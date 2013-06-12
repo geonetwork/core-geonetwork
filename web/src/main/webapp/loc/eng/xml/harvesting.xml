@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <selectownergroup>Harvester belongs to group</selectownergroup>
 	<select>Select</select>
 	<name>Name</name>
 	<directoryname>Directory</directoryname>
@@ -20,6 +21,11 @@
 	<info type="geonetwork20">
 		<short>GeoNetwork 2.0</short>
 		<long>GeoNetwork v2.0 remote node</long>
+	</info>
+	
+	<info type="geoPREST">
+		<short>GeoPortal REST</short>
+		<long>GeoPortal 9.3.x via REST interface</long>
 	</info>
 	
 	<info type="webdav">
@@ -75,6 +81,8 @@
     <!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
+
+	<baseUrl>Base URL of GeoPortal service</baseUrl>
 
 	<category>Category</category>
 	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
@@ -137,7 +145,8 @@
 	
 	<content>Harvested Content</content>
 	<importxslt>Apply this XSLT to harvested records</importxslt>
-
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier comparison (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
+	
 	<at>Run at</at>
     <atSpec>( hour of day : minute eg. 23:15 )</atSpec>
     <interval>Will run again every</interval>
@@ -398,6 +407,7 @@
 		<couldNotInsert>Could not insert</couldNotInsert>
     <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
 		<recordsUpdated>Records Updated</recordsUpdated>
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>Waiting for the first run</notRun>

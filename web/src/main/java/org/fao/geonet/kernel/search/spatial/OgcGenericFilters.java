@@ -1,7 +1,6 @@
 package org.fao.geonet.kernel.search.spatial;
 
 import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.index.SpatialIndex;
@@ -87,7 +86,6 @@ public class OgcGenericFilters
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("serial")
     public static SpatialFilter create(Query query, int numHits,
             Element filterExpr, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor, Parser parser) throws Exception
     {
@@ -132,7 +130,7 @@ public class OgcGenericFilters
 
 				// -- finally reproject all geometry in the Filter to match GeoNetwork
 				// -- default of WGS84 (long/lat ordering)
-		visitor = new ReprojectingFilterVisitor(filterFactory2, reprojectGeometryType(geometryColumn));
+		visitor = new org.geotools.filter.spatial.ReprojectingFilterVisitor(filterFactory2, reprojectGeometryType(geometryColumn));
 		final Filter reprojectedFilter = (Filter) remappedFilter.accept(visitor, null);
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE,"Reprojected Filter is "+reprojectedFilter);
@@ -175,15 +173,7 @@ public class OgcGenericFilters
         {
             final WithinImpl impl = (WithinImpl) filter;
             FilterFactory factory = CommonFactoryFinder.getFilterFactory(GeoTools.getDefaultHints());
-            return new WithinImpl(factory, impl.getExpression1(), impl.getExpression2())
-            {
-
-                @Override
-                public boolean evaluateInternal(Geometry leftGeom, Geometry rightGeom) {
-                    boolean equals2 = leftGeom.equalsExact(rightGeom, 0.01);
-                    return equals2 || super.evaluateInternal(leftGeom, rightGeom);
-                }
-            };
+            return new WithinOrEquals(factory, impl.getExpression1(), impl.getExpression2());
         };
     }
 

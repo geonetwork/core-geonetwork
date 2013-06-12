@@ -23,12 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
@@ -36,7 +30,6 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.ConstraintLanguage;
@@ -50,9 +43,17 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 //=============================================================================
 
@@ -78,21 +79,38 @@ class Harvester
 	//---
 	//---------------------------------------------------------------------------
 
-	public CswResult harvest() throws Exception
+	public HarvestResult harvest() throws Exception
 	{
 		log.info("Retrieving capabilities file for : "+ params.name);
 
 		CswServer server = retrieveCapabilities(log);
 
 		//--- perform all searches
-
+		
 		Set<RecordInfo> records = new HashSet<RecordInfo>();
-
-		for(Search s : params.getSearches())
+		
+		Search s = new Search();
+		
+		for (Element element : params.eltSearches) {
+			if (element.getChildText("value")!=null){
+				if (!element.getChildText("value").trim().equals("")){
+					s.addAttribute(element.getName(), element.getChildText("value").trim());
+				}
+			} else if (element.getText()!=null) {
+				s.addAttribute(element.getName(), element.getText().trim());
+			}
+		}
+			
+		records.addAll(search(server,s));
+		
+		/*
+		for(Search s : params.getSearches()){
 			records.addAll(search(server, s));
+		}*/
 
-		if (params.isSearchEmpty())
+		if (params.isSearchEmpty()){
 			records.addAll(search(server, Search.createEmptySearch()));
+		}
 
 		log.info("Total records processed in all searches :"+ records.size());
 
@@ -228,12 +246,12 @@ class Harvester
 				}
 			}
 
-			List list = results.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> list = results.getChildren();
 			int counter = 0;
 
-			for (Object e :list)
+			for (Element record :list)
 			{
-				Element    record = (Element) e;
 				RecordInfo recInfo= getRecordInfo((Element)record.clone());
 
 				if (recInfo != null)
@@ -265,6 +283,33 @@ class Harvester
     //---------------------------------------------------------------------------
 
     /**
+     * TODO Javadoc.
+     *
+     * @param request
+     * @param oper
+     * @param server
+     * @param s
+     * @param url
+     * @param constraintLanguage
+     * @param constraint
+     * @param method
+     */
+    private void setUpRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, URL url,
+                              ConstraintLanguage constraintLanguage, String constraint, CatalogRequest.Method method) {
+
+        request.setUrl(url);
+        request.setServerVersion(server.getPreferredServerVersion());
+        request.setOutputSchema(oper.preferredOutputSchema);
+        request.setConstraintLanguage(constraintLanguage);
+        request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
+        request.setConstraint(constraint);
+        request.setMethod(method);
+        for(String typeName: oper.typeNamesList) {
+            request.addTypeName(TypeName.getTypeName(typeName));
+        }
+        request.setOutputFormat(oper.preferredOutputFormat) ;
+    }
+    /**
      * Configs the harvester request
      *
      * @param request
@@ -279,80 +324,27 @@ class Harvester
         if (oper.getUrl == null && oper.postUrl == null) {
             throw new OperationAbortedEx("No GET or POST DCP available in this service.");
         }
-        
+
         // Use the preferred HTTP method and check one exist.
-		if (oper.getUrl != null && preferredMethod.equals("GET") && oper.constraintLanguage.contains("cql_text")) {
-			request.setUrl(oper.getUrl);
-            request.setServerVersion(server.getPreferredServerVersion());
-            request.setOutputSchema(oper.preferredOutputSchema);
-			request.setConstraintLanguage(ConstraintLanguage.CQL);
-			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-			request.setConstraint(getCqlConstraint(s));
-			request.setMethod(CatalogRequest.Method.GET);
-            for(String typeName: oper.typeNamesList) {
-                request.addTypeName(TypeName.getTypeName(typeName));
+        if (oper.getUrl != null && preferredMethod.equals("GET") && oper.constraintLanguage.contains("cql_text")) {
+            setUpRequest(request, oper, server, s, oper.getUrl, ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
+        }
+        else if (oper.postUrl != null && preferredMethod.equals("POST") && oper.constraintLanguage.contains("filter")) {
+            setUpRequest(request, oper, server, s, oper.postUrl, ConstraintLanguage.FILTER, getFilterConstraint(s), CatalogRequest.Method.POST);
+        }
+        else {
+            if (oper.getUrl != null && oper.constraintLanguage.contains("cql_text")) {
+                setUpRequest(request, oper, server, s, oper.getUrl, ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
             }
-            request.setOutputFormat(oper.preferredOutputFormat) ;
-
-		} else if (oper.postUrl != null && preferredMethod.equals("POST") && oper.constraintLanguage.contains("filter")) {
-			request.setUrl(oper.postUrl);
-            request.setServerVersion(server.getPreferredServerVersion());
-            request.setOutputSchema(oper.preferredOutputSchema);
-			request.setConstraintLanguage(ConstraintLanguage.FILTER);
-			request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-			request.setConstraint(getFilterConstraint(s));
-			request.setMethod(CatalogRequest.Method.POST);
-            for(String typeName: oper.typeNamesList) {
-                request.addTypeName(TypeName.getTypeName(typeName));
+            else if (oper.postUrl != null && oper.constraintLanguage.contains("filter")) {
+                setUpRequest(request, oper, server, s, oper.postUrl, ConstraintLanguage.FILTER, getFilterConstraint(s), CatalogRequest.Method.POST);
             }
-            request.setOutputFormat(oper.preferredOutputFormat) ;
-
-		} else {
-		    if (oper.getUrl != null && oper.constraintLanguage.contains("cql_text")) {
-                request.setUrl(oper.getUrl);
-                request.setServerVersion(server.getPreferredServerVersion());
-                request.setOutputSchema(oper.preferredOutputSchema);
-                request.setConstraintLanguage(ConstraintLanguage.CQL);
-                request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-                request.setConstraint(getCqlConstraint(s));
-                request.setMethod(CatalogRequest.Method.GET);
-                for(String typeName: oper.typeNamesList) {
-                    request.addTypeName(TypeName.getTypeName(typeName));
-                }
-                request.setOutputFormat(oper.preferredOutputFormat) ;
-
-            } else if (oper.postUrl != null && oper.constraintLanguage.contains("filter")) {
-				request.setUrl(oper.postUrl);
-                request.setServerVersion(server.getPreferredServerVersion());
-                request.setOutputSchema(oper.preferredOutputSchema);
-				request.setConstraintLanguage(ConstraintLanguage.FILTER);
-				request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-				request.setConstraint(getFilterConstraint(s));
-				request.setMethod(CatalogRequest.Method.POST);
-
-                for(String typeName: oper.typeNamesList) {
-                    request.addTypeName(TypeName.getTypeName(typeName));
-                }
-                request.setOutputFormat(oper.preferredOutputFormat) ;
-
-			} else {
-			    // TODO : add GET+FE and POST+CQL support
-			    log.warning("No GET (using CQL) or POST (using FE) DCP available in this service... Trying GET CQL anyway ...");
-			    
-			    request.setUrl(oper.getUrl);
-                request.setServerVersion(server.getPreferredServerVersion());
-                request.setOutputSchema(oper.preferredOutputSchema);
-                request.setConstraintLanguage(ConstraintLanguage.CQL);
-                request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
-                request.setConstraint(getCqlConstraint(s));
-                request.setMethod(CatalogRequest.Method.GET);
-                for(String typeName: oper.typeNamesList) {
-                    request.addTypeName(TypeName.getTypeName(typeName));
-                }
-                request.setOutputFormat(oper.preferredOutputFormat) ;
-
-			}
-		}
+            else {
+                // TODO : add GET+FE and POST+CQL support
+                log.warning("No GET (using CQL) or POST (using FE) DCP available in this service... Trying GET CQL anyway ...");
+                setUpRequest(request, oper, server, s, oper.getUrl, ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
+            }
+        }
     }
 
 	//---------------------------------------------------------------------------
@@ -360,24 +352,20 @@ class Harvester
 	private String getFilterConstraint(Search s)
 	{
 		//--- collect queriables
-
+		
 		ArrayList<Element> queriables = new ArrayList<Element>();
 
-		//--- make sure that any freetext value has wildcards
-		String freeText = s.freeText;
-		if (freeText.length() > 0) {
-			if (!freeText.contains("%")) freeText = "%"+freeText+"%";
+		if (!s.attributesMap.isEmpty()){
+			for(Entry<String, String> entry : s.attributesMap.entrySet()) {
+			    if (entry.getValue()!=null){
+			    	buildFilterQueryable(queriables, "csw:"+entry.getKey(), entry.getValue());
+		    	}
+			}
+		} else {
+		    log.debug("no search criterion specified, harvesting all ... ");
 		}
-
-		// FIXME :
-		// old GeoNetwork node does not understand AnyText (csw:AnyText instead).
-		buildFilterQueryable(queriables, "csw:AnyText", freeText);
-		buildFilterQueryable(queriables, "dc:title", s.title);
-		buildFilterQueryable(queriables, "dct:abstract", s.abstrac);
-		buildFilterQueryable(queriables, "dc:subject", s.subject);
-		buildFilterQueryable(queriables, "dc:denominator", s.minscale, "PropertyIsGreaterThanOrEqualTo");
-		buildFilterQueryable(queriables, "dc:denominator", s.maxscale, "PropertyIsLessThanOrEqualTo");
-
+		
+		
 		//--- build filter expression
 
 		if (queriables.isEmpty())
@@ -444,13 +432,25 @@ class Harvester
 		//--- collect queriables
 
 		ArrayList<String> queryables = new ArrayList<String>();
-
+		
+		if (!s.attributesMap.isEmpty()){
+			for(Entry<String, String> entry : s.attributesMap.entrySet()) {
+			    if (entry.getValue()!=null){
+			    	buildCqlQueryable(queryables, "csw:"+entry.getKey(), entry.getValue());
+		    	}
+			}
+		} else {
+			System.out.println("no search criterion specified, harvesting all ... ");
+		}
+		
+		/*
 		buildCqlQueryable(queryables, "csw:AnyText", s.freeText);
 		buildCqlQueryable(queryables, "dc:title", s.title);
 		buildCqlQueryable(queryables, "dct:abstract", s.abstrac);
 		buildCqlQueryable(queryables, "dc:subject", s.subject);
 		buildCqlQueryable(queryables, "dct:denominator", s.minscale, ">=");
 		buildCqlQueryable(queryables, "dct:denominator", s.maxscale, "<=");
+		*/
 		
 		//--- build CQL query
 
@@ -547,7 +547,7 @@ class Harvester
       	log.warning("Record doesn't have a uuid : "+ name);
 				return null; // skip this one
 			}
-
+			
 			String modified = dm.extractDateModified(schema, record); 
 			if (modified.length() == 0) modified = null;
             if(log.isDebugEnabled())

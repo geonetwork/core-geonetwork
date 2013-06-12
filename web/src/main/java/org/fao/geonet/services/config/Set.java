@@ -90,7 +90,7 @@ public class Set implements Service
 			throw new OperationAbortedEx("Cannot set all values");
 
         // Update inspire property in SearchManager
-        gc.getSearchmanager().setInspireEnabled(new Boolean((String) values.get("system/inspire/enable"))); 
+        gc.getSearchmanager().setInspireEnabled(Boolean.valueOf((String)values.get("system/inspire/enable"))); 
 		String newUuid = (String)values.get("system/site/siteId");
 
         if (!currentUuid.equals(newUuid)) {
@@ -146,9 +146,8 @@ public class Set implements Service
 		new ConfigEntry(ConfigEntry.Type.INT,    true, "oai/cachesize",             "system/oai/cachesize"),
 
         new ConfigEntry(ConfigEntry.Type.BOOL,   true,  "autodetect/enable",             "system/autodetect/enable"),
-        new ConfigEntry(ConfigEntry.Type.BOOL,   false, "requestedLanguage/only",             "system/requestedLanguage/only"),
+        new ConfigEntry(ConfigEntry.Type.STRING,   false, "requestedLanguage/only",             "system/requestedLanguage/only"),
         new ConfigEntry(ConfigEntry.Type.BOOL,   true, "requestedLanguage/sorted",     "system/requestedLanguage/sorted"),
-        new ConfigEntry(ConfigEntry.Type.BOOL,   false,  "requestedLanguage/ignored",             "system/requestedLanguage/ignored"),
 
 		new ConfigEntry(ConfigEntry.Type.BOOL,   false, "downloadservice/simple",             "system/downloadservice/simple"),
 		new ConfigEntry(ConfigEntry.Type.BOOL,   false, "downloadservice/withdisclaimer",     "system/downloadservice/withdisclaimer"),

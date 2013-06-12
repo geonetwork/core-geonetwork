@@ -22,24 +22,22 @@
 //==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import jeeves.resources.dbms.Dbms;
+import jeeves.utils.Log;
+import jeeves.utils.SerialFactory;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Profile;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.user.Update;
+import org.jdom.Element;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
-
-import jeeves.resources.dbms.Dbms;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
-
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Geonet.Profile;
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.user.Update;
-import org.jdom.Element;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LDAPUtils {
 	/**
@@ -71,7 +69,7 @@ public class LDAPUtils {
 			String query = "INSERT INTO Users (id, username, password, surname, name, profile, "+
 						"address, city, state, zip, country, email, organisation, kind, authtype) "+
 						"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			dbms.execute(query, new Integer(id), user.getUsername(), "", user.getSurname(), user.getName(), 
+			dbms.execute(query, Integer.valueOf(id), user.getUsername(), "", user.getSurname(), user.getName(), 
 					user.getProfile(), user.getAddress(), user.getCity(), user.getState(), user.getZip(), 
 					user.getCountry(), user.getEmail(), user.getOrganisation(), user.getKind(), LDAPConstants.LDAP_FLAG);
 		} else {
@@ -90,17 +88,17 @@ public class LDAPUtils {
 						" city=?, state=?, zip=?, country=?, email=?, organisation=?, kind=? WHERE id=?";
 			dbms.execute (query, user.getUsername(), "", user.getSurname(), user.getName(), 
 					user.getProfile(), user.getAddress(), user.getCity(), user.getState(), user.getZip(), 
-					user.getCountry(), user.getEmail(), user.getOrganisation(), user.getKind(), new Integer(id));
+					user.getCountry(), user.getEmail(), user.getOrganisation(), user.getKind(), Integer.valueOf(id));
 			
 			// Delete user groups
 			if (importPrivilegesFromLdap) {
-				dbms.execute("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
+				dbms.execute("DELETE FROM UserGroups WHERE userId=?", Integer.valueOf(id));
 			}
 		}
 
 		// Add user groups
 		if (importPrivilegesFromLdap && !Profile.ADMINISTRATOR.equals(user.getProfile())) {
-			dbms.execute("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
+			dbms.execute("DELETE FROM UserGroups WHERE userId=?", Integer.valueOf(id));
 			for(Map.Entry<String, String> privilege : user.getPrivileges().entries()) {
 				// Add group privileges for each groups
 				
@@ -113,29 +111,22 @@ public class LDAPUtils {
 				String groupId = null;
 				
 				if (groupRecord == null && createNonExistingLdapGroup) {
-					if (Log.isDebugEnabled(Geonet.LDAP)){
-						Log.debug(Geonet.LDAP, "  - Add non existing group '" + groupName + "' in local database.");
-					}
-					
-					// If LDAP group does not exist in local database, create it
-					groupId = serialFactory.getSerial(dbms, "Groups") + "";
-					String query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
-					dbms.execute(query, new Integer(groupId), groupName);
-					Lib.local.insert(dbms, "Groups", new Integer(groupId), groupName);
-				} else if (groupRecord != null) {
+                    createIfNotExist(groupName, groupId, dbms, serialFactory);
+				}
+                else if (groupRecord != null) {
 					groupId = groupRecord.getChildText("id");
 				}
 				
-				if (groupId != null || createNonExistingLdapGroup) {
+				if (createNonExistingLdapGroup) {
 					if (Log.isDebugEnabled(Geonet.LDAP)){
 						Log.debug(Geonet.LDAP, "  - Add LDAP group " + groupName + " for user.");
 					}
 					
-					Update.addGroup(dbms, new Integer(id), new Integer(groupId), profile);
+					Update.addGroup(dbms, Integer.valueOf(id), Integer.valueOf(groupId), profile);
 					
 					try {
 						if (profile.equals(Profile.REVIEWER)) {
-							Update.addGroup(dbms, new Integer(id), new Integer(
+							Update.addGroup(dbms, Integer.valueOf(id), Integer.valueOf(
 									groupId), Profile.EDITOR);
 						}
 					} catch (Exception e) {
@@ -155,7 +146,27 @@ public class LDAPUtils {
 		
 		dbms.commit();
 	}
-	
+
+    /**
+     *
+     * @param groupName
+     * @param groupId
+     * @param dbms
+     * @param serialFactory
+     * @throws SQLException
+     */
+    protected static void createIfNotExist(String groupName, String groupId, Dbms dbms, SerialFactory serialFactory) throws SQLException {
+        if (Log.isDebugEnabled(Geonet.LDAP)){
+            Log.debug(Geonet.LDAP, "  - Add non existing group '" + groupName + "' in local database.");
+        }
+
+        // If LDAP group does not exist in local database, create it
+        groupId = serialFactory.getSerial(dbms, "Groups") + "";
+        String query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
+        dbms.execute(query, Integer.valueOf(groupId), groupName);
+        Lib.local.insert(dbms, "Groups", Integer.valueOf(groupId), groupName);
+    }
+
 	static Map<String, ArrayList<String>> convertAttributes(
 			NamingEnumeration<? extends Attribute> attributesEnumeration) {
 		Map<String, ArrayList<String>> userInfo = new HashMap<String, ArrayList<String>>();
@@ -171,8 +182,7 @@ public class LDAPUtils {
 				}
 				
 				// --- loop on all attribute's values
-				NamingEnumeration valueEnum;
-				valueEnum = attr.getAll();
+				NamingEnumeration<?> valueEnum = attr.getAll();
 				
 				while (valueEnum.hasMore()) {
 					Object value = valueEnum.next();

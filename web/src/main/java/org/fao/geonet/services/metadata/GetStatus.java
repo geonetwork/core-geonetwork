@@ -28,7 +28,6 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -92,7 +91,9 @@ public class GetStatus implements Service
 		String status = Params.Status.UNKNOWN;
 		String userId = "-1"; // no userId
 		if (stats != null) {
-			List<Element> mdStat = stats.getChildren();
+		    
+			@SuppressWarnings("unchecked")
+            List<Element> mdStat = stats.getChildren();
 			if (mdStat.size() > 0) {	
 				Element stat = mdStat.get(0);	
 				status = stat.getChildText("statusid");
@@ -105,7 +106,8 @@ public class GetStatus implements Service
 
 		Element elStatus = Lib.local.retrieve(dbms, "StatusValues");
 
-		List<Element> kids = elStatus.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> kids = elStatus.getChildren();
 
 		for (Element kid : kids) {
 
@@ -125,7 +127,7 @@ public class GetStatus implements Service
 		//--- get the list of content reviewers for this metadata record
 
 		Set<Integer> ids = new HashSet<Integer>();
-		ids.add(new Integer(id));
+		ids.add(Integer.valueOf(id));
 
 		Element cRevs = am.getContentReviewers(dbms, ids);
 		cRevs.setName("contentReviewers");

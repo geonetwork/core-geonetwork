@@ -85,6 +85,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
         this.saveAction = new Ext.Action({
             text: OpenLayers.i18n('save'),
             iconCls: 'saveMetadata',
+            ctCls: 'gn-bt-main',
             handler: function(){
                 this.save();
             },
@@ -200,25 +201,26 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
         return this.typeMenu;
     },
     configMenu: function(){
+        var tgVisibility = new Ext.menu.CheckItem({
+                text: OpenLayers.i18n('collapseAll'),
+                checked: false,
+                checkHandler: function(){
+                    Ext.each(Ext.DomQuery.select('span.toggle'), function(i) {
+                        if (i.onclick) {
+                            i.onclick();
+                        }
+                    });
+                }
+            });
         
         this.configMenu = {
             iconCls: 'configIcon',
             menu: {
-                items: [{
-                        text: OpenLayers.i18n('collapseAll'),
-                        checked: false,
-                        checkHandler: function(){
-                            Ext.each(Ext.DomQuery.select('div.toggle'), function(i) {
-                                if (i.onclick) {
-                                    i.onclick();
-                                }
-                            });
-                        }
-                    },
+                items: [tgVisibility,
                     {
                         text: OpenLayers.i18n('editAttributes'),
                         checked: this.editAttributes,
-                        checkHandler: function(item, checked) {
+                        checkHandler: function (item, checked) {
                             this.editAttributes = checked;
                             this.editAttributesVisibility();
                         },
@@ -228,8 +230,9 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
             }
         };
         
-        this.editor.on('metadataUpdated', function() {
+        this.editor.on('metadataUpdated', function () {
             this.editAttributesVisibility();
+            tgVisibility.setChecked(false, true);   // reset collapsed sections - section are never collapsed when rendered
         }, this);
         
         return this.configMenu;
@@ -294,7 +297,7 @@ GeoNetwork.editor.EditorToolbar = Ext.extend(Ext.Toolbar, {
      *  TODO : what to do in destroy ?
      */
     onDestroy: function(){
-        GeoNetwork.EditorToolbar.superclass.onDestroy.apply(this, arguments);
+        GeoNetwork.editor.EditorToolbar.superclass.onDestroy.apply(this, arguments);
     }
 });
 

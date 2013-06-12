@@ -25,8 +25,6 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.MissingParameterEx;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -37,21 +35,18 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.Importer;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
-import org.jdom.Namespace;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-//=============================================================================
-
-/** Inserts a new metadata to the system (data is validated)
-  */
-
-public class Insert implements Service
-{
+/**
+ * Inserts a new metadata to the system (data is validated).
+ */
+public class Insert extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -71,7 +66,7 @@ public class Insert implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -80,7 +75,6 @@ public class Insert implements Service
 		String data       = Util.getParam(params, Params.DATA);
 		String group      = Util.getParam(params, Params.GROUP);
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
-		String title      = Util.getParam(params, Params.TITLE, "");
 		String style      = Util.getParam(params, Params.STYLESHEET, "_none_");
 
 		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
@@ -102,7 +96,7 @@ public class Insert implements Service
         if (schema == null)
         	throw new BadParameterEx("Can't detect schema for metadata automatically.", schema);
 
-		if (validate) dataMan.validateMetadata(schema, xml, context);
+		if (validate) DataManager.validateMetadata(schema, xml, context);
 
 		//-----------------------------------------------------------------------
 		//--- if the uuid does not exist and is not a template we generate it
@@ -163,18 +157,4 @@ public class Insert implements Service
 		return response;
 	};
 
-	//---------------------------------------------------------------------------
-
-	private void fixNamespace(Element md, Namespace ns)
-	{
-		if (md.getNamespaceURI().equals(ns.getURI()))
-			md.setNamespace(ns);
-
-		for (Object o : md.getChildren())
-			fixNamespace((Element) o, ns);
-	}
 }
-
-//=============================================================================
-
-

@@ -23,6 +23,7 @@
 
 package jeeves.utils;
 
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
@@ -57,7 +58,7 @@ public final class Log
 	public static final String TRANSFORMER_FACTORY = JEEVES
 			+ ".transformerFactory";
 
-    public final class Dbms {
+    public static final class Dbms {
 
         /**
          * Default constructor.
@@ -125,6 +126,11 @@ public final class Log
 		Logger.getLogger(module).warn(message);
 	}
 
+	public static void warning(String module, Object message, Throwable e) {
+		Logger.getLogger(module).warn(message, e);
+	}
+
+
 	//---------------------------------------------------------------------------
 
     public static void error(String module, Object message)
@@ -152,12 +158,13 @@ public final class Log
 		return new jeeves.interfaces.Logger()
 		{
 
-            public boolean isDebugEnabled() { return Log.isDebugEnabled(module);}
-            public void debug  (String message) { Log.debug  (module, message); }
-			public void info   (String message) { Log.info   (module, message); }
-			public void warning(String message) { Log.warning(module, message); }
-			public void error  (String message) { Log.error  (module, message); }
-			public void fatal  (String message) { Log.fatal  (module, message); }
+		    @Override public boolean isDebugEnabled() { return Log.isDebugEnabled(module);}
+            @Override public void debug  (String message) { Log.debug  (module, message); }
+            @Override public void info   (String message) { Log.info   (module, message); }
+			@Override public void warning(String message) { Log.warning(module, message); }
+			@Override public void error  (String message) { Log.error  (module, message); }
+			@Override public void fatal  (String message) { Log.fatal  (module, message); }
+			@Override public String getModule() {return module;}
 		};
 	}
 

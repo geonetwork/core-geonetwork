@@ -246,6 +246,23 @@ public final class Util
 		return sw.toString();
 	}
 
+    public static String getParamText(Element params, String desired)
+    {
+        String value = getParam(params, desired, "");
+        if(value.length() == 0) {
+            return null;
+        }
+        return value;
+    }
+
+    public static void toLowerCase(Element params) {
+        for (Object o : params.getChildren()) {
+            if (o instanceof Element) {
+                Element element = (Element) o;
+                element.setName(element.getName().toLowerCase());
+            }
+        }
+    }
 	
 }
 

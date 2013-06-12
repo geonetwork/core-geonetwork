@@ -1,15 +1,11 @@
 package org.fao.geonet.services.statistics;
 
-import java.util.List;
-
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 /**
@@ -19,7 +15,7 @@ import org.jdom.Element;
  * @author Simon Pigot
  *
  */
-public class MostSearchedCategory implements Service {
+public class MostSearchedCategory extends NotInReadOnlyModeService{
 	private String luceneTermFields;
 	private int maxHits;
 	//--------------------------------------------------------------------------
@@ -29,6 +25,8 @@ public class MostSearchedCategory implements Service {
 	//--------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception	{
+        super.init(appPath, params);
+
 		luceneTermFields = params.getValue("luceneTermFields");
 		maxHits = Integer.parseInt(params.getValue("maxHits"));
 	}
@@ -38,9 +36,9 @@ public class MostSearchedCategory implements Service {
 	//--- Service
 	//---
 	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+    @Override
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         String query = "select termtext, count(*) as cnt from ";
         query += "params ";
@@ -52,19 +50,8 @@ public class MostSearchedCategory implements Service {
         query += "order by cnt desc";
 
         if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER, "query: " + query);
-		Element response = null;
-		if (maxHits < 1) {
-			response = dbms.select(query);
-		} else {
-			List resultSet = dbms.select(query).getChildren();
-			int max = maxHits < resultSet.size() ? maxHits : resultSet.size() ;
-			response = new Element(Jeeves.Elem.RESPONSE);
-			for (int i = 0; i < max; i++) {
-				Element el = (Element)resultSet.get(i);
-				response.addContent((Element)el.clone());
-			}
-		}
-		//System.out.println("response: " + Xml.getString(response));
-		return response;
+
+        MostSearchedResponse mostSearchedResponse = new MostSearchedResponse();
+        return mostSearchedResponse.createResponse(maxHits, dbms, query);
 	}
 }

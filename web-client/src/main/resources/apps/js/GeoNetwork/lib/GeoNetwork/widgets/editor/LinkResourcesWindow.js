@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2011 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2013 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  * 
@@ -24,14 +24,16 @@ Ext.namespace('GeoNetwork.view');
 
 /** api: (define)
  *  module = GeoNetwork.view
- *  class = ViewWindow
- *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
+ *  class = LinkResourcesWindow
+ *  base_link = `Ext.Window <http://extjs.com/deploy/dev/docs/?class=Ext.Window>`_
  */
 /** api: constructor 
- *  .. class:: ViewWindow(config)
- *
- *     Create a GeoNetwork metadata view window composed of a GeoNetwork.view.Panel
- *     to display a metadata record.
+ *  .. class:: LinkResourcesWindow(config)
+ *     
+ *     Create a window which allows to set relationship between
+ *     one metadata record and other type of resources. The metadata
+ *     does not need to be in edit mode. All XSL processes are defined by
+ *     metadata schema in the process folder of the schema.
  *
  */
 GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
@@ -85,18 +87,12 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 name: 'E__schema',
                 value: 'iso19110'
             }],
-            sibling: [{
-                name: 'E__groupPublished',
-                value: ''
-            }],
-            onlinesrc: [{
-                name: 'E__groupPublished',
-                value: null
-            }]
+            sibling: [],
+            onlinesrc: []
         },
         /*
-         * Configuration for sibling per profil and per initiative type
-         * Required for MyOcean
+         * Configuration for sibling per profile and per initiative type
+         * Required for some ISO profiles
          * Configuration for online source to restrict to a group
          */
         hiddenParametersValues: {
@@ -126,6 +122,14 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         value: 'MYOCEAN-UPSTREAM-PRODUCTS'
                     }]
                 }
+//                'iso19139.xyz': {
+//                    // and depends on codelist value
+//                    // Updated when codelist change
+//                    document: [{
+//                        id: 'E__groupPublished',
+//                        value: 'A-GROUP'
+//                    }]
+//                }
             },
             onlinesrc: {
                 // Depends on schema
@@ -138,15 +142,6 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 }
             }
         }
-    },
-    processMap: {
-        parent: 'parentIdentifier-update',
-        fcats: 'update-attachFeatureCatalogue',
-        service: 'update-onlineSrc',
-        dataset: 'update-srv-attachDataset',
-        sibling: 'sibling-add',
-        onlinesrc: 'onlinesrc-add',
-        thumbnail: 'thumbnail-from-url-add'
     },
     /**
      * The URL of the currently selected metadata
@@ -236,6 +231,15 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             codeListName: 'gmd:DS_AssociationTypeCode'
         });
     },
+    loadProtocolCodeListStore: function (protocolStore) {
+        var protocols = GeoNetwork.util.HelpTools.get('|gmd:protocol|gmd:CI_OnlineResource|gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol|', 
+                this.metadataSchema, 
+                catalogue.services.schemaInfo, function(protocols) {
+            if (protocols.records[0]) {
+                protocolStore.loadData(protocols.records[0].data.helper);
+            }
+        });
+    },
     getFormFieldForSibling: function (items) {
         if (this.type === 'sibling') {
 
@@ -317,10 +321,16 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 }),
                 listeners: {
                     exception: function (proxy, type, action, options, res, arg) {
-                        Ext.MessageBox.alert(OpenLayers.i18n("error"));
+                        GeoNetwork.Message().msg({
+                            title: OpenLayers.i18n('error'),
+                            msg: OpenLayers.i18n("GetCapabilitiesException")
+                        });
                     },
-                    loadexception: function(){
-                        Ext.MessageBox.alert(OpenLayers.i18n("GetCapabilitiesDocumentError") + this.capabilitiesStore.baseParams.url);
+                    loadexception: function () {
+                        GeoNetwork.Message().msg({
+                            title: OpenLayers.i18n('error'),
+                            msg: OpenLayers.i18n("GetCapabilitiesDocumentError") + this.capabilitiesStore.baseParams.url
+                        });
                     },
                     scope: this
                 }
@@ -353,17 +363,6 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             
             items.push([this.getCapabilitiesCombo, layerName]);
         }
-    },
-    /**
-     * Form for online resource. Online resource could be a document to upload 
-     * a reference to a online resource of another metadata record or 
-     * a URL to a document.
-     * 
-     * A document is described by a URL, name, description and protocol.
-     * 
-     */
-    generateOnlineSrcForm: function () {
-        
     },
     /**
      * Thumbnail form
@@ -411,13 +410,14 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             autoEl: {
                 tag: 'img',
                 'class': 'thumb-small',
-                src: cat.imgPath + 'images/default/nopreview.png'
+                src: catalogue.URL + '/apps/images/default/nopreview.png'
             }
         });
         var urlField = new Ext.form.TextField({
                 name: 'url',
                 value: '',
-                width: 400,
+                anchor: '100%',
+                hideLabel: true,
                 validator: function (value) {
                     if (self.uploadThumbnail !== true) {
                         var isUrl = Ext.form.VTypes.url(value);
@@ -450,6 +450,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 emptyText: OpenLayers.i18n('selectImage'),
                 name: 'fname',
                 width: 300,
+                hideLabel: true,
                 buttonText: '',
                 buttonCfg: {
                     iconCls: 'thumbnailAddIcon'
@@ -469,6 +470,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 xtype: 'checkbox',
                 checked: false,
                 fieldLabel: '',
+                hideLabel: true,
                 labelSeparator: '',
                 boxLabel: OpenLayers.i18n('createSmall'),
                 name: 'createSmall',
@@ -497,9 +499,16 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         
         var fsUrl = new Ext.form.FieldSet ({
             checkboxToggle:true,
-            title: OpenLayers.i18n('setAURL'),
+            title: OpenLayers.i18n('setAThumbnailByURL'),
             collapsed: this.uploadThumbnail,
-            items :[urlField,this.previewImage],
+            items: [urlField, this.previewImage, {
+                id: 'thumbnail_desc',
+                name: 'thumbnail_desc',
+                xtype: 'textfield',
+                anchor: '100%',
+                hideLabel: false,
+                fieldLabel: OpenLayers.i18n('Description')
+            }],
             listeners: {
                 collapse: {
                     fn: function() {
@@ -524,9 +533,9 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         // TODO : deprecate ThumbnailPanel
         this.uploadForm = new Ext.form.FormPanel({
             fileUpload: true,
-            labelWidth: 50,
+            labelWidth: 90,
             defaults: {
-                hideLabels: true,
+//                hideLabels: true,
                 xtype: 'textfield'
             },
             anchor: '80%',
@@ -556,8 +565,15 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         });
         return this.uploadForm;
     },
+    /**
+     * Form for online resource 
+     */
     generateDocumentUploadForm: function (cancelBt) {
-        var self = this;
+        var self = this, protocolStore = new Ext.data.JsonStore({
+            fields: ['label', 'title', 'value']
+        });
+        
+        this.loadProtocolCodeListStore(protocolStore);
         
         this.idField = new Ext.form.TextField({
             xtype: 'textfield',
@@ -571,63 +587,110 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             hidden: true
         });
         
-        // TODO : create a cusom widget to be shared with ThumbnailPanel
+
+        var fsUrl = new Ext.form.FieldSet({
+            checkboxToggle: true,
+            title: OpenLayers.i18n('setAURL'),
+            collapsed: this.uploadDocument,
+            items: [{
+                xtype: 'textfield',
+                fieldLabel: OpenLayers.i18n('URL'),
+                name: 'href',
+                value: ''
+            }],
+            listeners: {
+                collapse: {
+                    fn: function () {
+                        if (fsUpload.collapsed) {
+                            fsUpload.expand();
+                        }
+                    },
+                    scope: this
+                },
+                expand: {
+                    fn: function () {
+                        this.uploadDocument = false;
+                        
+                        protocolCombo.setVisible(true);
+                        
+                        if (!fsUpload.collapsed) {
+                            fsUpload.collapse();
+                        }
+                    },
+                    scope: this
+                }
+            }
+        });
+        
+        var protocolCombo = new Ext.form.ComboBox({
+            name: 'protocol',
+            fieldLabel: OpenLayers.i18n('Protocol'),
+            store: protocolStore,
+            valueField: 'value',
+            displayField: 'label',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+        
+        
+        var fsUpload = new Ext.form.FieldSet({
+            checkboxToggle: true,
+            title: OpenLayers.i18n('selectFile'),
+            collapsed: !this.uploadDocument,
+            items: [{
+                xtype: 'fileuploadfield',
+                emptyText: OpenLayers.i18n('selectFile'),
+                fieldLabel: OpenLayers.i18n('File'),
+//                allowBlank: false,TODO validation
+                name: 'filename',
+                buttonText: '',
+                buttonCfg: {
+                    iconCls: 'uploadIconAdd'
+                }
+            }, {
+                name: 'overwrite',
+                fieldLabel: OpenLayers.i18n('Overwrite'),
+                checked: true,
+                xtype: 'checkbox'
+            }],
+            listeners: {
+                collapse: {
+                    fn: function () {
+                        if (fsUrl.collapsed) {
+                            fsUrl.expand();
+                        }
+                    },
+                    scope: this
+                },
+                expand: {
+                    fn: function () {
+                        this.uploadDocument = true;
+                        
+                        protocolCombo.setVisible(false);
+                        
+                        if (!fsUrl.collapsed) {
+                            fsUrl.collapse();
+                        }
+                    },
+                    scope: this
+                }
+            }
+        });
+        
+        
         this.uploadForm = new Ext.form.FormPanel({
             fileUpload: true,
             defaults: {
                 width: 350
             },
             items: [this.idField, this.versionField, 
-//                    {
-//                xtype: 'radio',
-//                checked: this.uploadDocument,
-//                fieldLabel: OpenLayers.i18n('uploadADocument'),
-//                name: 'type',
-//                listeners: {
-//                    check: function (radio, checked) {
-//                        this.uploadDocument = checked;
-//                        // TODO : protocol is not needed
-//                    },
-//                    scope: this
-//                }
-//            }, {
-//                name: 'access',
-//                allowBlank: false,
-//                hidden: true,
-//                value: 'private' // FIXME
-//            }, {
-//                name: 'overwrite',
-//                fieldLabel: 'Overwrite',
-//                checked: true,
-//                xtype: 'checkbox'
-//            }, {
-//                xtype: 'fileuploadfield',
-//                emptyText: OpenLayers.i18n('selectFile'),
-//                fieldLabel: 'File',
-//                allowBlank: false,
-//                name: 'f_' + ref,
-//                buttonText: '',
-//                buttonCfg: {
-//                    iconCls: 'uploadIconAdd'
-//                }
-//            }, {
-//                xtype: 'radio',
-//                fieldLabel: OpenLayers.i18n('documentURL'),
-//                name: 'type',
-//                checked: !this.uploadDocument,
-//                listeners: {
-//                    check: function (radio, checked) {
-//                        this.uploadDocument = !checked;
-//                    },
-//                    scope: this
-//                }
-//            }, 
-              {
-                xtype: 'textfield',
-                fieldLabel: OpenLayers.i18n('URL'),
-                name: 'href',
-                value: ''
-            }, {
+            {
+                name: 'access',
+                allowBlank: false,
+                hidden: true,
+                value: 'private' // FIXME
+            }, fsUpload, fsUrl, 
+            {
                 xtype: 'textfield',
                 fieldLabel: OpenLayers.i18n('Name'),
                 name: 'name',
@@ -637,13 +700,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 fieldLabel: OpenLayers.i18n('Description'),
                 name: 'title',
                 value: ''
-            }, {
-                // TODO : should be a combo
-                xtype: 'textfield',
-                fieldLabel: OpenLayers.i18n('Protocol'),
-                name: 'protocol',
-                value: ''
-            }],
+            }, protocolCombo
+            ],
             buttons: [{
                 text: OpenLayers.i18n('upload'),
                 formBind: true,
@@ -651,35 +709,25 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 scope: this,
                 handler: function () {
                     if (this.uploadForm.getForm().isValid()) {
-                        var panel = this;
+                        var self = this;
                         if (this.uploadDocument) {
-//                            TODO This mode require more work
-//                            The service should upload the document
-//                            and update the metadata record
-//                            instead of only returning the URL of the doc 
-//                            to be added to the metadata 
-//                            
-//                            if (this.uploadForm.getForm().isValid()) {
-//                                this.uploadForm.getForm().submit({
-//                                    url: catalogue.services.upload,
-//                                    waitMsg: OpenLayers.i18n('uploading'),
-//                                    success: function(fileUploadPanel, o){
-////                                        var fname = o.result.fname;
-////                                        var name = Ext.getDom('_' + ref);
-////                                        if (name) {
-////                                            name.value = fname;
-////                                        }
-//                                        // Trigger update
-//                                        self.save();
-//                                        self.hide();
-//                                    }
-//                                    // TODO : improve error message
-//                                    // Currently return  Unexpected token < from ext doDecode
-//                                });
-//                            }
+                            this.uploadForm.getForm().submit({
+                                url: catalogue.services.uploadResource,
+                                waitMsg: OpenLayers.i18n('uploading'),
+                                success: function (fp, o) {
+                                    self.editor.init(self.metadataId);
+                                    self.hide();
+                                },
+                                failure: function (response) {
+                                    GeoNetwork.Message().msg({
+                                        title: OpenLayers.i18n('error'),
+                                        msg: OpenLayers.i18n("UploadError")
+                                    });
+                                }
+                            });
                         } else {
-                            var form = this.uploadForm.getForm();
                             this.selectedLink = this.uploadForm.getForm().getValues();
+                            this.selectedLink.protocol = protocolCombo.getValue();
                             this.runProcess();
                         }
                     }
@@ -788,7 +836,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     this.capabilitiesStore.baseParams.url = url;
                     this.capabilitiesStore.reload({params: {url: url}});
                 } else {
-                    this.capabilitiesStore.removeAll();
+                    this.capabilitiesStore && this.capabilitiesStore.removeAll();
                 }
                 
             } else {
@@ -813,8 +861,9 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         this.formPanel = new Ext.form.FormPanel({
             items: cmp,
             buttons: [{
-                text: OpenLayers.i18n('link'),
+                text: OpenLayers.i18n('createLink'),
                 iconCls: 'linkIcon',
+                ctCls: 'gn-bt-main',
                 scope: this,
                 handler: function () {
                     this.runProcess();
@@ -897,8 +946,9 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             items: cmp,
             border: false,
             buttons: [{
-                text: OpenLayers.i18n('link'),
+                text: OpenLayers.i18n('createLink'),
                 iconCls: 'linkIcon',
+                ctCls: 'gn-bt-main',
                 scope: this,
                 handler: function () {
                     this.runProcess();
@@ -944,6 +994,9 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         if (this.type === 'parent') {
             // Define the parent metadata record to link to
             parameters += "&parentUuid=" + this.selectedMd;
+        } else if (this.type === 'sources') {
+            // Define the parent metadata record to link to
+            parameters += "&sourceUuid=" + this.selectedMd;
         } else if (this.type === 'fcats') {
             // Define the target feature catalogue to use
             parameters += "&uuidref=" + this.selectedMd;
@@ -955,7 +1008,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 // 1. Update service (if current user has privileges), using XHR request
                 var serviceUpdateUrl = this.catalogue.services.mdProcessingXml + 
                                             "?uuid=" + this.selectedMd + 
-                                            "&process=update-srv-attachDataset" + 
+                                            "&process=dataset-add" + 
                                             "&uuidref=" + targetMetadataUuid +
                                             "&scopedName=" + this.layerName;
                 // TODO : it looks like the dataset identifier and not the 
@@ -966,11 +1019,12 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     url: serviceUpdateUrl,
                     method: 'GET',
                     success: function (result, request) {
-                        // TODO : use a autohide message instead of a blocking popup
-                        Ext.MessageBox.alert(OpenLayers.i18n("ServiceUpdateSuccess"));
                     },
                     failure: function (result, request) {
-                        Ext.MessageBox.alert(OpenLayers.i18n("ServiceUpdateError"));
+                        GeoNetwork.Message().msg({
+                            title: OpenLayers.i18n('error'),
+                            msg: OpenLayers.i18n("ServiceUpdateError")
+                        });
                     }
                 });
             } else {
@@ -989,11 +1043,11 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             if (this.canEditTarget) {
                 var serviceUpdateUrl = this.catalogue.services.mdProcessingXml + 
                                             "?uuid=" + this.selectedMd + 
-                                            "&process=update-onlineSrc" + 
+                                            "&process=onlinesrc-add" + 
                                             "&desc=" + this.layerName + 
                                             "&url=" + this.serviceUrl + 
                                             "&uuidref=" + targetMetadataUuid +
-                                            "&scopedName=" + this.layerName;
+                                            "&name=" + this.layerName;
                 // TODO : it looks like the dataset identifier and not the 
                 // metadata UUID should be set in the operatesOn element of 
                 // the service metadata record.
@@ -1002,11 +1056,16 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     url: serviceUpdateUrl,
                     method: 'GET',
                     success: function (result, request) {
-                        // TODO : use a autohide message instead of a blocking popup
-                        Ext.MessageBox.alert(OpenLayers.i18n("DatasetUpdateSuccess"));
+                        GeoNetwork.Message().msg({
+                            title: OpenLayers.i18n('message'),
+                            msg: OpenLayers.i18n("DatasetUpdateSuccess")
+                        });
                     },
                     failure: function (result, request) {
-                        Ext.MessageBox.alert(OpenLayers.i18n("DatasetUpdateError"));
+                        GeoNetwork.Message().msg({
+                            title: OpenLayers.i18n('error'),
+                            msg: OpenLayers.i18n("DatasetUpdateError")
+                        });
                     }
                 });
             } else {
@@ -1022,7 +1081,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             parameters += "&protocol=" + this.serviceProtocol;
         } else if (this.type === 'thumbnail') {
             // Attach a thumbnail by URL
-            parameters += "&thumbnail_url=" + encodeURIComponent(this.serviceUrl);
+            parameters += "&thumbnail_url=" + encodeURIComponent(this.serviceUrl) + 
+                "&thumbnail_desc=" + Ext.getCmp('thumbnail_desc').getValue();
             // TODO : set name and description
         } else if (this.type === 'sibling') {
          // Combine all links if multiple selection is available
@@ -1057,13 +1117,10 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         }
         var action = this.catalogue.services.mdProcessing + 
             "?id=" + this.metadataId + 
-            "&process=" + this.processMap[this.type] +
+            "&process=" + this.type + "-add" +
             parameters;
         
         this.editor.process(action);
-        
-        // Process the related record 
-        // TODO : check for errors
         
         this.close();
     },
@@ -1178,8 +1235,9 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
         this.formPanel = new Ext.form.FormPanel({
             items: [cmp],
             buttons: [{
-                text: OpenLayers.i18n('link'),
+                text: OpenLayers.i18n('createLink'),
                 iconCls: 'linkIcon',
+                ctCls: 'gn-bt-main',
                 scope: this,
                 handler: function () {
                     this.runProcess();

@@ -32,11 +32,8 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
-import javax.servlet.ServletContext;
-import java.io.File;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -71,21 +68,8 @@ public class GeonetHarvester extends AbstractHarvester
 	protected void doInit(Element node) throws BadInputEx
 	{
 		params = new GeonetParams(dataMan);
+        super.setParams(params);
 		params.create(node);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- doDestroy
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doDestroy(Dbms dbms) throws SQLException
-	{
-        File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
-
-		icon.delete();
-		Lib.sources.delete(dbms, params.uuid);
 	}
 
 	//---------------------------------------------------------------------------
@@ -97,6 +81,7 @@ public class GeonetHarvester extends AbstractHarvester
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		params = new GeonetParams(dataMan);
+        super.setParams(params);
 
 		//--- retrieve/initialize information
 		params.create(node);
@@ -121,6 +106,7 @@ public class GeonetHarvester extends AbstractHarvester
 	protected void doUpdate(Dbms dbms, String id, Element node) throws BadInputEx, SQLException
 	{
 		GeonetParams copy = params.copy();
+        super.setParams(params);
 
 		//--- update variables
 		copy.update(node);
@@ -138,6 +124,8 @@ public class GeonetHarvester extends AbstractHarvester
 		Lib.sources.update(dbms, copy.uuid, copy.name, false);
 
 		params = copy;
+        super.setParams(params);
+
 	}
 
 	//---------------------------------------------------------------------------
@@ -146,6 +134,7 @@ public class GeonetHarvester extends AbstractHarvester
 											String siteId, String optionsId) throws SQLException
 	{
 		GeonetParams params = (GeonetParams) p;
+        super.setParams(params);
 
 		settingMan.add(dbms, "id:"+siteId, "host",    params.host);
 		settingMan.add(dbms, "id:"+siteId, "createRemoteCategory", params.createRemoteCategory);
@@ -203,57 +192,6 @@ public class GeonetHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- AbstractParameters
-	//---
-	//---------------------------------------------------------------------------
-
-	public AbstractParams getParams() { return params; }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AddInfo
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doAddInfo(Element node)
-	{
-		//--- if the harvesting is not started yet, we don't have any info
-
-		if (result == null)
-			return;
-
-		//--- ok, add proper info
-
-		Element info = node.getChild("info");
-		Element res  = getResult();
-		info.addContent(res);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- GetResult
-	//---
-	//---------------------------------------------------------------------------
-
-	protected Element getResult() {
-		Element res  = new Element("result");
-
-		if (result != null) {
-			add(res, "total",         result.totalMetadata);
-			add(res, "added",         result.addedMetadata);
-			add(res, "updated",       result.updatedMetadata);
-			add(res, "unchanged",     result.unchangedMetadata);
-			add(res, "unknownSchema", result.unknownSchema);
-			add(res, "removed",       result.locallyRemoved);
-			add(res, "unretrievable", result.unretrievable);
-            add(res, "doesNotValidate", result.doesNotValidate);
-		}
-
-		return res;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
 	//--- Harvest
 	//---
 	//---------------------------------------------------------------------------
@@ -273,23 +211,4 @@ public class GeonetHarvester extends AbstractHarvester
 	//---------------------------------------------------------------------------
 
 	private GeonetParams params;
-	private GeonetResult result;
 }
-
-//=============================================================================
-
-class GeonetResult
-{
-	public int totalMetadata;
-	public int addedMetadata;
-	public int updatedMetadata;
-	public int unchangedMetadata;
-	public int locallyRemoved;
-	public int unknownSchema;
-	public int unretrievable;
-    public int doesNotValidate;
-    
-}
-
-//=============================================================================
-

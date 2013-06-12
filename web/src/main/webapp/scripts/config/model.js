@@ -66,7 +66,6 @@ ConfigModel.prototype.getConfig_OK = function(node)
             AUTODETECT_ENABLE : xml.evalXPath(node, 'autodetect/enable'),
             REQUESTED_LANGUAGE_ONLY : xml.evalXPath(node, 'requestedLanguage/only'),
             REQUESTED_LANGUAGE_SORTED : xml.evalXPath(node, 'requestedLanguage/sorted'),
-            REQUESTED_LANGUAGE_IGNORED : xml.evalXPath(node, 'requestedLanguage/ignored'),
 
 			DOWNLOADSERVICE_LEAVE         : xml.evalXPath(node, 'downloadservice/leave'),
 			DOWNLOADSERVICE_SIMPLE         : xml.evalXPath(node, 'downloadservice/simple'),
@@ -208,7 +207,6 @@ ConfigModel.updateTemp =
 '	<requestedLanguage>'+
 '        <only>{REQUESTED_LANGUAGE_ONLY}</only>' +
 '        <sorted>{REQUESTED_LANGUAGE_SORTED}</sorted>' +
-'        <ignored>{REQUESTED_LANGUAGE_IGNORED}</ignored>' +
 '	</requestedLanguage>'+
 '	<downloadservice>'+
 '		<leave>{DOWNLOADSERVICE_LEAVE}</leave>'+

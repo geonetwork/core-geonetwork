@@ -5,17 +5,17 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/context/spring-context-3.0.xsd
           http://www.springframework.org/schema/security
           http://www.springframework.org/schema/security/spring-security-3.1.xsd" xmlns:sec="http://www.springframework.org/schema/security" xmlns:ctx="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
-    <bean class="jeeves.config.springutil.GeonetworkFilterSecurityInterceptor" id="filterSecurityInterceptor">
-    	<constructor-arg value="__geonetwork_spring_security_filterSecurityInterceptor_coreSecurityMapping_filterApplied"/>
+    <bean class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor" id="filterSecurityInterceptor">
         <property name="authenticationManager" ref="authenticationManager"></property>
         <property name="accessDecisionManager" ref="accessDecisionManager"></property>
         <property name="securityMetadataSource">
-            <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex" id="coreFilterSecurityMetadataSource">
+            <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex">
+                <sec:intercept-url pattern="/srv/.*/xml.thesaurus.getList!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/monitor" access="hasRole('Monitor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/\w*healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.+/service-not-allowed(|!)" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.+/login.form(|!)" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.+/service-not-allowed!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.+/login.form!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.+/.+\?casLogin.*" access="hasRole('RegisteredUser')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/group.remove!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/group.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
@@ -27,7 +27,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/xml.group.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.category.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.operation.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.region.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/util.import!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/util.ping!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/util.empty!?.*" access="hasRole('Administrator')"></sec:intercept-url>
@@ -47,19 +46,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/metadata.batchimport.form!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.searchunused.form!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.searchunused!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/harvesting!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.harvesting.get!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.harvesting.add!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.harvesting.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.harvesting.remove!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.harvesting.start!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.harvesting.stop!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.harvesting.run!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.harvesting.info!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.harvesting.clone!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/harvesting.history.full!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/harvesting.history!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/harvesting.history.delete!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/thesaurus.admin!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/thesaurus.clear!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/thesaurus.edit!?.*" access="hasRole('Administrator')"></sec:intercept-url>
@@ -82,7 +68,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/xml.config.set!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.config.doActions!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/lucene.config.reload!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/sequential.execution.set!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/system.properties.set!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.admin.index.rebuild!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.admin.index.rebuildxlinks!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.admin.index.optimize!?.*" access="hasRole('Administrator')"></sec:intercept-url>
@@ -105,6 +91,12 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/stat.deleteTmpGraphics!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/stat.tableExport!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/csw.config.get!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/virtualcsw.config!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/virtualcsw.config.add!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/virtualcsw.config.get!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/virtualcsw.config.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/virtualcsw.config.edit!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/virtualcsw.config.delete!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/csw.config.set!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/csw-publication!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/csw.customelementset.get!?.*" access="hasRole('Administrator')"></sec:intercept-url>
@@ -138,6 +130,19 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.update!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.files!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.edit!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/harvesting!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/xml.harvesting.get!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/xml.harvesting.add!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/xml.harvesting.update!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/xml.harvesting.remove!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/xml.harvesting.start!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/xml.harvesting.stop!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/xml.harvesting.run!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/xml.harvesting.info!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/xml.harvesting.clone!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/harvesting.history.full!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/harvesting.history!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/harvesting.history.delete!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/group.list!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/group.get!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.category!?.*" access="hasRole('Editor')"></sec:intercept-url>
@@ -250,6 +255,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/about!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/feedback!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/feedback.insert!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/feedback.send!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/file.download!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/file.disclaimer!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/feedback.download.insert!?.*" access="permitAll"></sec:intercept-url>
@@ -264,21 +270,18 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/pdf.selection.search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/pdf.present!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/pdf!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/intermap.wmc.setWmcContext!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.search.keywords!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.metadata.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/rdf.metadata.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/rdf.search!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.metadocument.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.metadocument.snippet!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/xml.metadocument.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.info!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.forward!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.region.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.keyword.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.file.disclaimer!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.file.download!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.metadata.status.values.list!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.metadata.status.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/view!?.*" access="permitAll"></sec:intercept-url>
@@ -319,6 +322,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/csv.present!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/google.kml!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/xml.group.list!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/csw-.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/csw!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/oaipmh!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/mef.export!?.*" access="permitAll"></sec:intercept-url>
@@ -330,7 +334,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/keywords.getselected!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/thesaurus.list!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/thesaurus.view!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/xml.thesaurus.getList!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/crs.search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/crs.types!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/crs.get!?.*" access="permitAll"></sec:intercept-url>
@@ -352,13 +355,28 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/.*/contacts.getRole!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/subtemplate!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/isolanguages!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/proxy" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/proxy?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/wmc/load.wmc" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/metadata.service.extract!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/robots.txt" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/robots.txt" access="permitAll"></sec:intercept-url>
+                
+                <!-- Formatter services -->
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.html!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.xml!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.pdf!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.resource!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/.*/metadata.formatter.list!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/proxy" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/proxy?.*" access="permitAll"></sec:intercept-url>
+
+                <!-- Region services -->
+                <sec:intercept-url pattern="/srv/.*/xml.region.get!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/xml.regions.list!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/xml.regions.category.list!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/region.getmap.\w\w\w!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/region\.geom\.\w\w\w!?.*" access="permitAll"></sec:intercept-url>
+
+
                 <sec:intercept-url pattern="/.*" access="denyAll"></sec:intercept-url>
             </sec:filter-security-metadata-source>
         </property>

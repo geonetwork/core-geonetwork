@@ -1,7 +1,6 @@
 package jeeves.monitor;
 
 import com.yammer.metrics.core.HealthCheck;
-import com.yammer.metrics.core.MetricsRegistry;
 import jeeves.server.context.ServiceContext;
 
 /**

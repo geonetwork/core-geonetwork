@@ -24,7 +24,6 @@
 package org.fao.geonet.services.thesaurus;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -34,17 +33,15 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.io.File;
 
-//=============================================================================
-
 /**
  * For editing : adds a tag to a thesaurus. Access is restricted
  */
-
-public class Add implements Service {
+public class Add extends NotInReadOnlyModeService {
 	public void init(String appPath, ServiceConfig params) throws Exception {
 	}
 
@@ -54,12 +51,14 @@ public class Add implements Service {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
+	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		String fname = Util.getParam(params, "fname");
+		String tname = Util.getParam(params, "tname");
+		String tnamespace = Util.getParam(params, "tns");
 		String dname = Util.getParam(params, "dname");
 		String type = Util.getParam(params, "type");
 		String activated = Util.getParam(params, "activated", "y");
@@ -76,8 +75,8 @@ public class Add implements Service {
 		String filePath = tm.buildThesaurusFilePath(fname, type, dname);
 		
 		File rdfFile = new File(filePath);		
-		Thesaurus thesaurus = new Thesaurus(fname,type,dname,rdfFile,dm.getSiteURL());		
-		tm.addThesaurus(thesaurus);
+		Thesaurus thesaurus = new Thesaurus(null, fname, tname, tnamespace, type, dname, rdfFile, dm.getSiteURL(context), false);
+		tm.addThesaurus(thesaurus, true);
 
 		// Save activated status in the database
 		String query = "INSERT INTO Thesaurus (id, activated) VALUES (?,?)";
@@ -94,6 +93,3 @@ public class Add implements Service {
 		return elResp;
 	}
 }
-
-// =============================================================================
-

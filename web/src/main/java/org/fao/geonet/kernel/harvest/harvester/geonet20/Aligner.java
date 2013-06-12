@@ -31,6 +31,7 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -65,14 +66,15 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public AlignerResult align(Element result, String siteId) throws Exception
+	public HarvestResult align(Element result, String siteId) throws Exception
 	{
 		log.info("Start of alignment for site-id="+ siteId);
 
-		this.result = new AlignerResult();
+		this.result = new HarvestResult();
 		this.result.siteId = siteId;
 
-		List mdList = result.getChildren("metadata");
+		@SuppressWarnings("unchecked")
+        List<Element> mdList = result.getChildren("metadata");
 
 		//-----------------------------------------------------------------------
 		//--- retrieve local uuids for given site-id
@@ -96,46 +98,41 @@ public class Aligner
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata
 
-		dataMan.startIndexGroup();
-		try {
-            for (Object aMdList : mdList) {
-                Element info = ((Element) aMdList).getChild("info", Edit.NAMESPACE);
+        for (Element aMdList : mdList) {
+            Element info = aMdList.getChild("info", Edit.NAMESPACE);
 
-                String remoteId = info.getChildText("id");
-                String remoteUuid = info.getChildText("uuid");
-                String schema = info.getChildText("schema");
-                String changeDate = info.getChildText("changeDate");
+            String remoteId = info.getChildText("id");
+            String remoteUuid = info.getChildText("uuid");
+            String schema = info.getChildText("schema");
+            String changeDate = info.getChildText("changeDate");
 
-                this.result.totalMetadata++;
+            this.result.totalMetadata++;
 
-                if(log.isDebugEnabled()) log.debug("Obtained remote id=" + remoteId + ", changeDate=" + changeDate);
+            if(log.isDebugEnabled()) log.debug("Obtained remote id=" + remoteId + ", changeDate=" + changeDate);
 
-                if (!dataMan.existsSchema(schema)) {
-                    if(log.isDebugEnabled()) log.debug("  - Skipping unsupported schema : " + schema);
-                    this.result.schemaSkipped++;
+            if (!dataMan.existsSchema(schema)) {
+                if(log.isDebugEnabled()) log.debug("  - Skipping unsupported schema : " + schema);
+                this.result.schemaSkipped++;
+            }
+            else {
+                String id = dataMan.getMetadataId(dbms, remoteUuid);
+
+                if (id == null) {
+                    id = addMetadata(info);
                 }
                 else {
-                    String id = dataMan.getMetadataId(dbms, remoteUuid);
+                    updateMetadata(siteId, info, id);
+                }
 
-                    if (id == null) {
-                        id = addMetadata(info);
-                    }
-                    else {
-                        updateMetadata(siteId, info, id);
-                    }
+                dbms.commit();
 
-                    dbms.commit();
+                //--- maybe the metadata was unretrievable
 
-                    //--- maybe the metadata was unretrievable
-
-                    if (id != null) {
-                        dataMan.indexMetadataGroup(dbms, id);
-                    }
+                if (id != null) {
+                    dataMan.indexMetadata(dbms, id);
                 }
             }
-		} finally {
-			dataMan.endIndexGroup();
-		}
+        }
 
 		log.info("End of alignment for site-id="+ siteId);
 
@@ -171,7 +168,7 @@ public class Aligner
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), params.uuid, Integer.parseInt(params.owner), group, remoteUuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), params.uuid, Integer.parseInt(params.ownerId), group, remoteUuid,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 
@@ -182,8 +179,11 @@ public class Aligner
 
 		result.addedMetadata++;
 
-		addCategories(id, info.getChildren("category"));
-		addPrivileges(id);
+		@SuppressWarnings("unchecked")
+        List<Element> categories = info.getChildren("category");
+        addCategories(id, categories);
+
+        addPrivileges(id);
 
 		return id;
 	}
@@ -192,10 +192,10 @@ public class Aligner
 	//--- Categories
 	//--------------------------------------------------------------------------
 
-	private void addCategories(String id, List categ) throws Exception
+	private void addCategories(String id, List<Element> categ) throws Exception
 	{
-        for (Object aCateg : categ) {
-            String catName = ((Element) aCateg).getText();
+        for (Element aCateg : categ) {
+            String catName = aCateg.getText();
             String catId = localCateg.getID(catName);
 
             if (catId != null) {
@@ -283,15 +283,15 @@ public class Aligner
 
 	private void updateCategories(String id, Element info) throws Exception
 	{
-		List catList = info.getChildren("category");
+		@SuppressWarnings("unchecked")
+        List<Element> catList = info.getChildren("category");
 
 		//--- remove old categories
 
-		List locCateg = dataMan.getCategories(dbms, id).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> locCateg = dataMan.getCategories(dbms, id).getChildren();
 
-        for (Object aLocCateg : locCateg) {
-            Element el = (Element) aLocCateg;
-
+        for (Element el : locCateg) {
             String catId = el.getChildText("id");
             String catName = el.getChildText("name");
 
@@ -303,8 +303,7 @@ public class Aligner
 
 		//--- add new categories
 
-        for (Object aCatList : catList) {
-            Element categ = (Element) aCatList;
+        for (Element categ : catList) {
             String catName = categ.getAttributeValue("name");
             String catId = localCateg.getID(catName);
 
@@ -321,7 +320,7 @@ public class Aligner
 
 	//--------------------------------------------------------------------------
 
-	private boolean existsCategory(List catList, String name)
+	private boolean existsCategory(List<Element> catList, String name)
 	{
         for (Object aCatList : catList) {
             Element categ = (Element) aCatList;
@@ -385,10 +384,10 @@ public class Aligner
 	//--------------------------------------------------------------------------
 	/** Return true if the sourceId is present in the remote site */
 
-	private boolean exists(List mdList, String uuid)
+	private boolean exists(List<Element> mdList, String uuid)
 	{
-        for (Object aMdList : mdList) {
-            Element elInfo = ((Element) aMdList).getChild("info", Edit.NAMESPACE);
+        for (Element aMdList : mdList) {
+            Element elInfo = aMdList.getChild("info", Edit.NAMESPACE);
 
             if (uuid.equals(elInfo.getChildText("uuid"))) {
                 return true;
@@ -424,24 +423,5 @@ public class Aligner
 	private ServiceContext context;
 	private CategoryMapper localCateg;
     private UUIDMapper     localUuids;
-	private AlignerResult  result;
+	private HarvestResult result;
 }
-
-//=============================================================================
-
-class AlignerResult
-{
-	public String siteId;
-
-	public int totalMetadata;
-	public int addedMetadata;
-	public int updatedMetadata;
-	public int unchangedMetadata;
-	public int locallyRemoved;
-	public int schemaSkipped;
-	public int uuidSkipped;
-    public int doesNotValidate;    
-}
-
-//=============================================================================
-

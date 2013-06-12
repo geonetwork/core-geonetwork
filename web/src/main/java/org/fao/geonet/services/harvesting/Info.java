@@ -23,6 +23,14 @@
 
 package org.fao.geonet.services.harvesting;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
@@ -32,6 +40,7 @@ import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
@@ -49,13 +58,6 @@ import org.fao.oaipmh.responses.SetInfo;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 //=============================================================================
 
@@ -86,10 +88,9 @@ public class Info implements Service
 		String schema = jeeves.utils.Util.getParam(params, "schema", "");
 		String serviceType = jeeves.utils.Util.getParam(params, "serviceType", "");
 
-		for (Iterator i=params.getChildren().iterator(); i.hasNext();)
-		{
-			Element el = (Element) i.next();
-
+		@SuppressWarnings("unchecked")
+        List<Element> paramChildren = params.getChildren();
+		for (Element el : paramChildren) {
 			String name = el.getName();
 			String type = el.getText();
 
@@ -142,10 +143,11 @@ public class Info implements Service
 	private Element getIcons(ServiceContext context)
 	{
 		Set<File> icons = Resources.listFiles(context, "harvesting", iconFilter);
-
+		List<File> list = new ArrayList<File>(icons);
+		Collections.sort(list);
 		Element result = new Element("icons");
 
-		for (File icon : icons)
+		for (File icon : list)
 			result.addContent(new Element("icon").setText(icon.getName()));
 
 		return result;
@@ -187,7 +189,8 @@ public class Info implements Service
 			File xslPath = new File(schemaMan.getSchemaDir(schema)+xslFragmentDir);	
 			if (!xslPath.exists()) continue;
 
-			List<Element> elSheets = getStylesheets(el, context, xslPath).getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> elSheets = getStylesheets(el, context, xslPath).getChildren();
 			for (Element elSheet : elSheets) {
 				elSheet = (Element)elSheet.clone();
 				elSheet.addContent(new Element(Geonet.Elem.SCHEMA).setText(schema));

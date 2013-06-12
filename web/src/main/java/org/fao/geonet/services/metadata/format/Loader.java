@@ -50,7 +50,7 @@ public enum Loader {
 			/**
 			 * Basic namespace needed for the Xpath search (xpath is given by config property loader.http)
 			 */
-			private List<Namespace> theNSs;
+			private transient List<Namespace> theNSs;
 			
 			/**
 			 * The value of the parameter "url" in the formatter url
@@ -133,7 +133,7 @@ public enum Loader {
 		 */
 		SHOW {
 			
-			private Show showService;
+			private transient Show showService;
 			
 			public void init(String appPath, ServiceConfig params) throws Exception {
 				showService = new Show();

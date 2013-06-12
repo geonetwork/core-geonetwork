@@ -50,12 +50,11 @@ public class GNXMLQuery {
        QueryModel querymodel ;
 			 List<String> collections;
        
-       public GNXMLQuery(IRQuery q, ApplicationContext ctx) {
-               
-               this.ctx=ctx;
-               this.querymodel=q.getQueryModel();
-							 this.collections=q.getCollections();
-               
+    @SuppressWarnings("unchecked")
+    public GNXMLQuery(IRQuery q, ApplicationContext ctx) {
+        this.ctx = ctx;
+        this.querymodel = q.getQueryModel();
+        this.collections = q.getCollections();
        }
        
 
@@ -80,7 +79,6 @@ public class GNXMLQuery {
 class GNRemoteQueryDecoder
 {
        private Stack<Element> stack = new Stack<Element>();
-       private String attrSet;
 
        public GNRemoteQueryDecoder(QueryModel qm, ApplicationContext ctx)
        {
@@ -175,11 +173,6 @@ class GNRemoteQueryDecoder
        public Element getQuery()
        {
                return (Element)stack.peek();
-       }
-
-       public String getAttrSet()
-       {
-               return attrSet;
        }
 
        public String toString()

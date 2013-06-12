@@ -26,7 +26,9 @@ package org.fao.geonet.kernel.search;
 import org.fao.geonet.kernel.LocaleUtil;
 import org.jdom.Element;
 
-import java.text.Collator;
+import bak.pcj.map.ObjectKeyIntMapIterator;
+
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,16 +39,25 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
+public class SummaryComparator implements Comparator<SummaryComparator.SummaryElement>, Serializable
 {
-    
+    private static final long serialVersionUID = -4668989929284491497L;
 
+    public static class SummaryElement {
+        public final String name;
+        public final int count;
+
+        public SummaryElement(ObjectKeyIntMapIterator next) {
+            this.name = (String) next.getKey();
+            this.count = next.getValue();
+        }
+    }
     public enum Type
     {
         STRING
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<LocalizedStringComparable> value(String string, Locale locale, Element configuration)
             {
                 return new LocalizedStringComparable(string, locale);
             }
@@ -55,7 +66,7 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
         NUMBER
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<Double> value(String string, Locale locale, Element configuration)
             {
             	try {
             		return Double.valueOf(string.trim());
@@ -67,7 +78,7 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
         SCALE
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<Double> value(String string, Locale locale, Element configuration)
             {
                 String scale = string;
                 /**
@@ -78,7 +89,7 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
                     String[] parts = string.split("/");
                     scale = parts[parts.length - 1];
                 } else if (string.contains("\\")) {
-                    String[] parts = string.split("\\");
+                    String[] parts = string.split("\\\\");
                     scale = parts[parts.length - 1];
                 } else if (string.contains(":")) {
                     String[] parts = string.split(":");
@@ -94,7 +105,7 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
         DATE
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<java.util.Date> value(String string, Locale locale, Element configuration)
             {
                 List<DateFormat> formats = new ArrayList<DateFormat>();
                 for (Object child : configuration.getChildren("dateFormat")) {
@@ -124,7 +135,7 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
             }
         };
 
-        public abstract Comparable value(String string, Locale locale, Element configuration);
+        public abstract Comparable<? extends Object> value(String string, Locale locale, Element configuration);
 
         private static Map<Object, DateFormat> dateformats = new HashMap<Object, DateFormat>();
         static {
@@ -168,12 +179,12 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
         _locale = LocaleUtil.toLocale(langCode);
     }
 
-    public int compare(Map.Entry<String, Integer> me1, Map.Entry<String, Integer> me2)
+    public int compare(SummaryElement me1, SummaryElement me2)
     {
-        String key1 = (String) me1.getKey();
-        String key2 = (String) me2.getKey();
-        Integer count1 = (Integer) me1.getValue();
-        Integer count2 = (Integer) me2.getValue();
+        String key1 = me1.name;
+        String key2 = me2.name;
+        int count1 = me1.count;
+        int count2 = me2.count;
         switch (_option)
         {
         case NAME:
@@ -203,27 +214,14 @@ public class SummaryComparator implements Comparator<Map.Entry<String, Integer>>
             return -1;
     }
 
+    @SuppressWarnings("unchecked")
     private int compareKeys(String key1, String key2)
     {
+        @SuppressWarnings("rawtypes")
         Comparable value1 = _type.value(key1, _locale, _configuration);
+        @SuppressWarnings("rawtypes")
         Comparable value2 = _type.value(key2, _locale, _configuration);
         return value1.compareTo(value2);
     }
-    
-    private static class LocalizedStringComparable implements Comparable<LocalizedStringComparable>
-    {
-        public final String _wrapped;
-        private Collator _comparator;
-
-        public LocalizedStringComparable(String wrapped, Locale locale)
-        {
-            this._wrapped = wrapped;
-            _comparator = java.text.Collator.getInstance(locale);
-        }
-
-        public int compareTo(LocalizedStringComparable anotherString)
-        {
-            return _comparator.compare(_wrapped, anotherString._wrapped);
-        }
-    }
+ 
 }

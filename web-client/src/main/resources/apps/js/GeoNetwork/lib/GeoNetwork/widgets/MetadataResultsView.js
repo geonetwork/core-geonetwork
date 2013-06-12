@@ -295,8 +295,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
         }
     },
     actionMenuInit: function(idx, node){
-    	// TODO MERGE-GN
-    	this.acMenu = Ext.get(Ext.DomQuery.selectNode('div.md-action-menu', node));
+        this.acMenu = Ext.get(Ext.DomQuery.selectNode('span.md-action-menu', node));
         if (this.acMenu) {
 	        this.acMenu.on('click', function(){
 	            this.createMenu(idx, this);
@@ -310,6 +309,9 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
 	        this.acMenu.show();
         }
     },
+    
+    addCustomAction: function() {
+    },
     createMenu: function(id, dv){
         var record = this.getStore().getAt(id);
         
@@ -318,7 +320,8 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                 floating: true,
                 catalogue: catalogue,
                 record: record,
-                resultsView: dv
+                resultsView: dv,
+                addCustomAction: this.addCustomAction
             });
         } else {
             this.contextMenu.setRecord(record);
@@ -584,7 +587,11 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                 }
                                 linkButton = [];
                                 currentType = record.get('type');
-                                label = OpenLayers.i18n('linklabel-' + currentType);
+                                var labelKey = 'linklabel-' + currentType;
+                                label = OpenLayers.i18n(labelKey);
+                                if (label === labelKey) { // Default label if not found in translation
+                                    label = OpenLayers.i18n('linklabel-');
+                                }
                                 if (currentType === 'application/x-compressed') {
                                     hasDownloadAction = true;
                                 }
@@ -604,6 +611,15 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                         }
                                     });
                                 }
+                            } else if (currentType === 'application/vnd.ogc.wmc') {
+                                linkButton.push({
+                                    text: record.get('title') || record.get('name'),
+                                    handler: function (b, e) {
+                                        // FIXME : ref to app
+                                        app.switchMode('1', true);
+                                        app.getIMap().addWMC(record.get('href'));
+                                    }
+                                });
                             } else {
                                 // If link is uploaded to GeoNetwork the resources.get service is used
                                 // Check if allowDownload 
@@ -626,7 +642,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                         
                     });
                     // Add the latest button
-                    if (linkButton !== null) {
+                    if (linkButton !== null && linkButton.length !== 0) {
                         view.addLinkMenu(linkButton, label, currentType, el);
                     }
                     

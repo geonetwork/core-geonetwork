@@ -35,7 +35,6 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -69,21 +68,9 @@ public class OgcWxSHarvester extends AbstractHarvester
 	protected void doInit(Element node) throws BadInputEx
 	{
 		params = new OgcWxSParams(dataMan);
-		params.create(node);
-	}
+        super.setParams(params);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- doDestroy
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doDestroy(Dbms dbms) throws SQLException
-	{
-        File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
-
-		icon.delete();
-		Lib.sources.delete(dbms, params.uuid);
+        params.create(node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -95,6 +82,7 @@ public class OgcWxSHarvester extends AbstractHarvester
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		params = new OgcWxSParams(dataMan);
+        super.setParams(params);
 
 		//--- retrieve/initialize information
 		params.create(node);
@@ -139,6 +127,7 @@ public class OgcWxSHarvester extends AbstractHarvester
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
 		
 		params = copy;
+        super.setParams(params);
 	}
 
 	//---------------------------------------------------------------------------
@@ -147,8 +136,9 @@ public class OgcWxSHarvester extends AbstractHarvester
 											String siteId, String optionsId) throws SQLException
 	{
 		OgcWxSParams params = (OgcWxSParams) p;
+        super.setParams(params);
 
-		settingMan.add(dbms, "id:"+siteId, "url",  params.url);
+        settingMan.add(dbms, "id:"+siteId, "url",  params.url);
 		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
 		settingMan.add(dbms, "id:"+siteId, "ogctype", params.ogctype);
 		settingMan.add(dbms, "id:"+optionsId, "lang",  params.lang);
@@ -158,59 +148,6 @@ public class OgcWxSHarvester extends AbstractHarvester
 		settingMan.add(dbms, "id:"+optionsId, "useLayerMd",  params.useLayerMd);
 		settingMan.add(dbms, "id:"+optionsId, "datasetCategory",  params.datasetCategory);
 		settingMan.add(dbms, "id:"+optionsId, "outputSchema",  params.outputSchema);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AbstractParameters
-	//---
-	//---------------------------------------------------------------------------
-
-	public AbstractParams getParams() { return params; }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AddInfo
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doAddInfo(Element node)
-	{
-		//--- if the harvesting is not started yet, we don't have any info
-
-		if (result == null)
-			return;
-
-		//--- ok, add proper info
-
-		Element info = node.getChild("info");
-		Element res  = getResult();
-		info.addContent(res);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- GetResult
-	//---
-	//---------------------------------------------------------------------------
-
-	protected Element getResult() {
-		Element res  = new Element("result");
-		if (result != null) {
-			add(res, "total",          		result.total);
-			add(res, "added",          		result.added);
-			add(res, "layer",          		result.layer);
-			add(res, "layerUuidExist",		result.layerUuidExist);
-			add(res, "layerUsingMdUrl",		result.layerUsingMdUrl);
-			add(res, "unknownSchema",  		result.unknownSchema);
-			add(res, "removed",        		result.locallyRemoved);
-			add(res, "unretrievable",  		result.unretrievable);
-			add(res, "badFormat",      		result.badFormat);
-			add(res, "doesNotValidate",		result.doesNotValidate);
-			add(res, "thumbnails",     		result.thumbnails);
-			add(res, "thumbnailsFailed",	result.thumbnailsFailed);
-		}
-		return res;
 	}
 
 	//---------------------------------------------------------------------------
@@ -234,26 +171,4 @@ public class OgcWxSHarvester extends AbstractHarvester
 	//---------------------------------------------------------------------------
 
 	private OgcWxSParams params;
-	private OgcWxSResult result;
 }
-
-//=============================================================================
-
-class OgcWxSResult
-{
-	public int total;			// = md for data and service (ie. data + 1)
-	public int added;			// = total
-	public int layer;			// = md for data
-	public int layerUuidExist;	// = uuid already in catalogue
-	public int layerUsingMdUrl;	// = md for data using metadata URL document if ok
-	public int locallyRemoved;	// = md removed
-	public int unknownSchema;	// = md with unknown schema (should be 0 if no layer loaded using md url)
-	public int unretrievable;	// = http connection failed
-	public int badFormat;		// 
-	public int doesNotValidate;	// = 0 cos' not validated
-	public int thumbnails;		// = number of thumbnail generated
-	public int thumbnailsFailed;// = number of thumbnail creation which failed
-}
-
-//=============================================================================
-

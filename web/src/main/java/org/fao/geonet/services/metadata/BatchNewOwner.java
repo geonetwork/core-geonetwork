@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -37,6 +36,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.util.HashSet;
@@ -45,13 +45,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-//=============================================================================
 
-/** Sets new owner for a set of metadata records
-  */
-
-public class BatchNewOwner implements Service
-{
+/**
+ * Sets new owner for a set of metadata records.
+ */
+public class BatchNewOwner extends NotInReadOnlyModeService {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -60,7 +58,7 @@ public class BatchNewOwner implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm   = gc.getDataManager();
@@ -90,9 +88,9 @@ public class BatchNewOwner implements Service
 			MdInfo info = dm.getMetadataInfo(dbms, id);
 
 			if (info == null) {
-				notFound.add(new Integer(id));	
+				notFound.add(Integer.valueOf(id));	
 			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
+				notOwner.add(Integer.valueOf(id));
 			} else {
 
 	 			//-- Get existing owner and privileges for that owner - note that 
@@ -121,7 +119,7 @@ public class BatchNewOwner implements Service
 				// -- set the new owner into the metadata record
 				dm.updateMetadataOwner(dbms, Integer.parseInt(id), targetUsr, targetGrp);
 
-				metadata.add(new Integer(id));
+				metadata.add(Integer.valueOf(id));
 			}
 		}
 		}
@@ -131,7 +129,7 @@ public class BatchNewOwner implements Service
 		// -- reindex metadata
 		context.info("Re-indexing metadata");
 		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, dbms, metadata);
-		r.processWithFastIndexing();
+		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids
 		// -- at a later stage for some sort of result display
@@ -146,18 +144,18 @@ public class BatchNewOwner implements Service
 	private Vector<String> retrievePrivileges(Dbms dbms, String id, String userId, String groupId) throws Exception
 	{
 
-		Object args[] = { new Integer(id), new Integer(id), new Integer(userId), new Integer(groupId) };
+		Object args[] = { Integer.valueOf(id), Integer.valueOf(id), Integer.valueOf(userId), Integer.valueOf(groupId) };
 		String query = "SELECT * "+
 							"FROM OperationAllowed, Metadata "+
 							"WHERE metadataId=? AND id =? AND owner=? AND groupId=?";
 
-		List list = dbms.select(query, args).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, args).getChildren();
 
 		Vector<String> result = new Vector<String>();
 
-		for (Object o : list)
+		for (Element elem : list)
 		{
-			Element elem = (Element) o;
 			String  opId = elem.getChildText("operationid");
 
 			result.add(opId);
@@ -167,6 +165,3 @@ public class BatchNewOwner implements Service
 	}
 
 }
-
-//=============================================================================
-

@@ -21,6 +21,8 @@
 				<sec:filter-chain pattern="/*.jsp" filters="" />
 				<sec:filter-chain pattern="/*.css" filters="" />
 				<sec:filter-chain pattern="/images/**" filters="" />
+				<sec:filter-chain pattern="/maps/**" filters="" />
+				<sec:filter-chain pattern="/wmc/**" filters="" />
 				<sec:filter-chain pattern="/htmlcache/**" filters="" />
 				<sec:filter-chain pattern="/scripts/**" filters="" />
 				<sec:filter-chain pattern="/pdf/**" filters="" />
@@ -59,17 +61,22 @@
 			<list>
 				<ref bean="securityContextPersistenceFilter" />
 				<ref bean="logoutFilter" />
+				<!-- A filter that check if an external service already authenticated user
+					 (default implementation does nothing but can be overridden) -->
+				<ref bean="preAuthenticationFilter" />
 				<ref bean="basicAuthenticationFilter" />
 				<ref bean="formLoginFilter" />
 				<ref bean="requestCacheFilter" />
 				<ref bean="anonymousFilter" />
 				<ref bean="sessionMgmtFilter" />
 				<ref bean="exceptionTranslationFilter" />
-				<ref bean="overridefilterSecurityInterceptor" />
 				<ref bean="filterSecurityInterceptor" />
 			</list>
 		</constructor-arg>
 	</bean>
+	<!-- A filter that check if an external service already authenticated user
+					 (default implementation does nothing but can be overridden) -->
+	<bean id="preAuthenticationFilter" class="org.fao.geonet.kernel.security.PassthroughFilter"/>
 	<bean id="securityContextPersistenceFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
 		<property name="securityContextRepository" ref="securityContextRepository" />
 	</bean>
@@ -78,6 +85,8 @@
 		class="org.springframework.security.authentication.ProviderManager">
 		<property name="providers">
 			<list>
+				<!-- Check if the preAuthenticationFilter has already authenticated user -->
+				<ref bean="preFilterAuthenticationProvider" />
 				<ref bean="geonetworkAuthenticationProvider" />
 			</list>
 		</property>
@@ -102,6 +111,7 @@
 		<property name="authenticationSuccessHandler">
 			<bean class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
 				<property name="defaultTargetUrl" value="/" />
+				<property name="targetUrlParameter" value="redirectUrl" />
 			</bean>
 		</property>
 		<property name="sessionAuthenticationStrategy">
@@ -185,6 +195,15 @@
 
     <bean class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider" id="geonetworkAuthenticationProvider"/>
 
+    <!-- Check if the preAuthenticationFilter has already authenticated user -->
+    <bean class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider" id="preFilterAuthenticationProvider">
+    	<property name="preAuthenticatedUserDetailsService">
+			<bean id="preAuthenticatedUserDetailsService" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+				<property name="userDetailsService" ref="geonetworkAuthenticationProvider"/>
+		    </bean>
+    	</property>
+    </bean>
+
     <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
 	    <property name="decisionVoters">
 	        <list>
@@ -211,8 +230,5 @@
 	<!-- This bean is here to allow evaluation permissions of the current user by Geonetwork -->
 	<bean id="webPrivilegeEvaluatorCore" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
 		<constructor-arg ref="filterSecurityInterceptor"/>
-	</bean>
-	<bean id="overrideWebPrivilegeEvaluator" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
-		<constructor-arg ref="overridefilterSecurityInterceptor"/>
 	</bean>
 </beans>

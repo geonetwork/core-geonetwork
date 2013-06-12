@@ -74,25 +74,26 @@ public class CatalogConfiguration {
 
 		Element configRoot = Xml.loadFile(configFile);
 
-		List<Element> operationsList = configRoot.getChildren(Csw.ConfigFile.Child.OPERATIONS);
+		@SuppressWarnings("unchecked")
+        List<Element> operationsList = configRoot.getChildren(Csw.ConfigFile.Child.OPERATIONS);
 
         for (Element element : operationsList) {
             initOperations(element);
         }
 
 		// --- recurse on includes
+		@SuppressWarnings("unchecked")
+        List<Element> includes = configRoot.getChildren(ConfigFile.Child.INCLUDE);
 
-		List includes = configRoot.getChildren(ConfigFile.Child.INCLUDE);
-
-        for (Object include1 : includes) {
-            Element include = (Element) include1;
+		for (Element include : includes) {
             loadCatalogConfig(path, include.getText());
         }
 
 	}
 
 	private static void initOperations(Element element) {
-		List<Element> operationLst = element.getChildren(Csw.ConfigFile.Operations.Child.OPERATION);
+		@SuppressWarnings("unchecked")
+        List<Element> operationLst = element.getChildren(Csw.ConfigFile.Operations.Child.OPERATION);
 
         for (Element operation : operationLst) {
             String operationName = operation.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME);
@@ -177,18 +178,20 @@ public class CatalogConfiguration {
 		Element typenames = operation
 				.getChild(Csw.ConfigFile.Operation.Child.TYPENAMES);
 
-        return (List<Element>) typenames.getChildren(Csw.ConfigFile.Typenames.Child.TYPENAME);
+        @SuppressWarnings("unchecked")
+        List<Element> typenamesConfig = typenames.getChildren(Csw.ConfigFile.Typenames.Child.TYPENAME);
+        return typenamesConfig;
 	}
 
 	private static void initGetRecordsConfig(Element operation) {
 		// Only one child parameters
 		Element params = operation
 				.getChild(Csw.ConfigFile.Operation.Child.PARAMETERS);
-		List<Element> paramsList = params.getChildren(Csw.ConfigFile.Parameters.Child.PARAMETER);
-		Iterator<Element> it = paramsList.iterator();
+		@SuppressWarnings("unchecked")
+        List<Element> paramsList = params.getChildren(Csw.ConfigFile.Parameters.Child.PARAMETER);
+		
 		String name, field, type, range;
-		while (it.hasNext()) {
-			Element param = it.next();
+		for (Element param : paramsList) {
 			name = param
 					.getAttributeValue(Csw.ConfigFile.Parameter.Attr.NAME);
 			field = param
@@ -215,7 +218,8 @@ public class CatalogConfiguration {
 				_additionalQueryables.add(name);
 
             // Load XPath mapping for queriables
-            List<Element> xpathList =param.getChildren(Csw.ConfigFile.Parameter.Child.XPATH);
+            @SuppressWarnings("unchecked")
+            List<Element> xpathList = param.getChildren(Csw.ConfigFile.Parameter.Child.XPATH);
             Iterator<Element> itXPath = xpathList.iterator();
             String schema, path;
             HashMap<String, String> xpathMap = new HashMap<String, String>();
@@ -240,7 +244,9 @@ public class CatalogConfiguration {
 		
 		// ConstraintLanguage parameter
 		Element constraintLanguageElt = operation.getChild(Csw.ConfigFile.Operation.Child.CONSTRAINT_LANGUAGE);
-		List<Element> constraintLanguageList = constraintLanguageElt.getChildren(Csw.ConfigFile.ConstraintLanguage.Child.VALUE);
+
+		@SuppressWarnings("unchecked")
+        List<Element> constraintLanguageList = constraintLanguageElt.getChildren(Csw.ConfigFile.ConstraintLanguage.Child.VALUE);
         for (Element constraint : constraintLanguageList) {
             String value = constraint.getText();
             _getRecordsConstraintLanguage.add(value);
@@ -269,7 +275,8 @@ public class CatalogConfiguration {
 		Element outputFormat = operation
 				.getChild(Csw.ConfigFile.Operation.Child.OUTPUTFORMAT);
 
-		List<Element> formatList = outputFormat.getChildren(Csw.ConfigFile.OutputFormat.Child.FORMAT);
+		@SuppressWarnings("unchecked")
+        List<Element> formatList = outputFormat.getChildren(Csw.ConfigFile.OutputFormat.Child.FORMAT);
 		
 		String format;
         for (Element currentFormat : formatList) {

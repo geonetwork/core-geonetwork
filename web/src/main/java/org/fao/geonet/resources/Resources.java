@@ -19,6 +19,7 @@ import javax.servlet.ServletContext;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 
 import org.apache.commons.io.IOUtils;
@@ -143,11 +144,20 @@ public class Resources {
 	 *         harvesting likely contain the actual images
 	 */
 	public static String locateResourcesDir(ServiceContext context) {
-		String webappName = "geonetwork";
 		if (context.getServlet() != null) {
-			webappName = context.getServlet().getServletContext().getServletContextName();
+			return locateResourcesDir(context.getServlet().getServletContext());
 		}
-		return System.getProperty(webappName + ".resources.dir");
+		String webappName = context.getBaseUrl().substring(1);
+
+		String dir = System.getProperty(webappName + ".resources.dir");
+		if (dir == null) {
+			dir = System.getProperty("geonetwork.resources.dir");
+		}
+		if (dir == null) {
+			return "resources";
+		} else {
+			return dir;
+		}
 	}
 
 	/**
@@ -163,8 +173,27 @@ public class Resources {
 	 *         harvesting likely contain the actual images
 	 */
 	public static String locateResourcesDir(ServletContext context) {
-		return System.getProperty(context.getServletContextName()
-				+ ".resources.dir");
+		String property = null;
+		String path = context.getContextPath();
+		if (path != null) {
+			property = System.getProperty(path.substring(1) + ".resources.dir");
+		}
+		if (property == null) {
+			property = System.getProperty(context.getServletContextName()
+					+ ".resources.dir");
+		}
+		if (property == null) {
+			property = System.getProperty("geonetwork.resources.dir");
+		}
+		if (property == null) {
+			property = context.getRealPath("/WEB-INF/data/resources");
+		}
+
+		if (property == null) {
+			return "resources";
+		} else {
+			return property;
+		}
 	}
 
 	/**
@@ -277,7 +306,7 @@ public class Resources {
 				webappCopy = new File(appPath, filename);
 			}
 			if (webappCopy.exists()) {
-				file.getParentFile().mkdirs();
+				IO.mkdirs(file.getParentFile(), "The resources container directory for the file: "+filename);
 				transferTo(webappCopy, new FileOutputStream(file), true);
 			}
 
@@ -347,6 +376,8 @@ public class Resources {
 		String appDir = context.getAppPath();
 
 		File des = null;
+		FileInputStream is = null;
+		FileOutputStream os = null;
 		try {
 			File src = Resources.locateResource(
 					Resources.locateResourcesDir(context), servletContext,
@@ -357,16 +388,19 @@ public class Resources {
 			des = new File(Resources.locateLogosDir(context), destName
 					+ extension);
 
-			FileInputStream is = new FileInputStream(src);
-			FileOutputStream os = new FileOutputStream(des);
+            is = new FileInputStream(src);
+            os = new FileOutputStream(des);
 
-			BinaryFile.copy(is, os, true, true);
+			BinaryFile.copy(is, os);
 		} catch (IOException e) {
 			// --- we ignore exceptions here, just log them
 
 			context.warning("Cannot copy icon -> " + e.getMessage());
 			context.warning(" (C) Source : " + icon);
 			context.warning(" (C) Destin : " + des);
+		} finally {
+		    IOUtils.closeQuietly(is);
+		    IOUtils.closeQuietly(os);
 		}
 	}
 

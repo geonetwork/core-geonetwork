@@ -25,7 +25,7 @@
 	</context-param>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>${security.config.file},classpath:mapfish-spring-application-context.xml,classpath:*-mapfish-spring-application-context-override.xml</param-value>
+		<param-value>${security.config.file}</param-value>
 	</context-param>
     <listener>
         <listener-class>jeeves.config.springutil.JeevesContextLoaderListener</listener-class>
@@ -203,6 +203,7 @@
             <param-name>${display.name}.schema.dir</param-name>
             <param-value>${gn.webappdir}/WEB-INF/data/config/schema_plugins</param-value>
         </init-param>
+		<load-on-startup>1</load-on-startup>
     </servlet>
 
         <!-- Servlet proxy -->

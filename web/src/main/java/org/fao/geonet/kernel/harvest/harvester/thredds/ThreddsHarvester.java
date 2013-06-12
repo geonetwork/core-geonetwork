@@ -23,9 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.thredds;
 
-import java.io.File;
-import java.sql.SQLException;
-import java.util.UUID;
 import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
@@ -37,6 +34,10 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
+
+import java.io.File;
+import java.sql.SQLException;
+import java.util.UUID;
 
 //=============================================================================
 
@@ -67,21 +68,9 @@ public class ThreddsHarvester extends AbstractHarvester
 	protected void doInit(Element node) throws BadInputEx
 	{
 		params = new ThreddsParams(dataMan);
-		params.create(node);
-	}
+        super.setParams(params);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- doDestroy
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doDestroy(Dbms dbms) throws SQLException
-	{
-        File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
-
-		icon.delete();
-		Lib.sources.delete(dbms, params.uuid);
+        params.create(node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -93,8 +82,9 @@ public class ThreddsHarvester extends AbstractHarvester
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		params = new ThreddsParams(dataMan);
+        super.setParams(params);
 
-		//--- retrieve/initialize information
+        //--- retrieve/initialize information
 		params.create(node);
 
 		//--- force the creation of a new uuid
@@ -137,7 +127,9 @@ public class ThreddsHarvester extends AbstractHarvester
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
 		
 		params = copy;
-	}
+        super.setParams(params);
+
+    }
 
 	//---------------------------------------------------------------------------
 
@@ -145,8 +137,9 @@ public class ThreddsHarvester extends AbstractHarvester
 											String siteId, String optionsId) throws SQLException
 	{
 		ThreddsParams params = (ThreddsParams) p;
+        super.setParams(params);
 
-		settingMan.add(dbms, "id:"+siteId, "url",  params.url);
+        settingMan.add(dbms, "id:"+siteId, "url",  params.url);
 		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
 		settingMan.add(dbms, "id:"+optionsId, "lang",  params.lang);
 		settingMan.add(dbms, "id:"+optionsId, "topic",  params.topic);
@@ -175,64 +168,6 @@ public class ThreddsHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- AbstractParameters
-	//---
-	//---------------------------------------------------------------------------
-
-	public AbstractParams getParams() { return params; }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AddInfo
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doAddInfo(Element node)
-	{
-		//--- if the harvesting is not started yet, we don't have any info
-
-		if (result == null)
-			return;
-
-		//--- ok, add proper info
-
-		Element info = node.getChild("info");
-		Element res  = getResult();
-		info.addContent(res);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- GetResult
-	//---
-	//---------------------------------------------------------------------------
-
-	protected Element getResult() {
-		Element res  = new Element("result");
-		if (result != null) {
-			add(res, "total",          		result.total);
-			add(res, "serviceRecords",       					result.serviceRecords);
-			add(res, "subtemplatesRemoved",		result.subtemplatesRemoved);
-			add(res, "fragmentsReturned",		result.fragmentsReturned);
-			add(res, "fragmentsUnknownSchema",	result.fragmentsUnknownSchema);
-			add(res, "subtemplatesAdded",		result.subtemplatesAdded);
-			add(res, "fragmentsMatched",		result.fragmentsMatched);
-			add(res, "collectionDatasetRecords",     	result.collectionDatasetRecords);
-			add(res, "atomicDatasetRecords",      		result.atomicDatasetRecords);
-			add(res, "datasetUuidExist",	result.datasetUuidExist);
-			add(res, "unknownSchema",  		result.unknownSchema);
-			add(res, "removed",        		result.locallyRemoved);
-			add(res, "unretrievable",  		result.unretrievable);
-			add(res, "badFormat",      		result.badFormat);
-			add(res, "doesNotValidate",		result.doesNotValidate);
-			add(res, "thumbnails",        result.thumbnails);
-			add(res, "thumbnailsFailed",  result.thumbnailsFailed);
-		}
-		return res;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
 	//--- Harvest
 	//---
 	//---------------------------------------------------------------------------
@@ -252,31 +187,4 @@ public class ThreddsHarvester extends AbstractHarvester
 	//---------------------------------------------------------------------------
 
 	private ThreddsParams params;
-	private ThreddsResult result;
 }
-
-//=============================================================================
-
-class ThreddsResult
-{
-	public int total;			// = md for datasets and service
-	public int serviceRecords;			// = md for services
-	public int subtemplatesRemoved;	// = fragments generated
-	public int fragmentsReturned;	// = fragments generated
-	public int fragmentsUnknownSchema;	// = fragments with unknown schema
-	public int subtemplatesAdded;		// = subtemplates for collection datasets
-	public int fragmentsMatched;	// = fragments matched in md templates
-	public int collectionDatasetRecords;	// = md for collection datasets
-	public int atomicDatasetRecords;		// = md for atomic datasets
-	public int datasetUuidExist;	// = uuid already in catalogue
-	public int locallyRemoved;	// = md removed
-	public int unknownSchema;	// = md with unknown schema (should be 0 if no dataset loaded using md url)
-	public int unretrievable;	// = http connection failed
-	public int badFormat;		// 
-	public int doesNotValidate;	// = 0 cos' not validated
-	public int thumbnails;    // = number of thumbnail generated
-	public int thumbnailsFailed;// = number of thumbnail creation which failed
-}
-
-//=============================================================================
-

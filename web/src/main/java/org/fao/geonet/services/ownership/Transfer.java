@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.ownership;
 
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -31,6 +30,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.sql.SQLException;
@@ -39,7 +39,7 @@ import java.util.*;
 /**
  *
  */
-public class Transfer implements Service {
+public class Transfer extends NotInReadOnlyModeService {
     /**
      *
      * @param appPath
@@ -55,7 +55,7 @@ public class Transfer implements Service {
      * @return
      * @throws Exception
      */
-	public Element exec(Element params, ServiceContext context) throws Exception {
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 		int sourceUsr = Util.getParamAsInt(params, "sourceUser");
 		int sourceGrp = Util.getParamAsInt(params, "sourceGroup");
 		int targetUsr = Util.getParamAsInt(params, "targetUser");
@@ -123,17 +123,20 @@ public class Transfer implements Service {
      * @throws SQLException
      */
 	private Set<String> retrievePrivileges(Dbms dbms, Integer userId, int groupId) throws SQLException {
-	    List list;
+	    final List<Element> list;
 	    if(userId==null) {
             String query = "SELECT * FROM OperationAllowed WHERE groupId=?";
-            list = dbms.select(query, groupId).getChildren();
+            @SuppressWarnings("unchecked")
+            List<Element> tmp = dbms.select(query, groupId).getChildren();
+            list = tmp;
 	    } else {
             String query = "SELECT * FROM OperationAllowed, Metadata WHERE metadataId=id AND owner=? AND groupId=?";
-            list = dbms.select(query, userId, groupId).getChildren();
+            @SuppressWarnings("unchecked")
+            List<Element> tmp = dbms.select(query, userId, groupId).getChildren();
+            list = tmp;
 	    }
 		Set<String> result = new HashSet<String>();
-		for (Object o : list) {
-			Element elem = (Element) o;
+		for (Element elem : list) {
 			String  opId = elem.getChildText("operationid");
 			String  mdId = elem.getChildText("metadataid");
 			result.add(opId +"|"+ mdId);

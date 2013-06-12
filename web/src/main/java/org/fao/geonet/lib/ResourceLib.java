@@ -125,7 +125,7 @@ public class ResourceLib {
 
 		AccessManager accessMan = gc.getAccessManager();
 
-		Set hsOper = accessMan.getOperations(context, id, context
+		Set<String> hsOper = accessMan.getOperations(context, id, context
 				.getIpAddress());
 		
 		if (!hsOper.contains(operation)) {

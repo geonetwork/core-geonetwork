@@ -9,7 +9,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * Retrieves the metadata owned by a user. Depending on user profile:
@@ -95,14 +95,15 @@ public class GetByOwner implements Service {
 
         Element result;
 				if (useOwnerId) {
-					result = dbms.select(query, new Integer(ownerId));
+					result = dbms.select(query, Integer.valueOf(ownerId));
 				} else {
 					result = dbms.select(query);
 				}
         _response = new Element("response");
 
-        for (Iterator iter = result.getChildren().iterator(); iter.hasNext();) {
-            Element rec = (Element)iter.next();
+        @SuppressWarnings("unchecked")
+        List<Element> resultElems = result.getChildren();
+        for (Element rec : resultElems) {
             String  id = rec.getChildText("id");
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
             Element md = gc.getDataManager().getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);

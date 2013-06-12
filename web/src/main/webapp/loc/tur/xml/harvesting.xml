@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <strings>
-	<select>Seçiniz</select>
+    <selectownergroup>Harvester grubuna ait</selectownergroup>
+    <select>Seçiniz</select>
 	<name>İsim</name>
 	<directoryname>Dizin</directoryname>
 	<type>Tip</type>
@@ -20,6 +21,11 @@
 	<info type="geonetwork20">
 		<short>GeoNetwork 2.0</short>
 		<long>GeoNetwork v2.0 uzak nokta</long>
+	</info>
+	
+	<info type="geoPREST">
+		<short>GeoPortal REST</short>
+		<long>GeoPortal 9.3.x via REST interface</long>
 	</info>
 	
 	<info type="webdav">
@@ -71,6 +77,8 @@
 	
 	<site>Site</site>
 
+	<baseUrl>Base URL of GeoPortal service</baseUrl>
+
 	<wxstype>OGC Web Servisi Tipi</wxstype>
 	<wxstypes>
 		<type value="WMS1.0.0">OGC Web Harita Servisi (WMS) Versiyon 1.0.0</type>
@@ -115,6 +123,7 @@
 
 <content>Hasat İçerik</content>
 <importxslt>Hasat kayıtlara bu XSLT'yi uygula</importxslt>
+<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
 
 <options>Seçenekler</options>
 <everySpec>(gün: saat: dakika)</everySpec>
@@ -292,7 +301,8 @@
 <fragmentsUnknownSchema>Şeması bilinmeyen parçalar</fragmentsUnknownSchema>
 <fragmentsReturned>Geri dönen parçalar</fragmentsReturned>
 <fragmentsMatched>Eşlenen parçalar</fragmentsMatched>
-<recordsBuilt>Oluşan kayıtlar</recordsBuilt>
+		<recordsBuilt>Oluşan kayıtlar</recordsBuilt>
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 </tipHeader>
 	
 	<notRun>Waiting for the first run</notRun>

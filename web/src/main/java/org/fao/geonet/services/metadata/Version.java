@@ -25,34 +25,21 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationNotAllowedEx;
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
-import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
-import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-
-//=============================================================================
-
-/** Adds a metadata to the subversion repository.
-  */
-
-public class Version implements Service
-{
+/**
+ * Adds a metadata to the subversion repository.
+ */
+public class Version extends NotInReadOnlyModeService {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -61,12 +48,11 @@ public class Version implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
 		AccessManager accessMan = gc.getAccessManager();
-		UserSession   session   = context.getUserSession();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
 		
@@ -92,6 +78,3 @@ public class Version implements Service
 		return elResp;
 	}
 }
-
-//=============================================================================
-

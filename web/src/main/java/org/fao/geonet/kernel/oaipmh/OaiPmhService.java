@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.oaipmh;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.requests.AbstractRequest;
 import org.fao.oaipmh.responses.AbstractResponse;
 

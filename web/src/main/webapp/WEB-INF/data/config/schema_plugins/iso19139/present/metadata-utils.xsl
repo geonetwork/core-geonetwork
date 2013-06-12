@@ -146,7 +146,7 @@
 			<xsl:variable name="uuid" select="$metadata/geonet:info/uuid"/>
 			
 			<xsl:variable name="isService" select="$metadata/gmd:identificationInfo/srv:SV_ServiceIdentification|
-			$metadata/gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']"/>
+			$metadata/gmd:identificationInfo/*[contains(@gco:isoType, 'SV_ServiceIdentification')]"/>
 			
 			
 			<!-- Related elements -->			
@@ -164,7 +164,7 @@
 				</xsl:call-template>
 			</xsl:variable>
 			<xsl:if test="normalize-space($parent)!='' or $children or $services or $relatedRecords or count($siblings)>0 or
-				$metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[@gco:isoType='srv:SV_ServiceIdentification'])/srv:operatesOn or $edit">
+				$metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[contains(@gco:isoType, 'SV_ServiceIdentification')])/srv:operatesOn or $edit">
 
 		        <div class="relatedElements">
 		        	<xsl:if test="count($siblings)>0 and not($edit)">
@@ -301,12 +301,12 @@
 
 					<!-- Datasets linked to a service
 					. -->
-          <xsl:if test="$isService and ($edit or $metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[@gco:isoType='srv:SV_ServiceIdentification'])/srv:operatesOn)">
+          <xsl:if test="$isService and ($edit or $metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[contains(@gco:isoType, 'SV_ServiceIdentification')])/srv:operatesOn)">
 						<h3><img src="{/root/gui/url}/images/dataset.gif"
 							align="absmiddle"/>
 							<xsl:value-of select="/root/gui/strings/linkedDatasetMetadata"/></h3>
 						<ul>
-							<xsl:for-each select="$metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[@gco:isoType='srv:SV_ServiceIdentification'])/srv:operatesOn[@uuidref!='']">
+							<xsl:for-each select="$metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[contains(@gco:isoType, 'SV_ServiceIdentification')])/srv:operatesOn[@uuidref!='']">
 								<li><a class="arrow" href="metadata.show?uuid={@uuidref}">
 									<xsl:call-template name="getMetadataTitle">
 										<xsl:with-param name="uuid" select="@uuidref"/>
@@ -436,7 +436,7 @@
 		<!-- Get Service URL from GetCapabilities Operation, if null from distribution information-->
 		<xsl:variable name="serviceUrl">
 			<xsl:value-of select="$metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata[srv:operationName/gco:CharacterString='GetCapabilities']/srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL|
-				$metadata/gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:containsOperations/srv:SV_OperationMetadata[srv:operationName/gco:CharacterString='GetCapabilities']/srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+				$metadata/gmd:identificationInfo/*[contains(@gco:isoType, 'SV_ServiceIdentification')]/srv:containsOperations/srv:SV_OperationMetadata[srv:operationName/gco:CharacterString='GetCapabilities']/srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
 		</xsl:variable>
 		
 		<!-- TODO : here we could use service type and version if

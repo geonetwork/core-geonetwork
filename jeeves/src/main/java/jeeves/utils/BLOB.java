@@ -31,6 +31,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+
+import jeeves.constants.Jeeves;
 
 //=============================================================================
 
@@ -56,7 +59,7 @@ public final class BLOB
 		if (filename != null)
 			response.setAttribute("contentDisposition",  "attachment;filename=" + filename);
 		//String data = new BASE64Encoder().encode(blob);
-		String data = new String(new Base64().encode(blob));
+		String data = new String(new Base64().encode(blob), Charset.forName(Jeeves.ENCODING));
 		response.setText(data);
 		return response;
 	}
@@ -96,7 +99,7 @@ public final class BLOB
 		String data = response.getText();
 		
 		//byte blob[] = new BASE64Decoder().decodeBuffer(data);
-		byte blob[] = new Base64().decode(data.getBytes());
+		byte blob[] = new Base64().decode(data.getBytes(Charset.forName(Jeeves.ENCODING)));
 		ByteArrayInputStream input = new ByteArrayInputStream(blob);
 		copy(input, output);
 	}

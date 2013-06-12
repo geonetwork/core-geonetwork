@@ -32,7 +32,6 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -63,7 +62,6 @@ public class PrepareBatchUpdatePrivileges implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getDataManager();
 		AccessManager am = gc.getAccessManager();
 		UserSession   us = context.getUserSession();
 
@@ -80,12 +78,10 @@ public class PrepareBatchUpdatePrivileges implements Service
 
 		Element elGroup = Lib.local.retrieve(dbms, "Groups");
 
-		List list = elGroup.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = elGroup.getChildren();
 
-		for(int i=0; i<list.size(); i++)
-		{
-			Element el = (Element) list.get(i);
-
+		for (Element el : list) {
 			el.setName(Geonet.Elem.GROUP);
 
 			//--- get all operations that this group can do on given metadata
@@ -93,10 +89,9 @@ public class PrepareBatchUpdatePrivileges implements Service
 
 			el.setAttribute("userGroup", userGroups.contains(sGrpId) ? "true" : "false");
 
-			int grpId = Integer.parseInt(sGrpId);
-
 			//--- now extend the group list adding proper operations
-			List listOper = elOper.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> listOper = elOper.getChildren();
 
 			for(int j=0; j<listOper.size(); j++)
 			{

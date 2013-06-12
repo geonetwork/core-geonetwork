@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2011 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2013 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  * 
@@ -31,68 +31,94 @@ Ext.namespace('GeoNetwork.editor');
 /** api: constructor 
  *  .. class:: LinkedMetadataPanel(config)
  *
- *     Create a GeoNetwork panel use to link metadata records
+ *     Create a GeoNetwork panel use to display metadata records related resources.
+ *     The panel provides action to create the different type of relation
+ *     according to the metadata type using the GeoNetwork.editor.LinkResourcesWindow.
  *
- *
+ *  TODO: this panel could be used without a metadata in edit mode. 
+ *  In that case, it will require to not update the related EditorPanel.
  */
 GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
+    /** api: property[title] 
+     * ``String`` Panel title
+     */
     title: undefined,
+    /** api: property[editor] 
+     * ``String`` The metadata editor panel linked to this relation panel.
+     * The editor panel is refreshed according to the related panel events.
+     */
     editor: undefined,
+    /** api: property[metadataId] 
+     * ``String`` The metadata internal identifier (use to retrieve list of relation)
+     * 
+     * TODO: use only the UUID ?
+     */
     metadataId: undefined,
+    /** api: property[metadataUuid] 
+     * ``String`` The metadata unique identifier
+     */
     metadataUuid: undefined,
-    selectedUuid: undefined,
-    selectedType: undefined,
+    /** api: property[metadataSchema] 
+     * ``String`` The metadata schema. The configuration could be based on the schema.
+     */
     metadataSchema: undefined,
-    serviceUrl: undefined,
+    /** api: property[store] 
+     * ``Ext.data.Store`` Store for the metadata relation.
+     */
     store: undefined,
-    parentAction: undefined,
-    datasetAction: undefined,
-    serviceAction: undefined,
-    featureCatAction: undefined,
-    delFeatureCatAction: undefined,
-    updateChildrenAction: undefined,
-    colModel: undefined,
-    expander: undefined,
+    /** api: property[imagePath] 
+     * ``String`` Path to image (needed for item selector component).
+     */
     imagePath: undefined,
-    processMap: {
-        'parent-remove': 'parentIdentifier-remove',
-        'children-remove': 'parentIdentifier-remove',
-        'onlinesrc-remove': 'onlinesrc-remove',
-        'fcats-remove': 'update-detachFeatureCatalogue',
-        'datasets-remove': 'update-srv-detachDataset',
-        'sibling-remove': 'sibling-remove',
-        'thumbnail-remove': 'thumbnail-from-url-remove'
-    },
+    /** api: property[resourcesTypes] 
+     * ``Object`` Type of resources to display
+     */
+    resourcesTypes: undefined,
+    /** api: property[imagePath] 
+     * ``boolean`` Defined when the metadata relation is loaded and set to
+     * true if the record has children. If true, the update children action
+     * is displayed.
+     */
+    hasChildren: false,
+    /** api: property[defaultConfig] 
+     * ``Object`` Default configuration
+     */
     defaultConfig: {
         border: false,
         frame: false,
+        /** api: property[sep] 
+         *  Used in button identifier to properly initialized them.
+         */
         sep: '^',
         iconCls: 'linkIcon',
         cls: 'linkPanel',
         collapsible: true,
         collapsed: false,
-        resourcesTypes: {
-            //iso19139: ['thumbnail', 'onlinesrc', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
-            iso19139: ['thumbnail', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
-            'iso19139.sextant': ['thumbnail', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
-            'iso19139.emodnet.chemistry': ['thumbnail', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
-            'iso19139.emodnet.hydrography': ['thumbnail', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
-            'iso19139.myocean': ['thumbnail', 'onlinesrc', 'sibling'],
-            'iso19139.myocean.short': ['thumbnail'],
+        /** api: config[addMenuByType] 
+         *  Create menu for each type of relation if true. Dropdown menu with
+         *  a list of action by default.
+         */
+        addMenuByType: false,
+        /** api: property[resourcesTypesCfg] 
+         *  Define configuration per schema. For ISO19139 profiles, all relations are displayed.
+         */
+        resourcesTypesCfg: {
+            iso19139: ['thumbnail', 'onlinesrc', 'parent', 'children', 'service', 'dataset', 'sources', 'fcats', 'sibling'],
+//            'iso19139.xyz': ['thumbnail', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
             'dublin-core': ['children']
-        }, // TODO : add missing ones
+        },
         tpl: null
     },
-    updatePanel: function () {
-        this.reload();
-    },
-    /** private: method[clear] 
+    /** public: method[clear] 
      *  Remove all related metadata from the store and clean the panel content.
      */
     clear: function () {
         this.store.removeAll();
         this.update('<div></div>');
     },
+    /** public: method[reload] 
+     *  Reload the relation for the current metadata
+     */
     reload: function (e, id, schema, version) {
         this.metadataId = id || this.metadataId;
         this.metadataUuid = document.mainForm.uuid.value;
@@ -108,8 +134,9 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             }
         });
     },
-    updateStatus: function (store, records, options) {
-    },
+    /** public: method[getChildrenIds] 
+     *  Return an array of the children's uuid.
+     */
     getChildrenIds: function () {
         var uuidList = [];
         this.store.each(
@@ -122,6 +149,9 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         );
         return uuidList;
     },
+    /** public: method[addRelation] 
+     *  Open the GeoNetwork.editor.LinkResourcesWindow to add a relation
+     */
     addRelation: function (type) {
         var window, config = {
                 type: type,
@@ -134,30 +164,28 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 metadataId: this.metadataId,
                 versionId: this.versionId,
                 metadataSchema: this.metadataSchema,
-                getThumbnail: this.catalogue.services.mdGetThumbnail,
                 setThumbnail: this.catalogue.services.mdSetThumbnail,
-                unsetThumbnail: this.catalogue.services.mdUnsetThumbnail,
                 bodyStyle: 'padding:10px;',
                 imagePath: this.imagePath
             };
         if (type === 'thumbnail') {
-            config.height= 300;
-            config.width= 500;
+            config.height = 300;
+            config.width = 500;
         } else if (type === 'onlinesrc') {
-            config.height= 450;
-            config.width= 700;
+            config.height = 450;
+            config.width = 700;
         } else if (type === 'sibling') {
-            config.height= 450;
-            config.width= 700;
+            config.height = 450;
+            config.width = 700;
         }
         
-        if (this.metadataSchema === 'iso19139.myocean') {
-            window = new GeoNetwork.editor.MyOceanLinkResourcesWindow(config);
-        } else {
-            window = new GeoNetwork.editor.LinkResourcesWindow(config);
-        }
+        window = new GeoNetwork.editor.LinkResourcesWindow(config);
         window.show();
     },
+    /** public: method[removeThumbnail] 
+     *  Remove a thumbnail. It requires to call a custom service (not an XSL process)
+     *  to properly delete the file.
+     */
     removeThumbnail: function (thumbnailType) {
         var panel = this,
             url = this.catalogue.services.mdUnsetThumbnail + '?id=' + this.metadataId + 
@@ -173,11 +201,30 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             }
         });
     },
+    /** public: method[removeUploadedFile] 
+     *  Remove an uploaded file
+     */
+    removeUploadedFile: function (label, parameters) {
+        var panel = this,
+            url = this.catalogue.services.delResource + '?id=' + this.metadataId + parameters;
+        
+        OpenLayers.Request.GET({
+            url: url,
+            success: function (response) {
+                panel.editor.init(panel.metadataId);
+            },
+            failure: function (response) {
+            }
+        });
+    },
+    /** public: method[removeRelation] 
+     *  Remove a relation calling the appropiate XSL process with parameters.
+     */
     removeRelation: function (type, uuid, id) {
         // Define which metadata to be modified
         // It could be the on in current editing or a related one
         var targetMetadataUuid = this.metadataUuid;
-        var parameters = "";
+        var parameters = "", msg = "";
         
         // Thumbnail upload to the catalog are usually retrieved using the resources.get service
         // Use a XSL process if there is no need to remove the thumbnail to the data dir
@@ -193,27 +240,40 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         } else if (type === 'children') {
             // Define the children metadata record to detach
             targetMetadataUuid = uuid;
+            msg = OpenLayers.i18n('ChildrenUpdated');
         } else if (type === 'fcats') {
             // Define the target feature catalogue to detach
             parameters += "&uuidref=" + uuid;
         } else if (type === 'datasets') {
             parameters += "&uuidref=" + uuid;
-            // TODO ? detach the service in the dataset record ?
+        } else if (type === 'sources') {
+            parameters += "&sourceUuid=" + uuid;
+        } else if (type === 'services') {
+            parameters += "&uuidref=" + this.metadataUuid;
+            targetMetadataUuid = uuid;
+            msg = OpenLayers.i18n('RelatedServiceUpdated');
         } else if (type === 'sibling') {
             parameters += "&uuidref=" + uuid;
         } else if (type === 'onlinesrc') {
             parameters += "&url=" + encodeURIComponent(id);
+            
+            // if a file is upload remove the file before removing the link
+            if (uuid.indexOf('WWW:DOWNLOAD-1.0-http--download') !== -1) {
+                this.removeUploadedFile(uuid, parameters);
+                return;
+            }
         }
         
         
 //        console.log('remove:' + uuid + " target: " + targetMetadataUuid +
 //                " type: " + type + 
-//                " process: " + this.processMap[type + '-remove'] +
+//                " process: " + type + '-remove' +
 //                " param:" + parameters);
+        
         
         var action = this.catalogue.services.mdProcessing + 
             "?uuid=" + targetMetadataUuid + 
-            "&process=" + this.processMap[type + '-remove'] +
+            "&process=" + type + '-remove' +
             parameters;
         
         if (targetMetadataUuid !== this.metadataUuid) {
@@ -221,15 +281,63 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 url: action,
                 method: 'GET',
                 success: function (result, request) {
-                    console.log('children updated.');
+                    GeoNetwork.Message().msg({
+                        title: OpenLayers.i18n('info'),
+                        msg: msg
+                    });
                 },
                 failure: function (result, request) {
-                    console.log('children not updated.');
+                    GeoNetwork.Message().msg({
+                        title: OpenLayers.i18n('error'),
+                        msg: result.responseText    // TODO improve
+                    });
                 }
             });
         } else {
             this.editor.process(action);
         }
+    },
+    /** private: method[generateAddMenu] 
+     * Generate a menu of actions to add relation.
+     */
+    generateAddMenu: function () {
+        var actions = [], schema = this.metadataSchema, panel = this;
+        
+        Ext.each(this.resourcesTypes, function (type) {
+            // Provide update children action when editing the parent
+            if (type === 'children') {
+                if (this.hasChildren) {
+                    actions.push(new Ext.Action({
+                        text: OpenLayers.i18n('updateChildren'),
+                        handler: function () {
+                            panel.editor.catalogue.modalAction(
+                                    OpenLayers.i18n('updateChildren'), 
+                                    panel.editor.catalogue.services.mdMassiveChildrenForm + "?parentUuid=" + document.mainForm.uuid.value + 
+                                            "&schema=" + document.mainForm.schema.value + 
+                                            "&childrenIds=" + panel.getChildrenIds().join(','));
+                        }
+                    }));
+                }
+            } else {
+                actions.push(new Ext.Action({
+                    text: OpenLayers.i18n('add-' + type),
+                    iconCls: 'cat-' + type,
+                    handler: function () {
+                        panel.addRelation(type);
+                    }
+                }));
+            }
+        }, this);
+        
+        var addMenu = new Ext.Button({
+            menu: new Ext.menu.Menu({
+                cls: 'links-mn', 
+                items: actions
+            }),
+            iconCls: "addMenu",
+            renderTo: "add-menu-content"
+        });
+        
     },
     /** private: method[initComponent] 
      *  Initializes the help panel.
@@ -286,24 +394,45 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         
         
         this.store.on('load', function (store, records) {
-//            console.log(records);
             // Generate HTML layout
             var html = '', schema = this.metadataSchema;
             
-            // Hack to move to iso19139 schema for profil
-            if (this.resourcesTypes[this.metadataSchema] === undefined) {
-                schema = 'iso19139';
+            this.hasChildren = false;
+            
+            // Default list of types to iso19139 schema for ISO profile
+            if (this.metadataSchema.indexOf('iso19139.') !== -1 && 
+                    this.resourcesTypesCfg[this.metadataSchema] === undefined) {
+                this.resourcesTypes = this.resourcesTypesCfg['iso19139'];
+            } else {
+                this.resourcesTypes = this.resourcesTypesCfg[schema];
             }
-            Ext.each(this.resourcesTypes[schema], function (type) {
+            
+            // Generate relation panel content according to the relation service response
+            Ext.each(this.resourcesTypes, function (type) {
+                console.log(type);
                 // Group title with a place for actions
                 var id = 'add' + this.sep + type;
-                html += '<h2>' + OpenLayers.i18n(type) + '<span class="button" id="' + id + '"></span>' + 
-                    '</h2>';
                 var mds = store.query('type', type);
+                console.log(mds);
+                
                 mds.items.type = type;
-                html += this.tpl.apply(mds.items);
+                if (panel.addMenuByType || (panel.addMenuByType === false && mds.items.length !== 0)) {
+                    html += '<h2>' + OpenLayers.i18n(type) + '<span class="button" id="' + id + '"></span>' + 
+                    '</h2>';
+                   html += this.tpl.apply(mds.items);
+                }
+                
+                if (type === 'children' && mds.items.length !== 0) {
+                    this.hasChildren = true;
+                }
             }, this);
-            this.update('<div>' + html + '</div>');
+            this.update('<div><div id="add-menu-content"></div>' + html + '</div>');
+            
+            
+            
+            if (!this.addMenuByType) {
+                this.generateAddMenu();
+            }
             
             // Register actions
             var buttons = Ext.query('.button', this.body.dom);
@@ -311,7 +440,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 var bt, id = button.getAttribute('id');
                 var info = id.split(panel.sep);
                 
-                if (info[0] === 'add') {
+                if (panel.addMenuByType && info[0] === 'add') {
                     
                     // Provide update children action when editing the parent
                     if (info[1] === 'children') {
@@ -336,7 +465,6 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                         });
                     }
                 } else if (info[0] === 'remove') {
-
                     bt = new Ext.Button({
                         text: OpenLayers.i18n('remove'),
                         renderTo: button,
@@ -356,7 +484,6 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         this.editor.on('editorClosed', this.clear, this);
         this.editor.on('metadataUpdated', this.reload, this);
         this.on('expand', this.reload);
-        this.store.on('load', this.updateStatus, this);
     }
 });
 

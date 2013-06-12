@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<ViewContext xmlns="http://www.opengis.net/context" version="1.1.0" id="default"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ol="http://openlayers.org/context"
+	xsi:schemaLocation="http://www.opengis.net/context http://schemas.opengis.net/context/1.1.0/context.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<General>
+		<Window width="973" height="741"/>
+		<BoundingBox minx="-180" miny="-90" maxx="180" maxy="90" SRS="EPSG:4326"/>
+		<Title/>
+	</General>
+	<LayerList>
+		<Layer queryable="0" hidden="0">
+			<Server service="OGC:WMS" version="1.1.1">
+				<OnlineResource xlink:type="simple"
+					xlink:href="http://localhost:8080/geoserver/wms?SERVICE=WMS"/>
+			</Server>
+			<Name>gn:world</Name>
+			<Title>World</Title>
+			<FormatList>
+				<Format current="1">image/jpeg</Format>
+			</FormatList>
+			<StyleList>
+				<Style>
+					<Name/>
+					<Title>Default</Title>
+				</Style>
+			</StyleList>
+			<Extension>
+				<ol:tileSize width="256" height="256"/>
+				<ol:transparent>false</ol:transparent>
+				<ol:numZoomLevels>15</ol:numZoomLevels>
+				<ol:isBaseLayer>true</ol:isBaseLayer>
+				<ol:displayInLayerSwitcher>true</ol:displayInLayerSwitcher>
+				<ol:singleTile>false</ol:singleTile>
+			</Extension>
+		</Layer>
+		<Layer queryable="0" hidden="0">
+			<Server service="OGC:WMS" version="1.1.1">
+				<OnlineResource xlink:type="simple"
+					xlink:href="http://localhost:8080/geoserver/wms?SERVICE=WMS"/>
+			</Server>
+			<Name>gn:ne_50m_boundary_da,gn:ne_50m_boundary_lines_land,gn:ne_50m_coastline</Name>
+			<Title>Country boundaries</Title>
+			<FormatList>
+				<Format current="1">image/png</Format>
+			</FormatList>
+			<StyleList>
+				<Style>
+					<Name/>
+					<Title>Default</Title>
+				</Style>
+			</StyleList>
+			<Extension>
+				<ol:tileSize width="256" height="256"/>
+				<ol:transparent>true</ol:transparent>
+				<ol:numZoomLevels>15</ol:numZoomLevels>
+				<ol:isBaseLayer>false</ol:isBaseLayer>
+				<ol:displayInLayerSwitcher>true</ol:displayInLayerSwitcher>
+				<ol:singleTile>true</ol:singleTile>
+			</Extension>
+		</Layer>
+	</LayerList>
+</ViewContext>

@@ -103,10 +103,14 @@
 			<xsl:with-param name="title" select="/root/gui/strings/admin"/>
 			<xsl:with-param name="content">
 
+                <xsl:variable name="readonly" select="/root/gui/env/readonly = 'true'"/>
+
 				<table width="100%" class="text-aligned-left">
 
 					<!-- metadata services -->
 					<xsl:variable name="mdServices">
+
+                        <xsl:if test="not($readonly)">
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'metadata.create.form'"/>
 							<xsl:with-param name="link">
@@ -119,6 +123,7 @@
 							<xsl:with-param name="desc" select="/root/gui/strings/newMdDes"/>
 							<xsl:with-param name="icon">page_add.png</xsl:with-param>
 						</xsl:call-template>
+                        </xsl:if>
 
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'metadata.searchunused.form'"/>
@@ -176,6 +181,7 @@
 						</xsl:choose>
 						
 
+                        <xsl:if test="not($readonly)">
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'transfer.ownership'"/>
 							<xsl:with-param name="title"
@@ -183,17 +189,19 @@
 							<xsl:with-param name="desc"
 								select="/root/gui/strings/transferOwnershipDes"/>
 						</xsl:call-template>
+                        </xsl:if>
 						
 						<tr>
 							<td class="spacer"/>
 						</tr>
+
+                        <xsl:if test="not($readonly)">
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'metadata.schema.add.form'"/>
 							<xsl:with-param name="title" select="/root/gui/strings/addSchema"/>
 							<xsl:with-param name="desc" select="/root/gui/strings/addSchemaDes"/>
 							<xsl:with-param name="icon">folder_add.png</xsl:with-param>
 						</xsl:call-template>
-
 						<xsl:if test="count(/root/gui/schemalist/name[@plugin='true'])>0">
 							<xsl:call-template name="addrow">
 								<xsl:with-param name="service" select="'metadata.schema.update.form'"/>
@@ -207,13 +215,13 @@
 								<xsl:with-param name="desc" select="/root/gui/strings/deleteSchemaDes"/>
 							</xsl:call-template>
 						</xsl:if>
+                        </xsl:if>
 					</xsl:variable>
 
-					<!-- Template administration -->
-					<xsl:variable name="mdTemplate">
-							
 							
 
+                    <!-- Template administration -->
+                    <xsl:variable name="mdTemplate">
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'metadata.templates.list'"/>
 							<xsl:with-param name="title"
@@ -232,7 +240,11 @@
 							<tr>
 								<td class="spacer"/>
 							</tr>
+                            <xsl:if test="not($readonly)">
 							<xsl:copy-of select="$mdTemplate"/>
+                            </xsl:if>
+
+                            <xsl:if test="not($readonly)">
 							<tr>
 								<td class="spacer"/>
 							</tr>
@@ -282,7 +294,7 @@
 									</table>
 								</xsl:with-param>
 							</xsl:call-template>
-
+                            </xsl:if>
 						</xsl:with-param>
 					</xsl:call-template>
 
@@ -318,33 +330,45 @@
 						</xsl:call-template>
 					</xsl:variable>
 
+                    <xsl:if test="not($readonly)">
 					<xsl:call-template name="addTitle">
 						<xsl:with-param name="icon">connect.png</xsl:with-param>
 						<xsl:with-param name="title" select="/root/gui/strings/io"/>
 						<xsl:with-param name="content" select="$io"/>
 					</xsl:call-template>
+                    </xsl:if>
 
 					<xsl:variable name="catalogueConfiguration">
-
+                        <xsl:if test="not($readonly)">
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'config'"/>
 							<xsl:with-param name="title" select="/root/gui/strings/systemConfig"/>
 							<xsl:with-param name="desc" select="/root/gui/strings/systemConfigDes"/>
 							<xsl:with-param name="icon">exec.png</xsl:with-param>	
 						</xsl:call-template>
+                        </xsl:if>
 
 						<xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'config.info'"/>
+                            <xsl:with-param name="title" select="/root/gui/strings/systemInfo"/>
+                            <xsl:with-param name="desc" select="/root/gui/strings/systemInfoDes"/>
+                        </xsl:call-template>
+                        
+                        <xsl:if test="not($readonly)">
+                            <xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'csw.config.get'"/>
 							<xsl:with-param name="title" select="/root/gui/strings/cswServer"/>
 							<xsl:with-param name="desc" select="/root/gui/strings/cswServerDes"/>
 						</xsl:call-template>
 
 						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'config.info'"/>
-							<xsl:with-param name="title" select="/root/gui/strings/systemInfo"/>
-							<xsl:with-param name="desc" select="/root/gui/strings/systemInfoDes"/>
+                                <xsl:with-param name="service" select="'virtualcsw.config'"/>
+                                <xsl:with-param name="title" select="/root/gui/strings/virtualcswServer"/>
+                                <xsl:with-param name="desc" select="/root/gui/strings/virtualcswServerDes"/>
 						</xsl:call-template>
 
+                        </xsl:if>
+                        
 						<xsl:call-template name="addrow">
 							<xsl:with-param name="service" select="'logo'"/>
 							<xsl:with-param name="title" select="/root/gui/strings/logo"/>
@@ -422,12 +446,13 @@
 						</xsl:if>
 					</xsl:variable>
 
+                    <xsl:if test="not($readonly)">
 					<xsl:call-template name="addTitle">
 						<xsl:with-param name="icon">group.png</xsl:with-param>
 						<xsl:with-param name="title" select="/root/gui/strings/usersAndGroups"/>
 						<xsl:with-param name="content" select="$persInfoServices"/>
 					</xsl:call-template>
-
+                    </xsl:if>
 
 					<xsl:variable name="classification">
 
@@ -460,11 +485,13 @@
 						</xsl:if>
 					</xsl:variable>
 
+                    <xsl:if test="not($readonly)">
 					<xsl:call-template name="addTitle">
 						<xsl:with-param name="icon">book_addresses.png</xsl:with-param>
 						<xsl:with-param name="title" select="/root/gui/strings/classification"/>
 						<xsl:with-param name="content" select="$classification"/>
 					</xsl:call-template>
+                    </xsl:if>
 
 					<xsl:variable name="indexConfiguration">
 						<xsl:if
@@ -510,11 +537,13 @@
 						</xsl:call-template>
 					</xsl:variable>
 
+                    <xsl:if test="not($readonly)">
 					<xsl:call-template name="addTitle">
 						<xsl:with-param name="icon">comment.png</xsl:with-param>
 						<xsl:with-param name="title" select="/root/gui/strings/localiz"/>
 						<xsl:with-param name="content" select="$i18n"/>
 					</xsl:call-template>
+                    </xsl:if>
 
 				</table>
 				<p/>

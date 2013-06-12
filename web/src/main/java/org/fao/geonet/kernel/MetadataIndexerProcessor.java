@@ -30,15 +30,7 @@ public abstract class MetadataIndexerProcessor {
     public MetadataIndexerProcessor(DataManager dm) {
         this.dm = dm;
     }
-	
+
     public abstract void process() throws Exception;
 
-    public void processWithFastIndexing() throws Exception {
-        dm.startIndexGroup();
-        try {
-            process();
-        } finally {
-            dm.endIndexGroup();
-        }
-    }
 }

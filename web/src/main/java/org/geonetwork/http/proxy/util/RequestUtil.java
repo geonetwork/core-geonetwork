@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 
+import jeeves.constants.Jeeves;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jose
@@ -23,10 +25,11 @@ public class RequestUtil {
      * @return              Value of parameter, null for non valid parameter
      */
     public static String getParameter(HttpServletRequest request, String paramName) {
-        Enumeration paramNames = request.getParameterNames();
+        @SuppressWarnings("unchecked")
+        Enumeration<String> paramNames = request.getParameterNames();
 
         while (paramNames.hasMoreElements()) {
-            String name = (String) paramNames.nextElement();
+            String name = paramNames.nextElement();
 
             if (name.equalsIgnoreCase(paramName)) {
                 return request.getParameter(name);
@@ -65,7 +68,7 @@ public class RequestUtil {
 
         InputStream stream = request.getInputStream();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream, Jeeves.ENCODING));
         StringBuilder sb = new StringBuilder();
         String line = null;
 

@@ -131,12 +131,11 @@ public class LocalLib
 
 	public void update(Dbms dbms, String baseTable, int id, Element label) throws SQLException
 	{
-		List labels = label.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> labels = label.getChildren();
 
-		for (Object lt : labels)
+		for (Element locText : labels)
 		{
-			Element locText = (Element) lt;
-
 			String langId = locText.getName();
 			String value  = locText.getText();
 
@@ -179,7 +178,7 @@ public class LocalLib
 
 	public Element retrieveById(Dbms dbms, String table, String id) throws SQLException
 	{
-		return retrieve(dbms, table, id, null, null, new Integer(id));
+		return retrieve(dbms, table, id, null, null, Integer.valueOf(id));
 	}
 
 	//-----------------------------------------------------------------------------
@@ -210,11 +209,20 @@ public class LocalLib
 
 		Element result = dbms.select(query1, args);
 
-		List base = result.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> base = result.getChildren();
 
-		List des;
-		if (id != null) des = dbms.select(query2, args).getChildren();
-		else des = dbms.select(query2).getChildren();
+		final List<Element> des;
+		if (id != null) {
+		    @SuppressWarnings("unchecked")
+            final List<Element> tmp = dbms.select(query2, args).getChildren();
+		    des = tmp;
+		}
+		else {
+		    @SuppressWarnings("unchecked")
+            final List<Element> tmp = dbms.select(query2).getChildren();
+		    des = tmp;
+		}
 
 		//--- preprocess data for faster access
 

@@ -23,14 +23,14 @@
 
 package org.fao.geonet.services.region;
 
+import java.util.Collection;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
+
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 //=============================================================================
@@ -48,17 +48,22 @@ public class Get implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		String id = params.getChildText(Params.ID);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        String id = params.getChildText(Params.ID);
 
-		if (id == null)
-			return new Element(Jeeves.Elem.RESPONSE);
+        if (id == null)
+            return new Element(Jeeves.Elem.RESPONSE);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+        Collection<RegionsDAO> daos = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
+        for (RegionsDAO dao : daos) {
+            Element result = dao.createSearchRequest(context).id(id).xmlResult();
+            if (result != null && !result.getChildren().isEmpty()) {
+                return result;
+            }
+        }
+        throw new RegionNotFoundEx(id);
 
-		return Lib.local.retrieveById(dbms, "Regions", id).setName(Jeeves.Elem.RESPONSE);
-	}
+    }
 }
 
 //=============================================================================

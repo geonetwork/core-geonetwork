@@ -25,7 +25,6 @@ package org.fao.geonet.services.user;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.UserNotFoundEx;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -33,15 +32,13 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-//=============================================================================
-
-/** Update the profile of logged user
-  */
-
-public class InfoUpdate implements Service
-{
+/**
+ * Update the profile of logged user
+ */
+public class InfoUpdate extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -56,7 +53,7 @@ public class InfoUpdate implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String surname  = Util.getParam(params, Params.SURNAME);
 		String name     = Util.getParam(params, Params.NAME);
@@ -85,11 +82,8 @@ public class InfoUpdate implements Service
 
 		dbms.execute (query, surname, name,
 									address, city, state, zip, country, email,
-									organ, kind, new Integer(userId));
+									organ, kind, Integer.valueOf(userId));
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
 }
-
-//=============================================================================
-

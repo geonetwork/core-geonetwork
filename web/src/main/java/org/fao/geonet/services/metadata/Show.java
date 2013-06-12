@@ -23,12 +23,12 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -44,37 +44,22 @@ import org.fao.geonet.util.XslUtil;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
-import jeeves.utils.Xml;
-
 //=============================================================================
 
 /** Retrieves a particular metadata. Access is restricted
   */
 
-public class Show implements Service
+public class Show extends ShowViewBaseService
 {
-    private boolean isExport;
     //--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
-	{
-		String skip;
-		
-		skip = params.getValue("skipPopularity", "n");
-		skipPopularity = skip.equals("y");
-
-		skip = params.getValue("skipInfo", "n");
-		skipInfo = skip.equals("y");
-
-		skip = params.getValue("addRefs", "n");
-		addRefs = skip.equals("y");
-		
+	public void init(String appPath, ServiceConfig params) throws Exception{
+		super.init(appPath, params);
 		isExport = "y".equals(params.getValue("isExport", "n"));
-		
 		cache = "y".equalsIgnoreCase(params.getValue("cache", "n"));
 	}
 
@@ -105,7 +90,7 @@ public class Show implements Service
 		SchemaManager sm = gc.getSchemamanager();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
-
+		boolean skipPopularity = this.skipPopularity;
 		if (!skipPopularity) { // skipPopularity could be a URL param as well
 			String skip = Util.getParam(params, "skipPopularity", "n");
 			skipPopularity = skip.equals("y");
@@ -191,12 +176,7 @@ public class Show implements Service
 	//--- Variables
 	//---
 	//--------------------------------------------------------------------------
-
-	private boolean skipPopularity;
-	private boolean skipInfo;
-	private boolean addRefs;
     private boolean cache;
+    private boolean isExport;
     
 }
-//=============================================================================
-

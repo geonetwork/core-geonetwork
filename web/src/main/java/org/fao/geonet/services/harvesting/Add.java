@@ -28,17 +28,15 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Element;
 
-//=============================================================================
-
-public class Add implements Service
-{
+/**
+ *
+ */
+public class Add implements Service {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -53,22 +51,15 @@ public class Add implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		HarvestManager hm = gc.getHarvestManager();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		// Add current user has harvester owner
-		params.setAttribute("owner", context.getUserSession().getUserId());
-		
-		String id = hm.add(dbms, params);
+		// Add current user as harvester owner
+        String id = hm.add(dbms, params, context.getUserSession().getUserId());
 
-		return new Element(Jeeves.Elem.RESPONSE)
-							.addContent(new Element("id").setText(id));
+		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element("id").setText(id));
 	}
 }
-
-//=============================================================================
-

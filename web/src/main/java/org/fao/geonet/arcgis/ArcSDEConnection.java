@@ -80,7 +80,7 @@ public class ArcSDEConnection {
 	/**
 	 * Closes the connection to ArcSDE server in case users of this class neglect to do so.
 	 */
-	public void finalize() throws Throwable {
+	protected void finalize() throws Throwable {
 		try {
 			seConnection.close();
 		}

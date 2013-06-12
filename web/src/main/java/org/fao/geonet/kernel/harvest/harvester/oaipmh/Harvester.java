@@ -32,9 +32,10 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.oaipmh.OaiPmh;
@@ -56,7 +57,7 @@ import java.util.Set;
 
 //=============================================================================
 
-class Harvester
+class Harvester extends BaseAligner
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -71,7 +72,7 @@ class Harvester
 		this.dbms   = dbms;
 		this.params = params;
 
-		result = new OaiPmhResult();
+		result = new HarvestResult();
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager();
@@ -83,7 +84,7 @@ class Harvester
 	//---
 	//---------------------------------------------------------------------------
 
-	public OaiPmhResult harvest() throws Exception
+	public HarvestResult harvest() throws Exception
 	{
 		ListIdentifiersRequest req = new ListIdentifiersRequest();
 		req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
@@ -208,7 +209,7 @@ class Harvester
 
 		for(RecordInfo ri : records)
 		{
-			result.total++;
+			result.totalMetadata++;
 
 			String id = localUuids.getID(ri.id);
 
@@ -255,7 +256,7 @@ class Harvester
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.id, Integer.parseInt(params.owner), group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.id, Integer.parseInt(params.ownerId), group, params.uuid,
                          isTemplate, docType, title, category, ri.changeDate.toString(), ri.changeDate.toString(), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -263,12 +264,12 @@ class Harvester
 		dataMan.setTemplateExt(dbms, iId, "n", null);
 		dataMan.setHarvestedExt(dbms, iId, params.uuid);
 
-		addPrivileges(id);
-		addCategories(id);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
-		result.added++;
+		dataMan.indexMetadata(dbms, id);
+		result.addedMetadata++;
 	}
 
 	//--------------------------------------------------------------------------
@@ -300,7 +301,7 @@ class Harvester
 					return null;
 			}
 
-			String schema = dataMan.autodetectSchema(md);
+			String schema = dataMan.autodetectSchema(md, null);
 
 			if (schema == null)
 			{
@@ -374,63 +375,6 @@ class Harvester
 	}
 
 	//--------------------------------------------------------------------------
-	//--- Categories
-	//--------------------------------------------------------------------------
-
-	private void addCategories(String id) throws Exception
-	{
-		for(String catId : params.getCategories())
-		{
-			String name = localCateg.getName(catId);
-
-			if (name == null)
-			{
-                if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:"+ catId);
-			}
-			else
-			{
-                if(log.isDebugEnabled()) log.debug("    - Setting category : "+ name);
-				dataMan.setCategory(context, dbms, id, catId);
-			}
-		}
-	}
-
-	//--------------------------------------------------------------------------
-	//--- Privileges
-	//--------------------------------------------------------------------------
-
-	private void addPrivileges(String id) throws Exception
-	{
-		for (Privileges priv : params.getPrivileges())
-		{
-			String name = localGroups.getName(priv.getGroupId());
-
-			if (name == null) 
-			{
-                if(log.isDebugEnabled()) log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
-			}
-			else
-			{
-                if(log.isDebugEnabled()) log.debug("    - Setting privileges for group : "+ name);
-
-				for (int opId: priv.getOperations())
-				{
-					name = dataMan.getAccessManager().getPrivilegeName(opId);
-
-					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6)
-					{
-                        if(log.isDebugEnabled()) log.debug("       --> "+ name);
-						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
-					}
-					else
-                    if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");
-				}
-			}
-		}
-	}
-
-	//--------------------------------------------------------------------------
 	//---
 	//--- Private methods : updateMetadata
 	//---
@@ -443,7 +387,7 @@ class Harvester
 		if (!ri.isMoreRecentThan(date))
 		{
             if(log.isDebugEnabled()) log.debug("  - Metadata XML not changed for remote id : "+ ri.id);
-			result.unchanged++;
+			result.unchangedMetadata++;
 		}
 		else
 		{
@@ -467,14 +411,14 @@ class Harvester
 			//--- web interface so we have to re-set both
 
 			dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
-			addPrivileges(id);
+            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
 
 			dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-			addCategories(id);
+            addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 			dbms.commit();
-			dataMan.indexMetadataGroup(dbms, id);
-			result.updated++;
+			dataMan.indexMetadata(dbms, id);
+			result.updatedMetadata++;
 		}
 	}
 
@@ -492,9 +436,5 @@ class Harvester
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
 	private UUIDMapper     localUuids;
-	private OaiPmhResult   result;
+	private HarvestResult   result;
 }
-
-//=============================================================================
-
-

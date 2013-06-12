@@ -74,7 +74,14 @@
         <from>^(.*)/it/(.*)$</from>
         <to type="permanent-redirect" last="true">%{context-path}$1/ita/$2</to>
     </rule>
-
+    <rule>
+        <note>
+            Retrieves robots.txt filemap pointing to sitemaps for better indexing.
+        </note>
+        <from>^/robots.txt$</from>
+        <to type="forward" last="true">/srv/eng/robots.txt</to>
+    </rule>
+    
     <!-- Rules for RESTful urls for metadata retrieve -->
     <rule>
         <note>
@@ -133,20 +140,22 @@
         <to type="permanent-redirect">%{context-path}/srv/$1/home?uuid=$2</to>
     </rule>
     
-    <rule>
-        <note>
-            Retrieves robots.txt filemap pointing to sitemaps for better indexing.
-        </note>
-        <from>^/robots.txt$</from>
-        <to type="forward">/srv/eng/robots.txt</to>
-    </rule>
-        
+    
     <rule>
         <note>
             map the old xml.user.login to the new login url
         </note>
         <from>^.*/.*/xml.user.login(\?.*)</from>
         <to type="permanent-redirect" last="true">%{context-path}/j_spring_security_check$1</to>
+    </rule>
+    
+    <!-- Rule for rss.latest to rss.search?sortBt=changeDate -->
+    <rule>
+        <note>
+            map the old rss.latest service
+        </note>
+        <from>^(.*)/rss.latest(\.*)</from>
+        <to type="permanent-redirect" last="true">%{context-path}$1/rss.search?sortBy=changeDate</to>
     </rule>
     
     <!-- hide jsession id from google bot -->

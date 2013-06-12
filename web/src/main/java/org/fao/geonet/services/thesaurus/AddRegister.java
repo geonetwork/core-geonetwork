@@ -24,7 +24,6 @@
 package org.fao.geonet.services.thesaurus;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -34,17 +33,15 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 
-//=============================================================================
-
 /**
  * Adds an ISO19135 register record as a thesaurus (or updates it if has 
- * already been added)
+ * already been added).
  */
-
-public class AddRegister implements Service {
+public class AddRegister extends NotInReadOnlyModeService {
 	public void init(String appPath, ServiceConfig params) throws Exception {
 	}
 
@@ -54,7 +51,7 @@ public class AddRegister implements Service {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
+	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
     Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
@@ -66,14 +63,16 @@ public class AddRegister implements Service {
 		ThesaurusManager tm = gc.getThesaurusManager();
 		
 
-		String theKey = tm.createUpdateThesaurusFromRegister(uuid, type);
+		String theKey = tm.createUpdateThesaurusFromRegister(uuid, type, context);
 
 		Thesaurus gst = tm.getThesaurusByName(theKey);
 		String fname = gst.getFname();
 
 		// Save activated status in the database
 		String query = "SELECT * FROM Thesaurus WHERE id = ?";
-		java.util.List<Element> result = dbms.select(query, fname).getChildren();
+		
+		@SuppressWarnings("unchecked")
+        java.util.List<Element> result = dbms.select(query, fname).getChildren();
 
 		if (result.size() == 0) {
 			query = "INSERT INTO Thesaurus (id, activated) VALUES (?,?)";
@@ -93,6 +92,3 @@ public class AddRegister implements Service {
 		return elResp;
 	}
 }
-
-// =============================================================================
-

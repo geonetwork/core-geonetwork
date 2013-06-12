@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <selectownergroup>Harvester kuuluu ryhmään</selectownergroup>
 	<select>Valitse</select>
 	<name>Nimi</name>
 	<directoryname>Hakemisto</directoryname>
@@ -20,6 +21,11 @@
 	<info type="geonetwork20">
 		<short>GeoNetwork 2.0</short>
 		<long>GeoNetwork v2.0 remote node</long>
+	</info>
+	
+	<info type="geoPREST">
+		<short>GeoPortal REST</short>
+		<long>GeoPortal 9.3.x via REST interface</long>
 	</info>
 	
 	<info type="webdav">
@@ -65,6 +71,8 @@
 	
 	<site>Site</site>
 
+	<baseUrl>Base URL of GeoPortal service</baseUrl>
+
 	<category>Category</category>
 	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
 
@@ -103,6 +111,8 @@
 	
 	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
 	<mefFormatFull>Use full MEF format</mefFormatFull>
+	
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
 	
 	<xslfilter>XSL filter name</xslfilter>
 	<search>Hakukriteerit</search>
@@ -344,6 +354,7 @@
 		<couldNotInsert>Could not insert</couldNotInsert>
     <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
 		<recordsUpdated>Records Updated</recordsUpdated>
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>Odottaa ensimmäistä ajoa.</notRun>

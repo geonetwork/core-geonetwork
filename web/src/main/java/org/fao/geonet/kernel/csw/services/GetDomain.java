@@ -26,10 +26,10 @@ package org.fao.geonet.kernel.csw.services;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -38,16 +38,15 @@ import jeeves.utils.Log;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.MapFieldSelector;
+import org.apache.lucene.document.DocumentStoredFieldVisitor;
 import org.apache.lucene.index.FieldInfos;
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.SlowCompositeReaderWrapper;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.util.ReaderUtil;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -58,14 +57,20 @@ import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.CatalogSearcher;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SummaryComparator;
 import org.fao.geonet.kernel.search.SummaryComparator.SortOption;
 import org.fao.geonet.kernel.search.SummaryComparator.Type;
+import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Element;
+
+import bak.pcj.map.ObjectKeyIntMapIterator;
+import bak.pcj.map.ObjectKeyIntOpenHashMap;
 
 //=============================================================================
 
@@ -77,7 +82,11 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	//---
 	//---------------------------------------------------------------------------
 
-	public GetDomain() {}
+	private LuceneConfig _luceneConfig;
+
+    public GetDomain(LuceneConfig luceneConfig) {
+	    this._luceneConfig = luceneConfig;
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -106,7 +115,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 		if (propertyNames != null) {
 			List<Element> domainValues;
 			try {
-				domainValues = handlePropertyName(propertyNames, context, false, CatalogConfiguration.getMaxNumberOfRecordsForPropertyNames(), cswServiceSpecificConstraint);
+				domainValues = handlePropertyName(propertyNames, context, false, CatalogConfiguration.getMaxNumberOfRecordsForPropertyNames(), cswServiceSpecificConstraint, _luceneConfig);
 			} catch (Exception e) {
 	            Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
 	            throw new NoApplicableCodeEx(
@@ -160,8 +169,8 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	//---------------------------------------------------------------------------
 	
 	public static List<Element> handlePropertyName(String[] propertyNames,
-			ServiceContext context, boolean freq, int maxRecords, String cswServiceSpecificConstraint) throws Exception {
-		 
+			ServiceContext context, boolean freq, int maxRecords, String cswServiceSpecificConstraint, LuceneConfig luceneConfig) throws Exception {
+
 		List<Element> domainValuesList = null;
 
         if(Log.isDebugEnabled(Geonet.CSW))
@@ -189,14 +198,16 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			SearchManager sm = gc.getSearchmanager();
 			
-			IndexReader reader = sm.getIndexReader(context.getLanguage());
+
+	        IndexAndTaxonomy indexAndTaxonomy= sm.getNewIndexReader(null);
 			try {
+			    GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 				BooleanQuery groupsQuery = (BooleanQuery) CatalogSearcher.getGroupsQuery(context);
                 BooleanQuery query = null;
 
                 // Apply CSW service specific constraint
                 if (StringUtils.isNotEmpty(cswServiceSpecificConstraint)) {
-                    Query constraintQuery = CatalogSearcher.getCswServiceSpecificConstraintQuery(cswServiceSpecificConstraint);
+                    Query constraintQuery = CatalogSearcher.getCswServiceSpecificConstraintQuery(cswServiceSpecificConstraint, luceneConfig);
 
                     query = new BooleanQuery();
 
@@ -230,7 +241,8 @@ public class GetDomain extends AbstractOperation implements CatalogService
 						property = indexField;
 	
 					// check if params asked is in the index using getFieldNames ?
-					FieldInfos fi = ReaderUtil.getMergedFieldInfos(reader);
+					@SuppressWarnings("resource")
+                    FieldInfos fi = new SlowCompositeReaderWrapper(reader).getFieldInfos();
 					if (fi.fieldInfo(property) == null)
 						continue;
 					
@@ -244,19 +256,20 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					else	
 						listOfValues = new Element("ListOfValues", Csw.NAMESPACE_CSW);
 
-					//List<String> fields = new ArrayList<String>();
-					//fields.add(property);
-					//fields.add("_isTemplate");
-					String fields[] = new String[] { property, "_isTemplate" };
-					MapFieldSelector selector = new MapFieldSelector(fields);
+					Set<String> fields = new HashSet<String>();
+					fields.add(property);
+					fields.add("_isTemplate");
+					
 	
 					// parse each document in the index
 					String[] fieldValues;
 					SortedSet<String> sortedValues = new TreeSet<String>();
-					HashMap<String, Integer> duplicateValues = new HashMap<String, Integer>();
+					ObjectKeyIntOpenHashMap duplicateValues = new ObjectKeyIntOpenHashMap();
 					for (int j = 0; j < hits.scoreDocs.length; j++) {
-						Document doc = reader.document(hits.scoreDocs[j].doc, selector);
-						
+					    DocumentStoredFieldVisitor selector = new DocumentStoredFieldVisitor(fields);
+						reader.document(hits.scoreDocs[j].doc, selector);
+						Document doc = selector.getDocument();
+
 						// Skip templates and subTemplates
 						String[] isTemplate = doc.getValues("_isTemplate");
 						if (isTemplate[0] != null && !isTemplate[0].equals("n"))
@@ -271,8 +284,13 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					}
 					
 					SummaryComparator valuesComparator = new SummaryComparator(SortOption.FREQUENCY, Type.STRING, context.getLanguage(), null);
-					TreeSet<Map.Entry<String, Integer>> sortedValuesFrequency = new TreeSet<Map.Entry<String, Integer>>(valuesComparator);
-					sortedValuesFrequency.addAll(duplicateValues.entrySet());
+					TreeSet<SummaryComparator.SummaryElement> sortedValuesFrequency = new TreeSet<SummaryComparator.SummaryElement>(valuesComparator);
+                    ObjectKeyIntMapIterator entries = duplicateValues.entries();
+                    
+                    while(entries.hasNext()) {
+                        sortedValuesFrequency.add(new SummaryComparator.SummaryElement(entries));
+                        entries.next();
+                    }
 					
 					if (freq)
 						return createValuesByFrequency(sortedValuesFrequency);
@@ -289,7 +307,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 					domainValuesList.add(domainValues);
 				}
 			} finally {
-				sm.releaseIndexReader(reader);
+				sm.releaseIndexReader(indexAndTaxonomy);
 			}
 		}
 		return domainValuesList;
@@ -377,7 +395,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	 * @param duplicateValues 
 	 */
 	private static void addtoSortedSet(SortedSet<String> sortedValues,
-			String[] fieldValues, HashMap<String, Integer> duplicateValues) {
+			String[] fieldValues, ObjectKeyIntOpenHashMap duplicateValues) {
 		for (String value : fieldValues) {
 			sortedValues.add(value);
 			if (duplicateValues.containsKey(value)) {
@@ -416,17 +434,15 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	 * @param sortedValuesFrequency
 	 * @return
 	 */
-	private static List<Element> createValuesByFrequency(TreeSet<Entry<String, Integer>> sortedValuesFrequency) {
+	private static List<Element> createValuesByFrequency(TreeSet<SummaryComparator.SummaryElement> sortedValuesFrequency) {
 		
 		List<Element> values = new ArrayList<Element>();
 		Element value;
 
-        for (Object aSortedValuesFrequency : sortedValuesFrequency) {
-            Entry<String, Integer> entry = (Entry<String, Integer>) aSortedValuesFrequency;
-
+        for (SummaryComparator.SummaryElement element : sortedValuesFrequency) {
             value = new Element("Value", Csw.NAMESPACE_CSW);
-            value.setAttribute("count", entry.getValue().toString());
-            value.setText(entry.getKey());
+            value.setAttribute("count", Integer.toString(element.count));
+            value.setText(element.name);
 
             values.add(value);
         }

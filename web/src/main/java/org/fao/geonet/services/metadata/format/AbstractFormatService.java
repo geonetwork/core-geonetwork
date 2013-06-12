@@ -10,6 +10,7 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 
 import org.fao.geonet.GeonetContext;
@@ -43,7 +44,7 @@ abstract class AbstractFormatService implements Service {
         Log.info(Geonet.DATA_DIRECTORY, "Custom Metadata format XSL directory set to initial value of: "+userXslDir);
     }
 
-    protected void ensureInitializedDir(ServiceContext context) {
+    protected void ensureInitializedDir(ServiceContext context) throws IOException {
         if (!initializedDir) {
             synchronized (this) {
                 if (!initializedDir) {
@@ -56,9 +57,7 @@ abstract class AbstractFormatService implements Service {
                         }
                         userXslDir = systemDataDir+"data"+File.separator+userXslDir;
                     }
-                    if(!new File(userXslDir).exists()) {
-                        new File(userXslDir).mkdirs();
-                    }
+                    IO.mkdirs(new File(userXslDir), "Formatter directory");
                     
                     Log.info(Geonet.DATA_DIRECTORY, "Final Custom Metadata format XSL directory set to: "+userXslDir);
 

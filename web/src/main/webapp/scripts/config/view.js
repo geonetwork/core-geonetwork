@@ -200,9 +200,8 @@ ConfigView.prototype.setData = function(data)
 	$('hidewithheldelements.keepMarkedElement').checked = data['HIDEWITHHELDELEMENTS_keepMarkedElement'] == 'true';
 
     $('autodetect.enable').checked = data['AUTODETECT_ENABLE'] == 'true';
-    $('requestedLanguage.only').checked = data['REQUESTED_LANGUAGE_ONLY'] == 'true';
+  $('requestedLanguage.only').value = data['REQUESTED_LANGUAGE_ONLY'];
     $('requestedLanguage.sorted').checked = data['REQUESTED_LANGUAGE_SORTED'] == 'true';
-    $('requestedLanguage.ignored').checked = data['REQUESTED_LANGUAGE_IGNORED'] == 'true';
 
 	$('searchStats.enable').checked = data['SEARCHSTATS_ENABLE'] == 'true';
 
@@ -321,9 +320,8 @@ ConfigView.prototype.getData = function()
 		HIDEWITHHELDELEMENTS_keepMarkedElement : $('hidewithheldelements.keepMarkedElement').checked,
 
         AUTODETECT_ENABLE : $('autodetect.enable').checked,
-        REQUESTED_LANGUAGE_ONLY: $('requestedLanguage.only').checked,
+    REQUESTED_LANGUAGE_ONLY: $('requestedLanguage.only').value,
         REQUESTED_LANGUAGE_SORTED : $('requestedLanguage.sorted').checked,
-        REQUESTED_LANGUAGE_IGNORED : $('requestedLanguage.ignored').checked,
 
 		SEARCHSTATS_ENABLE : $('searchStats.enable').checked,
 	

@@ -363,7 +363,16 @@
 		<param name="maxWritesInTransaction" value="1" />
 
 		<param name="useSubversion" value="true"/>
+        <param name="DBHeartBeatEnabled" value="false"/>
+        <param name="DBHeartBeatInitialDelaySeconds" value="20"/>
+        <param name="DBHeartBeatFixedDelaySeconds" value="20"/>
 
+		<!-- Define if the schema catalog should be updated on startup.
+		Default is true. -->
+		<param name="createOrUpdateSchemaCatalog" value="true"/>
+		
+		<!-- Define the class to use when metadata status change
+		-->
 		<param name="statusActionsClass" value="org.fao.geonet.services.metadata.DefaultStatusActions"/>
 	</appHandler>
 
@@ -385,7 +394,9 @@
 				<call name="keywords" class=".guiservices.keywords.Get" />
 				<call name="groups" class=".guiservices.groups.GetMine" />
 				<call name="categories" class=".services.category.List" />
-				<call name="status" class=".services.status.List" />
+				<call name="status" class=".services.main.Info">
+					<param name="type" value="status" />
+				</call>
 				<call name="regions" class=".guiservices.regions.Get" />
 				<call name="sources" class=".guiservices.util.Sources" />
 				<call name="repositories" class=".services.main.Info">
@@ -463,7 +474,7 @@
 		<service name="main.search.suggest">
 			<class name=".services.main.SearchSuggestion">
 				<!-- Minimum frequency for a term value to be proposed in suggestion. -->
-				<param name="threshold" value="2" />
+				<param name="threshold" value="1" />
 				<!--
 					Max number of term's values to look in the index. For large catalogue
 					this value should be increased in order to get better results. If this
@@ -592,10 +603,16 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+        <!-- classic GUI -->
 		<service name="feedback">
 			<output sheet="feedback.xsl" />
 		</service>
 
+        <!-- Ext GUIs -->
+        <service name="feedback.send">
+            <class name=".services.feedback.Receptor" />
+            <output sheet="extjs-feedback-response.xsl" contentType="application/json; charset=UTF-8" />
+        </service>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="links">
@@ -616,6 +633,69 @@
 
 		<service name="xml.region.get">
 			<class name=".services.region.Get" />
+			
+			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
+				<xml name="error" file="xml/file-not-found-error.xml" />
+			</error>
+		</service>
+
+		<service name="xml.regions.list">
+			<class name=".services.region.List" />
+		</service>
+
+		<service name="xml.regions.category.list">
+			<class name=".services.region.ListCategories" />
+		</service>
+
+		<service name="region.getmap.png">
+			<class name=".services.region.GetMap" >
+				<!-- In getMap the envelope of the geometry is calculated then
+					 it is expanded by a factor.  That factor is the size of the map.  This allows the 
+					 map to be slightly bigger than the geometry allowing some context to be shown.
+					 This parameter allows different factors to be chosen per scale level 
+					 
+					 Proportion is the proportion of the world that the geometry
+					 covers
+					 (bounds of WGS84)/(bounds of geometry in WGS84)-->)
+				 <param name="expandFactors">
+				 	<factor proportion=".0005" value="2"/>
+				 	<factor proportion=".01" value=".5"/>
+				 	<factor proportion=".015" value=".2"/>
+				 </param>
+				 <param name="format" value="png"/>
+				 <!-- named backgrounds allow the background parameter to be a simple key 
+				 	  and the complete URL will be looked up from this list of named backgrounds 
+				 	  The name of the child elements is the key and the text is the url -->
+				 <param name="namedBackgrounds">
+				 	<!-- <geocat>http://wms.geo.admin.ch/?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=ch.swisstopo.pixelkarte-farbe-pk1000.noscale&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png</geocat> -->
+				 </param>
+			 </class>
+			<output file="true" contentType="image/png"/>
+			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
+				<xml name="error" file="xml/file-not-found-error.xml" />
+			</error>
+		</service>
+
+		<service name="region.geom.wkt">
+			<class name=".services.region.GetGeom">
+				<param name="format" value="WKT"/>
+			</class>
+			
+			<output sheet="extracttext.xsl" contentType="text/plain; charset=utf-8"/>
+			
+			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
+				<xml name="error" file="xml/file-not-found-error.xml" />
+			</error>
+		</service>
+
+		<service name="region.geom.gml3">
+			<class name=".services.region.GetGeom">
+				<param name="format" value="GML3"/>
+			</class>
+			
+			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
+				<xml name="error" file="xml/file-not-found-error.xml" />
+			</error>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1034,12 +1114,6 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.region.update">
-			<class name=".services.region.Update" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Help services                                                 -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -1242,6 +1316,41 @@
 			</output>
 		</service>
 
+		<service name="virtualcsw.config">
+			<output sheet="csw/config-virtualcsw.xsl">
+				<call name="services" class=".guiservices.csw.virtual.List"/>
+			</output>
+		</service>
+		
+		<service name="virtualcsw.config.get">
+			<output sheet="csw/virtualcsw-new.xsl">
+				<call name="services" class=".guiservices.csw.virtual.Get"/>
+				<call name="groups" class=".guiservices.groups.GetMine" />
+                <call name="categories" class=".services.category.List" />
+                <call name="sources" class=".guiservices.util.Sources" />
+			</output>
+		</service>
+		
+		<service name="virtualcsw.config.update">
+			<class name=".guiservices.csw.virtual.Update" />
+			<output forward="virtualcsw.config" />
+		</service>
+		
+		
+		<service name="virtualcsw.config.edit">
+			<output sheet="csw/virtualcsw-update.xsl">
+				<call name="services" class=".guiservices.csw.virtual.Get"/>
+				<call name="groups" class=".guiservices.groups.GetMine" />
+                <call name="categories" class=".services.category.List" />
+                <call name="sources" class=".guiservices.util.Sources" />
+			</output>
+		</service>		
+		
+		<service name="virtualcsw.config.delete">
+			<class name=".guiservices.csw.virtual.Delete"/>
+			<output forward="virtualcsw.config" />
+		</service>
+		
 		<service name="csw.config.set">
 			<class name=".guiservices.csw.Set" />
 
@@ -1270,18 +1379,6 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- RSS services -->
-
-		<service name="rss.latest">
-			<output sheet="rss-latest.xsl" contentType="application/rss+xml; charset=UTF-8">
-				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
-					<param name="maxItems" value="20" />
-					<param name="timeBetweenUpdates" value="10" />
-				</call>
-				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="rss.search">
 			<class name=".services.main.Search">
@@ -1394,13 +1491,24 @@
 			<output sheet="crs.xsl" contentType="text/xml; charset=UTF-8" />
 		</service>
 
-		<service name="sequential.execution.set">
-			<class name=".services.config.SetSequentialExecution" />
+		<service name="system.properties.set">
+			<class name=".services.config.SetSystemProperties" />
 		</service>
 
 		<service name="isolanguages">
 			<class name="org.fao.geonet.guiservices.isolanguages.Get" />
 		</service>
+		
+		
+        <!-- HTML5UI -->
+        <service name="search">
+            <class name=".services.main.Home" />
+            <output sheet="search.xsl">
+                <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
+                <call name="isoLang" class=".guiservices.isolanguages.Get" />
+            </output>
+        </service>
+
 	</services>
 
 	<!-- ====================================================================== -->

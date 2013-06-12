@@ -36,6 +36,7 @@ import jeeves.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -75,7 +76,7 @@ class Harvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public GeonetResult harvest() throws Exception
+	public HarvestResult harvest() throws Exception
 	{
 		XmlRequest req = new XmlRequest(new URL(params.host));
 
@@ -131,7 +132,7 @@ class Harvester
 		//--- align local node
 
 		Aligner      aligner = new Aligner(log, context, dbms, req, params, remoteInfo);
-		GeonetResult result  = aligner.align(records);
+		HarvestResult result  = aligner.align(records);
 
 		Map<String, String> sources = buildSources(remoteInfo);
 		updateSources(dbms, records, sources);

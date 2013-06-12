@@ -54,7 +54,7 @@ import java.util.Map;
 
 public class CatalogDispatcher
 {
-	public static Map<String, CatalogService> hmServices = new HashMap<String, CatalogService>();
+	public static final Map<String, CatalogService> hmServices = new HashMap<String, CatalogService>();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -65,12 +65,12 @@ public class CatalogDispatcher
 	public CatalogDispatcher(File summaryConfig, LuceneConfig luceneConfig)
 	{
 		register(new DescribeRecord());
-		register(new GetCapabilities());
-		register(new GetDomain());
-		register(new GetRecordById(summaryConfig, luceneConfig));
-		register(new GetRecords(summaryConfig, luceneConfig));
+		register(new GetCapabilities(luceneConfig));
+		register(new GetDomain(luceneConfig));
+		register(new GetRecordById(luceneConfig));
+		register(new GetRecords(luceneConfig));
 		register(new Harvest());
-		register(new Transaction(summaryConfig, luceneConfig));
+		register(new Transaction(luceneConfig));
 	}
 
 	//---------------------------------------------------------------------------
@@ -196,11 +196,10 @@ public class CatalogDispatcher
 	{
 		HashMap<String, String> hm = new HashMap<String, String>();
 
-		List params = request.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> params = request.getChildren();
 
-        for (Object param1 : params) {
-            Element param = (Element) param1;
-
+        for (Element param : params) {
             String name = param.getName().toLowerCase();
             String value = param.getTextTrim();
 

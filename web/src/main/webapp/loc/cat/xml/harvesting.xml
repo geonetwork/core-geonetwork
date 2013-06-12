@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<select>Seleccionar</select>
+    <selectownergroup>Recol pertany al grup de</selectownergroup>
+    <select>Seleccionar</select>
 	<name>Nom</name>
 	<directoryname>Directori</directoryname>
 	<type>Tipus</type>
@@ -20,6 +21,11 @@
 	<info type="geonetwork20">
 		<short>GeoNetwork 2.0</short>
 		<long>Node remot GeoNetwork v2.0</long>
+	</info>
+	
+	<info type="geoPREST">
+		<short>GeoPortal REST</short>
+		<long>GeoPortal 9.3.x via REST interface</long>
 	</info>
 	
 	<info type="webdav">
@@ -75,6 +81,8 @@
     <!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Lloc</site>
+
+	<baseUrl>Base URL of GeoPortal service</baseUrl>
 
 	<category>Category</category>
 	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
@@ -136,6 +144,7 @@
 	
 	<content>Harvested Content</content>
 	<importxslt>Apply this XSLT to harvested records</importxslt>
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
 
     <at>Run at</at>
     <atSpec>( hour of day : minute eg. 23:15 )</atSpec>
@@ -395,6 +404,7 @@
 		<couldNotInsert>Could not insert</couldNotInsert>
     <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
 		<recordsUpdated>Records Updated</recordsUpdated>
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>Esperant la primera execució</notRun>

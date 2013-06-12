@@ -1,9 +1,11 @@
 package org.fao.geonet.kernel;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
-class PrioritizedLangComparator implements Comparator<String> {
+class PrioritizedLangComparator implements Comparator<String>, Serializable {
+    private static final long serialVersionUID = 3482464035641314990L;
         private String defaultLang;
         private List<String> prioritizedList;
 

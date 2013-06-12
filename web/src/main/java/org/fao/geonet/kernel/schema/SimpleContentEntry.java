@@ -27,7 +27,6 @@
 
 package org.fao.geonet.kernel.schema;
 
-import org.jdom.Attribute;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -78,10 +77,10 @@ class SimpleContentEntry
 
 	private void handleChildren(ElementInfo ei)
 	{
-		List children = ei.element.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = ei.element.getChildren();
 
-        for (Object aChildren : children) {
-            Element elChild = (Element) aChildren;
+        for (Element elChild : children) {
 
             if (elChild.getName().equals("extension")) {
                 handleExtension(elChild, ei);
@@ -102,9 +101,9 @@ class SimpleContentEntry
 	{
 		restriction = false;
 		base = el.getAttributeValue("base");
-		List extension = el.getChildren();
-        for (Object anExtension : extension) {
-            Element elExt = (Element) anExtension;
+		@SuppressWarnings("unchecked")
+        List<Element> extension = el.getChildren();
+        for (Element elExt : extension) {
             String elName = elExt.getName();
 
             if (elName.equals("attribute")) {
@@ -128,54 +127,5 @@ class SimpleContentEntry
 
         }
 	}
-
-	//---------------------------------------------------------------------------
-
-	private void handleRestriction(Element el, ElementInfo ei)
-	{
-		restriction = true;
-		base = el.getAttributeValue("base");
-		
-		List attribs = el.getAttributes();
-
-        for (Object attrib : attribs) {
-            Attribute at = (Attribute) attrib;
-
-            String attrName = at.getName();
-
-            Logger.log();
-        }
-
-		//--- handle children
-
-		List children = el.getChildren();
-
-        for (Object aChildren : children) {
-            Element elRes = (Element) aChildren;
-            String elName = elRes.getName();
-
-            if (elName.equals("attribute")) {
-                alAttribs.add(new AttributeEntry(elRes, ei.file, ei.targetNS, ei.targetNSPrefix));
-            }
-            else if (elName.equals("attributeGroup")) {
-                String attribGroup = elRes.getAttributeValue("ref");
-
-                if (attribGroup == null) {
-                    throw new IllegalArgumentException("'ref' is null for element in <attributeGroup> of SimpleContent with restriction base " + base);
-                }
-
-                alAttribGroups.add(attribGroup);
-
-            }
-
-
-            else {
-                Logger.log();
-            }
-
-        }
-	}
 }
-
-//==============================================================================
 

@@ -51,9 +51,11 @@ public abstract class AbstractThesaurusBasedTest {
             // Now make copy for this test
             this.thesaurusFile = new File(directory, getClass().getSimpleName()+"TestThesaurus.rdf");
             this.thesaurusFile.deleteOnExit();
-            FileChannel to = new FileOutputStream(thesaurusFile).getChannel();
-            FileChannel from = new FileInputStream(template).getChannel();
+            FileChannel to = null;
+            FileChannel from = null;
             try {
+                to = new FileOutputStream(thesaurusFile).getChannel();
+                from = new FileInputStream(template).getChannel();
             	to.transferFrom(from, 0, template.length());
             } finally {
             	IOUtils.closeQuietly(from);
@@ -77,7 +79,7 @@ public abstract class AbstractThesaurusBasedTest {
         File directory = new File(AbstractThesaurusBasedTest.class.getResource(AbstractThesaurusBasedTest.class.getSimpleName()+".class").getFile()).getParentFile();
 
         this.thesaurusFile = new File(directory, "testThesaurus.rdf");
-        this.thesaurus = new Thesaurus(isoLangMapper, thesaurusFile.getName(), "test", "test", thesaurusFile, "http://concept", true);
+        this.thesaurus = new Thesaurus(isoLangMapper, thesaurusFile.getName(), null, null, "test", "test", thesaurusFile, "http://concept", true);
         setRepository(this.thesaurus);
         
         if (thesaurusFile.exists() && thesaurusFile.length() > 0) {

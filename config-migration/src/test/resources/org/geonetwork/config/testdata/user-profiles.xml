@@ -387,8 +387,6 @@
 		<allow service="pdf.present"/>
 	  <allow service="pdf"/>
 		
-		<!-- WMC -->
-		<allow service="intermap.wmc.setWmcContext"/>
 
 		<!-- XML services -->
 		<allow service="xml.user.login"/>

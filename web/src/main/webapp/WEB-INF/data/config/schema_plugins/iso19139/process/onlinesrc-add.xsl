@@ -79,7 +79,6 @@ attached it to the metadata for data.
 											</gmd:onLine>
 										</xsl:for-each>
 									</xsl:if>
-									
 									<xsl:if test="$url">
 										<gmd:onLine>
 											<xsl:if test="$uuidref">

@@ -44,14 +44,6 @@ public class ArcSDEParams extends AbstractParams {
 	 */
 	public int port;
 	/**
-	 * Username for the ArcSDE database.
-	 */
-	public String username;
-	/**
-	 * Password for the username to the ArcSDE database.
-	 */
-	public String password;
-	/**
 	 * Name of the ArcSDE database.
 	 */
 	public String database;

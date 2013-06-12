@@ -50,7 +50,9 @@
 				if (url &amp;&amp; url.indexOf(window.location.host) != -1) {
 					return url;
 				} else {
+					
 					return OpenLayers.ProxyHostURL + encodeURIComponent(url);
+					
 				}
 			};
 			Ext.onReady(function(){

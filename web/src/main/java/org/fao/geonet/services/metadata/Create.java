@@ -26,7 +26,6 @@ package org.fao.geonet.services.metadata;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.ServiceNotAllowedEx;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -36,15 +35,13 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-//=============================================================================
-
-/** Creates a metadata copying data from a given template
+/**
+ * Creates a metadata copying data from a given template.
   */
-
-public class Create implements Service
-{
+public class Create extends NotInReadOnlyModeService {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -53,7 +50,7 @@ public class Create implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
@@ -88,7 +85,9 @@ public class Create implements Service
 		// TODO : Check user can create a metadata in that group
 		UserSession user = context.getUserSession();
 		if (!user.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
-			java.util.List list = dbms.select("SELECT groupId FROM UserGroups WHERE profile='Editor' AND userId=? AND groupId=?", 
+			String selectGroupIdQuery = "SELECT groupId FROM UserGroups WHERE profile='Editor' AND userId=? AND groupId=?";
+            @SuppressWarnings("unchecked")
+            java.util.List<Element> list = dbms.select(selectGroupIdQuery, 
 						Integer.valueOf(user.getUserId()),
 						Integer.valueOf(groupOwner)).getChildren();
 			System.out.println("Group found: " + list.size());
@@ -113,7 +112,3 @@ public class Create implements Service
 		return response;
 	}
 }
-
-//=============================================================================
-
-

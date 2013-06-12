@@ -1,3 +1,4 @@
+*.iml
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron/schematron*.xsl
 web/src/main/webapp/WEB-INF/data/config/schemaplugin-uri-catalog.xml
 web/src/main/webapp/WEB-INF/classes/JZKitConfig.xml
@@ -6,6 +7,8 @@ web/src/main/webapp/images/logos/*
 web/logs/
 web/jcs_caching/
 geonetwork*.db
+/geonetwork*
+changes-*
 web/coverage.ec
 */target/
 web/src/main/webapp/data/
@@ -27,8 +30,12 @@ web-client/src/main/resources/apps/css/geonetwork.css
 web-client/src/main/resources/apps/js/GeoNetwork-mini-nomap.js
 web-client/src/main/resources/apps/js/GeoNetwork-mini.js
 web-client/src/main/resources/apps/js/ext-ux/css/ext-ux.css
+web-client/src/main/resources/apps/search/js/App-mini.js
+web-client/src/main/resources/apps/tabsearch/js/App-mini.js
+web-client/src/main/resources/apps/html5ui/js/App-mini.js
 *.iml
 .idea/
 eclipse/
 web/src/main/webapp/WEB-INF/data/data
 web/src/main/webapp/WEB-INF/data/index
+web-itest/jcs_caching

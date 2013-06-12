@@ -27,15 +27,15 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.jdom.Element;
@@ -47,7 +47,7 @@ import java.util.UUID;
 
 //=============================================================================
 
-class Harvester {
+class Harvester extends BaseAligner {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -60,7 +60,7 @@ class Harvester {
 		this.dbms   = dbms;
 		this.params = params;
 
-		result = new WebDavResult();
+		result = new HarvestResult();
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager();
@@ -73,14 +73,17 @@ class Harvester {
 	//---
 	//---------------------------------------------------------------------------
 
-	public WebDavResult harvest() throws Exception {
+	public HarvestResult harvest() throws Exception {
         if(log.isDebugEnabled()) log.debug("Retrieving remote metadata information for : "+ params.name);
 		
 		RemoteRetriever rr = null;		
-		if(params.subtype.equals("webdav"))
-			rr = new WebDavRetriever();
-		else if(params.subtype.equals("waf"))
-			rr = new WAFRetriever();
+        if (params.subtype.equals("webdav")) {
+            rr = new WebDavRetriever();
+        } else if (params.subtype.equals("waf")) {
+            rr = new WAFRetriever();
+        } else {
+            throw new IllegalArgumentException(params.subtype + " is not one of webdav or waf");
+        }
 		
 		Log.info(Log.SERVICE, "webdav harvest subtype : "+params.subtype);		
 		rr.init(log, context, params);
@@ -122,7 +125,7 @@ class Harvester {
 		//--- insert/update new metadata
 
 		for(RemoteFile rf : files) {
-			result.total++;
+			result.totalMetadata++;
 			List<RecordInfo> records = localUris.getRecords(rf.getPath());
 			if (records == null)	{
 				addMetadata(rf);
@@ -177,7 +180,7 @@ class Harvester {
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.owner), group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.ownerId), group, params.uuid,
                      isTemplate, docType, title, category, rf.getChangeDate(), rf.getChangeDate(), ufo, indexImmediate);
 
 
@@ -186,12 +189,12 @@ class Harvester {
 		dataMan.setTemplateExt(dbms, iId, "n", null);
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, rf.getPath());
 
-		addPrivileges(id);
-		addCategories(id);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
-		result.added++;
+		dataMan.indexMetadata(dbms, id);
+		result.addedMetadata++;
 	}
 
 	//--------------------------------------------------------------------------
@@ -239,51 +242,6 @@ class Harvester {
 	}
 
 	//--------------------------------------------------------------------------
-	//--- Categories
-	//--------------------------------------------------------------------------
-
-	private void addCategories(String id) throws Exception {
-		for(String catId : params.getCategories()) {
-			String name = localCateg.getName(catId);
-
-			if (name == null) {
-                if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:"+ catId);
-			}
-			else {
-                if(log.isDebugEnabled()) log.debug("    - Setting category : "+ name);
-				dataMan.setCategory(context, dbms, id, catId);
-			}
-		}
-	}
-
-	//--------------------------------------------------------------------------
-	//--- Privileges
-	//--------------------------------------------------------------------------
-
-	private void addPrivileges(String id) throws Exception {
-		for (Privileges priv : params.getPrivileges()) {
-			String name = localGroups.getName(priv.getGroupId());
-			if (name == null) {
-                if(log.isDebugEnabled()) log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
-			}
-			else {
-                if(log.isDebugEnabled()) log.debug("    - Setting privileges for group : "+ name);
-				for (int opId: priv.getOperations()) {
-					name = dataMan.getAccessManager().getPrivilegeName(opId);
-					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
-                        if(log.isDebugEnabled()) log.debug("       --> "+ name);
-						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
-					}
-					else {
-                        if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");
-					}
-				}
-			}
-		}
-	}
-
-	//--------------------------------------------------------------------------
 	//---
 	//--- Private methods : updateMetadata
 	//---
@@ -292,7 +250,7 @@ class Harvester {
 	private void updateMetadata(RemoteFile rf, RecordInfo record) throws Exception {
 		if (!rf.isMoreRecentThan(record.changeDate)) {
             if(log.isDebugEnabled()) log.debug("  - Metadata XML not changed for path : "+ rf.getPath());
-			result.unchanged++;
+			result.unchangedMetadata++;
 		}
 		else {
             if(log.isDebugEnabled()) log.debug("  - Updating local metadata for path : "+ rf.getPath());
@@ -323,12 +281,14 @@ class Harvester {
 			//--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
 			dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(record.id));
-			addPrivileges(record.id);
-			dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(record.id));
-			addCategories(record.id);
-			dbms.commit();
-			dataMan.indexMetadataGroup(dbms, record.id);
-			result.updated++;
+            addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+
+            dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(record.id));
+            addCategories(record.id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+
+            dbms.commit();
+			dataMan.indexMetadata(dbms, record.id);
+			result.updatedMetadata++;
 		}
 	}
 
@@ -346,7 +306,7 @@ class Harvester {
 	private CategoryMapper localCateg;
 	private GroupMapper localGroups;
 	private UriMapper localUris;
-	private WebDavResult result;
+	private HarvestResult result;
 	private SchemaManager  schemaMan;
 }
 

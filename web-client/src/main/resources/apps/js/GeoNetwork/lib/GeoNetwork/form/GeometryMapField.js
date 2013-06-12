@@ -116,6 +116,7 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
         this.layer_style.strokeWidth = 4;
     },
     createExtentControl: function() {
+        var action;
         
         // Restrict to map extent action or draw polygon control
         if (this.restrictToMapExtent) {

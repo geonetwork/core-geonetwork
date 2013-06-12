@@ -10,11 +10,11 @@
   xmlns:gml="http://www.opengis.net/gml"
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:geonet="http://www.fao.org/geonetwork"
-  xmlns:saxon="http://saxon.sf.net/"
   xmlns:exslt="http://exslt.org/common"
   exclude-result-prefixes="#all">
 
   <xsl:include href="metadata-utils.xsl"/>
+  <xsl:include href="metadata-markup.xsl"/>
   <xsl:include href="metadata-geo.xsl"/>
   <xsl:include href="metadata-inspire.xsl"/>
   <xsl:include href="metadata-view.xsl"/>
@@ -100,9 +100,10 @@
   <!-- these elements should be boxed -->
   <!-- ===================================================================== -->
 
-  <xsl:template mode="iso19139" match="gmd:identificationInfo|gmd:distributionInfo|gmd:descriptiveKeywords|gmd:thesaurusName|
-              *[name(..)='gmd:resourceConstraints']|gmd:spatialRepresentationInfo|
-              gmd:portrayalCatalogueInfo|gmd:portrayalCatalogueCitation|gmd:pointOfContact|
+  <xsl:template mode="iso19139" match="gmd:identificationInfo|gmd:distributionInfo|
+              gmd:portrayalCatalogueInfo|gmd:portrayalCatalogueCitation|
+              gmd:descriptiveKeywords|gmd:thesaurusName|
+              *[name(..)='gmd:resourceConstraints']|gmd:spatialRepresentationInfo|gmd:pointOfContact|
               gmd:dataQualityInfo|gmd:contentInfo|gmd:distributionFormat|
               gmd:referenceSystemInfo|gmd:spatialResolution|gmd:offLine|gmd:projection|gmd:ellipsoid|gmd:extent[name(..)!='gmd:EX_TemporalExtent']|gmd:attributes|gmd:verticalCRS|
               gmd:geographicBox|gmd:EX_TemporalExtent|gmd:MD_Distributor|
@@ -147,17 +148,27 @@
         <xsl:variable name="text">
           <xsl:variable name="ref" select="gco:Distance/geonet:element/@ref"/>
           
-          <input type="number" class="md" name="_{$ref}" id="_{$ref}"  
-            onkeyup="validateNumber(this,true,true);"
-            onchange="validateNumber(this,true,true);"
-            value="{gco:Distance}" size="30"/>
+          <!-- Look for the helper to check if a radio edit mode is activated
+            If yes, hide the input text which will be updated when clicking the radio
+            or the other option. -->
+          <xsl:variable name="helper" select="geonet:getHelper($schema, ., /root/gui)"/>
           
-          &#160;
-          <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
-          &#160;
-          <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"  
-            value="{gco:Distance/@uom}" style="width:30px;"/>
-          
+          <div>
+            <xsl:if test="contains($helper/@editorMode, 'radio')">
+              <xsl:attribute name="style">display:none;</xsl:attribute>
+            </xsl:if>
+            <input type="number" class="md" name="_{$ref}" id="_{$ref}"  
+              onkeyup="validateNumber(this,true,true);"
+              onchange="validateNumber(this,true,true);"
+              value="{gco:Distance}" size="30">
+            </input>
+            
+            &#160;
+            <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
+            &#160;
+            <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"  
+              value="{gco:Distance/@uom}" style="width:30px;"/>
+          </div>
           <xsl:for-each select="gco:Distance">
             <xsl:call-template name="helper">
               <xsl:with-param name="schema" select="$schema"/>
@@ -530,7 +541,7 @@
   <xsl:template mode="iso19139" match="gco:ScopedName|gco:LocalName">
     <xsl:param name="schema"/>
     <xsl:param name="edit"/>
-    
+
     <xsl:variable name="text">
       <xsl:call-template name="getElementText">
         <xsl:with-param name="edit"   select="$edit"/>
@@ -774,7 +785,7 @@
             <xsl:variable name="link">
               <xsl:choose>
                 <xsl:when test="geonet:is-image(gmx:FileName/@src)">
-                  <div class="logo-wrap"><img src="{gmx:FileName/@src}"/></div>
+                  <div class="logo-wrap"><img class="logo" src="{gmx:FileName/@src}"/></div>
                 </xsl:when>
                 <xsl:otherwise>
                   <a href="{gmx:FileName/@src}"><xsl:value-of select="gmx:FileName"/></a>
@@ -1061,34 +1072,44 @@
                 Radio button modes
               -->
               <xsl:when test="contains($mode, 'radio')">
+                <div class="helper helper-{$mode}">
+                  <div>
+                    <input class="md" type="radio" id="{$name}" name="{$name}" value="">
+                      <xsl:if test="$isXLinked">
+                        <xsl:attribute name="disabled">disabled</xsl:attribute>
+                      </xsl:if>
+                    </input>
+                    <label for="{$name}"><xsl:value-of select="/root/gui/strings/nodata"/></label>
+                  </div>
+                  
+                  
+                  <xsl:for-each select="$codelist/codelist/entry[not(@hideInEditMode)]">
+                    <xsl:sort select="label"/>
+                    <div>
+                      <input class="md" type="radio" name="{$name}" id="{$name}{position()}" value="{code}">
+                        <xsl:if test="$isXLinked">
+                          <xsl:attribute name="disabled">disabled</xsl:attribute>
+                        </xsl:if>
+                        <xsl:if test="code=$value">
+                          <xsl:attribute name="checked"/>
+                        </xsl:if>
+                      </input>
+                      <label for="{$name}{position()}" title="{description}">
+                        <xsl:value-of select="label"/>
+                        <xsl:if test="$mode='radio_withdesc'"><span><xsl:value-of select="description"/></span></xsl:if>
+                      </label>
+                    </div>
+                  </xsl:for-each>
                 
-                <input class="md" type="radio" id="{$name}" name="{$name}" value="">
-                  <xsl:if test="$isXLinked">
-                    <xsl:attribute name="disabled">disabled</xsl:attribute>
+                  <!-- Add non existing values -->
+                  <xsl:if test="count($codelist/codelist/entry[code=$value])=0">
+                    <div>
+                      <input class="md" type="radio" name="{$name}" id="{$name}{position()}" checked="checked" value="{$value}"/>
+                      <label for="{$name}{position()}"><xsl:value-of select="$value"/></label>
+                    </div>
                   </xsl:if>
-                </input>
-                <label for="{$name}"><xsl:value-of select="/root/gui/strings/nodata"/></label>
-                <xsl:if test="$mode='radio_linebreak' or $mode='radio_withdesc'"><br/></xsl:if>
-                <xsl:for-each select="$codelist/codelist/entry[not(@hideInEditMode)]">
-                  <xsl:sort select="label"/>
-                  <input class="md" type="radio" name="{$name}" id="{$name}{position()}" value="{code}">
-                    <xsl:if test="$isXLinked">
-                      <xsl:attribute name="disabled">disabled</xsl:attribute>
-                    </xsl:if>
-                    <xsl:if test="code=$value">
-                      <xsl:attribute name="checked"/>
-                    </xsl:if>
-                  </input>
-                  <label for="{$name}{position()}" title="{description}"><xsl:value-of select="label"/></label>
-                  <xsl:if test="$mode='radio_withdesc'"> : <xsl:value-of select="description"/><br/></xsl:if>
-                  <xsl:if test="$mode='radio_linebreak'"><br/></xsl:if>
-                </xsl:for-each>
+                </div>
                 
-                <!-- Add non existing values -->
-                <xsl:if test="count($codelist/codelist/entry[code=$value])=0">
-                  <input class="md" type="radio" name="{$name}" id="{$name}{position()}" checked="checked" value="{$value}"/>
-                  <label for="{$name}{position()}"><xsl:value-of select="$value"/></label>
-                </xsl:if>
               </xsl:when>
               <!-- 
                 Select list modes
@@ -1289,7 +1310,7 @@
     -->
     
     <!-- Single quote are escaped inside keyword. -->
-    <xsl:variable name="listOfKeywords" select="concat('''', replace(replace(string-join(gmd:keyword/*[1], '#,#'), '''', '\\'''), '#', ''''), '''')"/>
+    <xsl:variable name="listOfKeywords" select="replace(replace(string-join(gmd:keyword/*[1], '#,#'), '''', '\\'''), '#', '''')"/>
     
     <!-- Get current transformation mode based on XML fragement analysis -->
     <xsl:variable name="transformation" select="if (count(descendant::gmd:keyword/gmx:Anchor) > 0) then 'to-iso19139-keyword-with-anchor' 
@@ -1305,17 +1326,25 @@
       then concat('''', string-join($elementTransformations/@xslTpl, ''','''), '''')
       else '''to-iso19139-keyword'''"/>
     
-    <!-- 
-      TODO : retrieve from schema configuration per thesaurus
-     <xsl:variable name="widgetMode" select="if (contains(gmd:thesaurusName/gmd:CI_Citation/
-      gmd:identifier/gmd:MD_Identifier/gmd:code/*[1], 'inspire')) then 'multiplelist' else ''"/>
+    <xsl:variable name="listOfTransformations">'to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink'</xsl:variable>
+    
+    <!-- Create custom widget: 
+      * '' for item selector, 
+      * 'combo' for simple combo, 
+      * 'list' for selection list, 
+      * 'multiplelist' for multiple selection list
       -->
     <xsl:variable name="widgetMode" select="''"/>
     
+    <!-- Retrieve the thesaurus identifier from the thesaurus citation. The thesaurus 
+    identifier should be defined in the citation identifier. By default, GeoNetwork
+    define it in a gmx:Anchor. Retrieve the first child of the code which might be a
+    gco:CharacterString. 
+    -->
     <xsl:variable name="thesaurusName" select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"></xsl:variable>
     <xsl:variable name="thesaurusId" select="if (gmd:thesaurusName/gmd:CI_Citation/
-      gmd:identifier/gmd:MD_Identifier/gmd:code) then gmd:thesaurusName/gmd:CI_Citation/
-      gmd:identifier/gmd:MD_Identifier/gmd:code else /root/gui/thesaurus/thesauri/thesaurus[title=$thesaurusName]/key"/>
+      gmd:identifier/gmd:MD_Identifier/gmd:code/*[1]) then gmd:thesaurusName/gmd:CI_Citation/
+      gmd:identifier/gmd:MD_Identifier/gmd:code/*[1] else /root/gui/thesaurus/thesauri/thesaurus[title=$thesaurusName]/key"/>
     
     
     <!-- The element identifier in the metadocument-->
@@ -1329,55 +1358,28 @@
       <xsl:with-param name="listOfTransformations" select="$listOfTransformations"/>
       <xsl:with-param name="transformation" select="$transformation"/>
     </xsl:call-template>
-
     
   </xsl:template>
   
   
   <xsl:template name="snippet-editor">
-    <!-- 
-    The gmd:keyword section identifier in the metadocument (in geonet:element/@ref)
-    -->
     <xsl:param name="elementRef"/>
-    <!-- Create custom widget: 
-      * '' for item selector, 
-      * 'combo' for simple combo, 
-      * 'list' for selection list, 
-      * 'multiplelist' for multiple selection list
-      -->
     <xsl:param name="widgetMode" select="''"/>
-    <!-- Retrieve the thesaurus identifier from the thesaurus citation. The thesaurus 
-    identifier should be defined in the citation identifier. By default, GeoNetwork
-    define it in a gmx:Anchor. Retrieve the first child of the code which might be a
-    gco:CharacterString. 
-    
-    TODO : Add lenient detection on thesaurus title from thesaurus list in the current XML document
-    -->
     <xsl:param name="thesaurusId"/>
-    <!-- 
-    Use the keyword label or uri to identified the keyword.
-    uri identification requires the URI to be in the XML fragment(eg. using gmx:Anchor)
-    -->
-    <xsl:param name="identificationMode" required="no"/>
-    <!-- 
-      List of keywords or uri according to identificationMode 
-    -->
     <xsl:param name="listOfKeywords"/>
-    <!-- 
-    List of transformations. Default to 'to-iso19139-keyword' -->
-    <xsl:param name="listOfTransformations" select="'to-iso19139-keyword'"/>
-    <!-- 
-    Current transformation
-    -->
+    <xsl:param name="listOfTransformations"/>
     <xsl:param name="transformation"/>
-
+    <xsl:param name="itemSelectorHeight" select="'undefined'" required="no"/>
+    <xsl:param name="itemSelectorWidth" select="'undefined'" required="no"/>
+    <xsl:param name="identificationMode" select="'value'" required="no"/>
+    
     <!-- The widget configuration -->
     <div class="thesaurusPickerCfg" id="thesaurusPicker_{$elementRef}" 
       config="{{mode: '{$widgetMode}', thesaurus:'{$thesaurusId
-      }',keywords: [{$listOfKeywords
-      }], transformations: [{$listOfTransformations
+      }',keywords: ['{$listOfKeywords
+      }'], transformations: [{$listOfTransformations
       }], transformation: '{$transformation
-      }', identificationMode: '{$identificationMode}'}}"/>
+      }', itemSelectorHeight: {$itemSelectorHeight}, itemSelectorWidth: {$itemSelectorWidth}}}"/>
     
     <!-- The widget container -->
     <div class="thesaurusPicker" id="thesaurusPicker_{$elementRef}_panel"/>
@@ -1412,6 +1414,7 @@
             <xsl:variable name="thesaurusCode" select="if (gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/
               gmd:identifier/gmd:MD_Identifier/gmd:code) then gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/
               gmd:identifier/gmd:MD_Identifier/gmd:code else /root/gui/thesaurus/thesauri/thesaurus[title=$thesaurusName]/key"/>
+            
             <xsl:choose>
               <!-- If a thesaurus is attached to that keyword group 
               use a snippet editor. 
@@ -1881,17 +1884,14 @@
 
     <!-- dataset or resource info in its own box -->
   
-    <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification|
-            gmd:identificationInfo/srv:SV_ServiceIdentification|
-            gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
-            gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
+    <xsl:for-each select="gmd:identificationInfo/*">
       <xsl:call-template name="complexElementGuiWrapper">
         <xsl:with-param name="title">
         <xsl:choose>
           <xsl:when test="$dataset=true()">
             <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='gmd:MD_DataIdentification']/label"/>
           </xsl:when>
-          <xsl:when test="local-name(.)='SV_ServiceIdentification' or @gco:isoType='srv:SV_ServiceIdentification'">
+          <xsl:when test="local-name(.)='SV_ServiceIdentification' or contains(@gco:isoType, 'SV_ServiceIdentification')">
             <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name='srv:SV_ServiceIdentification']/label"/>
           </xsl:when>
           <xsl:otherwise>
@@ -2819,7 +2819,16 @@
             	<xsl:value-of select="concat('checkForFileUpload(&quot;',$fref,'&quot;, &quot;',$ref,'&quot;, this.options[this.selectedIndex].value);')" />
       		</xsl:variable>
             
-            <input type="text" id="_{$ref}" name="_{$ref}" value="{$value}"/>
+            <!-- Look for the helper to check if a radio edit mode is activated
+            If yes, hide the input text which will be updated when clicking the radio
+            or the other option. -->
+            <xsl:variable name="helper" select="geonet:getHelper($schema, ., /root/gui)"/>
+            
+            <input type="text" id="_{$ref}" name="_{$ref}" value="{$value}">
+              <xsl:if test="contains($helper/@editorMode, 'radio')">
+                <xsl:attribute name="style">display:none;</xsl:attribute>
+              </xsl:if>
+            </input>
             <xsl:for-each select="gco:CharacterString">
              <xsl:call-template name="helper">
                <xsl:with-param name="schema" select="$schema"/>
@@ -2977,10 +2986,15 @@
         <xsl:apply-templates mode="escapeXMLEntities" select="/root/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
       </xsl:variable>
     
+      <xsl:variable name="abstract">
+        <xsl:apply-templates mode="escapeXMLEntities" select="/root/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract/gco:CharacterString"/>
+      </xsl:variable>
+    
       <button type="button" class="content repository" 
         onclick="javascript:Ext.getCmp('editorPanel').showGeoPublisherPanel('{/root/*/geonet:info/id}',
         '{/root/*/geonet:info/uuid}', 
         '{$title}',
+        '{$abstract}',
         '{$layer}', 
         '{$access}', 'gmd:onLine', '{ancestor::gmd:MD_DigitalTransferOptions/geonet:element/@ref}', [{$bbox}]);" 
         alt="{/root/gui/strings/publishHelp}" 
@@ -3037,7 +3051,7 @@
         </xsl:call-template>
       </xsl:variable>
       
-      <xsl:apply-templates mode="briefster" select="gmd:identificationInfo/gmd:MD_DataIdentification|gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|gmd:identificationInfo/srv:SV_ServiceIdentification">
+      <xsl:apply-templates mode="briefster" select="gmd:identificationInfo/*">
         <xsl:with-param name="id" select="$id"/>
         <xsl:with-param name="langId" select="$langId"/>
         <xsl:with-param name="info" select="$info"/>
@@ -3375,6 +3389,8 @@
     </xsl:call-template>
     </xsl:template>
   -->
+  
+  
   <!-- ============================================================================= -->
   <!-- iso19139 complete tab template  -->
   <!-- ============================================================================= -->
@@ -3720,6 +3736,7 @@
         <xsl:when test="name(.)='gmd:abstract'">large</xsl:when>
         <xsl:when test="name(.)='gmd:supplementalInformation'
           or name(.)='gmd:purpose'
+          or name(.)='gmd:orderingInstructions'
           or name(.)='gmd:statement'">medium</xsl:when>
         <xsl:when test="name(.)='gmd:description'
           or name(.)='gmd:specificUsage'

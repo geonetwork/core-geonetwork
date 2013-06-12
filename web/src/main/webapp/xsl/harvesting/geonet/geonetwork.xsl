@@ -8,6 +8,8 @@
 
 	<xsl:template name="editPanel-GN">
 		<div id="gn.editPanel">
+            <xsl:call-template name="ownerGroup-GN"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-GN"/>
 			<div class="dots"/>
 			<xsl:call-template name="search-GN"/>
@@ -22,6 +24,19 @@
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-GN">
+        <table border="0">
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
+                <td class="padded"><select id="gn.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-GN">
@@ -52,28 +67,10 @@
 		        <td class="padded"><xsl:value-of select="/root/gui/harvesting/xslfilter"/></td>
 		        <td class="padded"><input id="gn.xslfilter" class="content" type="text" value="" size="30"/></td>
 		    </tr>
-		  
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/useAccount"/></td>
-				<td class="padded"><input id="gn.useAccount" type="checkbox" checked="on"/></td>
-			</tr>
-
-			<tr>
-				<td/>
-				<td>
-					<table id="gn.account">
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/username"/></td>
-							<td class="padded"><input id="gn.username" class="content" type="text" value="" size="20"/></td>
-						</tr>
-		
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/password"/></td>
-							<td class="padded"><input id="gn.password" class="content" type="password" value="" size="20"/></td>
-						</tr>
-					</table>
-				</td>
-			</tr>			
+			
+			<xsl:call-template name="useAccount">
+				<xsl:with-param name="type" select="'gn'"/>
+			</xsl:call-template>
 		</table>
 	</xsl:template>
 
@@ -152,17 +149,6 @@
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/categories"/></h1>
 		
 		<select id="gn.categories" class="content" size="8" multiple="multiple"/>
-	</xsl:template>
-	
-	<!-- ============================================================================================= -->
-	
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
 	</xsl:template>
 
     <!-- ============================================================================================= -->

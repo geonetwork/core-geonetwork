@@ -2,7 +2,6 @@ package org.fao.geonet.kernel.rdf;
 
 import static java.text.MessageFormat.format;
 
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Namespace;
@@ -32,6 +31,7 @@ public class Selectors {
 	public static final Selector LOWER_CORNER = new Selector("lowc", "{id} gml:BoundedBy {} gml:lowerCorner {lowc}", GML_NAMESPACE);
 	public static final Selector UPPER_CORNER = new Selector("uppc", "{id} gml:BoundedBy {} gml:upperCorner {uppc}", GML_NAMESPACE);
 	public static final Selector SRS_NAME = new Selector("srsName", "{id} gml:BoundedBy {} gml:srsName {srsName}", GML_NAMESPACE);
+	public static final Selector BROADER = new Selector("broader", "{id} skos:broader {broader}", SKOS_NAMESPACE);
 	/**
 	 * Add a column with the language of another column.
 	 *

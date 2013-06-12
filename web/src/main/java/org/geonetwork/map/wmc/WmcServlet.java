@@ -4,6 +4,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.geonetwork.http.proxy.util.RequestUtil;
 import org.pvalsecc.misc.FileUtilities;
@@ -18,8 +19,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import jeeves.constants.Jeeves;
+
 
 public class WmcServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
     public static final Logger LOGGER = Logger.getLogger(WmcServlet.class);
 
     private final String WMC_CONTENT_TYPE = "application/vnd.ogc.context+xml";
@@ -116,14 +121,12 @@ public class WmcServlet extends HttpServlet {
                 ServletFileUpload upload = new ServletFileUpload(factory);
 
                 // Parse the request
+                @SuppressWarnings("unchecked")
                 List<FileItem> items = upload.parseRequest(request);
 
 
                 // Process the uploaded items
-                Iterator iter = items.iterator();
-                while (iter.hasNext()) {
-                    FileItem item = (FileItem) iter.next();
-
+                for (FileItem item : items) {
                     if (!item.isFormField()) {
                         byte[] data = item.get();
 
@@ -131,8 +134,8 @@ public class WmcServlet extends HttpServlet {
                         TempFile tempFile = new TempFile(File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX, getTempDir()));
                         final String id = generateId(tempFile);
                         try {
-                            FileWriter fw = new FileWriter(tempFile);
-                            fw.write(new String(data));
+                            Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), Jeeves.ENCODING));
+                            fw.write(new String(data, Jeeves.ENCODING));
                             fw.close();
                             out.write("{success: true, url: '" + getBaseUrl(request) + "/" + id + TEMP_FILE_SUFFIX + "'}");
 
@@ -212,7 +215,7 @@ public class WmcServlet extends HttpServlet {
             String wmcContent = RequestUtil.inputStreamAsString(httpServletRequest);
             wmcContent = XML_HEADER + "\n" + wmcContent;
 
-            FileWriter fw = new FileWriter(tempFile);
+            Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), Jeeves.ENCODING));
             fw.write(wmcContent);
             fw.close();
 
@@ -228,13 +231,19 @@ public class WmcServlet extends HttpServlet {
      * copy the WMC into the output stream
      */
     protected void sendWmcFile(HttpServletResponse httpServletResponse, File tempFile) throws IOException {
-        FileInputStream pdf = new FileInputStream(tempFile);
-        final OutputStream response = httpServletResponse.getOutputStream();
-        httpServletResponse.setContentType(WMC_CONTENT_TYPE);
-        httpServletResponse.setHeader("Content-disposition", "attachment; filename=" + tempFile.getName());
-        FileUtilities.copyStream(pdf, response);
-        pdf.close();
-        response.close();
+        FileInputStream pdf = null;
+        try {
+            pdf = new FileInputStream(tempFile);
+            final OutputStream response = httpServletResponse.getOutputStream();
+            httpServletResponse.setContentType(WMC_CONTENT_TYPE);
+            httpServletResponse.setHeader("Content-disposition", "attachment; filename=" + tempFile.getName());
+            FileUtilities.copyStream(pdf, response);
+            response.close();
+        } finally {
+            if(pdf != null) {
+                IOUtils.closeQuietly(pdf);
+            }
+        }
     }
 
     /**
@@ -299,11 +308,35 @@ public class WmcServlet extends HttpServlet {
     }
 
     protected static class TempFile extends File {
+        private static final long serialVersionUID = 1L;
         private final long creationTime;
 
         public TempFile(File tempFile) {
             super(tempFile.getAbsolutePath());
             creationTime = System.currentTimeMillis();
         }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result + (int) (creationTime ^ (creationTime >>> 32));
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (!super.equals(obj))
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            TempFile other = (TempFile) obj;
+            if (creationTime != other.creationTime)
+                return false;
+            return true;
+        }
+        
     }
 }

@@ -27,22 +27,22 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
-import jeeves.utils.PasswordUtil;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.FileCopyMgr;
@@ -56,6 +56,7 @@ import org.jdom.xpath.XPath;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.text.DateFormat;
@@ -137,7 +138,7 @@ import java.util.Map;
  * @author fxprunayre
  *   
  */
-class Harvester
+class Harvester extends BaseAligner
 {
 	
 	
@@ -160,14 +161,11 @@ class Harvester
 		this.dbms   = dbms;
 		this.params = params;
 
-		result = new OgcWxSResult ();
+		result = new HarvestResult ();
 		
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager ();
 		schemaMan = gc.getSchemamanager ();
-		SettingInfo si = new SettingInfo(context);
-
-
     }
 
 	//---------------------------------------------------------------------------
@@ -178,7 +176,7 @@ class Harvester
 	/** 
      * Start the harvesting of a WMS, WFS or WCS node.
      */
-	public OgcWxSResult harvest() throws Exception {
+	public HarvestResult harvest() throws Exception {
         Element xml;
 
         log.info("Retrieving remote metadata information for : " + params.name);
@@ -235,7 +233,7 @@ class Harvester
         
         dbms.commit ();
             
-        result.total = result.added + result.layer;
+        result.totalMetadata = result.addedMetadata + result.layer;
     
 		return result;
 	}
@@ -284,7 +282,7 @@ class Harvester
 		
 		Element md = Xml.transform (capa, styleSheet, param);
 		
-		String schema = dataMan.autodetectSchema (md); // ie. iso19139; 
+		String schema = dataMan.autodetectSchema (md, null); // ie. iso19139; 
 
 		if (schema == null) {
 			log.warning("Skipping metadata with unknown schema.");
@@ -309,7 +307,8 @@ class Harvester
 			xp.addNamespace("wms", "http://www.opengis.net/wms");
 			xp.addNamespace("sos", "http://www.opengis.net/sos/1.0");
 										
-			List<Element> layers = xp.selectNodes(capa);
+			@SuppressWarnings("unchecked")
+            List<Element> layers = xp.selectNodes(capa);
 			if (layers.size()>0) {
 				log.info("  - Number of layers, featureTypes or Coverages found : " + layers.size());
 			
@@ -335,13 +334,13 @@ class Harvester
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.owner), group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.ownerId), group, params.uuid,
                      isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 
-		addPrivileges(id);
-		addCategories(id);
+         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+         addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 		
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url);
 		dataMan.setTemplate(dbms, iId, "n", null);
@@ -349,7 +348,7 @@ class Harvester
 		dbms.commit();
 		//dataMan.indexMetadata(dbms, id); setTemplate update the index
 		
-		result.added ++;
+		result.addedMetadata++;
 		
 		// Add Thumbnails only after metadata insertion to avoid concurrent transaction
 		// and loaded thumbnails could eventually failed anyway.
@@ -450,7 +449,7 @@ class Harvester
 				Element op = new Element ("operatesOn", srv);
 				op.setAttribute("uuidref", layer.uuid);
 
-                String hRefLink =  dataMan.getSiteURL() + "/iso19139.xml?uuid=" + layer.uuid;
+                String hRefLink =  dataMan.getSiteURL(context) + "/xml.metadata.get?uuid=" + layer.uuid;
                 op.setAttribute("href", hRefLink, xlink);
 
 				
@@ -573,7 +572,7 @@ class Harvester
                             xml = (Element) xml.getChildren().get(0);
                         }
 
-						schema = dataMan.autodetectSchema (xml); // ie. iso19115 or 139 or DC
+						schema = dataMan.autodetectSchema (xml, null); // ie. iso19115 or 139 or DC
 						// Extract uuid from loaded xml document
 						// FIXME : uuid could be duplicate if metadata already exist in catalog
 						reg.uuid = dataMan.extractUUID(schema, xml);
@@ -643,7 +642,7 @@ class Harvester
             
 			schema = dataMan.autodetectSchema (xml);
 			
-            reg.id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), reg.uuid, Integer.parseInt(params.owner), group, params.uuid,
+            reg.id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), reg.uuid, Integer.parseInt(params.ownerId), group, params.uuid,
                          isTemplate, docType, title, category, date, date, ufo, indexImmediate);
 			
 			xml = dataMan.updateFixedInfo(schema, reg.id, params.uuid, xml, null, DataManager.UpdateDatestamp.no, dbms, context);
@@ -652,8 +651,9 @@ class Harvester
             if(log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
 
             if(log.isDebugEnabled()) log.debug("    - Set Privileges and category.");
-			addPrivileges(reg.id);
-			if (params.datasetCategory!=null && !params.datasetCategory.equals(""))
+            addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+
+            if (params.datasetCategory!=null && !params.datasetCategory.equals(""))
 				dataMan.setCategory (context, dbms, reg.id, params.datasetCategory);
 
             if(log.isDebugEnabled()) log.debug("    - Set Harvested.");
@@ -661,16 +661,16 @@ class Harvester
 			
 			dbms.commit();
 			
-			dataMan.indexMetadataGroup(dbms, reg.id);
+			dataMan.indexMetadata(dbms, reg.id);
 			
 			try {
     			// Load bbox info for later use (eg. WMS thumbnails creation)
     			Namespace gmd 	= Namespace.getNamespace("http://www.isotc211.org/2005/gmd");
     			Namespace gco 	= Namespace.getNamespace("http://www.isotc211.org/2005/gco");
     			
-    			Iterator<Element> bboxes = xml.getDescendants(
-    					new ElementFilter ("EX_GeographicBoundingBox", gmd)
-    					);
+    			ElementFilter bboxFinder = new ElementFilter("EX_GeographicBoundingBox", gmd);
+                @SuppressWarnings("unchecked")
+                Iterator<Element> bboxes = xml.getDescendants(bboxFinder);
     			
     			while (bboxes.hasNext()) {
     				Element box = bboxes.next();
@@ -821,11 +821,17 @@ class Harvester
 			if (result == 200) {
 			    // Save image document to temp directory
 				// TODO: Check OGC exception
-                OutputStream fo = new FileOutputStream (dir + filename);
-			    BinaryFile.copy (req.getResponseBodyAsStream(),
-						    		fo, 
-						    		true,
-						    		true);
+                OutputStream fo = null;
+                InputStream in = null;
+                
+                try {
+                    fo = new FileOutputStream (dir + filename);
+                    in = req.getResponseBodyAsStream();
+                    BinaryFile.copy (in,fo);
+                } finally {
+                    IOUtils.closeQuietly(in);
+                    IOUtils.closeQuietly(fo);
+                }
 			} else {
 				log.info (" Http error connecting");
 				return null;
@@ -845,63 +851,6 @@ class Harvester
 		
 		return filename;
 	}
-
-
-    /**
-     * Add categories according to harvesting configuration
-     *   
-     * @param id		GeoNetwork internal identifier
-     * 
-     */
-	private void addCategories (String id) throws Exception
-	{
-		for(String catId : params.getCategories ())
-		{
-			String name = localCateg.getName (catId);
-
-			if (name == null) {
-                if(log.isDebugEnabled()) log.debug ("    - Skipping removed category with id:"+ catId);
-			}
-			else {
-				dataMan.setCategory (context, dbms, id, catId);
-			}
-		}
-	}
-
-	/** 
-     * Add privileges according to harvesting configuration
-     *   
-     * @param id		GeoNetwork internal identifier
-     * 
-     */
-	private void addPrivileges (String id) throws Exception
-	{
-		for (Privileges priv : params.getPrivileges ())
-		{
-			String name = localGroups.getName( priv.getGroupId ());
-
-			if (name == null)
-			{
-                if(log.isDebugEnabled()) log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
-			}
-			else
-			{
-				for (int opId: priv.getOperations ())
-				{
-					name = dataMan.getAccessManager().getPrivilegeName(opId);
-
-					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6)
-					{
-						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
-					}
-					else
-                    if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");
-				}
-			}
-		}
-	}
-
 
 	/** 
      * Add '?' or '&' if required to url so that parameters can just be 
@@ -934,7 +883,7 @@ class Harvester
 	private SchemaManager  schemaMan;
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
-    private OgcWxSResult   result;
+    private HarvestResult   result;
 
     /**
 	 * Store the GetCapabilities operation URL. This URL is scrambled
@@ -950,11 +899,10 @@ class Harvester
     private static final String IMAGE_FORMAT = "image/png";
     private List<WxSLayerRegistry> layersRegistry = new ArrayList<WxSLayerRegistry>();
 	
-	private class WxSLayerRegistry {
+	private static class WxSLayerRegistry {
 		public String uuid;
 		public String id;
 		public String name;
-		public String url; 		// FIXME : if params.url is not the same as the GetMap Online link
 		public Double minx = -180.0;
 		public Double miny = -90.0;
 		public Double maxx = 180.0;
@@ -962,6 +910,3 @@ class Harvester
 	}
 
 }
-
-//=============================================================================
-

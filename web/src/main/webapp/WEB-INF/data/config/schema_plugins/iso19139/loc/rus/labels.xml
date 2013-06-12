@@ -1799,48 +1799,31 @@
 			dataset is a part</description>
 		<condition>обязательное поле</condition>
 	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:name">
-		<label>Наименование</label>
-		<description>name of the series, or aggregate dataset, of which the
-			dataset is a part</description>
-		<condition>обязательное поле</condition>
+	<element name="gmd:name" context="gmd:MD_Format" id="285.0">
+		<label>Name</label>
+		<description>Name of the data transfer format(s)</description>
+		<help>name of the data transfer format(s)</help>
+		<condition>mandatory</condition>
+		<helper rel="gmd:version">
+			<option value="Text">Text</option>
+			<option value="ESRI Shapefile" title="1.0">ESRI Shapefile</option>
+			<option value="Mapinfo MIF/MID" title="4.5">Mapinfo MIF/MID</option>
+			<option value="Mapinfo TAB">Mapinfo TAB</option>
+			<option value="KML">KML</option>
+			<option value="GML" title="3.2.1">GML</option>
+			<option value="GeoTIFF" title="1.0">GeoTIFF</option>
+			<option value="TIFF">TIFF</option>
+			<option value="ECW">ECW</option>
+			<option value="JPEG2000">JPEG2000</option>
+			<option value="ZIP">ZIP</option>
+			<option value="PDF">PDF</option>
+			<option value="PNG">PNG</option>
+			<option value="JPEG">JPEG</option>
+			<option value="OGC:WMC">OGC:WMC</option>
+			<option value="OGC:OWS Context">OGC:OWS Context</option>
+		</helper>
 	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:name">
-		<label>Наименование</label>
-		<description>name of the series, or aggregate dataset, of which the
-			dataset is a part</description>
-		<condition>обязательное поле</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:name">
-		<label>Наименование</label>
-		<description>name of the series, or aggregate dataset, of which the
-			dataset is a part</description>
-		<condition>обязательное поле</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:name">
-		<label>Наименование</label>
-		<description>name of the series, or aggregate dataset, of which the
-			dataset is a part</description>
-		<condition>обязательное поле</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:name">
-		<label>Наименование</label>
-		<description>name of the series, or aggregate dataset, of which the
-			dataset is a part</description>
-		<condition>обязательное поле</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:name">
-		<label>Наименование</label>
-		<description>name of the series, or aggregate dataset, of which the
-			dataset is a part</description>
-		<condition>обязательное поле</condition>
-	</element>
+	
 	<!-- ==================================================== -->
 	<element name="gmd:nameOfMeasure">
 		<label>Name of measure</label>
@@ -2939,46 +2922,31 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gco:aName" context="gco:TypeName">
-		<label>Type name</label>
-		<description />
-		<helper>
-			<option value="BOOLEAN">BOOLEAN</option>
-			<option value="BYTE">BYTE</option>
-			<option value="CHARACTER">CHARACTER</option>
-			<option value="DATE">DATE</option>
-			<option value="DATETIME">DATETIME</option>
-			<option value="DOUBLE">DOUBLE</option>
-			<option value="FLOAT">FLOAT</option>
-			<option value="INTEGER">INTEGER</option>
-			<option value="NUMERIC">NUMERIC</option>
-			<option value="REAL">REAL</option>
-			<option value="SERIAL">SERIAL</option>
-			<option value="VARCHAR">VARCHAR</option>
-			<option value="TEXT">TEXT</option>
-		</helper>
+	    <label>Type name</label>
+	    <description/>
+	    <helper>
+		<option value="BOOLEAN">BOOLEAN</option>
+		<option value="BYTE">BYTE</option>
+		<option value="CHARACTER">CHARACTER</option>
+		<option value="DATE">DATE</option>
+		<option value="DATETIME">DATETIME</option>
+		<option value="DOUBLE">DOUBLE</option>
+		<option value="FLOAT">FLOAT</option>
+		<option value="INTEGER">INTEGER</option>
+		<option value="NUMERIC">NUMERIC</option>
+		<option value="REAL">REAL</option>
+		<option value="SERIAL">SERIAL</option>
+		<option value="VARCHAR">VARCHAR</option>
+		<option value="TEXT">TEXT</option>
+	    </helper>
 	</element>
-	<element name="gmx:FileName">
-		<label>File name</label>
-		<description>File name and source URL.</description>
-	</element>
-	<element name="src">
-		<label>Source URL</label>
-		<description>URL of the document.</description>
-	</element>
-	<element name="gmx:Anchor">
-		<label>Anchor</label>
-		<description>Supports hyper-linking capabilities and ensures a
-			web-like implementation of CharacterStrings</description>
-	</element>
-	<element name="xlink:href">
-		<label>Link href</label>
-		<description>Supplies the data that allows an XLink application to
-			find a remote resource (or resource fragment) [W3C XLINK]</description>
-	</element>
-  	<!-- ==================================================== -->
-    <element name="hidden-elements">
-        <label>Hidden Elements</label>
-        <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
+    <element name="gmx:FileName">
+        <label>File name</label>
+        <description>File name and source URL.</description>
+    </element>
+    <element name="src">
+        <label>Source URL</label>
+        <description>URL of the document.</description>
     </element>
 		<element name="gmx:Anchor">
 				<label>Anchor</label>
@@ -3013,5 +2981,5 @@
     <element name="gmx:fieldOfApplication"> 
         <label>Field of application</label> 
         <description>Field of application</description> 
-    </element>
+    </element> 
 </labels>

@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel.rdf;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.List;
 
@@ -16,6 +17,36 @@ import org.openrdf.sesame.query.QueryResultsTable;
  * @author jeichar
  */
 public class Query<Q> {
+    /**
+     * The results of a query.
+     * 
+     * Note: only serializable so that the results can be cached in the JCS cache.  It should not
+     * ever be truly serialized.
+     */
+    public final class QueryResults extends AbstractList<Q> implements Serializable {
+        private static final long serialVersionUID = 3968403559675441162L;
+        private final QueryResultsTable table;
+        private transient final Thesaurus thesaurus;
+
+        public QueryResults(QueryResultsTable table, Thesaurus thesaurus) {
+            this.table = table;
+            this.thesaurus = thesaurus;
+        }
+
+        @Override
+        public Q get(int index) {
+            if(index > table.getRowCount() - 1) {
+                throw new IndexOutOfBoundsException(index+" is greater than "+(table.getRowCount() - 1));
+            }
+            return interpreter.createFromRow(thesaurus, table, index);
+        }
+
+        @Override
+        public int size() {
+            return table.getRowCount();
+        }
+    }
+
     private String query;
     private ResultInterpreter<Q> interpreter;
     
@@ -60,20 +91,7 @@ public class Query<Q> {
 	 */
 	public List<Q> execute(final Thesaurus thesaurus) throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
 	    final QueryResultsTable table = rawExecute(thesaurus);
-	    return new AbstractList<Q>() {
-            @Override
-            public Q get(int index) {
-                if(index > table.getRowCount() - 1) {
-                    throw new IndexOutOfBoundsException(index+" is greater than "+(table.getRowCount() - 1));
-                }
-                return interpreter.createFromRow(thesaurus, table, index);
-            }
-
-            @Override
-            public int size() {
-                return table.getRowCount();
-            }
-        };
+	    return new QueryResults(table, thesaurus);
 	}
 
     @Override

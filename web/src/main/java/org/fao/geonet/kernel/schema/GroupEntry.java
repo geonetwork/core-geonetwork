@@ -27,7 +27,6 @@
 
 package org.fao.geonet.kernel.schema;
 
-import org.jdom.Attribute;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import java.util.List;
 
 //==============================================================================
 
-class GroupEntry
+class GroupEntry extends BaseHandler
 {
 	public String  name;
     public ArrayList<ElementEntry> alElements = new ArrayList<ElementEntry>();
@@ -55,8 +54,8 @@ class GroupEntry
 	
 	public GroupEntry(ElementInfo ei)
 	{
-		handleAttribs(ei);
-		handleChildren(ei);
+        name = handleAttribs(ei, null);
+        handleChildren(ei);
 	}
 
 	//---------------------------------------------------------------------------
@@ -65,50 +64,16 @@ class GroupEntry
 	//---
 	//---------------------------------------------------------------------------
 
-	private void handleAttribs(ElementInfo ei)
-	{
-		List attribs = ei.element.getAttributes();
-
-        for (Object attrib : attribs) {
-            Attribute at = (Attribute) attrib;
-
-            String attrName = at.getName();
-            if (attrName.equals("name")) {
-                name = at.getValue();
-                if ((name.indexOf(':') == -1) && (ei.targetNSPrefix != null)) {
-                    name = ei.targetNSPrefix + ":" + at.getValue();
-                }
-            }
-            else {
-                Logger.log();
-            }
-        }
-	}
-
-	//---------------------------------------------------------------------------
-
 	private void handleChildren(ElementInfo ei)
 	{
-		List children = ei.element.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = ei.element.getChildren();
 
-        for (Object aChildren : children) {
-            Element elChild = (Element) aChildren;
+        for (Element elChild : children) {
             String elName = elChild.getName();
 
             if (elName.equals("sequence")) {
-                List sequence = elChild.getChildren();
-
-                for (Object aSequence : sequence) {
-                    Element elElem = (Element) aSequence;
-
-                    if (elElem.getName().equals("choice") || elElem.getName().equals("element") || elElem.getName().equals("group") || elElem.getName().equals("sequence")) {
-                        alElements.add(new ElementEntry(elElem, ei.file, ei.targetNS, ei.targetNSPrefix));
-                    }
-
-                    else {
-                        Logger.log();
-                    }
-                }
+                handleSequence(elChild, alElements, ei);
             }
             else if (elName.equals("choice")) {
                 alElements.add(new ElementEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));

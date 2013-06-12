@@ -60,7 +60,7 @@
       select="$root//gmd:onLine/gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, 'OGC:WMS') 
                                             and normalize-space(gmd:linkage/gmd:URL)!='']"/>
     <xsl:variable name="srv"
-      select="$root//*[local-name(.)='SV_ServiceIdentification' or @gco:isoType='srv:SV_ServiceIdentification']"/>
+      select="$root//*[local-name(.)='SV_ServiceIdentification' or contains(@gco:isoType, 'SV_ServiceIdentification')]"/>
     
     <!-- Check if server is up and new value are available 
      <xsl:variable name="capabilities"
@@ -102,15 +102,12 @@
 
   <!-- Here set extent and graphicOverview -->
   <xsl:template
-    match="gmd:identificationInfo/gmd:MD_DataIdentification|
-        gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
-        gmd:identificationInfo/srv:SV_ServiceIdentification|
-        gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']"
+    match="gmd:identificationInfo/*"
     priority="2">
 
     <xsl:variable name="srv"
       select="local-name(.)='SV_ServiceIdentification'
-            or @gco:isoType='srv:SV_ServiceIdentification'"/>
+            or contains(@gco:isoType, 'SV_ServiceIdentification')"/>
 
 
     <xsl:copy>

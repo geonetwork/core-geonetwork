@@ -27,7 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import jeeves.utils.PasswordUtil;
+import jeeves.constants.Jeeves;
 
 //==============================================================================
 
@@ -41,7 +41,7 @@ public class Sha1Encoder
 	{
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-1") ;
-			md.update(input.getBytes("UTF-8"));
+			md.update(input.getBytes(Jeeves.ENCODING));
 			return getHex(md.digest());
 		}
 		catch (UnsupportedEncodingException e) { return null; }

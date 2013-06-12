@@ -28,10 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -60,22 +57,17 @@ public class PrepareBatchUpdateCategories implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dataMan = gc.getDataManager();
-		AccessManager am = gc.getAccessManager();
-
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		Element isOwner = new Element("owner").setText("true");
 		
 		//--- retrieve categories
 		Element elCateg = Lib.local.retrieve(dbms, "Categories");
-		List list = elCateg.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = elCateg.getChildren();
 
-		for(int i=0; i<list.size(); i++)
-		{
-			Element el = (Element) list.get(i);
-			el.setName(Geonet.Elem.CATEGORY);
+		for (Element element : list) {
+			element.setName(Geonet.Elem.CATEGORY);
 		}
 
 		//-----------------------------------------------------------------------

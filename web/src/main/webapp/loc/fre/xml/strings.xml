@@ -16,10 +16,13 @@
     <tur>Türkçe</tur> <!-- Do not translate! -->
     <pol>Polski</pol> <!-- Do not translate! -->
     
+	<otherValue>Autre :</otherValue>
 	<warning>Attention</warning>
 	<isAdmin>Est administrateur ?</isAdmin>
     <anyLanguage>n'importe quelle langue</anyLanguage>
-	<nodata>Vide</nodata>
+	<nodata>Inconnu</nodata>
+	<chooseLogo>Sélectionner un logo</chooseLogo>
+	<orgLogo>Logo de l'organisme</orgLogo>
 	<!-- new strings - 2.7 -->
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
@@ -702,7 +705,7 @@
 	<persInfo>Personal info</persInfo>
 	<placeKeyword>Mot-clé géographique</placeKeyword>
 	<porCatInfoTab>Catalogue</porCatInfoTab>
-	<poweredBy>Fonctionne avec </poweredBy>
+	<poweredBy>Site propulsé par </poweredBy>
 	<previous>&lt;&lt;</previous>
 	<privileges>Privilèges</privileges>
 	<profile>Profil</profile>
@@ -873,7 +876,7 @@
     <inspireTab>Vue INSPIRE</inspireTab>
     <inspireSection>
         <identification>
-            <title>Identification</title>
+        	<title>Identification de la ressource</title>
         <help>
 				<div>
 				The following metadata elements shall be provided:
@@ -897,7 +900,7 @@
 			</help>
 		</identification>
         <classification>
-            <title>Classification des données ou services</title>
+        	<title>Classification des données et services géographiques</title>
         <help>
 				<div>
 					<ul>
@@ -912,7 +915,7 @@
 			</help>
 		</classification>
         <keywords>
-            <title>Mots-clés &amp; thèmes INSPIRE</title>
+        	<title>Mots clés, thème INSPIRE et catégorie de service</title>
         <help>
 				<div>
 					According to the INSPIRE Implementing Rule for Metadata, if a resource is a spatial data set or spatial data set series, at least one keyword shall be provided from the General Environmental Multi-lingual Thesaurus (GEMET) describing the relevant spatial data theme as defined in Annex I, II or III to Directive 2007/2/EC.
@@ -924,7 +927,7 @@
 			</help>
 		</keywords>
         <geoloc>
-            <title>Localisation géographique</title>
+        	<title>Situation géographique</title>
         <help>
 				<div>
 					The requirement for geographic location referred to in Article 11(2)(e) of Directive 2007/2/EC shall be expressed with the metadata element geographic bounding box.
@@ -1338,7 +1341,7 @@
 
     <cswServer>Configuration CSW</cswServer>
 	<cswServerDes>Configuration du serveur CSW</cswServerDes>
-    <cswServerConfig>Configuration du serveur CSW</cswServerConfig>
+	<cswServerConfig>Configuration du serveur CSW</cswServerConfig>
     <cswServerEnable>Activer</cswServerEnable>
     <cswServerMetadataPublic>Publier les métadonnées insérées via CSW (Transaction)</cswServerMetadataPublic>
     <cswServerTitle>Titre</cswServerTitle>
@@ -1346,6 +1349,34 @@
     <cswServerFees>Frais</cswServerFees>
     <cswServerAccessConstraints>Contraintes d'accès</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
+
+	<virtualcswServer>Ajouter un point d'accès CSW</virtualcswServer>
+	<virtualcswServerDes>Configuration des serveurs CSW virtuels</virtualcswServerDes>
+    <virtualcswServerConfig>Configuration des serveurs CSW virtuels</virtualcswServerConfig>
+    <virtualcswInsert>Configuration du serveur CSW virtuel</virtualcswInsert>
+    <virtualcswServiceName>Nom du service</virtualcswServiceName>
+    <virtualcswServiceDescription>Description du service</virtualcswServiceDescription>
+    <virtualcswClassName>Classe</virtualcswClassName>
+    <virtualcswNewService>Ajouter un service</virtualcswNewService>
+    <virtualcswParamName>Type de filtre</virtualcswParamName>
+    <virtualcswParamValue>Valeur du filtre</virtualcswParamValue>
+    <virtualcswServicenameMandatory>Le nom de service est obligatoire.</virtualcswServicenameMandatory>
+    <virtualcswServicenameTooLong>Le nom de service est trop long (48 caractères max)</virtualcswServicenameTooLong>
+    <virtualcswServicenameSpecialChars>Le nom de service ne doit pas contenir de caractères accentués.</virtualcswServicenameSpecialChars>
+    <virtualcswClassnameMandatory>La classe est obligatoire.</virtualcswClassnameMandatory>
+    <virtualcswServiceNameStartsWith>Le nom du service doit commencer par \"csw-\".</virtualcswServiceNameStartsWith>
+    
+    <virtualcswUpdateService>Mise à jour d'un serveur CSW virtuel</virtualcswUpdateService>
+    
+    <virtualcswAny>Texte libre</virtualcswAny>
+    <virtualcswTitle>Titre</virtualcswTitle>
+	<virtualcswAbstract>Résumé</virtualcswAbstract>
+	<virtualcswKeywords>Mot-clé</virtualcswKeywords>
+	<virtualcswDenominator>Échelle</virtualcswDenominator>
+	<virtualcswCatalog>Catalogue</virtualcswCatalog>
+	<virtualcswGroup>Groupe</virtualcswGroup>
+	<virtualcswCategory>Catégorie</virtualcswCategory>
+	<virtualcswType>Type de ressource</virtualcswType>
 
     <customize-elementset>Personnaliser ensemble d'éléments</customize-elementset>
     <csw-server-disabled>Serveur CSW est désactivé.</csw-server-disabled>
@@ -1359,7 +1390,17 @@
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
-	<markup>
+	
+	<advancedOptions.show>plus de critères</advancedOptions.show>
+	<advancedOptions.hide>moins de critères</advancedOptions.hide>
+	<latestDatasets>Nouveautés</latestDatasets>
+	<popularDatasets>Populaire</popularDatasets>
+	<filter>Filtrer</filter>
+	<welcome.text></welcome.text>
+	<tag_label>Tags</tag_label>
+	<map_label>Carte</map_label>
+
+<markup>
 	  <title>Markup</title>
 	  <tip>@@markupName@@ markup can be used for formatting the text in this element.&lt;p>For help on the syntax visit: &lt;div> @@syntaxLink@@ &lt;/div>&lt;/p></tip>
 	  <link>

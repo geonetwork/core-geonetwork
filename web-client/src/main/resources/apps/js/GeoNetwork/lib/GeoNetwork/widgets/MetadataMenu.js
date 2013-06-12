@@ -76,13 +76,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
      *  Create the menu.
      *  
      */
-    create: function() {
-    	this.initAction();
-    	this.composeMenu();
-    	this.updateMenu();
-    },
-    
-    initAction: function(){
+    create: function(){
         /* Edit menu */
         /* TODO : only displayer for logged in users */
         this.editAction = new Ext.Action({
@@ -94,6 +88,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
+        this.add(this.editAction);
         this.deleteAction = new Ext.Action({
             text: OpenLayers.i18n('delete'),
             iconCls: 'md-mn-del',
@@ -103,6 +98,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
+        this.add(this.deleteAction);
         
         /* Other actions */
         this.duplicateAction = new Ext.Action({
@@ -157,7 +153,6 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         });
         this.categoryAction = new Ext.Action({
             text: OpenLayers.i18n('categories'),
-            iconCls : 'category',
             //iconCls : 'md-mn-copy',
             handler: function(){
                 var id = this.record.get('id');
@@ -165,7 +160,17 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
+        
+        this.otherActions = new Ext.menu.Item({
+            text: OpenLayers.i18n('otherActions'),
+            menu: {
+                items: [this.duplicateAction, this.createChildAction, this.adminAction, this.statusAction, this.versioningAction, this.categoryAction]
+            }
+        });
+        this.add(this.otherActions);
+        
         this.adminMenuSeparator = new Ext.menu.Separator();
+        this.add(this.adminMenuSeparator);
         
         /* Public menu */
         this.viewAction = new Ext.Action({
@@ -176,7 +181,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                 this.catalogue.metadataShow(id);
             },
             scope: this
-        });        
+        });
+        this.add(this.viewAction);
+        
         this.zoomToAction = new Ext.Action({
             text: OpenLayers.i18n('zoomTo'),
             iconCls: 'zoomlayer',
@@ -185,7 +192,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                 this.resultsView.zoomTo(uuid);
             },
             scope: this
-        });        
+        });
+        this.add(this.zoomToAction);
+        
         this.viewXMLAction = new Ext.Action({
             text: OpenLayers.i18n('saveXml'),
             iconCls: 'xmlIcon',
@@ -196,6 +205,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
+        this.add(this.viewXMLAction);
         
         this.viewRDFAction = new Ext.Action({
             text: OpenLayers.i18n('saveRdf'),
@@ -208,6 +218,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
+        this.add(this.viewRDFAction);
         
         this.printAction = new Ext.Action({
                 text: OpenLayers.i18n('printSel'),
@@ -217,6 +228,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                 },
                 scope: this
             });
+        this.add(this.printAction);
+        
         this.getMEFAction = new Ext.Action({
             text: OpenLayers.i18n('getMEF'),
             iconCls: 'md-mn-zip',
@@ -225,6 +238,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
+        this.add(this.getMEFAction);
+        
+        
         
         /* Rating menu */
         if (Ext.ux.RatingItem) { // Check required widget are loaded before displaying context menu
@@ -247,35 +263,12 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                     scope: this
                 }
             });
-        }
-    },
-    
-    composeMenu: function(){
-        this.add(this.editAction);
-        this.add(this.deleteAction);
-        
-        this.otherActions = new Ext.menu.Item({
-            text: OpenLayers.i18n('otherActions'),
-            menu: {
-                items: [this.duplicateAction, this.createChildAction, this.adminAction, this.statusAction, this.versioningAction, this.categoryAction]
-            }
-        });
-        this.add(this.otherActions);
-        this.add(this.adminMenuSeparator);
-        
-        this.add(this.viewAction);
-        this.add(this.zoomToAction);
-        this.add(this.viewXMLAction);
-        this.add(this.viewRDFAction);
-        this.add(this.printAction);
-        this.add(this.getMEFAction);
-        
-        /* Rating menu */
-        if (Ext.ux.RatingItem) { // Check required widget are loaded before displaying context menu
             this.add(this.ratingWidget);
         }
+        
+        /* TODO : add categories / privileges / create child */
+        this.updateMenu();
     },
-    
     /** private: method[updateMenu] 
      *  Update menu privileges according to information defined in current record.
      *  
@@ -293,31 +286,31 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             isHarvested = this.record.get('isharvested') === 'y' ? true : false,
             harvesterType = this.record.get('harvestertype'),
             identified = this.catalogue.isIdentified() && 
-                (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'RegisteredUser');
+                (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'RegisteredUser'),
+            isReadOnly = this.catalogue.isReadOnly();
 
         /* Actions and menu visibility for logged in user */
-        if (!identified) {
+        if (!identified || isReadOnly) {
             this.editAction.hide();
             this.deleteAction.hide();
         } else {
             this.editAction.show();
             this.deleteAction.show();
         }
-        
         if(this.otherActions) this.otherActions.setVisible(identified);
         this.adminMenuSeparator.setVisible(identified);
         
         /* Actions status depend on records */
-        this.editAction.setDisabled(!isEditable);
-        this.adminAction.setDisabled(!isEditable && !isHarvested);
+        this.editAction.setDisabled(!isEditable || isReadOnly);
+        this.adminAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         this.statusAction.setDisabled(!isEditable && !isHarvested);
-        this.versioningAction.setDisabled(!isEditable && !isHarvested);
-        this.categoryAction.setDisabled(!isEditable && !isHarvested);
-        this.deleteAction.setDisabled(!isEditable && !isHarvested);
+        this.versioningAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        this.categoryAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        this.deleteAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         
         if (this.ratingWidget) {
             this.ratingWidget.reset();
-            if (isHarvested && harvesterType !== 'geonetwork') {
+            if ((isHarvested && harvesterType !== 'geonetwork') || isReadOnly) {
                 /* TODO : add tooltip message to explain why */
                 this.ratingWidget.disable();
             } else {

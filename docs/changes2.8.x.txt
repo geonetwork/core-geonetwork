@@ -1,0 +1,571 @@
+================================================================================
+===
+=== GeoNetwork 2.8.0: List of changes
+===
+================================================================================
+--------------------------------------------------------------------------------
+--- Bug fixes
+--------------------------------------------------------------------------------
+- fixed increase popularity task
+- #1225 TableExport service is prone to SQL injection and allows export any GeoNetwork table
+- ported back memory leak fix
+- Ensure gmd prefix xslt works for records with prefix and without
+- Fix for ticket #1199
+- fix resource loading when servlet is not called geonetwork
+- SDE harvester validation rules: remove trailing comma causing issues in IE
+- #1186 WebDav harvester doesn't keep in synch uuid in database and xml metadata content after reharvest
+- Clean up unused options as system configuration was broken
+- Fixed few issues with wrong/missing scripts in debug mode. - When in debug mode use the non-compressed version of the 
+openlayers - Also added a missing CSW js scripts for debug mode.
+- Batch import was not transactional any more - MEFLib/Importer should not control the dbms connection as threads need to 
+do that - split out indexing from database because some indexing methods in DataManager commit the dbms
+- Fix help text for gmd:protocol in metadata editor
+- Make path added to schemaplugin-uri-catalog.xml a uri - fix for ticket #1024
+- Fix for reader acquire of a previous version.
+- Don't set _title lucene field again - it is already set Don't reset isoLangId - it is already set
+- fixed selection with csw
+- fixed problem searching by uuid
+- Fix for ticket #1088 - thanks to bjohare
+- INSPIRE test suite (http://testsuite.gdi-de.org/gdi/) seem not agnostic about namespace prefix for 
+http://inspire.ec.europa.eu/schemas/common/1.0 and requires inspire_com prefix
+- field _title is being added to lucene index document twice
+- When calculating default index language allow for case where language element may be present but blank
+- Patch to improve lucene search manager and fix too many open files bug
+- Comment invalid comparison operators according to INSPIRE
+- fixed mapfish print to a specific version (used by georchestra as well
+- fix catalog searcher (csw) for spatial searches and paging
+- fixed compilation error and use 2 letter char
+- fixed geonetwork harvester for harvesting from geonetwork 2.9+ servers (new security)
+- Fixed small bug in case where the original local id is lower case. It was being missed in the conversion in gmd:LocalisedCharacterString. 
+Applying uppercase conversion fixes the issue.
+- Fix for ticket #1169
+- remove hit limitting in spatial filters to work around bug in calculating the end hit
+- #1053 scripts/ext/locale/* not loading
+- Fix for ticket #1159 - move form save into afterHide event on modal box that shows file upload results - otherwise modalbox
+gets treated badly by form save and won't come back to life again
+- Fix for ticket #1145 - cannot use root element of metadata because sometimes it is not present (eg. when adding a 
+gmd:onlineResource element) - also not necessary to have that check because only ever editing 1 record and the record 
+is the only xml element in /root with a geonet:info child (other elements in /root are gui and request)
+- Another fix related to Ticket #525 Missing POL in the build
+- Fix for ticket #1154
+- Fix for ticket #1152
+- Fix issue where it was not displaying category icons correctly when there were several.
+- Only display div for categories if categories exists.  fixes issues in cases where no category exists was messing up the display
+- Fix for Ticket #1146 Add missing category icons if the <display-in-search mode="db"/> is on
+- Supposed to be the same image as web-client/src/main/resources/apps/images/default/category
+- Fix for ticket #1130
+- Fix for Ticket #998 typo in local rating
+- Fix for Ticket #757 fix typo for term "Gazzetteer" should be "Gazetteer"
+- Another related fix for Ticket #1128 Removed extra parameter from call checkForFileUpload as it was no longer required.
+- Fix for ticket Ticket #1128 Only show file related error if we are dealing with the "File for download" protocol.
+- Fix for 1135, Transaction fails to import if user does not have a group
+- 1116 add missing directory
+- 1116: GetRecords hardcoded prefixes in TypeNames check
+- [PATCH] Fix minified js encoding, enforce UTF-8 (bug #980)
+- Fix #1120.  Error retrieving template during THREDDS fragment harvest due to user session not being present in context 
+while running harvest
+- #1118 Add xlink:href with CSW link to srv:operatesOn when editing the element in metadata editor
+
+--------------------------------------------------------------------------------
+--- Changes
+--------------------------------------------------------------------------------
+- Add geoportal REST harvester
+- Move schema list and status values list services into xml.info service
+- Fix editor metadata section tooltips
+- Use MetadataNotFoundEx for consistency
+- Add xml-error.xsl for harvesting services to provide XML error responses
+- added english translation for requestedlanguagesorted
+- added sort language back to ui
+- Move 'Clone' into Operation column.
+- Enable xml.metadata.schema.add,delete,update services
+- Some services need to use MetadataNotFoundEx Add services for xml_services (mainly for xml error handling) Add simple 
+Validation service Bug fix in DataManager getMetadataNoInfo NPE Bug fix to add www.opengis.net to iso19139 oasis remap 
+error-xml.xml and xml-error.xml doing the same thing - combine
+- Switch from status List service to Info service for advanced search menu
+- Include xml.schema.list service
+- updated config page's multilingual settings so only the correct settings are available
+- Added missing script (fi language) for debug mode.
+- Allow config overrides on schema conversions files
+- #1090 Duplicate key "selectOneFile" in strings.xml
+- Move jetty to 7.5.0 for mvn jetty:run
+- Add sample config file for jetty to access JNDIPool
+- added webspecs submodule
+- #1178 New UI - Display default pointer in search results, except for links/actions (display hand pointer)
+- #1137 Hovering over "+" symbol in editor displays "Add add"
+- updated spring version to 1.5.5 for #1161
+- Improve schema selection process in MEFv2 files - use schema from info.xml as suggested by Ian to choose metadata 
+to load, if not present then try preferredSchema, if neither present then select first one with valid schema to load.
+- Changed regular expression from ^WWW:DOWNLOAD-.*-http--download$ to ^WWW:DOWNLOAD-.*-http--download.* 
+So that it would include WWW:DOWNLOAD-.*-http--downloaddata
+- Standardized the search for WWW:DOWNLOAD-*-http--download. There were a few variations Used a regular 
+expression as it was cleaner.
+- Updated MEF load process to generate better debugging messages and better error message so that it would be easier 
+to identify where the error is. By better, in this case it meant adding the folder to the error message otherwise it would 
+generally only specify "metadata.xml" which is the default filename...
+- Set maxWritesInTransaction on spatial database to 1 by default - this is safest as it sets the spatial index writer to 
+autocommit thus protecting it from problems when connection to db is lost. Now safe to use as a result of earlier bug fixes.
+
+================================================================================
+===
+=== GeoNetwork 2.8.0RC2: List of changes
+===
+================================================================================
+--------------------------------------------------------------------------------
+--- Bug fixes
+--------------------------------------------------------------------------------
+- #850 Errors in upgrade sql script in trunk
+- #988 Don't create GAST link if user did not install it
+- #1048 Widgets UI: Map missing choose style option for a WMS
+- #1049 Widgets UI: Map missing print panel
+- #1075 New UI - Quick search links in Administration panel doesn't work with tabbed search UI
+- #1078 New UI - tabsearch interface doesn't get default language
+- #1081 Disclaimer form fails to appear when downloading local file as public user
+- #1083 Upgrading from 2.6.4 to 2.8 fails with Oracle
+- #1084, #1087 Catalan translations updates. Thanks Monstse Marco for updates
+- #1085 Exception when retrieving keyword in raw format
+- #1094 Fix langdetect jar version in pom files
+- #1095 Exception occurs when upperCorner/lowerCorner tags are empty in a geographic thesaurus
+- #1105 CSW Spatial Query: postgis query too large
+- #1106 GeoNetwork servlet hangs due to using up database connections
+- #1114 Thesaurus Manager - Delete thesaurus doesn't remove the related record from datatabase
+- Avoid localization when handling gmx:MimeFileType
+- Widgets UI: Added missing languages to the list of locales
+- Widgets UI: Fix for IE7
+- Widgets UI: Transforming to UTF-8 the spanish translations
+- Widgets UI: Add MarLIN app (based on tabsearch)
+- Widgets UI: Changed jetty configuration so it can accept requests long enough to open the administration page and avoid http 413 error
+- Fix various bugs in Widgets UI tabsearch including:
+    - No search options in search form - causes problems when displaying search re
+    - Shouldn't use GeoNetwork SearchFormPanel as it adds unwanted extra buttons
+    - Local should be GeoNetwork.Util.defaultLocale
+    - Add uuid argument to kvpSearch to speed up retrieval of metadata when viewin
+    - Remove console.log calls as these cause errors in IE7 and 8
+    - Fix JSLint warning
+
+--------------------------------------------------------------------------------
+--- Changes
+--------------------------------------------------------------------------------
+- #525 Polish translation. Thanks Piotr Pachół and Bogusław Kaczałek
+- #1045 Turkish translation
+- #1069 Spanish translations for iso19139. Thanks to Richard Camejo for providing them.
+- Add metadata siblings proposal port to 2.8.x for ANZMEST/MarLIN usage
+- Change maven build so that web classes are contained in a jar instead
+- Make csw stateless and resilient in the face of many simultaneous requests
+- Restrict download summary form to protocols that are understood by GeoNetwork
+- Set gmx:FileName resources to use uuid rather than id
+- Use uuid param instead of id param in download links and sample data
+
+================================================================================
+===
+=== GeoNetwork 2.8.0RC1: List of changes
+===
+================================================================================
+--------------------------------------------------------------------------------
+--- Bug fixes
+--------------------------------------------------------------------------------
+- #519 A valid record gets broken by editing
+- #662 Can't initiate search using the ENTER key
+- #905 Outdated / Invalid links
+- #932 New line issue with Oracle scripts
+- #950 Thumbnail overview not working on iso19139 schema
+- #957 gmd:PT_Locale@id changed without changing gmd:LocalisedCharacterString@locale
+- #960 Open for edit a ISO19139-mcp1.4 record resets start/end date to 1970-01-01
+- #964 Catalan translation for version subsequent to 2.6.4
+- #967 Security: GN vulnerable to XML bombs
+- #968 Start versioning does not version all files for the initial version.
+- #969 Metadata versioning creates version of files even if not changed
+- #972 New UI: Groups combobox preserves old values when login with a different user
+- #974 Harvesting missing after migration
+- #977 Server startup stalls when thesaurus tries to rebuild from register record(s) with xlinks
+- #981 Privileges and categories not set when using OAI-PMH harvester
+- #982 Local thesauri (ie. created in GN thesaurus manager) do not have a title field
+- #983 geopublisher leaks geoserver user/pass credentials to users with editor profile
+- #986 ext-lang-*.js not found due to 3 char ISO 639-2 - should use 2 char.
+- #1003 Widgets / Create metadata window improvements
+- #1005 Search suggestion / invalid JSON if field contains "
+- #1008 Widgets / download and dynamic record info not available
+- #1010 Privileges not set when using CSW harvester
+- #1033 Widgets / username field / browser does not remember previous values
+- #1038 CSV export / quoted field, escape " and newline in text
+- #1044 Harvester / CSW / OperationAbortedEx("No GET (using CQL) or POST (using FE) DCP available in this service.").
+- #1060 Statistics / images not display
+- #1063 schemaplugin has schemaLocation/noNamespaceSchemaLocation but not available to update-fixed-info.xsl
+- Added some missing ext js locales (CA, RU, PT, CN, FI and NO) that seems to be missing - This corrects the calendar so that the proper language is displayed.
+- Add full url for thumbnails, put 'eng' in full url for thumbnail
+- Full Url thumbnail : add baseUrl to thumbnail url instead of hardcoded /geonetwork
+- Fix issue with OAI-PMH harvester not updating icons correctly
+- Fix null pointer exception when harvesting from a WMS server with non-requestable category layers (i.e. layers without a name element)
+- Fix issue with privileges and categories not being set on harvested WxS resources and services
+- Fixes in spatial filters creation
+- Fix disk deletion of thumbnail and gui bug of thumbnail widget form
+- Fix to make superBrief more general for those profiles that deine their own CI_Citation
+- Fix capabilities xml docs to validate
+- Fix IE8 JS errors
+- Fix rating widget initialization.
+- For subtemplates, use the computed title instead of the title column by default (fix the subtemplate title name in search results).
+- Fix subtemplate search (search form panel toolbar field not take into account).
+- Fix generation of schema location URL (used when a schemalocation is not specified in schema-ident.xml)
+- Look across all ISO profiles to allow thesaurus type to be chosen from a profile as well as base standard
+- Remove dependencies not permitted under licensing rules
+- Remove schema location from dublin-core - forces schema location to be generated using GeoNetwork schema.xsd ie. <geonetwork_url>/xml/schemas/dublin-core/schema.xsd
+- Reset search form and results when clicking reset. Display info panel.
+
+--------------------------------------------------------------------------------
+--- Changes
+--------------------------------------------------------------------------------
+- #550 No Portuguese translation for ISO19110
+- #973 New Category - Physical samples
+- #1045 Turkish translation
+- Add '_groupPublished' in Lucene index corresponding on all group name the MD is refered to
+- Add siteUrl as parameter to xslts called by wfs getfeature harvester. Allows these xslts to query the local geonetwork catalog for things like
+register definitions etc.
+- Changed ../../ to {/root/gui/url} where appropriate for consistency as it is follows the same format as the others.
+- Update instructions for controlling spatial index transactions
+
+================================================================================
+===
+=== GeoNetwork 2.8.0RC0: List of changes
+===
+================================================================================
+--------------------------------------------------------------------------------
+--- Bug fixes
+--------------------------------------------------------------------------------
+- #96   keyword indexes and tag clouds
+- #210  Change managers (ie ThesaurusManager, SchemaManager...) to become singletons classes
+- #261  Increased configurability
+- #270  Calendar / Remove calendar.js dependency
+- #277  Exported Zip file anomaly
+- #283  Checkboxes for metadata
+- #284  Near-useless error
+- #299  Duplicated fields from metadata.xsl
+- #305  Harvester / OGC WxS / split XSL for each type of services
+- #312  Easier database setup
+- #340  Move to last ExtJS stable version (3.2.1)
+- #341  geonet:info/score = NaN
+- #342  xml.search / Add summary only output
+- #350  Delete metadata / data directory not removed
+- #351  CSW test page linked to external OpenLayers API.
+- #352  Configuration / Lucene and Data directory set by env variables
+- #355  Thesaurus / Load from URL
+- #360  Harvester / WPS / missing title
+- #361  Harvester / Add CSW harvester
+- #363  gmd:language / add support for gmd:LanguageCode
+- #368  Make GeoNetwork auto-changing your metadata optional
+- #382  Support numeric fields
+- #385  OGC WMS harvester / harvest min/maxScale, metadataURL, CRS
+- #389  Add migration script from 2.6 series to 2.7
+- #392  INSPIRE rules are not available in installer pack
+- #394  Add DB2 for Unix/Windows support
+- #401  Do not allow use of ".." in file upload/download service
+- #402  Custom widget for gmd:distance
+- #403  Indexing / Performance improvements
+- #404  Configuration option / add option to edit harvested records
+- #405  Editor / improve attribute support
+- #406  Schematron rules for ISO and INSPIRE improvements
+- #414  Add a system information panel
+- #416  Improve administration page layout
+- #419  Privileges / can't access group in modal box when too many groups
+- #420  JS error for display selected only
+- #421  INSPIRE option for search form and CSW
+- #423  Batch import / add fail on error option
+- #424  Search / add buildSummary parameter
+- #425  schema validation does not work
+- #426  Log search statistics in asynch mode
+- #428  Xlink processor / infinite loop on local Xlink
+- #429  Remove unnecessary override libraries (i.e CollectionsUtils, StringUtils)
+- #430  Refactor DataManager
+- #434  Validation report / session variable is shared between editors
+- #435  '???' added to 'sources' table on single/multiple XML file import
+- #436  Search / Add scale denominator sort option
+- #438  Search / add orgName parameter
+- #439  Search / add spatial representation type parameter
+- #441  Validation report / Improve XSD error message
+- #442  Validation report / Improve XML validation service
+- #444  CSW filters don't match Dublin Core identifiers
+- #446  DB / increase max length for date columns
+- #447  CSW GetRecords returns incorrect - # of results returned
+- #450  Common schema plugin directory in SVN
+- #451  Add set favicon option to the logo administration
+- #453  OSG application about box contain build version
+- #455  Error when calling CSW service
+- #457  Add persistent validation status information
+- #458  Get relation service : add XML output and add parent and dataset option
+- #459  Editor / add related attribute to helper to update a pair of field with suggestion
+- #460  Editor / add ISO19138 list of measures helper
+- #461  Editor / xml view / error when an attribute contains "&"
+- #464  xml.user.login / Add user information in response
+- #465  docs: xml.config.update service doesn't exist
+- #466  Metadata view / ISO19139 / failed to display multilingual element in portuguese
+- #468  GetRecordById ACL issues
+- #477  Mini-codesprint : DataManager refactoring part 1, to reduce - # of insert methods
+- #479  Mini-codesprint : DataManager refactoring part 2, to reduce - # of update methods
+- #480  LuceneQueryBuilder improvements
+- #481  Schema detection / add "or" support for needle values
+- #482  Mini-codesprint : DataManager refactoring part 3, to reduce - # of other methods, & misc. improvements
+- #483  PDF / Improve search results output
+- #485  Search / add search service which does not use XSL or DB - Lucene only
+- #486  NPE with the resumptionToken cache (OAI-PMH).
+- #487  Change resumption token separator for the OAI-PMH harvester.
+- #489  Unable to download raw xml metadata record
+- #496  Editor / gml:Polygon missing attributes after edit
+- #504  Trunk: error opening groups
+- #505  Move integration tests to a specific maven module
+- #507  Error creating a metadata child
+- #509  MetadataNotifierControl make tomcat hanging on shutdown
+- #510  resources download / improve SQL
+- #512  Parent/child and access to geonet:info element of current metadata record
+- #513  ConfigOverride Proposal
+- #515  Index and db inconsistency / _root field != root column
+- #517  bin/jre directory
+- #518  Jetty update
+- #521  Userguide enhancment, how to change the jdbc database
+- #527  Exception when sending multiple CSW update transactions to a geonetwork record
+- #529  Thesaurus / Delete concept by Id
+- #531  Build / use maven profiles and resources filter
+- #534  Rename "massive" to "batch"
+- #537  MinorEdit
+- #542  postgis support broken after recent changes to apachedbcpool
+- #545  Lightbox freezes screen
+- #553  Configuration / Thesaurus directory set by env variables
+- #555  spatial index writer code has long running transaction vulnerable to db connection problems
+- #563  Group Indexing operations can be multithreaded
+- #564  Dublin-core editor and viewer improvements
+- #565  Editor / geonet:choose elements are not sorted by title
+- #567  Xlink lost when running XSL processing
+- #572  LuceneQueryBuilder / or query on uuid does not work when uuid contains "_"
+- #573  GUI Widget / IE8 does not display menu label
+- #574  Thesaurus admin / XHR error on thesaurus repositroy
+- #577  GUI Widget / some search fields only appear when logged in
+- #578  Editor / Geopublication / add link to WMS + WFS + WCS
+- #579  Editor / Geopublication / publish by filename
+- #580  Add ability to specify overrides for XML files loaded by XmlFile class
+- #581  GeoNetwork harvester / add remote category settings and MEF full format support
+- #582  create table for new table Thesaurus does not work for DB2
+- #583  DB creation and migration configuration
+- #584  Using GeographicBoundingBox is not available "ExtentType" option
+- #586  Geotools (with spatial db) and geonetwork database should use same pool and add flexible JNDI
+- #589  Add option to build with web-client
+- #590  Harvester / CSW / unbound prefix error
+- #591  Constant Validation Query "SELECT 1" breaks support for DB2 and Oracle
+- #597  Groups maintenance option is displayed in Administration panel for editors (trunk)
+- #598  User groups are not always appended to searches for logged users with a profile different from administrator, returning not allowed metadata (trunk only)
+- #599  ConfigOverride, remove all servlet and web.xml requirements
+- #606  Geopublisher / set title and metadataUrl
+- #611  help page hide by the map
+- #613  SchemaManager autodetect defaults to defaultSchema (with patch)
+- #614  Subtemplate in ISO profile should propagate to ISO19139
+- #615  View mode / Add thesaurus title and missing keyword type
+- #616  Editor / DQ / Create links for gmd:source element in lineage
+- #617  View / simple mode / make disctinction between metadata and data POC
+- #619  Migration script / error in column definition
+- #621  Mime type chooser for file attachments chooses wrong type when specificity is 1
+- #622  Metadata viewer displays wrong values with gco:nilReason or missing children
+- #624  Metadata viewer doesn't display title for some elements in plugin schema
+- #625  SQL / HarvestHistory table creation fail on Oracle
+- #626  Widget / Add INSPIRE search fields
+- #627  Widget / Improve simple view mode
+- #629  Not-selected metadata is output in PDF
+- #630  Widget / Add multi select combo
+- #631  CSW Harvester / register all typenames including unknown types
+- #632  Widget / Add minified JS without map
+- #633  When date fields in advanced search don't work
+- #634  CSW Harvester stop on error 500
+- #635  Editor / link metadata on dataset and service may alter XML
+- #637  iso19139.fra / CSW / missing title in ogc:summary
+- #638  PDF / Add linebreaks support
+- #641  Editor / helper allows to update a related attribute
+- #643  Editor (widget only) / Add HTML5 number type for input
+- #644  Index / INSPIRE related datasets
+- #645  Geonetwork harvester / Add XSL filter of harvested records
+- #647  View mode / define custom style according to codelist value
+- #648  Widget / bounding box coordinates are wrong on input fields manual updates
+- #649  INSPIRE / Suggestion / mapping between topicCategory and INSPIRE Themes
+- #650  Widget / Add simple HTML page for printing
+- #651  Widget / Add documentation
+- #653  Batch import error report shows the raw schematron report instead of interpreting the XML to generate a user-friendly report
+- #654  Unset thumbnail keep geonet:info element in metadata record
+- #655  geoserver war build process could use maven and war could include geoserver_data
+- #658  keywords are not translated in metadata.show (with patch)
+- #669  UOM
+- #671  Change order of tabs while filling in the spatial extent to North > West > South > East
+- #672  Dublin core editing / can't delete any elements
+- #674  Overrides / add xpath with namespace support
+- #677  Error when trying to change the system configuration
+- #680  replaceString template does not replace pattern if in first position
+- #686  Thesaurus manager failed to load a thesaurus from URL without extension
+- #687  Add support to complex language range in keyword search
+- #695  Widgets / Failure when opening metadata having UUID with - #
+- #697  EXTJS 'Actions' drop down broken with ?id=x or uuid=x
+- #698  gco:CharacterString elements are not editable (non widget'd elements)
+- #699  Widgets / User info not displayed after page reload
+- #700  Implementation of CSW Harvest
+- #701  Metadata insert with generate uuid option return old uuid
+- #705  Editor / No controls for operatesOn element
+- #707  Wrong URL in codelist attribute for gmd:LanguageCode
+- #709  Widget / GeometryMapField / Add width and height config option
+- #710  Widgets / Add latest news in home page
+- #714  metadata PDF generation does not handle multilingual elements
+- #715  Widgets / no parameters to set default map extent in visualization mode
+- #716  Widgets / For series, display children directly in the search results
+- #717  Define Feature Catalogue relations in metadata xml
+- #719  Widgets / Handle gco:nilReason attribute in editor
+- #723  CSW / Add support for ISO19110 record in ISO output format
+- #724  CSW / ElementName
+- #727  Widgets / editor / wrong metadata in editing in new window
+- #729  Hardcoded type name and attributes in spatial index feature for Oracle thru JNDI don't work
+- #733  iso19110 / Improve metadata view
+- #734  CSW / harvesting / add filter on denominator
+- #735  Widgets / Bounding box not removed from maps
+- #736  Widgets / Related section / Add iso19110 relations
+- #737  Widgets / simple view not available for csw-record
+- #739  Importing sample data with postgis doesn't work correctly with new indexmetadatatask (from svn commit 8577)
+- #740  Shibboleth can return very long usernames - increase username field to 256 chars in Users table
+- #741  Schema manager should be able to identify record by searching for attribute+value
+- #742  Add oracle (thru JNDI) as supported database for multithreaded indexing
+- #744  Update french documentation
+- #747  Get relation service / use Lucene only search mode
+- #748  Clear the selection after a batch delete
+- #750  GUI cannot handle quotes in multilingual fields in 'CSW Server Configuration'
+- #751  Administration / Add site id update from the web UI
+- #752  Ext GUI: login with <enter>
+- #753  Widgets / After login the results list should be updated
+- #755  Error starting up GeoNetwork trunk (related to - #726)
+- #756  Valid metadata fails to import if it has spurious namespace declaration
+- #758  MEF import failed with multiple metadata
+- #760  Widgets / update to ext 3.4.0
+- #761  csw:Record / Wrong Bbox indexing
+- #762  CSW / date and relation queryable does not exist
+- #763  Portal sitemap use old xml export service
+- #765  svn versioning crashes server if user home is write protected or does not exist
+- #767  Get relation / sort by title
+- #768  Widgets / firefox debug mode is not working
+- #769  Disjunct fields search
+- #770  INSPIRE search form: fix service type list and add option to search by classification of data services
+- #771  Ext GUI: 'Metadata' button in result page for Metadata insert doesn't work
+- #772  Improve harvesters schedule (use similar configuration as for Lucene Index Optimizer schedule)
+- #773  GUIs and Internet Explorer
+- #774  Widgets / add options to have list of selection as a menu
+- #775  Uploaded Plugin Profile does not work
+- #776  transfer ownership list only editor
+- #777  Metadata admin / Add publication to all groups
+- #778  Assign MEF metadata to current catalog
+- #780  Widgets / Transfert ownership in search results does not work
+- #783  Map PDF / comment is not displayed
+- #784  Make available INSPIRE configuration in widgets
+- #787  Add schema converter list to built in and plug in schemas
+- #790  New widgets UI: Suggested list for country field is empty
+- #792  GeoNetwork must use database cursors efficiently
+- #794  Can't save settings without entering values
+- #797  Codelist Directory is not being created in the Build process
+- #798  admin/user management page layout improvement
+- #802  Widgets / Add capability to set up SuperBox with URL parameters
+- #804  Widgets / Add start versioning action
+- #805  Widgets / Add search criteria on feature catalogue
+- #807  Widgets / Select all action cause Lucene AlreadyClosedException
+- #810  Data Extents (Footprints) and Zoom To in new GUI broken
+- #818  Upload fails when upload dir is on another drive
+- #819  Intermap / Remove old JS
+- #820  Widgets / My metadata link point to classic UI
+- #821  Metadata status / localize change log message
+- #824  ISO19110 / Add support for gfc:FC_FeatureType as root element
+- #825  View mode / ISO19139 / Display unknown codelistvalue
+- #828  New UI: Javascript error when displaying search results if no keywords returned in search summary
+- #829  Use iso 639-2 language codes
+- #831  Preserve URL parameters in redirection
+- #832  Metadata records with hundreds+ of local xlinks take far too long to process
+- #833  New UI: When adding a new element with + button in metadata editor date controls are duplicated
+- #834  New UI: Metadata editor default view: cannot add new section after removing last one
+- #835  Thesaurus reference not included in thesaurusName block when Thesaurus picker used to insert keywords
+- #836  Allow register records (ISO19135) to be converted to SKOS and used as thesauri in thesaurus keyword picker
+- #838  Cannot deploy GeoNetwork to the /jsp/geonetwork context path on Tomcat 5.5
+- #841  Data dir changes cause error on Windows
+- #842  GetCapabilities / cosmetic : do not display ":80" in URL
+- #843  CSW / request parameter
+- #847  schemaPluginsDir in context.xml doesn't work as expected
+- #848  missing translations in apps/search interface
+- #849  CSW server incompatible with CSW client
+- #853  give each result's extent a different color
+- #854  Widgets / metadata view reset upon resize
+- #855  CSW / Harvester / Check constraintLanguage
+- #856  Tag Cloud floats over advanced options in Widgets Search
+- #857  Vertical CRS / improve layout
+- #858  View / iso19139 / localised template is applied to wrong elements
+- #860  SchemaManager / autodetectschema / check namespace on default schema or its dependencies
+- #862  Widgets / Restore search state
+- #864  Widgets / Add after metadata load event to ViewPanel & ViewWindow
+- #867  Feature catalogue citation xlink:href should not be resolved by Xlink processor
+- #868  Widgets / Editor / Avoid multiple click on editor toolbar
+- #869  Widgets / Clear selection before select all in page action
+- #870  Widgets / Avoid scroll to top when switching tab in view mode
+- #873  Harvester / WxS / FileNotFound due to new schema location
+- #874  Harvester / GeoNetwork protocol does not work due to 2 language code URL redirection
+- #877  Use sort field in PDF print
+- #878  Proposal: Extract subtemplates batch function on selected metadata records
+- #891  Bounding box map does not display for subtemplates with an extent in subtemplate.admin/manage directories
+- #892  Metadata title column is set by extract-subtemplates batch function but iso19139 does not check geonet:info/title
+- #893  Metadata brief template uses match instead of saxon:call-template
+- #894  Nightly Build 2012-05-06 fails to create metadata in Gui Widgets interface
+- #895  Convert long to clobs and varchar to varchar2 in Oracle setup script and investigate
+- #897  MCP1.4 and ANZLIC schema sample records - no title in search results
+- #899  Lucene / Add searching and indexing per field analyzers
+- #901  Lucene score / Do not take into account user privileges in scoring
+- #902  Lucene / Category field should not be tokenized
+- #906  HTTPS url not supported when adding a schema plugin
+- #909  Import / IllegalArgumentException when undeclared namespace in schema is used as default namespace
+- #921  geonetwork won't undeploy/shutdown in tomcat due to quartz scheduler threads
+- #926  GAST failed to start - vendorName == null when using imageio
+- #929  Run GeoNetwork with empty ORACLE database and ApacheDBCPool resource provider causes ORA-01000: maximum open cursors exceeded
+- #911  Z3950 Server not working correctly? Can't find collection (default or otherwise)?
+- #930  schemaplugins: problems with validation
+- #933  Status window not apear in IE8
+- #934  Tab Search not working in IE8
+- #935  ISO19139 : Identification : Extent : extent Type Code button not working in IE 8
+- #938  Distribution : TransferOptions : Name expressed as gmx:MimeFileType should be gco:CharacterString
+- #939  ISO 19139 XML injection Identification : Keyword : Thesaurus : otherCitationDetails
+- #940  ISO 19139 XML - unwanted replacement of codeList URLs - not polite
+- #941  Prompt to provide MD_Distribution//MD_Format not provided
+- #955  deleting schema plugin - seems to remove all other templates.
+- #956  Fix metadata-iso19139-edit.xsl
+- #958  Should a schema be allowed to be deleted if records still exist with that schema.
+- #959  Thesaurus Name reference added by thesaurus is useless/misleading without an edition/CharacterString
+- #962  Search for downloads not working
+- #963  Can't use download links returned by index search
+- #966  WFS GetFeature Harvester: when updating subtemplates, title in Metadata table in database is not updated
+
+--------------------------------------------------------------------------------
+--- Changes
+--------------------------------------------------------------------------------
+- #607, #608 WAF Harvest Support (http://trac.osgeo.org/geonetwork/wiki/WAFHarvest)
+- Add support for harvesting records from local filesystem (http://trac.osgeo.org/geonetwork/wiki/LocalHarvest)
+- #875 Service allowing display of metadata with custom XSLs (http://trac.osgeo.org/geonetwork/wiki/CustomFormatting)
+- #846 Monitor Health of Geonetwork instances (http://trac.osgeo.org/geonetwork/wiki/HealthMonitoring)
+- Logos Servlet Filter (http://trac.osgeo.org/geonetwork/wiki/Logos)
+- Allow the multiple deployment platform configurations to co-exist (http://trac.osgeo.org/geonetwork/wiki/ConfigOverride)
+- #556 Thesaurus manager panel (http://trac.osgeo.org/geonetwork/wiki/proposals/ThesaurusManagerPanel)
+- #539 Javascript user interface (http://trac.osgeo.org/geonetwork/wiki/proposals/WidgetsBasedGui)
+- #159 Upload a zipped Shapefile or a plain geotiff file and deploy it as a map service on GeoServer (http://trac.osgeo.org/geonetwork/wiki/GeoServer_integration)
+- Minor edit (http://trac.osgeo.org/geonetwork/wiki/MinorEdit)
+- #196 Persistent validation info (http://trac.osgeo.org/geonetwork/wiki/proposals/PersistentValidationStatusInformation)
+- #440 Organisation logo (http://trac.osgeo.org/geonetwork/wiki/proposals/OrganisationLogo)
+- #538 Manage and use sub-template to create composed metadata records (http://trac.osgeo.org/geonetwork/wiki/proposals/SubTemplates)
+- #443 Metadata editor suggestion (http://trac.osgeo.org/geonetwork/wiki/proposals/MetadataEditorSuggestion)
+- #314 Ability to plugin metadata schemas/profiles (http://trac.osgeo.org/geonetwork/wiki/pluginprofiles)
+- #359 Logo manager (http://trac.osgeo.org/geonetwork/wiki/proposals/LogoManager)
+- Add search statitics (http://trac.osgeo.org/geonetwork/wiki/Statistics)
+- #520 SOS Harvester (http://trac.osgeo.org/geonetwork/wiki/proposals/SOSHarvester)
+- Remote/Distributed Search form + tabbed search forms (http://trac.osgeo.org/geonetwork/wiki/RemoteSearchForm%2BTabbedSearchForms)
+- #508 PDF / Simple print metadata view mode (http://trac.osgeo.org/geonetwork/wiki/proposals/SimplePDFOutputForMetadataView)
+- #475 H2 as default database (http://trac.osgeo.org/geonetwork/wiki/proposals/H2AsDefaultDb)
+- #445 Add safe database connections for threads to use and thread some operations (http://trac.osgeo.org/geonetwork/wiki/DatabaseConnectionsForThreadsAndNewPool)
+- #452 Showing startup/initialization errors and database status and stats in web interface (http://trac.osgeo.org/geonetwork/wiki/StartupErrorsDatabaseConnections)
+- #488 Show history of all harvest operations (http://trac.osgeo.org/geonetwork/wiki/HarvestingHistory)
+- #612 Character Set Detection and Conversion when loading XML files (http://trac.osgeo.org/geonetwork/wiki/loadingxmlcontentcharsetdetection)
+- #652 Adding search mode which only use Lucene (http://trac.osgeo.org/geonetwork/wiki/proposals/LuceneOnlySearch)
+- #660 Define custom CSW entry points that applies extra criteria to the CSW request (http://trac.osgeo.org/geonetwork/wiki/proposals/VirtualCSW)
+- #230 Natural Earth dataset for background map (http://trac.osgeo.org/geonetwork/wiki/proposals/MapBackgroundUpdate)
+- #708 Document and field boosting (http://trac.osgeo.org/geonetwork/wiki/proposals/DocumentAndFieldBoosting)
+- #718 Installer package to enable INSPIRE options (http://trac.osgeo.org/geonetwork/wiki/proposals/InspireInstallerPackage)
+- #738 Workflow to capture lifecycle of a metadata record (http://trac.osgeo.org/geonetwork/wiki/metadataworkflow)  
+- #726 Versioning a metadata record (http://trac.osgeo.org/geonetwork/wiki/metadatachanges)
+- #876 Change harvester scheduler (http://trac.osgeo.org/geonetwork/wiki/proposals/HarvestingSchedule)
+- #826 Allow to configure external data directory (http://trac.osgeo.org/geonetwork/wiki/proposals/GeoNetworkDataDir)

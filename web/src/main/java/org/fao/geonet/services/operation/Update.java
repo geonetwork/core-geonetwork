@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.operation;
 
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -31,12 +30,10 @@ import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-//=============================================================================
-
-public class Update implements Service
-{
+public class Update extends NotInReadOnlyModeService {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -45,7 +42,7 @@ public class Update implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
@@ -62,6 +59,3 @@ public class Update implements Service
 		return new Element("ok");
 	}
 }
-
-//=============================================================================
-

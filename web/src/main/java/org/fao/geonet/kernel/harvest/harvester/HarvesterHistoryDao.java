@@ -28,7 +28,6 @@ import jeeves.utils.SerialFactory;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -55,7 +54,7 @@ public class HarvesterHistoryDao {
 			String query = "INSERT INTO HarvestHistory (id,harvestDate,harvesterUuid,"
 						+        "harvesterName,harvesterType,deleted,info,params,elapsedTime)";
       query +=       "VALUES (?,?,?,?,?,?,?,?,?)";
-      int res = dbms.execute(
+      dbms.execute(
           query,
           hhId,
           runDate,
@@ -140,7 +139,7 @@ public class HarvesterHistoryDao {
 		int nrRecs = 0; 
 		for (Element id : ids) {
 			dbms.execute("DELETE from HarvestHistory "
-		    	+        "WHERE id = ?", new Integer(id.getText()));
+		    	+        "WHERE id = ?", Integer.valueOf(id.getText()));
 			nrRecs++;
 			dbms.commit();
 		}
@@ -167,7 +166,7 @@ public class HarvesterHistoryDao {
 			try {
 				xml = Xml.loadString(info.getValue(), false);
 			} catch (Exception e) {
-				xml.addContent(new Element("error").setText("Invalid XML harvester result: "+e.getMessage()));	
+				xml = new Element("error").setText("Invalid XML harvester result: "+e.getMessage());	
 				e.printStackTrace();
 			}
 			info.removeContent();
@@ -177,7 +176,7 @@ public class HarvesterHistoryDao {
 			try {
 				xml = Xml.loadString(params.getValue(), false);
 			} catch (Exception e) {
-				xml.addContent(new Element("error").setText("Invalid XML harvester params: "+e.getMessage()));	
+				xml = new Element("error").setText("Invalid XML harvester params: "+e.getMessage());	
 				e.printStackTrace();
 			}
 			params.removeContent();

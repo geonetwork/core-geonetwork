@@ -24,13 +24,14 @@
 package org.fao.geonet.services.mef;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.io.File;
@@ -41,10 +42,18 @@ import java.util.List;
  * Import MEF file.
  * 
  */
-public class Import implements Service {
+public class Import extends NotInReadOnlyModeService {
 	private String stylePath;
 
+    /**
+     *
+     * @param appPath
+     * @param params
+     * @throws Exception
+     */
+    @Override
 	public void init(String appPath, ServiceConfig params) throws Exception {
+        super.init(appPath, params);
 		this.stylePath = appPath + Geonet.Path.IMPORT_STYLESHEETS;
 	}
 
@@ -63,7 +72,8 @@ public class Import implements Service {
 	 * @return List of imported ids.
 	 * 
 	 */
-	public Element exec(Element params, ServiceContext context)
+    @Override
+	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 		String mefFile = Util.getParam(params, "mefFile");
         String fileType = Util.getParam(params, "file_type", "mef");
@@ -72,23 +82,23 @@ public class Import implements Service {
 		File file = new File(uploadDir, mefFile);
 
 		List<String> id = MEFLib.doImport(params, context, file, stylePath);
-        String ids = "";
+        StringBuilder ids = new StringBuilder();
 
         Iterator<String> iter = id.iterator();
         while (iter.hasNext()) {
             String item = (String) iter.next();
-            ids += item + ";";
+            ids.append(item).append(";");
 
         }
 
-        file.delete();
+        IO.delete(file, false, Geonet.MEF);
 
 		Element result = null;
 
         if (context.getService().equals("mef.import")) {
 
             result = new Element("id");
-            result.setText(ids);
+            result.setText(ids.toString());
 
         } else {
 
@@ -106,6 +116,3 @@ public class Import implements Service {
 		return result;
 	}
 }
-
-// =============================================================================
-

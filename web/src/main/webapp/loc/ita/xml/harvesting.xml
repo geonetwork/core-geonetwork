@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <selectownergroup>Harvester appartiene al gruppo</selectownergroup>
 	<select>Seleziona</select>
 	<name>Nome</name>
 	<directoryname>Directory</directoryname>
@@ -20,6 +21,11 @@
 	<info type="geonetwork20">
 		<short>GeoNetwork 2.0</short>
 		<long>Nodo remoto GeoNetwork v2.0</long>
+	</info>
+	
+	<info type="geoPREST">
+		<short>GeoPortal REST</short>
+		<long>GeoPortal 9.3.x via REST interface</long>
 	</info>
 	
 	<info type="webdav">
@@ -78,6 +84,8 @@
 	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Sito</site>
+
+	<baseUrl>Base URL of GeoPortal service</baseUrl>
 
 	<wxstype>Tipo di servizio OGC</wxstype>
 	<wxstypes>
@@ -139,6 +147,7 @@
 	
 	<content>Contenuto scaricato</content>
 	<importxslt>Applicare questo XSLT ai metadati scaricati</importxslt>
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
 
 	<options>Opzioni</options>
 	<everySpec>(giorni : ore : minuti)</everySpec>
@@ -347,8 +356,7 @@
 		<couldNotInsert>Non ho potuto inserire</couldNotInsert>
 		<subtemplatesUpdated>Subtemplate aggiornati</subtemplatesUpdated>
 		<recordsUpdated>Record aggiornati</recordsUpdated>
-
-		
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>Non ancora eseguito</notRun>

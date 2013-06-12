@@ -32,12 +32,31 @@
 
 		<Documents>
 			<xsl:for-each select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:locale/gmd:PT_Locale">
-				<xsl:variable name="langId" select="@id" />
-				<!--<xsl:variable name="isoLangId" select="java:twoCharLangCode(normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue)))" />-->
-				<xsl:variable name="isoLangId" select="normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue))" />
-				<xsl:if test="$isoLangId!=$isoDocLangId">
-					<Document locale="{$isoLangId}">
+            	<xsl:call-template name="document">
+            		<xsl:with-param name="isoLangId" select="java:threeCharLangCode(normalize-space(string(gmd:languageCode/gmd:LanguageCode/@codeListValue)))"/>
+            		<xsl:with-param name="langId" select="@id"></xsl:with-param>
+            	</xsl:call-template>
+            </xsl:for-each>
+           <!-- 
+           		Create a language document only if PT_Locale defined (ie. is a multilingual document)
+           		and gmd:locale contains the main metadata language. -->
+           	<xsl:if test="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:locale/gmd:PT_Locale
+           					and count(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/
+           						gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode[@codeListValue = $isoDocLangId]) = 0">
+            	<xsl:call-template name="document">
+            		<xsl:with-param name="isoLangId" select="$isoDocLangId"></xsl:with-param>
+            		<xsl:with-param name="langId" select="java:twoCharLangCode(normalize-space(string($isoDocLangId)))"></xsl:with-param>
+            	</xsl:call-template>
+            </xsl:if>
+        </Documents>
+    </xsl:template>
+    
+	<!-- ========================================================================================= -->
+		<xsl:template name="document">
+  			<xsl:param name="isoLangId"/>
+  			<xsl:param name="langId"/>
 
+			<Document locale="{$isoLangId}">
 						<Field name="_locale" string="{$isoLangId}" store="true" index="true"/>
 						<Field name="_docLocale" string="{$isoDocLangId}" store="true" index="true"/>
 
@@ -47,23 +66,39 @@
 								<xsl:with-param name="isoDocLangId" select="$isoLangId"/>
 							</xsl:call-template>
 						</xsl:variable>
+				<xsl:if test="$isoLangId!=$isoDocLangId">
 						<!-- not tokenized title for sorting -->
 						<Field name="_defaultTitle" string="{string($_defaultTitle)}" store="true" index="true" />
-
+				</xsl:if>
 						<xsl:variable name="title"
 							select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo//gmd:citation//gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId]"/>
 
 						<!-- not tokenized title for sorting -->
+				<xsl:choose>
+                 	<xsl:when test="normalize-space($title) = ''">
+                 		<Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" />
+                 	</xsl:when>
+                 	<xsl:otherwise>
 						<Field name="_title" string="{string($title)}" store="true" index="true" />
+                 	</xsl:otherwise>
+				</xsl:choose>
 
 						<xsl:apply-templates select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata">
 							<xsl:with-param name="langId" select="$poundLangId"/>
 						</xsl:apply-templates>
 
+				<xsl:apply-templates mode="index" select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']">
+					<xsl:with-param name="langId" select="$poundLangId"/>
+				</xsl:apply-templates>
 					</Document>
-				</xsl:if>
-			</xsl:for-each>
-		</Documents>
+	</xsl:template>
+	
+	<xsl:template mode="index" match="*|@*">
+		<xsl:param name="langId" />
+		
+		<xsl:apply-templates mode="index" select="*|@*">
+			<xsl:with-param name="langId" select="$langId"/>
+		</xsl:apply-templates>
 	</xsl:template>
 
 	<!-- ========================================================================================= -->
@@ -75,10 +110,7 @@
 		<!-- the double // here seems needed to index MD_DataIdentification when
 			it is nested in a SV_ServiceIdentification class -->
 
-		<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification|
-							gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
-							gmd:identificationInfo/srv:SV_ServiceIdentification|
-							gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
+		<xsl:for-each select="gmd:identificationInfo/*">
 
 			<xsl:for-each select="gmd:citation/gmd:CI_Citation">
 
@@ -129,7 +161,6 @@
 			<xsl:for-each select="gmd:abstract//gmd:LocalisedCharacterString[@locale=$langId]">
 				<Field name="abstract" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
-
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 			<xsl:for-each select="*/gmd:EX_Extent">
@@ -220,7 +251,7 @@
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 			<xsl:for-each select="gmd:spatialRepresentationType/gmd:MD_SpatialRepresentationTypeCode/@codeListValue">
-				<Field name="spatialRepresentation" string="{string(.)}" store="true" index="true"/>
+				<Field name="spatialRepresentationType" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -247,12 +278,26 @@
                     <xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
                     <xsl:choose>
                         <xsl:when test="contains($fileName ,'://')">
+							<xsl:choose>
+								<xsl:when test="string($fileDescr)='thumbnail'">
+									<Field  name="image" string="{concat('thumbnail|', $fileName)}" store="true" index="false"/>
+								</xsl:when>
+								<xsl:when test="string($fileDescr)='large_thumbnail'">
+									<Field  name="image" string="{concat('overview|', $fileName)}" store="true" index="false"/>
+								</xsl:when>
+								<xsl:otherwise>
                             <Field  name="image" string="{concat('unknown|', $fileName)}" store="true" index="false"/>
+								</xsl:otherwise>
+							</xsl:choose>
                         </xsl:when>
                         <xsl:when test="string($fileDescr)='thumbnail'">
                             <!-- FIXME : relative path -->
                             <Field  name="image" string="{concat($fileDescr, '|', '../../srv/eng/resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
                         </xsl:when>
+						<xsl:when test="string($fileDescr)='large_thumbnail'">
+							<!-- FIXME : relative path -->
+							<Field  name="image" string="{concat('overview', '|', '../../srv/eng/resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
+						</xsl:when>
                     </xsl:choose>
                 </xsl:if>
             </xsl:for-each>
@@ -343,13 +388,13 @@
 		<!-- === Service stuff ===  -->
 		<!-- Service type           -->
 		<xsl:for-each select="gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName|
-			gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:serviceType/gco:LocalName">
+			gmd:identificationInfo/*[contains(@gco:isoType, 'SV_ServiceIdentification')]/srv:serviceType/gco:LocalName">
 			<Field name="serviceType" string="{string(.)}" store="true" index="true"/>
 		</xsl:for-each>
 
 		<!-- Service version        -->
 		<xsl:for-each select="gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString|
-			gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:serviceTypeVersion/gco:CharacterString">
+			gmd:identificationInfo/*[contains(@gco:isoType, 'SV_ServiceIdentification')]/srv:serviceTypeVersion/gco:CharacterString">
 			<Field name="serviceTypeVersion" string="{string(.)}" store="true" index="true"/>
 		</xsl:for-each>
 

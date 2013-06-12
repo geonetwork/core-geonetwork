@@ -24,8 +24,18 @@
 package jeeves.utils;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
+
+import org.apache.commons.io.IOUtils;
 
 //=============================================================================
 
@@ -50,9 +60,12 @@ public final class IO
 	{
 		StringBuffer sb = new StringBuffer();
 
+		FileInputStream in = null;
+		BufferedReader	rdr = null;
 		try
 		{
-			BufferedReader	rdr = new BufferedReader(new FileReader(name));
+            in = new FileInputStream(name);
+            rdr = new BufferedReader(new InputStreamReader(in, Charset.forName(Jeeves.ENCODING)));
 
 			String inputLine;
 
@@ -61,15 +74,95 @@ public final class IO
 				sb.append('\n');
 			}
 
-			rdr.close();
-
 			return sb.toString();
 		}
 		catch (IOException e)
 		{
 			return null;
+		} finally {
+		    if (in != null) {
+		        IOUtils.closeQuietly(in);
+		    }
+		    if (rdr != null) {
+		        IOUtils.closeQuietly(rdr);
+		    }
 		}
 	}
+	
+	/**
+	 * Make a directory (and parent directories) if it does not exist.
+	 * If the directory cannot be made and does not exist or is a file an exception is thrown 
+	 * 
+	 * @param dir the directory to make
+	 * @param desc A short description of the directory being made.
+	 */
+	public static void mkdirs(File dir, String desc) throws IOException {
+        if(!dir.mkdirs()) {
+            if (!dir.exists()) {
+                String msg = "Unable to make '"+desc+"': "+dir.getAbsolutePath()+". Check permissions of parent directory";
+                throw new IOException(msg);
+            }
+            if (dir.isFile()){
+                String msg = "Unable to make '"+desc+"': "+dir.getAbsolutePath()+". The file already exists and is a file";
+                throw new IOException(msg);
+                
+            }
+        }
+
+	}
+
+	/**
+	 * Set lastModified time if a failure log a warning.
+	 * 
+	 * @param file the file to set the time on
+	 * @param timeMillis the time in millis
+	 * @param loggerModule the module to log to
+	 */
+    public static void setLastModified(File file, long timeMillis, String loggerModule) {
+        if (!file.setLastModified(timeMillis)) {
+            Log.warning(loggerModule, "Unable to set the last modified time on: "+file.getAbsolutePath()+".  Check file permissions");
+        }
+    }
+
+    public static void delete(File file, boolean throwException, String loggerModule) {
+        if (!file.delete() && file.exists()) {
+            if(throwException) {
+                throw new RuntimeException("Unable to delete "+file.getAbsolutePath());
+            } else {
+                Log.warning(loggerModule, "Unable to delete "+file.getAbsolutePath());
+            }
+        }
+    }
+
+    public static void delete(File file, boolean throwException, ServiceContext context) {
+        if (!file.delete() && file.exists()) {
+            if(throwException) {
+                throw new RuntimeException("Unable to delete "+file.getAbsolutePath());
+            } else {
+                context.warning("Unable to delete "+file.getAbsolutePath());
+            }
+        }
+    }
+
+    public static void closeQuietly(ResultSet rs) {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (Throwable t) {
+                // ignore
+            }
+        }
+    }
+
+    public static void closeQuietly(Statement stmt) {
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (Throwable t) {
+                // ignore
+            }
+        }
+    }
 }
 
 //=============================================================================

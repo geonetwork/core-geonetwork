@@ -28,9 +28,13 @@
 
 <multilingual>Ustawienia wielu języków</multilingual>
     <autoDetectEnable>Włącz wykrywanie języka w wyszukiwaniu</autoDetectEnable>
-    <requestedlanguageonly>Wyszukaj tylko w zadanym języku</requestedlanguageonly>
+    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Wyniki wyszukiwania w zadanym języku pokaż na wierzchu</requestedlanguagesorted>
-    <requestedlanguageignored>Ignoruj język w wyszukiwaniu</requestedlanguageignored>
 
 	<oai>OAI Provider</oai>
 		<datesearch>Wyszukiwanie danych</datesearch>

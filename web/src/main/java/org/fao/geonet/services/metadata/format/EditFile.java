@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata.format;
 import java.io.File;
 import java.net.URLDecoder;
 
+import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
@@ -44,13 +45,13 @@ public class EditFile extends AbstractFormatService {
         ensureInitializedDir(context);
 
         String xslid = jeeves.utils.Util.getParam(params, Params.ID);
-        String file = URLDecoder.decode(jeeves.utils.Util.getParam(params, Params.FNAME), "UTF-8");
+        String file = URLDecoder.decode(jeeves.utils.Util.getParam(params, Params.FNAME), Jeeves.ENCODING);
 
         File formatDir = getAndVerifyFormatDir(Params.ID, xslid);
 
         Element result = new Element("data");
 
-        String data = FileUtils.readFileToString(new File(formatDir, file.replace('/', File.separatorChar)), "UTF-8");
+        String data = FileUtils.readFileToString(new File(formatDir, file.replace('/', File.separatorChar)), Jeeves.ENCODING);
 
         result.setText(data);
 

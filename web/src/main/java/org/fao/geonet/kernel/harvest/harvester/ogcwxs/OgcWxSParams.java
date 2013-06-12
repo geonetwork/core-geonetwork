@@ -131,7 +131,6 @@ public class OgcWxSParams extends AbstractParams
 	public String ogctype;
 	public String lang;
 	public String topic;
-	public String crs = "epsg:4326";
 	public boolean createThumbnails;
 	public boolean useLayer;
 	public boolean useLayerMd;

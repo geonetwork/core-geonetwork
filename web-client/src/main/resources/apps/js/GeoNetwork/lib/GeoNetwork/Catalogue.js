@@ -205,13 +205,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     identifiedUser: undefined,
     
-    /** api: property[adminUser]
-     *  ``Boolean`` True if user is admin
-     *
-     *  FIXME : How to handle login/logout the best way ?
-     */
-    adminUser: false,
-    
     metadataEditFn: undefined,
     /** api: config[adminAppUrl]
      *  ``String`` URL to the administration interface
@@ -272,6 +265,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             rootUrl: serviceUrl,
             proxy: this.URL + '/proxy',
             csw: serviceUrl + 'csw',
+            feedback: serviceUrl + 'feedback.send',
             xmlSearch: serviceUrl + 'xml.search',
             mdSelect: serviceUrl + 'metadata.select',
             mdView: serviceUrl + 'view',
@@ -286,6 +280,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdXMLGet19115: serviceUrl + 'xml_iso19115to19139',
             mdDuplicate: serviceUrl + 'metadata.duplicate.form',
             mdDelete: serviceUrl + 'metadata.delete',
+            mdExtract: serviceUrl + 'metadata.service.extract',
             mdPrint: serviceUrl + 'pdf',
             //mdEdit : serviceUrl + 'metadata.edit',
             mdEdit: serviceUrl + 'edit',
@@ -310,6 +305,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             subTemplateType: serviceUrl + 'subtemplate.types',
             subTemplate: serviceUrl + 'subtemplate',
             upload: serviceUrl + 'resources.upload.new',
+            uploadResource: serviceUrl + 'resource.upload.and.link',
+            delResource: serviceUrl + 'resource.del.and.detach',
             prepareDownload: serviceUrl + 'prepare.file.download',
             fileDisclaimer: serviceUrl + 'file.disclaimer',
             fileDownload: serviceUrl + 'file.download',
@@ -359,16 +356,20 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             getCategories: serviceUrl + 'xml.info?type=categories',
             getHarvesters: serviceUrl + 'xml.harvesting.get',
             rate: serviceUrl + 'xml.metadata.rate',
+            readOnly: serviceUrl + 'xml.info?type=readonly',
             xmlConfig: serviceUrl + 'xml.config.get',
             admin: serviceUrl + 'admin',
             xmlError: serviceUrl + 'xml.main.error',
             searchKeyword: serviceUrl + 'xml.search.keywords',
             getThesaurus: serviceUrl + 'xml.thesaurus.getList',
-            getStatus: serviceUrl + 'xml.metadata.status.values.list',
+            getStatus: serviceUrl + 'xml.info?type=status',
             getKeyword: serviceUrl + 'xml.keyword.get',
             searchCRS: serviceUrl + 'crs.search',
             getCRSTypes: serviceUrl + 'crs.types',
             logoAdd: serviceUrl + 'logo.add',
+            updatePassword: serviceUrl + 'user.pwedit?id=',
+            updateUserInfo: serviceUrl + 'user.infoedit?id=',
+            harvestingAdmin: serviceUrl + 'harvesting',
             logoUrl: this.URL + '/images/logos/',
             imgUrl: this.URL + '/images/',
             harvesterLogoUrl: this.URL + '/images/harvesting/',
@@ -411,14 +412,25 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Return true if current user is an admin
      */
     isAdmin: function(){
-        if(this.isIdentified()) {
-            var role = this.identifiedUser.role;
-            return (role.indexOf('Admin') >= 0 || role.indexOf('Editor') >= 0 || role.indexOf('Reviewer') >= 0);
+        return this.identifiedUser && this.identifiedUser.role === "Administrator";
+    },
+    /** api: method[isReadOnly]
+     *  Return true if GN is is read-only mode
+     */
+    isReadOnly: function(){
+        var request = OpenLayers.Request.GET({
+            url: this.services.readOnly,
+            async: false
+        }), ro, result = false;
+
+        if (request.responseXML) {
+            var xml = request.responseXML.documentElement;
+            ro = xml.getElementsByTagName('readonly')[0];
+            if(ro) {
+                result = ro.childNodes[0].nodeValue === "true";
+            }
         }
-        else {
-            return false;
-        }
-        
+        return result;
     },
     /** api: method[onAfterLogin]
      *  :param e: ``Object``
@@ -506,22 +518,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  
      *  Return catalogue information (site name, organization, id, casEnabled).
      */
-	// TODO MERGE-GN
-    getInfo: function(){
-        var info = {};
-        var properties = ['name', 'organization', 'siteId', 'casEnabled'];
-        var request = OpenLayers.Request.GET({
-            url: this.services.getSiteInfo,
-            async: false
-        });
-
-        if (request.responseXML) {
-            var xml = request.responseXML.documentElement;
-            Ext.each(properties, function(item, idx){
-                var children = xml.getElementsByTagName(item)[0];
-                if (children) {
-                    info[item] = children.childNodes[0].nodeValue;
-                }
+    getInfo: function (refresh) {
+        if (refresh || this.info === null) {
+            this.info = {};
+            var properties = ['name', 'organization', 'siteId', 'casEnabled'];
+            var request = OpenLayers.Request.GET({
+                url: this.services.getSiteInfo,
+                async: false
             });
             
             if (request.responseXML) {
@@ -529,14 +532,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 Ext.each(properties, function(item, idx){
                     var children = xml.getElementsByTagName(item)[0];
                     if (children) {
-                        info[item] = children.childNodes[0].nodeValue;
+                        this.info[item] = children.childNodes[0].nodeValue;
                     }
                 }, this);
             }
-            this.casEnabled = info.casEnabled === 'true';
+            this.casEnabled = this.info.casEnabled === 'true';
         }
-        this.casEnabled = info.casEnabled === 'true';
-        return info;
+        return this.info;
     },
     /** api: method[getInspireInfo]
      *
@@ -969,7 +971,15 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             }
         break;
         default: 
-            window.open(this.services.mdEdit + '?id=' + id, this.windowName, this.windowOption);
+            var url;
+            if (create) {
+                child = child ? 'y' : 'n';
+                url = this.services.mdCreate + '?id=' + id + '&group=' + group +
+                    '&template=' + isTemplate + '&child=' + child;
+            } else {
+                url = this.services.mdEdit + '?id=' + id;
+            }
+            window.open(url, this.windowName, this.windowOption);
         }
     },
     /** api: method[metadataDuplicate]
@@ -1090,10 +1100,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         
         if (response.status === 200 && authenticated) {
             this.identifiedUser = {
-                username: me.getElementsByTagName('username')[0].innerText || me.getElementsByTagName('username')[0].textContent || me.getElementsByTagName('username')[0].text,
-                name: me.getElementsByTagName('name')[0].innerText || me.getElementsByTagName('name')[0].textContent || me.getElementsByTagName('name')[0].text,
-                surname: me.getElementsByTagName('surname')[0].innerText || me.getElementsByTagName('surname')[0].textContent || me.getElementsByTagName('surname')[0].text,
-                role: me.getElementsByTagName('profile')[0].innerText || me.getElementsByTagName('profile')[0].textContent || me.getElementsByTagName('profile')[0].text
+                id: me.getElementsByTagName('id')[0].innerText || me.getElementsByTagName('id')[0].textContent,
+                username: me.getElementsByTagName('username')[0].innerText || me.getElementsByTagName('username')[0].textContent,
+                name: me.getElementsByTagName('name')[0].innerText || me.getElementsByTagName('name')[0].textContent,
+                surname: me.getElementsByTagName('surname')[0].innerText || me.getElementsByTagName('surname')[0].textContent,
+                email: me.getElementsByTagName('email')[0].innerText || me.getElementsByTagName('email')[0].textContent,
+                hash: me.getElementsByTagName('hash')[0].innerText || me.getElementsByTagName('hash')[0].textContent,
+                role: me.getElementsByTagName('profile')[0].innerText || me.getElementsByTagName('profile')[0].textContent
             };
             this.onAfterLogin();
             return true;
@@ -1291,10 +1304,17 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Open the administration interface according to adminAppUrl properties.
      */
     admin: function(){
-        window.open(this.adminAppUrl);
+        location.href = this.adminAppUrl;
+    },
+    /** api: method[admin]
+    *
+    *  Open the administration interface according to adminAppUrl properties.
+    */
+    moveToURL: function(url){
+        location.href = url;
     },
     metadataImport: function(){
-    	window.open(this.services.mdImport);
+        location.href = this.services.mdImport;
     },
     /**	api: method[massiveOp]
      *  :param type: Type of massive operation. One of ``NewOwner``,
@@ -1329,7 +1349,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 }
             };
             win = new Ext.Window({
-                id: 'gn-modalWindow',
+                id: 'modalWindow',
                 layout: 'fit',
                 width: 700,
                 height: 400,

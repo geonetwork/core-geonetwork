@@ -35,7 +35,8 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
-import jeeves.server.ConfigurationOverrides;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
@@ -53,8 +54,8 @@ import org.jdom.JDOMException;
  * 
  */
 public class LuceneConfig {
-
-	private static final int ANALYZER_CLASS = 1;
+	public static final String USE_NRT_MANAGER_REOPEN_THREAD = "useNRTManagerReopenThread";
+    private static final int ANALYZER_CLASS = 1;
 	private static final int BOOST_CLASS = 2;
 	private static final int DOC_BOOST_CLASS = 3;
 
@@ -97,13 +98,14 @@ public class LuceneConfig {
     /**
      * Facet configuration
      */
-    public class FacetConfig {
+    public static class FacetConfig {
         private String name;
         private String plural;
         private String indexKey;
         private Facet.SortBy sortBy = Facet.SortBy.COUNT;
         private Facet.SortOrder sortOrder = Facet.SortOrder.DESCENDING;
         private int max;
+        private String translator;
         /**
          * Create a facet configuration from a summary configuration element.
          * 
@@ -114,6 +116,7 @@ public class LuceneConfig {
             name = summaryElement.getAttributeValue("name");
             plural = summaryElement.getAttributeValue("plural");
             indexKey = summaryElement.getAttributeValue("indexKey");
+            translator = summaryElement.getAttributeValue("translator");
             
             String maxString = summaryElement.getAttributeValue("max");
             if (maxString == null) {
@@ -187,6 +190,13 @@ public class LuceneConfig {
         public int getMax() {
             return max;
         }
+        public Translator getTranslator(ServiceContext context, String langCode) {
+            try {
+                return Translator.createTranslator(translator, context, langCode);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
 	}
 
 	/**
@@ -232,34 +242,34 @@ public class LuceneConfig {
 			return precisionStep;
 		}
 
-		public boolean equals(Object a) {
-			if (this == a)
-				return true;
-			if (!(a instanceof LuceneConfigNumericField))
-				return false;
-			LuceneConfigNumericField f = (LuceneConfigNumericField) a;
-			return f.getName().equals(this.name);
-		}
-	};
-
-	public class DumpField {
-	    private String tagName;
-	    private String indexField;
-	    private boolean markup;
-        public DumpField(String tagName, String indexField, String markup) {
-            super();
-            this.tagName = tagName;
-            this.indexField = indexField;
-            this.markup = Boolean.parseBoolean(markup);
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + getOuterType().hashCode();
+            result = prime * result + ((name == null) ? 0 : name.hashCode());
+            return result;
         }
-        public String getTagName() { return tagName; }
-        public String getFieldName() { return indexField; }
-        public boolean isMarkup() { return markup; }
-	}
+
+
+        public boolean equals(Object a) {
+            if (this == a)
+                return true;
+            if (!(a instanceof LuceneConfigNumericField))
+                return false;
+            LuceneConfigNumericField f = (LuceneConfigNumericField) a;
+            return f.getName().equals(this.name);
+        }
+
+        private LuceneConfig getOuterType() {
+            return LuceneConfig.this;
+        }
+		
+	};
 
 	private Set<String> tokenizedFields = new HashSet<String>();
 	private Map<String, LuceneConfigNumericField> numericFields = new HashMap<String, LuceneConfigNumericField>();
-	private Map<String /*IndexFieldName*/, DumpField> dumpFields = new HashMap<String, DumpField>();
+	private Map<String, String> dumpFields = new HashMap<String, String>();
 
 	private String defaultAnalyzerClass;
 
@@ -267,7 +277,7 @@ public class LuceneConfig {
 	private Map<String, String> fieldSpecificAnalyzers = new HashMap<String, String>();
 	private Map<String, Float> fieldBoost = new HashMap<String, Float>();
 	private Map<String, Object[]> analyzerParameters = new HashMap<String, Object[]>();
-	private Map<String, Class[]> analyzerParametersClass = new HashMap<String, Class[]>();
+	private Map<String, Class<?>[]> analyzerParametersClass = new HashMap<String, Class<?>[]>();
 
 	private String boostQueryClass;
 	private Map<String, Object[]> boostQueryParameters = new HashMap<String, Object[]>();
@@ -275,7 +285,7 @@ public class LuceneConfig {
 
 	private String documentBoostClass;
 	private Map<String, Object[]> documentBoostParameters = new HashMap<String, Object[]>();
-	private Map<String, Class[]> documentBoostParametersClass = new HashMap<String, Class[]>();
+	private Map<String, Class<?>[]> documentBoostParametersClass = new HashMap<String, Class<?>[]>();
 
 	private Element luceneConfig;
 
@@ -289,8 +299,13 @@ public class LuceneConfig {
 	private boolean trackMaxScore = false;
 	private boolean docsScoredInOrder = false;
 
-	private Version LUCENE_VERSION = Version.LUCENE_34;
-	private Version DEFAULT_LUCENE_VERSION = Version.LUCENE_34;
+	private long commitInterval = 30 * 1000;
+	private boolean useNRTManagerReopenThread = true;
+	private double nrtManagerReopenThreadMaxStaleSec = 5;
+	private double nrtManagerReopenThreadMinStaleSec = 0.1f;
+	
+	private Version LUCENE_VERSION = Geonet.LUCENE_VERSION;
+	private Set<String> multilingualSortFields = new HashSet<String>();
 
 	
     /**
@@ -301,8 +316,8 @@ public class LuceneConfig {
 	 * @param luceneConfigXmlFile
 	 */
 	public LuceneConfig(String appPath, ServletContext servletContext, String luceneConfigXmlFile) {
-	    if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) 
-	        Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
 		this.appPath = appPath;
 		this.configurationFile = new File(appPath + luceneConfigXmlFile);
 		this.load(servletContext, luceneConfigXmlFile);
@@ -316,21 +331,24 @@ public class LuceneConfig {
 			luceneConfig = Xml.loadStream(new FileInputStream(
 					this.configurationFile));
 			if (servletContext != null) {
-				ConfigurationOverrides.updateWithOverrides(luceneConfigXmlFile, servletContext, appPath, luceneConfig);
+				ConfigurationOverrides.DEFAULT.updateWithOverrides(luceneConfigXmlFile, servletContext, appPath, luceneConfig);
 			}
 			
 			// Main Lucene index configuration option
 			Element elem = luceneConfig.getChild("index");
 			String version = elem.getChildText("luceneVersion");
 
-			if (version == null) {
+			if (version != null) {
 				try {
 					LUCENE_VERSION = Version.valueOf("LUCENE_" + version);
+					if (LUCENE_VERSION == null) {
+					    LUCENE_VERSION = Geonet.LUCENE_VERSION;
+					}
 				} catch (Exception e) {
 					Log.warning(Geonet.SEARCH_ENGINE,
 							"Failed to set Lucene version to: " + version
-									+ ". Set to default: " + DEFAULT_LUCENE_VERSION.toString());
-					LUCENE_VERSION = DEFAULT_LUCENE_VERSION;
+									+ ". Set to default: " + Geonet.LUCENE_VERSION.toString());
+					LUCENE_VERSION = Geonet.LUCENE_VERSION;
 				}
 			}
 
@@ -358,6 +376,43 @@ public class LuceneConfig {
 							"Invalid integer value for merge factor. Using default value.");
 					MergeFactor = DEFAULT_MERGEFACTOR;
 				}
+			}
+			
+			String cI = elem.getChildText("commitInterval");
+			if (cI != null) {
+			    try {
+			        commitInterval = Long.valueOf(cI);
+			    } catch (NumberFormatException e) {
+			        Log.warning(Geonet.SEARCH_ENGINE,
+			                "Invalid long value for commitInterval. Using default value.");
+			    }
+			}
+			String reopenThread = elem.getChildText(USE_NRT_MANAGER_REOPEN_THREAD);
+			if (reopenThread != null) {
+			    try {
+			        useNRTManagerReopenThread = Boolean.parseBoolean(reopenThread);
+			    } catch (NumberFormatException e) {
+			        Log.warning(Geonet.SEARCH_ENGINE,
+			                "Invalid boolean value for useNRTManagerReopenThread. Using default value.");
+			    }
+			}
+			String maxStaleNS = elem.getChildText("nrtManagerReopenThreadMaxStaleSec");
+			if (maxStaleNS != null) {
+			    try {
+			        nrtManagerReopenThreadMaxStaleSec = Double.valueOf(maxStaleNS);
+			    } catch (NumberFormatException e) {
+			        Log.warning(Geonet.SEARCH_ENGINE,
+			                "Invalid Double value for nrtManagerReopenThreadMaxStaleSec. Using default value.");
+			    }
+			}
+			String minStaleNS = elem.getChildText("nrtManagerReopenThreadMinStaleSec");
+			if (minStaleNS != null) {
+			    try {
+			        nrtManagerReopenThreadMinStaleSec = Double.valueOf(minStaleNS);
+			    } catch (NumberFormatException e) {
+			        Log.warning(Geonet.SEARCH_ENGINE,
+			                "Invalid Double value for nrtManagerReopenThreadMinStaleSec. Using default value.");
+			    }
 			}
 
 			// Tokenized fields
@@ -406,8 +461,9 @@ public class LuceneConfig {
 			elem = luceneConfig.getChild("defaultAnalyzer");
 			if (elem != null) {
 				defaultAnalyzerClass = elem.getAttribute("name").getValue();
-				loadClassParameters(ANALYZER_CLASS, "",
-						defaultAnalyzerClass, elem.getChildren("Param"));
+				List<?> paramChildren = elem.getChildren("Param");
+                loadClassParameters(ANALYZER_CLASS, "",
+						defaultAnalyzerClass, paramChildren);
 			}
 
 			// Fields specific analyzer
@@ -475,13 +531,16 @@ public class LuceneConfig {
 						Element e = (Element) o;
 						String name = e.getAttributeValue("name");
 						String tagName = e.getAttributeValue("tagName");
-						String markupElement = e.getAttributeValue("markup");
+						String multilingualSortField = e.getAttributeValue("multilingualSortField");
 						if (name == null || tagName == null) {
 							Log.warning(
 									Geonet.SEARCH_ENGINE,
 									"Field must have a name and an tagName attribute, check Lucene configuration file.");
 						} else {
-							dumpFields.put(name, new DumpField(name, tagName, markupElement));
+							dumpFields.put(name, tagName);
+							if (Boolean.parseBoolean(multilingualSortField)) {
+							    this.multilingualSortFields.add(name);
+							}
 						}
 					}
 				}				
@@ -501,7 +560,6 @@ public class LuceneConfig {
 			if (elem != null && elem.getText().equals("true")) {
 				setDocsScoredInOrder(true);
 			}
-
 		} catch (FileNotFoundException e) {
 			Log.error(
 					Geonet.SEARCH_ENGINE,
@@ -525,7 +583,7 @@ public class LuceneConfig {
 			Element taxonomyConfig = Xml.loadStream(new FileInputStream(
 					this.taxonomyConfigurationFile));
 			if (servletContext != null) {
-				ConfigurationOverrides.updateWithOverrides(taxonomyConfigFile, servletContext, appPath, taxonomyConfig);
+				ConfigurationOverrides.DEFAULT.updateWithOverrides(taxonomyConfigFile, servletContext, appPath, taxonomyConfig);
 			}
 			
 			taxonomy = new HashMap<String, Map<String,FacetConfig>>();
@@ -595,7 +653,7 @@ public class LuceneConfig {
      * @param clazz
      * @param children
      */
-	private void loadClassParameters(int type, String field, String clazz, List<Object> children) {
+	private void loadClassParameters(int type, String field, String clazz, List<?> children) {
 		if (children == null)
 			return; // No params
 
@@ -603,7 +661,7 @@ public class LuceneConfig {
             Log.debug(Geonet.SEARCH_ENGINE, "  Field: " + field + ", loading class " + clazz + " ...");
 
 		Object[] params = new Object[children.size()];
-		Class[] paramsClass = new Class[children.size()];
+		Class<?>[] paramsClass = new Class<?>[children.size()];
 		int i = 0;
 		for (Object o : children) {
 			if (o instanceof Element) {
@@ -681,6 +739,15 @@ public class LuceneConfig {
 	}
 
 	/**
+	 * Get the fields that are used for sorting also may have translations.
+	 * 
+	 * See http://trac.osgeo.org/geonetwork/ticket/1112
+	 */
+	public Set<String> getMultilingualSortFields() {
+		return multilingualSortFields;
+	}
+	
+	/**
 	 * 
 	 * @return The list of tokenized fields which could not determined using
 	 *         Lucene API.
@@ -710,7 +777,7 @@ public class LuceneConfig {
 	/**
 	 * @return The list of fields to dump from the index on fast search.
 	 */
-	public Map<String, DumpField> getDumpFields() {
+	public Map<String, String> getDumpFields() {
 		return this.dumpFields;
 	}
 	
@@ -751,7 +818,7 @@ public class LuceneConfig {
 	 *            with class name for specific field analyzer)
 	 * @return The list of classes for analyzer parameters
 	 */
-	public Class[] getAnalyzerParameterClass(String analyzer) {
+	public Class<?>[] getAnalyzerParameterClass(String analyzer) {
 		return this.analyzerParametersClass.get(analyzer);
 	}
 
@@ -767,7 +834,7 @@ public class LuceneConfig {
 	 * 
 	 * @return The list of classes for boost query parameters.
 	 */
-	public Class[] getBoostQueryParameterClass() {
+	public Class<?>[] getBoostQueryParameterClass() {
 		return this.boostQueryParametersClass.get(boostQueryClass);
 	}
 
@@ -791,7 +858,7 @@ public class LuceneConfig {
      * 
      * @return The list of classes for document boost parameters.
      */
-    public Class[] getDocumentBoostParameterClass() {
+    public Class<?>[] getDocumentBoostParameterClass() {
         return this.documentBoostParametersClass.get(documentBoostClass);
     }
 
@@ -950,4 +1017,36 @@ public class LuceneConfig {
 	public void setTaxonomy(Map<String, Map<String,FacetConfig>> taxonomy) {
 		this.taxonomy = taxonomy;
 	}
+
+    public static String multilingualSortFieldName(String fieldName, String locale) {
+        return fieldName + "|" + locale;
+    }
+
+    /**
+     * How often to check if a commit is required
+     */
+    public long commitInterval() {
+        return this.commitInterval;
+    }
+    
+    /**
+     * How often to check if a commit is required
+     */
+    public boolean useNRTManagerReopenThread() {
+        return this.useNRTManagerReopenThread;
+    }
+    
+    /**
+     * How often to check if a commit is required
+     */
+    public double getNRTManagerReopenThreadMaxStaleSec() {
+        return this.nrtManagerReopenThreadMaxStaleSec;
+    }
+    
+    /**
+     * How often to check if a commit is required
+     */
+    public double getNRTManagerReopenThreadMinStaleSec() {
+        return this.nrtManagerReopenThreadMinStaleSec;
+    }
 }

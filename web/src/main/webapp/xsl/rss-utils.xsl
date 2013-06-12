@@ -114,10 +114,10 @@
 
 			<pubDate><xsl:value-of select="concat($day,' ',$month,' ',$year,' ',$time,' EST')"/></pubDate> 
 			<guid><xsl:value-of select="$mdURL"/></guid>
-			<xsl:if test="string($thumbnailLink)!=''">
+			<guid><xsl:value-of select="$mdURL"/></guid>
+			<xsl:if test="string($thumbnailLink)!='' and starts-with($thumbnailLink, 'http')">
 				<media:content url="{$thumbnailLink}" type="image/gif" width="100"/>
 			</xsl:if>
-			<media:text><xsl:value-of select="$metadata/abstract"/></media:text>
 			
 			<xsl:apply-templates select="$metadata/geoBox" mode="geobox">
 				<xsl:with-param name="rssFormat" select="/root/request/georss" />

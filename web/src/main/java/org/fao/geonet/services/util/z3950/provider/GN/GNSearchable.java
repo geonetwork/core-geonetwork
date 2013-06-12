@@ -33,80 +33,80 @@ import org.springframework.context.ApplicationContext;
 
 import java.util.Map;
 import java.util.Observer;
+
 //import org.fao.geonet.services.util.z3950.GNSearchTask;
 
 /**
- * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
- * interface between JZkit and GN. not currently used
+ * @author 'Timo Proescholdt <tproescholdt@wmo.int>' interface between JZkit and GN. not currently used
  */
 public class GNSearchable implements Searchable {
 
-       
-       private Map recordArchetypes ;
-       private int timeout;
-       
-       private ApplicationContext ctx;
-       
-       
-       public GNSearchable() {
-           if(Log.isDebugEnabled(Geonet.Z3950_SERVER)) Log.debug(Geonet.Z3950_SERVER, "creating GNSearchable");
-       }
-       
-       public void close() {
-       
-       }
-       
-       public void setTimeout(int i) {
-               this.timeout=i;
-       }
+    @SuppressWarnings("rawtypes")
+    private Map recordArchetypes;
+    private int timeout;
 
-       public IRResultSet evaluate(IRQuery q) {
-       
-               return this.evaluate(q, null, null);
-       
-       }
+    private ApplicationContext ctx;
 
-       public IRResultSet evaluate(IRQuery q, Object userInfo) {
-               return this.evaluate(q, userInfo, null);
-       }
+    public GNSearchable() {
+        if (Log.isDebugEnabled(Geonet.Z3950_SERVER))
+            Log.debug(Geonet.Z3950_SERVER, "creating GNSearchable");
+    }
 
-       public IRResultSet evaluate(IRQuery q, Object userInfo, Observer[] observers) {
+    public void close() {
 
-           if(Log.isDebugEnabled(Geonet.Z3950_SERVER)) Log.debug(Geonet.Z3950_SERVER, "evaluating...");
-               
-               ContextContainer cnt = (ContextContainer)ctx.getBean("ContextGateway");
-               
-               
-           GNResultSet result = null;
+    }
 
-           try {
-             result = new  GNResultSet( new GNXMLQuery(q, ctx) , userInfo , observers ,cnt.getSrvctx()); //       SRUResultSet(observers, base_url, getCQLString(q), code);
-             result.evaluate(timeout);
-             result.setStatus(IRResultSetStatus.COMPLETE);
-           }
-           catch ( Exception e ) {
-             result.setStatus(IRResultSetStatus.FAILURE);
-             e.printStackTrace();
-           }
+    public void setTimeout(int i) {
+        this.timeout = i;
+    }
 
-           return result;
-       }
+    public IRResultSet evaluate(IRQuery q) {
 
-       
-       public Map getRecordArchetypes() {
-               return this.recordArchetypes;
-       }
+        return this.evaluate(q, null, null);
 
-       public void setRecordArchetypes(Map recordSyntaxArchetypes) {
-                       this.recordArchetypes=recordSyntaxArchetypes;
+    }
 
-       }
+    public IRResultSet evaluate(IRQuery q, Object userInfo) {
+        return this.evaluate(q, userInfo, null);
+    }
 
-       public void setApplicationContext(ApplicationContext ctx)
-                       throws BeansException {
-               this.ctx=ctx;
-               
-       }
+    public IRResultSet evaluate(IRQuery q, Object userInfo, Observer[] observers) {
 
+        if (Log.isDebugEnabled(Geonet.Z3950_SERVER))
+            Log.debug(Geonet.Z3950_SERVER, "evaluating...");
+
+        ContextContainer cnt = (ContextContainer) ctx.getBean("ContextGateway");
+
+        GNResultSet result = null;
+
+        try {
+            result = new GNResultSet(new GNXMLQuery(q, ctx), userInfo, observers, cnt.getSrvctx()); // SRUResultSet(observers, base_url,
+                                                                                                    // getCQLString(q), code);
+            result.evaluate(timeout);
+            result.setStatus(IRResultSetStatus.COMPLETE);
+        } catch (Exception e) {
+            if(result!=null)
+                result.setStatus(IRResultSetStatus.FAILURE);
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("rawtypes")
+    public Map getRecordArchetypes() {
+        return this.recordArchetypes;
+    }
+
+    public void setRecordArchetypes(@SuppressWarnings("rawtypes")
+    Map recordSyntaxArchetypes) {
+        this.recordArchetypes = recordSyntaxArchetypes;
+
+    }
+
+    public void setApplicationContext(ApplicationContext ctx) throws BeansException {
+        this.ctx = ctx;
+
+    }
 
 }

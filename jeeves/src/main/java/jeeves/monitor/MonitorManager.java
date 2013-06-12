@@ -214,7 +214,7 @@ public class MonitorManager {
             try {
                 checkCollection.add(hcClass.newInstance());
             } catch (Exception e) {
-                logReflectionError(e, hcClass.getName(), tagName);
+                logReflectionError(e, hcClass != null? hcClass.getName() : "unknown", tagName);
             }
         }
     }

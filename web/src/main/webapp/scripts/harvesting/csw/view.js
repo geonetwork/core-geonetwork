@@ -9,12 +9,19 @@ csw.View = function(xmlLoader)
 	HarvesterView.call(this);	
 	
 	var searchTransf = new XSLTransformer('harvesting/csw/client-search-row.xsl', xmlLoader);
+	var searchCapTransf = new XSLTransformer('harvesting/csw/client-search-capability.xsl', xmlLoader);
+	var searchTempTransf = new XSLTransformer('harvesting/csw/client-search-temp.xsl', xmlLoader);
+	var editCapTransf = new XSLTransformer('harvesting/csw/client-edit-capability.xsl', xmlLoader);
+	var elemCapTransf = new XSLTransformer('harvesting/csw/elem-capability.xsl', xmlLoader);
 	var privilTransf = new XSLTransformer('harvesting/csw/client-privil-row.xsl', xmlLoader);
 	var resultTransf = new XSLTransformer('harvesting/csw/client-result-tip.xsl', xmlLoader);
 	
 	var loader = xmlLoader;
 	var valid  = new Validator(loader);
 	var shower = null;
+	
+	var searchtemp;
+	var elemCap;
 	
 	var currSearchId = 0;
 	
@@ -61,7 +68,9 @@ function init()
 function setEmpty()
 {
 	this.setEmptyCommon();
-	
+
+    $('csw.rejectDuplicateResource').checked = false;
+    
 	removeAllSearch();
 	
 	$('csw.capabUrl').value = '';
@@ -90,15 +99,17 @@ function setData(node)
 
 	hvutil.setOption(site, 'capabilitiesUrl', 'csw.capabUrl');
 	hvutil.setOption(site, 'icon',            'csw.icon');
-	
+    hvutil.setOption(site, 'rejectDuplicateResource', 'csw.rejectDuplicateResource');
+    
 	//--- add search entries
 	
 	var list = searches.getElementsByTagName('search');
 	
 	removeAllSearch();
 	
-	for (var i=0; i<list.length; i++)
-		addSearch(list[i]);
+	for (var i=0; i<list.length; i++){
+		addEditCap(list[i]);
+	}
 
 	//--- add privileges entries
 	
@@ -122,28 +133,54 @@ function getData()
 	
 	data.CAPAB_URL = $F('csw.capabUrl');
 	data.ICON      = $F('csw.icon');
-	
+	data.REJECTDUPLICATERESOURCE = $('csw.rejectDuplicateResource').checked;
 	//--- retrieve search information
 	
 	var searchData = [];
 	var searchList = xml.children($('csw.searches'));
 	
+	if (typeof(elemCap)=='undefined'){
+		elemCap = elemCapTransf.transform(Sarissa.getDomDocument().createElement('search')); 
+	}
+	
+	var capList = elemCap.getElementsByTagName('capability');
+	var obj={};
+		
 	for(var i=0; i<searchList.length; i++)
 	{
 		var divElem = searchList[i];
+		var obj={};
 		
-		searchData.push(
-		{
-			ANY_TEXT : xml.getElementById(divElem, 'csw.anytext') .value,
-			TITLE    : xml.getElementById(divElem, 'csw.title')   .value,
-			ABSTRACT : xml.getElementById(divElem, 'csw.abstract').value,
-			SUBJECT  : xml.getElementById(divElem, 'csw.subject') .value,
-			MINSCALE : xml.getElementById(divElem, 'csw.minscale').value,
-			MAXSCALE : xml.getElementById(divElem, 'csw.maxscale').value
-		});
+		for(var j=0; j<capList.length; j++){
+			
+				var capName = capList[j].getAttribute('name');
+				obj[capName]= xml.getElementById(divElem, capList[j].textContent).value;
+				
+		}
+		
+		searchData.push(obj);
 	}
 	
+		
+	if(typeof(searchtemp)=='undefined'){ 
+	
+		var doc    = Sarissa.getDomDocument();
+		var searchtmp = doc.createElement('search');
+		for(var j=0; j < capList.length; j++) {
+			
+			var text = doc.createTextNode('{'+capList[j].getAttribute('name') +'}');
+			var subtmp = doc.createElement(capList[j].getAttribute('name'));
+			subtmp.appendChild(text);
+			searchtmp.appendChild(subtmp);
+		}
+			
+		addSearchTemp(searchtmp);
+	} 
+	
+
+	
 	data.SEARCH_LIST = searchData;
+	data.SEARCH_TEMP = searchtemp;
 	
 	//--- retrieve privileges and categories information
 	
@@ -191,13 +228,119 @@ function updateIcon()
 //=== Search methods
 //=====================================================================================
 
+function addEmptySearchOld()
+{
+		var doc    = Sarissa.getDomDocument();	
+		var search = doc.createElement('search');
+
+		addSearch(search);
+}
+
+/**
+ * Do a GetCapabilities request and for each queryables list them on the configuration.
+ */
 function addEmptySearch()
 {
-	var doc    = Sarissa.getDomDocument();	
-	var search = doc.createElement('search');
+	var url = $('csw.capabUrl').value;
+		 
+	if (url==''){
+		return;
+	}
+	if (url.indexOf('GetCapabilities') === -1) {
+          url += (url.indexOf('?') === -1 ? '?' : '&') + "request=GetCapabilities&version=2.0.2&service=CSW";
+	}
 	
-	addSearch(search);
+	var proxyUrl = '../../proxy?url='+encodeURIComponent(url);
+
+	OpenLayers.Request.GET({
+		url: proxyUrl,
+   		success: function(response) {
+   			
+   			var doc    = Sarissa.getDomDocument();	
+   			var search = doc.createElement('search');
+   			var searchtmp = doc.createElement('search');
+   			
+    		var format = new OpenLayers.Format.XML();
+    		var doc = format.read(response.responseText);
+    		var nodes = format.getElementsByTagNameNS(doc, '*', 'Constraint');
+    		var queryables = [];
+    		
+			for(var i=0; i < nodes.length; i++) {
+				if (nodes[i].attributes[0].value =='SupportedISOQueryables' || nodes[i].attributes[0].value =='AdditionalQueryables')
+				for(var j=0; j < nodes[i].childNodes.length; j++) {
+					if (nodes[i].childNodes[j].nodeName == 'ows:Value'){
+					    queryables.push(nodes[i].childNodes[j].firstChild.nodeValue)
+					}
+				}
+			}
+			
+			queryables.sort();
+			
+			for (var i=0; i < queryables.length; i++) {
+			    var sub = doc.createElement(queryables[i]);
+                search.appendChild(sub);
+                var text = doc.createTextNode('{'+queryables[i] +'}');
+                var subtmp = doc.createElement(queryables[i]);
+                subtmp.appendChild(text);
+                searchtmp.appendChild(subtmp);
+			}
+			
+			addSearchTemp(searchtmp);
+			
+			addSearchCap(search);
+    	},
+    	failure: function(result) {
+            alert("failure");
+    	}
+	});
+
+	
 }
+
+//=====================================================================================
+
+function addSearchCap(search)
+{
+	var id = ''+ currSearchId++;
+	search.setAttribute('id', id);
+	
+	elemCap = elemCapTransf.transform(search); 
+	
+	var html = searchCapTransf.transformToText(search);
+	
+	//--- add the new search in list
+	new Insertion.Bottom('csw.searches', html);
+	
+
+	
+}
+
+//=====================================================================================
+
+function addEditCap(search)
+{
+	var id = ''+ currSearchId++;
+	search.setAttribute('id', id);
+	
+	elemCap = elemCapTransf.transform(search); 
+		
+	var html = editCapTransf.transformToText(search);
+	
+	//--- add the new search in list
+	new Insertion.Bottom('csw.searches', html);
+	
+
+	
+}
+
+//=====================================================================================
+
+
+function addSearchTemp(searchtmp)
+{
+	searchtemp = xml.toString(searchtmp);
+}
+
 
 //=====================================================================================
 
@@ -206,10 +349,13 @@ function addSearch(search)
 	var id = ''+ currSearchId++;
 	search.setAttribute('id', id);
 	
+
 	var html = searchTransf.transformToText(search);
 
+	
 	//--- add the new search in list
 	new Insertion.Bottom('csw.searches', html);
+	
 	
 	valid.add(
 	[

@@ -43,8 +43,6 @@ import jeeves.xlink.Processor;
 import org.apache.log4j.Priority;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.XmlSerializer.ThreadLocalConfiguration;
-import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Attribute;
@@ -103,7 +101,7 @@ public abstract class XmlSerializer {
 	public static void clearThreadLocal() {
 		configThreadLocal.set(null);
 	}
-
+	
     /**
      *
      * @param sMan
@@ -146,7 +144,7 @@ public abstract class XmlSerializer {
      */
 	protected Element internalSelect(Dbms dbms, String table, String id, boolean isIndexingTask) throws Exception {
 		String query = "SELECT * FROM " + table + " WHERE id = ?";
-		Element select = dbms.select(query, new Integer(id));
+		Element select = dbms.select(query, Integer.valueOf(id));
 		Element record = select.getChild(Jeeves.Elem.RECORD);
 
 		if (record == null)
@@ -159,8 +157,8 @@ public abstract class XmlSerializer {
 		
 		if (!isIndexingTask) { 
 			boolean hideWithheldElements = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
-    		if(ServiceContext.get() != null) {
-    			ServiceContext context = ServiceContext.get();
+			ServiceContext context = ServiceContext.get();
+    		if(context != null) {
     			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
     			boolean canEdit = gc.getAccessManager().canEdit(context, id);
     			if(canEdit) {
@@ -291,7 +289,7 @@ public abstract class XmlSerializer {
 		if (groupOwner != null) {
 			fields.append(", groupOwner");
 			values.append(", ?");
-			args.add(new Integer(groupOwner));
+			args.add(Integer.valueOf(groupOwner));
 		}
 
 		if (title != null)
@@ -351,7 +349,7 @@ public abstract class XmlSerializer {
 
 		fixCR(xml);
 		String metadata = Xml.getString(xml);
-		int metadataId = new Integer(id);
+		int metadataId = Integer.valueOf(id);
 		
         if (updateDateStamp)  {
             if (changeDate == null)	{
@@ -388,7 +386,7 @@ public abstract class XmlSerializer {
 		// that aren't already in use from the xlink cache. For now we
 		// rely on the admin clearing cache and reindexing regularly
 		String query = "DELETE FROM " + table + " WHERE id=?";
-		dbms.execute(query, new Integer(id));
+		dbms.execute(query, Integer.valueOf(id));
 	}
 
     /**

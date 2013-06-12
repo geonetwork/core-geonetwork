@@ -87,7 +87,7 @@ public class PrepareBatchUpdateStatus implements Service
 			//--- check access, if owner then process 
 			
 			if (am.isOwner(context, id)) {
-				ids.add(new Integer(id));
+				ids.add(Integer.valueOf(id));
 			}
 		}
 		}
@@ -95,7 +95,8 @@ public class PrepareBatchUpdateStatus implements Service
 		//-----------------------------------------------------------------------
 		//--- retrieve status values
 		Element elStatus = Lib.local.retrieve(dbms, "StatusValues");
-		List<Element> list = elStatus.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = elStatus.getChildren();
 
 		for (Element el : list) {
 			el.setName(Geonet.Elem.STATUS);

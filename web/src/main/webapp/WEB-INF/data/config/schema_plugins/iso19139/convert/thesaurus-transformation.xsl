@@ -93,20 +93,35 @@
 										<xsl:value-of select="/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/title"/>
 									</gco:CharacterString>
 								</gmd:title>
-								<gmd:date>
-									<gmd:CI_Date>
-										<gmd:date>
-											<gco:Date>
-												<xsl:value-of select="/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/date"/>
-											</gco:Date>
-										</gmd:date>
-										<gmd:dateType>
-											<gmd:CI_DateTypeCode
-												codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
-												codeListValue="publication"/>
-										</gmd:dateType>
-									</gmd:CI_Date>
-								</gmd:date>
+								
+								<xsl:variable name="thesaurusDate" select="normalize-space(/root/gui/thesaurus/thesauri/thesaurus[key = $currentThesaurus]/date)"/>
+								
+								<xsl:if test="$thesaurusDate != ''">
+									<gmd:date>
+										<gmd:CI_Date>
+											<gmd:date>
+												<xsl:choose>
+													<xsl:when test="contains($thesaurusDate, 'T')">
+														<gco:DateTime>
+															<xsl:value-of select="$thesaurusDate"/>
+														</gco:DateTime>
+													</xsl:when>
+													<xsl:otherwise>
+														<gco:Date>
+															<xsl:value-of select="$thesaurusDate"/>
+														</gco:Date>
+													</xsl:otherwise>
+												</xsl:choose>
+											</gmd:date>
+											<gmd:dateType>
+												<gmd:CI_DateTypeCode
+													codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+													codeListValue="publication"/>
+											</gmd:dateType>
+										</gmd:CI_Date>
+									</gmd:date>
+								</xsl:if>
+								
 								<xsl:if test="$withThesaurusAnchor">
 									<gmd:identifier>
 										<gmd:MD_Identifier>

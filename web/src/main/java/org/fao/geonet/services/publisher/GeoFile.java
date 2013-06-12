@@ -79,8 +79,8 @@ public class GeoFile {
 	public Collection<String> getVectorLayers(boolean onlyOneFileAllowed) {
 		LinkedList<String> layers = new LinkedList<String>();
 		if (zipFile != null) {
-			for (Enumeration e = zipFile.entries(); e.hasMoreElements();) {
-				ZipEntry ze = (ZipEntry) e.nextElement();
+			for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();) {
+				ZipEntry ze = e.nextElement();
 				String fileName = ze.getName();
 				if (fileIsShp(fileName)) {
 					String base = getBase(fileName);
@@ -116,10 +116,10 @@ public class GeoFile {
 	 * @return a collection of layer names
 	 */
 	public Collection<String> getRasterLayers() {
-		LinkedList<String> layers = new LinkedList();
+		LinkedList<String> layers = new LinkedList<String>();
 		if (zipFile != null) {
-			for (Enumeration e = zipFile.entries(); e.hasMoreElements();) {
-				ZipEntry ze = (ZipEntry) e.nextElement();
+			for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();) {
+				ZipEntry ze = e.nextElement();
 				String fileName = ze.getName();
 				if (fileIsGeotif(fileName)) {
 					layers.add(getBase(fileName));
@@ -151,8 +151,8 @@ public class GeoFile {
 		if (zipFile != null) {
 			ZipOutputStream out = null;
 			byte[] buf = new byte[1024];
-			for (Enumeration e = zipFile.entries(); e.hasMoreElements();) {
-				ZipEntry ze = (ZipEntry) e.nextElement();
+			for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();) {
+				ZipEntry ze = e.nextElement();
 				String baseName = getBase(ze.getName());
 				if (baseName.equals(id)) {
 					if (out == null) {

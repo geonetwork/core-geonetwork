@@ -23,10 +23,8 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import jeeves.utils.PasswordUtil;
 import jeeves.utils.Xml;
 import org.apache.commons.httpclient.HttpException;
-import org.apache.webdav.lib.WebdavResource;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.util.Sha1Encoder;
@@ -39,7 +37,7 @@ import java.util.Map;
 
 class WAFRemoteFile implements RemoteFile {
 	
-	public class WXS{
+	public static class WXS{
 		public static final String WMS = "SERVICE=WMS";
 		public static final String WCS = "SERVICE=WCS";
 		public static final String WFS = "SERVICE=WFS";

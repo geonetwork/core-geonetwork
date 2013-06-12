@@ -214,8 +214,8 @@ public class GeonetworkResumptionToken extends ResumptionToken
 		String curs  = rt.getAttributeValue("cursor");
 
 		setExpirDate((expDt  == null) ? null : new ISODate(expDt));
-		listSize  = (listSz == null) ? null : new Integer(listSz);
-		cursor    = (curs   == null) ? null : new Integer(curs);
+		listSize  = (listSz == null) ? null : Integer.valueOf(listSz);
+		cursor    = (curs   == null) ? null : Integer.valueOf(curs);
 	}
 
 	private void parseToken(String strToken) throws BadResumptionTokenException {

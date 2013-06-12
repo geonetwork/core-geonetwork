@@ -14,7 +14,7 @@
     <xsl:template match="text()"/>
 
 		<xsl:template match="gmd:EX_BoundingPolygon[string(gmd:extentTypeCode/gco:Boolean) != 'false' and string(gmd:extentTypeCode/gco:Boolean) != '0']" priority="2">
-			<xsl:for-each select="gmd:polygon/gml:*">
+			<xsl:for-each select="gmd:polygon/gml:*[name() != 'gml:MultiCurve']">
 				<xsl:copy-of select="."/>
 			</xsl:for-each>
 		</xsl:template>

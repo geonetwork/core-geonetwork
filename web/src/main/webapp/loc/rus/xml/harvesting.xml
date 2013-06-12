@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <selectownergroup>Комбайн относится к группе</selectownergroup>
 	<select>Выбор</select>
 	<name>Название</name>
 	<directoryname>Directory</directoryname>
@@ -22,6 +23,11 @@
 		<long>Удаленный узел GeoNetwork v2.0</long>
 	</info>
 
+	<info type="geoPREST">
+		<short>GeoPortal REST</short>
+		<long>GeoPortal 9.3.x via REST interface</long>
+	</info>
+	
 	<info type="webdav">
 		<short>Web DAV</short>
 		<long>Web Access Folder/Сервер Web DAV</long>
@@ -75,6 +81,8 @@
 	<!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<site>Сайт</site>
+
+	<baseUrl>Base URL of GeoPortal service</baseUrl>
 
 	<category>Category</category>
 	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
@@ -141,6 +149,7 @@
 
 	<content>Harvested Content</content>
 	<importxslt>Apply this XSLT to harvested records</importxslt>
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
 
   <at>Run at</at>
   <atSpec>( hour of day : minute eg. 23:15 )</atSpec>
@@ -402,6 +411,7 @@
 		<couldNotInsert>Could not insert</couldNotInsert>
     <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
 		<recordsUpdated>Records Updated</recordsUpdated>
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
 
 	<notRun>Ожидает первого запуска</notRun>

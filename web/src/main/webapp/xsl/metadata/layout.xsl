@@ -830,6 +830,9 @@
 
   </xsl:template>
 
+
+
+
   <!--
 	shows editable fields for an attribute
 	-->
@@ -1048,9 +1051,28 @@
 	
 	In editing mode, for gco:CharacterString elements (with no codelist 
 	or enumeration defined in the schema) an helper list could be defined 
-	in loc files using the helper tag. Then a list of values
-	is displayed next to the input field.
+	in loc files (labels.xml) using the helper tag. 
+	<element name="gmd:denominator" id="57.0">
+      <label>Denominator</label>
+      <helper>
+        <option value="5000">1:5´000</option>
+        <option value="10000">1:10´000</option>
+        ...
 	
+	Then a list of values is displayed next to the input field.
+	
+	The helper list could be sorted if stort attribute is set to true:
+	<helper sort="true" ...
+	
+	By default, the list of suggestion is displayed in a combo next to the 
+	element. The layout may be customized by setting the editorMode. Supported
+	modes are:
+	* radio
+	* radio_withdesc
+	* radio_linebreak
+	
+	<helper editorMode="radio_withdesc" ...
+    
 	One related element (sibbling) could be link to current element using the @rel attribute.
 	This related element is updated with the title value of the selected option.
 	-->
@@ -1058,80 +1080,34 @@
     <xsl:param name="schema"/>
     <xsl:param name="attribute"/>
     <xsl:param name="jsAction"/>
-
-    <!-- Define the element to look for. -->
-    <xsl:variable name="parentName">
-      <xsl:choose>
-        <!-- In dublin core element contains value.
-					In ISO, attribute also but element contains characterString which contains the value -->
-        <xsl:when test="$attribute=true() or $schema = 'dublin-core'">
-          <xsl:value-of select="name(.)"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="name(parent::node())"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+    <xsl:param name="isTextArea" required="no" select="false()"/>
     
-    <xsl:variable name="context">
-      <xsl:value-of select="name(parent::node()/parent::node())"/>
-    </xsl:variable>
+    <!-- Define the element to look for.
+         In dublin core element contains value.
+         In ISO, attribute also but element contains characterString which contains the value -->
     
-    <xsl:variable name="xpath">
-      <xsl:for-each select="parent::node()">
-        <xsl:call-template name="getXPath"/>
-      </xsl:for-each>
-    </xsl:variable>
-
+    <xsl:variable name="node" select="if ($attribute = true() or $schema = 'dublin-core') 
+                                      then . 
+                                      else parent::node()"></xsl:variable>
     <!-- Look for the helper -->
-    <xsl:variable name="helper">
-      <xsl:choose>
-        <xsl:when
-          test="starts-with($schema,'iso19139')">
-              <xsl:choose>
-                <!-- Exact schema, name and full context match --> 
-                <xsl:when test="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName and @context=$xpath]/helper">
-                  <xsl:copy-of select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName and (@context=$xpath or @context=$context)]/helper"/>
-                </xsl:when>
-                <!-- ISO19139, name and full context match --> 
-                <xsl:when test="/root/gui/schemas/iso19139/labels/element[@name = $parentName and @context=$xpath]/helper">
-                  <xsl:copy-of select="/root/gui/schemas/iso19139/labels/element[@name = $parentName and (@context=$xpath or @context=$context)]/helper"/>
-                </xsl:when>
-                <!-- Exact schema, name and parent-only match --> 
-                <xsl:when test="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName and @context=$context]/helper">
-                  <xsl:copy-of select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName and (@context=$xpath or @context=$context)]/helper"/>
-                </xsl:when>
-                <!-- ISO19139, name and parent-only match --> 
-                <xsl:when test="/root/gui/schemas/iso19139/labels/element[@name = $parentName and @context=$context]/helper">
-                  <xsl:copy-of select="/root/gui/schemas/iso19139/labels/element[@name = $parentName and (@context=$xpath or @context=$context)]/helper"/>
-                </xsl:when>
-                <!-- Exact schema, name match --> 
-                <xsl:when test="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName and not(@context)]/helper">
-                  <xsl:copy-of select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName and not(@context)]/helper"/>
-                </xsl:when>
-                <!-- ISO19139 schema, name match --> 
-                <xsl:when test="/root/gui/schemas/iso19139/labels/element[@name = $parentName and not(@context)]/helper">
-                  <xsl:copy-of
-                    select="/root/gui/schemas/iso19139/labels/element[@name = $parentName and not(@context)]/helper"/>
-                </xsl:when>
-              </xsl:choose>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:copy-of
-            select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name = $parentName]/helper"
-          />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-
-
-    <!-- Display the helper list -->
+    <xsl:variable name="helper" select="if (empty(/root/gui)) then '' else geonet:getHelper($schema, $node, /root/gui)"/>
+    
+    
+    
+    <!-- Display the helper list if found -->
     <xsl:if test="normalize-space($helper)!=''">
-      <xsl:variable name="list" select="exslt:node-set($helper)"/>
+      
+      <!-- Helper configuration -->
+      <xsl:variable name="sortHelper" select="if ($helper/@sort='true') then true() else false()"/>
+      <xsl:variable name="mode" select="$helper/@editorMode"/>
+      <xsl:variable name="value" select="."/>
+      
+      
       <xsl:variable name="refId"
         select="if ($attribute=true()) then concat(../geonet:element/@ref, '_', name(.)) else geonet:element/@ref"/>
-      <xsl:variable name="relatedElementName" select="$list/*/@rel"/>
-      <xsl:variable name="relatedAttributeName" select="$list/*/@relAtt"/>
+      <xsl:variable name="relatedElementName" select="$helper/@rel"/>
+      <xsl:variable name="relatedAttributeName" select="$helper/@relAtt"/>
+      
       
       <xsl:variable name="relatedElementAction">
         <xsl:if test="$relatedElementName!=''">
@@ -1141,9 +1117,20 @@
             select="../following-sibling::node()[name()=$relatedElementName]/gco:CharacterString/geonet:element/@ref"/>
           <xsl:variable name="relatedElementIsEmpty" select="normalize-space($relatedElement)=''"/>
           <!--<xsl:value-of select="concat('if (Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value===&quot;&quot;) Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value=this.options[this.selectedIndex].title;')"/>-->
-          <xsl:value-of
-            select="concat('if (Ext.getDom(&quot;_', $relatedElementRef, '&quot;)) Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value=this.options[this.selectedIndex].title;')"
-          />
+          
+          <xsl:choose>
+            <!-- Layout with radio button -->
+            <xsl:when test="contains($mode, 'radio')">
+              <xsl:value-of
+                select="concat('if (Ext.getDom(&quot;_', $relatedElementRef, '&quot;)) Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value=this.title;')"
+              />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of
+                select="concat('if (Ext.getDom(&quot;_', $relatedElementRef, '&quot;)) Ext.getDom(&quot;_', $relatedElementRef, '&quot;).value=this.options[this.selectedIndex].title;')"
+              />
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:if>
       </xsl:variable>
       
@@ -1151,20 +1138,114 @@
         <xsl:if test="$relatedAttributeName!=''">
           <xsl:variable name="relatedAttributeRef"
             select="concat($refId, '_', $relatedAttributeName)"/>
-          <xsl:value-of
-            select="concat('if (Ext.getDom(&quot;_', $relatedAttributeRef, '&quot;)) Ext.getDom(&quot;_', $relatedAttributeRef, '&quot;).value=this.options[this.selectedIndex].title;')"
-          />
+          
+          
+          <xsl:choose>
+            <!-- Layout with radio button -->
+            <xsl:when test="contains($mode, 'radio')">
+              <xsl:value-of
+                select="concat('if (Ext.getDom(&quot;_', $relatedAttributeRef, '&quot;)) Ext.getDom(&quot;_', $relatedAttributeRef, '&quot;).value=this.title;')"
+              />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of
+                select="concat('if (Ext.getDom(&quot;_', $relatedAttributeRef, '&quot;)) Ext.getDom(&quot;_', $relatedAttributeRef, '&quot;).value=this.options[this.selectedIndex].title;')"
+              />
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:if>
       </xsl:variable>
       
-      <xsl:text> </xsl:text> (<xsl:value-of select="/root/gui/strings/helperList"/>
-      <select id="s_{$refId}" name="s_{$refId}" size="1" 
-		onchange="Ext.getDom('_{$refId}').value=this.options[this.selectedIndex].value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup(); {$relatedElementAction} {$relatedAttributeAction} {$jsAction}"
-		class="md" >
-        <option/>
-        <!-- This assume that helper list is already sort in alphabetical order in loc file. -->
-        <xsl:copy-of select="$list/*"/>
-      </select>) </xsl:if>
+      
+      
+
+      <div class="helper helper-{$mode}">
+      <xsl:choose>
+        <!-- Layout with radio button -->
+        <xsl:when test="contains($mode, 'radio')">
+          <xsl:for-each select="$helper/option">
+            <div>
+              <!-- Some helper may not contains values. That may be used to separate items.
+              Don't put a radio in that case. -->
+              <xsl:if test="@value">
+                <input class="md" type="radio" name="radio_{$refId}" id="radio_{$refId}{position()}" 
+                  value="{@value}" title="{@title}"
+                  onchange="Ext.getDom('_{$refId}').value=this.value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup();{$relatedElementAction} {$relatedAttributeAction} {$jsAction}">
+                  <xsl:if test="@value=$value">
+                    <xsl:attribute name="checked"/>
+                  </xsl:if>
+                </input>
+              </xsl:if>
+              <label for="radio_{$refId}{position()}" title="{@title}">
+                <xsl:value-of select="text()"/>
+                <xsl:if test="$mode='radio_withdesc'"><span><xsl:value-of select="@title"/></span></xsl:if>
+              </label>
+            </div>
+          </xsl:for-each>
+          
+          <xsl:variable name="valueInHelper" select="count($helper/option[@value = $value]) = 1"/>
+          
+          <!-- Add a input for typing a custom value if not available in the helper list.
+          When value change, the related field is updated and other radio is selected -->
+          <div>
+            <input class="md" type="radio" name="radio_{$refId}" id="otherradio_{$refId}" value=""
+              onchange="Ext.getDom('other_{$refId}').focus();Ext.getDom('_{$refId}').value=Ext.getDom('other_{$refId}').value;">
+              <xsl:if test="not($valueInHelper)">
+                <xsl:attribute name="checked"/>
+              </xsl:if>
+            </input>
+            <label for="otherradio_{$refId}"><xsl:value-of select="/root/gui/strings/otherValue"/></label>
+            
+            <xsl:choose>
+              <xsl:when test="$isTextArea">
+                <textarea id="other_{$refId}" type="text" 
+                  onfocus="Ext.getDom('otherradio_{$refId}').checked = true; Ext.getDom('_{$refId}').value=this.value;"
+                  onkeyup="Ext.getDom('_{$refId}').value=this.value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup();"
+                  >
+                  <xsl:if test="not($valueInHelper)">
+                    <xsl:value-of select="$value"/>
+                  </xsl:if>
+                </textarea>
+              </xsl:when>
+              <xsl:otherwise>
+                <input id="other_{$refId}" type="text" 
+                  onfocus="Ext.getDom('otherradio_{$refId}').checked = true; Ext.getDom('_{$refId}').value=this.value;"
+                  onkeyup="Ext.getDom('_{$refId}').value=this.value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup();"
+                  >
+                  <xsl:if test="not($valueInHelper)">
+                    <xsl:attribute name="value" select="$value"/>
+                  </xsl:if>
+                </input>
+              </xsl:otherwise>
+            </xsl:choose>
+            
+          </div>
+        </xsl:when>
+        <!-- Default layout, combo next to the element -->
+        <xsl:otherwise>
+          <xsl:text> </xsl:text> (<xsl:value-of select="/root/gui/strings/helperList"/>
+          <select id="s_{$refId}" name="s_{$refId}" size="1" 
+            onchange="Ext.getDom('_{$refId}').value=this.options[this.selectedIndex].value; if (Ext.getDom('_{$refId}').onkeyup) Ext.getDom('_{$refId}').onkeyup(); {$relatedElementAction} {$relatedAttributeAction} {$jsAction}"
+            class="md" >
+            <option/>
+            <!-- This assume that helper list is already sort in alphabetical order in loc file. -->
+            <xsl:choose>
+              <xsl:when test="$sortHelper">
+                <xsl:for-each select="$helper/option">
+                  <xsl:sort select="./text()"/>
+                  <xsl:copy-of select="."/>
+                </xsl:for-each>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:copy-of select="$helper/*"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </select>)
+        </xsl:otherwise>
+      </xsl:choose>
+      </div>
+      
+    </xsl:if>
   </xsl:template>
 
 
@@ -1350,8 +1431,16 @@
         </xsl:if>
       </th>
       <td>
+
+        <xsl:variable name="textnode" select="exslt:node-set($text)"/>
         <xsl:choose>
           <xsl:when test="$edit">
+            <xsl:copy-of select="$text"/>
+          </xsl:when>
+          <xsl:when test="count($textnode/*) &gt; 0">
+            <!-- In some templates, text already contains HTML (eg. codelist, link for download).
+              In that case copy text content and does not resolve
+              hyperlinks. -->
             <xsl:copy-of select="$text"/>
           </xsl:when>
           <xsl:otherwise>
@@ -1743,12 +1832,13 @@
       <td colspan="2" class="complex">
         <fieldset>
           <legend id="stip.{$helpLink}|{$id}">
-            <span>
+            
+            <span class="toggle">
               <xsl:if test="/root/gui/config/metadata-view-toggleTab">
-                <div class="toggle button tgDown" onclick="toggleFieldset(this, Ext.getDom('toggled{$id}'));"
-                  >&#160;</div>
+                <xsl:attribute name="onclick">toggleFieldset(Ext.getDom('toggled-bt-<xsl:value-of select="$id"/>'), Ext.getDom('toggled<xsl:value-of select="$id"/>'));</xsl:attribute>
+                <div class="button tgDown" id="toggled-bt-{$id}">&#160;</div>
               </xsl:if>
-
+              
               <xsl:choose>
                 <xsl:when test="$title!=''">
                   <xsl:value-of select="$title"/>
@@ -1759,21 +1849,21 @@
                   </xsl:call-template>
                 </xsl:otherwise>
               </xsl:choose>
-
-              <xsl:if test="$edit and not($isXLinked)">
-                <xsl:call-template name="getButtons">
-                  <xsl:with-param name="addLink" select="$addLink"/>
-                  <xsl:with-param name="addXMLFragment" select="$addXMLFragment"/>
-                  <xsl:with-param name="addXmlFragmentSubTemplate"
-                    select="$addXmlFragmentSubTemplate"/>
-                  <xsl:with-param name="removeLink" select="$removeLink"/>
-                  <xsl:with-param name="upLink" select="$upLink"/>
-                  <xsl:with-param name="downLink" select="$downLink"/>
-                  <xsl:with-param name="validationLink" select="$validationLink"/>
-                  <xsl:with-param name="id" select="$id"/>
-                </xsl:call-template>
-              </xsl:if>
+              
             </span>
+            <xsl:if test="$edit and not($isXLinked)">
+              <xsl:call-template name="getButtons">
+                <xsl:with-param name="addLink" select="$addLink"/>
+                <xsl:with-param name="addXMLFragment" select="$addXMLFragment"/>
+                <xsl:with-param name="addXmlFragmentSubTemplate"
+                  select="$addXmlFragmentSubTemplate"/>
+                <xsl:with-param name="removeLink" select="$removeLink"/>
+                <xsl:with-param name="upLink" select="$upLink"/>
+                <xsl:with-param name="downLink" select="$downLink"/>
+                <xsl:with-param name="validationLink" select="$validationLink"/>
+                <xsl:with-param name="id" select="$id"/>
+              </xsl:call-template>
+            </xsl:if>
           </legend>
           <!-- Check if divs could be used instead ? -->
           <table class="gn" id="toggled{$id}">
@@ -1894,7 +1984,6 @@
           <items>
             <xsl:for-each select="geonet:element/geonet:text">
               <xsl:variable name="choiceValue" select="string(@value)"/>
-              
               <xsl:variable name="schemaLabel"
                 select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
               
@@ -1990,6 +2079,12 @@
           </xsl:when>
 
           <xsl:otherwise>
+            <!-- Look for the helper to check if a radio edit mode is activated
+            If yes, hide the input text which will be updated when clicking the radio
+            or the other option. -->
+            <xsl:variable name="helper" select="if (empty(/root/gui)) then '' else geonet:getHelper($schema, parent::node(), /root/gui)"/>
+            
+            
             <input class="md {$class}" type="{$input_type}" value="{text()}">
               <xsl:if test="$isXLinked">
                 <xsl:attribute name="disabled">disabled</xsl:attribute>
@@ -1999,6 +2094,9 @@
               </xsl:if>
               <xsl:if test="$tabindex">
                 <xsl:attribute name="tabindex" select="$tabindex"/>
+              </xsl:if>
+              <xsl:if test="if ($helper) then contains($helper/@editorMode, 'radio') else false()">
+                <xsl:attribute name="style">display:none;</xsl:attribute>
               </xsl:if>
               <xsl:choose>
                 <xsl:when test="$no_name=false()">
@@ -2061,6 +2159,7 @@
         </xsl:choose>
       </xsl:when>
       <xsl:when test="$edit=true()">
+        <xsl:variable name="helper" select="if (empty(/root/gui)) then '' else geonet:getHelper($schema, parent::node(), /root/gui)"/>
         
         <!-- Only support markup syntax on textarea -->
         <xsl:variable name="cssClasses">
@@ -2075,6 +2174,9 @@
           <xsl:if test="$visible = false()">
             <xsl:attribute name="style">display:none;</xsl:attribute>
           </xsl:if>
+          <xsl:if test="if ($helper) then contains($helper/@editorMode, 'radio') else false()">
+            <xsl:attribute name="style">display:none;</xsl:attribute>
+          </xsl:if>
           <xsl:if
             test="(
             (name(.)='gmd:LocalisedCharacterString' and ../../geonet:element/@min='1')
@@ -2087,6 +2189,7 @@
         <xsl:call-template name="helper">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="attribute" select="false()"/>
+          <xsl:with-param name="isTextArea" select="true()"/>
         </xsl:call-template>
 
       </xsl:when>
@@ -2180,7 +2283,7 @@
 
               <!-- codelist in edit mode -->
               <xsl:variable name="label"
-                select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $parent]/entry[code=$choiceValue]/label"/>
+                select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = $name]/entry[code=$choiceValue]/label"/>
               <xsl:choose>
                 <xsl:when test="$label">
                   <xsl:value-of select="$label"/>
@@ -2211,7 +2314,7 @@
       <xsl:otherwise>
         <!-- codelist in view mode -->
         <xsl:variable name="label"
-          select="/root/gui/schemas/*[name(.)=$schema]//codelists/codelist[@name = $parent]/entry[code = $value]/label"/>
+          select="/root/gui/schemas/*[name(.)=$schema]//codelists/codelist[@name = $name]/entry[code = $value]/label"/>
         <xsl:choose>
           <xsl:when test="$label">
             <xsl:value-of select="$label"/>

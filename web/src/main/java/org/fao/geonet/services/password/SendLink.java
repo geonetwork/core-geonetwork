@@ -23,45 +23,27 @@
 
 package org.fao.geonet.services.password;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Properties;
-import java.util.Random;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadResponseEx;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.exceptions.UserNotFoundEx;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.services.MailSendingService;
 import org.jdom.Element;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 //=============================================================================
 
@@ -69,7 +51,7 @@ import org.jdom.Element;
  * Send change password link email
  */
 
-public class SendLink implements Service {
+public class SendLink extends MailSendingService {
 
 	// --------------------------------------------------------------------------
 	// ---
@@ -78,7 +60,6 @@ public class SendLink implements Service {
 	// --------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
-		this.appPath = appPath;
 		this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
 	}
 
@@ -147,67 +128,17 @@ public class SendLink implements Service {
 		String content = elEmail.getChildText("content");
 		
 		// send change link via email
-		if (!sendMail(host, Integer.parseInt(port), subject, adminEmail, to, content)) {
-			throw new OperationAbortedEx("Could not send email");
+        if (!sendMail(host, Integer.parseInt(port), subject, adminEmail, to, content, PROTOCOL)) {
+            throw new OperationAbortedEx("Could not send email");
 		}
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
 
-	// --------------------------------------------------------------------------
-		
-	/**
-	 * Send the mail to the user.
-	 * 
-	 * @param from
-	 * @param to
-	 * @param protocol
-	 * @param host
-	 * @param port
-	 * @param username
-	 * @param password
-	 * @return
-	 */
-	boolean sendMail(String host, int port, String subject, String from, String to, String content) {
-		boolean isSendout = false;
-
-		Properties props = new Properties();
-		
-		props.put("mail.transport.protocol", PROTOCOL);
-		props.put("mail.smtp.host", host);
-		props.put("mail.smtp.port", port);
-		props.put("mail.smtp.auth", "false");
-
-		Session mailSession = Session.getDefaultInstance(props);
-
-		try {
-			Message msg = new MimeMessage(mailSession);
-			msg.setFrom(new InternetAddress(from));
-			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
-			msg.setSentDate(new Date());
-			msg.setSubject(subject);
-			// Add content message
-			msg.setText(content);
-			Transport.send(msg);
-			isSendout = true;
-		} catch (AddressException e) {
-			isSendout = false;
-			e.printStackTrace();
-		} catch (MessagingException e) {
-			isSendout = false;
-			e.printStackTrace();
-		}
-		return isSendout;
-	}
-
 	private static String FS = File.separator;
-	private String appPath;
 	private String stylePath;
 	private static final String PROTOCOL = "smtp";
 	private static final String CHANGE_EMAIL_XSLT = "password-forgotten-email.xsl";
 	public static final String DATE_FORMAT = "yyyy-MM-dd";
 
 }
-
-// =============================================================================
-

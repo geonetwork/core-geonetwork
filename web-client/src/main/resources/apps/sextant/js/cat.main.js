@@ -653,6 +653,18 @@ cat.app = function() {
 	};
 
 	return {
+	    switchMode: function() {
+	        // Not supported by this widget app
+	    },
+	    getIMap: function () {return this;},
+	    addWMC: function(url) {
+	           // Not supported by this widget app
+        },
+        addWMSLayer: function (args) {
+            var layer = args[0];
+            // Not supported by this widget app
+            // TODO : should open the viewer ?
+        },
 		init : function() {
 			
 		    var cookiePath = '/';
@@ -788,10 +800,7 @@ cat.app = function() {
 				fitHeightToBody(viewport);
 			}
 			
-			if (urlParameters.mode) {
-                app.switchMode(urlParameters.mode, false);
-            }
-            if (urlParameters.edit !== undefined && urlParameters.edit !== '') {
+			if (urlParameters.edit !== undefined && urlParameters.edit !== '') {
                 catalogue.metadataEdit(urlParameters.edit);
             }
             if (urlParameters.create !== undefined) {

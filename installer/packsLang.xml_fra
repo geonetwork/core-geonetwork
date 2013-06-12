@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<langpack>
+    <str id="core" txt="GeoNetwork opensource"/>
+    <str id="core.description" txt="L'application GeoNetwork. Ce module correspond au catalogue de données géospatiales."/>
+    <str id="idSampleM" txt="Métadonnées exemples"/>
+    <str id="idSampleM.description" txt="Import de métadonnées pour les tests."/>
+    <str id="geoserver" txt="Serveur cartographique GeoServer"/>
+    <str id="geoserver.description" txt="GeoServer un serveur cartographique Open Source permettant la publication des données géographiques sur le web. Cette version permet d'avoir les couches de bases utilisées par l'application InterMap dans GeoNetwork. L'installation n'est pas recommandée pour les anciennes machines (moins de 256MB RAM)."/>
+    <str id="csw" txt="Client CSW de test"/>
+    <str id="csw.description" txt="GeoNetwork opensource fourni une application pour tester le support de la norme OGC Catalog Services for the Web 2.0."/>
+    <str id="src" txt="Code source"/>
+    <str id="src.description" txt="Le code source des applications GeoNetwork ainsi que les outils de compilation."/>
+    <str id="ibt" txt="Outils de création de l'installer"/>
+    <str id="ibt.description" txt="Les fichiers requis pour la création d'un nouvelle installeur."/>
+</langpack>
+        

@@ -107,9 +107,6 @@
 <edition>
 <gco:CharacterString/>
 </edition>
-<presentationForm>
-<CI_PresentationFormCode codeListValue="mapDigital" codeList="./resources/codeList.xml#CI_PresentationFormCode"/>
-</presentationForm>
 </CI_Citation>
 </citation>
 <abstract>

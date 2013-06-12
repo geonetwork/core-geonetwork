@@ -25,7 +25,6 @@ package org.fao.geonet.services.metadata;
 
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -36,6 +35,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -46,7 +46,7 @@ import java.util.Set;
 /**
  * Stores status on a metadata.
  */
-public class UpdateStatus implements Service {
+public class UpdateStatus extends NotInReadOnlyModeService{
 
     /**
      *
@@ -63,7 +63,7 @@ public class UpdateStatus implements Service {
      * @return
      * @throws Exception
      */
-	public Element exec(Element params, ServiceContext context) throws Exception {
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		DataManager dataMan = gc.getDataManager();
@@ -94,10 +94,10 @@ public class UpdateStatus implements Service {
 		Set<Integer> metadataIds = new HashSet<Integer>();
 		metadataIds.add(iLocalId);
 
-		Set<Integer> unchanged = saf.statusChange(sa, status, metadataIds, changeDate, changeMessage);
+		saf.statusChange(sa, status, metadataIds, changeDate, changeMessage);
 
 		//--- reindex metadata
-		dataMan.indexMetadata(dbms, id, false);
+		dataMan.indexMetadata(dbms, id);
 
 		//--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));

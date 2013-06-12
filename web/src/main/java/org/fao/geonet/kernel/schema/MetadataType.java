@@ -63,8 +63,9 @@ public class MetadataType
 
 	public int getElementCount() { return alElements.size(); }
 
+    @SuppressWarnings("unchecked")
     public List<String> getElementList() {
-		return (ArrayList<String>) alElements.clone();
+		return (List<String>) alElements.clone();
 	}
 
 	//--------------------------------------------------------------------------
@@ -123,10 +124,10 @@ public class MetadataType
 
 	public String toString()
 	{
-		String res = "";
+		StringBuilder res = new StringBuilder();
 
-		if (isOrType) res += "IsOrType = TRUE ";
-		else res += "IsOrType = FALSE ";
+		if (isOrType) res.append("IsOrType = TRUE ");
+		else res.append("IsOrType = FALSE ");
 
 		for(int i=0; i<alElements.size(); i++)
 		{
@@ -135,28 +136,29 @@ public class MetadataType
 			int    min  = getMinCardinAt(i);
 			int    max  = getMaxCardinAt(i);
 
-			String sMax = (max>1) ? "n" : max +"";
+			String sMax = (max>1) ? "n" : String.valueOf(max);
 
-			res += comp + "/" + min+ "-" + sMax + " ";
+			res.append(comp).append("/").append(min).append("-").append(sMax).append(" ");
 		}
 
 	
-		String attrs = "";
+		StringBuilder attrs = new StringBuilder();
 		for(int i=0; i<alAttribs.size(); i++)
 		{
-			attrs += "Attribute ("+i+") "+getAttributeAt(i).name+": ";
-			ArrayList alAtts = getAttributeAt(i).values;
+			attrs.append("Attribute (").append(i).append(") ").append(getAttributeAt(i).name).append(": ");
+			@SuppressWarnings("rawtypes")
+            ArrayList alAtts = getAttributeAt(i).values;
 			if (alAtts.size() > 0) {
-				attrs += getAttributeAt(i).values.toString();
-				attrs += " ";
+				attrs.append(getAttributeAt(i).values);
+				attrs.append(" ");
 			}
-			attrs += "Default Value: "+getAttributeAt(i).defValue;
-			if (getAttributeAt(i).required) attrs += " REQUIRED ";
+			attrs.append("Default Value: ").append(getAttributeAt(i).defValue);
+			if (getAttributeAt(i).required) attrs.append(" REQUIRED ");
 		}
 		if (attrs.length() > 0)
-			res += " Attributes: "+attrs;
+			res.append(" Attributes: ").append(attrs);
 
-		return res;
+		return res.toString();
 	}
 
 	//---------------------------------------------------------------------------

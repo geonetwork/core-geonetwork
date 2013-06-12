@@ -91,7 +91,8 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 	response.setAttribute(schemaLocation);
 
 
-	Iterator<Element> i = request.getChildren("TypeName", Csw.NAMESPACE_CSW).iterator();
+	@SuppressWarnings("unchecked")
+    Iterator<Element> i = request.getChildren("TypeName", Csw.NAMESPACE_CSW).iterator();
 	
 	Map<String, Element> scMap = new HashMap<String, Element>();
 	// default search without typename
@@ -108,9 +109,7 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 	}
 	
 
-	for (String tName : scMap.keySet()) {
-		Element schemaComponent = scMap.get(tName);
-	
+	for (Element schemaComponent: scMap.values()) {
 		if (schemaComponent != null)
 			response.addContent(schemaComponent);
 	}

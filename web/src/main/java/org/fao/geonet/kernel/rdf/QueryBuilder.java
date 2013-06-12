@@ -3,8 +3,8 @@ package org.fao.geonet.kernel.rdf;
 import static java.text.MessageFormat.format;
 import static org.fao.geonet.kernel.rdf.Selectors.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -60,7 +60,7 @@ public class QueryBuilder<Q> {
     public static QueryBuilder<Query<LinkedHashMap<String,Value>>> builder() {
         return new QueryBuilder<Query<LinkedHashMap<String,Value>>>();
     }
-
+    
     /**
      * Create a query builder that is configured to read keywords with translations in the provided languages
      * 
@@ -69,11 +69,23 @@ public class QueryBuilder<Q> {
      * @return A QueryBuilder configured to read keywords
      */
     public static QueryBuilder<KeywordBean> keywordQueryBuilder(IsoLanguagesMapper mapper, List<String> languages) {
+        return keywordQueryBuilder(mapper, languages, false);
+    }
+
+    /**
+     * Create a query builder that is configured to read keywords with translations in the provided languages
+     * 
+     * @param mapper the mapper to use to convert the language code when needed
+     * @param languages the languages to read from the thesaurus file
+     * @return A QueryBuilder configured to read keywords
+     */
+    public static QueryBuilder<KeywordBean> keywordQueryBuilder(IsoLanguagesMapper mapper, Collection<String> languages, boolean requireBoundedBy) {
         QueryBuilder<KeywordBean> builder = builder()
                 .distinct(true)
                 .selectId()
-                .select(UPPER_CORNER, false)
-                .select(LOWER_CORNER, false)
+                .select(UPPER_CORNER, requireBoundedBy)
+                .select(LOWER_CORNER, requireBoundedBy)
+                .select(BROADER, false)
                 .interpreter(new KeywordResultInterpreter(languages));
             
         for (String lang : languages) {
@@ -103,6 +115,9 @@ public class QueryBuilder<Q> {
         ResultInterpreter<String> newInterpreter = new IdentityResultInterpreter().onlyColumn("language").map(new com.google.common.base.Function<Value,String>(){
             @Override
             public String apply(Value input) {
+                if(input == null) {
+                    throw new AssertionError("Input of ResultInterpreter must not be null");
+                }
                 return mapper.iso639_1_to_iso639_2(input.toString(), "");
             }
         });

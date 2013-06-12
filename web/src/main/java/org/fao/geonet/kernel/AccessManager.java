@@ -26,7 +26,9 @@ package org.fao.geonet.kernel;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -35,7 +37,6 @@ import org.jdom.Element;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -78,10 +79,10 @@ public class AccessManager {
      */
 	public AccessManager(Dbms dbms, SettingManager sm) throws SQLException {
 		settMan = sm;
-		List operList = dbms.select("SELECT * FROM Operations").getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> operList = dbms.select("SELECT * FROM Operations").getChildren();
 
-		for (Object o : operList) {
-			Element oper = (Element) o;
+		for (Element oper : operList) {
 			String id   = oper.getChildText("id");
 			String name = oper.getChildText("name");
 
@@ -142,7 +143,7 @@ public class AccessManager {
 			ops = operations;
 		}
 
-		List operIds = Xml.selectNodes(ops, "record/operationid");
+		List<?> operIds = Xml.selectNodes(ops, "record/operationid");
         for (Object operId : operIds) {
             Element elem = (Element) operId;
             out.add(elem.getText());
@@ -171,12 +172,10 @@ public class AccessManager {
 		Set<String>  groups = getUserGroups(dbms, usrSess, ip, false);
 		StringBuffer groupList = new StringBuffer();
 
-		for (Iterator i = groups.iterator(); i.hasNext(); ) {
-			String groupId = (String) i.next();
+		for (String groupId : groups) {
+		    if(groupList.length() > 0)
+		        groupList.append(", ");
 			groupList.append(groupId);
-
-			if (i.hasNext())
-				groupList.append(", ");
 		}
 		// get allowed operations
 		StringBuffer query = new StringBuffer();
@@ -187,7 +186,7 @@ public class AccessManager {
 		query.append(groupList.toString());
 		query.append(") AND  metadataId = ?");
 		
-		Element operations = dbms.select(query.toString(), new Integer(mdId));
+		Element operations = dbms.select(query.toString(), Integer.valueOf(mdId));
 
 		// find out what they could do if they registered and offer that as as a separate element
 		if (!usrSess.isAuthenticated()) {
@@ -197,7 +196,7 @@ public class AccessManager {
 			query.append("WHERE  groupId = -1 ");
 			query.append("AND    metadataId = ?");
 			
-			Element therecords = dbms.select(query.toString(), new Integer(mdId));
+			Element therecords = dbms.select(query.toString(), Integer.valueOf(mdId));
 			if (therecords != null) {
 				Element guestOperations = new Element("guestoperations");
 				guestOperations.addContent(therecords.cloneContent());
@@ -234,10 +233,10 @@ public class AccessManager {
 			if (Geonet.Profile.ADMINISTRATOR.equals(usrSess.getProfile())) {
 				Element elUserGrp = dbms.select("SELECT id FROM Groups");
 
-				List list = elUserGrp.getChildren();
+				@SuppressWarnings("unchecked")
+                List<Element> list = elUserGrp.getChildren();
 
-                for (Object aList : list) {
-                    Element el = (Element) aList;
+                for (Element el : list) {
                     String groupId = el.getChildText("id");
                     hs.add(groupId);
                 }
@@ -250,10 +249,10 @@ public class AccessManager {
 				query.append("userId=?");
 				Element elUserGrp = dbms.select(query.toString(), usrSess.getUserIdAsInt());
 
-				List list = elUserGrp.getChildren();
+				@SuppressWarnings("unchecked")
+                List<Element> list = elUserGrp.getChildren();
 
-                for (Object aList : list) {
-                    Element el = (Element) aList;
+                for (Element el : list) {
                     String groupId = el.getChildText("groupid");
                     hs.add(groupId);
                 }
@@ -271,7 +270,11 @@ public class AccessManager {
      * @throws Exception
      */
 	public Set<String> getVisibleGroups(Dbms dbms, String userId) throws Exception {
-		int id = Integer.parseInt(userId);
+        if(StringUtils.isEmpty(userId)){
+            Log.warning(Geonet.ACCESS_MANAGER, "userId is empty. AccessManager getVisibleGroups()");
+            return new HashSet<String>();
+        }
+        int id = Integer.parseInt(userId);
 		return getVisibleGroups(dbms,id);
 	}
 
@@ -287,7 +290,8 @@ public class AccessManager {
 		Set<String> hs = new HashSet<String>();
 
 		String query= "SELECT * FROM Users WHERE id=?";
-		List   list = dbms.select(query, new Integer(userId)).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element>   list = dbms.select(query, Integer.valueOf(userId)).getChildren();
 
 		//--- return an empty list if the user does not exist
 
@@ -302,7 +306,7 @@ public class AccessManager {
 			elUserGrp = dbms.select("SELECT id AS grp FROM Groups");
 		}
         else {
-			elUserGrp = dbms.select("SELECT groupId AS grp FROM UserGroups WHERE userId=?", new Integer(userId));
+			elUserGrp = dbms.select("SELECT groupId AS grp FROM UserGroups WHERE userId=?", Integer.valueOf(userId));
 		}
 
 		for(Object o : elUserGrp.getChildren()) {
@@ -448,11 +452,12 @@ public class AccessManager {
     public boolean isVisibleToAll(Dbms dbms, String metadataId) throws Exception {
         // group 'all' has the magic id 1.
         String query = "SELECT operationId FROM OperationAllowed WHERE groupId = 1 AND metadataId = ?";
-        Element result = dbms.select(query, new Integer(metadataId));
+        Element result = dbms.select(query, Integer.valueOf(metadataId));
         if(result == null) {
             return false;
         }
         else {
+            @SuppressWarnings("unchecked")
             List<Element> records = result.getChildren("record");
             for(Element record : records) {
                 String operationId = record.getChildText("operationid");
@@ -568,12 +573,16 @@ public class AccessManager {
      * @return
      */
 	private long getAddress(String ip) {
-		StringTokenizer st = new StringTokenizer(ip, ".");
-		long a1 = Integer.parseInt(st.nextToken());
-		long a2 = Integer.parseInt(st.nextToken());
-		long a3 = Integer.parseInt(st.nextToken());
-		long a4 = Integer.parseInt(st.nextToken());
-		return a1<<24 | a2<<16 | a3<<8 | a4;
+		if(ip.trim().equals("?")) {
+			return 0;
+		} else {
+			StringTokenizer st = new StringTokenizer(ip, ".");
+			long a1 = Integer.parseInt(st.nextToken());
+			long a2 = Integer.parseInt(st.nextToken());
+			long a3 = Integer.parseInt(st.nextToken());
+			long a4 = Integer.parseInt(st.nextToken());
+			return a1<<24 | a2<<16 | a3<<8 | a4;
+		}
 	}
 
 	//--------------------------------------------------------------------------

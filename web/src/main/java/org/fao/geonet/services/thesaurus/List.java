@@ -36,7 +36,6 @@ import org.jdom.Element;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.Iterator;
 
 //=============================================================================
 
@@ -52,16 +51,16 @@ public class List implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private static String LOCAL_DIR;
-	private static String EXTERNAL_DIR;	
-	private String init_type;
+	private String _localThesaurusDir;
+	private String _externalDir;	
+	private String _initType;
 	
 	public void init(String appPath, ServiceConfig params) throws Exception {
 		
-		LOCAL_DIR = File.separator+Geonet.CodeList.LOCAL+File.separator+Geonet.CodeList.THESAURUS+File.separator;
-		EXTERNAL_DIR = File.separator+Geonet.CodeList.EXTERNAL+File.separator+Geonet.CodeList.THESAURUS+File.separator;
+		_localThesaurusDir = File.separator+Geonet.CodeList.LOCAL+File.separator+Geonet.CodeList.THESAURUS+File.separator;
+		_externalDir = File.separator+Geonet.CodeList.EXTERNAL+File.separator+Geonet.CodeList.THESAURUS+File.separator;
 		
-		init_type = params.getValue( Params.TYPE, "_none_" );
+		_initType = params.getValue( Params.TYPE, "_none_" );
 	}
 	
 	/** Filter on directory */
@@ -105,25 +104,25 @@ public class List implements Service
 			
 		Element thesauriList = new Element("thesaurusList");
 	
-		String type = Util.getParam(params, Params.TYPE, init_type );
+		String type = Util.getParam(params, Params.TYPE, _initType );
 		
 		if (type.equals("all-directories")) {
-			listThesauri(thesauriList, THESAURUS_DIR+EXTERNAL_DIR, 1, directoryFilter, Geonet.CodeList.EXTERNAL );
-			listThesauri(thesauriList, THESAURUS_DIR+LOCAL_DIR, 1, directoryFilter, Geonet.CodeList.LOCAL );
+			listThesauri(thesauriList, THESAURUS_DIR+_externalDir, 1, directoryFilter, Geonet.CodeList.EXTERNAL );
+			listThesauri(thesauriList, THESAURUS_DIR+_localThesaurusDir, 1, directoryFilter, Geonet.CodeList.LOCAL );
 		} else
 		if (type.equals("upload-directories")) {
-			listThesauri(thesauriList, THESAURUS_DIR+EXTERNAL_DIR, 1, directoryFilter, Geonet.CodeList.EXTERNAL );
+			listThesauri(thesauriList, THESAURUS_DIR+_externalDir, 1, directoryFilter, Geonet.CodeList.EXTERNAL );
 		} else
 		if (type.equals("all-thesauri")) {
-			listThesauri(thesauriList, THESAURUS_DIR+EXTERNAL_DIR, 2, thesauriFilter, Geonet.CodeList.EXTERNAL );
-			listThesauri(thesauriList, THESAURUS_DIR+LOCAL_DIR, 2, thesauriFilter, Geonet.CodeList.LOCAL );
+			listThesauri(thesauriList, THESAURUS_DIR+_externalDir, 2, thesauriFilter, Geonet.CodeList.EXTERNAL );
+			listThesauri(thesauriList, THESAURUS_DIR+_localThesaurusDir, 2, thesauriFilter, Geonet.CodeList.LOCAL );
 		} else
 		if (type.equals("update-thesauri")) {
-			listThesauri(thesauriList, THESAURUS_DIR+LOCAL_DIR, 3, thesauriFilter, Geonet.CodeList.LOCAL );
+			listThesauri(thesauriList, THESAURUS_DIR+_localThesaurusDir, 3, thesauriFilter, Geonet.CodeList.LOCAL );
 		} else
 		{
-			listThesauri(thesauriList, THESAURUS_DIR+EXTERNAL_DIR, 3, thesauriFilter, Geonet.CodeList.EXTERNAL );
-			listThesauri(thesauriList, THESAURUS_DIR+LOCAL_DIR, 3, thesauriFilter, Geonet.CodeList.LOCAL );
+			listThesauri(thesauriList, THESAURUS_DIR+_externalDir, 3, thesauriFilter, Geonet.CodeList.EXTERNAL );
+			listThesauri(thesauriList, THESAURUS_DIR+_localThesaurusDir, 3, thesauriFilter, Geonet.CodeList.LOCAL );
 		}
 
 		//-----------------------------------------------------------------------
@@ -181,12 +180,14 @@ public class List implements Service
 						dirE.setAttribute("type", rootName);
 						
 						// Search directory with same name
-						java.util.List children = list.getChildren("directory");
+						@SuppressWarnings("unchecked")
+                        java.util.List<Element> children = list.getChildren("directory");
 						Element element = null;
-						for (Iterator iter = children.iterator(); iter.hasNext();) {
-							element = (Element) iter.next();
-							if (element.getAttribute("label").getValue().equals(rdfDataDirectory[i].getName())) break;
-							element = null;
+						for (Element e : children) {
+							if (e.getAttribute("label").getValue().equals(rdfDataDirectory[i].getName())) {
+							    element = e;
+							    break;
+							}
 						}
 					
 						if (element != null) {

@@ -31,6 +31,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.kernel.schema.MetadataAttribute;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataType;
@@ -165,18 +166,6 @@ public class EditLib {
 	}
 
     /**
-     * TODO javadoc.
-     *
-     * @param schema
-     * @param parentName
-     * @param md
-     * @throws Exception
-     */
-	public void fillElement(String schema, String parentName, Element md) throws Exception {
-		fillElement(scm.getSchema(schema), scm.getSchemaSuggestions(schema), parentName, md);
-	}
-
-    /**
      * Given an expanded tree, removes all info added for editing and replaces choice_elements with their children.
      *
      * @param md
@@ -184,9 +173,10 @@ public class EditLib {
 	public void removeEditingInfo(Element md) {
 		//--- purge geonet: attributes
 
-		List listAtts = md.getAttributes();
+		@SuppressWarnings("unchecked")
+        List<Attribute> listAtts = md.getAttributes();
 		for (int i=0; i<listAtts.size(); i++) {
-			Attribute attr = (Attribute) listAtts.get(i);
+			Attribute attr = listAtts.get(i);
 			if (Edit.NAMESPACE.getPrefix().equals(attr.getNamespacePrefix())) {
 				attr.detach();
 				i--;
@@ -194,9 +184,10 @@ public class EditLib {
 		}
 
 		//--- purge geonet: children
-		List list = md.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = md.getChildren();
 		for (int i=0; i<list.size(); i++) {
-			Element child = (Element) list.get(i);
+			Element child = list.get(i);
 			if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix()))
 				removeEditingInfo(child);
 			else {
@@ -221,11 +212,10 @@ public class EditLib {
 
 		//--- search on children
 
-		List list = md.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = md.getChildren();
 
-        for (Object aList : list) {
-            Element child = (Element) aList;
-
+        for (Element child : list) {
             if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix())) {
                 child = findElement(child, ref);
 
@@ -263,9 +253,10 @@ public class EditLib {
             Log.debug(Geonet.EDITORADDELEMENT,"#### - child namespace = " + ns);
             Log.debug(Geonet.EDITORADDELEMENT,"#### - child prefix = " + prefix);
         }
-		List childS = el.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> childS = el.getChildren();
 		if (childS.size() > 0) {
-			Element elChildS = (Element)childS.get(0);
+			Element elChildS = childS.get(0);
 			Log.debug(Geonet.EDITORADDELEMENT,"#### 	- parents first child = " + elChildS.getName());
 		}
 
@@ -388,11 +379,10 @@ public class EditLib {
 	private List<Element> getChildren(Element el, String qname) {
 		Vector<Element> result = new Vector<Element>();
 
-		List children = el.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = el.getChildren();
 
-        for (Object aChildren : children) {
-            Element child = (Element) aChildren;
-
+        for (Element child : children) {
             if (child.getQualifiedName().equals(qname)) {
                 result.add(child);
             }
@@ -427,143 +417,186 @@ public class EditLib {
      * @param schema
      * @param sugg
      * @param parent
-     * @param md
+     * @param element
      * @throws Exception
      */
-	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, Element parent, Element md) throws Exception {
-        if(Log.isDebugEnabled(Geonet.EDITOR))
-            Log.debug(Geonet.EDITOR,"#### entering fillElement()");
-		String parentName = parent.getQualifiedName();
-		fillElement(schema,sugg,parentName,md);
-	}
+	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, Element parent, Element element) throws Exception {
+        String parentName = parent.getQualifiedName();
+        fillElement(schema, sugg, parentName, element);
+    }
 
     /**
      * TODO javadoc.
      *
-     * @param schema
-     * @param sugg
-     * @param parentName
-     * @param md
+     * @param schema    The metadata schema
+     * @param sugg  The suggestion configuration for the schema
+     * @param parentName  The name of the parent
+     * @param element    The element to fill
+     * 
      * @throws Exception
      */
-	private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, String parentName, Element md) throws Exception {
-        if(Log.isDebugEnabled(Geonet.EDITOR))
-            Log.debug(Geonet.EDITOR,"#### entering fillElement()");
-		String elemName = md.getQualifiedName();
-
+    private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, String parentName, Element element) throws Exception {
+        String elemName = element.getQualifiedName();
+        
+        boolean isSimpleElement = schema.isSimpleElement(elemName,parentName);
+        
         if(Log.isDebugEnabled(Geonet.EDITOR)) {
+            Log.debug(Geonet.EDITOR,"#### Entering fillElement()");
             Log.debug(Geonet.EDITOR,"#### - elemName = " + elemName);
             Log.debug(Geonet.EDITOR,"#### - parentName = " + parentName);
-            Log.debug(Geonet.EDITOR,"#### - isSimpleElement(" + elemName + ") = " + schema.isSimpleElement(elemName,parentName));
+            Log.debug(Geonet.EDITOR,"#### - isSimpleElement(" + elemName + ") = " + isSimpleElement);
         }
-
-		if (schema.isSimpleElement(elemName,parentName))
-			return;
-
-		MetadataType type = schema.getTypeInfo(schema.getElementType(elemName,parentName));
-		boolean useSuggestion = sugg.hasSuggestion(elemName, type.getElementList());
-
+        
+        
+        // Nothing to fill - eg. gco:CharacterString
+        if (isSimpleElement) {
+            return;
+        }
+        
+        MetadataType type = schema.getTypeInfo(schema.getElementType(elemName, parentName));
+        boolean hasSuggestion = sugg.hasSuggestion(elemName, type.getElementList());
+//        List<String> elementSuggestion = sugg.getSuggestedElements(elemName);
+//        boolean hasSuggestion = elementSuggestion.size() != 0;
+        
+        
         if(Log.isDebugEnabled(Geonet.EDITOR)) {
-            Log.debug(Geonet.EDITOR,"#### - type:");
+            Log.debug(Geonet.EDITOR,"#### - Type:");
             Log.debug(Geonet.EDITOR,"####   - name = " + type.getName());
             Log.debug(Geonet.EDITOR,"####   - # attributes = " + type.getAttributeCount());
             Log.debug(Geonet.EDITOR,"####   - # elements = " + type.getElementCount());
             Log.debug(Geonet.EDITOR,"####   - # isOrType = " + type.isOrType());
             Log.debug(Geonet.EDITOR,"####   - type = " + type);
+            Log.debug(Geonet.EDITOR,"#### - Has suggestion = " + hasSuggestion);
         }
-
-		//-----------------------------------------------------------------------
-		//--- handle attributes
-
-		for(int i=0; i<type.getAttributeCount(); i++)
-		{
-			MetadataAttribute attr = type.getAttributeAt(i);
-
+        
+        
+        //-----------------------------------------------------------------------
+        //--- handle attributes if mandatory or suggested
+        //
+        for(int i=0; i<type.getAttributeCount(); i++) {
+            MetadataAttribute attr = type.getAttributeAt(i);
+            
             if(Log.isDebugEnabled(Geonet.EDITOR)) {
                 Log.debug(Geonet.EDITOR,"####   - " + i + " attribute = " + attr.name);
                 Log.debug(Geonet.EDITOR,"####     - required = " + attr.required);
                 Log.debug(Geonet.EDITOR,"####     - suggested = "+sugg.isSuggested(elemName, attr.name));
             }
-			if (attr.required || sugg.isSuggested(elemName, attr.name))
-			{
-				String value = "";
-
-				if (attr.defValue != null) {
-					value = attr.defValue;
-                    if(Log.isDebugEnabled(Geonet.EDITOR))
+            
+            if (attr.required || sugg.isSuggested(elemName, attr.name)) {
+                String value = "";
+                
+                if (attr.defValue != null) {
+                    value = attr.defValue;
+                    if(Log.isDebugEnabled(Geonet.EDITOR)) {
                         Log.debug(Geonet.EDITOR,"####     - value = " + attr.defValue);
-				}
-
-				String uname = getUnqualifiedName(attr.name);
-				String ns     = getNamespace(attr.name, md, schema);
-				String prefix = getPrefix(attr.name);
-				if (!prefix.equals(""))
-					md.setAttribute(new Attribute(uname, value, Namespace.getNamespace(prefix,ns)));
-				else
-					md.setAttribute(new Attribute(uname, value));
-			}
-		}
-
-		//-----------------------------------------------------------------------
-		//--- add mandatory children
-
-		if (!type.isOrType()) {
-			for(int i=0; i<type.getElementCount(); i++) {
-				int    minCard   = type.getMinCardinAt(i);
-				String childName = type.getElementAt(i);
-				boolean hasSuggestion = sugg.hasSuggestion(childName, type.getElementList());
-
+                    }
+                }
+                
+                String uname = getUnqualifiedName(attr.name);
+                String ns     = getNamespace(attr.name, element, schema);
+                String prefix = getPrefix(attr.name);
+                if (!prefix.equals(""))
+                    element.setAttribute(new Attribute(uname, value, Namespace.getNamespace(prefix,ns)));
+                else
+                    element.setAttribute(new Attribute(uname, value));
+            }
+        }
+        
+        
+        //-----------------------------------------------------------------------
+        //--- add mandatory children
+        //
+        //     isOrType if element has substitutes and one of them should be chosen
+        if (!type.isOrType()) {
+            for(int i=0; i<type.getElementCount(); i++) {
+                String childName = type.getElementAt(i);
+                boolean childIsMandatory = type.getMinCardinAt(i) > 0;
+                boolean childIsSuggested = sugg.isSuggested(elemName, childName);
+                
                 if(Log.isDebugEnabled(Geonet.EDITOR)) {
                     Log.debug(Geonet.EDITOR,"####   - " + i + " element = " + childName);
-                    Log.debug(Geonet.EDITOR,"####     - suggested = "+sugg.isSuggested(elemName, childName));
-                    Log.debug(Geonet.EDITOR,"####     - has suggestion = "+hasSuggestion );
+                    Log.debug(Geonet.EDITOR,"####     - suggested = " + childIsSuggested);
+                    Log.debug(Geonet.EDITOR,"####     - is mandatory = " + childIsMandatory);
                 }
-
-                if (minCard > 0 || sugg.isSuggested(elemName, childName)) {
-					MetadataType elemType = schema.getTypeInfo(schema.getElementType(childName,elemName));
-
-					//--- There can be 'or' elements with other 'or' elements inside them.
-					//--- In this case we cannot expand the inner 'or' elements so the
-					//--- only way to solve the problem is to avoid the creation of them
-
-					if (
-							(schema.isSimpleElement(elemName, childName) || !elemType.isOrType()) ||
-							(elemType.isOrType() && elemType.getElementList().contains("gco:CharacterString") && !hasSuggestion && minCard == 0)
-						) {
-						String name   = getUnqualifiedName(childName);
-						String ns     = getNamespace(childName, md, schema);
-						String prefix = getPrefix(childName);
-
-						Element child = new Element(name, prefix, ns);
-
-						md.addContent(child);
-						fillElement(schema, sugg, md, child);
-					} else {
-						if (elemType.isOrType()) {
-							if (elemType.getElementList().contains("gco:CharacterString") && !hasSuggestion) {
-                                if(Log.isDebugEnabled(Geonet.EDITOR))
-                                    Log.debug(Geonet.EDITOR,"####   - (INNER) Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + md.getName());
-							} else {
-                                if(Log.isDebugEnabled(Geonet.EDITOR))
+                
+                
+                
+                if (childIsMandatory || childIsSuggested) {
+                    
+                    MetadataType elemType = schema.getTypeInfo(schema.getElementType(childName, elemName));
+                    List<String> childSuggestion = sugg.getSuggestedElements(childName);
+                    boolean childHasSuggestion = childSuggestion.size() != 0;
+                    boolean childHasOnlyCharacterStringSuggestion = childSuggestion.size() == 1 && childSuggestion.contains("gco:CharacterString");
+                    
+                    if(Log.isDebugEnabled(Geonet.EDITOR)) {
+                        Log.debug(Geonet.EDITOR,"####     - is or type = "+ elemType.isOrType());
+                        Log.debug(Geonet.EDITOR,"####     - has suggestion = "+ childHasSuggestion);
+                        Log.debug(Geonet.EDITOR,"####     - elem type list = " + elemType.getElementList());
+                        Log.debug(Geonet.EDITOR,"####     - suggested types list = " + sugg.getSuggestedElements(childName));
+                    }
+                    
+                    //--- There can be 'or' elements with other 'or' elements inside them.
+                    //--- In this case we cannot expand the inner 'or' elements so the
+                    //--- only way to solve the problem is to avoid the creation of them
+                    if (
+                        schema.isSimpleElement(elemName, childName) ||  // eg. gco:Decimal
+                        !elemType.isOrType() ||                         // eg. gmd:EX_Extent
+                        (elemType.isOrType() && (                       // eg. depends on schema-suggestions.xml
+                            childSuggestion.size() == 1 ||              //   expand the only one suggestion - TODO - this needs improvements
+                            (childSuggestion.size() == 0 && elemType.getElementList().contains("gco:CharacterString")))
+                                                                        //   expand element which have no suggestion
+                                                                        // and have a gco:CharacterString substitute.
+                                                                        // gco:CharacterString is the default.
+                        )
+                    ) {
+                        // Create the element
+                        String name   = getUnqualifiedName(childName);
+                        String ns     = getNamespace(childName, element, schema);
+                        String prefix = getPrefix(childName);
+                        
+                        Element child = new Element(name, prefix, ns);
+                        
+                        // Add it to the element
+                        element.addContent(child);
+                        
+                        if (childHasOnlyCharacterStringSuggestion) {
+                            child.addContent(new Element("CharacterString", Namespaces.GCO));
+                        }
+                        
+                        // Continue ....
+                        fillElement(schema, sugg, element, child);
+                    } else {
+                        // Logging some cases to avoid
+                        if(Log.isDebugEnabled(Geonet.EDITOR)) {
+                            if (elemType.isOrType()) {
+                                 if (elemType.getElementList().contains("gco:CharacterString") 
+                                         && !childHasSuggestion) {
+                                    Log.debug(Geonet.EDITOR,"####   - (INNER) Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + element.getName());
+                                 } else {
                                     Log.debug(Geonet.EDITOR,"####   - WARNING (INNER): requested expansion of an OR element : " +childName);
+                                }
                             }
-						}
-					}
-				}
-			}
-		}
-		else if (type.getElementList().contains("gco:CharacterString") && !useSuggestion) {
-			// Here we could probably expand element having one and only one suggestion for 
-			// an or element - then we force to expand that only one suggestion ? 
-            if(Log.isDebugEnabled(Geonet.EDITOR))
-                Log.debug(Geonet.EDITOR,"####   - Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + md.getName());
-			Element child = new Element("CharacterString", "gco", "http://www.isotc211.org/2005/gco");
-			md.addContent(child);
-		} else {
-            if(Log.isDebugEnabled(Geonet.EDITOR))
-                Log.debug(Geonet.EDITOR,"####   - WARNING : requested expansion of an OR element : " +md.getName());
+                        }
+                    }
+                }
+            }
+        } else if (type.getElementList().contains("gco:CharacterString") && !hasSuggestion) {
+            // expand element which have no suggestion
+            // and have a gco:CharacterString substitute.
+            // gco:CharacterString is the default.
+            if(Log.isDebugEnabled(Geonet.EDITOR)) {
+                Log.debug(Geonet.EDITOR, "####   - Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + element.getName());
+            }
+            Element child = new Element("CharacterString", Namespaces.GCO);
+            element.addContent(child);
+        } else {
+            // TODO: this could be supported if only one suggestion defined for an or element ?
+            // It will require to get the proper namespace for the element
+            if(Log.isDebugEnabled(Geonet.EDITOR)) {
+                Log.debug(Geonet.EDITOR, "####   - WARNING : requested expansion of an OR element : " + element.getName());
+            }
         }
-	}
+    }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -637,9 +670,10 @@ public class EditLib {
 		//--- create containers and fill them with elements using a depth first 
 		//--- search 
 		
-		List childs = md.getChildren();
-        for (Object child : childs) {
-            expandElements(schema, (Element) child);
+		@SuppressWarnings("unchecked")
+        List<Element> childs = md.getChildren();
+        for (Element child : childs) {
+            expandElements(schema, child);
         }
 	
 		String name = md.getQualifiedName();
@@ -680,9 +714,9 @@ public class EditLib {
 	private Vector<Object> getContainerChildren(Element md) {
 		Vector<Object> result = new Vector<Object>();
 
-		List chChilds = md.getChildren();
-        for (Object chChild1 : chChilds) {
-            Element chChild = (Element) chChild1;
+		@SuppressWarnings("unchecked")
+        List<Element> chChilds = md.getChildren();
+        for (Element chChild : chChilds) {
             String chName = chChild.getName();
             if (chName.contains(Edit.RootChild.CHOICE) ||
                     chName.contains(Edit.RootChild.GROUP) ||
@@ -706,8 +740,9 @@ public class EditLib {
 		//--- contract container children at each level in the XML tree
 		
 		Vector<Object> children = new Vector<Object>();
-		List childs = md.getContent();
-        for (Object obj : childs) {
+		@SuppressWarnings("unchecked")
+        List<Content> childs = md.getContent();
+        for (Content obj : childs) {
             if (obj instanceof Element) {
                 Element mdCh = (Element) obj;
                 String mdName = mdCh.getName();
@@ -755,10 +790,10 @@ public class EditLib {
 		int thisRef = ref;
 		int thisParent = ref;
 
-		List list = md.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = md.getChildren();
 
-        for (Object aList : list) {
-            Element child = (Element) aList;
+        for (Element child : list) {
             if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix())) {
                 ref = enumerateTree(child, ref + 1, thisParent);
             }
@@ -781,9 +816,10 @@ public class EditLib {
      */
 	public int findMaximumRef(Element md) {
 		int iRef = 0;
-		Iterator mdIt = md.getDescendants(new ElementFilter("element"));
+		@SuppressWarnings("unchecked")
+        Iterator<Element> mdIt = md.getDescendants(new ElementFilter("element"));
 		while (mdIt.hasNext()) {
-			Element elem = (Element)mdIt.next();
+			Element elem = mdIt.next();
 			String ref = elem.getAttributeValue("ref");
 			if (ref != null) {
 				int i = Integer.parseInt(ref);
@@ -803,11 +839,10 @@ public class EditLib {
 	public void expandTree(MetadataSchema schema, Element md) throws Exception {
 		expandElement(schema, md);
 
-		List list = md.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = md.getChildren();
 
-        for (Object aList : list) {
-            Element child = (Element) aList;
-
+        for (Element child : list) {
             if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix())) {
                 expandTree(schema, child);
             }
@@ -882,7 +917,7 @@ public class EditLib {
                 Log.debug(Geonet.EDITOREXPANDELEMENT,"- namespace = " + childNS);
             }
 
-			List list = md.getChildren(childName, Namespace.getNamespace(childNS));
+			List<?> list = md.getChildren(childName, Namespace.getNamespace(childNS));
 			if (list.size() == 0 && !(type.isOrType())) {
                 if(Log.isDebugEnabled(Geonet.EDITOREXPANDELEMENT))
                     Log.debug(Geonet.EDITOREXPANDELEMENT,"- no children of this type already present");
@@ -1037,10 +1072,11 @@ public class EditLib {
 		Vector<Element> v = new Vector<Element>();
 		v.add(child);
 
-		List list = md.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = md.getChildren();
 
-        for (Object aList : list) {
-            v.add((Element) aList);
+        for (Element elem : list) {
+            v.add(elem);
         }
 
 		//---
@@ -1063,13 +1099,14 @@ public class EditLib {
 	private void insertLast(Element md, String childName, String childNS, Element child) {
 		boolean added = false;
 
-		List list = md.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = md.getChildren();
 
-		Vector<Element> v = new Vector<Element>();
+		List<Element> v = new ArrayList<Element>();
 
 		for(int i=0; i<list.size(); i++)
 		{
-			Element el = (Element) list.get(i);
+			Element el = list.get(i);
 
 			v.add(el);
 
@@ -1082,7 +1119,7 @@ public class EditLib {
 				}
 				else
 				{
-					Element elNext = (Element) list.get(i+1);
+					Element elNext = list.get(i+1);
 
 					if (!equal(el, elNext))
 					{
@@ -1348,7 +1385,7 @@ public class EditLib {
      * @throws Exception
      */
 	private void addValues(MetadataSchema schema, Element elem, String name, String parent) throws Exception {
-		List values = schema.getElementValues(name,parent);
+		List<String> values = schema.getElementValues(name,parent);
 		if (values != null)
             for (Object value : values) {
                 Element text = new Element(Edit.Element.Child.TEXT, Edit.NAMESPACE);

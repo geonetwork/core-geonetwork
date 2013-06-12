@@ -4,7 +4,7 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 
 public enum OutputSchema
 {
-	OGC_CORE("Record"), ISO_PROFILE("IsoRecord");
+	OGC_CORE("Record"), ISO_PROFILE("IsoRecord"), OWN("own");
 
 	//------------------------------------------------------------------------
 
@@ -60,7 +60,9 @@ public enum OutputSchema
 		
 		if (schema.equals(Csw.NAMESPACE_CSW.getURI())) return OGC_CORE;
 		if (schema.equals(Csw.NAMESPACE_GMD.getURI())) return ISO_PROFILE;
-
+		
+		if (schema.equals(OWN.toString())) return OWN;
+		
 		throw new InvalidParameterValueEx("outputSchema", schema);
 	}
 

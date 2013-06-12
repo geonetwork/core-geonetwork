@@ -37,25 +37,10 @@ Ext.namespace('GeoNetwork.admin');
  */
 GeoNetwork.admin.MetadataInsertPanel = Ext.extend(Ext.Panel, {
     defaultConfig: {
-        autoScroll: true,
-        autoWidth: true,
-        layout: 'border'
+        layout: 'border',
+        isTemplate: 'n'
     },
-    store: undefined,
-    view: undefined,
     uploadForm: undefined,
-    serviceUrl: undefined,
-    /**
-     * Property: ref
-     */
-    ref: undefined,
-    /**
-     * APIMethod: setRef
-     * Set the element reference
-     */
-    setRef: function(ref){
-        this.ref = ref;
-    },
     getForm: function(){
         
         var groupStore = GeoNetwork.data.GroupStore(catalogue.services.getGroups);
@@ -65,6 +50,8 @@ GeoNetwork.admin.MetadataInsertPanel = Ext.extend(Ext.Panel, {
             //fileUpload: true,
             region: 'center',
             split: true,
+            border: false,
+            frame: false,
             errorReader: new Ext.data.XmlReader({
                     record : 'response'
                 }, ['id']
@@ -78,14 +65,13 @@ GeoNetwork.admin.MetadataInsertPanel = Ext.extend(Ext.Panel, {
                 xtype: 'textfield',
                 hidden: true,
                 name: 'template',
-                value: 's'
+                value: this.isTemplate
             }, {
                 xtype: 'textarea',
                 name: 'data',
                 fieldLabel: OpenLayers.i18n('xmlData'),
                 allowBlank: false,
-                width: 300,
-                height: 200
+                anchor: '98% 90%'
             }, new Ext.form.ComboBox({
                 name: 'group',
                 hiddenName: 'group',

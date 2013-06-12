@@ -40,7 +40,6 @@ import java.util.Vector;
 public final class Resolver implements ProxyInfoObserver
 {
 
-	private Resolver resolver;
 	private ProxyInfo proxyInfo;
 	private XmlResolver xmlResolver;
 	private CatalogResolver catResolver;
@@ -97,7 +96,8 @@ public final class Resolver implements ProxyInfoObserver
 
 		catResolver = new CatalogResolver(catMan);
 
-		Vector catalogs = catResolver.getCatalog().getCatalogManager().getCatalogFiles();
+		@SuppressWarnings("unchecked")
+        Vector<String> catalogs = catResolver.getCatalog().getCatalogManager().getCatalogFiles();
 		String[] cats = new String[catalogs.size()];
 		System.arraycopy(catalogs.toArray(), 0, cats, 0, catalogs.size());
 
@@ -145,7 +145,7 @@ public final class Resolver implements ProxyInfoObserver
 		beforeWrite();
 		try {
 			this.proxyInfo = proxyInfo;
-			ProxyParams proxyParams = proxyInfo.getProxyParams();
+			proxyInfo.getProxyParams();  // call to initialize
 			setUpXmlResolver();
 		} finally {
 			afterWrite();

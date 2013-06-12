@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -36,6 +35,7 @@ import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.notifications.domain.NotificationTarget;
 import org.jdom.Element;
 
@@ -45,7 +45,7 @@ import org.jdom.Element;
  *
  * @author heikki doeleman
  */
-public class Save implements Service {
+public class Save extends NotInReadOnlyModeService {
 
     /**
      *
@@ -119,9 +119,10 @@ public class Save implements Service {
      * @return
      * @throws Exception
      */
-	public Element exec(Element params, ServiceContext context) throws Exception {
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
         System.out.println("notifications save:\n"+ Xml.getString(params));
         Map<String, NotificationTarget> notificationTargets = new HashMap<String, NotificationTarget>();
+        @SuppressWarnings("unchecked")
         List<Element> parameters = params.getChildren();
         for(Element parameter : parameters) {
             String identifier = parameter.getName().substring(parameter.getName().lastIndexOf('-') + 1);
@@ -138,8 +139,7 @@ public class Save implements Service {
 
         }
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        for(String key : notificationTargets.keySet()) {
-            NotificationTarget notificationTarget = notificationTargets.get(key);
+        for(NotificationTarget notificationTarget : notificationTargets.values()) {
             String enabled = notificationTarget.isEnabled() ? "y" : "n" ;
             // insert
             if(! notificationTarget.isPreExisting() && StringUtils.isNotBlank(notificationTarget.getName())

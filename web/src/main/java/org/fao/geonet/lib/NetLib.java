@@ -133,7 +133,7 @@ public class NetLib
 
 					client.getState().setProxyCredentials(scope, cred);
 				}
-				List authPrefs = new ArrayList(2);
+				List<String> authPrefs = new ArrayList<String>(2);
 				authPrefs.add(AuthPolicy.DIGEST);
 				authPrefs.add(AuthPolicy.BASIC);
 				// This will exclude the NTLM authentication scheme
@@ -190,11 +190,9 @@ public class NetLib
 	  */
 	public void setupProxy(SettingManager sm)
 	{
-		boolean enabled = sm.getValueAsBool(ENABLED, false);
 		String  host    = sm.getValue(HOST);
 		String  port    = sm.getValue(PORT);
 		String  username= sm.getValue(USERNAME);
-		String  password= sm.getValue(PASSWORD);
 
 		Properties props = System.getProperties();
 		props.put("http.proxyHost", host);

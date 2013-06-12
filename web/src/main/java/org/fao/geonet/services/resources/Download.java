@@ -24,7 +24,7 @@
 package org.fao.geonet.services.resources;
 
 import java.io.File;
-import java.util.Iterator;
+import java.util.List;
 
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.ResourceNotFoundEx;
@@ -130,11 +130,11 @@ public class Download implements Service
 				query.append("AND    oa.metadataId = ? ");
 				query.append("AND    oa.groupId = g.id");
 
-				Element groups = dbms.select(query.toString(), new Integer(id));
+				Element groups = dbms.select(query.toString(), Integer.valueOf(id));
 
-				for (Iterator i = groups.getChildren().iterator(); i.hasNext(); )
-				{
-					Element group = (Element)i.next();
+				@SuppressWarnings("unchecked")
+                List<Element> groupsEls = groups.getChildren();
+				for (Element group : groupsEls) {
 					String  name  = group.getChildText("name");
 					String  email = group.getChildText("email");
 

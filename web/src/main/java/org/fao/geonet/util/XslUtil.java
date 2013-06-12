@@ -1,8 +1,7 @@
 package org.fao.geonet.util;
 
-import static java.io.File.separator;
-
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -264,16 +263,16 @@ public final class XslUtil
      * @return metadata title or an empty string if Lucene index or uuid could not be found
      */
     public static String getIndexField(Object appName, Object uuid, Object field, Object lang) {
-        String webappName = appName.toString();
         String id = uuid.toString();
         String fieldname = field.toString();
         String language = (lang.toString().equals("") ? null : lang.toString());
         try {
-            String fieldValue = LuceneSearcher.getMetadataFromIndex(webappName, language, id, fieldname);
+            String fieldValue = LuceneSearcher.getMetadataFromIndex(language, id, fieldname);
             if(fieldValue == null) {
                 return getIndexFieldById(appName,uuid,field,lang);
+            } else {
+                return fieldValue;
             }
-            return fieldValue == null ? "" : fieldValue;
         } catch (Exception e) {
             Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
             return "";
@@ -281,11 +280,10 @@ public final class XslUtil
     }
 
     public static String getIndexFieldById(Object appName, Object id, Object field, Object lang) {
-        String webappName = appName.toString();
         String fieldname = field.toString();
         String language = (lang.toString().equals("") ? null : lang.toString());
         try {
-            String fieldValue = LuceneSearcher.getMetadataFromIndexById(webappName, language, id.toString(), fieldname);
+            String fieldValue = LuceneSearcher.getMetadataFromIndexById(language, id.toString(), fieldname);
             return fieldValue == null ? "" : fieldValue;
         } catch (Exception e) {
             Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
@@ -360,14 +358,31 @@ public final class XslUtil
         
         return "";
     }
+    
+	public static String threeCharLangCode(String langCode) {
+	    if(langCode == null || langCode.length() < 2) return Geonet.DEFAULT_LANGUAGE;
+
+		if(langCode.length() == 3) return langCode;
+
+		return IsoLanguagesMapper.getInstance().iso639_1_to_iso639_2(langCode);
+	}
+
+	public static boolean match(Object src, Object pattern) {
+		if (src == null || src.toString().trim().isEmpty()) {
+			return false;
+		}
+		return src.toString().matches(pattern.toString());
+	}
+
 
     public static Element controlForMarkup(ServiceContext context, Element metadata, String outputParamPath) throws Exception {
-        SettingManager settingManager = context.getHandlerContext(GeonetContext.class).getSettingManager();
+        GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager settingManager = gc.getSettingManager();
         String mefOutput = settingManager.getValue(outputParamPath);
         String wysiwygEnabled = settingManager.getValue(Geonet.Settings.WYSIWYG_EDITOR);
         String markupType = settingManager.getValue(Geonet.Settings.WIKI_SYNTAX);
         if(Geonet.Settings.Values.STRIP_MARKUP.equals(mefOutput)) {
-            String styleSheetPath = context.getAppPath() + separator + "/" + separator + "xsl" + separator + "strip-wiki-markup.xsl";
+            String styleSheetPath = context.getAppPath() + File.separator + "xsl" + File.separator + "strip-wiki-markup.xsl";
             
             Map<String, String> params = new HashMap<String, String>();
             params.put("markupType", markupType);

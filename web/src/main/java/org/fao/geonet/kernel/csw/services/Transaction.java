@@ -53,7 +53,6 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import java.io.File;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -73,8 +72,8 @@ public class Transaction extends AbstractOperation implements CatalogService
 
    private SearchController _searchController;
 
-	public Transaction(File summaryConfig, LuceneConfig luceneConfig) {
-    	_searchController = new SearchController(summaryConfig, luceneConfig);
+	public Transaction(LuceneConfig luceneConfig) {
+    	_searchController = new SearchController(luceneConfig);
     }
 
 
@@ -104,7 +103,8 @@ public class Transaction extends AbstractOperation implements CatalogService
 		List<String>	strFileIds = new ArrayList<String>();
 		
 		//process the transaction from the first to the last
-		List<Element> childList = request.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> childList = request.getChildren();
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getDataManager();
@@ -117,6 +117,7 @@ public class Transaction extends AbstractOperation implements CatalogService
             for (Element transRequest : childList) {
                 String transactionType = transRequest.getName().toLowerCase();
                 if (transactionType.equals("insert") || transactionType.equals("update") || transactionType.equals("delete")) {
+                    @SuppressWarnings("unchecked")
                     List<Element> mdList = transRequest.getChildren();
 
                     // insert to database, and get the number of inserted successful
@@ -253,9 +254,6 @@ public class Transaction extends AbstractOperation implements CatalogService
         String id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userId, group, source,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
-		if( id == null )
-			return false;
-
         // Set metadata as public if setting enabled
         SettingManager sm = gc.getSettingManager();
         boolean metadataPublic = sm.getValueAsBool("system/csw/metadataPublic", false);
@@ -265,7 +263,17 @@ public class Transaction extends AbstractOperation implements CatalogService
         }
 
 
-		dataMan.indexMetadataGroup(dbms, id);
+        // Privileges for the user group that inserts the metadata (same permissions as when inserting xml file from UI)
+        if (group != null) {
+            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_VIEW);
+            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_DOWNLOAD);
+            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_EDITING);
+            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_DYNAMIC);
+            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_FEATURED);
+            dataMan.setOperation(context, dbms, id, group, AccessManager.OPER_NOTIFY);
+        }
+
+		dataMan.indexMetadata(dbms, id);
 		
 		fileIds.add( uuid );
 		
@@ -347,7 +355,8 @@ public class Transaction extends AbstractOperation implements CatalogService
             List<Element> results = getResultsFromConstraints(context, constr);
 
 
-            List<Element> recordProperties = (List<Element>) request.getChildren("RecordProperty",Csw.NAMESPACE_CSW );
+            @SuppressWarnings("unchecked")
+            List<Element> recordProperties = request.getChildren("RecordProperty",Csw.NAMESPACE_CSW );
 
 
             Iterator<Element> it = results.iterator();
@@ -356,7 +365,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 
             Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-            Set updatedMd = new HashSet<String>();
+            Set<String> updatedMd = new HashSet<String>();
             // Process all records selected
             while( it.hasNext() )
             {
@@ -382,7 +391,7 @@ public class Transaction extends AbstractOperation implements CatalogService
                   throw new NoApplicableCodeEx("Can't identify metadata schema");
                 }
 
-                Map mapNs = retrieveNamepacesForSchema(gc.getDataManager().getSchema(schemaId));
+                Map<String, String> mapNs = retrieveNamepacesForSchema(gc.getDataManager().getSchema(schemaId));
 
                 boolean metadataChanged = false;
 
@@ -509,7 +518,9 @@ public class Transaction extends AbstractOperation implements CatalogService
 		Pair<Element, Element> results= _searchController.search(context, 1, 100, ResultType.RESULTS,
 				OutputSchema.OGC_CORE, setName, filterExpr, filterVersion, null, null, null, 0, null, null);
 		
-		return results.two().getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = results.two().getChildren();
+        return children;
 	}
 
     /**

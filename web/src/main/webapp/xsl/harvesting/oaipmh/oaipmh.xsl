@@ -12,6 +12,8 @@
 			<img src="{/root/gui/url}/images/spinner.gif" alt="busy"/>
 		</div>
 		<div id="oai.editPanel">
+            <xsl:call-template name="ownerGroup-OAI"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-OAI"/>
 			<div class="dots"/>
 			<xsl:call-template name="search-OAI"/>
@@ -20,12 +22,28 @@
 			<div class="dots"/>
 			<xsl:call-template name="content-OAI"/>
 			<div class="dots"/>
-			<xsl:call-template name="privileges-OAI"/>
+			<xsl:call-template name="privileges">
+				<xsl:with-param name="type" select="'oai'"/>
+				<xsl:with-param name="jsId" select="'oaipmh'"/>
+			</xsl:call-template>
 			<div class="dots"/>
 			<xsl:call-template name="categories-OAI"/>
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-OAI">
+        <table border="0">
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
+                <td class="padded"><select id="oai.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-OAI">
@@ -47,31 +65,15 @@
 				<td class="padded">
 					<select id="oai.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="oai.icon.image" src="" alt="" />
+					<img id="oai.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>
 			
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/useAccount"/></td>
-				<td class="padded"><input id="oai.useAccount" type="checkbox" checked="on"/></td>
-			</tr>
-
-			<tr>
-				<td/>
-				<td>
-					<table id="oai.account">
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/username"/></td>
-							<td class="padded"><input id="oai.username" class="content" type="text" value="" size="20"/></td>
-						</tr>
-		
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/password"/></td>
-							<td class="padded"><input id="oai.password" class="content" type="password" value="" size="20"/></td>
-						</tr>
-					</table>
-				</td>
-			</tr>			
+			
+			<xsl:call-template name="useAccount">
+				<xsl:with-param name="type" select="'oai'"/>
+			</xsl:call-template>
+			
 		</table>
 	</xsl:template>
 	
@@ -124,37 +126,6 @@
 		</table>
 	</div>
 	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template name="privileges-OAI">
-		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/privileges"/></h1>
-		
-		<table>
-			<tr>
-				<td class="padded" valign="top"><xsl:value-of select="/root/gui/harvesting/groups"/></td>
-				<td class="padded"><select id="oai.groups" class="content" size="8" multiple="on"/></td>					
-				<td class="padded" valign="top">
-					<div align="center">
-						<button id="oai.addGroups" class="content" onclick="harvesting.oaipmh.addGroupRow()">
-							<xsl:value-of select="/root/gui/harvesting/add"/>
-						</button>
-					</div>
-				</td>					
-			</tr>
-		</table>
-		
-		<table id="oai.privileges">
-			<tr>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/group"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='5']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='6']"/></b></th>
-				<th/>
-			</tr>
-		</table>
-		
-	</xsl:template>
 	
 	<!-- ============================================================================================= -->
 
@@ -162,17 +133,6 @@
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/categories"/></h1>
 		
 		<select id="oai.categories" class="content" size="8" multiple="on"/>
-	</xsl:template>
-	
-	<!-- ============================================================================================= -->
-	
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
 	</xsl:template>
 
     <!-- ============================================================================================= -->

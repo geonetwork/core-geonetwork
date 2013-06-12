@@ -27,11 +27,9 @@ import java.util.Map;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -93,8 +91,6 @@ public class GetLatestUpdated implements Service
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			SearchManager searchMan = gc.getSearchmanager();
 			DataManager   dataMan   = gc.getDataManager();
-
-			Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 			_request.getChild("to").setText(""+_maxItems);
 

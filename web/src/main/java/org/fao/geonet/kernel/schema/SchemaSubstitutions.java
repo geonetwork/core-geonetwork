@@ -46,11 +46,10 @@ public class SchemaSubstitutions
 		if (xmlSubstitutionFile != null) {
 			Element subs = Xml.loadFile(xmlSubstitutionFile);
 
-			List list = subs.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> list = subs.getChildren();
 
-            for (Object aList : list) {
-                Element el = (Element) aList;
-
+            for (Element el : list) {
                 if (el.getName().equals("field")) {
                     htFields.put(el.getAttributeValue("name"), el);
                 }
@@ -65,19 +64,18 @@ public class SchemaSubstitutions
 	//--------------------------------------------------------------------------
 
 	public ArrayList<String> getSubstitutes(String child) {
-		Element el = htFields.get(child);
-		if (el == null)
+		Element fieldEl = htFields.get(child);
+		if (fieldEl == null)
 			return null;
 
 		ArrayList<String> results = new ArrayList<String>();
 
-		List list = el.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = fieldEl.getChildren();
 
-        for (Object aList : list) {
-            el = (Element) aList;
-
-            if (el.getName().equals("substitute")) {
-                String name = el.getAttributeValue("name");
+        for (Element elem : list) {
+            if (elem.getName().equals("substitute")) {
+                String name = elem.getAttributeValue("name");
                 results.add(name);
             }
         }

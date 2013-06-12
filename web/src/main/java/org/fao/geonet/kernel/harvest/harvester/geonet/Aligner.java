@@ -27,13 +27,18 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
+import jeeves.utils.IO;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
+
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.mef.IMEFVisitor;
@@ -58,7 +63,7 @@ import java.util.Set;
 
 //=============================================================================
 
-public class Aligner
+public class Aligner extends BaseAligner
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -77,30 +82,30 @@ public class Aligner
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager();
-		result  = new GeonetResult();
+		result  = new HarvestResult();
 
 		//--- save remote categories and groups into hashmaps for a fast access
 
-		List list = remoteInfo.getChild("groups").getChildren("group");
+		@SuppressWarnings("unchecked")
+        List<Element> list = remoteInfo.getChild("groups").getChildren("group");
 		setupLocEntity(list, hmRemoteGroups);
 	}
 
 	//--------------------------------------------------------------------------
 
-	private void setupLocEntity(List list, HashMap<String, HashMap<String, String>> hmEntity)
+	private void setupLocEntity(List<Element> list, HashMap<String, HashMap<String, String>> hmEntity)
 	{
 
-        for (Object aList : list) {
-            Element entity = (Element) aList;
+        for (Element entity : list) {
             String name = entity.getChildText("name");
 
             HashMap<String, String> hm = new HashMap<String, String>();
             hmEntity.put(name, hm);
 
-            List labels = entity.getChild("label").getChildren();
+            @SuppressWarnings("unchecked")
+            List<Element> labels = entity.getChild("label").getChildren();
 
-            for (Object label : labels) {
-                Element el = (Element) label;
+            for (Element el : labels) {
                 hm.put(el.getName(), el.getText());
             }
         }
@@ -112,7 +117,7 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public GeonetResult align(Set<RecordInfo> records) throws Exception
+	public HarvestResult align(Set<RecordInfo> records) throws Exception
 	{
 		log.info("Start of alignment for : "+ params.name);
 
@@ -247,9 +252,14 @@ public class Aligner
 					String pubDir = Lib.resource.getDir(context, "public", id[index]);
 
 					File outFile = new File(pubDir, file);
-					FileOutputStream os = new FileOutputStream(outFile);
-					BinaryFile.copy(is, os, false, true);
-					outFile.setLastModified(new ISODate(changeDate).getSeconds() * 1000);
+					FileOutputStream os = null;
+					try {
+                        os = new FileOutputStream(outFile);
+    					BinaryFile.copy(is, os);
+    					IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, log.getModule());
+					} finally {
+					    IOUtils.closeQuietly(os);
+					}
 				}
 				
 				public void handleFeatureCat(Element md, int index)
@@ -264,9 +274,14 @@ public class Aligner
                             log.debug("    - Adding remote private file with name:" + file + " available for download for user used for harvester.");
 	                    String dir = Lib.resource.getDir(context, "private", id[index]);
 	                    File outFile = new File(dir, file);
-	                    FileOutputStream os = new FileOutputStream(outFile);
-	                    BinaryFile.copy(is, os, false, true);
-	                    outFile.setLastModified(new ISODate(changeDate).getSeconds() * 1000);
+	                    FileOutputStream os = null;
+	                    try {
+                            os = new FileOutputStream(outFile);
+    	                    BinaryFile.copy(is, os);
+    	                    IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, log.getModule());
+	                    } finally {
+	                        IOUtils.closeQuietly(os);
+	                    }
 				    }
 				}
 			});
@@ -281,7 +296,9 @@ public class Aligner
 		}
 		finally
 		{
-			mefFile.delete();
+		     if (!mefFile.delete() && mefFile.exists()) {
+		         log.warning("Unable to delete mefFile: "+mefFile);
+		     }
 		}
 	}
 
@@ -318,7 +335,7 @@ public class Aligner
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
         boolean indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, ri.schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, Integer.parseInt(params.owner), group, siteId,
+        String id = dataMan.insertMetadata(context, dbms, ri.schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, Integer.parseInt(params.ownerId), group, siteId,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -329,19 +346,19 @@ public class Aligner
 		if(!localRating) {
 			String rating = general.getChildText("rating");
 			if (rating != null)
-				dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", new Integer(rating), iId);
+				dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", Integer.valueOf(rating), iId);
 		}
 		
 		if (popularity != null)
-			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", new Integer(popularity), iId);
+			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", Integer.valueOf(popularity), iId);
 
 		String pubDir = Lib.resource.getDir(context, "public",  id);
 		String priDir = Lib.resource.getDir(context, "private", id);
 
-		new File(pubDir).mkdirs();
-		new File(priDir).mkdirs();
+		IO.mkdirs(new File(pubDir), "Geonet Aligner public resources directory for metadata " + id);
+		IO.mkdirs(new File(priDir), "Geonet Aligner private resources directory for metadata " + id);
 
-		addCategories(id);
+        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 		if (params.createRemoteCategory) {
     		Element categs = info.getChild("categories");
     		if (categs != null) {
@@ -351,32 +368,10 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 		result.addedMetadata++;
 
 		return id;
-	}
-
-	//--------------------------------------------------------------------------
-	//--- Categories
-	//--------------------------------------------------------------------------
-
-	private void addCategories(String id) throws Exception
-	{
-		for(String catId : params.getCategories())
-		{
-			String name = localCateg.getName(catId);
-
-			if (name == null)
-			{
-                if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:"+ catId);
-			}
-			else
-			{
-                if(log.isDebugEnabled()) log.debug("    - Setting category : "+ name);
-				dataMan.setCategory(context, dbms, id, catId);
-			}
-		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -567,7 +562,10 @@ public class Aligner
 			}
 			finally
 			{
-				mefFile.delete();
+	             if (!mefFile.delete() && mefFile.exists()) {
+	                 log.warning("Unable to delete mefFile: "+mefFile);
+	             }
+
 			}
 		}
 	}
@@ -617,14 +615,14 @@ public class Aligner
 		if(!localRating) {
 			String rating = general.getChildText("rating");
 			if (rating != null)
-				dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", new Integer(rating), new Integer(id));
+				dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", Integer.valueOf(rating), Integer.valueOf(id));
 		}
 		
 		if (popularity != null)
-			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", new Integer(popularity), new Integer(id));
+			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", Integer.valueOf(popularity), Integer.valueOf(id));
 
 		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-		addCategories(id);
+        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 		if (params.createRemoteCategory) {
             Element categs = info.getChild("categories");
             if (categs != null) {
@@ -636,7 +634,7 @@ public class Aligner
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 	}
 
 	/**
@@ -701,8 +699,12 @@ public class Aligner
 		else for (File file : files)
 			if (!existsFile(file.getName(), infoFiles))
 			{
-                if(log.isDebugEnabled()) log.debug("  - Removing old " + dir + " file with name="+ file.getName());
-				file.delete();
+                if(log.isDebugEnabled()) {
+                    log.debug("  - Removing old " + dir + " file with name="+ file.getName());
+                }
+                if (!file.delete() && file.exists()) {
+                    log.warning("Unable to delete file: "+file);
+                }
 			}
 	}
 
@@ -710,10 +712,10 @@ public class Aligner
 
 	private boolean existsFile(String fileName, Element files)
 	{
-		List list = files.getChildren("file");
+		@SuppressWarnings("unchecked")
+        List<Element> list = files.getChildren("file");
 
-        for (Object aList : list) {
-            Element elem = (Element) aList;
+        for (Element elem : list) {
             String name = elem.getAttributeValue("name");
 
             if (fileName.equals(name)) {
@@ -737,15 +739,20 @@ public class Aligner
 
 		if (!locFile.exists() || remIsoDate.sub(locIsoDate) > 0)
 		{
-            if(log.isDebugEnabled()) log.debug("  - Adding remote " + dir + "  file with name:"+ file);
+            if(log.isDebugEnabled()){ log.debug("  - Adding remote " + dir + "  file with name:"+ file);}
 
-			FileOutputStream os = new FileOutputStream(locFile);
-			BinaryFile.copy(is, os, false, true);
-			locFile.setLastModified(remIsoDate.getSeconds() * 1000);
+			FileOutputStream os = null;
+			try {
+                os = new FileOutputStream(locFile);
+    			BinaryFile.copy(is, os);
+    			IO.setLastModified(locFile, remIsoDate.getSeconds() * 1000, log.getModule());
+			} finally {
+			    IOUtils.closeQuietly(os);
+			}
 		}
 		else
 		{
-            if(log.isDebugEnabled()) log.debug("  - Nothing to do in dir " + dir + " for file with name:"+ file);
+            if(log.isDebugEnabled()){ log.debug("  - Nothing to do in dir " + dir + " for file with name:"+ file);}
 		}
 	}
 
@@ -794,7 +801,7 @@ public class Aligner
 	private XmlRequest     request;
 	private GeonetParams   params;
 	private DataManager    dataMan;
-	private GeonetResult   result;
+	private HarvestResult   result;
 
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
@@ -805,7 +812,3 @@ public class Aligner
 	
 	private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();
 }
-
-//=============================================================================
-
-

@@ -33,7 +33,9 @@ public class VersionNegotiationFailedEx extends CatalogException
 	//---
 	//---------------------------------------------------------------------------
 
-	public VersionNegotiationFailedEx(String versions)
+    private static final long serialVersionUID = 1L;
+
+    public VersionNegotiationFailedEx(String versions)
 	{
 		super(VERSION_NEGOTIATION_FAILED, versions, null);
 	}

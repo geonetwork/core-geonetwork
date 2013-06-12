@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -33,15 +32,13 @@ import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-//=============================================================================
-
-/** For editing : adds a tag to a metadata. Access is restricted
-  */
-
-public class AddElement implements Service
-{
+/**
+ * For editing : adds a tag to a metadata. Access is restricted.
+ */
+public class AddElement extends NotInReadOnlyModeService {
     public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -50,8 +47,15 @@ public class AddElement implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+    /**
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    @Override
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		UserSession session = context.getUserSession();
@@ -86,6 +90,3 @@ public class AddElement implements Service
         return findRoot(element.getParentElement());
     }
 }
-
-//=============================================================================
-

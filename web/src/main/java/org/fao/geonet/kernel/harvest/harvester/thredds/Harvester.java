@@ -26,22 +26,25 @@
 
 package org.fao.geonet.kernel.harvest.harvester.thredds;
 
+import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadServerCertificateEx;
 import jeeves.exceptions.BadXmlResponseEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.PasswordUtil;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import jeeves.xlink.Processor;
+
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester;
@@ -54,9 +57,6 @@ import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import thredds.catalog.InvAccess;
 import thredds.catalog.InvCatalogFactory;
 import thredds.catalog.InvCatalogImpl;
@@ -75,7 +75,10 @@ import ucar.nc2.units.DateType;
 import ucar.unidata.util.StringUtil;
 
 import javax.net.ssl.SSLHandshakeException;
-import java.io.DataInputStream;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -167,7 +170,7 @@ import java.util.Map;
  * @author Simon Pigot
  *   
  */
-class Harvester
+class Harvester extends BaseAligner
 {
 	
 	
@@ -189,7 +192,7 @@ class Harvester
 		this.dbms   = dbms;
 		this.params = params;
 
-		result = new ThreddsResult ();
+		result = new HarvestResult ();
 		
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager ();
@@ -221,7 +224,7 @@ class Harvester
      * Start the harvesting of a thredds catalog 
      **/
 	
-	public ThreddsResult harvest() throws Exception {
+	public HarvestResult harvest() throws Exception {
 		
 		Element xml = null;
 		log.info("Retrieving remote metadata information for : " + params.name);
@@ -271,7 +274,7 @@ class Harvester
 		
 		dbms.commit();
 		
-	    result.total = result.serviceRecords + result.collectionDatasetRecords + result.atomicDatasetRecords;
+	    result.totalMetadata = result.serviceRecords + result.collectionDatasetRecords + result.atomicDatasetRecords;
 		return result;
 	}
 
@@ -427,7 +430,7 @@ class Harvester
 		//--- strip the catalog namespace as it is not required
 		md.removeNamespaceDeclaration(invCatalogNS);
 
-		String schema = dataMan.autodetectSchema(md); // should be iso19139
+		String schema = dataMan.autodetectSchema(md, null); // should be iso19139
 		if (schema == null) {
 			log.warning("Skipping metadata with unknown schema.");
 			result.unknownSchema ++;
@@ -444,18 +447,17 @@ class Harvester
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.owner), group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.ownerId), group, params.uuid,
                      isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
-		addPrivileges(id);
-		addCategories(id);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 		
 		dataMan.setTemplateExt(dbms, iId, "n", null);
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, uri);
 
-        boolean indexGroup = false;
-        dataMan.indexMetadata(dbms, id, indexGroup);
+        dataMan.indexMetadata(dbms, id);
 		
 		dbms.commit();
 	}
@@ -561,34 +563,6 @@ class Harvester
 				Processor.uncacheXLinkUri(metadataGetService+"?uuid=" + record.uuid);
 			}
 		}
-    }
-
-	//---------------------------------------------------------------------------
-	/** 
-	 * Get uuid and change date for thredds dataset
-	 *
-     * @param ds     the dataset to be processed 
-	 **/
-	
-	private RecordInfo getDatasetInfo(InvDataset ds) {
-	    Date lastModifiedDate  = null;
-		
-		List<DateType> dates = ds.getDates();
-		
-		for (DateType date: dates) {
-			if (date.getType().equalsIgnoreCase("modified")) {
-				lastModifiedDate = date.getDate();
-			}
-		}
-
-		String datasetChangeDate = null;
-		
-		if (lastModifiedDate != null) {
-			DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-			datasetChangeDate = fmt.print(new DateTime(lastModifiedDate));
-		}
-		
-	    return new RecordInfo(getUuid(ds), datasetChangeDate);
     }
 
 	//---------------------------------------------------------------------------
@@ -705,7 +679,7 @@ class Harvester
 	
 	private String getSubsetUrl(InvDataset ds) {
 	    try {
-	        return ds.getParentCatalog().getUriString() + "?dataset=" + URLEncoder.encode(ds.getID(),"UTF-8");
+	        return ds.getParentCatalog().getUriString() + "?dataset=" + URLEncoder.encode(ds.getID(),Jeeves.ENCODING);
         } catch (UnsupportedEncodingException e) {
 			log.error("Thrown Exception "+e+" during dataset processing");
 	        e.printStackTrace();
@@ -959,7 +933,7 @@ class Harvester
 	private void processService(InvService serv, String uuid, InvDataset ds) {
 		
 		//--- get service, if compound service then get all nested services
-		List<InvService> servs = new ArrayList();
+		List<InvService> servs = new ArrayList<InvService>();
 		if (serv.getServiceType() == ServiceType.COMPOUND) {
 			servs.addAll(serv.getServices());
 		} else {
@@ -1056,19 +1030,28 @@ class Harvester
             if(log.isDebugEnabled()) log.debug("Opened "+href+" and got class "+o.getClass().getName());
 			StringBuffer version = new StringBuffer();
 			String inputLine;
-			DataInputStream dis = new DataInputStream(conn.getInputStream());
-			while ((inputLine = dis.readLine()) != null) {
-					version.append(inputLine+"\n");	
+			BufferedReader dis = null;
+			InputStreamReader isr = null;
+			InputStream is = null;
+			try {
+			    is = conn.getInputStream();
+			    isr = new InputStreamReader(is, Jeeves.ENCODING);
+                dis = new BufferedReader(isr);
+    			while ((inputLine = dis.readLine()) != null) {
+    					version.append(inputLine+"\n");	
+    			}
+    			result = version.toString();
+                if(log.isDebugEnabled()) log.debug("Read from URL:\n"+result);
+			} finally {
+			    IOUtils.closeQuietly(is);
+			    IOUtils.closeQuietly(isr);
+			    IOUtils.closeQuietly(dis);
 			}
-			result = version.toString();
-            if(log.isDebugEnabled()) log.debug("Read from URL:\n"+result);
-			dis.close();
 		} catch (Exception e) {
             if(log.isDebugEnabled()) log.debug("Caught exception "+e+" whilst attempting to query URL "+href);
 			e.printStackTrace();
-		} finally {
-			return result;
 		}
+		return result;
 	}
  
 	//---------------------------------------------------------------------------
@@ -1089,7 +1072,6 @@ class Harvester
             if(log.isDebugEnabled()) log.debug("Processing Thredds service: "+serv.toString());
 
 			String sUuid = Sha1Encoder.encodeString (sUrl);
-			ts.uuid = sUuid;
 
 			//--- TODO: if service is WCS or WMS then pass the full service url to 
 			//--- OGCWxS service metadata creator
@@ -1112,7 +1094,7 @@ class Harvester
 
 			Element md = Xml.transform (cata, serviceStyleSheet, param);
 
-			String schema = dataMan.autodetectSchema (md); 
+			String schema = dataMan.autodetectSchema (md, null); 
 			if (schema == null) {
 				log.warning("Skipping metadata with unknown schema.");
 				result.unknownSchema ++;
@@ -1232,16 +1214,18 @@ class Harvester
 	 
 	 private Element addOperatesOnUuid (Element md, Map<String,String> datasets) {
 		Element root 	= md.getChild("identificationInfo", gmd).getChild("SV_ServiceIdentification", srv);
-		Element co 		= root.getChild("containsOperations", srv);
+//		Element co 		= root.getChild("containsOperations", srv);
 
 		if (root != null) {
             if(log.isDebugEnabled()) log.debug("  - add operatesOn with uuid and other attributes");
 			
-			for (String dsUuid : datasets.keySet()) {
+			for (Map.Entry<String, String> entry : datasets.entrySet()) {
+			    String dsUuid = entry.getKey();
+			    
 				Element op = new Element ("operatesOn", srv);
 				op.setAttribute("uuidref", dsUuid);
 				op.setAttribute("href", context.getBaseUrl() + "/srv/en/metadata.show?uuid=" + dsUuid, xlink);
-				op.setAttribute("title", datasets.get(dsUuid), xlink);
+				op.setAttribute("title", entry.getValue(), xlink);
 				root.addContent(op);
 			}
 		}
@@ -1250,76 +1234,6 @@ class Harvester
 	}
 	
 	//---------------------------------------------------------------------------
-	/** 
-     * Validates metadata according to the schema.
-     * 
-     *  
-     * @param schema 	Usually iso19139
-     * @param md		Metadata to be validated
-     * 
-     * @return			true or false
-     *                   
-     **/
-	 
-	private boolean validates(String schema, Element md) {
-		try {
-			dataMan.validate(schema, md);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	/** 
-     * Add categories according to harvesting configuration
-     *   
-     * @param id		GeoNetwork internal identifier
-     * 
-     **/
-	
-	private void addCategories (String id) throws Exception {
-		for(String catId : params.getCategories ()) {
-			String name = localCateg.getName (catId);
-
-			if (name == null) {
-                if(log.isDebugEnabled()) log.debug ("    - Skipping removed category with id:"+ catId);
-			} else {
-				dataMan.setCategory (context, dbms, id, catId);
-			}
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	/** 
-     * Add privileges according to harvesting configuration
-     *   
-     * @param id		GeoNetwork internal identifier
-     * 
-     **/
-	
-	private void addPrivileges (String id) throws Exception {
-		for (Privileges priv : params.getPrivileges ()) {
-			String name = localGroups.getName( priv.getGroupId ());
-
-			if (name == null) {
-                if(log.isDebugEnabled()) log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
-			} else {
-				for (int opId: priv.getOperations ()) {
-					name = dataMan.getAccessManager().getPrivilegeName(opId);
-
-					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
-						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
-					} else {
-                        if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");
-					}
-				}
-			}
-		}
-	}
-
-    //---------------------------------------------------------------------------
     /** 
      * Determine whether dataset metadata should be harvested  
      *
@@ -1375,7 +1289,6 @@ class Harvester
 		collectionParams.isoCategory = params.datasetCategory;
 		collectionParams.privileges = params.getPrivileges();
 		collectionParams.templateId = params.collectionMetadataTemplate;
-		collectionParams.url = params.url;
 		collectionParams.uuid = params.uuid;
 		collectionParams.outputSchema = params.outputSchemaOnCollectionsFragments;
 		return collectionParams;
@@ -1396,10 +1309,9 @@ class Harvester
 		atomicParams.isoCategory = params.datasetCategory;
 		atomicParams.privileges = params.getPrivileges();
 		atomicParams.templateId = params.atomicMetadataTemplate;
-		atomicParams.url = params.url;
 		atomicParams.uuid = params.uuid;
 		atomicParams.outputSchema = params.outputSchemaOnAtomicsFragments;
-		atomicParams.owner = params.owner;
+		atomicParams.owner = params.ownerId;
 		return atomicParams;
 	}
 
@@ -1418,22 +1330,21 @@ class Harvester
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
 	private UriMapper      localUris;
-	private ThreddsResult  result;
+	private HarvestResult  result;
 	private String         hostUrl;
 	private HashSet<String> harvestUris = new HashSet<String>();
 	private String				 cdmCoordsToIsoKeywordsStyleSheet; 
 	private String				 cdmCoordsToIsoMcpDataParametersStyleSheet;
 	private String				 fragmentStylesheetDirectory;
 	private String	 			 metadataGetService;
-	private Map<String,ThreddsService> services = new HashMap();
+	private Map<String,ThreddsService> services = new HashMap<String, Harvester.ThreddsService>();
 	private InvCatalogImpl catalog;
 	
 	private FragmentHarvester atomicFragmentHarvester;
 	private FragmentHarvester collectionFragmentHarvester;
 
-	private class ThreddsService {
-		public String uuid;
-		public Map<String,String> datasets = new HashMap();
+	private static class ThreddsService {
+		public Map<String,String> datasets = new HashMap<String, String>();
 		public InvService service;
 		public String version;
 		public String ops;
@@ -1442,11 +1353,7 @@ class Harvester
 	static private final Namespace difNS = Namespace.getNamespace("http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/");
 	static private final Namespace invCatalogNS = Namespace.getNamespace("http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0");
 	static private final Namespace gmd 	= Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
-	static private final Namespace gco 	= Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
 	static private final Namespace srv 	= Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
 	static private final Namespace xlink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
 		
 }
-
-//=============================================================================
-

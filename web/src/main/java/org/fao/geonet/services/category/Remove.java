@@ -24,7 +24,6 @@
 package org.fao.geonet.services.category;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -33,19 +32,19 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.util.ServiceMetadataReindexer;
 import org.jdom.Element;
 
 import java.util.List;
 
-//=============================================================================
-
-/** Removes a category from the system.
-  */
-
-public class Remove implements Service
-{
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+/**
+ * Removes a category from the system.
+ */
+public class Remove extends NotInReadOnlyModeService {
+	public void init(String appPath, ServiceConfig params) throws Exception {
+        super.init(appPath, params);
+    }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -53,16 +52,16 @@ public class Remove implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 		String id = Util.getParam(params, Params.ID);
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-		int iId = new Integer(id);
+		int iId = Integer.valueOf(id);
 		String query = "SELECT metadataId FROM MetadataCateg WHERE categoryId=?";
 
-		List<Element> reindex = dbms.select(query, iId).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> reindex = dbms.select(query, iId).getChildren();
 
 		dbms.execute ("DELETE FROM MetadataCateg WHERE categoryId=?",iId);
 		dbms.execute ("DELETE FROM CategoriesDes WHERE idDes=?",iId);
@@ -74,12 +73,9 @@ public class Remove implements Service
 		DataManager   dm = gc.getDataManager();
 
 		ServiceMetadataReindexer s = new ServiceMetadataReindexer(dm, dbms, reindex);
-		s.processWithFastIndexing();
+		s.process();
 
 		return new Element(Jeeves.Elem.RESPONSE)
 							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));
 	}
 }
-
-//=============================================================================
-

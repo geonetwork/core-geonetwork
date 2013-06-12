@@ -7,6 +7,7 @@
 -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+  xmlns:gmx="http://www.isotc211.org/2005/gmx" 
   xmlns:geonet="http://www.fao.org/geonetwork" 
   xmlns:util="xalan://org.fao.geonet.util.XslUtil"
   xmlns:exslt="http://exslt.org/common"
@@ -53,12 +54,13 @@
         
         <!-- Compute title based on online source info-->
         <xsl:variable name="title">
-          <!-- MyOcean set a uuidref when linking to another dataset's online source 
-          
-          identifiant / layer / protocol-->
           <xsl:variable name="title" select="if (../@uuidref) then util:getIndexField(string(/root/gui/app/path), string(../@uuidref), '_title', string(/root/gui/language)) else ''"/>
           <xsl:value-of select="if ($title = '' and ../@uuidref) then ../@uuidref else $title"/><xsl:text> </xsl:text>
-          <xsl:value-of select="if (gmd:name/gco:CharacterString != '') then gmd:name/gco:CharacterString else gmd:description/gco:CharacterString"/>
+          <xsl:value-of select="if (gmd:name/gco:CharacterString != '') 
+                                  then gmd:name/gco:CharacterString 
+                                  else if (gmd:name/gmx:MimeFileType != '')
+                                  then gmd:name/gmx:MimeFileType
+                                  else gmd:description/gco:CharacterString"/>
           <xsl:value-of select="if (gmd:protocol/*) then concat(' (', gmd:protocol/*, ')') else ''"/>
         </xsl:variable>
         

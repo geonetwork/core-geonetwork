@@ -33,7 +33,6 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
 import org.jdom.Element;
 
@@ -87,16 +86,16 @@ public class BatchVersion implements Service
 				Element md = dataMan.getMetadataNoInfo(context, id);
 	
 				if (md == null) {
-					notFound.add(new Integer(id));
+					notFound.add(Integer.valueOf(id));
 				} else if (!accessMan.isOwner(context, id)) {
-					notOwner.add(new Integer(id));
+					notOwner.add(Integer.valueOf(id));
 				} else {
 	
 					//--- now set metadata into subversion repo
 					dataMan.versionMetadata(context, id, md);
                     if(context.isDebug())
                         context.debug("  Metadata with id " + id + " added to subversion repo.");
-					metadata.add(new Integer(id));
+					metadata.add(Integer.valueOf(id));
 				}
 			} else
             if(context.isDebug())

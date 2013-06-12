@@ -29,7 +29,7 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
 //=============================================================================
 
@@ -109,17 +109,16 @@ public class Z3950Params extends AbstractParams {
 
 		if (repos == null) return;
 
-		Iterator repoList = repos.getChildren("repository").iterator();
+		@SuppressWarnings("unchecked")
+        List<Element> repoList = repos.getChildren("repository");
+        for (Element repoElem : repoList) {
+            String repoId = repoElem.getAttributeValue("id");
 
-    while (repoList.hasNext()) {
-      Element repoElem = (Element) repoList.next();
-      String  repoId   = repoElem.getAttributeValue("id");
+            if (repoId == null)
+                throw new MissingParameterEx("attribute:id", repoElem);
 
-      if (repoId == null)
-        throw new MissingParameterEx("attribute:id", repoElem);
-
-      alRepositories.add(repoId);
-    }
+            alRepositories.add(repoId);
+        }
 	}
 
 	//---------------------------------------------------------------------------

@@ -8,18 +8,35 @@
 
 	<xsl:template name="editPanel-thredds">
 		<div id="thredds.editPanel">
+            <xsl:call-template name="ownerGroup-thredds"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-thredds"/>
 			<div class="dots"/>
 			<xsl:call-template name="options-thredds"/>
 			<div class="dots"/>
 			<xsl:call-template name="content-thredds"/>
 			<div class="dots"/>
-			<xsl:call-template name="privileges-thredds"/>
+			<xsl:call-template name="privileges">
+				<xsl:with-param name="type" select="'thredds'"/>
+			</xsl:call-template>
 			<div class="dots"/>
 			<xsl:call-template name="categories-thredds"/>
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-thredds">
+        <table border="0">
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
+                <td class="padded"><select id="thredds.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-thredds">
@@ -37,28 +54,11 @@
 					<input id="thredds.cataUrl" class="content" type="text" value="http://" size="30"/>
 				</td>
 			</tr>
-			<!-- TODO : Do we have to set up an account for thredds secured ? -->
-			<tr style="display:none;">
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/useAccount"/></td>
-				<td class="padded"><input id="thredds.useAccount" type="checkbox"/></td>
-			</tr>
-
-			<tr style="display:none;">
-				<td/>
-				<td>
-					<table id="thredds.account">
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/username"/></td>
-							<td class="padded"><input id="thredds.username" class="content" type="text" value="" size="20"/></td>
-						</tr>
-		
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/password"/></td>
-							<td class="padded"><input id="thredds.password" class="content" type="password" value="" size="20"/></td>
-						</tr>
-					</table>
-				</td>
-			</tr>			
+			
+			<xsl:call-template name="useAccount">
+				<xsl:with-param name="type" select="'thredds'"/>
+			</xsl:call-template>
+			
 			<tr>
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/threddslang"/></td>
 				<td class="padded">
@@ -131,7 +131,7 @@
 				<td class="padded">
 					<select id="thredds.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="thredds.icon.image" src="" alt="" />
+					<img id="thredds.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>
 			
@@ -246,37 +246,6 @@
 		</table>
 	</div>
 	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template name="privileges-thredds">
-		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/privileges"/></h1>
-		
-		<table>
-			<tr>
-				<td class="padded" valign="top"><xsl:value-of select="/root/gui/harvesting/groups"/></td>
-				<td class="padded"><select id="thredds.groups" class="content" size="8" multiple="on"/></td>					
-				<td class="padded" valign="top">
-					<div align="center">
-						<button id="thredds.addGroups" class="content" onclick="harvesting.thredds.addGroupRow()">
-							<xsl:value-of select="/root/gui/harvesting/add"/>
-						</button>
-					</div>
-				</td>					
-			</tr>
-		</table>
-		
-		<table id="thredds.privileges">
-			<tr>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/group"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='5']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='6']"/></b></th>
-				<th/>
-			</tr>
-		</table>
-		
-	</xsl:template>
 	
 	<!-- ============================================================================================= -->
 
@@ -290,18 +259,4 @@
 		<select id="thredds.datasetCategory" class="content"/>
 
 	</xsl:template>
-	
-	<!-- ============================================================================================= -->
-		
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
-	</xsl:template>
-
-    <!-- ============================================================================================= -->
-
 </xsl:stylesheet>

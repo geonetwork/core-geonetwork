@@ -885,7 +885,7 @@ INSERT INTO Settings VALUES (12,10,'siteId','Dummy');
 INSERT INTO Settings VALUES (13,10,'organization','My organization');
 INSERT INTO Settings VALUES (14,1,'platform',NULL);
 -- FIXME : needs to use maven filter for version and subVersion
-INSERT INTO Settings VALUES (15,14,'version','2.9.0-SNAPSHOT');
+INSERT INTO Settings VALUES (15,14,'version','2.11.0');
 INSERT INTO Settings VALUES (16,14,'subVersion','SNAPSHOT');
 INSERT INTO Settings VALUES (17,10,'svnUuid','');
 INSERT INTO Settings VALUES (20,1,'server',NULL);
@@ -986,9 +986,8 @@ INSERT INTO Settings VALUES (921,920,'maxthreads','1');
 INSERT INTO Settings VALUES (950,1,'autodetect',NULL);
 INSERT INTO Settings VALUES (951,950,'enable','false');
 INSERT INTO Settings VALUES (952,1,'requestedLanguage',NULL);
-INSERT INTO Settings VALUES (953,952,'only','false');
+INSERT INTO Settings VALUES (953,952,'only','prefer_locale');
 INSERT INTO Settings VALUES (954,952,'sorted','false');
-INSERT INTO Settings VALUES (955,952,'ignored','true');
 
 INSERT INTO Settings VALUES (956,1,'hidewithheldelements',NULL);
 INSERT INTO Settings VALUES (957,956,'enable','false');
@@ -1007,4 +1006,3 @@ INSERT INTO Settings VALUES (965,964,'enable','false');
 -- ======================================================================
 
 INSERT INTO Users VALUES  (1,'admin','46e44386069f7cf0d4f2a420b9a2383a612f316e2024b0fe84052b0b96c479a23e8a0be8b90fb8c2','admin','admin','Administrator','','','','','','','','','', null);
-INSERT INTO Users VALUES  (2,'developer','b3e106a0375f9a74718df3916696e91952ad381807ffbae7a7ef1c77a0cf8892652714d859c7be27','developer','developer','Developer','','','','','','','','','', null);

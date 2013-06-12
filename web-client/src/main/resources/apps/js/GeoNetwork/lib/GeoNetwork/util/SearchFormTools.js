@@ -802,6 +802,82 @@ GeoNetwork.util.SearchFormTools = {
             });
         items.push(GeoNetwork.util.SearchFormTools.getTemporalExtentField(anyTime));
 
+        // This should be moved somewhere else probably
+        // FIXME
+        // Create a combo box for selection the type of date
+        var dateTypes = [['noneDate', OpenLayers.i18n('none')], ['creation', OpenLayers.i18n('creationDate')], 
+                         ['modification', OpenLayers.i18n('modificationDate')],
+                               ['publication', OpenLayers.i18n('publicationDate')]];
+        
+        var fieldNames = {
+           creation: ['creationDateFrom', 'creationDateTo'],
+           modification: ['revisionDateFrom', 'revisionDateTo'],
+           publication: ['publicationDateFrom', 'publicationDateTo']
+        };
+        
+        
+        items.push(new Ext.form.ComboBox({
+            mode: 'local',
+            triggerAction: 'all',
+            fieldLabel: OpenLayers.i18n('dateType'),
+            store: new Ext.data.ArrayStore({
+                id: 0,
+                fields: ['id', 'name'],
+                data: dateTypes
+            }),
+            valueField: 'id',
+            width: 120,
+            displayField: 'name',
+            listeners: {
+                'change': function (field, newvalue, oldvalue) {
+                    // On change, display the correct calendars according to
+                    // the search type and reset the other one in order to
+                    // not populate the search query from the form.
+                    for ( var field in fieldNames) {
+                        if (fieldNames.hasOwnProperty(field)) {
+                            Ext.getCmp(fieldNames[field][0]).setVisible(field === newvalue);
+                            Ext.getCmp(fieldNames[field][1]).setVisible(field === newvalue);
+                            
+                            if (field !== newvalue) {
+                                Ext.getCmp(fieldNames[field][0]).setValue('');
+                                Ext.getCmp(fieldNames[field][1]).setValue('');
+                            }
+                        }
+                    }
+                },
+                beforeselect : function (field, newvalue, oldvalue) {
+                    // On change, display the correct calendars according to
+                    // the search type and reset the other one in order to
+                    // not populate the search query from the form.
+                    for ( var field in fieldNames) {
+                        if (fieldNames.hasOwnProperty(field)) {
+                            Ext.getCmp(fieldNames[field][0]).setVisible(field === newvalue.id);
+                            Ext.getCmp(fieldNames[field][1]).setVisible(field === newvalue.id);
+                            
+                            if (field !== newvalue) {
+                                Ext.getCmp(fieldNames[field][0]).setValue('');
+                                Ext.getCmp(fieldNames[field][1]).setValue('');
+                            }
+                        }
+                    }
+                },
+                afterrender: function () {
+                    // Only display creation date by default
+                    Ext.getCmp('creationDateFrom').setVisible(true);
+                    Ext.getCmp('creationDateTo').setVisible(true);
+                    Ext.getCmp('revisionDateFrom').setVisible(false);
+                    Ext.getCmp('revisionDateTo').setVisible(false);
+                    Ext.getCmp('publicationDateFrom').setVisible(false);
+                    Ext.getCmp('publicationDateTo').setVisible(false);
+                }
+            }
+        }));
+        
+        // Add a dynamic range query filters
+        items.push(GeoNetwork.util.SearchFormTools.getCreationDateField(anyTime));
+        items.push(GeoNetwork.util.SearchFormTools.getModificationDateField(anyTime));
+        items.push(GeoNetwork.util.SearchFormTools.getPublicationDateField(anyTime));
+        
         return items;
         
     },
@@ -828,6 +904,45 @@ GeoNetwork.util.SearchFormTools = {
         return GeoNetwork.util.SearchFormTools.getDateRangeFields(
             'E_extFrom', 'from', 'extFrom', 
             'E_extTo', 'to', 'extTo', 
+            anyTime
+        );
+    },
+    /**
+     * api:method[getCreationDateField] :return: Creation date fields
+     * 
+     * Create creation date fields and register DateVtype if needed.
+     */
+    getCreationDateField: function(anyTime){
+        GeoNetwork.util.SearchFormTools.registerDateVtype();
+        return GeoNetwork.util.SearchFormTools.getDateRangeFields(
+            'E_creationDateFrom', 'from', 'creationDateFrom',
+            'E_creationDateTo', 'to', 'creationDateTo',
+            anyTime
+        );
+    },
+    /**
+     * api:method[getModificationDateField] :return: Creation date fields
+     * 
+     * Create modification date fields and register DateVtype if needed.
+     */
+    getModificationDateField: function(anyTime){
+        GeoNetwork.util.SearchFormTools.registerDateVtype();
+        return GeoNetwork.util.SearchFormTools.getDateRangeFields(
+            'E_revisionDateFrom', 'from', 'revisionDateFrom',
+            'E_revisionDateTo', 'to', 'revisionDateTo',
+            anyTime
+        );
+    },
+    /**
+     * api:method[getPublicationDateField] :return: Creation date fields
+     * 
+     * Create publication date fields and register DateVtype if needed.
+     */
+    getPublicationDateField: function(anyTime){
+        GeoNetwork.util.SearchFormTools.registerDateVtype();
+        return GeoNetwork.util.SearchFormTools.getDateRangeFields(
+            'E_publicationDateFrom', 'from', 'publicationDateFrom',
+            'E_publicationDateTo', 'to', 'publicationDateTo',
             anyTime
         );
     },
@@ -1043,7 +1158,9 @@ GeoNetwork.util.SearchFormTools = {
         var defaultCodeList = [['dataset', OpenLayers.i18n('dataset')], 
                                ['series', OpenLayers.i18n('series')],
                                ['service', OpenLayers.i18n('service')],
-                               ['model', OpenLayers.i18n('featureCat')]],
+                               ['interactiveMap', OpenLayers.i18n('interactiveMap')],
+                               ['staticMap', OpenLayers.i18n('staticMap')],
+                               ['featureCatalog', OpenLayers.i18n('featureCat')]],
             config = {
                     name: 'E_type',
                     mode: 'local',
@@ -1068,6 +1185,31 @@ GeoNetwork.util.SearchFormTools = {
         } else {
             return new Ext.form.ComboBox(config);
         }
+    },
+    getTypesFieldWithAutocompletion: function (services) {
+        var resourceTypeStore = new GeoNetwork.data.OpenSearchSuggestionStore({
+            url: services.opensearchSuggest,
+            rootId: 1,
+            baseParams: {
+                field: 'type'
+            }
+        });
+        var resourceTypeField = new Ext.ux.form.SuperBoxSelect({
+            hideLabel: false,
+            minChars: 0,
+            queryParam: 'q',
+            hideTrigger: false,
+            id: 'E_type',
+            name: 'E_type',
+            store: resourceTypeStore,
+            valueField: 'value',
+            displayField: 'value',
+            valueDelimiter: ' or ',
+            tpl: '<tpl for="."><div class="x-combo-list-item">{[OpenLayers.i18n(values.value)]}</div></tpl>',
+            fieldLabel: OpenLayers.i18n('resourceType')
+        });
+        
+        return resourceTypeField;
     },
     /** api:method[getSpatialRepresentationTypeField]
      *  :param codeList: ``Array`` of values 

@@ -5,14 +5,15 @@ import java.io.File;
 import java.util.List;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -28,7 +29,7 @@ import org.jfree.data.general.DefaultPieDataset;
  * @author Simon Pigot
  *
  */
-public class CategoriesPopularity implements Service {
+public class CategoriesPopularity extends NotInReadOnlyModeService {
 	/** the SQL query to get results */
 	private String query;
 	/** should we generate and send tooltips to client (caution, can slow down the process if
@@ -41,7 +42,7 @@ public class CategoriesPopularity implements Service {
 	/** should we generate and send legend to client (caution, can slow down the process if
 	 * dataset is big)
 	 */
-	private boolean createLegend;
+//	private boolean createLegend;
 	
 	/** chart width, service parameter, can be overloaded by request */
 	private int chartWidth;
@@ -57,7 +58,8 @@ public class CategoriesPopularity implements Service {
 	//--------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception	{
-		this.createLegend = Boolean.parseBoolean(params.getValue("createLegend"));
+        super.init(appPath,  params);
+//		this.createLegend = Boolean.parseBoolean(params.getValue("createLegend"));
 		this.createTooltips = Boolean.parseBoolean(params.getValue("createTooltips"));
 		this.chartWidth = Integer.parseInt(params.getValue("chartWidth"));
 		this.chartHeight = Integer.parseInt(params.getValue("chartHeight"));
@@ -69,32 +71,36 @@ public class CategoriesPopularity implements Service {
 	//--- Service
 	//---
 	//--------------------------------------------------------------------------
-	public Element exec(Element params, ServiceContext context) throws Exception {
-		String message = "";
+    @Override
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        String message = "";
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		
 		// gets the total popularity count (=100)
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		
 		// wont work if there is no metadata
-		List l  = dbms.select("select sum(popularity) as sumpop from metadata").getChildren();
-		if (l.size() != 1) {
+		String sumPopularityQuery = "select sum(popularity) as sumpop from metadata";
+        @SuppressWarnings("unchecked")
+        List<Element> sumPopularityResult  = dbms.select(sumPopularityQuery).getChildren();
+
+		if (!sumPopularityResult.isEmpty()) {
 			message = "cannot get popularity count";
 			return null;
 		}
 		
-		int cnt = Integer.parseInt(((Element)l.get(0)).getChildText("sumpop"));
+		int cnt = Integer.parseInt((sumPopularityResult.get(0)).getChildText("sumpop"));
 
         if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
             Log.debug(Geonet.SEARCH_LOGGER,"query to get popularity by category:\n" + query);
 		dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		
 		DefaultPieDataset dataset = new DefaultPieDataset(); 
-		List resultSet = dbms.select(query).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> resultSet = dbms.select(query).getChildren();
 		
-		for (int i=0; i < resultSet.size(); i++) {
-			Element record = (Element) resultSet.get(i);
-			String popularity = (record).getChildText("popularity");
+		for (Element record : resultSet) {
+			String popularity = record.getChildText("popularity");
 			if (!popularity.equals("0")) {
 				Double d = 0.0;
 				if (popularity.length() > 0 ) {
@@ -120,9 +126,7 @@ public class CategoriesPopularity implements Service {
 		
 		File statFolder = new File(gc.getHandlerConfig().getMandatoryValue(
 				Geonet.Config.RESOURCES_DIR) + File.separator + "images" + File.separator + "statTmp");
-		if (!statFolder.exists()) {
-			statFolder.mkdirs();
-		}
+		IO.mkdirs(statFolder, "Statistices tmp dir");
 		File f = new File(statFolder, chartFilename);
 		this.imageMap = org.fao.geonet.services.statistics.ChartFactory.writeChartImage(
 				chart, f, this.chartWidth, this.chartHeight, this.createTooltips, "graphPopularityByCategoryImageMap");

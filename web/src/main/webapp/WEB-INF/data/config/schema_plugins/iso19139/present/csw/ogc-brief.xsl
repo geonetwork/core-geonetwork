@@ -28,7 +28,7 @@
 		</xsl:variable>
 		
 		<xsl:variable name="identification" select="gmd:identificationInfo/gmd:MD_DataIdentification|
-			gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
+			gmd:identificationInfo/*[contains(@gco:isoType, 'MD_DataIdentification')]|
 			gmd:identificationInfo/srv:SV_ServiceIdentification"/>
 		
 		
@@ -58,7 +58,7 @@
 				$identification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
 				<xsl:variable name="rsi"  select="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/
 					gmd:referenceSystemIdentifier/gmd:RS_Identifier|/gmd:MD_Metadata/gmd:referenceSystemInfo/
-					*[@gco:isoType='MD_ReferenceSystem']/gmd:referenceSystemIdentifier/gmd:RS_Identifier"/>
+					*[contains(@gco:isoType, 'MD_ReferenceSystem')]/gmd:referenceSystemIdentifier/gmd:RS_Identifier"/>
 				<xsl:variable name="auth" select="$rsi/gmd:codeSpace/gco:CharacterString"/>
 				<xsl:variable name="id"   select="$rsi/gmd:code/gco:CharacterString"/>
 				

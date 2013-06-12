@@ -94,7 +94,7 @@ public final class DBUtils
 				if (forward == null || forward.equals(Jeeves.Text.FALSE)) fFlag = false;
 				else if (forward.equals(Jeeves.Text.TRUE))                fFlag = true;
 				else throw new IllegalArgumentException("bad forward attribute value: " + forward);
-				if (fFlag && value != null && result != null)
+				if (fFlag && result != null)
 					result.addContent(new Element(name).setText(value));
 				
 				String type = field.getAttributeValue(Jeeves.Attr.TYPE);
@@ -105,12 +105,12 @@ public final class DBUtils
 				else if (type.equals(Jeeves.Attr.Type.INT))
 				{
 					if (format == null)
-						vArgs.add(new Integer(value));
+						vArgs.add(Integer.valueOf(value));
 					else
 					{
 						DecimalFormat df = new DecimalFormat(format);
 						Number n = df.parse(value);
-						vArgs.add(new Integer(n.intValue()));
+						vArgs.add(Integer.valueOf(n.intValue()));
 					}
 				}
 				else if (type.equals(Jeeves.Attr.Type.DOUBLE))

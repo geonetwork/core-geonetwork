@@ -131,11 +131,10 @@ class ElementEntry
 		else if (ei.element.getName().equals("group")) groupElem = true;
 		else if (ei.element.getName().equals("sequence")) sequenceElem = true;
 
-		List attrs = ei.element.getAttributes();
+		@SuppressWarnings("unchecked")
+        List<Attribute> attrs = ei.element.getAttributes();
 
-        for (Object attr : attrs) {
-            Attribute at = (Attribute) attr;
-
+        for (Attribute at : attrs) {
             String attrName = at.getName();
             String value = at.getValue();
 
@@ -175,18 +174,19 @@ class ElementEntry
             }
 
             else {
-                if (choiceElem) {
-                    Logger.log();
-                }
-                else if (groupElem) {
-                    Logger.log();
-                }
-                else if (sequenceElem) {
-                    Logger.log();
-                }
-                else {
-                    Logger.log();
-                }
+// TODO: 
+//                if (choiceElem) {
+//                    Logger.log();
+//                }
+//                else if (groupElem) {
+//                    Logger.log();
+//                }
+//                else if (sequenceElem) {
+//                    Logger.log();
+//                }
+//                else {
+//                    Logger.log();
+//                }
 
             }
         }
@@ -196,10 +196,10 @@ class ElementEntry
 
 	private void handleChildren(ElementInfo ei)
 	{
-		List children = ei.element.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = ei.element.getChildren();
 
-        for (Object aChildren : children) {
-            Element elChild = (Element) aChildren;
+        for ( Element elChild : children) {
             String elName = elChild.getName();
 
             if (elName.equals("complexType")) {
@@ -231,20 +231,20 @@ class ElementEntry
 
 	private void handleContainerChildren(ElementInfo ei, ArrayList<ElementEntry> elements)
 	{
-		List children = ei.element.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = ei.element.getChildren();
 
-        for (Object aChildren : children) {
+        for (Element elChild : children) {
 
             if (groupElem) {
                 Log.warning(Geonet.SCHEMA_MANAGER, "WARNING found element children for group in element " + name + " " + ref);
             }
-            Element elChild = (Element) aChildren;
             String elName = elChild.getName();
 
             if (elName.equals("annotation")) {
-                List appinfo = elChild.getChildren();
-                for (Object anAppinfo : appinfo) {
-                    Element elElem = (Element) anAppinfo;
+                @SuppressWarnings("unchecked")
+                List<Element> appinfo = elChild.getChildren();
+                for (Element elElem : appinfo) {
                     if (elElem.getName().equals("appinfo")) {
                         name = elElem.getText();
                     }

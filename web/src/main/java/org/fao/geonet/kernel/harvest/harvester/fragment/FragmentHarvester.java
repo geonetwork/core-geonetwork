@@ -32,6 +32,7 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
@@ -59,7 +60,7 @@ import java.util.UUID;
  * 
 **/
 
-public class FragmentHarvester {
+public class FragmentHarvester extends BaseAligner {
 
 	//---------------------------------------------------------------------------
 	/** 
@@ -133,7 +134,8 @@ public class FragmentHarvester {
 		localCateg 	= new CategoryMapper (dbms);
 		localGroups = new GroupMapper (dbms);
 
-		List<Element> recs = fragments.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> recs = fragments.getChildren();
 		
 		for (Element rec : recs) {
 			addRecord(rec);
@@ -156,14 +158,16 @@ public class FragmentHarvester {
 			Namespace ns = metadataTemplate.getNamespace();
 			if (ns != null) {
 				metadataTemplateNamespaces.add(ns);
-				metadataTemplateNamespaces.addAll(metadataTemplate.getAdditionalNamespaces());
+				@SuppressWarnings("unchecked")
+                List<Namespace> additionalNamespaces = metadataTemplate.getAdditionalNamespaces();
+                metadataTemplateNamespaces.addAll(additionalNamespaces);
 			}
 
 			// --- Build a list of all id attributes in metadata document so
 			// --- that we can remove any that are left over afterwards
 			new Document(metadataTemplate);
-			List elems = Xml.selectNodes(metadataTemplate, "//*[@id]", metadataTemplateNamespaces);
-			for (Iterator<Object> iter = elems.iterator(); iter.hasNext();) {
+			List<?> elems = Xml.selectNodes(metadataTemplate, "//*[@id]", metadataTemplateNamespaces);
+			for (Iterator<?> iter = elems.iterator(); iter.hasNext();) {
 				Object ob = iter.next();
 				if (ob instanceof Element) {
 					Element elem = (Element)ob;
@@ -186,7 +190,8 @@ public class FragmentHarvester {
      * 
      */
 	private void addRecord(Element rec) throws Exception {
-		List<Element> fragments = rec.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> fragments = rec.getChildren();
 		
 		Element recordMetadata = null;
 		Set<String> recordMetadataRefs = new HashSet<String>();
@@ -246,7 +251,8 @@ public class FragmentHarvester {
      */
 	private void addMetadata(Element fragment) {
  	    if (fragment.getName().equals(REPLACEMENT_GROUP)) {
- 	    	List<Element> children = fragment.getChildren();
+ 	    	@SuppressWarnings("unchecked")
+            List<Element> children = fragment.getChildren();
  			for (Element child: children) {
  				addFragmentMetadata(child);
  			}
@@ -296,7 +302,8 @@ public class FragmentHarvester {
      */
 	private void createSubtemplates(Element fragment) throws Exception {
  	    if (fragment.getName().equals(REPLACEMENT_GROUP)) {
- 	    	List<Element> children = fragment.getChildren();
+ 	    	@SuppressWarnings("unchecked")
+            List<Element> children = fragment.getChildren();
  				for (Element child: children) {
  					createOrUpdateSubtemplate(child);
  				}
@@ -343,34 +350,9 @@ public class FragmentHarvester {
      * 
      */
 	private void updateSubtemplate(String id, String uuid, Element md, String title) throws Exception {
-		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
-		Date date = new Date();
-
-								//
-                // update metadata
-                //
-                boolean validate = false;
-                boolean ufo = false;
-                boolean index = false;
-                String language = context.getLanguage();
-        dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, df.format(date), false);
-				int iId = Integer.parseInt(id);
-	
-
-        dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", iId);
-        addPrivileges(id);
-
-        dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
-        addCategories(id);
-
-				dataMan.setTemplateExt(dbms, iId, "s", title);
-				dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-        dataMan.indexMetadataGroup(dbms, id);
-
-        dbms.commit();
-
-				harvestSummary.updatedMetadata.add(uuid);
-				harvestSummary.fragmentsUpdated++;
+        update(id, md, title, true);
+        harvestSummary.updatedMetadata.add(uuid);
+        harvestSummary.fragmentsUpdated++;
 	}
 
 	//---------------------------------------------------------------------------
@@ -399,12 +381,12 @@ public class FragmentHarvester {
 
 		int iId = Integer.parseInt(id);
 
-		addPrivileges(id);
-		addCategories(id);
+        addPrivileges(id, params.privileges, localGroups, dataMan, context, dbms, log);
+        addCategories(id, params.categories, localCateg, dataMan, dbms, context, log, null);
 	
 		dataMan.setTemplateExt(dbms, iId, "s", null);
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 
 		dbms.commit();
 		harvestSummary.fragmentsAdded ++;
@@ -431,10 +413,10 @@ public class FragmentHarvester {
 		// find all elements that have an attribute id with the matchId
         if(log.isDebugEnabled())
             log.debug("Attempting to search metadata for "+matchId);
-		List elems = Xml.selectNodes(template,"//*[@id='"+matchId+"']", metadataTemplateNamespaces);
+		List<?> elems = Xml.selectNodes(template,"//*[@id='"+matchId+"']", metadataTemplateNamespaces);
 
 		// for each of these elements...
-		for (Iterator<Object> iter = elems.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = elems.iterator(); iter.hasNext();) {
 			Object ob = iter.next();
 			if (ob instanceof Element) {
 				Element elem = (Element)ob;
@@ -442,7 +424,8 @@ public class FragmentHarvester {
 	 	    if (fragment.getName().equals(REPLACEMENT_GROUP)) {
  					Element parent = elem.getParentElement();
  					int insertionIndex = parent.indexOf(elem);
-	 	    	List<Element> children = fragment.getChildren();
+	 	    	@SuppressWarnings("unchecked")
+                List<Element> children = fragment.getChildren();
 	 	    	
 	 				for (Element child: children) {
 	 					//insert a copy of the referencing element 
@@ -480,10 +463,10 @@ public class FragmentHarvester {
 		for (String matchId : recordRefs) {
       if(log.isDebugEnabled())
             log.debug("Attempting to search metadata for "+matchId);
-			List elems = Xml.selectNodes(record,"//*[@id='"+matchId+"']", metadataTemplateNamespaces);
+			List<?> elems = Xml.selectNodes(record,"//*[@id='"+matchId+"']", metadataTemplateNamespaces);
 
 			// for each of these elements remove it as no fragment has matched it
-			for (Iterator<Object> iter = elems.iterator(); iter.hasNext();) {
+			for (Iterator<?> iter = elems.iterator(); iter.hasNext();) {
 				Object ob = iter.next();
 				if (ob instanceof Element) {
 					Element elem = (Element)ob;
@@ -545,35 +528,53 @@ public class FragmentHarvester {
      */
 	private void updateMetadata(String recUuid, String id, Element template) throws Exception, SQLException {
 		// now update existing record with the filled in template
-        if(log.isDebugEnabled())
+        if(log.isDebugEnabled()) {
             log.debug("	- Attempting to update metadata record "+id+" with links");
-		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
-		Date date = new Date();
-		template = dataMan.setUUID(params.outputSchema, recUuid, template); 
-	
-								//
-                // update metadata
-                //
-                boolean validate = false;
-                boolean ufo = false;
-                boolean index = false;
-                String language = context.getLanguage();
-        dataMan.updateMetadata(context, dbms, id, template, validate, ufo, index, language, df.format(date), false);
-
-				int iId = Integer.parseInt(id);
-
-        dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", iId);
-        addPrivileges(id);
-
-        dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
-        addCategories(id);
-
-        dataMan.indexMetadataGroup(dbms, id);	
-
-        dbms.commit();
-				harvestSummary.recordsUpdated++;
-				harvestSummary.updatedMetadata.add(recUuid);
+        }
+		template = dataMan.setUUID(params.outputSchema, recUuid, template);
+        update(id, template, null, false);
+        harvestSummary.recordsUpdated++;
+        harvestSummary.updatedMetadata.add(recUuid);
 	}
+
+    /**
+     * TODO Javadoc.
+     *
+     * @param id
+     * @param template
+     * @param title
+     * @param doExt
+     * @throws Exception
+     */
+     private void update(String id, Element template, String title, boolean doExt)  throws Exception {
+         DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
+         Date date = new Date();
+         //
+         // update metadata
+         //
+         boolean validate = false;
+         boolean ufo = false;
+         boolean index = false;
+         String language = context.getLanguage();
+         dataMan.updateMetadata(context, dbms, id, template, validate, ufo, index, language, df.format(date), false);
+
+         int iId = Integer.parseInt(id);
+
+         dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", iId);
+         addPrivileges(id, params.privileges, localGroups, dataMan, context, dbms, log);
+
+         dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
+         addCategories(id, params.categories, localCateg, dataMan, dbms, context, log, null);
+
+         dataMan.indexMetadata(dbms, id);
+         if(doExt) {
+             dataMan.setTemplateExt(dbms, iId, "s", title);
+             dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
+         }
+
+         dataMan.indexMetadata(dbms, id);
+         dbms.commit();
+    }
 
 	//---------------------------------------------------------------------------
 	/** 
@@ -596,72 +597,24 @@ public class FragmentHarvester {
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
         String id = dataMan.insertMetadata(context, dbms, params.outputSchema, template, context.getSerialFactory().getSerial(dbms, "Metadata"), recUuid, Integer.parseInt(params.owner), group, params.uuid,
-                         isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
+                isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 
-        if(log.isDebugEnabled())
+        if(log.isDebugEnabled()){
             log.debug("	- Set privileges, category, template and harvested");
-		addPrivileges(id);
-		dataMan.setCategory (context, dbms, id, params.isoCategory);
+        }
+        addPrivileges(id, params.privileges, localGroups, dataMan, context, dbms, log);
+        dataMan.setCategory(context, dbms, id, params.isoCategory);
 		
 		dataMan.setTemplateExt(dbms, iId, "n", null); 
 		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 
         if(log.isDebugEnabled())
             log.debug("	- Commit "+id);
 		dbms.commit();
 		harvestSummary.recordsBuilt++;
-	}
-
-	//---------------------------------------------------------------------------
-	/** 
-     * Add categories according to harvesting configuration
-     *   
-     * @param id		GeoNetwork internal identifier
-     * 
-     */
-	private void addCategories (String id) throws Exception {
-		for(String catId : params.categories) {
-			String name = localCateg.getName (catId);
-
-			if (name == null) {
-                if(log.isDebugEnabled())
-                    log.debug ("    - Skipping removed category with id:"+ catId);
-			} else {
-				dataMan.setCategory (context, dbms, id, catId);
-			}
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	/** 
-     * Add privileges according to harvesting configuration
-     *   
-     * @param id		GeoNetwork internal identifier
-     * 
-     */
-	private void addPrivileges (String id) throws Exception {
-		for (Privileges priv : params.privileges) {
-			String name = localGroups.getName( priv.getGroupId ());
-
-			if (name == null) {
-                if(log.isDebugEnabled())
-                    log.debug ("    - Skipping removed group with id:"+ priv.getGroupId ());
-			} else {
-				for (int opId: priv.getOperations ()) {
-					name = dataMan.getAccessManager().getPrivilegeName(opId);
-
-					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
-						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
-					} else {
-                        if(log.isDebugEnabled()) log.debug("       --> "+ name +" (skipped)");
-					}
-				}
-			}
-		}
 	}
 
 	private Logger log;
@@ -670,7 +623,7 @@ public class FragmentHarvester {
 	private DataManager dataMan;
 	private FragmentParams params;
 	private String metadataGetService;
-	private List metadataTemplateNamespaces = new ArrayList();;
+	private List<Namespace> metadataTemplateNamespaces = new ArrayList<Namespace>();
 	private Set<String>  templateIdAtts = new HashSet<String>();;
 	private Element metadataTemplate;
 	private String harvestUri;
@@ -679,7 +632,6 @@ public class FragmentHarvester {
 	private HarvestSummary harvestSummary;
 	
 	static public class FragmentParams {
-		public String url;
 		public String uuid;
         public String owner;
 		public String templateId;
@@ -690,7 +642,7 @@ public class FragmentHarvester {
 		public Iterable<String> categories;
 	}
 	
-	public class HarvestSummary {
+	public static class HarvestSummary {
 		public int fragmentsMatched;
 		public int recordsBuilt;
 		public int recordsUpdated;

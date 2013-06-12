@@ -28,6 +28,7 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.UserInfo;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import org.globus.ftp.DataSink;
@@ -47,6 +48,9 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
+import java.nio.charset.Charset;
+
+import jeeves.constants.Jeeves;
 
 //=============================================================================
 
@@ -211,7 +215,10 @@ public final class BinaryFile
 		if (remove)
 		{
 			String path = response.getAttributeValue("path");
-			new File(path).delete();
+			File file = new File(path);
+            if (!file.delete() && file.exists()) {
+                Log.warning(Log.JEEVES, "["+BinaryFile.class.getName()+"#removeIfTheCase]"+"Unable to remove binary file after sending to user.");
+            }
 		}
 	}
 
@@ -299,8 +306,13 @@ public final class BinaryFile
 		if (path == null) return;
 		if (!remoteFile) {
 			File f = new File(path);
-			InputStream input = new FileInputStream(f);
-			copy(input, output, true, false);
+			InputStream input = null;
+			try {
+                input = new FileInputStream(f);
+    			copy(input, output);
+			} finally {
+			    IOUtils.closeQuietly(input);
+			}
 		} else {
 			if (remoteProtocol.equals("scp")) {
 				try {
@@ -309,20 +321,22 @@ public final class BinaryFile
 					com.jcraft.jsch.Session session=jsch.getSession(remoteUser, remoteSite, 22);
 					UserInfo ui=new MyUserInfo();
 					session.setUserInfo(ui);
-					session.connect();
-				
-					String command="scp -f "+remotePath;
-					Channel channel=session.openChannel("exec");
-					((ChannelExec)channel).setCommand(command);
-	
-					// get I/O streams for remote scp
-					OutputStream outScp=channel.getOutputStream();
-					InputStream inScp=channel.getInputStream();
-					channel.connect();
-				
-					copy(inScp,outScp,output);
-				
-					session.disconnect();
+					try {
+    					session.connect();
+    				
+    					String command="scp -f "+remotePath;
+    					Channel channel=session.openChannel("exec");
+    					((ChannelExec)channel).setCommand(command);
+    	
+    					// get I/O streams for remote scp
+    					OutputStream outScp=channel.getOutputStream();
+    					InputStream inScp=channel.getInputStream();
+    					channel.connect();
+    				
+    					copy(inScp,outScp,output);
+					} finally {
+					    session.disconnect();
+					}
 				} catch (Exception e) {
 					Log.error(Log.RESOURCES,"Problem with scp from site: "+remoteUser+"@"+remoteSite+":"+remotePath);
 					e.printStackTrace();
@@ -388,7 +402,9 @@ public final class BinaryFile
       int c=checkAck(inScp);
       if(c!='C') break;
       // read '0644 ' from scp
-      inScp.read(buf, 0, 5);
+      if (inScp.read(buf, 0, 5) == -1) {
+          throw new IllegalStateException("Expected 0664 but got nothing");
+      }
 
 			// establish file size from scp
       long filesize=0L;
@@ -404,9 +420,11 @@ public final class BinaryFile
 			// now get file name from scp
       String file=null;
       for(int i=0;;i++) {
-      	inScp.read(buf, i, 1);
+      	if (inScp.read(buf, i, 1) == -1) {
+      	    throw new IllegalStateException("Unable to read file name");
+      	}
       	if(buf[i]==(byte)0x0a) {
-      		file=new String(buf, 0, i);
+      		file=new String(buf, 0, i, Charset.forName(Jeeves.ENCODING));
       		break;
       	}
       }
@@ -441,33 +459,24 @@ public final class BinaryFile
 	/**
 	 * Copies an input stream (from a file) to an output stream 
 	 */
-	public static void copy(InputStream in, OutputStream out,
-			boolean closeInput, boolean closeOutput) throws IOException {
-
-		try {
-			if (in instanceof FileInputStream) {
-				FileInputStream fin = (FileInputStream) in;
-				WritableByteChannel outChannel;
-				if (out instanceof FileOutputStream) {
-					outChannel = ((FileOutputStream) out).getChannel();
-				} else {
-					outChannel = Channels.newChannel(out);
-				}
-				fin.getChannel().transferTo(0, Long.MAX_VALUE, outChannel);
+	public static void copy(InputStream in, OutputStream out) throws IOException {
+		if (in instanceof FileInputStream) {
+			FileInputStream fin = (FileInputStream) in;
+			WritableByteChannel outChannel;
+			if (out instanceof FileOutputStream) {
+				outChannel = ((FileOutputStream) out).getChannel();
 			} else {
-				BufferedInputStream input = new BufferedInputStream(in);
-
-				byte buffer[] = new byte[BUF_SIZE];
-				int nRead;
-
-				while ((nRead = input.read(buffer)) > 0)
-					out.write(buffer, 0, nRead);
+				outChannel = Channels.newChannel(out);
 			}
-		} finally {
-			if (closeInput)
-				IOUtils.closeQuietly(in);
-			if (closeOutput)
-				IOUtils.closeQuietly(out);
+			fin.getChannel().transferTo(0, Long.MAX_VALUE, outChannel);
+		} else {
+			BufferedInputStream input = new BufferedInputStream(in);
+
+			byte buffer[] = new byte[BUF_SIZE];
+			int nRead;
+
+			while ((nRead = input.read(buffer)) > 0)
+				out.write(buffer, 0, nRead);
 		}
 	}
 
@@ -482,8 +491,8 @@ public final class BinaryFile
     throws IOException {
         
         if (sourceLocation.isDirectory()) {
-            if (!targetLocation.exists()) {
-                targetLocation.mkdir();
+            if (!targetLocation.mkdirs() && !targetLocation.exists()) {
+                throw new IOException("Unable to create target directory "+targetLocation);
             }
             
             String[] children = sourceLocation.list();
@@ -492,9 +501,16 @@ public final class BinaryFile
                         new File(targetLocation, children[i]));
             }
         } else {
-            InputStream in = new FileInputStream(sourceLocation);
-            OutputStream out = new FileOutputStream(targetLocation);
-            copy(in, out, true, true);
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                in = new FileInputStream(sourceLocation);
+                out = new FileOutputStream(targetLocation);
+                copy(in, out);
+            } finally {
+                IOUtils.closeQuietly(in);
+                IOUtils.closeQuietly(out);
+            }
         }
     }
 	
@@ -533,6 +549,16 @@ public final class BinaryFile
 		else
 			return("application/binary");
 	}
+
+    public static void copy(File srcFile, File destFile) throws IOException {
+        if(srcFile.isFile()) {
+            FileUtils.copyFile(srcFile, destFile);
+        } else {
+            FileUtils.copyDirectory(srcFile, destFile);
+            
+        }
+        
+    }
 
 }
 

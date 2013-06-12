@@ -8,19 +8,36 @@
 
 	<xsl:template name="editPanel-Arcsde">
 		<div id="arcsde.editPanel">
+            <xsl:call-template name="ownerGroup-Arcsde"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-Arcsde"/>
 			<div class="dots"/>
 			<xsl:call-template name="options-Arcsde"/>
 			<div class="dots"/>
 			<xsl:call-template name="content-Arcsde"/>
 			<div class="dots"/>
-			<xsl:call-template name="privileges-Arcsde"/>
+			<xsl:call-template name="privileges">
+				<xsl:with-param name="type" select="'arcsde'"/>
+			</xsl:call-template>
 			<div class="dots"/>
-			<xsl:call-template name="categories-Arcsde"/>			
+			<xsl:call-template name="categories-Arcsde"/>
 			<p/>
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-Arcsde">
+        <table border="0">
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
+                <td class="padded"><select id="arcsde.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-Arcsde">
@@ -62,7 +79,7 @@
 				<td class="padded">
 					<select id="arcsde.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="arcsde.icon.image" src="" alt="" />
+					<img id="arcsde.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>			
 		</table>
@@ -100,38 +117,6 @@
         </table>
     </div>
     </xsl:template>
-    
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template name="privileges-Arcsde">
-		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/privileges"/></h1>
-		
-		<table>
-			<tr>
-				<td class="padded" valign="top"><xsl:value-of select="/root/gui/harvesting/groups"/></td>
-				<td class="padded"><select id="arcsde.groups" class="content" size="8" multiple="on"/></td>					
-				<td class="padded" valign="top">
-					<div align="center">
-						<button id="arcsde.addGroups" class="content" onclick="harvesting.arcsde.addGroupRow()">
-							<xsl:value-of select="/root/gui/harvesting/add"/>
-						</button>
-					</div>
-				</td>					
-			</tr>
-		</table>
-		
-		<table id="arcsde.privileges">
-			<tr>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/group"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='5']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='6']"/></b></th>
-				<th/>
-			</tr>
-		</table>
-		
-	</xsl:template>
 	
 	<!-- ============================================================================================= -->
 
@@ -141,17 +126,6 @@
 		<select id="arcsde.categories" class="content" size="8" multiple="on"/>
 	</xsl:template>
 	
-	<!-- ============================================================================================= -->	
-	
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
-	</xsl:template>
-
     <!-- ============================================================================================= -->
 
 </xsl:stylesheet>

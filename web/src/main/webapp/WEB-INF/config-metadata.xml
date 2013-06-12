@@ -288,6 +288,12 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+        <service name="metadata.service.extract">
+                <class name=".services.metadata.ExtractServicesLayers"/>
+        </service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="metadata.delete">
 			<class name=".services.metadata.Delete"/>
 
@@ -300,17 +306,6 @@
             <class name=".services.metadata.Delete"/>
             <output forward="admin" />
         </service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.recent.additions.embedded">
-			<output sheet="metadata-recentadditions.xsl">
-				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
-          <param name="maxItems" value="10" />
-          <param name="timeBetweenUpdates" value="10" />
-        </call>
-			</output>
-		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -675,10 +670,6 @@
 		<!-- Status                                                        -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.metadata.status.values.list">
-			<class name=".services.status.List"/>
-		</service>
-		
 		<service name="xml.metadata.status.set">
 			<class name=".services.metadata.UpdateStatus"/>
 		</service>

@@ -23,11 +23,17 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.CswOperation;
@@ -36,19 +42,19 @@ import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordByIdRequest;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.jdom.Element;
-
-import java.util.List;
-import java.util.Set;
+import org.jdom.xpath.XPath;
 
 //=============================================================================
 
-public class Aligner
+public class Aligner extends BaseAligner
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -61,12 +67,11 @@ public class Aligner
 		this.log        = log;
 		this.context    = sc;
 		this.dbms       = dbms;
-		this.server     = server;
 		this.params     = params;
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager();
-		result  = new CswResult();
+		result  = new HarvestResult();
 
 		//--- setup get-record-by-id request
 
@@ -86,7 +91,7 @@ public class Aligner
 			if (oper.getUrl != null) {
 				request.setUrl(oper.getUrl);
 				request.setMethod(CatalogRequest.Method.GET);
-			} else if (oper.getUrl != null) {
+			} else if (oper.postUrl != null) {
 				request.setUrl(oper.postUrl);
 				request.setMethod(CatalogRequest.Method.POST);
 			} else {
@@ -114,7 +119,7 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public CswResult align(Set<RecordInfo> records) throws Exception
+	public HarvestResult align(Set<RecordInfo> records) throws Exception
 	{
 		log.info("Start of alignment for : "+ params.name);
 
@@ -173,7 +178,7 @@ public class Aligner
 		if (md == null)
 			return;
 
-		String schema = dataMan.autodetectSchema(md);
+		String schema = dataMan.autodetectSchema(md, null);
 
 		if (schema == null)
 		{
@@ -192,7 +197,7 @@ public class Aligner
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, Integer.parseInt(params.owner), group, params.uuid,
+        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, Integer.parseInt(params.ownerId), group, params.uuid,
                          isTemplate, docType, title, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -200,74 +205,12 @@ public class Aligner
 		dataMan.setTemplateExt(dbms, iId, "n", null);
 		dataMan.setHarvestedExt(dbms, iId, params.uuid);
 
-		addPrivileges(id);
-		addCategories(id);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 		dbms.commit();
-		dataMan.indexMetadataGroup(dbms, id);
+		dataMan.indexMetadata(dbms, id);
 		result.addedMetadata++;
-	}
-
-	//--------------------------------------------------------------------------
-	//--- Categories
-	//--------------------------------------------------------------------------
-
-	private void addCategories(String id) throws Exception
-	{
-		for(String catId : params.getCategories())
-		{
-			String name = localCateg.getName(catId);
-
-			if (name == null) {
-                if(log.isDebugEnabled()) {
-                    log.debug("    - Skipping removed category with id:"+ catId);
-                }
-			} else {
-                if(log.isDebugEnabled()) {
-                    log.debug("    - Setting category : "+ name);
-                }
-				dataMan.setCategory(context, dbms, id, catId);
-			}
-		}
-	}
-
-	//--------------------------------------------------------------------------
-	//--- Privileges
-	//--------------------------------------------------------------------------
-
-	private void addPrivileges(String id) throws Exception
-	{
-		for (Privileges priv : params.getPrivileges())
-		{
-			String name = localGroups.getName(priv.getGroupId());
-			
-            if (name == null) {
-                if(log.isDebugEnabled()) {
-                    log.debug("    - Skipping removed group with id:"+ priv.getGroupId());
-                }
-            } else {
-                if(log.isDebugEnabled()) {
-                    log.debug("    - Setting privileges for group : "+ name);
-                }
-                
-				for (int opId: priv.getOperations())
-				{
-					name = dataMan.getAccessManager().getPrivilegeName(opId);
-
-					//--- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
-                        if(log.isDebugEnabled()) {
-                            log.debug("       --> "+ name);
-                        }
-						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
-					} else {
-						if(log.isDebugEnabled()) {
-							log.debug("       --> "+ name +" (skipped)");
-						}
-					}
-				}
-			}
-		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -310,13 +253,13 @@ public class Aligner
 				dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, false);
 
 				dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
-				addPrivileges(id);
+                addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
 
 				dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-				addCategories(id);
+                addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 				dbms.commit();
-				dataMan.indexMetadataGroup(dbms, id);
+				dataMan.indexMetadata(dbms, id);
 				result.updatedMetadata++;
 			}
 		}
@@ -366,14 +309,15 @@ public class Aligner
             if(log.isDebugEnabled())
                 log.debug("Record got:\n"+Xml.getString(response));
 
-			List list = response.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> list = response.getChildren();
 
 			//--- maybe the metadata has been removed
 
 			if (list.size() == 0)
 				return null;
 
-			response = (Element) list.get(0);
+			response = list.get(0);
 			response = (Element) response.detach();
 
             // validate it here if requested
@@ -384,6 +328,13 @@ public class Aligner
                     return null;
                 }
             }
+            
+            if(params.rejectDuplicateResource) {
+                if (foundDuplicateForResource(uuid, response)) {
+                    return null;
+                }
+            }
+            
             return response;
 		}
 		catch(Exception e)
@@ -397,6 +348,71 @@ public class Aligner
 		}
 	}
 
+    /**
+     * Check for metadata in the catalog having the same resource identifier as the
+     * harvested record.
+     * 
+     * If one dataset (same MD_metadata/../identificationInfo/../identifier/../code) 
+     * (eg. a NMA layer for roads) is described in 2 or more catalogs with different 
+     * metadata uuids. The metadata may be slightly different depending on the author,
+     * but the resource is the same. When harvesting, some users would like to have 
+     * the capability to exclude "duplicate" description of the same dataset.
+     * 
+     * The check is made searching the identifier field in the index using 
+     * {@link LuceneSearcher#getAllMetadataFromIndexFor(String, String, String, Set, boolean)}
+     * 
+     * @param uuid the metadata unique identifier
+     * @param response  the XML document to check
+     * @return true if a record with same resource identifier is found. false otherwise.
+     */
+    private boolean foundDuplicateForResource(String uuid, Element response) {
+        String schema = dataMan.autodetectSchema(response);
+        
+        if(schema.startsWith("iso19139")) {
+            String resourceIdentifierXPath = "gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString";
+            String resourceIdentifierLuceneIndexField = "identifier";
+            String defaultLanguage = "eng";
+            
+            try {
+                // Extract resource identifier
+                XPath xp = XPath.newInstance (resourceIdentifierXPath);
+                xp.addNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+                xp.addNamespace("gco", "http://www.isotc211.org/2005/gco");
+                @SuppressWarnings("unchecked")
+                List<Element> resourceIdentifiers = xp.selectNodes(response);
+                if (resourceIdentifiers.size() > 0) {
+                    // Check if the metadata to import has a resource identifier
+                    // existing in current catalog for a record with a different UUID
+                    
+                    log.debug("  - Resource identifiers found : " + resourceIdentifiers.size());
+                    
+                    for (Element identifierNode : resourceIdentifiers) {
+                        String identifier = identifierNode.getTextTrim();
+                        log.debug("    - Searching for duplicates for resource identifier: " + identifier);
+                        
+                        Map<String, Map<String,String>> values = LuceneSearcher.getAllMetadataFromIndexFor(defaultLanguage, resourceIdentifierLuceneIndexField, 
+                                identifier, Collections.singleton("_uuid"), true);
+                        log.debug("    - Number of resources with same identifier: " + values.size());
+                        for (Map<String, String> recordFieldValues : values.values()) {
+                            String indexRecordUuid = recordFieldValues.get("_uuid");
+                            if (!indexRecordUuid.equals(uuid)) {
+                                log.debug("      - UUID " + indexRecordUuid + " in index does not match harvested record UUID " + uuid);
+                                log.warning("      - Duplicates found. Skipping record with UUID " + uuid + " and resource identifier " + identifier);
+                                
+                                result.duplicatedResource ++;
+                                return true;
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                log.warning("      - Error when searching for resource duplicate " + uuid + ". Error is: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Variables
@@ -408,14 +424,9 @@ public class Aligner
 	private Dbms           dbms;
 	private CswParams      params;
 	private DataManager    dataMan;
-	private CswServer      server;
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
 	private UUIDMapper     localUuids;
-	private CswResult      result;
+	private HarvestResult  result;
 	private GetRecordByIdRequest request;
 }
-
-//=============================================================================
-
-

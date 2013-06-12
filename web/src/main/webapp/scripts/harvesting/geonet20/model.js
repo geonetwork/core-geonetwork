@@ -8,9 +8,14 @@ gn20.Model = function(xmlLoader)
 {
 	var loader = xmlLoader;
 
-	this.getUpdateRequest = getUpdateRequest;
+    this.retrieveGroups    = retrieveGroups;
+    this.getUpdateRequest = getUpdateRequest;
 	
 //=====================================================================================
+
+function retrieveGroups(callBack) {
+    new InfoService(loader, 'groupsIncludingSystemGroups', callBack);
+}
 
 function getUpdateRequest(data)
 {
@@ -29,6 +34,7 @@ function getUpdateRequest(data)
 
 var updateTemp = 
 ' <node id="{ID}" type="{TYPE}">'+ 
+'    <ownerGroup><id>{OWNERGROUP}</id></ownerGroup>'+
 '    <site>'+
 '      <name>{NAME}</name>'+
 '      <host>{HOST}</host>'+

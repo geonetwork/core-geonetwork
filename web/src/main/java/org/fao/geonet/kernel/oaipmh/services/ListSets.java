@@ -64,12 +64,11 @@ public class ListSets implements OaiPmhService
 		String query = "SELECT name, label FROM Categories, CategoriesDes "+
 							"WHERE id=idDes AND langId=?";
 
-		List list = dbms.select(query, context.getLanguage()).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, context.getLanguage()).getChildren();
 
-		for (Object o : list)
+		for (Element rec : list)
 		{
-			Element rec = (Element) o;
-
 			String name  = rec.getChildText("name");
 			String label = rec.getChildText("label");
 

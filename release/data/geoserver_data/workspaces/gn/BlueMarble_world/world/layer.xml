@@ -1,0 +1,17 @@
+<layer>
+  <name>world</name>
+  <id>LayerInfoImpl--38822e1:1283976c287:-7fdf</id>
+  <path>/</path>
+  <type>RASTER</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--38822e1:1283976c287:-7fec</id>
+  </defaultStyle>
+  <resource class="coverage">
+    <id>CoverageInfoImpl--38822e1:1283976c287:-7fe0</id>
+  </resource>
+  <enabled>true</enabled>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+</layer>

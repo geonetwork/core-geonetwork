@@ -23,43 +23,29 @@
 
 package org.fao.geonet.services.register;
 
-import java.io.File;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.Properties;
-import java.util.Random;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-//=============================================================================
+import java.io.File;
+import java.sql.SQLException;
+import java.util.Random;
 
 /**
  * Register user.
  */
-
-public class SelfRegister implements Service {
+public class SelfRegister extends NotInReadOnlyModeService {
 
 	private static final String PROFILE_TEMPLATE = "profileTemplate";
 	private static final String PROFILE = "RegisteredUser";
@@ -85,7 +71,7 @@ public class SelfRegister implements Service {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
+	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 
 		String surname = Util.getParam(params, Params.SURNAME);
@@ -140,10 +126,10 @@ public class SelfRegister implements Service {
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		String passwordHash = PasswordUtil.encode(context, password);
-		dbms.execute(query, new Integer(id), username, passwordHash , surname, name, PROFILE, address,
+		dbms.execute(query, Integer.valueOf(id), username, passwordHash , surname, name, PROFILE, address,
 				city, state, zip, country, email, organ, kind);
 
-		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)", new Integer(id), new Integer(group));
+		dbms.execute("INSERT INTO UserGroups(userId, profile, groupId) VALUES (?, ?, ?)", Integer.valueOf(id), PROFILE, Integer.valueOf(group));
 
 		// Send email to user confirming registration
 
@@ -197,7 +183,7 @@ public class SelfRegister implements Service {
 	    String subject = elEmail.getChildText("subject");
 	    String message = elEmail.getChildText("content");
 
-	    return sendMail(host, Integer.parseInt(port), subject, from, email, message);
+        return sendMail(host, Integer.parseInt(port), subject, from, email, message, PROTOCOL);
     }
 
 	/**
@@ -228,57 +214,10 @@ public class SelfRegister implements Service {
 	    
 	    String subject = elEmail.getChildText("subject");
 	    String message = elEmail.getChildText("content");
-	    
-	    return sendMail(host, Integer.parseInt(port), subject, from, from, message);
+
+        return sendMail(host, Integer.parseInt(port), subject, from, from, message, PROTOCOL);
     }
 
-	// --------------------------------------------------------------------------
-		
-	/**
-	 * Send an email.
-	 * 
-	 * @param host
-	 * @param port
-	 * @param subject
-	 * @param from
-	 * @param to
-	 * @param content
-	 * @return
-	 */
-	boolean sendMail(String host, int port, String subject, String from, String to, String content) {
-		boolean isSendout = false;
-
-		Properties props = new Properties();
-		
-		props.put("mail.transport.protocol", PROTOCOL);
-		props.put("mail.smtp.host", host);
-		props.put("mail.smtp.port", port);
-		props.put("mail.smtp.auth", "false");
-
-		Session mailSession = Session.getDefaultInstance(props);
-
-		try {
-			Message msg = new MimeMessage(mailSession);
-			msg.setFrom(new InternetAddress(from));
-			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
-			msg.setSentDate(new Date());
-			msg.setSubject(subject);
-			// Add content message
-			msg.setText(content);
-			Transport.send(msg);
-			isSendout = true;
-		} catch (AddressException e) {
-			isSendout = false;
-			e.printStackTrace();
-		} catch (MessagingException e) {
-			isSendout = false;
-			e.printStackTrace();
-		}
-		return isSendout;
-	}
-
-	// --------------------------------------------------------------------------
-		
 	/**
 	 * Check if the user exists. 
    *
@@ -317,30 +256,27 @@ public class SelfRegister implements Service {
 	 */
 	String getInitPassword() {
 		Random random = new Random();
-		String password = "";
-		String rand = "";
+		StringBuilder password = new StringBuilder();
 		char c = 'a';
 		for (int i = 0; i < 6; i++) {
 			int j = random.nextInt(10);
-			if (j < 5) {
+			String rand;
+            if (j < 5) {
 				if (j < 3) {
 					rand = String.valueOf(
-							(char) (c + (int) (Math.random() * 26)))
+							(char) (c + (int) (random.nextInt() * 26)))
 							.toUpperCase();
 				} else {
 					rand = String.valueOf(
-							(char) (c + (int) (Math.random() * 26)))
+							(char) (c + (int) (random.nextInt() * 26)))
 							.toLowerCase();
 				}
 			} else {
 				rand = String.valueOf(random.nextInt(10));
 			}
-			password += rand;
+			password.append(rand);
 		}
-		return password;
+		return password.toString();
 	}
 
 }
-
-// =============================================================================
-

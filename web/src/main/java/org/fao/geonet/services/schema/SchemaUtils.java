@@ -24,6 +24,7 @@ package org.fao.geonet.services.schema;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -40,7 +41,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 
 //=============================================================================
@@ -60,8 +60,6 @@ public class SchemaUtils {
 	// --------------------------------------------------------------------------
 
 	private Element processSchema(ServiceContext context, String schema, String fname, URL url, String uuid, SchemaManager scm, boolean add) throws Exception {
-
-		Element response = new Element("response");
 
 		File zipArchive = null;
 		boolean deleteTempZip = false;
@@ -98,7 +96,7 @@ public class SchemaUtils {
 
 			// -- find link using XPath and create URL for further processing
 			XPath xp = XPath.newInstance ("link[contains(@protocol,'metadata-schema')]");
-			List elems = xp.selectNodes(elBrief);
+			List<?> elems = xp.selectNodes(elBrief);
 			try {
 				url = getMetadataSchemaUrl(elems);
 			}
@@ -125,8 +123,8 @@ public class SchemaUtils {
 			zipArchive = new File(fname);
 		}
 
-		response = doSchema(scm, schema, zipArchive, add);
-		if (deleteTempZip) zipArchive.delete();
+		Element response = doSchema(scm, schema, zipArchive, add);
+		if (deleteTempZip) IO.delete(zipArchive, false, Geonet.SCHEMA_MANAGER);
 		return response;
 	}
 
@@ -170,9 +168,8 @@ public class SchemaUtils {
 
 	// --------------------------------------------------------------------------
 
-	private URL getMetadataSchemaUrl(List elems) throws MalformedURLException { 
-		for (Iterator<Object> iter = elems.iterator(); iter.hasNext();) {
-			Object ob = iter.next();
+	private URL getMetadataSchemaUrl(List<?> elems) throws MalformedURLException { 
+	    for (Object ob : elems) {
 			if (ob instanceof Element) {
 				Element elem = (Element)ob;
 				String href = elem.getAttributeValue("href");

@@ -14,6 +14,7 @@ gn.Model = function(xmlLoader)
 	this.retrieveImportXslts = retrieveImportXslts;
 	this.retrieveSources   = retrieveSources;
 	this.retrieveGroups    = retrieveGroups;
+    this.retrieveLocalGroups = retrieveLocalGroups;
 	this.retrieveCategories= retrieveCategories;
 	this.getUpdateRequest  = getUpdateRequest;
 	
@@ -37,6 +38,10 @@ function retrieveSources(data, callBack)
 
 //=====================================================================================
 
+function retrieveLocalGroups(callBack) {
+    new InfoService(loader, 'groupsIncludingSystemGroups', callBack);
+}
+
 function retrieveGroups(data, callBack, username, password)
 {
 	this.retrieveGroupsCB = callBack;
@@ -50,7 +55,7 @@ function retrieveGroups(data, callBack, username, password)
 	//url += '/'+data.SERVLET+'/srv/'+Env.lang+'/xml.info';
     url += '/srv/'+Env.lang+'/xml.info';
 
-	new InfoService(loader, 'groups', callBack, url, username, password);
+	new InfoService(loader, 'groupsIncludingSystemGroups', callBack, url, username, password);
 }
 
 //=====================================================================================
@@ -121,6 +126,7 @@ function getUpdateRequest(data)
 
 var updateTemp = 
 ' <node id="{ID}" type="{TYPE}">'+ 
+'    <ownerGroup><id>{OWNERGROUP}</id></ownerGroup>'+
 '    <site>'+
 '      <name>{NAME}</name>'+
 '      <host>{HOST}</host>'+

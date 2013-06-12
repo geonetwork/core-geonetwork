@@ -25,9 +25,10 @@ package org.fao.geonet.services.util.z3950;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.BinaryFile;
 import jeeves.utils.Xml;
+
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Comment;
 import org.jdom.Content;
@@ -38,6 +39,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.List;
 
 //=============================================================================
@@ -56,15 +58,15 @@ public class Repositories
 	  */
 	public static boolean build(URL cfgUrl, ServiceContext context) 
 	{
-		if (cfgUrl == null) {
-			context.warning("Cannot initialize Z39.50 repositories because the file "+Geonet.File.JZKITCONFIG_TEMPLATE+" could not be found in the classpath");
-			return false;
-		} else {
-			configPath = cfgUrl.getFile();
-		}
 
 		try
 		{
+		    if (cfgUrl == null) {
+		        context.warning("Cannot initialize Z39.50 repositories because the file "+Geonet.File.JZKITCONFIG_TEMPLATE+" could not be found in the classpath");
+		        return false;
+		    } else {
+		        configPath = URLDecoder.decode(cfgUrl.getFile(), Jeeves.ENCODING);
+		    }
 			//--- build repositories file from template repositories file
 
 			String realRepo = StringUtils.substringBefore(configPath,".tem");
@@ -93,13 +95,13 @@ public class Repositories
 		String backRepo = tempRepo + ".backup"; 
 
 		boolean copied = false;
-		boolean restore = false;
 
 		try {
-			FileCopyMgr.copyFiles(new File(tempRepo), new File(backRepo));
+		    BinaryFile.copy(new File(tempRepo), new File(backRepo));
 			Element root  = Xml.loadFile(tempRepo);
 			Element copy  = new Element(root.getName());
-			List<Element> children = root.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> children = root.getChildren();
 			for (Element child : children) {
 				if (child.getName().equals("Repository") && child.getAttributeValue("className").equals("org.jzkit.search.provider.z3950.Z3950Origin")) continue;
 				copy.addContent((Content)child.clone());
@@ -114,7 +116,7 @@ public class Repositories
 			// restore the backup copy
 			if (copied) {
 				try {
-					FileCopyMgr.copyFiles(new File(backRepo), new File(tempRepo));
+				    BinaryFile.copy(new File(backRepo), new File(tempRepo));
 				} catch (IOException ioe) {
 					context.error("Cannot restore Z39.50 repositories template : this is serious and should not happen"+ ioe.getMessage());
 					ioe.printStackTrace();
@@ -136,14 +138,14 @@ public class Repositories
 		String backRepo = tempRepo + ".backup"; 
 
 		boolean copied = false;
-		boolean restore = false;
 		boolean replaced = false;
 
 		try {
-			FileCopyMgr.copyFiles(new File(tempRepo), new File(backRepo));
+			BinaryFile.copy(new File(tempRepo), new File(backRepo));
 			Element root  = Xml.loadFile(tempRepo);
 			Element copy  = new Element(root.getName());
-			List<Element> children = root.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> children = root.getChildren();
 			for (Element child : children) {
 				if (child.getName().equals("Repository") && child.getAttributeValue("code").equals(code)) {
 					copy.addContent(repo);
@@ -163,7 +165,7 @@ public class Repositories
 			// restore the backup copy
 			if (copied) {
 				try {
-					FileCopyMgr.copyFiles(new File(backRepo), new File(tempRepo));
+				    BinaryFile.copy(new File(backRepo), new File(tempRepo));
 				} catch (IOException ioe) {
 					context.error("Cannot restore Z39.50 repositories template : this is serious and should not happen"+ ioe.getMessage());
 					ioe.printStackTrace();

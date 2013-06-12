@@ -5,7 +5,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>2.9.0-SNAPSHOT</version>
+  <version>2.11.0-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and 
     Open Source catalog application to manage spatially referenced 
@@ -100,7 +100,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
-          <version>2.1-alpha-2</version>
+          <version>2.3</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -111,6 +111,51 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
           <version>2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <version>2.5.2</version>
+          <configuration>
+            <effort>Default</effort>
+            <threshold>Default</threshold>
+            <xmlOutput>true</xmlOutput>
+            <xmlOutput>true</xmlOutput>
+            <excludeFilterFile>${rootProjectDir}/code_quality/findbugs-excludes.xml</excludeFilterFile>
+            <debug>false</debug>
+            <includeTests>false</includeTests>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <phase>test</phase>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>2.10</version>
+          <executions>
+            <execution>
+              <id>check</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <phase>test</phase>
+            </execution>
+          </executions>
+          <configuration>
+            <enableRulesSummary>false</enableRulesSummary>
+            <configLocation>${rootProjectDir}/code_quality/checkstyle_checks.xml</configLocation>
+            <propertyExpansion>samedir=${rootProjectDir}/code_quality/</propertyExpansion>
+            <logViolationsToConsole>true</logViolationsToConsole>
+            <maxAllowedViolations>0</maxAllowedViolations>
+            <violationSeverity>warning</violationSeverity>
+            <encoding>UTF-8</encoding>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -194,7 +239,6 @@
           <outputDirectory>${project.build.directory}/release</outputDirectory>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 
@@ -282,6 +326,11 @@
         <groupId>net.sf.saxon</groupId>
         <artifactId>saxon-dom</artifactId>
         <version>9.1.0.8b</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vividsolutions</groupId>
+        <artifactId>jts</artifactId>
+        <version>1.13</version>
       </dependency>
 
 			<!-- universal character set detector -->
@@ -442,7 +491,7 @@
       </dependency>
       <dependency>
         <groupId>org.apache.lucene</groupId>
-        <artifactId>lucene-analyzers</artifactId>
+        <artifactId>lucene-analyzers-common</artifactId>
         <version>${lucene.version}</version>
       </dependency>
       <dependency>
@@ -454,6 +503,11 @@
           <groupId>org.apache.lucene</groupId>
           <artifactId>lucene-queries</artifactId>
           <version>${lucene.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-queryparser</artifactId>
+        <version>${lucene.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.lucene</groupId>
@@ -530,6 +584,11 @@
       <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-shapefile</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-xml</artifactId>
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
@@ -665,7 +724,7 @@
       <dependency>
         <groupId>org.tmatesoft.svnkit</groupId>
         <artifactId>svnkit</artifactId>
-        <version>1.3.8</version>
+        <version>1.7.8</version>
       </dependency>
 
       <!-- Databased stuff -->
@@ -697,29 +756,35 @@
         <dependency>
             <groupId>com.yammer.metrics</groupId>
             <artifactId>metrics-core</artifactId>
-            <version>2.1.1</version>
+        <version>${metrics.version}</version>
         </dependency>
         <dependency>
             <groupId>com.yammer.metrics</groupId>
             <artifactId>metrics-servlet</artifactId>
-            <version>2.1.1</version>
+        <version>${metrics.version}</version>
         </dependency>
         <dependency>
             <groupId>com.yammer.metrics</groupId>
             <artifactId>metrics-web</artifactId>
-            <version>2.1.1</version>
+        <version>${metrics.version}</version>
         </dependency>
         <dependency>
             <groupId>com.yammer.metrics</groupId>
             <artifactId>metrics-log4j</artifactId>
-            <version>2.1.1</version>
+        <version>${metrics.version}</version>
         </dependency>
         <!-- Tests -->
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.6</version>
+        <version>4.10</version>
         <!--<scope>test</scope>-->
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>1.9.5</version>
+        <scope>test</scope>
       </dependency>
 
       <!-- should we had this as scope test?-->
@@ -818,6 +883,11 @@
            <artifactId>spring-security-web</artifactId>
            <version>${spring.version}</version>
          </dependency>
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>2.0.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -825,6 +895,12 @@
   <!--     Dependencies to be inherited by all modules.            -->
   <!-- =========================================================== -->
   <dependencies>
+    <!-- This find bugs jars allows annotations like @Nullable and @Nonnull see the jsr305 -->
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -888,26 +964,6 @@
 			<url>http://mvnrepository.com/artifact</url>
 		</repository>
 
-
-	<!-- Mapfish repository -->
-    <repository>
-      <id>org.mapfish</id>
-      <url>http://dev.mapfish.org/maven/repository</url>
-    </repository>
-
-     <repository>
-        <id>thus.ch</id>
-        <name>Patrick Valsecchi's repository</name>
-        <url>http://www.thus.ch/~patrick/maven</url>
-    </repository>
-
-		<!-- tmatesoft repo for svnkit -->
-     <repository>
-        <id>org.tmatesoft.svnkit</id>
-        <name>svnkit repository</name>
-        <url>http://maven.tmatesoft.com/content/repositories/releases/</url>
-    </repository>
-
       <!-- seasar repo, has jsonic - used by langdetect -->
       <repository>
           <id>maven.seasar.org</id>
@@ -929,12 +985,6 @@
   <!--     Modules for the build in approximate dependency order   -->
   <!-- =========================================================== -->
   <modules>
-    
-    <!-- Remove comment tag to include documentation in the build. 
-      Python and Latex are required to build the documentation. -->
-    
-<!--    <module>docs</module> -->
-
     <module>cachingxslt</module>
     <module>config-migration</module>
     <module>jeeves</module> 
@@ -945,6 +995,13 @@
   </modules>
   
   <profiles>
+    <!-- Python and Latex are required to build the documentation. -->
+    <profile>
+      <id>with-doc</id>
+      <modules>
+        <module>docs</module>
+      </modules>
+    </profile>
     <profile>
       <id>itests</id>
       <modules>
@@ -991,10 +1048,12 @@
 
   <properties>
     <jetty.version>7.3.1.v20110307</jetty.version>
-    <lucene.version>3.6.1</lucene.version>
-    <geotools.version>8.1</geotools.version>
+    <geotools.version>8.6</geotools.version>
+    <lucene.version>4.1.0</lucene.version>
     <spring.version>3.1.1.RELEASE</spring.version>
+    <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
+    <rootProjectDir>..</rootProjectDir>
   </properties>
 </project>

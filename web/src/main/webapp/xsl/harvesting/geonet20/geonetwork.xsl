@@ -8,6 +8,7 @@
 
 	<xsl:template name="editPanel-GN20">
 		<div id="gn20.editPanel">
+            <xsl:call-template name="ownerGroup-GN20"/>
 			<xsl:call-template name="site-GN20"/>
 			<xsl:call-template name="search-GN20"/>
 			<xsl:call-template name="options-GN20"/>
@@ -17,6 +18,19 @@
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-GN20">
+        <table border="0">
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
+                <td class="padded"><select id="gn20.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-GN20">
@@ -32,28 +46,11 @@
 				<td class="padded"><xsl:value-of select="/root/gui/harvesting/url"/></td>
 				<td class="padded"><input id="gn20.host" class="content" type="text" value="" size="30"/></td>
 			</tr>
-
-			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/useAccount"/></td>
-				<td class="padded"><input id="gn20.useAccount" type="checkbox" checked="on"/></td>
-			</tr>
-
-			<tr>
-				<td/>
-				<td>
-					<table id="gn20.account">
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/username"/></td>
-							<td class="padded"><input id="gn20.username" class="content" type="text" value="" size="20"/></td>
-						</tr>
-		
-						<tr>
-							<td class="padded"><xsl:value-of select="/root/gui/harvesting/password"/></td>
-							<td class="padded"><input id="gn20.password" class="content" type="password" value="" size="20"/></td>
-						</tr>
-					</table>
-				</td>
-			</tr>			
+			
+			
+			<xsl:call-template name="useAccount">
+				<xsl:with-param name="type" select="'gn20'"/>
+			</xsl:call-template>
 		</table>
 	</xsl:template>
 
@@ -109,17 +106,6 @@
 			</tr>
 		</table>
 	</div>
-	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
 	</xsl:template>
 
     <!-- ============================================================================================= -->

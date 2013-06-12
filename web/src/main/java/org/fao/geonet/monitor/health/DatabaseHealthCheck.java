@@ -22,7 +22,7 @@ public class DatabaseHealthCheck implements HealthCheckFactory {
                 try {
                     // TODO add timeout
                     dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
-                    dbms.select("SELECT id from Metadata LIMIT 1");
+                    dbms.select("SELECT count(*) as count from settings");
                     return Result.healthy();
                 } catch (Throwable e) {
                     return Result.unhealthy(e);

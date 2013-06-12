@@ -33,9 +33,11 @@ import java.io.StringReader;
 import java.util.List;
 import java.util.Properties;
 
+import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
 
-import jeeves.server.ConfigurationOverrides;
+import jeeves.constants.Jeeves;
+import jeeves.server.overrides.ConfigurationOverrides;
 
 //=============================================================================
 
@@ -47,20 +49,28 @@ public class ServerLib
 	//---
 	//---------------------------------------------------------------------------
 
-	public ServerLib(ServletContext servletContext, String appPath) throws IOException
+	public ServerLib(@Nullable ServletContext servletContext, String appPath) throws IOException
 	{
 		this.appPath = appPath;
 
 		serverProps = new Properties();
 		
-		InputStream stream = servletContext.getResourceAsStream(SERVER_PROPS);
-		if (stream == null) {
-			stream = new FileInputStream(appPath + SERVER_PROPS);
+		InputStream stream = null;
+		if(servletContext != null) {
+		    stream = servletContext.getResourceAsStream(SERVER_PROPS);
+		    if (stream == null) {
+		        stream = servletContext.getResourceAsStream(SERVER_PROPS.replace("/",File.separator));
+		    }
 		}
-		BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+
+		if(stream == null) {
+		    stream = new FileInputStream(appPath + (SERVER_PROPS.replace("/",File.separator)));
+		}
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stream, Jeeves.ENCODING));
 		
 		try {
-			List<String> lines = ConfigurationOverrides.loadTextFileAndUpdate(
+			List<String> lines = ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(
                     SERVER_PROPS, servletContext, appPath, reader);
 			StringBuilder b = new StringBuilder();
 			for (String string : lines) {
@@ -93,7 +103,7 @@ public class ServerLib
 	private String     appPath;
 	private Properties serverProps;
 
-	private static final String SERVER_PROPS = File.separator + "WEB-INF" + File.separator + "server.prop";
+	private static final String SERVER_PROPS = "/WEB-INF/server.prop";
 }
 
 //=============================================================================

@@ -78,9 +78,9 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 			Element selectRequest = dbms.select("SELECT * FROM Users WHERE username=? AND authtype IS NULL", username);
 			Element userXml = selectRequest.getChild("record");
 			if (userXml != null) {
-				if (authentication != null) {
+				if (authentication != null && authentication.getCredentials() != null) {
 					String oldPassword = authentication.getCredentials().toString();
-					Integer iUserId = new Integer(userXml.getChildText(Geonet.Elem.ID));
+					Integer iUserId = Integer.valueOf(userXml.getChildText(Geonet.Elem.ID));
 					if(PasswordUtil.hasOldHash(userXml)) {
 						userXml = PasswordUtil.updatePasswordWithNew(true, oldPassword , oldPassword, iUserId , encoder, dbms);
 					}

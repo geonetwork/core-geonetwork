@@ -63,7 +63,6 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
          *  ``String`` trigger search when thesaurus change. Only for default mode. 
          *  if combo or list mode use, the list of keyword is loaded automatically.
          */
-        
         searchOnThesaurusSelection: false,
         /** api: config[mode] 
          *  ``String`` The widget mode:
@@ -94,24 +93,23 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
          *  ``boolean`` true by default.
          */
         autoHeight: true,
+        /** api: config[itemSelectorHeight] 
+         *  ``Integer`` The height of the item selector.
+         */
+        itemSelectorHeight: 250,
+        /** api: config[itemSelectorWidth] 
+         *  ``Integer`` The width of the item selector.
+         */
+        itemSelectorWidth: 350,
         loadingMask: null,
         /** api: config[thesaurusInfoTpl] 
          *  ``Ext.XTemplate`` template to use to render thesaurus information in the widget header.
          */
-        thesaurusInfoTpl: new Ext.XTemplate(
-                '<tpl for=".">',
-                    '<div class="thesaurusInfo"><span class="title">{title}</span><span class="theme">{theme}</span><span class="filename">({filename})</span></div>',
-                '</tpl>'
-        ),
+        thesaurusInfoTpl: GeoNetwork.Templates.THESAURUS_HEADER,
         /** api: config[keywordsTpl] 
          *  ``Ext.XTemplate`` template to use to render keyword in data views.
          */
-        keywordsTpl: new Ext.XTemplate(
-            '<tpl for=".">',
-                // TODO : add keyword definiton ?
-                '<div class="ux-mselect-item">{value}</div>',
-            '</tpl>'
-        ),
+        keywordsTpl: GeoNetwork.Templates.KEYWORD_ITEM,
         /** api: config[renderTo] 
          *  ``String`` Id of the element
          */
@@ -165,6 +163,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
      */
     KeywordRecord: Ext.data.Record.create([{
             name: 'value'
+        }, {
+            name: 'definition'
         }, {
             name: 'thesaurus',
             mapping: 'thesaurus/key'
@@ -269,16 +269,12 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         var dv = new Ext.DataView({
             store: this.keywordStore,
             tpl: this.keywordsTpl,
-            border: true,
 //            autoHeight: true,
             simpleSelect: true,
             multiSelect: this.mode === 'multiplelist' ? true : false,
             singleSelect: true,
-            width: 350,
-            height: 250,
-            style: {
-                border: '1px solid #dbdbdb'
-            },
+            width: this.itemSelectorWidth,
+            height: this.itemSelectorHeight,
             selectedClass: 'ux-mselect-selected',
             itemSelector: 'div.ux-mselect-item',
             listeners: {
@@ -296,10 +292,10 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                         var cb = function (response) {
                             self.loadingKeywordStore.loadData(response.responseXML, true);
                         };
-                        
+
                         // Get initial keyword in the data view and select them
                         Ext.each(self.initialKeyword, function (initKeyword) {
-                            var filter = (self.identificationMode === 'uri' ? 'uri' : 'value');
+                            var filter = self.identificationMode || 'value';
                             dv.select(self.keywordStore.find(filter, initKeyword), true);
                             self.keywordSearch(self.thesaurusIdentifier, initKeyword, cb);
                         });
@@ -337,10 +333,9 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             name: "itemselector",
             fieldLabel: "ItemSelector",
             dataFields: ["value", "thesaurus"],
-            width:800,
             //toData: [],
             toStore: this.selectedKeywordStore,
-            msWidth: 360,
+            msWidth: 350,
             msHeight: 260,
             valueField: "value",
             toSortField: undefined,
@@ -511,14 +506,14 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             listeners: {
                 load: function (store, records, options) {
                     // Check that requested thesaurus is available
-                    var thesaurus = store.query('id', self.thesaurusIdentifier);
+                    var thesaurus = store.query('id', new RegExp("^" + self.thesaurusIdentifier + "$"));
                     if (thesaurus.getCount() === 1) {
                         self.thesaurusSelector.setValue(thesaurus.get(0).get('id'));
                         self.setThesaurusInfo(thesaurus.get(0));
                         self.thesaurusSelector.fireEvent('select');
                     } else {
                         // TODO : improve alert
-                        console.log('Error: thesaurus not found in catalog.');
+                        console.log('Error: thesaurus ' + self.thesaurusIdentifier + ' not found in catalog.');
                     }
                 }
             }
@@ -773,7 +768,9 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function (cfg) {
                     transformation: jsonConfig.transformation,
                     identificationMode: jsonConfig.identificationMode,
                     xmlField: id + '_xml',
-                    renderTo: id + '_panel'
+                    renderTo: id + '_panel',
+                    itemSelectorWidth: jsonConfig.itemSelectorWidth,
+                    itemSelectorHeight: jsonConfig.itemSelectorHeight
                 });
             }
         }
@@ -798,11 +795,11 @@ GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, t
         listeners: {
             load: function (store, records, options) {
                 
-                store.sort('title');
+                store.sort('title', 'ASC');
                 
                 var items = [{
                     xtype: 'menutextitem',
-                    text: 'Add from thesaurus ...'
+                    text: OpenLayers.i18n('addFromThesaurus')
                 }];
                 store.each(function (thesaurus) {
                     items.push({

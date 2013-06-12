@@ -4,8 +4,8 @@
  *
  * DateTime field, combination of DateField and TimeField
  *
- * @author      Ing. Jozef Sak�lo�
- * @copyright (c) 2008, Ing. Jozef Sak�lo�
+ * @author      Ing. Jozef Sak<E1>lo<9A>
+ * @copyright (c) 2008, Ing. Jozef Sak<E1>lo<9A>
  * @version   2.0
  * @revision  $Id: Ext.ux.form.DateTime.js 813 2010-01-29 23:32:36Z jozo $
  *
@@ -200,7 +200,6 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
 //        if(Ext.isIE && Ext.isStrict) {
 //            t.select('input').applyStyles({top:0});
 //        }
-        t.select('img').applyStyles({position:'relative'});
 
         this.df.el.swallowEvent(['keydown', 'keypress']);
         this.tf.el.swallowEvent(['keydown', 'keypress']);
@@ -551,7 +550,7 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
         if(newDateVal && newDateVal instanceof Date) {
             this.setDate(newDateVal);
             this.setTime(newDateVal);
-            this.dateValue = new Date(Ext.isIE ? val.getTime() : val);
+            this.dateValue = new Date(Ext.isIE && val.getTime ? val.getTime() : val);
         }
         else {
             //Try to split the date into date/time if they can be parsed based on the supplied format then we will use it.

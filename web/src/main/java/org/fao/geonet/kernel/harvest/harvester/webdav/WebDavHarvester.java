@@ -34,7 +34,6 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -64,19 +63,9 @@ public class WebDavHarvester extends AbstractHarvester {
 	//--------------------------------------------------------------------------
 	protected void doInit(Element node) throws BadInputEx {
 		params = new WebDavParams(dataMan);
-		params.create(node);
-	}
+        super.setParams(params);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- doDestroy
-	//---
-	//---------------------------------------------------------------------------
-	protected void doDestroy(Dbms dbms) throws SQLException {
-        File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
-
-		icon.delete();
-		Lib.sources.delete(dbms, params.uuid);
+        params.create(node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -86,7 +75,9 @@ public class WebDavHarvester extends AbstractHarvester {
 	//---------------------------------------------------------------------------
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException {
 		params = new WebDavParams(dataMan);
-		//--- retrieve/initialize information
+        super.setParams(params);
+
+        //--- retrieve/initialize information
 		params.create(node);
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
@@ -116,7 +107,9 @@ public class WebDavHarvester extends AbstractHarvester {
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
 		
 		params = copy;
-	}
+        super.setParams(params);
+
+    }
 
 	//---------------------------------------------------------------------------
 	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
@@ -126,50 +119,6 @@ public class WebDavHarvester extends AbstractHarvester {
 		settingMan.add(dbms, "id:"+optionsId, "validate", params.validate);
 		settingMan.add(dbms, "id:"+optionsId, "recurse",  params.recurse);
 		settingMan.add(dbms, "id:"+optionsId, "subtype", params.subtype);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AbstractParameters
-	//---
-	//---------------------------------------------------------------------------
-	public AbstractParams getParams() { return params; }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AddInfo
-	//---
-	//---------------------------------------------------------------------------
-	protected void doAddInfo(Element node) {
-		//--- if the harvesting is not started yet, we don't have any info
-		if (result == null) {
-			return;
-		}
-		//--- ok, add proper info
-		Element info = node.getChild("info");
-		Element res  = getResult();
-		info.addContent(res);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- GetResult
-	//---
-	//---------------------------------------------------------------------------
-	protected Element getResult() {
-		Element res  = new Element("result");
-		if (result != null) {
-			add(res, "total",          result.total);
-			add(res, "added",          result.added);
-			add(res, "updated",        result.updated);
-			add(res, "unchanged",      result.unchanged);
-			add(res, "unknownSchema",  result.unknownSchema);
-			add(res, "removed",        result.locallyRemoved);
-			add(res, "unretrievable",  result.unretrievable);
-			add(res, "badFormat",      result.badFormat);
-			add(res, "doesNotValidate",result.doesNotValidate);
-		}
-		return res;
 	}
 
 	//---------------------------------------------------------------------------
@@ -192,21 +141,4 @@ public class WebDavHarvester extends AbstractHarvester {
 	//---------------------------------------------------------------------------
 
 	private WebDavParams params;
-	private WebDavResult result;
 }
-
-//=============================================================================
-
-class WebDavResult {
-	public int total;
-	public int added;
-	public int updated;
-	public int unchanged;
-	public int locallyRemoved;
-	public int unknownSchema;
-	public int unretrievable;
-	public int badFormat;
-	public int doesNotValidate;
-}
-
-//=============================================================================

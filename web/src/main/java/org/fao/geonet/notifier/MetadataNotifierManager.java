@@ -76,8 +76,9 @@ public class MetadataNotifierManager {
                 Map<String, Element> unregisteredMetadata =  dataMan.getUnnotifiedMetadata(dbms, notifierId);
 
                 // process metadata
-                for (String uuid : unregisteredMetadata.keySet()) {
-                    Element result = unregisteredMetadata.get(uuid);
+                for (Map.Entry<String, Element> entry : unregisteredMetadata.entrySet()) {
+                    String uuid = entry.getKey();
+                    Element result = entry.getValue();
 
                     String id = result.getChildText("id");
                     String metadataString = result.getChildText("data");
@@ -93,8 +94,9 @@ public class MetadataNotifierManager {
                 Map<String, Element> unregisteredMetadataToDelete =  dataMan.getUnnotifiedMetadataToDelete(dbms, notifierId);
 
                 // process metadata
-                for (String uuid : unregisteredMetadataToDelete.keySet()) {
-                    Element result = unregisteredMetadataToDelete.get(uuid);
+                for (Map.Entry<String, Element> entry : unregisteredMetadataToDelete.entrySet()) {
+                    String uuid = entry.getKey();
+                    Element result = entry.getValue();
 
                     String id = result.getChildText("id");
 
@@ -155,7 +157,7 @@ public class MetadataNotifierManager {
     }
 
     @SuppressWarnings("serial")
-    class MetadataNotifierException extends Exception {
+    static final class MetadataNotifierException extends Exception {
         public MetadataNotifierException(String newMessage) {
             super(newMessage);
         }

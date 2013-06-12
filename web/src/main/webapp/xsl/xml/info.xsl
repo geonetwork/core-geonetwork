@@ -118,23 +118,34 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="regions">
-		<xsl:copy>
-			<xsl:for-each select="record">
-				<region id="{id}">
-					<xsl:copy-of select="north"/>
-					<xsl:copy-of select="south"/>
-					<xsl:copy-of select="west"/>
-					<xsl:copy-of select="east"/>
-					<xsl:copy-of select="label"/>
-				</region>
-			</xsl:for-each>
-		</xsl:copy>
+		<xsl:copy-of select="."/>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="sources">
 		<xsl:copy-of select="."/>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template match="schemas">
+		<xsl:copy-of select="."/>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+	<xsl:template match="statusvalues">
+		<xsl:copy>
+			<xsl:for-each select="record">
+				<xsl:sort select="name" order="ascending"/>
+				<status id="{id}">
+					<xsl:copy-of select="name"/>
+					<xsl:copy-of select="reserved"/>
+					<xsl:copy-of select="label"/>
+				</status>
+			</xsl:for-each>
+		</xsl:copy>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
@@ -172,6 +183,12 @@
 	<xsl:template match="auth">
 		<xsl:copy-of select="."/>
 	</xsl:template>
+
+	<!-- ============================================================================================= -->
+
+    <xsl:template match="readonly|index">
+        <xsl:copy-of select="."/>
+    </xsl:template>
 
 	<!-- ============================================================================================= -->
 

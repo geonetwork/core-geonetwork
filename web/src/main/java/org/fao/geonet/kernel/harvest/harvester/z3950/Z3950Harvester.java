@@ -21,27 +21,24 @@
 
 package org.fao.geonet.kernel.harvest.harvester.z3950;
 
-import java.io.File;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Xml;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
-import javax.servlet.ServletContext;
+import java.io.File;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * {@link Z3950Harvester} needs to be configured in xml/repositories.xml.tem in
@@ -61,23 +58,16 @@ public class Z3950Harvester extends AbstractHarvester {
 
 	protected void doInit(Element node) throws BadInputEx {
 		params = new Z3950Params(dataMan);
+        super.setParams(params);
 		params.create(node);
-	}
-
-	protected void doDestroy(Dbms dbms) throws SQLException {
-        File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
-
-		icon.delete();
-		Lib.sources.delete(dbms, params.uuid);
-
-		// FIXME: Should also delete the categories we have created for servers
 	}
 
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx,
 			SQLException {
 		params = new Z3950Params(dataMan);
+        super.setParams(params);
 
-		// --- retrieve/initialize information
+        // --- retrieve/initialize information
 		params.create(node);
 
 		// --- force the creation of a new uuid
@@ -114,13 +104,16 @@ public class Z3950Harvester extends AbstractHarvester {
 				copy.uuid);
 
 		params = copy;
-	}
+        super.setParams(params);
+
+    }
 
 	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path,
 			String siteId, String optionsId) throws SQLException {
 		Z3950Params params = (Z3950Params) p;
+        super.setParams(params);
 
-		settingMan.add(dbms, "id:" + siteId, "icon", params.icon);
+        settingMan.add(dbms, "id:" + siteId, "icon", params.icon);
 		settingMan.add(dbms, "id:" + siteId, "query", params.query);
 
 		storeRepositories(dbms, "id:" + siteId, params);
@@ -133,10 +126,6 @@ public class Z3950Harvester extends AbstractHarvester {
 		}
 	}
 
-	public AbstractParams getParams() {
-		return params;
-	}
-
 	protected void doAddInfo(Element node) {
 		// --- if the harvesting is not started yet, we don't have any info
 
@@ -147,19 +136,22 @@ public class Z3950Harvester extends AbstractHarvester {
 		Element info = node.getChild("info");
 		Element res = getResult();
 		info.addContent(res);
+
+
 	}
 
 	protected Element getResult() {
 		Element res = new Element("result");
 		if (serverResults.getNumberOfResults() != 0) {
-			Z3950Result result = new Z3950Result();
+            HarvestResult result = new HarvestResult();
 
 			// --- total stats per server and record individual stats per server
 			// --- and then store in result
 
-			Map<String,Z3950Result> results = serverResults.getAllServerResults();
-			for ( String key : results.keySet()) {
-				Z3950Result serverRes = results.get(key);
+			Map<String,HarvestResult> results = serverResults.getAllServerResults();
+			for ( Map.Entry<String, HarvestResult> entry : results.entrySet()) {
+			    String key = entry.getKey();
+                HarvestResult serverRes = entry.getValue();
 				result.totalMetadata 			+= serverRes.totalMetadata;
 				result.addedMetadata 			+= serverRes.addedMetadata;
 				result.updatedMetadata 		+= serverRes.updatedMetadata;
@@ -217,36 +209,22 @@ public class Z3950Harvester extends AbstractHarvester {
 	private Z3950ServerResults serverResults = new Z3950ServerResults(); 
 }
 
-// =============================================================================
-
-class Z3950Result {
-	public int totalMetadata;
-	public int addedMetadata;
-	public int updatedMetadata;
-	public int unchangedMetadata;
-	public int unknownSchema;
-	public int locallyRemoved;
-	public int unretrievable;
-	public int badFormat;
-	public int doesNotValidate;
-	public int couldNotInsert;
-}
 
 class Z3950ServerResults {
-	private Map <String,Z3950Result> serverResults = new HashMap<String,Z3950Result>();
+	private Map<String, HarvestResult> serverResults = new HashMap<String, HarvestResult>();
 
 	public int locallyRemoved;
 
-	public Z3950Result getServerResult(String serverName) {
-		Z3950Result result = serverResults.get(serverName);
+	public HarvestResult getServerResult(String serverName) {
+        HarvestResult result = serverResults.get(serverName);
 		if (result == null) {
-			result = new Z3950Result();
+			result = new HarvestResult();
 			serverResults.put(serverName,result);
 		}
 		return result;
 	}
 
-	public Map getAllServerResults() {
+	public Map<String,HarvestResult> getAllServerResults() {
 		return serverResults;
 	}
 
@@ -254,10 +232,3 @@ class Z3950ServerResults {
 		return serverResults.size();
 	}
 }
-
-
-
-
-
-// =============================================================================
-

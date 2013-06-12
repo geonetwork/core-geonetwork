@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -33,17 +32,15 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-//=============================================================================
 
 /**
  * Process a metadata with an XSL transformation declared for the metadata
@@ -63,8 +60,7 @@ import java.util.Set;
  * 
  * @author fxprunayre
  */
-
-public class BatchXslProcessing implements Service {
+public class BatchXslProcessing extends NotInReadOnlyModeService{
 	private String _appPath;
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
@@ -80,14 +76,20 @@ public class BatchXslProcessing implements Service {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context)
+    /**
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
+	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 		String process = Util.getParam(params, Params.PROCESS);
 
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getDataManager();
-		AccessManager accessMan = gc.getAccessManager();
 		UserSession session = context.getUserSession();
 
 		Dbms dbms = (Dbms) context.getResourceManager()
@@ -103,7 +105,7 @@ public class BatchXslProcessing implements Service {
 		
 		synchronized(sm.getSelection("metadata")) {
 			BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(dataMan, dbms, sm.getSelection("metadata").iterator(), process, _appPath, params, context, metadata, notFound, notOwner, notProcessFound);
-			m.processWithFastIndexing();
+			m.process();
 		}
 
 
@@ -124,7 +126,7 @@ public class BatchXslProcessing implements Service {
 	// ---
 	// --------------------------------------------------------------------------
 
-	class BatchXslMetadataReindexer extends MetadataIndexerProcessor {
+	static final class BatchXslMetadataReindexer extends MetadataIndexerProcessor {
 		Dbms dbms;
 		Iterator<String> iter;
 		String process;
@@ -158,11 +160,8 @@ public class BatchXslProcessing implements Service {
                 String id = dm.getMetadataId(dbms, uuid);
                 context.info("Processing metadata with id:" + id);
 
-                XslProcessing.process(id, process, true, appPath, params, context, metadata, notFound, notOwner, notProcessFound, true, dataMan.getSiteURL());
+                XslProcessing.process(id, process, true, appPath, params, context, metadata, notFound, notOwner, notProcessFound, true, dataMan.getSiteURL(context));
             }
         }
 	}
 }
-
-// =============================================================================
-

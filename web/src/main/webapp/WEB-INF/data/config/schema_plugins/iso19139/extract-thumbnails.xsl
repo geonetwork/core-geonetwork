@@ -7,10 +7,7 @@
 
 	<xsl:template match="gmd:MD_Metadata">
 		<thumbnail>
-			<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic
-				|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic
-				|gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']/gmd:graphicOverview/gmd:MD_BrowseGraphic
-				|gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:graphicOverview/gmd:MD_BrowseGraphic
+			<xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/gmd:MD_BrowseGraphic
 				">
 				<xsl:choose>
 					<xsl:when test="gmd:fileDescription/gco:CharacterString = 'large_thumbnail' and gmd:fileName/gco:CharacterString != ''">

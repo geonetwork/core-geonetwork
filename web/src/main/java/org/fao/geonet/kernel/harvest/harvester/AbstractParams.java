@@ -23,18 +23,14 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import static org.quartz.JobBuilder.newJob;
-
-import java.util.ArrayList;
-import java.util.UUID;
-
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.MissingParameterEx;
 import jeeves.utils.Log;
 import jeeves.utils.QuartzSchedulerUtils;
 import jeeves.utils.Util;
-
+import jeeves.utils.Xml;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
@@ -42,18 +38,24 @@ import org.jdom.Element;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 
-//=============================================================================
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
-public abstract class AbstractParams
-{
+import static org.quartz.JobBuilder.newJob;
+
+/**
+ * TODO javadoc.
+ *
+ */
+public abstract class AbstractParams {
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-	public AbstractParams(DataManager dm)
-	{
+	public AbstractParams(DataManager dm) {
 		this.dm = dm;
 	}
 
@@ -63,8 +65,15 @@ public abstract class AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	public void create(Element node) throws BadInputEx
-	{
+    /**
+     *
+     * @param node
+     * @throws BadInputEx
+     */
+	public void create(Element node) throws BadInputEx {
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN)){
+            Log.debug(Geonet.HARVEST_MAN, "AbstractParams creating from:\n"+ Xml.getString(node));
+        }
 		Element site    = node.getChild("site");
 		Element opt     = node.getChild("options");
 		Element content = node.getChild("content");
@@ -75,10 +84,22 @@ public abstract class AbstractParams
 		name       = Util.getParam(site, "name", "");
 		uuid       = Util.getParam(site, "uuid", UUID.randomUUID().toString());
 		
-		owner = node.getAttributeValue("owner");
-		if (owner == null) {
-			Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
-		}
+        Element ownerIdE = node.getChild("ownerId");
+        if(ownerIdE != null) {
+            ownerId = ownerIdE.getText();
+        }
+
+        if(StringUtils.isEmpty(ownerId)){
+            Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
+        }
+
+        Element ownerIdGroupE = node.getChild("ownerGroup");
+        if(ownerIdGroupE != null) {
+            Element idE = ownerIdGroupE.getChild("id");
+            if(idE != null) {
+                ownerIdGroup = idE.getText();
+            }
+        }
 
 		useAccount = Util.getParam(account, "use",      false);
 		username   = Util.getParam(account, "username", "");
@@ -99,10 +120,12 @@ public abstract class AbstractParams
 		this.node = node;
 	}
 
-	//---------------------------------------------------------------------------
-
-	public void update(Element node) throws BadInputEx
-	{
+    /**
+     *
+     * @param node
+     * @throws BadInputEx
+     */
+	public void update(Element node) throws BadInputEx {
 		Element site    = node.getChild("site");
 		Element opt     = node.getChild("options");
 		Element content = node.getChild("content");
@@ -113,10 +136,21 @@ public abstract class AbstractParams
 
 		name       = Util.getParam(site, "name", name);
 
-		owner = node.getAttributeValue("owner");
-		if (owner == null) {
-			Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
-		}
+        Element ownerIdE = node.getChild("ownerId");
+        if(ownerIdE != null) {
+            ownerId = ownerIdE.getText();
+        }
+        else {
+            Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
+        }
+
+        Element ownerIdGroupE = node.getChild("ownerGroup");
+        if(ownerIdGroupE != null) {
+            Element idE = ownerIdGroupE.getChild("id");
+            if(idE != null) {
+                ownerIdGroup = idE.getText();
+            }
+        }
 		
 		useAccount = Util.getParam(account, "use",      useAccount);
 		username   = Util.getParam(account, "username", username);
@@ -130,19 +164,32 @@ public abstract class AbstractParams
 		importXslt = Util.getParam(content, "importxslt", importXslt);
 		validate = Util.getParam(content, "validate", validate);
 
-		if (privil != null)
+        if(privil != null) {
 			addPrivileges(privil);
+        }
 
-		if (categ != null)
+        if(categ != null) {
 			addCategories(categ);
+        }
 
 		this.node = node;
 	}
 
-	//---------------------------------------------------------------------------
+    /**
+     *
+     * @return
+     */
+	public Iterable<Privileges> getPrivileges() {
+        return alPrivileges;
+    }
 
-	public Iterable<Privileges> getPrivileges() { return alPrivileges; }
-	public Iterable<String>     getCategories() { return alCategories; }
+    /**
+     *
+     * @return
+     */
+    public Iterable<String> getCategories() {
+        return alCategories;
+    }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -150,11 +197,17 @@ public abstract class AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void copyTo(AbstractParams copy)
-	{
+    /**
+     *
+     * @param copy
+     */
+	protected void copyTo(AbstractParams copy) {
 		copy.name       = name;
 		copy.uuid       = uuid;
-		copy.owner      = owner;
+
+        copy.ownerId  = ownerId;
+        copy.ownerIdGroup  = ownerIdGroup;
+
 		copy.useAccount = useAccount;
 		copy.username   = username;
 		copy.password   = password;
@@ -165,29 +218,42 @@ public abstract class AbstractParams
 		copy.importXslt = importXslt;
 		copy.validate   = validate;
 
-		for (Privileges p : alPrivileges)
+        for(Privileges p : alPrivileges) {
 			copy.alPrivileges.add(p.copy());
+        }
 
-		for (String s : alCategories)
+        for(String s : alCategories) {
 			copy.alCategories.add(s);
+        }
 
 		copy.node = node;
 	}
 
+    /**
+     *
+     * @return
+     */
 	public JobDetail getJob() {
     	return newJob(HarvesterJob.class).withIdentity(uuid, AbstractHarvester.HARVESTER_GROUP_NAME).usingJobData(HarvesterJob.ID_FIELD, uuid).build();
     }
-    
+
+    /**
+     *
+     * @return
+     */
     public Trigger getTrigger() {
     	return QuartzSchedulerUtils.getTrigger(uuid, AbstractHarvester.HARVESTER_GROUP_NAME, every, MAX_EVERY);
     }
 
-	//---------------------------------------------------------------------------
-
-	protected void checkPort(int port) throws BadParameterEx
-	{
-		if (port <1 || port > 65535)
+    /**
+     *
+     * @param port
+     * @throws BadParameterEx
+     */
+	protected void checkPort(int port) throws BadParameterEx {
+        if(port < 1 || port > 65535) {
 			throw new BadParameterEx("port", port);
+	}
 	}
 
 	//---------------------------------------------------------------------------
@@ -196,7 +262,8 @@ public abstract class AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
-	/** Fills a list with Privileges that reflect the input 'privileges' element.
+	/**
+     * Fills a list with Privileges that reflect the input 'privileges' element.
 	  * The 'privileges' element has this format:
 	  *
 	  *   <privileges>
@@ -209,14 +276,16 @@ public abstract class AbstractParams
 	  *
 	  * Operation names are: view, download, edit, etc... User defined operations are
 	  * taken into account.
-	  */
-
-	private void addPrivileges(Element privil) throws BadInputEx
-	{
+      *
+      * @param privil
+      * @throws BadInputEx
+     */
+	private void addPrivileges(Element privil) throws BadInputEx {
 		alPrivileges.clear();
 
-		if (privil == null)
+        if(privil == null) {
 			return;
+        }
 
         for (Object o : privil.getChildren("group")) {
             Element group = (Element) o;
@@ -239,42 +308,51 @@ public abstract class AbstractParams
         }
 	}
 
-	//---------------------------------------------------------------------------
-
-	private int getOperationId(Element oper) throws BadInputEx
-	{
+    /**
+     *
+     * @param oper
+     * @return
+     * @throws BadInputEx
+     */
+	private int getOperationId(Element oper) throws BadInputEx {
 		String operName = oper.getAttributeValue("name");
 
-		if (operName == null)
+        if(operName == null) {
 			throw new MissingParameterEx("attribute:name", oper);
+        }
 
 		int operID = dm.getAccessManager().getPrivilegeId(operName);
 
-		if (operID == -1)
+        if(operID == - 1) {
 			throw new BadParameterEx("attribute:name", operName);
+        }
 
-		if (operID == 2 || operID == 4)
+        if(operID == 2 || operID == 4) {
 			throw new BadParameterEx("attribute:name", operName);
+        }
 
 		return operID;
 	}
 
-	//---------------------------------------------------------------------------
-	/** Fills a list with category identifiers that reflect the input 'categories' element.
-	  * The 'categories' element has this format:
-	  *
-	  *   <categories>
-	  *      <category id="..."/>
-	  *      ...
-	  *   </categories>
-	  */
-
-	private void addCategories(Element categ) throws BadInputEx
-	{
+	/**
+     * Fills a list with category identifiers that reflect the input 'categories' element.
+	 * The 'categories' element has this format:
+	 *
+	 *   <categories>
+	 *      <category id="..."/>
+	 *      ...
+	 *   </categories>
+     *
+     *
+     * @param categ
+     * @throws BadInputEx
+     */
+    private void addCategories(Element categ) throws BadInputEx {
 		alCategories.clear();
 
-		if (categ == null)
+        if(categ == null) {
 			return;
+        }
 
         for (Object o : categ.getChildren("category")) {
             Element categElem = (Element) o;
@@ -300,7 +378,7 @@ public abstract class AbstractParams
 
 	public String  name;
 	public String  uuid;
-	public String owner;
+
 	public boolean useAccount;
 	public String  username;
 	public String  password;
@@ -313,17 +391,20 @@ public abstract class AbstractParams
 
 	public Element node;
 
-	//---------------------------------------------------------------------------
+    /**
+     * id of the user who created or updated this harvester node.
+     */
+    public String ownerId;
+
+    /**
+     * id of the group selected by the user who created or updated this harvester node.
+     */
+    public String ownerIdGroup;
 
 	protected DataManager dm;
 
-	private ArrayList<Privileges> alPrivileges = new ArrayList<Privileges>();
-	private ArrayList<String>     alCategories = new ArrayList<String>();
-
-	//---------------------------------------------------------------------------
+	private List<Privileges> alPrivileges = new ArrayList<Privileges>();
+	private List<String> alCategories = new ArrayList<String>();
 
 	private static final long MAX_EVERY = Integer.MAX_VALUE;
 }
-
-//=============================================================================
-

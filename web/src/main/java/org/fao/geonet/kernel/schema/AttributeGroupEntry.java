@@ -70,10 +70,10 @@ class AttributeGroupEntry
 
 	private void handleAttribs(ElementInfo ei)
 	{
-		List attribs = ei.element.getAttributes();
+		@SuppressWarnings("unchecked")
+        List<Attribute> attribs = ei.element.getAttributes();
 
-        for (Object attrib : attribs) {
-            Attribute at = (Attribute) attrib;
+        for (Attribute at : attribs) {
 
             String attrName = at.getName();
             if (attrName.equals("name")) {
@@ -100,10 +100,10 @@ class AttributeGroupEntry
 
 	private void handleChildren(ElementInfo ei)
 	{
-		List children = ei.element.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = ei.element.getChildren();
 
-        for (Object aChildren : children) {
-            Element elChild = (Element) aChildren;
+        for (Element elChild : children) {
             String elName = elChild.getName();
 
             if (elName.equals("attribute")) {

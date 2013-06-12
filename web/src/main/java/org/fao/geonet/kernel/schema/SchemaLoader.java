@@ -51,12 +51,12 @@ public class SchemaLoader
     private Element   elFirst = null;
 	private Map<String, String> hmElements = new HashMap<String, String>();
 	private Map<String, ComplexTypeEntry> hmTypes    = new HashMap<String, ComplexTypeEntry>();
-	private Map   hmAttrGrp  = new HashMap();
+	private Map<String, List<AttributeEntry>>   hmAttrGrp  = new HashMap<String, List<AttributeEntry>>();
 	private Map<String, AttributeGroupEntry> hmAttrGpEn = new HashMap<String, AttributeGroupEntry>();
 	private Map<String, String> hmAbsElems = new HashMap<String, String>();
 	private Map<String, ArrayList<ElementEntry>> hmSubsGrp  = new HashMap<String, ArrayList<ElementEntry>>();
 	private Map<String, String> hmSubsLink = new HashMap<String, String>();
-	private Map   hmSubsNames = new HashMap();
+	private Map<String, List<String>>   hmSubsNames = new HashMap<String, List<String>>();
 	private Map<String, AttributeEntry> hmAttribs  = new HashMap<String, AttributeEntry>();
 	private Map<String, AttributeEntry> hmAllAttrs = new HashMap<String, AttributeEntry>();
 	private Map<String, GroupEntry> hmGroups   = new HashMap<String, GroupEntry>();
@@ -67,12 +67,12 @@ public class SchemaLoader
 	private String targetNSPrefix;
 
 	/** Restrictions for simple types (element restriction) */
-	private Map<String, List> hmElemRestr = new HashMap<String, List>();
+	private Map<String, List<String>> hmElemRestr = new HashMap<String, List<String>>();
 
 	/** Restrictions for simple types (type restriction) */
-	private Map<String, List> hmTypeRestr = new HashMap<String, List>();
+	private Map<String, List<String>> hmTypeRestr = new HashMap<String, List<String>>();
 
-	private Map<String, List> hmMemberTypeRestr = new HashMap<String, List>();
+	private Map<String, List<String>> hmMemberTypeRestr = new HashMap<String, List<String>>();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -108,7 +108,7 @@ public class SchemaLoader
         for (String o : hmSubsGrp.keySet()) {
 
             List<ElementEntry> elements = hmSubsGrp.get(o);
-            List subsNames = new ArrayList();
+            List<String> subsNames = new ArrayList<String>();
             hmSubsNames.put(o, subsNames);
             for (ElementEntry ee : elements) {
                 if (ee.type == null) {
@@ -132,13 +132,15 @@ public class SchemaLoader
 		mds.setPrimeNS(elFirst.getAttributeValue("targetNamespace"));
 
 
-				List<Element> annotation = elFirst.getChildren("annotation", Geonet.Namespaces.XSD);
+				@SuppressWarnings("unchecked")
+                List<Element> annotation = elFirst.getChildren("annotation", Geonet.Namespaces.XSD);
 
 				if (annotation!=null) {
 					List<Element> allAppInfo = new ArrayList<Element>();
 
 					for (Element currAnnotation: annotation) {
-						List<Element> currAppInfo = currAnnotation.getChildren("appinfo",Geonet.Namespaces.XSD);
+						@SuppressWarnings("unchecked")
+                        List<Element> currAppInfo = currAnnotation.getChildren("appinfo",Geonet.Namespaces.XSD);
 
 						if (currAppInfo != null) {
 							allAppInfo.addAll(currAppInfo);
@@ -168,20 +170,20 @@ public class SchemaLoader
                 }
             }
 
-            List elemRestr = hmElemRestr.get(elem);
-            List typeRestr = hmTypeRestr.get(type);
+            List<String> elemRestr = hmElemRestr.get(elem);
+            List<String> typeRestr = hmTypeRestr.get(type);
 
             if (elemRestr == null) {
-                elemRestr = new ArrayList();
+                elemRestr = new ArrayList<String>();
             }
 
             if (typeRestr != null) {
                 elemRestr.addAll(typeRestr);
             }
 
-            List elemSubs = (ArrayList) hmSubsNames.get(elem);
+            List<String> elemSubs = hmSubsNames.get(elem);
             if (elemSubs == null) {
-                elemSubs = new ArrayList();
+                elemSubs = new ArrayList<String>();
             }
             String elemSubsLink = hmSubsLink.get(elem);
             if (elemSubsLink == null) {
@@ -199,7 +201,7 @@ public class SchemaLoader
                     hmAllAttrs.put(attr.name, attr);
                 }
             }
-            List attrs = resolveNestedAttributeGroups(age);
+            ArrayList<AttributeEntry> attrs = resolveNestedAttributeGroups(age);
             hmAttrGrp.put(age.name, attrs);
         }
 
@@ -239,9 +241,8 @@ public class SchemaLoader
 					cte.alElements = resolveInheritance(cte);
 
 					//--- add attribs (if any)
-					List complexContentAttribs = resolveAttributeInheritance(cte);
-                    for (Object complexContentAttrib : complexContentAttribs) {
-                        AttributeEntry ae = (AttributeEntry) complexContentAttrib;
+					List<AttributeEntry> complexContentAttribs = resolveAttributeInheritance(cte);
+                    for (AttributeEntry ae : complexContentAttribs) {
                         mdt.addAttribute(buildMetadataAttrib(ae));
                     }
 
@@ -260,9 +261,8 @@ public class SchemaLoader
 			//--- resolve attribute inheritance from simpleContent
 			
 			} else if (cte.simpleContent != null) {
-				List simpleContentAttribs = resolveAttributeInheritanceFromSimpleContent(cte);
-                for (Object simpleContentAttrib : simpleContentAttribs) {
-                    AttributeEntry ae = (AttributeEntry) simpleContentAttrib;
+				List<AttributeEntry> simpleContentAttribs = resolveAttributeInheritanceFromSimpleContent(cte);
+                for (AttributeEntry ae : simpleContentAttribs) {
                     mdt.addAttribute(buildMetadataAttrib(ae));
                 }
 
@@ -275,13 +275,12 @@ public class SchemaLoader
 				}
 				for (int k=0;k < cte.alAttribGroups.size();k++) {
 					String attribGroup = cte.alAttribGroups.get(k);
-					ArrayList al = (ArrayList) hmAttrGrp.get(attribGroup);
+					List<AttributeEntry> al = hmAttrGrp.get(attribGroup);
 	
 					if (al == null)
 						throw new IllegalArgumentException("Attribute group not found : " + attribGroup);
 
-                    for (Object anAl : al) {
-                        AttributeEntry ae = (AttributeEntry) anAl;
+                    for (AttributeEntry ae : al) {
                         mdt.addAttribute(buildMetadataAttrib(ae));
                     }
 				}
@@ -322,7 +321,7 @@ public class SchemaLoader
                             i.previous();
                         }
 					}
-					mds.addElement(ee.name, type, new ArrayList(), new ArrayList(), "");
+					mds.addElement(ee.name, type, new ArrayList<String>(), new ArrayList<String>(), "");
 					mdt.addElementWithType(ee.name, type, ee.min, ee.max);
 
 // 2. element is a reference to a global element so check if abstract or
@@ -378,7 +377,7 @@ public class SchemaLoader
 	private ComplexTypeEntry handleLocalElement(Integer elementNr, String baseName, ElementEntry ee, MetadataType mdt, MetadataSchema mds) {
 
 		ComplexTypeEntry cteInt = null;
-		ArrayList<Object> elemRestr = new ArrayList<Object>();
+		ArrayList<String> elemRestr = new ArrayList<String>();
 
 		if (ee.type == null) {
 			if (ee.complexType != null) {
@@ -395,7 +394,7 @@ public class SchemaLoader
 			} 
 		}
 
-		mds.addElement(ee.name, ee.type, elemRestr, new ArrayList(), "");
+		mds.addElement(ee.name, ee.type, elemRestr, new ArrayList<String>(), "");
 		mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
 
 		return(cteInt);
@@ -417,12 +416,11 @@ public class SchemaLoader
 	private ArrayList<ElementEntry> getOverRideSubstitutes(String elementName) {
 
 		ArrayList<ElementEntry> subs = hmSubsGrp.get(elementName);
-		ArrayList ssOs = ssOverRides.getSubstitutes(elementName);
+		List<String> ssOs = ssOverRides.getSubstitutes(elementName);
 		if (ssOs != null && subs != null) {
 			ArrayList<ElementEntry> results = new ArrayList<ElementEntry>();
-			ArrayList validSubs = (ArrayList)hmSubsNames.get(elementName);
-            for (Object ssO : ssOs) {
-                String altSub = (String) ssO;
+			List<String> validSubs = hmSubsNames.get(elementName);
+            for (String altSub : ssOs) {
                 if (validSubs != null && !validSubs.contains(altSub)) {
                     Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: schema-substitutions.xml specified " + altSub + " for element " + elementName + " but the schema does not define this as a valid substitute");
                 }
@@ -461,7 +459,7 @@ public class SchemaLoader
 			if (choiceType) {
 			// The complex type has only one element then make it a choice type if
 			// there are concrete elements in the substitution group
-				Integer elementsAdded = assembleChoiceElements(mdt,al,doSubs);
+				int elementsAdded = assembleChoiceElements(mdt,al,doSubs);
 				if (!isAbstract && doSubs) {
 					/* 
 					 * Control of substitution lists is via the schema-substitutions.xml
@@ -493,7 +491,7 @@ public class SchemaLoader
 				type = ee.ref+Edit.RootChild.CHOICE+elementNr;
 				String name = type;
 				mds.addType(type,mdtc);
-				mds.addElement(name,type,new ArrayList(),new ArrayList(), "");
+				mds.addElement(name,type,new ArrayList<String>(),new ArrayList<String>(), "");
 				mdt.addElementWithType(name,type,ee.min,ee.max);
 			}
 		} else if (!isAbstract) {
@@ -508,8 +506,8 @@ public class SchemaLoader
 	//--- Recurse on attributeGroups to build a list of AttributeEntry objects
 	//---
 	//---------------------------------------------------------------------------
-	private ArrayList resolveNestedAttributeGroups(AttributeGroupEntry age) {
-		ArrayList attrs = new ArrayList();
+	private ArrayList<AttributeEntry> resolveNestedAttributeGroups(AttributeGroupEntry age) {
+		ArrayList<AttributeEntry> attrs = new ArrayList<AttributeEntry>();
 
 		if (age.alAttrGrps.size() > 0) {
 			for (int i=0;i<age.alAttrGrps.size();i++) {
@@ -553,7 +551,7 @@ public class SchemaLoader
 				ArrayList<ComplexTypeEntry> newCtes = createTypeAndResolveNestedContainers(mds,ee.alContainerElems,baseName,newExtension,baseNr);
 				if (newCtes.size() > 0) complexTypes.addAll(newCtes);
 				ee.name = ee.type = baseName+newExtension+baseNr;
-				mds.addElement(ee.name,ee.type,new ArrayList(),new ArrayList(), "");
+				mds.addElement(ee.name,ee.type,new ArrayList<String>(),new ArrayList<String>(), "");
 				mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
 
 			// GROUP
@@ -565,7 +563,7 @@ public class SchemaLoader
 					ArrayList<ComplexTypeEntry> newCtes = createTypeAndResolveNestedContainers(mds,alGroupElements,baseName,newExtension,baseNr);
 					if (newCtes.size() > 0) complexTypes.addAll(newCtes);
 					ee.name = ee.type = baseName+newExtension+baseNr;
-					mds.addElement(ee.name,ee.type,new ArrayList(),new ArrayList(), "");
+					mds.addElement(ee.name,ee.type,new ArrayList<String>(),new ArrayList<String>(), "");
 					mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
 				} else {
 				    Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: group element ref is NULL in "+baseName+extension+baseNr);
@@ -577,7 +575,7 @@ public class SchemaLoader
 				ArrayList<ComplexTypeEntry> newCtes = createTypeAndResolveNestedContainers(mds,ee.alContainerElems,baseName,newExtension,baseNr);
 				if (newCtes.size() > 0) complexTypes.addAll(newCtes);
 				ee.name = ee.type = baseName+newExtension+baseNr;
-				mds.addElement(ee.name,ee.type,new ArrayList(),new ArrayList(), "");
+				mds.addElement(ee.name,ee.type,new ArrayList<String>(),new ArrayList<String>(), "");
 				mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
 
 			// ELEMENT 
@@ -670,15 +668,15 @@ public class SchemaLoader
 		// around that bug
 		if ((xmlSchemaFile.contains("xml.xsd") || xmlSchemaFile.contains("xml-mod.xsd")) && targetNS.equals("http://www.w3.org/XML/1998/namespace")) targetNSPrefix="xml";
 
-		List children = elRoot.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = elRoot.getChildren();
 
 		//--- collect elements into an array because we have to add elements
 		//--- when we encounter the "import" element
 
 		List<ElementInfo> alElementFiles = new ArrayList<ElementInfo>();
 
-        for (Object aChildren : children) {
-            Element elChild = (Element) aChildren;
+        for (Element elChild : children) {
             String name = elChild.getName();
 
             if (name.equals("annotation")) {
@@ -902,9 +900,9 @@ public class SchemaLoader
 	//---
 	//---------------------------------------------------------------------------
 
-	private List resolveAttributeInheritanceFromSimpleContent(ComplexTypeEntry cte)
+	private List<AttributeEntry> resolveAttributeInheritanceFromSimpleContent(ComplexTypeEntry cte)
 	{
-		List result = new ArrayList();
+		List<AttributeEntry> result = new ArrayList<AttributeEntry>();
 
 		if (cte.simpleContent == null) {
 			throw new IllegalArgumentException("SimpleContent must be present in base type of the SimpleContent in "+cte.name);
@@ -915,12 +913,13 @@ public class SchemaLoader
 			String baseType = cte.simpleContent.base;
 			ComplexTypeEntry baseCTE = hmTypes.get(baseType);
 			if (baseCTE != null)
-				result = new ArrayList(resolveAttributeInheritanceFromSimpleContent(baseCTE));
+				result = new ArrayList<AttributeEntry>(resolveAttributeInheritanceFromSimpleContent(baseCTE));
 	
 			// if the base type was a restriction then replace the attributes we got
 			// from the restriction with these
 			if (cte.simpleContent.restriction) {
-				List adds = (ArrayList)cte.simpleContent.alAttribs.clone();
+				@SuppressWarnings("unchecked")
+                List<AttributeEntry> adds = (List<AttributeEntry>)cte.simpleContent.alAttribs.clone();
 				for (int i = 0;i < result.size();i++) {
 					AttributeEntry attrib = (AttributeEntry)result.get(i);
                     for (Object add : adds) {
@@ -934,20 +933,23 @@ public class SchemaLoader
 			}
 			// otherwise base type was an extension so add the attributes we got
 			// from the extension to these
-			else 
-				result.addAll((ArrayList)cte.simpleContent.alAttribs.clone());
+			else {
+				 @SuppressWarnings("unchecked")
+                List<AttributeEntry> clone = (List<AttributeEntry>)cte.simpleContent.alAttribs.clone();
+                result.addAll(clone );
+			}
 		
 			// No one seems clear on what to do with attributeGroups so treat them
 			// as an extension
 			if (cte.simpleContent.alAttribGroups != null) {
 				for (int k=0;k<cte.simpleContent.alAttribGroups.size();k++) {
 					String attribGroup = cte.simpleContent.alAttribGroups.get(k);
-					ArrayList al = (ArrayList) hmAttrGrp.get(attribGroup);
+					List<AttributeEntry> al = hmAttrGrp.get(attribGroup);
 
 					if (al == null)
 						throw new IllegalArgumentException("Attribute group not found : " + attribGroup);
 
-                    for (Object anAl : al) {
+                    for (AttributeEntry anAl : al) {
                         result.add(anAl);
                     }
 				}
@@ -984,7 +986,7 @@ public class SchemaLoader
 	//---
 	//---------------------------------------------------------------------------
 
-	private List resolveAttributeInheritance(ComplexTypeEntry cte)
+	private List<AttributeEntry> resolveAttributeInheritance(ComplexTypeEntry cte)
 	{
 
 		if (cte.complexContent == null)
@@ -995,7 +997,7 @@ public class SchemaLoader
 		if (baseCTE == null)
 			throw new IllegalArgumentException("Base type not found for : " + baseType);
 
-		List result = new ArrayList(resolveAttributeInheritance(baseCTE));
+		List<AttributeEntry> result = new ArrayList<AttributeEntry>(resolveAttributeInheritance(baseCTE));
 
 		// if the base type was a restriction then replace the attributes we got
 		// from the restriction with these
@@ -1018,10 +1020,11 @@ public class SchemaLoader
 			result.addAll(cte.complexContent.alAttribs);
 			if (cte.complexContent.alAttribGroups != null) {
 				for (int k=0;k<cte.complexContent.alAttribGroups.size();k++) {
-					String attribGroup = cte.complexContent.alAttribGroups.get(k);					ArrayList al = (ArrayList) hmAttrGrp.get(attribGroup);
+					String attribGroup = cte.complexContent.alAttribGroups.get(k);					
+					List<AttributeEntry> al = hmAttrGrp.get(attribGroup);
 					if (al == null) 
 						throw new IllegalArgumentException("Attribute group not found : " + attribGroup);
-                    for (Object anAl : al) {
+                    for (AttributeEntry anAl : al) {
                         result.add(anAl);
                     }
 				}
@@ -1033,12 +1036,12 @@ public class SchemaLoader
 		if (baseCTE.alAttribGroups != null) {
 			for (int k=0;k<baseCTE.alAttribGroups.size();k++) {
 				String attribGroup = baseCTE.alAttribGroups.get(k);
-				ArrayList al = (ArrayList) hmAttrGrp.get(attribGroup);
+				List<AttributeEntry> al = hmAttrGrp.get(attribGroup);
 
 				if (al == null)
 					throw new IllegalArgumentException("Attribute group not found : " + attribGroup);
 
-                for (Object anAl : al) {
+                for (AttributeEntry anAl : al) {
                     result.add(anAl);
                 }
 			}
@@ -1053,7 +1056,7 @@ public class SchemaLoader
 	//---
 	//---------------------------------------------------------------------------
 
-	private List resolveInheritance(ComplexTypeEntry cte)
+	private List<ElementEntry> resolveInheritance(ComplexTypeEntry cte)
 	{
 		if (cte == null || cte.complexContent == null)
             if (cte != null) {
@@ -1070,9 +1073,9 @@ public class SchemaLoader
 
 		// skip over the elements in the base type of a restricted complex type 
 		// by ending the recursion
-		List<Object> result = new ArrayList<Object>();
+		List<ElementEntry> result = new ArrayList<ElementEntry>();
 		if (!cte.complexContent.restriction)
-		 result = new ArrayList<Object>(resolveInheritance(baseCTE));
+		 result = new ArrayList<ElementEntry>(resolveInheritance(baseCTE));
 
 		result.addAll(cte.complexContent.alElements);
 
@@ -1110,20 +1113,20 @@ public class SchemaLoader
 
 		// Load simple type entry values
 		if (ae.type != null) {
-			List values = hmTypeRestr.get(ae.type);
+			List<String> values = hmTypeRestr.get(ae.type);
 			if (values != null){
-				for (Object v : values) {
-					ae.alValues.add((String) v);
+				for (String v : values) {
+					ae.alValues.add(v);
 				}
 			}
 			
 			// Load member types entry values
-			List memberTypes = hmMemberTypeRestr.get(ae.type);
+			List<String> memberTypes = hmMemberTypeRestr.get(ae.type);
 			if (memberTypes != null) {
-				for (Object type : memberTypes) {
-					List memberTypeValues = hmTypeRestr.get((String)type);
+				for (String type : memberTypes) {
+					List<String> memberTypeValues = hmTypeRestr.get((String)type);
 					if (memberTypeValues != null){
-						for (Object v : memberTypeValues) {
+						for (String v : memberTypeValues) {
 							ma.values.add((String) v);
 						}
 					}
@@ -1140,28 +1143,11 @@ public class SchemaLoader
 
 	//---------------------------------------------------------------------------
 
-	private String getPrefix(String qname) {
-		int pos = qname.indexOf(':');
-		if (pos < 0) return "";
-		else         return qname.substring(0, pos);
-	}
-
-	//--------------------------------------------------------------------------
-	
 	public String getUnqualifiedName(String qname) {
 		int pos = qname.indexOf(':');
 		if (pos < 0) return qname;
 		else         return qname.substring(pos + 1);
 	}
-
-	//---------------------------------------------------------------------------
-
-	private String getProfile(String name) {
-		int pos = name.indexOf('.');
-		if (pos < 0) return "";
-		else         return name.substring(pos+1);
-	}
-
 }
 
 //==============================================================================

@@ -35,7 +35,7 @@ import java.util.List;
 
 //==============================================================================
 
-class ComplexTypeEntry
+class ComplexTypeEntry extends BaseHandler
 {
 	public String  name;
 	public boolean isOrType = false;
@@ -44,7 +44,7 @@ class ComplexTypeEntry
 	public ComplexContentEntry complexContent;
 	public SimpleContentEntry  simpleContent;
 
-	public List alElements = new ArrayList();
+	public List<ElementEntry> alElements = new ArrayList<ElementEntry>();
 	public List<AttributeEntry> alAttribs  = new ArrayList<AttributeEntry>();
 	public List<String> alAttribGroups = new ArrayList<String>();
 
@@ -52,10 +52,6 @@ class ComplexTypeEntry
 	//---
 	//--- Constructor
 	//---
-	//---------------------------------------------------------------------------
-
-	private ComplexTypeEntry() {}
-
 	//---------------------------------------------------------------------------
 
 	public ComplexTypeEntry(Element el, String file, String targetNS, String targetNSPrefix)
@@ -79,7 +75,7 @@ class ComplexTypeEntry
 
 	private void handleAttribs(ElementInfo ei)
 	{
-		List attribs = ei.element.getAttributes();
+		List<?> attribs = ei.element.getAttributes();
 
         for (Object attrib : attribs) {
             Attribute at = (Attribute) attrib;
@@ -95,12 +91,13 @@ class ComplexTypeEntry
                 String abValue = at.getValue();
                 isAbstract = abValue.equals("true");
             }
-            else if (attrName.equals("mixed")) {
-                Logger.log();
-            }
-            else {
-                Logger.log();
-            }
+// TODO:
+//            else if (attrName.equals("mixed")) {
+//                Logger.log();
+//            }
+//            else {
+//                Logger.log();
+//            }
 
         }
 	}
@@ -109,7 +106,7 @@ class ComplexTypeEntry
 
 	private void handleChildren(ElementInfo ei)
 	{
-		List children = ei.element.getChildren();
+		List<?> children = ei.element.getChildren();
 
         for (Object aChildren : children) {
             Element elChild = (Element) aChildren;
@@ -119,12 +116,12 @@ class ComplexTypeEntry
             if (elName.equals("sequence") || elName.equals("choice")) {
                 isOrType = elName.equals("choice") && (first);
 
-                List sequence = elChild.getChildren();
+                List<?> sequence = elChild.getChildren();
 
                 for (Object aSequence : sequence) {
                     Element elElem = (Element) aSequence;
 
-                    if (elElem.getName().equals("element") || elElem.getName().equals("group") || elElem.getName().equals("choice") || elElem.getName().equals("sequence")) {
+                    if (isChoiceOrElementOrGroupOrSequence(elElem)) {
                         alElements.add(new ElementEntry(elElem, ei.file, ei.targetNS, ei.targetNSPrefix));
                     }
                     else {

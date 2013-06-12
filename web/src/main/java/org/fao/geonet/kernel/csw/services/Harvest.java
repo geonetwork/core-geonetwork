@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.csw.services;
 
+import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -64,7 +65,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -669,14 +669,9 @@ public class Harvest extends AbstractOperation implements CatalogService {
                 Log.debug(Geonet.CSW_HARVEST, "doHarvest finished waiting for harvester to finish");
             response = createHarvestResponse(harvester, context);
         }
-        if(response != null) {
-            if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
-                Log.debug(Geonet.CSW_HARVEST, "doHarvest returns\n" + Xml.getString(response));
-        }
-        else {
-            if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
-                Log.debug(Geonet.CSW_HARVEST, "doHarvest returns null");
-        }
+        if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
+            Log.debug(Geonet.CSW_HARVEST, "doHarvest returns\n" + Xml.getString(response));
+
 		return response;
 	}
 
@@ -810,8 +805,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
      * Class to deal with asynchronous HarvestResponse.
      *
      */
-    @SuppressWarnings({"NullableProblems"})
-    private class AsyncHarvestResponse implements RunnableFuture {
+    private class AsyncHarvestResponse implements RunnableFuture<Object> {
         /**
          * Constructor checks if the responseHandler uses a supported protocol.
          *
@@ -910,7 +904,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
                 // transfer file
                 //
                 String filename = "CSW.Harvest.result";
-                InputStream is = new ByteArrayInputStream(harvestResponse.getBytes("UTF-8"));
+                InputStream is = new ByteArrayInputStream(harvestResponse.getBytes(Jeeves.ENCODING));
                 ftpClient.storeFile(filename, is);
                 is.close();
                 ftpClient.logout();

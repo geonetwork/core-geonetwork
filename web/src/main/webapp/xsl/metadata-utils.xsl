@@ -55,6 +55,7 @@
 	-->
 	<xsl:template name="buttons" match="*">
 		<xsl:param name="metadata" select="."/>
+		<xsl:param name="buttonBarId" select="''"/>
 		<xsl:param name="ownerbuttonsonly" select="false()"/>
 
 		<!-- Title is truncated if longer than maxLength.  -->
@@ -74,7 +75,8 @@
 			</xsl:call-template>
 		</xsl:variable>
 
-		<xsl:if test="not($ownerbuttonsonly) and 
+        <xsl:variable name="readonly" select="/root/gui/env/readonly = 'true'"/>
+		<xsl:if test="not($readonly) and not($ownerbuttonsonly) and
 	 /root/gui/schemalist/name[.=$metadata/geonet:info/schema]/@edit='true'">
 			&#160;
 			<!-- create button -->
@@ -93,20 +95,21 @@
 		</xsl:if>
 		
 		<!-- delete button -->
-		<xsl:if test="geonet:info/owner='true'">
+		<xsl:if test="not($readonly) and ((/root/gui/config/harvester/enableEditing = 'true' and geonet:info/isHarvested = 'y' and geonet:info/edit='true')
+		or (geonet:info/isHarvested = 'n' and geonet:info/edit='true'))">
 			&#160;
 			<button class="content" onclick="return doConfirmDelete('{/root/gui/locService}/metadata.delete?id={$metadata/geonet:info/id}', '{/root/gui/strings/confirmDelete}','{$ltitle}','{$metadata/geonet:info/id}', '{/root/gui/strings/deleteConfirmationTitle}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
 		</xsl:if>
 						
-		<xsl:if test="geonet:info/edit='true'">
+		<xsl:if test="not($readonly) and geonet:info/edit='true'">
 			&#160;
 			<!-- =========================  -->
 			<!-- Add other actions list     -->
-			<button id="oAc{$metadata/geonet:info/id}" name="oAc{$metadata/geonet:info/id}" class="content" onclick="oActions('oAc',{$metadata/geonet:info/id});" style="width:150px;" title="{/root/gui/strings/otherActions}">
-				<img id="oAcImg{$metadata/geonet:info/id}" name="oAcImg{$metadata/geonet:info/id}" src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/>
+			<button id="{$buttonBarId}oAc{$metadata/geonet:info/id}" name="{$buttonBarId}oAc{$metadata/geonet:info/id}" class="content" onclick="oActions('{$buttonBarId}oAc',{$metadata/geonet:info/id});" style="width:150px;" title="{/root/gui/strings/otherActions}">
+				<img id="{$buttonBarId}oAcImg{$metadata/geonet:info/id}" name="{$buttonBarId}oAcImg{$metadata/geonet:info/id}" src="{/root/gui/url}/images/plus.gif" style="padding-right:3px;"/>
 				<xsl:value-of select="/root/gui/strings/otherActions"/>
 			</button>
-			<div id="oAcEle{$metadata/geonet:info/id}" class="oAcEle" style="display:none;width:250px" onClick="oActions('oAc',{$metadata/geonet:info/id});">
+			<div id="{$buttonBarId}oAcEle{$metadata/geonet:info/id}" class="oAcEle" style="display:none;width:250px" onClick="oActions('{$buttonBarId}oAc',{$metadata/geonet:info/id});">
 				
 				<!-- privileges button -->
 				<xsl:if test="java:isAccessibleService('metadata.admin.form')">
@@ -182,7 +185,7 @@
 		<xsl:variable name="url" select="concat(/root/gui/env/server/protocol,'://',/root/gui/env/server/host,':',/root/gui/env/server/port,/root/gui/locService)"/>
 													
     <xsl:for-each select="/root/gui/schemalist/name[text()=$schema]/conversions/converter">
-			<xsl:variable name="serviceName" select="@name"/>
+			<xsl:variable name="serviceName" select="concat('',@name)"/>
       <xsl:if test="java:isAccessibleService($serviceName)">
 				<xsl:variable name="serviceUrl" select="concat($url,'/',$serviceName,'?id=',$mid,'&amp;styleSheet=',@xslt)"/>
 				<xsl:variable name="exportLabel" select="/root/gui/schemas/*[name()=$schema]/strings/*[name()=$serviceName]"/>

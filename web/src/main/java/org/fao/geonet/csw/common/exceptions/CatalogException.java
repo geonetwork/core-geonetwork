@@ -130,7 +130,8 @@ public abstract class CatalogException extends Exception {
 
 		Namespace ns = response.getNamespace();
 
-		List exceptions = response.getChildren("Exception", ns);
+		@SuppressWarnings("unchecked")
+        List<Element> exceptions = response.getChildren("Exception", ns);
 
 		if (exceptions.size() == 0)
 			throw new Exception("Bad exception (no 'Exception' elem) : \n"+
@@ -140,7 +141,7 @@ public abstract class CatalogException extends Exception {
 
 		for(int i=exceptions.size() -1; i>=0; i--)
 		{
-			Element ex = (Element) exceptions.get(i);
+			Element ex = exceptions.get(i);
 
 			e = createException(ex, response, e);
 		}

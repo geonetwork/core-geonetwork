@@ -79,11 +79,11 @@ public class SerialFactory
 				else                   i = Integer.parseInt(strSerial);
 
 			i = (i < minSerial) ? minSerial : i;
-			intSerial = new Integer(i);
+			intSerial = Integer.valueOf(i);
 		}
 
 		int newSerial = intSerial.intValue() +1;
-		htSerials.put(table, new Integer(newSerial));
+		htSerials.put(table, Integer.valueOf(newSerial));
 
 		return newSerial;
 	}

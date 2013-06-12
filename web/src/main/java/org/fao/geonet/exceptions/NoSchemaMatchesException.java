@@ -35,7 +35,9 @@ public class NoSchemaMatchesException extends JeevesClientEx
 	//---
 	//--------------------------------------------------------------------------
 
-	public NoSchemaMatchesException(String name) { this(name, null); }
+    private static final long serialVersionUID = 1L;
+
+    public NoSchemaMatchesException(String name) { this(name, null); }
 
 	public NoSchemaMatchesException(String name, Object value)
 	{

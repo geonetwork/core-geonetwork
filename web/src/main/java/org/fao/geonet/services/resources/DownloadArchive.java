@@ -24,7 +24,6 @@
 package org.fao.geonet.services.resources;
 
 import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.MissingParameterEx;
 import jeeves.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -34,6 +33,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -59,11 +60,12 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import javax.annotation.Nonnull;
 
 //=============================================================================
 
@@ -73,9 +75,7 @@ import java.util.zip.ZipOutputStream;
 public class DownloadArchive implements Service
 {
 	private static String FS = File.separator;
-	private String appPath;
 	private String stylePath;
-	private final static String FILE_NAME_SUBSTR = "filename=";
 
 	//----------------------------------------------------------------------------
 	//---
@@ -84,7 +84,6 @@ public class DownloadArchive implements Service
 	//----------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
-		this.appPath = appPath;
 		this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
 	}
 
@@ -139,20 +138,19 @@ public class DownloadArchive implements Service
 		//--- set username for emails and logs
 		String username = session.getUsername();
 		if (username == null) username = "internet";
-		String profile = session.getProfile();
 		String userId  = session.getUserId();
 
 		//--- get feedback/reason for download info passed in & record in 'entered'
-		String name     = Util.getParam(params, Params.NAME);
-		String org      = Util.getParam(params, Params.ORG);
-		String email    = Util.getParam(params, Params.EMAIL);
-		String comments = Util.getParam(params, Params.COMMENTS);
+//		String name     = Util.getParam(params, Params.NAME);
+//		String org      = Util.getParam(params, Params.ORG);
+//		String email    = Util.getParam(params, Params.EMAIL);
+//		String comments = Util.getParam(params, Params.COMMENTS);
 		Element entered = new Element("entered").addContent(params.cloneContent());
 	
 		//--- get logged in user details & record in 'userdetails'
 		Element userDetails = new Element("userdetails");
 		if (!username.equals("internet")) {
-			Element elUser = dbms.select ("SELECT username, surname, name, address, state, zip, country, email, organisation FROM Users WHERE id=?",new Integer(userId));
+			Element elUser = dbms.select ("SELECT username, surname, name, address, state, zip, country, email, organisation FROM Users WHERE id=?",Integer.valueOf(userId));
 			if (elUser.getChild("record") != null) {
 				userDetails.addContent(elUser.getChild("record").cloneContent());
 			}
@@ -172,9 +170,9 @@ public class DownloadArchive implements Service
 		Element downloaded = new Element("downloaded");
 		File dir = new File(Lib.resource.getDir(context, access, id));
 
-		List files = params.getChildren(Params.FNAME);
-		for (Object o : files) {
-			Element elem = (Element)o;
+		@SuppressWarnings("unchecked")
+        List<Element> files = params.getChildren(Params.FNAME);
+		for (Element elem : files) {
 			String fname = elem.getText();
 
 			if (fname.contains("..")) {
@@ -239,9 +237,13 @@ public class DownloadArchive implements Service
 		FileOutputStream las = new FileOutputStream(licenseAnnex);
 		Xml.transform(root, licenseAnnexXslt, las);
 		las.close();
-    InputStream in = new FileInputStream(licenseAnnex);
-		addFile(out, Geonet.File.LICENSE_ANNEX, in);
-    in.close();
+        InputStream in = null;
+        try {
+            in = new FileInputStream(licenseAnnex);
+    		addFile(out, Geonet.File.LICENSE_ANNEX, in);
+        } finally {
+            IOUtils.closeQuietly(in);
+        }
 
 		//--- if a license is specified include any license files mirrored locally 
 		//--- for inclusion
@@ -251,9 +253,13 @@ public class DownloadArchive implements Service
 		//--- stream FIXME: some refactoring required here to avoid metadata 
 		//--- being read yet again(!) from the database by the MEF exporter
 		String outmef = MEFLib.doExport(context, info.uuid, MEFLib.Format.PARTIAL.toString(), false, true, true);
-    in = new FileInputStream(outmef);
-		addFile(out, "metadata.zip", in);
-    in.close();
+		FileInputStream in2 = null;
+		try {
+            in2 = new FileInputStream(outmef);
+    		addFile(out, "metadata.zip", in2);
+		} finally {
+		    IOUtils.closeQuietly(in2);
+		}
 
 		//--- now close the zip file and send it out
 		if (out != null) out.close();
@@ -337,11 +343,21 @@ public class DownloadArchive implements Service
 
 	//----------------------------------------------------------------------------
 	
-	private void addFile(ZipOutputStream zos, String name, InputStream in) throws IOException {
-		ZipEntry entry = new ZipEntry(name);
-		zos.putNextEntry(entry);
-		BinaryFile.copy(in, zos, true, false);
-		zos.closeEntry();
+	private void addFile(ZipOutputStream zos, String name, @Nonnull InputStream in) throws IOException {
+		ZipEntry entry = null;
+		try {
+    		entry = new ZipEntry(name);
+    		zos.putNextEntry(entry);
+    		BinaryFile.copy(in, zos);
+		} finally {
+		    try {
+    		    if(zos != null) {
+    		        zos.closeEntry();
+    		    }
+		    } finally {
+		        IOUtils.closeQuietly(in);
+		    }
+		}
 	}
 
 	//----------------------------------------------------------------------------
@@ -390,10 +406,10 @@ public class DownloadArchive implements Service
 				query.append("AND    oa.metadataId = ?");
 				query.append("AND    oa.groupId = g.id");
 
-				Element groups = dbms.select(query.toString(), new Integer(id));
-
-				for (Iterator i = groups.getChildren().iterator(); i.hasNext(); ) {
-					Element group = (Element)i.next();
+				Element groups = dbms.select(query.toString(), Integer.valueOf(id));
+                @SuppressWarnings("unchecked")
+                List<Element> groupsEls = groups.getChildren();
+                for (Element group : groupsEls) {
 					String  name  = group.getChildText("name");
 					String  email = group.getChildText("email");
 

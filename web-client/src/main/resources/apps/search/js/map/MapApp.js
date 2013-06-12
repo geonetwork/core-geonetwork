@@ -64,9 +64,35 @@ GeoNetwork.mapApp = function() {
             controls: []
         };
         
-        map = new OpenLayers.Map('ol_map', options);
-        
-        fixedScales = scales;
+        if (GeoNetwork.map.CONTEXT) {
+            // Load map context
+            var request = OpenLayers.Request.GET({
+                url: GeoNetwork.map.CONTEXT,
+                async: false
+            });
+            if (request.responseText) {
+                
+                var text = request.responseText;
+                var format = new OpenLayers.Format.WMC();
+                map = format.read(text, {map:options});
+            }
+        } 
+        else if (GeoNetwork.map.OWS) {
+            // Load map context
+            var request = OpenLayers.Request.GET({
+                url: GeoNetwork.map.OWS,
+                async: false
+            });
+            if (request.responseText) {
+                var parser = new OpenLayers.Format.OWSContext();
+                var text = request.responseText;
+                map = parser.read(text, {map: options});
+            }
+        }
+        else {
+            map = new OpenLayers.Map('ol_map', options);
+            fixedScales = scales;
+        }
     };
 
     /**
@@ -240,9 +266,12 @@ GeoNetwork.mapApp = function() {
     };
 	var createPrintPanel = function() {
         // The printProvider that connects us to the print service
-        printProvider = new GeoExt.data.PrintProvider({
+	    printProvider = new GeoExt.data.PrintProvider({
             method: "POST",
             url: GeoNetwork.map.printCapabilities,
+            baseParams: {
+                url: GeoNetwork.map.printCapabilities
+            },
             autoLoad: true
         });
         
@@ -255,11 +284,6 @@ GeoNetwork.mapApp = function() {
         
         map.addLayer(pageLayer);
         
-        map.events.register('moveend', map, function(){
-            printPage.fit(this, {
-                mode: "screen"
-            });
-        });
         // The form with fields controlling the print output
         printPanel = new Ext.form.FormPanel({
             title: OpenLayers.i18n("mf.print.print"),
@@ -336,6 +360,12 @@ GeoNetwork.mapApp = function() {
                 },
                 scope: pageLayer
             }
+        });
+        
+        map.events.register('moveend', map, function () {
+            printPage.fit(this, {
+                mode: "screen"
+            });
         });
     };
     /**
@@ -1133,7 +1163,6 @@ GeoNetwork.mapApp = function() {
                         map: map,
                         tbar: toolbar,
                         border: false,
-                        extent: GeoNetwork.map.EXTENT,
                         items: [mapOverlay]
                     }]
                 }
@@ -1319,7 +1348,17 @@ var processLayersSuccess = function(response) {
             
             map.addLayer(featureinfolayer);
         },
-
+        addWMC: function (url) {
+            var map = this.getMap();
+            
+            OpenLayers.Request.GET({
+                url: url, 
+                scope: this,
+                callback: function (response) {
+                    GeoNetwork.WMCManager.loadWmc(map, response.responseText);
+                 }
+            });
+        },
         /**
          * Add a list of WMS layers to the map
          *

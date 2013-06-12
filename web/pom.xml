@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>2.9.0-SNAPSHOT</version>
+    <version>2.11.0-SNAPSHOT</version>
   </parent>
 
 
@@ -104,6 +104,10 @@
       <artifactId>gt-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-xml</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.geotools.xsd</groupId>
       <artifactId>gt-xsd-gml3</artifactId>
     </dependency>
@@ -133,12 +137,16 @@
     </dependency>
 
     <dependency>
+      <groupId>com.vividsolutions</groupId>
+      <artifactId>jts</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-analyzers</artifactId>
+      <artifactId>lucene-analyzers-common</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
@@ -147,6 +155,10 @@
     <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-queries</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-queryparser</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.lucene</groupId>
@@ -279,13 +291,7 @@
 	  <dependency>
       <groupId>org.mapfish.print</groupId>
       <artifactId>print-lib</artifactId>
-      <version>1.2-SNAPSHOT</version>
-    </dependency>
-  
-	  <dependency>
-      <groupId>ch.thus</groupId>
-      <artifactId>pvalsecc</artifactId>
-      <version>0.9.2</version>
+      <version>1.2.0</version>
     </dependency>
   
     <!-- ====================== -->
@@ -855,12 +861,12 @@
 				<version>7.5.0.v20110901</version>
         <configuration>
           <connectors>
-            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+            <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
               <port>8080</port>
               <maxIdleTime>10000</maxIdleTime>
               <requestHeaderSize>20000</requestHeaderSize>
             </connector>
-            <connector implementation="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
+            <connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
               <!-- Note: If another server needs to communicate with this one with
                     https then it needs the environment variables set as follows:
                     -Djavax.net.ssl.trustStore=keystore.jks -Djavax.net.ssl.trustStorePassword=password
@@ -894,9 +900,37 @@
     -->
   <profiles>
     <profile>
+		<id>run-static-analysis</id>
+		<activation>
+			<property><name>!skipTests</name></property>
+		</activation>
+		<build>
+		<plugins>
+		  <plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>findbugs-maven-plugin</artifactId>
+		  </plugin>
+		  <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-checkstyle-plugin</artifactId>
+		  </plugin>
+		</plugins>
+		</build>
+	</profile>
+    <profile>
+      <id>no-env-specified</id>
+      <activation>
+        <property>
+          <name>!env</name>
+        </property>
+      </activation>
+      <properties>
+        <env>prod</env>
+      </properties>
+    </profile>
+    <profile>
       <id>env-prod</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
         <property>
           <name>env</name>
           <value>prod</value>
@@ -1134,6 +1168,14 @@
           <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
       </properties>
     </profile>
+    <profile>
+		<id>html5ui</id>
+		<properties>
+			<web.xml.widget.config.overrides>/WEB-INF/config-overrides-html5ui.xml</web.xml.widget.config.overrides>
+			<widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+		</properties>
+    </profile>
+    
   </profiles>
   
   <reporting>
@@ -1159,5 +1201,6 @@
     <web.xml.widget.config.overrides></web.xml.widget.config.overrides>
     <widgets.webapp.resources></widgets.webapp.resources>
     <system.specific.overrides></system.specific.overrides>
+    <rootProjectDir>${basedir}/..</rootProjectDir>
   </properties>
 </project>

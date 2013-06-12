@@ -34,9 +34,13 @@
 
     <multilingual>Monikielinen asetukset</multilingual>
     <autoDetectEnable>Ota automaattinen havaita etsittäväks kieltä</autoDetectEnable>
-    <requestedlanguageonly>Etsi vain pyydetystä kielestä</requestedlanguageonly>
+    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Hakutulokset pyysi kielellä lajiteltu päälle</requestedlanguagesorted>
-    <requestedlanguageignored>Ohita pyydetyt kieli haku</requestedlanguageignored>
 		
 	<downloadservice>Latauspalvelu</downloadservice>
 	<leave>Käytä metatiedoissa olevaa linkkiä</leave>

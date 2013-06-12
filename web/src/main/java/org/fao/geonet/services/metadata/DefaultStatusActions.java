@@ -26,7 +26,6 @@ package org.fao.geonet.services.metadata;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -39,7 +38,6 @@ import org.fao.geonet.util.ISODate;
 
 import org.jdom.Element;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
@@ -54,8 +52,6 @@ public class DefaultStatusActions implements StatusActions {
 	private String siteUrl;
 	private UserSession session;
 	private boolean emailNotes = true;
-
-	private String allGroup = "1";
 
 	/**
 		* Constructor.
@@ -108,7 +104,7 @@ public class DefaultStatusActions implements StatusActions {
 
 
 		dm = gc.getDataManager();
-		siteUrl = dm.getSiteURL();
+		siteUrl = dm.getSiteURL(context);
 	}
 
 	/** 
@@ -122,7 +118,7 @@ public class DefaultStatusActions implements StatusActions {
 		if (!minorEdit && dm.getCurrentStatus(dbms, id).equals(Params.Status.APPROVED)) {
 			String changeMessage = "GeoNetwork user "+session.getUserId()+" ("+session.getUsername()+") edited metadata record "+id;
 			unsetAllOperations(id);
-			dm.setStatus(context, dbms, id, new Integer(Params.Status.DRAFT), new ISODate().toString(), changeMessage);
+			dm.setStatus(context, dbms, id, Integer.valueOf(Params.Status.DRAFT), new ISODate().toString(), changeMessage);
 		}
 		
 	}
@@ -157,7 +153,7 @@ public class DefaultStatusActions implements StatusActions {
 			}
 
 			//--- set status, indexing is assumed to take place later
-			dm.setStatusExt(context, dbms, mid, new Integer(status), changeDate, changeMessage);
+			dm.setStatusExt(context, dbms, mid, Integer.valueOf(status), changeDate, changeMessage);
 		}
 
 
@@ -178,20 +174,6 @@ public class DefaultStatusActions implements StatusActions {
 	//-------------------------------------------------------------------------
 	// Private methods
 	//-------------------------------------------------------------------------
-
-	/**
-    * Set all operations on 'All' Group. Used when status changes from submitted to approved.
-    *
-    * @param mdId The metadata id to set privileges on
-    */
-  private void setAllOperations(int mdId) throws Exception {
-    String allGroup = "1";
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_VIEW);
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DOWNLOAD);
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_NOTIFY);
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DYNAMIC);
-    dm.setOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);
-  }
 
   /**
     * Unset all operations on 'All' Group. Used when status changes from approved to something else. 
@@ -260,30 +242,19 @@ public class DefaultStatusActions implements StatusActions {
 		*/
 	private void processList(Element users, String subject, String status, String changeDate, String changeMessage) throws Exception {
 
-		List<Element> userList = users.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> userList = users.getChildren();
 
-		List<Integer> mIds = new ArrayList<Integer>();
-		boolean first = true;
-		String lastUserId = "-100";
-		String email = "";
-		String id = "";
+		Set<String> emails = new HashSet<String>();
 
 		for (Element user : userList) {
-			String mid = user.getChildText("metadataid");
-			id  = user.getChildText("userid");
-			email      = user.getChildText("email");
-			if (!id.equals(lastUserId) && !first) {	// send out list
-				sendEmail(email, subject, status, changeDate, changeMessage);	
-				mIds = new ArrayList<Integer>();
-				lastUserId = id;
-			}
-			mIds.add(new Integer(mid));
-			first = false;
+			emails.add(user.getChildText("email"));
 		}
 
-		if (mIds.size() > 0) { // send out the last one
-			sendEmail(email, subject, status, changeDate, changeMessage);
+		for (String email : emails) {
+			sendEmail(email, subject, status, changeDate, changeMessage);	
 		}
+
 	}
 
 	/**
@@ -301,7 +272,7 @@ public class DefaultStatusActions implements StatusActions {
 		String message = changeMessage+"\n\nRecords are available from the following URL:\n"+buildMetadataSearchLink(status, changeDate);
 
 		if (!emailNotes) {
-			context.info("Would send email with message:\n"+message);
+			context.info("Would send email \nTo: "+sendTo+"\nSubject: "+subject+"\n Message:\n"+message);
 		} else {
 			MailSender sender = new MailSender(context);
 			sender.sendWithReplyTo(host, Integer.parseInt(port), from, fromDescr, sendTo, null, replyTo, replyToDescr, subject, message);

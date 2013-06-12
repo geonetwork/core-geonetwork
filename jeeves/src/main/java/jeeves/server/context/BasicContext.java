@@ -23,14 +23,16 @@
 
 package jeeves.server.context;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
 
-import java.util.Hashtable;
-import java.util.Map.Entry;
+import java.util.Collections;
+import java.util.Map;
 
 //=============================================================================
 
@@ -43,12 +45,13 @@ public class BasicContext
 	private ProviderManager provMan;
 	private SerialFactory   serialFact;
 
-	protected Logger logger;
+	protected Logger logger = Log.createLogger(Log.JEEVES);
 	private   String baseUrl;
 	private   String appPath;
 
-	protected Hashtable<String, Object> htContexts;
+	protected Map<String, Object> htContexts;
     private MonitorManager monitorManager;
+    private final JeevesApplicationContext jeevesApplicationContext;
 
     //--------------------------------------------------------------------------
 	//---
@@ -56,14 +59,15 @@ public class BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public BasicContext(MonitorManager mm, ProviderManager pm, SerialFactory sf, Hashtable<String, Object> contexts)
+	public BasicContext(JeevesApplicationContext jeevesApplicationContext, MonitorManager mm, ProviderManager pm, SerialFactory sf, Map<String, Object> contexts)
 	{
 		resMan = new ResourceManager(mm, pm);
 
+		this.jeevesApplicationContext = jeevesApplicationContext;
         this.monitorManager = mm;
 		provMan    = pm;
 		serialFact = sf;
-		htContexts = contexts;
+		htContexts = Collections.unmodifiableMap(contexts);
 	}
 
 	//--------------------------------------------------------------------------
@@ -94,20 +98,6 @@ public class BasicContext
 	{
 		return htContexts.get(contextName);
 	}
-    public<T> T getHandlerContext(Class<T> class1) {
-        T match = null; 
-        for (Entry<String, Object> entry : htContexts.entrySet()) {
-            if (class1.isAssignableFrom(entry.getValue().getClass())) {
-                if(match !=null ){
-                    throw new IllegalArgumentException(class1+" has multiple matches");
-                } else {
-                    match = class1.cast(entry.getValue());
-                }
-            }
-        }
-        return match;
-    }
-
 
 	//--------------------------------------------------------------------------
 
@@ -120,6 +110,12 @@ public class BasicContext
 
     public MonitorManager getMonitorManager() {
         return monitorManager;
+    }
+
+    //--------------------------------------------------------------------------
+
+    public JeevesApplicationContext getApplicationContext() {
+        return jeevesApplicationContext;
     }
 
 	//--------------------------------------------------------------------------

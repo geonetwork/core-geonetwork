@@ -37,6 +37,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.FragmentParams;
@@ -136,7 +137,7 @@ class Harvester
 		this.dbms   = dbms;
 		this.params = params;
 
-		result = new WfsFeaturesResult ();
+		result = new HarvestResult ();
 		
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager ();
@@ -188,7 +189,7 @@ class Harvester
 		*
 		*
     */
-	public WfsFeaturesResult harvest() throws Exception {
+	public HarvestResult harvest() throws Exception {
 
 		log.info("Retrieving metadata fragments for : " + params.name);
         
@@ -282,7 +283,10 @@ class Harvester
 	    			harvest(records, fragmentHarvester);
 	        }
 		} finally {
-			tempFile.delete();
+	        if (!tempFile.delete() && tempFile.exists()) {
+	            log.warning("Unable to delete tempFile: "+tempFile);
+	        }
+
 		}
 				
     }
@@ -306,7 +310,7 @@ class Harvester
 	    result.recordsUpdated += fragmentResult.recordsUpdated;
 	    result.subtemplatesUpdated += fragmentResult.fragmentsUpdated;
 
-	    result.total = result.subtemplatesAdded + result.recordsBuilt;
+	    result.totalMetadata = result.subtemplatesAdded + result.recordsBuilt;
     }
 
 	/** 
@@ -353,9 +357,8 @@ class Harvester
 		fragmentParams.isoCategory = params.recordsCategory;
 		fragmentParams.privileges = params.getPrivileges();
 		fragmentParams.templateId = params.templateId;
-		fragmentParams.url = params.url;
 		fragmentParams.uuid = params.uuid;
-		fragmentParams.owner = params.owner;
+		fragmentParams.owner = params.ownerId;
 		return fragmentParams;
     }
 
@@ -371,12 +374,9 @@ class Harvester
 	private WfsFeaturesParams   params;
 	private DataManager    dataMan;
 	private SchemaManager  schemaMan;
-	private WfsFeaturesResult   result;
+	private HarvestResult   result;
 	private UUIDMapper     localUuids;
 	private String	 		metadataGetService;
 	private String	 		 stylesheetDirectory;
 	private Map<String,String> ssParams = new HashMap<String,String>();
 }
-
-//=============================================================================
-

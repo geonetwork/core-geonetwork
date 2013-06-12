@@ -222,10 +222,11 @@ public class Export implements Service {
             if(Log.isDebugEnabled(Geonet.MEF))
                 Log.debug(Geonet.MEF, "  Exporting record(s) found for metadata: " + uuid);
 			Element elt = searcher.present(context, request, _config);
+
 			// Get ISO records only
+			@SuppressWarnings("unchecked")
 			List<Element> isoElt = elt.getChildren();
-			for (Iterator<Element> i = isoElt.iterator(); i.hasNext();) {
-				Element md = (Element) i.next();
+			for (Element md : isoElt) {
 				// -- Only metadata record should be processed
 				if (!md.getName().equals("summary")) {
 					String mdUuid = md.getChild(Edit.RootChild.INFO,

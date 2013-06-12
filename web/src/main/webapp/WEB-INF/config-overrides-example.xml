@@ -13,14 +13,21 @@
  xsi:noNamespaceSchemaLocation="config-overrides.xsd">
 	<!-- an import can be used if many of the overrides are common between your different configurations -->
 	<import file="/WEB-INF/server-props-overrides.xml"/>
-	
 	<properties>
 		<db.user>admin</db.user>
 		<db.pass>gnos</db.pass>
 	</properties>
-	<file name="">
-		<replaceAtt attName="" value="" xpath=""/>
-		<replaceText xpath=""></replaceText>
+	<spring>
+		<import file="extra-spring-config.xml"/>
+		<setInterceptUrl access="hasRole('Administrator')" pattern="/srv/.*/xml.thesaurus.getList!?.*"/>
+		<removeInterceptUrl pattern="/srv/.*/q!?.*"/>
+		<addInterceptUrl access="hasRole('Administrator')" pattern="/srv/ger/q" caseInsensitive="true" httpMethod="GET" position="3"/>
+		<addProperty bean="filterChainProxy" property="newproperty" value="two"/>
+		<setProperty bean="filterChainProxy" property="updatedproperty" value="newval"/>
+	</spring>
+	<file name="fname">
+		<replaceAtt attName="name" value="value" xpath="xpath" />
+		<replaceText xpath="xpath"></replaceText>
 	</file>
 	<file name=".*/WEB-INF/config.xml">
 		<replaceText xpath="general/uploadDir">../../data/tmp</replaceText>
@@ -46,9 +53,9 @@
 	<file name=".*/WEB-INF/config-gui.xml">
 		<replaceAtt xpath="client" attName="widget" value="false"/>
 		<replaceAtt xpath="client" attName="url" value="main.home"/>
-		<replaceXml xpath="repository">
+		<replaceXML xpath="repository">
 			<thesaurus>http://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/repository/thesaurus.xml</thesaurus>
-		</replaceXml>
+		</replaceXML>
 	</file>
 	<textFile name="data-db-default.sql">
 		<!-- generate server configuration updates -->

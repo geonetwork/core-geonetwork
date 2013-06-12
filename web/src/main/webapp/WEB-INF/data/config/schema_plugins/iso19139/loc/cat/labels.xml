@@ -1469,7 +1469,27 @@
 		<description>Nom del(s) format(s) de transferència usats</description>
 		<help>nom del(s) format(s) de transferència </help>
 		<condition>mandatory</condition>
+		<helper rel="gmd:version">
+			<option value="Text">Text</option>
+			<option value="ESRI Shapefile" title="1.0">ESRI Shapefile</option>
+			<option value="Mapinfo MIF/MID" title="4.5">Mapinfo MIF/MID</option>
+			<option value="Mapinfo TAB">Mapinfo TAB</option>
+			<option value="KML">KML</option>
+			<option value="GML" title="3.2.1">GML</option>
+			<option value="GeoTIFF" title="1.0">GeoTIFF</option>
+			<option value="TIFF">TIFF</option>
+			<option value="ECW">ECW</option>
+			<option value="JPEG2000">JPEG2000</option>
+			<option value="ZIP">ZIP</option>
+			<option value="PDF">PDF</option>
+			<option value="PNG">PNG</option>
+			<option value="JPEG">JPEG</option>
+			<option value="OGC:WMC">OGC:WMC</option>
+			<option value="OGC:OWS Context">OGC:OWS Context</option>
+		</helper>
 	</element>
+	
+	
 	<element name="gmd:name" context="gmd:MD_ExtendedElementInformation"
 		id="307.0">
 		<label>Nom</label>
@@ -2575,124 +2595,6 @@
 			<option value="VARCHAR">VARCHAR</option>
 			<option value="TEXT">TEXT</option>
 		</helper>
-	</element>
-	<element name="gco:attributeType">
-		<label>Attribute type</label>
-		<description />
-	</element>
-	<element name="gco:TypeName">
-		<label>Nom del tipus</label>
-		<description />
-	</element>
-	<element name="gco:LocalName">
-		<label>Nom local</label>
-		<description />
-	</element>
-	<element name="gco:ScopedName">
-		<label>Scoped name</label>
-		<description />
-	</element>
-	<element name="gmd:has">
-		<label>Has</label>
-		<description>Has</description>
-	</element>
-	<element name="gmd:MD_PixelOrientationCode">
-		<label>Codi de l'orientació del píxel</label>
-		<description>Point in a pixel corresponding to the Earth location of
-			the pixel</description>
-	</element>
-	<element name="gmd:MD_ObligationCode">
-		<label>Codi d'obligació</label>
-		<description>Obligació de l'element o de l'entitat</description>
-	</element>
-	<element name="gmd:maximumOccurrence">
-		<label>Nombre màxim d'ocurrències</label>
-		<description>Nombre màxim d'ocurrències de l'element estès</description>
-	</element>
-	<element name="gco:localName">
-		<label>Nom</label>
-		<description />
-	</element>
-	<element name="gmd:composedOf">
-		<label>ComposedOf</label>
-		<description>ComposedOf</description>
-	</element>
-	<element name="gmd:partOf">
-		<label>PartOf</label>
-		<description>PartOf</description>
-	</element>
-	<element name="gmd:seriesMetadata">
-		<label>SeriesMetadata</label>
-		<description>SeriesMetadata</description>
-	</element>
-	<element name="gmd:subset">
-		<label>Subset</label>
-		<description>Subset</description>
-	</element>
-	<element name="gmd:superset">
-		<label>Superset</label>
-		<description>Superset</description>
-	</element>
-	<element name="gmd:CI_RoleCode">
-		<label>Role code</label>
-		<description />
-	</element>
-	<element name="gts:TM_PeriodDuration">
-		<label>Període</label>
-		<description>
-			El tipus de dada per la duració permet definir un interval de temps.
-
-			El format és el següent "PnYnMnDTnHnMnS", on:
-
-			* P període (obligatori)
-			* nY : anys
-			* nM : nesos
-			* nD : dies
-			* T indica l'inici de la secció de temps (obligatori si s'especifica
-			hores, minuts o segons)
-			* nH : hores
-			* nM : minuts
-			* nS : segons
-		</description>
-	</element>
-	<element name="gco:CharacterString">
-		<label>Text</label>
-		<description />
-	</element>
-	<element name="gco:nilReason">
-		<label>Nil reason attribute</label>
-		<description />
-	</element>
-	<element name="srv:DCPList">
-		<label>Llista de plataformes distribuïdes de còmput</label>
-	</element>
-	<element name="gmd:verticalCRS">
-		<label>CRS vertical</label>
-		<description>Proporciona informació sobre l'origen des d'on es mesuren
-			els valors de les elevacions màxima i mínima</description>
-	</element>
-	<element name="gmx:FileName">
-		<label>Nom del fitxer</label>
-		<description>Nom del fitxer i URL font.</description>
-	</element>
-	<element name="src">
-		<label>URL font</label>
-		<description>URL del document.</description>
-	</element>
-	<element name="gmx:Anchor">
-		<label>Anchor</label>
-		<description>Supports hyper-linking capabilities and ensures a
-			web-like implementation of CharacterStrings</description>
-	</element>
-	<element name="xlink:href">
-		<label>Link href</label>
-		<description>Supplies the data that allows an XLink application to
-			find a remote resource (or resource fragment) [W3C XLINK]</description>
-	</element>
-  	<!-- ==================================================== -->
-    <element name="hidden-elements">
-        <label>Hidden Elements</label>
-        <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
     </element>
     <element name="gco:attributeType">
         <label>Attribute type</label>

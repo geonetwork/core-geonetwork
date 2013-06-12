@@ -30,10 +30,12 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
@@ -51,6 +53,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.Call;
 import jeeves.server.dispatchers.guiservices.GuiService;
+import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.sources.ServiceRequest;
@@ -84,6 +87,7 @@ public class ServiceManager
     private ProviderManager providMan;
     private ProfileManager  profilMan;
     private MonitorManager monitorManager;
+    private XmlCacheManager xmlCacheManager;
 
 	private SerialFactory   serialFact;
     private String  appPath;
@@ -96,6 +100,7 @@ public class ServiceManager
     private JeevesServlet servlet;
     private boolean startupError = false;
     private Map<String,String> startupErrors;
+    private JeevesApplicationContext jeevesApplicationContext;
 
     //---------------------------------------------------------------------------
 	//---
@@ -112,6 +117,9 @@ public class ServiceManager
 
 	public void setProviderMan  (ProviderManager p) { providMan  = p; }
 	public void setMonitorMan  (MonitorManager mm) { monitorManager  = mm; }
+	public void setXmlCacheManager  (XmlCacheManager xcm) { xmlCacheManager  = xcm; }
+    public void setApplicationContext(JeevesApplicationContext c) { this.jeevesApplicationContext = c;}
+
 	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
 	public void setServlet(JeevesServlet serv) { servlet = serv; }
     public void setStartupErrors(Map<String,String> errors)   { startupErrors = errors; startupError = true; }
@@ -173,6 +181,11 @@ public class ServiceManager
 		if (al == null) {
 			al = new ArrayList<ServiceInfo>();
 			htServices.put(name, al);
+		} else {
+		    info("Service " + name + " already exist, re-register it.");
+		    htServices.remove(name);
+		    al = new ArrayList<ServiceInfo>();
+		    htServices.put(name, al);
 		}
 
 		al.add(si);
@@ -328,9 +341,9 @@ public class ServiceManager
 
 	//---------------------------------------------------------------------------
 
-	public ServiceContext createServiceContext(String name)
+	public ServiceContext createServiceContext(String name, JeevesApplicationContext jeevesApplicationContext)
 	{
-		ServiceContext context = new ServiceContext(name, monitorManager, providMan, serialFact, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, xmlCacheManager, monitorManager, providMan, serialFact, profilMan, htContexts);
 
 		context.setBaseUrl(baseUrl);
 		context.setLanguage("?");
@@ -345,7 +358,7 @@ public class ServiceManager
 	}
 
 	public void dispatch(ServiceRequest req, UserSession session) {
-		ServiceContext context = new ServiceContext(req.getService(), monitorManager, providMan, serialFact, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext, xmlCacheManager, monitorManager, providMan, serialFact, profilMan, htContexts);
 		dispatch(req, session, context);
 	}
 
@@ -410,8 +423,6 @@ public class ServiceManager
 				//---------------------------------------------------------------------
 				//--- check access
 
-				String profile = ProfileManager.GUEST;
-
                 TimerContext timerContext = monitorManager.getTimer(ServiceManagerServicesTimer.class).time();
                 try{
 				    response = srvInfo.execServices(req.getParams(), context);
@@ -419,6 +430,17 @@ public class ServiceManager
                     timerContext.stop();
                 }
 
+                // Did we change some header on the service?
+                for (Entry<String, String> entry : context.getResponseHeaders()
+                        .entrySet()) {
+                    ((HttpServiceRequest) req).getHttpServletResponse()
+                            .setHeader(entry.getKey(), entry.getValue());
+                }
+
+                if (context.getStatusCode() != null) {
+                    ((ServiceRequest) req).setStatusCode(context
+                            .getStatusCode());
+                }
 				//---------------------------------------------------------------------
 				//--- handle forward
 
@@ -502,7 +524,7 @@ public class ServiceManager
 				req.write(SOAPUtil.embedExc(error, sender, id, message));
 			}
 
-			else if (input == InputMethod.XML || output == OutputMethod.XML || srvInfo == null)
+			else if (input == InputMethod.XML || output == OutputMethod.XML)
 			{
 				req.setStatusCode(code);
 				req.beginStream("application/xml; charset=UTF-8", cache);
@@ -513,7 +535,7 @@ public class ServiceManager
 			{
 				//--- try to dispatch to the error output
 
-				ErrorPage errPage = (srvInfo != null) ? srvInfo.findErrorPage(id) : null;
+				ErrorPage errPage = srvInfo.findErrorPage(id);
 
 				if (errPage == null)
 					errPage = findErrorPage(id);
@@ -586,6 +608,13 @@ public class ServiceManager
 
 				if (in == InputMethod.SOAP || out == OutputMethod.SOAP)
 				{
+
+                    // Did we set up a status code for the response?
+                    if (context.getStatusCode() != null) {
+                        ((ServiceRequest) req).setStatusCode(context
+                                .getStatusCode());
+                    }
+
 					req.beginStream("application/soap+xml; charset=UTF-8", cache);
 
 					if (!SOAPUtil.isEnvelope(response))
@@ -673,6 +702,10 @@ public class ServiceManager
 
 			int cl = (contentLength == null) ? -1 : Integer.parseInt(contentLength);
 
+            // Did we set up a status code for the response?
+            if (context.getStatusCode() != null) {
+                ((ServiceRequest) req).setStatusCode(context.getStatusCode());
+            }
 			req.beginStream(contentType, cl, contentDisposition, cache);
 			BinaryFile.write(response, req.getOutputStream());
 			req.endStream();

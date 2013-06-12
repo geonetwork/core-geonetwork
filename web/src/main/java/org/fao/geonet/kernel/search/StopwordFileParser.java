@@ -1,11 +1,17 @@
 package org.fao.geonet.kernel.search;
 
+import jeeves.constants.Jeeves;
 import jeeves.utils.Log;
+
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -34,8 +40,13 @@ public class StopwordFileParser {
         try {
             File file = new File(filepath);
             if (file.exists() && !file.isDirectory()) {
-                Scanner scanner = new Scanner(new FileReader(file));
+                FileInputStream fin = null;
+                Reader reader = null;
+                Scanner scanner = null;
                 try {
+                    fin = new FileInputStream(file);
+                    reader = new BufferedReader(new InputStreamReader(fin, Jeeves.ENCODING)); 
+                    scanner = new Scanner(reader);
                     while (scanner.hasNextLine()) {
                         Set<String> stopwordsFromLine = parseLine(scanner.nextLine());
                         if (stopwordsFromLine != null) {
@@ -47,7 +58,11 @@ public class StopwordFileParser {
                     }
                 }
                 finally {
-                    scanner.close();
+                    IOUtils.closeQuietly(reader);
+                    IOUtils.closeQuietly(fin);
+                    if(scanner!=null) {
+                        scanner.close();
+                    }
                 }
             }
             // file does not exist or is a directory
@@ -79,10 +94,12 @@ public class StopwordFileParser {
      */
     private static Set<String> parseLine(String line) {
         Set<String> stopwords = null;
+        @SuppressWarnings("resource")
         Scanner scanner = new Scanner(line);
         scanner.useDelimiter("\\|");
         if (scanner.hasNext()) {
             String stopwordsPart = scanner.next();
+            @SuppressWarnings("resource")
             Scanner whitespaceTokenizer = new Scanner(stopwordsPart);
             while (whitespaceTokenizer.hasNext()) {
                 String stopword = whitespaceTokenizer.next();

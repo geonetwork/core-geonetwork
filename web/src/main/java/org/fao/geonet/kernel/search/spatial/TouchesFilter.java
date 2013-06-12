@@ -44,15 +44,12 @@ import java.io.IOException;
  */
 public class TouchesFilter extends SpatialFilter
 {
-
-    private static final long serialVersionUID = 1114543251684147194L;
-
     public TouchesFilter(Query query, int numHits, Geometry geom, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException
     {
         super(query, numHits, geom, sourceAccessor);
     }
 
-    protected SpatialOperator createGeomFilter(FilterFactory2 filterFactory,
+    public SpatialOperator createGeomFilter(FilterFactory2 filterFactory,
             PropertyName geomPropertyName, Literal geomExpression)
     {
         return filterFactory.touches(geomPropertyName, geomExpression);

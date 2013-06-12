@@ -29,13 +29,15 @@ import jeeves.exceptions.JeevesClientEx;
 
 public class SchemaMatchConflictException extends JeevesClientEx
 {
+    private static final long serialVersionUID = 1L;
 	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	public SchemaMatchConflictException(String name) { this(name, null); }
+
+    public SchemaMatchConflictException(String name) { this(name, null); }
 
 	public SchemaMatchConflictException(String name, Object value)
 	{

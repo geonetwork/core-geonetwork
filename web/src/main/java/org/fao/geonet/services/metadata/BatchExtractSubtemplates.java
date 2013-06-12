@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -39,6 +38,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.Attribute;
@@ -46,10 +46,7 @@ import org.jdom.Comment;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.jdom.Parent;
 import org.jdom.Text;
-import org.jdom.filter.ContentFilter;
-import org.jdom.filter.Filter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,16 +56,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
-//=============================================================================
-
-/** Extracts subtemplates from a set of selected metadata records
-  */
-
-public class BatchExtractSubtemplates implements Service
-{
-	private Map<String,List> namespaceList = new HashMap<String,List>();
+/**
+ * Extracts subtemplates from a set of selected metadata records.
+ */
+public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
+	private Map<String,List<Namespace>> namespaceList = new HashMap<String,List<Namespace>>();
 
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
@@ -78,11 +71,10 @@ public class BatchExtractSubtemplates implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getDataManager();
-		AccessManager accessMan = gc.getAccessManager();
 		UserSession   session   = context.getUserSession();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
@@ -148,7 +140,7 @@ public class BatchExtractSubtemplates implements Service
 		indexers.addAll(metadata);
 		indexers.addAll(subtemplates);
 		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, dbms, indexers);
-		r.processWithFastIndexing();
+		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids
 		// -- at a later stage for some sort of result display
@@ -182,9 +174,9 @@ public class BatchExtractSubtemplates implements Service
 			MdInfo info = dataMan.getMetadataInfo(dbms, id);
 	
 			if (info == null) {
-				notFound.add(new Integer(id));
+				notFound.add(Integer.valueOf(id));
 			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
+				notOwner.add(Integer.valueOf(id));
 			} else {
 				extractSubtemplates(context, dataMan, dbms, id, category, xpath, getTit, xpathTit, doChanges, metadata, subtemplates, response); 	
 			}
@@ -194,7 +186,8 @@ public class BatchExtractSubtemplates implements Service
 		}
 	}
 
-	private void extractSubtemplates(ServiceContext context, DataManager dataMan, Dbms dbms, String id, String category, String xpath, String getTit, String xpathTit, boolean doChanges, Set<Integer> metadata, Set<Integer> subtemplates, Element response) throws Exception {
+	@SuppressWarnings("unchecked")
+    private void extractSubtemplates(ServiceContext context, DataManager dataMan, Dbms dbms, String id, String category, String xpath, String getTit, String xpathTit, boolean doChanges, Set<Integer> metadata, Set<Integer> subtemplates, Element response) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -203,9 +196,9 @@ public class BatchExtractSubtemplates implements Service
 		MdInfo mdInfo = dataMan.getMetadataInfo(dbms, id);
 
 		// Build a list of all Namespaces in the metadata document
-		List metadataNamespaces = namespaceList.get(mdInfo.schemaId);
+		List<Namespace> metadataNamespaces = namespaceList.get(mdInfo.schemaId);
 		if (metadataNamespaces == null) {
-			metadataNamespaces = new ArrayList();
+			metadataNamespaces = new ArrayList<Namespace>();
 			Namespace ns = md.getNamespace();
 			if (ns != null) {
 				metadataNamespaces.add(ns);
@@ -216,7 +209,7 @@ public class BatchExtractSubtemplates implements Service
 
 		new Document(md);
 		// select all nodes that come back from the xpath selectNodes
-		List nodes = Xml.selectNodes(md, xpath, metadataNamespaces);
+		List<?> nodes = Xml.selectNodes(md, xpath, metadataNamespaces);
 		if (context.isDebug() || !doChanges) {
 			context.debug("xpath \n"+xpath+"\n returned "+nodes.size()+" results");
 			if (!doChanges) {
@@ -227,7 +220,7 @@ public class BatchExtractSubtemplates implements Service
 
 
 		// for each node
-		for (Iterator iter = nodes.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = nodes.iterator(); iter.hasNext();) {
 			Object o = iter.next();
 			if (o instanceof Element) {
 				Element elem = (Element)o;
@@ -247,9 +240,9 @@ public class BatchExtractSubtemplates implements Service
 					}
 					title = xmlTitle.getText();
 				} else { // use xpathTit
-					List titNodes = Xml.selectNodes(elem, xpathTit, metadataNamespaces);
+					List<?> titNodes = Xml.selectNodes(elem, xpathTit, metadataNamespaces);
 					StringBuilder sb = new StringBuilder();
-					for (Iterator iterTit = titNodes.iterator(); iterTit.hasNext();) {
+					for (Iterator<?> iterTit = titNodes.iterator(); iterTit.hasNext();) {
 						Object oTit = iterTit.next();
 						if (oTit instanceof Element) { // getText
 							Element eTit = (Element)oTit;
@@ -304,7 +297,7 @@ public class BatchExtractSubtemplates implements Service
 				int iIndex = parent.indexOf(elem);
 				Element newElem = new Element(elem.getName(), elem.getNamespace());
 				newElem.setAttribute("uuidref", uuid);
-				newElem.setAttribute("href", dataMan.getSiteURL()+"/xml.metadata.get?uuid="+uuid, XLink.NAMESPACE_XLINK);
+				newElem.setAttribute("href", dataMan.getSiteURL(context)+"/xml.metadata.get?uuid="+uuid, XLink.NAMESPACE_XLINK);
 				newElem.setAttribute("show", "replace", XLink.NAMESPACE_XLINK);
 				parent.removeContent(iIndex);
 				parent.addContent(iIndex,newElem);
@@ -328,12 +321,9 @@ public class BatchExtractSubtemplates implements Service
 			boolean validate = false, ufo = false, indexImmediate = false;
 			dataMan.updateMetadata(context, dbms, id, md, validate, ufo, indexImmediate, context.getLanguage(), new ISODate().toString(), true); 
 
-			metadata.add(new Integer(id));
+			metadata.add(Integer.valueOf(id));
 		}
 		
 	}
 
 }
-
-//=============================================================================
-

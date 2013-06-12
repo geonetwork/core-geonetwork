@@ -16,6 +16,7 @@
     <tur>Türkçe</tur> <!-- Do not translate! -->
     <pol>Polski</pol> <!-- Do not translate! -->
     
+	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>
 	<isAdmin>Is administrator ?</isAdmin>
     <anyLanguage>Any language</anyLanguage>
@@ -714,7 +715,7 @@
 	<progressChoice value="planned">planned</progressChoice>
 	<progressChoice/>
 	<protocol>Protocol</protocol>
-	<pubdate>Publication Date</pubdate>
+    <pubdate>Publication Date</pubdate>
 	<publicationDate>Publication date</publicationDate>
 	<publisher>Publisher</publisher>
 	<purpose>Purpose</purpose>
@@ -1334,6 +1335,37 @@
     <cswServerFees>Fees</cswServerFees>
     <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
+    
+    
+    <virtualcswServer>Configure virtual CSW access point</virtualcswServer>
+	<virtualcswServerDes>Configuration of virtual CSW servers</virtualcswServerDes>
+    <virtualcswServerConfig>Configuration of virtual CSW servers</virtualcswServerConfig>
+    <virtualcswInsert>Configuration of a virtual CSW server</virtualcswInsert>
+    <virtualcswServiceName>Service name</virtualcswServiceName>
+    <virtualcswServiceDescription>Service description</virtualcswServiceDescription>
+    <virtualcswClassName>Class</virtualcswClassName>
+    <virtualcswNewService>Add a service</virtualcswNewService>
+    <virtualcswParamName>Filter type</virtualcswParamName>
+    <virtualcswParamValue>Filter value</virtualcswParamValue>
+    <virtualcswServicenameMandatory>Service name is mandatory.</virtualcswServicenameMandatory>
+    <virtualcswServicenameTooLong>Service name is too long (48 characters max)</virtualcswServicenameTooLong>
+    <virtualcswServicenameSpecialChars>Service name must not contain special characters.</virtualcswServicenameSpecialChars>
+    <virtualcswClassnameMandatory>Class name is mandatory.</virtualcswClassnameMandatory>
+    <virtualcswServiceNameStartsWith>Service name must begin with \"csw-\".</virtualcswServiceNameStartsWith>
+    
+    <virtualcswUpdateService>Update a CSW virtual server</virtualcswUpdateService>
+    
+    <virtualcswAny>Free text</virtualcswAny>
+    <virtualcswTitle>Title</virtualcswTitle>
+	<virtualcswAbstract>Abstract</virtualcswAbstract>
+	<virtualcswKeywords>Keyword</virtualcswKeywords>
+	<virtualcswDenominator>Denominator</virtualcswDenominator>
+	<virtualcswCatalog>Catalog</virtualcswCatalog>
+	<virtualcswGroup>Group</virtualcswGroup>
+	<virtualcswCategory>Category</virtualcswCategory>
+	<virtualcswType>Resource type</virtualcswType>
+    
+    
 
     <customize-elementset>Customize element set</customize-elementset>
     <csw-server-disabled>CSW server is disabled.</csw-server-disabled>
@@ -1347,6 +1379,17 @@
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+
+
+	<advancedOptions.show>show advanced options</advancedOptions.show>
+	<advancedOptions.hide>hide advanced options</advancedOptions.hide>
+	<latestDatasets>Latest</latestDatasets>
+	<popularDatasets>Popular</popularDatasets>
+	<filter>Filter</filter>
+	<welcome.text>Welcome to GeoNetwork</welcome.text>
+	<tag_label>Tags</tag_label>
+	<map_label>Map</map_label>
+
 	<markup>
 	  <title>Markup</title>
 	  <tip>@@markupName@@ markup can be used for formatting the text in this element.&lt;p>For help on the syntax visit: &lt;div> @@syntaxLink@@ &lt;/div>&lt;/p></tip>

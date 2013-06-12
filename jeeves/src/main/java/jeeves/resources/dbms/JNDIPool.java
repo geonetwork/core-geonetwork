@@ -25,12 +25,7 @@ package jeeves.resources.dbms;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.sql.Connection;
 import java.sql.SQLException;
-
-import javax.sql.DataSource;
-import javax.naming.Context;
-import javax.naming.InitialContext;
 
 import jeeves.constants.Jeeves;
 
@@ -57,7 +52,7 @@ import org.geotools.data.DataStore;
 public class JNDIPool extends AbstractDbmsPool {
 
 	private JDBCDataStore dataStore;
-	private final String unknownParam = "unknown - JNDI data source supplied by container";
+	private static final String UNKOWN_PARAM = "unknown - JNDI data source supplied by container";
 
 	// --------------------------------------------------------------------------
 	// ---
@@ -148,8 +143,8 @@ public class JNDIPool extends AbstractDbmsPool {
 	public Map<String, String> getProps() {
 		Map<String, String> result = new HashMap<String, String>();
 		result.put("name", name);
-		result.put("user", 			unknownParam);
-		result.put("password",	unknownParam);
+		result.put("user", 			UNKOWN_PARAM);
+		result.put("password",	UNKOWN_PARAM);
 		result.put("url", url);
 		return result;
 	}

@@ -23,14 +23,11 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.document.FieldSelectorResult;
 import org.apache.lucene.search.Sort;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
@@ -44,20 +41,19 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.XslUtil;
+import org.geotools.gml2.GMLConfiguration;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,45 +63,17 @@ import java.util.Set;
  */
 public class SearchController {
     
-    private final Element _summaryConfig;
 	private LuceneConfig _luceneConfig;
-	private final FieldSelector _selector;
-	private final FieldSelector _uuidselector;
+	private final Set<String> _selector;
+	private final Set<String> _uuidselector;
+    private GMLConfiguration _gmlConfig;
 
-	public SearchController(File summaryConfig, LuceneConfig luceneConfig) {
-		try {
-			if (summaryConfig != null) {
-				_summaryConfig = Xml.loadStream(new FileInputStream(
-						summaryConfig));
-			} else {
-				_summaryConfig = null;
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(
-					"Error reading summary configuration file", e);
-		}
-
+	public SearchController(LuceneConfig luceneConfig) {
 		_luceneConfig = luceneConfig;
 		
-		_selector = new FieldSelector() {
-			private static final long serialVersionUID = 1L;
-
-			public final FieldSelectorResult accept(String name) {
-				if (name.equals("_id")) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
-		
-
-		_uuidselector = new FieldSelector() {
-			private static final long serialVersionUID = 1L;
-
-			public final FieldSelectorResult accept(String name) {
-				if (name.equals("_uuid")) return FieldSelectorResult.LOAD;
-				else return FieldSelectorResult.NO_LOAD;
-			}
-		};
-		
+		_selector = Collections.singleton("_id");
+		_uuidselector = Collections.singleton("_uuid");
+		_gmlConfig = new GMLConfiguration();		
     }
 	
     public void setLuceneConfig(LuceneConfig newConfig) {
@@ -147,16 +115,13 @@ public class SearchController {
 
         Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
-        CatalogSearcher searcher = new CatalogSearcher(_summaryConfig, _luceneConfig, _selector, _uuidselector);
+        CatalogSearcher searcher = new CatalogSearcher(_gmlConfig, _luceneConfig, _selector, _uuidselector);
         
         context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
         
 		// search for results, filtered and sorted
         Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher .search(context, filterExpr, filterVersion,
                 typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
-
-        // store search results in user session
-        storeInUserSession(searcher, context, filterExpr);
 
         // retrieve actual metadata for results
         int counter = retrieveMetadataMatchingResults(context, results, summaryAndSearchResults, maxRecords, setName,
@@ -226,36 +191,6 @@ public class SearchController {
         }
         return counter;
     }
-    /**
-     * Stores searcher (with results) in user session.
-     * @param searcher 
-     *
-     * @param context service context
-     * @param filterExpr FilterExpression
-     */
-    private void storeInUserSession(CatalogSearcher searcher, ServiceContext context, Element filterExpr)  {
-        //
-        // keep results in user session
-        //
-        UserSession session = context.getUserSession();
-        session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
-        //
-        // clear selection from session when query filter change
-        //
-    QueryReprentationForSession sessionQueryReprentation = (QueryReprentationForSession) session.getProperty(Geonet.Session.SEARCH_REQUEST_ID);
-    QueryReprentationForSession requestQueryReprentation = new QueryReprentationForSession(context, filterExpr);
-
-    if (sessionQueryReprentation == null ||
-            !requestQueryReprentation.equals(sessionQueryReprentation)) {
-            // possibly close old selection
-            SelectionManager oldSelection = (SelectionManager)session.getProperty(Geonet.Session.SELECTED_RESULT);
-		    if (oldSelection != null){
-                oldSelection.close();
-                oldSelection = null;
-            }
-        }
-        session.setProperty(Geonet.Session.SEARCH_REQUEST_ID, requestQueryReprentation);
-    }
 
     /**
      * Retrieves metadata from the database. Conversion between metadata record and output schema are defined in
@@ -305,7 +240,7 @@ public class SearchController {
 		if (schema.equals("fgdc-std") || schema.equals("dublin-core"))
 		    if(outSchema != OutputSchema.OGC_CORE)
 		    	return null;
-        //
+        
 		// apply stylesheet according to setName and schema
         //
         // OGC 07-045 :
@@ -355,7 +290,7 @@ public class SearchController {
         if (outputSchema == OutputSchema.OGC_CORE) {
             prefix = "ogc";
         }
-        else if (outputSchema == OutputSchema.ISO_PROFILE) {
+        else if (outputSchema == OutputSchema.ISO_PROFILE || outputSchema == OutputSchema.OWN) {
             prefix = "iso";
         }
         else {
@@ -541,22 +476,23 @@ public class SearchController {
                                 xpath = "/" + typeName + "//" + elementName ;
                         }
                     }
+                    @SuppressWarnings("unchecked")
                     List<Element> elementsMatching = (List<Element>)Xml.selectDocumentNodes(result, xpath, namespaces);
+                    
                     if(strategy.equals("context")) {
-                        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                        if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
                             Log.debug(Geonet.CSW_SEARCH, "strategy is context, constructing context to root");
+                        }
+                        
                         List<Element> elementsInContextMatching = new ArrayList<Element>();
-                        for(Iterator<Element> i = elementsMatching.iterator(); i.hasNext();) {
-                            Element match = i.next();
+                        for (Element match : elementsInContextMatching) {
                             Element parent = match.getParentElement();
                             while(parent != null) {
-                                if(parent != null) {
                                     parent.removeContent();
                                     parent.addContent((Element)match.clone());
                                     match = (Element)parent.clone();
                                     parent = parent.getParentElement();
                                 }
-                            }
                             elementsInContextMatching.add(match);
                         }
                         elementsMatching = elementsInContextMatching;

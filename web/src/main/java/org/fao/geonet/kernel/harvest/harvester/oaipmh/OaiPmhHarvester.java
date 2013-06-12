@@ -68,21 +68,9 @@ public class OaiPmhHarvester extends AbstractHarvester
 	protected void doInit(Element node) throws BadInputEx
 	{
 		params = new OaiPmhParams(dataMan);
-		params.create(node);
-	}
+        super.setParams(params);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- doDestroy
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doDestroy(Dbms dbms) throws SQLException
-	{
-        File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
-
-		icon.delete();
-		Lib.sources.delete(dbms, params.uuid);
+        params.create(node);
 	}
 
 	//---------------------------------------------------------------------------
@@ -94,6 +82,7 @@ public class OaiPmhHarvester extends AbstractHarvester
 	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
 	{
 		params = new OaiPmhParams(dataMan);
+        super.setParams(params);
 
 		//--- retrieve/initialize information
 		params.create(node);
@@ -138,7 +127,9 @@ public class OaiPmhHarvester extends AbstractHarvester
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
 
 		params = copy;
-	}
+        super.setParams(params);
+
+    }
 
 	//---------------------------------------------------------------------------
 
@@ -168,56 +159,6 @@ public class OaiPmhHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- AbstractParameters
-	//---
-	//---------------------------------------------------------------------------
-
-	public AbstractParams getParams() { return params; }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AddInfo
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doAddInfo(Element node)
-	{
-		//--- if the harvesting is not started yet, we don't have any info
-
-		if (result == null)
-			return;
-
-		//--- ok, add proper info
-
-		Element info = node.getChild("info");
-		Element res  = getResult();
-		info.addContent(res);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- GetResult
-	//---
-	//---------------------------------------------------------------------------
-
-	protected Element getResult() {
-		Element res  = new Element("result");
-		if (result != null) {
-			add(res, "total",          result.total);
-			add(res, "added",          result.added);
-			add(res, "updated",        result.updated);
-			add(res, "unchanged",      result.unchanged);
-			add(res, "unknownSchema",  result.unknownSchema);
-			add(res, "removed",        result.locallyRemoved);
-			add(res, "unretrievable",  result.unretrievable);
-			add(res, "badFormat",      result.badFormat);
-			add(res, "doesNotValidate",result.doesNotValidate);
-		}
-		return res;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
 	//--- Harvest
 	//---
 	//---------------------------------------------------------------------------
@@ -237,23 +178,4 @@ public class OaiPmhHarvester extends AbstractHarvester
 	//---------------------------------------------------------------------------
 
 	private OaiPmhParams params;
-	private OaiPmhResult result;
 }
-
-//=============================================================================
-
-class OaiPmhResult
-{
-	public int total;
-	public int added;
-	public int updated;
-	public int unchanged;
-	public int locallyRemoved;
-	public int unknownSchema;
-	public int unretrievable;
-	public int badFormat;
-	public int doesNotValidate;
-}
-
-//=============================================================================
-

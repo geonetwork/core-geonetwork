@@ -26,6 +26,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import javax.annotation.CheckReturnValue;
+
+import jeeves.constants.Jeeves;
 import jeeves.utils.Log;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -36,6 +39,7 @@ import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.util.Xml;
 import org.jdom.Element;
 
@@ -181,7 +185,7 @@ public class GeoServerRest {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean createCoverage(String ws, String cs, File f, String metadataUuid, String metadataTitle)
+	public boolean createCoverage(String ws, String cs, File f, String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
 		String contentType = "image/tiff";
 		if (f.getName().toLowerCase().endsWith(".zip")) {
@@ -191,7 +195,7 @@ public class GeoServerRest {
 				+ "/coveragestores/" + cs + "/file.geotiff", null, f,
 				contentType, false);
 		
-		createCoverageForStore(ws, cs, null, metadataUuid, metadataTitle);
+		createCoverageForStore(ws, cs, null, metadataUuid, metadataTitle, metadataAbstract);
 		
 		return status == 201;
 	}
@@ -205,7 +209,7 @@ public class GeoServerRest {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean createCoverage(String ws, String cs, String file, String metadataUuid, String metadataTitle)
+	public boolean createCoverage(String ws, String cs, String file, String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
 		String contentType = "image/tiff";
 		String extension = "geotiff";
@@ -231,12 +235,12 @@ public class GeoServerRest {
 				+ "/coveragestores/" + cs + "/" + type + "." + extension, file,
 				null, contentType, false);
 		
-		createCoverageForStore(ws, cs, file, metadataUuid, metadataTitle);
+		createCoverageForStore(ws, cs, file, metadataUuid, metadataTitle, metadataAbstract);
 		return status == 201;
 	}
 
 	private void createCoverageForStore(String ws, String cs, String file,
-			String metadataUuid, String metadataTitle)
+			String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
 		String xml = "<coverageStore><name>" + cs + "</name><title>"
 			+ (metadataTitle != null ? metadataTitle : cs)
@@ -250,9 +254,24 @@ public class GeoServerRest {
 						+ this.baseCatalogueUrl
 						+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
 						+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
-						+ // Geopublication only allowed for ISO19139* records. The
-							// outputSchema should always return a record.
-						"&amp;ID=" + metadataUuid 
+						+ "&amp;ID=" + metadataUuid 
+					+ "</content>" 
+				+ "</metadataLink>"
+				+ "<metadataLink>" 
+					+ "<type>text/html</type>"
+					+ "<metadataType>TC211</metadataType>"
+					+ "<content>"
+						+ this.baseCatalogueUrl
+						+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
+						+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
+						+ "&amp;ID=" + metadataUuid 
+					+ "</content>" 
+				+ "</metadataLink>"
+				+ "<metadataLink>" 
+					+ "<type>text/html</type>"
+					+ "<metadataType>TC211</metadataType>"
+					+ "<content>"
+						+ this.baseCatalogueUrl + "home?uuid=" + metadataUuid
 					+ "</content>" 
 				+ "</metadataLink>"
 			+ "</metadataLinks>" 
@@ -261,6 +280,8 @@ public class GeoServerRest {
 		int statusCoverage = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
 				+ "/coveragestores/" + cs + "/coverages/" + cs + ".xml", xml,
 				null, "text/xml", false);
+		
+		checkResponseCode(statusCoverage);
 	}
 
 	/**
@@ -271,9 +292,9 @@ public class GeoServerRest {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean createCoverage(String cs, File f, String metadataUuid, String metadataTitle) throws IOException {
+	public boolean createCoverage(String cs, File f, String metadataUuid, String metadataTitle, String metadataAbstract) throws IOException {
 		// TODO : check default workspace is not null ?
-		return createCoverage(getDefaultWorkspace(), cs, f, metadataUuid, metadataTitle);
+		return createCoverage(getDefaultWorkspace(), cs, f, metadataUuid, metadataTitle, metadataAbstract);
 	}
 
 	/**
@@ -286,8 +307,8 @@ public class GeoServerRest {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean createCoverage(String cs, String f, String metadataUuid, String metadataTitle) throws IOException {
-		return createCoverage(getDefaultWorkspace(), cs, f, metadataUuid, metadataTitle);
+	public boolean createCoverage(String cs, String f, String metadataUuid, String metadataTitle, String metadataAbstract) throws IOException {
+		return createCoverage(getDefaultWorkspace(), cs, f, metadataUuid, metadataTitle, metadataAbstract);
 	}
 
 	/**
@@ -298,9 +319,9 @@ public class GeoServerRest {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean updateCoverage(String ws, String ds, File f, String metadataUuid, String metadataTitle)
+	public boolean updateCoverage(String ws, String ds, File f, String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
-		return createCoverage(ws, ds, f, metadataUuid, metadataTitle);
+		return createCoverage(ws, ds, f, metadataUuid, metadataTitle, metadataAbstract);
 	}
 
 	/**
@@ -310,8 +331,8 @@ public class GeoServerRest {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean updateCoverage(String ds, File f, String metadataUuid, String metadataTitle) throws IOException {
-		return createCoverage(getDefaultWorkspace(), ds, f, metadataUuid, metadataTitle);
+	public boolean updateCoverage(String ds, File f, String metadataUuid, String metadataTitle, String metadataAbstract) throws IOException {
+		return createCoverage(getDefaultWorkspace(), ds, f, metadataUuid, metadataTitle, metadataAbstract);
 	}
 
 	/**
@@ -485,12 +506,14 @@ public class GeoServerRest {
 			int status = sendREST(GeoServerRest.METHOD_GET, "/layers/" + layer
 					+ ".xml", null, null, null, true);
 
+			checkResponseCode(status);
 			Element layerProperties = Xml.loadString(getResponse(), false);
 			String styleName = layerProperties.getChild("defaultStyle")
 					.getChild("name").getText();
 
 			status = sendREST(GeoServerRest.METHOD_GET, "/styles/" + styleName
 					+ ".sld", null, null, null, true);
+            checkResponseCode(status);
 
 			String currentStyle = getResponse();
 
@@ -498,10 +521,12 @@ public class GeoServerRest {
 					+ layer + ".sld</filename></style>";
 			status = sendREST(GeoServerRest.METHOD_POST, "/styles", body, null,
 					"text/xml", true);
+            checkResponseCode(status);
 
 			status = sendREST(GeoServerRest.METHOD_PUT, "/styles/" + layer
 					+ "_style", currentStyle, null,
 					"application/vnd.ogc.sld+xml", true);
+            checkResponseCode(status);
 
 			body = "<layer><defaultStyle><name>"
 					+ layer
@@ -511,6 +536,7 @@ public class GeoServerRest {
 			// http://jira.codehaus.org/browse/GEOS-3964
 			status = sendREST(GeoServerRest.METHOD_PUT, "/layers/" + layer,
 					body, null, "text/xml", true);
+            checkResponseCode(status);
 
 		} catch (Exception e) {
             if(Log.isDebugEnabled("GeoServerRest"))
@@ -521,7 +547,13 @@ public class GeoServerRest {
 		return status;
 	}
 
-	public boolean createDatabaseDatastore(String ds, String host, String port,
+	private void checkResponseCode(int status2) {
+	    if(status2 > 399) {
+	        Log.warning(Geonet.GEOPUBLISH, "Warning a bad response code to message was returned:"+status2);
+	    }
+    }
+
+    public boolean createDatabaseDatastore(String ds, String host, String port,
 			String db, String user, String pwd, String dbType, String ns)
 			throws IOException {
 		return createDatabaseDatastore(getDefaultWorkspace(), ds, host, port,
@@ -547,13 +579,13 @@ public class GeoServerRest {
 	}
 
 	public boolean createFeatureType(String ds, String ft, boolean createStyle,
-			String metadataUuid, String metadataTitle) throws IOException {
+			String metadataUuid, String metadataTitle, String metadataAbstract) throws IOException {
 		return createFeatureType(getDefaultWorkspace(), ds, ft, createStyle,
-				metadataUuid, metadataTitle);
+				metadataUuid, metadataTitle, metadataAbstract);
 	}
 
 	public boolean createFeatureType(String ws, String ds, String ft,
-			boolean createStyle, String metadataUuid, String metadataTitle)
+			boolean createStyle, String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
 		String xml = "<featureType><name>" + ft + "</name><title>" + ft
 				+ "</title>" + "</featureType>";
@@ -564,7 +596,9 @@ public class GeoServerRest {
 
 		xml = "<featureType><title>"
 				+ (metadataTitle != null ? metadataTitle : ft)
-				+ "</title><enabled>true</enabled>" 
+				+ "</title><abstract>"
+				+ (metadataAbstract != null ? metadataAbstract : ft)
+				+ "</abstract><enabled>true</enabled>" 
 				+ "<metadataLinks>"
 					+ "<metadataLink>" 
 						+ "<type>text/xml</type>"
@@ -573,9 +607,25 @@ public class GeoServerRest {
 							+ this.baseCatalogueUrl
 							+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
 							+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
-							+ // Geopublication only allowed for ISO19139* records. The
-							// outputSchema should always return a record.
-							"&amp;ID=" + metadataUuid + "</content>" 
+							+ "&amp;ID=" + metadataUuid 
+						+ "</content>" 
+					+ "</metadataLink>"
+					+ "<metadataLink>" 
+						+ "<type>text/xml</type>"
+						+ "<metadataType>TC211</metadataType>"
+						+ "<content>"
+							+ this.baseCatalogueUrl
+							+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
+							+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
+							+ "&amp;ID=" + metadataUuid 
+						+ "</content>" 
+					+ "</metadataLink>"
+					+ "<metadataLink>" 
+						+ "<type>text/html</type>"
+						+ "<metadataType>TC211</metadataType>"
+						+ "<content>"
+							+ this.baseCatalogueUrl + "home?uuid=" + metadataUuid
+						+ "</content>" 
 					+ "</metadataLink>"
 				+ "</metadataLinks>" 
 			+ "</featureType>";
@@ -584,9 +634,11 @@ public class GeoServerRest {
 				"text/xml", true);
 
 		// Create layer for feature type (require for MapServer REST API)
-		int s = sendREST(GeoServerRest.METHOD_PUT, "/layers/" + ft, null, null,
+		status = sendREST(GeoServerRest.METHOD_PUT, "/layers/" + ft, null, null,
 				"text/xml", false);
 
+		checkResponseCode(status);
+		
 		if (createStyle) {
 			createStyle(ft);
 		}
@@ -610,7 +662,7 @@ public class GeoServerRest {
 	 * @return
 	 * @throws IOException
 	 */
-	public int sendREST(String method, String urlParams, String postData,
+	public @CheckReturnValue int sendREST(String method, String urlParams, String postData,
 			File file, String contentType, Boolean saveResponse)
 			throws IOException {
 
@@ -632,7 +684,7 @@ public class GeoServerRest {
 			}
 			if (postData != null) {
 				((PutMethod) m).setRequestEntity(new StringRequestEntity(
-						postData));
+						postData, contentType, Jeeves.ENCODING));
 			}
 		} else if (method.equals(METHOD_DELETE)) {
 			m = new DeleteMethod(url);
@@ -640,7 +692,7 @@ public class GeoServerRest {
 			m = new PostMethod(url);
 			if (postData != null) {
 				((PostMethod) m).setRequestEntity(new StringRequestEntity(
-						postData));
+						postData, contentType, Jeeves.ENCODING));
 			}
 
 		} else {

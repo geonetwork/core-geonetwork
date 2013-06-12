@@ -27,7 +27,6 @@
 
 package org.fao.geonet.kernel.schema;
 
-import org.jdom.Attribute;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import java.util.List;
 
 //==============================================================================
 
-class ComplexContentEntry
+class ComplexContentEntry extends BaseHandler
 {
 	public String base;
 	public ArrayList<String> alAttribGroups = new ArrayList<String>();
@@ -70,32 +69,29 @@ class ComplexContentEntry
 
 	private void handleAttribs(ElementInfo ei)
 	{
-		List attribs = ei.element.getAttributes();
-
-        for (Object attrib : attribs) {
-            Attribute at = (Attribute) attrib;
-
-            String attrName = at.getName();
-
-            if (attrName.equals("mixed")) {
-                Logger.log();
-            }
-            else {
-                Logger.log();
-            }
-        }
+//		@SuppressWarnings("unchecked")
+//        List<Attribute> attribs = ei.element.getAttributes();
+//
+//        for (Attribute at : attribs) {
+//            String attrName = at.getName();
+//  TODO:
+//            if (attrName.equals("mixed")) {
+//                Logger.log();
+//            }
+//            else {
+//                Logger.log();
+//            }
+//        }
 	}
 
 	//---------------------------------------------------------------------------
 
 	private void handleChildren(ElementInfo ei)
 	{
-		List children = ei.element.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = ei.element.getChildren();
 
-        for (Object aChildren : children) {
-            Element elChild = (Element) aChildren;
-            String elName = elChild.getName();
-
+        for (Element elChild : children) {
             if (elChild.getName().equals("extension")) {
                 handleExtension(elChild, ei);
             }
@@ -117,18 +113,16 @@ class ComplexContentEntry
 	{
 		base = el.getAttributeValue("base");
 
-		List extension = el.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> extension = el.getChildren();
 
-        for (Object anExtension : extension) {
-            Element elExt = (Element) anExtension;
-
+        for (Element elExt : extension) {
             if (elExt.getName().equals("sequence")) {
-                List sequence = elExt.getChildren();
+                @SuppressWarnings("unchecked")
+                List<Element> sequence = elExt.getChildren();
 
-                for (Object aSequence : sequence) {
-                    Element elSeq = (Element) aSequence;
-
-                    if (elSeq.getName().equals("element") || elSeq.getName().equals("choice") || elSeq.getName().equals("group") || elSeq.getName().equals("sequence")) {
+                for (Element elSeq : sequence) {
+                    if (isChoiceOrElementOrGroupOrSequence(elSeq)) {
                         alElements.add(new ElementEntry(elSeq, ei.file, ei.targetNS, ei.targetNSPrefix));
                     }
 
@@ -170,25 +164,14 @@ class ComplexContentEntry
 
 		//--- handle children
 
-		List restriction = el.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> restriction = el.getChildren();
 
-        for (Object aRestriction : restriction) {
-            Element elRes = (Element) aRestriction;
+        for (Element elRes: restriction) {
             String elName = elRes.getName();
 
             if (elRes.getName().equals("sequence")) {
-                List sequence = elRes.getChildren();
-
-                for (Object aSequence : sequence) {
-                    Element elSeq = (Element) aSequence;
-
-                    if (elSeq.getName().equals("element") || elSeq.getName().equals("choice") || elSeq.getName().equals("group") || elSeq.getName().equals("sequence")) {
-                        alElements.add(new ElementEntry(elSeq, ei.file, ei.targetNS, ei.targetNSPrefix));
-                    }
-                    else {
-                        Logger.log();
-                    }
-                }
+                handleSequence(elRes, alElements, ei);
             }
 
             else if (elRes.getName().equals("group")) {

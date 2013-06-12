@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -37,20 +36,18 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
-//=============================================================================
-
-/** Assigns status to metadata.  */
-
-public class BatchUpdateStatus implements Service
-{
+/**
+ * Assigns status to metadata.
+ */
+public class BatchUpdateStatus extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -65,7 +62,7 @@ public class BatchUpdateStatus implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String status = Util.getParam(params, Params.STATUS);
 		String changeMessage = Util.getParam(params, Params.CHANGE_MESSAGE);
@@ -93,11 +90,11 @@ public class BatchUpdateStatus implements Service
 			MdInfo info = dm.getMetadataInfo(dbms, id);
 
 			if (info == null) {
-				notFound.add(new Integer(id));
+				notFound.add(Integer.valueOf(id));
 			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
+				notOwner.add(Integer.valueOf(id));
 			} else {
-				metadata.add(new Integer(id));
+				metadata.add(Integer.valueOf(id));
 			}
 		}
 		}
@@ -115,7 +112,7 @@ public class BatchUpdateStatus implements Service
 		//--- reindex metadata
 		context.info("Re-indexing metadata");
 		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, dbms, metadata);
-		r.processWithFastIndexing();
+		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids
 		// -- at a later stage for some sort of result display
@@ -126,6 +123,3 @@ public class BatchUpdateStatus implements Service
 						.addContent(new Element("noChange").setText(noChange.size()+""));
 	}
 }
-
-//=============================================================================
-

@@ -2,7 +2,6 @@ package org.fao.geonet.kernel;
 
 import java.util.Map;
 
-import org.fao.geonet.languages.IsoLanguagesMapper;
 
 /**
  * Provides access for looking up thesauri.

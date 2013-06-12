@@ -31,10 +31,10 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
-//=============================================================================
-
-public class Get implements Service
-{
+/**
+ *
+ */
+public class Get implements Service {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -49,8 +49,7 @@ public class Get implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		//--- if 'id' is null all entries are returned
 
 		String id = params.getChildText("id");
@@ -58,7 +57,7 @@ public class Get implements Service
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		Element result = gc.getHarvestManager().get(id, sortField);
+		Element result = gc.getHarvestManager().get(id, context, sortField);
 
 		if (result != null)
 			return result;
@@ -68,6 +67,3 @@ public class Get implements Service
 		throw new ObjectNotFoundEx(id);
 	}
 }
-
-//=============================================================================
-

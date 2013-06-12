@@ -31,7 +31,6 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
@@ -94,7 +93,6 @@ public class GetRandom implements Service
 		if (System.currentTimeMillis() > _lastUpdateTime + _timeBetweenUpdates)
 		{
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-			DataManager   dataMan   = gc.getDataManager();
 			SearchManager searchMan = gc.getSearchmanager();
 			MetaSearcher  searcher  = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
 
@@ -119,7 +117,8 @@ public class GetRandom implements Service
 				presentRequest.addContent(new Element("from").setText("1"));
 				presentRequest.addContent(new Element("to").setText(searcher.getSize()+""));
            	 
-				List results = searcher.present(context, presentRequest, _config).getChildren();
+				@SuppressWarnings("unchecked")
+                List<Element> results = searcher.present(context, presentRequest, _config).getChildren();
 	
 				_response = new Element("response");
 				for (int i = 0; i < _maxItems && results.size() > 1; i++) {

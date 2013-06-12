@@ -30,12 +30,10 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -55,12 +53,8 @@ class Harvester
 	public Harvester(Logger log, ServiceContext context, Dbms dbms, Z3950ConfigParams params)
 	{
 		this.log    = log;
-		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		this.sm     = gc.getSettingManager();
-		this.dm     = gc.getDataManager();
+		this.context = context;
 	}
 
 	//--------------------------------------------------------------------------
@@ -69,10 +63,10 @@ class Harvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public Z3950ConfigResult harvest() throws Exception
+	public HarvestResult harvest() throws Exception
 	{
 
-		XmlRequest req = new XmlRequest(params.host, new Integer(params.port));
+		XmlRequest req = new XmlRequest(params.host, Integer.valueOf(params.port));
 
 		Lib.net.setupProxy(context, req);
 
@@ -91,7 +85,7 @@ class Harvester
 		//--- config local node
 
 		Z3950Config  configer = new Z3950Config(log, context, req, params);
-		Z3950ConfigResult result  = configer.config(records);
+		HarvestResult result  = configer.config(records);
 
 		return result;
 	}
@@ -153,11 +147,8 @@ class Harvester
 	//---------------------------------------------------------------------------
 
 	private Logger         log;
-	private Dbms           dbms;
 	private Z3950ConfigParams   params;
-  private ServiceContext context;
-	private SettingManager sm;
-	private DataManager dm;
+	private ServiceContext      context;
 }
 
 //=============================================================================

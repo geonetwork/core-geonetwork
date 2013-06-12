@@ -25,13 +25,13 @@ package org.fao.geonet.services.metadata;
 
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Stores all operations allowed for a metadata. Called by the metadata.admin service.
  */
-public class UpdateCategories implements Service {
+public class UpdateCategories extends NotInReadOnlyModeService {
 
     /**
      *
@@ -57,7 +57,7 @@ public class UpdateCategories implements Service {
      * @return
      * @throws Exception
      */
-	public Element exec(Element params, ServiceContext context) throws Exception {
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		DataManager dataMan = gc.getDataManager();
@@ -73,10 +73,10 @@ public class UpdateCategories implements Service {
 		dataMan.deleteAllMetadataCateg(dbms, id);
 
 		//--- set new ones
-		List list = params.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = params.getChildren();
 
-		for(int i=0; i<list.size(); i++) {
-			Element el = (Element) list.get(i);
+		for (Element el : list) {
 			String name = el.getName();
 
 			if (name.startsWith("_"))

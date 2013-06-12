@@ -40,12 +40,14 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.xml.NamespaceUtils;
@@ -54,7 +56,6 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.util.CollectionUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -85,8 +86,8 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * @param summaryConfig
      * @param luceneConfig
      */
-	public GetRecords(File summaryConfig, LuceneConfig luceneConfig) {
-    	_searchController = new SearchController(summaryConfig, luceneConfig);
+	public GetRecords(LuceneConfig luceneConfig) {
+    	_searchController = new SearchController(luceneConfig);
     }
 
     /**
@@ -112,7 +113,14 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      */
     public Element execute(Element request, ServiceContext context) throws CatalogException {
         String timeStamp = new ISODate().toString();
-
+        
+        // Return exception is indexing.
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataManager = gc.getDataManager();
+        if (dataManager.isIndexing()) {
+            throw new RuntimeException("Catalog is indexing records, retry later.");
+        }
+        
         //
         // some validation checks (note: this is not an XSD validation)
         //
@@ -124,7 +132,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         checkVersion(request);
 
         // GeoNetwork only supports "application/xml"
-        String outputFormat = checkOutputFormat(request);
+        checkOutputFormat(request);
 
         // one of ElementName XOR ElementSetName must be requested
         checkElementNamesXORElementSetName(request);
@@ -171,17 +179,14 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             setName = getElementSetName(query , ElementSetName.SUMMARY);
             // elementsetname is FULL: use customized elementset if defined
             if(setName.equals(ElementSetName.FULL)) {
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
                 List<Element> customElementSets;
                 Dbms dbms = null;
                 try {
 					dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-                    customElementSets = gc.getDataManager().getCustomElementSets(dbms);
+                    customElementSets = dataManager.getCustomElementSets(dbms);
                     // custom elementset defined
                     if(!CollectionUtils.isEmpty(customElementSets)) {
-                        if(elemNames == null) {
-                            elemNames = new HashSet<String>();
-                        }
+                        elemNames = new HashSet<String>();
                         for(Element customElementSet : customElementSets) {
                             elemNames.add(customElementSet.getChildText("xpath"));
                         }
@@ -501,7 +506,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * metadata record elements the query should present in the response to the GetRecords operation.
      *
      * OGC 07-045 8.2.2.1.1:
-     * Mandatory: Must support *one* of “csw:Record” or “gmd:MD_Metadata” in a query. Default value is “csw:Record”.
+     * Mandatory: Must support *one* of â€œcsw:Recordâ€� or â€œgmd:MD_Metadataâ€� in a query. Default value is â€œcsw:Recordâ€�.
      *
      * (note how OGC 07-045 mixes up a mandatory parameter that has a default value !!)
      *
@@ -553,6 +558,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 return cswPrefix + ":Record";
             }
             // not empty: scan comma-separated string
+            @SuppressWarnings("resource")
             Scanner commaSeparator = new Scanner(typeNamesValue);
             commaSeparator.useDelimiter(",");
             String result = cswPrefix + ":Record";
@@ -707,26 +713,26 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * @return
      * @throws InvalidParameterValueEx
      */
-    private int getHopCount(Element request) throws InvalidParameterValueEx {
-        Element ds = request.getChild("DistributedSearch", Csw.NAMESPACE_CSW);
-        if (ds == null) {
-            return -1;
-        }
-        String hopCount = ds.getAttributeValue("hopCount");
-        if (hopCount == null) {
-            return 2;
-        }
-        try {
-            int value = Integer.parseInt(hopCount);
-            if (value >= 0) {
-                return value;
-            }
-        }
-        catch (NumberFormatException ignored) {
-            throw new InvalidParameterValueEx("hopCount", hopCount);
-        }
-        throw new InvalidParameterValueEx("hopCount", hopCount);
-    }
+//    private int getHopCount(Element request) throws InvalidParameterValueEx {
+//        Element ds = request.getChild("DistributedSearch", Csw.NAMESPACE_CSW);
+//        if (ds == null) {
+//            return -1;
+//        }
+//        String hopCount = ds.getAttributeValue("hopCount");
+//        if (hopCount == null) {
+//            return 2;
+//        }
+//        try {
+//            int value = Integer.parseInt(hopCount);
+//            if (value >= 0) {
+//                return value;
+//            }
+//        }
+//        catch (NumberFormatException ignored) {
+//            throw new InvalidParameterValueEx("hopCount", hopCount);
+//        }
+//        throw new InvalidParameterValueEx("hopCount", hopCount);
+//    }
 
     /**
      * TODO javadoc.
@@ -746,10 +752,10 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 			return null;
         }
 
-		List list = sortBy.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = sortBy.getChildren();
 		List<Pair<String, Boolean>> sortFields = new ArrayList<Pair<String, Boolean>>();
-        for (Object aList : list) {
-            Element el = (Element) aList;
+        for (Element el : list) {
             String field = el.getChildText("PropertyName", Csw.NAMESPACE_OGC);
             String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
 
@@ -762,8 +768,12 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 sortFields.add(Pair.read(field, "DESC".equals(order)));
             }
         }
+        
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SearchManager sm = gc.getSearchmanager();
+        boolean requestedLanguageOnTop = sm.get_settingInfo().getRequestedLanguageOnTop();
 		// we always want to keep the relevancy as part of the sorting mechanism
-		return LuceneSearcher.makeSort(sortFields, context.getLanguage(), false);
+		return LuceneSearcher.makeSort(sortFields, context.getLanguage(), requestedLanguageOnTop);
 	}
 
 
@@ -778,6 +788,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             Log.debug(Geonet.CSW, "GetRecords getElementNames");
         Set<String> elementNames = null;
 	    if (query != null) {
+            @SuppressWarnings("unchecked")
             List<Element> elementList = query.getChildren("ElementName", query.getNamespace());
             for(Element element : elementList) {
                 if(elementNames == null) {
@@ -810,37 +821,37 @@ public class GetRecords extends AbstractOperation implements CatalogService {
      * @return list of typenames, or null if not found
      * @throws InvalidParameterValueEx if a typename is illegal
      */
-    private Set<String> getTypeNames(Element query) throws InvalidParameterValueEx {
-        Set<String> typeNames = null;
-        String typeNames$ = query.getAttributeValue("typeNames");
-        if(typeNames$ != null) {
-            Scanner commaSeparatedScanner = new Scanner(typeNames$).useDelimiter(",");
-            while(commaSeparatedScanner.hasNext()) {
-                String typeName = commaSeparatedScanner.next().trim();
-                // These two are explicitly not allowed as search targets in CSW 2.0.2, so we throw an exception if the
-                // client asks for them
-                if (typeName.equals("csw:BriefRecord") || typeName.equals("csw:SummaryRecord")) {
-                    throw new InvalidParameterValueEx("typeName", typeName);
-                }
-                if(typeNames == null) {
-                    typeNames = new HashSet<String>();
-                }
-                typeNames.add(typeName);
-            }
-        }
-        // TODO in if(isDebugEnabled) condition. Jeeves LOG doesn't provide that useful function though.
-        if(typeNames != null) {
-            for(String typeName : typeNames) {
-                if(Log.isDebugEnabled(Geonet.CSW))
-                    Log.debug(Geonet.CSW, "TypeName: " + typeName);
-            }
-        }
-        else {
-            if(Log.isDebugEnabled(Geonet.CSW))
-                Log.debug(Geonet.CSW, "No TypeNames found in request");
-        }
-        // TODO end if(isDebugEnabled)
-        return typeNames;
-    }
+//    private Set<String> getTypeNames(Element query) throws InvalidParameterValueEx {
+//        Set<String> typeNames = null;
+//        String typeNames$ = query.getAttributeValue("typeNames");
+//        if(typeNames$ != null) {
+//            Scanner commaSeparatedScanner = new Scanner(typeNames$).useDelimiter(",");
+//            while(commaSeparatedScanner.hasNext()) {
+//                String typeName = commaSeparatedScanner.next().trim();
+//                // These two are explicitly not allowed as search targets in CSW 2.0.2, so we throw an exception if the
+//                // client asks for them
+//                if (typeName.equals("csw:BriefRecord") || typeName.equals("csw:SummaryRecord")) {
+//                    throw new InvalidParameterValueEx("typeName", typeName);
+//                }
+//                if(typeNames == null) {
+//                    typeNames = new HashSet<String>();
+//                }
+//                typeNames.add(typeName);
+//            }
+//        }
+//        // TODO in if(isDebugEnabled) condition. Jeeves LOG doesn't provide that useful function though.
+//        if(typeNames != null) {
+//            for(String typeName : typeNames) {
+//                if(Log.isDebugEnabled(Geonet.CSW))
+//                    Log.debug(Geonet.CSW, "TypeName: " + typeName);
+//            }
+//        }
+//        else {
+//            if(Log.isDebugEnabled(Geonet.CSW))
+//                Log.debug(Geonet.CSW, "No TypeNames found in request");
+//        }
+//        // TODO end if(isDebugEnabled)
+//        return typeNames;
+//    }
 
 }

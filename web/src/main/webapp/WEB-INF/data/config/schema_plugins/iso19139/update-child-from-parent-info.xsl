@@ -80,10 +80,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
             <!-- Identification -->
             <gmd:identificationInfo>
-                <xsl:for-each select="/root/child/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification|
-	            /root/child/gmd:MD_Metadata/gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
-	            /root/child/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification|
-        		/root/child/gmd:MD_Metadata/gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
+                <xsl:for-each select="/root/child/gmd:MD_Metadata/gmd:identificationInfo/*">
 	            	<xsl:copy>
 	            		<xsl:copy-of select="@*"/>
 		                <xsl:copy-of select="gmd:citation"/>
@@ -227,10 +224,7 @@
         <xsl:variable name="childElement">
             <xsl:choose>
                 <xsl:when test="$subLevel=true()">
-                    <xsl:copy-of select="/root/child/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/*[name(.)=name($name)]|
-                    /root/child/gmd:MD_Metadata/gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']/*[name(.)=name($name)]|
-		            /root/child/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/*[name(.)=name($name)]|
-    	    		/root/child/gmd:MD_Metadata/gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/*[name(.)=name($name)]"/>        
+                    <xsl:copy-of select="/root/child/gmd:MD_Metadata/gmd:identificationInfo/*/*[name(.)=name($name)]"/>        
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:copy-of select="/root/child/gmd:MD_Metadata/*[name(.)=name($name)]"/>

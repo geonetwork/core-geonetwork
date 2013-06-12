@@ -22,18 +22,19 @@
 //==============================================================================
 package org.fao.geonet.guiservices.templates;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
-
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Saves display order of a list of templates.
@@ -48,7 +49,9 @@ public class SaveDisplayOrder implements Service {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         DataManager dm = gc.getDataManager() ;
+        @SuppressWarnings("unchecked")
         List<Element> requestParameters = params.getChildren();
+        List<String> ids = new ArrayList<String>();
         for (Element param : requestParameters) {
             // the request params come in as e.g. <displayorder-30749>5</displayorder-30749> where
             // the part after the dash is the metadata id.
@@ -58,8 +61,10 @@ public class SaveDisplayOrder implements Service {
                 String displayPosition = param.getText();
                 dm.updateDisplayOrder(dbms, id, displayPosition);
                 dbms.commit();
+                ids.add(id);
             }
         }
+        dm.indexInThreadPool(context, ids, dbms);
         return null;
     }
 }

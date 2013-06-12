@@ -8,7 +8,6 @@
   xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
   exclude-result-prefixes="gmx xsi gmd gco gml gts srv xlink exslt geonet">
 
-  <xsl:include href="metadata-markup.xsl"/>
 
   <xsl:template name="view-with-header-iso19139">
     <xsl:param name="tabs"/>
@@ -261,12 +260,15 @@
           </xsl:choose>
           
         </xsl:for-each>
+        
+        
         <xsl:variable name="type" select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>
         <xsl:if test="$type">
           (<xsl:value-of
             select="/root/gui/schemas/*[name(.)='iso19139']/codelists/codelist[@name = 'gmd:MD_KeywordTypeCode']/
-              entry[code = $type]/label"/>)
+            entry[code = $type]/label"/>)
         </xsl:if>
+        
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
@@ -529,18 +531,9 @@
           <td class="main">
             <!-- Usually, protocole format is OGC:WMS-version-blahblah, remove ':' and get
             prefix of the protocol to set the CSS icon class-->
-            <xsl:choose>
-                <xsl:when test="contains(current-grouping-key(), ':')">
-            		<span class="{translate(substring-before(current-grouping-key(), '-'), ':', '')} icon">
-            			<xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'gmd:protocol']/helper/option[@value=normalize-space(current-grouping-key())]"/>
-            		</span>
-            	</xsl:when>
-            	<xsl:otherwise>
-            		<span class="{current-grouping-key()} icon">
-            			<xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'gmd:protocol']/helper/option[@value=normalize-space(current-grouping-key())]"/>
-            		</span>
-            	</xsl:otherwise>
-            </xsl:choose>
+            <span class="{translate(substring-before(current-grouping-key(), '-'), ':', '')} icon">
+                <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'gmd:protocol']/helper/option[@value=normalize-space(current-grouping-key())]"/>
+            </span>
           </td>
           <td>
             <ul>
@@ -627,7 +620,7 @@
         else geonet:get-thumbnail-url($fileName, //geonet:info, /root/gui/locService)"/>
   
       <a href="{$url}" rel="lightbox-viewset">
-        <img class="logo" src="{$url}" alt="thumbnail"
+        <img class="thumbnail" src="{$url}" alt="thumbnail"
           title="{gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString}"/>
       </a>
     </xsl:if>

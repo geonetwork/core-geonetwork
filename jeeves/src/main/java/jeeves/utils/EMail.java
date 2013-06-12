@@ -31,7 +31,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.Date;
+
+import org.apache.commons.io.IOUtils;
+
+import jeeves.constants.Jeeves;
 
 //=============================================================================
 
@@ -123,20 +128,23 @@ public class EMail
 	public boolean send() throws IOException
 	{
 		Socket socket = new Socket(sMailServer, iPort);
-
-		in  = new BufferedReader(new InputStreamReader(new DataInputStream(socket.getInputStream())));
-		out = new OutputStreamWriter(new DataOutputStream(socket.getOutputStream()), "ISO-8859-1");
-
-		if (lookMailServer())
-		if (sendData("2",   "HELO " + InetAddress.getLocalHost().getHostName() + "\r\n"))
-		if (sendData("2",   "MAIL FROM: <" + sFrom + ">\r\n"))
-		if (sendData("2",   "RCPT TO: <" + sTo + ">\r\n"))
-		if (sendData("354", "DATA\r\n"))
-		if (sendData("2",   buildContent()))
-		if (sendData("2",   "QUIT\r\n"))
-			return true;
-
-		sendData("2", "QUIT\r\n");
+		try {
+    		in  = new BufferedReader(new InputStreamReader(new DataInputStream(socket.getInputStream()), Charset.forName(Jeeves.ENCODING)));
+    		out = new OutputStreamWriter(new DataOutputStream(socket.getOutputStream()), "ISO-8859-1");
+    
+    		if (lookMailServer())
+    		if (sendData("2",   "HELO " + InetAddress.getLocalHost().getHostName() + "\r\n"))
+    		if (sendData("2",   "MAIL FROM: <" + sFrom + ">\r\n"))
+    		if (sendData("2",   "RCPT TO: <" + sTo + ">\r\n"))
+    		if (sendData("354", "DATA\r\n"))
+    		if (sendData("2",   buildContent()))
+    		if (sendData("2",   "QUIT\r\n"))
+    			return true;
+    
+    		sendData("2", "QUIT\r\n");
+		} finally {
+		    IOUtils.closeQuietly(socket);
+		}
 		return false;
 	}
 
@@ -153,8 +161,11 @@ public class EMail
 	private boolean lookMailServer() throws IOException
 	{
 		sLastError = in.readLine();
-
-		return sLastError.startsWith("2");
+		if (sLastError != null) {
+		    return sLastError.startsWith("2");
+		} else {
+		    return false;
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -167,7 +178,11 @@ public class EMail
 		out.flush();
 
 		sLastError = in.readLine();
-		return sLastError.startsWith(error);
+		if (sLastError != null) {
+		    return sLastError.startsWith(error);
+		} else {
+		    return false;
+		}
 	}
 
 	//--------------------------------------------------------------------------

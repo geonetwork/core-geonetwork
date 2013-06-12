@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -35,6 +34,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.util.HashSet;
@@ -42,19 +42,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-//=============================================================================
 
-/** Assigns categories to metadata.  */
-
-public class BatchUpdateCategories implements Service
-{
+/**
+ * Assigns categories to metadata.
+ */
+public class BatchUpdateCategories extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+        super.init(appPath, params);
+    }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -62,7 +63,7 @@ public class BatchUpdateCategories implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -88,25 +89,25 @@ public class BatchUpdateCategories implements Service
 
 			MdInfo info = dm.getMetadataInfo(dbms, id);
 			if (info == null) {
-				notFound.add(new Integer(id));
+				notFound.add(Integer.valueOf(id));
 			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
+				notOwner.add(Integer.valueOf(id));
 			} else {
 
 				//--- remove old operations
 				dm.deleteAllMetadataCateg(dbms, id);
 
 				//--- set new ones
-				List list = params.getChildren();
+				@SuppressWarnings("unchecked")
+                List<Element> list = params.getChildren();
 
-				for(int i=0; i<list.size(); i++) {
-					Element el = (Element) list.get(i);
+				for (Element el : list) {
 					String name = el.getName();
 
 					if (name.startsWith("_"))
 						dm.setCategory(context, dbms, id, name.substring(1));
 				}
-				metadata.add(new Integer(id));
+				metadata.add(Integer.valueOf(id));
 			}
 		}
 		}
@@ -116,7 +117,7 @@ public class BatchUpdateCategories implements Service
 		//--- reindex metadata
 		context.info("Re-indexing metadata");
 		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, dbms, metadata);
-		r.processWithFastIndexing();
+		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids
 		// -- at a later stage for some sort of result display
@@ -126,6 +127,3 @@ public class BatchUpdateCategories implements Service
 						.addContent(new Element("notFound").setText(notFound.size()+""));
 	}
 }
-
-//=============================================================================
-

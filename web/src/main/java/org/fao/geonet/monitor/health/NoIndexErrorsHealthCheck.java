@@ -3,17 +3,15 @@ package org.fao.geonet.monitor.health;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
 
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanClause.Occur;
-import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 
 import com.yammer.metrics.core.HealthCheck;
 
@@ -33,7 +31,8 @@ public class NoIndexErrorsHealthCheck implements HealthCheckFactory {
 
                 SearchManager searchMan = gc.getSearchmanager();
 
-                IndexReader reader = searchMan.getIndexReader(null);
+                IndexAndTaxonomy indexAndTaxonomy= searchMan.getNewIndexReader(null);
+                GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
                 try {
                     TermQuery indexError = new TermQuery(new Term("_indexingError", "1"));
                     TopDocs hits = new IndexSearcher(reader).search(indexError, 1);
@@ -45,7 +44,7 @@ public class NoIndexErrorsHealthCheck implements HealthCheckFactory {
                 } catch (Throwable e) {
                     return Result.unhealthy(e);
                 } finally {
-                    searchMan.releaseIndexReader(reader);
+                    searchMan.releaseIndexReader(indexAndTaxonomy);
                 }
             }
         };

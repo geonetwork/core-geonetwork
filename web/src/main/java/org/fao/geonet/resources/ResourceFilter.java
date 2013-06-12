@@ -32,12 +32,12 @@ public class ResourceFilter implements Filter {
     private static final int CONTEXT_PATH_PREFIX = "/".length();
     private static final int FIVE_DAYS = 60*60*24*5;
     private static final int SIX_HOURS = 60*60*6;
-    private String resourcesDir;
-    private Pair<byte[], Long> defaultImage;
-    private Pair<byte[], Long> favicon;
+    private volatile String resourcesDir;
+    private volatile Pair<byte[], Long> defaultImage;
+    private volatile Pair<byte[], Long> favicon;
     private FilterConfig config;
-    private ServletContext servletContext;
-    private String appPath;
+    private volatile ServletContext servletContext;
+    private volatile String appPath;
 
     public void init(FilterConfig config) throws ServletException {
         this.config = config;
@@ -96,8 +96,8 @@ public class ResourceFilter implements Filter {
 
 	private void initFields() throws IOException {
         servletContext = config.getServletContext();
-        appPath = servletContext.getContextPath();
-        resourcesDir = System.getProperty(servletContext.getServletContextName() + ".resources.dir");
+        appPath = new java.io.File(servletContext.getRealPath(".")).getParent();
+        resourcesDir = Resources.locateResourcesDir(config.getServletContext());
 
         defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/dummy.gif", new byte[0], -1);
         favicon = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/favicon.gif", defaultImage.one(), -1);
@@ -107,7 +107,7 @@ public class ResourceFilter implements Filter {
         return ((HttpServletRequest) request).getMethod().equalsIgnoreCase("GET");
     }
 
-    public void destroy() {
+    public synchronized void destroy() {
         servletContext = null;
         appPath = null;
         resourcesDir = null;

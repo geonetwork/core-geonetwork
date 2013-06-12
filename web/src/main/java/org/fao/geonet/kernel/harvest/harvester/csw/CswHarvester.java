@@ -35,15 +35,14 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.UUID;
 
-//=============================================================================
-
-public class CswHarvester extends AbstractHarvester
-{
+/**
+ *
+ */
+public class CswHarvester extends AbstractHarvester {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Static init
@@ -66,24 +65,10 @@ public class CswHarvester extends AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	protected void doInit(Element node) throws BadInputEx
-	{
+	protected void doInit(Element node) throws BadInputEx {
 		params = new CswParams(dataMan);
+        super.setParams(params);
 		params.create(node);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- doDestroy
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doDestroy(Dbms dbms) throws SQLException
-	{
-        File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
-
-		icon.delete();
-		Lib.sources.delete(dbms, params.uuid);
 	}
 
 	//---------------------------------------------------------------------------
@@ -92,11 +77,20 @@ public class CswHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
-	{
+    /**
+     * TODO javadoc.
+     *
+     * @param dbms
+     * @param node
+     * @return
+     * @throws BadInputEx
+     * @throws SQLException
+     */
+	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException {
 		params = new CswParams(dataMan);
+        super.setParams(params);
 
-		//--- retrieve/initialize information
+        //--- retrieve/initialize information
 		params.create(node);
 
 		//--- force the creation of a new uuid
@@ -117,11 +111,19 @@ public class CswHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doUpdate(Dbms dbms, String id, Element node) throws BadInputEx, SQLException
-	{
+    /**
+     *
+     * @param dbms
+     * @param id
+     * @param node
+     * @throws BadInputEx
+     * @throws SQLException
+     */
+	protected void doUpdate(Dbms dbms, String id, Element node) throws BadInputEx, SQLException {
 		CswParams copy = params.copy();
+        super.setParams(params);
 
-		//--- update variables
+        //--- update variables
 		copy.update(node);
 
 		String path = "harvesting/id:"+ id;
@@ -131,28 +133,46 @@ public class CswHarvester extends AbstractHarvester
 		//--- update database
 		storeNode(dbms, copy, path);
 
-		//--- we update a copy first because if there is an exception CswParams
-		//--- could be half updated and so it could be in an inconsistent state
+		//--- we update a copy first because if there is an exception CswParams could be half updated and so it could be
+		// in an inconsistent state
 
 		Lib.sources.update(dbms, copy.uuid, copy.name, true);
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
 
 		params = copy;
-	}
+        super.setParams(params);
 
-	//---------------------------------------------------------------------------
+    }
 
-	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path,
-											String siteId, String optionsId) throws SQLException
-	{
+    /**
+     *
+     * @param dbms
+     * @param p
+     * @param path
+     * @param siteId
+     * @param optionsId
+     * @throws SQLException
+     */
+	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
 		CswParams params = (CswParams) p;
-
+		
 		settingMan.add(dbms, "id:"+siteId, "capabUrl", params.capabUrl);
 		settingMan.add(dbms, "id:"+siteId, "icon",     params.icon);
+                settingMan.add(dbms, "id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
+		
+		//--- store dynamic search nodes
+		String  searchID = settingMan.add(dbms, path, "search", "");	
+		
+		if (params.eltSearches!=null){
+			for (Element element : params.eltSearches) {
+				if (!element.getName().startsWith("parser")){
+					settingMan.add(dbms, "id:"+searchID, element.getName(), element.getText());
+				}
+			}
+		}
 
 		//--- store search nodes
-
-		for (Search s : params.getSearches())
+		/*for (Search s : params.getSearches())
 		{
 			String  searchID = settingMan.add(dbms, path, "search", "");
 
@@ -162,56 +182,7 @@ public class CswHarvester extends AbstractHarvester
 			settingMan.add(dbms, "id:"+searchID, "subject",  s.subject);
 			settingMan.add(dbms, "id:"+searchID, "minscale", s.minscale);
 			settingMan.add(dbms, "id:"+searchID, "maxscale", s.maxscale);
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AbstractParameters
-	//---
-	//---------------------------------------------------------------------------
-
-	public AbstractParams getParams() { return params; }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AddInfo
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doAddInfo(Element node)
-	{
-		//--- if the harvesting is not started yet, we don't have any info
-
-		if (result == null)
-			return;
-
-		//--- ok, add proper info
-
-		Element info = node.getChild("info");
-		Element res  = getResult();
-		info.addContent(res);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- GetResult
-	//---
-	//---------------------------------------------------------------------------
-
-	protected Element getResult() {
-		Element res  = new Element("result");
-		if (result != null) {
-			add(res, "total",        result.totalMetadata);
-			add(res, "added",        result.addedMetadata);
-			add(res, "updated",      result.updatedMetadata);
-			add(res, "unchanged",    result.unchangedMetadata);
-			add(res, "unknownSchema",result.unknownSchema);
-			add(res, "removed",      result.locallyRemoved);
-			add(res, "unretrievable",result.unretrievable);
-            add(res, "doesNotValidate",result.doesNotValidate);
-		}
-		return res;
+		}*/
 	}
 
 	//---------------------------------------------------------------------------
@@ -220,12 +191,17 @@ public class CswHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doHarvest(Logger log, ResourceManager rm) throws Exception
-	{
+    /**
+     *
+     * @param log
+     * @param rm
+     * @throws Exception
+     */
+	protected void doHarvest(Logger log, ResourceManager rm) throws Exception {
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
 		Harvester h = new Harvester(log, context, dbms, params);
-		result = h.harvest();
+		this.result = h.harvest();
 	}
 
 	//---------------------------------------------------------------------------
@@ -235,22 +211,4 @@ public class CswHarvester extends AbstractHarvester
 	//---------------------------------------------------------------------------
 
 	private CswParams params;
-	private CswResult result;
 }
-
-//=============================================================================
-
-class CswResult
-{
-	public int totalMetadata;
-	public int addedMetadata;
-	public int updatedMetadata;
-	public int unchangedMetadata;
-	public int locallyRemoved;
-	public int unknownSchema;
-	public int unretrievable;
-    public int doesNotValidate;	    
-}
-
-//=============================================================================
-

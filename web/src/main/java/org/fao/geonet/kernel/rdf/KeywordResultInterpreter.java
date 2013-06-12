@@ -1,6 +1,6 @@
 package org.fao.geonet.kernel.rdf;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
@@ -20,9 +20,9 @@ import com.google.common.collect.HashBiMap;
  */
 class KeywordResultInterpreter extends ResultInterpreter<KeywordBean> {
 
-    private List<String> languages;
+    private Collection<String> languages;
 
-    public KeywordResultInterpreter(List<String> languages) {
+    public KeywordResultInterpreter(Collection<String> languages) {
         this.languages = languages;
     }
     @Override
@@ -38,6 +38,7 @@ class KeywordResultInterpreter extends ResultInterpreter<KeywordBean> {
         String coordEast = upperCorner.one();
         String coordNorth = upperCorner.two();
 
+        String broader = columnValue(resultsTable, columnNameMap, row, Selectors.BROADER.id);
         KeywordBean keywordBean = new KeywordBean(thesaurus.getIsoLanguageMapper())
             .setThesaurusInfo(thesaurus)
             .setId(row)
@@ -46,8 +47,9 @@ class KeywordResultInterpreter extends ResultInterpreter<KeywordBean> {
             .setCoordNorth(coordNorth)
             .setCoordSouth(coordSouth)
             .setCoordWest(coordWest)
-						.setDownloadUrl(thesaurus.getDownloadUrl())
-						.setKeywordUrl(thesaurus.getKeywordUrl());
+            .setBroaderRelationship(broader)
+			.setDownloadUrl(thesaurus.getDownloadUrl())
+			.setKeywordUrl(thesaurus.getKeywordUrl());
             
         for (String lang : this.languages) {
             String value = columnValue(resultsTable, columnNameMap, row, lang+Selectors.LABEL_POSTFIX);

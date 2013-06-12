@@ -46,8 +46,8 @@ class AttributeEntry
     public String	 form = "unqualified";
 	public boolean required = false;
 
-	public ArrayList alValues = new ArrayList();
-	public ArrayList alTypes = new ArrayList();
+	public ArrayList<String> alValues = new ArrayList<String>();
+	public ArrayList<String> alTypes = new ArrayList<String>();
 	
 	//---------------------------------------------------------------------------
 	//---
@@ -76,7 +76,7 @@ class AttributeEntry
 
 	private void handleAttribs(ElementInfo ei)
 	{
-		List attribs = ei.element.getAttributes();
+		List<?> attribs = ei.element.getAttributes();
 
         for (Object attrib : attribs) {
             Attribute at = (Attribute) attrib;
@@ -125,7 +125,7 @@ class AttributeEntry
 
 	private void handleChildren(ElementInfo ei)
 	{
-		List children = ei.element.getChildren();
+		List<?> children = ei.element.getChildren();
 
         for (Object aChildren : children) {
             Element elChild = (Element) aChildren;

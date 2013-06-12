@@ -21,6 +21,7 @@
 package org.fao.geonet.kernel.search.lucenequeries;
 
 import org.apache.lucene.search.TermRangeQuery;
+import org.apache.lucene.util.BytesRef;
 
 	public class DateRangeQuery extends TermRangeQuery {
 
@@ -28,16 +29,17 @@ import org.apache.lucene.search.TermRangeQuery;
         super(fld, formatDate(lowerString), formatDate(upperString), inclusive.equalsIgnoreCase("true"), inclusive.equalsIgnoreCase("true") );
       }
 
-      private static String formatDate(String s) {
+      
+      private static BytesRef formatDate(String s) {
 
         String ret = "";
 
-        if (s==null) return null;
+        if (s==null) return new BytesRef();
 
         ret=s.trim();
         ret=ret.replaceAll("\'", "");
         ret=ret.toUpperCase();
 
-        return ret;
+        return new BytesRef(ret);
       }
   }

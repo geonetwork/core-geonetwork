@@ -24,27 +24,25 @@
 package org.fao.geonet.services.thesaurus;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.io.File;
 
-//=============================================================================
-
-/** Removes a thesaurus from the system.
-  */
-
-public class Delete implements Service
-{
+/**
+ * Removes a thesaurus from the system.
+ */
+public class Delete extends NotInReadOnlyModeService {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -53,7 +51,7 @@ public class Delete implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		ThesaurusManager manager = gc.getThesaurusManager();
@@ -71,7 +69,7 @@ public class Delete implements Service
 		
 		// Remove file
 		if (item.exists()) {
-			item.delete();
+			IO.delete(item, true, Geonet.THESAURUS);
 
             // Delete thesaurus record in the database
             String query = "DELETE FROM Thesaurus WHERE id =?";
@@ -85,6 +83,3 @@ public class Delete implements Service
 							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));
 	}
 }
-
-//=============================================================================
-

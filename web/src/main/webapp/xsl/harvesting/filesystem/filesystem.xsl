@@ -8,19 +8,36 @@
 
 	<xsl:template name="editPanel-Filesystem">
 		<div id="filesystem.editPanel">
+            <xsl:call-template name="ownerGroup-Filesystem"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-Filesystem"/>
 			<div class="dots"/>
 			<xsl:call-template name="options-Filesystem"/>
 			<div class="dots"/>
 			<xsl:call-template name="content-Filesystem"/>
 			<div class="dots"/>
-			<xsl:call-template name="privileges-Filesystem"/>
+			<xsl:call-template name="privileges">
+				<xsl:with-param name="type" select="'filesystem'"/>
+			</xsl:call-template>
 			<div class="dots"/>
-			<xsl:call-template name="categories-Filesystem"/>			
+			<xsl:call-template name="categories-Filesystem"/>
 			<p/>
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-Filesystem">
+        <table border="0">
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
+                <td class="padded"><select id="filesystem.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-Filesystem">
@@ -28,21 +45,21 @@
 
 		<table>
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/name"/></td>
+				<td class="padded"><label for="filesystem.name"><xsl:value-of select="/root/gui/harvesting/name"/></label></td>
 				<td class="padded"><input id="filesystem.name" class="content" type="text" value="" size="200"/></td>
 			</tr>
 			
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/directoryname"/></td>
+				<td class="padded"><label for="filesystem.directoryname"><xsl:value-of select="/root/gui/harvesting/directoryname"/></label></td>
 				<td class="padded"><input id="filesystem.directoryname" class="content" type="text" value="" size="300"/></td>
 			</tr>
 			
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/recurse"/></td>
+				<td class="padded"><label for="filesystem.recurse"><xsl:value-of select="/root/gui/harvesting/recurse"/></label></td>
 				<td class="padded"><input id="filesystem.recurse" type="checkbox" checked="on"/></td>
 			</tr>	
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/nodelete"/></td>
+				<td class="padded"><label for="filesystem.nodelete"><xsl:value-of select="/root/gui/harvesting/nodelete"/></label></td>
 				<td class="padded"><input id="filesystem.nodelete" type="checkbox" checked="on"/></td>
 			</tr>			
 			<tr>
@@ -50,7 +67,7 @@
 				<td class="padded">
 					<select id="filesystem.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="filesystem.icon.image" src="" alt="" />
+					<img id="filesystem.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>			
 		</table>
@@ -71,7 +88,7 @@
 			</tr>
 
 			<tr>
-				<td class="padded"><xsl:value-of select="/root/gui/harvesting/validate"/></td>
+				<td class="padded"><label for="filesystem.validate"><xsl:value-of select="/root/gui/harvesting/validate"/></label></td>
 				<td class="padded"><input id="filesystem.validate" type="checkbox" value=""/></td>
 			</tr>
 		</table>
@@ -86,37 +103,6 @@
 			<xsl:with-param name="type">filesystem</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template name="privileges-Filesystem">
-		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/privileges"/></h1>
-		
-		<table>
-			<tr>
-				<td class="padded" valign="top"><xsl:value-of select="/root/gui/harvesting/groups"/></td>
-				<td class="padded"><select id="filesystem.groups" class="content" size="8" multiple="on"/></td>					
-				<td class="padded" valign="top">
-					<div align="center">
-						<button id="filesystem.addGroups" class="content" onclick="harvesting.filesystem.addGroupRow()">
-							<xsl:value-of select="/root/gui/harvesting/add"/>
-						</button>
-					</div>
-				</td>					
-			</tr>
-		</table>
-		
-		<table id="filesystem.privileges">
-			<tr>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/group"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='0']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='5']"/></b></th>
-				<th class="padded"><b><xsl:value-of select="/root/gui/harvesting/oper/op[@id='6']"/></b></th>
-				<th/>
-			</tr>
-		</table>
-		
-	</xsl:template>
 	
 	<!-- ============================================================================================= -->
 
@@ -124,17 +110,6 @@
 		<h1 align="left"><xsl:value-of select="/root/gui/harvesting/categories"/></h1>
 		
 		<select id="filesystem.categories" class="content" size="8" multiple="on"/>
-	</xsl:template>
-	
-	<!-- ============================================================================================= -->	
-	
-    <xsl:template mode="selectoptions" match="day|hour|minute|dsopt">
-		<option>
-			<xsl:attribute name="value">
-				<xsl:value-of select="."/>
-			</xsl:attribute>
-			<xsl:value-of select="@label"/>
-		</option>
 	</xsl:template>
 
     <!-- ============================================================================================= -->

@@ -96,7 +96,7 @@ public class ProxyInfo
 	public void notifyAllObservers() {
 		// -- notify all observers that proxy info has changed
 
-		Iterator i = observers.iterator();
+		Iterator<ProxyInfoObserver> i = observers.iterator();
 		while (i.hasNext()) {
 			ProxyInfoObserver o = (ProxyInfoObserver) i.next();
 			o.update(this);

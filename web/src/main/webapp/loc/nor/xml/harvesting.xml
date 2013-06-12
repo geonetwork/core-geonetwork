@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<select>Velg</select>
+    <selectownergroup>Harvester tilhører gruppen</selectownergroup>
+    <select>Velg</select>
 	<name>Navn</name>
 	<directoryname>Katalog</directoryname>
 	<type>Type</type>
@@ -20,6 +21,11 @@
 	<info type="geonetwork20">
 		<short>GeoNetwork 2.0</short>
 		<long>GeoNetwork v2.0 remote node</long>
+	</info>
+	
+	<info type="geoPREST">
+		<short>GeoPortal REST</short>
+		<long>GeoPortal 9.3.x via REST interface</long>
 	</info>
 	
 	<info type="webdav">
@@ -75,6 +81,8 @@
     <!-- Editing form - - - - - - - - - - - - - - - - - - - - - - -->
 	
 	<site>Site</site>
+
+	<baseUrl>Base URL of GeoPortal service</baseUrl>
 
 	<category>Category</category>
 	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
@@ -137,6 +145,7 @@
 	
 	<content>Høstet innhold</content>
 	<importxslt>Kjør denne XSLT'en på høstede poster</importxslt>
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
 
     <at>Run at</at>
     <atSpec>( hour of day : minute eg. 23:15 )</atSpec>
@@ -396,6 +405,7 @@
 		<couldNotInsert>Could not insert</couldNotInsert>
     <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
 		<recordsUpdated>Records Updated</recordsUpdated>
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>Venter på første gjennomkjøring</notRun>

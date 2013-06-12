@@ -23,8 +23,7 @@
 
 package org.fao.geonet.lib;
 
-import jeeves.server.ConfigurationOverrides;
-import jeeves.server.sources.http.JeevesServlet;
+import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.utils.Util;
 
 import javax.servlet.ServletContext;
@@ -38,12 +37,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 //=============================================================================
 
 public class TextLib
 {
-	//---------------------------------------------------------------------------
+	private static final Random RANDOM = new Random();
+
+    //---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---
@@ -59,7 +61,7 @@ public class TextLib
 		FileInputStream is = new FileInputStream(file);
 		BufferedReader  ir = new BufferedReader(new InputStreamReader(is, encoding));
 
-		return ConfigurationOverrides.loadTextFileAndUpdate(file, servletContext, appPath, ir);
+		return ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(file, servletContext, appPath, ir);
 	}
 	
 	//---------------------------------------------------------------------------
@@ -145,7 +147,7 @@ public class TextLib
 
 	public char getRandomChar()
 	{
-		int pos = (int) (Math.random() * 62);
+		int pos = RANDOM.nextInt() * 62;
 
 		if (pos <26)
 			return (char) ('a' + pos);

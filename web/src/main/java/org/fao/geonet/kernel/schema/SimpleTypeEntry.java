@@ -27,7 +27,6 @@
 
 package org.fao.geonet.kernel.schema;
 
-import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -40,11 +39,11 @@ import java.util.List;
   * is logged). Only the "restriction" child is recognized and extracted.
   */
 
-class SimpleTypeEntry
+class SimpleTypeEntry extends BaseHandler
 {
 	public String name;
-	public List alTypes = new ArrayList();
-	public List alEnum = new ArrayList();
+	public List<String> alTypes = new ArrayList<String>();
+	public List<String> alEnum = new ArrayList<String>();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -61,8 +60,8 @@ class SimpleTypeEntry
 
 	public SimpleTypeEntry(ElementInfo ei)
 	{
-		handleAttribs(ei);
-		handleChildren(ei);
+        name = handleAttribs(ei, null);
+        handleChildren(ei);
 	}
 
 
@@ -86,38 +85,16 @@ class SimpleTypeEntry
 	//---
 	//---------------------------------------------------------------------------
 
-	private void handleAttribs(ElementInfo ei)
-	{
-		List attribs = ei.element.getAttributes();
-        for (Object attrib : attribs) {
-            Attribute at = (Attribute) attrib;
-
-            String attrName = at.getName();
-
-            if (attrName.equals("name")) {
-                name = at.getValue();
-                if ((name.indexOf(':') == -1) && (ei.targetNSPrefix != null)) {
-                    name = ei.targetNSPrefix + ":" + at.getValue();
-                }
-            }
-            else {
-                Logger.log();
-            }
-        }
-	}
-
-	//---------------------------------------------------------------------------
-
 	private void handleChildren(ElementInfo ei)
 	{
-		List children = ei.element.getChildren();
+		List<?> children = ei.element.getChildren();
 
         for (Object aChildren : children) {
             Element elChild = (Element) aChildren;
             String elName = elChild.getName();
 
             if (elName.equals("restriction")) {
-                List restrictions = elChild.getChildren();
+                List<?> restrictions = elChild.getChildren();
 
                 for (Object restriction : restrictions) {
                     Element elEnum = (Element) restriction;
@@ -142,16 +119,16 @@ class SimpleTypeEntry
             }
 
             else if (elName.equals("union")) {
-                List simpleTypes = elChild.getChildren("simpleType", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
+                List<?> simpleTypes = elChild.getChildren("simpleType", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
                 // Load enumeration of union of simpleType (eg. gml:TimeUnitType, gml:NilReasonEnumeration)
                 if (simpleTypes.size()>0) {
 	                for (Object st : simpleTypes) {
 	                	Element stEl = (Element) st;
-	                	List restrictions = stEl.getChildren("restriction", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
+	                	List<?> restrictions = stEl.getChildren("restriction", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
 	                
 	                	for (Object r : restrictions) {
 							Element rEl = (Element) r;
-							List enumerationList = rEl.getChildren("enumeration", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
+							List<?> enumerationList = rEl.getChildren("enumeration", Namespace.getNamespace("http://www.w3.org/2001/XMLSchema"));
 							for (Object e : enumerationList) {
 								Element elEnum = (Element) e;
 								String v = elEnum.getAttributeValue("value");

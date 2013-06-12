@@ -23,13 +23,17 @@
 
 package jeeves.server.context;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.CheckForNull;
+
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.ProfileManager;
 import jeeves.server.UserSession;
+import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
@@ -57,6 +61,7 @@ public class ServiceContext extends BasicContext
      *
      * @return the service context set by service context or null if no in an inherited thread
      */
+    @CheckForNull
     public static ServiceContext get() {
         return threadLocalInstance.get();
     }
@@ -84,6 +89,29 @@ public class ServiceContext extends BasicContext
 	private JeevesServlet servlet;
 	private boolean startupError = false;
 	Map<String,String> startupErrors;
+    private XmlCacheManager xmlCacheManager;
+    /**
+     * Property to be able to add custom response headers depending on the code
+     * (and not the xml of Jeeves)
+     * 
+     * Be very careful using this, because right now Jeeves doesn't check the
+     * headers. Can lead to infinite loops or wrong behaviour.
+     * 
+     * @see #statusCode
+     * 
+     */
+    private Map<String, String> responseHeaders;
+    /**
+     * Property to be able to add custom http status code headers depending on
+     * the code (and not the xml of Jeeves)
+     * 
+     * Be very careful using this, because right now Jeeves doesn't check the
+     * headers. Can lead to infinite loops or wrong behaviour.
+     * 
+     * @see #responseHeaders
+     * 
+     */
+    private Integer statusCode;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -91,12 +119,15 @@ public class ServiceContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ServiceContext(String service, MonitorManager mm, ProviderManager pm, SerialFactory sf, ProfileManager p, Hashtable<String, Object> contexts)
+	public ServiceContext(String service, JeevesApplicationContext jeevesApplicationContext, XmlCacheManager cacheManager, MonitorManager mm, ProviderManager pm, SerialFactory sf, ProfileManager p, Map<String, Object> contexts)
 	{
-		super(mm, pm, sf, contexts);
+		super(jeevesApplicationContext, mm, pm, sf, contexts);
 
+		this.xmlCacheManager = cacheManager;
 		profilMan    = p;
 		setService(service);
+
+        setResponseHeaders(new HashMap<String, String>());
 	}
 
 	//--------------------------------------------------------------------------
@@ -181,7 +212,7 @@ public class ServiceContext extends BasicContext
     }
 
 	public Element execute(LocalServiceRequest request) throws Exception {
-		ServiceContext context = new ServiceContext(request.getService(), getMonitorManager(), getProviderManager(), getSerialFactory(), getProfileManager(), htContexts) {
+		ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), getXmlCacheManager(), getMonitorManager(), getProviderManager(), getSerialFactory(), getProfileManager(), htContexts) {
 			public ResourceManager getResourceManager() {
 				return new ResourceManager(getMonitorManager(), getProviderManager()) {
 					@Override
@@ -229,6 +260,26 @@ public class ServiceContext extends BasicContext
 			throw new ServiceExecutionFailedException(request.getService(),e);
 		}
 	}
+    
+    public XmlCacheManager getXmlCacheManager() {
+        return this.xmlCacheManager;
+    }
+    public Map<String, String> getResponseHeaders() {
+        return responseHeaders;
+    }
+
+    private void setResponseHeaders(Map<String, String> responseHeaders) {
+        this.responseHeaders = responseHeaders;
+    }
+
+    public void setStatusCode(Integer statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public Integer getStatusCode() {
+        return statusCode;
+    }
+
 
 }
 

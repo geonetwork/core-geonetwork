@@ -2400,11 +2400,6 @@
 		<description>nombre de valeurs numériques discrètes dans la donnée raster </description>
 	</element>
 	<!-- ==================================================== -->
-	<element name="TopicCatCd">
-		<label>Code de la catégorie du sujet</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
 	<element name="TopLevCd">
 		<label>Code du niveau de topologie</label>
 		<description/>
