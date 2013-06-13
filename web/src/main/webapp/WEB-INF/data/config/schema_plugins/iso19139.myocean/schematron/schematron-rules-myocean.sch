@@ -77,24 +77,7 @@
     </sch:pattern>
     <sch:pattern>
         <sch:title>$loc/strings/processing</sch:title>
-        <sch:rule
-        context="//gmd:MD_Metadata|//*[@gco:isoType='gmd:MD_Metadata']">
         
-            
-            <!-- Check Number of vertical levels -->
-            <sch:let name="vert" value="gmd:contentInfo[1]/gmd:MD_CoverageDescription[1]/gmd:dimension[2]/gmd:MD_RangeDimension[1]/gmd:descriptor"/>
-            <sch:assert test="normalize-space($vert) != '' and normalize-space($vert) != 'vertical level number:'">$loc/strings/alert.R25</sch:assert>
-            <sch:report test="normalize-space($vert) != '' and normalize-space($vert) != 'vertical level number:'">
-                <sch:value-of select="$loc/strings/report.R25"/> "<sch:value-of select="normalize-space($vert)"/>"
-            </sch:report>
-            
-            <!-- Check Temporal resolution -->
-            <sch:let name="resolu" value="gmd:contentInfo[1]/gmd:MD_CoverageDescription[1]/gmd:dimension[1]/gmd:MD_RangeDimension[1]/gmd:descriptor"/>
-            <sch:assert test="normalize-space($resolu) != '' and normalize-space($resolu) != 'temporal resolution:'">$loc/strings/alert.R26</sch:assert>
-            <sch:report test="normalize-space($resolu) != '' and normalize-space($resolu) != 'temporal resolution:'">
-                <sch:value-of select="$loc/strings/report.R26"/> "<sch:value-of select="normalize-space($resolu)"/>"
-            </sch:report>
-        </sch:rule>
         <sch:rule
             context="//gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification|
             //*[@gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/gmd:MD_DataIdentification">
@@ -105,13 +88,6 @@
             <sch:assert test="string-join($level, '') != ''">$loc/strings/alert.R17</sch:assert>
             <sch:report test="string-join($level, '') != ''">
                 <sch:value-of select="$loc/strings/report.R17"/> "<sch:value-of select="string-join($level, ', ')"/>"
-            </sch:report>
-            
-            <!-- Check update frequency -->
-            <sch:let name="freq" value="gmd:resourceMaintenance[1]/gmd:MD_MaintenanceInformation[1]/gmd:maintenanceAndUpdateFrequency[1]/gmd:MD_MaintenanceFrequencyCode[1]/@codeListValue"/>
-            <sch:assert test="normalize-space($freq) != ''">$loc/strings/alert.R18</sch:assert>
-            <sch:report test="normalize-space($freq) != ''">
-                <sch:value-of select="$loc/strings/report.R18"/> "<sch:value-of select="normalize-space($freq)"/>"
             </sch:report>
             
             <!-- Check sliding window of update period -->
@@ -188,6 +164,24 @@
     <sch:pattern>
         <sch:title>$loc/strings/spatiotemp</sch:title>
         <sch:rule
+            context="//gmd:MD_Metadata|//*[@gco:isoType='gmd:MD_Metadata']">
+            
+            
+            <!-- Check Number of vertical levels -->
+            <sch:let name="vert" value="gmd:contentInfo[1]/gmd:MD_CoverageDescription[1]/gmd:dimension[2]/gmd:MD_RangeDimension[1]/gmd:descriptor"/>
+            <sch:assert test="normalize-space($vert) != '' and normalize-space($vert) != 'vertical level number:'">$loc/strings/alert.R25</sch:assert>
+            <sch:report test="normalize-space($vert) != '' and normalize-space($vert) != 'vertical level number:'">
+                <sch:value-of select="$loc/strings/report.R25"/> "<sch:value-of select="normalize-space($vert)"/>"
+            </sch:report>
+            
+            <!-- Check Temporal resolution -->
+            <sch:let name="resolu" value="gmd:contentInfo[1]/gmd:MD_CoverageDescription[1]/gmd:dimension[1]/gmd:MD_RangeDimension[1]/gmd:descriptor"/>
+            <sch:assert test="normalize-space($resolu) != '' and normalize-space($resolu) != 'temporal resolution:'">$loc/strings/alert.R26</sch:assert>
+            <sch:report test="normalize-space($resolu) != '' and normalize-space($resolu) != 'temporal resolution:'">
+                <sch:value-of select="$loc/strings/report.R26"/> "<sch:value-of select="normalize-space($resolu)"/>"
+            </sch:report>
+        </sch:rule>
+        <sch:rule
             context="//gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification|
             //*[@gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/gmd:MD_DataIdentification">
             
@@ -240,6 +234,14 @@
             <sch:report test="string-join($scale, '') != ''">
                 <sch:value-of select="$loc/strings/report.R16"/> "<sch:value-of select="string-join($scale, ', ')"/>"
             </sch:report>
+           
+            <!-- Check update frequency -->
+            <sch:let name="freq" value="gmd:resourceMaintenance[1]/gmd:MD_MaintenanceInformation[1]/gmd:maintenanceAndUpdateFrequency[1]/gmd:MD_MaintenanceFrequencyCode[1]/@codeListValue"/>
+            <sch:assert test="normalize-space($freq) != ''">$loc/strings/alert.R18</sch:assert>
+            <sch:report test="normalize-space($freq) != ''">
+                <sch:value-of select="$loc/strings/report.R18"/> "<sch:value-of select="normalize-space($freq)"/>"
+            </sch:report>
+            
         </sch:rule>
     </sch:pattern>
     
