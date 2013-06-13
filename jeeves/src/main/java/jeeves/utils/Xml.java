@@ -23,13 +23,54 @@
 
 package jeeves.utils;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.StringReader;
+import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.xml.XMLConstants;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.ValidatorHandler;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.XSDValidationErrorEx;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.FeatureKeys;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.SystemUtils;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
@@ -50,48 +91,6 @@ import org.mozilla.universalchardet.UniversalDetector;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import javax.xml.XMLConstants;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.URIResolver;
-import javax.xml.transform.sax.SAXResult;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.ValidatorHandler;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 //=============================================================================
 
@@ -435,7 +434,6 @@ public final class Xml
 	//--------------------------------------------------------------------------
 
 	private static class JeevesURIResolver implements URIResolver {
-
     /**
      *
      * @param href
@@ -443,61 +441,53 @@ public final class Xml
      * @return
      * @throws TransformerException
      */
-     public Source resolve(String href, String base) throws TransformerException {
+    public Source resolve(String href, String base) throws TransformerException {
+        if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
+            Log.debug(Log.XML_RESOLVER, "Trying to resolve " + href + " from " + base);
+        }
         Resolver resolver = ResolverWrapper.getInstance();
         CatalogResolver catResolver = resolver.getCatalogResolver();
-        if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
-            Log.debug(Log.XML_RESOLVER, "Trying to resolve "+href+":"+base);
-        }
-        String decodedBase;
-        try {
-            decodedBase = URLDecoder.decode(base, Jeeves.ENCODING);
-        } catch (UnsupportedEncodingException e1) {
-            decodedBase = base;
-        }
-        String decodedHref;
-        try {
-            decodedHref = URLDecoder.decode(href, Jeeves.ENCODING);
-        } catch (UnsupportedEncodingException e1) {
-            decodedHref = href;
-        }
-        Source s = catResolver.resolve(decodedHref, decodedBase);
+        Source s = catResolver.resolve(href, base);
         // If resolver has a blank XSL file to replace non existing resolved file ...
         String blankXSLFile = resolver.getBlankXSLFile();
         if (blankXSLFile != null && s.getSystemId().endsWith(".xsl")) {
             // The resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
+            String path = s.getSystemId();
             try {
                 if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
-                    Log.debug(Log.XML_RESOLVER, "  Check if exist " + s.getSystemId());
+                    Log.debug(Log.XML_RESOLVER, "  Check if exist " + path);
                 }
-                File f;
-                if (SystemUtils.IS_OS_WINDOWS) {
-                    String path = s.getSystemId();
-                    // fxp
-                    path = path.replaceAll("file:\\/", "");
-                    // heikki
-                    path = path.replaceAll("file:", "");
-
-                    f = new File(path);
-                }
-                else {
-                    f = new File(new URI(s.getSystemId()));
-                }
+                
+                URL url = new URL(path.replaceAll(" ", "%20"));
+                File f = new File(url.toURI());
                 if (!(f.exists())) {
                     if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
                         Log.debug(Log.XML_RESOLVER, "  Resolved resource " + s.getSystemId() + " does not exist. blankXSLFile returned instead.");
                     }
                     s.setSystemId(blankXSLFile);
+                } else {
+                    try {
+                        Log.debug(Log.XML_RESOLVER, "  File " + f.getCanonicalPath());
+                        s.setSystemId(f.getCanonicalPath());
+                    } catch (IOException e) {
+                        s.setSystemId(blankXSLFile);
+                        e.printStackTrace();
+                    }
                 }
             }
             catch (URISyntaxException e) {
+                s.setSystemId(blankXSLFile);
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                s.setSystemId(blankXSLFile);
                 e.printStackTrace();
             }
         }
          
          if (Log.isDebugEnabled(Log.XML_RESOLVER) && s != null) {
-             Log.debug(Log.XML_RESOLVER, "Resolved as "+s.getSystemId());
+             Log.debug(Log.XML_RESOLVER, "  Resolved as " + s.getSystemId());
          }
+         
          return s;
          }
      }

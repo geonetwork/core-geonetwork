@@ -27,34 +27,6 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationAbortedEx;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.guiservices.XmlFile;
-import jeeves.server.overrides.ConfigurationOverrides;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.IO;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Geonet.Namespaces;
-import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.exceptions.NoSchemaMatchesException;
-import org.fao.geonet.exceptions.SchemaMatchConflictException;
-import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.schema.SchemaLoader;
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.jdom.Attribute;
-import org.jdom.Content;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.Namespace;
-import org.jdom.filter.ElementFilter;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -70,6 +42,35 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import jeeves.constants.Jeeves;
+import jeeves.exceptions.OperationAbortedEx;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlFile;
+import jeeves.server.overrides.ConfigurationOverrides;
+import jeeves.utils.BinaryFile;
+import jeeves.utils.IO;
+import jeeves.utils.Log;
+import jeeves.utils.Xml;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Namespaces;
+import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.exceptions.NoSchemaMatchesException;
+import org.fao.geonet.exceptions.SchemaMatchConflictException;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.SchemaLoader;
+import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.jdom.Attribute;
+import org.jdom.Content;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.filter.ElementFilter;
 
 /**
  * Class that handles all functions relating to metadata schemas. This 
@@ -1025,8 +1026,15 @@ public class SchemaManager {
      * @return
      */
     private String buildSchemaFolderPath(String name) {
-        return schemaPluginsDir.replace('\\', '/') + "/" + name.replace('\\', '/');
+        String path = schemaPluginsDir + "/" + name;
+        if (SystemUtils.IS_OS_WINDOWS) {
+            path = "file:///" + path;
+        } else {
+            path = "file://" + path;
+        }
+        return path.replace('\\', '/').replaceAll(" ", "%20");
     }
+  
 	/**
      * Deletes the presentation xslt from the schemaplugin oasis catalog.
 	 *
