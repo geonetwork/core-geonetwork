@@ -131,7 +131,15 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         /** api: config[initialKeyword] 
          *  ``Array`` A list of initial keywords
          */
-        initialKeyword: []
+        initialKeyword: [],
+        /** api: config[identificationMode] 
+         *  ``String`` Identify keyword by their label (default) or uri (requires to use gmx:Anchor in the metadata).
+         */
+        identificationMode: 'value',
+        /**
+         * relative imagePath for ItemSelector
+         */
+        imagePath: '../../apps/js/ext-ux/images'
     },
     initialKeywordLoaded: false,
     /** private: property[thesaurusIdentifier] 
@@ -148,6 +156,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
     nbResultsField: null,
     initialized: false,
     keywords: null,
+    
+    
     /** private: property[KeywordRecord] 
      *  ``Ext.data.Record`` A record object for the keyword
      */
@@ -285,7 +295,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
 
                         // Get initial keyword in the data view and select them
                         Ext.each(self.initialKeyword, function (initKeyword) {
-                            dv.select(self.keywordStore.find('value', initKeyword), true);
+                            var filter = self.identificationMode || 'value';
+                            dv.select(self.keywordStore.find(filter, initKeyword), true);
                             self.keywordSearch(self.thesaurusIdentifier, initKeyword, cb);
                         });
                     });
@@ -294,7 +305,6 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                     this.keywordStore.baseParams.pThesauri = this.thesaurusIdentifier;
                     this.keywordStore.baseParams.maxResults = this.maxKeywords;
                     this.keywordStore.reload();
-                    
                 },
                 scope: this
             }
@@ -324,8 +334,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             dataFields: ["value", "thesaurus"],
             //toData: [],
             toStore: this.selectedKeywordStore,
-            msWidth: this.itemSelectorWidth,
-            msHeight: this.itemSelectorHeight,
+            msWidth: 350,
+            msHeight: 260,
             valueField: "value",
             toSortField: undefined,
             fromTpl: this.keywordsTpl,
@@ -340,7 +350,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             drawDownIcon: false,
             drawTopIcon: false,
             drawBotIcon: false,
-            imagePath: '../../apps/js/ext-ux/images',
+            imagePath: this.imagePath,
             fromTBar: [this.generateFilterField(), '->', 
                        OpenLayers.i18n('maxResults'), this.getLimitInput()],
             toTBar: [{
@@ -355,7 +365,10 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             }],
             listeners: {
                 render: function () {
-                    this.toMultiselect.view.on('selectionchange', function () {
+                    this.on('rowdblclick', function () {
+                        self.generateXML();
+                    });
+                    this.on('changeend', function () {
                         self.generateXML();
                     });
                     this.toMultiselect.view.on('dropend', function () {
@@ -644,17 +657,26 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         if (value === "") {
             return;
         }
+        
+        var params = {
+            pNewSearch: true,
+            pTypeSearch: 2, // Exact match
+            pMode: 'searchBox',
+            pUri: value,
+            pThesauri: thesaurus
+        };
+        
+        if (this.identificationMode === 'uri') {
+            params.pUri = value;
+        } else {
+            params.pKeyword = value;
+        }
+        
         // Call transformation service
         Ext.Ajax.request({
             url: this.catalogue.services.searchKeyword,
-            method: 'POST', 
-            params: {
-                pNewSearch: true,
-                pTypeSearch: 2, // Exact match
-                pMode: 'searchBox',
-                pKeyword: value,
-                pThesauri: thesaurus
-            },
+            method: 'GET', 
+            params: params,
             scope: this,
 //            async: false,
             success: cb || function (response) {
@@ -723,7 +745,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
  *       transformations: [], 
  *       transformation: ''}}"/>
  */
-GeoNetwork.editor.ConceptSelectionPanel.init = function () {
+GeoNetwork.editor.ConceptSelectionPanel.init = function (cfg) {
     var thesaurusPickers = Ext.DomQuery.select('.thesaurusPickerCfg');
     
     for (var idx = 0; idx < thesaurusPickers.length; ++idx) {
@@ -740,8 +762,10 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function () {
                     thesaurus: jsonConfig.thesaurus,
                     mode: jsonConfig.mode,
                     initialKeyword: jsonConfig.keywords,
+                    imagePath: cfg.imagePath,
                     transformations: jsonConfig.transformations,
                     transformation: jsonConfig.transformation,
+                    identificationMode: jsonConfig.identificationMode,
                     xmlField: id + '_xml',
                     renderTo: id + '_panel',
                     itemSelectorWidth: jsonConfig.itemSelectorWidth,
