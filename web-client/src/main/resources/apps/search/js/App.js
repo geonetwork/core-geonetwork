@@ -644,11 +644,14 @@ GeoNetwork.app = function () {
             }
         });
     }
-    function edit(metadataId, create, group, child){
+    function edit(metadataId, create, group, child, schema){
+        var record = catalogue.metadataStore.getAt(catalogue.metadataStore.find('id', metadataId));
         
         if (!this.editorWindow) {
             this.editorPanel = new GeoNetwork.editor.EditorPanel({
+                defaultEditMode : GeoNetwork.Settings.editor.defaultViewMode,
                 defaultViewMode: GeoNetwork.Settings.editor.defaultViewMode,
+                editMode : GeoNetwork.Settings.editor.editMode,
                 catalogue: catalogue,
                 xlinkOptions: {CONTACT: true}
             });
@@ -687,7 +690,8 @@ GeoNetwork.app = function () {
         
         if (metadataId) {
             this.editorWindow.show();
-            this.editorPanel.init(metadataId, create, group, child);
+            var recordSchema = record && record.get('schema');
+            this.editorPanel.init(metadataId, create, group, child, undefined, true, recordSchema || schema);
         }
     }
     

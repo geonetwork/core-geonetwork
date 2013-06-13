@@ -33,6 +33,11 @@ GeoNetwork.advancedFormButton = true;
 
 GeoNetwork.Settings.editor = {
     defaultViewMode : 'simple',
+    // Define which edit mode to use by default
+    // according to metadata schema
+    editMode: {
+//        'iso19139': 'identification'
+    },
     editHarvested: false
 //    defaultViewMode : 'inspire'
 };
