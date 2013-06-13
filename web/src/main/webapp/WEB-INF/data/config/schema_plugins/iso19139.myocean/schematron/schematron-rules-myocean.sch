@@ -144,7 +144,7 @@
             </sch:report>
             
             <!-- Check features type -->
-            <sch:let name="feature" value="count(../../gmd:contentInfo[2]/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes)"/>
+            <sch:let name="feature" value="count(../../gmd:contentInfo[2]/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes[gco:LocalName!=''])"/>
             <sch:assert test="$feature > 0">$loc/strings/alert.R23</sch:assert>
             <sch:report test="$feature > 0">
                 <sch:value-of select="$loc/strings/report.R23"/> "<sch:value-of select="../../gmd:contentInfo[2]/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName"/>"
