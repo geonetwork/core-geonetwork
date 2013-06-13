@@ -62,7 +62,7 @@
 								<xsl:when test="$withAnchor">
 									<!-- TODO multilingual Anchor ? -->
 									<gmx:Anchor
-										xlink:href="{$serviceUrl}/xml.keyword.get?thesaurus={thesaurus/key}&amp;amp;id={uri}">
+										xlink:href="{$serviceUrl}/xml.keyword.get?thesaurus={thesaurus/key}&amp;id={uri}">
 										<xsl:value-of select="value"/>
 									</gmx:Anchor>
 								</xsl:when>
