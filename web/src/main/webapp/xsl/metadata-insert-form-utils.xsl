@@ -89,7 +89,22 @@
                 <input class="content" type="checkbox" name="assign" id="assign"/>
             </td>
         </tr>
-
+        
+        <tr id="gn.type">
+            <th class="padded">
+                <label for="isTemplate">
+                    <xsl:value-of select="/root/gui/strings/kind"/>
+                </label>
+            </th>
+            <td>
+                <select class="content" name="template" size="1" id="metadata.type">
+                    <option value="n" selected="selected"><xsl:value-of select="/root/gui/strings/metadata"/></option>
+                    <option value="y"><xsl:value-of select="/root/gui/strings/template"/></option>
+                    <option value="s"><xsl:value-of select="/root/gui/strings/subtemplate"/></option>
+                </select>
+            </td>
+        </tr>
+        
 
         <!-- groups -->
         <tr id="gn.groups">
