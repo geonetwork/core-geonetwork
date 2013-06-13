@@ -222,12 +222,14 @@
     <xsl:param name="ref"/>
     <xsl:param name="date"/>
     <xsl:param name="format" select="'%Y-%m-%d'"/>
+    <xsl:param name="disabled" select="false()"/>
 
     <table width="100%">
       <tr>
         <td>
           <div class="cal" id="_{$ref}"/>
           <input type="hidden" id="_{$ref}_format" value="{$format}"/>
+          <input type="hidden" id="_{$ref}_disabled" value="{$disabled}"/>
           <input type="hidden" id="_{$ref}_cal" value="{$date}"/>
         </td>
       </tr>

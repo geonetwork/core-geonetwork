@@ -50,11 +50,12 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     selectionPanelImgPath: undefined,
 
     defaultConfig: {
-    	/** api: config[defaultViewMode] 
-         *  Default view mode to open the editor. Default to 'simple'.
+    	/** api: config[defaultEditMode] 
+         *  Default edit mode to open the editor. Default to 'simple'.
          *  View mode is keep in user session (on the server).
          */
-        defaultViewMode: 'simple',
+        defaultEditMode: 'simple',
+        editMode: null,
         selectionPanelImgPath: '../js/ext-ux/images',
         /** api: config[thesaurusButton] 
          *  Use thesaurus selector and inline keyword selection 
@@ -817,7 +818,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Initialized the metadata editor. The method could be used to create a metadata record
      *  from a template or from a parent metadata record.
      */
-    init: function(metadataId, create, group, child, isTemplate, fullPrivileges){
+    init: function(metadataId, create, group, child, isTemplate, fullPrivileges, schema){
         var url;
         
         this.metadataId = metadataId;
@@ -836,7 +837,15 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         } else {
             url = this.editUrl + '?id=' + this.metadataId;
         }
-        url += '&currTab=' + (document.mainForm ? document.mainForm.currTab.value : this.defaultViewMode);
+        
+        var mode = this.defaultEditMode;
+        if (this.editMode && this.editMode.hasOwnProperty(schema)) {
+            mode = this.editMode[schema];
+        } else if (document.mainForm) {
+            mode = document.mainForm.currTab.value;
+        }
+        url += '&currTab=' + mode;
+        
         
         this.loadUrl(url, undefined, this.loadCallback);
         
@@ -1133,6 +1142,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 var valueEl = Ext.getDom(id + '_cal', this.editorMainPanel.dom);
                 var value = (valueEl ? valueEl.value : '');
                 var showTime = format.indexOf('T') === -1 ? false : true;
+                var disabledEl = Ext.getDom(id + '_disabled', this.editorMainPanel.dom);
                 
                 if (showTime) {
                     var dtCal = new Ext.ux.form.DateTime({
@@ -1140,6 +1150,8 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                         name: id,
                         id: id,
                         value: value,
+                        width: 250, 
+                        disabled: disabledEl.value === 'true',
                         dateFormat: 'Y-m-d',
                         timeFormat: 'H:i',
                         hiddenFormat: 'Y-m-d\\TH:i:s',
@@ -1152,6 +1164,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                         id: id,
                         width: 160,
                         value: value,
+                        disabled: disabledEl.value === 'true',
                         format: 'Y-m-d'
                     });
                 }
