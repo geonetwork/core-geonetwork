@@ -227,6 +227,18 @@
                 <sch:value-of select="$loc/strings/report.R15"/> "<sch:value-of select="normalize-space($startDate)"/>"
             </sch:report>
             
+            
+            <!-- Check end date -->
+            <sch:let name="endDate" value="gmd:extent/gmd:EX_Extent/gmd:temporalElement[1]/gmd:EX_TemporalExtent[1]/gmd:extent[1]/gml:TimePeriod/gml:endPosition"/>
+            <sch:let name="isIndeterminate" value="gmd:extent/gmd:EX_Extent/gmd:temporalElement[1]/gmd:EX_TemporalExtent[1]/gmd:extent[1]/gml:TimePeriod/gml:endPosition/@indeterminatePosition='unknown'"/>
+            <sch:assert test="normalize-space($endDate) != '' or $isIndeterminate">$loc/strings/alert.R15.end</sch:assert>
+            <sch:report test="normalize-space($endDate) != ''">
+                <sch:value-of select="$loc/strings/report.R15.end"/> "<sch:value-of select="normalize-space($endDate)"/>"
+            </sch:report>
+            <sch:report test=" $isIndeterminate">
+                <sch:value-of select="$loc/strings/report.R15.endIndeterminate"/>
+            </sch:report>
+            
             <!-- Check temporal scale -->
             <sch:let name="scale" value="gmd:descriptiveKeywords
                 [gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='temporal-scale']/gmd:MD_Keywords[1]/gmd:keyword[1]"/>

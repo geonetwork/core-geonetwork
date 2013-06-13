@@ -66,6 +66,11 @@
         <div>Check that the start date is defined.</div>
     </alert.R15>
     <report.R15>Start date is:</report.R15>
+    <alert.R15.end>
+        <div>Check that the end date is defined.</div>
+    </alert.R15.end>
+    <report.R15.end>End date is:</report.R15.end>
+    <report.R15.endIndeterminate>End date is unknown.</report.R15.endIndeterminate>
     <alert.R16>
         <div>Check that the temporal scale is defined.</div>
     </alert.R16>
