@@ -186,19 +186,19 @@
             //*[@gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/gmd:MD_DataIdentification">
             
             <!-- Check BBox -->
-            <sch:let name="west" value="gmd:extent[1]//gmd:westBoundLongitude"/>
-            <sch:let name="east" value="gmd:extent[1]//gmd:eastBoundLongitude"/>
-            <sch:let name="north" value="gmd:extent[1]//gmd:northBoundLatitude"/>
-            <sch:let name="south" value="gmd:extent[1]//gmd:southBoundLatitude"/>
+            <sch:let name="west" value="gmd:extent[1]//gmd:westBoundLongitude[gco:Decimal!='NaN']"/>
+            <sch:let name="east" value="gmd:extent[1]//gmd:eastBoundLongitude[gco:Decimal!='NaN']"/>
+            <sch:let name="north" value="gmd:extent[1]//gmd:northBoundLatitude[gco:Decimal!='NaN']"/>
+            <sch:let name="south" value="gmd:extent[1]//gmd:southBoundLatitude[gco:Decimal!='NaN']"/>
             <sch:assert test="normalize-space($west) != '' and normalize-space($east) != '' and
                 normalize-space($north) != '' and normalize-space($south) != ''">$loc/strings/alert.R12
             </sch:assert>
             <sch:report test="normalize-space($west) != '' and normalize-space($east) != '' and
                 normalize-space($north) != '' and normalize-space($south) != ''">
                 <sch:value-of select="$loc/strings/report.R12"/> "
-                <sch:value-of select="normalize-space($west)"/>
-                <sch:value-of select="normalize-space($east)"/>
-                <sch:value-of select="normalize-space($north)"/>
+                <sch:value-of select="normalize-space($west)"/><sch:text>, </sch:text>
+                <sch:value-of select="normalize-space($east)"/><sch:text>   </sch:text>
+                <sch:value-of select="normalize-space($north)"/><sch:text>, </sch:text>
                 <sch:value-of select="normalize-space($south)"/>"
             </sch:report>
             
