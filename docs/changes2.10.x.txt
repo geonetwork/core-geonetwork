@@ -3,6 +3,91 @@
 === GeoNetwork 2.10.0: List of changes
 ===
 ================================================================================
+- Documentation / Add 2.10 feature list. Fix release doc due to submodule changes.
+- Documentation / Add missing files related to submodule removal and .gitignore rule.
+- Only ignore installer creation folder.
+- Merge pull request #131 from ianwallen/2.10.x
+- added missing file to docs
+- Permit anyone to view the docs if they exists.
+- Merge pull request #127 from Delawen/2.10.x
+- Print Panel improved, now with more scroll bars!
+- Merge pull request #126 from Delawen/2.10.x
+- More margin changes for main content div, so the editor looks better #108
+- Merge pull request #125 from Delawen/2.10.x
+- Improved style for metadata editor, adding a better "delete" icon for buttons
+- Improved styling on metadata editor
+- Fix typo that made the rule invalid
+- Merge pull request #124 from Delawen/2.10.x
+- Adding checkboxes for results view fixing #103
+- Merge pull request #123 from Delawen/2.10.x
+- Fixing logout not clearing the user defined on catalogue
+- Merge pull request #122 from Delawen/2.10.x
+- Putting Login dropdown box above everything else
+- Merge branch '2.10.x' of github.com:geonetwork/core-geonetwork into 2.10.x
+- Merge pull request #120 from Delawen/2.10.x
+- Minimum height for pupular and latest metadata, so it is completely visible at all times #104
+- Merge pull request #119 from Delawen/2.10.x
+- Consistent resizing of resultsPanel for different css rules
+- Margins on main content will degrade on smaller screens to have more space for content. Related to #100, not being able to see "actions" button
+- Merge pull request #118 from Delawen/2.10.x
+- Removing testing with latest ExtJS library
+- #1299 Map viewer: Layers that are inside the overlays folder are multiplying
+- #1299 Map viewer: Layers that are inside the overlays folder are multiplying
+- Merge pull request #114 from Delawen/2.10.x
+- Simplifying font-face css3 definitions
+- Fixing fonts css
+- patch fixes #106 Using document mode of IE9
+- Adding eot version of the fonts
+- added docs, installer and release into main repo
+- removed submodules installer, docs, releases
+- Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
+- Fix compile error.
+- Merge pull request #97 from ianwallen/UTF-8
+- Fix statistics compile error.
+- Self Registration - not adding profile (#1298).
+- Fix findbugs checks.
+- Feedback form / JS error.
+- ISO19139 / Improve label in french.
+- Add configuration option to update or not schema plugin catalog on startup (allows to modify it manually if necessary).
+- Widgets / Translate user role in user menu.
+- Fix logo size on IE7.
+- Fix all statistics services broken by ReadOnlyMode and some IOUtils changes.
+- Converted some file to UTF-8 for better support.
+- Fixed for Ticket #1295 Change encoding for login.jsp to utf-8
+- Merge pull request #96 from ianwallen/2.10.x
+- Remove "developer" user as it is not required.
+- RSS / FF does not render feed as usual (#1297).
+- Merge pull request #95 from ianwallen/2.10.x
+- Change oracle varchar to varchar2.
+- Rename migration scripts from 2.9 to 2.10 since 2.9 was not a supported version.
+- Widgets / misc fix.
+- UPDATE HarvestHistory moved to db-default so that it applies to all databases.
+- Add missing SQL statement in migration scripts required for CSW virtual admin.
+- Removed blank lines in Oracle statements so that it can be executed from sqlplus if required.
+- SQL table name error (from last commit) - "service" should be "services"
+- Widgets / Add missing i18n.
+- Widgets / Fix uuid to call to addWMSLayer.
+- gco:nilReson not translated (#1293).
+- French translation / Add missing string.
+- Suggestion / Keyword comma exploder / Only process required keywords and do not forget thesaurus name.
+- Related to #1276 for login.jsp page
+- Merge pull request #93 from Delawen/2.10.x Improvements on Spanish Translation
+- Merge pull request #93 from Delawen/2.10.x Improvements on Spanish Translation
+- Merge pull request #92 from Delawen/2.10.x
+- Removing some deprecated "importants" on css that made very difficult to work
+- A bigger tag cloud (width) as some long keywords have problems
+- When clicking on a tag, change tab to search to see results for the tag
+- Merge remote branch 'origin/2.10.x' into 2.10.x
+- Merge pull request #91 from Delawen/2.10.x
+- Log-out bug fixing
+- Authentication was incorrectly determined at start, so the login/logout/admin buttons were broken
+- Full link on label on tag cloud
+- Fixing bug on tag-cloud that made the facet filters search not to load
+- #1288 Fix link code for thumbnails
+- #1291 Unify permissions setting when importing a metadata with UI and CSW-Transaction
+- Updated installer submodule in 2.10.x
+- #1291 Unify permissions setting when importing a metadata with UI and CSW-Transaction
+- Update version to 2.10.0-SNAPSHOT
 - Update doc.
 - Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
 - Merge pull request #90 from Delawen/2.10.x
