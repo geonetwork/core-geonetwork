@@ -5,6 +5,42 @@ New Features
 
 The new GeoNetwork opensource comes with substantial upgrades of different components. 
 
+2.10 release
+````````````
+
+Search
+------
+
+- **Faceted search**: Narrow your search by easily selecting new filter
+- **Data Catalog Vocabulary and RDF services**: Increase discoverability and enable applications easily to consume metadata using W3C DCAT format
+- **Javascript widget user interface** : A 3rd flavour of home page based on HTML5 is also available
+
+Metadata
+--------
+
+- **Metadata on maps**: Add template for making metadata on static or interactive maps. Add a search criteria for easily found maps. Web Map Context could be loaded into the map viewer.
+- **Metadata linked data**: Easier metadata relation configuration and new support for source dataset and siblings. See :ref:`metadata_link`)
+- **Hide part of metadata**: Provide a method to hide portions of metadata using withHeld ISO attribute
+- **Wiki markup in metadata**: Allow users to enter markup text in metadata elements and have results shown with rendered html
+- **WFS data downloader**: Simple component to download WFS data
+
+Administration
+--------------
+
+- **User profile**: Setup user belonging to multiple groups with different profiles
+- **Virtual CSW** configuration interface to add new end points
+
+Others
+------
+
+- **Security layer**: New security layer based on Spring Security adding support for CAS and much more flexible LDAP configuration
+- **Xlink**: Add  local:// as a protocal for xlink links
+- Provide basic functionnalities (ie. search and view) when **database is in readonly**
+
+
+2.8 release
+```````````
+
 User interface 
 --------------
 - **Javascript widget user interface:** A new user interface using one of the latest Javascript widget libraries (extJS) has been added to support searching, editing and viewing metadata records. The user interface is now much easier for Javascript developers to reorganize and customize. GeoNetwork comes with two flavours of home page: one has the sidebar search similar to the old interface and the other uses a tabbed search layout. The 2.6.x user interface is still available as the default and has been updated.
