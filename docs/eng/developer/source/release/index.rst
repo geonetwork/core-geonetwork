@@ -66,7 +66,7 @@ TODO : Add procedure to only make a new release from an existing dev branch.
 ::
   
   # Set version numbers
-  modules=( "docs" "gast" "geoserver" "installer" )
+  modules=( "gast" "geoserver" "installer" )
   # TODO maybe add other modules if changes
   version=2.10.0
   devversion=2.10.x
