@@ -37,8 +37,15 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.OperationAllowedSpecs;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.io.ISVNEditor;
 import org.tmatesoft.svn.core.io.SVNRepository;
@@ -684,6 +691,10 @@ public class SvnManager {
      * @throws Exception if something goes wrong
      */
     private void commitMetadataPrivileges(ISVNEditor editor, String id, Dbms dbms) throws Exception {
+        OperationAllowedRepository operationAllowedRepository = dbms.getBean(OperationAllowedRepository.class);
+        Sort sort = new Sort("id.operationId");
+        Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasMetadataId(Integer.valueOf(id));
+        List<OperationAllowed> opsAllowed = operationAllowedRepository.findAll(hasMetadataId, sort);
         StringBuffer query = new StringBuffer();
 
         query.append("SELECT g.id as group_id, g.name as group_name,          ");
@@ -695,7 +706,7 @@ public class SvnManager {
         query.append("ORDER BY o.id                                           ");
 
         Element privs = dbms.select(query.toString(), Integer.valueOf(id));
-        String now = Xml.getString(privs);
+//        String now = Xml.getString(privs);
 
         if (exists(id + "/privileges.xml")) {
             // Update the id/privileges.xml item in the repository

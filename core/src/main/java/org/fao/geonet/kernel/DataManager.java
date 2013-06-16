@@ -51,6 +51,7 @@ import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
@@ -524,17 +525,18 @@ public class DataManager {
                 moreFields.add(SearchManager.makeField("_groupOwner", groupOwner, true, true));
 
             // get privileges
-            @SuppressWarnings("unchecked")
-            List<Element> operations = dbms
-                    .select("SELECT groupId, operationId, g.name FROM OperationAllowed o, groups g WHERE g.id = o.groupId AND metadataId = ? ORDER BY operationId ASC", id$)
-                    .getChildren();
+            OperationAllowedRepository operationAllowedRepository = servContext.getBean(OperationAllowedRepository.class);
+            List<OperationAllowed> operationsAllowed = operationAllowedRepository.findByMetadataId(id$);
 
-            for (Element operation : operations) {
-                String groupId = operation.getChildText("groupid");
-                String operationId = operation.getChildText("operationid");
-                moreFields.add(SearchManager.makeField("_op" + operationId, groupId, true, true));
-                if(operationId.equals("0")) {
-                    String name = operation.getChildText("name");
+            for (OperationAllowed operationAllowed : operationsAllowed) {
+                OperationAllowedId operationAllowedId = operationAllowed.getId();
+                int groupId = operationAllowedId.getGroupId();
+                int operationId = operationAllowedId.getOperationId();
+
+                moreFields.add(SearchManager.makeField("_op" + operationId, String.valueOf(groupId), true, true));
+                Operation operation = operationAllowed.getOperation();
+                if(operation.is(ReservedOperation.view)) {
+                    String name = operation.getName();
                     moreFields.add(SearchManager.makeField("_groupPublished", name, true, true));
                 }
             }
@@ -2017,7 +2019,7 @@ public class DataManager {
      */
     private void deleteMetadataFromDB(Dbms dbms, ServiceContext context, String id) throws Exception {
         //--- remove operations
-        deleteMetadataOper(dbms, id, false);
+        deleteMetadataOper(context, id, false);
 
         //--- remove categories
         deleteAllMetadataCateg(dbms, id);
@@ -2073,13 +2075,14 @@ public class DataManager {
      * @param skipAllIntranet
      * @throws Exception
      */
-    public void deleteMetadataOper(Dbms dbms, String id, boolean skipAllIntranet) throws Exception {
-        String query = "DELETE FROM OperationAllowed WHERE metadataId=?";
-
-        if (skipAllIntranet)
-            query += " AND groupId>1";
-
-        dbms.execute(query, Integer.valueOf(id));
+    public void deleteMetadataOper(ServiceContext context, String id, boolean skipAllIntranet) throws Exception {
+        OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
+        
+        if (skipAllIntranet) {
+            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.valueOf(id), ReservedGroup.intranet.getId());
+        } else {
+            operationAllowedRepository.deleteAllByMetadataId(Integer.valueOf(id));
+        }
     }
 
     /**
@@ -2400,10 +2403,11 @@ public class DataManager {
             }
         }
         // Set operation
-        String query = "SELECT metadataId FROM OperationAllowed WHERE metadataId=? AND groupId=? AND operationId=?";
-        Element elRes = dbms.select(query, mdId, grpId, opId);
-        if (elRes.getChildren().size() == 0) {
-            dbms.execute("INSERT INTO OperationAllowed(metadataId, groupId, operationId) VALUES(?,?,?)", mdId, grpId, opId);
+        OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
+        OperationAllowed opAllowed = operationAllowedRepository.findByGroupIdAndMetadataIdAndOperationId(mdId, grpId, opId);
+        if (opAllowed == null) {
+            opAllowed = new OperationAllowed(new OperationAllowedId().setGroupId(grpId).setMetadataId(mdId).setOperationId(opId));
+            operationAllowedRepository.save(opAllowed);
             if (svnManager != null) {
                 svnManager.setHistory(dbms, mdId+"", context);
             }
@@ -2446,8 +2450,8 @@ public class DataManager {
      * @throws Exception hmm
      */
     public void unsetOperation(ServiceContext context, Dbms dbms, int mdId, int groupId, int operId) throws Exception {
-        String query = "DELETE FROM OperationAllowed WHERE metadataId=? AND groupId=? AND operationId=?";
-        dbms.execute(query, mdId, groupId, operId);
+        OperationAllowedId id = new OperationAllowedId().setGroupId(groupId).setMetadataId(mdId).setOperationId(operId);
+        context.getBean(OperationAllowedRepository.class).delete(id);
         if (svnManager != null) {
             svnManager.setHistory(dbms, mdId+"", context);
         }

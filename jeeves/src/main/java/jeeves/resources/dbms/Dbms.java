@@ -26,6 +26,7 @@ package jeeves.resources.dbms;
 import jeeves.constants.Jeeves;
 import jeeves.utils.Log;
 import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
 
 import javax.sql.DataSource;
 import java.io.StringReader;
@@ -59,6 +60,7 @@ public class Dbms
 	private String url;
 	private Connection conn;
 	private long       lastConnTime;
+    private ApplicationContext springAppContext;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -66,10 +68,12 @@ public class Dbms
 	//---
 	//--------------------------------------------------------------------------
 
-	/** Constructs a DBMS object that contains a jdbc connection */
+	/** Constructs a DBMS object that contains a jdbc connection 
+	 * @param springAppContext */
 
-	public Dbms(DataSource dataSource, String url) throws ClassNotFoundException
+	public Dbms(ApplicationContext springAppContext, DataSource dataSource, String url) throws ClassNotFoundException
 	{
+	    this.springAppContext = springAppContext;
 		this.dataSource = dataSource;
 		this.url = url;
 	}
@@ -491,7 +495,10 @@ public class Dbms
 	protected void finalize() {
 		disconnect();
 	}
-	
+
+	public <T> T getBean(Class<T> beanType) {
+	    return springAppContext.getBean(beanType);
+	}
 }
 
 //=============================================================================

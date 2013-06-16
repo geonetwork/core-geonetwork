@@ -117,6 +117,11 @@ public class BasicContext
     public JeevesApplicationContext getApplicationContext() {
         return jeevesApplicationContext;
     }
+    //--------------------------------------------------------------------------
+    
+    public <T> T getBean(Class<T> beanType) {
+        return jeevesApplicationContext.getBean(beanType);
+    }
 
 	//--------------------------------------------------------------------------
 

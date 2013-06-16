@@ -34,9 +34,15 @@ import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -235,8 +241,7 @@ public class MEFLib {
 		if (list.isEmpty())
 			throw new MetadataNotFoundEx("uuid=" + uuid);
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = gc.getBean(DataManager.class);
+        DataManager dm = context.getBean(DataManager.class);
 
 		Element record = list.get(0);
 		String id = record.getChildText("id");
@@ -451,11 +456,8 @@ public class MEFLib {
 
 		String id = md.getChildText("id");
 		int iId = Integer.valueOf(id);
-		String query = "SELECT Groups.id as grpid, Groups.name as grpName, Operations.name as operName "
-				+ "FROM   OperationAllowed, Groups, Operations "
-				+ "WHERE  groupId = Groups.id "
-				+ "  AND  operationId = Operations.id "
-				+ "  AND  metadataId = ?";
+
+		operationAllowedRepository.findByMetadataId(metadataId)
 
 		String grpOwnerQuery = "SELECT groupOwner FROM Metadata WHERE id = ?";
 		// Only one groupOwner per metadata
@@ -477,29 +479,30 @@ public class MEFLib {
 
 		// --- scan query result to collect info
 
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, iId).getChildren();
+        OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
+        List<OperationAllowed> opsAllowed = operationAllowedRepository.findByMetadataId(iId);
 
-		for (Element record : list) {
-			String grpId = record.getChildText("grpid");
-			String grpName = record.getChildText("grpname");
-			String operName = record.getChildText("opername");
+        for (OperationAllowed operationAllowed : opsAllowed) {
+            Group group = operationAllowed.getGroup();
+            int grpId = group.getId();
+            String grpName = group.getName();
+            String operName = operationAllowed.getOperation().getName();
 
-			if (!userGroups.contains(grpId))
-				continue;
+            if (!userGroups.contains(grpId))
+                continue;
 
-			if (grpOwnerId != null && grpOwnerId.equals(grpId))
-				grpOwnerName = grpName;
+            if (grpOwnerId != null && grpOwnerId.equals(grpId))
+                grpOwnerName = grpName;
 
-			ArrayList<String> al = hmPriv.get(grpName);
+            ArrayList<String> al = hmPriv.get(grpName);
 
-			if (al == null) {
-				al = new ArrayList<String>();
-				hmPriv.put(grpName, al);
-			}
+            if (al == null) {
+                al = new ArrayList<String>();
+                hmPriv.put(grpName, al);
+            }
 
-			al.add(operName);
-		}
+            al.add(operName);
+        }
 
 		// --- generate elements
 

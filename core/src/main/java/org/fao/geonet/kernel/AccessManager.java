@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,6 +40,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Operation;
+import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.Setting;
@@ -147,11 +147,11 @@ public class AccessManager {
      * @throws Exception
      */
 	public Set<Operation> getAllOperations(ServiceContext context, String mdId, String ip) throws Exception {
-		Metadata md = _metadataRepository.findByIdString(mdId);
-		if(md == null) {
-		    return Collections.emptySet();
-		}
-		return md.getOperations();
+	    HashSet<Operation> operations = new HashSet<Operation>();
+	    for (OperationAllowed opAllow: _opAllowedRepository.findByMetadataId(mdId)) {
+	        operations.add(opAllow.getOperation());
+	    }
+		return operations;
 	}
 
     /**

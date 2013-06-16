@@ -37,6 +37,8 @@ import jeeves.server.resources.Stats;
 import jeeves.utils.Log;
 
 import org.geotools.data.DataStore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 /**
  * A pool of database connections. This class should be extended to initialize
@@ -50,6 +52,9 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 	private Set<ResourceListener> hsListeners = Collections.synchronizedSet(new HashSet<ResourceListener>());
 	private DataSource dataSource;
 	private DataStore  dataStore;
+
+    @Autowired
+    ApplicationContext springAppContext;
 
     public void init() {
         debug(toString());
@@ -132,7 +137,7 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 	 */
 
 	public synchronized Object open() throws Exception {
-		Dbms dbms = new Dbms(dataSource, getUrl());
+		Dbms dbms = new Dbms(springAppContext, dataSource, getUrl());
 		String nullStr = null;
 		dbms.connect(nullStr, nullStr);
 		return dbms;

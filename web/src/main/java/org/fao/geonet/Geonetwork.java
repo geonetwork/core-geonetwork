@@ -418,35 +418,32 @@ public class Geonetwork implements ApplicationHandler {
 
         HarvestManager harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
 
-        // Creates a default site logo, only if the logo image doesn't exists
-        // This can happen if the application has been updated with a new version preserving the database and
-        // images/logos folder is not copied from old application 
-        createSiteLogo(gnContext.getSiteId(), servletContext, context.getAppPath());
-
         //------------------------------------------------------------------------
         //--- return application context
 
-		beanFactory.registerSingleton("accessManager", accessMan);
-		beanFactory.registerSingleton("dataManager", dataMan);
-		beanFactory.registerSingleton("searchManager", searchMan);
-		beanFactory.registerSingleton("schemaManager", schemaMan);
-		beanFactory.registerSingleton("serviceHandlerConfig", handlerConfig);
-		beanFactory.registerSingleton("settingManager", settingMan);
-		beanFactory.registerSingleton("thesaurusManager", settingMan);
-		beanFactory.registerSingleton("oaipmhDisatcher", oaipmhDis);
-		beanFactory.registerSingleton("metadataNotifierManager", metadataNotifierMan);
-		beanFactory.registerSingleton("svnManager", svnManager);
-		beanFactory.registerSingleton("thesaurusManager", thesaurusMan);
-		beanFactory.registerSingleton("xmlSerializer", xmlSerializer);
+		beanFactory.registerSingleton("geonetworkDataManager", dataMan);
+		beanFactory.registerSingleton("geonetworkSearchManager", searchMan);
+		beanFactory.registerSingleton("geonetworkSchemaManager", schemaMan);
+		beanFactory.registerSingleton("geonetworkServiceHandlerConfig", handlerConfig);
+		beanFactory.registerSingleton("geonetworkOaipmhDisatcher", oaipmhDis);
+		beanFactory.registerSingleton("geonetworkMetadataNotifierManager", metadataNotifierMan);
+		beanFactory.registerSingleton("geonetworkSvnManager", svnManager);
+		beanFactory.registerSingleton("geonetworkThesaurusManager", thesaurusMan);
+		beanFactory.registerSingleton("geonetworkXmlSerializer", xmlSerializer);
 		// change harvestManager to bean
-		beanFactory.registerSingleton("harvestManager", harvestMan);
-
+		beanFactory.registerSingleton("geonetworkHarvestManager", harvestMan);
 
 		gnContext.springAppContext = context.getApplicationContext();
 		gnContext.threadPool  = threadPool;
 		gnContext.statusActionsClass = statusActionsClass;
 
 		logger.info("Site ID is : " + gnContext.getSiteId());
+
+        // Creates a default site logo, only if the logo image doesn't exists
+        // This can happen if the application has been updated with a new version preserving the database and
+        // images/logos folder is not copied from old application 
+        createSiteLogo(gnContext.getSiteId(), servletContext, context.getAppPath());
+
 
         // Notify unregistered metadata at startup. Needed, for example, when the user enables the notifier config
         // to notify the existing metadata in database

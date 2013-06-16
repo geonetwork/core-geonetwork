@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
@@ -54,7 +55,7 @@ public class SettingManager {
     @Autowired
     SettingRepository _settingsRepo;
 
-    @Autowired
+    @PersistenceContext
     EntityManager _entityManager;
 
     // ---------------------------------------------------------------------------
@@ -251,7 +252,11 @@ public class SettingManager {
 
 
     public boolean getValueAsBool(String path, boolean defValue) {
-        return _settingsRepo.findOneByPath(path).getValueAsBool();
+        Setting setting = _settingsRepo.findOneByPath(path);
+        if (setting == null) {
+            return defValue;
+        }
+        return setting.getValueAsBool();
     }
 
     // ---------------------------------------------------------------------------

@@ -1,9 +1,9 @@
 package org.fao.geonet.domain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Cacheable;
@@ -13,8 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -37,17 +35,17 @@ public class Metadata {
     private String uuid;
     private Date changeDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "operationallowed", joinColumns = @JoinColumn(name = "operationid"), inverseJoinColumns = @JoinColumn(name = "metadataid"))
-    private Set<Operation> operations = new HashSet<Operation>();
-    
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "operationallowed", joinColumns = @JoinColumn(name = "groupid"), inverseJoinColumns = @JoinColumn(name = "metadataid"))
-    private Set<Group> groups = new HashSet<Group>();
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "operationallowed", joinColumns = @JoinColumn(name = "operationid"), inverseJoinColumns = @JoinColumn(name = "metadataid"))
+//    private Set<Operation> operations = new HashSet<Operation>();
+//    
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "operationallowed", joinColumns = @JoinColumn(name = "groupid"), inverseJoinColumns = @JoinColumn(name = "metadataid"))
+//    private Set<Group> groups = new HashSet<Group>();
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name="metadataid")
-    private Set<OperationAllowed> operationAllowed = new HashSet<OperationAllowed>();
+    private List<OperationAllowed> operationAllowed = new ArrayList<OperationAllowed>();
     
     @Id
     @GeneratedValue
@@ -76,51 +74,75 @@ public class Metadata {
     
     @Column
     public Date getChangeDate() {
-        return changeDate;
+        if (changeDate != null) {
+            return (Date) changeDate.clone();
+        } else {
+            return null;
+        }
     }
     
     public void setChangeDate(Date changeDate) {
-        this.changeDate = changeDate;
+        if (changeDate != null) {
+            this.changeDate = (Date) changeDate.clone();
+        } else {
+            this.changeDate = null;
+        }
     }
     
 
-    /**
-     * Get the read-only set of operations that are assocated with
-     * this metadata.  This is essentially a view onto operations allowed
-     * and isn't automatically updated when operationsAllowed is updated
-     */
-    @Nonnull
-    @Transient
-    public Set<Operation> getOperations() {
-        return Collections.unmodifiableSet(operations);
-    }
-
-    /**
-     * Get the read-only collection of groups that are assocated with
-     * this metadata.  This is essentially a view onto operations allowed
-     * and isn't automatically updated when operationsAllowed is updated
-     */
-    @Transient
-    @Nonnull
-    public Set<Group> getGroups() {
-        return Collections.unmodifiableSet(groups);
-    }
+//    /**
+//     * Get the read-only set of operations that are assocated with
+//     * this metadata.  This is essentially a view onto operations allowed
+//     * and isn't automatically updated when operationsAllowed is updated
+//     */
+//    @Nonnull
+//    @Transient
+//    public Set<Operation> getOperations() {
+//        return Collections.unmodifiableSet(operations);
+//    }
+//
+//    /**
+//     * Get the read-only collection of groups that are assocated with
+//     * this metadata.  This is essentially a view onto operations allowed
+//     * and isn't automatically updated when operationsAllowed is updated
+//     */
+//    @Transient
+//    @Nonnull
+//    public Set<Group> getGroups() {
+//        return Collections.unmodifiableSet(groups);
+//    }
     
     public Metadata addOperationAllowed(OperationAllowed newOperationAllowed) {
         internalAddOperationAllowed(newOperationAllowed);
         newOperationAllowed.internalSetMetadata(this);
         return this;
     }
-
-    void internalAddOperationAllowed(OperationAllowed newOperationAllowed) {
-        Assert.isTrue(newOperationAllowed != null, OperationAllowed.class.getSimpleName()+" should not be null");
-      this.operationAllowed.add(newOperationAllowed);
+    
+    public Metadata removeOperationAllowed(OperationAllowed oldOperationAllowed) {
+        internalRemoveOperationAllowed(oldOperationAllowed);
+        oldOperationAllowed.internalSetMetadata(null);
+        return this;
     }
 
+    void internalAddOperationAllowed(OperationAllowed newOperationAllowed) {
+      Assert.isTrue(newOperationAllowed != null, OperationAllowed.class.getSimpleName()+" should not be null");
+      if (!operationAllowed.contains(newOperationAllowed)) {
+          this.operationAllowed.add(newOperationAllowed);
+      }
+    }
+
+    /**
+     * Get a <strong>unmodifiable</strong> collection containing the operations allowed
+     * @return
+     */
     @Transient
     @Nonnull
-    public Set<OperationAllowed> getOperationsAllowed() {
-        return this.operationAllowed;
+    public List<OperationAllowed> getOperationsAllowed() {
+        return Collections.unmodifiableList(this.operationAllowed);
+    }
+
+    void internalRemoveOperationAllowed(OperationAllowed operationAllowed) {
+        this.operationAllowed.remove(operationAllowed);
     }
 
 }

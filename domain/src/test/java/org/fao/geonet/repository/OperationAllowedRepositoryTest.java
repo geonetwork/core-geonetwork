@@ -103,4 +103,29 @@ public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTes
         assertFalse(opAllowedFound.contains(_opAllowed3));
         assertFalse(opAllowedFound.contains(_opAllowed4));
     }
+    
+
+    @Test
+    public void testDeleteByGroupdIdAndMetadataId() {
+        _opAllowRepo.deleteAllByMetadataIdExceptGroupId(_md1.getId(), _allGroup.getId());
+
+        List<OperationAllowed> opAllowedFound = _opAllowRepo.findAll();
+
+        assertTrue(opAllowedFound.contains(_opAllowed1));
+        assertTrue(opAllowedFound.contains(_opAllowed2));
+        assertEquals(2, opAllowedFound.size());
+        assertFalse(opAllowedFound.contains(_opAllowed3));
+        assertFalse(opAllowedFound.contains(_opAllowed4));
+    }
+    @Test
+    public void testDeleteByMetadataId() {
+        _opAllowRepo.deleteAllByMetadataId(_md1.getId());
+
+        List<OperationAllowed> opAllowedFound = _opAllowRepo.findAll();
+
+        assertFalse(opAllowedFound.contains(_opAllowed1));
+        assertTrue(opAllowedFound.contains(_opAllowed2));
+        assertEquals(1, opAllowedFound.size());
+        assertFalse(opAllowedFound.contains(_opAllowed3));
+        assertFalse(opAllowedFound.contains(_opAllowed4));}
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.SettingNamedQueries;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,15 +26,15 @@ public interface SettingRepository extends JpaRepository<Setting, Integer>, Sett
      * Get the root setting.
      */
     @Nonnull
-    @Query(name = QUERY_FIND_ROOT.NAME)
+    @Query(name = SettingNamedQueries.QUERY_FIND_ROOT.NAME)
     List<Setting> findRoots();
 
     List<Setting> findByName(String name);
 
-    @Query(name = QUERY_FIND_ALL_CHILDREN.NAME)
+    @Query(name = SettingNamedQueries.QUERY_FIND_ALL_CHILDREN.NAME)
     @Nonnull
     List<Setting> findAllChildren(@Param("parentid") int parentid);
 
-    @Query(name = QUERY_FIND_CHILDREN_BY_NAME.NAME)
+    @Query(name = SettingNamedQueries.QUERY_FIND_CHILDREN_BY_NAME.NAME)
     List<Setting> findChildrenByName(@Param("parentid") int parentid, @Param("name") String name);
 }

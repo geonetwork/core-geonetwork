@@ -1,8 +1,9 @@
-The resources section defines the database to be used by GeoNetwork.
+This folder contains the spring database configuration files.  
 
-Update the enabled attribute to true to use a connection.
-Only one resource can be enabled at a time, the others must be disabled.
+Database Configuration Parameters
+---------------------------------
 
+The main parameters are in the jdbc.properties file and are described below
 GeoNetwork uses Apache Commons Database Connection Pooling (DBCP) code.
 You can specify a JNDI datasource and place the DBCP config params in the 
 container context.xml (eg. for tomcat this is conf/context.xml) or 

@@ -9,5 +9,8 @@
 
     <jdbc:embedded-database type="H2" id="jdbcDataSource" />
     
+	<bean id="generateDdl" class="java.lang.String">
+		<constructor-arg value="true" />
+	</bean>
     
 </beans>

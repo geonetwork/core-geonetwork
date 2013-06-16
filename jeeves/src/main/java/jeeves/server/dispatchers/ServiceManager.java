@@ -70,6 +70,8 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
 import org.jdom.Element;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.yammer.metrics.core.TimerContext;
 
@@ -367,7 +369,7 @@ public class ServiceManager
 	//--- Dispatching methods
 	//---
 	//---------------------------------------------------------------------------
-
+	@Transactional(isolation = Isolation.READ_COMMITTED)
 	public void dispatch(ServiceRequest req, UserSession session, ServiceContext context)
 	{
 		context.setBaseUrl(baseUrl);

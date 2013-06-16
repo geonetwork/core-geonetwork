@@ -28,8 +28,11 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -92,7 +95,7 @@ class UnusedSearcher extends MetaSearcher
             ISODate changeDate = new ISODate(rec.getChildText("changedate"));
 
             if (changeDate.sub(createDate) / 60 < maxDiff) {
-                if (!hasInternetGroup(dbms, id)) {
+                if (!hasInternetGroup(context, id)) {
                     alResult.add(id);
                 }
             }
@@ -167,18 +170,11 @@ class UnusedSearcher extends MetaSearcher
 	//---
 	//--------------------------------------------------------------------------
 
-	private boolean hasInternetGroup(Dbms dbms, String id) throws SQLException
+	private boolean hasInternetGroup(ServiceContext context, String id) throws SQLException
 	{
-		String query ="SELECT COUNT(*) AS result FROM OperationAllowed WHERE groupId=1 AND metadataId=?";
-
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
-
-		Element record = list.get(0);
-
-		int result = Integer.parseInt(record.getChildText("result"));
-
-		return (result > 0);
+	    OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
+        List<OperationAllowed> opsAllowed = operationAllowedRepository.findByGroupIdAndMetadataId(ReservedGroup.all.getId(), Integer.valueOf(id));
+		return !opsAllowed.isEmpty();
 	}
 
 	//--------------------------------------------------------------------------

@@ -1,6 +1,5 @@
 package org.fao.geonet.domain;
 
-import static org.fao.geonet.domain.Setting.*;
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
@@ -19,6 +18,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.fao.geonet.domain.SettingNamedQueries.QUERY_FIND_ALL_CHILDREN;
+import org.fao.geonet.domain.SettingNamedQueries.QUERY_FIND_CHILDREN_BY_NAME;
+import org.fao.geonet.domain.SettingNamedQueries.QUERY_FIND_ROOT;
+
 @Entity
 @Table(name = "settings")
 // @Cacheable
@@ -30,26 +33,6 @@ import javax.persistence.Transient;
 public class Setting {
 
     public static final int ROOT_ID = 0;
-    public static final class QUERY_FIND_CHILDREN_BY_NAME {
-        public static final String NAME = "findChildrenByName";
-        public static final String PARAMETER_NAME = "name";
-        public static final String PARAMETER_PARENTID = "parentid";
-        static final String QUERY = "select s from Setting s where s.parent.id = :" + PARAMETER_PARENTID + " and s.name = :"
-                + PARAMETER_NAME;
-    }
-
-    public static final class QUERY_FIND_ALL_CHILDREN {
-        public static final String NAME = "findAllChildren";
-        public static final String PARAMETER_PARENTID = QUERY_FIND_CHILDREN_BY_NAME.PARAMETER_PARENTID;
-        static final String QUERY = "select s from Setting s where s.parent.id = :" + PARAMETER_PARENTID;
-    }
-    
-    public static final class QUERY_FIND_ROOT {
-        public static final String NAME = "findRoot";
-        static final String QUERY = "select s from Setting s where s.parent.id IS NULL";
-    }
-
-
     private int _id;
 
     private Setting _parent;

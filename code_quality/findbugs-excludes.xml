@@ -8,6 +8,10 @@
 		<Class name="~.*\..*Test" />
 	</Match>
 
+    <!-- 			Domain Exceptions 					-->
+	<Match>
+		<Class name="~org\.fao\.geonet\.domain\.\S+_$" />
+	</Match>
     <!-- 			Oaipmh Exceptions 					-->
 	<Match>
 		<Class name="org.fao.oaipmh.util.ISODate" />

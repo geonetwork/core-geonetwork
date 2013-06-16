@@ -91,7 +91,7 @@ public final class SpringDataTestSupport {
                 fail("Value for " + expectedProperty.getKey() + " was null be we expected it to be " + expectedProperty.getValue());
             } else if (actualProperty == null && expectedProperty.getValue() == null) {
                 continue;
-            } else if (actualProperty.getClass().isArray()) {
+            } else if (actualProperty != null && actualProperty.getClass().isArray()) {
                 assertArrayEquals(expectedProperty.getKey() + " does not match", (Object[]) expectedProperty.getValue(),
                         (Object[]) actualProperty);
             } else {

@@ -19,21 +19,24 @@ public class OperationAllowedId implements Serializable {
     public int getMetadataId() {
         return metadataId;
     }
-    public void setMetadataId(int newMetadataId) {
+    public OperationAllowedId setMetadataId(int newMetadataId) {
         this.metadataId = newMetadataId;
+        return this;
     }
     public int getGroupId() {
         return groupId;
     }
-    public void setGroupId(int newGroupId) {
+    public OperationAllowedId setGroupId(int newGroupId) {
         this.groupId = newGroupId;
+        return this;
     }
     
     public int getOperationId() {
         return operationId;
     }
-    public void setOperationId(int newOperationId) {
+    public OperationAllowedId setOperationId(int newOperationId) {
         this.operationId = newOperationId;
+        return this;
     }
     @Override
     public int hashCode() {
