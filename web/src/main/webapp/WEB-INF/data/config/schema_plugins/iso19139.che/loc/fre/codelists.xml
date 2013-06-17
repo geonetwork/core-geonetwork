@@ -129,6 +129,7 @@
 		<entry>
 			<code>federal</code>
 			<label>Fédéral</label>
+			<description> Identifiant du jeu de géodonnées de base au niveau fédéral (cf. Recueil des jeux de géodonnées de base de droit fédéral)</description>
 		</entry>
 		<entry>
 			<code>other</code>
