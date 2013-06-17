@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.XMLExtensionFilenameFilter;
@@ -258,7 +259,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
         String language = context.getLanguage();
         dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, new ISODate().toString(), false);
 
-		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
+        OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+        repository.deleteAllByMetadataId(Integer.parseInt(id));
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
 
 		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));

@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.NoRecordsMatchException;
 import org.fao.oaipmh.requests.GetRecordRequest;
@@ -410,7 +411,8 @@ class Harvester extends BaseAligner
 			//--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
 
-			dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
+            OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+            repository.deleteAllByMetadataId(Integer.parseInt(id));
             addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
 
 			dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));

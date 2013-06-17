@@ -37,14 +37,15 @@ import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
@@ -392,21 +393,12 @@ public class DownloadArchive implements Service
 			} else {
                 if(context.isDebug()) context.debug("Sending email notification for file : "+ theFile);
 
-					// send emails about downloaded file to groups with notify privilege
-				StringBuffer query = new StringBuffer();
-				query.append("SELECT g.id, g.name, g.email ");
-				query.append("FROM   OperationAllowed oa, Groups g ");
-				query.append("WHERE  oa.operationId =" + ReservedOperation.notify.getId() + " ");
-				query.append("AND    oa.metadataId = ?");
-				query.append("AND    oa.groupId = g.id");
-
-				Element groups = dbms.select(query.toString(), Integer.valueOf(id));
-                @SuppressWarnings("unchecked")
-                List<Element> groupsEls = groups.getChildren();
-                for (Element group : groupsEls) {
-					String  name  = group.getChildText("name");
-					String  email = group.getChildText("email");
-
+                OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);
+                List<OperationAllowed> opsAllowed = opAllowedRepo.findByMetadataId(id);
+                
+                for (OperationAllowed opAllowed : opsAllowed) {
+					String  name  = opAllowed.getGroup().getName();
+					String  email = opAllowed.getGroup().getEmail();
 
 					if (email.trim().length() != 0) {
 						String subject = "File " + theFile + " has been downloaded at "+dateTime;

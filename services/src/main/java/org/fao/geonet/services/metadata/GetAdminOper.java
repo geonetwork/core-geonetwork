@@ -30,11 +30,15 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Operation;
+import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
@@ -91,18 +95,32 @@ public class GetAdminOper implements Service
 
 		//--- get all operations
 
-		Element elOper = Lib.local.retrieve(dbms, "Operations").setName(Geonet.Elem.OPERATIONS);
+        OperationRepository opRepository = context.getBean(OperationRepository.class);
+        List<Operation> operationList = opRepository.findAll();
 
-		//-----------------------------------------------------------------------
+
+        // elOper is for returned XML and keeps backwards compatibility
+        Element elOper = new Element(Geonet.Elem.OPERATIONS);
+
+        for (Operation operation : operationList) {
+            Element record = new Element("record")
+                .addContent(new Element("id").setText(Integer.toString(operation.getId())))
+                .addContent(new Element("name").setText(operation.getName()))
+                .addContent(new Element("isreserved").setText(Boolean.toString(operation.isReserved())));
+            elOper.addContent(record);
+        }
+
+        //-----------------------------------------------------------------------
 		//--- retrieve groups operations
 
 		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress(), false);
 
 		Element elGroup = Lib.local.retrieve(dbms, "Groups");
 
+        OperationAllowedRepository opAllowRepository = context.getBean(OperationAllowedRepository.class);
+
 		@SuppressWarnings("unchecked")
         List<Element> list = elGroup.getChildren();
-
 		for (Element el : list) {
 			el.setName(Geonet.Elem.GROUP);
 			String sGrpId = el.getChildText("id");
@@ -121,33 +139,19 @@ public class GetAdminOper implements Service
 				el.addContent(new Element("userProfile").setText(profile));
 			}
 
+            //--- get all operations that this group can do on given metadata
+            List<OperationAllowed> opAllowList = opAllowRepository.findByGroupIdAndMetadataId(grpId, Integer.valueOf(id));
 
-			//--- get all operations that this group can do on given metadata
-
-			query = "SELECT operationId FROM OperationAllowed WHERE metadataId=? AND groupId=?";
-
-			@SuppressWarnings("unchecked")
-            List<Element> listAllow = dbms.select(query, Integer.valueOf(id), grpId).getChildren();
-
-			//--- now extend the group list adding proper operations
-
-			@SuppressWarnings("rawtypes")
-            List listOper = elOper.getChildren();
-
-			for(int j=0; j<listOper.size(); j++)
-			{
-				String operId = ((Element) listOper.get(j)).getChildText("id");
+			for (Operation operation : operationList) {
+				String operId = Integer.toString(operation.getId());
 
 				Element elGrpOper = new Element(Geonet.Elem.OPER)
 													.addContent(new Element(Geonet.Elem.ID).setText(operId));
 
 				boolean bFound = false;
 
-				for(int k=0; k<listAllow.size(); k++)
-				{
-					Element elAllow = (Element) listAllow.get(k);
-
-					if (operId.equals(elAllow.getChildText("operationid")))
+				for (OperationAllowed operationAllowed : opAllowList) {
+					if (operation.getId() == operationAllowed.getId().getOperationId())
 					{
 						bFound = true;
 						break;

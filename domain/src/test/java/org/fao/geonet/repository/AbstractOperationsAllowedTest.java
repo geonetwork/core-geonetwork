@@ -43,8 +43,8 @@ public abstract class AbstractOperationsAllowedTest extends AbstractSpringDataTe
     @Before
     public void createEntities() {
     
-        this._md1 = _mdRepo.save(new Metadata().setUuid("uuid1"));
-        this._md2 = _mdRepo.save(new Metadata().setUuid("uuid2"));
+        this._md1 = _mdRepo.save(new Metadata().setUuid("uuid1")).setOwner(1);
+        this._md2 = _mdRepo.save(new Metadata().setUuid("uuid2")).setOwner(2);
         
         this._viewOp = _opRepo.save(ReservedOperation.view.getOperationEntity().setId(-1));
         this._downloadOp = _opRepo.save(ReservedOperation.download.getOperationEntity().setId(-1));
@@ -60,7 +60,7 @@ public abstract class AbstractOperationsAllowedTest extends AbstractSpringDataTe
         flushAndClear();
     }
 
-    private void flushAndClear() {
+    protected void flushAndClear() {
         _opRepo.flush();
         _mdRepo.flush();
         _opAllowRepo.flush();

@@ -23,6 +23,8 @@
 
 package org.fao.geonet.services.ownership;
 
+import static org.springframework.data.jpa.domain.Specifications.*;
+import static org.fao.geonet.repository.OperationAllowedSpecs.*;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -31,13 +33,16 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.List;
 import java.util.Set;
-
+ 
 //=============================================================================
 
 public class Groups implements Service
@@ -52,7 +57,7 @@ public class Groups implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		int id = Util.getParamAsInt(params, "id");
+		int userId = Util.getParamAsInt(params, "id");
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		UserSession   us = context.getUserSession();
@@ -60,7 +65,7 @@ public class Groups implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		Set<String> userGroups = am.getVisibleGroups(dbms, id);
+		Set<String> userGroups = am.getVisibleGroups(dbms, userId);
 		Set<String> myGroups   = am.getUserGroups(dbms, us, null, false);
 
 		//--- remove 'Intranet' and 'All' groups
@@ -69,17 +74,14 @@ public class Groups implements Service
 
 		Element response = new Element("response");
 
+		OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);
 		for (String groupId : userGroups)
 		{
-			String query = "SELECT count(*) as cnt "+
-								"FROM OperationAllowed, Metadata "+
-								"WHERE metadataId = id AND groupId=? AND owner=?";
+		    int iGroupId = Integer.valueOf(groupId);
+            Specifications<OperationAllowed> spec = where(hasGroupId(iGroupId)).and(metadataHasOwnerId(userId));
+		    long count = opAllowedRepo.count(spec);
 
-			@SuppressWarnings("unchecked")
-            List<Element> list  = dbms.select(query, Integer.valueOf(groupId), id).getChildren();
-			String size  = (list.get(0)).getChildText("cnt");
-
-			if (Integer.parseInt(size) != 0)
+			if (count > 0)
 			{
 				@SuppressWarnings("unchecked")
                 List<Element> records = Lib.local.retrieveById(dbms, "Groups", groupId).getChildren();

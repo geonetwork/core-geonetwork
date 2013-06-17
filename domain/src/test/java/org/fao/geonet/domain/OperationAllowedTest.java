@@ -18,7 +18,16 @@ public class OperationAllowedTest extends AbstractOperationsAllowedTest {
         assertNotNull(operationAllowed);
         assertEquals(_opAllowed1.getGroup(), operationAllowed.getGroup());
     }
-    
+
+    @Test
+    public void testConstructors() {
+        int mdId = 1;
+        int opId = 20;
+        int grpId = 300;
+        assertEquals(new OperationAllowedId().setMetadataId(mdId).setGroupId(grpId).setOperationId(opId),
+                new OperationAllowedId(mdId,grpId, opId));
+    }
+
     @Test
     public void testNullSetting() {
         assertNotNull(_opAllowed1.getMetadata());

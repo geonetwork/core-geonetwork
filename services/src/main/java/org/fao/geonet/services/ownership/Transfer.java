@@ -23,15 +23,22 @@
 
 package org.fao.geonet.services.ownership;
 
+import static org.fao.geonet.repository.OperationAllowedSpecs.*;
+import static org.springframework.data.jpa.domain.Specifications.*;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specifications;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -68,8 +75,8 @@ public class Transfer extends NotInReadOnlyModeService {
 
 		//--- transfer privileges (if case)
 
-		Set<String> sourcePriv = retrievePrivileges(dbms, sourceUsr, sourceGrp);
-		Set<String> targetPriv = retrievePrivileges(dbms, null, targetGrp);
+		Set<String> sourcePriv = retrievePrivileges(context, sourceUsr, sourceGrp);
+		Set<String> targetPriv = retrievePrivileges(context, null, targetGrp);
 
 		//--- a commit just to release some resources
 
@@ -88,9 +95,15 @@ public class Transfer extends NotInReadOnlyModeService {
 
 			dm.unsetOperation(context, dbms, mdId, sourceGrp, opId);
 
-			if (!targetPriv.contains(priv))
-				dbms.execute("INSERT INTO OperationAllowed(metadataId, groupId, operationId) " +
-								 "VALUES(?,?,?)", mdId, targetGrp, opId);
+			if (!targetPriv.contains(priv)) {
+			    OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+			    OperationAllowedId id = new OperationAllowedId()
+			        .setGroupId(targetGrp)
+			        .setMetadataId(mdId)
+			        .setOperationId(opId);
+                OperationAllowed operationAllowed = new OperationAllowed(id );
+                repository.save(operationAllowed);
+			}
 
 			dbms.execute("UPDATE Metadata SET owner=?, groupOwner=? WHERE id=?", targetUsr, targetGrp, mdId);
 
@@ -116,31 +129,28 @@ public class Transfer extends NotInReadOnlyModeService {
 
     /**
      *
-     * @param dbms
+     * @param context
      * @param userId can be null
      * @param groupId
      * @return
      * @throws java.sql.SQLException
      */
-	private Set<String> retrievePrivileges(Dbms dbms, Integer userId, int groupId) throws SQLException {
-	    final List<Element> list;
-	    if(userId==null) {
-            String query = "SELECT * FROM OperationAllowed WHERE groupId=?";
-            @SuppressWarnings("unchecked")
-            List<Element> tmp = dbms.select(query, groupId).getChildren();
-            list = tmp;
-	    } else {
-            String query = "SELECT * FROM OperationAllowed, Metadata WHERE metadataId=id AND owner=? AND groupId=?";
-            @SuppressWarnings("unchecked")
-            List<Element> tmp = dbms.select(query, userId, groupId).getChildren();
-            list = tmp;
-	    }
-		Set<String> result = new HashSet<String>();
-		for (Element elem : list) {
-			String  opId = elem.getChildText("operationid");
-			String  mdId = elem.getChildText("metadataid");
-			result.add(opId +"|"+ mdId);
-		}
-		return result;
-	}
+    private Set<String> retrievePrivileges(ServiceContext context, Integer userId, int groupId) throws SQLException {
+        OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);
+        final List<OperationAllowed> opsAllowed;
+        if (userId == null) {
+            opsAllowed = opAllowedRepo.findByGroupId(groupId);
+        } else {
+            Specifications<OperationAllowed> spec = where(hasGroupId(groupId)).and(metadataHasOwnerId(userId));
+            opsAllowed = opAllowedRepo.findAll(spec);
+        }
+
+        Set<String> result = new HashSet<String>();
+        for (OperationAllowed elem : opsAllowed) {
+            int opId = elem.getId().getOperationId();
+            int mdId = elem.getId().getMetadataId();
+            result.add(opId + "|" + mdId);
+        }
+        return result;
+    }
 }

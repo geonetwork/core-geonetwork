@@ -34,7 +34,7 @@ public class Metadata {
     private int id;
     private String uuid;
     private Date changeDate;
-
+    private int owner;
 //    @ManyToMany(fetch = FetchType.LAZY)
 //    @JoinTable(name = "operationallowed", joinColumns = @JoinColumn(name = "operationid"), inverseJoinColumns = @JoinColumn(name = "metadataid"))
 //    private Set<Operation> operations = new HashSet<Operation>();
@@ -89,6 +89,15 @@ public class Metadata {
         }
     }
     
+    @Column
+    public int getOwner() {
+        return owner;
+    }
+    
+    public Metadata setOwner(int owner) {
+        this.owner = owner;
+        return this;
+    }
 
 //    /**
 //     * Get the read-only set of operations that are assocated with

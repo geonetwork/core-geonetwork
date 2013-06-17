@@ -39,10 +39,7 @@ import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -457,7 +454,8 @@ public class MEFLib {
 		String id = md.getChildText("id");
 		int iId = Integer.valueOf(id);
 
-		operationAllowedRepository.findByMetadataId(metadataId)
+		OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+		repository.findByMetadataId(iId);
 
 		String grpOwnerQuery = "SELECT groupOwner FROM Metadata WHERE id = ?";
 		// Only one groupOwner per metadata

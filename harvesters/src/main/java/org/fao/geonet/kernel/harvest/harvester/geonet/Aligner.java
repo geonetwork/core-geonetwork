@@ -48,6 +48,7 @@ import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
@@ -630,7 +631,8 @@ public class Aligner extends BaseAligner
             }
         }
 		
-		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
+        OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+        repository.deleteAllByMetadataId(Integer.parseInt(id));
 		addPrivileges(id, info.getChild("privileges"));
 
 		dbms.commit();

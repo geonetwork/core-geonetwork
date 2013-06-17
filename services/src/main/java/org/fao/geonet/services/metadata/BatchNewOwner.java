@@ -23,6 +23,8 @@
 
 package org.fao.geonet.services.metadata;
 
+import static org.springframework.data.jpa.domain.Specifications.*;
+import static org.fao.geonet.repository.OperationAllowedSpecs.*;
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -32,12 +34,15 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.*;
 
@@ -98,7 +103,7 @@ public class BatchNewOwner extends NotInReadOnlyModeService {
 					context.info("Source Group for user "+sourceUsr+" was null, setting default privileges");
 					dm.copyDefaultPrivForGroup(context, dbms, id, targetGrp, false);
 				} else {
-					Vector<String> sourcePriv = retrievePrivileges(dbms, id, sourceUsr, sourceGrp);
+					Vector<String> sourcePriv = retrievePrivileges(context, id, sourceUsr, sourceGrp);
 
 					// -- Set new privileges for new owner from privileges of the old  
 					// -- owner, if none then set defaults
@@ -137,25 +142,25 @@ public class BatchNewOwner extends NotInReadOnlyModeService {
 
 	//--------------------------------------------------------------------------
 
-	private Vector<String> retrievePrivileges(Dbms dbms, String id, String userId, String groupId) throws Exception
+	private Vector<String> retrievePrivileges(ServiceContext context, String id, String userId, String groupId) throws Exception
 	{
+	    
+	    OperationAllowedRepository opAllowRepo = context.getBean(OperationAllowedRepository.class);
 
-		Object args[] = { Integer.valueOf(id), Integer.valueOf(id), Integer.valueOf(userId), Integer.valueOf(groupId) };
-		String query = "SELECT * "+
-							"FROM OperationAllowed, Metadata "+
-							"WHERE metadataId=? AND id =? AND owner=? AND groupId=?";
+	    Integer iMetadataId = Integer.valueOf(id);
+	    Integer iUserId = Integer.valueOf(userId);
+	    Integer iGroupId = Integer.valueOf(groupId);
+	    Specification<OperationAllowed> spec = 
+	            where(hasMetadataId(iMetadataId))
+	            .and(hasGroupId(iGroupId))
+	            .and(metadataHasOwnerId(iUserId));
 
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, args).getChildren();
+        List<OperationAllowed> operationsAllowed = opAllowRepo.findAll(spec);
 
 		Vector<String> result = new Vector<String>();
-
-		for (Element elem : list)
-		{
-			String  opId = elem.getChildText("operationid");
-
-			result.add(opId);
-		}
+		for (OperationAllowed operationAllowed : operationsAllowed) {
+            result.add(String.valueOf(operationAllowed.getId()));
+        }
 
 		return result;
 	}

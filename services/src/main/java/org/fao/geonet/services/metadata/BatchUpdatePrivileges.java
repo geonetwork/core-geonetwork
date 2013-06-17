@@ -99,7 +99,7 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 				if (us.getUserId().equals(info.owner) && !isAdmin && !isReviewer)
 					skip = true;
 
-				dm.deleteMetadataOper(dbms, id, skip);
+				dm.deleteMetadataOper(context, id, skip);
 
 				//--- set new ones
 				@SuppressWarnings("unchecked")

@@ -3,6 +3,7 @@ package org.fao.geonet.repository;
 import java.util.List;
 
 import org.fao.geonet.domain.OperationAllowed;
+import org.springframework.data.jpa.domain.Specification;
 
 public interface OperationAllowedRepositoryCustom {
     /**

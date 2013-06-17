@@ -19,11 +19,64 @@ public class OperationAllowedSpecsTest extends AbstractOperationsAllowedTest {
         assertEquals(found.size(), 3);
         assertEquals(_viewOp.getId(), found.get(0).getId().getOperationId());
         assertEquals(_viewOp.getId(), found.get(1).getOperation().getId());
-        assertEquals(_allGroup.getId(), found.get(0).getId().getGroupId());
-        assertEquals(_intranetGroup.getId(), found.get(1).getGroup().getId());
         assertEquals(_viewOp.getId(), found.get(0).getId().getOperationId());
         assertEquals(_viewOp.getId(), found.get(1).getId().getOperationId());
         assertEquals(_downloadOp.getId(), found.get(2).getId().getOperationId());
+        
+        assertEquals(_intranetGroup.getId(), found.get(1).getGroup().getId());
+        assertEquals(_allGroup.getId(), found.get(0).getId().getGroupId());
+
+        assertEquals(_md1.getId(), found.get(0).getId().getMetadataId());
+        assertEquals(_md1.getId(), found.get(1).getId().getMetadataId());
+        assertEquals(_md1.getId(), found.get(2).getId().getMetadataId());
+    }
+    
+    @Test
+    public void testHasGroupId() {
+        Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasGroupId(_intranetGroup.getId());
+        List<OperationAllowed> found = _opAllowRepo.findAll(hasMetadataId, new Sort("id.operationId", "id.metadataId"));
+        
+        assertEquals(found.size(), 3);
+        assertEquals(_intranetGroup.getId(), found.get(0).getId().getGroupId());
+        assertEquals(_intranetGroup.getId(), found.get(1).getId().getGroupId());
+        assertEquals(_intranetGroup.getId(), found.get(2).getId().getGroupId());
+        
+        assertEquals(_viewOp.getId(), found.get(0).getId().getOperationId());
+        assertEquals(_downloadOp.getId(), found.get(1).getId().getOperationId());
+        assertEquals(_downloadOp.getId(), found.get(2).getId().getOperationId());
+        
+        assertEquals(_md1.getId(), found.get(0).getId().getMetadataId());
+        assertEquals(_md1.getId(), found.get(1).getId().getMetadataId());
+        assertEquals(_md2.getId(), found.get(2).getId().getMetadataId());
+    }
+    
+    @Test
+    public void testHasOperationId() {
+        Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasOperationId(_viewOp.getId());
+        List<OperationAllowed> found = _opAllowRepo.findAll(hasMetadataId, new Sort("id.groupId", "id.metadataId"));
+        
+        assertEquals(found.size(), 2);
+        assertEquals(_allGroup.getId(), found.get(0).getId().getGroupId());
+        assertEquals(_intranetGroup.getId(), found.get(1).getGroup().getId());
+        
+        assertEquals(_viewOp.getId(), found.get(0).getId().getOperationId());
+        assertEquals(_viewOp.getId(), found.get(1).getId().getOperationId());
+        
+        assertEquals(_md1.getId(), found.get(0).getId().getMetadataId());
+        assertEquals(_md1.getId(), found.get(1).getId().getMetadataId());
+    }
+    
+    @Test
+    public void testHasOwnerId() {
+        Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.metadataHasOwnerId(2);
+        List<OperationAllowed> found = _opAllowRepo.findAll(hasMetadataId);
+        
+        assertEquals(found.size(), 1);
+        assertEquals(_intranetGroup.getId(), found.get(0).getId().getGroupId());
+        
+        assertEquals(_downloadOp.getId(), found.get(0).getId().getOperationId());
+        
+        assertEquals(_md2.getId(), found.get(0).getId().getMetadataId());
     }
 
 }

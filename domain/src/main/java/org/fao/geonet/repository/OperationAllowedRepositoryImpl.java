@@ -6,11 +6,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.OperationAllowed_;
+import org.springframework.data.jpa.domain.Specification;
 
 public class OperationAllowedRepositoryImpl implements OperationAllowedRepositoryCustom {
 
@@ -27,5 +29,4 @@ public class OperationAllowedRepositoryImpl implements OperationAllowedRepositor
         query.where(builder.equal(builder.literal(iMdId), root.get(OperationAllowed_.id).get(OperationAllowedId_.metadataId)));
         return _entityManager.createQuery(query).getResultList();
     }
-
 }

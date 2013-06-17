@@ -31,11 +31,14 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.util.ServiceMetadataReindexer;
 import org.jdom.Element;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -58,16 +61,20 @@ public class Remove extends NotInReadOnlyModeService {
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
+        OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+                
+        List<Element> reindex = new ArrayList<Element>();
 		Integer iId = Integer.valueOf(id);
-		String query = "SELECT DISTINCT metadataId FROM OperationAllowed WHERE groupId=?";
-
-		@SuppressWarnings("unchecked")
-        List<Element> reindex = dbms.select(query, iId).getChildren();
-
-		dbms.execute("DELETE FROM OperationAllowed WHERE groupId=?",iId);
-		dbms.execute("DELETE FROM UserGroups       WHERE groupId=?",iId);
-		dbms.execute("DELETE FROM GroupsDes        WHERE idDes=?"  ,iId);
-		dbms.execute("DELETE FROM Groups           WHERE id=?"     ,iId);
+		List<OperationAllowed> operationsAllowed = repository.findByGroupId(iId);
+		for (OperationAllowed operationAllowed : operationsAllowed) {
+		    Element record = new Element("record");
+		    record.addContent(new Element("metadataid").setText(Integer.toString(operationAllowed.getId().getMetadataId())));
+		    reindex.add(record);
+            repository.delete(operationAllowed);
+            dbms.execute("DELETE FROM UserGroups       WHERE groupId=?",iId);
+            dbms.execute("DELETE FROM GroupsDes        WHERE idDes=?"  ,iId);
+            dbms.execute("DELETE FROM Groups           WHERE id=?"     ,iId);
+        }
 
 		//--- reindex affected metadata
 

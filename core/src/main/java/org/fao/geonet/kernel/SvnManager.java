@@ -695,18 +695,17 @@ public class SvnManager {
         Sort sort = new Sort("id.operationId");
         Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasMetadataId(Integer.valueOf(id));
         List<OperationAllowed> opsAllowed = operationAllowedRepository.findAll(hasMetadataId, sort);
-        StringBuffer query = new StringBuffer();
+        Element privs = new Element("response");
+        for (OperationAllowed operationAllowed : opsAllowed) {
+            Element record = new Element("record");
+            record.addContent(new Element("group_id").setText(Integer.toString(operationAllowed.getGroup().getId())));
+            record.addContent(new Element("group_name").setText(operationAllowed.getGroup().getName()));
+            record.addContent(new Element("operation_id").setText(Integer.toString(operationAllowed.getOperation().getId())));
+            record.addContent(new Element("operation_name").setText(operationAllowed.getOperation().getName()));
+            privs.addContent(record);
+        }
 
-        query.append("SELECT g.id as group_id, g.name as group_name,          ");
-        query.append("       o.id as operation_id, o.name as operation_name   ");
-        query.append("FROM groups g                                           ");
-        query.append("JOIN OperationAllowed oa on oa.groupId = g.id           ");
-        query.append("JOIN Operations o on o.id = oa.operationId              ");
-        query.append("WHERE oa.metadataId = ?                                 ");
-        query.append("ORDER BY o.id                                           ");
-
-        Element privs = dbms.select(query.toString(), Integer.valueOf(id));
-//        String now = Xml.getString(privs);
+        String now = Xml.getString(privs);
 
         if (exists(id + "/privileges.xml")) {
             // Update the id/privileges.xml item in the repository

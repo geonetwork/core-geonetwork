@@ -9,13 +9,25 @@ import javax.persistence.Embeddable;
 public class OperationAllowedId implements Serializable {
     private static final long serialVersionUID = -5759713154514715316L;
 
-    @Column(name="metadataId", nullable=false)
+    @Column(name="metadataid", nullable=false)
     private int metadataId;
-    @Column(name="groupId", nullable=false)
+    @Column(name="groupid", nullable=false)
     private int groupId;
-    @Column(name="operationId", nullable=false)
+    @Column(name="operationid", nullable=false)
     private int operationId;
     
+    /**
+     * Default constructor.  Setters must be used to initialize object.
+     */
+    public OperationAllowedId() {
+        // default constructor. 
+    }
+    
+    public OperationAllowedId(int metadataId, int groupId, int operationId) {
+        this.metadataId = metadataId;
+        this.groupId = groupId;
+        this.operationId = operationId;
+    }
     public int getMetadataId() {
         return metadataId;
     }

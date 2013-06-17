@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -560,7 +561,8 @@ public class FragmentHarvester extends BaseAligner {
 
          int iId = Integer.parseInt(id);
 
-         dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", iId);
+         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+         repository.deleteAllByMetadataId(iId);
          addPrivileges(id, params.privileges, localGroups, dataMan, context, dbms, log);
 
          dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);

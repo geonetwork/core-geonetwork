@@ -106,13 +106,16 @@ public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTes
     
 
     @Test
-    public void testDeleteByGroupdIdAndMetadataId() {
+    public void deleteAllByMetadataIdExceptGroupId() {
+        System.out.println("deleteAllByMdIdNotGroup");
+        assertEquals(4, _opAllowRepo.count());
         _opAllowRepo.deleteAllByMetadataIdExceptGroupId(_md1.getId(), _allGroup.getId());
 
+        assertEquals(2, _opAllowRepo.count());
         List<OperationAllowed> opAllowedFound = _opAllowRepo.findAll();
-
         assertTrue(opAllowedFound.contains(_opAllowed1));
         assertTrue(opAllowedFound.contains(_opAllowed2));
+
         assertEquals(2, opAllowedFound.size());
         assertFalse(opAllowedFound.contains(_opAllowed3));
         assertFalse(opAllowedFound.contains(_opAllowed4));

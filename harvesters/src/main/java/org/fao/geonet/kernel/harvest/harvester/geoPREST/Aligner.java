@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.jdom.Element;
 
 import java.net.URL;
@@ -203,7 +204,8 @@ public class Aligner extends BaseAligner
 				String language = context.getLanguage();
 				dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, false);
 
-				dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
+                OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+                repository.deleteAllByMetadataId(Integer.parseInt(id));
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
 
 				dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));

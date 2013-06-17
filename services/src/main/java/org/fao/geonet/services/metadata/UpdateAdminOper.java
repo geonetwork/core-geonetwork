@@ -107,7 +107,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 			skip = true;
 
 		if (!update) {
-			dm.deleteMetadataOper(dbms, id, skip);
+			dm.deleteMetadataOper(context, id, skip);
 		}
 		
 		//-----------------------------------------------------------------------
