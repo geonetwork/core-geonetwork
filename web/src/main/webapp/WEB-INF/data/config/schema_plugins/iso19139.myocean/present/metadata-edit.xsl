@@ -939,7 +939,7 @@
 								<xsl:with-param name="text">
 									<xsl:call-template name="snippet-editor">
 										<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
-										<xsl:with-param name="widgetMode" select="'combo'"/>
+										<xsl:with-param name="widgetMode" select="'multiplelist'"/>
 										<xsl:with-param name="thesaurusId" select="'local.temporal-scale.myocean.temporal-scale'"/>
 										<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
 										<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
