@@ -304,7 +304,7 @@
 		<entry>
 			<code>federal</code>
 			<label>Bund</label>
-			<description>Geobasisdatensatz-ID auf Bundesebene (cf. Sammlung der Geobasisdaten des Bundesrechts)</description>
+			<description>Geobasisdatensatz-ID auf Bundesebene (Sammlung der Geobasisdatensätze des Bundesrechts)</description>
 		</entry>
 		<entry>
 			<code>other</code>
