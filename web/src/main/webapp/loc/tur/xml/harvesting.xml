@@ -139,6 +139,7 @@
 <criteria>Kriterler</criteria>
 <validate>Doğrula</validate>
 <recurse>Tekrarla</recurse>
+<checkFileLastModifiedForUpdate>Update catalog record only if file as been updated</checkFileLastModifiedForUpdate>
 <nodelete>Kaynakta silinmiş ise yerel bilgisayarda sakla</nodelete>
 <server>Sunucu</server>
 <database>Veritabanı</database>

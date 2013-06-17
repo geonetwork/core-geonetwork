@@ -214,7 +214,8 @@
 	<criteria>Criterios</criteria>
 	<validate>Validar</validate>
 	<recurse>Recurso</recurse>
-	<nodelete>Keep local if deleted at source</nodelete>
+	<checkFileLastModifiedForUpdate>Update catalog record only if file as been updated</checkFileLastModifiedForUpdate>
+	<nodelete>Keep catalog record even if deleted at source</nodelete>
 	<server>Server</server>	
 	<database>Database</database>	
 	<privileges>Privilegios</privileges>

@@ -16,6 +16,7 @@
     <tur>Türkçe</tur> <!-- Do not translate! -->
     <pol>Polski</pol> <!-- Do not translate! -->
     
+	<recurse>Rechercher dans les sous répertoires également</recurse>
 	<otherValue>Autre :</otherValue>
 	<warning>Attention</warning>
 	<isAdmin>Est administrateur ?</isAdmin>

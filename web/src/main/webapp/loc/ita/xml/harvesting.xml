@@ -163,7 +163,8 @@
 	<criteria>Criteri</criteria>
 	<validate>Convalidare</validate>
 	<recurse>Ricorsione</recurse>
- 	<nodelete>Mantieni localmente se eliminato sul sito originario</nodelete>
+	<checkFileLastModifiedForUpdate>Update catalog record only if file as been updated</checkFileLastModifiedForUpdate>
+	<nodelete>Mantieni localmente se eliminato sul sito originario</nodelete>
  	<server>Server</server>	
  	<database>Database</database>	
 	<privileges>Privilegi</privileges>

@@ -440,7 +440,7 @@ class Harvester
 		    	}
 			}
 		} else {
-			System.out.println("no search criterion specified, harvesting all ... ");
+			log.debug("no search criterion specified, harvesting all ... ");
 		}
 		
 		/*

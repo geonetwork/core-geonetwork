@@ -16,7 +16,8 @@
     <tur>Türkçe</tur> <!-- Do not translate! -->
     <pol>Polski</pol> <!-- Do not translate! -->
     
-    <useStopwords>Lucene indeksi bu diller için durma kelimelerini (stopwords) kullanır :</useStopwords>    
+	<recurse>Also search in subfolders</recurse>
+	<useStopwords>Lucene indeksi bu diller için durma kelimelerini (stopwords) kullanır :</useStopwords>    
     <rebuildIndexMessage>Bu değerleri değiştirirseniz, Lucene indeksini yeniden oluşturmanız tavsiye edilir.</rebuildIndexMessage>
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Uzak sunucudan HTML göster</showRemoteHTML>

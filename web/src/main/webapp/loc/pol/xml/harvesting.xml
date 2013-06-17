@@ -220,6 +220,7 @@
 	<criteria>Kryteria</criteria>
 	<validate>Waliduj</validate>
 	<recurse>Rekursywnie</recurse>
+	<checkFileLastModifiedForUpdate>Update catalog record only if file as been updated</checkFileLastModifiedForUpdate>
 	<nodelete>Zachowaj lokalnie jeśli usunięto źródło</nodelete>
 	<server>Serwer</server>	
 	<database>Baza danych</database>	

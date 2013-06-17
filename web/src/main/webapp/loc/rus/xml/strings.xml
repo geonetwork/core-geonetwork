@@ -17,6 +17,7 @@
     <pol>Polski</pol> <!-- Do not translate! -->
     
 	<!-- new strings - 2.7 -->
+	<recurse>Also search in subfolders</recurse>
 	<otherValue>Other:</otherValue>
 	<nodata>Null</nodata>
 	<isAdmin>Is administrator ?</isAdmin>
