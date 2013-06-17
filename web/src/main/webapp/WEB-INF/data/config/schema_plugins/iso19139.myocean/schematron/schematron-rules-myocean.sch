@@ -221,7 +221,7 @@
             </sch:report>
             
             <!-- Check start date -->
-            <sch:let name="startDate" value="gmd:extent/gmd:EX_Extent/gmd:temporalElement[1]/gmd:EX_TemporalExtent[1]/gmd:extent[1]/gml:TimePeriod/gml:beginPosition"/>
+            <sch:let name="startDate" value="gmd:extent/gmd:EX_Extent/gmd:temporalElement[1]/gmd:EX_TemporalExtent[1]/gmd:extent[1]/gml:TimePeriod/descendant-or-self::*[name() = 'gml:beginPosition']"/>
             <sch:assert test="normalize-space($startDate) != ''">$loc/strings/alert.R15</sch:assert>
             <sch:report test="normalize-space($startDate) != ''">
                 <sch:value-of select="$loc/strings/report.R15"/> "<sch:value-of select="normalize-space($startDate)"/>"
@@ -229,8 +229,8 @@
             
             
             <!-- Check end date -->
-            <sch:let name="endDate" value="gmd:extent/gmd:EX_Extent/gmd:temporalElement[1]/gmd:EX_TemporalExtent[1]/gmd:extent[1]/gml:TimePeriod/gml:endPosition"/>
-            <sch:let name="isIndeterminate" value="gmd:extent/gmd:EX_Extent/gmd:temporalElement[1]/gmd:EX_TemporalExtent[1]/gmd:extent[1]/gml:TimePeriod/gml:endPosition/@indeterminatePosition='unknown'"/>
+            <sch:let name="endDate" value="gmd:extent/gmd:EX_Extent/gmd:temporalElement[1]/gmd:EX_TemporalExtent[1]/gmd:extent[1]/gml:TimePeriod/descendant-or-self::*[name() = 'gml:endPosition']"/>
+            <sch:let name="isIndeterminate" value="gmd:extent/gmd:EX_Extent/gmd:temporalElement[1]/gmd:EX_TemporalExtent[1]/gmd:extent[1]/gml:TimePeriod/descendant-or-self::*[name() = 'gml:endPosition']/@indeterminatePosition='unknown'"/>
             <sch:assert test="normalize-space($endDate) != '' or $isIndeterminate">$loc/strings/alert.R15.end</sch:assert>
             <sch:report test="normalize-space($endDate) != ''">
                 <sch:value-of select="$loc/strings/report.R15.end"/> "<sch:value-of select="normalize-space($endDate)"/>"
