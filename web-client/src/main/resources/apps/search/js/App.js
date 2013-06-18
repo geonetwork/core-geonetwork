@@ -653,6 +653,7 @@ GeoNetwork.app = function () {
                 defaultViewMode: GeoNetwork.Settings.editor.defaultViewMode,
                 editMode : GeoNetwork.Settings.editor.editMode,
                 catalogue: catalogue,
+                selectionPanelImgPath: '../../apps/js/ext-ux/images',
                 xlinkOptions: {CONTACT: true}
             });
             
