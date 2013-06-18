@@ -100,7 +100,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                             .matcher(profileName);
                     boolean b = m.matches();
                     if (b) {
-			String p = m.group(1);
+                        String p = m.group(1);
                         if (profileMapping != null) {
                             String mapped = profileMapping.get(p);
                             if (mapped != null) {
