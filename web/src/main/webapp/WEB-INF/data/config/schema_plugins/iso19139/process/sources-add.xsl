@@ -18,7 +18,7 @@ Stylesheet used to update metadata adding a reference to a source record.
 		</xsl:copy>
 	</xsl:template>
 	
-	<xsl:template match="gmd:LI_Lineage" priority="2">
+	<xsl:template match="gmd:LI_Lineage|*[contains(@gco:isoType, 'LI_Lineage')]" priority="2">
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
 			<xsl:copy-of select="gmd:statement|gmd:processStep|gmd:source"/>
