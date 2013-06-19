@@ -166,7 +166,7 @@
 		<entry>
 			<code>federal</code>
 			<label>Federal</label>
-			<description>ID of geodata set at federal level (Collection of federal law geodata)</description>
+			<description>Set of geodata ID at federal level (Collection of geodata on federal law)</description>
 		</entry>
 		<entry>
 			<code>other</code>
