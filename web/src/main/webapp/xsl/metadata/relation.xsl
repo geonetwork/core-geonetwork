@@ -40,16 +40,16 @@
   <!-- Relation contained in the metadata record has to be returned 
   It could be document or thumbnails
   -->
-  <xsl:template mode="relation" match="metadata[gmd:MD_Metadata]" priority="99">
+  <xsl:template mode="relation" match="metadata[gmd:MD_Metadata or *[contains(@gco:isoType, 'MD_Metadata')]]" priority="99">
     
-    <xsl:for-each select="gmd:MD_Metadata/descendant::*[name(.) = 'gmd:graphicOverview']/*">
+    <xsl:for-each select="*/descendant::*[name(.) = 'gmd:graphicOverview']/*">
       <relation type="thumbnail">
         <id><xsl:value-of select="gmd:fileName/gco:CharacterString"/></id>
         <title><xsl:value-of select="gmd:fileDescription/gco:CharacterString"/></title>
       </relation>
     </xsl:for-each>
     
-    <xsl:for-each select="gmd:MD_Metadata/descendant::*[name(.) = 'gmd:onLine']/*">
+    <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']/*">
       <relation type="onlinesrc">
         
         <!-- Compute title based on online source info-->
