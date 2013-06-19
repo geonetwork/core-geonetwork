@@ -127,7 +127,7 @@
 		<gmd:graphicOverview>
 			<gmd:MD_BrowseGraphic>
 				<gmd:fileName>
-					<xsl:variable name="metadataId"   select="/root/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString/text()" />
+					<xsl:variable name="metadataId"   select="/root/*/gmd:fileIdentifier/gco:CharacterString/text()" />
 					<xsl:variable name="serverHost"   select="/root/env/host" />
 					<xsl:variable name="serverPort"   select="/root/env/port" />
 					<xsl:variable name="baseUrl"   select="/root/env/baseUrl" />
