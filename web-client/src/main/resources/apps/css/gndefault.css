@@ -191,6 +191,8 @@ table.map {
 }
 #infoPanel {
   color: #777777;
+  overflow: auto;
+  height: 100%;
 }
 #infoPanel h3 {
   color: #000000;
