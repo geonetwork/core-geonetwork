@@ -9,11 +9,8 @@ import javax.persistence.Embeddable;
 public class OperationAllowedId implements Serializable {
     private static final long serialVersionUID = -5759713154514715316L;
 
-    @Column(name="metadataid", nullable=false)
     private int metadataId;
-    @Column(name="groupid", nullable=false)
     private int groupId;
-    @Column(name="operationid", nullable=false)
     private int operationId;
     
     /**
@@ -28,6 +25,7 @@ public class OperationAllowedId implements Serializable {
         this.groupId = groupId;
         this.operationId = operationId;
     }
+    @Column(name="metadataid", nullable=false)
     public int getMetadataId() {
         return metadataId;
     }
@@ -35,6 +33,7 @@ public class OperationAllowedId implements Serializable {
         this.metadataId = newMetadataId;
         return this;
     }
+    @Column(name="groupid", nullable=false)
     public int getGroupId() {
         return groupId;
     }
@@ -42,7 +41,8 @@ public class OperationAllowedId implements Serializable {
         this.groupId = newGroupId;
         return this;
     }
-    
+
+    @Column(name="operationid", nullable=false)
     public int getOperationId() {
         return operationId;
     }

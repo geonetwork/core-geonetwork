@@ -36,7 +36,6 @@ import jeeves.server.resources.ResourceProvider;
 import jeeves.server.resources.Stats;
 import jeeves.utils.Log;
 
-import org.geotools.data.DataStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -51,7 +50,6 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 	public String name;
 	private Set<ResourceListener> hsListeners = Collections.synchronizedSet(new HashSet<ResourceListener>());
 	private DataSource dataSource;
-	private DataStore  dataStore;
 
     @Autowired
     ApplicationContext springAppContext;
@@ -77,7 +75,6 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 	 * Closes the datasource and/or disposes the datastore
 	 */
     public void end() {
-        dataStore.dispose();
     }
 	// --------------------------------------------------------------------------
 
@@ -112,15 +109,6 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 	 */
 	public synchronized void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
-	}
-
-	/**
-	 * NOTE: Must be called by implementing classes after creating their own
-	 * (extended) dataStore. If creating a dataStore is not possible (eg. for
-	 * databases that don't support spatial types etc) then set null. 
-	 */
-	public void setDataStore(DataStore dataStore) {
-		this.dataStore = dataStore;
 	}
 
 	// --------------------------------------------------------------------------
@@ -187,19 +175,6 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
     public synchronized DataSource getDataSource() {
         return dataSource;
     }
-
-	// --------------------------------------------------------------------------
-	/**
-	 * Gets the DataStore from the pool, null if not set.
-	 */
-
-	public DataStore getDataStore() {
-		if (dataStore != null) {
-			return (DataStore)dataStore;
-		} else {
-			return null;
-		}
-	}
 
 	// --------------------------------------------------------------------------
 

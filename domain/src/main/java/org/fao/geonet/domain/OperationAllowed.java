@@ -2,6 +2,9 @@ package org.fao.geonet.domain;
 
 import static org.fao.geonet.domain.OperationAllowedNamedQueries.*;
 import javax.annotation.Nonnull;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,6 +26,11 @@ public class OperationAllowed {
     public static final String TABLE_NAME = "operationallowed";
     @EmbeddedId
     @Nonnull
+    @AttributeOverrides({
+      @AttributeOverride(name="groupId",column=@Column(name="groupid")),
+      @AttributeOverride(name="metadataId",column=@Column(name="metadataid")),
+      @AttributeOverride(name="operationId",column=@Column(name="operationid")),
+    })
     private OperationAllowedId id = new OperationAllowedId();
 
     @MapsId("metadataId")

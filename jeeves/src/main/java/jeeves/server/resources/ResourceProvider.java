@@ -28,8 +28,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.geotools.data.DataStore;
-
 //=============================================================================
 
 /** Describe a generic resource provider. Usually it is a pool of dbms objects
@@ -47,9 +45,6 @@ public interface ResourceProvider
 
 	/** gets stats from the provider */
 	public Stats getStats() throws SQLException;
-
-	/** gets datastore from the provider */
-	public DataStore getDataStore();
 
     /** Gets the datastore */
     public DataSource getDataSource();

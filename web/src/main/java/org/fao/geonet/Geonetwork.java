@@ -101,6 +101,7 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.jdom.Element;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -163,7 +164,7 @@ public class Geonetwork implements ApplicationHandler {
         ServiceConfig handlerConfig = new ServiceConfig(serviceConfigElems);
 		
 		// Init configuration directory
-		new GeonetworkDataDirectory(webappName, path, handlerConfig, context.getServlet());
+		new GeonetworkDataDirectory(webappName, path, handlerConfig, context.getServlet(), _applicationContext);
 		
 		// Get config handler properties
 		String systemDataDir = handlerConfig.getMandatoryValue(Geonet.Config.SYSTEM_DATA_DIR);
@@ -292,11 +293,12 @@ public class Geonetwork implements ApplicationHandler {
 		logger.info(lc.toString());
 		beanFactory.registerSingleton(LuceneConfig.LUCENE_CONFIG_BEAN_NAME, lc);
        
-		DataStore dataStore = context.getResourceManager().getDataStore(Geonet.Res.MAIN_DB);
-		if (dataStore == null) {
+		DataStore dataStore;
+		try {
+		    dataStore = _applicationContext.getBean(DataStore.class);
+		} catch (NoSuchBeanDefinitionException e) {
 			dataStore = createShapefileDatastore(luceneDir);
 		}
-
 		//--- no datastore for spatial indexing means that we can't continue
 		if (dataStore == null) {
 			throw new IllegalArgumentException("GeoTools datastore creation failed - check logs for more info/exceptions");

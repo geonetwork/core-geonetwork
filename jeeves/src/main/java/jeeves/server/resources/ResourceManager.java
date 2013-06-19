@@ -34,8 +34,6 @@ import jeeves.monitor.timer.ResourceManagerResourceIsOpenTimer;
 import jeeves.monitor.timer.ResourceManagerWaitForResourceTimer;
 import jeeves.utils.Log;
 
-import org.geotools.data.DataStore;
-
 import com.google.common.collect.Multimap;
 import com.yammer.metrics.core.Timer;
 import com.yammer.metrics.core.TimerContext;
@@ -211,14 +209,6 @@ public class ResourceManager
     public Multimap<Object, Exception> getResourceAccessTracker() {
         return resourceTracker.getOpenResources();
     }
-
-    //--------------------------------------------------------------------------
-
-	public synchronized DataStore getDataStore(String name) throws Exception
-	{
-		ResourceProvider provider = provManager.getProvider(name);
-		return provider.getDataStore();
-	}
 
 	//--------------------------------------------------------------------------
 	/** Closes a resource doing a commit

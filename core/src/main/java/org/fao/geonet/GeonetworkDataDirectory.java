@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.BinaryFile;
@@ -12,6 +14,7 @@ import jeeves.utils.Log;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
  * The GeoNetwork data directory is the location on the file system where
@@ -31,6 +34,7 @@ public class GeonetworkDataDirectory {
 
 	private String systemDataDir;
 	private JeevesServlet jeevesServlet;
+    private JeevesApplicationContext appContext;
 
 	/**
 	 * Check and create if needed GeoNetwork data directory.
@@ -53,11 +57,12 @@ public class GeonetworkDataDirectory {
 	 * 
 	 */
 	public GeonetworkDataDirectory(String webappName, String path,
-			ServiceConfig handlerConfig, JeevesServlet jeevesServlet) {
+			ServiceConfig handlerConfig, JeevesServlet jeevesServlet, JeevesApplicationContext appContext) {
         if (Log.isDebugEnabled(Geonet.DATA_DIRECTORY))
             Log.debug(Geonet.DATA_DIRECTORY,
 				"Check and create if needed GeoNetwork data directory");
 		this.jeevesServlet = jeevesServlet;
+		this.appContext = appContext;
 		setDataDirectory(webappName, path, handlerConfig);
 	}
 
@@ -196,10 +201,21 @@ public class GeonetworkDataDirectory {
 		Log.info(Geonet.DATA_DIRECTORY, "   - Data directory is: "
 				+ systemDataDir);
 		System.setProperty(webappName + KEY_SUFFIX + "", systemDataDir);
+		ConfigurableListableBeanFactory beanFactory = appContext.getBeanFactory();
+        beanFactory.registerSingleton(webappName + KEY_SUFFIX + "", systemDataDir);
 
 		// Set subfolder data directory
 		setResourceDir(webappName, handlerConfig, systemDataDir, ".lucene" + KEY_SUFFIX,
 				"index", Geonet.Config.LUCENE_DIR);
+		File spatialIndexPath = setResourceDir("", handlerConfig, systemDataDir, "spatial" + KEY_SUFFIX,
+		        "spatialindex", null);
+		try {
+		    // this is added for the shapefile-datastore.xml config file or other file based
+		    // spatial index options
+            beanFactory.registerSingleton("spatialIndexDir", spatialIndexPath.toURI().toURL());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
 		setResourceDir(webappName, handlerConfig, systemDataDir, ".config" + KEY_SUFFIX,
 				"config", Geonet.Config.CONFIG_DIR);
 		setResourceDir(webappName, handlerConfig, systemDataDir,
@@ -295,8 +311,9 @@ public class GeonetworkDataDirectory {
 	 * @param key
 	 * @param folder
 	 * @param handlerKey
+	 * @return 
 	 */
-	private void setResourceDir(String webappName, ServiceConfig handlerConfig,
+	private File setResourceDir(String webappName, ServiceConfig handlerConfig,
 			String systemDataDir, String key, String folder, String handlerKey) {
 		String envKey = webappName + key;
 		String dir = GeonetworkDataDirectory.lookupProperty(
@@ -311,7 +328,9 @@ public class GeonetworkDataDirectory {
 						+ " is relative path. Use absolute path instead.");
 			}
 		}
-		handlerConfig.setValue(handlerKey, dir);
+		if(handlerKey != null) {
+		    handlerConfig.setValue(handlerKey, dir);
+		}
 
 		// Create directory if it does not exist
 		File file = new File(dir);
@@ -319,7 +338,10 @@ public class GeonetworkDataDirectory {
 			throw new RuntimeException("Unable to create directory: "+file);
 		}
 
+        System.setProperty(envKey, dir);
+        appContext.getBeanFactory().registerSingleton(envKey, dir);
 		Log.info(Geonet.DATA_DIRECTORY, "    - " + envKey + " is " + dir);
+		return file;
 	}
 
 }
