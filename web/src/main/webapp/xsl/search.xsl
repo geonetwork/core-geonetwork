@@ -10,7 +10,7 @@
 		doctype-public="html" indent="yes" encoding="UTF-8" />
 
 	<xsl:variable name="hostUrl" select="concat(/root/gui/env/server/protocol, '://', /root/gui/env/server/host, ':', /root/gui/env/server/port)"/>
-	<xsl:variable name="baseUrl" select="concat($hostUrl, /root/gui/url)" />
+	<xsl:variable name="baseUrl" select="/root/gui/url" />
 	<xsl:variable name="serviceUrl" select="concat($hostUrl, /root/gui/locService)" />
 	<xsl:variable name="rssUrl" select="concat($serviceUrl, '/rss.search?sortBy=changeDate')" />
 	
