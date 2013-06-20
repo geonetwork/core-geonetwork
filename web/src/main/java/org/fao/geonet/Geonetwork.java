@@ -416,12 +416,12 @@ public class Geonetwork implements ApplicationHandler {
 
 		GeonetContext gnContext = new GeonetContext();
 
-        HarvestManager harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
+        gnContext.springAppContext = context.getApplicationContext();
+        gnContext.threadPool  = threadPool;
+        gnContext.statusActionsClass = statusActionsClass;
 
-        // Creates a default site logo, only if the logo image doesn't exists
-        // This can happen if the application has been updated with a new version preserving the database and
-        // images/logos folder is not copied from old application 
-        createSiteLogo(gnContext.getSiteId(), servletContext, context.getAppPath());
+
+        HarvestManager harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
 
         //------------------------------------------------------------------------
         //--- return application context
@@ -432,21 +432,20 @@ public class Geonetwork implements ApplicationHandler {
 		beanFactory.registerSingleton("schemaManager", schemaMan);
 		beanFactory.registerSingleton("serviceHandlerConfig", handlerConfig);
 		beanFactory.registerSingleton("settingManager", settingMan);
-		beanFactory.registerSingleton("thesaurusManager", settingMan);
+		beanFactory.registerSingleton("thesaurusManager", thesaurusMan);
 		beanFactory.registerSingleton("oaipmhDisatcher", oaipmhDis);
 		beanFactory.registerSingleton("metadataNotifierManager", metadataNotifierMan);
 		beanFactory.registerSingleton("svnManager", svnManager);
-		beanFactory.registerSingleton("thesaurusManager", thesaurusMan);
 		beanFactory.registerSingleton("xmlSerializer", xmlSerializer);
-		// change harvestManager to bean
 		beanFactory.registerSingleton("harvestManager", harvestMan);
 
 
-		gnContext.springAppContext = context.getApplicationContext();
-		gnContext.threadPool  = threadPool;
-		gnContext.statusActionsClass = statusActionsClass;
+        // Creates a default site logo, only if the logo image doesn't exists
+        // This can happen if the application has been updated with a new version preserving the database and
+        // images/logos folder is not copied from old application 
+        createSiteLogo(gnContext.getSiteId(), servletContext, context.getAppPath());
 
-		logger.info("Site ID is : " + gnContext.getSiteId());
+        logger.info("Site ID is : " + gnContext.getSiteId());
 
         // Notify unregistered metadata at startup. Needed, for example, when the user enables the notifier config
         // to notify the existing metadata in database

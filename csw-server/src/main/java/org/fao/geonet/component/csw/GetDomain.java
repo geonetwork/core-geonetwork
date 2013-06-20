@@ -86,15 +86,12 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	//---------------------------------------------------------------------------
 
 	static final String NAME = "GetDomain";
+	@Autowired
     private LuceneConfig _luceneConfig;
 
     @Autowired
-    ApplicationContext springAppContext;
+    private ApplicationContext springAppContext;
     
-    public GetDomain(LuceneConfig luceneConfig) {
-	    this._luceneConfig = luceneConfig;
-	}
-
 	//---------------------------------------------------------------------------
 	//---
 	//--- API methods

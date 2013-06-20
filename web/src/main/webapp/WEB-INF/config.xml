@@ -373,7 +373,7 @@
 		
 		<!-- Define the class to use when metadata status change
 		-->
-        <param name="statusActionsClass" value="org.fao.geonet.services.metadata.DefaultStatusActions"/>
+        <param name="statusActionsClass" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
 	</appHandler>
 
 	<!-- ====================================================================== -->
