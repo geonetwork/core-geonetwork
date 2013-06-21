@@ -1,7 +1,7 @@
 package org.fao.geonet.repository;
 
 import static org.junit.Assert.*;
-
+import static org.fao.geonet.domain.OperationAllowedNamedQueries.*;
 import java.util.List;
 
 import org.fao.geonet.domain.OperationAllowed;
@@ -14,7 +14,7 @@ public class OperationAllowedSpecsTest extends AbstractOperationsAllowedTest {
     @Test
     public void testHasMetadataId() {
         Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasMetadataId(_md1.getId());
-        List<OperationAllowed> found = _opAllowRepo.findAll(hasMetadataId, new Sort("id.operationId", "id.groupId"));
+        List<OperationAllowed> found = _opAllowRepo.findAll(hasMetadataId, new Sort(PATH_OPERATION_ID, PATH_METADATA_ID));
 
         assertEquals(found.size(), 3);
         assertEquals(_viewOp.getId(), found.get(0).getId().getOperationId());
@@ -34,7 +34,7 @@ public class OperationAllowedSpecsTest extends AbstractOperationsAllowedTest {
     @Test
     public void testHasGroupId() {
         Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasGroupId(_intranetGroup.getId());
-        List<OperationAllowed> found = _opAllowRepo.findAll(hasMetadataId, new Sort("id.operationId", "id.metadataId"));
+        List<OperationAllowed> found = _opAllowRepo.findAll(hasMetadataId, new Sort(PATH_GROUP_ID, PATH_METADATA_ID));
         
         assertEquals(found.size(), 3);
         assertEquals(_intranetGroup.getId(), found.get(0).getId().getGroupId());
@@ -53,7 +53,7 @@ public class OperationAllowedSpecsTest extends AbstractOperationsAllowedTest {
     @Test
     public void testHasOperationId() {
         Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasOperationId(_viewOp.getId());
-        List<OperationAllowed> found = _opAllowRepo.findAll(hasMetadataId, new Sort("id.groupId", "id.metadataId"));
+        List<OperationAllowed> found = _opAllowRepo.findAll(hasMetadataId, new Sort(PATH_GROUP_ID, PATH_METADATA_ID));
         
         assertEquals(found.size(), 2);
         assertEquals(_allGroup.getId(), found.get(0).getId().getGroupId());

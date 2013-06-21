@@ -17,17 +17,25 @@
 		<property name="dataSource" ref="jdbcDataSource" />
 		<property name="packagesToScan" value="org.fao.geonet.domain" />
 		<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+		<property name="jpaPropertyMap">
+			<map>
+				<entry key="access" value="PROPERTY" />
+			</map>
+		</property>
 	</bean>
 
 	<bean id="generateDdl" class="java.lang.String">
 		<constructor-arg value="false" />
 	</bean>
+	<bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
+		<constructor-arg value="H2" />
+	</bean>
 
 	<bean id="jpaVendorAdapter"
 		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 		<property name="generateDdl" ref="generateDdl" />
-		<property name="showSql" value="true" />
-		<property name="database" value="H2" />
+		<property name="showSql" value="false" />
+		<property name="database" ref="jpaVendorAdapterDatabaseParam" />
 	</bean>
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />

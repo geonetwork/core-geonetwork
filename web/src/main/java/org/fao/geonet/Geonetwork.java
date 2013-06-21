@@ -420,6 +420,10 @@ public class Geonetwork implements ApplicationHandler {
 
         HarvestManager harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
 
+        gnContext.springAppContext = context.getApplicationContext();
+        gnContext.threadPool  = threadPool;
+        gnContext.statusActionsClass = statusActionsClass;
+
         //------------------------------------------------------------------------
         //--- return application context
 
@@ -434,10 +438,6 @@ public class Geonetwork implements ApplicationHandler {
 		beanFactory.registerSingleton("geonetworkXmlSerializer", xmlSerializer);
 		// change harvestManager to bean
 		beanFactory.registerSingleton("geonetworkHarvestManager", harvestMan);
-
-		gnContext.springAppContext = context.getApplicationContext();
-		gnContext.threadPool  = threadPool;
-		gnContext.statusActionsClass = statusActionsClass;
 
 		logger.info("Site ID is : " + gnContext.getSiteId());
 

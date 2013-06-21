@@ -2,54 +2,63 @@ package org.fao.geonet.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 
 @Embeddable
+@Access(AccessType.FIELD)
 public class OperationAllowedId implements Serializable {
     private static final long serialVersionUID = -5759713154514715316L;
 
     private int metadataId;
     private int groupId;
     private int operationId;
-    
+
     /**
-     * Default constructor.  Setters must be used to initialize object.
+     * Default constructor. Setters must be used to initialize object.
      */
     public OperationAllowedId() {
-        // default constructor. 
+        // default constructor.
     }
-    
+
     public OperationAllowedId(int metadataId, int groupId, int operationId) {
         this.metadataId = metadataId;
         this.groupId = groupId;
         this.operationId = operationId;
     }
-    @Column(name="metadataid", nullable=false)
+
+    @Transient
     public int getMetadataId() {
         return metadataId;
     }
+
     public OperationAllowedId setMetadataId(int newMetadataId) {
         this.metadataId = newMetadataId;
         return this;
     }
-    @Column(name="groupid", nullable=false)
+
+    @Transient
     public int getGroupId() {
         return groupId;
     }
+
     public OperationAllowedId setGroupId(int newGroupId) {
         this.groupId = newGroupId;
         return this;
     }
 
-    @Column(name="operationid", nullable=false)
+    @Transient
     public int getOperationId() {
         return operationId;
     }
+
     public OperationAllowedId setOperationId(int newOperationId) {
         this.operationId = newOperationId;
         return this;
     }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -59,6 +68,7 @@ public class OperationAllowedId implements Serializable {
         result = prime * result + operationId;
         return result;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -76,12 +86,12 @@ public class OperationAllowedId implements Serializable {
             return false;
         return true;
     }
-    
-    
+
     @Override
     public String toString() {
         return "OperationAllowedId [metadataId=" + metadataId + ", groupId=" + groupId + ", operationId=" + operationId + "]";
     }
+
     public OperationAllowedId copy() {
         OperationAllowedId copy = new OperationAllowedId();
         copy.groupId = groupId;

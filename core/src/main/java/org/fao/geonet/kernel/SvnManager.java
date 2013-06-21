@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel;
 
+import static org.fao.geonet.domain.OperationAllowedNamedQueries.PATH_OPERATION_ID;
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
@@ -42,9 +43,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationAllowedSpecs;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.io.ISVNEditor;
@@ -692,7 +691,7 @@ public class SvnManager {
      */
     private void commitMetadataPrivileges(ISVNEditor editor, String id, Dbms dbms) throws Exception {
         OperationAllowedRepository operationAllowedRepository = dbms.getBean(OperationAllowedRepository.class);
-        Sort sort = new Sort("id.operationId");
+        Sort sort = new Sort(PATH_OPERATION_ID);
         Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasMetadataId(Integer.valueOf(id));
         List<OperationAllowed> opsAllowed = operationAllowedRepository.findAll(hasMetadataId, sort);
         Element privs = new Element("response");
