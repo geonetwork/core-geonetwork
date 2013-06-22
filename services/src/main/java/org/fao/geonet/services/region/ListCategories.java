@@ -26,6 +26,8 @@ package org.fao.geonet.services.region;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.kernel.region.RegionsDAO;
 import org.jdom.Element;
 
 import java.util.Collection;

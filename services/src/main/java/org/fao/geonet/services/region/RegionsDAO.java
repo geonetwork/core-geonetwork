@@ -1,12 +1,16 @@
 package org.fao.geonet.services.region;
 
-import com.vividsolutions.jts.geom.Geometry;
+import java.lang.ref.WeakReference;
+import java.util.Collection;
+
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.kernel.region.Region;
+import org.fao.geonet.kernel.region.Request;
 import org.jdom.Element;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-import java.lang.ref.WeakReference;
-import java.util.Collection;
+import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class RegionsDAO {
     private boolean cacheAllRegionsInMemory = true;

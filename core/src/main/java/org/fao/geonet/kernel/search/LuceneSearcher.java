@@ -820,6 +820,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         if (geomWKT != null && geomWKT.substring(0, prefix.length()).equalsIgnoreCase(prefix)) {
             boolean isWithinFilter = Geonet.SearchResult.Relation.WITHIN.equalsIgnoreCase(Util.getParam(request, Geonet.SearchResult.RELATION,null));
             Collection<RegionsDAO> regionDAOs = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
+            if (regionDAOs.isEmpty()) {
+                throw new IllegalArgumentException(
+                        "Found search with a regions geometry prefix but no RegsionsDAO objects are registered!\nThis is probably a configuration error.  Make sure the RegionsDAO objects are registered in spring");
+            }
             String[] regionIds = geomWKT.substring(prefix.length()).split("\\s*,\\s*");
             Geometry unionedGeom = null;
             List<Geometry> geoms = new ArrayList<Geometry>();
