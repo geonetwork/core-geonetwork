@@ -4,6 +4,8 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SingleThesaurusFinder;
 import org.fao.geonet.kernel.Thesaurus;
+import org.fao.geonet.kernel.region.Region;
+import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchType;

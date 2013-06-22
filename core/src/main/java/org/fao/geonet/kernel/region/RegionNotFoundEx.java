@@ -1,4 +1,4 @@
-package org.fao.geonet.services.region;
+package org.fao.geonet.kernel.region;
 
 import jeeves.exceptions.NotFoundEx;
 

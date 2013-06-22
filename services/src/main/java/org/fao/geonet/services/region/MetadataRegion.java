@@ -1,6 +1,8 @@
 package org.fao.geonet.services.region;
 
 import com.vividsolutions.jts.geom.Geometry;
+
+import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.services.region.MetadataRegionSearchRequest.Id;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;

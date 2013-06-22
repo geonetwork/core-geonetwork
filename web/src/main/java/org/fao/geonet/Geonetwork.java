@@ -418,11 +418,10 @@ public class Geonetwork implements ApplicationHandler {
 
 		GeonetContext gnContext = new GeonetContext();
 
-        HarvestManager harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
-
         gnContext.springAppContext = context.getApplicationContext();
         gnContext.threadPool  = threadPool;
         gnContext.statusActionsClass = statusActionsClass;
+
 
         //------------------------------------------------------------------------
         //--- return application context

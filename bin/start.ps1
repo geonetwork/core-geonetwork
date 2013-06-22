@@ -17,8 +17,7 @@ if (!(test-path Env:\JREBEL_HOME)) {
 $Env:MAVEN_OPTS=""
 
 cmd /c "cd $JEEVES_DIR && mvn install $args"
-cmd /c "cd $scriptPath\..\domain && mvn install $args"
-cmd /c "cd $scriptPath\..\core && mvn install $args"
+cmd /c "cd $scriptPath\..\csw-server && mvn install $args"
 cmd /c "cd $scriptPath\..\healthmonitor && mvn install $args"
 cmd /c "cd $scriptPath\..\harvesters && mvn install $args"
 cmd /c "cd $scriptPath\..\services && mvn install $args"

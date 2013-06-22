@@ -1,4 +1,4 @@
-package org.fao.geonet.services.region;
+package org.fao.geonet.kernel.region;
 
 public class RegionParams {
 

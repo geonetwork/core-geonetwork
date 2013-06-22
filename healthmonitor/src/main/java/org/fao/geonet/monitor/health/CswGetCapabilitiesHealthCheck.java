@@ -7,7 +7,6 @@ import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.Csw;
 import org.jdom.Element;
 
 import com.yammer.metrics.core.HealthCheck;

@@ -27,6 +27,10 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
+import org.fao.geonet.kernel.region.RegionParams;
+import org.fao.geonet.kernel.region.RegionsDAO;
+import org.fao.geonet.kernel.region.Request;
 import org.jdom.Element;
 
 import java.util.Collection;

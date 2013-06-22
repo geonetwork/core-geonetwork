@@ -10,6 +10,8 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.region.Region;
+import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;

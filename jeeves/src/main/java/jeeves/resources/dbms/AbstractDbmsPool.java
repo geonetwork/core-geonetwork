@@ -140,7 +140,7 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 		Dbms dbms = (Dbms) resource;
 		synchronized (hsListeners) {
 			for (ResourceListener l : hsListeners)
-				l.beforeClose(resource);
+		 		l.beforeClose(resource);
 		}
 		try {
 			dbms.commit();
