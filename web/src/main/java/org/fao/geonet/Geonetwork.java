@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -402,19 +403,8 @@ public class Geonetwork implements ApplicationHandler {
 
         //------------------------------------------------------------------------
 		//--- initialize metadata notifier subsystem
+		logger.info("  - Metadata notifier ...");
         MetadataNotifierManager metadataNotifierMan = new MetadataNotifierManager(dataMan);
-
-        logger.info("  - Metadata notifier ...");
-
-        
-        //------------------------------------------------------------------------
-        //--- initialize metadata notifier subsystem
-        logger.info("  - Metadata notifier ...");
-
-        //------------------------------------------------------------------------
-        //--- initialize harvesting subsystem
-
-        logger.info("  - Harvest manager...");
 
 		GeonetContext gnContext = new GeonetContext();
 
@@ -435,15 +425,20 @@ public class Geonetwork implements ApplicationHandler {
 		beanFactory.registerSingleton("geonetworkSvnManager", svnManager);
 		beanFactory.registerSingleton("geonetworkThesaurusManager", thesaurusMan);
 		beanFactory.registerSingleton("geonetworkXmlSerializer", xmlSerializer);
-		// change harvestManager to bean
+
+		//------------------------------------------------------------------------
+		//--- initialize harvesting subsystem
+		
+        logger.info("  - Harvest manager...");
+        HarvestManager harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
 		beanFactory.registerSingleton("geonetworkHarvestManager", harvestMan);
 
-		logger.info("Site ID is : " + gnContext.getSiteId());
+		logger.info("Site ID is : " + settingMan.getSiteId());
 
         // Creates a default site logo, only if the logo image doesn't exists
         // This can happen if the application has been updated with a new version preserving the database and
         // images/logos folder is not copied from old application 
-        createSiteLogo(gnContext.getSiteId(), servletContext, context.getAppPath());
+        createSiteLogo(settingMan.getSiteId(), servletContext, context.getAppPath());
 
 
         // Notify unregistered metadata at startup. Needed, for example, when the user enables the notifier config

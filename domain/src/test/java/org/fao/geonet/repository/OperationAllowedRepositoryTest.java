@@ -5,9 +5,19 @@ import static org.junit.Assert.*;
 import java.util.List;
 
 import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
 import org.junit.Test;
 
 public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTest {
+    
+    @Test
+    public void testSaveById() {
+        OperationAllowed newOp = _opAllowRepo.save(new OperationAllowed(new OperationAllowedId(_md1.getId(), _allGroup.getId(), _viewOp.getId())));
+        
+        assertEquals(_md1.getId(), newOp.getId().getMetadataId());
+        assertEquals(_allGroup.getId(), newOp.getId().getGroupId());
+        assertEquals(_viewOp.getId(), newOp.getId().getOperationId());
+    }
 
     @Test
     public void testFindByMetadataStringId() {

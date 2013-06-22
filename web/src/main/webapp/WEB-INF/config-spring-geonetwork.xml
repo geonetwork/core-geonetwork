@@ -13,7 +13,9 @@
     <context:component-scan base-package="org.fao.geonet.kernel,org.fao.geonet.component"/>
 
 	<import resource="config-security/config-security.xml"/>
-	<import resource="classpath:spring-data-jpa.xml"/>
+	<import resource="classpath*:/config-spring-geonetwork.xml"/>
+	<import resource="classpath:JZkitApplicationContext.xml"/>
+	
 	<!-- Uncomment the database configuration you need to use -->
 	<import resource="config-db/h2.xml"/>
 <!-- 	<import resource="config-db/jndi-postgres-postgis.xml"/> -->

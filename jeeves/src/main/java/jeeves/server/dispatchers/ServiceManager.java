@@ -369,7 +369,7 @@ public class ServiceManager
 	//--- Dispatching methods
 	//---
 	//---------------------------------------------------------------------------
-	@Transactional(isolation = Isolation.READ_COMMITTED)
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public void dispatch(ServiceRequest req, UserSession session, ServiceContext context)
 	{
 		context.setBaseUrl(baseUrl);
