@@ -1013,7 +1013,7 @@
   </reporting>
 
   <properties>
-    <geonetwork.version>${project.version}</geonetwork.version>
+    <geonetwork.version>2.10.0</geonetwork.version>
     <geonetwork.subversion>SNAPSHOT</geonetwork.subversion>
     <geonetwork.webapp.dir>${basedir}/src/main/webapp</geonetwork.webapp.dir>
     <geonetwork.webapp.js.dir>${geonetwork.webapp.dir}/scripts</geonetwork.webapp.js.dir>
