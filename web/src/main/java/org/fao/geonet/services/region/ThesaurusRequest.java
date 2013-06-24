@@ -15,6 +15,9 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SingleThesaurusFinder;
 import org.fao.geonet.kernel.Thesaurus;
+import org.fao.geonet.kernel.rdf.Query;
+import org.fao.geonet.kernel.rdf.QueryBuilder;
+import org.fao.geonet.kernel.rdf.Selectors;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchType;
@@ -32,7 +35,7 @@ public class ThesaurusRequest extends Request {
     private WeakHashMap<String, Map<String, String>> categoryTranslations;
     private ServiceContext serviceContext;
     private KeywordSearchParamsBuilder searchBuilder;
-
+    private Thesaurus thesaurus;
     private SingleThesaurusFinder finder;
 
     private Set<String> localesToLoad;
@@ -42,6 +45,7 @@ public class ThesaurusRequest extends Request {
         this.localesToLoad = localesToLoad;
         this.serviceContext = context;
         this.categoryTranslations = categoryTranslations;
+        this.thesaurus = thesaurus;
         this.searchBuilder = new KeywordSearchParamsBuilder(thesaurus.getIsoLanguageMapper());
         for (String lang : localesToLoad) {
             searchBuilder.addLang(lang);
@@ -65,7 +69,30 @@ public class ThesaurusRequest extends Request {
         searchBuilder.relationship(categoryIdParam, KeywordRelation.BROADER, KeywordSearchType.MATCH, false);
         return this;
     }
-
+    
+    
+    /**
+     * Return the first broader term found.
+     * 
+     * @param keywordId
+     * @return
+     */
+    public String getCategoryId(String keywordId) {
+        String categoryIdParam = "";
+        Query<KeywordBean> query = QueryBuilder.keywordQueryBuilder(thesaurus.getIsoLanguageMapper())
+            .select(Selectors.related(keywordId, KeywordRelation.NARROWER), true).build();
+        try {
+            List<KeywordBean> results = query.execute(thesaurus);
+            // Return the first one or the default
+            if (results.size() == 1) {
+                categoryIdParam = results.get(0).getUriCode();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return categoryIdParam;
+    }
+    
     @Override
     public Request maxRecords(int maxRecordsParam) {
         searchBuilder.maxResults(maxRecordsParam);
@@ -88,7 +115,8 @@ public class ThesaurusRequest extends Request {
                     labels.put(next.getKey(), next.getValue());
                 }
             }
-            String categoryId = keywordBean.getBroaderRelationship();
+            String categoryId = getCategoryId(keywordBean.getUriCode());
+            
             if(categoryId.trim().isEmpty()) {
                 categoryId = NO_CATEGORY;
             }
