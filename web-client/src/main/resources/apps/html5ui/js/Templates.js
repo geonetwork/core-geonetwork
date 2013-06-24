@@ -166,7 +166,7 @@ GeoNetwork.HTML5UI.Templates.RATING_TPL = '<div class="rating">' +
  */
 GeoNetwork.HTML5UI.Templates.LOGO =
     '<div class="md-logo">\
-        <img src="{[catalogue.URL]}/images/harvesting/{groupName}.png"/>\
+        <tpl if="(typeof groupName != \'undefined\') && groupName !=\'\' "><img src="{[catalogue.URL]}/images/harvesting/{groupName}.png"/></tpl>\
     </div>';
 
 

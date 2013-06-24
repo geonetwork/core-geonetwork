@@ -269,6 +269,7 @@ GeoNetwork.app = function() {
         var editorPanel = new GeoNetwork.editor.EditorPanel({
             defaultViewMode : GeoNetwork.Settings.editor.defaultViewMode,
             catalogue : catalogue,
+            selectionPanelImgPath: '../../apps/js/ext-ux/images',
             renderTo : 'metadata-info',
             layout : 'border',
             xlinkOptions : {

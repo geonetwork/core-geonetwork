@@ -68,6 +68,7 @@ public class GetNarrowerBroader implements Service {
 		searcher = new KeywordsSearcher(thesaurusMan);
 		
 		String request = Util.getParam(params, "request");
+        String conceptId = Util.getParam(params, "id");
 		
 		if (request.equals("broader") 
 				|| request.equals("narrower")
@@ -86,9 +87,9 @@ public class GetNarrowerBroader implements Service {
 			searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
 			
 			// Build response
-			Element keywordType = new Element(reqType.name);
-			keywordType.addContent(searcher.getResults());
-			response.addContent(keywordType);
+			response.setAttribute("relation", request);
+            response.setAttribute("to", conceptId);
+			response.addContent(searcher.getXmlResults());
 		}else  
 			throw new Exception("unknown request type: " + request);
 			

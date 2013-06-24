@@ -94,11 +94,14 @@ GeoNetwork.util.SearchTools = {
                     }
                     
                     if (isCatalogueSStore) {
-	                    var summary = currentRecords.summary;
+                        var summary = currentRecords.summary;
+                        var type = summaryStore.root.split('.');
+                        var root = (type !== undefined ? type[0] : 'keywords');
+                        var subroot = (type !== undefined  ? type[1] : 'keyword');
                         // added check for summary.keywords.keyword otherwise if result has no keywords the loadData on store fails
-                        if (summary && summary.count > 0 && summary.keywords && summary.keywords.keyword && summaryStore) {
-	                        summaryStore.loadData(summary);
-	                    }
+                        if (summary && summary.count > 0 && summary[root] && summary[root][subroot] && summaryStore) {
+                            summaryStore.loadData(summary);
+                        }
                     }
                     
                     if (cat && isCatalogueMdStore) {

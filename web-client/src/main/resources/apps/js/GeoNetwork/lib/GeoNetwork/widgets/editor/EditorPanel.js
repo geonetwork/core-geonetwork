@@ -44,23 +44,17 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     tbarConfig: undefined,
     id: 'editorPanel', // Only one Editor panel allowed by Document
     
-    /**
-     * image path for selectionPanel (default /ext-ux/MultiselectItemSelector-3.0/icons)
-     */
-    selectionPanelImgPath: undefined,
-
     defaultConfig: {
-    	/** api: config[defaultViewMode] 
-         *  Default view mode to open the editor. Default to 'simple'.
+        /** api: config[defaultEditMode] 
+         *  Default edit mode to open the editor. Default to 'simple'.
          *  View mode is keep in user session (on the server).
          */
         defaultEditMode: 'simple',
         editMode: null,
-        defaultViewMode: 'simple',
         /**
          * image path for selectionPanel (default /ext-ux/MultiselectItemSelector-3.0/icons)
          */
-        selectionPanelImgPath: '../js/ext-ux/images',
+        selectionPanelImgPath: '../../apps/js/ext-ux/images',
         /** api: config[thesaurusButton] 
          *  Use thesaurus selector and inline keyword selection 
          *  instead of keyword selection popup.
@@ -842,6 +836,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         } else {
             url = this.editUrl + '?id=' + this.metadataId;
         }
+        
         var mode = this.defaultEditMode;
         if (this.editMode && this.editMode.hasOwnProperty(schema)) {
             mode = this.editMode[schema];
@@ -849,6 +844,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             mode = document.mainForm.currTab.value;
         }
         url += '&currTab=' + mode;
+        
         
         this.loadUrl(url, undefined, this.loadCallback);
         
@@ -1288,6 +1284,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 var valueEl = Ext.getDom(id + '_cal', this.editorMainPanel.dom);
                 var value = (valueEl ? valueEl.value : '');
                 var showTime = format.indexOf('T') === -1 ? false : true;
+                var disabledEl = Ext.getDom(id + '_disabled', this.editorMainPanel.dom);
                 
                 if (showTime) {
                     var dtCal = new Ext.ux.form.DateTime({

@@ -135,7 +135,11 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         /** api: config[identificationMode] 
          *  ``String`` Identify keyword by their label (default) or uri (requires to use gmx:Anchor in the metadata).
          */
-        identificationMode: 'value'
+        identificationMode: 'value',
+        /**
+         * relative imagePath for ItemSelector
+         */
+        imagePath: '../../apps/js/ext-ux/images'
     },
     initialKeywordLoaded: false,
     /** private: property[thesaurusIdentifier] 
@@ -153,10 +157,6 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
     initialized: false,
     keywords: null,
     
-    /**
-     * relative imagePath for ItemSelector
-     */
-    imagePath: undefined,
     
     /** private: property[KeywordRecord] 
      *  ``Ext.data.Record`` A record object for the keyword

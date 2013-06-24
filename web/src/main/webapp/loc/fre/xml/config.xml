@@ -30,12 +30,12 @@
 
     <multilingual>paramètres multilingues</multilingual>
     <autoDetectEnable>Activer l'auto-détection langage de requête de recherche</autoDetectEnable>
-    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
-    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
-    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
-    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
-    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
-    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+    <requestedlanguageonly>Rechercher uniquement dans la langue de la requête</requestedlanguageonly>
+    <requestedlanguage_offonly>Tous les documents quelquesoit la langue (ie. pas de préférence)</requestedlanguage_offonly>
+    <requestedlanguageprefer_locale>Préférer les documents avec des traductions dans la langue de la requête</requestedlanguageprefer_locale>
+    <requestedlanguageprefer_docLocale>Préférer les documents dont la langue correspond à la langue de la requête</requestedlanguageprefer_docLocale>
+    <requestedlanguage_localeonly>Uniquement les documents ayant des traductions dans la langue de la requête</requestedlanguage_localeonly>
+    <requestedlanguage_docLocaleonly>Uniquement les documents dont la langue principale correspond à la langue de la requête</requestedlanguage_docLocaleonly>
     <requestedlanguagesorted>Résultats de la recherche dans la langue demandée triés sur le dessus</requestedlanguagesorted>
 
 	<server>Serveur</server>
