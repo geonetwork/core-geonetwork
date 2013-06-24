@@ -6,6 +6,9 @@ import static javax.persistence.CascadeType.PERSIST;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,21 +27,19 @@ import org.fao.geonet.domain.SettingNamedQueries.QUERY_FIND_ROOT;
 
 @Entity
 @Table(name = "settings")
-// @Cacheable
+@Cacheable
+@Access(AccessType.PROPERTY)
 @NamedQueries({ 
     @NamedQuery(name = QUERY_FIND_CHILDREN_BY_NAME.NAME, query = QUERY_FIND_CHILDREN_BY_NAME.QUERY),
     @NamedQuery(name = QUERY_FIND_ALL_CHILDREN.NAME, query = QUERY_FIND_ALL_CHILDREN.QUERY),
     @NamedQuery(name = QUERY_FIND_ROOT.NAME, query = QUERY_FIND_ROOT.QUERY),
     })
 public class Setting {
-
     public static final int ROOT_ID = 0;
+
     private int _id;
-
     private Setting _parent;
-
     private String _name;
-
     private String _value;
 
     @Id

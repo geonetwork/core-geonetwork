@@ -1,18 +1,15 @@
 package org.fao.geonet.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -23,12 +20,11 @@ import javax.persistence.Transient;
 @Entity
 @Table(name="operations")
 @Cacheable
+@Access(AccessType.PROPERTY)
 public class Operation {
     private int _id;
     private String _name;
 
-    @ManyToMany(mappedBy = "operations", fetch = FetchType.LAZY)
-    private List<Metadata> _metadata = new ArrayList<Metadata>();
     /**
      * Get Id of the operation
      */

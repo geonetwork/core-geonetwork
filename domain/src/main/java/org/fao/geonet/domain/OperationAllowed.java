@@ -1,7 +1,8 @@
 package org.fao.geonet.domain;
 
-import static org.fao.geonet.domain.OperationAllowedNamedQueries.*;
 import javax.annotation.Nonnull;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,34 +12,25 @@ import javax.persistence.MapsId;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+
+import org.fao.geonet.domain.OperationAllowedNamedQueries.DeleteAllByMetadataIdExceptGroupId;
+import org.fao.geonet.domain.OperationAllowedNamedQueries.DeleteByMetadataId;
 
 @Entity
 @Table(name = OperationAllowed.TABLE_NAME)
 //@Cacheable
+@Access(AccessType.PROPERTY)
 @NamedQueries({
         @NamedQuery(name=DeleteByMetadataId.NAME, query=DeleteByMetadataId.QUERY),
         @NamedQuery(name=DeleteAllByMetadataIdExceptGroupId.NAME, query=DeleteAllByMetadataIdExceptGroupId.QUERY)
 })
 public class OperationAllowed {
     public static final String TABLE_NAME = "operationallowed";
-    @EmbeddedId
-    @Nonnull
-    private OperationAllowedId id = new OperationAllowedId();
 
-    @MapsId("metadataId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="metadataid", referencedColumnName="id")
-    private Metadata metadata;
-
-    @MapsId("groupId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="groupid", referencedColumnName="id")
-    private Group group;
-    @MapsId("operationId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="operationid", referencedColumnName="id")
-    private Operation operation;
+    private OperationAllowedId _id = new OperationAllowedId();
+    private Metadata _metadata;
+    private Group _group;
+    private Operation _operation;
 
     /**
      * Constructor for use by JPA
@@ -50,23 +42,33 @@ public class OperationAllowed {
      * Constructor for use by developers to easily create an instance
      */
     public OperationAllowed(@Nonnull OperationAllowedId id) {
-        this.id = id;
+        this._id = id;
     }
 
     /**
      * Return the primary key.
      */
+    @EmbeddedId
     public OperationAllowedId getId() {
-        return id;
+        return _id;
+    }
+    /**
+     * Set primary key object
+     * @param id new id
+     */
+    public void setId(OperationAllowedId id) {
+        this._id = id;
     }
 
-    @Transient
+    @MapsId("metadataId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="metadataid", referencedColumnName="id")
     public Metadata getMetadata() {
-        return metadata;
+        return _metadata;
     }
 
     public OperationAllowed setMetadata(Metadata metadata) {
-        if (this.metadata != metadata) {
+        if (this._metadata != metadata) {
             internalSetMetadata(metadata);
             if (metadata != null) {
                 metadata.internalAddOperationAllowed(this);
@@ -75,39 +77,43 @@ public class OperationAllowed {
         return this;
     }
 
-    @Transient
+    @MapsId("groupId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="groupid", referencedColumnName="id")
     public Group getGroup() {
-        return group;
+        return _group;
     }
 
     public OperationAllowed setGroup(Group group) {
-        this.group = group;
+        this._group = group;
         if (group != null) {
-            this.id.setGroupId(group.getId());
+            this._id.setGroupId(group.getId());
         } else {
-            this.id.setGroupId(-1);
+            this._id.setGroupId(-1);
         }
         return this;
     }
 
-    @Transient
+    @MapsId("operationId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="operationid", referencedColumnName="id")
     public Operation getOperation() {
-        return operation;
+        return _operation;
     }
 
     public OperationAllowed setOperation(Operation operation) {
-        this.operation = operation;
+        this._operation = operation;
         if (operation != null) {
-            this.id.setOperationId(operation.getId());
+            this._id.setOperationId(operation.getId());
         } else {
-            this.id.setOperationId(-1);
+            this._id.setOperationId(-1);
         }
         return this;
     }
 
     @Override
     public String toString() {
-        return "OperationId: [" + id.toString() + "]";
+        return "OperationId: [" + _id.toString() + "]";
     }
 
     /**
@@ -116,15 +122,15 @@ public class OperationAllowed {
      * @param metadata the new metadata
      */
     void internalSetMetadata(Metadata metadata) {
-        if (this.metadata != metadata) {
-            if (this.metadata != null) {
-                this.metadata.internalRemoveOperationAllowed(this);
+        if (this._metadata != metadata) {
+            if (this._metadata != null) {
+                this._metadata.internalRemoveOperationAllowed(this);
             }
-            this.metadata = metadata;
+            this._metadata = metadata;
             if (metadata != null) {
-                this.id.setMetadataId(metadata.getId());
+                this._id.setMetadataId(metadata.getId());
             } else {
-                this.id.setMetadataId(-1);
+                this._id.setMetadataId(-1);
             }
         }
     }
@@ -133,7 +139,7 @@ public class OperationAllowed {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + (id.hashCode());
+        result = prime * result + (_id.hashCode());
         return result;
     }
 
@@ -146,7 +152,7 @@ public class OperationAllowed {
         if (getClass() != obj.getClass())
             return false;
         OperationAllowed other = (OperationAllowed) obj;
-        if (!id.equals(other.id))
+        if (!_id.equals(other._id))
             return false;
         return true;
     }

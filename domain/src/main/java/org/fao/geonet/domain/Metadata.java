@@ -1,12 +1,12 @@
 package org.fao.geonet.domain;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.persistence.Cacheable;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.vividsolutions.jts.util.Assert;
 
@@ -28,54 +27,47 @@ import com.vividsolutions.jts.util.Assert;
  */
 @Entity
 @Table(name = "metadata")
-@Cacheable
+@Access(AccessType.PROPERTY)
 public class Metadata {
 
-    private int id;
-    private String uuid;
-    private Date changeDate;
-    private int owner;
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "operationallowed", joinColumns = @JoinColumn(name = "operationid"), inverseJoinColumns = @JoinColumn(name = "metadataid"))
+    private int _id;
+    private String _uuid;
+    private Date _changeDate;
+    private int _owner;
+    private List<OperationAllowed> _operationsAllowed = new ArrayList<OperationAllowed>();
 //    private Set<Operation> operations = new HashSet<Operation>();
-//    
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "operationallowed", joinColumns = @JoinColumn(name = "groupid"), inverseJoinColumns = @JoinColumn(name = "metadataid"))
 //    private Set<Group> groups = new HashSet<Group>();
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name="metadataid")
-    private List<OperationAllowed> operationAllowed = new ArrayList<OperationAllowed>();
     
     @Id
     @GeneratedValue
     @Column(nullable = false)
     public int getId() {
-        return id;
+        return _id;
     }
 
     public Metadata setId(int _id) {
-        this.id = _id;
+        this._id = _id;
         return this;
     }
 
     @Column(nullable = false)
     @Nonnull
     public String getUuid() {
-        return uuid;
+        return _uuid;
     }
 
     @Nonnull
     public Metadata setUuid(@Nonnull String uuid) {
         Assert.isTrue(uuid != null, "Cannot have null uuid");
-        this.uuid = uuid;
+        this._uuid = uuid;
         return this;
     }
     
     @Column
     public Date getChangeDate() {
-        if (changeDate != null) {
-            return (Date) changeDate.clone();
+        if (_changeDate != null) {
+            return (Date) _changeDate.clone();
         } else {
             return null;
         }
@@ -83,19 +75,19 @@ public class Metadata {
     
     public void setChangeDate(Date changeDate) {
         if (changeDate != null) {
-            this.changeDate = (Date) changeDate.clone();
+            this._changeDate = (Date) changeDate.clone();
         } else {
-            this.changeDate = null;
+            this._changeDate = null;
         }
     }
     
     @Column
     public int getOwner() {
-        return owner;
+        return _owner;
     }
     
     public Metadata setOwner(int owner) {
-        this.owner = owner;
+        this._owner = owner;
         return this;
     }
 
@@ -104,8 +96,9 @@ public class Metadata {
 //     * this metadata.  This is essentially a view onto operations allowed
 //     * and isn't automatically updated when operationsAllowed is updated
 //     */
+//  @ManyToMany(fetch = FetchType.LAZY)
+//  @JoinTable(name = "operationallowed", joinColumns = @JoinColumn(name = "operationid"), inverseJoinColumns = @JoinColumn(name = "metadataid"))
 //    @Nonnull
-//    @Transient
 //    public Set<Operation> getOperations() {
 //        return Collections.unmodifiableSet(operations);
 //    }
@@ -115,7 +108,8 @@ public class Metadata {
 //     * this metadata.  This is essentially a view onto operations allowed
 //     * and isn't automatically updated when operationsAllowed is updated
 //     */
-//    @Transient
+//  @ManyToMany(fetch = FetchType.LAZY)
+//  @JoinTable(name = "operationallowed", joinColumns = @JoinColumn(name = "groupid"), inverseJoinColumns = @JoinColumn(name = "metadataid"))
 //    @Nonnull
 //    public Set<Group> getGroups() {
 //        return Collections.unmodifiableSet(groups);
@@ -135,23 +129,30 @@ public class Metadata {
 
     void internalAddOperationAllowed(OperationAllowed newOperationAllowed) {
       Assert.isTrue(newOperationAllowed != null, OperationAllowed.class.getSimpleName()+" should not be null");
-      if (!operationAllowed.contains(newOperationAllowed)) {
-          this.operationAllowed.add(newOperationAllowed);
+      if (!_operationsAllowed.contains(newOperationAllowed)) {
+          this._operationsAllowed.add(newOperationAllowed);
       }
     }
 
     /**
      * Get a <strong>unmodifiable</strong> collection containing the operations allowed
-     * @return
      */
-    @Transient
-    @Nonnull
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name="metadataid")
     public List<OperationAllowed> getOperationsAllowed() {
-        return Collections.unmodifiableList(this.operationAllowed);
+        return this._operationsAllowed;
     }
-
+    /**
+     * Set operationallowed collection.  Should only be used when creating the object.
+     *
+     * @param operationAllowed the operation allowed collection
+     */
+    protected void setOperationsAllowed(List<OperationAllowed> operationAllowed) {
+        this._operationsAllowed = operationAllowed;
+    }
+    
     void internalRemoveOperationAllowed(OperationAllowed operationAllowed) {
-        this.operationAllowed.remove(operationAllowed);
+        this._operationsAllowed.remove(operationAllowed);
     }
 
 }

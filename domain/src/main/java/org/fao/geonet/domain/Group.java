@@ -1,18 +1,23 @@
 package org.fao.geonet.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Cacheable;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKey;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * @author Jesse
@@ -21,15 +26,15 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "groups")
 @Cacheable
+@Access(AccessType.PROPERTY)
 public class Group {
 
     private int _id;
     private String _name;
     private String _description;
     private String _email;
-
-    @ManyToMany(mappedBy = "groups", fetch = FetchType.LAZY)
-    private List<Metadata> _metadata = new ArrayList<Metadata>();
+    private int _referrer;
+    private Map<String, String> _localizedTranslations = new HashMap<String, String>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -82,12 +87,26 @@ public class Group {
         this._email = email;
         return this;
     }
+
+    public int getReferrer() {
+        return _referrer;
+    }
     
-    @Transient
-    public List<Metadata> getMetadata() {
-        return _metadata;
+    public void setReferrer(int referrer) {
+        this._referrer = referrer;
     }
 
+    @ElementCollection(fetch=FetchType.EAGER, targetClass=String.class)
+    @CollectionTable(joinColumns=@JoinColumn(name="iddes"),name="groupsdes")
+    @MapKeyColumn(name="langid")
+    public Map<String, String> getLocalizedTranslations() {
+        return _localizedTranslations;
+    }
+    
+    public void setLocalizedTranslations(Map<String, String> localizedTranslations) {
+        this._localizedTranslations = localizedTranslations;
+    }
+    
     @Override
     public String toString() {
         return "Group [_id=" + _id + ", _name=" + _name + ", _email=" + _email + "]";
@@ -114,6 +133,4 @@ public class Group {
             return false;
         return true;
     }
-
-    
 }

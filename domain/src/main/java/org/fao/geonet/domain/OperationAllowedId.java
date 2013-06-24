@@ -2,19 +2,15 @@ package org.fao.geonet.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
-import javax.persistence.Transient;
 
 @Embeddable
-@Access(AccessType.FIELD)
 public class OperationAllowedId implements Serializable {
     private static final long serialVersionUID = -5759713154514715316L;
 
-    private int metadataId;
-    private int groupId;
-    private int operationId;
+    private int _metadataId;
+    private int _groupId;
+    private int _operationId;
 
     /**
      * Default constructor. Setters must be used to initialize object.
@@ -24,38 +20,35 @@ public class OperationAllowedId implements Serializable {
     }
 
     public OperationAllowedId(int metadataId, int groupId, int operationId) {
-        this.metadataId = metadataId;
-        this.groupId = groupId;
-        this.operationId = operationId;
+        this._metadataId = metadataId;
+        this._groupId = groupId;
+        this._operationId = operationId;
     }
 
-    @Transient
     public int getMetadataId() {
-        return metadataId;
+        return _metadataId;
     }
 
     public OperationAllowedId setMetadataId(int newMetadataId) {
-        this.metadataId = newMetadataId;
+        this._metadataId = newMetadataId;
         return this;
     }
 
-    @Transient
     public int getGroupId() {
-        return groupId;
+        return _groupId;
     }
 
     public OperationAllowedId setGroupId(int newGroupId) {
-        this.groupId = newGroupId;
+        this._groupId = newGroupId;
         return this;
     }
 
-    @Transient
     public int getOperationId() {
-        return operationId;
+        return _operationId;
     }
 
     public OperationAllowedId setOperationId(int newOperationId) {
-        this.operationId = newOperationId;
+        this._operationId = newOperationId;
         return this;
     }
 
@@ -63,9 +56,9 @@ public class OperationAllowedId implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + groupId;
-        result = prime * result + metadataId;
-        result = prime * result + operationId;
+        result = prime * result + _groupId;
+        result = prime * result + _metadataId;
+        result = prime * result + _operationId;
         return result;
     }
 
@@ -78,25 +71,25 @@ public class OperationAllowedId implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         OperationAllowedId other = (OperationAllowedId) obj;
-        if (groupId != other.groupId)
+        if (_groupId != other._groupId)
             return false;
-        if (metadataId != other.metadataId)
+        if (_metadataId != other._metadataId)
             return false;
-        if (operationId != other.operationId)
+        if (_operationId != other._operationId)
             return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return "OperationAllowedId [metadataId=" + metadataId + ", groupId=" + groupId + ", operationId=" + operationId + "]";
+        return "OperationAllowedId [metadataId=" + _metadataId + ", groupId=" + _groupId + ", operationId=" + _operationId + "]";
     }
 
     public OperationAllowedId copy() {
         OperationAllowedId copy = new OperationAllowedId();
-        copy.groupId = groupId;
-        copy.metadataId = metadataId;
-        copy.operationId = operationId;
+        copy._groupId = _groupId;
+        copy._metadataId = _metadataId;
+        copy._operationId = _operationId;
         return copy;
     }
 }

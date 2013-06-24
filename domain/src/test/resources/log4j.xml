@@ -7,10 +7,10 @@
 		</layout>
 	</appender>
 	<root>
-		<level value="trace" />
+		<level value="WARN" />
 		<appender-ref ref="CA" />
 	</root>
 	<category name="org.hibernate.SQL">
-		<priority value="trace" />
+		<priority value="DEBUG" />
 	</category>
 </log4j:configuration>
