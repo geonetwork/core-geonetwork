@@ -85,7 +85,6 @@ public class QueryBuilder<Q> {
                 .selectId()
                 .select(UPPER_CORNER, requireBoundedBy)
                 .select(LOWER_CORNER, requireBoundedBy)
-                .select(BROADER, false)
                 .interpreter(new KeywordResultInterpreter(languages));
             
         for (String lang : languages) {

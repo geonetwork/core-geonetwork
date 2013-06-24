@@ -47,7 +47,6 @@ class KeywordResultInterpreter extends ResultInterpreter<KeywordBean> {
             .setCoordNorth(coordNorth)
             .setCoordSouth(coordSouth)
             .setCoordWest(coordWest)
-            .setBroaderRelationship(broader)
 			.setDownloadUrl(thesaurus.getDownloadUrl())
 			.setKeywordUrl(thesaurus.getKeywordUrl());
             
