@@ -4,55 +4,55 @@
 	<site>Página Web</site>
 	<name>Nome</name>
 	<organ>Organização</organ>
-	
+
 	<server>Servidor</server>
 	<host>Host</host>
 	<port>Port</port>
 	<securePort>Secure Port</securePort>
-  <protocol>Preferred Protocol</protocol>
+	<protocol>Preferred Protocol</protocol>
 
 	<intranet>Intranet</intranet>
 	<network>Rede</network>
 	<netmask>Máscara de rede</netmask>
-	
+
 	<searchStats>Search Statistics</searchStats>
 
-	<threadedindexing>Multi-threaded Indexing</threadedindexing>
+	<z3950>Servidor Z39.50</z3950>
+	<enable>Activar</enable>
+
+			<threadedindexing>Multi-threaded Indexing</threadedindexing>
 	<maxthreads>Number of processing threads</maxthreads>
 	<recommendedThreads>Recommended</recommendedThreads>
 	<reasonForOne>Database not tested or doesn't support</reasonForOne>
 	<reasonForMore>From number of processors</reasonForMore>
 
-    <multilingual>configurações multilingues</multilingual>
-    <autoDetectEnable>Ativar auto-detecção de linguagem pedido da busca</autoDetectEnable>
-    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
-    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
-    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
-    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
-    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
-    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
-    <requestedlanguagesorted>Resultados da busca em idioma solicitado classificados no topo</requestedlanguagesorted>
+	<multilingual>configurações multilingues</multilingual>
+	<autoDetectEnable>Ativar auto-detecção de linguagem pedido da busca</autoDetectEnable>
+	<requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+	<requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+	<requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+	<requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+	<requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+	<requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+	<requestedlanguagesorted>Resultados da busca em idioma solicitado classificados no topo</requestedlanguagesorted>
 
-	<z3950>Servidor Z39.50</z3950>
-	<enable>Activar</enable>
-		
 	<oai>OAI Provider</oai>
-		<datesearch>Datesearch</datesearch>
-		<datesearchopt>
-			<dsopt label="temporal extent">1</dsopt>
-			<dsopt label="modification date">2</dsopt>
-		</datesearchopt>
-	
-		<tokentimeout>ResumptionToken Timeout </tokentimeout>
-		<cachesize>Cachesize</cachesize>
+	<datesearch>Datesearch</datesearch>
+	<datesearchopt>
+		<dsopt label="temporal extent">1</dsopt>
+		<dsopt label="modification date">2</dsopt>
+	</datesearchopt>
+
+	<tokentimeout>ResumptionToken Timeout </tokentimeout>
+	<cachesize>Cachesize</cachesize>
 
 	<xlinkResolver>XLink Resolver</xlinkResolver>
 
-    <inspire>INSPIRE</inspire>
-	
+	<inspire>INSPIRE</inspire>
+
 	<harvester>Harvesting</harvester>
 	<enableEditing>Allow editing on harvested records</enableEditing>
-	
+
 	<downloadservice>Data-For-Download Service</downloadservice>
 	<leave>Use metadata linkage as is - no changes to linkage</leave>
 	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
@@ -114,29 +114,29 @@
 	<abstract>Resumo</abstract>
 	<fees>Taxas</fees>
 	<accessConstraints>Restrições de acesso</accessConstraints>
-    <cswMetadataPublic>Os metadata introduzidos são públicos</cswMetadataPublic>
+	<cswMetadataPublic>Os metadata introduzidos são públicos</cswMetadataPublic>
 
 	<clickablehyperlinks>Clickable hyperlinks</clickablehyperlinks>
 
 	<localrating>Local Rating</localrating>
-    <autofixing>Correções automáticas</autofixing>
-	
+	<autofixing>Correções automáticas</autofixing>
+
 	<proxy>Proxy</proxy>
 	<use>Usar</use>
 	<username>Nome de utilizador</username>
-	
+
 	<feedback>Feedback</feedback>
 	<email>Email</email>
 	<smtpHost>SMTP Host</smtpHost>
 	<smtpPort>SMTP Port</smtpPort>
-		
+
 	<userSelfRegistration>Registo próprio de utilizador</userSelfRegistration>
-	
+
 	<removedMetadata>Metadados apagados</removedMetadata>
 	<dir>Directório</dir>
 
 	<authentication>Autenticação</authentication>
-	
+
 	<otherlogins>Permitir outros utilizadores de iniciar uma sessão de</otherlogins>
 
 	<shib>Autenticação Shibboleth</shib>
@@ -145,74 +145,75 @@
 	<surname>Apelido</surname>
 	<firstname>Nome próprio</firstname>
 
-    <metadataEnableInspireSearch>Enable search panel</metadataEnableInspireSearch>
+	<metadataEnableInspireSearch>Enable search panel</metadataEnableInspireSearch>
 
-    <metadataViews>Metadata views</metadataViews>
-    <metadataEnableSimpleView>Enable simple view</metadataEnableSimpleView>
-    <metadataEnableIsoView>Enable ISO view</metadataEnableIsoView>
-    <metadataEnableInspireView>Enable INSPIRE view</metadataEnableInspireView>
-    <metadataEnableXmlView>Enable XML view</metadataEnableXmlView>
-    <metadataDefaultView>Default view</metadataDefaultView>
-    <metadataSimpleView>Simple view</metadataSimpleView>
-    <metadataIsoView>ISO view</metadataIsoView>
-    <metadataInspireView>INSPIRE view</metadataInspireView>
-    <metadataXmlView>XML view</metadataXmlView>
-    <metadataAdvancedView>Advanced view</metadataAdvancedView>
-	
+	<metadataViews>Metadata views</metadataViews>
+	<metadataEnableSimpleView>Enable simple view</metadataEnableSimpleView>
+	<metadataEnableIsoView>Enable ISO view</metadataEnableIsoView>
+	<metadataEnableInspireView>Enable INSPIRE view</metadataEnableInspireView>
+	<metadataEnableXmlView>Enable XML view</metadataEnableXmlView>
+	<metadataDefaultView>Default view</metadataDefaultView>
+	<metadataSimpleView>Simple view</metadataSimpleView>
+	<metadataIsoView>ISO view</metadataIsoView>
+	<metadataInspireView>INSPIRE view</metadataInspireView>
+	<metadataXmlView>XML view</metadataXmlView>
+	<metadataAdvancedView>Advanced view</metadataAdvancedView>
+
 	<metadataPrivs>Metadata privileges</metadataPrivs>
 	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
+
 	<!-- Buttons -->
 	
 	<save>Gravar</save>
 	<refresh>Refrescar</refresh>
-	
+
 	<!-- validator messages -->
-	
+
 	<validator>
 		<length>
 			<cannotBeEmpty>O campo '{NAME}' não pode ficar vázio</cannotBeEmpty>
 			<invalidMinSize>O campo '{NAME}' tem que ter pelo menos {VALUE} carácter(es)</invalidMinSize>
 			<invalidMaxSize>O campo '{NAME}' deve ter no máximo {VALUE} carácter(es)</invalidMaxSize>
 		</length>
-		
+
 		<integer>
 			<notInt>O campo '{NAME}' tem que ser um número inteiro</notInt>
 			<invalidMinValue>O campo '{NAME}' tem que ser &gt;= {VALUE}</invalidMinValue>
 			<invalidMaxValue>O campo '{NAME}' tem que ser &lt;= {VALUE}</invalidMaxValue>
 		</integer>		
-		
+
 		<alphanum>
 			<notAlphaNumeric>O campo '{NAME}' tem que ser alfanumérico (e deve começar com uma letra)</notAlphaNumeric>
 		</alphanum>
-		
+
 		<hostname>
 			<notHostName>O campo '{NAME}' não é um nome válido dum host</notHostName>
 		</hostname>
-		
+
 		<url>
 			<notURL>O campo '{NAME}' não é um URL válido</notURL>
 		</url>
-		
+
 		<ipaddress>
 			<notIP>O campo '{NAME}' não é um endereço de IP válido</notIP>
 		</ipaddress>
 	</validator>
-	
+
 	<!-- display messages -->
-	
+
 	<cannotGet>Não consegue abrir a configuração de sistema</cannotGet>
 	<cannotSave>Não consegue gravar a configuração de sistema</cannotSave>
 	<saveOk>Configuração de sistema gravada.</saveOk>
-	
+
 	<!-- tooltips -->
-	
+
 	<tips>
 		<tip id="site.name">
 			Usado para identificar a instalação.
 		</tip>
-		
+
 		<!-- server -->
-		
+
 		<tip id="server.host">
 			O <b>host</b> e o <b>port</b> do servidor são usado para criar os URLs ao
 			servidor de GeoNetwork. Por exemplo, são usados durante uma edição
@@ -222,31 +223,31 @@
 			<b>Por favor note:</b> deva usar a ferramenta 'GAST' para reflectir esta
 			alteração nos metadados.
 		</tip>
-		
+
 		<!-- intranet -->
-		
+
 		<tip id="intranet.network">
 			Os parâmetros da <b>rede</b> e da <b>máscara de rede</b> são usados para identificar
 			conexões internas à GeoNetwork, isso é, identificar o grupo de intranet.
 		</tip>
-		
+
 		<!-- Z39.50 -->
-		
+
 		<tip id="z3950.enable">
 			Se definido, a GeoNetwork iniciaria o componente Z39.50 de servidor durante a inicialização.
 			Este componente usa o protocol ISO23950.
 			<br/>
 			<b>Por favor note:</b> reinicie a GeoNetwork para activar esta alteração.
 		</tip>
-		
+
 		<tip id="z3950.port">
 			Altere o port Z39.50 (listening).
 			<br/>
 			<b>Por favor note:</b> reinicie a GeoNetwork para activar esta alteração.
 		</tip>
-	
+
 		<!-- oai  -->
-		
+
 		<tip id="oai.mdmode">
 			Influences the behaviour of OAI when parameters from or until are supplied.
 			If set to temporal extent, the temporal extent of the date described by the metadata is searched.
@@ -254,17 +255,17 @@
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
-		
+
 		<tip id="oai.tokentimeout">
 			The number of seconds a OAI resultset stays in the cache and can be scrolled using the OAI resumptionToken
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
-		
+
 		<tip id="oai.cachesize">
 			The number of OAI resultSets that can be stored in the Cache.
 		</tip>
-		
+
 		<!-- CSW ISO Profile -->
 		<tip id="csw.enable">
 			Se definido, activaria-se o servidor de Perfil ISO CSW. Assim, outros catálogos poderiam harvest metadados (públicos).
@@ -278,9 +279,9 @@
 		<tip id="csw.abstract">Resumo</tip>
 		<tip id="csw.fees">Taxas</tip>
 		<tip id="csw.accessConstraints">Restrições de acesso</tip>
-		
+
 		<!-- clickable hyperlinks -->
-		
+
 		<tip id="clickablehyperlinks.enable">
 			If set, GeoNetwork will display clickable hyperlinks in the metadata.
 		</tip>
@@ -289,38 +290,38 @@
 		<tip id="localrating.enable">
 			If set, GeoNetwork will calculate user ratings for metadata from this node only (not distributed among other GeoNetwork nodes).
 		</tip>
-		
+
 		<!-- automatic fixes -->
 		<tip id="autofixing.enable">
-            Quando ativado, GeoNetwork aplica automaticamente corrige certas quando você salvar metadados.
-        </tip>
+			Quando ativado, GeoNetwork aplica automaticamente corrige certas quando você salvar metadados.
+		</tip>
 
 		<!-- proxy -->
-		
+
 		<tip id="proxy.use">
 			Se definido, a GeoNetwork usaria os parâmetros de proxy disponíveis para entrar
 			em nós remotos. Por exemplo, é usado para a harvesting de metadados.
 		</tip>
-		
+
 		<!-- feedback -->
-		
+
 		<tip id="feedback.email">
 			Este é o endereço de email do administrador e usa-se para enviar feedback.
 		</tip>
-		
+
 		<tip id="feedback.mail.host">
 			Os parâmetros SMTP de <b>host</b> e <b>port</b> são usados para enviar emails
 			para utilizadores da GeoNetwork quando um recurso seja downloaded.
 		</tip>
-		
+
 		<!-- removed metadata -->
-		
+
 		<tip id="removedMd.dir">
 			Este directório é usado para armazenar metadados (no formato MEF) quando eles são apagados.
 		</tip>
 
 		<!-- userSelfRegistration -->
-		
+
 		<tip id="userSelfRegistration.enable">
 			Se definido, utilizadores poderiam registar-se propriamente. Aqueles são
 			atribuídos ao grupo 'GUEST'. Um email é enviado para o utilizador
@@ -328,7 +329,7 @@
 			pela conta de email de feedback.
 			<br/>
 		</tip>
-		
+
 		<tip id="downloadservice.simple">
 				If metadata protocol is 'Data for download' then this service lets the user download the resource from GeoNetwork with no further user input - it is the simplest download interface
 		</tip>
@@ -351,21 +352,22 @@
 			If set, Statistics on searches will be collected and stored in the database.
 		</tip>
 
-        <!-- multilingual settings -->
-        <tip id="autodetect.enable">
-            Se for definido, a pesquisa de linguagem é automaticamente detectado. Note que isso não funciona muito bem para pesquisas curtas.
-        </tip>
-        <tip id="requestedlanguage.only">
-            Apenas retornar resultados de pesquisa na língua solicitada.
-        </tip>
-        <tip id="requestedlanguage.sorted">
-            Retornar resultados de busca na língua solicitada por cima.
-        </tip>
-        <tip id="requestedlanguage.ignored">
-            Ignorar idioma solicitado para resultados de busca.
-        </tip>
+		<!-- multilingual settings -->
+		<tip id="autodetect.enable">
+			Se for definido, a pesquisa de linguagem é automaticamente detectado. Note que isso não funciona muito bem para pesquisas curtas.
+		</tip>
+		<tip id="requestedlanguage.only">
+			Apenas retornar resultados de pesquisa na língua solicitada.
+		</tip>
+		<tip id="requestedlanguage.sorted">
+			Retornar resultados de busca na língua solicitada por cima.
+		</tip>
+		<tip id="requestedlanguage.ignored">
+			Ignorar idioma solicitado para resultados de busca.
+		</tip>
 
-    </tips>
+	</tips>
+
 	<data.dataDir>Data directory:</data.dataDir>
 	<data.resources>Resources directory:</data.resources>
 	<data.configDir>Configuration directory:</data.configDir>
@@ -386,19 +388,20 @@
 	<index>Lucene index information</index>
 	<main>System information</main>
 	<catalogue>Catalogue information</catalogue>
-	<database>Database information</database>
 	<system>Catalogue configuration</system>
+	<database>Database information</database>
 	<siteId>Catalogue identifier:</siteId>
 	<version>Version:</version>
 	<subVersion>Sub-version:</subVersion>
 	<index.lucene.config>Lucene configuration:</index.lucene.config>
-	<db.url>Database URL:</db.url>	
-	<db.openattempt>Database Status:</db.openattempt>	
-	<db.numactive>Database connections in use:</db.numactive>	
-	<db.numidle>Database connections available:</db.numidle>	
-	<db.maxactive>Maximum number of database connections:</db.maxactive>	
+	<db.url>Database URL:</db.url>
+	<db.openattempt>Database Status:</db.openattempt>
+	<db.numactive>Database connections in use:</db.numactive>
+	<db.numidle>Database connections available:</db.numidle>
+	<db.maxactive>Maximum number of database connections:</db.maxactive>
 	<db.statserror>Database statistics:</db.statserror>
-    <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
-    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
-    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
+	<sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+	<hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+	<keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
+
