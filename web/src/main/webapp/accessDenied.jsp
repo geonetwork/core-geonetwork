@@ -1,4 +1,5 @@
-<%@page import="java.util.Enumeration"%><html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@page import="java.util.Enumeration"%><html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 	<% String baseURL = "/geonetwork"; %>
 		<meta http-equiv="Pragma" content="no-cache">
@@ -72,7 +73,7 @@
 	</head>
 	<body onload="init()">
 		<p>&nbsp;&nbsp;Please wait...</p>
-		<p>&nbsp;&nbsp;Patientez s'il vous pla�t...</p>
+		<p>&nbsp;&nbsp;Patientez s'il vous plaît...</p>
 		<p>&nbsp;&nbsp;Bitte warten...</p>
 		<p>&nbsp;&nbsp;Un momento per favore...</p>
 

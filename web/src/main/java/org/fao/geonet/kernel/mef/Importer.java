@@ -290,9 +290,12 @@ public class Importer {
 							.setAttribute("name", "featured"));
 
 					// Get the Metadata uuid if it's not a template.
-					if (isTemplate.equals("n"))
+					if (isTemplate.equals("n")) {
 						uuid = dm.extractUUID(schema, md.get(index));
-
+					} else if (isTemplate.equals("s")) {
+					    // Get subtemplate uuid if defined in @uuid at root
+                        uuid = md.get(index).getAttributeValue("uuid");
+					}
 					validate = Util.getParam(params, Params.VALIDATE, "off")
 							.equals("on");
 

@@ -19,6 +19,7 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.fr = {
+    'metadata-not-found': 'La métadonnée avec l\'identifiant ${uuid} n\'a pas été trouvée ou n\'est pas partagée avec vous.',
     'Administrator': 'Administrateur',
     'Reviewer': 'Relecteur',
     'Editor': 'Éditeur',
