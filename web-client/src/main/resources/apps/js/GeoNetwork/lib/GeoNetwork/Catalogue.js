@@ -874,23 +874,36 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 record = store.getAt(store.find('uuid', uuid));
             }
             
-            if (this.metadataShowFn) {
-                this.metadataShowFn(uuid, record, url, maximized, width, height);
+            // metadata deleted or not visible to current user
+            if (record !== undefined) {
+                if (this.metadataShowFn) {
+                    this.metadataShowFn(uuid, record, url, maximized, width, height);
+                } else {
+                    var win = new GeoNetwork.view.ViewWindow({
+                        serviceUrl: url,
+                        lang: this.lang,
+                        currTab: GeoNetwork.defaultViewMode || 'simple',
+                        printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
+                        printUrl: GeoNetwork.printUrl || 'print.html',
+                        catalogue: this,
+                        maximized: maximized || false,
+                        metadataUuid: uuid,
+                        record: record,
+                        resultsView: this.resultsView
+                        });
+                    win.show(this.resultsView);
+                    win.alignTo(bd, 'tr-tr');
+                }
             } else {
-                var win = new GeoNetwork.view.ViewWindow({
-                    serviceUrl: url,
-                    lang: this.lang,
-                    currTab: GeoNetwork.defaultViewMode || 'simple',
-                    printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
-                    printUrl: GeoNetwork.printUrl || 'print.html',
-                    catalogue: this,
-                    maximized: maximized || false,
-                    metadataUuid: uuid,
-                    record: record,
-                    resultsView: this.resultsView
-                    });
-                win.show(this.resultsView);
-                win.alignTo(bd, 'tr-tr');
+                GeoNetwork.Message().msg({
+                    title: OpenLayers.i18n('error'), 
+                    msg: OpenLayers.i18n('metadata-not-found'), 
+                    tokens: {
+                        uuid: uuid
+                    }, 
+                    status: 'warning',
+                    target: Ext.getBody()
+                });
             }
         }
     },
