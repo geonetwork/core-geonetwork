@@ -20,6 +20,7 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.es = {
+    'metadata-not-found': 'Metadata with UUID ${uuid} not found or not shared with you.',
     'updateUserInfo': 'Edit my profile',
     'updatePassword': 'Change my password',
     'myMetadata': 'My metadata',
