@@ -119,7 +119,8 @@ GeoNetwork.map.ExtentMap = function(){
                 units: units,
                 projection: mainProjCode,
                 resolutions: GeoNetwork.map.RESOLUTIONS,
-                maxExtent: GeoNetwork.map.EXTENT,
+                restrictedExtent: GeoNetwork.map.EXTENT,
+                maxExtent: GeoNetwork.map.MAXEXTENT,
                 theme: null
             },
             map = new OpenLayers.Map(options);
@@ -131,7 +132,7 @@ GeoNetwork.map.ExtentMap = function(){
         if (!edit) {
             var navigationControl = map.getControlsByClass('OpenLayers.Control.Navigation')[0];
             navigationControl.disableZoomWheel();
-            map.removeControl(map.getControlsByClass('OpenLayers.Control.PanZoom')[0]);
+//            map.removeControl(map.getControlsByClass('OpenLayers.Control.PanZoom')[0]);
         }
         
         // Add mouse position control to display coordintate.
