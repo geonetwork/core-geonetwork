@@ -175,7 +175,7 @@
 		
 		<xsl:choose>
 			<!-- has children or attributes, existing or potential -->
-			<xsl:when test="*[namespace-uri(.)!=$geonetUri]|@*|geonet:child|geonet:element/geonet:attribute">
+			<xsl:when test="*[namespace-uri(.)!=$geonetUri]|@*[namespace-uri()!=$geonetUri]|geonet:child|geonet:element/geonet:attribute">
 			
 				<xsl:choose>
 					
