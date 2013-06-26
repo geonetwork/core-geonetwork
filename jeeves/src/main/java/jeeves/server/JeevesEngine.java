@@ -44,6 +44,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.xml.transform.TransformerConfigurationException;
 
+import jeeves.component.ProfileManager;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
@@ -192,12 +193,8 @@ public class JeevesEngine
 
 			loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, serviceMan);
 
-            info("Initializing profiles...");
-            ProfileManager profileManager = serviceMan.loadProfiles(servletContext, profilesFile);
-
             // Add ResourceManager as a bean to the spring application context so that GeonetworkAuthentication can access it
             jeevesAppContext.getBeanFactory().registerSingleton("resourceManager", new ResourceManager(this.monitorManager, this.providerMan));
-            jeevesAppContext.getBeanFactory().registerSingleton("profileManager", profileManager);
             jeevesAppContext.getBeanFactory().registerSingleton("serialFactory", serialFact);
 
 			//--- handlers must be started here because they may need the context

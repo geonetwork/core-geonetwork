@@ -10,9 +10,10 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 	" >
 
-    <context:component-scan base-package="org.fao.geonet.kernel,org.fao.geonet.component"/>
+    <context:component-scan base-package="org.fao.geonet.kernel,org.fao.geonet.component, jeeves.component"/>
 
 	<import resource="config-security/config-security.xml"/>
+	<import resource="config-user-profiles.xml"/>
 	<import resource="classpath*:/config-spring-geonetwork.xml"/>
 	<import resource="classpath:JZkitApplicationContext.xml"/>
 	

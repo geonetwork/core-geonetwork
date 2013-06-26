@@ -35,6 +35,7 @@ import java.util.Map.Entry;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
+import jeeves.component.ProfileManager;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
@@ -47,7 +48,6 @@ import jeeves.monitor.MonitorManager;
 import jeeves.monitor.timer.ServiceManagerGuiServicesTimer;
 import jeeves.monitor.timer.ServiceManagerServicesTimer;
 import jeeves.monitor.timer.ServiceManagerXslOutputTransformTimer;
-import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -135,14 +135,6 @@ public class ServiceManager
 
 		if (!baseUrl.startsWith("/") && baseUrl.length() != 0)
 			baseUrl = "/"+ baseUrl;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public ProfileManager loadProfiles(ServletContext servletContext, String file) throws Exception
-	{
-		profilMan = new ProfileManager(servletContext, appPath, appPath + Jeeves.Path.WEBINF + file);
-		return profilMan;
 	}
 
 	//---------------------------------------------------------------------------

@@ -30,7 +30,6 @@ import jeeves.exceptions.UserNotFoundEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -39,6 +38,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.MailSendingService;
+import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
 
 import java.io.File;

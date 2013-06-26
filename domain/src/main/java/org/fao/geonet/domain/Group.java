@@ -15,7 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.MapKey;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
@@ -34,7 +33,7 @@ public class Group {
     private String _description;
     private String _email;
     private int _referrer;
-    private Map<String, String> _localizedTranslations = new HashMap<String, String>();
+    private Map<String, String> _labelTranslations = new HashMap<String, String>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -96,15 +95,23 @@ public class Group {
         this._referrer = referrer;
     }
 
-    @ElementCollection(fetch=FetchType.EAGER, targetClass=String.class)
+    /**
+     * Get the map of langid -> label translations for groups
+     */
+    @ElementCollection(fetch=FetchType.LAZY, targetClass=String.class)
     @CollectionTable(joinColumns=@JoinColumn(name="iddes"),name="groupsdes")
     @MapKeyColumn(name="langid")
-    public Map<String, String> getLocalizedTranslations() {
-        return _localizedTranslations;
+    public Map<String, String> getLabelTranslations() {
+        return _labelTranslations;
     }
-    
-    public void setLocalizedTranslations(Map<String, String> localizedTranslations) {
-        this._localizedTranslations = localizedTranslations;
+    /**
+     * Set new translations this should only be used for initialization.  
+     * to add and remove translations use "get" and modify map.
+     *
+     * @param localizedTranslations the translation map
+     */
+    protected void setLabelTranslations(Map<String, String> localizedTranslations) {
+        this._labelTranslations = localizedTranslations;
     }
     
     @Override

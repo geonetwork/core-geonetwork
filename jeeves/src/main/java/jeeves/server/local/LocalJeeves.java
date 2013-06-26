@@ -1,14 +1,19 @@
 package jeeves.server.local;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import jeeves.guiservices.session.JeevesUser;
+import jeeves.interfaces.Profile;
 import jeeves.server.JeevesEngine;
-import jeeves.server.ProfileManager;
 import jeeves.server.UserSession;
 import jeeves.utils.Xml;
 
 import org.jdom.Element;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -134,12 +139,78 @@ public class LocalJeeves
 
 			// Make session with all permissions
 			session = new UserSession();
-			JeevesUser user = new JeevesUser(jeeves.getProfileManager())
-			.setId("0")
-			.setUsername("local")
-			.setName("local")
-			.setProfile(ProfileManager.ADMIN)
-			.setEmail( "local@localhost");
+			JeevesUser user = new JeevesUser(){
+
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public Collection<? extends GrantedAuthority> getAuthorities() {
+                    ArrayList<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
+                        for (String p : Profile.Administrator.getAllNames()) {
+                            auths.add(new SimpleGrantedAuthority(p));
+                        }
+                    return auths;
+                }
+
+                @Override
+                public String getUsername() {
+                    return Profile.Administrator.name();
+                }
+
+                @Override
+                public boolean isAccountNonExpired() {
+                    return true;
+                }
+
+                @Override
+                public boolean isAccountNonLocked() {
+                    // TODO Auto-generated method stub
+                    return true;
+                }
+
+                @Override
+                public boolean isCredentialsNonExpired() {
+                    // TODO Auto-generated method stub
+                    return true;
+                }
+
+                @Override
+                public boolean isEnabled() {
+                    // TODO Auto-generated method stub
+                    return true;
+                }
+
+                @Override
+                public String getEmail() {
+                    return "";
+                }
+
+                @Override
+                public String getName() {
+                    return Profile.Administrator.name();
+                }
+
+                @Override
+                public String getSurname() {
+                    return Profile.Administrator.name();
+                }
+
+                @Override
+                public Profile getProfile() {
+                    return Profile.Administrator;
+                }
+
+                @Override
+                public String getPassword() {
+                    return "";
+                }
+
+                @Override
+                public int getId() {
+                    return 0;
+                }
+			    
+			};
 		
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities() ) ;
 		authentication.setDetails(user);

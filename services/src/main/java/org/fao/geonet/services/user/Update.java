@@ -28,11 +28,11 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
 
 import javax.servlet.ServletContext;

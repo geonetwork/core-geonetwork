@@ -29,7 +29,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jeeves.server.ProfileManager;
+import jeeves.component.ProfileManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 

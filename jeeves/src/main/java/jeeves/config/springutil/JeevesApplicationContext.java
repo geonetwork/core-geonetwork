@@ -13,7 +13,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
 public class JeevesApplicationContext extends XmlWebApplicationContext {
-	
+    
     private String appPath;
     private final ConfigurationOverrides _configurationOverrides;
     

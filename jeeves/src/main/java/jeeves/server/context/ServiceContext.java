@@ -28,10 +28,10 @@ import java.util.Map;
 
 import javax.annotation.CheckForNull;
 
+import jeeves.component.ProfileManager;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
-import jeeves.server.ProfileManager;
 import jeeves.server.UserSession;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.local.LocalServiceRequest;

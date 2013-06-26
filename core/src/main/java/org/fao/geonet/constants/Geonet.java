@@ -456,17 +456,14 @@ public final class Geonet {
 		}
 	}
 
-    /**
-     * Container for profile names.
-     */
 	public static final class Profile {
-		public static final String ADMINISTRATOR   = "Administrator";
-		public static final String USER_ADMIN      = "UserAdmin";
-		public static final String REVIEWER        = "Reviewer";
-		public static final String EDITOR          = "Editor";
-		public static final String REGISTERED_USER = "RegisteredUser";
-		public static final String GUEST           = "Guest";
-		public static final String MONITOR         = "Monitor";
+		public static final String ADMINISTRATOR   = jeeves.interfaces.Profile.Administrator.name();
+		public static final String USER_ADMIN      = jeeves.interfaces.Profile.UserAdmin.name();
+		public static final String REVIEWER        = jeeves.interfaces.Profile.Reviewer.name();
+		public static final String EDITOR          = jeeves.interfaces.Profile.Editor.name();
+		public static final String REGISTERED_USER = jeeves.interfaces.Profile.RegisteredUser.name();
+		public static final String GUEST           = jeeves.interfaces.Profile.Guest.name();
+		public static final String MONITOR         = jeeves.interfaces.Profile.Monitor.name();
 	}
 
     /**

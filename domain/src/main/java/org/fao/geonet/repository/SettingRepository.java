@@ -1,7 +1,5 @@
 package org.fao.geonet.repository;
 
-import static org.fao.geonet.domain.Setting.*;
-
 import java.util.List;
 
 import javax.annotation.Nonnull;

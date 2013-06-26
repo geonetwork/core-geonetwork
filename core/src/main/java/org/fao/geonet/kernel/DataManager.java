@@ -139,7 +139,7 @@ public class DataManager {
         this.svnManager    = parameterObject.svnManager;
 
         UserSession session = new UserSession();
-        session.loginAs(new JeevesUser(servContext.getProfileManager()).setUsername("admin").setId("-1").setProfile(Geonet.Profile.ADMINISTRATOR));
+        session.loginAs(new JeevesUser(servContext.getProfileManager()){}.setUsername("admin").setId("-1").setProfile(Geonet.Profile.ADMINISTRATOR));
         servContext.setUserSession(session);
         init(parameterObject.context, parameterObject.dbms, false);
         this._applicationContext = servContext.getApplicationContext();

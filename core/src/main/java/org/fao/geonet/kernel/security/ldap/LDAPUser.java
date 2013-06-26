@@ -22,8 +22,8 @@
 //==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
+import jeeves.component.ProfileManager;
 import jeeves.guiservices.session.JeevesUser;
-import jeeves.server.ProfileManager;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -33,6 +33,20 @@ public class LDAPUser extends JeevesUser {
 	private static final long serialVersionUID = -5390558007347570517L;
 	
 	private Multimap<String, String> groupsAndProfile = HashMultimap.create();
+
+    private String address;
+
+    private String city;
+
+    private String state;
+
+    private String zip;
+
+    private String country;
+
+    private String organisation;
+
+    private String kind;
 	
 	public LDAPUser(ProfileManager profileManager, String username) {
 		super(profileManager);
@@ -50,4 +64,74 @@ public class LDAPUser extends JeevesUser {
 	public Multimap<String, String> getPrivileges() {
 		return groupsAndProfile;
 	}
+
+    public String getAddress() {
+    	return address;
+    }
+
+    public LDAPUser setAddress(String address) {
+    	if (address==null) address = "";
+    	this.address = address;
+    	return this;
+    }
+
+    public String getCity() {
+    	return city;
+    }
+
+    public LDAPUser setCity(String city) {
+    	if (city==null) city = "";
+    	this.city = city;
+    	return this;
+    }
+
+    public String getState() {
+    	return state;
+    }
+
+    public LDAPUser setState(String state) {
+    	if (state==null) state = "";
+    	this.state = state;
+    	return this;
+    }
+
+    public String getZip() {
+    	return zip;
+    }
+
+    public LDAPUser setZip(String zip) {
+    	if (zip==null) zip = "";
+    	this.zip = zip;
+    	return this;
+    }
+
+    public String getCountry() {
+    	return country;
+    }
+
+    public LDAPUser setCountry(String country) {
+    	if (country==null) country = "";
+    	this.country = country;
+    	return this;
+    }
+
+    public String getOrganisation() {
+    	return organisation;
+    }
+
+    public LDAPUser setOrganisation(String organisation) {
+    	if (organisation==null) organisation = "";
+    	this.organisation = organisation;
+    	return this;
+    }
+
+    public String getKind() {
+    	return kind;
+    }
+
+    public LDAPUser setKind(String kind) {
+    	if (kind==null) kind = "";
+    	this.kind = kind;
+    	return this;
+    }
 }

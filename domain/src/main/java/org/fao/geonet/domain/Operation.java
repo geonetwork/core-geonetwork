@@ -1,15 +1,23 @@
 package org.fao.geonet.domain;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Cacheable;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -24,6 +32,7 @@ import javax.persistence.Transient;
 public class Operation {
     private int _id;
     private String _name;
+    private Map<String, String> _labelTranslations = new HashMap<String, String>();
 
     /**
      * Get Id of the operation
@@ -59,6 +68,25 @@ public class Operation {
     public Operation setName(String name) {
         this._name = name;
         return this;
+    }
+
+    /**
+     * Get the map of langid -> label translations for operations
+     */
+    @ElementCollection(fetch=FetchType.LAZY, targetClass=String.class)
+    @CollectionTable(joinColumns=@JoinColumn(name="iddes"),name="operationsdes")
+    @MapKeyColumn(name="langid")
+    public Map<String, String> getLabelTranslations() {
+        return _labelTranslations;
+    }
+    /**
+     * Set new translations this should only be used for initialization.  
+     * to add and remove translations use "get" and modify map.
+     *
+     * @param localizedTranslations the translation map
+     */
+    protected void setLabelTranslations(Map<String, String> localizedTranslations) {
+        this._labelTranslations = localizedTranslations;
     }
     
     /**

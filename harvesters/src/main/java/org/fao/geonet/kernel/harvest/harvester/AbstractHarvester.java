@@ -474,7 +474,8 @@ public abstract class AbstractHarvester extends BaseAligner {
 	 */
 	private void login() throws Exception {
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		JeevesUser user = new JeevesUser(this.context.getProfileManager());
+		@SuppressWarnings("serial")
+        JeevesUser user = new JeevesUser(this.context.getProfileManager()){};
 
         String ownerId = getParams().ownerId;
         if(log.isDebugEnabled()) {

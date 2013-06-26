@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import jeeves.server.ProfileManager;
+import jeeves.component.ProfileManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 

@@ -1,13 +1,13 @@
 package org.fao.geonet.domain;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -32,9 +32,13 @@ public class Metadata {
 
     private int _id;
     private String _uuid;
-    private Date _changeDate;
-    private int _owner;
+    private String data;
+    private MetadataDataInfo dataInfo;
+    private MetadataSourceInfo sourceInfo;
+    private MetadataHarvestInfo harvestInfo;
+
     private List<OperationAllowed> _operationsAllowed = new ArrayList<OperationAllowed>();
+    
 //    private Set<Operation> operations = new HashSet<Operation>();
 //    private Set<Group> groups = new HashSet<Group>();
 
@@ -63,33 +67,61 @@ public class Metadata {
         this._uuid = uuid;
         return this;
     }
-    
     @Column
-    public Date getChangeDate() {
-        if (_changeDate != null) {
-            return (Date) _changeDate.clone();
-        } else {
-            return null;
-        }
+    public String getData() {
+        return data;
+    }
+    public void setData(String data) {
+        this.data = data;
+    }
+    @Embedded
+    public MetadataDataInfo getDataInfo() {
+        return dataInfo;
+    }
+    public void setDataInfo(MetadataDataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+    }
+    @Embedded
+    public MetadataSourceInfo getSourceInfo() {
+        return sourceInfo;
+    }
+    public void setSourceInfo(MetadataSourceInfo sourceInfo) {
+        this.sourceInfo = sourceInfo;
+    }
+    @Embedded
+    public MetadataHarvestInfo getHarvestInfo() {
+        return harvestInfo;
+    }
+    public void setHarvestInfo(MetadataHarvestInfo harvestInfo) {
+        this.harvestInfo = harvestInfo;
     }
     
-    public void setChangeDate(Date changeDate) {
-        if (changeDate != null) {
-            this._changeDate = (Date) changeDate.clone();
-        } else {
-            this._changeDate = null;
-        }
-    }
-    
-    @Column
-    public int getOwner() {
-        return _owner;
-    }
-    
-    public Metadata setOwner(int owner) {
-        this._owner = owner;
-        return this;
-    }
+//    @Column
+//    public Date getChangeDate() {
+//        if (_changeDate != null) {
+//            return (Date) _changeDate.clone();
+//        } else {
+//            return null;
+//        }
+//    }
+//    
+//    public void setChangeDate(Date changeDate) {
+//        if (changeDate != null) {
+//            this._changeDate = (Date) changeDate.clone();
+//        } else {
+//            this._changeDate = null;
+//        }
+//    }
+//    
+//    @Column
+//    public int getOwner() {
+//        return _owner;
+//    }
+//    
+//    public Metadata setOwner(int owner) {
+//        this._owner = owner;
+//        return this;
+//    }
 
 //    /**
 //     * Get the read-only set of operations that are assocated with

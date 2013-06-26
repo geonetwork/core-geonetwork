@@ -27,8 +27,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import jeeves.component.ProfileManager;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.ProfileManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
@@ -93,8 +93,8 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
         LDAPUser userDetails = new LDAPUser(profileManager, username);
         userDetails.setName(getUserInfo(userInfo, "name"))
                 .setSurname(getUserInfo(userInfo, "surname"))
-                .setEmail(getUserInfo(userInfo, "mail"))
-                .setOrganisation(getUserInfo(userInfo, "organisation"))
+                .setEmail(getUserInfo(userInfo, "mail"));
+        userDetails.setOrganisation(getUserInfo(userInfo, "organisation"))
                 .setAddress(getUserInfo(userInfo, "address"))
                 .setState(getUserInfo(userInfo, "state"))
                 .setZip(getUserInfo(userInfo, "zip"))

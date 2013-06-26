@@ -199,7 +199,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 		}
 		
 		private void login() {
-		    JeevesUser user = new JeevesUser(this.context.getProfileManager());
+		    JeevesUser user = new JeevesUser(this.context.getProfileManager()){};
 		    user.setId(this.userId);
 		    user.setUsername(this.userName);
 		    user.setProfile(this.userProfile);

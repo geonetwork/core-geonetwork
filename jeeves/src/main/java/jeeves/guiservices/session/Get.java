@@ -29,6 +29,7 @@ import org.jdom.*;
 import jeeves.interfaces.*;
 import jeeves.server.*;
 import jeeves.server.context.*;
+import jeeves.component.ProfileManager;
 import jeeves.constants.*;
 
 //=============================================================================

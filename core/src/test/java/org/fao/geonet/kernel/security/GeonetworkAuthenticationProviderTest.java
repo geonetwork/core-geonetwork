@@ -2,9 +2,10 @@ package org.fao.geonet.kernel.security;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.PasswordUtil;
 import junit.framework.TestCase;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,7 +59,6 @@ public class GeonetworkAuthenticationProviderTest {
         when(applicationContext.getBean(ResourceManager.class)).thenReturn(resourceManager);
 
         geonetworkAuthenticationProvider = new GeonetworkAuthenticationProvider();
-        geonetworkAuthenticationProvider.setApplicationContext(applicationContext);
     }
 
     /**
@@ -164,8 +164,8 @@ public class GeonetworkAuthenticationProviderTest {
      *
      * @return mock user
      */
-    private GeonetworkUser mockUserSetup() {
-        GeonetworkUser user = mock(GeonetworkUser.class);
+    private User mockUserSetup() {
+        User user = mock(User.class);
         when(user.isAccountNonLocked()).thenReturn(true);
         when(user.isEnabled()).thenReturn(true);
         when(user.isAccountNonExpired()).thenReturn(true);
@@ -183,10 +183,9 @@ public class GeonetworkAuthenticationProviderTest {
      */
     private GeonetworkAuthenticationProvider spyOnAuthenticateSetup(boolean userFound) {
         GeonetworkAuthenticationProvider spy = spy(geonetworkAuthenticationProvider);
-        GeonetworkUser user = userFound ? mockUserSetup() : null ;
+        User user = userFound ? mockUserSetup() : null ;
 
         doReturn(user).when(spy).retrieveUser(anyString(), any(UsernamePasswordAuthenticationToken.class));
-        spy.setApplicationContext(applicationContext);
 
         return spy;
     }

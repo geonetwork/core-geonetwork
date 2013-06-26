@@ -1,4 +1,4 @@
-package jeeves.utils;
+package org.fao.geonet.util;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -9,10 +9,11 @@ import javax.servlet.ServletContext;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.UserNotFoundEx;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 
-import org.jdom.Element;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserSecurity;
+import org.fao.geonet.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -37,11 +38,11 @@ public class PasswordUtil {
 	/**
 	 * Check the security column for the {@value PasswordUtil.HASH_UPDATE_REQUIRED} tag.
 	 * 
-	 * @param userXml a database query for the user containing the security column
+	 * @param securityField The securityField the
 	 * @return true if the user needs its hash updated
 	 */
-	public static boolean hasOldHash(Element userXml) {
-		return userXml.getChildText(SECURITY_FIELD).contains(HASH_UPDATE_REQUIRED);
+	public static boolean hasOldHash(User user) {
+		return user.getSecurity().getSecurityNotifications().contains(HASH_UPDATE_REQUIRED);
 	}
 	/**
 	 * Compare the hash (read from database) to *all* type of hashes used by geonetwork.  This should not be used
@@ -75,10 +76,11 @@ public class PasswordUtil {
 	 * @param userXml a database query for the user containing the security column
 	 * @return the value of the security element (minus the {@value PasswordUtil.HASH_UPDATE_REQUIRED} tag)
 	 */
-	public static String removeSecurityTag(Element userXml) {
-		String security = userXml.getChildTextNormalize(SECURITY_FIELD);
+	public static String removeSecurityTag(User user) {
+		UserSecurity security = user.getSecurity();
+        String securityNote = security.getSecurityNotifications();
 		StringBuilder newSec = new StringBuilder();
-		for (String seg: security.split(",")) {
+		for (String seg: securityNote.split(",")) {
 			if(newSec.length() > 0){
 				newSec.append(',');
 			}
@@ -86,7 +88,7 @@ public class PasswordUtil {
 				newSec.append(seg);
 			}
 		}
-		userXml.getChild(SECURITY_FIELD).setText(newSec.toString());
+		security.setSecurityNotifications(newSec.toString());
 		return newSec.toString();
 	}
 	/**
@@ -166,11 +168,11 @@ public class PasswordUtil {
 	 * @throws SQLException if an error occurred during a database access 
 	 * @throws UserNotFoundEx  if the id does not reference a user
 	 */
-	public static Element updatePasswordWithNew(boolean matchOldPassword, String oldPassword,
-			String newPassword, Integer iUserId, ServletContext servletContext, Dbms dbms) throws SQLException, UserNotFoundEx {
+	public static User updatePasswordWithNew(boolean matchOldPassword, String oldPassword,
+			String newPassword, Integer iUserId, ServletContext servletContext, UserRepository repo) throws SQLException, UserNotFoundEx {
 
 		PasswordEncoder encoder = encoder(servletContext);
-		return updatePasswordWithNew(matchOldPassword, oldPassword, newPassword, iUserId, encoder, dbms);
+		return updatePasswordWithNew(matchOldPassword, oldPassword, newPassword, iUserId, encoder, repo);
 	}
 	/**
 	 * Updates database with new password if passwords match
@@ -186,16 +188,14 @@ public class PasswordUtil {
 	 * @throws SQLException if an error occurred during a database access 
 	 * @throws UserNotFoundEx  if the id does not reference a user
 	 */
-	public static Element updatePasswordWithNew(boolean matchOldPassword, String oldPassword,
-			String newPassword, Integer iUserId, PasswordEncoder encoder, Dbms dbms) throws SQLException, UserNotFoundEx {
-		String query = "SELECT * FROM Users WHERE id=?";
-		Element elUser = dbms.select(query, iUserId);
-		if (elUser.getChildren().size() == 0) {
+	public static User updatePasswordWithNew(boolean matchOldPassword, String oldPassword,
+			String newPassword, Integer iUserId, PasswordEncoder encoder, UserRepository repository) throws SQLException, UserNotFoundEx {
+		User user = repository.findOne(iUserId);
+		if (user != null) {
 			throw new UserNotFoundEx(""+iUserId);
 		}
-		elUser = elUser.getChild("record");
-		String hash = elUser.getChildText(PASSWORD_COLUMN);
-		if (hasOldHash(elUser)) {
+		String hash = user.getPassword();
+		if (hasOldHash(user)) {
 			if ((matchOldPassword || oldPassword != null) && !matchesOldHash(hash , oldPassword)) {
 				throw new IllegalArgumentException("Old password is not correct");
 			}
@@ -205,14 +205,13 @@ public class PasswordUtil {
 			}
 		}
 		
-		String security = removeSecurityTag (elUser);
+		removeSecurityTag (user);
 		
 		String newPasswordHash = encoder.encode(newPassword);
-		elUser.getChild(PASSWORD_COLUMN).setText(newPasswordHash);
+		user.getSecurity().setPassword(newPasswordHash.toCharArray());
 		
-		// all ok so change password
-		dbms.execute("UPDATE Users SET password=?, security=? WHERE id=?", newPasswordHash, security, iUserId);
-		return elUser;
+		repository.save(user);
+		return user;
 	}
 	public static String encode(ServiceContext context, String password) {
 		return encoder(context.getServlet().getServletContext()).encode(password);

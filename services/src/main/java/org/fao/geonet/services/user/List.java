@@ -23,9 +23,9 @@
 
 package org.fao.geonet.services.user;
 
+import jeeves.interfaces.Profile;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -121,7 +121,7 @@ public class List implements Service
 	private Set<String> getGroups(Dbms dbms, String id, String profile) throws Exception
 	{
 		Element groups;
-		if (profile.equals(ProfileManager.ADMIN)) {
+		if (profile.equals(Profile.Administrator.name())) {
 			groups = dbms.select("SELECT id FROM Groups");
 		} if (profile.equals(Geonet.Profile.USER_ADMIN)) {
 			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE profile='UserAdmin' AND userId=?", Integer.valueOf(id));

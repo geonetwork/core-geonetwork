@@ -18,7 +18,6 @@ import org.fao.geonet.domain.OperationAllowedNamedQueries.DeleteByMetadataId;
 
 @Entity
 @Table(name = OperationAllowed.TABLE_NAME)
-//@Cacheable
 @Access(AccessType.PROPERTY)
 @NamedQueries({
         @NamedQuery(name=DeleteByMetadataId.NAME, query=DeleteByMetadataId.QUERY),

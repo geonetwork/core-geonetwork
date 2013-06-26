@@ -6,6 +6,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId_;
@@ -70,7 +71,7 @@ public final class OperationAllowedSpecs {
             
             @Override
             public Predicate toPredicate(Root<OperationAllowed> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Integer> mdIdAttributePath = root.get(OperationAllowed_.metadata).get(Metadata_.owner);
+                Path<Integer> mdIdAttributePath = root.get(OperationAllowed_.metadata).get(Metadata_.sourceInfo).get(MetadataSourceInfo_.owner);
                 Predicate mdIdEqualPredicate = cb.equal(mdIdAttributePath, cb.literal(ownerId));
                 return mdIdEqualPredicate;
             }
