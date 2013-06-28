@@ -26,7 +26,6 @@ package org.fao.geonet.services.resources;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;

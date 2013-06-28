@@ -23,7 +23,7 @@
 
 package org.fao.geonet.services.ownership;
 
-import static org.fao.geonet.repository.OperationAllowedSpecs.*;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.*;
 import static org.springframework.data.jpa.domain.Specifications.*;
 
 import jeeves.resources.dbms.Dbms;

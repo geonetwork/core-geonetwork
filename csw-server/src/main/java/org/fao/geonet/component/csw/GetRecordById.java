@@ -44,7 +44,6 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;

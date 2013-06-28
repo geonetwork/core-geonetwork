@@ -1,4 +1,4 @@
-package org.fao.geonet.repository;
+package org.fao.geonet.repository.specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -9,6 +9,7 @@ import javax.persistence.criteria.Root;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserSecurity_;
 import org.fao.geonet.domain.User_;
+import org.fao.geonet.repository.UserRepository;
 import org.springframework.data.jpa.domain.Specification;
 
 /**

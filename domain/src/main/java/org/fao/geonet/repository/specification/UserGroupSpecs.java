@@ -1,4 +1,4 @@
-package org.fao.geonet.repository;
+package org.fao.geonet.repository.specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

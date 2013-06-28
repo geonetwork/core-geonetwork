@@ -23,8 +23,8 @@
 
 package org.fao.geonet.services.login;
 
-import static org.fao.geonet.repository.UserGroupSpecs.hasGroupId;
-import static org.fao.geonet.repository.UserGroupSpecs.hasUserId;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasGroupId;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.sql.SQLException;

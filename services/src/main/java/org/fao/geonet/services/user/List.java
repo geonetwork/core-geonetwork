@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.user;
 
+import jeeves.component.ProfileManager;
 import jeeves.interfaces.Profile;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -67,7 +68,7 @@ public class List implements Service
 
 		Set<String> hsMyGroups = getGroups(dbms, session.getUserId(), session.getProfile());
 
-		Set<String> profileSet = context.getProfileManager().getProfilesSet(session.getProfile());
+		Set<String> profileSet = ProfileManager.getProfilesSet(session.getProfile());
 
 		//--- retrieve all users
 

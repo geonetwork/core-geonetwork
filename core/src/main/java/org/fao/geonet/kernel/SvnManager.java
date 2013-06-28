@@ -41,7 +41,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.OperationAllowedSpecs;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;

@@ -5,6 +5,7 @@ import static org.fao.geonet.domain.OperationAllowedNamedQueries.*;
 import java.util.List;
 
 import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.junit.Test;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;

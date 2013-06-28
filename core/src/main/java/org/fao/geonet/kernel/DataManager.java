@@ -67,7 +67,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.UserSpecs;
+import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.ThreadUtils;
 import org.jdom.Attribute;

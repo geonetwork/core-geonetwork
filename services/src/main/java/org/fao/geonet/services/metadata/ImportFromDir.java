@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.exceptions.XSDValidationErrorEx;
-import jeeves.guiservices.session.JeevesUser;
 import jeeves.interfaces.Profile;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;

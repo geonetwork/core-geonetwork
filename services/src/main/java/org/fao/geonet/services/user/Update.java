@@ -36,7 +36,6 @@ import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 
-import javax.servlet.ServletContext;
 import java.util.ArrayList;
 
 /**

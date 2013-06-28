@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import jeeves.interfaces.Profile;
-import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
