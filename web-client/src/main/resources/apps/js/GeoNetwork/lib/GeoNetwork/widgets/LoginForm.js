@@ -97,6 +97,9 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
     userInfoTooltip: undefined,
     linksPanel: undefined,
     tooltipMenu: undefined,
+    harvestingMenu: undefined,
+    importMetadataMenu: undefined,
+    newMetadataMenu: undefined,
     username: undefined,
     password: undefined,
     /** private: property[toggledFields]
@@ -139,9 +142,13 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
                 label : OpenLayers.i18n("LastSubmitted"),
                 criteria : {"E__status" : "4", "E_sortBy" : "changeDate"}  // Submitted
             }], 
+        'RegisteredUser': [{
+                label : OpenLayers.i18n("lastUpdates"),
+                criteria : {"E_sortBy" : "changeDate"}
+        }],
         'Administrator': [{
                 label : OpenLayers.i18n('myMetadata'),
-                criteria : {"E__owner" : this.catalogue.identifiedUser.id}
+                criteria : {"E__owner" : this.catalogue.identifiedUser.id, "E__isHarvested" : "n"}
             }, {
                 label : OpenLayers.i18n("lastUpdates"),
                 criteria : {"E_sortBy" : "changeDate"}
@@ -248,38 +255,41 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
                 ]
             };
         
+        this.harvestingMenu = new Ext.Button({
+            text: OpenLayers.i18n('harvestingAdmin'),
+            listeners: {
+                click: function () {
+                    this.catalogue.moveToURL(this.catalogue.services.harvestingAdmin)
+                },
+                scope: this
+            }
+        });
+        this.newMetadataMenu = new Ext.Button({
+            text: OpenLayers.i18n('newMetadata'),
+            ctCls: 'gn-bt-main',
+            iconCls: 'addIcon',
+            listeners: {
+                click: function () {
+                    if (catalogue.isIdentified()) {
+                        var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
+                        actionCtn.createMetadataAction.handler.apply(actionCtn);
+                    }
+                },
+                scope: this
+            }
+        });
+        this.importMetadataMenu = new Ext.Button({
+            text: OpenLayers.i18n('importMetadata'),
+            handler: function () {
+                catalogue.metadataImport();
+            }
+        });
         var adminPanel = {
                 xtype: 'panel',
                 items: [
-                    new Ext.Button({
-                        text: OpenLayers.i18n('newMetadata'),
-                        ctCls: 'gn-bt-main',
-                        iconCls: 'addIcon',
-                        listeners: {
-                            click: function () {
-                                if (catalogue.isIdentified()) {
-                                    var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
-                                    actionCtn.createMetadataAction.handler.apply(actionCtn);
-                                }
-                            },
-                            scope: this
-                        }
-                    }),
-                    new Ext.Button({
-                        text: OpenLayers.i18n('importMetadata'),
-                        handler: function () {
-                            catalogue.metadataImport();
-                        }
-                    }),
-                    new Ext.Button({
-                        text: OpenLayers.i18n('harvestingAdmin'),
-                        listeners: {
-                            click: function () {
-                                this.catalogue.moveToURL(this.catalogue.services.harvestingAdmin)
-                            },
-                            scope: this
-                        }
-                    }),
+                    this.newMetadataMenu,
+                    this.importMetadataMenu,
+                    this.harvestingMenu,
                     new Ext.Button({
                         text: OpenLayers.i18n('administration'),
                         //iconCls : 'md-mn md-mn-advanced',
@@ -460,6 +470,14 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
                     this.userInfoTooltip.update(cat.identifiedUser);
                 }
                 this.createQuickLinks();
+                
+                if (this.catalogue.identifiedUser) {
+                    this.harvestingMenu.setVisible(this.catalogue.identifiedUser.role === 'Administrator' || this.catalogue.identifiedUser.role === 'UserAdmin');
+                    
+                    var isRegisteredUser = this.catalogue.identifiedUser.role === 'RegisteredUser';
+                    this.importMetadataMenu.setVisible(!isRegisteredUser);
+                    this.newMetadataMenu.setVisible(!isRegisteredUser);
+                }
             }
         } else {
             if (this.userInfo.rendered) {
