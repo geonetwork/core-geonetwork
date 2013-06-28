@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.Map.Entry;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
 import jeeves.component.ProfileManager;

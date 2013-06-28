@@ -14,7 +14,7 @@ import jeeves.interfaces.Profile;
 
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name="usergroups")
+@Table(name=UserGroupNamedQueries.TABLE_NAME)
 public class UserGroup {
     private UserGroupId _id;
     private Group _group;

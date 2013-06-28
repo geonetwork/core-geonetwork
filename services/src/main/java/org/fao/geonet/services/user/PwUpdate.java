@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.user;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.UserNotFoundEx;
 import jeeves.resources.dbms.Dbms;
@@ -59,7 +60,6 @@ public class PwUpdate extends NotInReadOnlyModeService {
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String password    = Util.getParam(params, Params.PASSWORD);
-		ServletContext servletContext = context.getServlet().getServletContext();
 		String newPassword = Util.getParam(params, Params.NEW_PASSWORD);
 
 		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
@@ -70,7 +70,8 @@ public class PwUpdate extends NotInReadOnlyModeService {
 		if (currentUserId == null) throw new UserNotFoundEx(null);
 
 		int iUserId = Integer.parseInt(currentUserId);
-		PasswordUtil.updatePasswordWithNew(true, password, newPassword, iUserId, servletContext, dbms);
+		JeevesApplicationContext appContext = context.getApplicationContext();
+		PasswordUtil.updatePasswordWithNew(true, password, newPassword, iUserId, appContext);
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}

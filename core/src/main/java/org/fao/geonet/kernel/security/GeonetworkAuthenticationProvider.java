@@ -70,7 +70,7 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 			throws AuthenticationException {
 	    try {
 			// Only check user with local db user (ie. authtype is '')
-	        User user = _userRepository.findByUsernameAndAuthTypeIsNull(username);
+	        User user = _userRepository.findByUsernameAndSecurityAuthTypeIsNull(username);
 			if (user != null) {
 				if (authentication != null && authentication.getCredentials() != null) {
 					if(PasswordUtil.hasOldHash(user)) {

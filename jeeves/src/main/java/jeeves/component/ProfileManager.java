@@ -87,7 +87,7 @@ public class ProfileManager
 
 	//--------------------------------------------------------------------------
 
-	public Set<String> getProfilesSet(String profile)
+	public static Set<String> getProfilesSet(String profile)
 	{
 		
 		return Profile.valueOf(profile).getAllNames();
@@ -122,12 +122,11 @@ public class ProfileManager
      * @param profiles The list of profiles to analyze
      * @return The highest profile in the list
      */
-    public static Profile getHighestProfile(String[] profiles) {
+    public static Profile getHighestProfile(Profile[] profiles) {
         Profile highestProfile = null;
         int numberOfProfilesExtended = 0;
         
-        for (String profileName : profiles) {
-            Profile profile = Profile.valueOf(profileName);
+        for (Profile profile : profiles) {
             Set<Profile> all = profile.getAll();
             if (all.size() > numberOfProfilesExtended) {
                 highestProfile = profile;

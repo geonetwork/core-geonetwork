@@ -22,116 +22,80 @@
 //==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
-import jeeves.component.ProfileManager;
-import jeeves.guiservices.session.JeevesUser;
+import java.util.Collection;
+
+import jeeves.interfaces.Profile;
+
+import org.fao.geonet.domain.User;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-public class LDAPUser extends JeevesUser {
+public class LDAPUser implements UserDetails {
 	
-	private static final long serialVersionUID = -5390558007347570517L;
-	
-	private Multimap<String, String> groupsAndProfile = HashMultimap.create();
+    private static final long serialVersionUID = -879282571127799714L;
 
-    private String address;
+    private Multimap<String, Profile> _groupsAndProfile = HashMultimap.create();
 
-    private String city;
+	private User _user;
 
-    private String state;
-
-    private String zip;
-
-    private String country;
-
-    private String organisation;
-
-    private String kind;
-	
-	public LDAPUser(ProfileManager profileManager, String username) {
-		super(profileManager);
-		setUsername(username);
+	public LDAPUser(String username) {
+		_user.setUsername(username);
 		// FIXME Should we here populate the LDAP user with LDAP attributes instead of in the GNLDAPUserDetailsMapper ?
 		// TODO : populate userId which should be in session
 	}
 	
-	public void addPrivilege(String group, String profile) {
-		groupsAndProfile.put(group, profile);
+	public void addPrivilege(String group, Profile profile) {
+		_groupsAndProfile.put(group, profile);
 	}
-	public void setPrivileges(Multimap<String, String> privileges) {
-		groupsAndProfile = privileges;
+	public void setPrivileges(Multimap<String, Profile> privileges) {
+		_groupsAndProfile = privileges;
 	}
-	public Multimap<String, String> getPrivileges() {
-		return groupsAndProfile;
+	public Multimap<String, Profile> getPrivileges() {
+		return _groupsAndProfile;
 	}
 
-    public String getAddress() {
-    	return address;
+	public User getUser() {
+        return _user;
+    }
+	public void setUser(User user) {
+        this._user = user;
     }
 
-    public LDAPUser setAddress(String address) {
-    	if (address==null) address = "";
-    	this.address = address;
-    	return this;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return _user.getAuthorities();
     }
 
-    public String getCity() {
-    	return city;
+    @Override
+    public String getPassword() {
+        return _user.getUsername();
     }
 
-    public LDAPUser setCity(String city) {
-    	if (city==null) city = "";
-    	this.city = city;
-    	return this;
+    @Override
+    public String getUsername() {
+        return _user.getUsername();
     }
 
-    public String getState() {
-    	return state;
+    @Override
+    public boolean isAccountNonExpired() {
+        return _user.isAccountNonExpired();
     }
 
-    public LDAPUser setState(String state) {
-    	if (state==null) state = "";
-    	this.state = state;
-    	return this;
+    @Override
+    public boolean isAccountNonLocked() {
+        return _user.isAccountNonLocked();
     }
 
-    public String getZip() {
-    	return zip;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return _user.isCredentialsNonExpired();
     }
 
-    public LDAPUser setZip(String zip) {
-    	if (zip==null) zip = "";
-    	this.zip = zip;
-    	return this;
-    }
-
-    public String getCountry() {
-    	return country;
-    }
-
-    public LDAPUser setCountry(String country) {
-    	if (country==null) country = "";
-    	this.country = country;
-    	return this;
-    }
-
-    public String getOrganisation() {
-    	return organisation;
-    }
-
-    public LDAPUser setOrganisation(String organisation) {
-    	if (organisation==null) organisation = "";
-    	this.organisation = organisation;
-    	return this;
-    }
-
-    public String getKind() {
-    	return kind;
-    }
-
-    public LDAPUser setKind(String kind) {
-    	if (kind==null) kind = "";
-    	this.kind = kind;
-    	return this;
+    @Override
+    public boolean isEnabled() {
+        return _user.isEnabled();
     }
 }

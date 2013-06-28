@@ -19,31 +19,61 @@ public class Address {
     public String getAddress() {
         return address;
     }
-    public void setAddress(String address) {
+    public Address setAddress(String address) {
         this.address = address;
+        return this;
     }
     public String getCity() {
         return city;
     }
-    public void setCity(String city) {
+    public Address setCity(String city) {
         this.city = city;
+        return this;
     }
     public String getState() {
         return state;
     }
-    public void setState(String state) {
+    public Address setState(String state) {
         this.state = state;
+        return this;
     }
     public String getZip() {
         return zip;
     }
-    public void setZip(String zip) {
+    public Address setZip(String zip) {
         this.zip = zip;
+        return this;
     }
     public String getCountry() {
         return country;
     }
-    public void setCountry(String country) {
+    public Address setCountry(String country) {
         this.country = country;
+        return this;
+    }
+    /**
+     * Merge data from other address into this one.
+     *
+     * @param otherAddress other address
+     * @param mergeNullData  if true then also set null values from other address. If false then only merge non-null data
+     */
+    public void mergeAddress(Address otherAddress, boolean mergeNullData) {
+        if (mergeNullData || otherAddress.getAddress()!= null){
+            setAddress(otherAddress.getAddress());
+        }
+        if (mergeNullData || otherAddress.getCity()!= null){
+            setCity(otherAddress.getCity());
+        }
+        if (mergeNullData || otherAddress.getState()!= null){
+            setState(otherAddress.getState());
+        }
+        if (mergeNullData || otherAddress.getZip()!= null){
+            setZip(otherAddress.getZip());
+        }
+        if (mergeNullData || otherAddress.getCountry()!= null){
+            setCountry(otherAddress.getCountry());
+        }
+        
+        
     }
 }

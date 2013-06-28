@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.exceptions.XSDValidationErrorEx;
 import jeeves.guiservices.session.JeevesUser;
+import jeeves.interfaces.Profile;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -34,6 +35,7 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
@@ -181,9 +183,9 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 		private final String stylePath;
 		private final boolean failOnError;
 		private final ServiceContext context;
-		private final String userId;
+		private final int userId;
 		private final String userName;
-		private final String userProfile;
+		private final Profile userProfile;
 
 		ImportCallable(File files[], int beginIndex, int count, Element params, ServiceContext context, String stylePath, boolean failOnError) {
 			this.files = files;
@@ -193,18 +195,14 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 			this.context = context;
 			this.stylePath = stylePath;
 			this.failOnError = failOnError;
-			this.userId = this.context.getUserSession().getUserId();
+			this.userId = Integer.valueOf(this.context.getUserSession().getUserId());
 			this.userName = this.context.getUserSession().getUsername();
-			this.userProfile = this.context.getUserSession().getProfile();
+			this.userProfile = Profile.valueOf(this.context.getUserSession().getProfile());
 		}
 		
 		private void login() {
-		    JeevesUser user = new JeevesUser(this.context.getProfileManager()){};
-		    user.setId(this.userId);
-		    user.setUsername(this.userName);
-		    user.setProfile(this.userProfile);
 		    UserSession session = new UserSession();
-		    session.loginAs(user);
+		    session.loginAs(new User().setUsername(this.userName).setId(this.userId).setProfile(this.userProfile));
 		    this.context.setUserSession(session);
 		}
 		

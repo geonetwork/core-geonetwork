@@ -84,7 +84,6 @@ public class JeevesEngine
 	private static final String TRANSFORMER_PATH = "/WEB-INF/classes/META-INF/services/javax.xml.transform.TransformerFactory";
 	private String  defaultSrv;
 	private String	startupErrorSrv;
-	private String  profilesFile;
 	private String  defaultLang;
 	private String  defaultContType;
 	private String  uploadDir;
@@ -386,7 +385,6 @@ public class JeevesEngine
 	{
 		info("Initializing general configuration...");
 
-		profilesFile = Util.getParam(general, ConfigFile.General.Child.PROFILES);
 		uploadDir    = Util.getParam(general, ConfigFile.General.Child.UPLOAD_DIR);
 		try {
 		    maxUploadSize = Integer.parseInt(Util.getParam(general, ConfigFile.General.Child.MAX_UPLOAD_SIZE));

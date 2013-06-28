@@ -37,3 +37,5 @@ web-itest/jcs_caching
 datadir/
 *.factorypath
 web/src/main/webapp/WEB-INF/data/removed/
+web/.springBeans
+web/images/

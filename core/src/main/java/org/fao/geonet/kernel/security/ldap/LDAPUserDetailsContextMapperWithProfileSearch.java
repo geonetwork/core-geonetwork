@@ -36,6 +36,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchResult;
 
 import jeeves.component.ProfileManager;
+import jeeves.interfaces.Profile;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 
@@ -65,8 +66,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
 
     private Pattern privilegeQueryPatternCompiled;
 
-    protected void setProfilesAndPrivileges(ResourceManager resourceManager,
-            ProfileManager profileManager, String defaultProfile,
+    protected void setProfilesAndPrivileges(Profile defaultProfile,
             String defaultGroup, Map<String, ArrayList<String>> userInfo,
             LDAPUser userDetails) {
 
@@ -87,7 +87,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                 DirContext dc = contextSource.getReadOnlyContext();
 
                 // Extract profile first
-                Set<String> profileList = new HashSet<String>();
+                Set<Profile> profileList = new HashSet<Profile>();
                 String groupsQuery = MessageFormat.format(this.privilegeQuery,
                         userDetails.getUsername());
                 ldapInfoList = dc.search(privilegeObject, groupsQuery, null);
@@ -100,7 +100,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                             .matcher(profileName);
                     boolean b = m.matches();
                     if (b) {
-                        addProfile(profileManager, userDetails, m.group(1));
+                        addProfile(userDetails, m.group(1), profileList);
                     } else {
                         Log.error(Geonet.LDAP, "LDAP profile '" + profileName
                                 + "' does not match search pattern '"
@@ -108,24 +108,25 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                                 + "'. Information ignored.");
                     }
                 }
-                String highestUserProfile = profileManager
-                        .getHighestProfile(profileList.toArray(new String[0]));
+                
+                // TODO: This is broken.  
+                Profile highestUserProfile = ProfileManager.getHighestProfile(profileList.toArray(new Profile[0]));
                 if (highestUserProfile != null) {
                     if (Log.isDebugEnabled(Geonet.LDAP)) {
                         Log.debug(Geonet.LDAP, "  Highest user profile is "
                                 + highestUserProfile);
                     }
-                    userDetails.setProfile(highestUserProfile);
+                    userDetails.getUser().setProfile(highestUserProfile);
                 }
                 
                 // If no profile defined, use default profile
-                if (userDetails.getProfile() == null) {
+                if (userDetails.getUser().getProfile() == null) {
                     if (Log.isDebugEnabled(Geonet.LDAP)) {
                         Log.debug(Geonet.LDAP,
                                 "  No profile defined in LDAP, using default profile "
                                         + defaultProfile);
                     }
-                    userDetails.setProfile(defaultProfile);
+                    userDetails.getUser().setProfile(defaultProfile);
                 }
                 
                 
@@ -144,7 +145,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                     if (b) {
                         String group = m.group(1);
                         userDetails.addPrivilege(group,
-                                userDetails.getProfile());
+                                userDetails.getUser().getProfile());
                     } else {
                         Log.error(Geonet.LDAP, "LDAP group '" + groupName
                                 + "' does not match search pattern '"

@@ -33,6 +33,7 @@ import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.ServiceNotAllowedEx;
 import jeeves.exceptions.XSDValidationErrorEx;
 import jeeves.guiservices.session.JeevesUser;
+import jeeves.interfaces.Profile;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -54,6 +55,7 @@ import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
@@ -64,6 +66,8 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.UserSpecs;
 import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.ThreadUtils;
 import org.jdom.Attribute;
@@ -72,6 +76,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
+import org.springframework.data.jpa.domain.Specifications;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -139,7 +144,8 @@ public class DataManager {
         this.svnManager    = parameterObject.svnManager;
 
         UserSession session = new UserSession();
-        session.loginAs(new JeevesUser(servContext.getProfileManager()){}.setUsername("admin").setId("-1").setProfile(Geonet.Profile.ADMINISTRATOR));
+        session.loginAs(new User().setUsername("admin").setId(-1).setProfile(Profile.Administrator));
+
         servContext.setUserSession(session);
         init(parameterObject.context, parameterObject.dbms, false);
         this._applicationContext = servContext.getApplicationContext();
@@ -2506,10 +2512,8 @@ public class DataManager {
         return (elRes.getChildren().size() != 0);
     }
 
-    public boolean existsUser(Dbms dbms, int id) throws Exception {
-        String query= "SELECT * FROM Users WHERE id=?";
-        List<?> list = dbms.select(query, id).getChildren();
-        return list.size() > 0;
+    public boolean existsUser(ServiceContext context, int id) throws Exception {
+        return context.getBean(UserRepository.class).count(Specifications.where(UserSpecs.hasUserId(id))) > 0;
     }
 
     /**

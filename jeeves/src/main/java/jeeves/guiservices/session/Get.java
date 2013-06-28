@@ -29,7 +29,6 @@ import org.jdom.*;
 import jeeves.interfaces.*;
 import jeeves.server.*;
 import jeeves.server.context.*;
-import jeeves.component.ProfileManager;
 import jeeves.constants.*;
 
 //=============================================================================
@@ -78,16 +77,16 @@ public class Get implements Service
 		String sProfile  = session.getProfile();
 
 		if (sUsername == null)
-			sUsername = ProfileManager.GUEST;
+			sUsername = Profile.Guest.name();
 
 		if (sName == null)
-			sName = ProfileManager.GUEST;
+			sName = sUsername;
 
 		if (sSurname == null)
 			sSurname = "";
 
 		if (sProfile == null)
-			sProfile = ProfileManager.GUEST;
+			sProfile = Profile.Guest.name();
 
 		Element userId   = new Element("userId")  .addContent(session.getUserId());
 		Element username = new Element("username").addContent(sUsername);

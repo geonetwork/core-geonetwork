@@ -22,6 +22,10 @@ public class UserSecurity {
         this.password = password;
         return this;
     }
+    public UserSecurity setPassword(String password) {
+        this.password = password.toCharArray();
+        return this;
+    }
     @Column(name="security", length = 128)
     public String getSecurityNotifications() {
         return securityNotifications;
@@ -37,5 +41,23 @@ public class UserSecurity {
     public UserSecurity setAuthType(String authType) {
         this.authType = authType;
         return this;
+    }
+    /**
+     * Merge all data from other security into this security.
+     * 
+     * @param otherSecurity other user to merge data from.
+     * @param mergeNullData if true then also set null values from other security. If false then only merge non-null data
+     */
+    public void mergeSecurity(UserSecurity otherSecurity, boolean mergeNullData) {
+        if (mergeNullData || otherSecurity.getPassword() != null){
+            setPassword(otherSecurity.getPassword());
+        }
+        if (mergeNullData || otherSecurity.getSecurityNotifications() != null){
+            setSecurityNotifications(otherSecurity.getSecurityNotifications());
+        }
+        if (mergeNullData || otherSecurity.getAuthType() != null){
+            setAuthType(otherSecurity.getAuthType());
+        }
+        
     }
 }

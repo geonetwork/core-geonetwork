@@ -39,7 +39,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.security.GeonetworkUser;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.kernel.region.RegionsDAO;
@@ -241,7 +240,7 @@ public class Info implements Service {
 		if (userSession.isAuthenticated()) {
 			data.setAttribute("authenticated","true");
 			data.addContent(new Element(Geonet.Elem.PROFILE).setText(userSession.getProfile()))
-				.addContent(new Element(GeonetworkUser.USERNAME_COLUMN).setText(userSession.getUsername()))
+				.addContent(new Element(Geonet.Elem.USERNAME).setText(userSession.getUsername()))
 				.addContent(new Element(Geonet.Elem.ID).setText(userSession.getUserId()))
 				.addContent(new Element(Geonet.Elem.NAME).setText(userSession.getName()))
 				.addContent(new Element(Geonet.Elem.SURNAME).setText(userSession.getSurname()))

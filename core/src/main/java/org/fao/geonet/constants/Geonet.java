@@ -108,6 +108,7 @@ public final class Geonet {
         public static final String NOTIFICATIONS = "notifications";
 		public static final String SURNAME    = "surname";
 		public static final String PROFILE    = "profile";
+		public static final String USERNAME    = "username";
 		public static final String EMAIL      = "email";
 		public static final String OPERATIONS = "operations";
 		public static final String OPER       = "oper";

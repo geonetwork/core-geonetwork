@@ -133,7 +133,7 @@ public class UserSession
 		if (userDetails == null) {
 			return null;   
 		} else {
-			return userDetails.getId();
+			return String.valueOf(userDetails.getId());
 		}
 	}
 	public String getUsername() {
@@ -165,7 +165,7 @@ public class UserSession
 		if (userDetails == null) {
 			return null;   
 		} else {
-			return userDetails.getProfile();
+			return userDetails.getProfile().name();
 		}
 	}
 	public String getEmailAddr() {

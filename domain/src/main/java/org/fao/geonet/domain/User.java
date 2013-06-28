@@ -32,7 +32,7 @@ public class User implements JeevesUser {
     String name;
     String email;
     Address address;
-    String organization;
+    String organisation;
     String kind;
     Profile profile;
     UserSecurity security;
@@ -99,12 +99,12 @@ public class User implements JeevesUser {
         return this;
     }
 
-    public String getOrganization() {
-        return organization;
+    public String getOrganisation() {
+        return organisation;
     }
 
-    public User setOrganization(String organization) {
-        this.organization = organization;
+    public User setOrganisation(String organization) {
+        this.organisation = organization;
         return this;
     }
 
@@ -139,6 +139,7 @@ public class User implements JeevesUser {
         return this;
     }
 
+    @Transient
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
@@ -150,23 +151,60 @@ public class User implements JeevesUser {
         return auths;
     }
 
+    @Transient
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @Transient
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @Transient
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @Transient
     public boolean isEnabled() {
         return true;
+    }
+
+    /**
+     * Merge all data from other user into this user.
+     * 
+     * @param otherUser other user to merge data from.
+     * @param mergeNullData if true then also set null values from other user. If false then only merge non-null data
+     */
+    public void mergeUser(User otherUser, boolean mergeNullData) {
+        if (mergeNullData || otherUser.getUsername() != null) {
+            setUsername(otherUser.getUsername());
+        }
+        if (mergeNullData || otherUser.getSurname() != null) {
+            setSurname(otherUser.getSurname());
+        }
+        if (mergeNullData || otherUser.getName() != null) {
+            setName(otherUser.getName());
+        }
+        if (mergeNullData || otherUser.getOrganisation() != null) {
+            setOrganisation(otherUser.getOrganisation());
+        }
+        if (mergeNullData || otherUser.getKind() != null) {
+            setKind(otherUser.getKind());
+        }
+        if (mergeNullData || otherUser.getProfile() != null) {
+            setProfile(otherUser.getProfile());
+        }
+        if (mergeNullData || otherUser.getEmail() != null){
+            setEmail(otherUser.getEmail());
+        }
+        
+        getAddress().mergeAddress(otherUser.getAddress(), mergeNullData);
+        getSecurity().mergeSecurity(otherUser.getSecurity(), mergeNullData);
     }
 }

@@ -34,6 +34,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletContext;
 import java.util.ArrayList;
@@ -164,8 +165,8 @@ public class Update extends NotInReadOnlyModeService {
 
 			// -- reset password
 				} else if (operation.equals(Params.Operation.RESETPW)) {
-					ServletContext servletContext = context.getServlet().getServletContext();
-					PasswordUtil.updatePasswordWithNew(false, null, password, Integer.valueOf(id), servletContext, dbms);
+					ApplicationContext appContext = context.getApplicationContext();
+					PasswordUtil.updatePasswordWithNew(false, null, password, Integer.valueOf(id), appContext);
 				} else {
 					throw new IllegalArgumentException("unknown user update operation "+operation);
 				}

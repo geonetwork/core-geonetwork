@@ -27,8 +27,8 @@ import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.OperationAbortedEx;
-import jeeves.guiservices.session.JeevesUser;
 import jeeves.interfaces.Logger;
+import jeeves.interfaces.Profile;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -37,6 +37,7 @@ import jeeves.utils.Log;
 import jeeves.utils.QuartzSchedulerUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.BaseAligner;
@@ -58,6 +59,7 @@ import org.fao.geonet.kernel.harvest.harvester.z3950Config.Z3950ConfigHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.monitor.harvest.AbstractHarvesterErrorCounter;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 import org.joda.time.DateTime;
@@ -473,30 +475,25 @@ public abstract class AbstractHarvester extends BaseAligner {
      * is created or updated according to user session.
 	 */
 	private void login() throws Exception {
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		@SuppressWarnings("serial")
-        JeevesUser user = new JeevesUser(this.context.getProfileManager()){};
 
         String ownerId = getParams().ownerId;
         if(log.isDebugEnabled()) {
             log.debug("AbstractHarvester login: ownerId = " + ownerId);
         }
 
+        UserRepository repository = this.context.getBean(UserRepository.class);
+        User user = repository.findOne(ownerId);
+
         // for harvesters created before owner was added to the harvester code, or harvesters belonging to a user that no longer exists
-        if(StringUtils.isEmpty(ownerId) || !this.dataMan.existsUser(dbms, Integer.parseInt(ownerId))) {
+        if(StringUtils.isEmpty(ownerId) || !this.dataMan.existsUser(this.context, Integer.parseInt(ownerId))) {
             // just pick any Administrator (they can all see all harvesters and groups anyway)
-            ownerId = this.dataMan.pickAnyAdministrator(dbms);
-            getParams().ownerId = ownerId;
+            user = repository.findAllByProfile(Profile.Administrator).get(0);
+            getParams().ownerId = String.valueOf(user.getId());
             if(log.isDebugEnabled()) {
                 log.debug("AbstractHarvester login: picked Administrator  " + ownerId + " to run this job");
             }
         }
 
-		user.setId(ownerId);
-
-		// lookup owner profile (it may have changed since harvester was created)
-        String profile = this.dataMan.getUserProfile(dbms, Integer.parseInt(ownerId));
-        user.setProfile(profile);
         // todo reject if < useradmin ?
 
 		UserSession session = new UserSession();

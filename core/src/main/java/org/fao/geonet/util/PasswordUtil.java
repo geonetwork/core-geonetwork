@@ -14,6 +14,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserSecurity;
 import org.fao.geonet.repository.UserRepository;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -145,7 +146,7 @@ public class PasswordUtil {
 		catch (NoSuchAlgorithmException e)     { return null; }
 	}
 	/**
-	 * Obtain the pasword encoder from the spring application context.
+	 * Obtain the password encoder from the spring application context.
 	 * @param servletContext 
 	 * 
 	 * @return the pasword encoder from the spring application context.
@@ -153,6 +154,15 @@ public class PasswordUtil {
 	public static PasswordEncoder encoder(ServletContext servletContext) {
 		WebApplicationContext appcontext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		return (PasswordEncoder) appcontext.getBean(ENCODER_ID);
+	}
+	/**
+	 * Obtain the password encoder from the spring application context.
+	 * @param servletContext 
+	 * 
+	 * @return the pasword encoder from the spring application context.
+	 */
+	public static PasswordEncoder encoder(ApplicationContext appContext) {
+	    return (PasswordEncoder) appContext.getBean(ENCODER_ID);
 	}
 	/**
 	 * Updates database with new password if passwords match
@@ -169,9 +179,9 @@ public class PasswordUtil {
 	 * @throws UserNotFoundEx  if the id does not reference a user
 	 */
 	public static User updatePasswordWithNew(boolean matchOldPassword, String oldPassword,
-			String newPassword, Integer iUserId, ServletContext servletContext, UserRepository repo) throws SQLException, UserNotFoundEx {
-
-		PasswordEncoder encoder = encoder(servletContext);
+			String newPassword, Integer iUserId, ApplicationContext appContext) throws SQLException, UserNotFoundEx {
+	    UserRepository repo = appContext.getBean(UserRepository.class);
+		PasswordEncoder encoder = encoder(appContext);
 		return updatePasswordWithNew(matchOldPassword, oldPassword, newPassword, iUserId, encoder, repo);
 	}
 	/**
@@ -214,6 +224,6 @@ public class PasswordUtil {
 		return user;
 	}
 	public static String encode(ServiceContext context, String password) {
-		return encoder(context.getServlet().getServletContext()).encode(password);
+		return encoder(context.getApplicationContext()).encode(password);
 	}
 }

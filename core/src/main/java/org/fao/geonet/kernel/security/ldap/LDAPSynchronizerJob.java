@@ -27,6 +27,8 @@ import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.repository.GroupRepository;
 import org.jdom.Element;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -210,9 +212,8 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
         NamingEnumeration<?> groupList = dc.search(ldapGroupSearchBase,
                 ldapGroupSearchFilter, null);
         Pattern ldapGroupSearchPatternCompiled = null;
-        if (!"".equals(ldapGroupSearchPattern)) {
-            ldapGroupSearchPatternCompiled = Pattern
-                    .compile(ldapGroupSearchPattern);
+        if (ldapGroupSearchPattern != null && !"".equals(ldapGroupSearchPattern)) {
+            ldapGroupSearchPatternCompiled = Pattern.compile(ldapGroupSearchPattern);
         }
         
         while (groupList.hasMore()) {
@@ -224,7 +225,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
             String groupName = (String) sr.getAttributes()
                     .get(ldapGroupSearchAttribute).get();
             
-            if (!"".equals(ldapGroupSearchPattern)) {
+            if (ldapGroupSearchPatternCompiled != null && !"".equals(ldapGroupSearchPattern)) {
                 Matcher m = ldapGroupSearchPatternCompiled.matcher(groupName);
                 boolean b = m.matches();
                 if (b) {
@@ -232,16 +233,12 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                 }
             }
             
-            Element groupIdRequest = dbms.select(
-                    "SELECT id FROM Groups WHERE name = ?", groupName);
-            Element groupRecord = groupIdRequest.getChild("record");
-            String groupId = null;
+            GroupRepository groupRepo = applicationContext.getBean(GroupRepository.class);
+            Group group = groupRepo.findByName(groupName);
             
-            if (groupRecord == null) {
-                LDAPUtils.createIfNotExist(groupName, groupId, dbms, serialFactory);
-
+            if (group == null) {
+                group = LDAPUtils.createIfNotExist(groupName, groupRepo);
             } else {
-                groupId = groupRecord.getChildText("id");
                 // Update something ?
                 // Group description is only defined in catalog, not in LDAP for the time
                 // being
