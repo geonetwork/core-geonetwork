@@ -222,6 +222,7 @@
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"   select="false()"/>
 		<xsl:param name="editAttributes" select="true()"/>
+		<xsl:param name="showAttributes" select="true()"/>
 		<xsl:param name="title">
 			<xsl:call-template name="getTitle">
 				<xsl:with-param name="name"   select="name(.)"/>
@@ -255,6 +256,7 @@
 				<xsl:call-template name="showSimpleElement">
 					<xsl:with-param name="schema"   select="$schema"/>
 					<xsl:with-param name="title"    select="$title"/>
+					<xsl:with-param name="showAttributes" select="$showAttributes"/>
 					<xsl:with-param name="text"     select="$text"/>
 					<xsl:with-param name="helpLink" select="$helpLink"/>
 				</xsl:call-template>
@@ -425,6 +427,7 @@
 	<xsl:template name="showSimpleElement">
 		<xsl:param name="schema"/>
 		<xsl:param name="title"/>
+		<xsl:param name="showAttributes" select="true()"/>
 		<xsl:param name="text"/>
 		<xsl:param name="helpLink"/>
 	
@@ -432,6 +435,7 @@
 		<xsl:if test="normalize-space($text)!=''">
 			<xsl:call-template name="simpleElementGui">
 				<xsl:with-param name="title" select="$title"/>
+				<xsl:with-param name="showAttributes" select="$showAttributes"/>
 				<xsl:with-param name="schema" select="$schema"/>
 				<xsl:with-param name="text" select="$text"/>
 				<xsl:with-param name="helpLink" select="$helpLink"/>
@@ -768,6 +772,7 @@
 		<xsl:param name="id" select="generate-id(.)"/>
 		<xsl:param name="visible" select="true()"/>
 		<xsl:param name="editAttributes" select="true()"/>
+		<xsl:param name="showAttributes" select="true()"/>
 
 		<xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0" />
 		<xsl:variable name="geonet" select="starts-with(name(.),'geonet:')"/>
@@ -887,7 +892,7 @@
 							</xsl:call-template>
 						</xsl:for-each>
 					</xsl:when>
-					<xsl:when test="not($edit) and @*">
+					<xsl:when test="not($edit) and $showAttributes and @*">
 						<xsl:apply-templates mode="simpleAttribute" select="@*">
 							<xsl:with-param name="schema" select="$schema"/>
 							<xsl:with-param name="edit"   select="$edit"/>
