@@ -113,7 +113,7 @@ public class Group {
     protected void setLabelTranslations(Map<String, String> localizedTranslations) {
         this._labelTranslations = localizedTranslations;
     }
-    
+
     @Override
     public String toString() {
         return "Group [_id=" + _id + ", _name=" + _name + ", _email=" + _email + "]";

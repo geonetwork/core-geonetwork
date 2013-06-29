@@ -1,7 +1,9 @@
 package org.fao.geonet.domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Access;
@@ -32,12 +34,13 @@ public class Metadata {
 
     private int _id;
     private String _uuid;
-    private String data;
-    private MetadataDataInfo dataInfo;
-    private MetadataSourceInfo sourceInfo;
-    private MetadataHarvestInfo harvestInfo;
-
+    private String _data;
+    private MetadataDataInfo _dataInfo;
+    private MetadataSourceInfo _sourceInfo;
+    private MetadataHarvestInfo _harvestInfo;
     private List<OperationAllowed> _operationsAllowed = new ArrayList<OperationAllowed>();
+    private Set<String> _metadataCategory = new HashSet<String>();
+    private List<MetadataStatus> _metadataStatus;
     
 //    private Set<Operation> operations = new HashSet<Operation>();
 //    private Set<Group> groups = new HashSet<Group>();
@@ -69,33 +72,51 @@ public class Metadata {
     }
     @Column
     public String getData() {
-        return data;
+        return _data;
     }
     public void setData(String data) {
-        this.data = data;
+        this._data = data;
     }
     @Embedded
     public MetadataDataInfo getDataInfo() {
-        return dataInfo;
+        return _dataInfo;
     }
     public void setDataInfo(MetadataDataInfo dataInfo) {
-        this.dataInfo = dataInfo;
+        this._dataInfo = dataInfo;
     }
     @Embedded
     public MetadataSourceInfo getSourceInfo() {
-        return sourceInfo;
+        return _sourceInfo;
     }
     public void setSourceInfo(MetadataSourceInfo sourceInfo) {
-        this.sourceInfo = sourceInfo;
+        this._sourceInfo = sourceInfo;
     }
     @Embedded
     public MetadataHarvestInfo getHarvestInfo() {
-        return harvestInfo;
+        return _harvestInfo;
     }
     public void setHarvestInfo(MetadataHarvestInfo harvestInfo) {
-        this.harvestInfo = harvestInfo;
+        this._harvestInfo = harvestInfo;
     }
     
+    @JoinColumn(name="metadataId", table="metadatacateg")
+    @OneToMany(fetch=FetchType.LAZY)
+    public Set<String> getMetadataCategory() {
+        return _metadataCategory;
+    }
+    public void setMetadataCategory(Set<String> metadataCategory) {
+        this._metadataCategory = metadataCategory;
+    }
+    
+    @JoinColumn(name="metadataId")
+    @OneToMany(fetch=FetchType.LAZY)
+    public List<MetadataStatus> getMetadataStatus() {
+        return _metadataStatus;
+    }
+    public void setMetadataStatus(List<MetadataStatus> metadataStatus) {
+        this._metadataStatus = metadataStatus;
+    }
+
 //    @Column
 //    public Date getChangeDate() {
 //        if (_changeDate != null) {
@@ -186,5 +207,4 @@ public class Metadata {
     void internalRemoveOperationAllowed(OperationAllowed operationAllowed) {
         this._operationsAllowed.remove(operationAllowed);
     }
-
 }
