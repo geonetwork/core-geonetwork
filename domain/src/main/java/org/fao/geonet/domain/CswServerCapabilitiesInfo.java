@@ -8,6 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+/**
+ * Variable substitutions and extra information that goes in a CSW capabilities document.
+ *
+ * @author Jesse
+ */
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name="cswservercapabilitiesinfo")

@@ -16,6 +16,12 @@ import javax.persistence.Table;
 import org.fao.geonet.domain.OperationAllowedNamedQueries.DeleteAllByMetadataIdExceptGroupId;
 import org.fao.geonet.domain.OperationAllowedNamedQueries.DeleteByMetadataId;
 
+/**
+ * An entity that represents the relationship between a metadata, group and the operations
+ * that group is allowed to perform on the metadata.
+ *
+ * @author Jesse
+ */
 @Entity
 @Table(name = OperationAllowed.TABLE_NAME)
 @Access(AccessType.PROPERTY)

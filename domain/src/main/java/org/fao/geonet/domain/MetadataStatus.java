@@ -6,7 +6,16 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-
+/**
+ * An entity that represents a status change of a metadata.
+ * 
+ * Note:  I am not the author of metadata status, but it appears that
+ * this tracks the history as well since the Id consists of the User, date, metadata
+ * and statusvalue of the metadata status change.
+ *
+ * @author Jesse
+ *
+ */
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "metadatastatus")

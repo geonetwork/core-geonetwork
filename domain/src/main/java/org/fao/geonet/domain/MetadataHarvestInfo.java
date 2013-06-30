@@ -9,6 +9,7 @@ import javax.persistence.Embeddable;
  * Encapsulates the harvest data related to a
  * metadata document.  Like whether the metadata
  * was harvested, the uuid of the harvester, etc...
+ * This is a JPA Embeddable object that is embedded into a {@link Metadata} Entity
  *
  * @author Jesse
  */

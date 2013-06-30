@@ -8,6 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+/**
+ * An entity representing a metadata related notification that has been made or 
+ * is pending.
+ *
+ * @author Jesse
+ */
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "metadatanotifications")

@@ -8,6 +8,7 @@ import javax.persistence.Embeddable;
 /**
  * Information about the source and owner of the metadata
  * document.
+ * This is a JPA Embeddable object that is embedded into a {@link Metadata} Entity
  *
  * @author Jesse
  */

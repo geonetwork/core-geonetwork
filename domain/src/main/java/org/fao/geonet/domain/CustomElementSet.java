@@ -6,6 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * Csw custom element set.
+ *
+ * @author Jesse
+ */
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name="customelementset")

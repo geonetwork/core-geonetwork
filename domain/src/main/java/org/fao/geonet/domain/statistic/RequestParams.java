@@ -1,86 +1,91 @@
-package org.fao.geonet.domain;
+package org.fao.geonet.domain.statistic;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-
+/**
+ * Entity representing the search parameters of a request.  Related to {@link Request}.
+ *
+ * @author Jesse
+ */
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "params")
-public class RequestParam {
-    private int id;
-    private int requestId;
-    private String queryType;
-    private String termField;
-    private String termText;
-    private double similarity;
-    private String lowerText;
-    private String upperText;
-    private boolean inclusive;
+public class RequestParams {
+    private int _id;
+    private String _queryType;
+    private String _termField;
+    private String _termText;
+    private double _similarity;
+    private String _lowerText;
+    private String _upperText;
+    private boolean _inclusive;
+    private Request _request;
     
     @Id
     public int getId() {
-        return id;
+        return _id;
     }
     public void setId(int id) {
-        this.id = id;
+        this._id = id;
     }
-    @Column(name="requestid")
-    public int getRequestId() {
-        return requestId;
+    @OneToOne(mappedBy="params")
+    public Request getRequest() {
+        return _request;
     }
-    public void setRequestId(int requestId) {
-        this.requestId = requestId;
+    public void setRequest(Request request) {
+        this._request = request;
     }
     @Column(name="querytype")
     public String getQueryType() {
-        return queryType;
+        return _queryType;
     }
     public void setQueryType(String queryType) {
-        this.queryType = queryType;
+        this._queryType = queryType;
     }
     @Column(name="termfield")
     public String getTermField() {
-        return termField;
+        return _termField;
     }
     public void setTermField(String termField) {
-        this.termField = termField;
+        this._termField = termField;
     }
     @Column(name="termtext")
     public String getTermText() {
-        return termText;
+        return _termText;
     }
     public void setTermText(String termText) {
-        this.termText = termText;
+        this._termText = termText;
     }
     public double getSimilarity() {
-        return similarity;
+        return _similarity;
     }
     public void setSimilarity(double similarity) {
-        this.similarity = similarity;
+        this._similarity = similarity;
     }
     @Column(name="lowertext")
     public String getLowerText() {
-        return lowerText;
+        return _lowerText;
     }
     public void setLowerText(String lowerText) {
-        this.lowerText = lowerText;
+        this._lowerText = lowerText;
     }
     @Column(name="uppertext")
     public String getUpperText() {
-        return upperText;
+        return _upperText;
     }
     public void setUpperText(String upperText) {
-        this.upperText = upperText;
+        this._upperText = upperText;
     }
     public boolean isInclusive() {
-        return inclusive;
+        return _inclusive;
     }
     public void setInclusive(boolean inclusive) {
-        this.inclusive = inclusive;
+        this._inclusive = inclusive;
     }
 }

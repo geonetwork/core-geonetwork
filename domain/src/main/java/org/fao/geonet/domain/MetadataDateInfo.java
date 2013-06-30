@@ -11,6 +11,7 @@ import javax.persistence.Version;
 /**
  * Encapsulates date related information about the metadata
  * document.
+ * This is a JPA Embeddable object that is embedded into a {@link Metadata} Entity
  *
  * @author Jesse
  */

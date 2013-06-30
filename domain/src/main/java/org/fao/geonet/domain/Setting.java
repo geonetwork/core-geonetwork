@@ -25,6 +25,14 @@ import org.fao.geonet.domain.SettingNamedQueries.QUERY_FIND_ALL_CHILDREN;
 import org.fao.geonet.domain.SettingNamedQueries.QUERY_FIND_CHILDREN_BY_NAME;
 import org.fao.geonet.domain.SettingNamedQueries.QUERY_FIND_ROOT;
 
+/**
+ * An entity representing a system configuration setting.
+ * 
+ * Settings are represented by a tree. One should use the {@link org.fao.geonet.repository.SettingRepository}
+ * to traverse the hierarchy.
+ *
+ * @author Jesse
+ */
 @Entity
 @Table(name = "settings")
 @Cacheable

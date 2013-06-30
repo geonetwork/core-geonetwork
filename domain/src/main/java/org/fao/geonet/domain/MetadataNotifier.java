@@ -12,6 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * An entity representing a service that desires to be notified when
+ * a metadata is modified.
+ *
+ * @author Jesse
+ */
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "metadatanotifier")

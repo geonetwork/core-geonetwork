@@ -1,7 +1,8 @@
 package org.fao.geonet.domain;
 
 /**
- * The list of reserverd groups
+ * The list of reserved groups.  Ids and names are hardcoded and have
+ * special meaning in Geonetwork.
  * 
  * @author Jesse
  */

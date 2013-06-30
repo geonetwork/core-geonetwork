@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
+/**
+ * The id object of {@link OperationAllowed}
+ *
+ * @author Jesse
+ */
 @Embeddable
 public class OperationAllowedId implements Serializable {
     private static final long serialVersionUID = -5759713154514715316L;

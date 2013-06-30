@@ -6,7 +6,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-
+/**
+ * The enumeration of all languages available in the system.
+ * 
+ * Note:  The difference between IsoLanguages and Languages seems to be
+ * IsoLanguages lists all possible mappings between language codes and
+ * Languages are the translations that can be used in the system.  For
+ * example the languages the UI is translated into, the languages metadata
+ * can be written in, the languages the groups, etc... should be translated
+ * into.
+ *
+ * @author Jesse
+ *
+ */
 @Entity
 @Access(AccessType.PROPERTY)
 public class Languages {

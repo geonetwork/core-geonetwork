@@ -15,6 +15,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
+/**
+ * An entity representing the bi-directional mapping between the 
+ * different iso language codes (de -> ger) and translations of 
+ * the languages. (German, Deutsch, etc...)
+ *
+ * @author Jesse
+ */
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name="isolanguages")

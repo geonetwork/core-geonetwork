@@ -5,6 +5,7 @@ import javax.persistence.Embeddable;
 
 /**
  * Encapsulates security information about the user.
+ * This is a JPA Embeddable object that is embedded into a {@link User} Entity
  *
  * @author Jesse
  */

@@ -22,7 +22,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 /**
- * Represents an operation that can be performed on a metadata.
+ * An entity representing an operation that can be performed on a metadata.
+ *
  * @author Jesse
  */
 @Entity

@@ -3,7 +3,8 @@ package org.fao.geonet.domain;
 import javax.annotation.Nullable;
 
 /**
- * The system reserved operations
+ * The system reserved operations.  Ids and names are hardcoded and have
+ * special meaning in Geonetwork.
  * 
  * @author Jesse Eichar
  */

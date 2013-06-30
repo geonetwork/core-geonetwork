@@ -8,6 +8,11 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 
+/**
+ * An Id object for {@link MetadataRatingByIp}
+ * @author Jesse
+ *
+ */
 @Embeddable
 @Access(AccessType.PROPERTY)
 public class MetadataRatingByIpId implements Serializable {

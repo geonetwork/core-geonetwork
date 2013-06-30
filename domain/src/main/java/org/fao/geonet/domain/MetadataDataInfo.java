@@ -9,7 +9,7 @@ import javax.persistence.Embeddable;
 
 /**
  * Encapsulates the metadata about a metadata document. (title, rating, schema etc...)
- *
+ * This is a JPA Embeddable object that is embedded into a {@link Metadata} Entity
  * @author Jesse
  */
 @Embeddable

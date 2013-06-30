@@ -6,6 +6,11 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
 
+/**
+ * Id object for the {@link Validation} entity.
+ *
+ * @author Jesse
+ */
 @Embeddable
 @Access(AccessType.PROPERTY)
 public class ValidationId implements Serializable {

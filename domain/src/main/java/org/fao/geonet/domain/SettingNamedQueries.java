@@ -1,26 +1,28 @@
 package org.fao.geonet.domain;
 
-public final class SettingNamedQueries {
-    public static final class QUERY_FIND_CHILDREN_BY_NAME {
-        public static final String NAME = "findChildrenByName";
-        public static final String PARAMETER_NAME = "name";
-        public static final String PARAMETER_PARENTID = "parentid";
-        static final String QUERY = "select s from Setting s where s.parent.id = :" + PARAMETER_PARENTID + " and s.name = :"
+/**
+ * Contains constants that describe all the named queries that are defined for the {@link Setting} entity.
+ * 
+ * @author Jesse
+ * 
+ */
+public interface SettingNamedQueries {
+    interface QUERY_FIND_CHILDREN_BY_NAME {
+        String NAME = "findChildrenByName";
+        String PARAMETER_NAME = "name";
+        String PARAMETER_PARENTID = "parentid";
+        String QUERY = "select s from Setting s where s.parent.id = :" + PARAMETER_PARENTID + " and s.name = :"
                 + PARAMETER_NAME;
     }
 
-    public static final class QUERY_FIND_ALL_CHILDREN {
-        public static final String NAME = "findAllChildren";
-        public static final String PARAMETER_PARENTID = QUERY_FIND_CHILDREN_BY_NAME.PARAMETER_PARENTID;
-        static final String QUERY = "select s from Setting s where s.parent.id = :" + PARAMETER_PARENTID;
+    interface QUERY_FIND_ALL_CHILDREN {
+        String NAME = "findAllChildren";
+        String PARAMETER_PARENTID = QUERY_FIND_CHILDREN_BY_NAME.PARAMETER_PARENTID;
+        String QUERY = "select s from Setting s where s.parent.id = :" + PARAMETER_PARENTID;
     }
 
-    public static final class QUERY_FIND_ROOT {
-        public static final String NAME = "findRoot";
-        static final String QUERY = "select s from Setting s where s.parent.id IS NULL";
-    }
-
-    private SettingNamedQueries() {
-        // disallow instantiation
+    interface QUERY_FIND_ROOT {
+        String NAME = "findRoot";
+        String QUERY = "select s from Setting s where s.parent.id IS NULL";
     }
 }

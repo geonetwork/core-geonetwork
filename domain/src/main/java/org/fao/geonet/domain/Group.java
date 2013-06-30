@@ -19,8 +19,9 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
 /**
- * @author Jesse
+ * An entity representing group of users and metadata.
  *
+ * @author Jesse
  */
 @Entity
 @Table(name = "groups")

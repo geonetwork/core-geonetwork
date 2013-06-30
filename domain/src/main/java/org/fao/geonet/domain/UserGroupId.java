@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
+/**
+ * The id object for {@link UserGroup}
+ *
+ * @author Jesse
+ */
 @Embeddable
 public class UserGroupId implements Serializable {
     private static final long serialVersionUID = 758566280699819800L;

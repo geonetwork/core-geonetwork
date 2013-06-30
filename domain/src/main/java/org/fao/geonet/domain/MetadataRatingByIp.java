@@ -7,6 +7,13 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * An entity that tracks which users have rated a metadata.  
+ * It currently tracks by Ip address so that each IP address can
+ * only rate a given metadata once.
+ *
+ * @author Jesse
+ */
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "metadatarating")

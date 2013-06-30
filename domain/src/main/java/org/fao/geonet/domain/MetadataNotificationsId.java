@@ -6,6 +6,11 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
 
+/**
+ * Id of a MetadataNotification object.
+ *
+ * @author Jesse
+ */
 @Embeddable
 @Access(AccessType.PROPERTY)
 public class MetadataNotificationsId implements Serializable {

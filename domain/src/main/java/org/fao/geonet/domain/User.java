@@ -17,7 +17,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 /**
- * A user entity
+ * A user entity.  A user is used in spring security, controlling access to metadata as well
+ * as in the {@link jeeves.server.UserSession}.
  * 
  * @author Jesse
  */

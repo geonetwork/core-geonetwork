@@ -6,9 +6,15 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
 
+/**
+ * The id object of {@link MetadataStatus}.
+ *
+ * @author Jesse
+ */
 @Embeddable
 @Access(AccessType.PROPERTY)
 public class MetadataStatusId implements Serializable {
+    private static final long serialVersionUID = -4395314364468537427L;
     private String _changedate;
     private int _metadataId;
     private int _statusId;

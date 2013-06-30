@@ -5,7 +5,9 @@ import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
 
 /**
- * Represents an address
+ * Represents an address.
+ * This is a JPA Embeddable object that is embedded into a {@link User} Entity
+ *
  * @author Jesse
  */
 @Embeddable
