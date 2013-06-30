@@ -7,7 +7,7 @@ import org.fao.geonet.domain.Operation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Access the operation objects
+ * Data Access for the {@link Operation} entities
  * 
  * @author Jesse
  */

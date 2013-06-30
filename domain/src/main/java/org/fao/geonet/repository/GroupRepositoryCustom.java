@@ -6,7 +6,7 @@ import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ReservedGroup;
 
 /**
- * Custom (non-spring-data) query methods
+ * Custom (non-spring-data) query methods for {@link Group} entities
  *
  * @author Jesse
  */

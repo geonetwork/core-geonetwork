@@ -15,6 +15,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+/**
+ * Data Access object for finding and saving {@link OperationAllowed} entities.
+ *
+ * @author Jesse
+ */
 public interface OperationAllowedRepository extends JpaRepository<OperationAllowed, OperationAllowedId>, OperationAllowedRepositoryCustom,
         JpaSpecificationExecutor<OperationAllowed> {
     @Nonnull

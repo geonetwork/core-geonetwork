@@ -123,9 +123,11 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 
     protected void addProfile(@Nonnull LDAPUser userDetails, @Nonnull String profileName, @Nullable Set<Profile> profileList) {
         // Check if profile exist in profile mapping table
-        String mappedProfile = profileMapping.get(profileName);
-        if (mappedProfile != null) {
-            profileName = mappedProfile;
+        if (profileMapping != null) {
+            String mapped = profileMapping.get(profileName);
+            if (mapped != null) {
+                profileName = mapped;
+            }
         }
 
         if (Log.isDebugEnabled(Geonet.LDAP)) {

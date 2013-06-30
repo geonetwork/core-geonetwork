@@ -10,6 +10,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Data Access object for accessing {@link UserGroup} entities.
+ * 
+ * @author Jesse
+ */
 public interface UserGroupRepository extends JpaRepository<UserGroup, UserGroupId>, JpaSpecificationExecutor<UserGroup> {
 
     @Modifying

@@ -2,6 +2,11 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.Metadata;
 
+/**
+ * Custom (Non spring-data) Query methods for {@link Metadata} entities.
+ *
+ * @author Jesse
+ */
 public interface MetadataRepositoryCustom {
     /**
      * Permit finding a metadata by its ids as a string.

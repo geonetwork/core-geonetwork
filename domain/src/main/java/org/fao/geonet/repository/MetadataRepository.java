@@ -7,7 +7,7 @@ import org.fao.geonet.domain.Metadata;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Access object for the Group objects.
+ * Data Access object for the {@link Metadata} entities.
  *
  * @author Jesse
  */

@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 /**
- * DataAccess object for accessing settings.
+ * Data Access object for accessing {@link Setting} entities.
  * 
  * @author Jesse
  */

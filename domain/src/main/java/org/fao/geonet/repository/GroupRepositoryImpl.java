@@ -7,6 +7,11 @@ import javax.persistence.PersistenceContext;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ReservedGroup;
 
+/**
+ * Implementation for {@link GroupRepositoryCustom} queries.
+ *
+ * @author Jesse
+ */
 public class GroupRepositoryImpl implements GroupRepositoryCustom {
 
     @PersistenceContext
