@@ -15,4 +15,7 @@
   <notValidFor> n'est pas une valeur valide pour </notValidFor>
   <xsdErrorIs>L'erreur XSD complète est : </xsdErrorIs>
   <inElement> dont le parent est </inElement>
+  <enum1>La valeur </enum1>
+  <enum2> n'est pas valide pour le champ </enum2>
+  <enum3>Les valeurs possibles sont : </enum3>
 </strings>

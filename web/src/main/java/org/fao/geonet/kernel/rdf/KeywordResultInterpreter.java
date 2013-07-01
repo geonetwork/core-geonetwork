@@ -38,7 +38,6 @@ class KeywordResultInterpreter extends ResultInterpreter<KeywordBean> {
         String coordEast = upperCorner.one();
         String coordNorth = upperCorner.two();
 
-        String broader = columnValue(resultsTable, columnNameMap, row, Selectors.BROADER.id);
         KeywordBean keywordBean = new KeywordBean(thesaurus.getIsoLanguageMapper())
             .setThesaurusInfo(thesaurus)
             .setId(row)

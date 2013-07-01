@@ -28,9 +28,12 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 
+import javax.servlet.ServletContext;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -39,6 +42,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 
 /**
  * Service to manage GeoServer dataset publication.
@@ -81,7 +85,8 @@ public class Do implements Service {
 	 * geoserver-nodes.xml
 	 */
 	private Element geoserverConfig;
-
+	private String geoserverConfigFile;
+	private boolean geoserverConfigLoaded = false;
 	/**
 	 * List of current known nodes
 	 */
@@ -122,12 +127,101 @@ public class Do implements Service {
 		Log.createLogger(MODULE);
 
 		// Load configuration
-		String geoserverConfigFile = appPath
+		geoserverConfigFile = appPath
 				+ params.getValue("configFile", "");
 
 		Log.info(MODULE, "Using configuration: " + geoserverConfigFile);
+	}
 
-		geoserverConfig = Xml.loadFile(geoserverConfigFile);
+    /**
+     * Publish a dataset to a remote GeoServer node. Dataset could be a ZIP
+     * composed of Shapefile(s) or GeoTiff.
+     * 
+     * updataMetadataRecord, add or delete a online source link.
+     */
+    public Element exec(Element params, ServiceContext context)
+    		throws Exception {
+        if (!geoserverConfigLoaded) {
+            loadConfiguration(geoserverConfigFile, context);
+        }
+    	
+    	GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    	String baseUrl = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PROTOCOL)
+    			+ "://" + gc.getSettingManager().getValue(Geonet.Settings.SERVER_HOST)
+    			+ ":" + gc.getSettingManager().getValue("system/server/port")
+    			+ context.getBaseUrl()
+    			+ "/srv/" + context.getLanguage() + "/";
+    	
+    	
+    	ACTION action = ACTION.valueOf(Util.getParam(params, "action"));
+    	if (action.equals(ACTION.LIST)) {
+    		return list();
+    	} else if (action.equals(ACTION.CREATE) || action.equals(ACTION.UPDATE)
+    			|| action.equals(ACTION.DELETE) || action.equals(ACTION.GET)) {
+    
+    		// Check parameters
+    		String nodeId = Util.getParam(params, "nodeId");
+    		String metadataId = Util.getParam(params, "metadataId");
+    		String metadataUuid = Util.getParam(params, "metadataUuid", "");
+    		// purge \\n from metadataTitle - geoserver prefers layer titles on a single line
+    		String metadataTitle = Util.getParam(params, "metadataTitle", "").replace("\\n","");
+    		// unescape \\n from metadataAbstract so they're properly sent to geoserver
+    		String metadataAbstract = Util.getParam(params, "metadataAbstract", "").replace("\\n","\n");
+    		GeoServerNode g = geoserverNodes.get(nodeId);
+    		if (g == null)
+    			throw new IllegalArgumentException(
+    					"Invalid node id "
+    							+ nodeId
+    							+ ". Can't find node id in current registered nodes. Use action=LIST parameter to retrieve the list of valid nodes.");
+    
+    		GeoServerRest gs = new GeoServerRest(g.getUrl(), g.getUsername(), g.getUserpassword(), g.getNamespacePrefix(), baseUrl);
+    
+    		String file = Util.getParam(params, "file");
+    		String access = Util.getParam(params, "access");
+    
+    		//jdbc:postgresql://host:port/user:password@database#table
+    		if (file.startsWith("jdbc:postgresql")) {
+    			String[] values = file.split("/");
+    			
+    			String[] serverInfo = values[2].split(":");
+    			String host = serverInfo[0];
+    			String port = serverInfo[1];
+    			
+    			String[] dbUserInfo = values[3].split("@");
+    			
+    			String[] userInfo = dbUserInfo[0].split(":");
+    			String user = userInfo[0];
+    			String password = userInfo[1];
+    			
+    			String[] dbInfo = dbUserInfo[1].split("#");
+    			String db = dbInfo[0]; 
+    			String table = dbInfo[1]; 
+    			
+    			return publishDbTable(action, gs, "postgis", host, port, user, password, db, table, "postgis", g.getNamespaceUrl(), metadataUuid, metadataTitle, metadataAbstract);
+    		} else {
+    		    if (file.startsWith("file://") || file.startsWith("http://")) {
+    		        return addExternalFile(action, gs, file, metadataUuid, metadataTitle, metadataAbstract);
+    		    } else {
+    		        // Get ZIP file from data directory
+                    File dir = new File(Lib.resource
+                            .getDir(context, access, metadataId));
+                    File f = new File(dir, file);
+                    return addZipFile(action, gs, f, file, metadataUuid, metadataTitle, metadataAbstract);
+    		    }
+    		}
+    	}
+    	return null;
+    }
+
+    private void loadConfiguration(String geoserverConfigFile, ServiceContext context) throws IOException, JDOMException {
+        geoserverConfig = Xml.loadFile(geoserverConfigFile);
+        ServletContext servletContext = null;
+        if(context.getServlet() != null) {
+            servletContext = context.getServlet().getServletContext();
+        }
+		ConfigurationOverrides.DEFAULT.updateWithOverrides(geoserverConfigFile, 
+		        servletContext, context.getAppPath(), geoserverConfig);
+		
 		if (geoserverConfig == null) {
 			Log.error(MODULE, "Failed to load geoserver configuration file "
 					+ geoserverConfigFile);
@@ -163,7 +257,9 @@ public class Do implements Service {
 		}
         if(Log.isDebugEnabled(MODULE))
             Log.debug(MODULE, "End node registration.");
-	}
+        
+        geoserverConfigLoaded = true;
+    }
 
 	/**
 	 * List of action valid for publisher service
@@ -174,82 +270,6 @@ public class Do implements Service {
 		 */
 		LIST, CREATE, UPDATE, DELETE, GET
 	};
-
-	/**
-	 * Publish a dataset to a remote GeoServer node. Dataset could be a ZIP
-	 * composed of Shapefile(s) or GeoTiff.
-	 * 
-	 * updataMetadataRecord, add or delete a online source link.
-	 */
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		String baseUrl = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PROTOCOL)
-				+ "://" + gc.getSettingManager().getValue(Geonet.Settings.SERVER_HOST)
-				+ ":" + gc.getSettingManager().getValue("system/server/port")
-				+ context.getBaseUrl()
-				+ "/srv/" + context.getLanguage() + "/";
-		
-		
-		ACTION action = ACTION.valueOf(Util.getParam(params, "action"));
-		if (action.equals(ACTION.LIST)) {
-			return list();
-		} else if (action.equals(ACTION.CREATE) || action.equals(ACTION.UPDATE)
-				|| action.equals(ACTION.DELETE) || action.equals(ACTION.GET)) {
-
-			// Check parameters
-			String nodeId = Util.getParam(params, "nodeId");
-			String metadataId = Util.getParam(params, "metadataId");
-			String metadataUuid = Util.getParam(params, "metadataUuid", "");
-			// purge \\n from metadataTitle - geoserver prefers layer titles on a single line
-			String metadataTitle = Util.getParam(params, "metadataTitle", "").replace("\\n","");
-			// unescape \\n from metadataAbstract so they're properly sent to geoserver
-			String metadataAbstract = Util.getParam(params, "metadataAbstract", "").replace("\\n","\n");
-			GeoServerNode g = geoserverNodes.get(nodeId);
-			if (g == null)
-				throw new IllegalArgumentException(
-						"Invalid node id "
-								+ nodeId
-								+ ". Can't find node id in current registered nodes. Use action=LIST parameter to retrieve the list of valid nodes.");
-
-			GeoServerRest gs = new GeoServerRest(g.getUrl(), g.getUsername(), g.getUserpassword(), g.getNamespacePrefix(), baseUrl);
-
-			String file = Util.getParam(params, "file");
-			String access = Util.getParam(params, "access");
-
-			//jdbc:postgresql://host:port/user:password@database#table
-			if (file.startsWith("jdbc:postgresql")) {
-				String[] values = file.split("/");
-				
-				String[] serverInfo = values[2].split(":");
-				String host = serverInfo[0];
-				String port = serverInfo[1];
-				
-				String[] dbUserInfo = values[3].split("@");
-				
-				String[] userInfo = dbUserInfo[0].split(":");
-				String user = userInfo[0];
-				String password = userInfo[1];
-				
-				String[] dbInfo = dbUserInfo[1].split("#");
-				String db = dbInfo[0]; 
-				String table = dbInfo[1]; 
-				
-				return publishDbTable(action, gs, "postgis", host, port, user, password, db, table, "postgis", g.getNamespaceUrl(), metadataUuid, metadataTitle, metadataAbstract);
-			} else {
-			    if (file.startsWith("file://") || file.startsWith("http://")) {
-			        return addExternalFile(action, gs, file, metadataUuid, metadataTitle, metadataAbstract);
-			    } else {
-			        // Get ZIP file from data directory
-	                File dir = new File(Lib.resource
-	                        .getDir(context, access, metadataId));
-	                File f = new File(dir, file);
-	                return addZipFile(action, gs, f, file, metadataUuid, metadataTitle, metadataAbstract);
-			    }
-			}
-		}
-		return null;
-	}
 
 	/**
 	 * Register a database table in GeoServer
