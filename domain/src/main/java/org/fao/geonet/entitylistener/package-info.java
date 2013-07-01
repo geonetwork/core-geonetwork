@@ -3,4 +3,4 @@
  *
  * @author Jesse
  */
-package org.fao.geonet.domain.listener;
+package org.fao.geonet.entitylistener;
