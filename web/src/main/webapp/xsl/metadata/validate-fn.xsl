@@ -59,7 +59,7 @@
     <xsl:param name="error" as="xs:string"/>
     <xsl:param name="schema" as="xs:string"/>
     <xsl:param name="labels" as="node()"/>
-    <xsl:message><xsl:value-of select="$errorType"/>## <xsl:value-of select="$error"/></xsl:message>
+
     <!-- Set of rules processed : -->
     <xsl:variable name="rules">
       <!--Invalid content was found starting with element 'gmd:dateType'. One of '{"http://www.isotc211.org/2005/gmd":date}' is expected. (Element: gmd:dateType with parent element: gmd:CI_Date)-->
