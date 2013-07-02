@@ -13,7 +13,9 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired

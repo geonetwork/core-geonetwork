@@ -13,7 +13,7 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 @Access(AccessType.PROPERTY)
-public class MetadataNotificationsId implements Serializable {
+public class MetadataNotificationId implements Serializable {
     private static final long serialVersionUID = 8167301479650105617L;
     private int metadataId;
     private int notifierId;
@@ -45,7 +45,7 @@ public class MetadataNotificationsId implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        MetadataNotificationsId other = (MetadataNotificationsId) obj;
+        MetadataNotificationId other = (MetadataNotificationId) obj;
         if (metadataId != other.metadataId)
             return false;
         if (notifierId != other.notifierId)

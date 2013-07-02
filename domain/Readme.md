@@ -19,8 +19,11 @@ The package structure of this module is to put:
 	* Spring-data-jpa Specification Utility/factory objects in org.fao.geonet.repository.specification package or sub-packages
 
 The file config-spring-geonetwork.xml in the src/main/resources directory configures spring and JPA to scan the 
-org.fao.geonet.domain package for Entities and the org.fao.geonet.repository package for spring-data-jpa
+org.fao.geonet.domain package (and sub-packages) for Entities and the org.fao.geonet.repository package for spring-data-jpa
 Repository objects.
+
+The exact list that are scanned the spring configuration files need to be checked.  At the time of this writing the file
+is config-spring-geonetwork.xml in this module.
 
 The side-effect of this means that repositories and entities can be in other modules as well.  At the time of this writting
 that is not the case but should be considered in the future.   

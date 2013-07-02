@@ -36,7 +36,7 @@ public class CswServerCapabilitiesInfo {
         return _langId;
     }
 
-    public void setLangid(String langid) {
+    public void setLangId(String langid) {
         this._langId = langid;
     }
 

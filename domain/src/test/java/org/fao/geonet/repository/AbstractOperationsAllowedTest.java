@@ -15,7 +15,9 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public abstract class AbstractOperationsAllowedTest extends AbstractSpringDataTest {
 
     @Autowired

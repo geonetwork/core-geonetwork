@@ -1,9 +1,7 @@
 package org.fao.geonet.domain;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Access;
@@ -39,9 +37,8 @@ public class Metadata {
     private MetadataSourceInfo _sourceInfo;
     private MetadataHarvestInfo _harvestInfo;
     private List<OperationAllowed> _operationsAllowed = new ArrayList<OperationAllowed>();
-    private Set<String> _metadataCategory = new HashSet<String>();
-    private List<MetadataStatus> _metadataStatus;
-
+//    private Set<String> _metadataCategory = new HashSet<String>();
+//    private List<MetadataStatus> _metadataStatus;
     // private Set<Operation> operations = new HashSet<Operation>();
     // private Set<Group> groups = new HashSet<Group>();
 
@@ -104,26 +101,6 @@ public class Metadata {
 
     public void setHarvestInfo(MetadataHarvestInfo harvestInfo) {
         this._harvestInfo = harvestInfo;
-    }
-
-    @JoinColumn(name = "metadataId", table = "metadatacateg")
-    @OneToMany(fetch = FetchType.LAZY)
-    public Set<String> getMetadataCategory() {
-        return _metadataCategory;
-    }
-
-    public void setMetadataCategory(Set<String> metadataCategory) {
-        this._metadataCategory = metadataCategory;
-    }
-
-    @JoinColumn(name = "metadataId")
-    @OneToMany(fetch = FetchType.LAZY)
-    public List<MetadataStatus> getMetadataStatus() {
-        return _metadataStatus;
-    }
-
-    public void setMetadataStatus(List<MetadataStatus> metadataStatus) {
-        this._metadataStatus = metadataStatus;
     }
 
     // @Column

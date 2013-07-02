@@ -7,7 +7,9 @@ import java.util.List;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
 import org.junit.Test;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTest {
     
     @Test

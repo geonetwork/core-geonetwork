@@ -29,4 +29,30 @@ public class ValidationId implements Serializable {
     public void setValidationType(String validationType) {
         this._validationType = validationType;
     }
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + _metadataId;
+        result = prime * result + ((_validationType == null) ? 0 : _validationType.hashCode());
+        return result;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ValidationId other = (ValidationId) obj;
+        if (_metadataId != other._metadataId)
+            return false;
+        if (_validationType == null) {
+            if (other._validationType != null)
+                return false;
+        } else if (!_validationType.equals(other._validationType))
+            return false;
+        return true;
+    }
 }

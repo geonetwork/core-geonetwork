@@ -4,6 +4,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 
 /**
@@ -13,6 +14,7 @@ import javax.persistence.Id;
  */
 @Entity
 @Access(AccessType.PROPERTY)
+@Table(name="sources")
 public class Source {
     private String uuid;
     private String name;

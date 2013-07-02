@@ -1,8 +1,5 @@
 package org.fao.geonet.domain.statistic;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
@@ -11,8 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 /**
  * An entity representing a request that was made by a user.  
@@ -22,6 +19,7 @@ import javax.persistence.OneToOne;
  */
 @Entity
 @Access(AccessType.PROPERTY)
+@Table(name="requests")
 public class Request {
     private int _id;
     private String _requestDate;
@@ -45,8 +43,7 @@ public class Request {
     public void setId(int id) {
         this._id = id;
     }
-    @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
-    @JoinColumn(name="requestid")
+    @OneToOne(cascade=CascadeType.ALL, mappedBy = "request" ,orphanRemoval=true, fetch=FetchType.LAZY)
     public RequestParams getParams() {
         return _params;
     }

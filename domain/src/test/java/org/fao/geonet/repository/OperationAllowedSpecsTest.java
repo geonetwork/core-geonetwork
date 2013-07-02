@@ -9,7 +9,9 @@ import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.junit.Test;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class OperationAllowedSpecsTest extends AbstractOperationsAllowedTest {
 
     @Test

@@ -5,11 +5,14 @@ import java.util.List;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
 
 
 /**
@@ -22,6 +25,7 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 @Access(AccessType.PROPERTY)
+@Table(name="services")
 public class Service {
     private int _id;
     private String _name;
@@ -48,7 +52,9 @@ public class Service {
     public void setClassName(String className) {
         this._className = className;
     }
-    @ManyToOne(cascade=CascadeType.ALL)
+
+    @ElementCollection(fetch=FetchType.LAZY, targetClass=ServiceParameter.class)
+    @CollectionTable(joinColumns=@JoinColumn(name="service"),name="serviceparameters")
     public List<ServiceParameter> getParameters() {
         return _parameters;
     }

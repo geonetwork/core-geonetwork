@@ -21,7 +21,6 @@ public class MetadataRatingByIpId implements Serializable {
     private int _metadataId;
     private String _ipAddress;
 
-    @EmbeddedId
     @Column(name="metadataid", nullable=false)
     public int getMetadataId() {
         return _metadataId;

@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.Table;
 
 /**
  * A Metadata category.  This is separate from any category listed in
@@ -23,6 +24,7 @@ import javax.persistence.MapKeyColumn;
 @Entity
 @Access(AccessType.PROPERTY)
 @Cacheable
+@Table(name="categories")
 public class Category {
     private int _id;
     private String _name;
@@ -45,7 +47,7 @@ public class Category {
      * Get the map of langid -> label translations for groups
      */
     @ElementCollection(fetch=FetchType.LAZY, targetClass=String.class)
-    @CollectionTable(joinColumns=@JoinColumn(name="iddes"),name="groupsdes")
+    @CollectionTable(joinColumns=@JoinColumn(name="iddes"),name="categoriesdes")
     @MapKeyColumn(name="langid")
     public Map<String, String> getLabelTranslations() {
         return _labelTranslations;

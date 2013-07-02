@@ -18,18 +18,18 @@ import javax.persistence.Table;
 @Access(AccessType.PROPERTY)
 @Table(name = "metadatanotifications")
 public class MetadataNotification {
-    private MetadataNotificationsId id;
+    private MetadataNotificationId id;
     private boolean notified;
     private String metadataUuid;
     private char action;
     private String errorMessage;
 
     @EmbeddedId
-    public MetadataNotificationsId getId() {
+    public MetadataNotificationId getId() {
         return id;
     }
 
-    public void setId(MetadataNotificationsId id) {
+    public void setId(MetadataNotificationId id) {
         this.id = id;
     }
 

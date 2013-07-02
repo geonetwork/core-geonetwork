@@ -1,7 +1,10 @@
 package org.fao.geonet.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -14,15 +17,14 @@ import javax.persistence.Table;
  * @author Jesse
  */
 
-@Entity
+@Embeddable
 @Access(AccessType.PROPERTY)
-@Table(name = "serviceparameter")
-public class ServiceParameter {
+public class ServiceParameter implements Serializable {
+    private static final long serialVersionUID = -4773637291731084291L;
     private int _id;
     private String _name;
     private String _value;
 
-    @Id
     public int getId() {
         return _id;
     }

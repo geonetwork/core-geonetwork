@@ -41,7 +41,7 @@ public final class SpringDataTestSupport {
      * @param function
      * @throws SQLException
      */
-    protected static void updateNatively(ApplicationContext context, Function<Statement, Void> function) throws SQLException {
+    public static void updateNatively(ApplicationContext context, Function<Statement, Void> function) throws SQLException {
         DataSource dataSource = context.getBean(DataSource.class);
         Connection conn = null;
         Statement stmt = null;
@@ -70,7 +70,7 @@ public final class SpringDataTestSupport {
      * @param expected
      * @param actual
      */
-    protected static final <T> void assertSameContents(@Nonnull T expected, T actual, String... skipProperties) throws Exception {
+    public static final <T> void assertSameContents(@Nonnull T expected, T actual, String... skipProperties) throws Exception {
         Set<String> skip = new HashSet<String>(Arrays.asList(skipProperties));
         assertNotNull(actual);
         assertEquals(expected.getClass(), actual.getClass());

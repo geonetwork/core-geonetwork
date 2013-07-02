@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:config-spring-geonetwork.xml", "classpath:repository-test-context.xml" })
-@Transactional
 public abstract class AbstractSpringDataTest {
 
 }

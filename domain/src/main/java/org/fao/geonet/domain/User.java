@@ -8,6 +8,7 @@ import javax.persistence.AccessType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import jeeves.guiservices.session.JeevesUser;
@@ -24,6 +25,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
  */
 @Entity
 @Access(AccessType.PROPERTY)
+@Table(name="users")
 public class User implements JeevesUser {
     private static final long serialVersionUID = 2589607276443866650L;
 

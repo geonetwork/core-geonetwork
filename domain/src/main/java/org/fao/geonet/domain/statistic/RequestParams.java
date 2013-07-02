@@ -4,8 +4,10 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 /**
@@ -26,7 +28,7 @@ public class RequestParams {
     private String _upperText;
     private boolean _inclusive;
     private Request _request;
-    
+
     @Id
     public int getId() {
         return _id;
@@ -34,7 +36,8 @@ public class RequestParams {
     public void setId(int id) {
         this._id = id;
     }
-    @OneToOne(mappedBy="params")
+    @OneToOne(fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
     public Request getRequest() {
         return _request;
     }

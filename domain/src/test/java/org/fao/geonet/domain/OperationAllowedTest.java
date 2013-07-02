@@ -10,7 +10,9 @@ import static org.junit.Assert.assertTrue;
 import org.fao.geonet.repository.AbstractOperationsAllowedTest;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class OperationAllowedTest extends AbstractOperationsAllowedTest {
     @Test @Ignore
     public void testGetGroup() {

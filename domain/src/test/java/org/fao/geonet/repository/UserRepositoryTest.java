@@ -7,7 +7,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.fao.geonet.domain.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class UserRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired

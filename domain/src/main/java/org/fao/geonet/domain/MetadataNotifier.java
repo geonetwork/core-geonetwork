@@ -20,7 +20,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "metadatanotifier")
+@Table(name = "metadatanotifiers")
 public class MetadataNotifier {
     private int id;
     private String name;

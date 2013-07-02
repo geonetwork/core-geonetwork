@@ -18,7 +18,9 @@ import org.fao.geonet.repository.OperationRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class OperationRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired

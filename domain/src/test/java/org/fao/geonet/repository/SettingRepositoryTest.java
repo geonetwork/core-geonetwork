@@ -15,7 +15,9 @@ import org.fao.geonet.repository.SettingRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class SettingRepositoryTest extends AbstractSpringDataTest {
     interface Runnable {
         void run() throws Exception;

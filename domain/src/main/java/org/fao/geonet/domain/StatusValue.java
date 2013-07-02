@@ -20,7 +20,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name="statusvalue")
+@Table(name="statusvalues")
 public class StatusValue {
     private int _id;
     private String _name;

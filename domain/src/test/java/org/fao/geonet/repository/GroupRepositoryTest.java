@@ -15,7 +15,9 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.repository.GroupRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class GroupRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
