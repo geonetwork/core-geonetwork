@@ -36,6 +36,7 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.HarvestInfoProvider;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarversterJobListener;
@@ -55,7 +56,7 @@ import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
  * TODO Javadoc.
  *
  */
-public class HarvestManager
+public class HarvestManager implements HarvestInfoProvider
 {
 	//---------------------------------------------------------------------------
 	//---              searchProfiles
