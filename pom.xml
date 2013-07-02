@@ -970,17 +970,6 @@
       </modules>
     </profile>
     <profile>
-      <id>gast</id>
-      <activation>
-        <file>
-          <exists>gast/pom.xml</exists>
-        </file>
-      </activation>
-      <modules>
-        <module>gast</module>
-      </modules>
-    </profile>
-    <profile>
       <id>geoserver</id>
       <activation>
         <file>

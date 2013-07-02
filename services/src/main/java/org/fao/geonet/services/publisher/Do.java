@@ -144,11 +144,11 @@ public class Do implements Service {
         if (!geoserverConfigLoaded) {
             loadConfiguration(geoserverConfigFile, context);
         }
-    	
     	GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-    	String baseUrl = gc.getSettingManager().getValue(Geonet.Settings.SERVER_PROTOCOL)
-    			+ "://" + gc.getSettingManager().getValue(Geonet.Settings.SERVER_HOST)
-    			+ ":" + gc.getSettingManager().getValue("system/server/port")
+    	SettingManager settingsManager = gc.getBean(SettingManager.class);
+    	String baseUrl = settingsManager.getValue(Geonet.Settings.SERVER_PROTOCOL)
+    			+ "://" + settingsManager.getValue(Geonet.Settings.SERVER_HOST)
+    			+ ":" + settingsManager.getValue("system/server/port")
     			+ context.getBaseUrl()
     			+ "/srv/" + context.getLanguage() + "/";
     	

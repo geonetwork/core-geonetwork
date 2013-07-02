@@ -7,6 +7,8 @@ import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.rdf.Query;
 import org.fao.geonet.kernel.rdf.QueryBuilder;
 import org.fao.geonet.kernel.rdf.Selectors;
+import org.fao.geonet.kernel.region.Region;
+import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchType;
