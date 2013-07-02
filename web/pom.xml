@@ -12,8 +12,7 @@
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <groupId>org.geonetwork-opensource</groupId>
-  <artifactId>geonetwork-main</artifactId>
+  <artifactId>web-app</artifactId>
   <packaging>war</packaging>
   <name>GeoNetwork Web module</name>
   <description> GeoNetwork web module description (TODO). </description>
@@ -302,22 +301,46 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>cachingxslt</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>oaipmh</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency> <!-- dummy API for ARC SDE stuff -->
-      <groupId>org.geonetwork-opensource</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>dummy-api</artifactId>
       <version>${project.version}</version>
     </dependency>
 
-    <!-- Handled locally by a temporarly repository -->
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>core</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>services</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>harvesters</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>health-monitor</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+
+      <!-- Handled locally by a temporarly repository -->
     <dependency>
       <groupId>dlib</groupId>
       <artifactId>dlib</artifactId>
@@ -440,6 +463,7 @@
                  </goals>
                  <configuration>
                      <sources>
+                          <source>${basedir}/src/main/java</source>
                           <source>${basedir}/src/main/webapp/WEB-INF/classes/setup/sql/migrate</source>
                      </sources>
                  </configuration>

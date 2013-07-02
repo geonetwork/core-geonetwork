@@ -125,8 +125,10 @@ public class JeevesEngine
 	{
 		try
 		{
-			
-			PropertyConfigurator.configure(configPath +"log4j.cfg");
+			File log4jConfig = new File(configPath, "log4j.cfg");
+		    if (log4jConfig.exists()) {
+		        PropertyConfigurator.configure(log4jConfig.getAbsolutePath());
+		    }
 
             ServletContext servletContext = null;
             if(servlet != null) servletContext= servlet.getServletContext();

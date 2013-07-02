@@ -1,3 +1,4 @@
+.DS_Store
 *.iml
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron/schematron*.xsl
 web/src/main/webapp/WEB-INF/data/config/schemaplugin-uri-catalog.xml
@@ -33,3 +34,5 @@ eclipse/
 web/src/main/webapp/WEB-INF/data/data
 web/src/main/webapp/WEB-INF/data/index
 web-itest/jcs_caching
+datadir/
+web/src/main/webapp/WEB-INF/data/removed/

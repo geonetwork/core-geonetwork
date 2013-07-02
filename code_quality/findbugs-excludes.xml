@@ -7,7 +7,13 @@
 	<Match>
 		<Class name="~.*\..*Test" />
 	</Match>
-	
+
+    <!-- 			Oaipmh Exceptions 					-->
+	<Match>
+		<Class name="org.fao.oaipmh.util.ISODate" />
+		<Bug pattern="REC_CATCH_EXCEPTION" />
+	</Match>
+
 	<!--              Jeeves  Exceptions                 -->
 	<Match>
 		<Class name="jeeves.server.JeevesEngine" />
@@ -73,6 +79,10 @@
 		<Method name="processCQLTermNode"/>
 	</Match>
 	<Match>
+		<Class name="de.fzi.dbs.xml.transform.CachingTransformerFactory" />
+		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+	</Match>
+	<Match>
 		<Class name="org.fao.geonet.services.metadata.BatchVersion" />
 		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
 		<Method name="exec"/>
@@ -85,7 +95,7 @@
 	<Match>
 		<Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
 	</Match>
-	
+
 	
 <!-- The following bugs are hard to fix should be fixed because they can cause problems in servers with multiple geonetworks running -->	
 	<Match>

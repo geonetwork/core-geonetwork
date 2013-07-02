@@ -25,6 +25,7 @@ package org.fao.oaipmh.responses;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.OaiPmhException;
@@ -95,7 +96,9 @@ public abstract class ListResponse extends AbstractResponse
 		build(listReq.resume(token));
 
 		//--- just to avoid problems...
-		iterator.hasNext();
+		if (!iterator.hasNext()) {
+		    throw new NoSuchElementException();
+		}
 
 		return createObject(iterator.next());
 	}

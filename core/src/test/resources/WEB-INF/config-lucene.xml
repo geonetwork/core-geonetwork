@@ -1,0 +1,300 @@
+<?xml version="1.0"?>
+<config>
+  <index>
+    <!-- 
+      The amount of memory to be used for buffering documents in memory.
+      48MB seems to be plenty for running at least two long 
+       indexing jobs (eg. importing 20,000 records) and keeping disk 
+       activity for lucene index writing to a minimum.
+    -->
+    <RAMBufferSizeMB>48.0d</RAMBufferSizeMB>
+
+    <!-- Determines how often segment indices are merged by addDocument(). -->
+    <MergeFactor>10</MergeFactor>
+
+    <!-- Default Lucene version to use (mainly for Analyzer creation). -->
+    <luceneVersion>36</luceneVersion>
+    <!-- How often to check if a commit is required -->
+    <commitInterval>30000</commitInterval>
+    <!-- If true then NRTManagerReopenThread will control how often the reader are reopened.
+    	 If false then the reader will be opened everytime they are obtained.  -->
+    <useNRTManagerReopenThread>true</useNRTManagerReopenThread>
+    <!-- 
+    	Only applies if useNRTManagerReopenThread is true
+    	Maximum time until a new  reader must be opened; this sets the upper bound 
+    	on how slowly reopens may occur 
+    	See NRTManagerReopenThread -->
+    <nrtManagerReopenThreadMaxStaleSec>5</nrtManagerReopenThreadMaxStaleSec>
+    <!-- 
+    	 Only applies if useNRTManagerReopenThread is true
+    	 Minimum time until a new reader can be opened; this sets the lower bound
+         on how quickly reopens may occur, when a caller
+         is waiting for a specific indexing change to become visible 
+         See NRTManagerReopenThread-->
+    <nrtManagerReopenThreadMinStaleSec>0.1</nrtManagerReopenThreadMinStaleSec>
+  </index>
+
+
+  <!-- Search parameters are applied at search time and does not need
+    an index rebuild in order to be take into account. -->
+  <search>
+    <!-- Score parameters. Turning these parameters to true, affects performance. -->
+    <!-- Set track doc score to true if score needs to be displayed in results using 
+        geonet:info/score element -->
+    <trackDocScores>false</trackDocScores>
+    <trackMaxScore>false</trackMaxScore>
+
+    <!-- Not used because no Scorer defined -->
+    <docsScoredInOrder>false</docsScoredInOrder>
+
+    <!--
+            By default Lucene compute score according to search criteria
+            and the corresponding result set and their index content.
+            In case of search with no criteria, Lucene will return top docs
+            in index order (because none are more relevant than others).
+            
+            In order to change the score computation, a boost function could
+            be define. Boosting query needs to be loaded in classpath.
+            * RecencyBoostingQuery will promote recently modified documents
+    -->
+
+    <!--  
+      <boostQuery name="org.fao.geonet.kernel.search.function.RecencyBoostingQuery">
+      <Param name="multiplier" type="double" value="2.0"/>
+      <Param name="maxDaysAgo" type="int" value="365"/>
+      <Param name="dayField" type="java.lang.String" value="_changeDate"/>
+      </boostQuery>
+     -->
+    
+
+    <!-- 
+      List of fields to dump when using q service. Fields must be stored in the index.
+
+	  The attribute 'multilingualSortField' flag fields that are used for sorting also may have translations.
+	  This is the solution for http://trac.osgeo.org/geonetwork/ticket/1112
+	  This is an issue where searching by one field and sorting by another will result
+	  in an incorrect sorting. The reason is that sorted field may have multiple translations.
+	  If the document found is one language (say french) and the UI language is english then
+	  then the french translation will be used for sorting even though when the metadata
+	  is viewed by user the metadata will be in english.  
+	  
+	  The following fields are the sort field that can have translations and therefore
+	  need special care when indexing and sorting.
+	   -->
+    <dumpFields>
+      <field name="_isTemplate" tagName="isTemplate"/>
+      <field name="_isHarvested" tagName="isHarvested"/>
+      <field name="_popularity" tagName="popularity"/>
+      <field name="_rating" tagName="rating"/>
+      <field name="_displayOrder" tagName="displayOrder"/>
+      <field name="_view" tagName="view"/>
+      <field name="_notify" tagName="notify"/>
+      <field name="_download" tagName="download"/>
+      <field name="_dynamic" tagName="dynamic"/>
+      <field name="_featured" tagName="featured"/>
+      <field name="_owner" tagName="owner"/>
+      <field name="_userinfo" tagName="userinfo"/>
+      <field name="_isPublishedToAll" tagName="isPublishedToAll"/>
+      <field name="_ownername" tagName="ownername"/>
+      <field name="_cat" tagName="category"/>
+      <field name="_valid" tagName="valid"/>
+      <field name="_valid_schematron-rules-geonetwork" tagName="valid_schematron-rules-geonetwork"/>
+      <field name="_valid_schematron-rules-iso" tagName="valid_schematron-rules-iso"/>
+      <field name="_valid_schematron-rules-inspire" tagName="valid_schematron-rules-inspire"/>
+      <field name="_valid_xsd" tagName="valid_xsd"/>
+      <field name="_selected" tagName="selected"/>
+      <field name="_source" tagName="source"/>
+      <field name="_edit" tagName="edit"/>
+      <field name="_title" tagName="title" multilingualSortField="true"/>
+      <field name="_docLocale" tagName="docLocale"/>
+      <field name="_locale" tagName="_locale"/>
+      <field name="_defaultTitle" tagName="defaultTitle"/>
+      <field name="abstract" tagName="abstract"/>
+      <field name="keyword" tagName="keyword"/>
+      <field name="parentUuid" tagName="parentId"/>
+      <field name="type" tagName="type"/>
+      <field name="image" tagName="image"/>
+      <field name="link" tagName="link"/>
+      <field name="credit" tagName="credit"/>
+      <field name="responsibleParty" tagName="responsibleParty"/>
+      <field name="accessConstr" tagName="Constraints"/>
+      <field name="otherConstr" tagName="Constraints"/>
+      <field name="classif" tagName="SecurityConstraints"/>
+      <field name="conditionApplyingToAccessAndUse" tagName="Constraints"/>
+      <field name="datasetLang" tagName="datasetLang"/>
+      <field name="language" tagName="language"/>
+      <field name="spatialRepresentationType" tagName="spatialRepresentationType"/>
+      <field name="serviceType" tagName="serviceType"/>
+      <field name="geoBox" tagName="geoBox"/>
+      <field name="_indexingError" tagName="idxError"/>
+      <field name="_indexingErrorMsg" tagName="idxMsg"/>
+    </dumpFields>
+  </search>
+
+
+  <!-- Default analyzer to use for all fields not defined in the fieldSpecificAnalyzer section.
+    If not set, GeoNetwork use a default per field analyzer (ie. fieldSpecificAnalyzer is not
+    take into account). The default analyzer is defined in SearchManager.
+    
+    Example:
+    org.apache.lucene.analysis.fr.FrenchAnalyzer
+  
+  <defaultAnalyzer name="org.apache.lucene.analysis.standard.StandardAnalyzer">
+  <Param name="version" type="org.apache.lucene.util.Version"/>
+  </defaultAnalyzer>
+  -->
+  <defaultAnalyzer name="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+  <!-- TODO: Add a language specific analyzer according to:
+     * metadata language
+     * metadata elements language (ie. PT_FreeText elements)
+  -->
+
+
+  <!-- Field analyzer
+    Define here specific analyzer for each fields stored in the index
+    
+    For example adding a different analyzer for any (ie. full text search) 
+    could be better than a standard analyzer which has a particular way of 
+    creating tokens.
+    
+    In that situation, when field is "mission AD-T" is tokenized to "mission" "ad" & "t"
+    using StandardAnalyzer. A WhiteSpaceTokenizer tokenized to "mission" "AD-T"
+    which could be better in some situation. But when field is "mission AD-34T" is tokenized 
+    to "mission" "ad-34t" using StandardAnalyzer due to number.
+    
+    doeleman: UUID must be case insensitive, as its parts are hexadecimal numbers which
+    are not case sensitive. StandardAnalyzer is recommended for UUIDS.
+    
+    A list of analyzer is available http://lucene.apache.org/java/2_4_0/api/org/apache/lucene/analysis/Analyzer.html
+    Commons analyzer:
+    * org.apache.lucene.analysis.standard.StandardAnalyzer
+    * org.apache.lucene.analysis.WhitespaceAnalyzer
+    * org.apache.lucene.analysis.SimpleAnalyzer
+    * org.fao.geonet.kernel.search.GeoNetworkAnalyzer (recommended for wildcard query support)
+    
+    The analyzer must be in the classpath.
+    
+  -->
+  <fieldSpecificAnalyzer>
+    <Field name="_uuid" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+    <Field name="parentUuid" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+    <Field name="operatesOn" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+    <Field name="operatesOnIdentifier" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+    <Field name="hassource" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+    <Field name="hasfeaturecat" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+    
+    <!-- 
+    <Field name="any" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+    
+    <Field name="any" analyzer="org.apache.lucene.analysis.standard.StandardAnalyzer">
+      <Param name="version" type="org.apache.lucene.util.Version"/>
+      <Param name="stopWords" type="java.io.File" value="/path/to/resources/stopwords/en.txt"/>
+    </Field>
+    -->
+    <Field name="subject" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
+    <Field name="_cat" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
+    
+
+    <Field name="keyword" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
+    <Field name="inspirerelated" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
+    <Field name="_groupPublished" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
+    <Field name="_source" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
+    
+  </fieldSpecificAnalyzer>
+  
+  <fieldSpecificSearchAnalyzer>
+    <!-- Define here analyzers to be overriden from fieldSpecificAnalyzer.
+      By default, indexing and searching per field analyzers are the same.
+      
+      In some case, an analyzer could be applied at indexing and another 
+      at searching time. For example when using a SynonymAnalyzer. When adding 
+      Londres, Londinium, Londona for London at indexing time, then there is no
+      need to add those synonyms for search if users search for Londres, it will match.
+      We only need synonym expansion during indexing or during searching, not both.
+    -->
+  </fieldSpecificSearchAnalyzer>
+  
+  <!-- Document boosting configuration. 
+    
+    Document boosting allows to define custom boost factor for a document
+    or for document fields at index time which 
+    will be use for score computation at search time.
+    
+    Note: Do not abuse of document boost 
+    because it may lead to promote too much some kind of documents 
+    or the contrary and make end-user not so confident of your search engine!
+  
+  -->
+  <!-- Boosting factor for fields. This parameter will impact queries using OR operator.
+  <fieldBoosting>
+    <Field name="title" boost="1.5F"/>
+  </fieldBoosting>
+  
+  It could be relevant to also remove some field from scoring using this:
+   * If not, user privileges will be take into account to compute the score.
+  -->
+  <fieldBoosting>
+    <Field name="_op0" boost="0.0F"/>
+    <Field name="_op1" boost="0.0F"/>
+    <Field name="_op2" boost="0.0F"/>
+    <Field name="_dummy" boost="0.0F"/>
+    <Field name="_isTemplate" boost="0.0F"/>
+    <Field name="_owner" boost="0.0F"/>
+  </fieldBoosting>
+  
+  
+  <!-- Boosting factor for document based on document values.
+    Parameters:
+    * fields: A comma separated value of fields.
+    * values: A comma separated value of value for each field. Use NOTNULL to check any field values.
+    * boost: A comma separated value of boost factor for each field (Float).
+    
+    "The boost factor values you should use depend on what you’re trying to achieve; 
+    you’ll need to do some experimentation and
+    tuning to achieve the desired effect." source: Lucene In Action 
+    
+  <boostDocument name="org.fao.geonet.kernel.search.function.ImportantDocument">
+    <!- - Example to promote series and not promote records part of a series - ->
+    <Param name="fields" type="java.lang.String" value="type,parentUuid"/>
+    <Param name="values" type="java.lang.String" value="series,NOTNULL"/>
+    <Param name="boosts" type="java.lang.String" value=".1F,-.3F"/>
+    <!- - Example to promote series and service and records with keyword containing elevation
+    <Param name="fields" type="java.lang.String" value="type,type,keyword"/>
+    <Param name="values" type="java.lang.String" value="series,service,Elevation"/>
+    <Param name="boosts" type="java.lang.String" value=".1F,-.3F,.4F"/>- ->
+  </boostDocument>
+  -->
+
+  <!-- All Lucene fields that are tokenized must be kept here because it
+       is impossible unfortunately from Lucene API to work out which fields are
+        tokenized and which aren't unless we read documents and we may not have
+        an index to do this on so since most fields are not tokenized we 
+        keep a list of tokenized fields here
+   -->
+  <tokenized>
+    <Field name="any"/>
+    <Field name="abstract"/>
+    <Field name="title"/>
+    <Field name="altTitle"/>
+    <Field name="keywordType"/>
+    <!--<Field name="orgName"/>-->
+    <Field name="specificationTitle"/>
+    <Field name="levelName"/>
+    <Field name="subject"/>
+  </tokenized>
+
+  <!-- All Lucene numeric fields.
+    Use of numeric field will increase index size.
+    It could give better search results for numeric values.
+    
+    Type attribute : int (default), double, long, float
+    Precision attribute : see NumericUtils.PRECISION_STEP_DEFAULT
+  -->
+  <numeric>
+    <Field name="denominator"/>
+    <Field name="northBL" type="double"/>
+    <Field name="eastBL" type="double"/>
+    <Field name="southBL" type="double"/>
+    <Field name="westBL" type="double"/>
+  </numeric>
+</config>

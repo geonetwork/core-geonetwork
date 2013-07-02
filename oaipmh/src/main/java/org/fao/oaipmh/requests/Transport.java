@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import jeeves.constants.Jeeves;
+
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.Header;
@@ -301,9 +304,11 @@ public class Transport
 		try
 		{
 			if (response != null)
-				receivedData += new String(response, "UTF8");
+				receivedData += new String(response, Jeeves.ENCODING);
 		}
-		catch (UnsupportedEncodingException e) {}
+		catch (UnsupportedEncodingException e) {
+		    throw new RuntimeException(e);
+		}
 	}
 	
 	//---------------------------------------------------------------------------
