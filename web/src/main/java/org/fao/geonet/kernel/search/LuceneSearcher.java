@@ -1301,8 +1301,7 @@ public class LuceneSearcher extends MetaSearcher {
                 FacetConfig config = summaryConfigValues.get(label);
                 String facetName = config.getPlural();
 
-
-                Translator translator;
+                final Translator translator;
                 if (ServiceContext.get() != null) {
                     try {
                         ServiceContext context = ServiceContext.get();
@@ -1337,12 +1336,34 @@ public class LuceneSearcher extends MetaSearcher {
                                 + ":\tSorting facet by " + config.getSortBy().toString()
                                 + " (" + config.getSortOrder().toString() + ")");
                     }
-
                     // No need for a custom comparator Lucene facet request is
                     // made by count descending order
                     if (Facet.SortBy.COUNT != config.getSortBy()) {
-                        Comparator c = null;
-                        if (Facet.SortBy.NUMVALUE == config.getSortBy()) {
+                        Comparator<Entry<String, Double>> c = null;
+                        if (Facet.SortBy.LABEL == config.getSortBy()) {
+                        	c = new Comparator<Entry<String, Double>>() {
+
+								@Override
+								public int compare(Entry<String, Double> o1,
+										Entry<String, Double> o2) {
+									String label1 = null;
+									String label2 = null;
+									if (translator != null) {
+										label1 = translator.translate(o1
+												.getKey());
+										label2 = translator.translate(o2
+												.getKey());
+									}
+									if (label1 == null) {
+										label1 = o1.getKey();
+									}
+									if (label2 == null) {
+										label2 = o2.getKey();
+									}
+									return label1.compareTo(label2);
+								}
+							};
+                        }else if (Facet.SortBy.NUMVALUE == config.getSortBy()) {
                             // Create a numeric comparator
                             c = new Comparator<Entry<String, Double>>() {
                                 public int compare(
