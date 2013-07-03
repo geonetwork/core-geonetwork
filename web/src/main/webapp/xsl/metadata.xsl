@@ -19,9 +19,6 @@
 	<xsl:include href="metadata-controls.xsl"/>
   
   <xsl:variable name="flat" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/@flat"/>
-  <xsl:variable name="ancestorException" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/ancestorException/@for"/>
-  <xsl:variable name="elementException" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/exception/@for"/>
-  
 	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<!-- main schema mode selector -->
@@ -74,6 +71,9 @@
 		<xsl:variable name="max" select="../geonet:element/@max|@max"/>
 		<xsl:variable name="prevBrother" select="preceding-sibling::*[1]"/>
 	   
+  	<xsl:variable name="ancestorException" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/ancestorException[@schema=$schema]/@for"/>
+  	<xsl:variable name="elementException" select="/root/gui/config/metadata-tab/*[name(.)=$currTab]/exception[@schema=$schema]/@for"/>
+  
 		<!--
 			Exception for:
 			 * gmd:graphicOverview because GeoNetwork manage thumbnail using specific interface 
@@ -85,6 +85,13 @@
 			or count(ancestor::*[contains($ancestorException, local-name())]) > 0
 			or contains($elementException, @name)
 			"/>
+
+		<!--
+		<xsl:if test="$exception">
+			<xsl:message>Exception for <xsl:value-of select="@name"/></xsl:message>
+		</xsl:if>
+		-->
+
 		<!-- <xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)=$name]"/> -->
 		<xsl:variable name="subtemplates" select="/root/gui/subtemplates/record[string(root)='']"/>
 		
