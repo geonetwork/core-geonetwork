@@ -18,6 +18,14 @@
 -->
 <urlrewrite use-query-string="true" use-context="false">
     <rule>
+        <note>
+            Geocat hack.  seems that there is bug in creating the country xlinks to region.getmap requests.
+        </note>
+        <from>^/srv/(...)/region.getmap.png\?(.*?)id=countries:(\d+?)(.+)$</from>
+        <to type="forward" last="true">/srv/$1/region.getmap.png\?$2id=country:$3$4</to>
+    </rule>
+
+    <rule>
         <from>^(.*)/fra/(.*)$</from>
         <to type="permanent-redirect" last="true">%{context-path}$1/fre/$2</to>
     </rule>
