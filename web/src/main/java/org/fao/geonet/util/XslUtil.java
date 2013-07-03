@@ -830,7 +830,23 @@ public final class XslUtil {
         do {
             builder.append(insertBR(textString.substring(i, matcher.start())));
 
-            String tag = "<a href=\"" + matcher.group() + "\" target=\"_newtab\">" + insertBR(matcher.group()) + "</a>";
+            String linkText = insertBR(matcher.group());
+            final int maxLength = 80;
+			if (linkText.length() > maxLength) {
+				StringBuilder newText = new StringBuilder();
+				newText.append(linkText.substring(0, maxLength));
+
+            	String remaining = linkText.substring(80);
+            	while (remaining.length() > maxLength) {
+            		newText.append("<br/>");
+            		newText.append(remaining.substring(0, maxLength));
+            		remaining = remaining.substring(80);
+            	}
+            	newText.append("<br/>");
+        		newText.append(remaining);
+            	linkText = newText.toString();
+            }
+            String tag = "<a href=\"" + matcher.group() + "\" target=\"_newtab\">" + linkText + "</a>";
 
             // do a test to make sure the new text makes a valid document
             if (parse(configuration, builder.toString() + tag + textString.substring(matcher.end()), false) != null) {
