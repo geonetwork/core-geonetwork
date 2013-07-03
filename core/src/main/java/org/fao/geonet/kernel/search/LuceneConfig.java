@@ -29,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -87,11 +88,26 @@ public class LuceneConfig {
             /**
              * Sort by count
              */
-            COUNT
+            COUNT,
+            /**
+             * Sort by translated label
+             */
+            LABEL;
+
+            public static org.fao.geonet.kernel.search.LuceneConfig.Facet.SortBy find(
+                    String lookupName,
+                    org.fao.geonet.kernel.search.LuceneConfig.Facet.SortBy defaultValue) {
+                for (SortBy sortBy : values()) {
+                    if(sortBy.name().equalsIgnoreCase(lookupName)) {
+                        return sortBy;
+                    }
+                }
+                return defaultValue;
+            }
         }
 
         public enum SortOrder {
-            ASCENDIND, DESCENDING
+            ASCENDING, DESCENDING
         }
     }
     
@@ -129,14 +145,10 @@ public class LuceneConfig {
             String sortByConfig = summaryElement.getAttributeValue("sortBy");
             String sortOrderConfig = summaryElement.getAttributeValue("sortOrder");
             
-            if("value".equals(sortByConfig)){
-                sortBy = Facet.SortBy.VALUE;
-            } else if("numValue".equals(sortByConfig)){
-                sortBy = Facet.SortBy.NUMVALUE;
-            }
+            sortBy = Facet.SortBy.find(sortByConfig, Facet.SortBy.COUNT);
             
             if("asc".equals(sortOrderConfig)){
-                sortOrder = Facet.SortOrder.ASCENDIND;
+                sortOrder = Facet.SortOrder.ASCENDING;
             }
         }
         public String toString() {
@@ -613,7 +625,8 @@ public class LuceneConfig {
      * @throws Exception
      */
 	private Map<String,FacetConfig> getSummaryConfig(Element resultTypeConfig) {
-		Map<String, FacetConfig> results = new HashMap<String, FacetConfig>();
+	    // User linked hash map so that results in output are same as ordered in summary file
+		Map<String, FacetConfig> results = new LinkedHashMap<String, FacetConfig>();
 
 		for (Object obj : resultTypeConfig.getChildren()) {
 			if(obj instanceof Element) {
