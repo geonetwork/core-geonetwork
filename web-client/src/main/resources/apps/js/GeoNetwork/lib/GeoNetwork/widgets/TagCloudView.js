@@ -71,35 +71,34 @@ GeoNetwork.TagCloudView = Ext.extend(Ext.DataView, {
     catalogue: undefined,
     
     multiSelect: true,
-    /**
-     * FIXME : how to make it generic
-     */
-    root: 'keywords.keyword',
-    
-    /** api: config[qurey] 
-     *  If defined, trigger the KVP query and update the data view.
-     */
-    qurey: undefined,
-    
-    searchField: 'themekey',
-    
+    defaultConfig: {
+        /**
+         * Search field to trigger search on
+         */
+        searchField: 'keyword',
+        /**
+         * Define the location of the facet to display in the tag cloud
+         */
+        root: 'keywords.keyword',
+        /** api: config[qurey] 
+         *  If defined, trigger the KVP query and update the data view.
+         */
+        query: undefined
+    },
     onSuccess: null,
     onFailure: null,
-    
     overClass: 'tag-cloud-hover',
-    
     itemSelector: 'li.tag-cloud',
-    
     emptyText: '',
-    
     autoWidth: true,
     
     /** private: method[initComponent] 
      *  Initializes the metadata results view.
      */
     initComponent: function(){
+    	Ext.applyIf(this, this.defaultConfig);
         GeoNetwork.TagCloudView.superclass.initComponent.call(this);
-        
+
         this.tpl = this.tpl || new Ext.XTemplate(
             '<ul>', 
                 '<tpl for=".">', 
@@ -112,8 +111,8 @@ GeoNetwork.TagCloudView = Ext.extend(Ext.DataView, {
                     '</li>', 
                 '</tpl>', 
             '</ul>');
+        this.catalogue.summaryStore = new GeoNetwork.data.MetadataSummaryStore(this.root);
         this.store = this.catalogue.summaryStore;
-        
         if (this.query) {
             // run a query in fast mode to retrieve a summary
             this.catalogue.kvpSearch(this.query, null, null, null, true);

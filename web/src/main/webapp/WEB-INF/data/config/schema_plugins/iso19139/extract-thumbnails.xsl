@@ -5,7 +5,7 @@
 						xmlns:srv="http://www.isotc211.org/2005/srv"
 						xmlns:gmd="http://www.isotc211.org/2005/gmd">
 
-	<xsl:template match="gmd:MD_Metadata">
+	<xsl:template match="gmd:MD_Metadata|*[contains(@gco:isoType, 'MD_Metadata')]">
 		<thumbnail>
 			<xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/gmd:MD_BrowseGraphic
 				">

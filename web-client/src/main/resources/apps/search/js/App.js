@@ -475,6 +475,7 @@ GeoNetwork.app = function () {
     function createMainTagCloud() {
         var tagCloudView = new GeoNetwork.TagCloudView({
             catalogue: catalogue,
+            root: GeoNetwork.Settings.tagCloud.root,
             query: 'fast=true&summaryOnly=true',
             renderTo: 'tag',
             onSuccess: 'app.loadResults'
@@ -553,22 +554,6 @@ GeoNetwork.app = function () {
                 loadScripts: false
             }
         });
-    }
-    
-    /**
-     * Main tagcloud displayed in the information panel
-     *
-     * @return
-     */
-    function createMainTagCloud(){
-        var tagCloudView = new GeoNetwork.TagCloudView({
-            catalogue: catalogue,
-            query: 'fast=true&summaryOnly=true',
-            renderTo: 'tag',
-            onSuccess: 'app.loadResults'
-        });
-        
-        return tagCloudView;
     }
     /**
      * Create latest metadata panel.
@@ -653,6 +638,7 @@ GeoNetwork.app = function () {
                 defaultViewMode: GeoNetwork.Settings.editor.defaultViewMode,
                 editMode : GeoNetwork.Settings.editor.editMode,
                 catalogue: catalogue,
+                selectionPanelImgPath: '../../apps/js/ext-ux/images',
                 xlinkOptions: {CONTACT: true}
             });
             

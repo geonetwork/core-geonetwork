@@ -59,7 +59,7 @@
     <xsl:param name="error" as="xs:string"/>
     <xsl:param name="schema" as="xs:string"/>
     <xsl:param name="labels" as="node()"/>
-    
+
     <!-- Set of rules processed : -->
     <xsl:variable name="rules">
       <!--Invalid content was found starting with element 'gmd:dateType'. One of '{"http://www.isotc211.org/2005/gmd":date}' is expected. (Element: gmd:dateType with parent element: gmd:CI_Date)-->
@@ -71,6 +71,7 @@
       <rule errorType="datatype-valid.1.2.1">'(.*)' is not a valid value for '(.*)'\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
       <!--cvc-type.3.1.3: The value 'DUMMY_DENOMINATOR' of element 'gco:Integer' is not valid. (Element: gco:Integer with parent element: gmd:denominator)-->
       <rule errorType="type.3.1.3">The value '(.*)' of element '(.*)' is not valid\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
+      <rule errorType="enumeration-valid">Value '(.*)' is not facet-valid with respect to enumeration '\[(.*)\]'\. It must be a value from the enumeration\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
     </xsl:variable>
     
     <xsl:variable name="regexp" select="$rules/rule[@errorType=$errorType]"/>
@@ -113,6 +114,15 @@
                   <xsl:value-of select="$labels/validation/inElement"/>
                   <xsl:value-of select="geonet:getTitleWithoutContext($schema, regex-group(5), $labels)"/>
                   (<xsl:value-of select="regex-group(5)"/>).
+                </xsl:when>
+                <xsl:when test="$errorType = 'enumeration-valid'">
+                  <xsl:value-of select="$labels/validation/enum1"/>
+                  '<xsl:value-of select="regex-group(1)"/>' 
+                  <xsl:value-of select="$labels/validation/enum2"/>
+                  <xsl:value-of select="geonet:getTitleWithoutContext($schema, concat(regex-group(3), ':', regex-group(4)), $labels)"/>
+                  (<xsl:value-of select="concat(regex-group(3), ':', regex-group(4))"/>). 
+                  <xsl:value-of select="$labels/validation/enum3"/>
+                  <xsl:value-of select="regex-group(2)"/>.
                 </xsl:when>
               </xsl:choose>
             </xsl:variable>

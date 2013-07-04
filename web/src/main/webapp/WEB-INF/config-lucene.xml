@@ -94,7 +94,6 @@
       <field name="_featured" tagName="featured"/>
       <field name="_owner" tagName="owner"/>
       <field name="_userinfo" tagName="userinfo"/>
-      <field name="_isPublishedToAll" tagName="isPublishedToAll"/>
       <field name="_ownername" tagName="ownername"/>
       <field name="_cat" tagName="category"/>
       <field name="_valid" tagName="valid"/>
@@ -128,6 +127,7 @@
       <field name="geoBox" tagName="geoBox"/>
       <field name="_indexingError" tagName="idxError"/>
       <field name="_indexingErrorMsg" tagName="idxMsg"/>
+      <field name="_op0" tagName="publishedForGroup"/>
     </dumpFields>
   </search>
 

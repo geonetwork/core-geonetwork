@@ -855,7 +855,6 @@
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -943,9 +942,15 @@
   <modules>
     <module>cachingxslt</module>
     <module>jeeves</module>
-    <module>oaipmh</module>
     <module>sde</module>
     <module>web-client</module>
+    <module>domain</module>
+    <module>core</module>
+    <module>oaipmh</module>
+    <module>csw-server</module>
+    <module>harvesters</module>
+    <module>healthmonitor</module>
+    <module>services</module>
     <module>web</module>
   </modules>
 
@@ -961,17 +966,6 @@
       <id>itests</id>
       <modules>
         <module>web-itest</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>gast</id>
-      <activation>
-        <file>
-          <exists>gast/pom.xml</exists>
-        </file>
-      </activation>
-      <modules>
-        <module>gast</module>
       </modules>
     </profile>
     <profile>

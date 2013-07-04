@@ -9,7 +9,7 @@
 	<host>Servidor</host>
 	<port>Port</port>
 	<securePort>Secure Port</securePort>
-    <protocol>Preferred Protocol</protocol>
+	<protocol>Preferred Protocol</protocol>
 
 	<intranet>Intranet</intranet>
 	<network>Xarxa</network>
@@ -26,28 +26,33 @@
 	<reasonForOne>Database not tested or doesn't support</reasonForOne>
 	<reasonForMore>From number of processors</reasonForMore>
 
-    <multilingual>configuració multilingüe</multilingual>
-    <autoDetectEnable>Activa l'auto-detecció de llenguatge de sol·licitud de cerca</autoDetectEnable>
-    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
-    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
-    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
-    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
-    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
-    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
-    <requestedlanguagesorted>Resultats de la cerca en l'idioma sol·licitat ordenats a la part superior</requestedlanguagesorted>
+	<multilingual>configuració multilingüe</multilingual>
+	<autoDetectEnable>Activa l'auto-detecció de llenguatge de sol·licitud de cerca</autoDetectEnable>
+	<requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+	<requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+	<requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+	<requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+	<requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+	<requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+	<requestedlanguagesorted>Resultats de la cerca en l'idioma sol·licitat ordenats a la part superior</requestedlanguagesorted>
 
 	<oai>Proveïdor OAI</oai>
-		<datesearch>Datesearch</datesearch>
-		<datesearchopt>
-			<dsopt label="temporal extent">1</dsopt>
-			<dsopt label="modification date">2</dsopt>
-		</datesearchopt>
-	
-		<tokentimeout>ResumptionToken Timeout </tokentimeout>
-		<cachesize>Cachesize</cachesize>
+	<datesearch>Datesearch</datesearch>
+	<datesearchopt>
+		<dsopt label="temporal extent">1</dsopt>
+		<dsopt label="modification date">2</dsopt>
+	</datesearchopt>
+
+	<tokentimeout>ResumptionToken Timeout </tokentimeout>
+	<cachesize>Cachesize</cachesize>
 
 	<xlinkResolver>XLink Resolver</xlinkResolver>
-		
+
+	<inspire>INSPIRE</inspire>
+
+	<harvester>Harvesting</harvester>
+	<enableEditing>Allow editing on harvested records</enableEditing>
+
 	<downloadservice>Data-For-Download Service</downloadservice>
 	<leave>Use metadata linkage as is - no changes to linkage</leave>
 	<simple>Use GeoNetwork simple file download service (resources.get)</simple>
@@ -109,17 +114,13 @@
 	<abstract>Resum</abstract>
 	<fees>Tarifes</fees>
 	<accessConstraints>Restriccions d'accés</accessConstraints>
-    <cswMetadataPublic>Les metadades inserides són públiques</cswMetadataPublic>
-    
+	<cswMetadataPublic>Les metadades inserides són públiques</cswMetadataPublic>
+
 	<clickablehyperlinks>Es pot fer clic a hipervincles</clickablehyperlinks>
 
 	<localrating>Classificació local</localrating>
-    <autofixing>Correccions automàtiques</autofixing>
+	<autofixing>Correccions automàtiques</autofixing>
 
-    <inspire>INSPIRE</inspire>
-    <harvester>Harvesting</harvester>
-	<enableEditing>Allow editing on harvested records</enableEditing>
-	
 	<proxy>Proxy</proxy>
 	<use>Ús</use>
 	<username>Nom d'usuari</username>
@@ -130,12 +131,12 @@
 	<smtpPort>Port SMTP</smtpPort>
 
 	<userSelfRegistration>Auto-registre d'usuaris</userSelfRegistration>
-	
+
 	<removedMetadata>Metadades esborrades</removedMetadata>
 	<dir>Directori</dir>
 
 	<authentication>Autentificació</authentication>
-	
+
 	<otherlogins>Permetre a altres usuaris fer login des de</otherlogins>
 
 	<shib>Autentificació Shibboleth</shib>
@@ -144,22 +145,23 @@
 	<surname>Cognom</surname>
 	<firstname>Nom</firstname>
 
-    <metadataEnableInspireSearch>Habilitar panell de cerca</metadataEnableInspireSearch>
+	<metadataEnableInspireSearch>Habilitar panell de cerca</metadataEnableInspireSearch>
 
-    <metadataViews>Vistes de metadades</metadataViews>
-    <metadataEnableSimpleView>Habilitar vista simple</metadataEnableSimpleView>
-    <metadataEnableIsoView>Habilitar vista ISO</metadataEnableIsoView>
-    <metadataEnableInspireView>Habilitar vista INSPIRE</metadataEnableInspireView>
-    <metadataEnableXmlView>Habilitar vista XML</metadataEnableXmlView>
-    <metadataDefaultView>Vista per defecte</metadataDefaultView>
-    <metadataSimpleView>Vista simple</metadataSimpleView>
-    <metadataIsoView>Vista ISO</metadataIsoView>
-    <metadataInspireView>Vista INSPIRE</metadataInspireView>
-    <metadataXmlView>Vista XML</metadataXmlView>
-    <metadataAdvancedView>Vista avan�ada</metadataAdvancedView>
+	<metadataViews>Vistes de metadades</metadataViews>
+	<metadataEnableSimpleView>Habilitar vista simple</metadataEnableSimpleView>
+	<metadataEnableIsoView>Habilitar vista ISO</metadataEnableIsoView>
+	<metadataEnableInspireView>Habilitar vista INSPIRE</metadataEnableInspireView>
+	<metadataEnableXmlView>Habilitar vista XML</metadataEnableXmlView>
+	<metadataDefaultView>Vista per defecte</metadataDefaultView>
+	<metadataSimpleView>Vista simple</metadataSimpleView>
+	<metadataIsoView>Vista ISO</metadataIsoView>
+	<metadataInspireView>Vista INSPIRE</metadataInspireView>
+	<metadataXmlView>Vista XML</metadataXmlView>
+	<metadataAdvancedView>Vista avan�ada</metadataAdvancedView>
 	
 	<metadataPrivs>Metadata privileges</metadataPrivs>
 	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
+
 	<!-- Buttons -->
 
 	<save>Guardar</save>
@@ -277,13 +279,13 @@
 
 		<tip id="z3950.port">
 			Canvieu el port Z39.50.
-			<br />
+			<br/>
 			<b>Si us plau:</b>
 			Cal reiniciar GeoNetwork perquè aquest canvi tingui efecte.
 		</tip>
-	
+
 		<!-- oai  -->
-		
+
 		<tip id="oai.mdmode">
 			Influences the behaviour of OAI when parameters from or until are supplied.
 			If set to temporal extent, the temporal extent of the date described by the metadata is searched.
@@ -291,21 +293,20 @@
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
-		
+
 		<tip id="oai.tokentimeout">
 			The number of seconds a OAI resultset stays in the cache and can be scrolled using the OAI resumptionToken
 			<br/>
 			<b>Please note:</b> restart GeoNetwork to make this change active.
 		</tip>
-		
+
 		<tip id="oai.cachesize">
 			The number of OAI resultSets that can be stored in the Cache.
 		</tip>
 
-		<!-- proxy -->
-
+		<!-- CSW ISO Profile -->
 		<tip id="csw.enable">
-			If set, this will enable the CSW ISO Profile server functionnality. It will allow other catalogs to harvest it.
+			If set, this will enable the CSW ISO Profile server functionality. It will allow other catalogs to harvest it.
 			<br/>
 			<b>Si us plau, pareu esment:</b> Cal reiniciar GeoNetwork perquè aquest canvi tingui efecte.
 		</tip>
@@ -318,11 +319,11 @@
 		<tip id="csw.accessConstraints">Restriccions d'accés</tip>
 		
 		<!-- clickable hyperlinks -->
-		
+
 		<tip id="clickablehyperlinks.enable">
 			Si activat, GeoNetwork permetrà fer clic als enllaços de les metadades.
 		</tip>
-		
+
 		<!-- local rating -->
 		<tip id="localrating.enable">
 			Si activat, GeoNetwork calcularà puntuacions d'usuari només per les metadades d'aquest node (no distribuït entre els altres nodes de GeoNetwork).
@@ -330,11 +331,11 @@
 
 		<!-- automatic fixes -->
 		<tip id="autofixing.enable">
-            Quan s'activa, GeoNetwork aplica automàticament algunes correccions al guardar les metadades.
-        </tip>
+			Quan s'activa, GeoNetwork aplica automàticament algunes correccions al guardar les metadades.
+		</tip>
 
 		<!-- proxy -->
-			
+
 		<tip id="proxy.use">
 			Si activat, GeoNetwork usarà els paràmetres per
 			accedir a nodes remots. Per exemple, és usat durant el
@@ -355,14 +356,15 @@
 			són usats per enviar correus als usuaris de GeoNetwork
 			quan es baixa un recurs.
 		</tip>
-	<!-- removed metadata -->
-		
+
+		<!-- removed metadata -->
+
 		<tip id="removedMd.dir">
-            Directori per emmagatzemar les metadades (en format MEF ) quan s'esborren.			
+			Directori per emmagatzemar les metadades (en format MEF ) quan s'esborren.			
 		</tip>
 
 		<!-- userSelfRegistration -->
-		
+
 		<tip id="userSelfRegistration.enable">
 			If set, users will be able to register themselves. Self-registered
 			users are assigned to the GUEST group. An email is sent to the
@@ -370,7 +372,7 @@
 			email information.
 			<br/>
 		</tip>
-		
+
 		<tip id="downloadservice.simple">
 				If metadata protocol is 'Data for download' then this service lets the user download the resource from GeoNetwork with no further user input - it is the simplest download interface
 		</tip>
@@ -392,22 +394,23 @@
 		<tip id="searchStats.enable">
 			If set, Statistics on searches will be collected and stored in the database.
 		</tip>
-		
-        <!-- multilingual settings -->
-        <tip id="autodetect.enable">
-            Si s'estableix, el llenguatge de cerca es detecta automàticament. Fixeu-vos que això no funciona molt bé per als termes de cerca curts.
-        </tip>
-        <tip id="requestedlanguage.only">
-            Només retornar resultats de cerca en l'idioma sol·licitat.
-        </tip>
-        <tip id="requestedlanguage.sorted">
-            Mostra els resultats de cerca en l'idioma sol·licitat a la part superior.
-        </tip>
-        <tip id="requestedlanguage.ignored">
-            Omet l'idioma sol·licitat pels resultats de cerca.
-        </tip>
 
-    </tips>
+		<!-- multilingual settings -->
+		<tip id="autodetect.enable">
+			Si s'estableix, el llenguatge de cerca es detecta automàticament. Fixeu-vos que això no funciona molt bé per als termes de cerca curts.
+		</tip>
+		<tip id="requestedlanguage.only">
+			Només retornar resultats de cerca en l'idioma sol·licitat.
+		</tip>
+		<tip id="requestedlanguage.sorted">
+			Mostra els resultats de cerca en l'idioma sol·licitat a la part superior.
+		</tip>
+		<tip id="requestedlanguage.ignored">
+			Omet l'idioma sol·licitat pels resultats de cerca.
+		</tip>
+
+	</tips>
+
 	<data.dataDir>Data directory:</data.dataDir>
 	<data.resources>Resources directory:</data.resources>
 	<data.configDir>Configuration directory:</data.configDir>
@@ -434,14 +437,14 @@
 	<version>Version:</version>
 	<subVersion>Sub-version:</subVersion>
 	<index.lucene.config>Lucene configuration:</index.lucene.config>
-	<db.url>Database URL:</db.url>	
-	<db.openattempt>Database Status:</db.openattempt>	
-	<db.numactive>Database connections in use:</db.numactive>	
-	<db.numidle>Database connections available:</db.numidle>	
-	<db.maxactive>Maximum number of database connections:</db.maxactive>	
+	<db.url>Database URL:</db.url>
+	<db.openattempt>Database Status:</db.openattempt>
+	<db.numactive>Database connections in use:</db.numactive>
+	<db.numidle>Database connections available:</db.numidle>
+	<db.maxactive>Maximum number of database connections:</db.maxactive>
 	<db.statserror>Database statistics:</db.statserror>
-    <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
-    <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
-    <keepMarkedElement>Keep Marked Element</keepMarkedElement>
+	<sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+	<hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+	<keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

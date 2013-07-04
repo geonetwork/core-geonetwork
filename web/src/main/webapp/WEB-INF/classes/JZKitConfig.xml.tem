@@ -12,7 +12,7 @@
   </Crosswalks>
   <RecordConversion>
     <converter type="xslt" classname="org.fao.geonet.services.util.z3950.transformers.GNTransformer" />
-    <mapping fromSpec="xml::f" toSpec="html::f" type="xslt" resource="crosswalks/RecordModel/xml_to_html.xsl" />
+    <mapping fromSpec="xml::f" toSpec="html::f" type="xslt" resource="classpath:crosswalks/RecordModel/xml_to_html.xsl" />
   </RecordConversion>
   <Repository className="org.fao.geonet.services.util.z3950.provider.GN.GNSearchable" code="GN" serviceName="Local GeoNetwork">
     <Preferences>

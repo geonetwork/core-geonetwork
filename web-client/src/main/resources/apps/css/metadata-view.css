@@ -334,43 +334,39 @@ Display hyperlink as text next to element
 
 /* TagCloud styles */
 ul li.tag-cloud {
-  border-top : 1px solid transparent;
   text-align : center;
   padding : 1px;
   margin : 2px;
-  /*
-  height:200px;
-  width:200px;
- */
 }
 ul li.tag-cloud-hover {
-  -moz-border-radius : 4px 4px 4px 4px;
-  background-color : rgba(10, 10, 10, 0.15);
-  border-top : 1px solid rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+}
+ul li.tag-cloud a {
+    line-height: 26px;
 }
 li.tag-cloud-0 {
-  font-size : xx-small !important
+  font-size : 60% !important;
 }
 li.tag-cloud-1 {
-  font-size : x-small !important
+  font-size : 70% !important;
 }
 li.tag-cloud-2 {
-  font-size : smaller !important
+  font-size : 80% !important;
 }
 li.tag-cloud-3 {
-  font-size : small !important
+  font-size : 90% !important;
 }
 li.tag-cloud-4 {
-  font-size : medium !important
+  font-size : 100% !important;
 }
 li.tag-cloud-5 {
-  font-size : larger !important
+  font-size : 120% !important;
 }
 li.tag-cloud-6 {
-  font-size : x-large !important
+  font-size : 140% !important;
 }
 li.tag-cloud-7 {
-  font-size : xx-large !important
+  font-size : 160% !important;
 }
 /* Image in combo box */
 .x-combo-list-item img {

@@ -61,10 +61,11 @@ public class Lib
 
 		//--- if there is no verb, there are no params
 
-		if (params != null)
-			for (String key : params.keySet())
-				req.setAttribute(key, params.get(key));
-
+		if (params != null) {
+	        for (Map.Entry<String, String> param: params.entrySet()) {
+	            req.setAttribute(param.getKey(), param.getValue());
+			}
+		}
 		root.addContent(req);
 		root.addContent(response);
 
