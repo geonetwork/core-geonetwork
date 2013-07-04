@@ -36,6 +36,7 @@
     <replaceText xpath="general/uploadDir">../../temp/</replaceText>
     <replaceText xpath="general/maxUploadSize">100</replaceText>
     <replaceAtt xpath="appHandler/param[@name = 'useSubversion']" attName="value" value="true"/>
+    <replaceAtt xpath="appHandler/param[@name = 'statusActionsClass']" attName="value" value="org.fao.geonet.kernel.metadata.SextantStatusActions"/>
     
     <replaceAtt xpath="//service[@name = 'main.search.suggest']/class/param[@name='threshold']" attName="value" value="1"/>
     

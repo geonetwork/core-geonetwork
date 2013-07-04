@@ -42,14 +42,14 @@ import java.util.Set;
 
 public class DefaultStatusActions implements StatusActions {
 
-	private String host, port, from, fromDescr, replyTo, replyToDescr;
-	private ServiceContext context;
-	private AccessManager am;
-	private DataManager dm;
-	private Dbms dbms;
-	private String siteUrl;
-	private UserSession session;
-	private boolean emailNotes = true;
+	protected String host, port, from, fromDescr, replyTo, replyToDescr;
+	protected ServiceContext context;
+	protected AccessManager am;
+	protected DataManager dm;
+	protected Dbms dbms;
+	protected String siteUrl;
+	protected UserSession session;
+	protected boolean emailNotes = true;
 
 	/**
 		* Constructor.
