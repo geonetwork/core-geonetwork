@@ -207,7 +207,7 @@
         </xsl:for-each>
         
         <xsl:if test="descendant::gmx:FileName">
-          <img src="{descendant::gmx:FileName/@src}" alt="logo" class="orgLogo" style="float:right;"/>
+          <img src="{descendant::gmx:FileName/@src}" alt="logo" class="logo orgLogo" style="float:right;"/>
           <!-- FIXME : css -->
         </xsl:if>
       </xsl:with-param>
