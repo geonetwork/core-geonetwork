@@ -213,7 +213,8 @@
 	<source>Quelle</source>
 	<criteria>Kriterium</criteria>
 	<validate>Validieren</validate>
-	<recurse>Rekursiv</recurse>
+	<recurse>Also search in subfolders</recurse>
+	<checkFileLastModifiedForUpdate>Update catalog record only if file as been updated</checkFileLastModifiedForUpdate>
 	<nodelete>Behalte lokal, wenn Quelle gelöscht wird</nodelete>
 	<server>Server</server>
 	<database>Datenbank</database>

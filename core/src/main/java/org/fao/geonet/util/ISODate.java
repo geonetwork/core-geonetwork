@@ -39,7 +39,7 @@ public class ISODate implements Cloneable
 	public int hour;	//--- 0..23
 	public int min;	//--- 0..59
 	public int sec;	//--- 0..59
-
+	public static final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 	public boolean isShort; //--- 'true' if the format is yyyy-mm-dd
 
 	//---------------------------------------------------------------------------

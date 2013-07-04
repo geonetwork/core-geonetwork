@@ -124,6 +124,7 @@
 	<servlet>Servlet</servlet>
 	<useAccount>Kullanılacak Hesap</useAccount>
 	<username>Kullanıcı Adı</username>
+	<checkFileLastModifiedForUpdate>Update catalog record only if file as been updated</checkFileLastModifiedForUpdate>
 	<password>Şifre</password>
 
 	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
@@ -232,6 +233,7 @@
 	<allGroup>Tüm Gruplar</allGroup>
 
 	<policy>
+>>>>>>> upstream/develop
 		<copy>Kopyala</copy>
 		<createAndCopy>Oluştur ve Kopyala</createAndCopy>
 		<copyToIntranet>Intranet grubuna kopyala</copyToIntranet>
