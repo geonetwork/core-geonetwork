@@ -190,6 +190,18 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             });
         });
     },
+    
+    getLimitInput: function(){
+      return {
+          xtype: 'textfield',
+          name: 'E_hitsperpage',
+          id: 'maxResults',
+          fieldLabel: OpenLayers.i18n('maxResults'),
+          value: 50,
+          width: 40
+      };
+    },
+    
     getInitiativeTypeStore: function () {
         return GeoNetwork.data.CodeListStore({
             url: catalogue.services.schemaInfo,
@@ -718,6 +730,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         
         // Metadata relation
         this.mdStore = GeoNetwork.data.MetadataResultsFastStore();
+
         // Create grid with template list
         var checkboxSM = new Ext.grid.CheckboxSelectionModel({
             singleSelect: self.type === 'onlinesrc' ? false : this.singleSelect,
@@ -828,6 +841,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         this.getHiddenFormInput(cmp);
         this.getFormFieldForSibling(cmp);
         cmp.push(this.getSearchInput());
+        cmp.push(this.getLimitInput());
         cmp.push(grid);
         this.getFormFieldForService(cmp);
         
@@ -865,9 +879,10 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         
         var cmp = [];
         this.getHiddenFormInput(cmp);
-        this.getFormFieldForSibling(cmp);
 
+        this.getFormFieldForSibling(cmp);
         cmp.push(this.getSearchInput());
+        cmp.push(this.getLimitInput());
         
         var itemSelector = new Ext.ux.ItemSelector({
             dataFields: ["title"],
@@ -912,7 +927,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 record.data.associationTypeLabel = self.associationType.get('label');
             });
         });
-        
+
         cmp.push(itemSelector);
         
         this.formPanel = new Ext.form.FormPanel({
@@ -1108,116 +1123,6 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         GeoNetwork.editor.nbResultPerPage = 20;
         this.mdStore.removeAll();
         GeoNetwork.util.SearchTools.doQueryFromForm(this.formPanel.getId(), this.catalogue, 1, Ext.emptyFn, null, Ext.emptyFn, this.mdStore);
-    },
-    initComponent: function () {
-        Ext.applyIf(this, this.defaultConfig);
-        
-        GeoNetwork.editor.LinkResourcesWindow.superclass.initComponent.call(this);
-        
-        this.setTitle(OpenLayers.i18n('linkAResource-' + this.type));
-        
-        this.generateMode();
-    }
-});
-
-GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.LinkResourcesWindow, {
-    /**
-     * According to the type of resource to link build the
-     * form to populate process parameters.
-     */
-    generateMode: function () {
-        var self = this;
-        
-        var cancelBt = {
-                text: OpenLayers.i18n('cancel'),
-                iconCls: 'cancel',
-                scope: this,
-                handler: function () {
-                    self.hide();
-                }
-            };
-        
-        if (this.type === 'thumbnail') {
-            this.add(this.generateThumbnailForm(cancelBt));
-        } else if (this.type === 'onlinesrc') {
-            this.add(this.generateMultipleMetadataSelector(cancelBt));
-        } else if (this.type === 'sibling') {
-            this.add(this.getMultipleMetadataSelectorForSibling(cancelBt));
-        } else {
-            
-            this.add(this.generateMetadataSearchForm(cancelBt));
-            // TODO : add filter
-            this.doSearch();
-            //this.catalogue.search({E_template: 'n'}, null, null, 1, true, this.mdStore, null);
-        }
-    },
-    
-    /**
-     * Custom for MyOcean to allow multiple selection
-     */
-    generateMultipleMetadataSelector: function (cancelBt) {
-        
-        this.mdSelectedStore = GeoNetwork.data.MetadataResultsFastStore();
-        this.mdStore = GeoNetwork.data.MetadataResultsFastStore();
-        
-        var tpl = new Ext.XTemplate(
-                '<tpl for=".">',
-                    // TODO : add keyword definiton ?
-                    '<div class="ux-mselect-item">{title}</div>',
-                '</tpl>'
-            );
-
-        var cmp = [];
-        this.getHiddenFormInput(cmp);
-        cmp.push(this.getSearchInput());
-        
-        var itemSelector = new Ext.ux.ItemSelector({
-            dataFields: ["title"],
-            //toData: [],
-            toStore: this.mdSelectedStore,
-            msWidth: 320,
-            msHeight: 260,
-            valueField: "value",
-            hideLabel: true,
-            toSortField: undefined,
-            fromTpl: tpl,
-            toTpl: tpl,
-            toLegend: OpenLayers.i18n('Selected'),
-            fromLegend: OpenLayers.i18n('Found'),
-            fromStore: this.mdStore,
-            fromAllowTrash: false,
-            fromAllowDup: true,
-            toAllowDup: false,
-            drawUpIcon: false,
-            drawDownIcon: false,
-            drawTopIcon: false,
-            drawBotIcon: false,
-            imagePath: this.imagePath,
-            toTBar: [{
-                // control to clear all select keywwords and refresh the XML.
-                text: OpenLayers.i18n('clear'),
-                handler: function () {
-                    var i = itemSelector;
-                    itemSelector.reset.call(i);
-                },
-                scope: this
-            }]
-        });
-        cmp.push(itemSelector);
-        
-        this.formPanel = new Ext.form.FormPanel({
-            items: [cmp],
-            buttons: [{
-                text: OpenLayers.i18n('createLink'),
-                iconCls: 'linkIcon',
-                ctCls: 'gn-bt-main',
-                scope: this,
-                handler: function () {
-                    this.runProcess();
-                }
-            }, cancelBt]
-        });
-        return this.formPanel;
     },
     initComponent: function () {
         Ext.applyIf(this, this.defaultConfig);
