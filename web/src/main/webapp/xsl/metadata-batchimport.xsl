@@ -63,6 +63,20 @@
 				</tr>
 				
 				<xsl:call-template name="metadata-insert-common-form"/>
+				
+				
+				<!-- recurse on subfolder -->
+				<tr id="gn.recurse">
+					<th class="padded">
+						<label for="recurse">
+							<xsl:value-of select="/root/gui/strings/recurse"/>
+						</label>
+					</th>
+					<td>
+						<input class="content" type="checkbox" name="recurse"/>
+					</td>
+				</tr>
+				
 			  <input type="hidden" name="failOnError" id="failOnError" value="off"/>
 			 <!-- Uncomment that to enable fail on error checkbox option 
 			   <tr>

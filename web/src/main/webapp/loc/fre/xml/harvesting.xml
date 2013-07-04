@@ -212,8 +212,9 @@
 	<source>Source</source>
 	<criteria>Critères</criteria>
 	<validate>Valider</validate>
-	<recurse>Récursif</recurse>
-	<nodelete>Conserver les fichiers</nodelete>
+	<recurse>Rechercher dans les sous répertoires également</recurse>
+	<checkFileLastModifiedForUpdate>Mettre à jour la fiche du catalogue si le fichier est plus récent</checkFileLastModifiedForUpdate>
+	<nodelete>Conserver la fiche du catalogue même si le fichier n'est plus présent</nodelete>
 	<server>Serveur</server>
 	<database>Base de données</database>
 	<privileges>Privilèges</privileges>

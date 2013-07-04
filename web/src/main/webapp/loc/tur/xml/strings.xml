@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    
+	<recurse>Also search in subfolders</recurse>
+	<useStopwords>Lucene indeksi bu diller için durma kelimelerini (stopwords) kullanır :</useStopwords>    
+    <rebuildIndexMessage>Bu değerleri değiştirirseniz, Lucene indeksini yeniden oluşturmanız tavsiye edilir.</rebuildIndexMessage>
+	<!-- new strings - SP 2.5 -->
+	<showRemoteHTML>Uzak sunucudan HTML göster</showRemoteHTML>
+	<!-- end new strings -->
 	<ara>عربي</ara> <!-- Do not translate! -->
 	<cat>Català</cat> <!-- Do not translate! -->
 	<chi>中文</chi> <!-- Do not translate! -->

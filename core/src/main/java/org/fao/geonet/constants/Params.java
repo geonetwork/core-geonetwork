@@ -29,6 +29,7 @@ package org.fao.geonet.constants;
 public final class Params {
 	public static final String ACCESS       = "access";
 	public static final String BTN          = "btn";
+    public static final String RECURSE      = "recurse";
 	public static final String CATEGORY     = "category";
 	public static final String CHOICE             = "choice";
 	public static final String JURISDICTION       = "jurisdiction";
