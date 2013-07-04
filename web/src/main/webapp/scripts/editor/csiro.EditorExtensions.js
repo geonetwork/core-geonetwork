@@ -7,12 +7,16 @@ Ext.namespace("csiro");
  * showThesaurusSelectionPanel: Used in sensorML editing for 
  * picking terms from thesauri (but could be used in any schema) 
  *
+ * showCRSSelectionPanel: Used in sensorML editing for 
+ * picking CRS from crs.search service (but could be used in any schema) 
+ *
  * showRelatedDatasetSelectionPanel: Used in sensorML editing for
  * picking related datasets and assigning the result to an input element
  * in the editing form (but could be used in any schema)
  */
 
 csiro.SearchThesaurusSelectionPanel = null;
+csiro.SearchCRSSelectionPanel = null;
 csiro.SearchKeywordSelectionWindow = null;
 
 csiro.showThesaurusSelectionPanel = function(thesaurusTitle, thesaurus, term, termId, thesaurusId) {
@@ -63,6 +67,39 @@ csiro.showThesaurusSelectionPanel = function(thesaurusTitle, thesaurus, term, te
         iconCls: 'searchIcon'
 	});
 	csiro.SearchKeywordSelectionWindow.show();	
+};
+
+csiro.showCRSSelectionPanel = function(crsId, useCode) {
+
+	csiro.SearchCRSSelectionPanel = new csiro.CRSSelectionPanel({
+				minSelected: 1,
+				maxSelected: 1,
+				listeners : {
+						crsSelected: function(panel, crss) {
+							console.log(crss);
+							if (useCode) {
+								$(crsId).value = crss.codes[0];
+							} else {
+								// set description into appropriate input
+								$(crsId).value = crss.descriptions[0];
+							}
+						}
+				}
+	});
+
+	var title = 'Search Coordinate Reference Systems (CRS)';
+		
+	csiro.SearchCRSSelectionWindow = new Ext.Window({
+       	width: 720,
+        height: 330,
+        layout: 'fit',
+				title: title, 
+        items: csiro.SearchCRSSelectionPanel,
+        closeAction: 'hide',
+        constrain: true,
+        iconCls: 'searchIcon'
+	});
+	csiro.SearchCRSSelectionWindow.show();	
 };
 
 csiro.showRelatedDatasetSelectionPanel = function(xlinkRef, nameRef, nameValue) {
