@@ -41,6 +41,7 @@ import javax.servlet.ServletContext;
 
 import jeeves.JeevesJCS;
 import jeeves.JeevesProxyInfo;
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
@@ -68,7 +69,6 @@ import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.XmlSerializerDb;
 import org.fao.geonet.kernel.XmlSerializerSvn;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
-import org.fao.geonet.kernel.csw.CatalogDispatcher;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
@@ -86,7 +86,7 @@ import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.services.metadata.StatusActions;
+import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;
@@ -101,8 +101,7 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.jdom.Element;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
 
@@ -113,12 +112,11 @@ public class Geonetwork implements ApplicationHandler {
 	private Logger        		logger;
 	private String 				path;				
 	private SearchManager 		searchMan;
-	private HarvestManager 		harvestMan;
-	private ThesaurusManager 	thesaurusMan;
 	private MetadataNotifierControl metadataNotifierControl;
 	private ThreadPool        threadPool;
 	private String   FS         = File.separator;
 	private Element dbConfiguration;
+    private JeevesApplicationContext _applicationContext;
     private static final String       SPATIAL_INDEX_FILENAME    = "spatialindex";
 	private static final String       IDS_ATTRIBUTE_NAME        = "id";
 
@@ -141,6 +139,8 @@ public class Geonetwork implements ApplicationHandler {
 	  */
 	public Object start(Element config, ServiceContext context) throws Exception {
 		logger = context.getLogger();
+		this._applicationContext = context.getApplicationContext();
+        ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
 
 		path    = context.getAppPath();
 		String baseURL = context.getBaseUrl();
@@ -232,20 +232,17 @@ public class Geonetwork implements ApplicationHandler {
 		boolean z3950Enable    = settingMan.getValueAsBool("system/z3950/enable", false);
 		String  z3950port      = settingMan.getValue("system/z3950/port");
 
-		// null means not initialized
-		ApplicationContext app_context = null;
-
 		// build Z3950 repositories file first from template
 		URL url = getClass().getClassLoader().getResource(Geonet.File.JZKITCONFIG_TEMPLATE);
 
-		if (Repositories.build(url, context)) {
+        if (Repositories.build(url, context)) {
 			logger.info("     Repositories file built from template.");
 
 			try {
-				app_context = new  ClassPathXmlApplicationContext( Geonet.File.JZKITAPPLICATIONCONTEXT );
+			    JeevesApplicationContext appContext = context.getApplicationContext();
 
 				// to have access to the GN context in spring-managed objects
-				ContextContainer cc = (ContextContainer)app_context.getBean("ContextGateway");
+				ContextContainer cc = (ContextContainer)appContext.getBean("ContextGateway");
 				cc.setSrvctx(context);
 
 				if (!z3950Enable)
@@ -254,7 +251,7 @@ public class Geonetwork implements ApplicationHandler {
 				{
 					logger.info("     Server is Enabled.");
 		
-					Server.init(z3950port, app_context);
+					Server.init(z3950port, appContext);
 				}	
 			} catch (Exception e) {
 				logger.error("     Repositories file init FAILED - Z3950 server disabled and Z3950 client services (remote search, harvesting) may not work. Error is:" + e.getMessage());
@@ -291,8 +288,9 @@ public class Geonetwork implements ApplicationHandler {
 		luceneTermsToExclude = handlerConfig.getMandatoryValue(Geonet.Config.STAT_LUCENE_TERMS_EXCLUDE);
 
 		LuceneConfig lc = new LuceneConfig(path, servletContext, luceneConfigXmlFile);
-        logger.info("  - Lucene configuration is:");
-        logger.info(lc.toString());
+		logger.info("  - Lucene configuration is:");
+		logger.info(lc.toString());
+		beanFactory.registerSingleton(LuceneConfig.LUCENE_CONFIG_BEAN_NAME, lc);
        
 		DataStore dataStore = context.getResourceManager().getDataStore(Geonet.Res.MAIN_DB);
 		if (dataStore == null) {
@@ -317,10 +315,10 @@ public class Geonetwork implements ApplicationHandler {
 				.getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
 		
 		SettingInfo settingInfo = new SettingInfo(settingMan);
-		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, thesauriDir, summaryConfigXmlFile, lc,
-				logAsynch, logSpatialObject, luceneTermsToExclude, 
-				dataStore, maxWritesInTransaction, 
-				settingInfo, schemaMan, servletContext);
+		searchMan = new SearchManager(path, luceneDir, htmlCacheDir, thesauriDir, summaryConfigXmlFile, logAsynch,
+				logSpatialObject, luceneTermsToExclude, dataStore, 
+				maxWritesInTransaction, settingInfo, 
+				schemaMan, servletContext, _applicationContext);
 		
 		 
 		 // if the validator exists the proxyCallbackURL needs to have the external host and
@@ -383,7 +381,7 @@ public class Geonetwork implements ApplicationHandler {
 
 		logger.info("  - Thesaurus...");
 
-		thesaurusMan = ThesaurusManager.getInstance(context, path, dataMan, context.getResourceManager(), thesauriDir);
+		ThesaurusManager thesaurusMan = ThesaurusManager.getInstance(context, path, dataMan, context.getResourceManager(), thesauriDir);
 
 		//------------------------------------------------------------------------
 		//--- initialize catalogue services for the web
@@ -391,7 +389,6 @@ public class Geonetwork implements ApplicationHandler {
 		logger.info("  - Catalogue services for the web...");
 
 		CatalogConfiguration.loadCatalogConfig(path, Csw.CONFIG_FILE);
-		CatalogDispatcher catalogDis = new CatalogDispatcher(new File(path,summaryConfigXmlFile), lc);
 
 		//------------------------------------------------------------------------
 		//--- initialize catalogue services for the web
@@ -411,45 +408,44 @@ public class Geonetwork implements ApplicationHandler {
         //------------------------------------------------------------------------
         //--- initialize metadata notifier subsystem
         logger.info("  - Metadata notifier ...");
-        
-		//------------------------------------------------------------------------
-		//--- return application context
-
-		GeonetContext gnContext = new GeonetContext();
-
-		gnContext.accessMan   = accessMan;
-		gnContext.dataMan     = dataMan;
-		gnContext.searchMan   = searchMan;
-		gnContext.schemaMan   = schemaMan;
-		gnContext.config      = handlerConfig;
-		gnContext.catalogDis  = catalogDis;
-		gnContext.settingMan  = settingMan;
-		gnContext.thesaurusMan= thesaurusMan;
-		gnContext.oaipmhDis   = oaipmhDis;
-		gnContext.app_context = app_context;
-        gnContext.metadataNotifierMan = metadataNotifierMan;
-		gnContext.threadPool  = threadPool;
-		gnContext.xmlSerializer  = xmlSerializer;
-		gnContext.svnManager  = svnManager;
-		gnContext.statusActionsClass = statusActionsClass;
-
-		logger.info("Site ID is : " + gnContext.getSiteId());
 
         //------------------------------------------------------------------------
         //--- initialize harvesting subsystem
 
         logger.info("  - Harvest manager...");
 
-        harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
-        dataMan.setHarvestManager(harvestMan);
+		GeonetContext gnContext = new GeonetContext();
 
-        gnContext.harvestMan  = harvestMan;
+        gnContext.springAppContext = context.getApplicationContext();
+        gnContext.threadPool  = threadPool;
+        gnContext.statusActionsClass = statusActionsClass;
+
+
+        HarvestManager harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
+
+        //------------------------------------------------------------------------
+        //--- return application context
+
+		beanFactory.registerSingleton("accessManager", accessMan);
+		beanFactory.registerSingleton("dataManager", dataMan);
+		beanFactory.registerSingleton("searchManager", searchMan);
+		beanFactory.registerSingleton("schemaManager", schemaMan);
+		beanFactory.registerSingleton("serviceHandlerConfig", handlerConfig);
+		beanFactory.registerSingleton("settingManager", settingMan);
+		beanFactory.registerSingleton("thesaurusManager", thesaurusMan);
+		beanFactory.registerSingleton("oaipmhDisatcher", oaipmhDis);
+		beanFactory.registerSingleton("metadataNotifierManager", metadataNotifierMan);
+		beanFactory.registerSingleton("svnManager", svnManager);
+		beanFactory.registerSingleton("xmlSerializer", xmlSerializer);
+		beanFactory.registerSingleton("harvestManager", harvestMan);
 
 
         // Creates a default site logo, only if the logo image doesn't exists
         // This can happen if the application has been updated with a new version preserving the database and
         // images/logos folder is not copied from old application 
         createSiteLogo(gnContext.getSiteId(), servletContext, context.getAppPath());
+
+        logger.info("Site ID is : " + gnContext.getSiteId());
 
         // Notify unregistered metadata at startup. Needed, for example, when the user enables the notifier config
         // to notify the existing metadata in database
@@ -501,7 +497,7 @@ public class Geonetwork implements ApplicationHandler {
                     boolean readOnly = gc.isReadOnly();
                     logger.debug("DBHeartBeat: GN is read-only ? " + readOnly);
                     boolean canWrite = checkDBWrite();
-                    HarvestManager hm = gc.getHarvestManager();
+                    HarvestManager hm = gc.getBean(HarvestManager.class);
                     if(readOnly && canWrite) {
                         logger.warning("GeoNetwork can write to the database, switching to read-write mode");
                         readOnly = false;
@@ -909,7 +905,7 @@ public class Geonetwork implements ApplicationHandler {
 
 			
 		logger.info("  - Harvest Manager...");
-		harvestMan.shutdown();
+		_applicationContext.getBean(HarvestManager.class).shutdown();
 
 		logger.info("  - Z39.50...");
 		Server.end();

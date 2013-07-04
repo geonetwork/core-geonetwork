@@ -213,6 +213,7 @@
 	<source>Bron</source>
 	<criteria>Criteria</criteria>
 	<validate>Valideren</validate>
+	<checkFileLastModifiedForUpdate>Update catalog record only if file was updated</checkFileLastModifiedForUpdate>
 	<recurse>Teruggaan</recurse>
 	<nodelete>Bewaar lokaal indien verwijderd bij de bronhouder</nodelete>
 	<server>Server</server>	

@@ -218,7 +218,8 @@
 	<source>Font</source>
 	<criteria>Criteris</criteria>
 	<validate>Validar</validate>
-	<recurse>Recurs</recurse>
+	<recurse>Also search in subfolders</recurse>
+	<checkFileLastModifiedForUpdate>Update catalog record only if file was updated</checkFileLastModifiedForUpdate>
 	<nodelete>Conservar en local quan la font s'esborri</nodelete>
 	<server>Servidor</server>	
 	<database>Base de dades</database>	

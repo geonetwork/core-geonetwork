@@ -213,6 +213,7 @@
 	<source>Lähtösijainti</source>
 	<criteria>Kriteeri</criteria>
 	<validate>Validoi</validate>
+	<checkFileLastModifiedForUpdate>Update catalog record only if file was updated</checkFileLastModifiedForUpdate>
 	<recurse>Rekursoi</recurse>
 	<nodelete>Pidä paikallinen, jos poistetaan alkuperäisestä sijainnista.</nodelete>
 	<server>Palvelin</server>	

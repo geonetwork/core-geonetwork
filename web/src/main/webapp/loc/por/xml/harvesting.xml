@@ -214,6 +214,7 @@
 	<criteria>Critério</criteria>
 	<validate>Validar</validate>
 	<recurse>Incluir</recurse>
+	<checkFileLastModifiedForUpdate>Update catalog record only if file was updated</checkFileLastModifiedForUpdate>
 	<nodelete>Manter uma cópia local, quando apagado na fonte.</nodelete>
 	<server>Servidor</server>
 	<database>Banco de dados</database>

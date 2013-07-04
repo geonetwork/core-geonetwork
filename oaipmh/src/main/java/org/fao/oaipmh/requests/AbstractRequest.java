@@ -102,8 +102,9 @@ public abstract class AbstractRequest
 	{
 		transport.clearParameters();
 
-		for (String name : params.keySet())
-			transport.addParameter(name, params.get(name));
+		for (Map.Entry<String, String> param: params.entrySet()) {
+			transport.addParameter(param.getKey(), param.getValue());
+		}
 
 		transport.addParameter("verb", getVerb());
 

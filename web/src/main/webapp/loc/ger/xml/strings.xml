@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<ara>عربي</ara> <!-- Do not translate! -->
+	<recurse>Also search in subfolders</recurse>
 	<cat>Català</cat> <!-- Do not translate! -->
 	<chi>中文</chi> <!-- Do not translate! -->
 	<dut>Nederlands</dut> <!-- Do not translate! -->

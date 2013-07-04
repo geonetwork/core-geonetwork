@@ -26,11 +26,14 @@ package jeeves.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
@@ -162,6 +165,43 @@ public final class IO
                 // ignore
             }
         }
+    }
+
+    /**
+     * Returns a list of all file names in a directory - if recurse is true, 
+     * processes all subdirectories too.
+     * @param directory
+     * @param recurse
+     * @return
+     */
+    public static List<File> getFilesInDirectory(File directory, boolean recurse, FilenameFilter filter) throws IOException {
+    	List<File> fileList = new ArrayList<File>();
+    	if(! directory.exists()) {
+    		throw new IOException("Directory does not exist: "+ directory.getAbsolutePath());
+    	}
+    	if(! directory.canRead()) {
+    		throw new IOException("Cannot read directory: "+ directory.getAbsolutePath());
+    	}
+    	if(! directory.isDirectory()) {
+    		throw new IOException("Directory is not a directory: "+ directory.getAbsolutePath());
+    	}
+    	for(File file : directory.listFiles(filter)) {
+    		if(file.isDirectory()) {
+    			if(recurse) { 
+    				// recurse
+    				fileList.addAll(getFilesInDirectory(file, recurse, filter));
+    			}
+    		}
+    		else {
+    			if(! file.canRead()) {
+    				throw new IOException("Cannot read file "+ file.getAbsolutePath());
+    			}
+    			else {
+    				fileList.add(file);
+    			}
+    		}
+    	}		
+    	return fileList;
     }
 }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<recurse>Rechercher dans les sous répertoires également</recurse>
 	<ara>عربي</ara> <!-- Do not translate! -->
 	<cat>Català</cat> <!-- Do not translate! -->
 	<chi>中文</chi> <!-- Do not translate! -->

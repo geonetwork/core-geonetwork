@@ -16,6 +16,7 @@
 	<tur>Türkçe</tur> <!-- Do not translate! -->
 	<pol>Polski</pol> <!-- Do not translate! -->
 
+	<recurse>Also search in subfolders</recurse>
 	<otherValue>Otro:</otherValue>
 	<warning>Advertencia</warning>
 	<isAdmin>¿Es administrador?</isAdmin>
