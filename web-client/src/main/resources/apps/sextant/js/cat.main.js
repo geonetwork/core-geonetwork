@@ -406,9 +406,29 @@ cat.app = function() {
 						it.setVisible(mode);
 					}
 				}, this);
-			}
+			},
+		    updatePrivileges: function(catalogue, user){
+		        
+		        var nbVisible=0;
+		        var editingActions = []; //new Md & insert MD actions
+		        
+		        if(this.createMetadataAction) editingActions.push(this.createMetadataAction);
+		        if(this.mdImportAction) editingActions.push(this.mdImportAction);
+		        
+		        // Only administrator (SXT5_ALL_Administrator) will see 'Administration' button
+		        var vis = user && user.role == 'Administrator';
+		        this.adminAction.setVisible(vis);
+		        
+		        // Do not display editing action for registered users
+		        Ext.each(editingActions, function(){
+		            var vis = user && user.role !== 'RegisteredUser';
+		            this.setVisible(vis);
+		            if(vis)nbVisible++;
+		        });
+		        
+		        this.actionOnSelectionMenu.setVisible(nbVisible > 0 && this.catalogue.isAdmin());
+		    }
 		});
-		
 
 		resultPanel = new Ext.Panel({
 			id : 'resultsPanel',
