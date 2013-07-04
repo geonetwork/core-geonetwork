@@ -217,7 +217,7 @@
 	<criteria>Критерий</criteria>
 	<validate>Проверить</validate>
 	<recurse>Рекурсивно</recurse>
-	<checkFileLastModifiedForUpdate>Update catalog record only if file as been updated</checkFileLastModifiedForUpdate>
+	<checkFileLastModifiedForUpdate>Update catalog record only if file was updated</checkFileLastModifiedForUpdate>
 	<nodelete>Keep local if deleted at source</nodelete>
 	<server>Server</server>	
 	<database>Database</database>	
