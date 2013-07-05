@@ -4,10 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
  * One of the entities responsible for dynamic service configuration. 
@@ -31,12 +29,14 @@ public class ServiceParameter implements Serializable {
     public void setId(int id) {
         this._id = id;
     }
+    @Column(nullable=false)
     public String getName() {
         return _name;
     }
     public void setName(String name) {
         this._name = name;
     }
+    @Column(length=1024, nullable=false)
     public String getValue() {
         return _value;
     }

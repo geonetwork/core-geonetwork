@@ -15,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
@@ -77,7 +78,7 @@ public class Setting {
         return this;
     }
 
-    @Column(name = "name", nullable = true)
+    @Column(name = "name", nullable = false)
     public @Nonnull
     String getName() {
         return _name;
@@ -88,6 +89,7 @@ public class Setting {
         return this;
     }
 
+    @Lob
     @Column(name = "value", nullable = true)
     public String getValue() {
         return _value;

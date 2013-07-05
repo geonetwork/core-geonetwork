@@ -4,6 +4,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 
 /**
  * Encapsulates the harvest data related to a
@@ -16,16 +17,29 @@ import javax.persistence.Embeddable;
 @Embeddable
 @Access(AccessType.PROPERTY)
 public class MetadataHarvestInfo {
-    private boolean _harvested;
+    private char _harvested = 'n';
     private String _uuid;
     private String _uri;
 
-    @Column(name="isharvested")
-    public boolean isHarvested() {
+    /**
+     * For backwards compatibility we need the deleted column to
+     * be either 'n' or 'y'.  This is a workaround to allow this
+     * until future versions of JPA that allow different ways 
+     * of controlling how types are mapped to the database.
+     */
+    @Column(name="isharvested", length=1, nullable=false)
+    public char isHarvested_JPAWorkaround() {
         return _harvested;
     }
-    public void setHarvested(boolean harvested) {
+    public void setHarvested_JPAWorkaround(char harvested) {
         this._harvested = harvested;
+    }
+    @Transient
+    public boolean isHarvested() {
+        return _harvested == 'y';
+    }
+    public void setHarvested(boolean harvested) {
+        this._harvested = harvested ? 'y' : 'n';
     }
     @Column(name="harvestuuid")
     public String getUuid() {
@@ -34,7 +48,7 @@ public class MetadataHarvestInfo {
     public void setUuid(String uuid) {
         this._uuid = uuid;
     }
-    @Column(name="harvesturi")
+    @Column(name="harvesturi", length=512)
     public String getUri() {
         return _uri;
     }
@@ -45,7 +59,7 @@ public class MetadataHarvestInfo {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + (_harvested ? 1231 : 1237);
+        result = prime * result + _harvested;
         result = prime * result + ((_uri == null) ? 0 : _uri.hashCode());
         result = prime * result + ((_uuid == null) ? 0 : _uuid.hashCode());
         return result;
@@ -73,6 +87,4 @@ public class MetadataHarvestInfo {
             return false;
         return true;
     }
-    
-    
 }

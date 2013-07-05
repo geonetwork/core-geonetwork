@@ -18,7 +18,7 @@ public class MetadataSourceInfo {
     private String _source;
     private int _groupOwner;
     private int _owner;
-    @Column
+    @Column(nullable=false)
     public String getSource() {
         return _source;
     }
@@ -32,7 +32,7 @@ public class MetadataSourceInfo {
     public void setGroupOwner(int groupOwner) {
         this._groupOwner = groupOwner;
     }
-    @Column
+    @Column(nullable=false)
     public int getOwner() {
         return _owner;
     }

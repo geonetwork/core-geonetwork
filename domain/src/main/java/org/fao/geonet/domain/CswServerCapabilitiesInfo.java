@@ -23,6 +23,7 @@ public class CswServerCapabilitiesInfo {
     private String _label;
 
     @Id
+    @Column(name="idfield", length=10)
     public int getId() {
         return _id;
     }
@@ -31,7 +32,7 @@ public class CswServerCapabilitiesInfo {
         this._id = id;
     }
 
-    @Column(name="langid")
+    @Column(name="langid", nullable=false, length=5)
     public String getLangId() {
         return _langId;
     }
@@ -40,6 +41,7 @@ public class CswServerCapabilitiesInfo {
         this._langId = langid;
     }
 
+    @Column(nullable=false, length=32)
     public String getField() {
         return _field;
     }

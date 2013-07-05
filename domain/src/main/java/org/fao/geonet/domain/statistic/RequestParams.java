@@ -6,9 +6,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Entity representing the search parameters of a request.  Related to {@link Request}.
@@ -26,7 +28,7 @@ public class RequestParams {
     private double _similarity;
     private String _lowerText;
     private String _upperText;
-    private boolean _inclusive;
+    private char _inclusive = 'n';
     private Request _request;
 
     @Id
@@ -37,7 +39,7 @@ public class RequestParams {
         this._id = id;
     }
     @OneToOne(fetch = FetchType.LAZY)
-    @PrimaryKeyJoinColumn
+    @JoinColumn(referencedColumnName="id", name="requestid")
     public Request getRequest() {
         return _request;
     }
@@ -85,10 +87,25 @@ public class RequestParams {
     public void setUpperText(String upperText) {
         this._upperText = upperText;
     }
-    public boolean isInclusive() {
+    /**
+     * For backwards compatibility we need the deleted column to
+     * be either 'n' or 'y'.  This is a workaround to allow this
+     * until future versions of JPA that allow different ways 
+     * of controlling how types are mapped to the database.
+     */
+    @Column(name="inclusive", length=1, nullable=true)
+    public char isInclusive_JPAWorkaround() {
         return _inclusive;
     }
-    public void setInclusive(boolean inclusive) {
+    public void setInclusive_JPAWorkaround(char inclusive) {
         this._inclusive = inclusive;
+    }
+
+    @Transient
+    public boolean isInclusive() {
+        return _inclusive == 'y';
+    }
+    public void setInclusive(boolean inclusive) {
+        this._inclusive = inclusive ? 'y' : 'n';
     }
 }

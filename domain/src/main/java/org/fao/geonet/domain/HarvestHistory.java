@@ -1,11 +1,14 @@
 package org.fao.geonet.domain;
 
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * An entity representing a harvesting task that may have been
@@ -23,7 +26,7 @@ public class HarvestHistory {
     private String _harvesterUuid;
     private String _harvesterName;
     private String _harvesterType;
-    private boolean _deleted;
+    private char _deleted = 'n';
     private String _info;
     private String _params;
 
@@ -34,7 +37,7 @@ public class HarvestHistory {
     public void setId(int id) {
         this._id = id;
     }
-    @Column(name="harvestdate")
+    @Column(name="harvestdate", length=30)
     public String getHarvestDate() {
         return _harvestDate;
     }
@@ -69,18 +72,34 @@ public class HarvestHistory {
     public void setHarvesterType(String harvesterType) {
         this._harvesterType = harvesterType;
     }
-    public boolean isDeleted() {
+    /**
+     * For backwards compatibility we need the deleted column to
+     * be either 'n' or 'y'.  This is a workaround to allow this
+     * until future versions of JPA that allow different ways 
+     * of controlling how types are mapped to the database.
+     */
+    @Column(name="deleted", nullable=false, length=1)
+    protected char getDeleted_JpaWorkaround() {
         return _deleted;
     }
-    public void setDeleted(boolean deleted) {
-        this._deleted = deleted;
+    protected char setDeleted_JpaWorkaround(char deleted) {
+        return _deleted = deleted;
     }
+    @Transient
+    public boolean isDeleted() {
+        return _deleted == 'y';
+    }
+    public void setDeleted(boolean deleted) {
+        this._deleted = deleted? 'y' : 'n';
+    }
+    @Lob
     public String getInfo() {
         return _info;
     }
     public void setInfo(String info) {
         this._info = info;
     }
+    @Lob
     public String getParams() {
         return _params;
     }

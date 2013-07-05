@@ -1,13 +1,13 @@
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.Thesaurus;
+import org.fao.geonet.domain.ThesaurusActivation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
- * Data Access object for accessing {@link Thesaurus} entities.
+ * Data Access object for accessing {@link ThesaurusActivation} entities.
  * 
  * @author Jesse
  */
-public interface ThesaurusRepository extends JpaRepository<Thesaurus, Integer>, JpaSpecificationExecutor<Thesaurus> {
+public interface ThesaurusRepository extends JpaRepository<ThesaurusActivation, Integer>, JpaSpecificationExecutor<ThesaurusActivation> {
 }

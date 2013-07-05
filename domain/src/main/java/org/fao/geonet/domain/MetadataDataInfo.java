@@ -6,6 +6,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 
 /**
  * Encapsulates the metadata about a metadata document. (title, rating, schema etc...)
@@ -17,8 +18,10 @@ import javax.persistence.Embeddable;
 public class MetadataDataInfo implements Serializable {
     private static final long serialVersionUID = 8049813754167665960L;
     private String _title;
+    private String _changeDate;
+    private String _createDate;
     private String _schemaId;
-    private boolean _template;
+    private char _template = 'n';
     private String _root;
     private String _doctype;
     private int _displayOrder;
@@ -44,19 +47,32 @@ public class MetadataDataInfo implements Serializable {
     /**
      * ID of the schema the metadata belongs to.
      */
-    @Column(name="schemaid")
+    @Column(name="schemaid", length=32, nullable=false)
     public String getSchemaId() {
         return _schemaId;
     }
     public void setSchemaId(String schemaId) {
         this._schemaId = schemaId;
     }
-    @Column(name="istemplate")
-    public boolean isTemplate() {
+    /**
+     * For backwards compatibility we need the deleted column to
+     * be either 'n' or 'y'.  This is a workaround to allow this
+     * until future versions of JPA that allow different ways 
+     * of controlling how types are mapped to the database.
+     */
+    @Column(name="istemplate", length=1, nullable=false)
+    public char isTemplate_JPAWorkaround() {
         return _template;
     }
-    public void setTemplate(boolean template) {
+    public void setTemplate_JPAWorkaround(char template) {
         this._template = template;
+    }
+    @Transient
+    public boolean isTemplate() {
+        return _template == 'y';
+    }
+    public void setTemplate(boolean template) {
+        this._template = template ? 'y' : 'n';
     }
     @Column
     public String getRoot() {
@@ -79,31 +95,47 @@ public class MetadataDataInfo implements Serializable {
     public void setDisplayOrder(int displayOrder) {
         this._displayOrder = displayOrder;
     }
-    @Column
+    @Column(nullable=false)
     public int getRating() {
         return _rating;
     }
     public void setRating(int rating) {
         this._rating = rating;
     }
-    @Column
+    @Column(nullable=false)
     public int getPopularity() {
         return _popularity;
     }
     public void setPopularity(int popularity) {
         this._popularity = popularity;
     }
+    @Column(nullable=false, length=30)
+    public String getChangeDate() {
+        return _changeDate;
+    }
+    public void setChangeDate(String changeDate) {
+        this._changeDate = changeDate;
+    }
+    @Column(nullable=false, length=30)
+    public String getCreateDate() {
+        return _createDate;
+    }
+    public void setCreateDate(String createDate) {
+        this._createDate = createDate;
+    }
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ((_changeDate == null) ? 0 : _changeDate.hashCode());
+        result = prime * result + ((_createDate == null) ? 0 : _createDate.hashCode());
         result = prime * result + _displayOrder;
         result = prime * result + ((_doctype == null) ? 0 : _doctype.hashCode());
         result = prime * result + _popularity;
         result = prime * result + _rating;
         result = prime * result + ((_root == null) ? 0 : _root.hashCode());
         result = prime * result + ((_schemaId == null) ? 0 : _schemaId.hashCode());
-        result = prime * result + (_template ? 1231 : 1237);
+        result = prime * result + _template;
         result = prime * result + ((_title == null) ? 0 : _title.hashCode());
         return result;
     }
@@ -116,6 +148,16 @@ public class MetadataDataInfo implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         MetadataDataInfo other = (MetadataDataInfo) obj;
+        if (_changeDate == null) {
+            if (other._changeDate != null)
+                return false;
+        } else if (!_changeDate.equals(other._changeDate))
+            return false;
+        if (_createDate == null) {
+            if (other._createDate != null)
+                return false;
+        } else if (!_createDate.equals(other._createDate))
+            return false;
         if (_displayOrder != other._displayOrder)
             return false;
         if (_doctype == null) {

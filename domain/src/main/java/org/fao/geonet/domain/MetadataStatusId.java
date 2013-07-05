@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
@@ -20,6 +21,7 @@ public class MetadataStatusId implements Serializable {
     private int _statusId;
     private int _userId;
 
+    @Column(length=30)
     public String getChangedate() {
         return _changedate;
     }

@@ -1,7 +1,9 @@
 package org.fao.geonet.domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Access;
@@ -13,6 +15,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -37,7 +42,7 @@ public class Metadata {
     private MetadataSourceInfo _sourceInfo;
     private MetadataHarvestInfo _harvestInfo;
     private List<OperationAllowed> _operationsAllowed = new ArrayList<OperationAllowed>();
-//    private Set<String> _metadataCategory = new HashSet<String>();
+    private Set<Category> _metadataCategories = new HashSet<Category>();
 //    private List<MetadataStatus> _metadataStatus;
     // private Set<Operation> operations = new HashSet<Operation>();
     // private Set<Group> groups = new HashSet<Group>();
@@ -67,7 +72,8 @@ public class Metadata {
         return this;
     }
 
-    @Column
+    @Column(nullable=false)
+    @Lob
     public String getData() {
         return _data;
     }
@@ -103,33 +109,6 @@ public class Metadata {
         this._harvestInfo = harvestInfo;
     }
 
-    // @Column
-    // public Date getChangeDate() {
-    // if (_changeDate != null) {
-    // return (Date) _changeDate.clone();
-    // } else {
-    // return null;
-    // }
-    // }
-    //
-    // public void setChangeDate(Date changeDate) {
-    // if (changeDate != null) {
-    // this._changeDate = (Date) changeDate.clone();
-    // } else {
-    // this._changeDate = null;
-    // }
-    // }
-    //
-    // @Column
-    // public int getOwner() {
-    // return _owner;
-    // }
-    //
-    // public Metadata setOwner(int owner) {
-    // this._owner = owner;
-    // return this;
-    // }
-
     // /**
     // * Get the read-only set of operations that are assocated with
     // * this metadata. This is essentially a view onto operations allowed
@@ -155,7 +134,34 @@ public class Metadata {
     // public Set<Group> getGroups() {
     // return Collections.unmodifiableSet(groups);
     // }
+    // /**
+    // * Get the read-only collection of groups that are assocated with
+    // * this metadata. This is essentially a view onto operations allowed
+    // * and isn't automatically updated when operationsAllowed is updated
+    // */
+    // @ManyToMany(fetch = FetchType.LAZY)
+    // @JoinTable(name = "operationallowed", joinColumns = @JoinColumn(name = "groupid"), inverseJoinColumns = @JoinColumn(name =
+    // "metadataid"))
+    // @Nonnull
+    // public Set<Group> getGroups() {
+    // return Collections.unmodifiableSet(groups);
+    // }
 
+     /**
+     * Get the read-only collection of groups that are assocated with
+     * this metadata. This is essentially a view onto operations allowed
+     * and isn't automatically updated when operationsAllowed is updated
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "metadatacateg", joinColumns = @JoinColumn(name = "categoryid"), inverseJoinColumns = @JoinColumn(name = "metadataid"))
+    @Nonnull
+    public Set<Category> getCategories() {
+        return _metadataCategories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this._metadataCategories = categories;
+    }
     public Metadata addOperationAllowed(OperationAllowed newOperationAllowed) {
         internalAddOperationAllowed(newOperationAllowed);
         newOperationAllowed.internalSetMetadata(this);

@@ -2,6 +2,7 @@ package org.fao.geonet.domain;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -30,6 +31,7 @@ public class MetadataStatus {
     public void setId(MetadataStatusId id) {
         this.id = id;
     }
+    @Column(length=2048, nullable=false)
     public String getChangeMessage() {
         return changeMessage;
     }

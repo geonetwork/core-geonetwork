@@ -7,6 +7,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Cacheable;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,6 +38,7 @@ public class Category {
     public void setId(int id) {
         this._id = id;
     }
+    @Column(nullable=false)
     public String getName() {
         return _name;
     }
@@ -48,7 +50,8 @@ public class Category {
      */
     @ElementCollection(fetch=FetchType.LAZY, targetClass=String.class)
     @CollectionTable(joinColumns=@JoinColumn(name="iddes"),name="categoriesdes")
-    @MapKeyColumn(name="langid")
+    @MapKeyColumn(name="langid",length=5)
+    @Column(name="label", nullable=false)
     public Map<String, String> getLabelTranslations() {
         return _labelTranslations;
     }
@@ -60,6 +63,30 @@ public class Category {
      */
     protected void setLabelTranslations(Map<String, String> localizedTranslations) {
         this._labelTranslations = localizedTranslations;
+    }
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + _id;
+        result = prime * result + ((_name == null) ? 0 : _name.hashCode());
+        return result;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Category other = (Category) obj;
+        if (_name == null) {
+            if (other._name != null)
+                return false;
+        } else if (!_name.equals(other._name))
+            return false;
+        return true;
     }
     
 }

@@ -30,7 +30,7 @@ public class MetadataRatingByIpId implements Serializable {
         this._metadataId = metadataId;
     }
 
-    @Column(name="ipaddress", nullable=false)
+    @Column(name="ipaddress", nullable=false, length=Constants.IP_ADDRESS_COLUMN_LENGTH)
     public String getIpAddress() {
         return _ipAddress;
     }

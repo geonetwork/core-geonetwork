@@ -49,6 +49,7 @@ public class Operation {
         this._id = id;
         return this;
     }
+    
     /**
      * Return true if the operation is one of the reserved operations.  
      * If this returns true then getReservedOperation method should return a value
@@ -61,7 +62,7 @@ public class Operation {
     /**
      * Return the name (untranslated) of the operation.
      */
-    @Column(name="name", nullable = false)
+    @Column(name="name", nullable = false, length=32)
     public @Nonnull String getName() {
         return _name;
     }
@@ -76,7 +77,8 @@ public class Operation {
      */
     @ElementCollection(fetch=FetchType.LAZY, targetClass=String.class)
     @CollectionTable(joinColumns=@JoinColumn(name="iddes"),name="operationsdes")
-    @MapKeyColumn(name="langid")
+    @MapKeyColumn(name="langid", length=5)
+    @Column(name="label", nullable=false)
     public Map<String, String> getLabelTranslations() {
         return _labelTranslations;
     }

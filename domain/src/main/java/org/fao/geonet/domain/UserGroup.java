@@ -2,6 +2,7 @@ package org.fao.geonet.domain;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -57,6 +58,7 @@ public class UserGroup {
         this._user = user;
         return this;
     }
+    @Column(nullable=false)
     public Profile getProfile() {
         return _profile;
     }

@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -29,33 +30,33 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 public class User implements JeevesUser {
     private static final long serialVersionUID = 2589607276443866650L;
 
-    int id;
-    String username;
-    String surname;
-    String name;
-    String email;
-    Address address;
-    String organisation;
-    String kind;
-    Profile profile;
-    UserSecurity security;
+    int _id;
+    String _username;
+    String _surname;
+    String _name;
+    String _email;
+    Address _address;
+    String _organisation;
+    String _kind;
+    Profile _profile;
+    UserSecurity _security;
 
     @Id
     public int getId() {
-        return id;
+        return _id;
     }
 
     public User setId(int id) {
-        this.id = id;
+        this._id = id;
         return this;
     }
 
     public String getUsername() {
-        return username;
+        return _username;
     }
 
     public User setUsername(String username) {
-        this.username = username;
+        this._username = username;
         return this;
     }
 
@@ -66,66 +67,73 @@ public class User implements JeevesUser {
     }
 
     public String getSurname() {
-        return surname;
+        return _surname;
     }
 
     public User setSurname(String surname) {
-        this.surname = surname;
+        this._surname = surname;
         return this;
     }
 
     public String getName() {
-        return name;
+        return _name;
     }
 
     public User setName(String name) {
-        this.name = name;
+        this._name = name;
         return this;
     }
 
     public String getEmail() {
-        return email;
+        return _email;
     }
 
     public User setEmail(String email) {
-        this.email = email;
+        this._email = email;
         return this;
     }
 
     @Embedded
     public Address getAddress() {
-        return address;
+        return _address;
     }
 
     public User setAddress(Address address) {
-        this.address = address;
+        this._address = address;
         return this;
     }
 
     public String getOrganisation() {
-        return organisation;
+        return _organisation;
     }
 
     public User setOrganisation(String organization) {
-        this.organisation = organization;
+        this._organisation = organization;
         return this;
     }
 
+    /**
+     * Get the 'kind' of user.  Just
+     * a sting representing the type or category 
+     * of the user.  It can be customized for a particular
+     * application.  An example is GOV or CONTRACTOR.
+     */
+    @Column(length=16)
     public String getKind() {
-        return kind;
+        return _kind;
     }
 
     public User setKind(String kind) {
-        this.kind = kind;
+        this._kind = kind;
         return this;
     }
 
     public Profile getProfile() {
-        return profile;
+        return _profile;
     }
 
     public User setProfile(Profile profile) {
-        this.profile = profile;
+        this._profile = profile;
         return this;
     }
 
@@ -134,11 +142,11 @@ public class User implements JeevesUser {
      * @return
      */
     public UserSecurity getSecurity() {
-        return security;
+        return _security;
     }
 
     protected User setSecurity(UserSecurity security) {
-        this.security = security;
+        this._security = security;
         return this;
     }
 
@@ -146,7 +154,7 @@ public class User implements JeevesUser {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
-        if (profile != null) {
+        if (_profile != null) {
             for (String p : getProfile().getAllNames()) {
                 auths.add(new SimpleGrantedAuthority(p));
             }

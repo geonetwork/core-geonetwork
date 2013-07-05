@@ -88,6 +88,7 @@ public class Group {
         return this;
     }
 
+    @Column(nullable=true)
     public int getReferrer() {
         return _referrer;
     }
@@ -101,7 +102,8 @@ public class Group {
      */
     @ElementCollection(fetch=FetchType.LAZY, targetClass=String.class)
     @CollectionTable(joinColumns=@JoinColumn(name="iddes"),name="groupsdes")
-    @MapKeyColumn(name="langid")
+    @MapKeyColumn(name="langid", length=5)
+    @Column(name="label", nullable=false, length=96)
     public Map<String, String> getLabelTranslations() {
         return _labelTranslations;
     }

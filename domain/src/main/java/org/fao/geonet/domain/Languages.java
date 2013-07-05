@@ -5,6 +5,7 @@ import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 /**
  * The enumeration of all languages available in the system.
@@ -22,36 +23,65 @@ import javax.persistence.Id;
 @Entity
 @Access(AccessType.PROPERTY)
 public class Languages {
-    String id;
-    String name;
-    boolean inspire;
-    boolean _defaultLanguage;
+    String _id;
+    String _name;
+    char _inspire = 'n';
+    char _defaultLanguage = 'n';
     
     @Id
+    @Column(length=5)
     public String getId() {
-        return id;
+        return _id;
     }
     public void setId(String id) {
-        this.id = id;
+        this._id = id;
     }
+    @Column(nullable=false)
     public String getName() {
-        return name;
+        return _name;
     }
     public void setName(String name) {
-        this.name = name;
+        this._name = name;
     }
+    /**
+     * For backwards compatibility we need the deleted column to
+     * be either 'n' or 'y'.  This is a workaround to allow this
+     * until future versions of JPA that allow different ways 
+     * of controlling how types are mapped to the database.
+     */
+    @Column(name="isinspire", length=1)
+    protected char getInspire_JPAWorkaround() {
+        return _inspire;
+    }
+    protected void setInspire_JPAWorkaround(char isinspire) {
+        _inspire = isinspire;
+    }
+    @Transient
     public boolean isInspire() {
-        return inspire;
+        return _inspire == 'y';
     }
     public void setInspire(boolean inspire) {
-        this.inspire = inspire;
+        this._inspire = inspire ? 'y' : 'n';
     }
-    @Column(name="default")
-    public boolean isDefaultLanguage() {
+    /**
+     * For backwards compatibility we need the deleted column to
+     * be either 'n' or 'y'.  This is a workaround to allow this
+     * until future versions of JPA that allow different ways 
+     * of controlling how types are mapped to the database.
+     */
+    @Column(name="isdefault", length=1)
+    protected char getDefaultLanguage_JPAWorkaround() {
         return _defaultLanguage;
     }
+    protected void setDefaultLanguage_JPAWorkaround(char isdefault) {
+        _defaultLanguage = isdefault;
+    }
+    @Transient
+    public boolean isDefaultLanguage() {
+        return _defaultLanguage == 'y';
+    }
     public void setDefaultLanguage(boolean newDefault) {
-        this._defaultLanguage = newDefault;
+        this._defaultLanguage = newDefault ? 'y' : 'n';
     }
     
     

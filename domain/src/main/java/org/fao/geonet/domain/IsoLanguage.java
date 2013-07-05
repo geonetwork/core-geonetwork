@@ -25,7 +25,7 @@ import javax.persistence.Table;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name="isolanguages")
-public class IsoLanguages {
+public class IsoLanguage {
     private int id;
     private String code;
     private String shortCode;
@@ -38,13 +38,14 @@ public class IsoLanguages {
     public void setId(int id) {
         this.id = id;
     }
+    @Column(length=3, nullable=false)
     public String getCode() {
         return code;
     }
     public void setCode(String code) {
         this.code = code;
     }
-    @Column(name="shortcode")
+    @Column(name="shortcode", length=2)
     public String getShortCode() {
         return shortCode;
     }
@@ -57,7 +58,8 @@ public class IsoLanguages {
      */
     @ElementCollection(fetch=FetchType.EAGER, targetClass=String.class)
     @CollectionTable(joinColumns=@JoinColumn(name="iddes"),name="isolanguagesdes")
-    @MapKeyColumn(name="langid")
+    @MapKeyColumn(name="langid", length=5)
+    @Column(name="label", nullable=false)
     public Map<String, String> getLabelTranslations() {
         return _labelTranslations;
     }

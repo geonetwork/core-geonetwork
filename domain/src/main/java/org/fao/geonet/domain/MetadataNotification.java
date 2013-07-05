@@ -7,6 +7,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * An entity representing a metadata related notification that has been made or 
@@ -18,54 +19,68 @@ import javax.persistence.Table;
 @Access(AccessType.PROPERTY)
 @Table(name = "metadatanotifications")
 public class MetadataNotification {
-    private MetadataNotificationId id;
-    private boolean notified;
-    private String metadataUuid;
-    private char action;
-    private String errorMessage;
+    private MetadataNotificationId _id;
+    private char _notified = 'n';
+    private String _metadataUuid;
+    private char _action;
+    private String _errorMessage;
 
     @EmbeddedId
     public MetadataNotificationId getId() {
-        return id;
+        return _id;
     }
 
     public void setId(MetadataNotificationId id) {
-        this.id = id;
+        this._id = id;
     }
-
+    /**
+     * For backwards compatibility we need the deleted column to
+     * be either 'n' or 'y'.  This is a workaround to allow this
+     * until future versions of JPA that allow different ways 
+     * of controlling how types are mapped to the database.
+     */
+    @Column(name="notified", length=1, nullable=false)
+    public char isNotified_JPAWorkaround() {
+        return _notified;
+    }
+    public void setNotified_JPAWorkaround(char notified) {
+        this._notified = notified;
+    }
+    @Transient
     public boolean isNotified() {
-        return notified;
+        return _notified == 'y';
     }
 
     public void setNotified(boolean notified) {
-        this.notified = notified;
+        this._notified = notified ? 'y' : 'n';
     }
 
-    @Column(name = "metadatauuid")
+    @Column(name = "metadatauuid", nullable=false)
     public String getMetadataUuid() {
-        return metadataUuid;
+        return _metadataUuid;
     }
 
     public void setMetadataUuid(String metadataUuid) {
-        this.metadataUuid = metadataUuid;
+        this._metadataUuid = metadataUuid;
     }
 
+    @Column(length=1, nullable=false)
     public char getAction() {
-        return action;
+        return _action;
     }
 
     public void setAction(char action) {
-        this.action = action;
+        this._action = action;
     }
 
     @Lob
-    @Column(name = "errormessage")
+    @Column(name = "errormsg")
     public String getErrorMessage() {
-        return errorMessage;
+        return _errorMessage;
     }
 
     public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+        this._errorMessage = errorMessage;
     }
 
 }
