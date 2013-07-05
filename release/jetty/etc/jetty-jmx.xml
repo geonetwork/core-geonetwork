@@ -10,6 +10,17 @@
 <Configure id="Server" class="org.eclipse.jetty.server.Server">
 
   <!-- =========================================================== -->
+  <!-- Set the java.rmi.server.hostname property in case you've    -->
+  <!-- got a misconfigured /etc/hosts entry or the like.           -->
+  <!-- =========================================================== -->
+  <!-- 
+  <Call class="java.lang.System" name="setProperty">
+    <Arg>java.rmi.server.hostname</Arg>
+    <Arg>127.0.0.1</Arg>
+  </Call>
+  -->
+  
+  <!-- =========================================================== -->
   <!-- Initialize an mbean server                                  -->
   <!-- =========================================================== -->
   <Call id="MBeanServer" class="java.lang.management.ManagementFactory"
@@ -19,34 +30,28 @@
   <!-- Initialize the Jetty MBean container                        -->
   <!-- =========================================================== -->
   <New id="MBeanContainer" class="org.eclipse.jetty.jmx.MBeanContainer">
-    <Arg>
-      <Ref id="MBeanServer" />
-    </Arg>
+    <Arg><Ref id="MBeanServer" /></Arg>
+    <Call name="start"/>
   </New>
 
   <!-- Add to the Server to listen for object events -->
   <Get id="Container" name="container">
     <Call name="addEventListener">
-      <Arg>
-        <Ref id="MBeanContainer" />
-      </Arg>
+      <Arg><Ref id="MBeanContainer" /></Arg>
     </Call>
   </Get>
 
-  <!-- Add to the Server as a lifecycle -->
-  <!-- Only do this if you know you will only have a single jetty server -->
+  <!-- Add to the Server as a managed lifecycle -->
   <Call name="addBean">
-    <Arg>
-      <Ref id="MBeanContainer" />
-    </Arg>
+    <Arg><Ref id="MBeanContainer"/></Arg>
+    <Arg type="boolean">true</Arg>
   </Call>
 
   <!-- Add the static log -->
-  <Get id="Logger" class="org.eclipse.jetty.util.log.Log" name="log" />
   <Ref id="MBeanContainer">
     <Call name="addBean">
       <Arg>
-        <Ref id="Logger" />
+        <New class="org.eclipse.jetty.util.log.Log"/>
       </Arg>
     </Call>
   </Ref>
@@ -64,7 +69,7 @@
   -->
   <!--
   <Call name="createRegistry" class="java.rmi.registry.LocateRegistry">
-    <Arg type="java.lang.Integer">1099</Arg>
+    <Arg type="java.lang.Integer"><SystemProperty name="jetty.jmxrmiport" default="1099"/></Arg>
     <Call name="sleep" class="java.lang.Thread">
        <Arg type="java.lang.Integer">1000</Arg>
     </Call>
@@ -86,11 +91,11 @@
       <New class="javax.management.remote.JMXServiceURL">
         <Arg type="java.lang.String">rmi</Arg>
         <Arg type="java.lang.String" />
-        <Arg type="java.lang.Integer">0</Arg>
-        <Arg type="java.lang.String">/jndi/rmi://localhost:1099/jettyjmx</Arg>
+        <Arg type="java.lang.Integer"><SystemProperty name="jetty.jmxrmiport" default="1099"/></Arg>
+        <Arg type="java.lang.String">/jndi/rmi://<SystemProperty name="jetty.jmxrmihost" default="localhost"/>:<SystemProperty name="jetty.jmxrmiport" default="1099"/>/jmxrmi</Arg>
       </New>
     </Arg>
-    <Arg>org.eclipse.jetty:name=rmiconnectorserver</Arg>
+    <Arg>org.eclipse.jetty.jmx:name=rmiconnectorserver</Arg>
     <Call name="start" />
   </New>
   -->
