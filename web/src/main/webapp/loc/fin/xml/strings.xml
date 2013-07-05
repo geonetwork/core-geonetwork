@@ -17,6 +17,15 @@
 	<tur>Türkçe</tur> <!-- Do not translate! -->
 	<pol>Polski</pol> <!-- Do not translate! -->
 
+	<statusTitle> / Metadata Workflow</statusTitle>
+	<statusUserEdit>GeoNetwork user %s (%s) edited metadata record #%s</statusUserEdit>
+	<statusInform>%s / Metadata Workflow / Metadata record(s) %s by %s (%s) (%s)</statusInform>
+	<!--
+        legacy UI 
+        <statusSendEmail>Change log message: %s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
+        -->
+	<statusSendEmail>Change log message: %s\r\n\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
+	
 	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>
 	<isAdmin>Is administrator ?</isAdmin>

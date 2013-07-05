@@ -33,259 +33,258 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ISODate;
+import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class DefaultStatusActions implements StatusActions {
 
-	protected String host, port, from, fromDescr, replyTo, replyToDescr;
-	protected ServiceContext context;
-	protected AccessManager am;
-	protected DataManager dm;
-	protected Dbms dbms;
-	protected String siteUrl;
-	protected UserSession session;
-	protected boolean emailNotes = true;
+    protected String host, port, from, fromDescr, replyTo, replyToDescr;
+    protected ServiceContext context;
+    protected AccessManager am;
+    protected String language;
+    protected DataManager dm;
+    protected Dbms dbms;
+    protected String siteUrl;
+    protected String siteName;
+    protected UserSession session;
+    protected boolean emailNotes = true;
 
-	/**
-		* Constructor.
-		*/
-	public DefaultStatusActions() {}
+    /**
+     * Constructor.
+     */
+    public DefaultStatusActions() {
+    }
 
-	/** 
-	  * Initializes the StatusActions class with external info from GeoNetwork.
-	  *
-		* @param context
-		* @param dbms
-		*/
-	public void init(ServiceContext context, Dbms dbms) {
-	
-		this.context = context;
-		this.dbms = dbms;
+    /**
+     * Initializes the StatusActions class with external info from GeoNetwork.
+     * 
+     * @param context
+     * @param dbms
+     * @throws IOException
+     * @throws JDOMException
+     */
+    public void init(ServiceContext context, Dbms dbms) throws Exception {
 
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm = gc.getBean(SettingManager.class);
-		am = gc.getBean(AccessManager.class);
+        this.context = context;
+        this.dbms = dbms;
+        this.language = context.getLanguage();
 
-		host = sm.getValue("system/feedback/mailServer/host");
-		port = sm.getValue("system/feedback/mailServer/port");
-		from = sm.getValue("system/feedback/email");
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager sm = gc.getBean(SettingManager.class);
+        am = gc.getBean(AccessManager.class);
 
-		if (host.length() == 0) {
-			context.error("Mail server host not configured, email notifications won't be sent.");
-			emailNotes = false;
-		}
-		
-		if (port.length() == 0) {
-			context.error("Mail server port not configured, email notifications won't be sent.");
-			emailNotes = false;
-		}
-		
-		if (from.length() == 0) {
-			context.error("Mail feedback address not configured, email notifications won't be sent.");
-			emailNotes = false;
-		}
+        siteName = sm.getValue("system/site/name");
+        host = sm.getValue("system/feedback/mailServer/host");
+        port = sm.getValue("system/feedback/mailServer/port");
+        from = sm.getValue("system/feedback/email");
 
-		fromDescr = "Metadata Workflow";
+        if (host.length() == 0) {
+            context.error("Mail server host not configure");
+            emailNotes = false;
+        }
 
-		session = context.getUserSession();
-		replyTo = session.getEmailAddr();
-		if (replyTo != null) {
-			replyToDescr = session.getName() + " " + session.getSurname();
-		} else {
-			replyTo = from; replyToDescr = fromDescr;
-		}
+        if (port.length() == 0) {
+            context.error("Mail server port not configured, email notifications won't be sent.");
+            emailNotes = false;
+        }
 
+        if (from.length() == 0) {
+            context.error("Mail feedback address not configured, email notifications won't be sent.");
+            emailNotes = false;
+        }
 
-		dm = gc.getBean(DataManager.class);
-		siteUrl = dm.getSiteURL(context);
-	}
+        fromDescr = siteName + LangUtils.translate(context, "statusTitle").get(this.language);
 
-	/** 
-	  * Called when a record is edited to set/reset status.
-	  *
-		* @param id The metadata id that has been edited.
-		* @param minorEdit If true then the edit was a minor edit.
-		*/
-	public void onEdit(int id, boolean minorEdit) throws Exception {
+        session = context.getUserSession();
+        replyTo = session.getEmailAddr();
+        if (replyTo != null) {
+            replyToDescr = session.getName() + " " + session.getSurname();
+        } else {
+            replyTo = from;
+            replyToDescr = fromDescr;
+        }
 
-		if (!minorEdit && dm.getCurrentStatus(dbms, id).equals(Params.Status.APPROVED)) {
-			String changeMessage = "GeoNetwork user "+session.getUserId()+" ("+session.getUsername()+") edited metadata record "+id;
-			unsetAllOperations(id);
-			dm.setStatus(context, dbms, id, Integer.valueOf(Params.Status.DRAFT), new ISODate().toString(), changeMessage);
-		}
-		
-	}
+        dm = gc.getBean(DataManager.class);
+        siteUrl = dm.getSiteURL(context);
+    }
 
-	/** 
-	  * Called when need to set status on a set of metadata records.
-	  *
-		* @param status The status to set.
-		* @param metadataIds The set of metadata ids to set status on.
-		* @param changeDate The date the status was changed.
-		* @param changeMessage The message explaining why the status has changed.
-		*/
-	public Set<Integer> statusChange(String status, Set<Integer> metadataIds, String changeDate, String changeMessage) throws Exception {
+    /**
+     * Called when a record is edited to set/reset status.
+     * 
+     * @param id The metadata id that has been edited.
+     * @param minorEdit If true then the edit was a minor edit.
+     */
+    public void onEdit(int id, boolean minorEdit) throws Exception {
 
-		Set<Integer> unchanged = new HashSet<Integer>();
+        if (!minorEdit && dm.getCurrentStatus(dbms, id).equals(Params.Status.APPROVED)) {
+            String changeMessage = String.format(LangUtils.translate(context, "statusUserEdit").get(this.language), replyToDescr,
+                    replyTo, id);
+            unsetAllOperations(id);
+            dm.setStatus(context, dbms, id, Integer.valueOf(Params.Status.DRAFT), new ISODate().toString(), changeMessage);
+        }
 
-		//-- process the metadata records to set status
-		for (Integer mid : metadataIds) {
-			String currentStatus = dm.getCurrentStatus(dbms, mid);
+    }
 
-			//--- if the status is already set to value of status then do nothing
-			if (status.equals(currentStatus)) {
-                if(context.isDebug())
-                    context.debug("Metadata "+mid+" already has status "+mid);
-				unchanged.add(mid);
-			}
+    /**
+     * Called when need to set status on a set of metadata records.
+     * 
+     * @param status The status to set.
+     * @param metadataIds The set of metadata ids to set status on.
+     * @param changeDate The date the status was changed.
+     * @param changeMessage The message explaining why the status has changed.
+     */
+    public Set<Integer> statusChange(String status, Set<Integer> metadataIds, String changeDate, String changeMessage) throws Exception {
 
-			if (status.equals(Params.Status.APPROVED)) {
-				// setAllOperations(mid); - this is a short cut that could be enabled
-			} else if (status.equals(Params.Status.DRAFT) || status.equals(Params.Status.REJECTED)) {
-				unsetAllOperations(mid);
-			}
+        Set<Integer> unchanged = new HashSet<Integer>();
 
-			//--- set status, indexing is assumed to take place later
-			dm.setStatusExt(context, dbms, mid, Integer.valueOf(status), changeDate, changeMessage);
-		}
+        // -- process the metadata records to set status
+        for (Integer mid : metadataIds) {
+            String currentStatus = dm.getCurrentStatus(dbms, mid);
 
+            // --- if the status is already set to value of status then do nothing
+            if (status.equals(currentStatus)) {
+                if (context.isDebug())
+                    context.debug("Metadata " + mid + " already has status " + mid);
+                unchanged.add(mid);
+            }
 
-		//--- inform content reviewers if the status is submitted
-    if (status.equals(Params.Status.SUBMITTED)) {
-      informContentReviewers(metadataIds, changeDate, changeMessage);
-    //--- inform owners if status is approved
-    } else if (status.equals(Params.Status.APPROVED)) {
-      informOwnersApprovedOrRejected(metadataIds, changeDate, changeMessage, true);
-    //--- inform owners if status is rejected
-    } else if (status.equals(Params.Status.REJECTED)) {
-      informOwnersApprovedOrRejected(metadataIds, changeDate, changeMessage, false);
-    }	
+            if (status.equals(Params.Status.APPROVED)) {
+                // setAllOperations(mid); - this is a short cut that could be enabled
+            } else if (status.equals(Params.Status.DRAFT) || status.equals(Params.Status.REJECTED)) {
+                unsetAllOperations(mid);
+            }
 
-		return unchanged;
-	}
+            // --- set status, indexing is assumed to take place later
+            dm.setStatusExt(context, dbms, mid, Integer.valueOf(status), changeDate, changeMessage);
+        }
 
-	//-------------------------------------------------------------------------
-	// Private methods
-	//-------------------------------------------------------------------------
+        // --- inform content reviewers if the status is submitted
+        if (status.equals(Params.Status.SUBMITTED)) {
+            informContentReviewers(metadataIds, changeDate, changeMessage);
+            // --- inform owners if status is approved
+        } else if (status.equals(Params.Status.APPROVED)) {
+            informOwnersApprovedOrRejected(metadataIds, changeDate, changeMessage, true);
+            // --- inform owners if status is rejected
+        } else if (status.equals(Params.Status.REJECTED)) {
+            informOwnersApprovedOrRejected(metadataIds, changeDate, changeMessage, false);
+        }
 
-  /**
-    * Unset all operations on 'All' Group. Used when status changes from approved to something else. 
-    *
-    * @param mdId The metadata id to unset privileges on
-    */
-  private void unsetAllOperations(int mdId) throws Exception {
-    String allGroup = "1";
-    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_VIEW);
-    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DOWNLOAD);
-    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_NOTIFY);
-    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DYNAMIC);
-    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);
-  }
-		
-	/**
-		* Inform content reviewers of metadata records in list that they need
-		* to review the record.
-		*
-		* @param metadata The selected set of metadata records
-		* @param changeDate The date that of the change in status
-		* @param changeMessage Message supplied by the user that set the status
-		*/
-	private void informContentReviewers(Set<Integer> metadata, String changeDate, String changeMessage) throws Exception {
+        return unchanged;
+    }
 
-		//--- get content reviewers (sorted on content reviewer userid)
-		Element contentRevs = am.getContentReviewers(dbms, metadata);
+    // -------------------------------------------------------------------------
+    // Private methods
+    // -------------------------------------------------------------------------
 
-		String subject = "Metadata records SUBMITTED by "+replyTo+" ("+replyToDescr+") on "+changeDate;
-		processList(contentRevs, subject, Params.Status.SUBMITTED, changeDate, changeMessage);
-	}
+    /**
+     * Unset all operations on 'All' Group. Used when status changes from approved to something else.
+     * 
+     * @param mdId The metadata id to unset privileges on
+     */
+    protected void unsetAllOperations(int mdId) throws Exception {
+        String allGroup = "1";
+        dm.unsetOperation(context, dbms, mdId + "", allGroup, AccessManager.OPER_VIEW);
+        dm.unsetOperation(context, dbms, mdId + "", allGroup, AccessManager.OPER_DOWNLOAD);
+        dm.unsetOperation(context, dbms, mdId + "", allGroup, AccessManager.OPER_NOTIFY);
+        dm.unsetOperation(context, dbms, mdId + "", allGroup, AccessManager.OPER_DYNAMIC);
+        dm.unsetOperation(context, dbms, mdId + "", allGroup, AccessManager.OPER_FEATURED);
+    }
 
-	/**
-		* Inform owners of metadata records that the records have approved
-		* or rejected.
-		*
-		* @param metadata The selected set of metadata records
-		* @param changeDate The date that of the change in status
-		* @param changeMessage Message supplied by the user that set the status
-		*/
-	private void informOwnersApprovedOrRejected(Set<Integer> metadata, String changeDate, String changeMessage, boolean approved) throws Exception {
+    /**
+     * Inform content reviewers of metadata records in list that they need to review the record.
+     * 
+     * @param metadata The selected set of metadata records
+     * @param changeDate The date that of the change in status
+     * @param changeMessage Message supplied by the user that set the status
+     */
+    protected void informContentReviewers(Set<Integer> metadata, String changeDate, String changeMessage) throws Exception {
 
-		//--- get metadata owners (sorted on owner userid)
-		Element owners = am.getOwners(dbms, metadata);
+        // --- get content reviewers (sorted on content reviewer userid)
+        Element contentRevs = am.getContentReviewers(dbms, metadata);
 
-		String subject = "Metadata records APPROVED";
-		String status = Params.Status.APPROVED;
-		if (!approved) {
-			subject = "Metadata records REJECTED";
-			status = Params.Status.REJECTED;
-		}
-		subject += " by "+replyTo+" ("+replyToDescr+") on "+changeDate;
+        String subject = String.format(LangUtils.translate(context, "statusInform").get(this.language), siteName, 
+                LangUtils.dbtranslate(context, "StatusValues", Params.Status.SUBMITTED).get(this.language), 
+                replyToDescr, replyTo, changeDate);
 
-		processList(owners, subject, status, changeDate, changeMessage);
+        processList(contentRevs, subject, LangUtils.dbtranslate(context, "StatusValues", Params.Status.SUBMITTED).get(this.language),
+                changeDate, changeMessage);
+    }
 
-	}
+    /**
+     * Inform owners of metadata records that the records have approved or rejected.
+     * 
+     * @param metadata The selected set of metadata records
+     * @param changeDate The date that of the change in status
+     * @param changeMessage Message supplied by the user that set the status
+     */
+    protected void informOwnersApprovedOrRejected(Set<Integer> metadata, String changeDate, String changeMessage, boolean approved)
+            throws Exception {
 
-	/**
-		* Process the users and metadata records for emailing notices.
-		*
-		* @param users The selected set of users
-		* @param subject Subject to be used for email notices
-		* @param status The status being set
-		* @param changeDate Datestamp of status change
-		* @param changeMessage The message indicating why the status has changed
-		*/
-	private void processList(Element users, String subject, String status, String changeDate, String changeMessage) throws Exception {
+        // --- get metadata owners (sorted on owner userid)
+        Element owners = am.getOwners(dbms, metadata);
 
-		@SuppressWarnings("unchecked")
+        String status = Params.Status.APPROVED;
+        if (!approved) {
+            status = Params.Status.REJECTED;
+        }
+        String subject = String.format(LangUtils.translate(context, "statusInform").get(this.language), siteName,
+                LangUtils.dbtranslate(context, "StatusValues", status).get(this.language), replyToDescr, replyTo, changeDate);
+
+        processList(owners, subject, status, changeDate, changeMessage);
+
+    }
+
+    /**
+     * Process the users and metadata records for emailing notices.
+     * 
+     * @param users The selected set of users
+     * @param subject Subject to be used for email notices
+     * @param status The status being set
+     * @param changeDate Datestamp of status change
+     * @param changeMessage The message indicating why the status has changed
+     */
+    protected void processList(Element users, String subject, String status, String changeDate, String changeMessage) throws Exception {
+
+        @SuppressWarnings("unchecked")
         List<Element> userList = users.getChildren();
 
-		Set<String> emails = new HashSet<String>();
+        Set<String> emails = new HashSet<String>();
 
-		for (Element user : userList) {
-			emails.add(user.getChildText("email"));
-		}
+        for (Element user : userList) {
+            emails.add(user.getChildText("email"));
+        }
 
-		for (String email : emails) {
-			sendEmail(email, subject, status, changeDate, changeMessage);	
-		}
+        for (String email : emails) {
+            sendEmail(email, subject, status, changeDate, changeMessage);
+        }
 
-	}
+    }
 
-	/**
-		* Send the email message about change of status on a group of metadata
-		* records.
-		*
-		* @param sendTo The recipient email address
-		* @param subject Subject to be used for email notices
-		* @param status The status being set on the records
-		* @param changeDate Datestamp of status change
-		* @param changeMessage The message indicating why the status has changed
-		*/
-	private void sendEmail(String sendTo, String subject, String status, String changeDate, String changeMessage) throws Exception {
+    /**
+     * Send the email message about change of status on a group of metadata records.
+     * 
+     * @param sendTo The recipient email address
+     * @param subject Subject to be used for email notices
+     * @param status The status being set on the records
+     * @param changeDate Datestamp of status change
+     * @param changeMessage The message indicating why the status has changed
+     */
+    protected void sendEmail(String sendTo, String subject, String status, String changeDate, String changeMessage) throws Exception {
+        String message = String.format(LangUtils.translate(context, "statusSendEmail").get(this.language), changeMessage, siteUrl, status,
+                changeDate);
 
-		String message = changeMessage+"\n\nRecords are available from the following URL:\n"+buildMetadataSearchLink(status, changeDate);
-
-		if (!emailNotes) {
-			context.info("Would send email \nTo: "+sendTo+"\nSubject: "+subject+"\n Message:\n"+message);
-		} else {
-			MailSender sender = new MailSender(context);
-			sender.sendWithReplyTo(host, Integer.parseInt(port), from, fromDescr, sendTo, null, replyTo, replyToDescr, subject, message);
-		}
-	}
-
-	/**
-		* Build search link to metadata that has had a change of status.
-		*
-		* @param status The status of the metadata 
-		* @param changeDate The date the status has been set on the metadata 
-		* @return string Search link to metadata
-		*/
-	private String buildMetadataSearchLink(String status, String changeDate) {
-		// FIXME : hard coded link to main.search 
-		return siteUrl+"/main.search?_status="+status+"&_statusChangeDate="+changeDate;
-	}
+        if (!emailNotes) {
+            context.info("Would send email \nTo: " + sendTo + "\nSubject: " + subject + "\n Message:\n" + message);
+        } else {
+            MailSender sender = new MailSender(context);
+            sender.sendWithReplyTo(host, Integer.parseInt(port), from, fromDescr, sendTo, null, replyTo, replyToDescr, subject, message);
+        }
+    }
 }
