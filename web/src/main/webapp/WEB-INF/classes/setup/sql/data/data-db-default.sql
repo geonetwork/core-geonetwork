@@ -878,7 +878,6 @@ INSERT INTO Regions VALUES (371,43.58,41.82,18.196,20.396);
 
 INSERT INTO Settings VALUES  (0,NULL,'root',NULL);
 INSERT INTO Settings VALUES (1,0,'system',NULL);
-INSERT INTO Settings VALUES (2,0,'harvesting',NULL);
 INSERT INTO Settings VALUES (10,1,'site',NULL);
 INSERT INTO Settings VALUES (11,10,'name','My GeoNetwork catalogue');
 INSERT INTO Settings VALUES (12,10,'siteId','Dummy');
@@ -992,6 +991,9 @@ INSERT INTO Settings VALUES (954,952,'sorted','false');
 INSERT INTO Settings VALUES (956,1,'hidewithheldelements',NULL);
 INSERT INTO Settings VALUES (957,956,'enable','false');
 INSERT INTO Settings VALUES (958,956,'keepMarkedElement','true');
+
+
+INSERT INTO HarvesterSettings VALUES  (1,NULL,'harvesting',NULL);
 
 -- ======================================================================
 -- === Table: Users

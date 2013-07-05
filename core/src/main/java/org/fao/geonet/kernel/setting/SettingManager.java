@@ -230,7 +230,7 @@ public class SettingManager
 			{
 				String path = entry.getKey();
 				String value= makeString(entry.getValue());
-                if(Log.isDebugEnabled(Geonet.SPATIAL))
+                if(Log.isDebugEnabled(Geonet.SETTINGS))
                     Log.debug(Geonet.SETTINGS, "Set path: " + path + ", value: " + value);
 
 				Setting s = resolve(path);

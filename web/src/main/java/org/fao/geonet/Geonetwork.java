@@ -71,11 +71,13 @@ import org.fao.geonet.kernel.XmlSerializerSvn;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
+import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -86,7 +88,6 @@ import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;
@@ -420,8 +421,8 @@ public class Geonetwork implements ApplicationHandler {
         gnContext.threadPool  = threadPool;
         gnContext.statusActionsClass = statusActionsClass;
 
-
-        HarvestManager harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
+        HarvesterSettingsManager harvesterSettingsMan = new HarvesterSettingsManager(dbms, context.getProviderManager());
+        HarvestManager harvestMan = new HarvestManager(context, gnContext, harvesterSettingsMan, dataMan);
 
         //------------------------------------------------------------------------
         //--- return application context
@@ -432,6 +433,7 @@ public class Geonetwork implements ApplicationHandler {
 		beanFactory.registerSingleton("schemaManager", schemaMan);
 		beanFactory.registerSingleton("serviceHandlerConfig", handlerConfig);
 		beanFactory.registerSingleton("settingManager", settingMan);
+		beanFactory.registerSingleton("harvesterSettingsMan", harvesterSettingsMan);
 		beanFactory.registerSingleton("thesaurusManager", thesaurusMan);
 		beanFactory.registerSingleton("oaipmhDisatcher", oaipmhDis);
 		beanFactory.registerSingleton("metadataNotifierManager", metadataNotifierMan);
