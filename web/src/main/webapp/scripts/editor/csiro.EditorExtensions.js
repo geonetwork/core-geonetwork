@@ -76,7 +76,6 @@ csiro.showCRSSelectionPanel = function(crsId, useCode) {
 				maxSelected: 1,
 				listeners : {
 						crsSelected: function(panel, crss) {
-							console.log(crss);
 							if (useCode) {
 								$(crsId).value = crss.codes[0];
 							} else {
