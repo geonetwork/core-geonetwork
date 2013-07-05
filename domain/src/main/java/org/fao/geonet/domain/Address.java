@@ -2,7 +2,9 @@ package org.fao.geonet.domain;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * Represents an address.
@@ -10,47 +12,57 @@ import javax.persistence.Embeddable;
  *
  * @author Jesse
  */
-@Embeddable
+@Entity
 @Access(AccessType.PROPERTY)
 public class Address {
-    private String address;
-    private String city;
-    private String state;
-    private String zip;
-    private String country;
+    private int _id;
+    private String _address;
+    private String _city;
+    private String _state;
+    private String _zip;
+    private String _country;
+    
+    @Id
+    @GeneratedValue
+    public int getId() {
+        return _id;
+    }
+    public void setId(int id) {
+        this._id = id;
+    }
     public String getAddress() {
-        return address;
+        return _address;
     }
     public Address setAddress(String address) {
-        this.address = address;
+        this._address = address;
         return this;
     }
     public String getCity() {
-        return city;
+        return _city;
     }
     public Address setCity(String city) {
-        this.city = city;
+        this._city = city;
         return this;
     }
     public String getState() {
-        return state;
+        return _state;
     }
     public Address setState(String state) {
-        this.state = state;
+        this._state = state;
         return this;
     }
     public String getZip() {
-        return zip;
+        return _zip;
     }
     public Address setZip(String zip) {
-        this.zip = zip;
+        this._zip = zip;
         return this;
     }
     public String getCountry() {
-        return country;
+        return _country;
     }
     public Address setCountry(String country) {
-        this.country = country;
+        this._country = country;
         return this;
     }
     /**
@@ -75,7 +87,56 @@ public class Address {
         if (mergeNullData || otherAddress.getCountry()!= null){
             setCountry(otherAddress.getCountry());
         }
-        
-        
     }
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((_address == null) ? 0 : _address.hashCode());
+        result = prime * result + ((_city == null) ? 0 : _city.hashCode());
+        result = prime * result + ((_country == null) ? 0 : _country.hashCode());
+        result = prime * result + _id;
+        result = prime * result + ((_state == null) ? 0 : _state.hashCode());
+        result = prime * result + ((_zip == null) ? 0 : _zip.hashCode());
+        return result;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Address other = (Address) obj;
+        if (_address == null) {
+            if (other._address != null)
+                return false;
+        } else if (!_address.equals(other._address))
+            return false;
+        if (_city == null) {
+            if (other._city != null)
+                return false;
+        } else if (!_city.equals(other._city))
+            return false;
+        if (_country == null) {
+            if (other._country != null)
+                return false;
+        } else if (!_country.equals(other._country))
+            return false;
+        if (_id != other._id)
+            return false;
+        if (_state == null) {
+            if (other._state != null)
+                return false;
+        } else if (!_state.equals(other._state))
+            return false;
+        if (_zip == null) {
+            if (other._zip != null)
+                return false;
+        } else if (!_zip.equals(other._zip))
+            return false;
+        return true;
+    }
+
 }

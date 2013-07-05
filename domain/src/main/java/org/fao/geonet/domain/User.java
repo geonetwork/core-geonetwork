@@ -2,13 +2,22 @@ package org.fao.geonet.domain;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -34,8 +43,8 @@ public class User implements JeevesUser {
     String _username;
     String _surname;
     String _name;
-    String _email;
-    Address _address;
+    Set<String> _email = new HashSet<String>();
+    Set<Address> _addresses = new HashSet<Address>();
     String _organisation;
     String _kind;
     Profile _profile;
@@ -84,22 +93,35 @@ public class User implements JeevesUser {
         return this;
     }
 
+    @Override
+    @Transient
     public String getEmail() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    @ElementCollection(fetch=FetchType.EAGER,targetClass=String.class)
+    @CollectionTable(name="email")
+    public Set<String> getEmailAddresses() {
         return _email;
     }
 
-    public User setEmail(String email) {
+    public User setEmailAddresses(Set<String> email) {
         this._email = email;
         return this;
     }
 
-    @Embedded
-    public Address getAddress() {
-        return _address;
+    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
+    @JoinTable(name="USER_ADDRESS",
+        joinColumns=@JoinColumn(name="userid"),
+        inverseJoinColumns={ @JoinColumn(name="PHONE_ID", referencedColumnName="ID", unique=true) }
+    )
+    public Set<Address> getAddresses() {
+        return _addresses;
     }
 
-    public User setAddress(Address address) {
-        this._address = address;
+    public User setAddresses(Set<Address> addresses) {
+        this._addresses = addresses;
         return this;
     }
 
@@ -211,11 +233,32 @@ public class User implements JeevesUser {
         if (mergeNullData || otherUser.getProfile() != null) {
             setProfile(otherUser.getProfile());
         }
-        if (mergeNullData || otherUser.getEmail() != null){
-            setEmail(otherUser.getEmail());
+
+        _email.clear();
+        _email.addAll(otherUser.getEmailAddresses());
+
+        ArrayList<Address> otherAddresses = new ArrayList<Address>(otherUser.getAddresses());
+
+        for (Iterator<Address> iterator = _addresses.iterator(); iterator.hasNext();) {
+            Address address = (Address) iterator.next();
+            boolean found = false;
+            
+            for (Iterator<Address> iterator2 = otherAddresses.iterator(); iterator.hasNext();) {
+                Address otherAddress = iterator2.next();
+                if (otherAddress.getId() == address.getId()) {
+                    address.mergeAddress(otherAddress, mergeNullData);
+                    found = true;
+                    iterator2.remove();
+                    break;
+                }
+            }
+            
+            if (!found) {
+                iterator.remove();
+            }
         }
-        
-        getAddress().mergeAddress(otherUser.getAddress(), mergeNullData);
+
+        _addresses.addAll(otherAddresses);
         getSecurity().mergeSecurity(otherUser.getSecurity(), mergeNullData);
     }
 }
