@@ -83,8 +83,13 @@
     
     <codelist name="gmd:DS_InitiativeTypeCode">
         <entry>
-            <code>upstream</code>
-            <label>Upstream product</label>
+            <code>upstream-validation</code>
+            <label>Upstream product (Validation)</label>
+            <description></description>
+        </entry>
+        <entry>
+            <code>upstream-production</code>
+            <label>Upstream product (Production)</label>
             <description></description>
         </entry>
         <entry>

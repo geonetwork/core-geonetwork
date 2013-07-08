@@ -111,7 +111,11 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         id: 'E__groupPublished',
                         value: 'MYOCEAN-DOCUMENTS'
                     }],
-                    upstream: [{
+                    'upstream-validation': [{
+                        id: 'E__groupPublished',
+                        value: 'MYOCEAN-UPSTREAM-PRODUCTS'
+                    }],
+                    'upstream-production': [{
                         id: 'E__groupPublished',
                         value: 'MYOCEAN-UPSTREAM-PRODUCTS'
                     }]
