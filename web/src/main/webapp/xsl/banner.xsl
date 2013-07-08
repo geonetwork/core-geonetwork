@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:java="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="#all">
+
+    <xsl:function name="java:file-exists" xmlns:file="java.io.File" as="xs:boolean">
+      <xsl:param name="file" as="xs:string"/>
+      <xsl:sequence select="file:exists(file:new($file))"/>
+    </xsl:function>
 
     <xsl:variable name="modal" select="count(/root/gui/config/search/use-modal-box-for-banner-functions)"/>
 
@@ -91,8 +97,8 @@
                     |
                     <!-- Help section to be displayed according to GUI language -->
                     <xsl:choose>
-                        <xsl:when test="/root/gui/language='fr'">
-                            <a class="banner" href="{/root/gui/url}/docs/fra/users" target="_blank"><xsl:value-of select="/root/gui/strings/help"/></a>
+                        <xsl:when test="java:file-exists(concat(resolve-uri('../', replace(static-base-uri(), 'file:', '')), 'docs/', /root/gui/language, '/users/index.html'))">
+                            <a class="banner" href="{/root/gui/url}/docs/{/root/gui/language}/users" target="_blank"><xsl:value-of select="/root/gui/strings/help"/></a>
                         </xsl:when>
                         <xsl:otherwise>
                             <a class="banner" href="{/root/gui/url}/docs/eng/users" target="_blank"><xsl:value-of select="/root/gui/strings/help"/></a>
