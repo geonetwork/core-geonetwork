@@ -23,9 +23,11 @@
 								<xsl:variable name="lang" select="/root/gui/language"/>
 					
 								<!-- loop on all status -->
-		
+								<xsl:variable name="isSubmitted" 
+									select="count(/root/response/statusvalues/status[on and name='submitted']) = 1"/>
+
 								<xsl:for-each select="/root/response/statusvalues/status">
-								  <xsl:sort select="label/child::*[name() = $lang]"/>
+								  <xsl:sort select="id"/>
 									<tr>
 										<td class="padded" align="left" colspan="2">
 											<xsl:variable name="profile" select="/root/gui/session/profile"/>
@@ -36,9 +38,12 @@
 												<xsl:if test="on">
 													<xsl:attribute name="checked"/>
 												</xsl:if>
-												<!-- status value submitted is disabled for reviewers  -->
-												<xsl:if test="$isReviewer or contains($profile,'Admin')">
-													<xsl:if test="name='submitted'">
+												<!-- status value submitted is disabled for reviewers  
+												<xsl:if test="$isReviewer or contains($profile,'Admin')">-->
+												
+												<!-- status value draft and unkown disabled once submitted -->
+												<xsl:if test="$isSubmitted">
+													<xsl:if test="name='unknown' or name='draft'">
 														<xsl:attribute name="disabled"/>
 													</xsl:if>
 												</xsl:if>
