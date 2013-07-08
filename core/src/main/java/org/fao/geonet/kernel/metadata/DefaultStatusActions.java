@@ -169,11 +169,8 @@ public class DefaultStatusActions implements StatusActions {
         if (status.equals(Params.Status.SUBMITTED)) {
             informContentReviewers(metadataIds, changeDate, changeMessage);
             // --- inform owners if status is approved
-        } else if (status.equals(Params.Status.APPROVED)) {
-            informOwnersApprovedOrRejected(metadataIds, changeDate, changeMessage, true);
-            // --- inform owners if status is rejected
-        } else if (status.equals(Params.Status.REJECTED)) {
-            informOwnersApprovedOrRejected(metadataIds, changeDate, changeMessage, false);
+        } else if (status.equals(Params.Status.APPROVED) || status.equals(Params.Status.REJECTED)) {
+            informOwners(metadataIds, changeDate, changeMessage, status);
         }
 
         return unchanged;
@@ -213,7 +210,7 @@ public class DefaultStatusActions implements StatusActions {
                 LangUtils.dbtranslate(context, "StatusValues", Params.Status.SUBMITTED).get(this.language), 
                 replyToDescr, replyTo, changeDate);
 
-        processList(contentRevs, subject, LangUtils.dbtranslate(context, "StatusValues", Params.Status.SUBMITTED).get(this.language),
+        processList(contentRevs, subject, Params.Status.SUBMITTED,
                 changeDate, changeMessage);
     }
 
@@ -224,16 +221,12 @@ public class DefaultStatusActions implements StatusActions {
      * @param changeDate The date that of the change in status
      * @param changeMessage Message supplied by the user that set the status
      */
-    protected void informOwnersApprovedOrRejected(Set<Integer> metadata, String changeDate, String changeMessage, boolean approved)
+    protected void informOwners(Set<Integer> metadata, String changeDate, String changeMessage, String status)
             throws Exception {
 
         // --- get metadata owners (sorted on owner userid)
         Element owners = am.getOwners(dbms, metadata);
 
-        String status = Params.Status.APPROVED;
-        if (!approved) {
-            status = Params.Status.REJECTED;
-        }
         String subject = String.format(LangUtils.translate(context, "statusInform").get(this.language), siteName,
                 LangUtils.dbtranslate(context, "StatusValues", status).get(this.language), replyToDescr, replyTo, changeDate);
 

@@ -62,7 +62,7 @@ public class LangUtils {
        String sqlSelect = String.format("SELECT langid, label FROM %sDes WHERE idDes=?", table);
        Map<String, String> translations = new HashMap<String, String>();
        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-       Element result = dbms.select(sqlSelect, key);
+       Element result = dbms.select(sqlSelect, Integer.parseInt(key));
        for (Object o : result.getChildren()) {
            Element record = (Element) o;
            translations.put(record.getChildText("langid"), record.getChildText("label"));
