@@ -81,7 +81,7 @@ CREATE TABLE ADDRESS
 
 CREATE TABLE EMAIL 
 (
-	userid			  int 			not null,
+	userIid			  int 			not null,
 	email         varchar(128),
 
 	primary key(userid),	

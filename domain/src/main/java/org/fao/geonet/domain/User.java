@@ -60,6 +60,7 @@ public class User implements JeevesUser {
         return this;
     }
 
+    @Column(nullable=false)
     public String getUsername() {
         return _username;
     }
@@ -96,12 +97,15 @@ public class User implements JeevesUser {
     @Override
     @Transient
     public String getEmail() {
-        // TODO Auto-generated method stub
+        if (_email != null) {
+            return _email.iterator().next();
+        }
         return null;
     }
     
     @ElementCollection(fetch=FetchType.EAGER,targetClass=String.class)
     @CollectionTable(name="email")
+    @Column(name="email")
     public Set<String> getEmailAddresses() {
         return _email;
     }
@@ -114,7 +118,7 @@ public class User implements JeevesUser {
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
     @JoinTable(name="USER_ADDRESS",
         joinColumns=@JoinColumn(name="userid"),
-        inverseJoinColumns={ @JoinColumn(name="PHONE_ID", referencedColumnName="ID", unique=true) }
+        inverseJoinColumns={ @JoinColumn(name="addressid", referencedColumnName="ID", unique=true) }
     )
     public Set<Address> getAddresses() {
         return _addresses;
@@ -150,6 +154,7 @@ public class User implements JeevesUser {
         return this;
     }
 
+    @Column(nullable=false)
     public Profile getProfile() {
         return _profile;
     }

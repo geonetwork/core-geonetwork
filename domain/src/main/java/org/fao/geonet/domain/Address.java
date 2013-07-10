@@ -2,6 +2,7 @@ package org.fao.geonet.domain;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -51,6 +52,7 @@ public class Address {
         this._state = state;
         return this;
     }
+    @Column(length=16)
     public String getZip() {
         return _zip;
     }

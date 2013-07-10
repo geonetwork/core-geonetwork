@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
@@ -23,6 +24,7 @@ public class ValidationId implements Serializable {
     public void setMetadataId(int metadataid) {
         this._metadataId = metadataid;
     }
+    @Column(name="valtype", length=40)
     public String getValidationType() {
         return _validationType;
     }

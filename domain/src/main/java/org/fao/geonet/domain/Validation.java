@@ -45,7 +45,7 @@ public class Validation {
     public void setFailed(int failed) {
         this.failed = failed;
     }
-    @Column(name="valdate")
+    @Column(name="valdate", length=30)
     public String getValidationDate() {
         return validationDate;
     }

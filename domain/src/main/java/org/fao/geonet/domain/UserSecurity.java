@@ -12,7 +12,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class UserSecurity {
     private char[] password;
-    private String securityNotifications;
+    private String securityNotifications = "";
     private String authType;
 
     @Column(nullable=false, length=120)
