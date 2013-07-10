@@ -9,6 +9,7 @@
 		function init() {
 			<% 
 			Object language = null;
+			Object ssLanguage = null;
 
 			String redirectUrl;
 			org.springframework.security.web.savedrequest.SavedRequest savedRequest =     new org.springframework.security.web.savedrequest.HttpSessionRequestCache().getRequest(request, response);
@@ -20,6 +21,7 @@
 				if (m.find()) 
 					language=m.group(1);
 				}
+		ssLanguage=language;
 				
 		if (language==null) {
 			String found = null;
@@ -37,7 +39,14 @@
 				}
 			%>
 			var userLang = '<%= language %>'
+			var ssUserLang = '<%= ssLanguage %>'
 			var referer = window.location.pathname
+
+			// Attempt to determine language based on referer if we could not determine it based on spring security.
+			refererLang=referer.match(/^.*\/srv\/([a-z]{3})\/.*$/i)[1];
+			if (ssUserLang=="null" && refererLang.length==3)
+				userLang=refererLang;
+
 			if(!userLang) {
 				userLang = (navigator.language) ? navigator.language : navigator.userLanguage;
 			} 
