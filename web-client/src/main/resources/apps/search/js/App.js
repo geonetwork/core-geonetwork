@@ -218,6 +218,7 @@ GeoNetwork.app = function () {
             valueField: 'value',
             displayField: 'value',
             valueDelimiter: ' or ',
+            listWidth: 'width:auto',
 //            tpl: tpl,
             fieldLabel: OpenLayers.i18n('org')
         });
