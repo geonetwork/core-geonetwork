@@ -22,6 +22,7 @@ GeoNetwork.Lang.fr = {
     'metadata-not-found': 'La métadonnée avec l\'identifiant ${uuid} n\'a pas été trouvée ou n\'est pas partagée avec vous.',
     'Administrator': 'Administrateur',
     'Reviewer': 'Relecteur',
+    'RegisteredUser': 'RegisteredUser',
     'Editor': 'Éditeur',
     'Guest': 'Invité',
     'harvestingAdmin': 'Gestion du moissonnage',
