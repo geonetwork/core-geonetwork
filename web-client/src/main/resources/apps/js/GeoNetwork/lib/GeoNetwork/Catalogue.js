@@ -269,6 +269,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdSelect: serviceUrl + 'metadata.select',
             mdView: serviceUrl + 'view',
             mdXMLInsert: serviceUrl + 'xml.metadata.insert',
+            mdInsertPaste: serviceUrl + 'xml.metadata.insert.paste',
+            mdInsertUpload: serviceUrl + 'xml.mef.import.ui',
             mdShow: serviceUrl + 'metadata.show.embedded',
             mdMEF: serviceUrl + 'mef.export',
             mdXMLGet: serviceUrl + 'xml.metadata.get',
@@ -371,7 +373,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             harvestingAdmin: serviceUrl + 'harvesting',
             logoUrl: this.URL + '/images/logos/',
             imgUrl: this.URL + '/images/',
-            harvesterLogoUrl: this.URL + '/images/harvesting/'
+            harvesterLogoUrl: this.URL + '/images/harvesting/',
+            getImportXSL: serviceUrl + 'get.conversions.xsl'
         };
         
         // TODO : init only once required (ie. metadata show)

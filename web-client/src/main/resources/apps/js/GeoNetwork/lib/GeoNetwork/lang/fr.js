@@ -672,6 +672,24 @@ GeoNetwork.Lang.fr = {
     'linklabel-text/plain': 'Liens',
     'linklabel-image/png': 'Images',
     'linklabel-image/jpeg': 'Images',
-    'linklabel-': 'Liens'
+    'linklabel-': 'Liens',
+    'insertMode': 'Mode d\'insertion',
+    'fileUpload': 'Import de fichiers',
+    'copyPaste': 'Copier/Coller',
+    'fileType': 'Type de fichier',
+    'singleFile' :'Fichier simple (XML, SLD, WMC...)',
+    'mefFile': 'Fichier MEF',
+    'importActions': 'Actions à l\'import',
+    'noActionOnImport': 'Aucune action à l\'import',
+    'overwriteMD': 'Ecraser les métadonnées de même identifiant' ,
+    'generateUuid': 'Générer un nouvel identifiant pour les métadonnées insérées',
+    'styleSheet': 'Feuille de style',
+    'validate': 'Valider',
+    'assignCurCat': 'Affecter à ce catalogue',
+    'metadata': 'Métadonnée',
+    'mdInsertResults': 'Résultat de l\'import de métadonnées :',
+    'mdInsertSuccess': 'Métadonnée insérée avec :',
+    'mdInsertFailure': 'Erreur lors de l\'insertion de la métadonnée : ',
+    'chooseCategory': 'Choisissez une catégorie'
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.Lang.fr);

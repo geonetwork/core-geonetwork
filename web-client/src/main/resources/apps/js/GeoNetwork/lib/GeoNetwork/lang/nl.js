@@ -661,7 +661,25 @@ GeoNetwork.Lang.nl = {
     'linklabel-text/plain': 'Web link',
     'linklabel-image/png': 'Image link',
     'linklabel-image/jpeg': 'Image link',
-    'linklabel-': 'Link'
+    'linklabel-': 'Link',
+    'insertMode': 'Insert Mode',
+    'fileUpload': 'File upload',
+    'copyPaste': 'Copy/Paste',
+    'fileType': 'File Type',
+    'singleFile' :'Single File (XML, SLD, WMC...)',
+    'mefFile': 'MEF file',
+    'importActions': 'Import actions',
+    'noActionOnImport': 'No action on import',
+    'overwriteMD': 'Overwrite metadata with same UUID' ,
+    'generateUuid': 'Generate UUID for inserted metadata',
+    'styleSheet': 'StyleSheet',
+    'validate': 'Validate',
+    'assignCurCat': 'Assign to current catalog',
+    'metadata': 'Metadata',
+    'mdInsertResults': 'Results of metadata import',
+    'mdInsertSuccess': 'Metadata inserted with',
+    'mdInsertFailure': 'Error while inserting metadata : ',
+    'chooseCategory': 'Choose a category'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.nl, GeoNetwork.Lang.nl);

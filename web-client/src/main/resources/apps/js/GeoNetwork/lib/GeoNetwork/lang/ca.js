@@ -651,7 +651,25 @@ GeoNetwork.Lang.ca={
     'Advanced': "Avançat",
     'newWindow': "Nova finestra",
     'mdEditor': "Editor de metadades",
-    'List': "Llista"
+    'List': "Llista",
+    'insertMode': 'Insert Mode',
+    'fileUpload': 'File upload',
+    'copyPaste': 'Copy/Paste',
+    'fileType': 'File Type',
+    'singleFile' :'Single File (XML, SLD, WMC...)',
+    'mefFile': 'MEF file',
+    'importActions': 'Import actions',
+    'noActionOnImport': 'No action on import',
+    'overwriteMD': 'Overwrite metadata with same UUID' ,
+    'generateUuid': 'Generate UUID for inserted metadata',
+    'styleSheet': 'StyleSheet',
+    'validate': 'Validate',
+    'assignCurCat': 'Assign to current catalog',
+    'metadata': 'Metadata',
+    'mdInsertResults': 'Results of metadata import',
+    'mdInsertSuccess': 'Metadata inserted with',
+    'mdInsertFailure': 'Error while inserting metadata : ',
+    'chooseCategory': 'Choose a category'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.ca,GeoNetwork.Lang.ca);

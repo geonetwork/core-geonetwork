@@ -633,6 +633,12 @@ div.facets * .facet-less-bt a {
 .label-info, .badge-info {
     background-color: #3A87AD;
 }
+.label-success-font {
+    color: #468847;
+}
+.label-error-font {
+    color: red;
+}
 .validation * h2, .validation * div {
     white-space: normal !important;
 }
@@ -764,4 +770,12 @@ ul.gn-relation-thumbnail {
 }
 #login-form .gn-login {
     margin-left: 3px
+}
+
+.md-insert-status-title {
+	font-weight: 700;
+	padding-bottom: 5px;
+}
+.md-import-status-panel li {
+    padding-left: 15px;
 }

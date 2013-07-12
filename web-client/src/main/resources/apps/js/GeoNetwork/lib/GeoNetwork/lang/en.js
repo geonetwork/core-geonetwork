@@ -659,7 +659,25 @@ GeoNetwork.Lang.en = {
     'linklabel-website': 'Web link',
     'linklabel-application/octet-stream': 'Link',
     'linklabel-': 'Link',
-    'cookies.warning': 'This webpage uses cookies, which will save on your computer information about your usage and statistics.'
+    'cookies.warning': 'This webpage uses cookies, which will save on your computer information about your usage and statistics.',
+    'insertMode': 'Insert Mode',
+    'fileUpload': 'File upload',
+    'copyPaste': 'Copy/Paste',
+    'fileType': 'File Type',
+    'singleFile' :'Single File (XML, SLD, WMC...)',
+    'mefFile': 'MEF file',
+    'importActions': 'Import actions',
+    'noActionOnImport': 'No action on import',
+    'overwriteMD': 'Overwrite metadata with same UUID' ,
+    'generateUuid': 'Generate UUID for inserted metadata',
+    'styleSheet': 'StyleSheet',
+    'validate': 'Validate',
+    'assignCurCat': 'Assign to current catalog',
+    'metadata': 'Metadata',
+    'mdInsertResults': 'Results of metadata import',
+    'mdInsertSuccess': 'Metadata inserted with',
+    'mdInsertFailure': 'Error while inserting metadata : ',
+    'chooseCategory': 'Choose a category'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.Lang.en);
