@@ -484,7 +484,8 @@ GeoNetwork.util.SearchFormTools = {
                 store: catStore,
                 valueField: 'id',
                 displayField: 'name',
-                tpl: tpl
+                tpl: tpl,
+                listWidth: 'width:auto'
             };
         
         if (multi) {
@@ -518,7 +519,8 @@ GeoNetwork.util.SearchFormTools = {
                 store: groupStore,
                 valueField: 'id',
                 displayField: 'name',
-                tpl: tpl
+                tpl: tpl,
+                listWidth: 'width:auto'
             };
         if (multi) {
             Ext.apply(config, {
@@ -558,7 +560,8 @@ GeoNetwork.util.SearchFormTools = {
                     data: [['n', OpenLayers.i18n('md')], ['y', OpenLayers.i18n('tpl')]]
                 }),
                 valueField: 'id',
-                displayField: 'name'
+                displayField: 'name',
+                listWidth: 'width:auto'
             };
         if (multi) {
             Ext.apply(config, {
@@ -594,7 +597,8 @@ GeoNetwork.util.SearchFormTools = {
             store: store,
             valueField: 'name',
             displayField: 'name',
-            tpl: tpl
+            tpl: tpl,
+            listWidth: 'width:auto'
         };
         if (multi) {
             var displaytpl = (imgUrl ?
