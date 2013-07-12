@@ -214,7 +214,7 @@
 	<criteria>Kriterium</criteria>
 	<validate>Validieren</validate>
 	<recurse>Also search in subfolders</recurse>
-	<checkFileLastModifiedForUpdate>Update catalog record only if file as been updated</checkFileLastModifiedForUpdate>
+	<checkFileLastModifiedForUpdate>Update catalog record only if file was updated</checkFileLastModifiedForUpdate>
 	<nodelete>Behalte lokal, wenn Quelle gelöscht wird</nodelete>
 	<server>Server</server>
 	<database>Datenbank</database>

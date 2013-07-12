@@ -124,7 +124,7 @@
 	<servlet>Servlet</servlet>
 	<useAccount>Kullanılacak Hesap</useAccount>
 	<username>Kullanıcı Adı</username>
-	<checkFileLastModifiedForUpdate>Update catalog record only if file as been updated</checkFileLastModifiedForUpdate>
+	<checkFileLastModifiedForUpdate>Update catalog record only if file was updated</checkFileLastModifiedForUpdate>
 	<password>Şifre</password>
 
 	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>

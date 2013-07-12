@@ -219,7 +219,7 @@
 	<criteria>Kriteria</criteria>
 	<validate>Validér</validate>
 	<recurse>Also search in subfolders</recurse>
-	<checkFileLastModifiedForUpdate>Update catalog record only if file as been updated</checkFileLastModifiedForUpdate>
+	<checkFileLastModifiedForUpdate>Update catalog record only if file was updated</checkFileLastModifiedForUpdate>
 	<nodelete>Behold lokalt hvis slettet på kilden</nodelete>
 	<server>Server</server>	
 	<database>Database</database>	
