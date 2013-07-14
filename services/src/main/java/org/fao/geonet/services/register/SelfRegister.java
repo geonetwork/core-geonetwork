@@ -126,7 +126,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		String passwordHash = PasswordUtil.encode(context, password);
-		dbms.execute(query, Integer.valueOf(id), username, passwordHash , surname, name, PROFILE, address,
+		dbms.execute(query, Integer.valueOf(id), username, passwordHash, surname, name, PROFILE, address,
 				city, state, zip, country, email, organ, kind);
 
 		dbms.execute("INSERT INTO UserGroups(userId, profile, groupId) VALUES (?, ?, ?)", Integer.valueOf(id), PROFILE, Integer.valueOf(group));

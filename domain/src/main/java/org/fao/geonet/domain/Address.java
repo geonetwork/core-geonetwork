@@ -9,7 +9,8 @@ import javax.persistence.Id;
 
 /**
  * Represents an address.
- * This is a JPA Embeddable object that is embedded into a {@link User} Entity
+ * This is a JPA Entity object and is contained in a
+ * database table.
  *
  * @author Jesse
  */
@@ -22,49 +23,121 @@ public class Address {
     private String _state;
     private String _zip;
     private String _country;
-    
+
+    /**
+     * Id of the address.  This is automatically
+     * generated so when creating a new object leave this blank
+     * and allow the database or JPA set the value for you on save.
+     */
     @Id
     @GeneratedValue
     public int getId() {
         return _id;
     }
-    public void setId(int id) {
+    /**
+     * Set the id of the address.   This is automatically
+     * generated so when creating a new object leave this blank
+     * and allow the database or JPA set the value for you on save.
+     * 
+     * @param id the id
+     * @return 
+     * @return this address object
+     */
+    public Address setId(int id) {
         this._id = id;
+        return this;
     }
+    /**
+     * Get the address line of the address.  This is
+     * typically the street name and number but varies
+     * depending on the type of address.
+     */
     public String getAddress() {
         return _address;
     }
+    /**
+     * Set the address data.  See {@link #getAddress()} for
+     * details on what the "address" is.
+     *
+     * @param address the new address data
+     * @return this address object     */
     public Address setAddress(String address) {
         this._address = address;
         return this;
     }
+    
+    /**
+     * Get the city of the address
+     */
     public String getCity() {
         return _city;
     }
+    /**
+     * Set the city of the address
+     * @param city the city
+     * @return this address object
+     */
     public Address setCity(String city) {
         this._city = city;
         return this;
     }
+    /**
+     * Return the state/province/Kantone/departement/etc... of
+     * the address.
+     *
+     * @return the state of the address.
+     */
     public String getState() {
         return _state;
     }
+    /**
+     * Return the state/province/Kantone/departement/etc... of
+     * the address.
+     * 
+     * @param state the state
+     * @return this address object
+     */
     public Address setState(String state) {
         this._state = state;
         return this;
     }
+    /**
+     * Return the zip/postal code of the address.  
+     * 
+     * @return the zip/postal code
+     */
     @Column(length=16)
     public String getZip() {
         return _zip;
     }
+    /**
+     * Set the zip/postal code of the address.
+     * 
+     * @param zip the new value
+     *
+     * @return this address object
+     */
     public Address setZip(String zip) {
         this._zip = zip;
         return this;
     }
+    /**
+     * Get iso2 country code of the address.
+     *
+     * @return the iso2 country code.
+     */
     public String getCountry() {
         return _country;
     }
-    public Address setCountry(String country) {
-        this._country = country;
+    /**
+     * Set the iso2 country code of the address.
+     *
+     * @param iso2CountryCode the iso 2 country code.
+     *
+     * @return this address object
+     */
+    public Address setCountry(String iso2CountryCode) {
+        this._country = iso2CountryCode;
         return this;
     }
     /**
@@ -90,6 +163,7 @@ public class Address {
             setCountry(otherAddress.getCountry());
         }
     }
+
     @Override
     public int hashCode() {
         final int prime = 31;

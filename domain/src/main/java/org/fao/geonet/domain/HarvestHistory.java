@@ -5,6 +5,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
@@ -30,13 +31,33 @@ public class HarvestHistory {
     private String _info;
     private String _params;
 
+    /**
+     * Get the id of the harvest history record.  This is a generated value
+     * and as such new instances should not have this set as it will simply
+     * be ignored and could result in reduced performance.
+     *
+     * @return the id
+     */
     @Id
+    @GeneratedValue
     public int getId() {
         return _id;
     }
+    /**
+     * Set the id of the harvest history record.  This is a generated value
+     * and as such new instances should not have this set as it will simply
+     * be ignored and could result in reduced performance.
+     *
+     * @param id the new id
+     */
     public void setId(int id) {
         this._id = id;
     }
+    /**
+     * The date of the harvest.  This is a string in order to maintain backwards compatibility.
+     *
+     * @return the harvest date
+     */
     @Column(name="harvestdate", length=30)
     public String getHarvestDate() {
         return _harvestDate;

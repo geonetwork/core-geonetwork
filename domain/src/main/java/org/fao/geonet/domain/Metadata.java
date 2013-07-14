@@ -42,7 +42,7 @@ public class Metadata {
     private MetadataSourceInfo _sourceInfo;
     private MetadataHarvestInfo _harvestInfo;
     private List<OperationAllowed> _operationsAllowed = new ArrayList<OperationAllowed>();
-    private Set<Category> _metadataCategories = new HashSet<Category>();
+    private Set<MetadataCategory> _metadataCategories = new HashSet<MetadataCategory>();
 //    private List<MetadataStatus> _metadataStatus;
     // private Set<Operation> operations = new HashSet<Operation>();
     // private Set<Group> groups = new HashSet<Group>();
@@ -155,11 +155,11 @@ public class Metadata {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "metadatacateg", joinColumns = @JoinColumn(name = "categoryid"), inverseJoinColumns = @JoinColumn(name = "metadataid"))
     @Nonnull
-    public Set<Category> getCategories() {
+    public Set<MetadataCategory> getCategories() {
         return _metadataCategories;
     }
 
-    public void setCategories(Set<Category> categories) {
+    public void setCategories(Set<MetadataCategory> categories) {
         this._metadataCategories = categories;
     }
     public Metadata addOperationAllowed(OperationAllowed newOperationAllowed) {
