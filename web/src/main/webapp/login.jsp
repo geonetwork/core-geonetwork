@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@page import="java.util.Enumeration"%><html xmlns="http://www.w3.org/1999/xhtml">
+<%@ page import="java.util.Enumeration,org.springframework.security.web.*,org.springframework.security.core.*,java.util.regex.Pattern,java.util.regex.Matcher"%><html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Pragma" content="no-cache">
 		<meta http-equiv="Cache-Control" content="no-cache,no-store">
@@ -7,19 +7,33 @@
 		<script language="Javascript1.5" type="text/javascript">
 		function init() {
 			<% 
-			String found = null;
-			Enumeration names = request.getHeaderNames();
-			while (names.hasMoreElements()) {
-				String s = (String)names.nextElement();
-				if(s.equalsIgnoreCase("Accept-Language")) {
-					found = s;
-					break;
-				}
-			}
 			Object language = null;
-			if(found != null) {
-				language = request.getHeader(found);
-			}
+
+			String redirectUrl;
+			org.springframework.security.web.savedrequest.SavedRequest savedRequest =     new org.springframework.security.web.savedrequest.HttpSessionRequestCache().getRequest(request, response);
+			if (savedRequest !=null) {
+				redirectUrl=savedRequest.getRedirectUrl();
+				Pattern p = Pattern.compile("^.*/srv/([a-z]{3})/.*$");
+				Matcher m = p.matcher(redirectUrl);
+
+				if (m.find()) 
+					language=m.group(1);
+				}
+				
+		if (language==null) {
+				String found = null;
+				Enumeration names = request.getHeaderNames();
+				while (names.hasMoreElements()) {
+					String s = (String)names.nextElement();
+					if(s.equalsIgnoreCase("Accept-Language")) {
+						found = s;
+						break;
+					}
+				}
+				if(found != null) {
+					language = request.getHeader(found);
+					}
+				}
 			%>
 			var userLang = "<%= language %>"
 			if(!userLang) {
