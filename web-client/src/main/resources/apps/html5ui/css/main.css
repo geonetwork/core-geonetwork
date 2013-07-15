@@ -1604,6 +1604,17 @@ dl.xml * dd {
 	background-position: center;
 }
 
+                                                                                                                                                      
+.emptyThumbnail span {                                                                                                                                
+       font-size: 12px;                                                                                                                               
+       text-align: center;                                                                                                                            
+       margin: auto;                                                                                                                                  
+       display: block;                                                                                                                                
+       font-weight: bold;                                                                                                                             
+       padding-top: 50px;                                                                                                                             
+       text-shadow: 1px 1px grey;                                                                                                                     
+}      
+
 .overthumb {
 	background-color: rgba(255,255,255,0.5);
 	width: inherit;
