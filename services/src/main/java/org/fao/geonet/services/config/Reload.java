@@ -33,6 +33,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.jdom.Element;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import javax.servlet.ServletContext;
 
@@ -58,12 +59,10 @@ public class Reload implements Service {
 
 		LuceneConfig lc = new LuceneConfig(path, servletContext, luceneConfigXmlFile);
 
+        // Reregister Lucene config singleton
         JeevesApplicationContext applicationContext = context.getApplicationContext();
         ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
-// RFTODO test reload and make sure we don't have 2 lc beans
-//        LuceneConfig beanInstance = applicationContext.getBean(LuceneConfig.LUCENE_CONFIG_BEAN_NAME, LuceneConfig.class);
-//  beanFactory.destroyBean(LuceneConfig.LUCENE_CONFIG_BEAN_NAME, beanInstance);
-
+        ((DefaultListableBeanFactory) beanFactory).destroySingleton(LuceneConfig.LUCENE_CONFIG_BEAN_NAME);
         beanFactory.registerSingleton(LuceneConfig.LUCENE_CONFIG_BEAN_NAME, lc);
 
 		Logger logger = context.getLogger();

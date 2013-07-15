@@ -255,14 +255,11 @@ csiro.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
       
       var store = this.itemSelector.store;
 			var selectionsArray = this.itemSelector.view.getSelectedIndexes();
-			console.log('Selected '+selectionsArray.length);
 			for (var i=0; i<selectionsArray.length; i++) {
 				var rec = store.getAt(selectionsArray[i]);
-				console.log('Pushing '+rec.get('description')+' and '+rec.get('code'));
 				this.crsSelected.descriptions.push(rec.get('description'));
 				this.crsSelected.codes.push(rec.get('code'));
 			}
-			console.log('Before fire '+this.crsSelected);
       this.fireEvent('crsSelected', this, this.crsSelected);
       this.ownerCt.hide();
     }
