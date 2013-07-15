@@ -2552,7 +2552,6 @@
     <xsl:param name="schema"/>
   
     <xsl:variable name="id" select="generate-id(.)"/>
-    <tr><td colspan="2"><div id="{$id}"/></td></tr>
     <xsl:apply-templates mode="complexElement" select=".">
       <xsl:with-param name="schema" select="$schema"/>
       <xsl:with-param name="edit"   select="true()"/>
