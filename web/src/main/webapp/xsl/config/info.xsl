@@ -70,10 +70,10 @@
 		</fieldset>
 	</xsl:template>
 	
-	<xsl:template mode="info" match="setting[@name='system/site/siteId' or @name='system/platform/version' or @name='system/platform/subVersion']">
+	<xsl:template mode="info" match="*[@name='system/site/siteId' or @name='system/platform/version' or @name='system/platform/subVersion']">
 		<xsl:variable name="tag" select="@name"/>
 		<label style="text-size:140%;font-weight:bold"><xsl:value-of select="/root/gui/config/setting[@name=$tag]/@label"/></label> 
-		<span class="info"><xsl:value-of select="@value"/></span><br/>
+		<span class="info"><xsl:value-of select="."/></span><br/>
 	</xsl:template>
 	<xsl:template mode="info" match="main/*|index/*|catalogue/*|database/*">
 		<xsl:variable name="tag" select="name(.)"/>
