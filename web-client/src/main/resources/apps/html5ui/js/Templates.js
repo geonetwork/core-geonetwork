@@ -141,12 +141,20 @@ GeoNetwork.HTML5UI.Templates.RATING =
  */
 GeoNetwork.HTML5UI.Templates.SHORT_TITLE =
     '<h1 style="height:60px" >\
+    <input type="checkbox" \
+        <tpl if="selected==\'true\'">checked="true"</tpl> \
+        class="selector" \
+        onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"\
     <a href="javascript:void(0);" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">\
     {[Ext.util.Format.ellipsis(values.title, 30, true)]}</a>\
     </h1>';
 GeoNetwork.HTML5UI.Templates.TITLE =
     '<h1>\
-       <a href="javascript:void(0);" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>\
+    <input type="checkbox" \
+        <tpl if="selected==\'true\'">checked="true"</tpl> \
+        class="selector" \
+        onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"\
+    <a href="javascript:void(0);" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>\
     </h1>';
 
 
@@ -270,7 +278,9 @@ GeoNetwork.HTML5UI.Templates.THUMB =
             </a>\
         </tpl>\
         <tpl if="!thumbnail">\
-            <div class="emptyThumbnail"/>\
+            <div class="emptyThumbnail">\
+				<span>{[OpenLayers.i18n("no-thumbnail")]}</span>\
+			</div>\
         </tpl>\
     </div>';
 
