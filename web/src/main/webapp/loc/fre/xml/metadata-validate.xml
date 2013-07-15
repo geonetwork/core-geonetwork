@@ -13,7 +13,7 @@
   <missingElement>Élément manquant. Le contenu de l'élément </missingElement>
   <invalidValue>Valeur manquante ou invalide.</invalidValue>
   <notValidFor> n'est pas une valeur valide pour </notValidFor>
-  <xsdErrorIs>L'erreur XSD complète est : </xsdErrorIs>
+  <xsdErrorIs>L'erreur est : </xsdErrorIs>
   <inElement> dont le parent est </inElement>
   <enum1>La valeur </enum1>
   <enum2> n'est pas valide pour le champ </enum2>
