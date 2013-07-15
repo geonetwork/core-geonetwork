@@ -255,7 +255,7 @@ public class DataManager {
      * @param context
      * @param ids
      */
-    private void batchRebuild(ServiceContext context, List<String> ids) {
+    public void batchRebuild(ServiceContext context, List<String> ids) {
 
         // split reindexing task according to number of processors we can assign
         int threadCount = ThreadUtils.getNumberOfThreads();
