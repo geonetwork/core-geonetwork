@@ -278,7 +278,9 @@ GeoNetwork.HTML5UI.Templates.THUMB =
             </a>\
         </tpl>\
         <tpl if="!thumbnail">\
-            <div class="emptyThumbnail"/>\
+            <div class="emptyThumbnail">\
+				<span>{[OpenLayers.i18n("no-thumbnail")]}</span>\
+			</div>\
         </tpl>\
     </div>';
 
