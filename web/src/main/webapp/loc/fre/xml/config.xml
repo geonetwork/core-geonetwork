@@ -41,6 +41,9 @@
 			when a resource is downloaded.
 		</setting>
 <setting label="Port SMTP" name="system/feedback/mailServer/port"/>
+<setting name="system/feedback/mailServer/ssl" label="Activé SSL"/>
+<setting name="system/feedback/mailServer/username" label="Nom d'utilisateur"/>
+<setting name="system/feedback/mailServer/password" label="Mot de passe"/>
 <setting label="Moissonnage" name="harvester"/>
 <setting label="Autoriser l'édition des métadonnées moissonnées" name="system/harvester/enableEditing"/>
 <setting label="Metadata / ISO19139 / Nil reason attribute with held" name="hidewithheldelements"/>

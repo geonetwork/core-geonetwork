@@ -35,6 +35,9 @@
 			I parametri SMTP host e port sono usati per spedire email agli utenti di Geonetwork quando è scaricata una risorsa.
 		</setting>
 <setting label="Porta SMTP" name="system/feedback/mailServer/port"/>
+<setting name="system/feedback/mailServer/ssl" label="Use SSL"/>
+<setting name="system/feedback/mailServer/username" label="User name"/>
+<setting name="system/feedback/mailServer/password" label="Password"/>
 <setting label="Harvesting" name="harvester"/>
 <setting label="Permetti la modifica dei metadati caricati tramite harvesting" name="system/harvester/enableEditing"/>
 <setting label="Metadata / ISO19139 / Nil reason attribute with held" name="hidewithheldelements"/>

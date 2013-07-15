@@ -84,7 +84,12 @@ public class Set implements Service {
 
         if (!sm.setValues(dbms, values))
             throw new OperationAbortedEx("Cannot set all values");
-
+        
+        // Save parameters
+        dbms.commit();
+        
+        
+        // And reload services
         // Update inspire property in SearchManager
         gc.getBean(SearchManager.class).setInspireEnabled(Boolean.valueOf((String) values.get("system/inspire/enable")));
         String newUuid = (String) values.get("system/site/siteId");

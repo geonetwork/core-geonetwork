@@ -36,6 +36,9 @@
 			para utilizadores da GeoNetwork quando um recurso seja downloaded.
 		</setting>
 <setting label="SMTP Port" name="system/feedback/mailServer/port"/>
+<setting name="system/feedback/mailServer/ssl" label="Use SSL"/>
+<setting name="system/feedback/mailServer/username" label="User name"/>
+<setting name="system/feedback/mailServer/password" label="Password"/>
 <setting label="Harvesting" name="harvester"/>
 <setting label="Allow editing on harvested records" name="system/harvester/enableEditing"/>
 <setting label="Metadata / ISO19139 / Nil reason attribute with held" name="hidewithheldelements"/>

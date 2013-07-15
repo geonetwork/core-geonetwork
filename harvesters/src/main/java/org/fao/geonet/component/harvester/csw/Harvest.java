@@ -848,8 +848,12 @@ public class Harvest extends AbstractOperation implements CatalogService {
             String port = settingManager.getValue("system/feedback/mailServer/port");
             String to = responseHandler.substring(Protocol.EMAIL.toString().length());
             MailSender sender = new MailSender(serviceContext);
-            sender.send(host, Integer.parseInt(port), "noreply@geonetwork.org", "GeoNetwork CSW Server", to, null,
-                    "Asynchronous CSW Harvest results delivery", harvestResponse);
+            sender.send(host, Integer.parseInt(port), 
+                    settingManager.getValue("system/feedback/mailServer/username"), 
+                    settingManager.getValue("system/feedback/mailServer/password"), 
+                    settingManager.getValueAsBool("system/feedback/mailServer/ssl"), 
+                    "noreply@geonetwork.org",
+                    "GeoNetwork CSW Server", to, null, "Asynchronous CSW Harvest results delivery", harvestResponse);
         }
 
         /**
