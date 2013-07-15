@@ -216,9 +216,10 @@ public class Geonetwork implements ApplicationHandler {
 		logger.info("  - Setting manager...");
 
 		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
-
+		HarvesterSettingsManager harvesterSettingsMan = new HarvesterSettingsManager(dbms, context.getProviderManager());
+		
 		// --- Migrate database if an old one is found
-		migrateDatabase(servletContext, dbms, settingMan, version, subVersion, context.getAppPath());
+		migrateDatabase(servletContext, dbms, settingMan, harvesterSettingsMan, version, subVersion, context.getAppPath());
 		
 		//--- initialize ThreadUtils with setting manager and rm props
 		ThreadUtils.init(context.getResourceManager().getProps(Geonet.Res.MAIN_DB),
@@ -421,7 +422,6 @@ public class Geonetwork implements ApplicationHandler {
         gnContext.threadPool  = threadPool;
         gnContext.statusActionsClass = statusActionsClass;
 
-        HarvesterSettingsManager harvesterSettingsMan = new HarvesterSettingsManager(dbms, context.getProviderManager());
         HarvestManager harvestMan = new HarvestManager(context, gnContext, harvesterSettingsMan, dataMan);
 
         //------------------------------------------------------------------------
@@ -582,13 +582,15 @@ public class Geonetwork implements ApplicationHandler {
 	 * eg. 2.4.3-to-2.5.0-default.sql
 	 *
      * @param servletContext
-     * @param dbms
-     * @param settingMan
-     * @param webappVersion
-     * @param subVersion
-     * @param appPath
+	 * @param dbms
+	 * @param settingMan
+	 * @param harvesterSettingsMan TODO
+	 * @param webappVersion
+	 * @param subVersion
+	 * @param appPath
      */
-	private void migrateDatabase(ServletContext servletContext, Dbms dbms, SettingManager settingMan, String webappVersion, String subVersion, String appPath) {
+	private void migrateDatabase(ServletContext servletContext, Dbms dbms, SettingManager settingMan, 
+	        HarvesterSettingsManager harvesterSettingsMan, String webappVersion, String subVersion, String appPath) {
 		logger.info("  - Migration ...");
 		
 		// Get db version and subversion
@@ -622,14 +624,6 @@ public class Geonetwork implements ApplicationHandler {
 			boolean anyMigrationAction = false;
 			boolean anyMigrationError = false;
 			
-            try {
-            	new UpdateHarvesterIdsTask().update(settingMan,dbms);
-            } catch (Exception e) {
-                logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-                e.printStackTrace();
-                anyMigrationError = true;
-            }
-
 			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
 			String dbType = DatabaseType.lookup(dbms).toString();
 			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
@@ -650,7 +644,7 @@ public class Geonetwork implements ApplicationHandler {
                                 logger.info("         - Java migration class:" + className);
 	                        	settingMan.refresh(dbms);
 	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
-	                            task.update(settingMan, dbms);
+	                            task.update(settingMan, harvesterSettingsMan, dbms);
 	                        } catch (Exception e) {
 	                            logger.info("          Errors occurs during Java migration file: " + e.getMessage());
 	                            e.printStackTrace();

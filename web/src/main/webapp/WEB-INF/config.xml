@@ -1042,6 +1042,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="config">
+			<class name=".services.config.Get" />
 			<output sheet="config/config.xsl">
 				<xml name="config" file="xml/config.xml" />
 				<call name="users" class="jeeves.services.db.Select">
@@ -1055,7 +1056,14 @@
 				</call>
 			</output>
 		</service>
-
+		
+		<service name="config.set">
+			<class name=".services.config.Set">
+				<param name="reloadServices" value="y"/>
+			</class>
+			<output forward="admin" />
+		</service>
+		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.config.get">

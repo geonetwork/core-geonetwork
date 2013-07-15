@@ -34,14 +34,12 @@ CREATE TABLE CustomElementSet
 
 CREATE TABLE Settings
   (
-    id        int            not null,
-    parentId  int,
-    name      varchar(64)    not null,
+    name      varchar(512)    not null,
     value     longvarchar,
+    datatype   int,
+    position   int,
 
-    primary key(id),
-
-    foreign key(parentId) references Settings(id)
+    primary key(name)
   );
 
 CREATE TABLE HarvesterSettings

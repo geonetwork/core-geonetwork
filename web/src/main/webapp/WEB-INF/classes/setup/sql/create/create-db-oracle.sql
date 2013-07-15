@@ -32,11 +32,11 @@ REM ======================================================================
 
 CREATE TABLE Settings
   (
-    id        int            not null,
-    parentId  int,
-    name      varchar2(64)   not null,
+    name      varchar2(512)   not null,
     value     clob,
-    primary key(id)
+    datatype   int,
+    position   int,
+    primary key(name)
   );
   
 CREATE TABLE HarvesterSettings
@@ -495,7 +495,6 @@ ALTER TABLE OperationsDes ADD FOREIGN KEY (langId) REFERENCES Languages (id);
 ALTER TABLE OperationsDes ADD FOREIGN KEY (idDes) REFERENCES Operations (id);
 ALTER TABLE RegionsDes ADD FOREIGN KEY (langId) REFERENCES Languages (id);
 ALTER TABLE RegionsDes ADD FOREIGN KEY (idDes) REFERENCES Regions (id);
-ALTER TABLE Settings ADD FOREIGN KEY (parentId) REFERENCES Settings (id);
 ALTER TABLE HarvesterSettings ADD FOREIGN KEY (parentId) REFERENCES HarvesterSettings (id);
 ALTER TABLE UserGroups ADD FOREIGN KEY (userId) REFERENCES Users (id);
 ALTER TABLE UserGroups ADD FOREIGN KEY (groupId) REFERENCES Groups (id);
