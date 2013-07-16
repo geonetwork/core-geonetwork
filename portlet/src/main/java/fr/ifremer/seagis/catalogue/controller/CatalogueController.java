@@ -31,6 +31,7 @@ public class CatalogueController implements Serializable {
     private String mdviewerurl;
     private String geoviewerurl;
     private String panierurl;
+    private String typeSearch;
     
     public void sendLayerToGeoviewer() {
         CATALOGUESERVICE.sendLayerToGeoviewer(FacesContext.getCurrentInstance(), wmsurl, wmsversion, layername, layergroup);        
@@ -85,6 +86,14 @@ public class CatalogueController implements Serializable {
     public String getInitCatalogue() {
         makeConfig();
         return null;
+    }
+    
+    public String getTypeSearch() {
+        return typeSearch;
+    }
+    
+    public void setTypeSearch(String typeSearch) {
+        this.typeSearch = typeSearch;
     }
     
     public String getLayername() {
