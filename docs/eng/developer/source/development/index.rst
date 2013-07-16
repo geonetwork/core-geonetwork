@@ -105,7 +105,7 @@ Typically work is done on branches and merged back so when developing normally y
      $ git push origin myfeature
         # this pushed your new branch to Github now you are ready to make a Pull Request to get the new feature added to Geonetwork
 
-Geonetwork uses git submodule in order to keep track of externals dependencies. It is necessary to init and update them after a repository clone or a branch change::
+Geonetwork uses git submodules in order to keep track of externals dependencies. It is necessary to init and update them after a repository clone or a branch change::
 
      $ git submodule update --init
      
