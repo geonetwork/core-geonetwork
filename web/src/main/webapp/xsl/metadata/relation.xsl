@@ -73,7 +73,7 @@
         <abstract><xsl:value-of select="gmd:description/gco:CharacterString"/></abstract>
       </relation>
     </xsl:for-each>
-  
+  </xsl:template>
 
   <!-- In Lucene only mode, metadata are retrieved from 
   the index and pass as a simple XML with one level element.
