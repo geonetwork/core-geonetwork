@@ -23,6 +23,13 @@
 
 package org.fao.geonet.kernel.harvest;
 
+import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.MissingParameterEx;
@@ -31,6 +38,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -41,16 +49,10 @@ import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarversterJobListener;
 import org.fao.geonet.kernel.harvest.harvester.HarvesterHistoryDao;
+import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 import org.quartz.SchedulerException;
-
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
 
 /**
  * TODO Javadoc.
@@ -73,7 +75,7 @@ public class HarvestManager implements HarvestInfoProvider
      * @param dm datamanager
      * @throws Exception hmm
      */
-	public HarvestManager(ServiceContext context, GeonetContext gc, SettingManager sm, DataManager dm) throws Exception {
+	public HarvestManager(ServiceContext context, GeonetContext gc, HarvesterSettingsManager sm, DataManager dm) throws Exception {
 		this.context = context;
         this.readOnly = gc.isReadOnly();
         Log.debug(Geonet.HARVEST_MAN, "HarvesterManager initializing, READONLYMODE is " + this.readOnly);
@@ -548,7 +550,7 @@ public class HarvestManager implements HarvestInfoProvider
 	//---------------------------------------------------------------------------
 
 	private String         xslPath;
-	private SettingManager settingMan;
+	private HarvesterSettingsManager settingMan;
 	private DataManager    dataMan;
 	private ServiceContext context;
     private boolean readOnly;

@@ -40,6 +40,9 @@ import org.jdom.Element;
 
 //=============================================================================
 
+/**
+ * do any immediate actions resulting from changes to settings  
+ */
 public class DoActions implements Service
 {
 	//--------------------------------------------------------------------------
@@ -69,14 +72,7 @@ public class DoActions implements Service
 		return new Element(Jeeves.Elem.RESPONSE).setText("ok");
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- doActions - do any immediate actions resulting from changes to settings
-	//---
-	//--------------------------------------------------------------------------
-
-	// do any immediate actions resulting from changes to settings	
-	private void doActions(ServiceContext context) throws Exception {
+	public static void doActions(ServiceContext context) throws Exception {
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager		dataMan = gc.getBean(DataManager.class);
 		SettingManager settingMan = gc.getBean(SettingManager.class);
@@ -92,18 +88,22 @@ public class DoActions implements Service
 			e.printStackTrace();
 			throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: "+e.getMessage());
 		}
-		
-		// Load proxy information into Jeeves
-		ProxyInfo pi = JeevesProxyInfo.getInstance();
-		boolean useProxy = settingMan.getValueAsBool("system/proxy/use", false);
-		if (useProxy) {
-			String  proxyHost      = settingMan.getValue("system/proxy/host");
-			String  proxyPort      = settingMan.getValue("system/proxy/port");
-			String  username       = settingMan.getValue("system/proxy/username");
-			String  password       = settingMan.getValue("system/proxy/password");
-			pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
-		}
 
+        try {
+    		// Load proxy information into Jeeves
+    		ProxyInfo pi = JeevesProxyInfo.getInstance();
+    		boolean useProxy = settingMan.getValueAsBool("system/proxy/use", false);
+    		if (useProxy) {
+    			String  proxyHost      = settingMan.getValue("system/proxy/host");
+    			String  proxyPort      = settingMan.getValue("system/proxy/port");
+    			String  username       = settingMan.getValue("system/proxy/username");
+    			String  password       = settingMan.getValue("system/proxy/password");
+    			pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
+    		}
+    	} catch (Exception e) {
+            e.printStackTrace();
+            throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
+        }
 		// FIXME: should also restart the Z server?
 	}
 

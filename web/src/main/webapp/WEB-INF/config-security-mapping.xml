@@ -14,6 +14,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/monitor" access="hasRole('Monitor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/\w*healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
+
                 <sec:intercept-url pattern="/srv/[a-z]{3}/service-not-allowed!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{3}/login.form!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{3}/.+\?casLogin.*" access="hasRole('RegisteredUser')"></sec:intercept-url>
@@ -62,6 +63,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{3}/thesaurus.add.register!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{3}/thesaurus.activate!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{3}/config!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{3}/config.set!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{3}/xml.config.get!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{3}/xml.config.info!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{3}/config.info!?.*" access="hasRole('Administrator')"></sec:intercept-url>
