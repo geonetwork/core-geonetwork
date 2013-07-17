@@ -27,8 +27,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.util.ISODate;
-import org.jzkit.z3950.gen.v3.RecordSyntax_explain.superAttributes_inline96_codec;
 
 /**
  * Custom status action class for Sextant.
@@ -105,7 +103,7 @@ public class SextantStatusActions extends DefaultStatusActions {
             informContentReviewers(metadataIds, changeDate, changeMessage);
             // --- inform owners if status is approved
         } else if (status.equals(Params.Status.APPROVED) || status.equals(Params.Status.REJECTED) || status.equals(Params.Status.RETIRED) || status.equals(Params.Status.UNKNOWN)) {
-            informOwnersApprovedOrRejected(metadataIds, changeDate, changeMessage, status);
+            informOwners(metadataIds, changeDate, changeMessage, status);
         }
 
         return unchanged;

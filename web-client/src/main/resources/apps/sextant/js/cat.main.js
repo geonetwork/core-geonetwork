@@ -395,7 +395,7 @@ cat.app = function() {
 					}, this);
 					this.actionOnSelectionMenu = adminBtn;
 					tBar.changeMode(false);
-					this.actionOnSelectionMenu.setVisible(this.config.otherActions && this.catalogue.isAdmin());
+					this.actionOnSelectionMenu.setVisible(true);
 				}, this);
 				
 				return ' ';

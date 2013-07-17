@@ -170,7 +170,7 @@ public class DefaultStatusActions implements StatusActions {
             informContentReviewers(metadataIds, changeDate, changeMessage);
             // --- inform owners if status is approved
         } else if (status.equals(Params.Status.APPROVED) || status.equals(Params.Status.REJECTED)) {
-            informOwnersApprovedOrRejected(metadataIds, changeDate, changeMessage, status);
+            informOwners(metadataIds, changeDate, changeMessage, status);
         }
 
         return unchanged;
@@ -221,7 +221,7 @@ public class DefaultStatusActions implements StatusActions {
      * @param changeDate The date that of the change in status
      * @param changeMessage Message supplied by the user that set the status
      */
-    protected void informOwnersApprovedOrRejected(Set<Integer> metadata, String changeDate, String changeMessage, String status)
+    protected void informOwners(Set<Integer> metadata, String changeDate, String changeMessage, String status)
             throws Exception {
 
         // --- get metadata owners (sorted on owner userid)

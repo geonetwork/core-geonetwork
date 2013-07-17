@@ -252,6 +252,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
                     this.add(this.categoryAction);
                     this.add(this.createChildAction);
                     this.add(this.statusAction);
+                    this.add(this.enableWorkflowAction);
                     this.add(this.versioningAction);
                     
                 }

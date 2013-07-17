@@ -301,6 +301,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdUnsetThumbnail: serviceUrl + 'metadata.thumbnail.unset.new',
             mdImport: serviceUrl + 'metadata.xmlinsert.form',
             mdStatus: serviceUrl + 'metadata.status.form',
+            mdStatusSet: serviceUrl + 'metadata.status',
             mdVersioning: serviceUrl + 'metadata.version',
             subTemplateType: serviceUrl + 'subtemplate.types',
             subTemplate: serviceUrl + 'subtemplate',
@@ -488,7 +489,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: method[onAfterRating]
      *  :param e: ``Object``
      *
-     *  The "onAfterDelete" listener.
+     *  The "onAfterRating" listener.
      *
      *  Listeners will be called with the following arguments:
      *
@@ -497,6 +498,19 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     onAfterRating: function(){
         this.fireEvent('afterRating', this);
+    },
+    /** api: method[onAfterStatus]
+     *  :param e: ``Object``
+     *
+     *  The "onAfterStatus" listener.
+     *
+     *  Listeners will be called with the following arguments:
+     *
+     *    * ``this`` : GeoNetwork.Catalogue
+     *    
+     */
+    onAfterStatus: function(){
+        this.fireEvent('afterStatus', this);
     },
     /** private: method[setSelectedRecords]
      *  :param nb: ``Number``
@@ -1073,7 +1087,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             params: params,
             success: function(response){
                 if (msgSuccess) {
-                    Ext.Msg.alert(msgSuccess, response.responseText);
+                    GeoNetwork.Message().msg({
+                        title: OpenLayers.i18n(msgSuccess),
+                        msg: response.responseText,
+                        status: '',
+                        target: Ext.getBody()
+                    });
                 }
                 
                 if (onSuccess) {
@@ -1395,11 +1414,34 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         this.modalAction(OpenLayers.i18n('setPrivileges'), url);
     },
     /** api: method[metadataStatus]
-     *  Change status for this metadata
+     *  Open status form to update metadata status
      */
     metadataStatus: function(id){
         var url = this.services.mdStatus + "?id=" + id;
         this.modalAction(OpenLayers.i18n('setStatus'), url);
+    },
+    /** api: method[metadataSetStatus]
+     *  Change status for this metadata
+     */
+    metadataSetStatus: function(id, status, msg){
+        var url = this.services.mdStatusSet + "?id=" + id + "&status=" + status + "&changeMessage=" + msg;
+
+        catalogue.doAction(catalogue.services.mdStatusSet, {
+                                    id: id,
+                                    status: status,
+                                    changeMessage: msg
+                                }, 
+                                undefined, 
+                                OpenLayers.i18n('error'), 
+                                function () {
+                                    GeoNetwork.Message().msg({
+                                        title: OpenLayers.i18n('enableWorkflow'),
+                                        msg: OpenLayers.i18n('enableWorkflowStart'),
+                                        status: '',
+                                        target: Ext.getBody()
+                                    });
+                                    catalogue.onAfterStatus();
+                                });
     },
     /** api: method[metadataVersioning]
      *  Active versioning for this metadata

@@ -103,6 +103,7 @@
       <field name="_valid_xsd" tagName="valid_xsd"/>
       <field name="_selected" tagName="selected"/>
       <field name="_source" tagName="source"/>
+      <field name="_status" tagName="status"/>
       <field name="_edit" tagName="edit"/>
       <field name="_title" tagName="title" multilingualSortField="true"/>
       <field name="_docLocale" tagName="docLocale"/>

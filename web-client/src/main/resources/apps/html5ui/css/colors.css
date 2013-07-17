@@ -287,3 +287,8 @@ div#tabs .x-tab-strip span.x-tab-strip-text {
 	color: black;
 	shadow: grey;
 }
+
+
+.emptyThumbnail span {
+	color: #376690;	
+}
