@@ -32,6 +32,7 @@ GeoNetwork.searchDefault = {
 GeoNetwork.advancedFormButton = true;
 
 GeoNetwork.Settings.editor = {
+    disableIfSubmittedForEditor: false,
     defaultViewMode : 'simple',
     // Define which edit mode to use by default
     // according to metadata schema
