@@ -54,6 +54,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
     tplStore: undefined,
     selectedGroup: undefined,
     selectedTpl: undefined,
+    selectedSchema: undefined,
     isChild: undefined,
     filter: undefined,
     createBt: undefined,
@@ -99,7 +100,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
             disabled: true,
             handler: function(){
                 // FIXME could be improved
-                this.catalogue.metadataEdit(this.selectedTpl, true, this.selectedGroup, this.isChild, this.isTemplate);
+                this.catalogue.metadataEdit(this.selectedTpl, true, this.selectedGroup, this.isChild, this.isTemplate, this.selectedSchema);
                 this.ownerCt.hide();
             },
             scope: this
@@ -170,6 +171,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
             grid.getSelectionModel().on('rowselect', function(sm, rowIndex, r) {
                 if (sm.getCount() !== 0) {
                     this.selectedTpl = r.data.id;
+                    this.selectedSchema = r.data.schema;
                 } else {
                     this.selectedTpl = undefined;
                 }

@@ -987,12 +987,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *
      *  FIXME : metadata.edit service does not support uuid param
      */
-    metadataEdit: function(id, create, group, child, isTemplate){
+    metadataEdit: function(id, create, group, child, isTemplate, schema){
         
         switch(this.editMode) {
         case this.EDITOR_MODE.IN_EDITOR_POPUP:
             if (this.metadataEditFn) {
-                this.metadataEditFn(id, create, group, child, isTemplate);
+                this.metadataEditFn(id, create, group, child, isTemplate, schema);
             }
         break;
         default: 
