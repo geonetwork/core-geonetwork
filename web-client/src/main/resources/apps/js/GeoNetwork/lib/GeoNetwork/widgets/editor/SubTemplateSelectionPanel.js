@@ -130,31 +130,9 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
     SubTemplateSelected: [],
     initComponent: function(){
         this.subTemplateStore = GeoNetwork.data.MetadataResultsStore();
-
-        this.items = [{
-            xtype: 'panel',
-            layout: 'fit',
-            bodyStyle: 'padding: 5px;',
-            border: false,
-            items: [this.getSearchField(), this.getSubTemplateItemSelector()]
-        }];
         
-        this.subTemplateStore.on({
-            'loadexception': function(){
-            },
-            'beforeload': function(store, options){
-                if (!this.loadingMask) {
-                    this.loadingMask = new Ext.LoadMask(this.itemSelector.fromMultiselect.getEl(), {
-                        msg: OpenLayers.i18n('searching')
-                    });
-                }
-                this.loadingMask.show();
-            },
-            'load': function(){
-                this.loadingMask.hide();
-            },
-            scope: this
-        });
+        this.items = [this.getSearchField(), this.getSubTemplateItemSelector()];
+        
         
         /**
          * triggered when the user has selected a Contact
@@ -196,12 +174,21 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
             });
         return [new GeoNetwork.form.SearchField({
             name: 'E_any',
+            width: 240,
+            hideLabel: true,
             store: this.catalogue.metadataStore,
             triggerAction: function(scope){
                  scope.doSearch();
             },
             scope: this
-        }),this.subTplTypeField
+        }), {
+            xtype: 'textfield',
+            name: 'E_hitsperpage',
+            id: 'maxResults',
+            fieldLabel: OpenLayers.i18n('maxResults'),
+            value: 50,
+            width: 40
+        }, this.subTplTypeField
             , {
                 xtype: 'textfield',
                 name: 'E__isTemplate',
@@ -293,7 +280,7 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         
         this.itemSelector = new Ext.ux.ItemSelector({
             name: "itemselector",
-            fieldLabel: "ItemSelector",
+            hideLabel: true,
             dataFields: ["uuid", "title"],
             toData: [],
             msWidth: 320,
@@ -420,6 +407,8 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
     },
     
     doSearch: function(){
+        this.subTemplateStore.removeAll();
+        
         if (!this.loadingMask) {
             this.loadingMask = new Ext.LoadMask(this.getEl(), {
                 msg: OpenLayers.i18n('searching')
@@ -432,10 +421,12 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
 //            GeoNetwork.editor.nbResultPerPage = Ext.getCmp('nbResultPerPage').getValue();
 //        }
         GeoNetwork.util.SearchTools.doQueryFromForm(this.id, this.catalogue, 
-            1, this.showResults.bind(this), null, 
+            1, this.showResults.bind(this), this.searchError.bind(this), 
             false, this.subTemplateStore);
     },
-    
+    searchError: function(response){
+        this.loadingMask.hide();
+    },
     showResults: function(response){
         var getRecordsFormat = new OpenLayers.Format.GeoNetworkRecords();
         var r = getRecordsFormat.read(response.responseText);
@@ -443,6 +434,7 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         if (values.length > 0) {
             this.subTemplateStore.loadData(r);
         }
+        this.loadingMask.hide();
     }
 });
 
