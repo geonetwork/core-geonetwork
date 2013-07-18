@@ -99,6 +99,13 @@ cat.app = function() {
     }
 	
 	function createLoginForm() {
+
+		// Refresh login form if needed
+		var user = cookie.get('user');
+		if (user) {
+			catalogue.identifiedUser = user;
+		}
+
 		var loginForm = new GeoNetwork.LoginForm({
 			renderTo : 'login-form',
 			catalogue : catalogue,
@@ -114,13 +121,6 @@ cat.app = function() {
 		    cookie.set('user', undefined);
 		});
         
-		// Refresh login form if needed
-		var user = cookie.get('user');
-		if (user) {
-			catalogue.identifiedUser = user;
-			loginForm.login(catalogue, true);
-		}
-		loginForm.triggerClick();
 	}
 	
 	function showMD(uuid, record, url, maximized, width, height) {
