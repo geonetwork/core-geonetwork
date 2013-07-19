@@ -395,7 +395,7 @@ cat.app = function() {
 					}, this);
 					this.actionOnSelectionMenu = adminBtn;
 					tBar.changeMode(false);
-					this.actionOnSelectionMenu.setVisible(this.config.otherActions && this.catalogue.isAdmin());
+					this.actionOnSelectionMenu.setVisible(this.config.otherActions && this.catalogue.identifiedUser != undefined);
 				}, this);
 				
 				return ' ';
@@ -425,8 +425,8 @@ cat.app = function() {
 		            this.setVisible(vis);
 		            if(vis)nbVisible++;
 		        });
-		        
-		        this.actionOnSelectionMenu.setVisible(nbVisible > 0 && this.catalogue.isAdmin());
+
+		        this.actionOnSelectionMenu && this.actionOnSelectionMenu.setVisible(nbVisible > 0 && catalogue.identifiedUser != undefined);
 		    }
 		});
 
@@ -851,6 +851,9 @@ cat.app = function() {
                     cat.what.updateUserGroups(searchAfterLoggin);
                 });
             });
+
+            // Trigger search
+            cat.what.updateUserGroups(searchAfterLoggin);
 		},
 
 		getCatalogue : function() {
