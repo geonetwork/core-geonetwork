@@ -90,8 +90,7 @@ public class JeevesEngine
 	private boolean defaultLocal;
 	private boolean debugFlag;
 	
-    private Dbms dbms;
-    private boolean dbLoaded;
+    private Dbms dbms;;
     
 	/** true if the 'general' part has been loaded */
 	private boolean generalLoaded;
@@ -183,11 +182,11 @@ public class JeevesEngine
 			scheduleMan.setApplicationContext(jeevesAppContext);
 			scheduleMan.setSerialFactory(serialFact);
 			scheduleMan.setBaseUrl(baseUrl);
-
-			dbLoaded = false;
 			
 			loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, serviceMan);
 
+	        loadConfigDB(dbms, -1);
+	        
             info("Initializing profiles...");
             ProfileManager profileManager = serviceMan.loadProfiles(servletContext, profilesFile);
 
@@ -342,17 +341,6 @@ public class JeevesEngine
 		
 		for(int i=0; i<srvList.size(); i++)
 			initServices(srvList.get(i));
-
-		if (!dbLoaded) {
-			setDBServicesElement(dbms);
-			for(int i=0; i<dbservices.size(); i++){
-				initServices(dbservices.get(i));
-			}
-			dbLoaded = true;
-		}
-		
-		
-
 		
 		//--- init schedules
 
@@ -378,6 +366,7 @@ public class JeevesEngine
 
 			loadConfigFile(servletContext, path, include.getText(), serviceMan);
 		}
+
 	}
 
 	//---------------------------------------------------------------------------
@@ -820,49 +809,62 @@ public class JeevesEngine
 	public ProfileManager getProfileManager() { return serviceMan.getProfileManager(); }
 	
     /**
-     * Create Jeeves services from a configuration stored in the Services table
+     * Create or reload Jeeves services from a configuration stored in the Services table
      * of the DBMS resource.
      * 
      * @param _dbms
+     * @param serviceIdentifierToLoad -1 for all or the service identifier
      */
-    private void setDBServicesElement(Dbms _dbms) {
+    public void loadConfigDB(Dbms _dbms, int serviceIdentifierToLoad) {
         try {
             Element eltServices = new Element("services");
             eltServices.setAttribute("package", "org.fao.geonet");
+            
             String selectServiceQuery = "SELECT * FROM Services";
+
             @SuppressWarnings("unchecked")
-            java.util.List<Element> serviceList = _dbms.select(selectServiceQuery)
+            java.util.List<Element> serviceList = null;
+            if (serviceIdentifierToLoad == -1) {
+                serviceList = _dbms.select(selectServiceQuery)
                     .getChildren();
+            } else {
+                selectServiceQuery += " WHERE id=?";
+                serviceList = _dbms.select(selectServiceQuery, serviceIdentifierToLoad)
+                        .getChildren();
+            }
 
-            if (!dbLoaded) {
-                for (Element eltService : serviceList) {
-                    Element srv = new Element("service");
-                    Element cls = new Element("class");
-                    String selectServiceParamsQuery = "SELECT name, value FROM ServiceParameters WHERE service =?";
-                    Integer serviceId = Integer.valueOf(eltService.getChildText("id"));
-                    @SuppressWarnings("unchecked")
-                    java.util.List<Element> paramList = _dbms.select(selectServiceParamsQuery, serviceId).getChildren();
+            for (Element eltService : serviceList) {
+                Element srv = new Element("service");
+                Element cls = new Element("class");
+                String selectServiceParamsQuery = "SELECT name, value FROM ServiceParameters WHERE service =?";
+                Integer serviceId = Integer.valueOf(eltService.getChildText("id"));
 
-                    for (Element eltParam : paramList) {
-                        if (eltParam.getChildText("value") != null
-                                && !eltParam.getChildText("value").equals("")) {
-                            cls.addContent(new Element("param").setAttribute(
-                                    "name", "filter").setAttribute(
-                                    "value",
-                                    "+" + eltParam.getChildText("name") + ":"
-                                            + eltParam.getChildText("value")));
-                        }
+                @SuppressWarnings("unchecked")
+                java.util.List<Element> paramList = _dbms.select(selectServiceParamsQuery, serviceId).getChildren();
+
+                for (Element eltParam : paramList) {
+                    if (eltParam.getChildText("value") != null
+                            && !eltParam.getChildText("value").equals("")) {
+                        cls.addContent(new Element("param").setAttribute(
+                                "name", "filter").setAttribute(
+                                "value",
+                                "+" + eltParam.getChildText("name") + ":"
+                                        + eltParam.getChildText("value")));
                     }
-
-                    srv.setAttribute("name", eltService.getChildText("name"))
-                            .addContent(
-                                    cls.setAttribute("name",
-                                            eltService.getChildText("class")));
-                    eltServices.addContent(srv);
                 }
+
+                srv.setAttribute("name", eltService.getChildText("name"))
+                        .addContent(
+                                cls.setAttribute("name",
+                                        eltService.getChildText("class")));
+                eltServices.addContent(srv);
             }
 
             dbservices.add(eltServices);
+
+            for(int i=0; i<dbservices.size(); i++){
+                initServices(dbservices.get(i));
+            }
         } catch (Exception e) {
             warning("Jeeves DBMS service configuration lookup failed (database may not be available yet). Message is: "
                     + e.getMessage());
