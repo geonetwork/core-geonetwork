@@ -18,7 +18,7 @@
 							<div align="center">
                 <button class="content" onclick="goReset('userregisterform')"><xsl:value-of select="/root/gui/strings/reset"/></button>
                 &#160;
-                <button class="content" onclick="processRegSub('{/root/gui/locService}/user.register.submit')"><xsl:value-of select="/root/gui/strings/register"/></button>
+                <button class="content" onclick="processRegSub('user.register.submit')"><xsl:value-of select="/root/gui/strings/register"/></button>
 							</div>
             </xsl:with-param>
         </xsl:call-template>
