@@ -393,7 +393,7 @@ cat.app = function() {
 					}, this);
 					this.actionOnSelectionMenu = adminBtn;
 					tBar.changeMode(false);
-					this.actionOnSelectionMenu.setVisible(true);
+					this.actionOnSelectionMenu.setVisible(this.catalogue.identifiedUser != undefined);
 				}, this);
 				
 				return ' ';
@@ -406,7 +406,6 @@ cat.app = function() {
 				}, this);
 			},
 		    updatePrivileges: function(catalogue, user){
-		        
 		        var nbVisible=0;
 		        var editingActions = []; //new Md & insert MD actions
 		        
@@ -423,11 +422,11 @@ cat.app = function() {
 		            this.setVisible(vis);
 		            if(vis)nbVisible++;
 		        });
-		        
-		        this.actionOnSelectionMenu.setVisible(nbVisible > 0 && this.catalogue.isAdmin());
+                
+		        this.actionOnSelectionMenu && this.actionOnSelectionMenu.setVisible(nbVisible > 0 && catalogue.identifiedUser != undefined);
 		    }
 		});
-
+		
 		resultPanel = new Ext.Panel({
 			id : 'resultsPanel',
 			border : false,
@@ -732,12 +731,13 @@ cat.app = function() {
 			// Extra stuffs
 			infoPanel = createInfoPanel();
 			searchForm = createSearchForm();
-			createLoginForm();
 			//createLanguageSwitcher(cat.language);
 
 			edit();
 			resultsPanel = createResultsPanel();
-
+			
+			createLoginForm();
+			
 			var viewport = new Ext.Panel({
 				renderTo: 'main-viewport',
 				layout : 'border',
@@ -858,6 +858,9 @@ cat.app = function() {
                     cat.what.updateUserGroups(searchAfterLoggin);
                 });
             });
+            
+            // Trigger search
+            cat.what.updateUserGroups(searchAfterLoggin);
 		},
 
 		getCatalogue : function() {
