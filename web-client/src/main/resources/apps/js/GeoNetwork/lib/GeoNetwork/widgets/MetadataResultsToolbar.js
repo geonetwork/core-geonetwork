@@ -149,14 +149,9 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      */
     initComponent: function(){
         var cmp = [];
-        if(this.config.selectAction) {
-        	cmp.push(this.createSelectionToolBar());
-            this.catalogue.on('selectionchange', this.updateSelectionInfo, this);
-            this.updateSelectionInfo(this.catalogue, 0);
-        }
+        
         Ext.applyIf(this, this.defaultConfig);
         
-        var cmp = [];
         if (this.withPaging) {
             cmp.push(this.createPaging());
         }
@@ -175,6 +170,12 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         	cmp.push(this.createOtherActionMenu());
         }
         
+        if(this.config.selectAction) {
+            cmp.push(this.createSelectionToolBar());
+            this.catalogue.on('selectionchange', this.updateSelectionInfo, this);
+            this.updateSelectionInfo(this.catalogue, 0);
+        }
+        
         // Permalink
         if(this.permalinkProvider) {
             var l = this.permalinkProvider.getLink;
@@ -190,7 +191,6 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         if(cmp[cmp.length-1] == '|') {
         	cmp.pop();
         }
-        
         this.add(cmp);
         
         if(this.config.otherActions) {
