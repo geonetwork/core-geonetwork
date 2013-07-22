@@ -855,7 +855,7 @@ GeoNetwork.app = function () {
                 Ext.getCmp('geometryMap').map.zoomToExtent(urlParameters.bounds);
             }
             
-            var events = ['afterDelete', 'afterRating', 'afterLogout', 'afterLogin'];
+            var events = ['afterDelete', 'afterRating', 'afterStatus', 'afterLogout', 'afterLogin'];
             Ext.each(events, function (e) {
                 catalogue.on(e, function () {
                     if (searching === true) {
