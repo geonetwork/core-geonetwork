@@ -163,6 +163,17 @@ Options in this group determine how GeoNetwork will search metadata in multiple 
 - *Document language is the requested language* - The search results will contain documents whose metadata language is specified as being the in search language
 
 
+Note::
+
+  Using "All documents in all languages (No preferences)" and having metadata content in more than one language 
+  (eg. english and french) or in a language that is not english is not recommended when 
+  using language specific analyzer like the GeoNetworkAnalyzer (See :ref:`adv_configuration_lucene`).
+  GeoNetworkAnalyzer uses different stopwords list for each language. In that situation, the search will always 
+  use the default GeoNetworkAnalyzer (with an english set of stopwords) and searching for "les cours d'eau" will
+  not match anything because "les" is not removed by search field analysis (and it was during indexing the value in the
+  index in French). Use another option or switch to a non language specific analyzer.
+  
+
 Data-For-Download Service
 `````````````````````````
 

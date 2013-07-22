@@ -111,7 +111,7 @@ public class LDAPUtils {
 				String groupId = null;
 				
 				if (groupRecord == null && createNonExistingLdapGroup) {
-					groupId = createIfNotExist(groupName, dbms, serialFactory);
+				    groupId = createIfNotExist(groupName, dbms, serialFactory);
 				}
                 else if (groupRecord != null) {
 					groupId = groupRecord.getChildText("id");
@@ -165,7 +165,6 @@ public class LDAPUtils {
         String query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
         dbms.execute(query, Integer.valueOf(groupId), groupName);
         Lib.local.insert(dbms, "Groups", Integer.valueOf(groupId), groupName);
-        
         return groupId;
     }
 

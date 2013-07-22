@@ -57,6 +57,11 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
     metadataSchema: undefined,
     subTplTypeField: undefined,
     
+    subTemplateStore: undefined,
+    codeListStore: undefined,
+    metadataSchema: undefined,
+    subTplTypeField: undefined,
+    
     /**
      * Property: itemSelector
      */
@@ -260,10 +265,11 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         
         this.codeListStore.on({
             'load': function(){
-                this.defaultRole && Ext.getCmp('codeList').setValue(this.defaultRole);
+                this.defaultRole && this.codeListCombo.setValue(this.defaultRole);
             },
             scope: this
         });
+        
         return this.codeListCombo;
     },
     

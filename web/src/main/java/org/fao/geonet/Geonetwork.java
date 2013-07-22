@@ -771,6 +771,9 @@ public class Geonetwork implements ApplicationHandler {
 			// Copy logo
 			String uuid = UUID.randomUUID().toString();
 			initLogo(servletContext, dbms, uuid, context.getAppPath());
+			
+			context.getServlet().getEngine().loadConfigDB(dbms, -1);
+			
 			created = true;
 		} else {
 			logger.info("      Found an existing GeoNetwork database.");
