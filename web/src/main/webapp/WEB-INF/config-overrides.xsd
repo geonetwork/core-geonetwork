@@ -213,6 +213,7 @@
 			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
+	</xs:element>
 
 	<xs:element name="file">
 		<xs:annotation>
