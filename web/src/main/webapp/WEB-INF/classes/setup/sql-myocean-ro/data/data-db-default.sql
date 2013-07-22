@@ -959,7 +959,7 @@ INSERT INTO Settings VALUES (721,720,'enable','false');
 INSERT INTO Settings VALUES (722,720,'enableSearchPanel','false');
 
 INSERT INTO Settings VALUES (900,1,'harvester',NULL);
-INSERT INTO Settings VALUES (901,900,'enableEditing','false');
+INSERT INTO Settings VALUES (901,900,'enableEditing','true');
 
 INSERT INTO Settings VALUES (910,1,'metadata',NULL);
 INSERT INTO Settings VALUES (911,910,'enableSimpleView','true');
