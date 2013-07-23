@@ -316,7 +316,7 @@
     
     <!-- "An entity responsible for making the dataset available" -->
     <xsl:for-each select="gmd:pointOfContact/*/gmd:organisationName/gco:CharacterString[.!='']">
-      <dct:publisher rdf:resource="{$url}/organization/{.}"/>
+      <dct:publisher rdf:resource="{$url}/organization/{encode-for-uri(.)}"/>
     </xsl:for-each>
     <!-- xpath: gmd:identificationInfo/*/gmd:pointOfContact -->
     
