@@ -121,7 +121,7 @@ cat.app = function() {
 		    cookie.set('user', undefined);
 		});
         
-		catalogue.login();
+		loginForm.triggerClick();
 	}
 	
 	function showMD(uuid, record, url, maximized, width, height) {
@@ -852,9 +852,6 @@ cat.app = function() {
                     cat.what.updateUserGroups(searchAfterLoggin);
                 });
             });
-
-            // Trigger search
-            cat.what.updateUserGroups(searchAfterLoggin);
 		},
 
 		getCatalogue : function() {
