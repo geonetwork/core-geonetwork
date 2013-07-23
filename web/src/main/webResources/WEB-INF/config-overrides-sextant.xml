@@ -246,6 +246,11 @@
           <param name="filter" value="+_groupPublished:SINPMER"/>
         </class>
       </service>
+      <service name="csw-SURVEILLANCE_LITTORALE">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:SURVEILLANCE_LITTORALE"/>
+        </class>
+      </service>
       <service name="csw-URANTILLES">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:URANTILLES"/>
