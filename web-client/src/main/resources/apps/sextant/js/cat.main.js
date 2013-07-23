@@ -121,6 +121,7 @@ cat.app = function() {
 		    cookie.set('user', undefined);
 		});
         
+		catalogue.login();
 	}
 	
 	function showMD(uuid, record, url, maximized, width, height) {
@@ -395,7 +396,7 @@ cat.app = function() {
 					}, this);
 					this.actionOnSelectionMenu = adminBtn;
 					tBar.changeMode(false);
-					this.actionOnSelectionMenu.setVisible(this.config.otherActions && this.catalogue.identifiedUser != undefined);
+					this.updatePrivileges(catalogue, catalogue.identifiedUser);
 				}, this);
 				
 				return ' ';
