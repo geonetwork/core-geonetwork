@@ -163,6 +163,7 @@ public final class Geonet {
 		public static final String SEARCH_REQUEST_ID 		= "search_request_id";		
 		public static final String METADATA_SHOW			= "metadata.show";
 		public static final String METADATA_EDITING		= "metadata.editing";
+        public static final String METADATA_EDITING_TAB   = "metadata.editing.tab";
 		public static final String METADATA_POSITION  = "metadata.position";
 		public static final String SEARCH_KEYWORDS_RESULT	= "search.keywords.result";
 		public static final String SELECTED_RESULT          = "selected.result";
