@@ -27,17 +27,22 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 
 //=============================================================================
 
 /** This service is used by metadata.show/edit to retrieve the current
-  * selected tab
+  * selected tab.
   */
 
 public class GetCurrentMDTab implements Service
 {
+    String sessionTabProperty = Geonet.Session.METADATA_SHOW;
+    
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -49,19 +54,23 @@ public class GetCurrentMDTab implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		UserSession session = context.getUserSession();
+		String currentTab = (String) session.getProperty(sessionTabProperty);
 
-		String data = (String) session.getProperty(Geonet.Session.METADATA_SHOW);
-
-		if (data == null)
-		{
+		if (currentTab == null) {
 			context.info("Creating default metadata tab");
-
-			data = "simple";
-
-			session.setProperty(Geonet.Session.METADATA_SHOW, data);
+			currentTab = "simple";
+			session.setProperty(sessionTabProperty, currentTab);
 		}
-		return new Element("a").setText(data);
+		return new Element("a").setText(currentTab);
 	}
+
+    public String getSessionTabProperty() {
+        return sessionTabProperty;
+    }
+
+    public void setSessionTabProperty(String sessionTabProperty) {
+        this.sessionTabProperty = sessionTabProperty;
+    }
 }
 
 //=============================================================================

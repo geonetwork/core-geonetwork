@@ -92,9 +92,11 @@ class EditUtils {
 
 		Element elCurrTab = params.getChild(Params.CURRTAB);
 		Element elCurrPos = params.getChild(Params.POSITION);
-
+		boolean useEditTab = Util.getParam(params, "editTab", false);
+        String sessionTabProperty = useEditTab ? Geonet.Session.METADATA_EDITING_TAB : Geonet.Session.METADATA_SHOW;
+       
 		if (elCurrTab != null) {
-			session.setProperty(Geonet.Session.METADATA_SHOW, elCurrTab.getText());
+			session.setProperty(sessionTabProperty, elCurrTab.getText());
 		}
 		if (elCurrPos != null)
 			session.setProperty(Geonet.Session.METADATA_POSITION, elCurrPos.getText());
