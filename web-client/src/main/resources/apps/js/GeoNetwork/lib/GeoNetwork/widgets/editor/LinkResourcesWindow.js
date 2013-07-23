@@ -47,9 +47,9 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             border: false
         },
         /** api: config[closeAction] 
-         *  The close action. Default is 'destroy'.
+         *  The close action. Default is 'close'.
          */
-        closeAction: 'destroy',
+        closeAction: 'close',
         maximizable: false,
         maximized: false,
         collapsible: true,
