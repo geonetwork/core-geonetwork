@@ -232,7 +232,6 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
       return {
           xtype: 'textfield',
           name: 'E_hitsperpage',
-          id: 'maxResults',
           fieldLabel: OpenLayers.i18n('maxResults'),
           value: 50,
           width: 40
@@ -994,7 +993,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 iconCls: 'cancel',
                 scope: this,
                 handler: function () {
-                    self.hide();
+                    self.close();
                 }
             };
         
@@ -1222,6 +1221,7 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
         var cmp = [];
         this.getHiddenFormInput(cmp);
         cmp.push(this.getSearchInput());
+        cmp.push(this.getLimitInput());
         
         var itemSelector = new Ext.ux.ItemSelector({
             dataFields: ["title"],
