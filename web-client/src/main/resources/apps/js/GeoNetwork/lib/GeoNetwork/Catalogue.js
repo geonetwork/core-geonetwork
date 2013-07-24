@@ -1173,7 +1173,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                             loginAttempts+=25;
                             app.identifiedUser = undefined;
                             app.onAfterBadLogin();
-                            console.log('error');
                         }
                         if(loginEvent == true) {
                             var response = OpenLayers.Request.GET({
