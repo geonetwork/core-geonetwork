@@ -314,11 +314,11 @@
 							<xsl:value-of select="/root/gui/strings/any"/>
 						</option>
 						
-						<xsl:for-each select="/root/gui/status/record">
+						<xsl:for-each select="/root/gui/status/statusvalues/status">
 							<xsl:sort select="label/child::*[name() = $mylang]" order="ascending"/>
 							
-							<option value="{id}">
-								<xsl:if test="id = /root/gui/searchDefaults/_status">
+							<option value="{@id}">
+								<xsl:if test="@id = /root/gui/searchDefaults/_status">
 									<xsl:attribute name="selected"/>
 								</xsl:if>
 								<xsl:value-of select="label/child::*[name() = $mylang]"/>

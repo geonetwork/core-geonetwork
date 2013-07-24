@@ -12,18 +12,10 @@
 			function init() {
 				var modeValue = getModeValue();
                 
-                typeChanged();
                 insertMode(modeValue);
                 
                 if (modeValue == 1)
                     updateForm();
-			}
-
-			function typeChanged() {
-				var type = $F('metadata.type');
-
-				if (type == 's')	Element.show('metadata.title');
-					else			Element.hide('metadata.title');
 			}
 			
 			function getModeValue() {
@@ -55,6 +47,7 @@
                 if (value == 0) {
                     Element.hide('gn.fileUp');
                     Element.show('gn.xmlUp');
+                    Element.show('gn.type');
                     $('gn.fileType').style.display='none';
                     document.xmlinsert.enctype="application/x-www-form-urlencoded";
 					document.xmlinsert.encoding="application/x-www-form-urlencoded";
@@ -63,6 +56,7 @@
                 } else {
                     Element.hide('gn.xmlUp');
                     Element.show('gn.fileUp');
+                    Element.hide('gn.type');
                     $('gn.fileType').style.display='';
                     document.xmlinsert.enctype="multipart/form-data";
 					document.xmlinsert.encoding="multipart/form-data";
@@ -233,25 +227,6 @@
                                 </span>
                             </td>
                         </tr>
-						
-						<!-- type -->
-						<tr id="gn.type">
-							<th class="padded" valign="top"><xsl:value-of select="/root/gui/strings/type"/></th>
-							<td>
-								<select class="content" name="template" size="1" id="metadata.type" onchange="typeChanged()">
-									<option value="n"><xsl:value-of select="/root/gui/strings/metadata"/></option>
-									<option value="y"><xsl:value-of select="/root/gui/strings/template"/></option>
-									<!-- <option value="s"><xsl:value-of select="/root/gui/strings/subtemplate"/></option> -->
-								</select>
-								<div id="metadata.title">
-									<xsl:text>&#160;</xsl:text>
-									<xsl:value-of select="/root/gui/strings/subtemplateTitle"/>
-									<xsl:text>&#160;</xsl:text>
-									<input class="content" type="text" name="title"/>
-								</div>
-							</td>
-						</tr>
-
                         <xsl:call-template name="metadata-insert-common-form"/>
 
 						

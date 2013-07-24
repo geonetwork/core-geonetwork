@@ -19,6 +19,7 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.en = {
+    'metadata-not-found': 'Metadata with UUID ${uuid} not found or not shared with you.',
     'harvestingAdmin': 'Harvesting',
     'updateUserInfo': 'Edit my profile',
     'updatePassword': 'Change my password',
@@ -657,7 +658,8 @@ GeoNetwork.Lang.en = {
     'linklabel-website': 'Web link',
     'linklabel-application/octet-stream': 'Link',
     'linklabel-': 'Link',
-    'cookies.warning': 'This webpage uses cookies, which will save on your computer information about your usage and statistics.'
+    'cookies.warning': 'This webpage uses cookies, which will save on your computer information about your usage and statistics.',
+    'no-thumbnail': 'No thumbnail available'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.Lang.en);

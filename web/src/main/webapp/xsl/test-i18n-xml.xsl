@@ -3,23 +3,25 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:exslt="http://exslt.org/common">
 
-    <xsl:output method="xml"/>
-    
+	<xsl:output method="xml"/>
+
 	<xsl:variable name="langs">
 		<langs>
-			<!-- TODO : add a master lang param to be able to compare to other lang than en <en master="true"/> -->
-            <fre/>
-            <spa/>
-            <chi/>
-            <ara/>
-            <ger/>
-            <ita/>
-            <rus/>
-            <dut/>
-            <por/>
-            <cat/>
-            <fin/>
-            <nor/>
+			<!-- TODO : add a master lang param to be able to compare to other lang than eng <eng master="true"/> -->
+			<fre/>
+			<spa/>
+			<chi/>
+			<ara/>
+			<ger/>
+			<ita/>
+			<rus/>
+			<dut/>
+			<por/>
+			<cat/>
+			<fin/>
+			<nor/>
+			<tur/>
+			<pol/>
 		</langs>
 	</xsl:variable>
 

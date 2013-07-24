@@ -47,15 +47,23 @@ function retrieveGroups(data, callBack, username, password)
 	this.retrieveGroupsCB = callBack;
 
     var url = data.HOST;
-	//var url = 'http://'+ data.HOST;
-	
-	//if (data.PORT != '')
-	//	url += ':'+data.PORT;
-		
-	//url += '/'+data.SERVLET+'/srv/'+Env.lang+'/xml.info';
     url += '/srv/'+Env.lang+'/xml.info';
 
-	new InfoService(loader, 'groupsIncludingSystemGroups', callBack, url, username, password);
+    // Check if GeoNetwork node is 2.10 or previous release in
+    // order to properly retrieve groups (hack for #150).
+    OpenLayers.Request.GET({
+        url: url + "?type=groupsIncludingSystemGroups",
+        success: function(response){
+            if (response.responseXML) {
+                new InfoService(loader, 'groupsIncludingSystemGroups', callBack, url, username, password);
+            } else {
+                new InfoService(loader, 'groups', callBack, url, username, password);
+            }
+        },
+        failure: function(response){
+            new InfoService(loader, 'groups', callBack, url, username, password);
+        }
+    });
 }
 
 //=====================================================================================

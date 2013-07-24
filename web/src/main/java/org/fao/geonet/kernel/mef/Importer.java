@@ -54,14 +54,8 @@ import java.util.UUID;
 
 public class Importer {
 	public static List<String> doImport(final Element params,
-			final ServiceContext context, File mefFile, final String stylePath)
-			throws Exception {
-			return doImport(params, context, mefFile, stylePath, false);
-	}
-
-	public static List<String> doImport(final Element params,
 			final ServiceContext context, File mefFile, final String stylePath,
-			final boolean indexGroup) throws Exception {
+			final Dbms dbms) throws Exception {
 		final GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		final DataManager dm = gc.getDataManager();
@@ -71,9 +65,6 @@ public class Importer {
 				.getMandatoryValue("preferredSchema") != null ? gc
 				.getHandlerConfig().getMandatoryValue("preferredSchema")
 				: "iso19139");
-
-		final Dbms dbms = (Dbms) context.getResourceManager().open(
-				Geonet.Res.MAIN_DB);
 
 		final List<String> id = new ArrayList<String>();
 		final List<Element> md = new ArrayList<Element>();
@@ -287,9 +278,12 @@ public class Importer {
 							.setAttribute("name", "featured"));
 
 					// Get the Metadata uuid if it's not a template.
-					if (isTemplate.equals("n"))
+					if (isTemplate.equals("n")) {
 						uuid = dm.extractUUID(schema, md.get(index));
-
+					} else if (isTemplate.equals("s")) {
+					    // Get subtemplate uuid if defined in @uuid at root
+                        uuid = md.get(index).getAttributeValue("uuid");
+					}
 					validate = Util.getParam(params, Params.VALIDATE, "off")
 							.equals("on");
 
@@ -397,12 +391,6 @@ public class Importer {
 				else
 					addOperations(context, dm, dbms, privileges, id.get(index), groupId);
 
-				if (indexGroup) {
-					dm.indexMetadata(dbms, id.get(index));
-				}
-                else {
-                    dm.indexInThreadPool(context,id.get(index),dbms);
-				}
 			}
 
 			// --------------------------------------------------------------------

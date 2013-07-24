@@ -138,6 +138,7 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/CSWGetRecords.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Events.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Events/buttonclick.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Icon.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Animation.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Marker.js</include>
@@ -169,6 +170,7 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMSGetFeatureInfo.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Geometry.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/Zoom.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/PanZoom.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/PanZoomBar.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Tween.js</include>

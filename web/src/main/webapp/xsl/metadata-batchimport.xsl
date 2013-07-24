@@ -4,6 +4,18 @@
 	<xsl:include href="main.xsl"/>
 	<xsl:include href="metadata-insert-form-utils.xsl"/>
 	
+	<xsl:template mode="script" match="/">
+		<script type="text/javascript" language="JavaScript">
+			
+			function fileTypeXML(isXml) {
+				if (isXml) {
+					Element.show('gn.type');
+				} else {
+					Element.hide('gn.type');
+				}
+			}
+		</script>
+	</xsl:template>
 	<!--
 	page content
 	-->
@@ -39,11 +51,11 @@
 							<tr>
 								<td class="padded">
 									<label for="singleFile"><xsl:value-of select="/root/gui/strings/singleFile"/></label>
-									<input type="radio" id="singleFile" name="file_type" value="single" checked="true"/>
+									<input type="radio" id="singleFile" onclick="fileTypeXML(this.checked)" name="file_type" value="single" checked="true"/>
 								</td>
 								<td class="padded">
 									<label for="mefFile"><xsl:value-of select="/root/gui/strings/mefFile"/></label>
-									<input type="radio" id="mefFile" name="file_type" value="mef"/>
+									<input type="radio" id="mefFile" onclick="fileTypeXML(!this.checked)" name="file_type" value="mef"/>
 								</td>
 							</tr>
 						</table>

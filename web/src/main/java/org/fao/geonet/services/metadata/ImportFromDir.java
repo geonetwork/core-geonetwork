@@ -51,6 +51,7 @@ import org.fao.geonet.constants.Geonet.Profile;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
@@ -100,7 +101,7 @@ public class ImportFromDir extends NotInReadOnlyModeService{
 	//--------------------------------------------------------------------------
 
 	private String stylePath;
-    private ArrayList<Exception> exceptions = new ArrayList<Exception>();
+    private List<Exception> exceptions = new ArrayList<Exception>();
     private boolean failOnError;
 	private static final String CONFIG_FILE = "import-config.xml";
 
@@ -184,7 +185,7 @@ public class ImportFromDir extends NotInReadOnlyModeService{
 	//---
 	//--------------------------------------------------------------------------
 
-	public class ImportCallable implements Callable<List<Exception>> {
+	public class ImportCallable implements Callable<Pair<List<String>,List<Exception>>> {
 		private final File files[];
 		private final int beginIndex, count;
 		private final Element params;
@@ -194,8 +195,9 @@ public class ImportFromDir extends NotInReadOnlyModeService{
 		private final String userId;
 		private final String userName;
 		private final String userProfile;
+		private final Dbms dbms;
 
-		ImportCallable(File files[], int beginIndex, int count, Element params, ServiceContext context, String stylePath, boolean failOnError) {
+		ImportCallable(File files[], int beginIndex, int count, Element params, ServiceContext context, String stylePath, boolean failOnError, Dbms dbms) {
 			this.files = files;
 			this.beginIndex = beginIndex;
 			this.count = count;
@@ -206,6 +208,7 @@ public class ImportFromDir extends NotInReadOnlyModeService{
 			this.userId = this.context.getUserSession().getUserId();
 			this.userName = this.context.getUserSession().getUsername();
 			this.userProfile = this.context.getUserSession().getProfile();
+			this.dbms = dbms;
 		}
 		
 		private void login() {
@@ -218,35 +221,37 @@ public class ImportFromDir extends NotInReadOnlyModeService{
 		    this.context.setUserSession(session);
 		}
 		
-		public List<Exception> call() throws Exception {
+		public Pair<List<String>,List<Exception>> call() throws Exception {
+			List<String> ids = new ArrayList<String>();
 			List<Exception> exceptions = new ArrayList<Exception>();
 			
 			login();
 			
 			for(int i=beginIndex; i<beginIndex+count; i++) {
 				try {
-					MEFLib.doImportIndexGroup(params, context, files[i], stylePath);
+					List<String> nIds = MEFLib.doImport(params, context, files[i], stylePath, dbms);
+					ids.addAll(nIds);
 				} catch (Exception e) {
-					if (failOnError)
+					if (failOnError) {
 						throw e;
-					
+					}
 					exceptions.add(e);
 				}
 			}
-			return exceptions;
+			return Pair.read(ids,exceptions);
 		}
 	}
 
-	public class ImportMetadataReindexer extends MetadataIndexerProcessor {
+	public class ImportMetadata {
 		Element params;
 		File files[];
 		String stylePath;
 		ServiceContext context;
-		ArrayList<Exception> exceptions = new ArrayList<Exception>();
+		List<String> ids = new ArrayList<String>();
+		List<Exception> exceptions = new ArrayList<Exception>();
 
 
-		public ImportMetadataReindexer(DataManager dm, Element params, ServiceContext context, File files[], String stylePath, boolean failOnError) {
-			super (dm);
+		public ImportMetadata(Element params, ServiceContext context, File files[], String stylePath, boolean failOnError) {
 			this.params = params;
 			this.context = context;
 			this.files = files;
@@ -263,30 +268,54 @@ public class ImportFromDir extends NotInReadOnlyModeService{
 			else perThread = files.length / threadCount;
 			int index = 0;
 
-			List<Future<List<Exception>>> submitList = new ArrayList<Future<List<Exception>>>();
-			while(index < files.length) {
-				int start = index;
-				int count = Math.min(perThread,files.length-start);
-				// create threads to process this chunk of files
-				Callable<List<Exception>> worker = new ImportCallable(files, start, count, params, context, stylePath, failOnError);
-				Future<List<Exception>> submit = executor.submit(worker);
-				submitList.add(submit);
-				index += count;
-			}
-
-			for (Future<List<Exception>> future : submitList) {
-				try {
-					exceptions.addAll(future.get());
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					e.printStackTrace();
+			// batch import is transactional - open up one dbms channel for each thread
+			// - we abort the dbms channels if we get an exception otherwise commit
+			List<Dbms> dbmsList = new ArrayList<Dbms>();
+			try {
+				List<Future<Pair<List<String>,List<Exception>>>> sList = new ArrayList<Future<Pair<List<String>,List<Exception>>>>();
+				while(index < files.length) {
+					int start = index;
+					int count = Math.min(perThread,files.length-start);
+					// create threads to process this chunk of files
+					Dbms dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
+					dbmsList.add(dbms);
+					Callable<Pair<List<String>,List<Exception>>> worker = new ImportCallable(files, start, count, params, context, stylePath, failOnError, dbms);
+					Future<Pair<List<String>,List<Exception>>> submit = executor.submit(worker);
+					sList.add(submit);
+					index += count;
+				}
+	
+				for (Future<Pair<List<String>,List<Exception>>> future : sList) {
+					try {
+						ids.addAll(future.get().one());
+						exceptions.addAll(future.get().two());
+					} catch (InterruptedException e) {
+						exceptions.add(e);
+						e.printStackTrace();
+					} catch (ExecutionException e) {
+						e.printStackTrace();
+						exceptions.add(e);
+					}
+				}
+		
+				for (Dbms dbms : dbmsList) {
+					if (exceptions.size() > 0 && failOnError) dbms.abort();
+					else dbms.commit();
+				}
+			} finally {
+				for (Dbms dbms : dbmsList) {
+					context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
 				}
 			}
+
 			executor.shutdown();
 		}
 
-		public ArrayList<Exception> getExceptions() {
+		public List<String> getIds() {
+			return ids;
+		}
+
+		public List<Exception> getExceptions() {
 			return exceptions;
 		}
 	}
@@ -309,10 +338,14 @@ public class ImportFromDir extends NotInReadOnlyModeService{
 		if (files == null)
 			throw new Exception("Directory not found: " + dir);
 
-		ImportMetadataReindexer r = new ImportMetadataReindexer(dm, params, context, files, stylePath, failOnError);
+		ImportMetadata r = new ImportMetadata(params, context, files, stylePath, failOnError);
 		r.process();
+		List<String> ids = r.getIds();
 		exceptions = r.getExceptions();
-		
+	
+		context.info("Now reindexing "+ids.size());
+
+		dm.batchRebuild(context, ids);
 		return files.length;
 	}
 
@@ -386,8 +419,15 @@ public class ImportFromDir extends NotInReadOnlyModeService{
 
 		//--- step 2 : insert metadata
 
-		for (ImportInfo ii : alImport)
-			insert(ii.schema, ii.xml, group, context, ii.category);
+		List<String> ids = new ArrayList<String>();
+		for (ImportInfo ii : alImport) {
+			String mId = insert(ii.schema, ii.xml, group, context, ii.category);
+			ids.add(mId);
+		}
+
+		//--- step 3 : index inserted metadata
+
+		dm.batchRebuild(context, ids);
 
 		return counter;
 	}
@@ -398,7 +438,7 @@ public class ImportFromDir extends NotInReadOnlyModeService{
 	//---
 	//--------------------------------------------------------------------------
 
-	private void insert(String schema, Element xml, String group, ServiceContext context,
+	private String insert(String schema, Element xml, String group, ServiceContext context,
 							  String category) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -421,8 +461,11 @@ public class ImportFromDir extends NotInReadOnlyModeService{
         String docType = null, title = null, createDate = null, changeDate = null;
         boolean ufo = true, indexImmediate = true;
         String isTemplate = "n";
-        dm.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, context.getUserSession().getUserIdAsInt(), group, gc.getSiteId(),
+				int mId = context.getSerialFactory().getSerial(dbms, "Metadata");
+        dm.insertMetadata(context, dbms, schema, xml, mId, uuid, context.getUserSession().getUserIdAsInt(), group, gc.getSiteId(),
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+
+		return mId+"";
 
 	}
 

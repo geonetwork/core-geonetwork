@@ -4,16 +4,19 @@
 	<site>Site</site>
 	<name>İsim</name>
 	<organ>Organizasyon</organ>
-	
+
 	<server>Sunucu(Server)</server>
 	<host>Ana sistem(Host)</host>
 	<port>Bağlantı Noktası(Port)</port>
 	<securePort>Secure Port</securePort>
-	
+	<protocol>Preferred Protocol</protocol>
+
 	<intranet>Intranet</intranet>
 	<network>Ağ (Network)</network>
 	<netmask>Netmask***</netmask>
-	
+
+	<searchStats>Search Statistics</searchStats>
+
 	<z3950>Z39.50 Sunucu</z3950>
 	<enable>İzin ver</enable>
 
@@ -23,30 +26,33 @@
 	<reasonForOne>Database not tested or doesn't support</reasonForOne>
 	<reasonForMore>From number of processors</reasonForMore>
 
-    <multilingual>Multilingual settings</multilingual>
-    <autoDetectEnable>Enable auto-detecting search request language</autoDetectEnable>
-    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
-    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
-    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
-    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
-    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
-    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
-    <requestedlanguagesorted>Search results in requested language sorted on top</requestedlanguagesorted>
+	<multilingual>Multilingual settings</multilingual>
+	<autoDetectEnable>Enable auto-detecting search request language</autoDetectEnable>
+	<requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+	<requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+	<requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+	<requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+	<requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+	<requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+	<requestedlanguagesorted>Search results in requested language sorted on top</requestedlanguagesorted>
 
 	<oai>OAI Sağlayıcı</oai>
-		<datesearch>Veri arama</datesearch>
-		<datesearchopt>
-			<dsopt label="geçici alan">1</dsopt>
-			<dsopt label="değiştirme tarihi">2</dsopt>
-		</datesearchopt>
-	
-		<tokentimeout>ResumptionToken*** Zaman Aşımı </tokentimeout>
-		<cachesize>Önbellek boyu(Cachesize)</cachesize>
+	<datesearch>Veri arama</datesearch>
+	<datesearchopt>
+		<dsopt label="geçici alan">1</dsopt>
+		<dsopt label="değiştirme tarihi">2</dsopt>
+	</datesearchopt>
+
+	<tokentimeout>ResumptionToken*** Zaman Aşımı </tokentimeout>
+	<cachesize>Önbellek boyu(Cachesize)</cachesize>
 
 	<xlinkResolver>XLink Çözücü</xlinkResolver>
 
-    <inspire>INSPIRE***</inspire>
-		
+	<inspire>INSPIRE***</inspire>
+
+	<harvester>Harvesting</harvester>
+	<enableEditing>Allow editing on harvested records</enableEditing>
+
 	<downloadservice>İndirme Verisi Servisi</downloadservice>
 	<leave>Üstveri bağlantısını kullanınız - bağlantı için değişiklik yok</leave>
 	<simple>GeoNetwork basit dosya indirme servisini kullanınız(resources.get)</simple>
@@ -108,37 +114,35 @@
 	<abstract>Özet</abstract>
 	<fees>Ücret</fees>
 	<accessConstraints>Erişim Kısıtları</accessConstraints>
-    <cswMetadataPublic>Eklenen üstveri genedir.</cswMetadataPublic>
-    
+	<cswMetadataPublic>Eklenen üstveri genedir.</cswMetadataPublic>
+
 	<clickablehyperlinks>Tıklanabilir üstbağ</clickablehyperlinks>
 
 	<localrating>Yerel Değerlendirme</localrating>
-    <autofixing>Otomatik Düzeltmeler</autofixing>
-	
+	<autofixing>Otomatik Düzeltmeler</autofixing>
+
 	<proxy>Proxy</proxy>
 	<use>Kullan</use>
 	<username>Kullanıcı adı</username>
-	
+
 	<feedback>Geribildirim</feedback>
 	<email>EMail</email>
 	<smtpHost>SMTP Ana sistem (Host) </smtpHost>
 	<smtpPort>SMTP Bağlantı noktası (Port)</smtpPort>
 
 	<userSelfRegistration>Kullanıcı kaydı</userSelfRegistration>
-	
+
 	<removedMetadata>Silinmiş üstveri</removedMetadata>
 	<dir>Altdizin</dir>
-		
+
 	<authentication>Kimlik denetleme</authentication>
-	
-	<loginuses>Oturum açma kullanımı</loginuses>
+
 	<otherlogins>Diğer kullanıcıların oturum açmasına izin ver</otherlogins>
-
+	<loginuses>Oturum açma kullanımı</loginuses>
 	<geonetworkdb>GeoNetwork kimlik denetleme</geonetworkdb>
-
 	<ldap>LDAP</ldap>
 	<defProfile>Varsayılan profil</defProfile>
-    <uidAttr>Uid*** özellik</uidAttr>
+	<uidAttr>Uid*** özellik</uidAttr>
 	<login>Oturum aç</login>
 	<userDN>Kullanıcı DN</userDN>
 	<distNames>Görülebilir isim</distNames>
@@ -153,107 +157,124 @@
 	<attributes>Shibboleth*** özellik haritası</attributes>
 	<surname>Soyadı</surname>
 	<firstname>Adı</firstname>
-		
+
+	<metadataEnableInspireSearch>Enable search panel</metadataEnableInspireSearch>
+
+	<metadataViews>Metadata views</metadataViews>
+	<metadataEnableSimpleView>Enable simple view</metadataEnableSimpleView>
+	<metadataEnableIsoView>Enable ISO view</metadataEnableIsoView>
+	<metadataEnableInspireView>Enable INSPIRE view</metadataEnableInspireView>
+	<metadataEnableXmlView>Enable XML view</metadataEnableXmlView>
+	<metadataDefaultView>Default view</metadataDefaultView>
+	<metadataSimpleView>Simple view</metadataSimpleView>
+	<metadataIsoView>ISO view</metadataIsoView>
+	<metadataInspireView>INSPIRE view</metadataInspireView>
+	<metadataXmlView>XML view</metadataXmlView>
+	<metadataAdvancedView>Advanced view</metadataAdvancedView>
+
+	<metadataPrivs>Metadata privileges</metadataPrivs>
+	<md.usergrouponly>Only set privileges to user's groups</md.usergrouponly>
+
 	<!-- Buttons -->
-	
+
 	<save>Kaydet</save>
 	<refresh>Yenile</refresh>
 	
 	<!-- validator messages -->
-	
+
 	<validator>
 		<length>
 			<cannotBeEmpty>'{NAME}' alanı boş olamaz</cannotBeEmpty>
 			<invalidMinSize>'{NAME}' alanı en az {VALUE} karakter uzunluğunda olmalıdır.</invalidMinSize>
 			<invalidMaxSize>'{NAME}' alanı en fazla {VALUE} karakter uzunluğunda olmalıdır.</invalidMaxSize>
 		</length>
-		
+
 		<integer>
 			<notInt>'{NAME}' alanı tam sayı olmalıdır.</notInt>
 			<invalidMinValue>'{NAME}' alanı &gt;= {VALUE} olmalıdır.</invalidMinValue>
 			<invalidMaxValue>'{NAME}' alanı &lt;= {VALUE} olmalıdır.</invalidMaxValue>
 		</integer>		
-		
+
 		<alphanum>
 			<notAlphaNumeric>'{NAME}' alanı alfanumerik (bir harf ile başlamalıdır) olmalıdır.</notAlphaNumeric>
 		</alphanum>
-		
+
 		<hostname>
 			<notHostName>'{NAME}' alanı uygun bir ana sistem (host) adı değildir.</notHostName>
 		</hostname>
-		
+
 		<url>
 			<notURL>'{NAME}' alanı uygun bir URL değildir.</notURL>
 		</url>
-		
+
 		<ipaddress>
 			<notIP>'{NAME}' alanı uygun bir IP adresi değildir.</notIP>
 		</ipaddress>
 	</validator>
-	
+
 	<!-- display messages -->
-	
+
 	<cannotGet>Sistem konfigürasyonu alınamamıştır</cannotGet>
 	<cannotSave>Sistem konfigürasyonu kaydedilememiştir</cannotSave>
 	<saveOk>Sistem konfigürasyonu kaydedilmiştir.</saveOk>
-	
+
 	<!-- tooltips -->
-	
+
 	<tips>
 		<tip id="site.name">
 			Kurulumun tanımlanması için kullanılmıştır.
 		</tip>
-		
+
 		<!-- server -->
-		
+
 		<tip id="server.host">
 			Sunucunun <b>ana sistem (host)</b> ve <b>bağlantı noktası (port)</b> GeoNetwork sunucusuna URL yaratmak için kullanılmaktadır. Örneğin, üst veri düzenlemesi boyunca kaynak bağlantılarını oluşturmak için ve CS/W talebi süresince sunucunun kapasitesini geri vermek için kullanılır.
 			
 			<br/>
 			<b>Not:</b> bu değişikliği üstveriye aktarmak için GAST aracını kullanmalısınız.
 		</tip>
-		
+
 		<!-- intranet -->
-		
+
 		<tip id="intranet.network">
 			<b>Ağ(network)</b> ve <b>netmask</b>*** parametreleri GeoNetwork'ün dahili bağlantılarını tanımlamak için kullanılmaktadır, bu da intranet grubunun tanımlanabilmesini sağlar.
 	
 		</tip>
-		
+
 		<!-- Z39.50 -->
-		
+
 		<tip id="z3950.enable">
 			Başlangıç süresince GeoNetwor Z39.50 sunucu bileşeninde başlayacaktır.
 			Bu bileşen ISO23950 protokolünü kullanır.
 			<br/>
 			<b>Not:</b> Bu değişikliği aktifleştirmek için GeoNetwork'ü tekrar çalıştırınız.
 		</tip>
-		
+
 		<tip id="z3950.port">
 			Z39.50 dinleme bağlantı noktasını (port) değiştiriniz.
 			
 			<br/>
 			<b>Not:</b> Bu değişikliği aktifleştirmek için GeoNetwork'ü tekrar çalıştırınız.
 		</tip>
-	
+
 		<!-- oai  -->
-		
+
 		<tip id="oai.mdmode">
 			Parametreler elde edildikten itibaren OAI davranışlarını etkiler.
 			Eğer geçici alan ayarlanmış ise, üstveri tarafından tarif edilen geçici alan tarihi araştırılır.
 			Eğer değiştirme tarihi ayarlanmış ise, üstverinin en son dğiştirildiği tarih araştırılır.
-	
+
 			<br/>
 			<b>Not:</b> Bu değişikliği aktifleştirmek için GeoNetwork'ü tekrar çalıştırınız.
 		</tip>
-		
+
 		<tip id="oai.tokentimeout">
 			Bir OAI sonuç grubunun önbellekte kaldığı saniye sayısı.
 		
 			<br/>
 			<b>Not:</b> Bu değişikliği aktifleştirmek için GeoNetwork'ü tekrar çalıştırınız.
 		</tip>
-		
+
 		<tip id="oai.cachesize">
 			Önbellekte saklanabilen OAI sonuç grubu sayısı.
 			
@@ -273,9 +294,9 @@
 		<tip id="csw.abstract">Özet</tip>
 		<tip id="csw.fees">Ücret</tip>
 		<tip id="csw.accessConstraints">Erişim Kısıtları</tip>
-		
+
 		<!-- clickable hyperlinks -->
-		
+
 		<tip id="clickablehyperlinks.enable">
 			Eğer ayarlanmış ise, GeoNetwork tıklanabilir üstbağları üstveri içerisinde gösterecektir.
 		</tip>
@@ -293,40 +314,40 @@
 		</tip>
 
 		<!-- proxy -->
-		
+
 		<tip id="proxy.use">
 			Eğer ayarlanmış ise, GeoNetwork uzak ağlara erişirken sağlanmış proxy parametrelerini kullanacaktır. Örneğin, harmanlama boyunca kullanılır.
 			
 		</tip>
-		
+
 		<!-- feedback -->
-		
+
 		<tip id="feedback.email">
 			Geribildirim göndermek için kullanılan yönetici email adresidir.
 
 		</tip>
-		
+
 		<tip id="feedback.mail.host">
 			Bir kaynak indirildiğinde GeoNetwork kullanıcılarına email gönderileceği zaman, SMTP <b>ana sistem(host)</b> ve <b>bağlantı noktası (port)</b> parametreleri kullanılır.
 			
 		</tip>
-		
+
 		<!-- removed metadata -->
-		
+
 		<tip id="removedMd.dir">
 			Üstveriler silindikleri zaman altdizinde saklanırlar (MEF formatında)
 			
 		</tip>
 
 		<!-- userSelfRegistration -->
-		
+
 		<tip id="userSelfRegistration.enable">
 			Eğer ayarlanmış ise, kullanıcılar kendi kendilerine kayıt olabileceklerdir. Kendi kendilerine kayıt olmuş kullanıcılar KONUK (GUEST) grubuna eklenirler. Bu kullanıcılara, geribildirim email bilgileri kullanılarak
 			kullanıcı adları ve şifrelerinin bulunduğu bir email gönderilir.
 		
 			<br/>
 		</tip>
-		
+
 		<tip id="downloadservice.simple">
 				Eğer üstveri protokolü "İndirmek için uygun veri" ise, bu servis daha fazla kullanıcı girdisine gerek duymadan kullanıcıların GeoNetwork'den kaynak indirmelerine izin verir - bu en basit dosya indirme arayüzüdür.
 				
@@ -344,11 +365,44 @@
 
 		<tip id="xlinkResolver.enable">
 			Eğer ayarlanmış ise, kayıtlardaki üstveri parçaları XLink çözücü ile çözülür.
-		
+
 		</tip>
 	</tips>
-	
-  <hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
-  <keepMarkedElement>Keep Marked Element</keepMarkedElement>
+
+	<data.dataDir>Data directory:</data.dataDir>
+	<data.resources>Resources directory:</data.resources>
+	<data.configDir>Configuration directory:</data.configDir>
+	<data.schemaPluginsDir>Schema plugin directory:</data.schemaPluginsDir>
+	<data.subversionPath>Subversion directory:</data.subversionPath>
+	<data.codeListDir>Thesaurus directory:</data.codeListDir>
+	<xslt.factory>XSLT factory:</xslt.factory>
+	<java.vm.name>JVM name:</java.vm.name>
+	<java.vm.vendor>JVM vendor:</java.vm.vendor>
+	<java.version>JVM version:</java.version>
+	<os.arch>System architecture:</os.arch>
+	<os.name>System name:</os.name>
+	<mem.total>Total memory:</mem.total>
+	<mem.free>Total free memory:</mem.free>
+	<index.size.lucene>Lucene index size (ko):</index.size.lucene>
+	<index.size>Total index size (ko):</index.size>
+	<index.path>Index directory:</index.path>
+	<index>Lucene index information</index>
+	<main>System information</main>
+	<catalogue>Catalogue information</catalogue>
+	<system>Catalogue configuration</system>
+	<database>Database information</database>
+	<siteId>Catalogue identifier:</siteId>
+	<version>Version:</version>
+	<subVersion>Sub-version:</subVersion>
+	<index.lucene.config>Lucene configuration:</index.lucene.config>
+	<db.url>Database URL:</db.url>
+	<db.openattempt>Database Status:</db.openattempt>
+	<db.numactive>Database connections in use:</db.numactive>
+	<db.numidle>Database connections available:</db.numidle>
+	<db.maxactive>Maximum number of database connections:</db.maxactive>
+	<db.statserror>Database statistics:</db.statserror>
+	<sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+	<hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
+	<keepMarkedElement>Keep Marked Element</keepMarkedElement>
 </strings>
 

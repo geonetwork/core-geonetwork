@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <ara>عربي</ara> <!-- Do not translate! -->
-    <cat>Català</cat> <!-- Do not translate! -->
-    <chi>中文</chi> <!-- Do not translate! -->
-    <dut>Nederlands</dut> <!-- Do not translate -->
-    <eng>English</eng> <!-- Do not translate! -->
-    <fin>Suomeksi</fin>  <!-- Do not translate! -->
-    <fre>Français</fre> <!-- Do not translate! -->
-    <ger>Deutsch</ger> <!-- Do not translate! -->
-    <ita>Italiano</ita> <!-- Do not translate! -->
-    <nor>Norsk</nor>  <!-- Do not translate! -->
-    <por>Рortuguês</por> <!-- Do not translate! -->
-    <rus>Русский</rus> <!-- Do not translate! -->
-    <spa>Español</spa> <!-- Do not translate! -->
-    <tur>Türkçe</tur> <!-- Do not translate! -->
-    <pol>Polski</pol> <!-- Do not translate! -->
-    
+	<ara>عربي</ara> <!-- Do not translate! -->
+	<cat>Català</cat> <!-- Do not translate! -->
+	<chi>中文</chi> <!-- Do not translate! -->
+	<dut>Nederlands</dut> <!-- Do not translate! -->
+	<eng>English</eng> <!-- Do not translate! -->
+	<fin>Suomeksi</fin> <!-- Do not translate! -->
+	<fre>Français</fre> <!-- Do not translate! -->
+	<ger>Deutsch</ger> <!-- Do not translate! -->
+	<ita>Italiano</ita> <!-- Do not translate! -->
+	<nor>Norsk</nor> <!-- Do not translate! -->
+	<por>Рortuguês</por> <!-- Do not translate! -->
+	<rus>Русский</rus> <!-- Do not translate! -->
+	<spa>Español</spa> <!-- Do not translate! -->
+	<tur>Türkçe</tur> <!-- Do not translate! -->
+	<pol>Polski</pol> <!-- Do not translate! -->
+
 	<otherValue>Autre :</otherValue>
 	<warning>Attention</warning>
 	<isAdmin>Est administrateur ?</isAdmin>
-    <anyLanguage>n'importe quelle langue</anyLanguage>
+	<anyLanguage>n'importe quelle langue</anyLanguage>
 	<nodata>Inconnu</nodata>
-	<chooseLogo>Sélectionner un logo</chooseLogo>
-	<orgLogo>Logo de l'organisme</orgLogo>
-	<!-- new strings - 2.7 -->
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -45,19 +42,16 @@
 	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
 	<startVersion>Start Versioning</startVersion>
 	<batchStartVersionTitle>Batch Start Versioning</batchStartVersionTitle>
-  <editAttributes>Compléter la description</editAttributes>
-  <subtemplate.admin>Gestion des annuaires</subtemplate.admin>
-  <subtemplate.admin.desc>Ajouter/modifier/supprimer les annuaires (eg. annuaire de contact)</subtemplate.admin.desc>
+	<editAttributes>Compléter la description</editAttributes>
+	<subtemplate.admin>Gestion des annuaires</subtemplate.admin>
+	<subtemplate.admin.desc>Ajouter/modifier/supprimer les annuaires (eg. annuaire de contact)</subtemplate.admin.desc>
 	<surnameMandatory>Le nom est obligatoire</surnameMandatory>
 	<firstnameMandatory>Le prénom est obligatoire</firstnameMandatory>
 	<emailMandatory>Le mail est obligatoire</emailMandatory>
 	<forgottenPassword>Mot de passe oublié ?</forgottenPassword>
-  <io>Import, export &amp; moissonnage</io>
-  <usersAndGroups>Utilisateurs et groupes</usersAndGroups>
-  <classification>Thesaurus et système de classification</classification>
-  <catalogueConfiguration>Paramètres du catalogue</catalogueConfiguration>
-  <indexConfiguration>Paramètres de l'Index</indexConfiguration>  
-  <selectTemplate>Sélectionner les standards </selectTemplate>
+	<selectTemplate>Sélectionner les standards </selectTemplate>
+	<useStopwords>L'index de Lucene utilise des mots vides pour les langues suivantes:</useStopwords>    
+	<rebuildIndexMessage>Si vous modifiez ces valeurs, il est recommandé de reconstruire l'index Lucene.</rebuildIndexMessage>
 	<notificationsDes>Configurer la mise à jour distante de dépôt</notificationsDes>
 	<metadata-templates-samples-add>Ajouter les modèles ou les exemples</metadata-templates-samples-add>
 	<metadata-schema-select>Sélectionner un standard pour lequel ajouter les modèles ou les exemples</metadata-schema-select>
@@ -66,43 +60,42 @@
 	<advancedSearch>avancée</advancedSearch>
 	<remoteSearch>distribuée</remoteSearch>
 	<displayRemoteHtml>Afficher les résultats avec le HTML du catalogue ?</displayRemoteHtml>
-	<showRemoteHTML>Afficher la métadonnée à partir du catalogue distant</showRemoteHTML>
 	<noSearchCriteria js="true">Sélectionner des critères de recherches.</noSearchCriteria>
-    <noServer js="true">Sélectionner au moins un catalogue à interroger.</noServer>
+	<noServer js="true">Sélectionner au moins un catalogue à interroger.</noServer>
 	<anyWith>Tous - au moins un des mots suivants</anyWith>
 	<anyWithExactPhrase>Tous - cette expression exacte</anyWithExactPhrase>
 	<anyWithAllWords>Tous - tous les mots suivants</anyWithAllWords>
 	<anyWithoutWords>Tous - aucun des mots suivants</anyWithoutWords>
 	<dataDownload>Données à télécharger</dataDownload>
 	<addSchema>Ajouter un standard de métadonnées</addSchema>
-  <updateSchema>Mettre à jour un standard de métadonnées</updateSchema>
-  <deleteSchema>Supprimer un standard de métadonnées</deleteSchema>
-  <selectSchema>Sélectionner un standard de métadonnées</selectSchema>
+	<updateSchema>Mettre à jour un standard de métadonnées</updateSchema>
+	<deleteSchema>Supprimer un standard de métadonnées</deleteSchema>
+	<selectSchema>Sélectionner un standard de métadonnées</selectSchema>
 	<schemaFileName>Chemin vers l'archive ZIP</schemaFileName>
 	<schemaUrl>URL de l'archive ZIP</schemaUrl>
 	<schemaUuid>Identifiant (UUID) d'une métadonnée locale avec l'URL du schéma (GeoNetwork Metadata Schema Archive-GMSA URL) dans la section ressource en ligne</schemaUuid>
-<stat.numAutoGeneratedSearches>Nombre de recherches auto-générés (guiservice) </stat.numAutoGeneratedSearches>	
-       <stat.mostSearchedCategories>Catégories les plus recherchés</stat.mostSearchedCategories>
-			 <stat.popularityByCategory>La popularité des métadonnées par catégorie</stat.popularityByCategory>	   
 	<add>Ajouter</add>
 	<schemaOps>Gestion des schémas de métadonnées</schemaOps>
 	<enterSchema>Nom du schéma à ajouter</enterSchema>
 	<selectSchemaOperations>Nom du schéma source :</selectSchemaOperations>
+	<showRemoteHTML>Afficher la métadonnée à partir du catalogue distant</showRemoteHTML>
+	<searchStatistics>Statistiques</searchStatistics>
+	<searchStatisticsDes>Consulter les statistiques de consultation du catalogue</searchStatisticsDes>
 	<assignToGroup>Attribuer au(x) groupe(s)</assignToGroup>
 	<copyThumbnail>Copier les imagettes ?</copyThumbnail>
 	<copyResources>Copier les fichiers à télécharger ?</copyResources>
-	<searchStatistics>Statistiques</searchStatistics>
-	<searchStatisticsDes>Consulter les statistiques de consultation du
-	catalogue</searchStatisticsDes>
+
 	<stat.byDay>par jour</stat.byDay>
 	<stat.byMonth>par mois</stat.byMonth>
 	<stat.byWeek>par semaine</stat.byWeek>
 	<stat.byYear>par année</stat.byYear>
 	<stat.collapse>Fermer</stat.collapse>
+	<stat.numAutoGeneratedSearches>Nombre de recherches auto-générés (guiservice) </stat.numAutoGeneratedSearches>	
 	<stat.date>date</stat.date>
 	<stat.day>Jour</stat.day>
 	<stat.hits>Résultats</stat.hits>
 	<stat.ip>IP</stat.ip>
+	<stat.noValue>pas de valeur</stat.noValue>
 	<stat.language>Langue</stat.language>
 	<stat.month>Mois</stat.month>
 	<stat.numberOfSearch>Nombre de recherches</stat.numberOfSearch>
@@ -110,8 +103,6 @@
 	<stat.spatialFilter>Filtre spatial</stat.spatialFilter>
 	<stat.totalsearches>Nombre total de recherches</stat.totalsearches>
 	<stat.year>Année</stat.year>
-	<stat.filesDel> fichier(s) supprimé(s).</stat.filesDel>
-	<stat.noValue>pas de valeur</stat.noValue>
 	<stat.mdSheet>fiche Métadonnées</stat.mdSheet>
 	<stat.noTitle>pas de titre</stat.noTitle>
 	<stat.csvExport>Export CSV</stat.csvExport>
@@ -121,6 +112,7 @@
 	<stat.lastMonthStats>Statistiques du mois courant</stat.lastMonthStats>
 	<stat.userIpText>IP des utilisateurs durant la recherche (nombre de recherches par IP unique)</stat.userIpText>
 	<stat.mostSearchedKeywords>Mots-clés les plus recherchés</stat.mostSearchedKeywords>
+	<stat.mostSearchedCategories>Catégories les plus recherchés</stat.mostSearchedCategories>
 	<stat.simpleVsAdvanced>Recherche simple / recherche avancée</stat.simpleVsAdvanced>
 	<stat.mdPopularity>Popularité des métadonnées</stat.mdPopularity>
 	<stat.graphicalStats>Statistiques graphiques</stat.graphicalStats>
@@ -139,14 +131,15 @@
 	<stat.count>Nombre</stat.count>
 	<stat.numSimpleSearch>Recherches simples</stat.numSimpleSearch>
 	<stat.numAdvancedSearch>Recherches avancées</stat.numAdvancedSearch>
+	<stat.></stat.>
 	<stat.exportRequests>Exporter la table des requêtes (table 'Requests', une entrée par requête utilisateur)</stat.exportRequests>
 	<stat.exportParams>Exporter la table des paramètres (table 'Parameters', plusieurs entrées par requête utilisateur)</stat.exportParams>
-	<stat.requestParamsLink>le lien entre requetes et paramètres se fait par le champs requestId</stat.requestParamsLink>
 	<stat.csvSemiColumnDelimiter>Séparateur point-virgule</stat.csvSemiColumnDelimiter>
 	<stat.rightClickSaveAs>Clic bouton droit sur le lien pour enregistrer le fichier CSV sur le disque</stat.rightClickSaveAs>
 	<stat.searchedKeywords>Mots-clés recherchés</stat.searchedKeywords>
 	<stat.popuByGroup>Popularité des métadonnées par groupe</stat.popuByGroup>
 	<stat.popuByCatalog>Popularité des métadonnées par catalogue (node id)</stat.popuByCatalog>
+	<stat.popularityByCategory>La popularité des métadonnées par catégorie</stat.popularityByCategory>	   
 	<stat.mdType>Type de métadonnées</stat.mdType>
 	<stat.dsMsType>Métadonnées de données</stat.dsMsType>
 	<stat.serviceMdType>Métadonnées de service</stat.serviceMdType>
@@ -157,13 +150,11 @@
 	<stat.maintenance>Maintenance</stat.maintenance>
 	<stat.deleteTmpImages>Effacement des fichiers graphiques et CSV temporaires (générés lors de l'affichage des graphiques et l'export CSV)</stat.deleteTmpImages>
 	<stat.deleteTmpFiles>Effacer les fichiers maintenant</stat.deleteTmpFiles>
+	<stat.filesDel> fichier(s) supprimé(s).</stat.filesDel>
 	<stat.warnCsvExport>Attention, exporter les tables de log peut prendre plusieurs minutes</stat.warnCsvExport>
 	<stat.clickToDownload>Cliquer sur le lien pour télécharger le fichier CSV</stat.clickToDownload>
-	<!-- end new strings -->
+	<stat.requestParamsLink>le lien entre requetes et paramètres se fait par le champs requestId</stat.requestParamsLink>
 
-    <useStopwords>L'index de Lucene utilise des mots vides pour les langues suivantes:</useStopwords>    
-    <rebuildIndexMessage>Si vous modifiez ces valeurs, il est recommandé de reconstruire l'index Lucene.</rebuildIndexMessage>
-	
 	<drawRectangle js="true">Dessiner une emprise</drawRectangle>
 	<drawPolygon js="true">Dessiner un polygone</drawPolygon>
 	<drawCircle js="true">Dessiner un cercle</drawCircle>
@@ -190,17 +181,20 @@
 	<mapPreview js="true">Carte</mapPreview>
 	<selectANode js="true">Choisir un n&#339;ud ...</selectANode>
 	<publishing js="true">Publication en cours ...</publishing>
+
 	<logo>Configuration des logos</logo>
 	<logoSelectionWindow js="true">Sélectionner un logo</logoSelectionWindow>
-    <logoDes>Gestion des logos (catalogues local et moissonnés)</logoDes>
+	<chooseLogo>Sélectionner un logo</chooseLogo>
+	<orgLogo>Logo de l'organisme</orgLogo>
+	<logoDes>Gestion des logos (catalogues local et moissonnés)</logoDes>
 	<logoRegistered js="true">Logos enregistrés</logoRegistered>
 	<logoAdd js="true">Ajouter un logo</logoAdd>
-  <selectedLogo js="true">Logo sélectionné :</selectedLogo>
-  <logoDel js="true">Supprimer</logoDel>
-  <logoForNode js="true">Utiliser pour le catalogue</logoForNode>
-  <logoForNodeFavicon js="true">Utiliser comme icône du site</logoForNodeFavicon>
-  <logoSelect js="true">Choisir une image ...</logoSelect>
-	
+	<selectedLogo js="true">Logo sélectionné :</selectedLogo>
+	<logoDel js="true">Supprimer</logoDel>
+	<logoForNode js="true">Utiliser pour le catalogue</logoForNode>
+	<logoForNodeFavicon js="true">Utiliser comme icône du site</logoForNodeFavicon>
+	<logoSelect js="true">Choisir une image ...</logoSelect>
+	<url>URL</url>
 	<createChild>Créer un enfant</createChild>
 	<updateChildren>Mettre à jour les enfants</updateChildren>
 	<updateChildrenOk>Enfants mis à jour</updateChildrenOk>
@@ -277,6 +271,7 @@
 		"coupled resource" (ressource couplée) peut contenir la nom de la couche tel que définie dans le service OGC.
 		La list des couches diffusées par le service peut aider l'éditeur à choisir une valeur.
 		</layerNameHelp>
+	
 	<layerName js="true">Nom de la couche</layerName>
 	<createIfNotExistButton js="true">Créer une nouvelle métadonnée</createIfNotExistButton>
 	<associateService js="true">Associer une métadonnée de service</associateService>
@@ -307,7 +302,7 @@
 	<translateWithGoogle>Utiliser le service de traduction de Google pour proposer une traduction pour la langue sélectionnée.</translateWithGoogle>
 	<translateWithGoogle.maxSize js="true">Le texte à traduire dépasse les 5000 caractères (voir http://code.google.com/apis/ajaxlanguage/terms.html).</translateWithGoogle.maxSize>
 	<translateWithGoogle.emptyInput js="true">La valeur de ce champ dans la langue principale est vide. Saisir une valeur avant d'utiliser le service de traduction.</translateWithGoogle.emptyInput>	
-          <layersAdded js="true">Les couches sélectionnées ont été ajoutées</layersAdded>
+	<layersAdded js="true">Les couches sélectionnées ont été ajoutées</layersAdded>
 	<registrationFailed js="true">Erreur, l'enregistrement a échoué :</registrationFailed>	
 	<tryAgain js="true">Essayez plus tard</tryAgain>
 	<cannotRetrieveGroup js="true">Impossible d'obtenir la liste des groupes</cannotRetrieveGroup>
@@ -364,6 +359,7 @@
 	<any>- Tous -</any>
 	<anytime>N'importe quand</anytime>
 	<appSchInfoTab>Schéma d'app.</appSchInfoTab>
+
 	<assigned>Attribuer</assigned>
 	<attrlabl>Attribute Label</attrlabl>
 	<availability>Disponibilité</availability>
@@ -413,7 +409,7 @@
 	<completeTab>Vue avancée</completeTab>
 	<completeTabEditor>Editeur avancé</completeTabEditor>
 	<confirmCancel>Êtes-vous sûr de vouloir quitter l\'éditeur? (vous allez perdre les changements non sauvegardés)</confirmCancel>
-    <confirmCancelCreate>Etes-vous sûr de vouloir annuler la création de ces métadonnées?</confirmCancelCreate>
+	<confirmCancelCreate>Etes-vous sûr de vouloir annuler la création de ces métadonnées?</confirmCancelCreate>
 	<confirmDelete js="true">Êtes-vous sûr de vouloir supprimer cette métadonnée ?</confirmDelete> <!-- Check if js=true is required -->
 	<confirmBatchDelete>Êtes-vous sûr de vouloir supprimer toutes les $1 métadonnées sélectionnées ?</confirmBatchDelete>
 	<confirmNewPassword>Confirmer le nouveau mot de passe</confirmNewPassword>
@@ -503,6 +499,8 @@
 	<feedbackCardTitle>Retour et commentaires</feedbackCardTitle>
 	<feedbackComments>Retour / commentaires</feedbackComments>
 	<feedbackRequest>Merci de préciser vos coordonnées avant le téléchargement des données</feedbackRequest>
+
+
 	<file>Fichier</file>
 	<fileType>Type de fichier :</fileType>
 	<fileUploadSuccessful>Téléchargement réussi</fileUploadSuccessful>
@@ -522,15 +520,15 @@
 	<georss>Ouvrez flux GeoRSS</georss>
 	<group>Groupe</group>
 	<usergroups>Groupes de l'utilisateur</usergroups>
-  <choice>Choix</choice>
-  <sequence>Séquence</sequence>
+	<choice>Choix</choice>
+	<sequence>Séquence</sequence>
 	<groupManagement>Gestion des groupes</groupManagement>
 	<groupManDes>Ajouter/Modifier/Supprimer et visualiser les groupes</groupManDes>
 	<groups>Groupes</groups>
 	<harvestingManagement>Gestion du moissonnage</harvestingManagement>
 	<harvestingManDes>Ajouter/modifier/supprimer/lancer/arrêter les moissons (récupération de métadonnées depuis un n&#339;ud distant)</harvestingManDes>
 	<help>Aide</help>
-    <helpLinkTooltip js="true">Aide</helpLinkTooltip>  
+	<helpLinkTooltip js="true">Aide</helpLinkTooltip>  
 	<helpComplete>Aide complet</helpComplete>
 	<helperList>Suggestions :</helperList>	
 	<hideAdvancedOptions>Recherche simple</hideAdvancedOptions>
@@ -563,17 +561,19 @@
 	<isoAll>ISO Complet</isoAll>
 	<isoCore>ISO Core</isoCore>
 	<isoMinimum>ISO Minimum</isoMinimum>
+
 	<keyword>Mot-clé</keyword>
 	<keywords js="true">Mots-clés</keywords>
 	<keywordshelp>Sélectionner plusieurs mots-clés en utilisant la touche Ctrl</keywordshelp>
 	<kind>Type</kind>
 	<kindChoice value="company">Entreprise privée</kindChoice>
 	<kindChoice value="consultant">Consultant indépendant</kindChoice>
-  <kindChoice value="gov">Gouvernement ou administration publique</kindChoice>
+	<kindChoice value="gov">Gouvernement ou administration publique</kindChoice>
 	<kindChoice value="int-org">Organisation Internationale</kindChoice>
 	<kindChoice value="ngo">ONG</kindChoice>
 	<kindChoice value="other">Autre</kindChoice>
 	<kindChoice value="uni">Université/Centre de recherche</kindChoice>
+
 	<label>Libellé</label>
 	<language>fr</language>
 	<large_thumbnail>Cliquer pour voir la vignette (grand format)</large_thumbnail>
@@ -614,6 +614,7 @@
 	<batchNewOwnerTitle>Opération de changement d\'auteur</batchNewOwnerTitle>
 	<batchUpdateCategoriesTitle>Opération de changement de catégories</batchUpdateCategoriesTitle>
 	<batchUpdatePrivilegesTitle>Opération de changement de privilèges</batchUpdatePrivilegesTitle>
+
 	<max>Maximum</max>
 	<mdRating>Note de la métadonnée</mdRating>
 	<mdUpdateError>Erreur de mise à jour</mdUpdateError>
@@ -631,30 +632,32 @@
 	<metadata.admin.index.wait js="true">Index operation already in progress please wait.</metadata.admin.index.wait>
 	<metadata.admin.index.optimize.desc>Optimisation de l'index Lucene</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Vider le cache d'XLink et reconstruire l'index</metadata.admin.index.rebuildxlinks.desc>
+
 	<lucene.config.reload>Recharger la configuration Lucene</lucene.config.reload>
 	<reload>Recharger</reload>
 	<rebuildxlinks>Reconstruire</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">Cette opération peut prendre du temps sur des catalogues volumineux. Il n'est pas recommandé de la lancer lors des périodes d'utilisation intense. Continuer ?</doYouReallyWantToDoThis>
 	<optimize>Optimiser</optimize>
 	<metadata.admin.index>Gestion de l&apos;index</metadata.admin.index>
-    <metadata-samples>Exemple de métadonnées</metadata-samples>
-    <metadata-samples-add>Ajouter les exemples</metadata-samples-add>
-    <metadata-samples-add-failed>Echec de l\'ajout des exemples</metadata-samples-add-failed>
-    <metadata-samples-add-success>Exemples ajoutés</metadata-samples-add-success>
-  <metadata-template-add-success>Modèles ajoutés.</metadata-template-add-success>
-  <metadata-template-order>Ordonner les modèles</metadata-template-order>	
+	<metadata-samples>Exemple de métadonnées</metadata-samples>
+	<metadata-samples-add>Ajouter les exemples</metadata-samples-add>
+	<metadata-samples-add-failed>Echec de l\'ajout des exemples</metadata-samples-add-failed>
+	<metadata-samples-add-success>Exemples ajoutés</metadata-samples-add-success>
+	<metadata-template-add-success>Modèles ajoutés.</metadata-template-add-success>
+	<metadata-template-order>Ordonner les modèles</metadata-template-order>	
 	<metadata-template-order-desc>Ordonner les modèles de saisie</metadata-template-order-desc>
 	<metadata-template-add-default>Ajouter les modèles</metadata-template-add-default>
+
 	<metadata>Métadonnées</metadata>
 	<metadataAdded>Métadonnées ajouter avec l'ID:</metadataAdded>
 	<metadataDeleted>Métadonnées supprimer avec l'ID:</metadataDeleted>
 	<metadataInsertResults>Rapport sur l'import de métadonnées</metadataInsertResults>
 	<metadataJSForm>Metadata depuis le formulaire javascript</metadataJSForm>
+	<failOnError>Arrêt en cas d'erreur</failOnError>
+	<metadataRecordsProcessed>Nombre de métadonnées traitées :</metadataRecordsProcessed>
 	<metadataRecordsAdded>Nombres de métadonnées insérées :</metadataRecordsAdded>
-  <failOnError>Arrêt en cas d'erreur</failOnError>
-  <metadataRecordsProcessed>Nombre de métadonnées traitées :</metadataRecordsProcessed>
 	<min>Minimum</min>
-    <minor>Modification mineure</minor>
+	<minor>Modification mineure</minor>
 	<missing>Vide ou manquant</missing>
 	<missingSeeTab>Manquant - Voir l'onglet correspondant au groupe </missingSeeTab>
 	<more>Plus</more>
@@ -693,6 +696,7 @@
 	<overwriteFile>Écraser ?</overwriteFile>
 	<owner>Auteur</owner>
 	<ownerRights>Suppression/Privilèges/Catégories débloqués: vous avez les droits</ownerRights>
+
 	<paper>Copie papier</paper>
 	<partial>Recouvert partiellement</partial>
 	<partialCooordinate>Coordonnées partielles</partialCooordinate>
@@ -703,6 +707,11 @@
 	<passwordOldRequired>Your old password is mandatory</passwordOldRequired>
 	<passwordSpace>Votre mot de passe ne doit pas contenir d'espace.</passwordSpace>
 	<persInfo>Personal info</persInfo>
+	<usersAndGroups>Utilisateurs et groupes</usersAndGroups>
+	<classification>Thesaurus et système de classification</classification>
+	<catalogueConfiguration>Paramètres du catalogue</catalogueConfiguration>
+	<indexConfiguration>Paramètres de l'Index</indexConfiguration>
+	<io>Import, export &amp; moissonnage</io>
 	<placeKeyword>Mot-clé géographique</placeKeyword>
 	<porCatInfoTab>Catalogue</porCatInfoTab>
 	<poweredBy>Site propulsé par </poweredBy>
@@ -748,9 +757,9 @@
 	<ress>résultat</ress>
 	<restrictTo>Limiter a</restrictTo>
 	<result>Derniers résultats</result>
-  <searchResult>Résultats de recherche</searchResult>
-  <resources>Ressources</resources>
-  <visualizationService>URL du service de visualisation (WMS)</visualizationService>
+	<searchResult>Résultats de recherche</searchResult>
+	<resources>Ressources</resources>
+	<visualizationService>URL du service de visualisation (WMS)</visualizationService>
 	<resultsCoordinate>Résultats correspondant aux critères de recherche géographiques</resultsCoordinate>
 	<resultsFreeText>Résultats de la recherche</resultsFreeText>
 	<resultsMatching>Nombre de résultats : </resultsMatching>
@@ -795,6 +804,7 @@
 	<site>Site</site>
 	<siteId>Identifiant</siteId>
 	<sizeBytes>Size (bytes)</sizeBytes>
+
 	<sort>Trier</sort>
 	<sortBy>Trier par</sortBy>
 	<sortByType id="changeDate">Date de mise à jour</sortByType>
@@ -802,6 +812,7 @@
 	<sortByType id="rating">Note</sortByType>
 	<sortByType id="relevance">Pertinence</sortByType>
 	<sortByType id="title">Titre</sortByType>
+
 	<southbc>Coordonnée sud de l'emprise</southbc>
 	<spacesNot js="true">Les espaces ne sont pas autorisés dans ce champ</spacesNot>
 	<spatial2Tab>Représentation Spat.</spatial2Tab>
@@ -822,6 +833,7 @@
 	<Term>Terme</Term>
 	<thanks>Merci</thanks>
 	<theme>Sujet ISO</theme>
+
 	<thumbnails>Vignettes</thumbnails>
 	<timeout>Timeout</timeout>
 	<timeoutChoice value="10">10 secondes</timeoutChoice>
@@ -832,6 +844,7 @@
 	<toDateSelector>Select TO date</toDateSelector>
 	<tools>Outils</tools>
 	<topic>Sujet</topic>
+
 	<transferOwnership>Transfert de privilèges</transferOwnership>
 	<transferOwnershipDes>Transfert des privilèges de métadonnées pour un autre utilisateur</transferOwnershipDes>
 	<type>Type</type>
@@ -873,11 +886,11 @@
 	<xmlInsert>Importer des fichiers de métadonnées (format XML ou MEF)</xmlInsert>
 	<xmlInsertTitle>Import de métadonnées</xmlInsertTitle>
 	<xmlTab>XML</xmlTab>
-    <inspireTab>Vue INSPIRE</inspireTab>
-    <inspireSection>
-        <identification>
-        	<title>Identification de la ressource</title>
-        <help>
+	<inspireTab>Vue INSPIRE</inspireTab>
+	<inspireSection>
+		<identification>
+			<title>Identification de la ressource</title>
+			<help>
 				<div>
 				The following metadata elements shall be provided:
 				<ul>
@@ -899,9 +912,9 @@
 				</div>
 			</help>
 		</identification>
-        <classification>
-        	<title>Classification des données et services géographiques</title>
-        <help>
+		<classification>
+			<title>Classification des données et services géographiques</title>
+			<help>
 				<div>
 					<ul>
 						<li>Topic category:			
@@ -914,9 +927,9 @@
 				</div>
 			</help>
 		</classification>
-        <keywords>
-        	<title>Mots clés, thème INSPIRE et catégorie de service</title>
-        <help>
+		<keywords>
+			<title>Mots clés, thème INSPIRE et catégorie de service</title>
+			<help>
 				<div>
 					According to the INSPIRE Implementing Rule for Metadata, if a resource is a spatial data set or spatial data set series, at least one keyword shall be provided from the General Environmental Multi-lingual Thesaurus (GEMET) describing the relevant spatial data theme as defined in Annex I, II or III to Directive 2007/2/EC.
 					<br/>					
@@ -926,18 +939,18 @@
 				</div>
 			</help>
 		</keywords>
-        <geoloc>
-        	<title>Situation géographique</title>
-        <help>
+		<geoloc>
+			<title>Situation géographique</title>
+			<help>
 				<div>
 					The requirement for geographic location referred to in Article 11(2)(e) of Directive 2007/2/EC shall be expressed with the metadata element geographic bounding box.
 					This is the extent of the resource in the geographic space, given as a bounding box. The bounding box shall be expressed with westbound and eastbound longitudes, and southbound and northbound latitudes in decimal degrees, with a precision of at least 2 decimals. 
 				</div>
 			</help>
 		</geoloc>
-        <temporal>
-            <title>Référence temporelle</title>
-        <help>
+		<temporal>
+			<title>Référence temporelle</title>
+			<help>
 				<div>
 					This metadata element addresses the requirement to have information on the temporal dimension of the data as referred to in Article 8(2)(d) of Directive 2007/2/EC . At least one of the metadata elements referred to in points 5.1 to 5.4 shall be provided. The value domain of the metadata elements referred to in points 5.1 to 5.4 is a set of dates. Each date shall refer to a temporal reference system and shall be expressed in a form compatible with that system. The default reference system shall be the Gregorian calendar, with dates expressed in accordance with ISO 8601.
 					<br/>
@@ -952,9 +965,9 @@
 				</div>
 			</help>
 		</temporal>
-        <quality>
-            <title>Qualité et validité</title>
-        <help>
+		<quality>
+			<title>Qualité et validité</title>
+			<help>
 				<div> The requirements referred to in Article 5(2) and Article 11(2) of Directive 2007/2/EC relating to the quality and validity of spatial data shall be addressed by the following metadata elements: 
 					<ul>
 						<li>Lineage:
@@ -968,9 +981,9 @@
 				</div>
 			</help>
 		</quality>
-        <conformity>
-            <title>Conformité</title>
-        <help>
+		<conformity>
+			<title>Conformité</title>
+			<help>
 				<div>
 					The requirements referred to in Article 5(2)(a) and Article 11(2)(d) of Directive 2007/2/EC relating to the conformity, and the degree of conformity, with implementing rules adopted under Article 7(1) of Directive 2007/2/EC shall be addressed by the following metadata elements:
 					<ul>
@@ -986,9 +999,9 @@
 				</div>
 			</help>
 		</conformity>
-        <constraint>
-        	<title>Contraintes en matière d'accès et d'utilisation de la ressource</title>
-        <help>
+		<constraint>
+				<title>Contraintes en matière d'accès et d'utilisation de la ressource</title>
+			<help>
 				<div>
 					A constraint related to access and use shall be either or both of the following:
 					<ul>
@@ -1006,9 +1019,9 @@
 				</div>
 			</help>
 		</constraint>
-        <org>
-          <title>Organisation(s) responsable(s) de la ressource</title>
-        <help>
+		<org>
+			<title>Organisation(s) responsable(s) de la ressource</title>
+			<help>
 				<div>
 					For the purposes of Article 5(2)(d) and Article 11(2)(g) of Directive 2007/2/EC, the following two metadata elements shall be provided:
 					<ul>
@@ -1025,16 +1038,16 @@
 				</div>
 			</help>
 		</org>
-        <metadata>
-            <title>Métadonnée</title>
-        <help>For the purposes of Article 5(1) of Directive 2007/2/EC.</help>
+		<metadata>
+			<title>Métadonnée</title>
+			<help>For the purposes of Article 5(1) of Directive 2007/2/EC.</help>
 		</metadata>
-    </inspireSection>
-    <inspireAddConformity>Ajouter une section conformité INSPIRE</inspireAddConformity>    
+	</inspireSection>
+	<inspireAddConformity>Ajouter une section conformité INSPIRE</inspireAddConformity>    
 	<xsdError>Erreur de validation XSD</xsdError>
 	<yourRegistration js="true">Création du compte ...</yourRegistration>
 	<zip>Code postal</zip>
-	
+
 	<header_meta>
 		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
@@ -1103,16 +1116,15 @@
 			</font>
 		</p>
 	</mainhelp3>
-    <savexml>
+	<savexml>
 		<dc>Télécharger les métadonnées au format Dublin Core</dc>
 		<fgdc>Télécharger les métadonnées au format FGDC</fgdc>
 		<iso19115Esri>Télécharger les métadonnées au format ESRI ArcCatalog</iso19115Esri>
 		<iso19139>Télécharger les métadonnées au format ISO19115/19139</iso19139>
 		<iso19139fra>Télécharger les métadonnées au format ISO19115/19139 profil France</iso19139fra>
 	</savexml>
-  <url>URL</url>
-  <thesaurus>
-    <load>Installer un thésaurus à partir du dépôt GeoNetwork disponible en ligne</load>    
+	<thesaurus>
+		<load>Installer un thésaurus à partir du dépôt GeoNetwork disponible en ligne</load>    
 		<addelement>Ajouter un élément</addelement>
 		<admin>Gérer le thésaurus</admin>
 		<broader>Broader Term</broader>
@@ -1259,6 +1271,7 @@
                 <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
             </group>
         </spatialDataService>
+
         <what>
             <l1>Recherche INSPIRE</l1>
             <l2>Métadonnées INSPIRE</l2>
@@ -1275,7 +1288,7 @@
             <l13>Cacher les thèmes INSPIRE</l13>
             <l14>Thèmes INSPIRE</l14>
             <l15>Type de service</l15>
-        <l16>Classification of data services</l16>
+            <l16>Classification of data services</l16>
         </what>
         <annex1>
             <theme id="inspire_CoordinateRefSystems">Référentiels de coordonnées</theme>
@@ -1318,58 +1331,58 @@
             <theme id="inspire_MineralResources">Ressources minérales</theme>
         </annex3>
     </inspire>
-    
-    <selectMetadataFileAlert>Vous devez sélectionner un fichier à insérer</selectMetadataFileAlert>    
-    <showMoreSearchFields>Autres critères de recherche</showMoreSearchFields>
-    <searchEitherOfTheWords>Au moins un des mots suivants</searchEitherOfTheWords>
-    <searchExactPhrase>Cette expression exacte</searchExactPhrase>
-    <searchAllWords>Tous les mots suivants</searchAllWords>
-    <searchWithoutWords>Aucun des mots suivants</searchWithoutWords>
-    
-    <showMap>Afficher la carte</showMap>
-    <mapViewer>Visualiseur</mapViewer>
 
-    <uuid>Identifiant unique</uuid>    
-    <mymetadata>Mes métadonnées</mymetadata>
+	<selectMetadataFileAlert>Vous devez sélectionner un fichier à insérer</selectMetadataFileAlert>    
+	<showMoreSearchFields>Autres critères de recherche</showMoreSearchFields>
+	<searchEitherOfTheWords>Au moins un des mots suivants</searchEitherOfTheWords>
+	<searchExactPhrase>Cette expression exacte</searchExactPhrase>
+	<searchAllWords>Tous les mots suivants</searchAllWords>
+	<searchWithoutWords>Aucun des mots suivants</searchWithoutWords>
+
+	<showMap>Afficher la carte</showMap>
+	<mapViewer>Visualiseur</mapViewer>
+
+	<uuid>Identifiant unique</uuid>    
 	<quickSearch>Recherches rapides</quickSearch>
+	<mymetadata>Mes métadonnées</mymetadata>
 	<catalogueRecords>Métadonnées du catalogue</catalogueRecords>
 	<harvestedRecords>Métadonnées moissonnées</harvestedRecords>
 	<catalogueTemplates>Modèles de saisie</catalogueTemplates>
 	<addremove>Ajouter / Supprimer</addremove>
-    <enabled>Activé</enabled>
+	<enabled>Activé</enabled>
 	<notifications>Notification de n&#339;uds distants</notifications>
 
-    <cswServer>Configuration CSW</cswServer>
+	<cswServer>Configuration CSW</cswServer>
 	<cswServerDes>Configuration du serveur CSW</cswServerDes>
 	<cswServerConfig>Configuration du serveur CSW</cswServerConfig>
-    <cswServerEnable>Activer</cswServerEnable>
-    <cswServerMetadataPublic>Publier les métadonnées insérées via CSW (Transaction)</cswServerMetadataPublic>
-    <cswServerTitle>Titre</cswServerTitle>
-    <cswServerAbstract>Résumé</cswServerAbstract>
-    <cswServerFees>Frais</cswServerFees>
-    <cswServerAccessConstraints>Contraintes d'accès</cswServerAccessConstraints>
-    <cswServerContact>Contact</cswServerContact>
+	<cswServerEnable>Activer</cswServerEnable>
+	<cswServerMetadataPublic>Publier les métadonnées insérées via CSW (Transaction)</cswServerMetadataPublic>
+	<cswServerTitle>Titre</cswServerTitle>
+	<cswServerAbstract>Résumé</cswServerAbstract>
+	<cswServerFees>Frais</cswServerFees>
+	<cswServerAccessConstraints>Contraintes d'accès</cswServerAccessConstraints>
+	<cswServerContact>Contact</cswServerContact>
 
 	<virtualcswServer>Ajouter un point d'accès CSW</virtualcswServer>
 	<virtualcswServerDes>Configuration des serveurs CSW virtuels</virtualcswServerDes>
-    <virtualcswServerConfig>Configuration des serveurs CSW virtuels</virtualcswServerConfig>
-    <virtualcswInsert>Configuration du serveur CSW virtuel</virtualcswInsert>
-    <virtualcswServiceName>Nom du service</virtualcswServiceName>
-    <virtualcswServiceDescription>Description du service</virtualcswServiceDescription>
-    <virtualcswClassName>Classe</virtualcswClassName>
-    <virtualcswNewService>Ajouter un service</virtualcswNewService>
-    <virtualcswParamName>Type de filtre</virtualcswParamName>
-    <virtualcswParamValue>Valeur du filtre</virtualcswParamValue>
-    <virtualcswServicenameMandatory>Le nom de service est obligatoire.</virtualcswServicenameMandatory>
-    <virtualcswServicenameTooLong>Le nom de service est trop long (48 caractères max)</virtualcswServicenameTooLong>
-    <virtualcswServicenameSpecialChars>Le nom de service ne doit pas contenir de caractères accentués.</virtualcswServicenameSpecialChars>
-    <virtualcswClassnameMandatory>La classe est obligatoire.</virtualcswClassnameMandatory>
-    <virtualcswServiceNameStartsWith>Le nom du service doit commencer par \"csw-\".</virtualcswServiceNameStartsWith>
-    
-    <virtualcswUpdateService>Mise à jour d'un serveur CSW virtuel</virtualcswUpdateService>
-    
-    <virtualcswAny>Texte libre</virtualcswAny>
-    <virtualcswTitle>Titre</virtualcswTitle>
+	<virtualcswServerConfig>Configuration des serveurs CSW virtuels</virtualcswServerConfig>
+	<virtualcswInsert>Configuration du serveur CSW virtuel</virtualcswInsert>
+	<virtualcswServiceName>Nom du service</virtualcswServiceName>
+	<virtualcswServiceDescription>Description du service</virtualcswServiceDescription>
+	<virtualcswClassName>Classe</virtualcswClassName>
+	<virtualcswNewService>Ajouter un service</virtualcswNewService>
+	<virtualcswParamName>Type de filtre</virtualcswParamName>
+	<virtualcswParamValue>Valeur du filtre</virtualcswParamValue>
+	<virtualcswServicenameMandatory>Le nom de service est obligatoire.</virtualcswServicenameMandatory>
+	<virtualcswServicenameTooLong>Le nom de service est trop long (48 caractères max)</virtualcswServicenameTooLong>
+	<virtualcswServicenameSpecialChars>Le nom de service ne doit pas contenir de caractères accentués.</virtualcswServicenameSpecialChars>
+	<virtualcswClassnameMandatory>La classe est obligatoire.</virtualcswClassnameMandatory>
+	<virtualcswServiceNameStartsWith>Le nom du service doit commencer par \"csw-\".</virtualcswServiceNameStartsWith>
+
+	<virtualcswUpdateService>Mise à jour d'un serveur CSW virtuel</virtualcswUpdateService>
+
+	<virtualcswAny>Texte libre</virtualcswAny>
+	<virtualcswTitle>Titre</virtualcswTitle>
 	<virtualcswAbstract>Résumé</virtualcswAbstract>
 	<virtualcswKeywords>Mot-clé</virtualcswKeywords>
 	<virtualcswDenominator>Échelle</virtualcswDenominator>
@@ -1378,19 +1391,19 @@
 	<virtualcswCategory>Catégorie</virtualcswCategory>
 	<virtualcswType>Type de ressource</virtualcswType>
 
-    <customize-elementset>Personnaliser ensemble d'éléments</customize-elementset>
-    <csw-server-disabled>Serveur CSW est désactivé.</csw-server-disabled>
-    <custom-elementset-intro>Définir les éléments à inclure dans votre élément personnalisé défini ici. Chaque élément doit être identifié par son XPATH complète de la racine du document. Ces éléments et leurs descendants seront inclus dans les réponses aux demandes CSW GetRecord avec ElementSetName = FULL.</custom-elementset-intro>
-    <custom-elementset-revert>Pour revenir à la valeur par défaut = ElementSetName des réponses complètes, supprimer tous les éléments de cette liste.</custom-elementset-revert>
-    <custom-elementset-add>Ajouter un élément</custom-elementset-add>
+	<customize-elementset>Personnaliser ensemble d'éléments</customize-elementset>
+	<csw-server-disabled>Serveur CSW est désactivé.</csw-server-disabled>
+	<custom-elementset-intro>Définir les éléments à inclure dans votre élément personnalisé défini ici. Chaque élément doit être identifié par son XPATH complète de la racine du document. Ces éléments et leurs descendants seront inclus dans les réponses aux demandes CSW GetRecord avec ElementSetName = FULL.</custom-elementset-intro>
+	<custom-elementset-revert>Pour revenir à la valeur par défaut = ElementSetName des réponses complètes, supprimer tous les éléments de cette liste.</custom-elementset-revert>
+	<custom-elementset-add>Ajouter un élément</custom-elementset-add>
 
-    <wmslayers>Couches WMS</wmslayers>
-    <formatter.admin>Formatage de métadonnées</formatter.admin>
-    <formatter.admin.des>Interface d'administration pour les XSLT personnalisés</formatter.admin.des>
+	<wmslayers>Couches WMS</wmslayers>
+	<formatter.admin>Formatage de métadonnées</formatter.admin>
+	<formatter.admin.des>Interface d'administration pour les XSLT personnalisés</formatter.admin.des>
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
-	
+
 	<advancedOptions.show>plus de critères</advancedOptions.show>
 	<advancedOptions.hide>moins de critères</advancedOptions.hide>
 	<latestDatasets>Nouveautés</latestDatasets>
