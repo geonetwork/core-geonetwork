@@ -957,7 +957,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 iconCls: 'cancel',
                 scope: this,
                 handler: function () {
-                    self.hide();
+                    self.close();
                 }
             };
         
