@@ -1,8 +1,71 @@
 ================================================================================
 ===
-=== GeoNetwork 2.10.0: List of changes
+=== GeoNetwork 2.10.1: List of changes
 ===
 ================================================================================
+- Update version to 2.10.1-0
+- Update version to 2.10.1-0
+- Merge branch '2.10.x' of github.com:geonetwork/core-geonetwork into 2.10.x
+- Forgotten password in self-registration system broken due to arguments to PasswordEncoder matches function being wrong way round
+- Fixed issue with registration and password reset not working
+- ISO19139 / RDF / Properly encode rdf:resource for point of contact organisation.
+- Security / JeevesException extending AuthenticationException make the user to be logged off when an Exception is thrown.
+- Merge branch '2.10.x' of github.com:geonetwork/core-geonetwork into 2.10.x
+- Merge pull request #172 from ianwallen/Issue_#153
+- Merge pull request #188 from ianwallen/Fix_Issue_176
+- Issue #166: Spatial Filters in CSW etc for 2.10.x were trimming too many search results - problem was caused by switching from a Set implementation in 2.8.x to an array[] in 2.10.x whilst processing search results the counter on the array was not being incremented
+- Change log4j.logger.jeeves from DEBUG to INFO    DEBUG should probably not be a default    DEBUG was causing all the config overrides to be placed in the log files - in some cases this was username passwords for the database.
+- Bring in commit 45edb70 from 2.8.x to make batch import transactional and faster
+- Merge pull request #175 from ianwallen/Fix_Issue_174
+- Merge pull request #178 from ianwallen/Fix_question_mark_search
+- Merge pull request #180 from Delawen/2.10.x
+- Adding translatable text to "no thumbnail" caption
+- Fix for issue when searching for "?" which was returning the following error. StringIndexOutOfBoundsException : String index out of range: -1
+- Added another fix where if we cannot get the language from the spring security then we can use the referer.
+- Fix for Issue #174 Retreived savedRequest from spring security and parse language out of the url.
+- Re-Fix Issue #153 Apparently there may still be links which use the 2 char language code -i.e. "fr" which get redirected to "fre". In order for these links to work we need to allow for 2 to 3 chars for the language.
+- Merge pull request #161 from ianwallen/2.10.x
+- Merge pull request #163 from ianwallen/fix-Issue-158
+- Merge pull request #165 from ianwallen/Fix-Issue-153
+- Fix for issue 153 Updated the regular expression related to the languages to be more specific.
+- Fix for Issue #158 Changed logic so that it will only check for the proper permission if there is a need to make a change. Since the user interface does now allow editor to change the group <= 1 they should not be any attempt to changes.
+- Remove console.log debug stuff
+- Updated Help link so that it will link to the proper language if the correct files exists.
+- CRS selection change for sensorML
+- Exception processing should be done by schema to avoid confusion caused by unqualified names being present in more than one schema
+- Merge pull request #156 from ianwallen/2.10.x
+- Switch from status List service to Info service for advanced search menu
+- Add thesaurus selector which can be predefined with thesaurus name, can select one or many values - used for sensorML at present but could be used elsewhere
+- French changes failed in the last update. Trying again.
+- Widgets / Keyword selection / Fix keyword update when using arrow control.
+- Overrides / Add support for geoserver nodes (#154).
+- When processing geonet:child, exclude geonet: namespace attributes
+- Subtemplate import / Add the capability to update existing record (#152).
+- Merge branch 'UTF-8' of git://github.com/ianwallen/core-geonetwork into ianwallen-UTF-8
+- Another Fix for Ticket 1295 - Thanks Ian Wallen.
+- Add same map options as mini search map.
+- Add missing JS file required for zoom control.
+- Add warning when permalink points to a deleted or not visible to user record.
+- Ignore geonet:* in INSPIRE view edit mode.
+- Harvester / Error retrieving remote node groups (#150).
+- ISO19139 profile / Make add source templates generic for ISO profile too.
+- ISO19139 profile / Make thumbnail managment templates generic for ISO profile too.
+- ISO19139 profile / Make relation templates generic for ISO profile too.
+- ISO19139 profile / Make thumbnail managment templates generic for ISO profile too.
+- Test CSW / This interface is accessible from the admin now - Use the same layout.
+- Merge pull request #145 from ianwallen/2.10.x
+- Widgets / Add capability to customize tagcloud (#144).
+- Fixed broken image issue that was occurring when the image src variable was null.
+- BaseURL should not contain Host URL Otherwise if the site hostname is not configured properly then you will get errors such as the following. "bad URI or cross-site access not allowed"
+- Widgets apps / Support IE10.
+- Widgets / HTML5UI / Fix image path for icon in editor (Related to ba19858).
+- LDAP / Get highest profile if more than one defined.
+- Administration / Subtemplate / Allow sort by title (#140).
+- Improve french translation.
+- Widgets / Add capability to configure default edit mode on per schema basis. Add option to disable a calendar (eg. when indeterminatePosition=something for example in ISO19139).
+- Widgets / Keyword selection / Add the capability to search by URI instead of keyword label. Properly escape & in gmx:Anchor.
+- Administration / Import / Restore the capability to load subtemplates.
+- Update version to 2.10.0-SNAPSHOT
 - Documentation / Add 2.10 feature list. Fix release doc due to submodule changes.
 - Documentation / Add missing files related to submodule removal and .gitignore rule.
 - Only ignore installer creation folder.
@@ -37,11 +100,23 @@
 - Simplifying font-face css3 definitions
 - Fixing fonts css
 - patch fixes #106 Using document mode of IE9
+- Cleanup/formating of harvesting.xml and config.xml   Added missing elements that existed in English but not in the other.   Formating - tabs   Moved some elements around to match the order of the English elements
 - Adding eot version of the fonts
 - added docs, installer and release into main repo
 - removed submodules installer, docs, releases
+- Updated the compare to use the xsl:for-each to loop through language as it is cleaner. Added missing "tur" and "pol"
+- Added missing "pol"
+- Formatting - spaces to tabs
+- Added missing <add js="true">
+- Added missing <url> and <filter>
+-   Added missing elements that existed in English but not in the other.   Fixed typos in attributes
+- * Cleanup/formating.   Added missing elements that existed in English but not in the other.   Formating - tabs   Moved some elements around to match the order of the English
+- Formating changes - mostly spaces to tabs.
+- Fixed XML related errors.
+- Cleanup/formating.   Added missing elements that existed in English but not in the other.   Formating - tabs   Moved some elements around to match the order of the English
 - Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
 - Fix compile error.
+- Converted another file to UTF-8 for better support.
 - Merge pull request #97 from ianwallen/UTF-8
 - Fix statistics compile error.
 - Self Registration - not adding profile (#1298).
