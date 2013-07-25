@@ -47,7 +47,6 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
     },
     border: false,
     frame: false,
-    selectedThesaurus: undefined,
     layout: 'border',
     catalogue: undefined,
     toolbar: undefined,
@@ -389,7 +388,19 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                 })
             }]
         });
-    
+        
+        var successFn = function(data) {
+            var error = data.responseXML.getElementsByTagName('error')[0];
+            if (error) {
+                var msg = error.getElementsByTagName('message')[0];
+                Ext.Msg.alert(OpenLayers.i18n('error'), msg.innerText || msg.textContent);
+            }
+        };
+        var failureFn = function(data) {
+            // TODO: display a message describing the reason of the error
+            Ext.Msg.alert(OpenLayers.i18n('error'), data.responseText);
+        };
+        
         // Keywords grid
         this.keywordGrid = new Ext.grid.EditorGridPanel({
             layout: 'fit',
@@ -412,9 +423,8 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                 afteredit: function(e) {
                     var ref = this.keywordStore.baseParams.pThesauri;
                     var refType = ref.split(".")[1];
-                    var tokens = e.record.data.uri.split("#");
-                    var namespace = tokens[0];
-                    var newId = tokens[1];
+                    var namespace = this.thesaurusGrid.getSelectionModel().getSelected().data.defaultNamespace;
+                    var newId = e.record.data.uri;
                     var oldId = newId;
                     // Edit keyword in current GUI language
                     // TODO : improved to select the language to be updated
@@ -424,7 +434,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                     var requestPayLoad;
                     
                     if(e.field === "uri") {
-                        oldId = e.originalValue.split('#')[1];
+                        oldId = e.originalValue;
                     }
                     
                     // Creation of an ajax request to update the edited keyword
@@ -436,32 +446,28 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                         
                         requestPayLoad = '<request><oldid>' + oldId + '</oldid><newid>' +
                             newId + '</newid><lang>' + lang + '</lang><ref>' + ref + '</ref><definition>' +
-                            definition + '</definition><namespace>' + namespace + '#</namespace>' + '<north>' + north + '</north><south>' +
+                            definition + '</definition><namespace>' + namespace + '</namespace>' + '<north>' + north + '</north><south>' +
                             south + '</south><east>' + east + '</east><prefLab>' + prefLab + '</prefLab><west>' +
                             west + '</west><refType>' + refType + '</refType></request>';
 
                         Ext.Ajax.request({
                             scope: this,
                             url: this.catalogue.services.thesaurusConceptUpdate,
-                              failure: function() {
-                                  // TODO: display a message describing the reason of the error
-                                  Ext.Msg.alert('Fail');
-                                  },
-                              xmlData: requestPayLoad
+                            success: successFn,
+                            failure: failureFn,
+                            xmlData: requestPayLoad
                         });
                     } else {
                         requestPayLoad = '<request><newid>' + newId + '</newid><refType>' + refType + '</refType><definition>'
-                        + definition + '</definition><namespace>' + namespace + '#</namespace><ref>' + ref + '</ref><oldid>'
+                        + definition + '</definition><namespace>' + namespace + '</namespace><ref>' + ref + '</ref><oldid>'
                         + oldId + '</oldid><lang>' + lang + '</lang><prefLab>' + prefLab + '</prefLab></request>';
                         
                         Ext.Ajax.request({
                             scope: this,
                             url: this.catalogue.services.thesaurusConceptUpdate,
-                              failure: function() {
-                                  // TODO: display a message describing the reason of the error
-                                  Ext.Msg.alert('Fail');
-                                  },
-                              xmlData: requestPayLoad
+                            success: successFn,
+                            failure: failureFn,
+                            xmlData: requestPayLoad
                         });
                     }
                     
@@ -485,7 +491,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                         // Send a request to add a new keyword in the database
                         var ref = this.keywordStore.baseParams.pThesauri;
                         var refType = ref.split(".")[1];
-                        var newId = newUri.split("#")[1];
+                        var newId = newUri;
                         var lang = this.catalogue.lang;
                         var prefLab = OpenLayers.i18n('newLabel');
                         var definition = OpenLayers.i18n('newDefinition');
@@ -506,9 +512,8 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                             Ext.Ajax.request({
                                 scope: this,
                                 url: this.catalogue.services.thesaurusConceptAdd,
-                                  // TODO: display a message describing the reason of the error
-                                  failure: function() { Ext.Msg.alert('Fail'); },
-                                  xmlData: requestPayLoad
+                                failure: failureFn,
+                                xmlData: requestPayLoad
                             });
                         } else {
                             requestPayLoad = '<request><newid>' + newId + '</newid><refType>' + refType + '</refType><definition>'
@@ -517,8 +522,7 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                             Ext.Ajax.request({
                                 scope: this,
                                 url: this.catalogue.services.thesaurusConceptAdd,
-                                  // TODO: display a message describing the reason of the error
-                                  failure: function() { Ext.Msg.alert('Fail'); },
+                                  failure: failureFn,
                                   xmlData: requestPayLoad
                             });
                         }
@@ -547,14 +551,13 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                         var selectedCells = this.keywordGrid.getSelectionModel().getSelectedCell();
                         var rec = this.keywordGrid.store.getAt(selectedCells[0]);
                         var thesaurus = this.keywordStore.baseParams.pThesauri;
-                        var tokens = rec.data.uri.split("#");
-                        var namespace = tokens[0];
-                        var id = tokens[1];
                         Ext.Ajax.request({
                                 scope: this,
-                                url: this.catalogue.services.thesaurusConceptDelete + '?pThesaurus=' + thesaurus + '&namespace=' + namespace + '%23&id=' + id,
+                                url: this.catalogue.services.thesaurusConceptDelete + '?pThesaurus=' + thesaurus + '&id=' + encodeURIComponent(rec.data.uri),
                                 // TODO: display a message describing the reason of the error
-                                failure: function() { Ext.Msg.alert('Fail'); }
+                                failure: function() {
+                                    Ext.Msg.alert(OpenLayers.i18n('error'));
+                                }
                         });
                         // Delete the datastore record
                         this.keywordGrid.store.removeAt(selectedCells[0]);
@@ -705,7 +708,6 @@ GeoNetwork.admin.ThesaurusManagerPanel = Ext.extend(Ext.Panel, {
                 text:OpenLayers.i18n('add'),
                 scope: this,
                 handler: function(){
-                    console.log(this.createThesaurusFromLocalFileForm);
                     if (this.createThesaurusFromLocalFileForm.getForm().isValid()) {
                         this.createThesaurusFromLocalFileForm.getForm().getEl().dom.enctype="multipart/form-data";
                         this.createThesaurusFromLocalFileForm.bodyCfg.enctype="multipart/form-data";

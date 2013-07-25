@@ -213,6 +213,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
                 }
             }
 
+
             xslParameter.put("siteUrl", siteUrl);
 
             Element processedMetadata = Xml.transform(md, filePath, xslParameter);
