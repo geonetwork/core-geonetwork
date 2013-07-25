@@ -384,7 +384,27 @@ public class Thesaurus {
         Graph myGraph = repository.getGraph();
         ValueFactory myFactory = myGraph.getValueFactory();
         URI subject = myFactory.createURI(namespace, code);
-        StatementIterator iter = myGraph.getStatements(subject, null, null);
+        
+        return removeElement(myGraph, subject);
+    }
+    /**
+     * Remove keyword from thesaurus.
+     * 
+     * @param namespace
+     * @param uri
+     * @throws AccessDeniedException
+     */
+    public synchronized Thesaurus removeElement(String uri) throws AccessDeniedException {
+        Graph myGraph = repository.getGraph();
+        ValueFactory myFactory = myGraph.getValueFactory();
+        URI subject = myFactory.createURI(uri);
+        
+        return removeElement(myGraph, subject);
+    }
+    
+	private Thesaurus removeElement(Graph myGraph, URI subject)
+			throws AccessDeniedException {
+		StatementIterator iter = myGraph.getStatements(subject, null, null);
         while (iter.hasNext()) {
             AtomicReference<Statement> st = new AtomicReference<Statement>(iter.next());
             if (st.get().getObject() instanceof BNode) {
@@ -398,7 +418,7 @@ public class Thesaurus {
         	Log.debug(Geonet.THESAURUS, msg);
         }
         return this;
-    }
+	}
 
     private String toiso639_1_Lang(String lang) {
          String defaultCode = getIsoLanguageMapper().iso639_2_to_iso639_1(Geonet.DEFAULT_LANGUAGE, Geonet.DEFAULT_LANGUAGE.substring(2));
@@ -433,7 +453,7 @@ public class Thesaurus {
         URI predicateScopeNote = myFactory.createURI(namespaceSkos, "scopeNote");
 
         // Get subject (URI)
-        URI subject = myFactory.createURI(keyword.getNameSpaceCode(),keyword.getRelativeCode());
+        URI subject = myFactory.createURI(keyword.getUriCode());
 
         // Remove old labels
         StatementIterator iter = myGraph.getStatements(subject, predicatePrefLabel, null);
@@ -534,18 +554,18 @@ public class Thesaurus {
     }
 
     /**
-     * TODO javadoc.
+     * Check if code is already used by a thesaurus concept.
      *
-     * @param namespace
-     * @param code
+     * @param namespace  Use null, to check a concept identifier not based on thesaurus namespace
+     * @param code  The concept identifier
      * @return
      * @throws AccessDeniedException
      */
 	public synchronized boolean isFreeCode(String namespace, String code) throws AccessDeniedException {
 		boolean res = true;				
 		Graph myGraph = repository.getGraph();
-		ValueFactory myFactory = myGraph.getValueFactory();		
-		URI obj = myFactory.createURI(namespace,code);
+		ValueFactory myFactory = myGraph.getValueFactory();
+		URI obj = namespace == null ? myFactory.createURI(code) : myFactory.createURI(namespace,code);
 		Collection<?> statementsCollection = myGraph.getStatementCollection(obj,null,null);
 		if (statementsCollection!=null && statementsCollection.size()>0){
 			res = false;
@@ -559,23 +579,54 @@ public class Thesaurus {
     public Thesaurus updateCode(KeywordBean bean, String newcode) throws AccessDeniedException, IOException {
         return updateCode(bean.getNameSpaceCode(), bean.getRelativeCode(), newcode);
     }
-
+    
     /**
-     * TODO javadoc.
-     *
+     * Update concept code by creating URI from namespace and code.
+     * This is recommended when thesaurus concept identifiers contains #
+     * eg. http://vocab.nerc.ac.uk/collection/P07/current#CFV13N44
+     * 
      * @param namespace
      * @param oldcode
      * @param newcode
+     * @return
      * @throws AccessDeniedException
      * @throws IOException
      */
-	public synchronized Thesaurus updateCode(String namespace, String oldcode, String newcode) throws AccessDeniedException, IOException {
+    public synchronized Thesaurus updateCode(String namespace, String oldcode, String newcode) throws AccessDeniedException, IOException {
+    	Graph myGraph = repository.getGraph();
+		
+		ValueFactory myFactory = myGraph.getValueFactory();
+
+		URI oldobj = myFactory.createURI(namespace,oldcode);
+		URI newobj = myFactory.createURI(namespace,newcode);
+		
+		return updateElementCode(myGraph, oldobj, newobj);
+		
+    }
+    /**
+     * Update concept code using its URI.
+     * This is recommended when concept identifier may not be based on 
+     * thesaurus namespace and does not contains #.
+     * 
+     * eg. http://vocab.nerc.ac.uk/collection/P07/current/CFV13N44/
+     *
+     * @param olduri
+     * @param newuri
+     * @throws AccessDeniedException
+     * @throws IOException
+     */
+	public synchronized Thesaurus updateCodeByURI(String olduri, String newuri) throws AccessDeniedException, IOException {
 		Graph myGraph = repository.getGraph();
 		
 		ValueFactory myFactory = myGraph.getValueFactory();
 		
-		URI oldobj = myFactory.createURI(namespace,oldcode);
-		URI newobj = myFactory.createURI(namespace,newcode);
+		URI oldobj = myFactory.createURI(olduri);
+		URI newobj = myFactory.createURI(newuri);
+		
+		return updateElementCode(myGraph, oldobj, newobj);
+	}
+	
+	private Thesaurus updateElementCode(Graph myGraph, URI oldobj, URI newobj) {
 		StatementIterator iterStSubject = myGraph.getStatements(oldobj,null,null);
 		while(iterStSubject.hasNext()){
 			AtomicReference<Statement> st = new AtomicReference<Statement>(iterStSubject.next());
