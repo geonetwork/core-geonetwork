@@ -387,7 +387,8 @@ GeoNetwork.editor.InsertMetadataPanel = Ext.extend(Ext.form.FormPanel, {
             if(response.responseXML) {
                 this.statusPanel.body.dom.innerHTML = t.apply({
                     id: Ext.DomQuery.selectNode('id', response.responseXML).childNodes[0].nodeValue,
-                    uuid: Ext.DomQuery.selectNode('uuid', response.responseXML).childNodes[0].nodeValue
+                    uuid: Ext.DomQuery.selectNode('uuid', response.responseXML).childNodes[0].nodeValue,
+                    records: null
                 });
             }
             // We got a JSON response from the fileupload form.submit request
