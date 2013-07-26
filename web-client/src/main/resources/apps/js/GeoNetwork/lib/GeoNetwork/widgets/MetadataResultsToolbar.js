@@ -391,7 +391,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                     });
                     
                     this.insertMetadataWindow = new Ext.Window({
-                        title: OpenLayers.i18n('newMetadataTitle'),
+                        title: OpenLayers.i18n('importMetadata'),
                         width: 660,
                         height: 650,
                         layout: 'fit',
