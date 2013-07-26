@@ -99,7 +99,8 @@ cat.app = function() {
     }
 	
 	function createLoginForm() {
-	 // Refresh login form if needed
+
+	    // Refresh login form if needed
         var user = cookie.get('user');
         if (user) {
             catalogue.identifiedUser = user;
@@ -408,6 +409,7 @@ cat.app = function() {
 				}, this);
 			},
 		    updatePrivileges: function(catalogue, user){
+
 		        var nbVisible=0;
 		        var editingActions = []; //new Md & insert MD actions
 		        
@@ -424,7 +426,6 @@ cat.app = function() {
 		            this.setVisible(vis);
 		            if(vis)nbVisible++;
 		        });
-                
 		        this.actionOnSelectionMenu && this.actionOnSelectionMenu.setVisible(nbVisible > 0 && catalogue.identifiedUser != undefined);
 		    }
 		});
