@@ -376,6 +376,21 @@ table.related * a:hover,
 .connect {
   background-image : url(../images/default/connect.png) !important;
 }
+.importIcon {
+  background-image : url(../images/default/import.png) !important;
+}
+.adminIcon {
+  background-image : url(../images/default/admin.png) !important;
+}
+.csvIcon {
+  background-image : url(../images/default/csv.png) !important;
+}
+.categoryIcon {
+  background-image : url(../images/default/tag_orange.png) !important;
+}
+.newOwnerIcon {
+  background-image : url(../images/default/newOwner.png) !important;
+}
 .subtemplateIcon {
   background-image : url(../images/default/report_magnify.png) !important;
 }

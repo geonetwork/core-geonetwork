@@ -26,41 +26,46 @@ package org.fao.geonet.guiservices.util;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SvnManager;
 import org.jdom.Element;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 //=============================================================================
 
-/** This service returns useful information about the subversion manager
-  */
+/**
+ * This service returns useful information about the subversion manager
+ */
+public class GetSvnDetails implements Service {
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-public class GetSvnDetails implements Service
-{
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-		SvnManager svnMan = gc.getBean(SvnManager.class);
-
-		Element root = new Element("a");
-		if (svnMan == null) {
-			root.addContent(new Element(Geonet.Elem.ENABLED).setText("false"));
-		} else {
-			root.addContent(new Element(Geonet.Elem.ENABLED).setText("true"));
-		}
-		return root;
-	}
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        boolean svnManagerFound = false;
+        Element root = new Element("a");
+        
+        try {
+            SvnManager svnMan = gc.getBean(SvnManager.class);
+            if (svnMan != null) {
+                svnManagerFound = true;
+            }
+        } catch (NoSuchBeanDefinitionException e) {
+            // No SVN manager found - SVN is not activated
+            Log.debug(Geonet.SVN_MANAGER, "NoSuchBeanDefinitionException: No SVN manager found - SVN is not activated");
+        }
+        
+        root.addContent(new Element(Geonet.Elem.ENABLED).setText(Boolean.toString(svnManagerFound)));
+        
+        return root;
+    }
 }
-
-//=============================================================================
-

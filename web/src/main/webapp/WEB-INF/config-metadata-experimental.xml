@@ -30,11 +30,14 @@
 
 
     <service name="edit">
-      <class name=".services.metadata.GetEditableData"/>
+      <class name=".services.metadata.GetEditableData">
+        <param name="editTab" value="true"/>
+      </class>
 
       <output sheet="metadata/edit/edit.xsl">
+        <xml name="validation" file="xml/metadata-validate.xml" />
         <call name="thesaurus" class=".services.thesaurus.GetList" />
-        <call name="currTab" class=".guiservices.util.GetCurrentMDTab"/>
+        <call name="currTab" class=".guiservices.util.GetCurrentMDEditingTab"/>
         <call name="position" class=".guiservices.util.GetPositionMD"/>
         <call name="groups" class=".guiservices.groups.GetMine"/>
         <call name="sources" class=".guiservices.util.Sources"/>
@@ -54,7 +57,7 @@
       <class name=".services.metadata.AddElement"/>
 
       <output sheet="metadata/edit/edit-embedded.xsl">
-        <call name="currTab" class=".guiservices.util.GetCurrentMDTab"/>
+        <call name="currTab" class=".guiservices.util.GetCurrentMDEditingTab"/>
         <call name="position" class=".guiservices.util.GetPositionMD"/>
         <call name="groups" class=".guiservices.groups.GetMine"/>
         <call name="sources" class=".guiservices.util.Sources"/>
@@ -74,7 +77,7 @@
       <class name=".services.metadata.DeleteElement"/>
 
       <output sheet="metadata/edit/edit-embedded.xsl">
-        <call name="currTab" class=".guiservices.util.GetCurrentMDTab"/>
+        <call name="currTab" class=".guiservices.util.GetCurrentMDEditingTab"/>
         <call name="position" class=".guiservices.util.GetPositionMD"/>
         <call name="groups" class=".guiservices.groups.GetMine"/>
         <call name="sources" class=".guiservices.util.Sources"/>

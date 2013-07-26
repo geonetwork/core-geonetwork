@@ -123,6 +123,9 @@ public class Info implements Service {
 			else if (type.equals("inspire"))
 				result.addContent(gc.getBean(SettingManager.class).get("system/inspire", -1));
 
+			else if (type.equals("harvester"))
+			    result.addContent(gc.getBean(SettingManager.class).get("system/harvester", -1));
+
 			else if (type.equals("categories"))
 				result.addContent(Lib.local.retrieve(dbms, "Categories"));
 

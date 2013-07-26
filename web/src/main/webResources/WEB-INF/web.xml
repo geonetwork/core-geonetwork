@@ -39,10 +39,6 @@
         <!--<param-name>JSON_FACTORY_ATTRIBUTE</param-name>-->
         <!--<param-value>Joe</param-value>-->
     <!--</context-param>-->
-    <!-- H2 DB starter configuration / remove if you don't use H2 -->
-    <listener>
-      <listener-class>org.h2.server.web.DbStarter</listener-class>
-    </listener>
   
     <!-- shut down java cache used for xlinks and spatial index -->
     <listener>

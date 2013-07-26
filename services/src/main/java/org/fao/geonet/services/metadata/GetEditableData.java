@@ -39,13 +39,17 @@ import org.jdom.Element;
 
 public class GetEditableData implements Service
 {
+    boolean useEditTab = false;
+    
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+        useEditTab = params.getValue("editTab", "false").equals("true");
+	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -55,13 +59,15 @@ public class GetEditableData implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
+        boolean showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, false);
+        
 		String id = Utils.getIdentifierFromParameters(params, context);
-		boolean showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, false);
-
+        String sessionTabProperty = useEditTab ? Geonet.Session.METADATA_EDITING_TAB : Geonet.Session.METADATA_SHOW;
+        
         // Set current tab for new editing session if defined.
         Element elCurrTab = params.getChild(Params.CURRTAB);
         if (elCurrTab != null) {
-            context.getUserSession().setProperty(Geonet.Session.METADATA_SHOW, elCurrTab.getText());
+            context.getUserSession().setProperty(sessionTabProperty, elCurrTab.getText());
         }
 		
         //-----------------------------------------------------------------------

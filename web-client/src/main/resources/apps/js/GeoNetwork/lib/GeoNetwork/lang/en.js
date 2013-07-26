@@ -275,8 +275,12 @@ GeoNetwork.Lang.en = {
     'administration': 'Administration',
     'validationReport': 'Validation report',
     'setStatus': 'Metadata status',
-    'status': 'Status',
+    'status': 'Change status',
     'updateStatus': 'Update status',
+    'currentStatus': ' (current status is ${status})',
+    'enableWorkflow': 'Enable worklow',
+    'enableWorkflowTT': 'Set metadata status to draft and enable workflow',
+    'enableWorkflowStart': 'Metadata status set to draft.',
     'updateVersion': 'Activate versioning',
     'addLayerSelection': 'Add layers of selection to the map',
     'statusTT': 'Change the status of a record according to its life cycle phase',
@@ -549,7 +553,6 @@ GeoNetwork.Lang.en = {
     'feedbackerrorMsg' : 'An error has occurred when sending. Please try again later.',
     'feedbackcancel' : 'Cancel',
     'feedbackWindowTitle' : 'feedback',
-
     // Suggestion processing
     'add-extent-from-geokeywordsreplace': 'Replace existing extent',
     'add-info-from-wmssetExtent': 'Set extent',
@@ -677,7 +680,8 @@ GeoNetwork.Lang.en = {
     'mdInsertResults': 'Results of metadata import',
     'mdInsertSuccess': 'Metadata inserted with',
     'mdInsertFailure': 'Error while inserting metadata : ',
-    'chooseCategory': 'Choose a category'
+    'chooseCategory': 'Choose a category',
+    'no-thumbnail': 'No thumbnail available'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.Lang.en);

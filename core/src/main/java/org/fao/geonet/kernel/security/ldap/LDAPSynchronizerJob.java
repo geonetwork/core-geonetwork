@@ -238,7 +238,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
             String groupId = null;
             
             if (groupRecord == null) {
-                LDAPUtils.createIfNotExist(groupName, groupId, dbms, serialFactory);
+                groupId = LDAPUtils.createIfNotExist(groupName, dbms, serialFactory);
 
             } else {
                 groupId = groupRecord.getChildText("id");

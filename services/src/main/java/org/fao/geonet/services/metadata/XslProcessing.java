@@ -194,8 +194,25 @@ public class XslProcessing extends NotInReadOnlyModeService {
             xslParameter.put("guiLang", context.getLanguage());
             xslParameter.put("baseUrl", context.getBaseUrl());
             for (Element param : children) {
-                xslParameter.put(param.getName(), param.getTextTrim());
+                // Add extra metadata
+                if (param.getName().equals("extra_metadata_uuid")
+                        && !param.getTextTrim().equals("")) {
+                    String extraMetadataId = dataMan.getMetadataId(dbms,
+                            param.getTextTrim());
+                    if (extraMetadataId != null) {
+                        Element extraMetadata = dataMan.getMetadata(context,
+                                extraMetadataId, forEditing,
+                                withValidationErrors, keepXlinkAttributes);
+                        md.addContent(new Element("extra")
+                                .addContent(extraMetadata));
+                        xslParameter.put(param.getName(), param.getTextTrim());
+                    }
+                } else {
+                    // Or add parameter
+                    xslParameter.put(param.getName(), param.getTextTrim());
+                }
             }
+
 
             xslParameter.put("siteUrl", siteUrl);
 

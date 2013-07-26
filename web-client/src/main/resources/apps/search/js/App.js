@@ -218,6 +218,7 @@ GeoNetwork.app = function () {
             valueField: 'value',
             displayField: 'value',
             valueDelimiter: ' or ',
+            listWidth: 'width:auto',
 //            tpl: tpl,
             fieldLabel: OpenLayers.i18n('org')
         });
@@ -629,7 +630,7 @@ GeoNetwork.app = function () {
             }
         });
     }
-    function edit(metadataId, create, group, child, schema){
+    function edit(metadataId, create, group, child, isTemplate, schema){
         var record = catalogue.metadataStore.getAt(catalogue.metadataStore.find('id', metadataId));
         
         if (!this.editorWindow) {
@@ -677,7 +678,7 @@ GeoNetwork.app = function () {
         if (metadataId) {
             this.editorWindow.show();
             var recordSchema = record && record.get('schema');
-            this.editorPanel.init(metadataId, create, group, child, undefined, true, recordSchema || schema);
+            this.editorPanel.init(metadataId, create, group, child, isTemplate, true, recordSchema || schema);
         }
     }
     
@@ -854,7 +855,7 @@ GeoNetwork.app = function () {
                 Ext.getCmp('geometryMap').map.zoomToExtent(urlParameters.bounds);
             }
             
-            var events = ['afterDelete', 'afterRating', 'afterLogout', 'afterLogin'];
+            var events = ['afterDelete', 'afterRating', 'afterStatus', 'afterLogout', 'afterLogin'];
             Ext.each(events, function (e) {
                 catalogue.on(e, function () {
                     if (searching === true) {

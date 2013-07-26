@@ -2552,7 +2552,6 @@
     <xsl:param name="schema"/>
   
     <xsl:variable name="id" select="generate-id(.)"/>
-    <tr><td colspan="2"><div id="{$id}"/></td></tr>
     <xsl:apply-templates mode="complexElement" select=".">
       <xsl:with-param name="schema" select="$schema"/>
       <xsl:with-param name="edit"   select="true()"/>
@@ -2799,14 +2798,17 @@
             <xsl:variable name="ref" select="gco:CharacterString/geonet:element/@ref"/>
             <xsl:variable name="isXLinked" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
             <xsl:variable name="fref" select="../gmd:name/gco:CharacterString/geonet:element/@ref|../gmd:name/gmx:MimeFileType/geonet:element/@ref"/>
-            <xsl:variable name="relatedJsAction">
-            	<xsl:value-of select="concat('checkForFileUpload(&quot;',$fref,'&quot;, &quot;',$ref,'&quot;, this.options[this.selectedIndex].value);')" />
-      		</xsl:variable>
             
             <!-- Look for the helper to check if a radio edit mode is activated
             If yes, hide the input text which will be updated when clicking the radio
             or the other option. -->
             <xsl:variable name="helper" select="geonet:getHelper($schema, ., /root/gui)"/>
+            
+            <xsl:variable name="relatedJsAction">
+              <xsl:value-of select="concat('checkForFileUpload(&quot;',$fref,'&quot;, &quot;',$ref,'&quot;, ', 
+                (if (contains($helper/@editorMode, 'radio')) then 'this.value' else 'this.options[this.selectedIndex].value')
+                , ');')" />
+            </xsl:variable>
             
             <input type="text" id="_{$ref}" name="_{$ref}" value="{$value}">
               <xsl:if test="contains($helper/@editorMode, 'radio')">

@@ -187,6 +187,7 @@ public abstract class SpatialFilter extends Filter
         		while(iter.hasNext() && i < MAX_FIDS_PER_QUERY) {
         			subset[i] = iter.next();
         			iter.remove();
+							i++;
         		}
         		fidFilter = _filterFactory.id(subset);
 	        } else {
