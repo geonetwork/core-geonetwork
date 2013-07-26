@@ -655,6 +655,8 @@ GeoNetwork.Lang.es = {
     'mdInsertResults': 'Results of metadata import',
     'mdInsertSuccess': 'Metadata inserted with',
     'mdInsertFailure': 'Error while inserting metadata : ',
+    'mdRecordsProcessed': 'Total number of metadata records processed',
+    'mdRecordsAdded': 'Total number of metadata records added',
     'chooseCategory': 'Choose a category'
 };
 

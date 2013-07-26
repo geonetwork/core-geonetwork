@@ -365,15 +365,19 @@ GeoNetwork.editor.InsertMetadataPanel = Ext.extend(Ext.form.FormPanel, {
     updateStatus: function(response, success) {
         this.statusPanel.setVisible(true);
         
-        // Here the reponse elements are in response.responseXML object
+        // Here the response elements are in response.responseXML object
         if(success) {
             
             var t = new Ext.XTemplate(
                 '<div class="label-success-font">',
                 '<div class="md-insert-status-title">'+OpenLayers.i18n('mdInsertResults')+'</div>',
-                '<ul>' +OpenLayers.i18n('mdInsertSuccess'), 
-                '<li> ID : {id}</li>',
+                '<ul>', 
+                '<tpl if="id">' + OpenLayers.i18n('mdInsertSuccess') + '<li> ID : {id}</li></tpl>',
                 '<tpl if="uuid"><li> UUID : {uuid}</li></tpl>',
+                '<tpl if="records">',
+                    '<li>'+ OpenLayers.i18n('mdRecordsProcessed') + ' : {records}</li>',
+                    '<li>'+ OpenLayers.i18n('mdRecordsAdded') + ' : {records}</li>',
+                '</tpl>',
                 '</ul>',
                 '</div>'
             );
@@ -390,7 +394,8 @@ GeoNetwork.editor.InsertMetadataPanel = Ext.extend(Ext.form.FormPanel, {
             else {
                 this.statusPanel.body.dom.innerHTML = t.apply({
                     id: response.id,
-                    uuid: ''
+                    uuid: '',
+                    records: response.records
                 });
             }
         }

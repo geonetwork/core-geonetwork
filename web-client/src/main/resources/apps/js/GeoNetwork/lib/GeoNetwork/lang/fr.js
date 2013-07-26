@@ -693,6 +693,8 @@ GeoNetwork.Lang.fr = {
     'mdInsertResults': 'Résultat de l\'import de métadonnées :',
     'mdInsertSuccess': 'Métadonnée insérée avec :',
     'mdInsertFailure': 'Erreur lors de l\'insertion de la métadonnée : ',
+    'mdRecordsProcessed': 'Nombre total de métadonnées traitées',
+    'mdRecordsAdded': 'Nombre total de métadonnées ajoutées',
     'chooseCategory': 'Choisissez une catégorie'
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.Lang.fr);
