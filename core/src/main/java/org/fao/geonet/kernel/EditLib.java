@@ -29,6 +29,7 @@ package org.fao.geonet.kernel;
 
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+import org.apache.commons.collections.CollectionUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
@@ -440,11 +441,11 @@ public class EditLib {
         
         boolean isSimpleElement = schema.isSimpleElement(elemName,parentName);
         
-        if(Log.isDebugEnabled(Geonet.EDITOR)) {
-            Log.debug(Geonet.EDITOR,"#### Entering fillElement()");
-            Log.debug(Geonet.EDITOR,"#### - elemName = " + elemName);
-            Log.debug(Geonet.EDITOR,"#### - parentName = " + parentName);
-            Log.debug(Geonet.EDITOR,"#### - isSimpleElement(" + elemName + ") = " + isSimpleElement);
+        if(Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
+            Log.debug(Geonet.EDITORFILLELEMENT,"#### Entering fillElement()");
+            Log.debug(Geonet.EDITORFILLELEMENT,"#### - elemName = " + elemName);
+            Log.debug(Geonet.EDITORFILLELEMENT,"#### - parentName = " + parentName);
+            Log.debug(Geonet.EDITORFILLELEMENT,"#### - isSimpleElement(" + elemName + ") = " + isSimpleElement);
         }
         
         
@@ -459,14 +460,14 @@ public class EditLib {
 //        boolean hasSuggestion = elementSuggestion.size() != 0;
         
         
-        if(Log.isDebugEnabled(Geonet.EDITOR)) {
-            Log.debug(Geonet.EDITOR,"#### - Type:");
-            Log.debug(Geonet.EDITOR,"####   - name = " + type.getName());
-            Log.debug(Geonet.EDITOR,"####   - # attributes = " + type.getAttributeCount());
-            Log.debug(Geonet.EDITOR,"####   - # elements = " + type.getElementCount());
-            Log.debug(Geonet.EDITOR,"####   - # isOrType = " + type.isOrType());
-            Log.debug(Geonet.EDITOR,"####   - type = " + type);
-            Log.debug(Geonet.EDITOR,"#### - Has suggestion = " + hasSuggestion);
+        if(Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
+            Log.debug(Geonet.EDITORFILLELEMENT,"#### - Type:");
+            Log.debug(Geonet.EDITORFILLELEMENT,"####   - name = " + type.getName());
+            Log.debug(Geonet.EDITORFILLELEMENT,"####   - # attributes = " + type.getAttributeCount());
+            Log.debug(Geonet.EDITORFILLELEMENT,"####   - # elements = " + type.getElementCount());
+            Log.debug(Geonet.EDITORFILLELEMENT,"####   - # isOrType = " + type.isOrType());
+            Log.debug(Geonet.EDITORFILLELEMENT,"####   - type = " + type);
+            Log.debug(Geonet.EDITORFILLELEMENT,"#### - Has suggestion = " + hasSuggestion);
         }
         
         
@@ -476,10 +477,10 @@ public class EditLib {
         for(int i=0; i<type.getAttributeCount(); i++) {
             MetadataAttribute attr = type.getAttributeAt(i);
             
-            if(Log.isDebugEnabled(Geonet.EDITOR)) {
-                Log.debug(Geonet.EDITOR,"####   - " + i + " attribute = " + attr.name);
-                Log.debug(Geonet.EDITOR,"####     - required = " + attr.required);
-                Log.debug(Geonet.EDITOR,"####     - suggested = "+sugg.isSuggested(elemName, attr.name));
+            if(Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
+                Log.debug(Geonet.EDITORFILLELEMENT,"####   - " + i + " attribute = " + attr.name);
+                Log.debug(Geonet.EDITORFILLELEMENT,"####     - required = " + attr.required);
+                Log.debug(Geonet.EDITORFILLELEMENT,"####     - suggested = "+sugg.isSuggested(elemName, attr.name));
             }
             
             if (attr.required || sugg.isSuggested(elemName, attr.name)) {
@@ -487,8 +488,8 @@ public class EditLib {
                 
                 if (attr.defValue != null) {
                     value = attr.defValue;
-                    if(Log.isDebugEnabled(Geonet.EDITOR)) {
-                        Log.debug(Geonet.EDITOR,"####     - value = " + attr.defValue);
+                    if(Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
+                        Log.debug(Geonet.EDITORFILLELEMENT,"####     - value = " + attr.defValue);
                     }
                 }
                 
@@ -513,10 +514,10 @@ public class EditLib {
                 boolean childIsMandatory = type.getMinCardinAt(i) > 0;
                 boolean childIsSuggested = sugg.isSuggested(elemName, childName);
                 
-                if(Log.isDebugEnabled(Geonet.EDITOR)) {
-                    Log.debug(Geonet.EDITOR,"####   - " + i + " element = " + childName);
-                    Log.debug(Geonet.EDITOR,"####     - suggested = " + childIsSuggested);
-                    Log.debug(Geonet.EDITOR,"####     - is mandatory = " + childIsMandatory);
+                if(Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
+                    Log.debug(Geonet.EDITORFILLELEMENT,"####   - " + i + " element = " + childName);
+                    Log.debug(Geonet.EDITORFILLELEMENT,"####     - suggested = " + childIsSuggested);
+                    Log.debug(Geonet.EDITORFILLELEMENT,"####     - is mandatory = " + childIsMandatory);
                 }
                 
                 
@@ -525,14 +526,14 @@ public class EditLib {
                     
                     MetadataType elemType = schema.getTypeInfo(schema.getElementType(childName, elemName));
                     List<String> childSuggestion = sugg.getSuggestedElements(childName);
-                    boolean childHasSuggestion = childSuggestion.size() != 0;
+										boolean childHasOneSuggestion = sugg.hasSuggestion(childName, elemType.getElementList()) && (CollectionUtils.intersection(elemType.getElementList(),childSuggestion).size()==1);
                     boolean childHasOnlyCharacterStringSuggestion = childSuggestion.size() == 1 && childSuggestion.contains("gco:CharacterString");
                     
-                    if(Log.isDebugEnabled(Geonet.EDITOR)) {
-                        Log.debug(Geonet.EDITOR,"####     - is or type = "+ elemType.isOrType());
-                        Log.debug(Geonet.EDITOR,"####     - has suggestion = "+ childHasSuggestion);
-                        Log.debug(Geonet.EDITOR,"####     - elem type list = " + elemType.getElementList());
-                        Log.debug(Geonet.EDITOR,"####     - suggested types list = " + sugg.getSuggestedElements(childName));
+                    if(Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
+                        Log.debug(Geonet.EDITORFILLELEMENT,"####     - is or type = "+ elemType.isOrType());
+                        Log.debug(Geonet.EDITORFILLELEMENT,"####     - has suggestion = "+ childHasOneSuggestion);
+                        Log.debug(Geonet.EDITORFILLELEMENT,"####     - elem type list = " + elemType.getElementList());
+                        Log.debug(Geonet.EDITORFILLELEMENT,"####     - suggested types list = " + sugg.getSuggestedElements(childName));
                     }
                     
                     //--- There can be 'or' elements with other 'or' elements inside them.
@@ -542,7 +543,7 @@ public class EditLib {
                         schema.isSimpleElement(elemName, childName) ||  // eg. gco:Decimal
                         !elemType.isOrType() ||                         // eg. gmd:EX_Extent
                         (elemType.isOrType() && (                       // eg. depends on schema-suggestions.xml
-                            childSuggestion.size() == 1 ||              //   expand the only one suggestion - TODO - this needs improvements
+                            childHasOneSuggestion ||                    //   expand the only one suggestion - TODO - this needs improvements
                             (childSuggestion.size() == 0 && elemType.getElementList().contains("gco:CharacterString")))
                                                                         //   expand element which have no suggestion
                                                                         // and have a gco:CharacterString substitute.
@@ -567,13 +568,13 @@ public class EditLib {
                         fillElement(schema, sugg, element, child);
                     } else {
                         // Logging some cases to avoid
-                        if(Log.isDebugEnabled(Geonet.EDITOR)) {
+                        if(Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
                             if (elemType.isOrType()) {
                                  if (elemType.getElementList().contains("gco:CharacterString") 
-                                         && !childHasSuggestion) {
-                                    Log.debug(Geonet.EDITOR,"####   - (INNER) Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + element.getName());
+                                         && !childHasOneSuggestion) {
+                                    Log.debug(Geonet.EDITORFILLELEMENT,"####   - (INNER) Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + element.getName());
                                  } else {
-                                    Log.debug(Geonet.EDITOR,"####   - WARNING (INNER): requested expansion of an OR element : " +childName);
+                                    Log.debug(Geonet.EDITORFILLELEMENT,"####   - WARNING (INNER): requested expansion of an OR element : " +childName);
                                 }
                             }
                         }
@@ -584,16 +585,16 @@ public class EditLib {
             // expand element which have no suggestion
             // and have a gco:CharacterString substitute.
             // gco:CharacterString is the default.
-            if(Log.isDebugEnabled(Geonet.EDITOR)) {
-                Log.debug(Geonet.EDITOR, "####   - Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + element.getName());
+            if(Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
+                Log.debug(Geonet.EDITORFILLELEMENT, "####   - Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + element.getName());
             }
             Element child = new Element("CharacterString", Namespaces.GCO);
             element.addContent(child);
         } else {
             // TODO: this could be supported if only one suggestion defined for an or element ?
             // It will require to get the proper namespace for the element
-            if(Log.isDebugEnabled(Geonet.EDITOR)) {
-                Log.debug(Geonet.EDITOR, "####   - WARNING : requested expansion of an OR element : " + element.getName());
+            if(Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
+                Log.debug(Geonet.EDITORFILLELEMENT, "####   - WARNING : requested expansion of an OR element : " + element.getName());
             }
         }
     }

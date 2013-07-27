@@ -49,6 +49,9 @@
     <logger name="geonetwork.editorexpandelement" additivity="false">
         <level value="WARN" />
     </logger>
+    <logger name="geonetwork.editorfillelement" additivity="false">
+        <level value="WARN" />
+    </logger>
     <logger name="geonetwork.LanguageDetector" additivity="false">
         <level value="WARN" />
     </logger>
