@@ -1819,7 +1819,7 @@
               </xsl:if>
               
               <xsl:choose>
-                <xsl:when test="$title!=''">
+                <xsl:when test="$helpLink!=''">
                   <xsl:value-of select="$title"/>
                 </xsl:when>
                 <xsl:otherwise>
