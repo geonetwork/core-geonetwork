@@ -847,6 +847,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         
         this.formPanel = new Ext.form.FormPanel({
             items: cmp,
+            labelWidth: 200,
             buttons: [{
                 text: OpenLayers.i18n('createLink'),
                 iconCls: 'linkIcon',
