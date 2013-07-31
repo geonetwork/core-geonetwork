@@ -603,6 +603,8 @@ GeoNetwork.Lang.ca={
     'thesaurusFromFile': 'A partir d\'un arxiu local',
     'thesaurusFromURL': 'A partir d\'un arxiu remot (URL)',
     'id': 'Identificador',
+    'mdIdentifier': 'Record internal identifier: ',
+    'mdUUID': 'Record unique identifier: ',
     'label': 'Etiqueta',
     'definition': '-',
     'xmin': 'X min',

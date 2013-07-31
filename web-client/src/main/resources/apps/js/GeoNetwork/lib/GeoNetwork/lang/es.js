@@ -571,6 +571,8 @@ GeoNetwork.Lang.es = {
     'thesaurusFromFile':'Desde el archivo local',
     'thesaurusFromURL':'Archivo remoto (URL)',
     'id':'Identificador',
+    'mdIdentifier': 'Record internal identifier: ',
+    'mdUUID': 'Record unique identifier: ',
     'label':'Etiqueta',
     'definition':'-',
     'xmin':'X min',

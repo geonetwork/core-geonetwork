@@ -592,6 +592,8 @@ GeoNetwork.Lang.fr = {
     'thesaurusFromFile': 'A partir d\'un fichier local',
     'thesaurusFromURL': 'A partir d\'un fichier distant (URL)',
     'id': 'Identifiant',
+    'mdIdentifier': 'Identifiant interne de la fiche : ',
+    'mdUUID': 'Identifiant unique : ',
     'label': 'Libellé',
     'definition': '-',
     'xmin': 'X min',

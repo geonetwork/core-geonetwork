@@ -579,6 +579,8 @@ GeoNetwork.Lang.nl = {
     'thesaurusFromFile': "Van lokaal bestand",
     'thesaurusFromURL': "Van extern bestand (URL)",
     'id': "Identificator",
+    'mdIdentifier': 'Record internal identifier: ',
+    'mdUUID': 'Record unique identifier: ',
     'label': "Label",
     'definition': "-",
     'xmin': "X min",
