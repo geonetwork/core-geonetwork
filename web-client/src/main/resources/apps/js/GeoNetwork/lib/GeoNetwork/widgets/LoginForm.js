@@ -281,7 +281,8 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
         this.importMetadataMenu = new Ext.Button({
             text: OpenLayers.i18n('importMetadata'),
             handler: function () {
-                catalogue.metadataImport();
+                var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
+                actionCtn.mdImportAction.handler.apply(actionCtn);
             }
         });
         var adminPanel = {
