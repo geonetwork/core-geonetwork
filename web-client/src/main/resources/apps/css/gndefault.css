@@ -583,8 +583,7 @@ div.facets * .facet-less-bt a {
 }
 .gn-bt-main * button ,
 .gn-bt-main * span {
-    /*font-weight: bold;*/
-    text-shadow: 0 0 0.1em grey;
+    font-weight: bolder;
 }
 .alert {
     padding: 8px 35px 8px 14px;
