@@ -78,7 +78,7 @@ public class ZipUtil {
 	public static void extract(ZipFile zipFile, ZipEntry zipEntry, File toDir)
 			throws IOException {
 		File file = new File(toDir, zipEntry.getName());
-		IO.mkdirs(toDir, "Unzip dir");
+		IO.mkdirs(file.getParentFile(), "Unzip dir");
 
 		BufferedInputStream bis = null;
 		BufferedOutputStream bos = null;
