@@ -712,7 +712,7 @@ GeoNetwork.Lang.fr = {
     'Cadastral parcels': ' Parcelles cadastrales',
     'Transport networks': ' Réseaux de transport',
     'Hydrography': ' Hydrographie',
-    'Protected sites': ' Sites protégés'
+    'Protected sites': ' Sites protégés',
     'insertMode': 'Mode d\'insertion',
     'fileUpload': 'Import de fichiers',
     'copyPaste': 'Copier/Coller',
