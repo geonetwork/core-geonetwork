@@ -153,9 +153,9 @@
             
             
             <!-- Check display priority -->
-            <sch:let name="credit" value="gmd:credit"/>
-            <sch:assert test="normalize-space($credit) != ''">$loc/strings/alert.R11</sch:assert>
-            <sch:report test="normalize-space($credit) != ''">
+            <sch:let name="credit" value="gmd:supplementalInformation"/>
+            <sch:assert test="normalize-space($credit) != 'display priority:'">$loc/strings/alert.R11</sch:assert>
+            <sch:report test="normalize-space($credit) != 'display priority:'">
                 <sch:value-of select="$loc/strings/report.R11"/> "<sch:value-of select="normalize-space($credit)"/>"
             </sch:report>
         </sch:rule>
