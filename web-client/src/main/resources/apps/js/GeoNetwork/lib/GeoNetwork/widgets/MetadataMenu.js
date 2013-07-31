@@ -403,7 +403,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         
         GeoNetwork.MetadataMenu.superclass.initComponent.call(this);
         
-        this.statusStore = new GeoNetwork.data.StatusStore(catalogue.services.getStatus);
+        this.statusStore = new GeoNetwork.data.StatusStore(this.catalogue.services.getStatus);
         this.statusStore.on('load', function () {
             this.create();
         }, this);

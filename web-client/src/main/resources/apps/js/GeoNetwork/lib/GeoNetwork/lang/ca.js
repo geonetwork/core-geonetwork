@@ -603,6 +603,8 @@ GeoNetwork.Lang.ca={
     'thesaurusFromFile': 'A partir d\'un arxiu local',
     'thesaurusFromURL': 'A partir d\'un arxiu remot (URL)',
     'id': 'Identificador',
+    'mdIdentifier': 'Record internal identifier: ',
+    'mdUUID': 'Record unique identifier: ',
     'label': 'Etiqueta',
     'definition': '-',
     'xmin': 'X min',
@@ -655,7 +657,27 @@ GeoNetwork.Lang.ca={
     'Advanced': "Avançat",
     'newWindow': "Nova finestra",
     'mdEditor': "Editor de metadades",
-    'List': "Llista"
+    'List': "Llista",
+    'insertMode': 'Insert Mode',
+    'fileUpload': 'File upload',
+    'copyPaste': 'Copy/Paste',
+    'fileType': 'File Type',
+    'singleFile' :'Single File (XML, SLD, WMC...)',
+    'mefFile': 'MEF file',
+    'importActions': 'Import actions',
+    'noActionOnImport': 'No action on import',
+    'overwriteMD': 'Overwrite metadata with same UUID' ,
+    'generateUuid': 'Generate UUID for inserted metadata',
+    'styleSheet': 'StyleSheet',
+    'validate': 'Validate',
+    'assignCurCat': 'Assign to current catalog',
+    'metadata': 'Metadata',
+    'mdInsertResults': 'Results of metadata import',
+    'mdInsertSuccess': 'Metadata inserted with',
+    'mdInsertFailure': 'Error while inserting metadata : ',
+    'mdRecordsProcessed': 'Total number of metadata records processed',
+    'mdRecordsAdded': 'Total number of metadata records added',
+    'chooseCategory': 'Choose a category'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.ca,GeoNetwork.Lang.ca);

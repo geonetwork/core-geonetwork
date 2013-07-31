@@ -1423,17 +1423,24 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
+	
 		<service name="mef.import.ui">
 			<class name=".services.mef.Import" />
-
-
+	
+	
 			<output sheet="metadata-insert-results.xsl" />
-
+	
 			<error sheet="error.xsl">
 				<xml name="error" file="xml/validation-error.xml" />
 				<xml name="validation" file="xml/metadata-validate.xml" />
 			</error>
+		</service>
+	
+		<service name="xml.mef.import.ui">
+			<class name=".services.mef.Import" />
+			<output sheet="metadata/md-insert-results.xsl"/>
+			
+			<error sheet="error-xml.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
