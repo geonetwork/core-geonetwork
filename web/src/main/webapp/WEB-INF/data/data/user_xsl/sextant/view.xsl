@@ -2,8 +2,10 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	version="2.0" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts"
 	xmlns:java="java:org.fao.geonet.util.XslUtil"
+	xmlns:gfc="http://www.isotc211.org/2005/gfc"
 	xmlns:xlink="http://www.w3.org/1999/xlink">
 
 
@@ -14,7 +16,14 @@
 	<xsl:template xmlns:geonet="http://www.fao.org/geonetwork"
 		mode="iso19139" match="geonet:info" />
 	<!-- Root element matching. -->
+	
 	<xsl:template match="/" priority="5">
+		<xsl:apply-templates select="/root/gmd:MD_Metadata" />
+		<xsl:apply-templates select="/root/simpledc" />
+		<xsl:apply-templates select="/root/gfc:FC_FeatureCatalogue" />
+	</xsl:template>
+	
+	<xsl:template match="/root/gmd:MD_Metadata" priority="5">
 		<html>
 			<!-- Set some vars. -->
 			<xsl:variable name="title">
@@ -31,10 +40,10 @@
 			</head>
 			<body>
 			
-			<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/reset.css"/>
-			<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/jquery-ui-1.8.2.custom.css"/>
-			<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/main.css"/>
-			<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/default.css"/>
+			<link rel="stylesheet" type="text/css" href="{/root/url}/apps/sextant/css/schema/reset.css"/>
+			<link rel="stylesheet" type="text/css" href="{/root/url}/apps/sextant/css/schema/jquery-ui-1.8.2.custom.css"/>
+			<link rel="stylesheet" type="text/css" href="{/root/url}/apps/sextant/css/schema/main.css"/>
+			<link rel="stylesheet" type="text/css" href="{/root/url}/apps/sextant/css/schema/default.css"/>
 			<div class="tpl-sextant">
 				<div class="ui-layout-content">
 					<div>
@@ -84,7 +93,7 @@
 								<div class="result-metadata-modal-content">
 									<p></p>
 									<ul>
-										<xsl:call-template name="contact"/>
+										<xsl:apply-templates mode="iso19139" select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact"/>
 									</ul>
 								</div>
 							</div>
@@ -202,10 +211,10 @@
 		
 	</xsl:template>
 	
-	<xsl:template name="contact" mode="iso19139"
-		match="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact" priority="3">
+	<xsl:template mode="iso19139"
+		match="gmd:pointOfContact|gfc:producer" priority="3">
 		
-		<xsl:for-each select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty">
+		<xsl:for-each select="gmd:CI_ResponsibleParty">
 			<xsl:apply-templates mode="iso19139"
 					select="gmd:individualName" />
 			<xsl:apply-templates mode="iso19139"
@@ -295,5 +304,155 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+
+
+
+
+	<xsl:template match="/root/simpledc" priority="5">
+		<html>
+			<!-- Set some vars. -->
+			<xsl:variable name="title">
+				<xsl:value-of select="/root/simpledc/dc:title" />
+			</xsl:variable>
+			<xsl:variable name="descr">
+				<xsl:value-of select="/root/simpledc/dc:description" />
+			</xsl:variable>
+				
+			<head>
+				<title>
+					Metadata:
+					<xsl:value-of select="$title" />
+				</title>
+			</head>
+			<body>
+			
+			<link rel="stylesheet" type="text/css" href="{/root/url}/apps/sextant/css/schema/reset.css"/>
+			<link rel="stylesheet" type="text/css" href="{/root/url}/apps/sextant/css/schema/jquery-ui-1.8.2.custom.css"/>
+			<link rel="stylesheet" type="text/css" href="{/root/url}/apps/sextant/css/schema/main.css"/>
+			<link rel="stylesheet" type="text/css" href="{/root/url}/apps/sextant/css/schema/default.css"/>
+			<div class="tpl-sextant">
+				<div class="ui-layout-content">
+					<div>
+						<div class="result-metadata-modal-tabs">
+							<div id="result-metadata-modal-tab-1">
+							    <div class="result-metadata-modal-resume"  style="border-bottom: 1px solid #EFEFEF;">
+							      <h6><xsl:value-of select="$title" /></h6>
+							    </div>
+							    <br/>
+								<div class="result-metadata-modal-resume">
+									<h6>
+									<xsl:call-template name="getTitle">
+										<xsl:with-param name="name" select="'gmd:MD_Keywords'" />
+									</xsl:call-template>
+									</h6>
+									<p><div class="result-metadata-modal-content">
+									<xsl:value-of 
+										select="string-join(/root/simpledc/dc:subject, ', ')" />
+										
+									</div></p>
+								</div>		
+								<h5>Description</h5>
+								<div class="result-metadata-modal-content">
+									<div class="result-metadata-modal-resume">
+										<p><b>
+											<xsl:call-template name="getTitle">
+												<xsl:with-param name="name" select="'gmd:abstract'" />
+											</xsl:call-template>
+										</b></p>
+										<div class="result-metadata-modal-content">
+											<xsl:value-of select="$descr" />
+										</div>
+									</div>
+								</div>
+								
+								<h5><xsl:value-of select="/root/schemas/iso19139.sextant/strings/constraints_access" /></h5>
+								<div class="result-metadata-modal-content">
+									<div class="result-metadata-modal-resume">
+										<p><b>
+											<xsl:value-of select="string(/root/schemas/dublin-core/labels/element[@name = 'dc:rights']/label)" /> : 
+										</b></p>
+										<div class="result-metadata-modal-content">
+											<xsl:value-of select="/root/simpledc/dc:rights" />
+										</div>
+									</div>
+								</div>
+								
+								<h5><xsl:value-of select="/root/schemas/iso19139.sextant/strings/contact" /></h5>
+								<div class="result-metadata-modal-content">
+									<p></p>
+									<ul>
+										<li>
+											<b><xsl:value-of select="string(/root/schemas/dublin-core/labels/element[@name = 'dc:publisher']/label)" /> : </b>
+											<xsl:value-of select="/root/simpledc/dc:publisher" />
+										</li>
+										<li>
+											<b><xsl:value-of select="string(/root/schemas/dublin-core/labels/element[@name = 'dc:publisher']/label)" /> : </b>
+											<xsl:value-of select="/root/simpledc/dc:publisher" />
+										</li>
+										<li>
+											<b><xsl:value-of select="string(/root/schemas/dublin-core/labels/element[@name = 'dc:creator']/label)" /> : </b>
+											<xsl:value-of select="/root/simpledc/dc:creator" />
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</body>
+		</html>
+	</xsl:template>
+
+	<xsl:template match="/root/gfc:FC_FeatureCatalogue" priority="5">
+		<html>
+			<!-- Set some vars. -->
+			<xsl:variable name="title">
+				<xsl:apply-templates mode="localised" 
+					select="gmx:name" />
+			</xsl:variable>
+				
+
+			<head>
+				<title>
+					Metadata:
+					<xsl:value-of select="$title" />
+				</title>
+			</head>
+			<body>
+			
+			<link rel="stylesheet" type="text/css" href="{/root/url}/apps/sextant/css/schema/reset.css"/>
+			<link rel="stylesheet" type="text/css" href="{/root/url}/apps/sextant/css/schema/jquery-ui-1.8.2.custom.css"/>
+			<link rel="stylesheet" type="text/css" href="{/root/url}/apps/sextant/css/schema/main.css"/>
+			<link rel="stylesheet" type="text/css" href="{/root/url}/apps/sextant/css/schema/default.css"/>
+			<div class="tpl-sextant">
+				<div class="ui-layout-content">
+					<div>
+						<div class="result-metadata-modal-tabs">
+							<div id="result-metadata-modal-tab-1">
+							    <div class="result-metadata-modal-resume"  style="border-bottom: 1px solid #EFEFEF;">
+							      <h6><xsl:value-of select="$title" /></h6>
+							    </div>
+							    <br/>
+								<h5>Description</h5>
+								<div class="result-metadata-modal-content">
+									<p><xsl:apply-templates mode="iso19139" select="gmx:scope" /></p>
+								</div>
+								<h5><xsl:value-of select="/root/schemas/iso19139.sextant/strings/contact" /></h5>
+								<div class="result-metadata-modal-content">
+									<p></p>
+									<ul>
+										<xsl:apply-templates mode="iso19139" select="gfc:producer"/>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</body>
+		</html>
+	</xsl:template>
+
 
 </xsl:stylesheet>
