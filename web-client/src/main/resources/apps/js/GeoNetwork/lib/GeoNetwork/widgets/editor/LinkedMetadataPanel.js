@@ -165,7 +165,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 versionId: this.versionId,
                 metadataSchema: this.metadataSchema,
                 setThumbnail: this.catalogue.services.mdSetThumbnail,
-                bodyStyle: 'padding:10px;',
+                bodyStyle: 'padding:10px;background-color:white',
                 imagePath: this.imagePath
             };
         if (type === 'thumbnail') {
