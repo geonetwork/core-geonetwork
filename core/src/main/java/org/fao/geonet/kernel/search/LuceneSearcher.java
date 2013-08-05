@@ -193,28 +193,37 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 		performQuery(getFrom()-1, getTo(), buildSummary);
 		updateSearchRange(request);
 		
-		SettingInfo si = new SettingInfo(srvContext);
-		if (si.isSearchStatsEnabled()) {
-			if (_sm.getLogAsynch()) {
-				// Run asynch
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in asynch mode - start.");
-				GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-				gc.getThreadPool().runTask(new SearchLoggerTask(srvContext, _sm.getLogSpatialObject(), _sm.getLuceneTermsToExclude(), _query, _numHits, _sort, _geomWKT, config.getValue(Jeeves.Text.GUI_SERVICE,"n")));
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in asynch mode - end.");
-			} else {
-				// Run synch - alter search performance
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in synch mode - start.");
-				SearcherLogger searchLogger = new SearcherLogger(srvContext, _sm.getLogSpatialObject(), _sm.getLuceneTermsToExclude());
-				searchLogger.logSearch(_query, _numHits, _sort, _geomWKT, config.getValue(Jeeves.Text.GUI_SERVICE,"n"));
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in synch mode - end.");
-			}
-		}
+		
+		logSearch(srvContext, config, _query, _numHits, _sort, _geomWKT, _sm);
 	}
 
+    public static void logSearch(ServiceContext srvContext, ServiceConfig config, Query query, int numHits, Sort sort, String geomWKT,
+            SearchManager sm) {
+        SettingInfo si = new SettingInfo(srvContext);
+        if (si.isSearchStatsEnabled()) {
+            if (sm.getLogAsynch()) {
+                // Run asynch
+                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in asynch mode - start.");
+                GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+                gc.getThreadPool().runTask(new SearchLoggerTask(srvContext, sm.getLogSpatialObject(), 
+                        sm.getLuceneTermsToExclude(), query, numHits, sort, geomWKT, 
+                        config.getValue(Jeeves.Text.GUI_SERVICE,"n")));
+                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in asynch mode - end.");
+            } else {
+                // Run synch - alter search performance
+                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in synch mode - start.");
+                SearcherLogger searchLogger = new SearcherLogger(srvContext, sm.getLogSpatialObject(), 
+                        sm.getLuceneTermsToExclude());
+                searchLogger.logSearch(query, numHits, sort, geomWKT, 
+                        config.getValue(Jeeves.Text.GUI_SERVICE,"n"));
+                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in synch mode - end.");
+            }
+        }
+    }
     /**
      * TODO javadoc.
      *
