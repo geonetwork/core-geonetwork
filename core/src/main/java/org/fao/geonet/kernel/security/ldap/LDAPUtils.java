@@ -117,7 +117,7 @@ public class LDAPUtils {
 					groupId = groupRecord.getChildText("id");
 				}
 				
-				if (createNonExistingLdapGroup) {
+				if (groupId != null) {
 					if (Log.isDebugEnabled(Geonet.LDAP)){
 						Log.debug(Geonet.LDAP, "  - Add LDAP group " + groupName + " for user.");
 					}
@@ -136,7 +136,7 @@ public class LDAPUtils {
 					}
 				} else {
 					if (Log.isDebugEnabled(Geonet.LDAP)){
-						Log.debug(Geonet.LDAP, "  - Can't create LDAP group " + groupName + " for user. " +
+						Log.debug(Geonet.LDAP, "  - Can't assign LDAP group " + groupName + " for user. " +
 												"Group does not exist in local database or createNonExistingLdapGroup is set to false.");
 					}
 				}
@@ -155,17 +155,21 @@ public class LDAPUtils {
      * @param serialFactory
      * @throws SQLException
      */
-    protected static String createIfNotExist(String groupName, Dbms dbms, SerialFactory serialFactory) throws SQLException {
+    protected static String createIfNotExist(String groupName, Dbms dbms, SerialFactory serialFactory) {
         if (Log.isDebugEnabled(Geonet.LDAP)){
             Log.debug(Geonet.LDAP, "  - Add non existing group '" + groupName + "' in local database.");
         }
-
-        // If LDAP group does not exist in local database, create it
-        String groupId = serialFactory.getSerial(dbms, "Groups") + "";
-        String query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
-        dbms.execute(query, Integer.valueOf(groupId), groupName);
-        Lib.local.insert(dbms, "Groups", Integer.valueOf(groupId), groupName);
-        return groupId;
+        try {
+	        // If LDAP group does not exist in local database, create it
+	        String groupId = serialFactory.getSerial(dbms, "Groups") + "";
+	        String query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
+	        dbms.execute(query, Integer.valueOf(groupId), groupName);
+	        Lib.local.insert(dbms, "Groups", Integer.valueOf(groupId), groupName);
+	        return groupId;
+        } catch (SQLException e) {
+            Log.warning(Geonet.LDAP, "  - Error creating non existing group '" + groupName + "' in local database. Error is " + e.getMessage());
+        }
+        return null;
     }
 
 	static Map<String, ArrayList<String>> convertAttributes(
