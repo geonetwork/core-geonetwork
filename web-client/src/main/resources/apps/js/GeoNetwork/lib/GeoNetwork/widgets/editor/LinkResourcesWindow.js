@@ -778,7 +778,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             if (self.type === 'service') {
                 Ext.each(record.data.links, function (link) {
                     // FIXME: restrict
-                    if (self.protocolForServices.join(',').indexOf(link.protocol) !== -1) {
+                    if (self.protocolForServices.join(',').indexOf(link.type) !== -1) {
                         links += '<li><a target="_blank" href="' + link.href + '">' + link.href + '</a></li>';
                         // FIXME : when service contains multiple URL 
                         record.data.serviceUrl = link.href;
@@ -883,6 +883,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         
         this.formPanel = new Ext.form.FormPanel({
             items: cmp,
+            labelWidth: 200,
             buttons: [{
                 text: OpenLayers.i18n('createLink'),
                 iconCls: 'linkIcon',

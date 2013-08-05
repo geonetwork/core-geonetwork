@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:include href="metadata-markup.xsl"/>
+
+    <xsl:template name="view-with-header-dublin-core">
+        <xsl:call-template name="metadata-dublin-coreview-simple"></xsl:call-template>
+  </xsl:template>
+
 </xsl:stylesheet>

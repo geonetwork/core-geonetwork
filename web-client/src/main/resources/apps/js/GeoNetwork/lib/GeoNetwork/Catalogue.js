@@ -377,7 +377,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             imgUrl: this.URL + '/images/',
             harvesterLogoUrl: this.URL + '/images/harvesting/',
             mdFormatter: serviceUrl + 'metadata.formatter.html',
-            getImportXSL: serviceUrl + 'get.conversions.xsl'
+            getImportXSL: serviceUrl + 'get.conversions.xsl',
+            proxy: this.URL + '/proxy'
         };
         
         // TODO : init only once required (ie. metadata show)

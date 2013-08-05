@@ -41,6 +41,7 @@ import javax.annotation.Nonnull;
 
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
@@ -76,6 +77,8 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.exceptions.SearchExpiredEx;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.region.Region;
+import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.search.DuplicateDocFilter;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneConfig;
@@ -83,15 +86,13 @@ import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.MetadataRecordSelector;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
-import org.fao.geonet.kernel.region.Region;
-import org.fao.geonet.kernel.region.RegionsDAO;
-import org.geotools.xml.Encoder;
 import org.geotools.gml2.GMLConfiguration;
+import org.geotools.xml.Encoder;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -524,7 +525,11 @@ public class CatalogSearcher implements MetadataRecordSelector {
 		// record globals for reuse
 		_query = query;
 		_sort = sort;
-	
+		
+	    ServiceConfig config = new ServiceConfig();
+	    String geomWkt = null;
+	    LuceneSearcher.logSearch(context, config, _query, numHits, _sort, geomWkt, sm);
+
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
                 maxRecords, _lang, luceneConfig.getTaxonomy().get(resultType.toString()), reader, _query, wrapSpatialFilter(),
                 _sort, taxonomyReader, buildSummary, luceneConfig.isTrackDocScores(), luceneConfig.isTrackMaxScore(),
