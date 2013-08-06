@@ -8,8 +8,8 @@
 	xmlns:geonet="http://www.fao.org/geonetwork"
   exclude-result-prefixes="#all">
   
-  <xsl:include href="metadata-markup.xsl"/>
   <xsl:import href="metadata-view.xsl"/>
+  <xsl:include href="metadata-markup.xsl"/>
   
 	<!-- main template - the way into processing dublin-core -->
   <xsl:template name="metadata-dublin-core">
