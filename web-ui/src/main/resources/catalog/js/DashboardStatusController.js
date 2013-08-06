@@ -18,7 +18,7 @@
       $scope.tab;
       $scope.hits = 20;
 
-      $http.get('../criticalhealthcheck').success(function(data) {
+      $http.get('../../criticalhealthcheck').success(function(data) {
         $scope.healthy = true;
         $scope.healthcheck = data;
       }).error(function(data) {

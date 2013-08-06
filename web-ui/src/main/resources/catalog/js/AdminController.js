@@ -12,21 +12,21 @@
   module.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
         when('/dashboard', {
-          templateUrl: 'templates/admin/dashboard.html',
+          templateUrl: '../../catalog/templates/admin/dashboard.html',
           controller: 'GnDashboardController'}).
         when('/dashboard/:dashboardType', {
-          templateUrl: 'templates/admin/dashboard.html',
+          templateUrl: '../../catalog/templates/admin/dashboard.html',
           controller: 'GnDashboardController'}).
         when('/organization', {
-          templateUrl: 'templates/admin/organization.html',
+          templateUrl: '../../catalog/templates/admin/organization.html',
           controller: 'GnUserGroupController'}).
         when('/organization/:userGroupTab', {
-          templateUrl: 'templates/admin/organization.html',
+          templateUrl: '../../catalog/templates/admin/organization.html',
           controller: 'GnUserGroupController'}).
         when('/organization/groups/:groupId', {
-          templateUrl: 'templates/admin/organization.html',
+          templateUrl: '../../catalog/templates/admin/organization.html',
           controller: 'GnUserGroupController'}).
-        otherwise({templateUrl: 'templates/admin/admin.html'});
+        otherwise({templateUrl: '../../catalog/templates/admin/admin.html'});
   }]);
 
   /**
@@ -39,7 +39,6 @@
   module.controller('GnAdminController', [
     '$scope', '$http', '$q', '$rootScope', '$route',
     function($scope, $http, $q, $rootScope, $route) {
-
       /**
        * Define admin console menu for each type of user
        */

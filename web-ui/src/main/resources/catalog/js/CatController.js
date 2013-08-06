@@ -16,12 +16,13 @@
       $scope.version = '0.0.1';
       // TODO : add language
       $scope.lang = 'eng';
-      $scope.url = '../srv/' + $scope.lang + '/';
+      $scope.url = '';
+      $scope.base = '../../catalog/';
       $scope.pages = {
-        home: 'index.html',
-        admin: 'admin.html',
-        signin: 'signin.html'
-      };
+          home: 'catalog.search',
+          admin: 'admin.console',
+          signin: 'catalog.login'
+        };
 
       /**
        * An ordered list of profiles
@@ -65,18 +66,6 @@
       });
 
 
-      // Redirect user if not login and try to access a private page
-      var securityRedirect = function() {
-        if (location.pathname.indexOf($scope.pages.home) === -1 &&
-                location.pathname.indexOf($scope.pages.signin) === -1) {
-          // Only home page and sign in page are public
-          location.href = $scope.pages.home;
-        } else if ($scope.authenticated &&
-                location.pathname.indexOf($scope.pages.signin) === -1) {
-          // Authenticated user on sign in page go to home
-          location.href = $scope.pages.home;
-        }
-      };
 
       // Retrieve user information if catalog is online
       var userLogin = catInfo.then(function(value) {
@@ -89,7 +78,6 @@
               if ($scope.authenticated) {
               // User is logged in
               } else {
-                securityRedirect();
               }
             }).
             error(function(data, status, headers, config) {

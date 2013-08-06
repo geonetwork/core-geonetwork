@@ -18,7 +18,7 @@
    */
   module.controller('GnDashboardController', ['$scope', '$routeParams', '$http',
     function($scope, $routeParams, $http) {
-      var templateFolder = 'templates/admin/dashboard/';
+      var templateFolder = '../../catalog/templates/admin/dashboard/';
       var availableTemplates = [
         'information', 'statistics-search', 'statistics-content', 'status'
       ];

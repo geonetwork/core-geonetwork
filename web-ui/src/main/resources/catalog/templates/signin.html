@@ -1,0 +1,37 @@
+
+<div class="container">
+    <div class="col-lg-6">
+        <form class="form-horizontal" action="../../j_spring_security_check" method="post">
+            <label for="inputUsername" translate>username</label>
+            <!-- TODO : translate attr -->
+            <input type="text" id="inputUsername" name="username" placeholder="{{'username' | translate}}"/>
+            <label for="inputPassword" translate>password</label>
+            <input type="password" id="inputPassword" name="password" placeholder="{{'password' | translate}}"/>
+            <input type="hidden" name="redirectUrl" value="/"/>
+            <!--<div class="checkbox">
+                <label class="checkbox">
+                    <input type="checkbox"/><span translate>rememberMe</span>
+                </label>
+            </div>-->
+            <p></p>
+            <button type="submit" class="btn btn-primary" data-translate>signIn</button>
+        </form>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel">
+            <div class="panel-heading" data-translate>needAnAccount</div>
+            <p data-translate>needAnAccountInfo</p>
+            <p>
+                <button type="submit" class="btn" data-translate>createAnAccount</button>
+            </p>
+        </div>
+        <div class="panel">
+            <div class="panel-heading" data-translate>forgetDetails</div>
+            <p data-translate>forgetDetailsInfo</p>
+            <p>
+                
+                <button type="submit" class="btn" data-translate>recoverPassword</button>
+            </p>
+        </div>
+    </div>
+</div>

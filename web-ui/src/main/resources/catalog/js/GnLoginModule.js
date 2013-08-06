@@ -19,7 +19,7 @@
 
   module.config(['$translateProvider', function($translateProvider) {
     $translateProvider.useStaticFilesLoader({
-      prefix: 'locales/',
+      prefix: '../../catalog/locales/',
       suffix: '.json'
     });
 

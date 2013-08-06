@@ -14,7 +14,7 @@
     function($scope, $routeParams, $http, $rootScope, $translate, $compile) {
 
 
-      var templateFolder = 'templates/admin/usergroup/';
+      var templateFolder = '../../catalog/templates/admin/usergroup/';
       var availableTemplates = [
         'users', 'groups'
       ];

@@ -386,12 +386,21 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.list!?.*" access="hasRole('Editor')"/>
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.update?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.update!?.*" access="hasRole('Administrator')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.update.labels!?.*" access="hasRole('Administrator')"/>
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.remove?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.remove!?.*" access="hasRole('Administrator')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.user.list!?.*" access="hasRole('UserAdmin')"/>
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.user.update?.*" access="hasRole('UserAdmin')"/>
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.user.remove?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.user.update!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.user.remove!?.*" access="hasRole('UserAdmin')"/>
+                
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.search!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.search.nojs!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.login!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.console!?.*" access="hasRole('RegisteredUser')"/>
+                
+                
+                
                 
                 <sec:intercept-url pattern="/.*" access="denyAll"></sec:intercept-url>
             </sec:filter-security-metadata-source>

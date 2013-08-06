@@ -7,13 +7,13 @@
             <documentation>The service can be used to create or update 
                 a user.</documentation>
             <class name=".services.user.Update" />
-            <error sheet="error-json.xsl"/>
+            <error sheet="../xslt/error/error-json.xsl"/>
         </service>
         
         <service name="admin.user.remove">
             <documentation>Remove a user.</documentation>
             <class name=".services.user.Remove" />
-            <error sheet="error-json.xsl"/>
+            <error sheet="../xslt/error/error-json.xsl"/>
         </service>
         
         <service name="admin.user.list">
@@ -43,13 +43,13 @@
             <documentation>The service can be used to create
                 or update a group.</documentation>
             <class name=".services.group.Update" />
-            <error sheet="error-json.xsl"/>
+            <error sheet="../xslt/error/error-json.xsl"/>
         </service>
         
         <service name="admin.group.remove">
             <documentation>The service can be used to remove a group.</documentation>
             <class name=".services.group.Remove" />
-            <error sheet="error-json.xsl"/>
+            <error sheet="../xslt/error/error-json.xsl"/>
         </service>
     </services>
 </geonet>
