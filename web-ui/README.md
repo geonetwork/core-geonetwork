@@ -15,7 +15,7 @@ Currently supported features:
 
 
 
-## Compilation
+## Compile
 
 Closure project is used to check, compile and manage JS dependencies.
 
@@ -47,4 +47,16 @@ TODO: Add to maven
 
 TODO
 
+### Compile
 
+```
+mvn clean install
+```
+
+## Run
+
+```
+cd web
+mvn jetty:run -Pui
+```
+and access http://localhost:8080/geonetwork/catalog/
