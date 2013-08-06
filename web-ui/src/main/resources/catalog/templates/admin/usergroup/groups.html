@@ -1,0 +1,92 @@
+<div class="row" 
+    data-ng-controller="GnUserGroupController">
+    <div class="col-lg-4">
+        <div class="panel">
+            <div class="panel-heading"
+                data-translate>groups</div>
+            <input data-ng-model="groupSearch.$" placeholder="{{'filter' | translate}}"/>
+            <input type="hidden" data-ng-model="groupSelected.id"/>
+            <div class="list-group">
+                <a class="list-group-item" 
+                    data-ng-repeat="g in groups | filter:groupSearch | orderBy:'name'"  
+                    data-ng-click="selectGroup(g)">
+                    {{g.label[lang]}}
+                </a>
+            </div>
+            
+            <button type="button" class="btn btn-primary icon-plus" 
+                data-ng-click="addGroup()" 
+                data-translate>newGroup</button>
+        </div>
+    </div>
+    
+    
+    
+    <div class="col-lg-8" 
+        data-ng-hide="groupSelected.id == null">
+        <div class="panel">
+            <div class="panel-heading"
+                title="{{groupHasRecords() ? ('cantDeleteGroupHavingRecords' | translate) : ''}}">
+                <span data-ng-hide="groupSelected.id == ''" data-translate>updateGroup</span>
+                <span data-ng-hide="groupSelected.id != ''" data-translate>newGroup</span><span>{{groupSelected.name}}</span>
+                <button type="button" class="btn btn-primary pull-right icon-save" 
+                    data-ng-disabled="!groupUpdated"
+                    data-ng-click="saveGroup('#gn-group-edit')" 
+                    data-translate>saveGroup</button>
+                <button type="button" class="btn btn-primary pull-right btn-danger icon-remove" 
+                    data-ng-disabled="groupHasRecords()"
+                    data-ng-hide="groupSelected.id == ''"
+                    data-ng-click="deleteGroup(groupSelected.id)" 
+                    data-translate>deleteGroup</button>
+            </div>
+            
+            
+            
+            <form id="gn-group-edit" 
+                data-ng-keypress="updatingGroup()">
+                <fieldset>
+                    <input type="hidden" name="id" 
+                        data-ng-model="groupSelected.id" value="{{groupSelected.id}}"></input>
+                    <label data-translate>groupName</label>
+                    <input type="text" name="name" 
+                        data-ng-model="groupSelected.name"></input>
+                    <p class="help-block" data-translate>groupNameHelp</p>
+                    <label data-translate>groupDescription</label>
+                    <textarea name="description" 
+                        data-ng-model="groupSelected.description"></textarea>
+                    <p class="help-block" data-translate>groupDescriptionHelp</p>
+                    <label data-translate>groupEmail</label>
+                    <input type="email" name="email" 
+                        data-ng-model="groupSelected.email"></input>
+                    <p class="help-block" data-translate>groupEmailHelp</p>
+                    
+                </fieldset>
+            </form>
+            
+            
+            <div data-ng-hide="!groupSelected.label">
+                <h3><span data-translate>translationForGroup</span> {{groupSelected.name}}</h3>
+                <table class="table table-striped">
+                    <tr 
+                        data-ng-repeat="(key, value) in groupSelected.label track by $index">
+                        <td>{{key}}</td>
+                        <td><input type="text" id="translation-{{key}}" value="{{value}}"
+                            data-ng-model="groupSelected.label[key]" 
+                            data-ng-keyup="saveTranslation(this)"
+                            /></td>
+                    </tr>
+                </table>
+            </div>
+            
+            
+            
+            
+            <div data-ng-hide="!groupRecords">
+                <h3>{{groupRecords.length}} <span data-translate>recordsInGroup</span> {{groupSelected.name}}</h3>
+                <ul>
+                    <li data-ng-repeat="md in groupRecords">{{md.title}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

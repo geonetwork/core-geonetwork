@@ -1,0 +1,112 @@
+(function() {
+  goog.provide('gn_admin_controller');
+
+  goog.require('gn_cat_controller');
+  goog.require('gn_dashboard_controller');
+  goog.require('gn_usergroup_controller');
+
+  var module = angular.module('gn_admin_controller',
+      ['gn_dashboard_controller', 'gn_usergroup_controller']);
+
+
+  module.config(['$routeProvider', function($routeProvider) {
+    $routeProvider.
+        when('/dashboard', {
+          templateUrl: 'templates/admin/dashboard.html',
+          controller: 'GnDashboardController'}).
+        when('/dashboard/:dashboardType', {
+          templateUrl: 'templates/admin/dashboard.html',
+          controller: 'GnDashboardController'}).
+        when('/organization', {
+          templateUrl: 'templates/admin/organization.html',
+          controller: 'GnUserGroupController'}).
+        when('/organization/:userGroupTab', {
+          templateUrl: 'templates/admin/organization.html',
+          controller: 'GnUserGroupController'}).
+        when('/organization/groups/:groupId', {
+          templateUrl: 'templates/admin/organization.html',
+          controller: 'GnUserGroupController'}).
+        otherwise({templateUrl: 'templates/admin/admin.html'});
+  }]);
+
+  /**
+   * The admin console controller.
+   *
+   * Example:
+   *
+   *     <body ng-controller="GnAdminController">
+   */
+  module.controller('GnAdminController', [
+    '$scope', '$http', '$q', '$rootScope', '$route',
+    function($scope, $http, $q, $rootScope, $route) {
+
+      /**
+       * Define admin console menu for each type of user
+       */
+      $scope.menu = {
+        Administrator: [
+          // TODO : create gn classes
+          {name: 'metadatasAndTemplates', route: '#metadata',
+            classes: 'btn-primary'},
+          {name: 'io', url: 'import', classes: 'btn-primary'},
+          {name: 'harvesters', url: 'harvesting',
+            classes: 'btn-primary'},
+          {name: 'statisticsAndStatus', route: '#dashboard',
+            classes: 'btn-success'},
+          {name: 'settings', url: 'config', classes: 'btn-success'},
+          {name: 'usersAndGroups', route: '#organization'},
+          {name: 'classificationSystems', url: 'admin',
+            classes: 'btn-info'},
+          {name: 'standards', url: 'admin', classes: 'btn-info'},
+          {name: 'tools', route: '#tools', classes: 'btn-warning'}
+        ]
+        // TODO : add other role menu
+      };
+
+      $scope.convertToCSV = function(objArray) {
+        if (objArray === undefined) return;
+
+        var array = (typeof objArray != 'object' ?
+            JSON.parse(objArray) : objArray);
+        // TODO : improve CSV conversion when nested objects
+        var str = '';
+        for (var i = 0; i < array.length; i++) {
+          var line = '';
+          for (var index in array[i]) {
+            if (line != '') {
+              line += ',';
+            }
+            line += array[i][index];
+          }
+          str += line + '\r\n';
+        }
+        return str;
+      };
+
+      $scope.csvExport = function(json, e) {
+        $(e.target).next('pre.gn-csv-export').remove();
+        $(e.target).after("<pre class='gn-csv-export'>" +
+                $scope.convertToCSV(json) + '</pre>');
+      };
+
+      /**
+       * Return menu Angular route or GeoNetwork legacy URLs
+       * according to $scope.menu configuration.
+       */
+      $scope.getMenuUrl = function(menu) {
+        if (menu.route) {
+          return menu.route;
+        } else if (menu.url) {
+          return $scope.url + menu.url;
+        }
+      };
+
+      /**
+       * Return menu according to user profile
+       */
+      $scope.getMenu = function() {
+        return $scope.menu[$scope.user.profile];
+      };
+    }]);
+
+})();

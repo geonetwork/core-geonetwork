@@ -965,6 +965,13 @@
       </properties>
     </profile>
     <profile>
+      <id>ui</id>
+      <properties>
+          <web.xml.widget.config.overrides></web.xml.widget.config.overrides>
+          <ui.webapp.resources>,../web-ui/src/main/resources/</ui.webapp.resources>
+      </properties>
+    </profile>
+    <profile>
       <id>widgets</id>
       <properties>
         <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widget.xml</web.xml.widget.config.overrides>

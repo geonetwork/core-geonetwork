@@ -1,0 +1,18 @@
+<div class="row" data-ng-controller="GnDashboardController" >
+    <div class="col-lg-2">
+        <div class="gn-sidebar affix">
+            <ul class="nav nav-pills nav-stacked">
+                <li data-ng-class="type === 'status' && 'active'">
+                    <a href="#/dashboard/status" data-translate>status</a></li>
+                <li data-ng-class="type === 'information' && 'active'">
+                    <a href="#/dashboard/information" data-translate>information</a></li>
+                <li data-ng-class="type === 'statistics-search' && 'active'">
+                    <a href="#/dashboard/statistics-search" data-translate>searchStatistics</a></li>
+                <li data-ng-class="type === 'statistics-content' && 'active'">
+                    <a href="#/dashboard/statistics-content" data-translate>contentStatistics</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-10" ng-include="getTemplate()">
+    </div>
+</div>

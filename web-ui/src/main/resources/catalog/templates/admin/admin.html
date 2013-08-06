@@ -1,0 +1,14 @@
+<div class="col-lg-8">
+    <div class="panel">
+        <a data-ng-repeat="m in getMenu(user.role)" href="{{getMenuUrl(m)}}" 
+            class="btn btn-large btn-block {{m.classes}} gn-btn-admin" data-translate>{{m.name}}</a>
+    </div>
+</div>
+<div class="col-lg-4">
+    <div class="panel">
+        <div class="panel-heading" data-translate>latestNews</div>
+    </div>
+    <div class="panel">
+        <div class="panel-heading" data-translate>quicklinks</div>
+    </div>
+</div>

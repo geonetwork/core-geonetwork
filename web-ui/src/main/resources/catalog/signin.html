@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html ng-app="gn">
+    <head>
+        <title></title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        
+        <!--
+            TODO : less compilation 
+            <link href="style/app.css" rel="stylesheet" media="screen" />
+-->
+        <link href="style/app.css" rel="stylesheet" media="screen" />
+        <link href="style/app.less" rel="stylesheet/less" media="screen" />
+        <link rel="shortcut icon" type="image/x-icon" href="../images/logos/favicon.ico" />
+    </head>
+    
+    <body data-ng-controller="GnCatController">
+        <div class="ng-cloak" data-ng-cloak>
+            <div class="navbar navbar-fixed-top" data-ng-include="'templates/top-toolbar.html'">
+            </div>
+            
+            
+            <div class="container">
+                <div class="col-lg-6">
+                    <form class="form-horizontal" action="../j_spring_security_check" method="post">
+                        <label for="inputUsername" translate>data-username</label>
+                        <!-- TODO : translate attr -->
+                        <input type="text" id="inputUsername" name="username" placeholder="{{'username' | translate}}"/>
+                        <label for="inputPassword" translate>password</label>
+                        <input type="password" id="inputPassword" name="password" placeholder="{{'password' | translate}}"/>
+                        <input type="hidden" name="redirectUrl" value="/catalog"/>
+                        <!--<div class="checkbox">
+                            <label class="checkbox">
+                                <input type="checkbox"/><span translate>rememberMe</span>
+                            </label>
+                        </div>-->
+                        <p></p>
+                        <button type="submit" class="btn btn-primary" data-translate>signIn</button>
+                    </form>
+                </div>
+                <div class="col-lg-6">
+                    <div class="panel">
+                        <div class="panel-heading" data-translate>needAnAccount</div>
+                        <p data-translate>needAnAccountInfo</p>
+                        <p>
+                            <button type="submit" class="btn" data-translate>createAnAccount</button>
+                        </p>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-heading" data-translate>forgetDetails</div>
+                        <p data-translate>forgetDetailsInfo</p>
+                        <p>
+                            
+                            <button type="submit" class="btn" data-translate>recoverPassword</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container">
+                <div data-ng-include="'templates/info.html'">
+                </div>
+                <div data-ng-include="'templates/footer.html'">
+                </div>
+            </div>
+        </div>
+        
+        
+        <script src="lib/closure/base.js"></script>
+        <script src="lib/jquery-2.0.2.js"></script>
+        <script src="lib/angular-1.1.5.js"></script>
+        <script src="lib/angular-translate-0.9.4.js"></script>
+        <script src="lib/angular-translate-loader-static-files-0.1.2.js"></script>
+        <script src="lib/bootstrap-3.0.0.js"></script>
+        <script src="lib/less-1.4.1.min.js"></script>
+        
+        <!-- Use Closure to load the application scripts -->
+        <script>
+            window.CLOSURE_NO_DEPS = true;
+        </script>
+        
+        <script>
+            goog.require('gn_login');
+        </script>
+    </body>
+</html>
