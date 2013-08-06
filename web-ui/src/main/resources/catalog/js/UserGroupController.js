@@ -6,48 +6,20 @@
 
 
   /**
-   *
+   * UserGroupController provides all necessary operations
+   * to manage users and groups.
    */
   module.controller('GnUserGroupController', [
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
     function($scope, $routeParams, $http, $rootScope, $translate, $compile) {
+
+
       var templateFolder = 'templates/admin/usergroup/';
       var availableTemplates = [
         'users', 'groups'
       ];
 
-      // TODO : should provide paging
-      $scope.maxHitsForPreview = 50;
-
-      $scope.groups = null;
-      $scope.groupRecords = null;
-      $scope.groupUpdated = false;
-      $scope.groupSearch = {};
-      $scope.groupSelected = {id: $routeParams.groupId};
-
-
-      $scope.users = null;
-      $scope.userOperation = 'editinfo';
-      $scope.userIsAdmin = false;
-      $scope.userUpdated = false;
-      $scope.userSelected = {};
-      $scope.userGroups = {};
-
-      function loadGroups() {
-        $http.get($scope.url + 'xml.group.list@json').success(function(data) {
-          $scope.groups = data;
-        }).error(function(data) {
-          // TODO
-        });
-      }
-      function loadUsers() {
-        $http.get($scope.url + 'xml.user.list@json').success(function(data) {
-          $scope.users = data;
-        }).error(function(data) {
-          // TODO
-        });
-      }
-
+      // By default display groups tab
       $scope.defaultUserGroupTab = 'groups';
 
       $scope.getTemplate = function() {
@@ -59,9 +31,54 @@
       };
 
 
+      // TODO : should provide paging
+      $scope.maxHitsForPreview = 50;
+
+
+      // Scope for group
+      // List of catalog groups
+      $scope.groups = null;
+      $scope.groupSelected = {id: $routeParams.groupId};
+      // List of metadata records attached to the selected group
+      $scope.groupRecords = null;
+      // On going changes group ...
+      $scope.groupUpdated = false;
+      $scope.groupSearch = {};
+
+
+      // Scope for user
+      // List of catalog users
+      $scope.users = null;
+      $scope.userSelected = {};
+      // List of group for selected user
+      $scope.userGroups = {};
+      // Indicate if an update is going on
+      $scope.userOperation = 'editinfo';
+      $scope.userIsAdmin = false;
+      // On going changes for user ...
+      $scope.userUpdated = false;
+
+
+      function loadGroups() {
+        $http.get($scope.url + 'admin.group.list@json').success(function(data) {
+          $scope.groups = data;
+        }).error(function(data) {
+          // TODO
+        });
+      }
+      function loadUsers() {
+        $http.get($scope.url + 'admin.user.list@json').success(function(data) {
+          $scope.users = data;
+        }).error(function(data) {
+          // TODO
+        });
+      }
+
+
 
       /**
-       * Add an new user
+       * Add an new user based on the default
+       * user config.
        */
       $scope.addUser = function() {
         $scope.unselectUser();
@@ -83,6 +100,10 @@
         };
       };
 
+      /**
+       * Remove current user from selection and
+       * clear user groups and records.
+       */
       $scope.unselectUser = function() {
         $scope.userSelected = null;
         $scope.userGroups = null;
@@ -91,9 +112,13 @@
         $scope.userOperation = 'editinfo';
       };
 
+      /**
+       * Select a user and retrieve its groups and
+       * metadata records.
+       */
       $scope.selectUser = function(u) {
         // Load user group and then select user
-        $http.get($scope.url + 'xml.usergroups.list@json?id=' + u.id)
+        $http.get($scope.url + 'admin.usergroups.list@json?id=' + u.id)
                 .success(function(data) {
               $scope.userGroups = data;
               $scope.userSelected = u;
@@ -112,6 +137,14 @@
         $scope.userUpdated = false;
       };
 
+
+      /**
+       * Check if the groupId is in the user groups
+       * list with that profile.
+       *
+       * Note: A user can have more than one profile
+       * for a group.
+       */
       $scope.isUserGroup = function(groupId, profile) {
         for (var i = 0; i < $scope.userGroups.length; i++) {
           if ($scope.userGroups[i].id == groupId &&
@@ -122,6 +155,16 @@
         return false;
       };
 
+      /**
+       * Compute user profile based on group/profile select
+       * list. This is closely related to the template manipulating
+       * element ids.
+       *
+       * Searching through the list, compute the highest profile
+       * for the user and set it.
+       * When a user is a reviewer of a group, the corresponding
+       * group is also selected in the editor profile list.
+       */
       $scope.setUserProfile = function(isAdmin) {
         $scope.userUpdated = true;
         if (isAdmin) {
@@ -161,11 +204,15 @@
         }
       };
 
+
       $scope.updatingUser = function() {
         $scope.userUpdated = true;
       };
 
 
+      /**
+       * Save a user.
+       */
       $scope.saveUser = function(formId) {
         $http.get($scope.url + 'admin.user.update?' + $(formId).serialize())
         .success(function(data) {
@@ -185,6 +232,9 @@
             });
       };
 
+      /**
+       * Delete a user.
+       */
       $scope.deleteUser = function(formId) {
         $http.get($scope.url + 'admin.user.remove?id=' +
                 $scope.userSelected.id)
@@ -269,7 +319,7 @@
         xml = xml.replace('{{id}}', $scope.groupSelected.id)
                     .replace(/{{key}}/g, e.key)
                     .replace('{{value}}', e.value);
-        $http.post($scope.url + 'xml.group.update', xml, {
+        $http.post($scope.url + 'admin.group.update.labels', xml, {
           headers: {'Content-type': 'application/xml'}
         }).success(function(data) {
         }).error(function(data) {
