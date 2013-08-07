@@ -39,7 +39,7 @@ GeoNetwork.GeoCatCh.Lang.de = {
 	'includearchived': 'inklusive Archiv',
 	'excludearchived': 'exklusive Archiv',
 	'onlyarchived': 'nur Archiv',
-	'owner': 'Owner',
+	'owner': 'Eigentümer',
 
 	'withinGeo': 'vollständig innerhalb oder gleich',
 	'intersectGeo': 'schneidet',
