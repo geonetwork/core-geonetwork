@@ -36,9 +36,9 @@ GeoNetwork.GeoCatCh.Lang.de = {
 	'unChecked': 'Unchecked',
 	'recordType': 'Type',
 	
-	'includearchived': 'Include archived',
-	'excludearchived': 'Exclude archived',
-	'onlyarchived': 'Only archived',
+	'includearchived': 'inklusive Archiv',
+	'excludearchived': 'exklusive Archiv',
+	'onlyarchived': 'nur Archiv',
 	'owner': 'Owner',
 
 	'withinGeo': 'vollständig innerhalb oder gleich',
