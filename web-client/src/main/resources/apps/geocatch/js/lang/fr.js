@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2009 GeoNetwork
  *
  * This file is part of GeoNetwork
@@ -35,7 +35,7 @@ GeoNetwork.GeoCatCh.Lang.fr = {
 	'geodata': 'Archive',
 	'yes': 'Oui',
 	'no': 'Non',
-	'unChecked': 'Non testé',
+	'unChecked': 'Non contrôlé',
 	'recordType': 'Type',
 
 	'includearchived': 'Archives incluses',
