@@ -7,9 +7,9 @@
 			<output sheet="../xslt/ui-admin/admin.xsl"/>
 		</service>
 		
-		<service name="catalog.login">
-			<documentation>The user login page.</documentation>
-			<output sheet="../xslt/ui-admin/sigin.xsl"/>
+		<service name="catalog.signin">
+			<documentation>The user authentication page.</documentation>
+			<output sheet="../xslt/ui-admin/signin.xsl"/>
 		</service>
 		
 	</services>

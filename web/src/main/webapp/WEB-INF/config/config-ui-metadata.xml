@@ -2,7 +2,7 @@
 <geonet>
 	<services package="org.fao.geonet">
 		
-		<service name="gn-view">
+		<service name="md.view">
 			<documentation>View a metadata record</documentation>
 			<class name=".services.metadata.View"/>
 			<output sheet="../xslt/ui-metadata/view/view.xsl">
@@ -11,9 +11,7 @@
 			<error sheet="../xslt/common/error.xsl"/>
 		</service>
 		
-		
-		<!-- Editing metadata / Start -->
-		<service name="gn-edit">
+		<service name="md.edit">
 			<documentation>Edit a metadata record</documentation>
 			<class name=".services.metadata.GetEditableData"/>
 			<output sheet="../xslt/ui-metadata/edit/edit.xsl">
@@ -23,22 +21,19 @@
 			<error sheet="../xslt/common/error.xsl"/>
 		</service>
 		
-		<service name="gn-edit-and-save">
+		<service name="md.edit.and.save">
 			<documentation>Edit and save a metadata record. gn-edit should be used first.</documentation>
 			<class name=".services.metadata.Update"/>
 			<output forward="gn-edit"/>
 			<error sheet="../xslt/common/error.xsl"/>
 		</service>
 		
-		<service name="gn-edit-save-and-close">
+		<service name="md.edit.save.and.close">
 			<documentation>Terminate an editing session.</documentation>
 			<class name=".services.metadata.Update">
 				<!--<param name="finished" value="yes" />-->
 			</class>
 			<error sheet="../xslt/common/error.xsl"/>
 		</service>
-		<!-- Editing metadata / End -->
-		
-		
 	</services>
 </geonet>

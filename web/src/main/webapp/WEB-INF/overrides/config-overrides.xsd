@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified">
+	<xs:element name="overrides">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element minOccurs="0" maxOccurs="unbounded" ref="import" />
+					<xs:element minOccurs="0" ref="properties" />
+					<xs:element minOccurs="0" ref="spring" />
+					<xs:element minOccurs="0" maxOccurs="unbounded" ref="file" />
+					<xs:element minOccurs="0" maxOccurs="unbounded" ref="textFile" />
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="import">
+		<xs:annotation>
+			<xs:documentation>Import values. The imported values are put at top
+				of sections
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="file" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="properties">
+		<xs:annotation>
+			<xs:documentation>
+				Properties allow some properties to be defined that
+				will be substituted
+				into text or attributes where ${property} is the
+				substitution pattern
+				The properties can reference other properties
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:any minOccurs="1" maxOccurs="unbounded" processContents="lax" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="spring">
+		<xs:annotation>
+			<xs:documentation>override/modify/add the core spring application
+				context
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element minOccurs="0" maxOccurs="unbounded" ref="import" />
+					<xs:element minOccurs="0" maxOccurs="unbounded" ref="addProperty" />
+					<xs:element minOccurs="0" maxOccurs="unbounded" ref="setProperty" />
+					<xs:element minOccurs="0" maxOccurs="unbounded" ref="addInterceptUrl" />
+					<xs:element minOccurs="0" maxOccurs="unbounded" ref="setInterceptUrl" />
+					<xs:element minOccurs="0" maxOccurs="unbounded" ref="removeInterceptUrl" />
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="addProperty">
+		<xs:annotation>
+			<xs:documentation>Add a value or bean to a collection property on a
+				bean that exists in the application context
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="bean" use="required">
+				<xs:annotation>
+					<xs:documentation>The id of the bean to modify</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="property" use="required">
+				<xs:annotation>
+					<xs:documentation>The name of the property to modify
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="ref">
+				<xs:annotation>
+					<xs:documentation>The references of the bean to add to the
+						collection. Either ref or value is required
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="value">
+				<xs:annotation>
+					<xs:documentation>The value to add to the collection. Either ref or
+						value is required
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="setProperty">
+		<xs:annotation>
+			<xs:documentation>Set the property on an existing to the new
+				value/bean
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="bean" use="required">
+				<xs:annotation>
+					<xs:documentation>The id of the bean to modify</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="property" use="required">
+				<xs:annotation>
+					<xs:documentation>The name of the property to modify
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="ref">
+				<xs:annotation>
+					<xs:documentation>The references of the bean to add to the
+						collection. Either ref or value is required
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="value">
+				<xs:annotation>
+					<xs:documentation>The value to add to the collection. Either ref or
+						value is required
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="addInterceptUrl">
+		<xs:annotation>
+			<xs:documentation>Add a new intercept url mapping to the identified
+				Security Interceptor bean
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="pattern" use="required">
+				<xs:annotation>
+					<xs:documentation>The regex expression used to select a url
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="caseInsensitive">
+				<xs:annotation>
+					<xs:documentation>either true|false defaults is false
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="httpMethod">
+				<xs:annotation>
+					<xs:documentation>One of the http allowed methods,
+						POST,PUT,DELETE,GET,etc... (case insensitive). Restricts the
+						httpMethod that is matched by interceptor. If not specified then
+						all will be matched
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="access" use="required">
+				<xs:annotation>
+					<xs:documentation>Same as the 'access' attribute of the spring
+						security intercept-url element. For example
+						hasRole('Administrator')
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="position">
+				<xs:annotation>
+					<xs:documentation>the position of the new mapping to add. By
+						default it will be added as the first rule.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="removeInterceptUrl">
+		<xs:annotation>
+			<xs:documentation>Remove an existing intercept url mapping to the
+				identified Security Interceptor bean
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="pattern" use="required">
+				<xs:annotation>
+					<xs:documentation>The regex expression in the configuration files
+						to remove.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="setInterceptUrl">
+		<xs:annotation>
+			<xs:documentation>set an existing intercept url mapping to the
+				identified Security Interceptor bean
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="pattern" use="required">
+				<xs:annotation>
+					<xs:documentation>The regex expression in the configuration files
+						to update
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="access" use="required">
+				<xs:annotation>
+					<xs:documentation>Same as the 'access' attribute of the spring
+						security intercept-url element. For example
+						hasRole('Administrator')
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="file">
+		<xs:annotation>
+			<xs:documentation>XML file overrides configuration</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="replaceAtt" />
+					<xs:element ref="replaceText" />
+					<xs:element ref="replaceXML" />
+					<xs:element ref="addXML" />
+					<xs:element ref="removeXML" />
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="name" use="required">
+				<xs:annotation>
+					<xs:documentation>A regular expression for matching the file
+						affected.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="replaceAtt">
+		<xs:complexType>
+			<xs:attribute name="attName" use="required" type="xs:NCName" />
+			<xs:attribute name="value" use="required" type="xs:string" />
+			<xs:attribute name="xpath" use="required" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="replaceXML">
+		<xs:annotation>
+			<xs:documentation>This sub-element will replace all the xml with the
+				contained xml
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:any minOccurs="1" maxOccurs="unbounded" processContents="lax" />
+			</xs:sequence>
+			<xs:attribute name="xpath" use="required" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="addXML">
+		<xs:annotation>
+			<xs:documentation>Append xml as a child to a section (If xpath == ""
+				then that indicates the root of the document),
+				this case adds nodes
+				to the root document
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:any minOccurs="1" maxOccurs="unbounded" processContents="lax" />
+			</xs:sequence>
+			<xs:attribute name="xpath" use="required" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="removeXML">
+		<xs:annotation>
+			<xs:documentation>This will remove the xml identified by the XPath
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="xpath" use="required" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="replaceText">
+		<xs:annotation>
+			<xs:documentation>This will replace the text of an element
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType mixed="true">
+			<xs:attribute name="xpath" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="textFile">
+		<xs:annotation>
+			<xs:documentation>Text file overrides configuration
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" maxOccurs="unbounded" ref="update" />
+			</xs:sequence>
+			<xs:attribute name="name" use="required" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="update">
+		<xs:complexType mixed="true">
+			<xs:attribute name="linePattern" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

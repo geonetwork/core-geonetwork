@@ -21,7 +21,7 @@
       $scope.pages = {
           home: 'catalog.search',
           admin: 'admin.console',
-          signin: 'catalog.login'
+          signin: 'catalog.signin'
         };
 
       /**
