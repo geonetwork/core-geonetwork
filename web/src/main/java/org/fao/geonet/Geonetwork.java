@@ -214,13 +214,18 @@ public class Geonetwork implements ApplicationHandler {
 		//--- initialize settings subsystem
 
 		logger.info("  - Setting manager...");
-
-		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
-		HarvesterSettingsManager harvesterSettingsMan = new HarvesterSettingsManager(dbms, context.getProviderManager());
-		
-		// --- Migrate database if an old one is found
-		migrateDatabase(servletContext, dbms, settingMan, harvesterSettingsMan, version, subVersion, context.getAppPath());
-		
+		SettingManager settingMan = null;
+		HarvesterSettingsManager harvesterSettingsMan = null;
+		try {
+    		settingMan = new SettingManager(dbms, context.getProviderManager());
+    		harvesterSettingsMan = new HarvesterSettingsManager(dbms, context.getProviderManager());
+		} catch (Exception e) {
+		    logger.info("     Failed to initialize setting managers. This is probably due to bad Settings table. Error is: " + 
+		                e.getMessage() + ". In case of database migration, the setting managers will be reinitialized.");
+		}
+        // --- Migrate database if an old one is found
+        migrateDatabase(servletContext, dbms, settingMan, harvesterSettingsMan, version, subVersion, context);
+        
 		//--- initialize ThreadUtils with setting manager and rm props
 		ThreadUtils.init(context.getResourceManager().getProps(Geonet.Res.MAIN_DB),
 		              	 settingMan); 
@@ -575,6 +580,59 @@ public class Geonetwork implements ApplicationHandler {
         return Integer.valueOf(number.replaceAll("\\.", ""));
     }
     
+    @SuppressWarnings("unchecked")
+    /**
+     * Return database version and subversion number.
+     * 
+     * @param dbms
+     * @return
+     */
+    private Pair<String, String> getDatabaseVersion(Dbms dbms) {
+        int VERSION_NUMBER_ID_BEFORE_2_11 = 15;
+        int SUBVERSION_NUMBER_ID_BEFORE_2_11 = 16;
+        String VERSION_NUMBER_KEY = "system/platform/version";
+        String SUBVERSION_NUMBER_KEY = "system/platform/subVersion";
+        String version = null;
+        String subversion = null;
+        
+        List<Element> results;
+        // Before 2.11, settings was a tree. Check using keys
+        try {
+            results = dbms.select("SELECT value FROM settings WHERE id = ?", VERSION_NUMBER_ID_BEFORE_2_11).getChildren();
+            if (results.size() != 0) {
+                Element record = (Element) results.get(0);
+                version = record.getChildText("value");
+            }
+            results = dbms.select("SELECT value FROM settings WHERE id = ?", SUBVERSION_NUMBER_ID_BEFORE_2_11).getChildren();
+            if (results.size() != 0) {
+                Element record = (Element) results.get(0);
+                subversion = record.getChildText("value");
+            }
+        } catch (SQLException e) {
+            logger.info("     Error getting database version: " + e.getMessage() + 
+                    ". Probably due to an old version. Trying with new Settings structure.");
+            dbms.abort();
+        }
+        
+        // Now settings is KVP
+        if (version == null) {
+            try {
+                results = dbms.select("SELECT value FROM settings WHERE name = ?", VERSION_NUMBER_KEY).getChildren();
+                if (results.size() != 0) {
+                    Element record = (Element) results.get(0);
+                    version = record.getChildText("value");
+                }
+                results = dbms.select("SELECT value FROM settings WHERE name = ?", SUBVERSION_NUMBER_KEY).getChildren();
+                if (results.size() != 0) {
+                    Element record = (Element) results.get(0);
+                   subversion = record.getChildText("value");
+                }
+            } catch (SQLException e) {
+                logger.info("     Error getting database version: " + e.getMessage() + ".");
+            }
+        }
+        return Pair.read(version, subversion);
+    }
 	/**
 	 * Checks if current database is running same version as the web application.
 	 * If not, apply migration SQL script :
@@ -590,12 +648,13 @@ public class Geonetwork implements ApplicationHandler {
 	 * @param appPath
      */
 	private void migrateDatabase(ServletContext servletContext, Dbms dbms, SettingManager settingMan, 
-	        HarvesterSettingsManager harvesterSettingsMan, String webappVersion, String subVersion, String appPath) {
+	        HarvesterSettingsManager harvesterSettingsMan, String webappVersion, String subVersion, ServiceContext context) {
 		logger.info("  - Migration ...");
 		
 		// Get db version and subversion
-		String dbVersion = settingMan.getValue("system/platform/version");
-		String dbSubVersion = settingMan.getValue("system/platform/subVersion");
+		Pair<String, String> dbVersionInfo = getDatabaseVersion(dbms);
+		String dbVersion = dbVersionInfo.one();
+		String dbSubVersion = dbVersionInfo.two();
 		
 		// Migrate db if needed
 		logger.info("      Webapp   version:" + webappVersion + " subversion:" + subVersion);
@@ -642,9 +701,14 @@ public class Geonetwork implements ApplicationHandler {
 	                        try {
                             	String className = file.getAttributeValue("class");
                                 logger.info("         - Java migration class:" + className);
-	                        	settingMan.refresh(dbms);
-	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
-	                            task.update(settingMan, harvesterSettingsMan, dbms);
+                                
+                                // In 2.11, settingsManager was not able to initialized on previous
+                                // version db table due to structure changes
+	                        	if (settingMan != null) {
+                                    settingMan.refresh(dbms);
+    	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
+    	                            task.update(settingMan, harvesterSettingsMan, dbms);
+	                        	}
 	                        } catch (Exception e) {
 	                            logger.info("          Errors occurs during Java migration file: " + e.getMessage());
 	                            e.printStackTrace();
@@ -670,7 +734,13 @@ public class Geonetwork implements ApplicationHandler {
     		
 			// Refresh setting manager in case the migration task added some new settings.
             try {
-                settingMan.refresh(dbms);
+                if (settingMan != null) {
+                    settingMan.refresh(dbms);
+                } else {
+                    // Reinitialized settings
+                    settingMan = new SettingManager(dbms, context.getProviderManager());
+                    harvesterSettingsMan = new HarvesterSettingsManager(dbms, context.getProviderManager());
+                }
             } catch (Exception e) {
                 logger.info("      Errors occurs during settings manager refresh during migration. Error is: " + e.getMessage());
                 e.printStackTrace();
@@ -679,7 +749,7 @@ public class Geonetwork implements ApplicationHandler {
 			
 			// Update the logo 
 			String siteId = settingMan.getValue("system/site/siteId");
-			initLogo(servletContext, dbms, siteId, appPath);
+			initLogo(servletContext, dbms, siteId, context.getAppPath());
 			
 			// TODO : Maybe a force rebuild index is required in such situation.
 			

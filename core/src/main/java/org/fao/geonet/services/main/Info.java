@@ -135,7 +135,10 @@ public class Info implements Service {
 				                         }));
 
 			else if (type.equals("harvester"))
-			    result.addContent(gc.getBean(SettingManager.class).get("system/harvester", -1));
+			    result.addContent(gc.getBean(SettingManager.class).getValues(
+                        new String[]{
+                                "system/harvester/enableEditing"
+                                }));
 
 			else if (type.equals("categories"))
 				result.addContent(Lib.local.retrieve(dbms, "Categories"));
