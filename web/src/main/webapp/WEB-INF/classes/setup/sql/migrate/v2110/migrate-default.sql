@@ -1,8 +1,8 @@
 INSERT INTO HarvesterSettings VALUES  (1,NULL,'harvesting',NULL);
 -- Copy all harvester's root nodes config
 INSERT INTO HarvesterSettings SELECT id, 1, name, value FROM Settings WHERE parentId = 2;
--- Copy all harvester's properties (Greater than last 2.10.0 settings ie. keepMarkedElement)
-INSERT INTO HarvesterSettings SELECT * FROM Settings WHERE id > (SELECT max(id) FROM HarvesterSettings);
+-- Copy all harvester's properties (Greater than last 2.10.1 settings ie. keepMarkedElement)
+INSERT INTO HarvesterSettings SELECT * FROM Settings WHERE id > 958;
 -- Drop harvester config from Settings table
 DELETE FROM Settings WHERE id > 958;
 DELETE FROM Settings WHERE id=2;
@@ -135,7 +135,11 @@ ALTER TABLE Settings DROP COLUMN parentId;
 ALTER TABLE Settings DROP COLUMN id;
 ALTER TABLE Settings ADD PRIMARY KEY (name);
 
+-- Add new settings
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/username', '', 0, 642);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/password', '', 0, 643);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/ssl', false, 2, 641);
 
 -- Version update
-UPDATE Settings SET value='2.11.0' WHERE name='version';
-UPDATE Settings SET value='SNAPSHOT' WHERE name='subVersion';
+UPDATE Settings SET value='2.11.0' WHERE name='system/platform/version';
+UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
