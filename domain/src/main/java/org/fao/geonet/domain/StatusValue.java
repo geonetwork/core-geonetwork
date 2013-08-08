@@ -17,12 +17,12 @@ import javax.persistence.Transient;
 
 /**
  * One of the enumerated status options that a metadata can be.
- *
+ * 
  * @author Jesse
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name="statusvalues")
+@Table(name = "statusvalues")
 public class StatusValue {
     private int _id;
     private String _name;
@@ -33,50 +33,56 @@ public class StatusValue {
     public int getId() {
         return _id;
     }
+
     public void setId(int id) {
         this._id = id;
     }
-    @Column(nullable=false)
+
+    @Column(nullable = false)
     public String getName() {
         return _name;
     }
+
     public void setName(String name) {
         this._name = name;
     }
+
     /**
-     * For backwards compatibility we need the column to
-     * be either 'n' or 'y'.  This is a workaround to allow this
-     * until future versions of JPA that allow different ways 
-     * of controlling how types are mapped to the database.
+     * For backwards compatibility we need the reserved column to be either 'n' or 'y'. This is a workaround to allow this until future
+     * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
-    @Column(name="reserved", nullable=false, length=1)
+    @Column(name = "reserved", nullable = false, length = 1)
     protected char getReserved_JpaWorkaround() {
         return _reserved;
     }
+
     protected char setReserved_JpaWorkaround(char reserved) {
         return _reserved = reserved;
     }
+
     @Transient
     public boolean isReserved() {
         return _reserved == 'y';
     }
+
     public void setReserved(boolean reserved) {
         this._reserved = reserved ? 'y' : 'n';
     }
+
     /**
      * Get the map of langid -> label translations for groups
      */
-    @ElementCollection(fetch=FetchType.LAZY, targetClass=String.class)
-    @CollectionTable(joinColumns=@JoinColumn(name="iddes"),name="statusvaluesdes")
-    @MapKeyColumn(name="langid", length=5)
-    @Column(name="label", nullable=false)
+    @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
+    @CollectionTable(joinColumns = @JoinColumn(name = "iddes"), name = "statusvaluesdes")
+    @MapKeyColumn(name = "langid", length = 5)
+    @Column(name = "label", nullable = false)
     public Map<String, String> getLabelTranslations() {
         return _labelTranslations;
     }
+
     /**
-     * Set new translations this should only be used for initialization.  
-     * to add and remove translations use "get" and modify map.
-     *
+     * Set new translations this should only be used for initialization. to add and remove translations use "get" and modify map.
+     * 
      * @param localizedTranslations the translation map
      */
     protected void setLabelTranslations(Map<String, String> localizedTranslations) {

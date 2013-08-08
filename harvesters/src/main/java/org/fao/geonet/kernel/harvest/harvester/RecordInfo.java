@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.domain.ISODate;
 import org.jdom.Element;
 
 //=============================================================================

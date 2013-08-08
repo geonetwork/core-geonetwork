@@ -8,10 +8,9 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
- * One of the entities responsible for dynamic service configuration. 
- * The services represent the virtual services and these are the parameters
- * for the services. 
- *
+ * One of the entities responsible for dynamic service configuration. The services represent the virtual services and these are the
+ * parameters for the services.
+ * 
  * @author Jesse
  */
 
@@ -26,20 +25,25 @@ public class ServiceParameter implements Serializable {
     public int getId() {
         return _id;
     }
+
     public void setId(int id) {
         this._id = id;
     }
-    @Column(nullable=false)
+
+    @Column(nullable = false)
     public String getName() {
         return _name;
     }
+
     public void setName(String name) {
         this._name = name;
     }
-    @Column(length=1024, nullable=false)
+
+    @Column(length = 1024, nullable = false)
     public String getValue() {
         return _value;
     }
+
     public void setValue(String value) {
         this._value = value;
     }

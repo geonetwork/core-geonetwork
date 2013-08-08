@@ -16,18 +16,38 @@ public class MetadataRelationId implements Serializable {
     private int _metadataId;
     private int _relatedId;
 
+    /**
+     * Get the id of the first metadata.
+     * 
+     * @return the id of the first metadata.
+     */
     public int getMetadataId() {
         return _metadataId;
     }
 
+    /**
+     * Set the id of the first metadata.
+     * 
+     * @param metadataId the id of the first metadata.
+     */
     public void setMetadataId(int metadataId) {
         this._metadataId = metadataId;
     }
 
+    /**
+     * Get the id of the second metadata.
+     * 
+     * @return the id of the second metadata.
+     */
     public int getRelatedId() {
         return _relatedId;
     }
 
+    /**
+     * Set the id of the second metadata.
+     * 
+     * @param relatedId the id of the second metadata.
+     */
     public void setRelatedId(int relatedId) {
         this._relatedId = relatedId;
     }

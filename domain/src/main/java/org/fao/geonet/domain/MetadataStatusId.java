@@ -6,10 +6,11 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 
 /**
  * The id object of {@link MetadataStatus}.
- *
+ * 
  * @author Jesse
  */
 @Embeddable
@@ -21,35 +22,94 @@ public class MetadataStatusId implements Serializable {
     private int _statusId;
     private int _userId;
 
-    @Column(length=30)
+    /**
+     * Get the date of the status change in string form. The dates are created by {@link ISODate}.
+     * 
+     * @return the date of the status change in string form.
+     */
+    @Column(length = 30)
     public String getChangedate() {
         return _changedate;
     }
 
+    /**
+     * Set the date of the status change in string form. The dates are created by {@link ISODate}.
+     * 
+     * @param changedate the date of the status change in string form. The dates are created by {@link ISODate}.
+     */
     public void setChangedate(String changedate) {
         this._changedate = changedate;
     }
 
+    /**
+     * Get the date of the status change in string form.
+     * 
+     * @return the date of the status change in string form.
+     */
+    @Transient
+    public ISODate getChangeIsoDate() {
+        return new ISODate(_changedate);
+    }
+
+    /**
+     * Set the date of the status change in string form.
+     * 
+     * @param changedate the date of the status change in string form.
+     */
+    public void setChangedate(ISODate changedate) {
+        this._changedate = changedate.toString();
+    }
+
+    /**
+     * Get the id of the metadata the status is related to.
+     * 
+     * @return the id of the metadata the status is related to.
+     */
     public int getMetadataId() {
         return _metadataId;
     }
 
+    /**
+     * Set the id of the metadata the status is related to.
+     * 
+     * @param metadataId the id of the metadata the status is related to.
+     */
     public void setMetadataId(int metadataId) {
         this._metadataId = metadataId;
     }
 
+    /**
+     * Get the id of the new status.
+     * 
+     * @return the id of the new status.
+     */
     public int getStatusId() {
         return _statusId;
     }
 
+    /**
+     * Set the id of the new status.
+     * 
+     * @param statusId the id of the new status.
+     */
     public void setStatusId(int statusId) {
         this._statusId = statusId;
     }
 
+    /**
+     * Get the user who is responsible for changing the status.
+     * 
+     * @return the user who is responsible for changing the status.
+     */
     public int getUserId() {
         return _userId;
     }
 
+    /**
+     * Set the user who is responsible for changing the status.
+     * 
+     * @param userId the user who is responsible for changing the status.
+     */
     public void setUserId(int userId) {
         this._userId = userId;
     }

@@ -149,8 +149,8 @@ public class Group {
     }
 
     /**
-     * TODO At the moment the use of this field/column is unknown.
-     *
+     * TODO UNKNOWN_PROPERTY At the moment the use of this field/column is unknown.
+     * 
      * @return the referrer
      */
     @Column(nullable = true)
@@ -160,7 +160,7 @@ public class Group {
 
     /**
      * Set the referrer: TODO it is unknown what the "referrer" is at the moment.
-     *
+     * 
      * @param referrer the referrer.
      */
     public void setReferrer(int referrer) {

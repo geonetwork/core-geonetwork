@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 
 /**
  * Entity representing metadata validation reports.
- *
+ * 
  * @author Jesse
  */
 @Entity
@@ -24,31 +24,40 @@ public class Validation {
     public ValidationId getId() {
         return id;
     }
+
     public void setId(ValidationId id) {
         this.id = id;
     }
+
     public int getStatus() {
         return status;
     }
+
     public void setStatus(int status) {
         this.status = status;
     }
+
     public int getTested() {
         return tested;
     }
+
     public void setTested(int tested) {
         this.tested = tested;
     }
+
     public int getFailed() {
         return failed;
     }
+
     public void setFailed(int failed) {
         this.failed = failed;
     }
-    @Column(name="valdate", length=30)
+
+    @Column(name = "valdate", length = 30)
     public String getValidationDate() {
         return validationDate;
     }
+
     public void setValidationDate(String validationDate) {
         this.validationDate = validationDate;
     }

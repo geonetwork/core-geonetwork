@@ -6,7 +6,7 @@ import javax.persistence.Embeddable;
 
 /**
  * The id object of {@link OperationAllowed}
- *
+ * 
  * @author Jesse
  */
 @Embeddable
@@ -24,34 +24,74 @@ public class OperationAllowedId implements Serializable {
         // default constructor.
     }
 
+    /**
+     * Create a new instance from the required id objects.
+     * 
+     * @param metadataId the metadata id
+     * @param groupId the group id
+     * @param operationId the operation id
+     */
     public OperationAllowedId(int metadataId, int groupId, int operationId) {
         this._metadataId = metadataId;
         this._groupId = groupId;
         this._operationId = operationId;
     }
 
+    /**
+     * Get the id of the metadata this OperationAllowed is references to.
+     * 
+     * @return the id of the metadata this OperationAllowed is references to.
+     */
     public int getMetadataId() {
         return _metadataId;
     }
 
+    /**
+     * Set the id of the metadata this OperationAllowed is references to.
+     * 
+     * @param newMetadataId the id of the metadata this OperationAllowed is references to.
+     * @return this id object
+     */
     public OperationAllowedId setMetadataId(int newMetadataId) {
         this._metadataId = newMetadataId;
         return this;
     }
 
+    /**
+     * Get the id of the group this OperationAllowed is references to.
+     * 
+     * @return the id of the group this OperationAllowed is references to.
+     */
     public int getGroupId() {
         return _groupId;
     }
 
+    /**
+     * Get the id of the group this OperationAllowed is references to.
+     * 
+     * @param newGroupId the id of the group this OperationAllowed is references to.
+     * @return this id object
+     */
     public OperationAllowedId setGroupId(int newGroupId) {
         this._groupId = newGroupId;
         return this;
     }
 
+    /**
+     * Get the id of the operation this OperationAllowed is references to.
+     * 
+     * @return the id of the operation this OperationAllowed is references to.
+     */
     public int getOperationId() {
         return _operationId;
     }
 
+    /**
+     * Set the id of the operation this OperationAllowed is references to.
+     * 
+     * @param newOperationId the id of the operation this OperationAllowed is references to.
+     * @return this id object
+     */
     public OperationAllowedId setOperationId(int newOperationId) {
         this._operationId = newOperationId;
         return this;
@@ -90,6 +130,10 @@ public class OperationAllowedId implements Serializable {
         return "OperationAllowedId [metadataId=" + _metadataId + ", groupId=" + _groupId + ", operationId=" + _operationId + "]";
     }
 
+    /**
+     * Make a copy of this id object.
+     * @return a copy of this id object.
+     */
     public OperationAllowedId copy() {
         OperationAllowedId copy = new OperationAllowedId();
         copy._groupId = _groupId;

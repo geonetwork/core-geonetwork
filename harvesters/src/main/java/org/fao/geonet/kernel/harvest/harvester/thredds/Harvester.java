@@ -39,6 +39,7 @@ import jeeves.xlink.Processor;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
@@ -52,11 +53,11 @@ import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.Fragme
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
+
 import thredds.catalog.InvAccess;
 import thredds.catalog.InvCatalogFactory;
 import thredds.catalog.InvCatalogImpl;

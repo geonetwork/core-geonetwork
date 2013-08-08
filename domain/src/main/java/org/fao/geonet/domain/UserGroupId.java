@@ -6,7 +6,7 @@ import javax.persistence.Embeddable;
 
 /**
  * The id object for {@link UserGroup}
- *
+ * 
  * @author Jesse
  */
 @Embeddable
@@ -15,20 +15,25 @@ public class UserGroupId implements Serializable {
 
     private int _userId;
     private int _groupId;
+
     public int getUserId() {
         return _userId;
     }
+
     public UserGroupId setUserId(int userId) {
         this._userId = userId;
         return this;
     }
+
     public int getGroupId() {
         return _groupId;
     }
+
     public UserGroupId setGroupId(int groupId) {
         this._groupId = groupId;
         return this;
     }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -37,6 +42,7 @@ public class UserGroupId implements Serializable {
         result = prime * result + _userId;
         return result;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

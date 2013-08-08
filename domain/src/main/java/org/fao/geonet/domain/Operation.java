@@ -23,11 +23,11 @@ import javax.persistence.Transient;
 
 /**
  * An entity representing an operation that can be performed on a metadata.
- *
+ * 
  * @author Jesse
  */
 @Entity
-@Table(name="operations")
+@Table(name = "operations")
 @Cacheable
 @Access(AccessType.PROPERTY)
 public class Operation {
@@ -36,23 +36,33 @@ public class Operation {
     private Map<String, String> _labelTranslations = new HashMap<String, String>();
 
     /**
-     * Get Id of the operation
+     * Get the Id of the operation. This is a generated value and as such new instances should not have this set as it will simply be
+     * ignored and could result in reduced performance.
+     * 
+     * @return the Id of the operation.
      */
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(name="id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
     public int getId() {
         return _id;
     }
 
+    /**
+     * Set the Id of the operation. This is a generated value and as such new instances should not have this set as it will simply be
+     * ignored and could result in reduced performance.
+     * 
+     * @param id the Id of the operation
+     * @return this entity object.
+     */
     public Operation setId(int id) {
         this._id = id;
         return this;
     }
-    
+
     /**
-     * Return true if the operation is one of the reserved operations.  
-     * If this returns true then getReservedOperation method should return a value
+     * Return true if the operation is one of the reserved operations. If this returns true then getReservedOperation method should return a
+     * value
      */
     @Transient
     public boolean isReserved() {
@@ -62,11 +72,18 @@ public class Operation {
     /**
      * Return the name (untranslated) of the operation.
      */
-    @Column(name="name", nullable = false, length=32)
-    public @Nonnull String getName() {
+    @Column(name = "name", nullable = false, length = 32)
+    public @Nonnull
+    String getName() {
         return _name;
     }
 
+    /**
+     * Set the name (untranslated) of the operation.
+     * 
+     * @param name the name (untranslated) of the operation.
+     * @return this entity object
+     */
     public Operation setName(String name) {
         this._name = name;
         return this;
@@ -75,29 +92,29 @@ public class Operation {
     /**
      * Get the map of langid -> label translations for operations
      */
-    @ElementCollection(fetch=FetchType.LAZY, targetClass=String.class)
-    @CollectionTable(joinColumns=@JoinColumn(name="iddes"),name="operationsdes")
-    @MapKeyColumn(name="langid", length=5)
-    @Column(name="label", nullable=false)
+    @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
+    @CollectionTable(joinColumns = @JoinColumn(name = "iddes"), name = "operationsdes")
+    @MapKeyColumn(name = "langid", length = 5)
+    @Column(name = "label", nullable = false)
     public Map<String, String> getLabelTranslations() {
         return _labelTranslations;
     }
+
     /**
-     * Set new translations this should only be used for initialization.  
-     * to add and remove translations use "get" and modify map.
-     *
+     * Set new translations this should only be used for initialization. to add and remove translations use "get" and modify map.
+     * 
      * @param localizedTranslations the translation map
      */
     protected void setLabelTranslations(Map<String, String> localizedTranslations) {
         this._labelTranslations = localizedTranslations;
     }
-    
+
     /**
-     * Return a ReservedOperation if this operation is one of the reserved operation or
-     * null otherwise.
+     * Return a ReservedOperation if this operation is one of the reserved operation or null otherwise.
      */
     @Transient
-    public @Nullable ReservedOperation getReservedOperation() {
+    public @Nullable
+    ReservedOperation getReservedOperation() {
         return ReservedOperation.lookup(_id);
     }
 
@@ -131,6 +148,5 @@ public class Operation {
     public String toString() {
         return "Operation [_id=" + _id + ", _name=" + _name + "]";
     }
-    
-    
+
 }

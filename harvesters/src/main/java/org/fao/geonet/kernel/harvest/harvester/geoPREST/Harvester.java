@@ -30,10 +30,11 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
+
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 import java.net.URL;

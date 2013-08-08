@@ -11,8 +11,7 @@ public interface SettingNamedQueries {
         String NAME = "findChildrenByName";
         String PARAMETER_NAME = "name";
         String PARAMETER_PARENTID = "parentid";
-        String QUERY = "select s from Setting s where s.parent.id = :" + PARAMETER_PARENTID + " and s.name = :"
-                + PARAMETER_NAME;
+        String QUERY = "select s from Setting s where s.parent.id = :" + PARAMETER_PARENTID + " and s.name = :" + PARAMETER_NAME;
     }
 
     interface QUERY_FIND_ALL_CHILDREN {

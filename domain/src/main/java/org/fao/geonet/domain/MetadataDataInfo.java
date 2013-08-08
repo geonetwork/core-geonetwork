@@ -9,8 +9,9 @@ import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 
 /**
- * Encapsulates the metadata about a metadata document. (title, rating, schema etc...)
- * This is a JPA Embeddable object that is embedded into a {@link Metadata} Entity
+ * Encapsulates the metadata about a metadata document. (title, rating, schema etc...) This is a JPA Embeddable object that is embedded into
+ * a {@link Metadata} Entity
+ * 
  * @author Jesse
  */
 @Embeddable
@@ -27,6 +28,7 @@ public class MetadataDataInfo implements Serializable {
     private int _displayOrder;
     private int _rating;
     private int _popularity;
+
     /**
      * Get title of metadata.
      */
@@ -34,95 +36,232 @@ public class MetadataDataInfo implements Serializable {
     public String getTitle() {
         return _title;
     }
+
     /**
-     * Set title of metadata.  This only updates the database not the actual 
-     * XML document.  It is important that this value is retrieved from 
+     * Set title of metadata. This only updates the database not the actual XML document. It is important that this value is retrieved from
      * metadata document.
-     *
+     * 
      * @param title new value.
+     * @return this data info object
      */
-    public void setTitle(String title) {
+    public MetadataDataInfo setTitle(String title) {
         this._title = title;
+        return this;
     }
+
     /**
-     * ID of the schema the metadata belongs to.
+     * Get ID of the schema the metadata belongs to.
      */
-    @Column(name="schemaid", length=32, nullable=false)
+    @Column(name = "schemaid", length = 32, nullable = false)
     public String getSchemaId() {
         return _schemaId;
     }
-    public void setSchemaId(String schemaId) {
-        this._schemaId = schemaId;
-    }
+
     /**
-     * For backwards compatibility we need the deleted column to
-     * be either 'n' or 'y'.  This is a workaround to allow this
-     * until future versions of JPA that allow different ways 
-     * of controlling how types are mapped to the database.
+     * Set ID of the schema the metadata belongs to.
+     * 
+     * @param schemaId the ID of the schema the metadata belongs to.
+     * @return this data info object
      */
-    @Column(name="istemplate", length=1, nullable=false)
-    public char isTemplate_JPAWorkaround() {
+    public MetadataDataInfo setSchemaId(String schemaId) {
+        this._schemaId = schemaId;
+        return this;
+    }
+
+    /**
+     * For backwards compatibility we need the istemplate column to be either 'n' or 'y'. This is a workaround to allow this until future
+     * versions of JPA that allow different ways of controlling how types are mapped to the database.
+     */
+    @Column(name = "istemplate", length = 1, nullable = false)
+    protected char isTemplate_JPAWorkaround() {
         return _template;
     }
-    public void setTemplate_JPAWorkaround(char template) {
+
+    /**
+     * Set the code representing true or false for istemplate column.
+     * 
+     * @param template 'y' or 'n'
+     */
+    protected void setTemplate_JPAWorkaround(char template) {
         this._template = template;
     }
+
+    /**
+     * Get true if the metadata is a template.
+     * 
+     * @return true if the metadata is a template.
+     */
     @Transient
     public boolean isTemplate() {
         return _template == 'y';
     }
-    public void setTemplate(boolean template) {
+
+    /**
+     * Set true if the metadata is a template.
+     * 
+     * @param template true if the metadata is a template
+     * @return this data info object
+     */
+    public MetadataDataInfo setTemplate(boolean template) {
         this._template = template ? 'y' : 'n';
+        return this;
     }
+
+    /**
+     * Get the name of the root element of the data related to the metadata entity.
+     * 
+     * @return the name of the root element of the data related to the metadata entity.
+     */
     @Column
     public String getRoot() {
         return _root;
     }
-    public void setRoot(String root) {
+
+    /**
+     * Set the name of the root element of the data related to the metadata entity.
+     * 
+     * TODO explain what is it for.
+     * 
+     * @param root the name of the root element of the data related to the metadata entity.
+     * @return this data info object
+     */
+    public MetadataDataInfo setRoot(String root) {
         this._root = root;
+        return this;
     }
+
+    /**
+     * Get the doctype to use for validation of the metadata. This will be a reference to a dtd typically.
+     * 
+     * @return the doctype to use for validation of the metadata
+     */
     @Column
     public String getDoctype() {
         return _doctype;
     }
-    public void setDoctype(String doctype) {
+
+    /**
+     * Set the doctype to use for validation of the metadata. This will be a reference to a dtd typically.
+     * 
+     * @param doctype the doctype to use for validation of the metadata
+     * @return this data info object
+     */
+    public MetadataDataInfo setDoctype(String doctype) {
         this._doctype = doctype;
+        return this;
     }
-    @Column(name="displayorder")
+
+    /**
+     * Get the display order. A hint for ordering templates when displayed in a list. May also be used when displaying sub-templates.
+     * <p>
+     * Should be non-negative and lower number indicates higher/earlier in the list.
+     * </p>
+     * 
+     * @return the display order
+     */
+    @Column(name = "displayorder")
     public int getDisplayOrder() {
         return _displayOrder;
     }
-    public void setDisplayOrder(int displayOrder) {
+
+    /**
+     * Set the display order. A hint for ordering templates when displayed in a list. May also be used when displaying sub-templates.
+     * <p>
+     * Should be non-negative and lower number indicates higher/earlier in the list.
+     * </p>
+     * 
+     * @param displayOrder the display orderthe display order
+     * @return this data info object
+     */
+    public MetadataDataInfo setDisplayOrder(int displayOrder) {
         this._displayOrder = displayOrder;
+        return this;
     }
-    @Column(nullable=false)
+
+    /**
+     * Get the current rating of the metadata.
+     * 
+     * @return the rating of the metadata.
+     */
+    @Column(nullable = false)
     public int getRating() {
         return _rating;
     }
-    public void setRating(int rating) {
+
+    /**
+     * Set the current rating of the metadata.
+     * 
+     * @param rating set the metadata rating.
+     * @return this data info object
+     */
+    public MetadataDataInfo setRating(int rating) {
         this._rating = rating;
+        return this;
     }
-    @Column(nullable=false)
+
+    /**
+     * Get the popularity of the metadata. (Number of views).
+     * 
+     * @return the popularity of the metadata. (Number of views).
+     */
+    @Column(nullable = false)
     public int getPopularity() {
         return _popularity;
     }
-    public void setPopularity(int popularity) {
+
+    /**
+     * Set the popularity of the metadata. (Number of views).
+     * 
+     * @param popularity the popularity of the metadata. (Number of views).
+     * @return this data info object
+     */
+    public MetadataDataInfo setPopularity(int popularity) {
         this._popularity = popularity;
+        return this;
     }
-    @Column(nullable=false, length=30)
+
+    /**
+     * Get the date of the last change made to the metadata.
+     * 
+     * @return the date of the last change made to the metadata.
+     */
+    @Column(nullable = false, length = 30)
     public String getChangeDate() {
         return _changeDate;
     }
-    public void setChangeDate(String changeDate) {
+
+    /**
+     * Set the date of the last change made to the metadata.
+     * 
+     * @param changeDate the date of the last change made to the metadata.
+     * @return this data info object
+     */
+    public MetadataDataInfo setChangeDate(String changeDate) {
         this._changeDate = changeDate;
+        return this;
     }
-    @Column(nullable=false, length=30)
+
+    /**
+     * Get the date that the metadata was created.
+     * 
+     * @return the creation date.
+     */
+    @Column(nullable = false, length = 30)
     public String getCreateDate() {
         return _createDate;
     }
-    public void setCreateDate(String createDate) {
+
+    /**
+     * Set the date that the metadata was created.
+     * 
+     * @param createDate the creation date.
+     * @return this data info object
+     */
+    public MetadataDataInfo setCreateDate(String createDate) {
         this._createDate = createDate;
+        return this;
     }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -139,6 +278,7 @@ public class MetadataDataInfo implements Serializable {
         result = prime * result + ((_title == null) ? 0 : _title.hashCode());
         return result;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

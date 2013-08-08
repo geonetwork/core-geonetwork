@@ -9,7 +9,7 @@ import javax.persistence.Embeddable;
 
 /**
  * Id object for the {@link Validation} entity.
- *
+ * 
  * @author Jesse
  */
 @Embeddable
@@ -18,19 +18,24 @@ public class ValidationId implements Serializable {
     private static final long serialVersionUID = -7162983572434017017L;
     private int _metadataId;
     private String _validationType;
+
     public int getMetadataId() {
         return _metadataId;
     }
+
     public void setMetadataId(int metadataid) {
         this._metadataId = metadataid;
     }
-    @Column(name="valtype", length=40)
+
+    @Column(name = "valtype", length = 40)
     public String getValidationType() {
         return _validationType;
     }
+
     public void setValidationType(String validationType) {
         this._validationType = validationType;
     }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -39,6 +44,7 @@ public class ValidationId implements Serializable {
         result = prime * result + ((_validationType == null) ? 0 : _validationType.hashCode());
         return result;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

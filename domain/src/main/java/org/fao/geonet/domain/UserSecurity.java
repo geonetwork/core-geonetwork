@@ -4,9 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
- * Encapsulates security information about the user.
- * This is a JPA Embeddable object that is embedded into a {@link User} Entity
- *
+ * Encapsulates security information about the user. This is a JPA Embeddable object that is embedded into a {@link User} Entity
+ * 
  * @author Jesse
  */
 @Embeddable
@@ -15,34 +14,41 @@ public class UserSecurity {
     private String securityNotifications = "";
     private String authType;
 
-    @Column(nullable=false, length=120)
+    @Column(nullable = false, length = 120)
     public char[] getPassword() {
         return password;
     }
+
     public UserSecurity setPassword(char[] password) {
         this.password = password;
         return this;
     }
+
     public UserSecurity setPassword(String password) {
         this.password = password.toCharArray();
         return this;
     }
-    @Column(name="security", length = 128)
+
+    @Column(name = "security", length = 128)
     public String getSecurityNotifications() {
         return securityNotifications;
     }
+
     public UserSecurity setSecurityNotifications(String securityNotifications) {
         this.securityNotifications = securityNotifications;
         return this;
     }
-    @Column(name="authtype", length=32)
+
+    @Column(name = "authtype", length = 32)
     public String getAuthType() {
         return authType;
     }
+
     public UserSecurity setAuthType(String authType) {
         this.authType = authType;
         return this;
     }
+
     /**
      * Merge all data from other security into this security.
      * 
@@ -50,15 +56,15 @@ public class UserSecurity {
      * @param mergeNullData if true then also set null values from other security. If false then only merge non-null data
      */
     public void mergeSecurity(UserSecurity otherSecurity, boolean mergeNullData) {
-        if (mergeNullData || otherSecurity.getPassword() != null){
+        if (mergeNullData || otherSecurity.getPassword() != null) {
             setPassword(otherSecurity.getPassword());
         }
-        if (mergeNullData || otherSecurity.getSecurityNotifications() != null){
+        if (mergeNullData || otherSecurity.getSecurityNotifications() != null) {
             setSecurityNotifications(otherSecurity.getSecurityNotifications());
         }
-        if (mergeNullData || otherSecurity.getAuthType() != null){
+        if (mergeNullData || otherSecurity.getAuthType() != null) {
             setAuthType(otherSecurity.getAuthType());
         }
-        
+
     }
 }

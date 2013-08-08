@@ -24,10 +24,11 @@
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import jeeves.utils.Xml;
+
 import org.apache.commons.httpclient.HttpException;
 import org.apache.webdav.lib.WebdavResource;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 

@@ -8,10 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * Represents an address.
- * This is a JPA Entity object and is contained in a
- * database table.
- *
+ * Represents an address. This is a JPA Entity object and is contained in a database table.
+ * 
  * @author Jesse
  */
 @Entity
@@ -25,55 +23,56 @@ public class Address {
     private String _country;
 
     /**
-     * Id of the address.  This is automatically
-     * generated so when creating a new object leave this blank
-     * and allow the database or JPA set the value for you on save.
+     * Id of the address. This is automatically generated so when creating a new object leave this blank and allow the database or JPA set
+     * the value for you on save.
      */
     @Id
     @GeneratedValue
     public int getId() {
         return _id;
     }
+
     /**
-     * Set the id of the address.   This is automatically
-     * generated so when creating a new object leave this blank
-     * and allow the database or JPA set the value for you on save.
+     * Set the id of the address. This is automatically generated so when creating a new object leave this blank and allow the database or
+     * JPA set the value for you on save.
      * 
      * @param id the id
-     * @return 
+     * @return
      * @return this address object
      */
     public Address setId(int id) {
         this._id = id;
         return this;
     }
+
     /**
-     * Get the address line of the address.  This is
-     * typically the street name and number but varies
-     * depending on the type of address.
+     * Get the address line of the address. This is typically the street name and number but varies depending on the type of address.
      */
     public String getAddress() {
         return _address;
     }
+
     /**
-     * Set the address data.  See {@link #getAddress()} for
-     * details on what the "address" is.
-     *
+     * Set the address data. See {@link #getAddress()} for details on what the "address" is.
+     * 
      * @param address the new address data
-     * @return this address object     */
+     * @return this address object
+     */
     public Address setAddress(String address) {
         this._address = address;
         return this;
     }
-    
+
     /**
      * Get the city of the address
      */
     public String getCity() {
         return _city;
     }
+
     /**
      * Set the city of the address
+     * 
      * @param city the city
      * @return this address object
      */
@@ -81,18 +80,18 @@ public class Address {
         this._city = city;
         return this;
     }
+
     /**
-     * Return the state/province/Kantone/departement/etc... of
-     * the address.
-     *
+     * Return the state/province/Kantone/departement/etc... of the address.
+     * 
      * @return the state of the address.
      */
     public String getState() {
         return _state;
     }
+
     /**
-     * Return the state/province/Kantone/departement/etc... of
-     * the address.
+     * Return the state/province/Kantone/departement/etc... of the address.
      * 
      * @param state the state
      * @return this address object
@@ -101,65 +100,70 @@ public class Address {
         this._state = state;
         return this;
     }
+
     /**
-     * Return the zip/postal code of the address.  
+     * Return the zip/postal code of the address.
      * 
      * @return the zip/postal code
      */
-    @Column(length=16)
+    @Column(length = 16)
     public String getZip() {
         return _zip;
     }
+
     /**
      * Set the zip/postal code of the address.
      * 
      * @param zip the new value
-     *
+     * 
      * @return this address object
      */
     public Address setZip(String zip) {
         this._zip = zip;
         return this;
     }
+
     /**
      * Get iso2 country code of the address.
-     *
+     * 
      * @return the iso2 country code.
      */
     public String getCountry() {
         return _country;
     }
+
     /**
      * Set the iso2 country code of the address.
-     *
+     * 
      * @param iso2CountryCode the iso 2 country code.
-     *
+     * 
      * @return this address object
      */
     public Address setCountry(String iso2CountryCode) {
         this._country = iso2CountryCode;
         return this;
     }
+
     /**
      * Merge data from other address into this one.
-     *
+     * 
      * @param otherAddress other address
-     * @param mergeNullData  if true then also set null values from other address. If false then only merge non-null data
+     * @param mergeNullData if true then also set null values from other address. If false then only merge non-null data
      */
     public void mergeAddress(Address otherAddress, boolean mergeNullData) {
-        if (mergeNullData || otherAddress.getAddress()!= null){
+        if (mergeNullData || otherAddress.getAddress() != null) {
             setAddress(otherAddress.getAddress());
         }
-        if (mergeNullData || otherAddress.getCity()!= null){
+        if (mergeNullData || otherAddress.getCity() != null) {
             setCity(otherAddress.getCity());
         }
-        if (mergeNullData || otherAddress.getState()!= null){
+        if (mergeNullData || otherAddress.getState() != null) {
             setState(otherAddress.getState());
         }
-        if (mergeNullData || otherAddress.getZip()!= null){
+        if (mergeNullData || otherAddress.getZip() != null) {
             setZip(otherAddress.getZip());
         }
-        if (mergeNullData || otherAddress.getCountry()!= null){
+        if (mergeNullData || otherAddress.getCountry() != null) {
             setCountry(otherAddress.getCountry());
         }
     }
@@ -176,6 +180,7 @@ public class Address {
         result = prime * result + ((_zip == null) ? 0 : _zip.hashCode());
         return result;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

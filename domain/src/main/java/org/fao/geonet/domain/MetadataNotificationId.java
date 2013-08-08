@@ -8,7 +8,7 @@ import javax.persistence.Embeddable;
 
 /**
  * Id of a MetadataNotification object.
- *
+ * 
  * @author Jesse
  */
 @Embeddable
@@ -17,18 +17,51 @@ public class MetadataNotificationId implements Serializable {
     private static final long serialVersionUID = 8167301479650105617L;
     private int metadataId;
     private int notifierId;
+
+    /**
+     * Get the id of the metadata the notification is related to.
+     * 
+     * @return the id of the metadata the notification is related to.
+     */
     public int getMetadataId() {
         return metadataId;
     }
-    public void setMetadataId(int metadataId) {
+
+    /**
+     * Set the id of the metadata the notification is related to.
+     * 
+     * @param metadataId the id of the metadata the notification is related to.
+     * @return this id object
+     */
+    public MetadataNotificationId setMetadataId(int metadataId) {
         this.metadataId = metadataId;
+        return this;
     }
+
+    /**
+     * Get the id of the notifier (notification listener).
+     * 
+     * @return the id of the notifier (notification listener)
+     * 
+     * @see MetadataNotifier
+     */
     public int getNotifierId() {
         return notifierId;
     }
-    public void setNotifierId(int notifierId) {
+
+    /**
+     * Set the id of the notifier (notification listener).
+     * 
+     * @param notifierId the id of the notifier (notification listener)
+     * @return the id of the notifier (notification listener)
+     * 
+     * @see MetadataNotifier
+     */
+    public MetadataNotificationId setNotifierId(int notifierId) {
         this.notifierId = notifierId;
+        return this;
     }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -37,6 +70,7 @@ public class MetadataNotificationId implements Serializable {
         result = prime * result + notifierId;
         return result;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

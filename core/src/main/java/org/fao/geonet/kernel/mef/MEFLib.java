@@ -35,12 +35,12 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Document;
 import org.jdom.Element;
 

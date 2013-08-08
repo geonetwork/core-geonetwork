@@ -111,3 +111,32 @@ CREATE TABLE Users
   
 INSERT INTO USERS SELECT * FROM USERS_TMP;
 DROP TABLE USERS_TMP;
+
+-- ----  Change notifier actions column to map to the MetadataNotificationAction enumeration
+
+CREATE TABLE MetadataNotifications_Tmp
+  (
+    metadataId         int            not null,
+    notifierId         int            not null,
+    notified           char(1)        default 'n' not null,
+    metadataUuid       varchar(250)   not null,
+    action             char(1)        not null,
+    errormsg           text
+  );
+
+
+INSERT INTO MetadataNotifications_Tmp SELECT metadataId, notifierId, notified, metadataUuid, 0, errormsg FROM MetadataNotifications where action='u';
+INSERT INTO MetadataNotifications_Tmp SELECT metadataId, notifierId, notified, metadataUuid, 1, errormsg FROM MetadataNotifications where action='d';
+
+DROP TABLE MetadataNotifications;
+CREATE TABLE MetadataNotifications
+  (
+    metadataId         int            not null,
+    notifierId         int            not null,
+    notified           char(1)        default 'n' not null,
+    metadataUuid       varchar(250)   not null,
+    action             int        not null,
+    errormsg           text,
+    primary key(metadataId,notifierId)
+  );
+  

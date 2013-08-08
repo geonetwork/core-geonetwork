@@ -28,14 +28,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 /**
- * A user entity.  A user is used in spring security, controlling access to metadata as well
- * as in the {@link jeeves.server.UserSession}.
+ * A user entity. A user is used in spring security, controlling access to metadata as well as in the {@link jeeves.server.UserSession}.
  * 
  * @author Jesse
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name="users")
+@Table(name = "users")
 public class User implements JeevesUser {
     private static final long serialVersionUID = 2589607276443866650L;
 
@@ -60,7 +59,7 @@ public class User implements JeevesUser {
         return this;
     }
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     public String getUsername() {
         return _username;
     }
@@ -102,10 +101,10 @@ public class User implements JeevesUser {
         }
         return null;
     }
-    
-    @ElementCollection(fetch=FetchType.EAGER,targetClass=String.class)
-    @CollectionTable(name="email")
-    @Column(name="email")
+
+    @ElementCollection(fetch = FetchType.EAGER, targetClass = String.class)
+    @CollectionTable(name = "email")
+    @Column(name = "email")
     public Set<String> getEmailAddresses() {
         return _email;
     }
@@ -115,11 +114,8 @@ public class User implements JeevesUser {
         return this;
     }
 
-    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
-    @JoinTable(name="USER_ADDRESS",
-        joinColumns=@JoinColumn(name="userid"),
-        inverseJoinColumns={ @JoinColumn(name="addressid", referencedColumnName="ID", unique=true) }
-    )
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "USER_ADDRESS", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = { @JoinColumn(name = "addressid", referencedColumnName = "ID", unique = true) })
     public Set<Address> getAddresses() {
         return _addresses;
     }
@@ -139,12 +135,10 @@ public class User implements JeevesUser {
     }
 
     /**
-     * Get the 'kind' of user.  Just
-     * a sting representing the type or category 
-     * of the user.  It can be customized for a particular
-     * application.  An example is GOV or CONTRACTOR.
+     * Get the 'kind' of user. Just a sting representing the type or category of the user. It can be customized for a particular
+     * application. An example is GOV or CONTRACTOR.
      */
-    @Column(length=16)
+    @Column(length = 16)
     public String getKind() {
         return _kind;
     }
@@ -154,7 +148,7 @@ public class User implements JeevesUser {
         return this;
     }
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     public Profile getProfile() {
         return _profile;
     }
@@ -247,7 +241,7 @@ public class User implements JeevesUser {
         for (Iterator<Address> iterator = _addresses.iterator(); iterator.hasNext();) {
             Address address = (Address) iterator.next();
             boolean found = false;
-            
+
             for (Iterator<Address> iterator2 = otherAddresses.iterator(); iterator.hasNext();) {
                 Address otherAddress = iterator2.next();
                 if (otherAddress.getId() == address.getId()) {
@@ -257,7 +251,7 @@ public class User implements JeevesUser {
                     break;
                 }
             }
-            
+
             if (!found) {
                 iterator.remove();
             }

@@ -25,15 +25,30 @@ public class MetadataRelation {
     private Metadata metadata;
     private Metadata related;
 
+    /**
+     * Get the metadata relation id object.
+     * 
+     * @return the metadata relation id object.
+     */
     @EmbeddedId
     public MetadataRelationId getId() {
         return id;
     }
 
+    /**
+     * Set the metadata relation id object.
+     * 
+     * @param id the metadata relation id object.
+     */
     public void setId(MetadataRelationId id) {
         this.id = id;
     }
 
+    /**
+     * Get the one of the metadata in the relationship.
+     * 
+     * @return the one of the metadata in the relationship.
+     */
     @MapsId("metadataId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id", referencedColumnName = "id")
@@ -41,16 +56,32 @@ public class MetadataRelation {
         return metadata;
     }
 
+    /**
+     * Set the one of the metadata in the relationship.
+     * 
+     * @param metadata the one of the metadata in the relationship.
+     */
     public void setMetadata(Metadata metadata) {
         this.metadata = metadata;
     }
+
+    /**
+     * Get the second of the related metadata.
+     * 
+     * @return the second of the related metadata.
+     */
     @MapsId("relatedId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="relatedid", referencedColumnName="id")
+    @JoinColumn(name = "relatedid", referencedColumnName = "id")
     public Metadata getRelated() {
         return related;
     }
 
+    /**
+     * Set the second of the related metadata.
+     * 
+     * @param related the second of the related metadata.
+     */
     public void setRelated(Metadata related) {
         this.related = related;
     }

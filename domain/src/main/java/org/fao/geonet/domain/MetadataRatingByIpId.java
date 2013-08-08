@@ -6,12 +6,11 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.EmbeddedId;
 
 /**
  * An Id object for {@link MetadataRatingByIp}
+ * 
  * @author Jesse
- *
  */
 @Embeddable
 @Access(AccessType.PROPERTY)
@@ -21,20 +20,40 @@ public class MetadataRatingByIpId implements Serializable {
     private int _metadataId;
     private String _ipAddress;
 
-    @Column(name="metadataid", nullable=false)
+    /**
+     * Get the id of the associated metadata.
+     * 
+     * @return the id of the associated metadata.
+     */
+    @Column(name = "metadataid", nullable = false)
     public int getMetadataId() {
         return _metadataId;
     }
 
+    /**
+     * Set the id of the associated metadata.
+     * 
+     * @param metadataId the id of the associated metadata.
+     */
     public void setMetadataId(int metadataId) {
         this._metadataId = metadataId;
     }
 
-    @Column(name="ipaddress", nullable=false, length=Constants.IP_ADDRESS_COLUMN_LENGTH)
+    /**
+     * Get the IP Address of the user the rating is related to.
+     * 
+     * @return the IP Address of the user the rating is related to.
+     */
+    @Column(name = "ipaddress", nullable = false, length = Constants.IP_ADDRESS_COLUMN_LENGTH)
     public String getIpAddress() {
         return _ipAddress;
     }
 
+    /**
+     * Set the IP Address of the user the rating is related to.
+     * 
+     * @param ipAddress the IP Address of the user the rating is related to.
+     */
     public void setIpAddress(String ipAddress) {
         this._ipAddress = ipAddress;
     }

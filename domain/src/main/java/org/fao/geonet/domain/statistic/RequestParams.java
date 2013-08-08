@@ -8,7 +8,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -88,16 +87,16 @@ public class RequestParams {
         this._upperText = upperText;
     }
     /**
-     * For backwards compatibility we need the deleted column to
+     * For backwards compatibility we need the inclusive column to
      * be either 'n' or 'y'.  This is a workaround to allow this
      * until future versions of JPA that allow different ways 
      * of controlling how types are mapped to the database.
      */
     @Column(name="inclusive", length=1, nullable=true)
-    public char isInclusive_JPAWorkaround() {
+    protected char isInclusive_JPAWorkaround() {
         return _inclusive;
     }
-    public void setInclusive_JPAWorkaround(char inclusive) {
+    protected void setInclusive_JPAWorkaround(char inclusive) {
         this._inclusive = inclusive;
     }
 

@@ -29,20 +29,17 @@ import org.fao.geonet.domain.SettingNamedQueries.QUERY_FIND_ROOT;
 /**
  * An entity representing a system configuration setting.
  * 
- * Settings are represented by a tree. One should use the {@link org.fao.geonet.repository.SettingRepository}
- * to traverse the hierarchy.
- *
+ * Settings are represented by a tree. One should use the {@link org.fao.geonet.repository.SettingRepository} to traverse the hierarchy.
+ * 
  * @author Jesse
  */
 @Entity
 @Table(name = "settings")
 @Cacheable
 @Access(AccessType.PROPERTY)
-@NamedQueries({ 
-    @NamedQuery(name = QUERY_FIND_CHILDREN_BY_NAME.NAME, query = QUERY_FIND_CHILDREN_BY_NAME.QUERY),
-    @NamedQuery(name = QUERY_FIND_ALL_CHILDREN.NAME, query = QUERY_FIND_ALL_CHILDREN.QUERY),
-    @NamedQuery(name = QUERY_FIND_ROOT.NAME, query = QUERY_FIND_ROOT.QUERY),
-    })
+@NamedQueries({ @NamedQuery(name = QUERY_FIND_CHILDREN_BY_NAME.NAME, query = QUERY_FIND_CHILDREN_BY_NAME.QUERY),
+        @NamedQuery(name = QUERY_FIND_ALL_CHILDREN.NAME, query = QUERY_FIND_ALL_CHILDREN.QUERY),
+        @NamedQuery(name = QUERY_FIND_ROOT.NAME, query = QUERY_FIND_ROOT.QUERY), })
 public class Setting {
     public static final int ROOT_ID = 0;
 

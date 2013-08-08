@@ -7,11 +7,9 @@ import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 
 /**
- * Encapsulates the harvest data related to a
- * metadata document.  Like whether the metadata
- * was harvested, the uuid of the harvester, etc...
+ * Encapsulates the harvest data related to a metadata document. Like whether the metadata was harvested, the uuid of the harvester, etc...
  * This is a JPA Embeddable object that is embedded into a {@link Metadata} Entity
- *
+ * 
  * @author Jesse
  */
 @Embeddable
@@ -22,39 +20,86 @@ public class MetadataHarvestInfo {
     private String _uri;
 
     /**
-     * For backwards compatibility we need the deleted column to
-     * be either 'n' or 'y'.  This is a workaround to allow this
-     * until future versions of JPA that allow different ways 
-     * of controlling how types are mapped to the database.
+     * For backwards compatibility we need the isharvested column to be either 'n' or 'y'. This is a workaround to allow this until future
+     * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
-    @Column(name="isharvested", length=1, nullable=false)
-    public char isHarvested_JPAWorkaround() {
+    @Column(name = "isharvested", length = 1, nullable = false)
+    protected char isHarvested_JPAWorkaround() {
         return _harvested;
     }
-    public void setHarvested_JPAWorkaround(char harvested) {
+
+    /**
+     * Set the code for the harvested column.
+     * 
+     * @param harvested 'y' or 'n'
+     */
+    protected void setHarvested_JPAWorkaround(char harvested) {
         this._harvested = harvested;
     }
+
+    /**
+     * Return true if the metadata was harvested.
+     * 
+     * @return true if the metadata was harvested.
+     */
     @Transient
     public boolean isHarvested() {
         return _harvested == 'y';
     }
-    public void setHarvested(boolean harvested) {
+
+    /**
+     * true if the metadata was harvested, false otherwise.
+     * 
+     * @param harvested true if the metadata was harvested.
+     * @return this data info object
+     */
+    public MetadataHarvestInfo setHarvested(boolean harvested) {
         this._harvested = harvested ? 'y' : 'n';
+        return this;
     }
-    @Column(name="harvestuuid")
+
+    /**
+     * Get the uuid of the harvester that harvested this metadata (if the metadata is harvested metadata)
+     * 
+     * @return the uuid of the harvester that harvested this metadata (if the metadata is harvested metadata)
+     * @see #isHarvested()
+     */
+    @Column(name = "harvestuuid")
     public String getUuid() {
         return _uuid;
     }
+
+    /**
+     * Set the uuid of the harvester that harvested this metadata (if the metadata is harvested metadata)
+     * 
+     * @param uuid the uuid of the harvester that harvested this metadata (if the metadata is harvested metadata)
+     * @see #isHarvested()
+     */
     public void setUuid(String uuid) {
         this._uuid = uuid;
     }
-    @Column(name="harvesturi", length=512)
+
+    /**
+     * Get the optional uri indicating what was harvested to get this metadata.
+     * 
+     * @return the optional uri indicating what was harvested to get this metadata.
+     */
+    @Column(name = "harvesturi", length = 512)
     public String getUri() {
         return _uri;
     }
-    public void setUri(String uri) {
+
+    /**
+     * Set the optional uri indicating what was harvested to get this metadata.
+     * 
+     * @param uri the optional uri indicating what was harvested to get this metadata.
+     * @return this data info object
+     */
+    public MetadataHarvestInfo setUri(String uri) {
         this._uri = uri;
+        return this;
     }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -64,6 +109,7 @@ public class MetadataHarvestInfo {
         result = prime * result + ((_uuid == null) ? 0 : _uuid.hashCode());
         return result;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

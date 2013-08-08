@@ -18,23 +18,21 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
 /**
- * A Metadata category.  This is separate from any category listed in
- * the metadata xml itself and is geonetwork specific.
- *
+ * A Metadata category. This is separate from any category listed in the metadata xml itself and is geonetwork specific.
+ * 
  * @author Jesse
  */
 @Entity
 @Access(AccessType.PROPERTY)
 @Cacheable
-@Table(name="categories")
+@Table(name = "categories")
 public class MetadataCategory {
     private int _id;
     private String _name;
     private Map<String, String> _labelTranslations = new HashMap<String, String>();
-    
+
     /**
-     * The id of the category.  This is a generated value and not
-     * controlled by the developer.
+     * The id of the category. This is a generated value and not controlled by the developer.
      * 
      * @return the id
      */
@@ -43,55 +41,59 @@ public class MetadataCategory {
     public int getId() {
         return _id;
     }
+
     /**
-     * Set the id of the category.  This is typically set by the JPA entity manager
-     * and should only be set by the developer when they want to merge new data with
-     * an existing entity or want to perform query by example.  But even then
-     * it is not generally recommended.
-     *
+     * Set the id of the category. This is typically set by the JPA entity manager and should only be set by the developer when they want to
+     * merge new data with an existing entity or want to perform query by example. But even then it is not generally recommended.
+     * 
      * @param id the id.
      */
     public void setId(int id) {
         this._id = id;
     }
+
     /**
-     * The name of the category.  This is a required property.
+     * The name of the category. This is a required property.
+     * 
      * @return the name.
      */
-    @Column(nullable=false)
+    @Column(nullable = false)
     public String getName() {
         return _name;
     }
+
     /**
-     * Set the name of the category.  This is a required non-null
-     * property.
-     *
+     * Set the name of the category. This is a required non-null property.
+     * 
      * @param name the new name.
      */
     public void setName(String name) {
         this._name = name;
     }
+
     /**
-     * Get the map of langid -> label translations for metadata categories.
-     * langid is an iso 3 character code for the language.  For example:  eng, ger, fra, etc...
+     * Get the map of langid -> label translations for metadata categories. langid is an iso 3 character code for the language. For example:
+     * eng, ger, fra, etc...
+     * 
      * @return the map of langid -> label
      */
-    @ElementCollection(fetch=FetchType.LAZY, targetClass=String.class)
-    @CollectionTable(joinColumns=@JoinColumn(name="iddes"),name="categoriesdes")
-    @MapKeyColumn(name="langid",length=5)
-    @Column(name="label", nullable=false)
+    @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
+    @CollectionTable(joinColumns = @JoinColumn(name = "iddes"), name = "categoriesdes")
+    @MapKeyColumn(name = "langid", length = 5)
+    @Column(name = "label", nullable = false)
     public Map<String, String> getLabelTranslations() {
         return _labelTranslations;
     }
+
     /**
-     * Set new translations this should only be used for initialization.  
-     * to add and remove translations use "get" and modify map.
-     *
+     * Set new translations this should only be used for initialization. to add and remove translations use "get" and modify map.
+     * 
      * @param localizedTranslations the translation map
      */
     protected void setLabelTranslations(Map<String, String> localizedTranslations) {
         this._labelTranslations = localizedTranslations;
     }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -100,6 +102,7 @@ public class MetadataCategory {
         result = prime * result + ((_name == null) ? 0 : _name.hashCode());
         return result;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -116,5 +119,5 @@ public class MetadataCategory {
             return false;
         return true;
     }
-    
+
 }

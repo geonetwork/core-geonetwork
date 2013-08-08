@@ -30,7 +30,7 @@ import org.apache.lucene.search.FieldCache;
 import org.apache.lucene.search.FieldCache.DocTerms;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.BytesRef;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.domain.ISODate;
 
 import java.io.IOException;
 

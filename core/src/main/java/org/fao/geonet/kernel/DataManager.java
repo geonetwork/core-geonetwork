@@ -43,6 +43,7 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
@@ -50,6 +51,7 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
@@ -68,7 +70,6 @@ import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserSpecs;
-import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.ThreadUtils;
 import org.jdom.Attribute;
 import org.jdom.Document;
@@ -80,6 +81,7 @@ import org.springframework.data.jpa.domain.Specifications;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;

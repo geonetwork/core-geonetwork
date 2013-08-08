@@ -38,7 +38,8 @@ public class Service {
     public void setId(int id) {
         this._id = id;
     }
-    @Column(nullable=false)
+
+    @Column(nullable = false)
     public String getName() {
         return _name;
     }
