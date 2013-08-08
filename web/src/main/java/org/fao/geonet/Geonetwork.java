@@ -71,11 +71,13 @@ import org.fao.geonet.kernel.XmlSerializerSvn;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
+import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -86,7 +88,6 @@ import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;
@@ -215,9 +216,10 @@ public class Geonetwork implements ApplicationHandler {
 		logger.info("  - Setting manager...");
 
 		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
-
+		HarvesterSettingsManager harvesterSettingsMan = new HarvesterSettingsManager(dbms, context.getProviderManager());
+		
 		// --- Migrate database if an old one is found
-		migrateDatabase(servletContext, dbms, settingMan, version, subVersion, context.getAppPath());
+		migrateDatabase(servletContext, dbms, settingMan, harvesterSettingsMan, version, subVersion, context.getAppPath());
 		
 		//--- initialize ThreadUtils with setting manager and rm props
 		ThreadUtils.init(context.getResourceManager().getProps(Geonet.Res.MAIN_DB),
@@ -420,8 +422,7 @@ public class Geonetwork implements ApplicationHandler {
         gnContext.threadPool  = threadPool;
         gnContext.statusActionsClass = statusActionsClass;
 
-
-        HarvestManager harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
+        HarvestManager harvestMan = new HarvestManager(context, gnContext, harvesterSettingsMan, dataMan);
 
         //------------------------------------------------------------------------
         //--- return application context
@@ -432,6 +433,7 @@ public class Geonetwork implements ApplicationHandler {
 		beanFactory.registerSingleton("schemaManager", schemaMan);
 		beanFactory.registerSingleton("serviceHandlerConfig", handlerConfig);
 		beanFactory.registerSingleton("settingManager", settingMan);
+		beanFactory.registerSingleton("harvesterSettingsMan", harvesterSettingsMan);
 		beanFactory.registerSingleton("thesaurusManager", thesaurusMan);
 		beanFactory.registerSingleton("oaipmhDisatcher", oaipmhDis);
 		beanFactory.registerSingleton("metadataNotifierManager", metadataNotifierMan);
@@ -580,13 +582,15 @@ public class Geonetwork implements ApplicationHandler {
 	 * eg. 2.4.3-to-2.5.0-default.sql
 	 *
      * @param servletContext
-     * @param dbms
-     * @param settingMan
-     * @param webappVersion
-     * @param subVersion
-     * @param appPath
+	 * @param dbms
+	 * @param settingMan
+	 * @param harvesterSettingsMan TODO
+	 * @param webappVersion
+	 * @param subVersion
+	 * @param appPath
      */
-	private void migrateDatabase(ServletContext servletContext, Dbms dbms, SettingManager settingMan, String webappVersion, String subVersion, String appPath) {
+	private void migrateDatabase(ServletContext servletContext, Dbms dbms, SettingManager settingMan, 
+	        HarvesterSettingsManager harvesterSettingsMan, String webappVersion, String subVersion, String appPath) {
 		logger.info("  - Migration ...");
 		
 		// Get db version and subversion
@@ -620,14 +624,6 @@ public class Geonetwork implements ApplicationHandler {
 			boolean anyMigrationAction = false;
 			boolean anyMigrationError = false;
 			
-            try {
-            	new UpdateHarvesterIdsTask().update(settingMan,dbms);
-            } catch (Exception e) {
-                logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-                e.printStackTrace();
-                anyMigrationError = true;
-            }
-
 			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
 			String dbType = DatabaseType.lookup(dbms).toString();
 			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
@@ -648,7 +644,7 @@ public class Geonetwork implements ApplicationHandler {
                                 logger.info("         - Java migration class:" + className);
 	                        	settingMan.refresh(dbms);
 	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
-	                            task.update(settingMan, dbms);
+	                            task.update(settingMan, harvesterSettingsMan, dbms);
 	                        } catch (Exception e) {
 	                            logger.info("          Errors occurs during Java migration file: " + e.getMessage());
 	                            e.printStackTrace();
