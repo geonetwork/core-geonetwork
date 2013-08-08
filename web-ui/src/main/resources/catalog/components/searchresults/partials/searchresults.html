@@ -1,0 +1,26 @@
+<div>
+  <div class="clearfix">
+    <div class="btn-group pull-right" data-ng-hide="!allowSelection">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        {{selectedRecordsCount}} <span data-translate="">selected</span><span class="caret"/>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <a data-ng-click="selectAll(true)" data-translate="">selectAll</a>
+        </li>
+        <li>
+          <a data-ng-click="selectAll(false)" data-translate="">selectNone</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div>
+    <div class="list-group">
+      <a class="list-group-item gn-record" data-ng-repeat="md in searchResults"
+        data-ng-click="select(md['geonet:info'].uuid, $event)"
+        data-ng-class="md['geonet:info'].selected == 'true' ? 'active' : ''"> {{md.title ||
+        md.defaultTitle}} </a>
+    </div>
+  </div>
+</div>
