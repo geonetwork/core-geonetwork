@@ -1,0 +1,21 @@
+<div class="row" data-ng-controller="GnAdminToolsController" >
+    <div class="col-lg-2">
+        <div class="gn-sidebar affix">
+            <ul class="nav nav-pills nav-stacked">
+                <li data-ng-class="type === 'batch' && 'active'">
+                    <a href="#/tools/batch" data-translate>batchProcess</a>
+                </li>
+              <li data-ng-class="type === 'formatter' && 'active'">
+                <a href="#/tools/formatter" data-translate>formatter</a>
+              </li>
+              <li data-ng-class="type === 'transfertPrivs' && 'active'">
+                <a href="#/tools/transfertPrivs" data-translate>transfertPrivs</a>
+              </li>
+            </ul>
+        </div>
+    </div>
+  
+  
+    <div class="col-lg-10" ng-include="getTemplate()">
+    </div>
+</div>

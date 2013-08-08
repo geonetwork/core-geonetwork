@@ -1,12 +1,17 @@
 (function() {
   goog.provide('gn_admin_controller');
 
+
+
+
+  goog.require('gn_admintools_controller');
   goog.require('gn_cat_controller');
   goog.require('gn_dashboard_controller');
   goog.require('gn_usergroup_controller');
 
   var module = angular.module('gn_admin_controller',
-      ['gn_dashboard_controller', 'gn_usergroup_controller']);
+      ['gn_dashboard_controller', 'gn_usergroup_controller',
+       'gn_admintools_controller']);
 
 
   module.config(['$routeProvider', function($routeProvider) {
@@ -25,6 +30,12 @@
           controller: 'GnUserGroupController'}).
         when('/organization/groups/:groupId', {
           templateUrl: '../../catalog/templates/admin/organization.html',
+          controller: 'GnUserGroupController'}).
+        when('/tools', {
+          templateUrl: '../../catalog/templates/admin/tools.html',
+          controller: 'GnDashboardController'}).
+        when('/tools/batch', {
+          templateUrl: '../../catalog/templates/admin/tools.html',
           controller: 'GnUserGroupController'}).
         otherwise({templateUrl: '../../catalog/templates/admin/admin.html'});
   }]);

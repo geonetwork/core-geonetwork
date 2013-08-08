@@ -19,10 +19,16 @@
       $scope.url = '';
       $scope.base = '../../catalog/';
       $scope.pages = {
-          home: 'catalog.search',
-          admin: 'admin.console',
-          signin: 'catalog.signin'
-        };
+        home: 'catalog.search',
+        admin: 'admin.console',
+        signin: 'catalog.signin'
+      };
+
+      /**
+       * Number of selected metadata records.
+       * Only one selection per session is allowed.
+       */
+      $scope.selectedRecordsCount = 0;
 
       /**
        * An ordered list of profiles
@@ -108,6 +114,24 @@
           }, $scope.status.timeout * 1000);
         }
       });
+
+
+
+
+
+
+
+      $scope.selectMetadata = function(uuid) {
+        console.log('select ' + uuid);
+      };
+      $scope.selectAllMetadata = function() {
+        console.log('select all ');
+      };
+
+
+
+
+
     }]);
 
 })();

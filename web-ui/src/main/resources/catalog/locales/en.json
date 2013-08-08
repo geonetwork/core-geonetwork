@@ -22,6 +22,8 @@
     "from": "From",
     "to": "To",
     "by": "by",
+    "previous": "Previous",
+    "next": "Next",
     
     "any": "Full text",
     "orgName": "Contact for the resource",
@@ -185,10 +187,10 @@
     "newGroup": "New group ",
     "cantDeleteGroupHavingRecords": "This group contains records. Move all records to another group to be able to remove it.",
     
+    "urlUpdater": "Update URLs in metadata records",
+    "processReport-done": "Number of records proccessed",
     
-    
-    "manageUsers": "Manage users",
-    
+    "contactUpdaterXMLParam": "<h5>Example:</h5><code class='gn-code'>&lt;gmd:CI_ResponsibleParty xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\"&gt;&lt;gmd:individualName&gt;&lt;gco:CharacterString&gt;A new user&lt;/gco:CharacterString&gt;&lt;/gmd:individualName&gt;&lt;gmd:organisationName&gt;&lt;gco:CharacterString&gt;Organisation&lt;/gco:CharacterString&gt;&lt;/gmd:organisationName&gt;&lt;gmd:contactInfo&gt;&lt;gmd:CI_Contact&gt;&lt;gmd:address&gt;&lt;gmd:CI_Address&gt;&lt;gmd:electronicMailAddress&gt;&lt;gco:CharacterString&gt;newemail@organisation.org&lt;/gco:CharacterString&gt;&lt;/gmd:electronicMailAddress&gt;&lt;/gmd:CI_Address&gt;&lt;/gmd:address&gt;&lt;/gmd:CI_Contact&gt;&lt;/gmd:contactInfo&gt;&lt;gmd:role&gt;&lt;gmd:CI_RoleCode codeListValue=\"pointOfContact\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode\"/&gt;&lt;/gmd:role&gt;&lt;/gmd:CI_ResponsibleParty&gt;</code>",
     
     "errorIs": "Error is ",
     

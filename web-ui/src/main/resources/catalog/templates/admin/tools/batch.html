@@ -1,0 +1,83 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel">
+      <div class="panel-heading" data-translate="">chooseRecordsToUpdate</div>
+      
+      <input class="form-control" type="text" data-ng-model="recordsToProcessFilter"
+        placeholder="{{'anyPlaceHolder' | translate}}"
+        data-ng-keyup="recordsToProcessSearchFor($event)"/>
+      
+      <div data-gn-search-results="recordsToProcess"
+        data-gn-search-results-selected-records-count="selectedRecordsCount"
+        data-gn-search-results-allow-selection="true"/>
+
+      <div data-gn-pagination="recordsToProcessPagination"/>
+    </div>
+  </div>
+
+
+
+  <div class="col-lg-12">
+    <div class="panel">
+      <div class="panel-heading" data-translate="">configureProcess</div>
+      
+      <form class="form-horizontal" id="gn-batch-process">
+        <fieldset>
+          <legend data-translate="">chooseProcess</legend>
+          
+          <select class="form-control" 
+            data-ng-disabled="selectedRecordsCount == 0"
+            data-ng-model="selectedProcess"
+            data-ng-options="p.key | translate for p in batchProcesses"></select>
+          <!-- ng-options set only a index for the select value, 
+          bound the process name in a hidden field -->
+          <input type="hidden" name="process" value="{{selectedProcess.key}}"/>
+          
+          <fieldset data-ng-hide="!selectedProcess">
+            <legend data-translate="">batchProcessParameters</legend>
+            <div 
+              data-ng-repeat="p in selectedProcess.params track by $index"
+              data-ng-switch="" data-on="p.type">
+              <label for="batch_param_{{p.name}}">{{p.name | translate}}</label>
+              <textarea data-ng-switch-when="textarea" 
+                class="form-control"
+                id="batch_param_{{p.name}}" name="{{p.name}}"
+                >{{p.value}}</textarea>
+              <input data-ng-switch-default="" id="batch_param_{{p.name}}" name="{{p.name}}"
+                type="{{p.type || 'text'}}"
+                class="form-control"
+                placeholder="{{p.value}}"/>
+              <p class="help-block" data-translate="">{{p.help | translate}}</p>
+            </div>
+          </fieldset>
+        
+          <button type="button" class="btn btn-primary pull-right icon-play" 
+            data-ng-disabled="!selectedProcess"
+            data-ng-click="runProcess('#gn-batch-process')" 
+            data-translate="">runProcess</button>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-12" data-ng-hide="!processing && !processReport">
+    <div class="panel"
+      data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'"
+      >
+      <div class="panel-heading" 
+        data-translate="">processReport</div>
+      
+      <div class="progress progress-striped active" data-ng-hide="processReport">
+        <div class="progress-bar" style="width: 100%"></div>
+      </div>
+      
+      <table class="table table-striped" data-ng-hide="!processReport">
+        <tr data-ng-repeat="(key, value) in processReport track by $index">
+          <td>{{('processReport-' + key) | translate}}</td>
+          <td class="text-right">{{value}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+</div>

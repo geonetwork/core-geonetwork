@@ -25,6 +25,6 @@
 /**
  * Properly break stack trace error.
  */
-.gn-stack {
+.gn-stack, .gn-code {
     white-space: normal;
 }
