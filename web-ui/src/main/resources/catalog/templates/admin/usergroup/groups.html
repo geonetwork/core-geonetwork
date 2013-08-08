@@ -4,7 +4,7 @@
         <div class="panel">
             <div class="panel-heading"
                 data-translate>groups</div>
-            <input data-ng-model="groupSearch.$" placeholder="{{'filter' | translate}}"/>
+            <input class="form-control" data-ng-model="groupSearch.$" placeholder="{{'filter' | translate}}"/>
             <input type="hidden" data-ng-model="groupSelected.id"/>
             <div class="list-group">
                 <a class="list-group-item" 
@@ -45,18 +45,18 @@
             <form id="gn-group-edit" 
                 data-ng-keypress="updatingGroup()">
                 <fieldset>
-                    <input type="hidden" name="id" 
+                    <input type="hidden" name="id"
                         data-ng-model="groupSelected.id" value="{{groupSelected.id}}"></input>
                     <label data-translate>groupName</label>
-                    <input type="text" name="name" 
+                    <input type="text" name="name" class="form-control"
                         data-ng-model="groupSelected.name"></input>
                     <p class="help-block" data-translate>groupNameHelp</p>
                     <label data-translate>groupDescription</label>
-                    <textarea name="description" 
+                    <textarea name="description" class="form-control"
                         data-ng-model="groupSelected.description"></textarea>
                     <p class="help-block" data-translate>groupDescriptionHelp</p>
                     <label data-translate>groupEmail</label>
-                    <input type="email" name="email" 
+                    <input type="email" name="email" class="form-control"
                         data-ng-model="groupSelected.email"></input>
                     <p class="help-block" data-translate>groupEmailHelp</p>
                     
