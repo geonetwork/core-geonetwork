@@ -223,8 +223,18 @@ public class Geonetwork implements ApplicationHandler {
 		    logger.info("     Failed to initialize setting managers. This is probably due to bad Settings table. Error is: " + 
 		                e.getMessage() + ". In case of database migration, the setting managers will be reinitialized.");
 		}
+		
         // --- Migrate database if an old one is found
         migrateDatabase(servletContext, dbms, settingMan, harvesterSettingsMan, version, subVersion, context);
+        
+        if (settingMan == null) {
+            throw new IllegalArgumentException("Failed to initialize setting managers. This is probably due to bad Settings table.");
+        }
+        
+        // Reinitialized harvester manager which may be affected by migration
+        if (harvesterSettingsMan == null) {
+            harvesterSettingsMan = new HarvesterSettingsManager(dbms, context.getProviderManager());
+        }
         
 		//--- initialize ThreadUtils with setting manager and rm props
 		ThreadUtils.init(context.getResourceManager().getProps(Geonet.Res.MAIN_DB),
@@ -704,7 +714,7 @@ public class Geonetwork implements ApplicationHandler {
                                 
                                 // In 2.11, settingsManager was not able to initialized on previous
                                 // version db table due to structure changes
-	                        	if (settingMan != null) {
+	                        	if (settingMan != null && harvesterSettingsMan != null) {
                                     settingMan.refresh(dbms);
     	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
     	                            task.update(settingMan, harvesterSettingsMan, dbms);
@@ -739,17 +749,16 @@ public class Geonetwork implements ApplicationHandler {
                 } else {
                     // Reinitialized settings
                     settingMan = new SettingManager(dbms, context.getProviderManager());
-                    harvesterSettingsMan = new HarvesterSettingsManager(dbms, context.getProviderManager());
+                    
+                    // Update the logo 
+                    String siteId = settingMan.getValue("system/site/siteId");
+                    initLogo(servletContext, dbms, siteId, context.getAppPath());
                 }
             } catch (Exception e) {
                 logger.info("      Errors occurs during settings manager refresh during migration. Error is: " + e.getMessage());
                 e.printStackTrace();
                 anyMigrationError = true;
             }
-			
-			// Update the logo 
-			String siteId = settingMan.getValue("system/site/siteId");
-			initLogo(servletContext, dbms, siteId, context.getAppPath());
 			
 			// TODO : Maybe a force rebuild index is required in such situation.
 			
