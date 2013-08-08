@@ -21,7 +21,7 @@
 			</xsl:with-param>
 			<xsl:with-param name="buttons">
 				<div align="center">
-					<button class="content" onclick="processForgottenPwdSubmit('{/root/gui/locService}/password.forgotten.submit')"><xsl:value-of select="/root/gui/strings/accept"/></button>
+					<button class="content" onclick="processForgottenPwdSubmit('password.forgotten.submit')"><xsl:value-of select="/root/gui/strings/accept"/></button>
 				</div>
 			</xsl:with-param>
 		</xsl:call-template>
