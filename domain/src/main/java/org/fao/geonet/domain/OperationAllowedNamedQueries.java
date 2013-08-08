@@ -48,6 +48,9 @@ public interface OperationAllowedNamedQueries {
          * The metadataId named parameter 
          */
         String PARAM_METADATA_ID = OperationAllowedNamedQueries.PARAM_METADATA_ID;
+        /**
+         * The definition of the query.
+         */
         String QUERY = "DELETE FROM OperationAllowed oa WHERE oa.id.groupId != :" + PARAM_GROUP_ID + " AND oa.id.metadataId = :"
                 + PARAM_METADATA_ID;
     }
@@ -58,8 +61,17 @@ public interface OperationAllowedNamedQueries {
      * @author Jesse
      */
     interface DeleteByMetadataId {
+        /**
+         * The name of the stored query.
+         */
         String NAME = "DeleteByMetadataId";
+        /**
+         * The metadataId named parameter 
+         */
         String PARAM_METADATA_ID = OperationAllowedNamedQueries.PARAM_METADATA_ID;
+        /**
+         * The definition of the query.
+         */
         String QUERY = "DELETE FROM OperationAllowed oa WHERE oa.id.metadataId = :" + PARAM_METADATA_ID;
     }
 }

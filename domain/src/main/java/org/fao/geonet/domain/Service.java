@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
@@ -30,48 +31,95 @@ public class Service {
     private String description;
     private List<ServiceParameter> _parameters = new ArrayList<ServiceParameter>();
 
+    /**
+     * Get the id of the service entity.  This is a generated value and as such new instances should not have this set as it will simply be ignored
+     * and could result in reduced performance.
+     *
+     * @return the id of the service.
+     */
     @Id
+    @GeneratedValue
     public int getId() {
         return _id;
     }
 
+    /**
+     * Set the id of the service entity.  This is a generated value and as such new instances should not have this set as it will simply be ignored
+     * and could result in reduced performance.
+     * @param id the id of the service entity.
+     */
     public void setId(int id) {
         this._id = id;
     }
 
+    /**
+     * Get the name of the service.
+     *
+     * @return the name of the service.
+     */
     @Column(nullable = false)
     public String getName() {
         return _name;
     }
 
+    /**
+     * Set the name of the service.
+     * @param name the name of the service.
+     */
     public void setName(String name) {
         this._name = name;
     }
 
+    /**
+     * Get the service class name.
+     * @return the service class name.
+     */
     @Column(name = "class", length = 1024, nullable = false)
     public String getClassName() {
         return _className;
     }
 
+    /**
+     * Set the service class name.
+     * @param className the service class name.
+     */
     public void setClassName(String className) {
         this._className = className;
     }
 
+    /**
+     * Get the description of the service.  Maximum length is 1024 characters.
+     *
+     * @return the description of the service.  Maximum length is 1024 characters.
+     */
     @Column(length = 1024)
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Set the description of the service.  Maximum length is 1024 characters.
+     * @param description the description of the service.  Maximum length is 1024 characters.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Get the init parameters to pass to the service.
+     * 
+     * @return the init parameters to pass to the service.
+     */
     @ElementCollection(fetch = FetchType.LAZY, targetClass = ServiceParameter.class)
     @CollectionTable(joinColumns = @JoinColumn(name = "service"), name = "serviceparameters")
     public List<ServiceParameter> getParameters() {
         return _parameters;
     }
 
+    /**
+     * Set the init parameters to pass to the service.
+     * @param parameters the init parameters to pass to the service.
+     */
     public void setParameters(List<ServiceParameter> parameters) {
         this._parameters = parameters;
     }
