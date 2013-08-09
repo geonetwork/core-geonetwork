@@ -85,12 +85,12 @@ public class UserGroups implements Service
 			//--- retrieve user groups of the user id supplied
 			Element elGroups = new Element(Geonet.Elem.GROUPS);
 			Element theGroups;
-
-			if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) && (theProfile.equals(Geonet.Profile.ADMINISTRATOR))) {
-				theGroups = dbms.select("SELECT id, name, description FROM Groups");
-			} else {
-				theGroups = dbms.select("SELECT id, name, description FROM UserGroups, Groups WHERE groupId=id AND userId=?",Integer.valueOf(id));
-			}
+			
+            if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) && (theProfile.equals(Geonet.Profile.ADMINISTRATOR))) {
+                theGroups = dbms.select("SELECT id, name, description, 'Administrator' AS profile FROM Groups");
+            } else {
+                theGroups = dbms.select("SELECT id, name, description, profile FROM UserGroups, Groups WHERE groupId=id AND userId=?",Integer.valueOf(id));
+            }
 
 			@SuppressWarnings("unchecked")
             List<Element> list = theGroups.getChildren();

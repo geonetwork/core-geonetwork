@@ -26,7 +26,7 @@ package org.fao.geonet.guiservices.util;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.XmlSerializer;
@@ -37,11 +37,8 @@ import org.jdom.Element;
  * This service returns some useful information about GeoNetwork.
   */
 public class Env implements Service {
-    private static final String SYSTEM = "system";
     private static final String READ_ONLY = "readonly";
-    private static final String XML_DIR = "/xml";
-    private static final String ENV_XSL = "/env.xsl";
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -56,10 +53,8 @@ public class Env implements Service {
 
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-        String  xslPath = context.getAppPath() + Geonet.Path.STYLESHEETS + XML_DIR;
-		Element system  = gc.getBean(SettingManager.class).get(SYSTEM, -1);
+		Element response  = gc.getBean(SettingManager.class).getAllAsXML();
 
-		Element response = Xml.transform(system, xslPath + ENV_XSL);
         Element readOnly = new Element(READ_ONLY);
         readOnly.setText(Boolean.toString(gc.isReadOnly()));
         response.addContent(readOnly);

@@ -6,14 +6,17 @@ import java.util.Iterator;
 import jeeves.resources.dbms.Dbms;
 
 import org.fao.geonet.DatabaseMigrationTask;
+import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
 public class MigrationTask implements DatabaseMigrationTask {
 
 	@Override
-	public void update(SettingManager settings, Dbms dbms) throws SQLException {
-		Element harvesters = settings.get("harvesting", -1);
+	public void update(SettingManager settings, HarvesterSettingsManager harvesterSettingsMan, Dbms dbms) throws SQLException {
+		// FIXME SETTING-SPLIT Settings are now in HarvesterSettings
+	    Element harvesters = harvesterSettingsMan.get("harvesting", -1);
+		
 		@SuppressWarnings("unchecked")
 		Iterator<Object> iter = harvesters.getDescendants();
 		while(iter.hasNext()) {
@@ -21,15 +24,15 @@ public class MigrationTask implements DatabaseMigrationTask {
 			if(next instanceof Element) {
 				Element el = (Element) next;
 				if(el.getName().equals("options")) {
-					handleOption(settings, dbms, el);
+					handleOption(harvesterSettingsMan, dbms, el);
 				} else if(el.getName().equals("site")) {
-					handleSite(settings, dbms, el);
+					handleSite(harvesterSettingsMan, dbms, el);
 				}
 			}
 		}
 	}
 
-	private void handleSite(SettingManager settings, Dbms dbms, Element el) throws SQLException {
+	private void handleSite(HarvesterSettingsManager settings, Dbms dbms, Element el) throws SQLException {
 		if((parentValue(el, "geonetwork") || parentValue(el, "geonetwork20")) && child(el,"host") != null) {
 			Element host = child(el,"host");
 			Element port = child(el, "port");
@@ -37,7 +40,6 @@ public class MigrationTask implements DatabaseMigrationTask {
 			
 			String value = "http://"+value(host)+":"+value(port)+"/"+value(servlet);
 			settings.setValue(dbms, idPath(host), value);
-			
 			settings.remove(dbms, idPath(port));
 			settings.remove(dbms, idPath(servlet));
 		}
@@ -54,9 +56,9 @@ public class MigrationTask implements DatabaseMigrationTask {
 	private boolean parentValue(Element el, String string) {
 		return el.getParentElement().getParentElement().getChildText("value").equals(string);
 	}
-	private void handleOption(SettingManager settings, Dbms dbms, Element el) throws SQLException {
+	private void handleOption(HarvesterSettingsManager settings, Dbms dbms, Element el) throws SQLException {
 		if(parentValue(el, "webdav") && child(el,"subtype") == null) {
-			settings.add(dbms, idPath(el), "subtype", "webdav");
+		    settings.add(dbms, idPath(el), "subtype", "webdav");
 		}
 	}
 

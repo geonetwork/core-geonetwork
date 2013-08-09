@@ -1348,7 +1348,8 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 				title="Number of missing items in the dataset in relation to the number of items that should have been present"
 				id="ISO19138:2006:measure:7">Rate of missing items</option>
 			<option value="">-- Logical consistency / Conceptual consistency
-				--</option>
+				--
+			</option>
 			<option value="Conceptual schema noncompliance"
 				title="Indication that an item is not compliant to the rules of the relevant conceptual schema"
 				id="ISO19138:2006:measure:8">Conceptual schema noncompliance</option>
@@ -1359,7 +1360,8 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 				value="Number of items noncompliant to the rules of the conceptual schema"
 				title="Count of all items in the dataset that are noncompliant to the rules of the conceptual schema. If the conceptual schema explicitly or implicitly describes rules, these rules have to be followed. Violations against such rules can e.g. be invalid placement of features within a defined tolerance, duplication of features and invalid overlap of features."
 				id="ISO19138:2006:measure:10">Number of items noncompliant to the rules of the conceptual
-				schema</option>
+				schema
+			</option>
 			<option value="Number of invalid overlaps of surfaces"
 				title="Total number of erroneous overlaps within the data Which surfaces may overlap and which must not is application dependent. Not all overlapping surfaces are necessarily erroneous. When reporting this data quality measure the types of feature classes corresponding to the illegal overlapping surfaces have to be reported as well."
 				id="ISO19138:2006:measure:11">Number of invalid overlaps of surfaces</option>
@@ -1367,7 +1369,8 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 				value="Non-compliance rate with respect to the rules of the conceptual schema"
 				title="Number of items in the dataset that are noncompliant to the rules of the conceptual schema in relation to the total number of these items supposed to be in the dataset"
 				id="ISO19138:2006:measure:12">Non-compliance rate with respect to the rules of the conceptual
-				schema</option>
+				schema
+			</option>
 			<option value=" Compliance rate with the rules of the conceptual schema"
 				title="number of items in the dataset in compliance with the rules of the conceptual schema in relation to the total number of items"
 				id="ISO19138:2006:measure:13"> Compliance rate with the rules of the conceptual schema</option>
@@ -1396,7 +1399,8 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 				title="Number of items in the dataset that are stored in conflict with the physical structure of the dataset divided by the total number of items"
 				id="ISO19138:2006:measure:20">Physical structure conflict rate</option>
 			<option value="">-- Logical consistency / Topological consistency
-				--</option>
+				--
+			</option>
 			<option value="Number of faulty point-curve connections"
 				title="Number of faulty point-curve connections in the dataset. A point-curve connection exists where different curves touch. These curves have an intrinsic topological relationship that has to reflect the true constellation. If the point-curve connection contradicts the universe of discourse, the point-curve connection is faulty with respect to this data quality measure. The data quality measure counts the number of errors of this kind."
 				id="ISO19138:2006:measure:21">Number of faulty point-curve connections</option>
@@ -1419,7 +1423,8 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 				title="Count of all items in the data that illegally self overlap"
 				id="ISO19138:2006:measure:27">Number of invalid self overlap errors</option>
 			<option value="">-- Positional accuracy / Absolute or external
-				accuracy / General measures --</option>
+				accuracy / General measures --
+			</option>
 			<option value="Mean value of positional uncertainties"
 				title="Mean value of the positional uncertainties for a set of positions where the positional uncertainties are defined as the distance between a measured position and what is considered as the corresponding true position"
 				id="ISO19138:2006:measure:28">Mean value of positional uncertainties</option>
@@ -1438,7 +1443,8 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 				title="A symmetrical square matrix with variances of point coordinates on the main diagonal and covariances between these coordinates as off-diagonal elements."
 				id="ISO19138:2006:measure:32">Covariance matrix</option>
 			<option value="">-- Positional accuracy / Absolute or external
-				accuracy / Vertical --</option>
+				accuracy / Vertical --
+			</option>
 			<option value="Linear error probable"
 				title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 50%."
 				id="ISO19138:2006:measure:33">Linear error probable</option>
@@ -1462,16 +1468,19 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 				id="ISO19138:2006:measure:39">Root mean square error</option>
 			<option
 				value="Absolute linear error at 90% significance level of biased vertical data (Alternative 1)"
-				title="The absolute vertical accuracy of the dataâs coordinates, expressed in terms of linear error at 90% probability given that a bias is present."
+				title="The absolute vertical accuracy of the data’s coordinates, expressed in terms of linear error at 90% probability given that a bias is present."
 				id="ISO19138:2006:measure:40">Absolute linear error at 90% significance level of biased
-				vertical data (Alternative 1)</option>
+				vertical data (Alternative 1)
+			</option>
 			<option
 				value="Absolute linear error at 90% significance level of biased vertical data"
-				title="The absolute vertical accuracy of the dataâs coordinates, expressed in terms of linear error at 90% probability given that a bias is present."
+				title="The absolute vertical accuracy of the data’s coordinates, expressed in terms of linear error at 90% probability given that a bias is present."
 				id="ISO19138:2006:measure:41">Absolute linear error at 90% significance level of biased
-				vertical data</option>
+				vertical data
+			</option>
 			<option value="">-- Positional accuracy / Absolute or external
-				accuracy / Horizontal --</option>
+				accuracy / Horizontal --
+			</option>
 			<option value="Circular standard deviation"
 				title="Radius describing a circle, in which the true point location lies with the probability of 39.4%."
 				id="ISO19138:2006:measure:42">Circular standard deviation</option>
@@ -1492,12 +1501,13 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 				id="ISO19138:2006:measure:47">Root mean square error of planimetry</option>
 			<option
 				value="Absolute circular error at 90% significance level of biased data (Alternative 2)"
-				title="The absolute horizontal accuracy of the dataâs coordinates, expressed in terms of circular error at 90% probability given that a bias is present."
+				title="The absolute horizontal accuracy of the data’s coordinates, expressed in terms of circular error at 90% probability given that a bias is present."
 				id="ISO19138:2006:measure:48">Absolute circular error at 90% significance level of biased data
-				(Alternative 2)</option>
+				(Alternative 2)
+			</option>
 			<option
 				value="Absolute circular error at 90% significance level of biased data"
-				title="The absolute horizontal accuracy of the dataâs coordinates, expressed in terms of circular error at 90% probability given that a bias is present."
+				title="The absolute horizontal accuracy of the data’s coordinates, expressed in terms of circular error at 90% probability given that a bias is present."
 				id="ISO19138:2006:measure:49">Absolute circular error at 90% significance level of biased data
 			</option>
 			<option value="Uncertainty ellipse"
@@ -1507,7 +1517,8 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 				title="2D ellipse with the two main axes indicating the direction and magnitude of the highest and the lowest uncertainty of a 2D point"
 				id="ISO19138:2006:measure:51">Confidence ellipse</option>
 			<option value="">-- Positional accuracy / Relative or internal
-				accuracy --</option>
+				accuracy --
+			</option>
 			<option value="Relative vertical error"
 				title="Evaluation of the random errors of one relief feature to another in the same dataset or on the same map/chart. It is a function of the random errors in the two elevations with respect to a common vertical datum."
 				id="ISO19138:2006:measure:52">Relative vertical error</option>
@@ -1515,7 +1526,8 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 				title="Evaluation of the random errors in the horizontal position of one feature to another in the same dataset or on the same map/chart."
 				id="ISO19138:2006:measure:53">Relative horizontal error</option>
 			<option value="">-- Temporal accuracy / Accuracy of a time
-				measurement --</option>
+				measurement --
+			</option>
 			<option value="Time accuracy at 68.3% significance level"
 				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 68.3%."
 				id="ISO19138:2006:measure:54">Time accuracy at 68.3% significance level</option>
@@ -1535,10 +1547,12 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 99.8%."
 				id="ISO19138:2006:measure:59">Time accuracy at 99.8% significance level</option>
 			<option value="">-- Thematic accuracy / Classification
-				correctness --</option>
+				correctness --
+			</option>
 			<option value="Number of incorrectly classified features"
 				title="Number of incorrectly classified features" id="ISO19138:2006:measure:60">Number of
-				incorrectly classified features</option>
+				incorrectly classified features
+			</option>
 			<option value="Misclassification rate"
 				title="number of incorrectly classified features in relation to the number of features that are supposed to be there"
 				id="ISO19138:2006:measure:61">Misclassification rate</option>
@@ -1552,7 +1566,8 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 				title="Coefficient to quantify the proportion of agreement of assignments to classes by removing misclassifications"
 				id="ISO19138:2006:measure:64">Kappa coefficient</option>
 			<option value="">-- Thematic accuracy / Non-quantitative
-				attribute correctness --</option>
+				attribute correctness --
+			</option>
 			<option value="Number of incorrect attribute values"
 				title="Total number of erroneous attribute values within the relevant part of the dataset"
 				id="ISO19138:2006:measure:65">Number of incorrect attribute values</option>
@@ -1563,7 +1578,8 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 				title="Number of attribute values where incorrect values are assigned in relation to the total number of attribute values"
 				id="ISO19138:2006:measure:67">Rate of incorrect attribute values</option>
 			<option value="">-- Thematic accuracy / Quantitative attribute
-				accuracy --</option>
+				accuracy --
+			</option>
 			<option value="Attribute value uncertainty at 68.3% significance level"
 				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 68.3%."
 				id="ISO19138:2006:measure:68">Attribute value uncertainty at 68.3% significance level</option>

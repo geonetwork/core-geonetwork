@@ -822,3 +822,14 @@ ul.gn-relation-thumbnail {
 .md-import-status-panel li {
     padding-left: 15px;
 }
+
+.gn-onlineResForm {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.gn-onlineResForm-grid .x-panel-body {
+    padding-bottom: 15px;
+}
+.gn-onlineResForm-grid .x-panel-header {
+    background-image: none;
+}
