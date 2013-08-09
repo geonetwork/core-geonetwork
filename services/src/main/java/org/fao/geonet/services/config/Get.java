@@ -54,10 +54,8 @@ public class Get implements Service
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		String  xslPath = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml";
-		Element system  = gc.getBean(SettingManager.class).get("system", -1);
-
-		return Xml.transform(system, xslPath +"/config.xsl");
+		Element system  = gc.getBean(SettingManager.class).getAllAsXML();
+		return system;
 	}
 }
 

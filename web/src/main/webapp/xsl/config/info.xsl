@@ -48,7 +48,7 @@
 		</xsl:call-template>
     </xsl:template>
 	
-	<xsl:template mode="block" match="system|catalogue|main|index|database">
+	<xsl:template mode="block" match="settings|catalogue|main|index|database">
 		<fieldset style="text-align:left;">
 			<xsl:variable name="tag" select="name(.)"/>
 			<legend><xsl:value-of select="/root/gui/config/*[name()=$tag]"/></legend>
@@ -70,10 +70,15 @@
 		</fieldset>
 	</xsl:template>
 	
-	
-	<xsl:template mode="info" match="main/*|index/*|catalogue/*|database/*|siteId|version|subVersion">
+	<xsl:template mode="info" match="*[@name='system/site/siteId' or @name='system/platform/version' or @name='system/platform/subVersion']">
+		<xsl:variable name="tag" select="@name"/>
+		<label style="text-size:140%;font-weight:bold"><xsl:value-of select="/root/gui/config/setting[@name=$tag]/@label"/></label> 
+		<span class="info"><xsl:value-of select="."/></span><br/>
+	</xsl:template>
+	<xsl:template mode="info" match="main/*|index/*|catalogue/*|database/*">
 		<xsl:variable name="tag" select="name(.)"/>
-		<label style="text-size:140%;font-weight:bold"><xsl:value-of select="/root/gui/config/*[name()=$tag]"/></label> <span class="info"><xsl:value-of select=".|value"/></span><br/>
+		<label style="text-size:140%;font-weight:bold"><xsl:value-of select="/root/gui/config/*[name()=$tag]"/></label> 
+		<span class="info"><xsl:value-of select=".|value"/></span><br/>
 	</xsl:template>
 	
 	<xsl:template mode="info" match="index/index.lucene.config">

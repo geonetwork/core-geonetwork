@@ -45,8 +45,8 @@ import java.util.Set;
 
 public class DefaultStatusActions implements StatusActions {
 
-    protected String host, port, from, fromDescr, replyTo, replyToDescr;
-    protected ServiceContext context;
+    private String host, port, username, password, from, fromDescr, replyTo, replyToDescr;
+    private boolean useSSL;    protected ServiceContext context;
     protected AccessManager am;
     protected String language;
     protected DataManager dm;
@@ -84,7 +84,10 @@ public class DefaultStatusActions implements StatusActions {
         host = sm.getValue("system/feedback/mailServer/host");
         port = sm.getValue("system/feedback/mailServer/port");
         from = sm.getValue("system/feedback/email");
-
+        username = sm.getValue("system/feedback/mailServer/username");
+        password = sm.getValue("system/feedback/mailServer/password");
+        useSSL = sm.getValueAsBool("system/feedback/mailServer/ssl");
+        
         if (host.length() == 0) {
             context.error("Mail server host not configure");
             emailNotes = false;
@@ -277,7 +280,7 @@ public class DefaultStatusActions implements StatusActions {
             context.info("Would send email \nTo: " + sendTo + "\nSubject: " + subject + "\n Message:\n" + message);
         } else {
             MailSender sender = new MailSender(context);
-            sender.sendWithReplyTo(host, Integer.parseInt(port), from, fromDescr, sendTo, null, replyTo, replyToDescr, subject, message);
+            sender.sendWithReplyTo(host, Integer.parseInt(port), username, password, useSSL, from, fromDescr, sendTo, null, replyTo, replyToDescr, subject, message);
         }
     }
 }
