@@ -113,7 +113,7 @@ public class JODAISODate
 		return odt;
 	}
 
-	private static DateTime parseBasicOrFullDateTime(String input1) throws Exception {
+	public static DateTime parseBasicOrFullDateTime(String input1) throws Exception {
 		DateTimeFormatter bd = ISODateTimeFormat.basicDate();
 		DateTimeFormatter bt = ISODateTimeFormat.basicTime();
 		DateTimeFormatter bdt = ISODateTimeFormat.basicDateTime();

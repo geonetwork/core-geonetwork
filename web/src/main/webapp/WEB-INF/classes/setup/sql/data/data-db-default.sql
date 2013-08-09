@@ -920,7 +920,7 @@ INSERT INTO settings (name, value, datatype, position) VALUES ('system/downloads
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/downloadservice/withdisclaimer', 'false', 0, 2230);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/xlinkResolver/enable', 'false', 2, 2310);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/autofixing/enable', 'true', 2, 2410);
-INSERT INTO settings (name, value, datatype, position) VALUES ('system/searchStats/enable', 'false', 2, 2510);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/searchStats/enable', 'true', 2, 2510);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/indexoptimizer/enable', 'true', 2, 6010);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/indexoptimizer/at/hour', '0', 1, 6030);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/indexoptimizer/at/min', '0', 1, 6040);
