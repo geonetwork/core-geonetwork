@@ -71,9 +71,6 @@
 
 	<xsl:template name="panel">
 		<form action="config.set" name="settings" method="post">
-			<xsl:message>
-				<xsl:copy-of select="/root/settings/*"/>
-			</xsl:message>
 			<xsl:for-each select="/root/settings/*">
 				<xsl:sort select="@position" data-type="number"/>
 				<xsl:apply-templates mode="make-settings-form" select="."/>
@@ -101,6 +98,9 @@
 					</xsl:when>
 					<xsl:when test="name() = 'threadedindexing'">
 						<xsl:call-template name="make-settings-form-for-threadedindexing"/>
+					</xsl:when>
+					<xsl:when test="name() = 'wiki'">
+						<xsl:call-template name="make-settings-form-for-markup"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:apply-templates mode="make-settings-form" select="."/>
@@ -373,55 +373,76 @@
 	</xsl:template>
 
 
-	<!-- ============================================================================================= -->
-<!--	<xsl:template name="metadataTextContent">
 
-		<h1 align="left"><xsl:value-of select="/root/gui/config/metadataTextContent"/></h1>
-
-		<div align="left" style="{$style}">
-			<table>
-				<tr>
-					<td class="padded" width="{$width}"><label for="clickablehyperlinks.enable"><xsl:value-of select="/root/gui/config/clickablehyperlinks"/></label></td>
-					<td class="padded"><input id="clickablehyperlinks.enable" class="content" type="checkbox" value=""/></td>
-				</tr>
-				<tr>
-					<td class="padded" width="{$width}"><label for="wysiwyg.enable"><xsl:value-of select="/root/gui/config/wysiwyg"/></label></td>
-					<td class="padded"><input id="wysiwyg.enable" class="content" type="checkbox" value=""/></td>
-				</tr>
-				<tr>
-					<td class="padded" width="{$width}"><label for="wiki.markup"><xsl:value-of select="/root/gui/config/markup"/></label></td>
-					<td class="padded">
-						<select id="wiki.markup" name="wiki.markup" class="content">
-							<option value="none"><xsl:value-of select="/root/gui/config/none"/></option>
-							<option value="org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage">Confluence Wiki Markup</option>
-							<option value="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage">Mediawiki Markup</option>
-							<option value="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage">Textile Markup</option>
-							<option value="org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage">Trac Wiki Markup</option>
-							<option value="org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage">TWiki Markup</option>
-						</select>
-					</td>
-				</tr>
-				<tr id="wiki.output.row">
-					<td class="padded" width="{$width}"><label for="wiki.output"><xsl:value-of select="/root/gui/config/wikiOutput"/></label></td>
-					<td class="padded">
-						<select id="wiki.output" name="wiki.output" class="content">
-							<option value="strip"><xsl:value-of select="/root/gui/config/removeStyling"/></option>
-							<option value="keep"><xsl:value-of select="/root/gui/config/keepStyling"/></option>
-						</select>
-					</td>
-				</tr>
-				<tr id="wiki.mefoutput.row">
-					<td class="padded" width="{$width}"><label for="wiki.mefoutput"><xsl:value-of select="/root/gui/config/wikiMEFOutput"/></label></td>
-					<td class="padded">
-						<select id="wiki.mefoutput" name="wiki.mefoutput" class="content">
-							<option value="strip"><xsl:value-of select="/root/gui/config/removeStyling"/></option>
-							<option value="keep"><xsl:value-of select="/root/gui/config/keepStyling"/></option>
-						</select>
-					</td>
-				</tr>
-			</table>
-		</div>
-	</xsl:template>-->
+	<xsl:template name="make-settings-form-for-markup">
+		<xsl:variable name="id" select="generate-id()"/>
+		<xsl:variable name="name" select="'system/wiki/markup'"/>
+		
+		<fieldset>
+			<legend>
+				<xsl:value-of select="$settingLabel[@name = $name]/@label"/>
+				<a href="#markup"/>
+			</legend>
+			<div>
+				<label for="{$id}">
+					<xsl:value-of select="$settingLabel[@name = $name]/@label"/>
+				</label>
+				<xsl:variable name="markup" select="markup"/>
+				<select name="system.wiki.markup" class="content">
+					<option value="none"><xsl:value-of select="/root/gui/config/none"/></option>
+					<option value="org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage">
+						<xsl:if test="$markup = 'org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage'">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>Confluence Wiki Markup</option>
+					<option value="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage">
+						<xsl:if test="$markup = 'org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage'">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>Mediawiki Markup</option>
+					<option value="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage">
+						<xsl:if test="$markup = 'org.eclipse.mylyn.wikitext.textile.core.TextileLanguage'">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>Textile Markup</option>
+					<option value="org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage">
+						<xsl:if test="$markup = 'org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage'">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>Trac Wiki Markup</option>
+					<option value="org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage">
+						<xsl:if test="$markup = 'org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage'">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>TWiki Markup</option>
+				</select>
+			</div>
+			<div>
+				<label for="{$id}">
+					<xsl:value-of select="$settingLabel[@name = 'system/wiki/output']/@label"/>
+				</label>
+				<select name="system.wiki.output" class="content">
+					<option value="strip">
+						<xsl:if test="output = 'strip'">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if><xsl:value-of select="/root/gui/config/removeStyling"/></option>
+					<option value="keep">
+						<xsl:if test="output = 'keep'">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if><xsl:value-of select="/root/gui/config/keepStyling"/></option>
+				</select>
+			</div>
+			<div>
+				<label for="{$id}">
+					<xsl:value-of select="$settingLabel[@name = 'system/wiki/mefoutput']/@label"/>
+				</label>
+				<select name="system.wiki.mefoutput" class="content">
+					<option value="strip"><xsl:if test="mefoutput = 'strip'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if><xsl:value-of select="/root/gui/config/removeStyling"/></option>
+					<option value="keep"><xsl:if test="mefoutput = 'keep'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if><xsl:value-of select="/root/gui/config/keepStyling"/></option>
+				</select>
+			</div>
+		</fieldset>
+	</xsl:template>
+	
 	<xsl:template name="make-settings-form-for-indexoptimizer">
 		<fieldset>
 			<legend>

@@ -305,4 +305,11 @@
 <db.maxactive>Nombre maximum de connexions :</db.maxactive>
 <db.statserror>Statistique :</db.statserror>
 <sequentialExecution>ThreadPool Sequential Execution Mode: </sequentialExecution>
+	
+	<setting label="Choose markup to use" name="system/wiki/markup"/>
+	<setting label="Parse markup in output" name="system/wiki/output"/>
+	<setting label="Parse markup in MEF output" name="system/wiki/mefoutput"/>
+	<setting label="Rich Text Editor" name="system/wysiwyg/enable"/>
+	<removeStyling>Remove styling</removeStyling>
+	<keepStyling>Keep styling</keepStyling>
 </strings>

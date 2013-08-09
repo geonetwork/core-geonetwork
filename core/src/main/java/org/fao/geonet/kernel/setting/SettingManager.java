@@ -171,7 +171,12 @@ public class SettingManager {
         if (Log.isDebugEnabled(Geonet.SETTINGS)) {
             Log.debug(Geonet.SETTINGS, "Requested setting with name: " + path);
         }
-        String value = settings.get(path).getValue();
+        SettingEntry se = settings.get(path);
+        if (se == null) {
+            Log.error(Geonet.SETTINGS, "  Requested setting with name: " + path + "  not found. Add it to the settings table.");
+            return null;
+        }
+        String value = se.getValue();
         if (value == null) {
             Log.warning(Geonet.SETTINGS, "  Requested setting with name: " + path + " but null value found. Check the settings table.");
         }
@@ -187,11 +192,16 @@ public class SettingManager {
         Element env = new Element("settings");
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i];
-            String value = settings.get(key).getValue();
-            if (value != null) {
-                Element setting = new Element("setting");
-                setting.setAttribute("name", key).setAttribute("value", value);
-                env.addContent(setting);
+            SettingEntry se = settings.get(key);
+            if (se == null) {
+                Log.error(Geonet.SETTINGS, "  Requested setting with name: " + key + " not found. Add it to the settings table.");
+            } else {
+                String value = se.getValue();
+                if (value != null) {
+                    Element setting = new Element("setting");
+                    setting.setAttribute("name", key).setAttribute("value", value);
+                    env.addContent(setting);
+                }
             }
         }
         return env;
