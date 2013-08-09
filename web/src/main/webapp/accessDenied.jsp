@@ -43,8 +43,8 @@
 			var referer = window.location.pathname
 
 			// Attempt to determine language based on referer if we could not determine it based on spring security.
-			refererLang=referer.match(/^.*\/srv\/([a-z]{3})\/.*$/i)[1];
-			if (ssUserLang=="null" && refererLang.length==3)
+			refererLang=(referer.match(/^.*\/srv\/([a-z]{3})\/.*$/i)|| [,null])[1];
+			if (ssUserLang=="null" && refererLang && refererLang.length==3)
 				userLang=refererLang;
 
 			if(!userLang) {

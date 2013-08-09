@@ -535,7 +535,9 @@ public class ServiceManager
 			{
 				//--- try to dispatch to the error output
 
-				ErrorPage errPage = srvInfo.findErrorPage(id);
+				ErrorPage errPage=null;
+				if (srvInfo!=null) 
+					errPage=srvInfo.findErrorPage(id);
 
 				if (errPage == null)
 					errPage = findErrorPage(id);

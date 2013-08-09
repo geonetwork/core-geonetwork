@@ -9,6 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>health-monitor</artifactId>
+    	<name>GeoNetwork health monitor</name>
 
 	<dependencies>
 		<dependency>

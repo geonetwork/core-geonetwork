@@ -22,7 +22,7 @@
 			
 You can change your password using the following link:
 
-<xsl:value-of select="root/siteURL"/>/srv/en/password.change.form?username=<xsl:value-of select="root/username"/>&amp;changeKey=<xsl:value-of select="root/changeKey"/>
+<xsl:value-of select="root/siteURL"/>/srv/eng/password.change.form?username=<xsl:value-of select="root/username"/>&amp;changeKey=<xsl:value-of select="root/changeKey"/>
 
 This link is valid for today only.
 
