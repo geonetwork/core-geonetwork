@@ -171,9 +171,9 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         if (type === 'thumbnail') {
             config.height = 300;
             config.width = 500;
-        } else if (type === 'onlinesrc') {
-            config.height = 450;
-            config.width = 700;
+        } else if (type === 'onlinesrc' || type === 'service') {
+            config.height = 700;
+            config.width = 800;
         } else if (type === 'sibling') {
             config.height = 450;
             config.width = 700;
