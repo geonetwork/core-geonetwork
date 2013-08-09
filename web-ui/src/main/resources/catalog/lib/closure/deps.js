@@ -23,7 +23,8 @@ goog.addDependency('../../js/DashboardSearchStatController.js', ['gn_dashboard_s
 goog.addDependency('../../js/DashboardStatusController.js', ['gn_dashboard_status_controller'], ['gn_gauge']);
 goog.addDependency('../../js/GnAdminModule.js', ['gn_admin'], ['gn', 'gn_admin_controller', 'gn_admintools_controller', 'gn_cat_controller', 'gn_dashboard_controller', 'gn_translation', 'gn_translation_controller']);
 goog.addDependency('../../js/GnLoginModule.js', ['gn_login'], ['gn_cat_controller', 'gn_login_controller', 'gn_translation', 'gn_translation_controller']);
-goog.addDependency('../../js/GnModule.js', ['gn'], ['gn_cat_controller', 'gn_metadata_manager', 'gn_pagination', 'gn_search_manager', 'gn_search_results', 'gn_translation', 'gn_translation_controller', 'gn_utility_service']);
+goog.addDependency('../../js/GnModule.js', ['gn', 'gn_search_controller'], ['gn_cat_controller', 'gn_metadata_manager', 'gn_pagination', 'gn_search_manager', 'gn_search_results', 'gn_translation', 'gn_translation_controller', 'gn_utility_service']);
 goog.addDependency('../../js/LoginController.js', ['gn_login_controller'], []);
+goog.addDependency('../../js/SearchController.js', ['gn_search_controller'], []);
 goog.addDependency('../../js/TranslationController.js', ['gn_translation_controller'], []);
 goog.addDependency('../../js/UserGroupController.js', ['gn_usergroup_controller'], []);

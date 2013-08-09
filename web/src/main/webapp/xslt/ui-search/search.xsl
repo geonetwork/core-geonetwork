@@ -4,14 +4,7 @@
   <xsl:include href="../base-layout.xsl"/>
 
   <xsl:template mode="content" match="/">
-    
-    <div class="container">
-      
-      <div class="jumbotron">
-        <h1>GeoNetwork opensource</h1>
-        <a href="../srv/eng/search" type="button" class="btn btn-default">Search</a>
-      </div>
+    <div data-ng-include="'{$uiResourcesPath}templates/search/search.html'">
     </div>
-    
   </xsl:template>
 </xsl:stylesheet>

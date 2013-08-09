@@ -15,7 +15,7 @@ from XSLT.
     <html ng-app="{$angularApp}" lang="{$lang}">
       <head>
         <title><xsl:value-of
-          select="concat($env/site/name, ' - ', $env/site/organisation)"/></title>
+          select="concat($env/system/site/name, ' - ', $env/system/site/organisation)"/></title>
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

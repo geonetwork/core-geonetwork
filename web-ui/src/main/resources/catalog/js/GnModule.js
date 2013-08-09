@@ -10,15 +10,10 @@
 
 
 
-
-
-
-
-
-
   goog.require('gn_cat_controller');
   goog.require('gn_metadata_manager');
   goog.require('gn_pagination');
+  goog.require('gn_search_controller');
   goog.require('gn_search_manager');
   goog.require('gn_search_results');
   goog.require('gn_translation');
@@ -33,7 +28,8 @@
     'gn_search_results',
     'gn_pagination',
     'gn_translation_controller',
-    'gn_cat_controller'
+    'gn_cat_controller',
+    'gn_search_controller'
   ]);
 
   module.config(['$translateProvider', function($translateProvider) {

@@ -8,7 +8,7 @@
     </div>
     
     <!-- Make this a directive TODO -->
-    <div ng-include="'../../catalog/templates/info.html'">
+    <div ng-include="'{$uiResourcesPath}templates/info.html'">
     </div>
   </xsl:template>
 
