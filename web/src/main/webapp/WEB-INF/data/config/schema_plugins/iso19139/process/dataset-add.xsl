@@ -22,6 +22,8 @@ attached it to the metadata for data.
 	<!-- ============================================================================= -->
 
 	<xsl:template match="/gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
+	<xsl:message>JE PASSEE</xsl:message>
+	
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
 			<xsl:copy-of
@@ -92,21 +94,23 @@ attached it to the metadata for data.
 
 							<!-- Handle SV_CoupledResource -->
 							<xsl:variable name="coupledResource">
-								<srv:coupledResource>
-									<srv:SV_CoupledResource>
-										<srv:operationName>
-											<gco:CharacterString>GetCapabilities</gco:CharacterString>
-										</srv:operationName>
-										<srv:identifier>
-											<gco:CharacterString>
-												<xsl:value-of select="$uuidref"/>
-											</gco:CharacterString>
-										</srv:identifier>
-										<gco:ScopedName>
-											<xsl:value-of select="$scopedName"/>
-										</gco:ScopedName>
-									</srv:SV_CoupledResource>
-								</srv:coupledResource>
+								<xsl:for-each select="tokenize($scopedName, ',')">
+									<srv:coupledResource>
+										<srv:SV_CoupledResource>
+											<srv:operationName>
+												<gco:CharacterString>GetCapabilities</gco:CharacterString>
+											</srv:operationName>
+											<srv:identifier>
+												<gco:CharacterString>
+													<xsl:value-of select="$uuidref"/>
+												</gco:CharacterString>
+											</srv:identifier>
+											<gco:ScopedName>
+												<xsl:value-of select="."/>
+											</gco:ScopedName>
+										</srv:SV_CoupledResource>
+									</srv:coupledResource>
+								</xsl:for-each>
 							</xsl:variable>
 
 							<xsl:choose>
@@ -189,30 +193,33 @@ attached it to the metadata for data.
 										select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:transferSize"/>
 									<xsl:copy-of
 										select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:onLine"/>
-									<gmd:onLine>
-										<gmd:CI_OnlineResource>
-											<gmd:linkage>
-												<gmd:URL>
-												<xsl:value-of select="$url"/>
-												</gmd:URL>
-											</gmd:linkage>
-											<gmd:protocol>
-												<gco:CharacterString>
-												<xsl:value-of select="$protocol"/>
-												</gco:CharacterString>
-											</gmd:protocol>
-											<gmd:name>
-												<gco:CharacterString>
-												<xsl:value-of select="$scopedName"/>
-												</gco:CharacterString>
-											</gmd:name>
-											<gmd:description>
-												<gco:CharacterString>
-												<xsl:value-of select="$desc"/>
-												</gco:CharacterString>
-											</gmd:description>
-										</gmd:CI_OnlineResource>
-									</gmd:onLine>
+									
+										<xsl:for-each select="tokenize($scopedName, ',')">
+											<gmd:onLine>
+												<gmd:CI_OnlineResource>
+													<gmd:linkage>
+														<gmd:URL>
+														<xsl:value-of select="$url"/>
+														</gmd:URL>
+													</gmd:linkage>
+													<gmd:protocol>
+														<gco:CharacterString>
+														<xsl:value-of select="$protocol"/>
+														</gco:CharacterString>
+													</gmd:protocol>
+													<gmd:name>
+														<gco:CharacterString>
+														<xsl:value-of select="."/>
+														</gco:CharacterString>
+													</gmd:name>
+													<gmd:description>
+														<gco:CharacterString>
+														<xsl:value-of select="."/>
+														</gco:CharacterString>
+													</gmd:description>
+												</gmd:CI_OnlineResource>
+											</gmd:onLine>
+										</xsl:for-each>
 									<xsl:copy-of
 										select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:offLine"
 									/>
