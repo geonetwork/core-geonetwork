@@ -4,10 +4,10 @@ Stylesheet used to remove a reference to a online resource.
 -->
 <xsl:stylesheet version="2.0" xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+	xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	
-	<xsl:param name="url"/>
-	<xsl:param name="name" />
+	<xsl:param name="uuidref"/>
 	
 	<!-- Do a copy of every nodes and attributes -->
 	<xsl:template match="@*|node()">
@@ -16,7 +16,6 @@ Stylesheet used to remove a reference to a online resource.
 		</xsl:copy>
 	</xsl:template>
 
-	<!-- Remove geonet:* elements. -->
-	<xsl:template match="geonet:*|gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) = $name]" priority="2"/>
+	<xsl:template match="geonet:*|srv:coupledResource[normalize-space(srv:SV_CoupledResource/srv:identifier/gco:CharacterString) = $uuidref]|srv:operatesOn[@uuidref = $uuidref]" priority="2"/>
 	
 </xsl:stylesheet>
