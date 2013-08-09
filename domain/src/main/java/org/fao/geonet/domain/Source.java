@@ -21,19 +21,39 @@ public class Source {
     private String name;
     private char _local = 'y';
 
+    /**
+     * Get the uuid of the source.
+     * 
+     * @return the uuid of the source.
+     */
     @Id
     public String getUuid() {
         return uuid;
     }
 
+    /**
+     * Set the uuid of the source.
+     * 
+     * @param uuid the uuid of the source.
+     */
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
+    /**
+     * Get the name of the source.
+     * 
+     * @return the name of the source.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Set the name of the source.
+     * 
+     * @param name the name of the source.
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -47,17 +67,29 @@ public class Source {
         return _local;
     }
 
-    protected char setIsLocal_JpaWorkaround(char local) {
-        return _local = local;
+    /**
+     * Set the column values.
+     * @param local 'y' or 'n'
+     */
+    protected void setIsLocal_JpaWorkaround(char local) {
+        _local = local;
     }
 
+    /**
+     * Return true is the source refers to the local geonetwork.
+     *
+     * @return true is the source refers to the local geonetwork.
+     */
     @Transient
     public boolean isLocal() {
         return _local == 'y';
     }
 
+    /**
+     * Set true is the source refers to the local geonetwork.
+     * @param local true is the source refers to the local geonetwork.
+     */
     public void setLocal(boolean local) {
         this._local = local ? 'y' : 'n';
     }
-
 }

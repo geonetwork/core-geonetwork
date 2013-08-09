@@ -48,6 +48,11 @@ public class Setting {
     private String _name;
     private String _value;
 
+    /**
+     * Get the setting id.  This is a generated value and as such new instances should not have this set as it will simply be ignored
+     * and could result in reduced performance.
+     * @return the setting id
+     */
     @Id
     @GeneratedValue
     @Column(name = "id", nullable = false)
@@ -55,13 +60,19 @@ public class Setting {
         return _id;
     }
 
+    /**
+     * Set the setting id.  This is a generated value and as such new instances should not have this set as it will simply be ignored
+     * and could result in reduced performance.
+     * @param _id the setting id
+     * @return this setting object
+     */
     public Setting setId(int _id) {
         this._id = _id;
         return this;
     }
 
     /**
-     * Get the parent setting.
+     * Get the parent setting object.  This is a nullable property.
      */
     @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = { PERSIST, MERGE, DETACH })
     @JoinColumn(name = "parentid")
@@ -70,46 +81,98 @@ public class Setting {
         return _parent;
     }
 
-    public Setting setParent(Setting parent) {
+    /**
+     * Set the parent setting object for this setting.  The may be null.
+     *
+     * @param parent the parent setting object 
+     * @return this setting object
+     */
+    public @Nonnull Setting setParent(@Nullable Setting parent) {
         this._parent = parent;
         return this;
     }
 
+    /**
+     * Get the setting name.  This is a required property.
+     *
+     * @return the setting name.
+     */
     @Column(name = "name", nullable = false)
     public @Nonnull
     String getName() {
         return _name;
     }
 
-    public Setting setName(String name) {
+    /**
+     * Set the setting name.  This is a required property.
+     * @param name the setting name.   This is a required property.
+     * @return this setting object
+     */
+    public @Nonnull Setting setName(@Nonnull String name) {
         this._name = name;
         return this;
     }
 
+    /**
+     * Get the setting value. This is a nullable property.
+     * @return
+     */
     @Lob
     @Column(name = "value", nullable = true)
-    public String getValue() {
+    public @Nullable String getValue() {
         return _value;
     }
 
-    public Setting setValue(String value) {
+    public Setting setValue(@Nullable String value) {
         this._value = value;
         return this;
     }
 
+    /**
+     * Get the value as an integer. This may throw {@link NullPointerException} if the value is null or {@link NumberFormatException} if the
+     * value is not a valid number.
+     * 
+     * @return the value as an integer
+     */
     @Transient
-    public int getValueAsInt() {
-        return Integer.parseInt(_value);
+    public int getValueAsInt() throws NullPointerException, NumberFormatException {
+        if (getValue() == null) {
+            throw new NullPointerException("Setting value of "+getName()+" is null");
+        }
+        return Integer.parseInt(getValue());
     }
 
+    /**
+     * Set the value of setting with an integer.
+     * 
+     * @param value the new value
+     * @return this setting object
+     */
     public Setting setValue(int value) {
-        this._value = String.valueOf(value);
-        return this;
+       return setValue(String.valueOf(value));
     }
 
+    /**
+     * Get the values as a boolean.  Returns false if the values is not a boolean.
+     * @return the values as a boolean
+     * @throws NullPointerException if the value is null.
+     */
     @Transient
-    public boolean getValueAsBool() {
+    public boolean getValueAsBool() throws NullPointerException {
+        if (getValue() == null) {
+            throw new NullPointerException("Setting value of "+getName()+" is null");
+        }
         return Boolean.parseBoolean(_value);
+    }
+
+    /**
+     * Set the value of setting with a boolean.
+     * 
+     * @param value the new value
+     * @return this setting object
+     */
+    public Setting setValue(boolean value) {
+       return setValue(String.valueOf(value));
     }
 
     @Override

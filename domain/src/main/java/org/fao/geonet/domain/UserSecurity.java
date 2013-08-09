@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import javax.annotation.Nonnull;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
@@ -14,18 +15,35 @@ public class UserSecurity {
     private String securityNotifications = "";
     private String authType;
 
+    /**
+     * Get the hashed password.  This is a required property.
+     *
+     * @return the hashed password
+     */
     @Column(nullable = false, length = 120)
-    public char[] getPassword() {
+    public @Nonnull char[] getPassword() {
         return password;
     }
 
-    public UserSecurity setPassword(char[] password) {
+    /**
+     * Set the hashed password.  This is a required property.
+     * 
+     * @param password the hashed password.
+     * @return this UserSecurity object
+     */
+    public @Nonnull UserSecurity setPassword(@Nonnull char[] password) {
         this.password = password;
         return this;
     }
 
+    /**
+     * Set the hashed password.  This is a required property.
+     * 
+     * @param password the hashed password.
+     * @return this UserSecurity object
+     */
     public UserSecurity setPassword(String password) {
-        this.password = password.toCharArray();
+        setPassword(password.toCharArray());
         return this;
     }
 

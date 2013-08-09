@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
@@ -14,6 +16,7 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -49,46 +52,90 @@ public class User implements JeevesUser {
     Profile _profile;
     UserSecurity _security;
 
+    /**
+     * Get the userid.   This is a generated value and as such new instances should not have this set as it will simply be ignored
+     * and could result in reduced performance.
+     * 
+     * @return the user id
+     */
     @Id
+    @GeneratedValue
     public int getId() {
         return _id;
     }
 
-    public User setId(int id) {
+    /**
+     * Set the userid.   This is a generated value and as such new instances should not have this set as it will simply be ignored
+     * and could result in reduced performance.
+     * @param id the userid
+     * @return this user object
+     */
+    public @Nonnull User setId(int id) {
         this._id = id;
         return this;
     }
 
-    @Column(nullable = false)
-    public String getUsername() {
+    /**
+     * Get the username.  This is both required and must be unique
+     * 
+     * @return the username
+     */
+    @Column(nullable = false, unique=true)
+    public @Nonnull String getUsername() {
         return _username;
     }
 
-    public User setUsername(String username) {
+    /**
+     * Set the username.  This is both required and must be unique
+     * @param username the username.  This is both required and must be unique
+     * @return this user object
+     */
+    public @Nonnull User setUsername(@Nonnull String username) {
         this._username = username;
         return this;
     }
-
+    /**
+     * Get the user's hashed password.  Actual passwords are not stored only hashes of the passwords.
+     */
     @Transient
     @Override
     public String getPassword() {
         return new String(getSecurity().getPassword());
     }
 
-    public String getSurname() {
+    /**
+     * Get the Surname/lastname of the user.  May be null
+     * 
+     * @return the Surname/lastname of the user.  May be null
+     */
+    public @Nullable String getSurname() {
         return _surname;
     }
 
-    public User setSurname(String surname) {
+    /**
+     * Set the Surname/lastname of the user.  May be null
+     * @param surname the Surname/lastname of the user.  May be null
+     * @return this user object
+     */
+    public @Nonnull User setSurname(@Nullable String surname) {
         this._surname = surname;
         return this;
     }
 
-    public String getName() {
+    /**
+     * Get the user's actual first name.  May be null.
+     * @return the user's actual first name.  May be null.
+     */
+    public @Nullable String getName() {
         return _name;
     }
 
-    public User setName(String name) {
+    /**
+     * Set the user's actual first name.  May be null.
+     * @param name the user's actual first name.  May be null.
+     * @return this user object
+     */
+    public @Nonnull User setName(@Nullable String name) {
         this._name = name;
         return this;
     }
@@ -102,6 +149,11 @@ public class User implements JeevesUser {
         return null;
     }
 
+    /**
+     * Get all the user's email addresses.
+     *
+     * @return the user's email addresses.
+     */
     @ElementCollection(fetch = FetchType.EAGER, targetClass = String.class)
     @CollectionTable(name = "email")
     @Column(name = "email")
@@ -109,22 +161,43 @@ public class User implements JeevesUser {
         return _email;
     }
 
+    /**
+     * Set all the email addresses.
+     *
+     * @param email all the email addresses.
+     * @return this user object
+     */
     public User setEmailAddresses(Set<String> email) {
         this._email = email;
         return this;
     }
 
+    /**
+     * Get all the user's addresses.
+     * 
+     * @return all the user's addresses.
+     */ 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "USER_ADDRESS", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = { @JoinColumn(name = "addressid", referencedColumnName = "ID", unique = true) })
     public Set<Address> getAddresses() {
         return _addresses;
     }
 
+    /**
+     * Set all the user's addresses.
+     * @param addresses all the user's addresses.
+     * @return this user object
+     */
     public User setAddresses(Set<Address> addresses) {
         this._addresses = addresses;
         return this;
     }
 
+    /**
+     * Return the organization the user is a part of.
+     *
+     * @return the user's organization.
+     */
     public String getOrganisation() {
         return _organisation;
     }
@@ -143,30 +216,58 @@ public class User implements JeevesUser {
         return _kind;
     }
 
-    public User setKind(String kind) {
+    /**
+     * Set the 'kind' of user. Just a sting representing the type or category of the user. It can be customized for a particular
+     * application. An example is GOV or CONTRACTOR.
+     *
+     * @param kind the 'kind' of user. Just a sting representing the type or category of the user. It can be customized for a particular
+     * application. An example is GOV or CONTRACTOR.
+     *
+     * @return this user object
+     */
+    public @Nonnull User setKind(String kind) {
         this._kind = kind;
         return this;
     }
 
+    /**
+     * Get the user's profile. This is a required property.
+     * 
+     * @return the user's profile.
+     */
     @Column(nullable = false)
-    public Profile getProfile() {
+    public @Nonnull Profile getProfile() {
         return _profile;
     }
 
-    public User setProfile(Profile profile) {
+    /**
+     * Set the user's profile. This is a required property.
+     *
+     * @param profile the user's profile.
+     *
+     * @return this user object
+     */
+    public @Nonnull User setProfile(@Nonnull Profile profile) {
         this._profile = profile;
         return this;
     }
 
     /**
-     * 
-     * @return
+     * Get the object containing the information regarding security.
+     *
+     * @return the object containing the information regarding security.
      */
-    public UserSecurity getSecurity() {
+    public @Nonnull UserSecurity getSecurity() {
         return _security;
     }
 
-    protected User setSecurity(UserSecurity security) {
+    /**
+     * Set the UserSecurity object.  It is to be used by JPA framework.
+     *
+     * @param security the security object
+     * @return this user object
+     */
+    protected @Nonnull User setSecurity(@Nonnull UserSecurity security) {
         this._security = security;
         return this;
     }

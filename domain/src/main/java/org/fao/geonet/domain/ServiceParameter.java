@@ -6,6 +6,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
 
 /**
  * One of the entities responsible for dynamic service configuration. The services represent the virtual services and these are the
@@ -22,28 +23,61 @@ public class ServiceParameter implements Serializable {
     private String _name;
     private String _value;
 
+    /**
+     * Get the id of the parameter entity. This is a generated value and as such new instances should not have this set as it will simply be
+     * ignored and could result in reduced performance.
+     * 
+     * @return the id of the parameter entity.
+     */
+    @GeneratedValue
     public int getId() {
         return _id;
     }
 
+    /**
+     * Set the id of the parameter entity. This is a generated value and as such new instances should not have this set as it will simply be
+     * ignored and could result in reduced performance.
+     * 
+     * @param id the id of the parameter entity.
+     */
     public void setId(int id) {
         this._id = id;
     }
 
+    /**
+     * Get the parameter name. This is a required property.
+     * 
+     * @return the parameter name.
+     */
     @Column(nullable = false)
     public String getName() {
         return _name;
     }
 
+    /**
+     * Set the parameter name. This is a required property.
+     * 
+     * @param name the parameter name.
+     */
     public void setName(String name) {
         this._name = name;
     }
 
+    /**
+     * Get the parameter value. This is a required property.
+     * 
+     * @return the parameter value.
+     */
     @Column(length = 1024, nullable = false)
     public String getValue() {
         return _value;
     }
 
+    /**
+     * Set the parameter value. This is a required property.
+     * 
+     * @param value the parameter value.
+     */
     public void setValue(String value) {
         this._value = value;
     }

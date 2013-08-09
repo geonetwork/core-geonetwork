@@ -31,7 +31,7 @@ public interface OperationAllowedNamedQueries {
     String PATH_OPERATION_ID = OperationAllowed_.id.getName() + "." + OperationAllowedId_.operationId.getName();
 
     /**
-     * Constants defining a Stored Query and its parameters.
+     * Constants defining the Delete OperationsAllowed by metadataId except for in group Stored Query and its parameters.
      *
      * @author Jesse
      */
@@ -56,7 +56,7 @@ public interface OperationAllowedNamedQueries {
     }
 
     /**
-     * Constants defining a Stored Query and its parameters.
+     * Constants defining the Delete OperationsAllowed by metadataId Stored Query and its parameters.
      *
      * @author Jesse
      */

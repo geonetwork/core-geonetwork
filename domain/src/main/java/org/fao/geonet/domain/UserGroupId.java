@@ -16,19 +16,41 @@ public class UserGroupId implements Serializable {
     private int _userId;
     private int _groupId;
 
+    /**
+     * Get the id of the user.
+     *
+     * @return the id of the user.
+     */
     public int getUserId() {
         return _userId;
     }
 
+    /**
+     * Set the id of the user.
+     * 
+     * @param userId the id of the user.
+     * @return this id object
+     */
     public UserGroupId setUserId(int userId) {
         this._userId = userId;
         return this;
     }
 
+    /**
+     * Get the group id.
+     *
+     * @return the group id.
+     */
     public int getGroupId() {
         return _groupId;
     }
 
+    /**
+     * Set the group id
+     * 
+     * @param groupId the group id
+     * @return this id object
+     */
     public UserGroupId setGroupId(int groupId) {
         this._groupId = groupId;
         return this;
