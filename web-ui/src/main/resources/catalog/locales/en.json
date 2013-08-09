@@ -169,6 +169,8 @@
     "isAdministrator": "Is an administrator ?",
     "defineUserGroupsPerProfile": "Select user groups per profile",
     "passwordRepeat": "Repeat password",
+    "passwordNotMatching": "The password does not match!",
+    "passwordMinlength": "Password must contain at least 6 characters!",
     
     "groups": "Groups",
     "groupName": "Name",

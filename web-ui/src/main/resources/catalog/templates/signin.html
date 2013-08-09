@@ -1,12 +1,13 @@
-
 <div class="container">
     <div class="col-lg-6">
         <form class="form-horizontal" action="../../j_spring_security_check" method="post">
             <label for="inputUsername" translate>username</label>
             <!-- TODO : translate attr -->
-            <input type="text" id="inputUsername" name="username" placeholder="{{'username' | translate}}"/>
+            <input type="text" class="form-control"
+              id="inputUsername" name="username" placeholder="{{'username' | translate}}"/>
             <label for="inputPassword" translate>password</label>
-            <input type="password" id="inputPassword" name="password" placeholder="{{'password' | translate}}"/>
+            <input type="password"  class="form-control"
+              id="inputPassword" name="password" placeholder="{{'password' | translate}}"/>
             <input type="hidden" name="redirectUrl" value="/"/>
             <!--<div class="checkbox">
                 <label class="checkbox">

@@ -70,7 +70,8 @@
                     <tr 
                         data-ng-repeat="(key, value) in groupSelected.label track by $index">
                         <td>{{key}}</td>
-                        <td><input type="text" id="translation-{{key}}" value="{{value}}"
+                        <td><input type="text" class="form-control" 
+                            id="translation-{{key}}" value="{{value}}"
                             data-ng-model="groupSelected.label[key]" 
                             data-ng-keyup="saveTranslation(this)"
                             /></td>

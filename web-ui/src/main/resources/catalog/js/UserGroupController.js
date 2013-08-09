@@ -57,7 +57,7 @@
       $scope.userIsAdmin = false;
       // On going changes for user ...
       $scope.userUpdated = false;
-
+      $scope.passwordCheck = '';
 
       function loadGroups() {
         $http.get($scope.url + 'admin.group.list@json').success(function(data) {
@@ -146,10 +146,12 @@
        * for a group.
        */
       $scope.isUserGroup = function(groupId, profile) {
-        for (var i = 0; i < $scope.userGroups.length; i++) {
-          if ($scope.userGroups[i].id == groupId &&
-              $scope.userGroups[i].profile == profile) {
-            return true;
+        if ($scope.userGroups) {
+          for (var i = 0; i < $scope.userGroups.length; i++) {
+            if ($scope.userGroups[i].id == groupId &&
+                $scope.userGroups[i].profile == profile) {
+              return true;
+            }
           }
         }
         return false;

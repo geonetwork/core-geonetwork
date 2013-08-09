@@ -11,9 +11,13 @@
    */
   module.controller('GnAdminToolsController', [
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
-    'gnMetadataManagerService', 'gnSearchManagerService',
+    'gnMetadataManagerService',
+    'gnSearchManagerService',
+    'gnUtilityService',
     function($scope, $routeParams, $http, $rootScope, $translate, $compile,
-            gnMetadataManagerService, gnSearchManagerService) {
+            gnMetadataManagerService, 
+            gnSearchManagerService, 
+            gnUtilityService) {
       /**
        * True if currently processing records
        */
@@ -115,6 +119,8 @@
                 timeout: 2,
                 type: 'success'});
               $scope.processing = false;
+
+              gnUtilityService.scrollTo('#gn-batch-process-report');
             })
           .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
@@ -124,6 +130,7 @@
                 type: 'danger'});
               $scope.processing = false;
             });
+
       };
 
       $scope.recordsToProcessSearchFor = function(e) {

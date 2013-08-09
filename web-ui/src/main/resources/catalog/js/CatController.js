@@ -78,8 +78,8 @@
         url = $scope.url + 'xml.info@json?type=me';
         return $http.get(url).
             success(function(data, status) {
-              $scope.user = data[0];
-              $scope.authenticated = data[0]['@authenticated'] !== 'false';
+              $scope.user = data.me;
+              $scope.authenticated = data.me['@authenticated'] !== 'false';
               // TODO : should not be here, redirect to home
               if ($scope.authenticated) {
               // User is logged in

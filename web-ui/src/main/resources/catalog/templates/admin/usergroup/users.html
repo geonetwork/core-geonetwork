@@ -42,7 +42,7 @@
             
             
             
-            <form id="gn-user-edit" 
+            <form id="gn-user-edit" name="gnUserEdit"
                 data-ng-keypress="updatingUser()">
                 <fieldset>
                     <input type="hidden" name="id" 
@@ -50,36 +50,50 @@
                     <input type="hidden" name="operation" 
                         data-ng-model="userOperation" value="{{userOperation}}"></input>
                     
-                    <label data-translate>username</label>
-                    <input type="text" name="username" class="form-control"
-                        data-ng-model="userSelected.username"></input>
-                    <p class="help-block" data-translate>usernameHelp</p>
+                    <div data-ng-class="userSelected.username == '' ? 'has-error' : ''">
+                      <label class="control-label" data-translate>username</label>
+                      <input type="text" name="username" class="form-control"
+                          data-ng-model="userSelected.username"></input>
+                      <p class="help-block" data-translate>usernameHelp</p>
+                    </div>
                     
                     <!-- Password are disabled when updating user -->
                     <div ng-hide="userOperation != 'newuser'">
-                        <label data-translate>password</label>
+                      <div data-ng-class="gnUserEdit.password.$valid != true ? 'has-error' : ''">
+                        <label class="control-label" data-translate>password</label>
                         <input type="password" id="gn-user-password" name="password" class="form-control"
+                            data-ng-minlength="6"
                             data-ng-model="userSelected.password"></input>
-                        
-                        <label data-translate>passwordRepeat</label>
+                        <p class="help-block">
+                          <span class="error" ng-show="gnUserEdit.password.$error.minlength" data-translate="">passwordMinlength</span>
+                        </p>
+                      </div>
+                      <div data-ng-class="gnUserEdit.password.$valid == false || 
+                        (passwordCheck !== userSelected.password) ? 'has-error' : ''">
+                        <label class="control-label" data-translate>passwordRepeat</label>
                         <input type="password" id="gn-user-password2" name="password2" class="form-control"
-                            ></input>
+                          data-ng-model="passwordCheck"></input>
+                        <p class="help-block">
+                          <span class="error" ng-show="gnUserEdit.password.$valid 
+                            && passwordCheck != userSelected.password" data-translate="">passwordNotMatching</span>
+                        </p>
+                      </div>
                     </div>
                     
-                    <div ng-class="userSelected.name == '' ? 'has-error' : ''">
+                    <div data-ng-class="userSelected.name == '' ? 'has-error' : ''">
                         <label class="control-label" data-translate>name</label>
                         <input type="text" name="name" class="form-control"
                             data-ng-model="userSelected.name"></input>
                     </div>
                     
-                    <div ng-class="userSelected.surname == '' ? 'has-error' : ''">
+                    <div data-ng-class="userSelected.surname == '' ? 'has-error' : ''">
                         <label class="control-label" data-translate>username</label>
                         <input type="text" name="surname" class="form-control"
                             data-ng-model="userSelected.surname"></input>
                     </div>
                     
                     
-                    <div ng-class="userSelected.email == '' ? 'has-error' : ''">
+                    <div data-ng-class="userSelected.email == '' ? 'has-error' : ''">
                         <label class="control-label" data-translate>email</label>
                         <input type="email" name="email" class="form-control"
                             data-ng-model="userSelected.email"></input>
