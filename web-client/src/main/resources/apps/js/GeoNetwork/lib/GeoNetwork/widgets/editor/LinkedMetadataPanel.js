@@ -256,6 +256,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             parameters += "&uuidref=" + uuid;
         } else if (type === 'onlinesrc') {
             parameters += "&url=" + encodeURIComponent(id);
+            parameters += "&name=" + encodeURIComponent(uuid.trim().split(' ')[0]);
             
             // if a file is upload remove the file before removing the link
             if (uuid.indexOf('WWW:DOWNLOAD-1.0-http--download') !== -1) {
