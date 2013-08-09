@@ -142,6 +142,11 @@
 					<enableSearchPanel><xsl:value-of select="setting[@name='system/inspire/enableSearchPanel']/@value"/></enableSearchPanel>
 				</inspire>
 			</xsl:when>
+			<xsl:when test="not(setting[@name='system/site/name']) and setting[@name='system/harvester/enableEditing']">
+				<harvester>
+					<enable><xsl:value-of select="setting[@name='system/harvester/enableEditing']/@value"/></enable>
+				</harvester>
+			</xsl:when>
 			<xsl:otherwise>
 				<!-- Not needed -->
 			</xsl:otherwise>
