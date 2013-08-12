@@ -17,7 +17,8 @@
 
   var module = angular.module('gn_admin_controller',
       ['gn_dashboard_controller', 'gn_usergroup_controller',
-       'gn_admintools_controller', 'gn_settings_controller']);
+       'gn_admintools_controller', 'gn_settings_controller',
+       'gn_classificationSystems_controller']);
 
 
   module.config(['$routeProvider', function($routeProvider) {
@@ -46,6 +47,10 @@
         when('/settings', {
           templateUrl: '../../catalog/templates/admin/settings.html',
           controller: 'GnSettingsController'}).
+        when('/classificationSystems', {
+          templateUrl: '../../catalog/templates/admin/classificationSystems.html',
+          controller: 'GnClassificationSystemsController'
+        	  }).
         otherwise({templateUrl: '../../catalog/templates/admin/admin.html'});
   }]);
 
@@ -74,7 +79,7 @@
             classes: 'btn-success'},
           {name: 'settings', route: '#settings', classes: 'btn-success'},
           {name: 'usersAndGroups', route: '#organization'},
-          {name: 'classificationSystems', url: 'admin',
+          {name: 'classificationSystems', route: '#classificationSystems',
             classes: 'btn-info'},
           {name: 'standards', url: 'admin', classes: 'btn-info'},
           {name: 'tools', route: '#tools', classes: 'btn-warning'}

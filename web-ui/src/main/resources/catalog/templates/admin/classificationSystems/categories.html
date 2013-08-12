@@ -1,0 +1,47 @@
+<div class="row" 
+    >
+    <div class="col-lg-4">
+        <div class="panel">
+            <div class="panel-heading"
+                data-translate>categories</div>
+            <!--
+            	
+            <input type="hidden" data-ng-model="groupSelected.id"/>
+            <div class="list-group">
+                <a class="list-group-item" 
+                    data-ng-repeat="g in groups | filter:groupSearch | orderBy:'name'"  
+                    data-ng-click="selectGroup(g)">
+                    {{g.label[lang]}}
+                </a>
+            </div>
+            
+            
+           
+            <button type="button" class="btn btn-primary icon-plus" 
+                data-ng-click="addGroup()" 
+                data-translate>newGroup</button>-->
+                <input class="form-control" 
+                data-ng-model="categorySearch.$" placeholder="{{'filter' | translate}}"/>
+                <input type="text" data-ng-model="categorySelected['@id']"/>
+                <div class="list-group">
+                	<a class="list-group-item"
+                	data-ng-repeat="c in categories"
+                	data-ng-click="selectCategory(c)">{{c.name}}</a>
+                </div>
+        </div>
+    </div>
+    
+    
+    
+    <div class="col-lg-8" 
+        >
+        <div class="panel">
+            <div class="panel-heading">
+                
+            </div>
+            
+            
+            
+        </div>
+    </div>
+</div>

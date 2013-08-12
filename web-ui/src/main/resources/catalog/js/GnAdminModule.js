@@ -16,6 +16,7 @@
   goog.require('gn_dashboard_controller');
   goog.require('gn_translation');
   goog.require('gn_translation_controller');
+  goog.require('gn_classificationSystems_controller');
 
   var module = angular.module('gn_admin', [
     'gn',
