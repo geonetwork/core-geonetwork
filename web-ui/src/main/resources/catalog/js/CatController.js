@@ -51,48 +51,50 @@
         timeout: -1
       };
 
-      var promiseStart = $q.when('start');
+      $scope.loadCatalogInfo = function() {
+        var promiseStart = $q.when('start');
 
-      // Retrieve site information
-      // TODO: Add INSPIRE, harvester, ... information
-      var catInfo = promiseStart.then(function(value) {
-        url = $scope.url + 'xml.info@json?type=site&type=auth';
-        return $http.get(url).
-            success(function(data, status) {
-              $scope.info = data;
-              $scope.initialized = true;
-            }).
-            error(function(data, status, headers, config) {
-                  $rootScope.$broadcast('StatusUpdated',
-                 {
-                   title: $translate('somethingWrong'),
-                   msg: $translate('msgNoCatalogInfo'),
-                   type: 'danger'});
-            });
-      });
+        // Retrieve site information
+        // TODO: Add INSPIRE, harvester, ... information
+        var catInfo = promiseStart.then(function(value) {
+          url = $scope.url + 'xml.info@json?type=site&type=auth';
+          return $http.get(url).
+              success(function(data, status) {
+                $scope.info = data;
+                $scope.initialized = true;
+              }).
+              error(function(data, status, headers, config) {
+                $rootScope.$broadcast('StatusUpdated',
+                   {
+                     title: $translate('somethingWrong'),
+                     msg: $translate('msgNoCatalogInfo'),
+                     type: 'danger'});
+              });
+        });
 
 
 
-      // Retrieve user information if catalog is online
-      var userLogin = catInfo.then(function(value) {
-        url = $scope.url + 'xml.info@json?type=me';
-        return $http.get(url).
-            success(function(data, status) {
-              $scope.user = data.me;
-              $scope.authenticated = data.me['@authenticated'] !== 'false';
-              // TODO : should not be here, redirect to home
-//              if ($scope.authenticated) {
-//              // User is logged in
-//              } else {
-//              }
-            }).
-            error(function(data, status, headers, config) {
-                  // TODO : translate
-                  $rootScope.$broadcast('StatusUpdated',
-                      {msg: $translate('msgNoUserInfo')}
-                  );
-                });
-      });
+        // Retrieve user information if catalog is online
+        var userLogin = catInfo.then(function(value) {
+          url = $scope.url + 'xml.info@json?type=me';
+          return $http.get(url).
+              success(function(data, status) {
+                $scope.user = data.me;
+                $scope.authenticated = data.me['@authenticated'] !== 'false';
+                // TODO : should not be here, redirect to home
+                //                  if ($scope.authenticated) {
+                //                  // User is logged in
+                //                  } else {
+                //                  }
+              }).
+              error(function(data, status, headers, config) {
+                // TODO : translate
+                $rootScope.$broadcast('StatusUpdated',
+                   {msg: $translate('msgNoUserInfo')}
+                );
+              });
+        });
+      };
 
       $scope.clearStatusMessage = function() {
         $scope.status = {};
@@ -129,7 +131,7 @@
       };
 
 
-
+      $scope.loadCatalogInfo();
 
 
     }]);

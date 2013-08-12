@@ -1,30 +1,41 @@
-[ng\:cloak], [ng-cloak], .ng-cloak {
-    display: none !important;
+[ng\:cloak],
+[ng-cloak],
+.ng-cloak{
+  display:none !important;
 }
 
 /**
  * Required when displaying long text like
  * exception report. Eg. catalog health check.
  */
-.list-group-item-text {
-    word-break: break-word;
+.list-group-item-text{
+  word-break:break-word;
 }
 
-.gn-sidebar.affix {
-    position: fixed;
-    top: 50px;
+.gn-sidebar.affix{
+  position:fixed;
+  top:50px;
+  width:190px;
 }
 
-.gn-info {
-    position: fixed;
-    z-index: 9999;
-    top: 5px;
-    left: 5px;
+.gn-sidebar .nav .nav > li > a{
+  padding-top:3px;
+  padding-bottom:3px;
+  padding-left:30px;
+  font-size:90%;
+}
+
+.gn-info{
+  position:fixed;
+  z-index:9999;
+  top:5px;
+  left:5px;
 }
 
 /**
  * Properly break stack trace error.
  */
-.gn-stack, .gn-code {
-    white-space: normal;
+.gn-stack,
+.gn-code{
+  white-space:normal;
 }

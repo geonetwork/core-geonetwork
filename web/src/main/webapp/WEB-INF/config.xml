@@ -1466,6 +1466,9 @@
 
 	<!-- New section of services based on refactoring
 	guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
+  
+  <include>config/config-service-admin.xml</include>
+  <include>config/config-service-statistics.xml</include>
 	<include>config/config-service-admin-user-and-group.xml</include>
 
 	<include>config/config-service-csw.xml</include>

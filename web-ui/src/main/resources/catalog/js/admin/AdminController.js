@@ -4,14 +4,20 @@
 
 
 
+
+
+
+
+
   goog.require('gn_admintools_controller');
   goog.require('gn_cat_controller');
   goog.require('gn_dashboard_controller');
+  goog.require('gn_settings_controller');
   goog.require('gn_usergroup_controller');
 
   var module = angular.module('gn_admin_controller',
       ['gn_dashboard_controller', 'gn_usergroup_controller',
-       'gn_admintools_controller']);
+       'gn_admintools_controller', 'gn_settings_controller']);
 
 
   module.config(['$routeProvider', function($routeProvider) {
@@ -37,6 +43,9 @@
         when('/tools/batch', {
           templateUrl: '../../catalog/templates/admin/tools.html',
           controller: 'GnUserGroupController'}).
+        when('/settings', {
+          templateUrl: '../../catalog/templates/admin/settings.html',
+          controller: 'GnSettingsController'}).
         otherwise({templateUrl: '../../catalog/templates/admin/admin.html'});
   }]);
 
@@ -63,7 +72,7 @@
             classes: 'btn-primary'},
           {name: 'statisticsAndStatus', route: '#dashboard',
             classes: 'btn-success'},
-          {name: 'settings', url: 'config', classes: 'btn-success'},
+          {name: 'settings', route: '#settings', classes: 'btn-success'},
           {name: 'usersAndGroups', route: '#organization'},
           {name: 'classificationSystems', url: 'admin',
             classes: 'btn-info'},

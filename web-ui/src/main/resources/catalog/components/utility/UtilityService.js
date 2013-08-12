@@ -7,8 +7,11 @@
       /**
        * Scroll page to element. 
        */
-      var scrollTo = function (elementId, duration, easing) {
-          $(document.body).animate({scrollTop: $(elementId).offset().top}, 
+      var scrollTo = function (elementId, offset, duration, easing) {
+          $(document.body).animate({scrollTop: (offset ?
+                  $(elementId).offset().top :
+                  $(elementId).position().top)
+                  }, 
                   duration, easing);
       };
       return {

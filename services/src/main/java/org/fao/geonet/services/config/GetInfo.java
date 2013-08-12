@@ -77,7 +77,7 @@ public class GetInfo implements Service {
 		loadIndexInfo(luceneDir);
 		loadDatabaseInfo(context);
 
-		Element system = gc.getBean(SettingManager.class).getAllAsXML();
+		Element system = gc.getBean(SettingManager.class).getAllAsXML(true);
 
 		Element main = new Element("main");
 		addToElement(main, systemProperties);

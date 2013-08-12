@@ -397,16 +397,23 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.update!?.*" access="hasRole('Administrator')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.update.labels!?.*" access="hasRole('Administrator')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.remove!?.*" access="hasRole('Administrator')"/>
+                
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.user.list!?.*" access="hasRole('UserAdmin')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.user.update!?.*" access="hasRole('UserAdmin')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.user.remove!?.*" access="hasRole('UserAdmin')"/>
+                
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.list!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.save!?.*" access="hasRole('Administrator')"/>
+              
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.console!?.*" access="hasRole('RegisteredUser')"/>
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.edit.save.and.close!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.edit.save!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.edit!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.view!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.processing.batch!?.*" access="hasRole('Editor')"/>
-              
+                
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw-publication!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw-.*" access="permitAll"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw!?.*" access="permitAll"/>
@@ -417,7 +424,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.search.nojs!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.signin!?.*" access="permitAll"/>
                 
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.console!?.*" access="hasRole('RegisteredUser')"/>
                 
                 
                 
