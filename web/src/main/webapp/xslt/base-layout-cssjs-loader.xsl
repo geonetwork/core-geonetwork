@@ -72,7 +72,7 @@
           <script src="{$uiResourcesPath}lib/d3.ext/gauge.js"></script>
           <script src="{$uiResourcesPath}lib/nv.d3.min.js"></script>
         </xsl:if>
-        <script src="{$uiResourcesPath}js/{$angularApp}.min.js"></script>
+        <script src="{$uiResourcesPath}lib/{$angularApp}.min.js"></script>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

@@ -61,7 +61,7 @@ python ../../../../../closure-library/closure/bin/build/closurebuilder.py \
   --namespace="gn" \
   --output_mode=compiled \
   --compiler_jar=../../../../compiler.jar \
-  > catalog/js/gn.min.js
+  > catalog/lib/gn.min.js
 
 
 python ../../../../../closure-library/closure/bin/build/closurebuilder.py \
@@ -69,17 +69,19 @@ python ../../../../../closure-library/closure/bin/build/closurebuilder.py \
   --namespace="gn_admin" \
   --output_mode=compiled \
   --compiler_jar=../../../../compiler.jar \
-  > catalog/js/gn_admin.min.js
+  > catalog/lib/gn_admin.min.js
 
 python ../../../../../closure-library/closure/bin/build/closurebuilder.py \
   --root=catalog \
   --namespace="gn_login" \
   --output_mode=compiled \
   --compiler_jar=../../../../compiler.jar \
-  > catalog/js/gn_login.min.js
+  > catalog/lib/gn_login.min.js
+
 ```
 
 TODO: Add to maven
+ * May be an option https://code.google.com/p/wro4j/wiki/MavenPlugin?ts=1284124553&updated=MavenPlugin
 
 ### Compile
 
