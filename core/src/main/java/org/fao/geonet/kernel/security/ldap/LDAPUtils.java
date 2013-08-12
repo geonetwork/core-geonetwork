@@ -83,12 +83,39 @@ public class LDAPUtils {
             toSave = user.getUser();
         }
 
-        userRepo.save(toSave);
+		// Add user groups
+		if (importPrivilegesFromLdap && !Profile.ADMINISTRATOR.equals(user.getProfile())) {
+			dbms.execute("DELETE FROM UserGroups WHERE userId=?", Integer.valueOf(id));
+			for(Map.Entry<String, String> privilege : user.getPrivileges().entries()) {
+				// Add group privileges for each groups
+				
+				// Retrieve group id
+				String groupName = privilege.getKey();
+				String profile = privilege.getValue();
+				
+				Element groupIdRequest = dbms.select("SELECT id FROM Groups WHERE name = ?", groupName);
+				Element groupRecord = groupIdRequest.getChild("record");
+				String groupId = null;
+				
+				if (groupRecord == null && createNonExistingLdapGroup) {
+                    createIfNotExist(groupName, groupId, dbms, serialFactory);
+				if (groupId != null) {
 
-        // Add user groups
-        if (importPrivilegesFromLdap && Profile.Administrator == user.getUser().getProfile()) {
-            for (Map.Entry<String, Profile> privilege : user.getPrivileges().entries()) {
-                // Add group privileges for each groups
+					Utils.addGroup(dbms, Integer.valueOf(id), Integer.valueOf(groupId), profile);
+					
+					try {
+						if (profile.equals(Profile.REVIEWER)) {
+                            Utils.addGroup(dbms, Integer.valueOf(id), Integer.valueOf(
+									groupId), Profile.EDITOR);
+						}
+					} catch (Exception e) {
+						Log.debug(Geonet.LDAP,
+								"  - User is already editor for that group."
+										+ e.getMessage());
+					}
+				} else {
+					if (Log.isDebugEnabled(Geonet.LDAP)){
+						Log.debug(Geonet.LDAP, "  - Can't create LDAP group " + groupName + " for user. " +
 
                 // Retrieve group id
                 String groupName = privilege.getKey();
@@ -135,12 +162,16 @@ public class LDAPUtils {
      * @param serialFactory
      * @throws SQLException
      */
-    protected static Group createIfNotExist(String groupName, GroupRepository groupRepo) throws SQLException {
+    protected static void createIfNotExist(String groupName, String groupId, Dbms dbms, SerialFactory serialFactory) throws SQLException {
         if (Log.isDebugEnabled(Geonet.LDAP)){
             Log.debug(Geonet.LDAP, "  - Add non existing group '" + groupName + "' in local database.");
         }
 
-        return groupRepo.save(new Group().setName(groupName));
+        // If LDAP group does not exist in local database, create it
+        groupId = serialFactory.getSerial(dbms, "Groups") + "";
+        String query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
+        dbms.execute(query, Integer.valueOf(groupId), groupName);
+        Lib.local.insert(dbms, "Groups", Integer.valueOf(groupId), groupName);
     }
 
 	static Map<String, ArrayList<String>> convertAttributes(

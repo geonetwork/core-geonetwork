@@ -8,13 +8,14 @@
 	<!-- ================================================================= -->
 	
 	<xsl:template match="/root">
-		 <xsl:apply-templates select="gmd:MD_Metadata"/>
+		<xsl:apply-templates select="gmd:MD_Metadata|*[contains(@gco:isoType, 'MD_Metadata')]"/>
 	</xsl:template>
 
 	<!-- ================================================================= -->
 	
-	<xsl:template match="gmd:MD_Metadata">
+	<xsl:template match="gmd:MD_Metadata|*[contains(@gco:isoType, 'MD_Metadata')]">
 		<xsl:copy>
+			<xsl:copy-of select="@*"/>
 			<xsl:apply-templates select="gmd:fileIdentifier"/>
 			<xsl:apply-templates select="gmd:language"/>
 			<xsl:apply-templates select="gmd:characterSet"/>
@@ -88,6 +89,8 @@
 			<xsl:apply-templates select="gmd:environmentDescription"/>
 			<xsl:apply-templates select="gmd:extent"/>
 			<xsl:apply-templates select="gmd:supplementalInformation"/>
+			
+			<xsl:copy-of select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd']"/>
 		</xsl:copy>
 	</xsl:template>
 	
@@ -110,7 +113,10 @@
 			<xsl:apply-templates select="gmd:resourceSpecificUsage"/>
 			<xsl:apply-templates select="gmd:resourceConstraints"/>
 			<xsl:apply-templates select="gmd:aggregationInfo"/>
+			
 			<xsl:apply-templates select="srv:*"/>
+			
+			<xsl:copy-of select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd' and namespace-uri()!='http://www.isotc211.org/2005/srv']"/>
 		</xsl:copy>
 	</xsl:template>
 	
@@ -121,7 +127,7 @@
 		<gmd:graphicOverview>
 			<gmd:MD_BrowseGraphic>
 				<gmd:fileName>
-					<xsl:variable name="metadataId"   select="/root/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString/text()" />
+					<xsl:variable name="metadataId"   select="/root/*/gmd:fileIdentifier/gco:CharacterString/text()" />
 					<xsl:variable name="serverHost"   select="/root/env/host" />
 					<xsl:variable name="serverPort"   select="/root/env/port" />
 					<xsl:variable name="baseUrl"   select="/root/env/baseUrl" />

@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <ara>عربي</ara> <!-- Do not translate! -->
-    <cat>Català</cat> <!-- Do not translate! -->
-    <chi>中文</chi> <!-- Do not translate! -->
-    <dut>Nederlands</dut> <!-- Do not translate -->
-    <eng>English</eng> <!-- Do not translate! -->
-    <fin>Suomeksi</fin>  <!-- Do not translate! -->
-    <fre>Français</fre> <!-- Do not translate! -->
-    <ger>Deutsch</ger> <!-- Do not translate! -->
-    <ita>Italiano</ita> <!-- Do not translate! -->
-    <nor>Norsk</nor>  <!-- Do not translate! -->
-    <por>Рortuguês</por> <!-- Do not translate! -->
-    <rus>Русский</rus> <!-- Do not translate! -->
-    <spa>Español</spa> <!-- Do not translate! -->
-    <tur>Türkçe</tur> <!-- Do not translate! -->
-    <pol>Polski</pol> <!-- Do not translate! -->
-    
+	<ara>عربي</ara> <!-- Do not translate! -->
+	<cat>Català</cat> <!-- Do not translate! -->
+	<chi>中文</chi> <!-- Do not translate! -->
+	<dut>Nederlands</dut> <!-- Do not translate! -->
+	<eng>English</eng> <!-- Do not translate! -->
+	<fin>Suomeksi</fin> <!-- Do not translate! -->
+	<fre>Français</fre> <!-- Do not translate! -->
+	<ger>Deutsch</ger> <!-- Do not translate! -->
+	<ita>Italiano</ita> <!-- Do not translate! -->
+	<nor>Norsk</nor> <!-- Do not translate! -->
+	<por>Рortuguês</por> <!-- Do not translate! -->
+	<rus>Русский</rus> <!-- Do not translate! -->
+	<spa>Español</spa> <!-- Do not translate! -->
+	<tur>Türkçe</tur> <!-- Do not translate! -->
+	<pol>Polski</pol> <!-- Do not translate! -->
+
+	<statusTitle> / Metadata Workflow</statusTitle>
+	<statusUserEdit>GeoNetwork user %s (%s) edited metadata record #%s</statusUserEdit>
+	<statusInform>%s / Metadata Workflow / Metadata record(s) %s by %s (%s) (%s)</statusInform>
+	<!--
+        legacy UI 
+        <statusSendEmail>Change log message: %s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
+        -->
+	<statusSendEmail>Change log message: %s\r\n\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
+
 	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>
 	<isAdmin>Is administrator ?</isAdmin>
-    <anyLanguage>Ongeacht welke taal</anyLanguage>
+	<anyLanguage>Ongeacht welke taal</anyLanguage>
 	<nodata>Null</nodata>
-	<!-- new strings - 2.7 -->
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -37,20 +45,22 @@
 	<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
 	<createThesaurus>Create/Update Thesaurus</createThesaurus>
 	<thesaurusType>Thesaurus Type</thesaurusType>
-	<status>Status</status>
 	<changeLogMessage>Change Log Message</changeLogMessage>
+	<status>Status</status>
 	<updateStatus>Wijzigingsstatus</updateStatus>
 	<batchUpdateStatusTitle>Batch Wijzigingsstatus Operation</batchUpdateStatusTitle>
 	<startVersion>Start Versioning</startVersion>
 	<batchStartVersionTitle>Batch Start Versioning</batchStartVersionTitle>
-  <editAttributes>Voeg meer details toe</editAttributes>
-  <subtemplate.admin>Beheer folders.</subtemplate.admin>
-  <subtemplate.admin.desc>Toevoegen/wijzigen/verwijderen folders (vb. contact folders)</subtemplate.admin.desc>  
-  <surnameMandatory>Familienaam/achternaam is vereist</surnameMandatory>
+	<editAttributes>Voeg meer details toe</editAttributes>
+	<subtemplate.admin>Beheer folders.</subtemplate.admin>
+	<subtemplate.admin.desc>Toevoegen/wijzigen/verwijderen folders (vb. contact folders)</subtemplate.admin.desc>  
+	<surnameMandatory>Familienaam/achternaam is vereist</surnameMandatory>
 	<firstnameMandatory>Voornaam is vereist</firstnameMandatory>
 	<emailMandatory>e-mail adres is vereist</emailMandatory>
 	<forgottenPassword>Paswoord vergeten?</forgottenPassword>
-  <selectTemplate>Select schemas</selectTemplate>	
+	<selectTemplate>Select schemas</selectTemplate>
+	<useStopwords>De Lucene index gebruikt stopwoorden voor de volgende talen:</useStopwords>
+	<rebuildIndexMessage>Als u deze waarden wijzigt, is het raadzaam de Lucene index terug op te bouwen.</rebuildIndexMessage>
 	<notificationsDes>Remote Wijzigingen</notificationsDes>
 	<metadata-templates-samples-add>Toevoegen Templates en Voorbeelden</metadata-templates-samples-add>
 	<metadata-schema-select>Selecteer een schema om templates of voorbeelddata toe te voegen</metadata-schema-select>
@@ -59,8 +69,8 @@
 	<advancedSearch>Geavanceerd Zoeken</advancedSearch>
 	<remoteSearch>Remote Zoeken</remoteSearch>
 	<displayRemoteHtml>Tonen resultaten in HTML?</displayRemoteHtml>
-  <noSearchCriteria js="true">Vul zoekcriteria in of selecteer van de lijst</noSearchCriteria>
-  <noServer js="true">Selecteer een server om te zoeken</noServer>
+	<noSearchCriteria js="true">Vul zoekcriteria in of selecteer van de lijst</noSearchCriteria>
+	<noServer js="true">Selecteer een server om te zoeken</noServer>
 	<anyWith>Alles - met één van deze woorden</anyWith>
 	<anyWithExactPhrase>Alles - met deze exacte zin</anyWithExactPhrase>
 	<anyWithAllWords>Alles - met al deze woorden</anyWithAllWords>
@@ -78,84 +88,81 @@
 	<enterSchema>Geef een naam voor het toe te voegen schema</enterSchema>
 	<selectSchemaOperations>Bron van het schema zip archief:</selectSchemaOperations>
 	<showRemoteHTML>Toon HTML van de remote server</showRemoteHTML>
+	<searchStatistics>Zoek Statistieken</searchStatistics>
+	<searchStatisticsDes>Bekijk statistieken over uitgevoerde zoekacties in de toepassing</searchStatisticsDes>
 	<assignToGroup>Toekennen aan Groep(en)</assignToGroup>
 	<copyThumbnail>Copiëren thumbnails?</copyThumbnail>
 	<copyResources>Copiëren downloadbare bestanden?</copyResources>
-		<searchStatistics>Zoek Statistieken</searchStatistics>
-		<searchStatisticsDes>Bekijk statistieken over uitgevoerde zoekacties in de toepassing</searchStatisticsDes>
-		<stat.byDay>per dag</stat.byDay>
-       <stat.byMonth>per maand</stat.byMonth>
-       <stat.byWeek>per week</stat.byWeek>
-       <stat.byYear>per jaar</stat.byYear>
-       <stat.collapse>Inklappen</stat.collapse>
-			 <stat.numAutoGeneratedSearches>Aantal automatisch aangemaakte (guiservice) zoekacties</stat.numAutoGeneratedSearches>
-       <stat.date>Datum</stat.date>
-       <stat.day>Dag</stat.day>
-       <stat.hits>Hits</stat.hits>
-       <stat.ip>IP</stat.ip>
-       <stat.noValue>geen waarde</stat.noValue>
-       <stat.language>Taal</stat.language>
-       <stat.month>Maand</stat.month>
-       <stat.numberOfSearch>Aantal zoekacties</stat.numberOfSearch>
-       <stat.requestDate>Datum van aanvraag</stat.requestDate>
-       <stat.spatialFilter>Ruimtelijke filter</stat.spatialFilter>
-       <stat.totalsearches>Totaal aantal gebruikerszoekactiers</stat.totalsearches>
-       <stat.year>Jaar</stat.year>
-       <stat.mdSheet>Metadata fiche</stat.mdSheet>
-       <stat.noTitle>gen titel</stat.noTitle>
-       <stat.csvExport>CSV export</stat.csvExport>
-       <stat.tabularStats>Tabulaire statistieken</stat.tabularStats>
-       <stat.tip1begin>Klik op een onderstaande link voor het tonen van live statistieken, klik op het pijltje</stat.tip1begin>
-       <stat.tip1end>om terug te verbergen</stat.tip1end>
-       <stat.lastMonthStats>Laatste Maand statistieken</stat.lastMonthStats>
-       <stat.userIpText>User IP tijdens zoekacties (aantal zoekacties per uniek IP)</stat.userIpText>
-       <stat.mostSearchedKeywords>Meest gezochte sleutelwoorden</stat.mostSearchedKeywords>
-       <stat.mostSearchedCategories>Meest gezochte Categorieën</stat.mostSearchedCategories>
-       <stat.simpleVsAdvanced>Eenvoudig vs. geavanceerd zoeken</stat.simpleVsAdvanced>
-       <stat.mdPopularity>Metadata populariteit</stat.mdPopularity>
-       <stat.graphicalStats>Grafische statistieken</stat.graphicalStats>
-       <stat.tip2>Kies een datum eenhedi (jaar, maand, dag) en een datum spanne en klik OK om de grafiek te tonen</stat.tip2>
-       <stat.numberOfRequests>Aantal requests</stat.numberOfRequests>
-        <stat.chooseDateFrom>Kies een datum van</stat.chooseDateFrom>
-       <stat.dateFrom>Datum vanaf</stat.dateFrom>
-       <stat.dateTo>Datum tot</stat.dateTo>
-       <stat.md>Metadata</stat.md>
-       <stat.popularity>Populariteit</stat.popularity>
-       <stat.totalSearches>Totaal gebruiker zoekopdrachten</stat.totalSearches>
-       <stat.numSearchesPerDay>Aantal gebruiker zoekopdrachten per dag</stat.numSearchesPerDay>
-       <stat.numSearchesNoResult>Aantal gebruiker zoekopdrachten zonder resultaten</stat.numSearchesNoResult>
-       <stat.simpleAdvancedSearch>Eenvoudig / geavanceerd zoeken</stat.simpleAdvancedSearch>
-       <stat.searchedTerm>Gezochte term</stat.searchedTerm>
-       <stat.count>Teller</stat.count>
-       <stat.numSimpleSearch>Aantal eenvoudige zoekopdrachten</stat.numSimpleSearch>
-       <stat.numAdvancedSearch>Aantal geavanceerde zoekopdrachten</stat.numAdvancedSearch>
-       <stat.></stat.>
-       <stat.exportRequests>Export Requests table (one entry per user request)</stat.exportRequests>
-       <stat.exportParams>Export Parameters table (request keywords, several entries per user request)</stat.exportParams>
-       <stat.csvSemiColumnDelimiter>Semicolon separator</stat.csvSemiColumnDelimiter>
-			 <stat.rightClickSaveAs>Right-click on the link to save the CSV file</stat.rightClickSaveAs>
-       <stat.searchedKeywords>Searched Keywords</stat.searchedKeywords>
-       <stat.popuByGroup>Metadata popularity by group</stat.popuByGroup>
-       <stat.popuByCatalog>Metadata popularity by catalog (node id)</stat.popuByCatalog>
-			 <stat.popularityByCategory>Metadata popularity by category</stat.popularityByCategory>
-       <stat.mdType>Type of metadata searched for</stat.mdType>
-       <stat.dsMsType>Dataset metadata</stat.dsMsType>
-       <stat.serviceMdType>Service metadata</stat.serviceMdType>
-       <stat.basicGeodataType>Basic geodata</stat.basicGeodataType>
-       <stat.allTypes>All</stat.allTypes>
-       <stat.seeAdminPage>See system configuration page to enable logging feature</stat.seeAdminPage>
-       <stat.logDisabled>The logging feature is currently disabled</stat.logDisabled>
-       <stat.maintenance>Maintenance</stat.maintenance>
-       <stat.deleteTmpImages>Deletes temporary graphic and CSV files</stat.deleteTmpImages>
-       <stat.deleteTmpFiles>Delete files now</stat.deleteTmpFiles>
-       <stat.filesDel> file(s) deleted.</stat.filesDel>
-       <stat.warnCsvExport>Caution: exporting log tables can take several minutes</stat.warnCsvExport>
-       <stat.clickToDownload>Click on the link to download the CSV file</stat.clickToDownload>
-	<!-- end new strings -->
 
-    <useStopwords>De Lucene index gebruikt stopwoorden voor de volgende talen:</useStopwords>
-    <rebuildIndexMessage>Als u deze waarden wijzigt, is het raadzaam de Lucene index terug op te bouwen.</rebuildIndexMessage>
-	
+	<stat.byDay>per dag</stat.byDay>
+	<stat.byMonth>per maand</stat.byMonth>
+	<stat.byWeek>per week</stat.byWeek>
+	<stat.byYear>per jaar</stat.byYear>
+	<stat.collapse>Inklappen</stat.collapse>
+	<stat.numAutoGeneratedSearches>Aantal automatisch aangemaakte (guiservice) zoekacties</stat.numAutoGeneratedSearches>
+	<stat.date>Datum</stat.date>
+	<stat.day>Dag</stat.day>
+	<stat.hits>Hits</stat.hits>
+	<stat.ip>IP</stat.ip>
+	<stat.noValue>geen waarde</stat.noValue>
+	<stat.language>Taal</stat.language>
+	<stat.month>Maand</stat.month>
+	<stat.numberOfSearch>Aantal zoekacties</stat.numberOfSearch>
+	<stat.requestDate>Datum van aanvraag</stat.requestDate>
+	<stat.spatialFilter>Ruimtelijke filter</stat.spatialFilter>
+	<stat.totalsearches>Totaal aantal gebruikerszoekactiers</stat.totalsearches>
+	<stat.year>Jaar</stat.year>
+	<stat.mdSheet>Metadata fiche</stat.mdSheet>
+	<stat.noTitle>gen titel</stat.noTitle>
+	<stat.csvExport>CSV export</stat.csvExport>
+	<stat.tabularStats>Tabulaire statistieken</stat.tabularStats>
+	<stat.tip1begin>Klik op een onderstaande link voor het tonen van live statistieken, klik op het pijltje</stat.tip1begin>
+	<stat.tip1end>om terug te verbergen</stat.tip1end>
+	<stat.lastMonthStats>Laatste Maand statistieken</stat.lastMonthStats>
+	<stat.userIpText>User IP tijdens zoekacties (aantal zoekacties per uniek IP)</stat.userIpText>
+	<stat.mostSearchedKeywords>Meest gezochte sleutelwoorden</stat.mostSearchedKeywords>
+	<stat.mostSearchedCategories>Meest gezochte Categorieën</stat.mostSearchedCategories>
+	<stat.simpleVsAdvanced>Eenvoudig vs. geavanceerd zoeken</stat.simpleVsAdvanced>
+	<stat.mdPopularity>Metadata populariteit</stat.mdPopularity>
+	<stat.graphicalStats>Grafische statistieken</stat.graphicalStats>
+	<stat.tip2>Kies een datum eenhedi (jaar, maand, dag) en een datum spanne en klik OK om de grafiek te tonen</stat.tip2>
+	<stat.numberOfRequests>Aantal requests</stat.numberOfRequests>
+	<stat.chooseDateFrom>Kies een datum van</stat.chooseDateFrom>
+	<stat.dateFrom>Datum vanaf</stat.dateFrom>
+	<stat.dateTo>Datum tot</stat.dateTo>
+	<stat.md>Metadata</stat.md>
+	<stat.popularity>Populariteit</stat.popularity>
+	<stat.totalSearches>Totaal gebruiker zoekopdrachten</stat.totalSearches>
+	<stat.numSearchesPerDay>Aantal gebruiker zoekopdrachten per dag</stat.numSearchesPerDay>
+	<stat.numSearchesNoResult>Aantal gebruiker zoekopdrachten zonder resultaten</stat.numSearchesNoResult>
+	<stat.simpleAdvancedSearch>Eenvoudig / geavanceerd zoeken</stat.simpleAdvancedSearch>
+	<stat.searchedTerm>Gezochte term</stat.searchedTerm>
+	<stat.count>Teller</stat.count>
+	<stat.numSimpleSearch>Aantal eenvoudige zoekopdrachten</stat.numSimpleSearch>
+	<stat.numAdvancedSearch>Aantal geavanceerde zoekopdrachten</stat.numAdvancedSearch>
+	<stat.></stat.>
+	<stat.exportRequests>Export Requests table (one entry per user request)</stat.exportRequests>
+	<stat.exportParams>Export Parameters table (request keywords, several entries per user request)</stat.exportParams>
+	<stat.csvSemiColumnDelimiter>Semicolon separator</stat.csvSemiColumnDelimiter>
+	<stat.rightClickSaveAs>Right-click on the link to save the CSV file</stat.rightClickSaveAs>
+	<stat.searchedKeywords>Searched Keywords</stat.searchedKeywords>
+	<stat.popuByGroup>Metadata popularity by group</stat.popuByGroup>
+	<stat.popuByCatalog>Metadata popularity by catalog (node id)</stat.popuByCatalog>
+	<stat.popularityByCategory>Metadata popularity by category</stat.popularityByCategory>
+	<stat.mdType>Type of metadata searched for</stat.mdType>
+	<stat.dsMsType>Dataset metadata</stat.dsMsType>
+	<stat.serviceMdType>Service metadata</stat.serviceMdType>
+	<stat.basicGeodataType>Basic geodata</stat.basicGeodataType>
+	<stat.allTypes>All</stat.allTypes>
+	<stat.seeAdminPage>See system configuration page to enable logging feature</stat.seeAdminPage>
+	<stat.logDisabled>The logging feature is currently disabled</stat.logDisabled>
+	<stat.maintenance>Maintenance</stat.maintenance>
+	<stat.deleteTmpImages>Deletes temporary graphic and CSV files</stat.deleteTmpImages>
+	<stat.deleteTmpFiles>Delete files now</stat.deleteTmpFiles>
+	<stat.filesDel> file(s) deleted.</stat.filesDel>
+	<stat.warnCsvExport>Caution: exporting log tables can take several minutes</stat.warnCsvExport>
+	<stat.clickToDownload>Click on the link to download the CSV file</stat.clickToDownload>
+
 	<drawRectangle js="true">Teken rechthoek</drawRectangle>
 	<drawPolygon js="true">Teken polygoon</drawPolygon>
 	<drawCircle js="true">Teken cirkel</drawCircle>
@@ -182,17 +189,20 @@
 	<mapPreview js="true">Map preview</mapPreview>
 	<selectANode js="true">Select a node ...</selectANode>
 	<publishing js="true">Publishing ...</publishing>
+
 	<logo>Logo configuration</logo>
 	<logoSelectionWindow js="true">Choose a logo</logoSelectionWindow>
-    <logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
+	<chooseLogo>Choose logo</chooseLogo>
+	<orgLogo>Organisation logo</orgLogo>
+	<logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
 	<logoRegistered js="true">Registered logos</logoRegistered>
 	<logoAdd js="true">Add new logo</logoAdd>
-  <selectedLogo js="true">Selected logo:</selectedLogo>
-  <logoDel js="true">Remove</logoDel>
-  <logoForNode js="true">Use for the catalogue</logoForNode>
-  <logoForNodeFavicon js="true">Use as favorite icon</logoForNodeFavicon>
+	<selectedLogo js="true">Selected logo:</selectedLogo>
+	<logoDel js="true">Remove</logoDel>
+	<logoForNode js="true">Use for the catalogue</logoForNode>
+	<logoForNodeFavicon js="true">Use as favorite icon</logoForNodeFavicon>
 	<logoSelect js="true">Select image for logo ...</logoSelect>
-	
+	<url>URL</url>
 	<createChild>Create child</createChild>
 	<updateChildren>Update children</updateChildren>
 	<updateChildrenOk>Children updated</updateChildrenOk>
@@ -257,8 +267,8 @@
 	<NoServiceURLError js="true">Kijk na of de geselecteerde service URL gedefinieerd is.</NoServiceURLError>
 	<GetCapabilitiesDocumentError js="true">Fout bij laden van het service GetCapabilities document via URL: </GetCapabilitiesDocumentError>
 	<noOperatesOn>Geen gerelateerde dataset</noOperatesOn>
-    <linkedDataset>Gerelateerde datasets:</linkedDataset>
-    <linkedFeatureCatalogue>Gerelateerde objectcatalogi:</linkedFeatureCatalogue>
+	<linkedDataset>Gerelateerde datasets:</linkedDataset>
+	<linkedFeatureCatalogue>Gerelateerde objectcatalogi:</linkedFeatureCatalogue>
 	<linkedFeatureCatalogueHelp>Voeg een relatie toe tussen de huidige metadatarecord
 	en een objectcataloog conform de ISO19110 standaard.</linkedFeatureCatalogueHelp>
 	<createLinkedFeatureCatalogue>Linken objectcatalogus</createLinkedFeatureCatalogue>
@@ -267,12 +277,14 @@
 	name as defined in the OGC service.
 	The list of service layers could help metadata editor to add 
 	an existing value.</layerNameHelp>
+
 	<layerName js="true">Layer name</layerName>
 	<createIfNotExistButton js="true">Create a new metadata record</createIfNotExistButton>
 	<associateService js="true">Link service metadata</associateService>
 	<associateDataset js="true">Link dataset metadata</associateDataset>
 	<associateServiceHelp>To add a relation to a service metadata, search for service and define layer name.</associateServiceHelp>
 	<associateDatasetHelp>To add a relation to a dataset, go to ISO view > Identification section, and defined operates on elements.</associateDatasetHelp>
+
 	<addParent> Add or update parent metadata section</addParent>
 	<createAssoService>Create relation</createAssoService>
 	<updateMdd>Update dataset metadata</updateMdd>
@@ -392,8 +404,6 @@
 	<categoryNameMandatory>Een categorie moet worden ingevuld.</categoryNameMandatory>
 	<changeDate>Metadata change date</changeDate>
 	<checkusername>Check</checkusername>
-  <choice>Choice</choice>
-  <sequence>Sequence</sequence>	
 	<choose>-Kies-</choose>
 	<chooseFile>Kies de lokatie van het bestand dat u wilt uploaden</chooseFile>
 	<chooseLargeThumbnail>Kies de lokatie van het grote voorbeeldweergave bestand</chooseLargeThumbnail>
@@ -405,7 +415,7 @@
 	<completeTab>Uitgebreide weergave</completeTab>
 	<completeTabEditor>Geavanceerde editor</completeTabEditor>
 	<confirmCancel>Weet u zeker dat u de editor wilt sluiten? (Alle niet bewaarde aanpassingen gaan verloren)</confirmCancel>
-    <confirmCancelCreate>Weet u zeker dat u wilt annuleren creëren van deze metadata?</confirmCancelCreate>
+	<confirmCancelCreate>Weet u zeker dat u wilt annuleren creëren van deze metadata?</confirmCancelCreate>
 	<confirmDelete>Weet u zeker dat u de metadata wilt verwijderen uit de database?</confirmDelete>
 	<confirmBatchDelete>Weet u zeker dat u alle $1 geselecteerde metadata wild verwijderen uit de database?</confirmBatchDelete>
 	<confirmNewPassword>Bevestig nieuw wachtwoord</confirmNewPassword>
@@ -422,7 +432,7 @@
 	<createTip>Maak een nieuw metadatarecord aan volgens deze template</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
-  <crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
+	<crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
 	<crs code="EPSG:4258">ETRS 89</crs>
 	<crs code="EPSG:900913">Google Mercator</crs>
 	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
@@ -496,6 +506,8 @@
 	<feedbackCardTitle>Respons en commentaar</feedbackCardTitle>
 	<feedbackComments>Respons / commentaar</feedbackComments>
 	<feedbackRequest>Vul a.u.b. uw gegevens in alvorens de download te starten </feedbackRequest>
+
+
 	<file>Bestand</file>
 	<fileType>Bestandstype:</fileType>
 	<fileUploadSuccessful>Upload van bestand gelukt</fileUploadSuccessful>
@@ -515,13 +527,15 @@
 	<georss>Open een GeoRSS feed</georss>
 	<group>Groep</group>
 	<usergroups>Gebruikersgroepen</usergroups>
+	<choice>Choice</choice>
+	<sequence>Sequence</sequence>	
 	<groupManagement>Beheer groepen</groupManagement>
 	<groupManDes>Toevoegen/wijzigen/verwijderen en bekijken van groepen</groupManDes>
 	<groups>Groepen</groups>
 	<harvestingManagement>Harvesting beheer</harvestingManagement>
 	<harvestingManDes>Toevoegen/wijzigen/verwijderen/starten/stoppen van harvesting taken</harvestingManDes>
 	<help>Help</help>
-    <helpLinkTooltip js="true">Help</helpLinkTooltip>  
+	<helpLinkTooltip js="true">Help</helpLinkTooltip>  
 	<helpComplete>Complete help</helpComplete>
 	<helperList>Suggestions:</helperList>
 	<hideAdvancedOptions>Verberg geavanceerde opties</hideAdvancedOptions>
@@ -536,8 +550,8 @@
 	<i18nDesc>Deze service helpt GeoNetwork opensource ontwikkelaars om de status van de GUI vertalingsbestanden te bekijken.</i18nDesc>
 	<identificationTab>Identificatie</identificationTab>
 	<identifier>Sleutelveld</identifier>
-	<image>URL logo</image>
 	<imAreaInterest>Selecteer een gebied naar keuze</imAreaInterest>
+	<image>URL logo</image>
 	<imPan>Pan</imPan>
 	<import>Importeren</import>
 	<imZoomFull>Laat de hele map zien</imZoomFull>
@@ -573,6 +587,7 @@
 	<kindChoice value="research">Onderzoek</kindChoice>
 	<kindChoice value="uni">Universiteit/onderzoekscentrum</kindChoice>
 	<kindChoice value="water">Waterschappen</kindChoice>
+
 	<label>Label</label>
 	<language>nl</language>
 	<large_thumbnail>Klik om de grote voorbeeldweergave te openen</large_thumbnail>
@@ -613,6 +628,7 @@
 	<batchNewOwnerTitle>Batch New Owner Operatie</batchNewOwnerTitle>
 	<batchUpdateCategoriesTitle>Batch Update Categories Operatie</batchUpdateCategoriesTitle>
 	<batchUpdatePrivilegesTitle>Batch Update Privileges Operatie</batchUpdatePrivilegesTitle>
+
 	<max>Maximaal</max>
 	<mdRating>Metadata Waardering</mdRating>
 	<mdUpdateError>Fout tijdens bijwerken</mdUpdateError>
@@ -624,26 +640,27 @@
 	<messageMdUpdateError>Er is een fout opgetreden tijdens het bijwerken van de metadata.</messageMdUpdateError>
 	<messageNoPrivileges>U heeft niet de rechten (privileges) om deze actie uit te voeren.</messageNoPrivileges>
 	<messageNotPerformed>De gewenste actie kon niet worden uitgevoerd.</messageNotPerformed>
-	<metadata-edit-delete>Metadata bewerken / verwijderen</metadata-edit-delete>
-	<metadata-edit>Metadata bewerken</metadata-edit>
 	<metadata.admin.index.desc>Vernieuw Lucene index</metadata.admin.index.desc>
 	<metadata.admin.index.failed js="true">Index operation failed.</metadata.admin.index.failed>
 	<metadata.admin.index.success js="true">Index operation was successful.</metadata.admin.index.success>
 	<metadata.admin.index.wait js="true">Index operation already in progress please wait.</metadata.admin.index.wait>
 	<metadata.admin.index.optimize.desc>Optimize Lucene index</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
+	<metadata-edit-delete>Metadata bewerken / verwijderen</metadata-edit-delete>
+	<metadata-edit>Metadata bewerken</metadata-edit>
+
 	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>
 	<reload>Reload</reload>
 	<rebuildxlinks>Rebuild XLinks</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">This operation may take some time on large catalogs and should not be done during peak usage. Continue?</doYouReallyWantToDoThis>
 	<optimize>Optimize</optimize>
 	<metadata.admin.index>Index manager</metadata.admin.index>
-    <metadata-samples>Voorbeeld metadata</metadata-samples>
-    <metadata-samples-add>Voorbeeld metadata toevoegen</metadata-samples-add>
-    <metadata-samples-add-failed>Laden voorbeeld metadata is mislukt</metadata-samples-add-failed>
-    <metadata-samples-add-success>Laden voorbeeld metadata is gelukt</metadata-samples-add-success>
-  <metadata-template-add-success>Metadata template added.</metadata-template-add-success>
-  <metadata-template-order>Templates sorteren</metadata-template-order>	
+	<metadata-samples>Voorbeeld metadata</metadata-samples>
+	<metadata-samples-add>Voorbeeld metadata toevoegen</metadata-samples-add>
+	<metadata-samples-add-failed>Laden voorbeeld metadata is mislukt</metadata-samples-add-failed>
+	<metadata-samples-add-success>Laden voorbeeld metadata is gelukt</metadata-samples-add-success>
+	<metadata-template-add-success>Metadata template added.</metadata-template-add-success>
+	<metadata-template-order>Templates sorteren</metadata-template-order>	
 	<metadata-template-order-desc>Sorteer uw templates</metadata-template-order-desc>
 	<metadata-template-add-default>Add templates</metadata-template-add-default>
 	<metadata>Metadata</metadata>
@@ -651,11 +668,11 @@
 	<metadataDeleted>Metadata met ID: is niet meer aanwezig</metadataDeleted>
 	<metadataInsertResults>Results of Metadata Import</metadataInsertResults>
 	<metadataJSForm>Metadata van JS Form</metadataJSForm>
+	<failOnError>Fail on error</failOnError>
+	<metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>
 	<metadataRecordsAdded>Totaal aantal metadata toegevoegd:</metadataRecordsAdded>
-  <failOnError>Fail on error</failOnError>
-  <metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>
-  <min>Minimaal</min>
-    <minor>Minor edit</minor>
+	<min>Minimaal</min>
+	<minor>Minor edit</minor>
 	<missing>ONTBREEKT of LEEG</missing>
 	<missingSeeTab>ONTBREEKT - Zie de volgende groep tab in de zijkolom: </missingSeeTab>
 	<more>meer</more>
@@ -694,6 +711,7 @@
 	<overwriteFile>Overschrijven?</overwriteFile>
 	<owner>Gebruiker</owner>
 	<ownerRights>Verwijder/Toegangsrechten/Categorieën vrij: u heeft beheersrechten</ownerRights>
+
 	<page>pagina</page>
 	<paper>Hard copy</paper>
 	<partial>Gedeeltelijke overlapping</partial>
@@ -705,12 +723,12 @@
 	<passwordOldRequired>Uw oude wachtwoord is verplicht</passwordOldRequired>
 	<passwordSpace>Spaties zijn niet toegestaan in een wachtwoord.</passwordSpace>
 	<persInfo>Persoonlijke informatie</persInfo>
-  <usersAndGroups>Gebruikers en groepen</usersAndGroups>
-  <classification>Thesauri en klassificatie systemen</classification>
-  <catalogueConfiguration>Cataloog instellingen</catalogueConfiguration>
-  <indexConfiguration>Index instellingen</indexConfiguration>
-  <io>Import, export &amp; harvesting</io>
-  <placeKeyword>Geef sleutelwoorden</placeKeyword>
+	<usersAndGroups>Gebruikers en groepen</usersAndGroups>
+	<classification>Thesauri en klassificatie systemen</classification>
+	<catalogueConfiguration>Cataloog instellingen</catalogueConfiguration>
+	<indexConfiguration>Index instellingen</indexConfiguration>
+	<io>Import, export &amp; harvesting</io>
+	<placeKeyword>Geef sleutelwoorden</placeKeyword>
 	<porCatInfoTab>Catalogus</porCatInfoTab>
 	<poweredBy>Gemaakt met </poweredBy>
 	<previous>Vorige</previous>
@@ -755,9 +773,9 @@
 	<ress>resultaat</ress>
 	<restrictTo>Beperk tot</restrictTo>
 	<result>Vorige resultaten</result>
-  <searchResult>Search results</searchResult>
-  <resources>Resources</resources>
-  <visualizationService>Visualization service URL (WMS)</visualizationService>
+	<searchResult>Search results</searchResult>
+	<resources>Resources</resources>
+	<visualizationService>Visualization service URL (WMS)</visualizationService>
 	<resultsCoordinate>Resultaten die met de coördinaten overeenkomen</resultsCoordinate>
 	<resultsFreeText>Resultaten die met de zoek criteria overeenkomen</resultsFreeText>
 	<resultsMatching>Zoekresultaten :</resultsMatching>
@@ -802,12 +820,14 @@
 	<site>Site</site>
 	<siteId>Site ID</siteId>
 	<sizeBytes>Grootte (bytes)</sizeBytes>
+
 	<sortBy>Sorteren</sortBy>
 	<sortByType id="changeDate">Laatste wijzigingsdatum</sortByType>
 	<sortByType id="popularity">Populariteit</sortByType>
 	<sortByType id="rating">Beoordeling</sortByType>
 	<sortByType id="relevance">Relevantie</sortByType>
 	<sortByType id="title">Titel</sortByType>
+
 	<southbc>Zuidelijke coördinaat</southbc>
 	<spacesNot js="true">Spaties zijn niet toegestaan in dit veld</spacesNot>
 	<spatial2Tab>Ruimt. Repr.</spatial2Tab>
@@ -828,6 +848,7 @@
 	<Term>Zoekterm</Term>
 	<thanks>Bedankt voor uw inspanningen.</thanks>
 	<theme>ISO onderwerp categorie</theme>
+
 	<thumbnails>Voorbeeldweergave</thumbnails>
 	<timeout>Timeout</timeout>
 	<timeoutChoice value="10">na 10 seconden</timeoutChoice>
@@ -838,6 +859,7 @@
 	<toDateSelector>Selecteer TOT datum</toDateSelector> 
 	<tools>Tools</tools>
 	<topic>Onderwerp</topic>
+
 	<transferOwnership>Stel eigenaar in</transferOwnership>
 	<transferOwnershipDes>Wijzig de rechten van eigenaar toe aan een andere gebruiker</transferOwnershipDes>
 	<type>Type</type>
@@ -1069,7 +1091,7 @@
 	<mainpage2>
 		<p>
 		GeoNetwork opensource maakt het mogelijk ruimtelijke gerelateerde informatie te ontsluiten tussen 
-                    verschillende organisaties. Voor meer informatie kunt u contact opnemen met
+		verschillende organisaties. Voor meer informatie kunt u contact opnemen met
 		</p>
 	</mainpage2>
 	<mainhelp1> Hoe kunt u zoeken... </mainhelp1>
@@ -1107,9 +1129,8 @@
 		<iso19139>Bewaar ISO19115/19139 metadata als XML</iso19139>
 		<iso19139fra>Bewaar ISO19115/19139 Fra metadata als XML</iso19139fra>
 	</savexml>
-  <url>URL</url>
-  <thesaurus>
-    <load>Load from GeoNetwork thesaurus repository</load>    
+	<thesaurus>
+	<load>Load from GeoNetwork thesaurus repository</load>    
 		<addelement>Element toevoegen</addelement>			
 		<admin>Beheer thesaurus</admin>
 		<broader>Algemenere term</broader>
@@ -1144,7 +1165,7 @@
 		<thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
 
-    <inspire>
+	<inspire>
           <serviceType>
             <value id="discovery">Discovery Service (discovery)</value>
             <value id="view">View Service (view)</value>
@@ -1255,6 +1276,7 @@
                 <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
             </group>
         </spatialDataService>
+
           <what>
             <l1>INSPIRE zoekopties</l1>
             <l2>INSPIRE metadata</l2>
@@ -1271,10 +1293,10 @@
             <l13>Verberg INSPIRE Thema's</l13>
             <l14>INSPIRE Thema</l14>
             <l15>Service type</l15>
-        <l16>Classification of data services</l16>
+            <l16>Classification of data services</l16>
         </what>
         <annex1>
-        	<theme id="inspire_CoordinateRefSystems">Geografisch coördinatenstelsel</theme>
+            <theme id="inspire_CoordinateRefSystems">Geografisch coördinatenstelsel</theme>
             <theme id="inspire_GeographicalGridSystems">Geografisch grid systeem</theme>
             <theme id="inspire_GeographicalNames">Geografische namen</theme>
             <theme id="inspire_AdministrativeUnits">Administratieve eenheden</theme>
@@ -1314,37 +1336,38 @@
             <theme id="inspire_MineralResources">Mineral resources</theme>
         </annex3>
     </inspire>
-    
-    <selectMetadataFileAlert>U moet een metadata bestand selecteren</selectMetadataFileAlert>    
-    <showMoreSearchFields>Meer zoekvelden</showMoreSearchFields>
-    <searchEitherOfTheWords>Met één van deze woorden</searchEitherOfTheWords>
-    <searchExactPhrase>Met de exacte woordcombinatie</searchExactPhrase>
-    <searchAllWords>Met al deze woorden</searchAllWords>
-    <searchWithoutWords>Zonder de woorden</searchWithoutWords>
-    
-    <showMap>Show map</showMap>
-    <mapViewer>Map viewer</mapViewer>
 
-    <uuid>Unique identifier</uuid>    
-    <mymetadata>mijn metadata</mymetadata>
+	<selectMetadataFileAlert>U moet een metadata bestand selecteren</selectMetadataFileAlert>    
+	<showMoreSearchFields>Meer zoekvelden</showMoreSearchFields>
+	<searchEitherOfTheWords>Met één van deze woorden</searchEitherOfTheWords>
+	<searchExactPhrase>Met de exacte woordcombinatie</searchExactPhrase>
+	<searchAllWords>Met al deze woorden</searchAllWords>
+	<searchWithoutWords>Zonder de woorden</searchWithoutWords>
+
+	<showMap>Show map</showMap>
+	<mapViewer>Map viewer</mapViewer>
+
+	<uuid>Unique identifier</uuid>    
+	<mymetadata>mijn metadata</mymetadata>
 	<quickSearch>Quick search links</quickSearch>
 	<catalogueRecords>Catalogue metadata</catalogueRecords>
 	<harvestedRecords>Harvested metadata</harvestedRecords>
 	<catalogueTemplates>Catalogue templates</catalogueTemplates>
-    <addremove>Toevoegen / Verwijderen</addremove>
-    <enabled>Ingeschakeld</enabled>
-    <notifications>Kennisgeving aan externe doelen</notifications>
-    
-    <cswServer>CSW server</cswServer>
-    <cswServerDes>CSW Server configuration</cswServerDes>
-    <cswServerConfig>CSW Server configuration</cswServerConfig>
-    <cswServerEnable>Enable</cswServerEnable>
-    <cswServerMetadataPublic>Inserted metadata is public (Transaction)</cswServerMetadataPublic>
-    <cswServerTitle>Title</cswServerTitle>
-    <cswServerAbstract>Abstract</cswServerAbstract>
-    <cswServerFees>Fees</cswServerFees>
-    <cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
-    <cswServerContact>Contact</cswServerContact>
+	<addremove>Toevoegen / Verwijderen</addremove>
+	<enabled>Ingeschakeld</enabled>
+	<notifications>Kennisgeving aan externe doelen</notifications>
+
+	<cswServer>CSW server</cswServer>
+	<cswServerDes>CSW Server configuration</cswServerDes>
+	<cswServerConfig>CSW Server configuration</cswServerConfig>
+	<cswServerEnable>Enable</cswServerEnable>
+	<cswServerMetadataPublic>Inserted metadata is public (Transaction)</cswServerMetadataPublic>
+	<cswServerTitle>Title</cswServerTitle>
+	<cswServerAbstract>Abstract</cswServerAbstract>
+	<cswServerFees>Fees</cswServerFees>
+	<cswServerAccessConstraints>Access constraints</cswServerAccessConstraints>
+	<cswServerContact>Contact</cswServerContact>
+
 	<virtualcswServer>Configure virtual CSW access point</virtualcswServer>
 	<virtualcswServerDes>Configuration of virtual CSW servers</virtualcswServerDes>
 	<virtualcswServerConfig>Configuration of virtual CSW servers</virtualcswServerConfig>
@@ -1372,16 +1395,26 @@
 	<virtualcswGroup>Group</virtualcswGroup>
 	<virtualcswCategory>Category</virtualcswCategory>
 	<virtualcswType>Resource type</virtualcswType>
-    <customize-elementset>Aanpassen element in te stellen</customize-elementset>
-    <csw-server-disabled>CSW server is uitgeschakeld.</csw-server-disabled>
-    <custom-elementset-intro>Definiëren die moeten worden opgenomen in uw aangepaste element hier is ingesteld. Elk element moet worden aangegeven door zijn volledige XPATH van de document root. Deze elementen en hun nakomelingen zullen worden opgenomen in de antwoorden op CSW GetRecord aanvragen met ElementSetName = VOL.</custom-elementset-intro>
-    <custom-elementset-revert>Om terug te keren naar de standaard ElementSetName = VOL reacties, verwijder alle elementen uit deze lijst.</custom-elementset-revert>
-    <custom-elementset-add>Toe te voegen element</custom-elementset-add>
 
-    <wmslayers>WMS layers</wmslayers>
-    <formatter.admin>Metadata Formatter Admin</formatter.admin>
-    <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
+	<customize-elementset>Aanpassen element in te stellen</customize-elementset>
+	<csw-server-disabled>CSW server is uitgeschakeld.</csw-server-disabled>
+	<custom-elementset-intro>Definiëren die moeten worden opgenomen in uw aangepaste element hier is ingesteld. Elk element moet worden aangegeven door zijn volledige XPATH van de document root. Deze elementen en hun nakomelingen zullen worden opgenomen in de antwoorden op CSW GetRecord aanvragen met ElementSetName = VOL.</custom-elementset-intro>
+	<custom-elementset-revert>Om terug te keren naar de standaard ElementSetName = VOL reacties, verwijder alle elementen uit deze lijst.</custom-elementset-revert>
+	<custom-elementset-add>Toe te voegen element</custom-elementset-add>
+
+	<wmslayers>WMS layers</wmslayers>
+	<formatter.admin>Metadata Formatter Admin</formatter.admin>
+	<formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+	
+	<advancedOptions.show>show advanced options</advancedOptions.show>
+	<advancedOptions.hide>hide advanced options</advancedOptions.hide>
+	<latestDatasets>Latest</latestDatasets>
+	<popularDatasets>Popular</popularDatasets>
+	<filter>Filter</filter>
+	<welcome.text>Welcome to GeoNetwork</welcome.text>
+	<tag_label>Tags</tag_label>
+	<map_label>Map</map_label>
 </strings>

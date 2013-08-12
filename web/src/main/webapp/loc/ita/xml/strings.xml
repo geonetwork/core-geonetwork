@@ -14,8 +14,18 @@
 	<rus>Русский</rus> <!-- Do not translate! -->
 	<spa>Español</spa> <!-- Do not translate! -->
 	<tur>Türkçe</tur> <!-- Do not translate! -->
-    <pol>Polski</pol> <!-- Do not translate! -->
+	<pol>Polski</pol> <!-- Do not translate! -->
 	
+	<statusTitle> / Metadata Workflow</statusTitle>
+	<statusUserEdit>GeoNetwork user %s (%s) edited metadata record #%s</statusUserEdit>
+	<statusInform>%s / Metadata Workflow / Metadata record(s) %s by %s (%s) (%s)</statusInform>
+	<!--
+        legacy UI 
+        <statusSendEmail>Change log message: %s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
+        -->
+	<statusSendEmail>Change log message: %s\r\n\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
+
+	<recurse>Also search in subfolders</recurse>
 	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>
 	<isAdmin>Is administrator ?</isAdmin>
@@ -52,7 +62,6 @@
 	<selectTemplate>Select schemas</selectTemplate>
 	<useStopwords>L'indice Lucene usa le stopword per queste lingue:</useStopwords>    
 	<rebuildIndexMessage>Se si cambiano questi valori, si raccomanda la ricostruzione dell'indice di Lucene.</rebuildIndexMessage>
-	<!-- new strings - 2.7 -->
 	<notificationsDes>Remote updates</notificationsDes>
 	<metadata-templates-samples-add>Aggiungi modelli ed esempi</metadata-templates-samples-add>
 	<metadata-schema-select>Selezione una schema per il quale aggiungere modelli e dati di esempio</metadata-schema-select>
@@ -82,6 +91,7 @@
 	<showRemoteHTML>Mostra HTML dal server remoto</showRemoteHTML>
 	<searchStatistics>Search statistics</searchStatistics>
 	<searchStatisticsDes>See statistics about searches performed in the application</searchStatisticsDes>
+
 	<stat.byDay>by Day</stat.byDay>
 	<stat.byMonth>by Month</stat.byMonth>
 	<stat.byWeek>by Week</stat.byWeek>
@@ -150,7 +160,6 @@
 	<stat.filesDel> file(s) deleted.</stat.filesDel>
 	<stat.warnCsvExport>Caution: exporting log tables can take several minutes</stat.warnCsvExport>
 	<stat.clickToDownload>Click on the link to download the CSV file</stat.clickToDownload>
-	<!-- end new strings -->
 	
 	<drawRectangle js="true">Disegna rettangolo</drawRectangle>
 	<drawPolygon js="true">Disegna poligono</drawPolygon>
@@ -256,8 +265,8 @@
 	<NoServiceURLError js="true">Controllare che la URL del servizio selezionato sia definito.</NoServiceURLError>
 	<GetCapabilitiesDocumentError js="true">Errore nel caricamento del servizio GetCapabilities dall'URL: </GetCapabilitiesDocumentError>
 	<noOperatesOn>Nessun dataset collegato</noOperatesOn>
-    <linkedDataset>Dataset collegati:</linkedDataset>
-    <linkedFeatureCatalogue>Cataloghi di entità collegati:</linkedFeatureCatalogue>
+	<linkedDataset>Dataset collegati:</linkedDataset>
+	<linkedFeatureCatalogue>Cataloghi di entità collegati:</linkedFeatureCatalogue>
 	<linkedFeatureCatalogueHelp>Aggiungi una relazione tra i metadati correnti 
               e un catalogo di entità nello standard ISO19110.</linkedFeatureCatalogueHelp>
 	<createLinkedFeatureCatalogue>Collega un catalogo di entità</createLinkedFeatureCatalogue>
@@ -266,12 +275,14 @@
               l'elemento della risorsa associata può contenere il nome del layer 
               così come definito nel servizio OGC.
               La lista dei layer del servizio può aiutare il revisore dei metadati ad aggiungere un valore esistente.</layerNameHelp>
+
 	<layerName js="true">Nome del layer</layerName>
 	<createIfNotExistButton js="true">Crea un nuovo record di metadati</createIfNotExistButton>
 	<associateService js="true">Collega metadati di un servizio</associateService>
 	<associateDataset js="true">Collega metadati di dati</associateDataset>
 	<associateServiceHelp>Per aggiungere un collegamento ai metadati di un servizio, ricerca un servizio e definisci un nome di un layer.</associateServiceHelp>
 	<associateDatasetHelp>Per aggiungere un collegamento ai dati, vai sulla vista ISO &gt; sezione Identificazione, e operare sugli elementi definiti.</associateDatasetHelp>
+
 	<addParent>Aggiungi o aggiorna la sezione dei metadati genitore</addParent>
 	<createAssoService>Crea una relazione</createAssoService>
 	<updateMdd>Aggiorna i matadati sui dati</updateMdd>
@@ -352,8 +363,9 @@
 	<any>- Qualunque -</any>
 	<anytime>Nessun filtro temporale</anytime>
 	<appSchInfoTab>App. schema</appSchInfoTab>
+
 	<assigned>Assegnato</assigned>
- 	<attrlabl>Etichetta dell'attributo</attrlabl>
+	<attrlabl>Etichetta dell'attributo</attrlabl>
 	<availability>Disponibilità</availability>
 	<back>Indietro</back>
 	<backToDescription>Torna alla descrizione del dato</backToDescription>
@@ -390,8 +402,6 @@
 	<categoryNameMandatory>Deve essere inserito un nome per la categoria.</categoryNameMandatory>
 	<changeDate>Data di modifica del metadato</changeDate>
 	<checkusername>Verifica</checkusername>
-  <choice>Choice</choice>
-  <sequence>Sequence</sequence>	
 	<choose>-Scegli-</choose>
 	<chooseFile>Scegli la posizione del file da caricare</chooseFile>
 	<chooseLargeThumbnail>Scegli la posizione del file della miniatura grande</chooseLargeThumbnail>
@@ -494,6 +504,8 @@
 	<feedbackCardTitle>Feedback e commenti</feedbackCardTitle>
 	<feedbackComments>Feedback / commenti</feedbackComments>
 	<feedbackRequest>Fornisci i tuoi dettagli prima di fare il download</feedbackRequest>
+
+
 	<file>File</file>
 	<fileType>Tipo di file:</fileType>
 	<fileUploadSuccessful>Caricamento file eseguito correttamente</fileUploadSuccessful>
@@ -554,6 +566,7 @@
 	<isoAll>ISO: Completo</isoAll>
 	<isoCore>ISO: Base</isoCore>
 	<isoMinimum>ISO: Minimo</isoMinimum>
+
 	<keyword>Parola chiave</keyword>
 	<keywords js="true">Parole chiave</keywords>
 	<keywordshelp>Seleziona parole chiave multiple usando il tasto Ctrl mentre selezioni con il mouse</keywordshelp>
@@ -565,6 +578,7 @@
 	<kindChoice value="ngo">ONG</kindChoice>
 	<kindChoice value="other">Altro</kindChoice>
 	<kindChoice value="uni">Università/Centro di ricerca</kindChoice>
+
 	<label>Etichetta</label>
 	<language>it</language>
 	<large_thumbnail>Clicca per vedere una miniatura più grande</large_thumbnail>
@@ -605,6 +619,7 @@
 	<batchNewOwnerTitle>Riassegnazione in blocco del proprietario</batchNewOwnerTitle>
 	<batchUpdateCategoriesTitle>Operazione di aggiornamento categorie in blocco</batchUpdateCategoriesTitle>
 	<batchUpdatePrivilegesTitle>Operazione di aggiornamento privilegi in blocco</batchUpdatePrivilegesTitle>
+
 	<max>Massimo</max>
 	<mdRating>Votazione del dato</mdRating>
 	<mdUpdateError>Errore di aggiornamento</mdUpdateError>
@@ -622,6 +637,7 @@
 	<metadata.admin.index.wait js="true">Operazione di indicizzazione in corso...</metadata.admin.index.wait>
 	<metadata.admin.index.optimize.desc>Ottimizza l'indice Lucene</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Pulisce la cache XLink e ricostruisce l'indice dei record con XLinks</metadata.admin.index.rebuildxlinks.desc>
+
 	<lucene.config.reload>Ricarica la configurazione di Lucene</lucene.config.reload>
 	<reload>Ricarica</reload>
 	<rebuildxlinks>Ricostruisce XLinks</rebuildxlinks>
@@ -636,6 +652,7 @@
 	<metadata-template-order>Organizza modelli</metadata-template-order>	
 	<metadata-template-order-desc>Ordina i tuoi modelli</metadata-template-order-desc>	
 	<metadata-template-add-default>Aggiungi modello</metadata-template-add-default>	
+
 	<metadata>Metadati</metadata>
 	<metadataAdded>Aggiunti metadati con ID:</metadataAdded>
 	<metadataDeleted>Elimina metadati con ID:</metadataDeleted>
@@ -684,6 +701,7 @@
 	<overwriteFile>Sovrascrivi?</overwriteFile>
 	<owner>Proprietario</owner>
 	<ownerRights>Elimina/Privilegi/Categorie sbloccati: si possiedono i diritti di proprietario</ownerRights>
+
 	<paper>Stampa</paper>
 	<partial>Sovrapposizione parziale</partial>
 	<partialCooordinate>Coordinate parziali </partialCooordinate>
@@ -791,12 +809,14 @@
 	<site>Sito</site>
 	<siteId>ID del sito</siteId>
 	<sizeBytes>Dimensione (bytes)</sizeBytes>
+
 	<sortBy>Ordina per</sortBy>
 	<sortByType id="changeDate">Data ultima modifica</sortByType>
 	<sortByType id="popularity">Popolarità</sortByType>
 	<sortByType id="rating">Voto</sortByType>
 	<sortByType id="relevance">Rilevanza</sortByType>
 	<sortByType id="title">Titolo</sortByType>
+
 	<southbc>Coordinata limite verso sud</southbc>
 	<spacesNot js="true">In questo campo gli spazi non sono ammessi</spacesNot>
 	<spatial2Tab>Rappr. Spaz.</spatial2Tab>
@@ -817,6 +837,7 @@
 	<Term>Condizioni</Term>
 	<thanks>Grazie per l'iniziativa. GeoNetwork</thanks>
 	<theme>Categoria ISO del soggetto</theme>
+
 	<thumbnails>Miniature</thumbnails>
 	<timeout>Timeout</timeout>
 	<timeoutChoice value="10">dopo 10 secondi</timeoutChoice>
@@ -827,6 +848,7 @@
 	<toDateSelector>Seleziona la data di fine</toDateSelector>
 	<tools>Strumenti</tools>
 	<topic>Argomento</topic>
+
 	<transferOwnership>Riassegna metadati</transferOwnership>
 	<transferOwnershipDes>Trasferisci la proprietà del metadato ad un altro utente</transferOwnershipDes>
 	<type>Tipo</type>
@@ -1029,7 +1051,7 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 	<xsdError>Errore di validazione XSD</xsdError>
 	<yourRegistration js="true">La tua registrazione...</yourRegistration>
 	<zip>Zip</zip>
-    	<header_meta>
+	<header_meta>
 		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
 		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
@@ -1130,7 +1152,7 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 		<thesaurus>Estrai parole chiave da thesauri</thesaurus>
 	</searchhelp>
 
-    <inspire>      
+	<inspire>      
         <serviceType>
             <value id="discovery">Discovery Service (discovery)</value>
             <value id="view">View Service (view)</value>
@@ -1246,6 +1268,7 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
             <value id="notConformant">Not Conformant</value>
             <value id="notEvaluated">Not Evaluated</value>
         </conformity>      
+
         <what>
             <l1>Opzioni di ricerca INSPIRE</l1>
             <l2>Metadati INSPIRE</l2>
@@ -1305,36 +1328,38 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
             <theme id="inspire_MineralResources">Risorse minerarie</theme>
         </annex3>
     </inspire>
-    
-    <selectMetadataFileAlert>Selezionare un file di metadati da inserire</selectMetadataFileAlert>        
-    <showMoreSearchFields>Mostra/Nascondi campi di ricerca</showMoreSearchFields>
-    <searchEitherOfTheWords>Almeno una parola</searchEitherOfTheWords>
-    <searchExactPhrase>Frase esatta</searchExactPhrase>
-    <searchAllWords>Tutte le parole</searchAllWords>
-    <searchWithoutWords>Senza le parole</searchWithoutWords>
-    
-    <showMap>Mostra mappa</showMap>
-    <mapViewer>Visualizzatore</mapViewer>
 
-    <uuid>Identificatore univoco</uuid>
-    <quickSearch>Link di ricerca veloce</quickSearch>
-    <mymetadata>I miei metadati</mymetadata>
-    <catalogueRecords>Metadati del catalogo</catalogueRecords>
-    <harvestedRecords>Metadati scaricati</harvestedRecords>
-    <catalogueTemplates>Modelli di metadato</catalogueTemplates>
-    <addremove>Aggiungi/Rimuovi</addremove>
-    <enabled>Abilitato</enabled>
-    <notifications>Notifica ai destinatari remoti</notifications>    
-    <cswServer>Server CSW</cswServer>
-    <cswServerDes>Descrizione server CSW</cswServerDes>
-    <cswServerConfig>Configurazione server CSW</cswServerConfig>
-    <cswServerEnable>Abilita</cswServerEnable>
-    <cswServerMetadataPublic>Il metadato inserito è pubblico (Transazione)</cswServerMetadataPublic>
-    <cswServerTitle>Titolo</cswServerTitle>
-    <cswServerAbstract>Riassunto</cswServerAbstract>
-    <cswServerFees>Tariffa</cswServerFees>
-    <cswServerAccessConstraints>Vincoli di accesso</cswServerAccessConstraints>
-    <cswServerContact>Contatto</cswServerContact>
+	<selectMetadataFileAlert>Selezionare un file di metadati da inserire</selectMetadataFileAlert>        
+	<showMoreSearchFields>Mostra/Nascondi campi di ricerca</showMoreSearchFields>
+	<searchEitherOfTheWords>Almeno una parola</searchEitherOfTheWords>
+	<searchExactPhrase>Frase esatta</searchExactPhrase>
+	<searchAllWords>Tutte le parole</searchAllWords>
+	<searchWithoutWords>Senza le parole</searchWithoutWords>
+
+	<showMap>Mostra mappa</showMap>
+	<mapViewer>Visualizzatore</mapViewer>
+
+	<uuid>Identificatore univoco</uuid>
+	<quickSearch>Link di ricerca veloce</quickSearch>
+	<mymetadata>I miei metadati</mymetadata>
+	<catalogueRecords>Metadati del catalogo</catalogueRecords>
+	<harvestedRecords>Metadati scaricati</harvestedRecords>
+	<catalogueTemplates>Modelli di metadato</catalogueTemplates>
+	<addremove>Aggiungi/Rimuovi</addremove>
+	<enabled>Abilitato</enabled>
+	<notifications>Notifica ai destinatari remoti</notifications>
+
+	<cswServer>Server CSW</cswServer>
+	<cswServerDes>Descrizione server CSW</cswServerDes>
+	<cswServerConfig>Configurazione server CSW</cswServerConfig>
+	<cswServerEnable>Abilita</cswServerEnable>
+	<cswServerMetadataPublic>Il metadato inserito è pubblico (Transazione)</cswServerMetadataPublic>
+	<cswServerTitle>Titolo</cswServerTitle>
+	<cswServerAbstract>Riassunto</cswServerAbstract>
+	<cswServerFees>Tariffa</cswServerFees>
+	<cswServerAccessConstraints>Vincoli di accesso</cswServerAccessConstraints>
+	<cswServerContact>Contatto</cswServerContact>
+
 	<virtualcswServer>Configure virtual CSW access point</virtualcswServer>
 	<virtualcswServerDes>Configuration of virtual CSW servers</virtualcswServerDes>
 	<virtualcswServerConfig>Configuration of virtual CSW servers</virtualcswServerConfig>
@@ -1362,17 +1387,26 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 	<virtualcswGroup>Group</virtualcswGroup>
 	<virtualcswCategory>Category</virtualcswCategory>
 	<virtualcswType>Resource type</virtualcswType>
-	<customize-elementset>Personalizza element set</customize-elementset>
-    <csw-server-disabled>Il server CSW è disabilitato.</csw-server-disabled>
-    <custom-elementset-intro>Definire gli elementi da includere nel set di elementi personalizzato. L'elemento deve essere identificato dal suo XPath completo dalla root del documento. Questi elementi ed i loro discendenti saranno inclusi nelle risposte alle richieste CSW GetRecord con ElementSetName = FULL.</custom-elementset-intro>
-    <custom-elementset-revert>Per ripristinare le risposte di default ElementSetName = FULL, eliminare tutti gli elementi da questa lista.</custom-elementset-revert>
-    <custom-elementset-add>Aggiungi elemento</custom-elementset-add>
 
-    <wmslayers>Layers WMS</wmslayers>
-    
-    <formatter.admin>Metadata Formatter Admin</formatter.admin>
-    <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
+	<customize-elementset>Personalizza element set</customize-elementset>
+	<csw-server-disabled>Il server CSW è disabilitato.</csw-server-disabled>
+	<custom-elementset-intro>Definire gli elementi da includere nel set di elementi personalizzato. L'elemento deve essere identificato dal suo XPath completo dalla root del documento. Questi elementi ed i loro discendenti saranno inclusi nelle risposte alle richieste CSW GetRecord con ElementSetName = FULL.</custom-elementset-intro>
+	<custom-elementset-revert>Per ripristinare le risposte di default ElementSetName = FULL, eliminare tutti gli elementi da questa lista.</custom-elementset-revert>
+	<custom-elementset-add>Aggiungi elemento</custom-elementset-add>
+
+	<wmslayers>Layers WMS</wmslayers>
+	<formatter.admin>Metadata Formatter Admin</formatter.admin>
+	<formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+	
+	<advancedOptions.show>show advanced options</advancedOptions.show>
+	<advancedOptions.hide>hide advanced options</advancedOptions.hide>
+	<latestDatasets>Latest</latestDatasets>
+	<popularDatasets>Popular</popularDatasets>
+	<filter>Filter</filter>
+	<welcome.text>Welcome to GeoNetwork</welcome.text>
+	<tag_label>Tags</tag_label>
+	<map_label>Map</map_label>
 </strings>

@@ -356,6 +356,20 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         
         builder.where(Wheres.ID(keyword.getNameSpaceCode()+15));
         assertEquals(1, builder.build().execute(writableThesaurus).size());
+        
+        writableThesaurus.updateCodeByURI(keyword.getNameSpaceCode()+15, "http://thesaurus.test#101");
+        assertEquals(0, builder.build().execute(writableThesaurus).size());
+        
+        builder.where(Wheres.ID("http://thesaurus.test#101"));
+        assertEquals(1, builder.build().execute(writableThesaurus).size());
+        
+        writableThesaurus.updateCodeByURI("http://thesaurus.test#101", "http://not.namespace.based.ids/101");
+        assertEquals(0, builder.build().execute(writableThesaurus).size());
+        
+        builder.where(Wheres.ID("http://not.namespace.based.ids/101"));
+        assertEquals(1, builder.build().execute(writableThesaurus).size());
+        
+        
     }
     
     @Test

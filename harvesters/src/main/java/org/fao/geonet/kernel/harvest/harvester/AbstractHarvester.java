@@ -56,7 +56,7 @@ import org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester;
 import org.fao.geonet.kernel.harvest.harvester.wfsfeatures.WfsFeaturesHarvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950Config.Z3950ConfigHarvester;
-import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.monitor.harvest.AbstractHarvesterErrorCounter;
 import org.fao.geonet.repository.UserRepository;
@@ -145,7 +145,7 @@ public abstract class AbstractHarvester extends BaseAligner {
      * @throws BadParameterEx
      * @throws OperationAbortedEx
      */
-	public static AbstractHarvester create(String type, ServiceContext context, SettingManager sm, DataManager dm) throws BadParameterEx, OperationAbortedEx {
+	public static AbstractHarvester create(String type, ServiceContext context, HarvesterSettingsManager sm, DataManager dm) throws BadParameterEx, OperationAbortedEx {
 		//--- raises an exception if type is null
 		if (type == null) {
 			throw new BadParameterEx("type", null);
@@ -862,7 +862,7 @@ public abstract class AbstractHarvester extends BaseAligner {
     private boolean running = false;
 
 	protected ServiceContext context;
-	protected SettingManager settingMan;
+	protected HarvesterSettingsManager settingMan;
 	protected DataManager    dataMan;
 
     protected AbstractParams params;

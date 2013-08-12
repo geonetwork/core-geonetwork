@@ -63,6 +63,10 @@
 				<td class="padded"><input id="filesystem.nodelete" type="checkbox" checked="on"/></td>
 			</tr>			
 			<tr>
+				<td class="padded"><label for="filesystem.checkFileLastModifiedForUpdate"><xsl:value-of select="/root/gui/harvesting/checkFileLastModifiedForUpdate"/></label></td>
+				<td class="padded"><input id="filesystem.checkFileLastModifiedForUpdate" type="checkbox" checked="on"/></td>
+			</tr>           
+			<tr>
 				<td class="padded" valign="bottom"><xsl:value-of select="/root/gui/harvesting/icon"/></td>
 				<td class="padded">
 					<select id="filesystem.icon" class="content" name="icon" size="1"/>

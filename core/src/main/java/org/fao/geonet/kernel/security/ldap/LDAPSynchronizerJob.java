@@ -236,8 +236,9 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
             GroupRepository groupRepo = applicationContext.getBean(GroupRepository.class);
             Group group = groupRepo.findByName(groupName);
             
-            if (group == null) {
-                group = LDAPUtils.createIfNotExist(groupName, groupRepo);
+            if (groupRecord == null) {
+                LDAPUtils.createIfNotExist(groupName, groupId, dbms, serialFactory);
+
             } else {
                 // Update something ?
                 // Group description is only defined in catalog, not in LDAP for the time

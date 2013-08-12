@@ -132,60 +132,8 @@ public class Update implements Service {
         }
 
         // launching the service on the fly
-        initService(context, dbms, Integer.valueOf(serviceId));
+        context.getServlet().getEngine().loadConfigDB(dbms, Integer.valueOf(serviceId));
 
         return new Element(Jeeves.Elem.RESPONSE);
-    }
-
-    /**
-     * launch service upon creation
-     * 
-     * @param context
-     * @param dbms
-     * @param serviceId
-     * @throws Exception
-     */
-    private void initService(ServiceContext context, Dbms dbms,
-            int serviceId) throws Exception {
-
-        // build service element
-
-        Element eltServices = new Element("services");
-        eltServices.setAttribute("package", "org.fao.geonet");
-
-        String query = "SELECT * FROM Services WHERE id=?";
-        Element eltService = dbms.select(query, serviceId);
-
-        Element srv = new Element("service");
-        Element cls = new Element("class");
-
-        String selectServiceParamsQuery = "SELECT name, value FROM ServiceParameters WHERE service =?";
-        @SuppressWarnings("unchecked")
-        java.util.List<Element> paramList = dbms.select(selectServiceParamsQuery, serviceId)
-                .getChildren();
-
-        // Build a Lucene query from the set of parameters
-        StringBuilder luceneQuery = new StringBuilder();
-        for (Element eltParam : paramList) {
-            if (eltParam.getChildText("value") != null
-                    && !eltParam.getChildText("value").equals("")) {
-                luceneQuery.append(" +")
-                    .append(eltParam.getChildText("name"))
-                    .append(":")
-                    .append(eltParam.getChildText("value"));
-            }
-        }
-        cls.addContent(new Element("param").setAttribute("name",
-                "filter").setAttribute(
-                "value",
-                luceneQuery.toString()));
-
-        srv.setAttribute("name",
-                eltService.getChild("record").getChildText("name")).addContent(
-                cls.setAttribute("name", eltService.getChild("record")
-                        .getChildText("class")));
-        eltServices.addContent(srv);
-
-        context.getServlet().getEngine().initServices(eltServices);
     }
 }

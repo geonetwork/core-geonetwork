@@ -29,6 +29,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -71,22 +72,35 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 	/**
 	 * Filter xml or mef files.
 	 */
-	private FilenameFilter mdFilter = new FilenameFilter()
-	{
-		public boolean accept(File dir, String name)
-		{
-			if (name.equals(CONFIG_FILE))
-				return false;
+	public static class BatchImportFilenameFilter implements FilenameFilter {
+	    
+	    private boolean acceptDirectories = false;
+	    
+	    public static final boolean ACCEPT_DIRECTORIES = true;
+	    
+	    public BatchImportFilenameFilter(boolean acceptDirectories) {
+	        this.acceptDirectories = acceptDirectories;
+	    }
+	    
+	    public BatchImportFilenameFilter() {}
+	    
+	    public boolean accept(File dir, String name) {
+	        if(acceptDirectories) {
+	            File f = new File(dir + File.separator + name);
+	            return f.isDirectory() || checkFile(name);
+	        }
+	        return checkFile(name);
+	    }
 
-			if (name.startsWith("."))
-				return false;
-
-			if (name.toLowerCase().endsWith(".xml") || name.toLowerCase().endsWith(".mef"))
-				return true;
-			else
-				return false;
-		}
-	};
+        private boolean checkFile(String name) {
+            if (name.equals(CONFIG_FILE))
+                return false;
+            if (name.toLowerCase().endsWith(".xml") || name.toLowerCase().endsWith(".mef"))
+                return true;
+            else
+                return false;
+        }
+	}
 
 	//--------------------------------------------------------------------------
 
@@ -232,12 +246,11 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 		ArrayList<Exception> exceptions = new ArrayList<Exception>();
 
 
-		public ImportMetadataReindexer(DataManager dm, Element params, ServiceContext context, File files[], String stylePath, boolean failOnError) {
+		public ImportMetadataReindexer(DataManager dm, Element params, ServiceContext context, List<File> fileList, String stylePath, boolean failOnError) {
 			super (dm);
 			this.params = params;
 			this.context = context;
-			this.files = new File[files.length];
-			System.arraycopy(files, 0, this.files, 0, files.length);
+			this.files = fileList.toArray(new File[fileList.size()]);
 			this.stylePath = stylePath;
 		}
 
@@ -291,17 +304,18 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 		DataManager   dm = gc.getBean(DataManager.class);
 
 		String dir      = Util.getParam(params, Params.DIR);
+		boolean recurse = Util.getParam(params, Params.RECURSE, "off").equals("on");
 		
-		File files[] = new File(dir).listFiles(mdFilter);
+		List<File> files = IO.getFilesInDirectory(new File(dir), recurse, new BatchImportFilenameFilter(recurse));
 
-		if (files == null)
-			throw new Exception("Directory not found: " + dir);
+		if (files.size() == 0)
+			throw new Exception("No XML or MEF file found in " + dir);
 
 		ImportMetadataReindexer r = new ImportMetadataReindexer(dm, params, context, files, stylePath, failOnError);
 		r.process();
 		exceptions = r.getExceptions();
 		
-		return files.length;
+		return files.size();
 	}
 
 	//--------------------------------------------------------------------------
@@ -348,7 +362,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
                     context.debug("   Scanning category : "+categs[j]);
 
 				String catDir  = categs[j].getName();
-				File   files[] = categs[j].listFiles(mdFilter);
+				File   files[] = categs[j].listFiles(new BatchImportFilenameFilter());
 
 				if (files == null)
 					throw new Exception("Cannot scan files in : " + categs[j].getPath());

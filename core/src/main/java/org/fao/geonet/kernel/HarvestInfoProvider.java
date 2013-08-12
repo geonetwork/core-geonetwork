@@ -1,5 +1,7 @@
 package org.fao.geonet.kernel;
 
+import org.jdom.Element;
+
 /**
  * An interface so that Datamanager can obtain harvest information without needing to depend
  * on harvesting module.
@@ -16,6 +18,6 @@ public interface HarvestInfoProvider {
      * @param uuid uuid of metadata
      * @return
      */
-    String getHarvestInfo(String harvestUuid, String id, String uuid);
+    Element getHarvestInfo(String harvestUuid, String id, String uuid);
 
 }

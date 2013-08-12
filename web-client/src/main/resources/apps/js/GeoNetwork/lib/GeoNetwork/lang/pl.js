@@ -19,6 +19,7 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.pl = {
+    'metadata-not-found': 'Metadata with UUID ${uuid} not found or not shared with you.',
     'harvestingAdmin': 'Harvesting',
     'updateUserInfo': 'Edit my profile',
     'updatePassword': 'Change my password',
@@ -275,6 +276,10 @@ GeoNetwork.Lang.pl = {
 	'setStatus': 'Status metadanych',
     'status': 'Status',
     'updateStatus': 'Zaktualizuj status',
+    'currentStatus': ' (current status is ${status})',
+    'enableWorkflow': 'Enable worklow',
+    'enableWorkflowTT': 'Set metadata status to draft and enable workflow',
+    'enableWorkflowStart': 'Metadata status set to draft.',
     'updateVersion': 'Aktywuj wersjonowanie',
     'statusTT': 'Zmień status rekordu, zgodnie z jego fazą cyklu życia',
     'setVersioning': 'Wersjonowanie metadanych',
@@ -581,6 +586,8 @@ GeoNetwork.Lang.pl = {
     'thesaurusFromFile': 'Z lokalnego pliku',
     'thesaurusFromURL': 'Ze zdalnedo pliku (URL)',
     'id': 'Identyfikator',
+    'mdIdentifier': 'Record internal identifier: ',
+    'mdUUID': 'Record unique identifier: ',
     'label': 'Etykieta',
     'definition': '-',
     'xmin': 'X min',
@@ -657,7 +664,27 @@ GeoNetwork.Lang.pl = {
     'linklabel-text/plain': 'Web link',
     'linklabel-image/png': 'Image link',
     'linklabel-image/jpeg': 'Image link',
-    'linklabel-': 'Link'
+    'linklabel-': 'Link',
+    'insertMode': 'Insert Mode',
+    'fileUpload': 'File upload',
+    'copyPaste': 'Copy/Paste',
+    'fileType': 'File Type',
+    'singleFile' :'Single File (XML, SLD, WMC...)',
+    'mefFile': 'MEF file',
+    'importActions': 'Import actions',
+    'noActionOnImport': 'No action on import',
+    'overwriteMD': 'Overwrite metadata with same UUID' ,
+    'generateUuid': 'Generate UUID for inserted metadata',
+    'styleSheet': 'StyleSheet',
+    'validate': 'Validate',
+    'assignCurCat': 'Assign to current catalog',
+    'metadata': 'Metadata',
+    'mdInsertResults': 'Results of metadata import',
+    'mdInsertSuccess': 'Metadata inserted with',
+    'mdInsertFailure': 'Error while inserting metadata : ',
+    'mdRecordsProcessed': 'Total number of metadata records processed',
+    'mdRecordsAdded': 'Total number of metadata records added',
+    'chooseCategory': 'Choose a category'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.pl, GeoNetwork.Lang.pl);

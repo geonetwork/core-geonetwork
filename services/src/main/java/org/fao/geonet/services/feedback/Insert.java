@@ -67,11 +67,15 @@ public class Insert implements Service
 		String subject  = Util.getParam(params, Params.SUBJECT, "New feedback");  // TODO : i18n
 
 		String host = sm.getValue("system/feedback/mailServer/host");
-		String port = sm.getValue("system/feedback/mailServer/port");
 		String to   = sm.getValue("system/feedback/email");
 
 		MailSender sender = new MailSender(context);
-		sender.send(host, Integer.parseInt(port), email, name +" ("+org+")", to, null, subject, comments);
+		sender.send(host, 
+		        sm.getValueAsInt("system/feedback/mailServer/port"), 
+		        sm.getValue("system/feedback/mailServer/username"), 
+		        sm.getValue("system/feedback/mailServer/password"), 
+		        sm.getValueAsBool("system/feedback/mailServer/ssl"), 
+		        email, name +" ("+org+")", to, null, subject, comments);
 
 		return new Element("response").addContent(params.cloneContent());
 	}

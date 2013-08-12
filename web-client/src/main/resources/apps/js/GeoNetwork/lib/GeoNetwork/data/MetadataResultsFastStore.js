@@ -215,6 +215,14 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }
     }
     
+    function getStatus(v, record){
+        if (record.status) {
+            return record.status[0].value;
+        } else {
+            return '';
+        }
+    }
+    
     function getDownload(v, record){
         if (record.geonet_info && record.geonet_info.download) {
             return (record.geonet_info.download[0].value === 'true');
@@ -406,6 +414,9 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }, {
             name: 'rating',
             convert: getRating
+        }, {
+            name: 'status',
+            convert: getStatus
         }, {
             name: 'popularity',
             convert: getPopularity

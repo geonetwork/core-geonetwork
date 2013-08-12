@@ -152,18 +152,20 @@ public class SelectionManager {
 			this.selections.put(type, selection);
 		}
 
-		if (selected.equals(ADD_ALL_SELECTED))
-			this.selectAll(type, context);
-		else if (selected.equals(REMOVE_ALL_SELECTED))
-			this.close(type);
-		else if (selected.equals(ADD_SELECTED) && (paramid != null))
-			selection.add(paramid);
-		else if (selected.equals(REMOVE_SELECTED) && (paramid != null))
-			selection.remove(paramid);
-		else if (selected.equals(CLEAR_ADD_SELECTED) && (paramid != null)) {
-			this.close(type);
-			selection.add(paramid);
-		}
+        if (selected != null) {
+            if (selected.equals(ADD_ALL_SELECTED))
+                this.selectAll(type, context);
+            else if (selected.equals(REMOVE_ALL_SELECTED))
+                this.close(type);
+            else if (selected.equals(ADD_SELECTED) && (paramid != null))
+                selection.add(paramid);
+            else if (selected.equals(REMOVE_SELECTED) && (paramid != null))
+                selection.remove(paramid);
+            else if (selected.equals(CLEAR_ADD_SELECTED) && (paramid != null)) {
+                this.close(type);
+                selection.add(paramid);
+            }
+        }
 
 		// Remove empty/null element from the selection
         Iterator<String> iter = selection.iterator();

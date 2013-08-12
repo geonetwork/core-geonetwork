@@ -8,13 +8,13 @@
 
 /**
  * Namespace: OpenLayers.Lang["nb"]
- * Dictionary for norwegian bokmål (Norway). Keys for entries are used in calls to
+ * Dictionary for norwegian bokmÃ¥l (Norway). Keys for entries are used in calls to
  *     <OpenLayers.Lang.translate>.  Entry bodies are normal strings or
  *     strings formatted for use with <OpenLayers.String.format> calls.
  */
 OpenLayers.Lang["no"] = {
 
-    'unhandledRequest': "Ubehandlet forespørsel returnerte ${statusText}",
+    'unhandledRequest': "Ubehandlet forespÃ¸rsel returnerte ${statusText}",
 
     'permalink': "Kobling til denne siden",
 
@@ -23,7 +23,7 @@ OpenLayers.Lang["no"] = {
     'baseLayer': "Bakgrunnskart",
 
     'sameProjection':
-        "Oversiktskartet fungerer bare når det har samme projeksjon som hovedkartet",
+        "Oversiktskartet fungerer bare nÃ¥r det har samme projeksjon som hovedkartet",
 
     'readNotImplemented': "Lesing er ikke implementert.",
 
@@ -34,24 +34,24 @@ OpenLayers.Lang["no"] = {
     'errorLoadingGML': "Feil under lasting av GML-fil ${url}",
 
     'browserNotSupported':
-        "Din nettleser støtter ikke vektortegning. Følgende tegnemetoder støttes:\n${renderers}",
+        "Din nettleser stÃ¸tter ikke vektortegning. FÃ¸lgende tegnemetoder stÃ¸ttes:\n${renderers}",
 
-    'componentShouldBe': "addFeatures : komponenten må være en ${geomType}",
+    'componentShouldBe': "addFeatures : komponenten mÃ¥ vÃ¦re en ${geomType}",
 
     // console message
     'getFeatureError':
-        "getFeatureFromEvent kjørt mot lag uten tegnemetode. Dette betyr som regel at du " +
-        "fjernet et lag uten å fjerne alle handlere tilknyttet laget.",
+        "getFeatureFromEvent kjÃ¸rt mot lag uten tegnemetode. Dette betyr som regel at du " +
+        "fjernet et lag uten Ã¥ fjerne alle handlere tilknyttet laget.",
 
     // console message
     'minZoomLevelError':
-        "Egenskapen minZoomLevel er kun tenkt for bruk på lag " +
-        "basert på FixedZoomLevels. At dette wfs-laget sjekker " +
+        "Egenskapen minZoomLevel er kun tenkt for bruk pÃ¥ lag " +
+        "basert pÃ¥ FixedZoomLevels. At dette wfs-laget sjekker " +
         "minZoomLevel er en fortidslevning. Det kan dog ikke " +
-        "tas bort uten å risikere at OL-baserte applikasjoner " +
-        "slutter å virke, så det er merket som foreldet: " +
+        "tas bort uten Ã¥ risikere at OL-baserte applikasjoner " +
+        "slutter Ã¥ virke, sÃ¥ det er merket som foreldet: " +
         "minZoomLevel i sjekken nedenfor vil fjernes i 3.0. " +
-        "Vennligst bruk innstillingene for min/maks oppløsning " +
+        "Vennligst bruk innstillingene for min/maks opplÃ¸sning " +
         "som er beskrevet her: "+
         "http://trac.openlayers.org/wiki/SettingZoomLevels",
 
@@ -62,22 +62,22 @@ OpenLayers.Lang["no"] = {
     'googleWarning':
         "Google-laget kunne ikke lastes.<br><br>" +
         "Bytt til et annet bakgrunnslag i lagvelgeren i " +
-        "øvre høyre hjørne for å slippe denne meldingen.<br><br>" +
-        "Sannsynligvis forårsakes feilen av at Google Maps-biblioteket " +
-        "ikke er riktig inkludert på nettsiden, eller at det ikke er " +
-        "angitt riktig API-nøkkel for nettstedet.<br><br>" +
-        "Utviklere: For hjelp til å få dette til å virke se "+
+        "Ã¸vre hÃ¸yre hjÃ¸rne for Ã¥ slippe denne meldingen.<br><br>" +
+        "Sannsynligvis forÃ¥rsakes feilen av at Google Maps-biblioteket " +
+        "ikke er riktig inkludert pÃ¥ nettsiden, eller at det ikke er " +
+        "angitt riktig API-nÃ¸kkel for nettstedet.<br><br>" +
+        "Utviklere: For hjelp til Ã¥ fÃ¥ dette til Ã¥ virke se "+
         "<a href='http://trac.openlayers.org/wiki/Google' " +
         "target='_blank'>her</a>.",
 
     'getLayerWarning':
         "${layerType}-laget kunne ikke lastes.<br><br>" +
         "Bytt til et annet bakgrunnslag i lagvelgeren i " +
-        "øvre høyre hjørne for å slippe denne meldingen.<br><br>" +
-        "Sannsynligvis forårsakes feilen av at " +
+        "Ã¸vre hÃ¸yre hjÃ¸rne for Ã¥ slippe denne meldingen.<br><br>" +
+        "Sannsynligvis forÃ¥rsakes feilen av at " +
         "${layerLib}-biblioteket ikke var riktig inkludert " +
-        "på nettsiden.<br><br>" +
-        "Utviklere: For hjelp til å få dette til å virke se " +
+        "pÃ¥ nettsiden.<br><br>" +
+        "Utviklere: For hjelp til Ã¥ fÃ¥ dette til Ã¥ virke se " +
         "<a href='http://trac.openlayers.org/wiki/${layerLib}' " +
         "target='_blank'>her</a>.",
 
@@ -85,15 +85,15 @@ OpenLayers.Lang["no"] = {
 
     // console message
     'layerAlreadyAdded':
-        "Du forsøkte å legge til laget ${layerName} på kartet, men det er allerede lagt til",
+        "Du forsÃ¸kte Ã¥ legge til laget ${layerName} pÃ¥ kartet, men det er allerede lagt til",
 
     // console message
     'reprojectDeprecated':
-        "Du bruker innstillingen 'reproject' på laget ${layerName}. " +
-        "Denne innstillingen er foreldet, den var ment for å støtte " +
+        "Du bruker innstillingen 'reproject' pÃ¥ laget ${layerName}. " +
+        "Denne innstillingen er foreldet, den var ment for Ã¥ stÃ¸tte " +
         "visning av kartdata over kommersielle bakgrunnskart, men det " +
-        "bør nå gjøres med støtten for Spherical Mercator. Mer informasjon " +
-        "finnes på http://trac.openlayers.org/wiki/SphericalMercator.",
+        "bÃ¸r nÃ¥ gjÃ¸res med stÃ¸tten for Spherical Mercator. Mer informasjon " +
+        "finnes pÃ¥ http://trac.openlayers.org/wiki/SphericalMercator.",
 
     // console message
     'methodDeprecated':
@@ -101,20 +101,20 @@ OpenLayers.Lang["no"] = {
         "Bruk ${newMethod} i stedet.",
 
     // console message
-    'boundsAddError': "Du må gi både x- og y-verdier til funksjonen add.",
+    'boundsAddError': "Du mÃ¥ gi bÃ¥de x- og y-verdier til funksjonen add.",
 
     // console message
-    'lonlatAddError': "Du må gi både lon- og lat-verdier til funksjonen add.",
+    'lonlatAddError': "Du mÃ¥ gi bÃ¥de lon- og lat-verdier til funksjonen add.",
 
     // console message
-    'pixelAddError': "Du må gi både x- og y-verdier til funksjonen add.",
+    'pixelAddError': "Du mÃ¥ gi bÃ¥de x- og y-verdier til funksjonen add.",
 
     // console message
-    'unsupportedGeometryType': "Ustøttet geometritype: ${geomType}",
+    'unsupportedGeometryType': "UstÃ¸ttet geometritype: ${geomType}",
 
     // console message
     'pagePositionFailed':
-        "OpenLayers.Util.pagePosition feilet: elementet med id ${elemId} kan være feilplassert.",
+        "OpenLayers.Util.pagePosition feilet: elementet med id ${elemId} kan vÃ¦re feilplassert.",
                     
     'end': ''
 };

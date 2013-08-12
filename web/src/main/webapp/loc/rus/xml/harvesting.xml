@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <selectownergroup>Комбайн относится к группе</selectownergroup>
+	<selectownergroup>Комбайн относится к группе</selectownergroup>
 	<select>Выбор</select>
 	<name>Название</name>
 	<directoryname>Directory</directoryname>
@@ -27,7 +27,7 @@
 		<short>GeoPortal REST</short>
 		<long>GeoPortal 9.3.x via REST interface</long>
 	</info>
-	
+
 	<info type="webdav">
 		<short>Web DAV</short>
 		<long>Web Access Folder/Сервер Web DAV</long>
@@ -62,7 +62,7 @@
 		<short>Thredds</short>
 		<long>Thredds Catalog</long>
 	</info>
-	
+
 	<info type="wfsfeatures">
 		<short>WFS Features</short>
 		<long>OGC WFS GetFeature Response</long>
@@ -71,7 +71,7 @@
 	<info type="filesystem">
 		<short>Local Filesystem</short>
 		<long>Local Filesystem Harvesting</long>
-	</info>
+	</info>	
 
 	<info type="z3950Config">
 		<short>Z3950 Server Config Harvesting</short>
@@ -95,8 +95,8 @@
 		<type value="WFS1.0.0">OGC Web Feature Service (WFS) Version 1.0.0</type>
 		<type value="WFS1.1.0">OGC Web Feature Service (WFS) Version 1.1.0 - preferred</type>
 		<type value="WCS1.0.0">OGC Web Coverage Service (WCS) Version 1.0.0</type>
-				<type value="WPS0.4.0">OGC Web Processing Service (WPS) Version 0.4.0</type>
-				<type value="WPS1.0.0">OGC Web Processing Service (WPS) Version 1.0.0</type>
+		<type value="WPS0.4.0">OGC Web Processing Service (WPS) Version 0.4.0</type>
+		<type value="WPS1.0.0">OGC Web Processing Service (WPS) Version 1.0.0</type>
 		<type value="CSW2.0.2">OGC Catalogue Service (CSW) Version 2.0.2</type>
 		<type value="SOS1.0.0">OGC Sensor Observation Service (SOS) Version 1.0.0</type>
 	</wxstypes>
@@ -118,17 +118,16 @@
 	<returnedSets>OAI provider sets</returnedSets>
 	<returnedPrefixes>OAI provider prefixes</returnedPrefixes>
 	<retrieveSetsPrefixes>Retrieve Sets/Prefixes</retrieveSetsPrefixes>
-    
+
 	<host>Хост</host>
 	<port>Порт</port>
 	<servlet>Сервлет</servlet>
 	<useAccount>От имени пользователя</useAccount>
 	<username>Логин</username>
 	<password>Пароль</password>
-	
+
 	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
 	<mefFormatFull>Use full MEF format</mefFormatFull>
-	
 	<xslfilter>XSL filter name</xslfilter>
 	<search>Критерий поиска</search>
 	<siteName>Название сайта</siteName>
@@ -149,60 +148,60 @@
 
 	<content>Harvested Content</content>
 	<importxslt>Apply this XSLT to harvested records</importxslt>
-	<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier comparison (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
 
-  <at>Run at</at>
-  <atSpec>( hour of day : minute eg. 23:15 )</atSpec>
-  <interval>Will run again every</interval>
+	<at>Run at</at>
+	<atSpec>( hour of day : minute eg. 23:15 )</atSpec>
+	<interval>Will run again every</interval>
+	<hourintervals>
+		<hour label="Each hour">1</hour>
+		<hour label="3 hours">3</hour>
+		<hour label="6 hours">6</hour>
+		<hour label="12 hours">12</hour>
+		<hour label="N/A">undefined</hour>
+	</hourintervals>
 
-  <hourintervals>
-      <hour label="Each hour">1</hour>
-      <hour label="3 hours">3</hour>
-      <hour label="6 hours">6</hour>
-      <hour label="12 hours">12</hour>
-      <hour label="N/A">undefined</hour>
-  </hourintervals>
-  <dayofweek>
-      <day label="Monday">MON</day>
-      <day label="Tuesday">TUE</day>
-      <day label="Wednesday">WED</day>
-      <day label="Thursday">THU</day>
-      <day label="Friday">FRI</day>
-      <day label="Saturday">SAT</day>
-      <day label="Sunday">SUN</day>
-  </dayofweek>
-  <hours>
-      <hour label="0">0</hour>
-      <hour label="1">1</hour>
-      <hour label="2">2</hour>
-      <hour label="3">3</hour>
-      <hour label="4">4</hour>
-      <hour label="5">5</hour>
-      <hour label="6">6</hour>
-      <hour label="7">7</hour>
-      <hour label="8">8</hour>
-      <hour label="9">9</hour>
-      <hour label="10">10</hour>
-      <hour label="11">11</hour>
-      <hour label="12">12</hour>
-      <hour label="13">13</hour>
-      <hour label="14">14</hour>
-      <hour label="15">15</hour>
-      <hour label="16">16</hour>
-      <hour label="17">17</hour>
-      <hour label="18">18</hour>
-      <hour label="19">19</hour>
-      <hour label="20">20</hour>
-      <hour label="21">21</hour>
-      <hour label="22">22</hour>
-      <hour label="23">23</hour>
-  </hours>
-  <minutes>
-      <minute label="00">0</minute>
-      <minute label="15">15</minute>
-      <minute label="30">30</minute>
-      <minute label="45">45</minute>
-  </minutes>
+	<dayofweek>
+		<day label="Monday">MON</day>
+		<day label="Tuesday">TUE</day>
+		<day label="Wednesday">WED</day>
+		<day label="Thursday">THU</day>
+		<day label="Friday">FRI</day>
+		<day label="Saturday">SAT</day>
+		<day label="Sunday">SUN</day>
+	</dayofweek>
+	<hours>
+		<hour label="0">0</hour>
+		<hour label="1">1</hour>
+		<hour label="2">2</hour>
+		<hour label="3">3</hour>
+		<hour label="4">4</hour>
+		<hour label="5">5</hour>
+		<hour label="6">6</hour>
+		<hour label="7">7</hour>
+		<hour label="8">8</hour>
+		<hour label="9">9</hour>
+		<hour label="10">10</hour>
+		<hour label="11">11</hour>
+		<hour label="12">12</hour>
+		<hour label="13">13</hour>
+		<hour label="14">14</hour>
+		<hour label="15">15</hour>
+		<hour label="16">16</hour>
+		<hour label="17">17</hour>
+		<hour label="18">18</hour>
+		<hour label="19">19</hour>
+		<hour label="20">20</hour>
+		<hour label="21">21</hour>
+		<hour label="22">22</hour>
+		<hour label="23">23</hour>
+	</hours>
+	<minutes>
+		<minute label="00">0</minute>
+		<minute label="15">15</minute>
+		<minute label="30">30</minute>
+		<minute label="45">45</minute>
+	</minutes>
 
 	<options>Опции</options>
 	<everySpec>(дней : часов : минут)</everySpec>
@@ -218,6 +217,7 @@
 	<criteria>Критерий</criteria>
 	<validate>Проверить</validate>
 	<recurse>Рекурсивно</recurse>
+	<checkFileLastModifiedForUpdate>Update catalog record only if file was updated</checkFileLastModifiedForUpdate>
 	<nodelete>Keep local if deleted at source</nodelete>
 	<server>Server</server>	
 	<database>Database</database>	
@@ -265,7 +265,7 @@
 	<threddslang>Metadata language</threddslang>
 	<threddsCreateDIFMd>Extract DIF metadata elements and create ISO metadata</threddsCreateDIFMd>
 	<threddsCreateFragments>Extract Unidata dataset discovery metadata using fragments</threddsCreateFragments>
-  <threddsFragmentStylesheet>Stylesheet to create metadata fragments</threddsFragmentStylesheet>
+	<threddsFragmentStylesheet>Stylesheet to create metadata fragments</threddsFragmentStylesheet>
 	<threddsCreateSubtemplates>Create subtemplates for fragments and XLink them into template</threddsCreateSubtemplates>
 	<threddsIgnoreHarvest>Ignore harvesting attribute</threddsIgnoreHarvest>
 	<threddsOutputSchema>Select schema for output metadata records</threddsOutputSchema>
@@ -275,7 +275,7 @@
 	<threddsCollectionDataset>Create metadata for Collection Datasets</threddsCollectionDataset>
 	<threddsAtomicDataset>Create metadata for Atomic Datasets</threddsAtomicDataset>
 	<threddsTemplate>Select template to combine with fragments</threddsTemplate>
-	
+
 	<wfsFeaturesLang>Metadata language</wfsFeaturesLang>
 	<wfsFeaturesQuery>OGC WFS GetFeature Query</wfsFeaturesQuery>
 	<wfsFeaturesStylesheet>Stylesheet to create fragments</wfsFeaturesStylesheet>
@@ -288,7 +288,7 @@
 
 	<z3950repositories>Z3950 Server(s)</z3950repositories>
 	<z3950query>Z3950 Query</z3950query>
-	
+
 	<cataUrl>Catalog URL</cataUrl>
 	<!-- validator messages -->
 
@@ -328,8 +328,7 @@
 	<cannotStart>Элемент(ы) не могут быть активирован(ы)</cannotStart>
 	<cannotStop>Элемент(ы) не могут быть деактивирован(ы)</cannotStop>
 	<cannotRun>Элемент(ы) не могут быть запущен(ы)</cannotRun>
-	<confirmRemove>Удалить выделенные элементы? Узлы и все найденные на них
-		метаданные будут удалены.</confirmRemove>
+	<confirmRemove>Удалить выделенные элементы? Узлы и все найденные на них метаданные будут удалены.</confirmRemove>
 	<everyZero>Период поиска не может равняться нулю (0:0:0)</everyZero>
 	<pleaseRetrieve>Необходимо получить информацию о сайтах</pleaseRetrieve>
 	<cannotRetrieve>Информация не может быть получена</cannotRetrieve>
@@ -353,26 +352,26 @@
 	</oper>
 
 	<!-- history messages -->
-  <harvesterHistory>Harvester History</harvesterHistory>
-  <noHistory>No History</noHistory>
-  <dateDesc>Date (most recent first)</dateDesc>
-  <date>Date</date>
-  <elapsedTime>Time</elapsedTime>
-  <detail>Detail</detail>
-  <grandTotal>Grand Total</grandTotal>
-  <counter>of</counter>
-  <totalHistory>Total history records:</totalHistory>
-  <viewAll>View All</viewAll>
-  <deleteHistory>Delete History</deleteHistory>
-  <harvestedNothing>Harvested Nothing</harvestedNothing>
-  <sortBy>Sort by:</sortBy>
-  <ok>Success</ok>
-  <deleted>Deleted</deleted>
-  <historyDeleted>Harvesting History Records Deleted:</historyDeleted>
-  <historyDeletedTitle>Harvesting History Record Delete Results</historyDeletedTitle>
+	<harvesterHistory>Harvester History</harvesterHistory>
+	<noHistory>No History</noHistory>
+	<dateDesc>Date (most recent first)</dateDesc>
+	<date>Date</date>
+	<elapsedTime>Time</elapsedTime>
+	<detail>Detail</detail>
+	<grandTotal>Grand Total</grandTotal>
+	<counter>of</counter>
+	<totalHistory>Total history records:</totalHistory>
+	<viewAll>View All</viewAll>
+	<deleteHistory>Delete History</deleteHistory>
+	<harvestedNothing>Harvested Nothing</harvestedNothing>
+	<sortBy>Sort by:</sortBy>
+	<ok>Success</ok>
+	<deleted>Deleted</deleted>
+	<historyDeleted>Harvesting History Records Deleted:</historyDeleted>
+	<historyDeletedTitle>Harvesting History Record Delete Results</historyDeletedTitle>
 	<historyDeleteConfirm>Delete selected harvester history entries?</historyDeleteConfirm>
-  <backToHarvestManager>Back to Harvest Manager</backToHarvestManager>
-	
+	<backToHarvestManager>Back to Harvest Manager</backToHarvestManager>
+
 	<!-- tooltips - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<statusTip>
@@ -399,17 +398,17 @@
 		<serviceRecords>Services Added</serviceRecords>
 		<collectionDatasetRecords>Collections Added</collectionDatasetRecords>
 		<atomicDatasetRecords>Atomics Added</atomicDatasetRecords>
-        <fragmentsAdded>Fragments Added</fragmentsAdded>
-        <subtemplatesAdded>Subtemplates Added</subtemplatesAdded>
-        <fragmentsRemoved>Fragments Removed</fragmentsRemoved>
-        <subtemplatesRemoved>Subtemplates Removed</subtemplatesRemoved>
+		<fragmentsAdded>Fragments Added</fragmentsAdded>
+		<subtemplatesAdded>Subtemplates Added</subtemplatesAdded>
+		<fragmentsRemoved>Fragments Removed</fragmentsRemoved>
+		<subtemplatesRemoved>Subtemplates Removed</subtemplatesRemoved>
 		<fragmentsUnknownSchema>Fragments w/Unknown Schema</fragmentsUnknownSchema>
 		<fragmentsReturned>Fragments Returned</fragmentsReturned>
 		<fragmentsMatched>Fragments Matched</fragmentsMatched>
 		<recordsBuilt>Records Built</recordsBuilt>
 		<incompatible>Incompatible</incompatible>
 		<couldNotInsert>Could not insert</couldNotInsert>
-    <subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
+		<subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
 		<recordsUpdated>Records Updated</recordsUpdated>
 		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
@@ -424,16 +423,17 @@
 		</tip>
 
 		<tip id="gn.host">
-            The given URL must point to a geonetwork server. The format of a
-            URL is like this:<br/>
-            http[s]://HOST[:port]/geonetwork
+			The given URL must point to a geonetwork server. The format of a
+			URL is like this:<br/>
+			http[s]://HOST[:port]/geonetwork
 		</tip>
-		
+
 		<tip id="gn.xslfilter">
 			The name of the XSL filter to be applied to harvested metadata records. The filter must be
 			registered in schema's process folder by catalogue administrator. If filter is not found
 			for metadata schema, not filter is applied.
 		</tip>
+
 		<tip id="gn.retrieveSources">
 			Укажите <i>Хост</i>, <i>Порт</i> и <i>Сервлет</i> и нажмите данную кнопку,
 			чтобы получить известные на удаленном узле источники.
@@ -455,24 +455,24 @@
 		</tip>
 
 		<!-- Z3950 harvesting type - - - - - - - - - - - - - - - - - - - - - -->
-	
+
 		<tip id="z3950.repositories">
 			Select one or more of the Z3950 servers shown
 		</tip>
-		
+
 		<tip id="z3950.query">
 			The query should be a valid Z3950 query eg. @attrset geo @attr 1=1016 @attr 4=6 @attr 2=3 "water"
 		</tip>
-	
+
 		<tip id="z3950.profile">
 			Select a profile (group of) Z3950 servers
 		</tip>
-		
-		<!-- CSW ISO Profile harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<!-- CSW harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<tip id="csw.capabUrl">
 			Указанный URL должен указывать на capabilities-документ. Например:<br/>
-			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1
+			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1			
 		</tip>
 
 		<tip id="csw.addSearch">
@@ -516,7 +516,7 @@
 		<tip id="ogcwxs.outputSchema">
 			The schema to be used for harvested metadata
 		</tip>
- 
+
 		<tip id="ogcwxs.addSearch">
 			Добавить поисковый запрос на удаленный сервер. Для получения метаднных
 			необходимо указать хотя бы один запрос.
@@ -536,7 +536,6 @@
 			Используйте клавишу <b>&lt;CTRL&gt;</b> для выделения более одной категории.
 		</tip>
 
-	
 		<!-- OAI-PMH harvesting type - - - - - - - - - - - - - - - - - - - - - -->
 
 		<tip id="oai.url">
@@ -605,3 +604,4 @@
 		</tip>
 	</tips>
 </strings>
+

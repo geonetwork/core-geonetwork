@@ -108,6 +108,7 @@ var updateTemp =
 '      <directory>{DIRECTORYNAME}</directory>'+
 '      <recurse>{RECURSE}</recurse>'+
 '      <nodelete>{NODELETE}</nodelete>'+
+'      <checkFileLastModifiedForUpdate>{checkFileLastModifiedForUpdate}</checkFileLastModifiedForUpdate>'+
 '      <icon>{ICON}</icon>'+
 '    </site>'+
 '    <options>'+

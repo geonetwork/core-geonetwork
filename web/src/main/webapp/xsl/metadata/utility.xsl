@@ -300,10 +300,19 @@
   
   <!-- Copy all elements and attributes excluding GeoNetwork elements. 
     This could be useful to get the source XML when working on a metadocument.
+    This is used in edit mode usually to populate a _X element and & are escaped.
   -->
   <xsl:template match="@*|node()[namespace-uri()!='http://www.fao.org/geonetwork']" mode="geonet-cleaner">
     <xsl:copy>
-      <xsl:copy-of select="@*[namespace-uri()!='http://www.fao.org/geonetwork']"/>
+      <xsl:for-each select="@*[namespace-uri()!='http://www.fao.org/geonetwork']">
+        <xsl:attribute name="{name()}">
+          <xsl:call-template name="replaceString">
+            <xsl:with-param name="expr"        select="string()"/>
+            <xsl:with-param name="pattern"     select="'&amp;'"/>
+            <xsl:with-param name="replacement" select="'&amp;amp;'"/>
+          </xsl:call-template>
+        </xsl:attribute>
+      </xsl:for-each>
       <xsl:apply-templates select="node()" mode="geonet-cleaner"/>
     </xsl:copy>
   </xsl:template>

@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <ara>عربي</ara> <!-- Do not translate! -->
-    <cat>Català</cat> <!-- Do not translate! -->
-    <chi>中文</chi> <!-- Do not translate! -->
-    <dut>Nederlands</dut> <!-- Do not translate -->
-    <eng>English</eng> <!-- Do not translate! -->
-    <fin>Suomeksi</fin>  <!-- Do not translate! -->
-    <fre>Français</fre> <!-- Do not translate! -->
-    <ger>Deutsch</ger> <!-- Do not translate! -->
-    <ita>Italiano</ita> <!-- Do not translate! -->
-    <nor>Norsk</nor>  <!-- Do not translate! -->
-    <por>Рortuguês</por> <!-- Do not translate! -->
-    <rus>Русский</rus> <!-- Do not translate! -->
-    <spa>Español</spa> <!-- Do not translate! -->
-    <tur>Türkçe</tur> <!-- Do not translate! -->
-    <pol>Polski</pol> <!-- Do not translate! -->
-    
+	<recurse>Also search in subfolders</recurse>
+	<cat>Català</cat> <!-- Do not translate! -->
+	<chi>中文</chi> <!-- Do not translate! -->
+	<dut>Nederlands</dut> <!-- Do not translate! -->
+	<eng>English</eng> <!-- Do not translate! -->
+	<fin>Suomeksi</fin> <!-- Do not translate! -->
+	<fre>Français</fre> <!-- Do not translate! -->
+	<ger>Deutsch</ger> <!-- Do not translate! -->
+	<ita>Italiano</ita> <!-- Do not translate! -->
+	<nor>Norsk</nor> <!-- Do not translate! -->
+	<por>Рortuguês</por> <!-- Do not translate! -->
+	<rus>Русский</rus> <!-- Do not translate! -->
+	<spa>Español</spa> <!-- Do not translate! -->
+	<tur>Türkçe</tur> <!-- Do not translate! -->
+	<pol>Polski</pol> <!-- Do not translate! -->
+
+	<statusTitle> / Metadata Workflow</statusTitle>
+	<statusUserEdit>GeoNetwork user %s (%s) edited metadata record #%s</statusUserEdit>
+	<statusInform>%s / Metadata Workflow / Metadata record(s) %s by %s (%s) (%s)</statusInform>
+	<!--
+        legacy UI 
+        <statusSendEmail>Change log message: %s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
+        -->
+	<statusSendEmail>Change log message: %s\r\n\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
+
 	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>
 	<isAdmin>Is administrator ?</isAdmin>
-    <anyLanguage>jede Sprache</anyLanguage>
+	<anyLanguage>jede Sprache</anyLanguage>
 	<nodata>Null</nodata>
-  <!-- new strings - 2.7 -->
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
@@ -34,24 +42,26 @@
 	<makeChanges>I really want to do this!</makeChanges>
 	<dontMakeChanges>By default, this operation will not make any changes to the database ie. it runs in test mode. Checking this box switches test mode off and changes will be made to the database.</dontMakeChanges>
 
-		<defaultStatusChangeMessage>Keine Information</defaultStatusChangeMessage>
+	<defaultStatusChangeMessage>Keine Information</defaultStatusChangeMessage>
 	<createThesaurus>Thesaurus erstellen/anpassen</createThesaurus>
 	<thesaurusType>Art des Thesaurus</thesaurusType>
-	<editAttributes>Weitere Details hinzufügen</editAttributes>
 	<changeLogMessage>Änderungsnachricht</changeLogMessage>
 	<status>Status</status>
 	<updateStatus>Aktualisierungsstatus</updateStatus>
 	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
 	<startVersion>Versionierung starten</startVersion>
 	<batchStartVersionTitle>Batch Versionierung starten</batchStartVersionTitle>
-  <subtemplate.admin>Verzeichnisse verwalten</subtemplate.admin>
-  <subtemplate.admin.desc>Verzeichnisse erstellen/bearbeiten/löschen (z.B. Kontaktverzeichnisse)</subtemplate.admin.desc>  
-  <surnameMandatory>Nachname ist obligatorisch</surnameMandatory>
+	<editAttributes>Weitere Details hinzufügen</editAttributes>
+	<subtemplate.admin>Verzeichnisse verwalten</subtemplate.admin>
+	<subtemplate.admin.desc>Verzeichnisse erstellen/bearbeiten/löschen (z.B. Kontaktverzeichnisse)</subtemplate.admin.desc>  
+	<surnameMandatory>Nachname ist obligatorisch</surnameMandatory>
 	<firstnameMandatory>Vorname ist obligatorisch</firstnameMandatory>
 	<emailMandatory>E-Mail Adresse ist obligatorisch</emailMandatory>
 	<forgottenPassword>Passwort vergessen?</forgottenPassword>
-  <selectTemplate>Schema auswählen</selectTemplate>
-  <notificationsDes>Entfernte Aktualisierung</notificationsDes>
+	<selectTemplate>Schema auswählen</selectTemplate>
+	<useStopwords>Der Lucene Index verwendet Stoppwörter für diese Sprachen:</useStopwords>    
+	<rebuildIndexMessage>Wenn Sie diese Werte ändern, ist es ratsam, den Neuaufbau des Lucene-Index zu starten.</rebuildIndexMessage>
+	<notificationsDes>Entfernte Aktualisierung</notificationsDes>
 	<metadata-templates-samples-add>Vorlagen und Beispieldaten hinzufügen</metadata-templates-samples-add>
 	<metadata-schema-select>Schema der Vorlagen oder Beispieldaten wählen</metadata-schema-select>
 	<templatesSamples>Vorlagen und Beispieldaten verwalten</templatesSamples>
@@ -59,8 +69,8 @@
 	<advancedSearch>Erweiterte Suche</advancedSearch>
 	<remoteSearch>Entfernte Suche</remoteSearch>
 	<displayRemoteHtml>Resultate im HTML des Servers darstellen?</displayRemoteHtml>
-  <noSearchCriteria js="true">Bitte geben Sie ein Suchkriterium an</noSearchCriteria>
-  <noServer js="true">Bitte wählen Sie einen Server für die Suche</noServer>
+	<noSearchCriteria js="true">Bitte geben Sie ein Suchkriterium an</noSearchCriteria>
+	<noServer js="true">Bitte wählen Sie einen Server für die Suche</noServer>
 	<anyWith>Alle Felder - mit einem dieser Begriffe</anyWith>
 	<anyWithExactPhrase>Alle Felder - Exakte Reihenfolge</anyWithExactPhrase>
 	<anyWithAllWords>Alle Felder - mit allen Begriffen</anyWithAllWords>
@@ -78,83 +88,81 @@
 	<enterSchema>Namen des hinzuzufügenden Schemas angeben</enterSchema>
 	<selectSchemaOperations>Quelle des Schema Zip-Archivs:</selectSchemaOperations>
 	<showRemoteHTML>HTML des entfernten servers anzeigen</showRemoteHTML>
+	<searchStatistics>Suchstatistik</searchStatistics>
+	<searchStatisticsDes>Statistik über die in der Anwendung duchgeführten Suchanfragen</searchStatisticsDes>
 	<assignToGroup>Zu Gruppe(n) zuordnen</assignToGroup>
 	<copyThumbnail>Vorschau kopieren?</copyThumbnail>
 	<copyResources>Herunterladbare Dateien kopieren?</copyResources>
-		<searchStatistics>Suchstatistik</searchStatistics>
-		<searchStatisticsDes>Statistik über die in der Anwendung duchgeführten Suchanfragen</searchStatisticsDes>
-		<stat.byDay>nach Tag</stat.byDay>
-       <stat.byMonth>nach Monat</stat.byMonth>
-    <stat.byWeek>nach Woche</stat.byWeek>
-    <stat.byYear>nach Jahr</stat.byYear>
-    <stat.collapse>Schliessen</stat.collapse>
-			 <stat.numAutoGeneratedSearches>Anzahl automatischer (guiservice) Suchanfragen</stat.numAutoGeneratedSearches>
-    <stat.date>Datum</stat.date>
-    <stat.day>Tag</stat.day>
-    <stat.hits>Aufrufe</stat.hits>
-    <stat.ip>IP</stat.ip>
-       <stat.noValue>Keine Werte</stat.noValue>
-    <stat.language>Sprache</stat.language>
-    <stat.month>Monat</stat.month>
-    <stat.numberOfSearch>Anzahl Suchanfragen</stat.numberOfSearch>
-    <stat.requestDate>Datum der Anfrage</stat.requestDate>
-    <stat.spatialFilter>Räumliche Suche</stat.spatialFilter>
-    <stat.totalsearches>Total der Suchanfragen</stat.totalsearches>
-    <stat.year>Jahr</stat.year>
-       <stat.mdSheet>Metadaten</stat.mdSheet>
-       <stat.noTitle>Kein Titel</stat.noTitle>
-       <stat.csvExport>CSV export</stat.csvExport>
-    <stat.tabularStats>Tabellarische Statistik</stat.tabularStats>
-    <stat.tip1begin>Die stehenden Links anklicken, um die Statistik anzuzeigen, auf den kleinen Pfeil klicken </stat.tip1begin>
-    <stat.tip1end> um sie wieder zu verstecken</stat.tip1end>
-    <stat.lastMonthStats>Statistik des letzten Monats</stat.lastMonthStats>
-    <stat.userIpText>User IP während der Suche (Anzahl Suchanfragen pro IP)</stat.userIpText>
-    <stat.mostSearchedKeywords>Meist gesuchte Begriffe</stat.mostSearchedKeywords>
-       <stat.mostSearchedCategories>Meist gesuchte Kategorien</stat.mostSearchedCategories>
-    <stat.simpleVsAdvanced>Einfache vs Erweiterte Suche</stat.simpleVsAdvanced>
-    <stat.mdPopularity>Popularitätsrate</stat.mdPopularity>
-    <stat.graphicalStats>Grafische Statistik</stat.graphicalStats>
-    <stat.tip2>(Datumsart (Jahr, Monat, Tag) und Zeitspanne wählen, OK klicken um eine Grafik anzuzeigen)</stat.tip2>
-    <stat.numberOfRequests>Anzahl Abfragen</stat.numberOfRequests>
-    <stat.chooseDateFrom>Bitte wählen Sie ein Startdatum</stat.chooseDateFrom>
-    <stat.dateFrom>Von</stat.dateFrom>
-    <stat.dateTo>Bis</stat.dateTo>
-    <stat.md>Metadaten</stat.md>
-    <stat.popularity>Popularität</stat.popularity>
-    <stat.totalSearches>Total Suchanfragen</stat.totalSearches>
-    <stat.numSearchesPerDay>Suchanfragen pro Tag</stat.numSearchesPerDay>
-    <stat.numSearchesNoResult>Suchanfragen ohne Ergebnis</stat.numSearchesNoResult>
-    <stat.simpleAdvancedSearch>Einfache / Erweiterte Suche</stat.simpleAdvancedSearch>
-    <stat.searchedTerm>Gesuchte(r) Begriff(e)</stat.searchedTerm>
-    <stat.count>Anzahl</stat.count>
-    <stat.numSimpleSearch>Anzahl Einfache Suchanfragen</stat.numSimpleSearch>
-    <stat.numAdvancedSearch>Anzahl Erweiterte Suchanfragen</stat.numAdvancedSearch>
-    <stat.exportRequests>Tabelle mit den Anfragen exportieren (ein Eintrag pro User-Anfrage)</stat.exportRequests>
-    <stat.exportParams>Parametertabelle exportieren (Schlüsselwörter, mehrere Einträge pro User-Anfrage)</stat.exportParams>
-    <stat.csvSemiColumnDelimiter>Spalten-Trennzeichen (;)</stat.csvSemiColumnDelimiter>
-    <stat.rightClickSaveAs>Rechte Maustaste-Klick auf den Link, um als CSV abzuspeichern</stat.rightClickSaveAs>
-    <stat.searchedKeywords>Gesuchte Begriffe</stat.searchedKeywords>
-    <stat.popuByGroup>Popularitätsrate nach Gruppe (Lokal)</stat.popuByGroup>
-    <stat.popuByCatalog>Popularitätsrate nach Katalog (Lokal, Externe)</stat.popuByCatalog>
-			 <stat.popularityByCategory>Popularitätsrate nach Kategorie</stat.popularityByCategory>
-    <stat.mdType>Art der Metadaten</stat.mdType>
-    <stat.dsMsType>Metadaten zu Daten</stat.dsMsType>
-    <stat.serviceMdType>Metadaten zu Diensten</stat.serviceMdType>
-    <stat.basicGeodataType>Metadaten zu Geobasisdaten</stat.basicGeodataType>
-    <stat.allTypes>Alle Arten von Metadaten</stat.allTypes>
-    <stat.seeAdminPage>Siehe Systemkonfigurationsseite, um das Log-Feature zu aktivieren</stat.seeAdminPage>
-    <stat.logDisabled>Das Log-Feature ist zurzeit deaktiviert</stat.logDisabled>
-    <stat.maintenance>Aufräumen</stat.maintenance>
-    <stat.deleteTmpImages>Temporäre Grafik-Dateien löschen</stat.deleteTmpImages>
-    <stat.deleteTmpFiles>Dateien jetzt löschen</stat.deleteTmpFiles>
-    <stat.filesDel> Datei(en) gelöscht.</stat.filesDel>
-       <stat.warnCsvExport>Achtung: Das Exportieren der Log Tabellen kann mehrere Minuten dauern</stat.warnCsvExport>
-       <stat.clickToDownload>Auf den Link klicken um die CSV-Datei herunterzuladen</stat.clickToDownload>
-	<!-- end new strings -->
 
-    <useStopwords>Der Lucene Index verwendet Stoppwörter für diese Sprachen:</useStopwords>    
-    <rebuildIndexMessage>Wenn Sie diese Werte ändern, ist es ratsam, den Neuaufbau des Lucene-Index zu starten.</rebuildIndexMessage>
-	
+	<stat.byDay>nach Tag</stat.byDay>
+	<stat.byMonth>nach Monat</stat.byMonth>
+	<stat.byWeek>nach Woche</stat.byWeek>
+	<stat.byYear>nach Jahr</stat.byYear>
+	<stat.collapse>Schliessen</stat.collapse>
+	<stat.numAutoGeneratedSearches>Anzahl automatischer (guiservice) Suchanfragen</stat.numAutoGeneratedSearches>
+	<stat.date>Datum</stat.date>
+	<stat.day>Tag</stat.day>
+	<stat.hits>Aufrufe</stat.hits>
+	<stat.ip>IP</stat.ip>
+	<stat.noValue>Keine Werte</stat.noValue>
+	<stat.language>Sprache</stat.language>
+	<stat.month>Monat</stat.month>
+	<stat.numberOfSearch>Anzahl Suchanfragen</stat.numberOfSearch>
+	<stat.requestDate>Datum der Anfrage</stat.requestDate>
+	<stat.spatialFilter>Räumliche Suche</stat.spatialFilter>
+	<stat.totalsearches>Total der Suchanfragen</stat.totalsearches>
+	<stat.year>Jahr</stat.year>
+	<stat.mdSheet>Metadaten</stat.mdSheet>
+	<stat.noTitle>Kein Titel</stat.noTitle>
+	<stat.csvExport>CSV export</stat.csvExport>
+	<stat.tabularStats>Tabellarische Statistik</stat.tabularStats>
+	<stat.tip1begin>Die stehenden Links anklicken, um die Statistik anzuzeigen, auf den kleinen Pfeil klicken </stat.tip1begin>
+	<stat.tip1end> um sie wieder zu verstecken</stat.tip1end>
+	<stat.lastMonthStats>Statistik des letzten Monats</stat.lastMonthStats>
+	<stat.userIpText>User IP während der Suche (Anzahl Suchanfragen pro IP)</stat.userIpText>
+	<stat.mostSearchedKeywords>Meist gesuchte Begriffe</stat.mostSearchedKeywords>
+	<stat.mostSearchedCategories>Meist gesuchte Kategorien</stat.mostSearchedCategories>
+	<stat.simpleVsAdvanced>Einfache vs Erweiterte Suche</stat.simpleVsAdvanced>
+	<stat.mdPopularity>Popularitätsrate</stat.mdPopularity>
+	<stat.graphicalStats>Grafische Statistik</stat.graphicalStats>
+	<stat.tip2>(Datumsart (Jahr, Monat, Tag) und Zeitspanne wählen, OK klicken um eine Grafik anzuzeigen)</stat.tip2>
+	<stat.numberOfRequests>Anzahl Abfragen</stat.numberOfRequests>
+	<stat.chooseDateFrom>Bitte wählen Sie ein Startdatum</stat.chooseDateFrom>
+	<stat.dateFrom>Von</stat.dateFrom>
+	<stat.dateTo>Bis</stat.dateTo>
+	<stat.md>Metadaten</stat.md>
+	<stat.popularity>Popularität</stat.popularity>
+	<stat.totalSearches>Total Suchanfragen</stat.totalSearches>
+	<stat.numSearchesPerDay>Suchanfragen pro Tag</stat.numSearchesPerDay>
+	<stat.numSearchesNoResult>Suchanfragen ohne Ergebnis</stat.numSearchesNoResult>
+	<stat.simpleAdvancedSearch>Einfache / Erweiterte Suche</stat.simpleAdvancedSearch>
+	<stat.searchedTerm>Gesuchte(r) Begriff(e)</stat.searchedTerm>
+	<stat.count>Anzahl</stat.count>
+	<stat.numSimpleSearch>Anzahl Einfache Suchanfragen</stat.numSimpleSearch>
+	<stat.numAdvancedSearch>Anzahl Erweiterte Suchanfragen</stat.numAdvancedSearch>
+	<stat.></stat.>
+	<stat.exportRequests>Tabelle mit den Anfragen exportieren (ein Eintrag pro User-Anfrage)</stat.exportRequests>
+	<stat.exportParams>Parametertabelle exportieren (Schlüsselwörter, mehrere Einträge pro User-Anfrage)</stat.exportParams>
+	<stat.csvSemiColumnDelimiter>Spalten-Trennzeichen (;)</stat.csvSemiColumnDelimiter>
+	<stat.rightClickSaveAs>Rechte Maustaste-Klick auf den Link, um als CSV abzuspeichern</stat.rightClickSaveAs>
+	<stat.searchedKeywords>Gesuchte Begriffe</stat.searchedKeywords>
+	<stat.popuByGroup>Popularitätsrate nach Gruppe (Lokal)</stat.popuByGroup>
+	<stat.popuByCatalog>Popularitätsrate nach Katalog (Lokal, Externe)</stat.popuByCatalog>
+	<stat.popularityByCategory>Popularitätsrate nach Kategorie</stat.popularityByCategory>
+	<stat.mdType>Art der Metadaten</stat.mdType>
+	<stat.dsMsType>Metadaten zu Daten</stat.dsMsType>
+	<stat.serviceMdType>Metadaten zu Diensten</stat.serviceMdType>
+	<stat.basicGeodataType>Metadaten zu Geobasisdaten</stat.basicGeodataType>
+	<stat.allTypes>Alle Arten von Metadaten</stat.allTypes>
+	<stat.seeAdminPage>Siehe Systemkonfigurationsseite, um das Log-Feature zu aktivieren</stat.seeAdminPage>
+	<stat.logDisabled>Das Log-Feature ist zurzeit deaktiviert</stat.logDisabled>
+	<stat.maintenance>Aufräumen</stat.maintenance>
+	<stat.deleteTmpImages>Temporäre Grafik-Dateien löschen</stat.deleteTmpImages>
+	<stat.deleteTmpFiles>Dateien jetzt löschen</stat.deleteTmpFiles>
+	<stat.filesDel> Datei(en) gelöscht.</stat.filesDel>
+	<stat.warnCsvExport>Achtung: Das Exportieren der Log Tabellen kann mehrere Minuten dauern</stat.warnCsvExport>
+	<stat.clickToDownload>Auf den Link klicken um die CSV-Datei herunterzuladen</stat.clickToDownload>
+
 	<drawRectangle js="true">Ein Rechteck zeichnen</drawRectangle>
 	<drawPolygon js="true">Ein Polygon zeichnen</drawPolygon>
 	<drawCircle js="true">Einen Kreis zeichnen</drawCircle>
@@ -181,16 +189,20 @@
 	<mapPreview js="true">Kartenviewer</mapPreview>
 	<selectANode js="true">Einen Knoten auswählen ...</selectANode>
 	<publishing js="true">Publizieren ...</publishing>
+
 	<logo>Logo Konfiguration</logo>
-    <logoSelectionWindow js="true">Ein Logo wählen</logoSelectionWindow>
-    <logoDes>Katalog Logos verwalten (Lokale und Harvesting Logos)</logoDes>
+	<logoSelectionWindow js="true">Ein Logo wählen</logoSelectionWindow>
+	<chooseLogo>Choose logo</chooseLogo>
+	<orgLogo>Organisation logo</orgLogo>
+	<logoDes>Katalog Logos verwalten (Lokale und Harvesting Logos)</logoDes>
 	<logoRegistered js="true">Gespeicherte Logos</logoRegistered>
 	<logoAdd js="true">Ein neues Logo hinzufügen</logoAdd>
-  <selectedLogo js="true">Ausgewähltes Logo:</selectedLogo>
-  <logoDel js="true">Entfernen</logoDel>
-  <logoForNode js="true">Für den Katalog übernehmen</logoForNode>
-  <logoForNodeFavicon js="true">Als Favicon verwenden</logoForNodeFavicon>
+	<selectedLogo js="true">Ausgewähltes Logo:</selectedLogo>
+	<logoDel js="true">Entfernen</logoDel>
+	<logoForNode js="true">Für den Katalog übernehmen</logoForNode>
+	<logoForNodeFavicon js="true">Als Favicon verwenden</logoForNodeFavicon>
 	<logoSelect js="true">Ein Bild als Logo verwenden ...</logoSelect>
+	<url>URL</url>
 	<createChild>Kind-Metadaten erstellen</createChild>
 	<updateChildren>Kinder aktualisieren</updateChildren>
 	<updateChildrenOk>Kinder aktualisiert</updateChildrenOk>
@@ -240,11 +252,11 @@
 	</helpShortcutsEditor>
 	<validationReport js="true">Validierungsbericht</validationReport>
 	<errorsOnly>Nur Fehler anzeigen</errorsOnly>
-    <schematronReport>Gültig nach ISO-Bedingungen (Schematron)</schematronReport>
-    <xsdReport>Gültig nach Schema-Regeln (XML Schema)</xsdReport>
-    <rules name="schematron-rules-inspire">INSPIRE Durchführungsbestimmungen für Metadaten</rules>
-    <rules name="schematron-rules-iso">ISO 19115/19119 Bedingungen</rules>
-    <rules name="schematron-rules-iso-che">GM03_2 Bedingungen</rules>
+	<schematronReport>Gültig nach ISO-Bedingungen (Schematron)</schematronReport>
+	<xsdReport>Gültig nach Schema-Regeln (XML Schema)</xsdReport>
+	<rules name="schematron-rules-inspire">INSPIRE Durchführungsbestimmungen für Metadaten</rules>
+	<rules name="schematron-rules-iso">ISO 19115/19119 Bedingungen</rules>
+	<rules name="schematron-rules-iso-che">GM03_2 Bedingungen</rules>
 	<rules name="schematron-rules-geonetwork">GeoNetwork Empfehlungen</rules>	
 	<getCapabilitiesLayer js="true">GetCapabilities layer</getCapabilitiesLayer>
 	<ServiceUpdateError js="true">Fehler bei der Aktualisierung der Dienst-Metadaten</ServiceUpdateError>
@@ -252,8 +264,8 @@
 	<NoServiceURLError js="true">Überprüfen Sie, ob eine URL für den Dienst angegeben wurde.</NoServiceURLError>
 	<GetCapabilitiesDocumentError js="true">Fehler beim Laden der GetCapabilities von der URL: </GetCapabilitiesDocumentError>
 	<noOperatesOn>Keine Datensätze verlinkt. Bitte im Kasten oben rechts auf "Metadaten verlinken" klicken.</noOperatesOn>
-    <linkedDataset> Verlinkte Metadaten:</linkedDataset>
-    <linkedFeatureCatalogue> Verlinkte Objektartenkataloge:</linkedFeatureCatalogue>
+	<linkedDataset> Verlinkte Metadaten:</linkedDataset>
+	<linkedFeatureCatalogue> Verlinkte Objektartenkataloge:</linkedFeatureCatalogue>
 	<linkedFeatureCatalogueHelp>Eine Verbindung zwischen den Metadaten und einem Objektartenkatalog
 	nach ISO 19110 erstellen.</linkedFeatureCatalogueHelp>
 	<createLinkedFeatureCatalogue>Objektartenkatalog verlinken</createLinkedFeatureCatalogue>
@@ -261,12 +273,15 @@
 	Datenmetadaten verlinkt werden, enthält das Attribut angehängte Ressource den Layernamen
 	wie er im OGC-Dienst definiert ist.
 	Die Liste der Layer soll dem Bearbeiter bei der Auswahl existierender Layer helfen.</layerNameHelp>
+
+
 	<layerName js="true">Layername</layerName>
 	<createIfNotExistButton js="true">Einen neuen Metadatensatz erstellen</createIfNotExistButton>
 	<associateService js="true"> Dienst-Metadaten verlinken</associateService>
 	<associateDataset js="true"> Daten-Metadaten verlinken</associateDataset>
 	<associateServiceHelp>Um Dienst-Metadaten zu verlinken: nach Dienst-Metadaten suchen und Layername angeben.</associateServiceHelp>
 	<associateDatasetHelp>Um eine Beziehung zu einem Datensatz herzustellen, gehen Sie zu "ISO-Ansicht" &gt; Basisinformation und definieren Sie die "bezieht sich auf"-Elemente (Operates on).</associateDatasetHelp>
+
 	<addParent> Hinzufügen oder Aktualisieren eines Eltern-Metadatensatzes</addParent>
 	<createAssoService>Eine Verbindung erstellen</createAssoService>
 	<updateMdd>Daten-Metadaten aktualisieren</updateMdd>
@@ -347,6 +362,7 @@
 	<any js="true">- Alle -</any>
 	<anytime>zu jeder Zeit</anytime>
 	<appSchInfoTab>Anwendungsschema</appSchInfoTab>
+
 	<assigned>Zugeteilt</assigned>
 	<attrlabl>Attribut Beschriftung</attrlabl>
 	<availability>Verfügbarkeit</availability>
@@ -360,12 +376,12 @@
 	<begtime>Anfangszeit</begtime>
 	<bgFileDescChoice value="large_thumbnail">Grosse Miniaturansicht</bgFileDescChoice>
 	<bgFileDescChoice value="thumbnail">Miniaturansicht</bgFileDescChoice>
-    <bookmarkDelicious>Lesezeichen auf Delicious</bookmarkDelicious>
-    <bookmarkDigg>Lesezeichen auf Digg</bookmarkDigg>
-    <bookmarkEmail>Eine Referenz zu diesem Eintrag als E-Mail versenden</bookmarkEmail>
-    <bookmarkFacebook>Lesezeichen auf Facebook</bookmarkFacebook>
-    <bookmarkPermanent>Permalink für diese Beschreibung</bookmarkPermanent>
-    <bookmarkStumbleUpon>Lesezeichen auf StumbleUpon</bookmarkStumbleUpon>
+	<bookmarkDelicious>Lesezeichen auf Delicious</bookmarkDelicious>
+	<bookmarkDigg>Lesezeichen auf Digg</bookmarkDigg>
+	<bookmarkEmail>Eine Referenz zu diesem Eintrag als E-Mail versenden</bookmarkEmail>
+	<bookmarkFacebook>Lesezeichen auf Facebook</bookmarkFacebook>
+	<bookmarkPermanent>Permalink für diese Beschreibung</bookmarkPermanent>
+	<bookmarkStumbleUpon>Lesezeichen auf StumbleUpon</bookmarkStumbleUpon>
 	<bounding>Begrenzungskoordinaten</bounding>
 	<boundingRelation value="encloses">umfasst</boundingRelation>
 	<boundingRelation value="equal">ist genau</boundingRelation>
@@ -385,8 +401,6 @@
 	<categoryNameMandatory>Ein Kategoriename muss ausgefüllt werden.</categoryNameMandatory>
 	<changeDate>Änderungsdatum der Metadaten</changeDate>
 	<checkusername>Überpüfen</checkusername>
-  <choice>Choice</choice>
-  <sequence>Sequence</sequence>	
 	<choose>-Auswählen-</choose>
 	<chooseFile>Auswahl des Verzeinisses der hochgeladenen Datei </chooseFile>
 	<chooseLargeThumbnail>Auswahl des Verzeinisses der hochgeladenen grossen Minaturansicht </chooseLargeThumbnail>
@@ -398,7 +412,7 @@
 	<completeTab>Erweiterte Ansicht</completeTab>
 	<completeTabEditor>Erweiterter Editor</completeTabEditor>
 	<confirmCancel>Sind Sie sicher, dass Sie die Aktion abbrechen wollen? (Alle ungespeicherten Eingaben gehen verloren)</confirmCancel>
-    <confirmCancelCreate>Sind Sie sicher, dass Sie die Erstellung dieser Metadaten stornieren möchten?</confirmCancelCreate>
+	<confirmCancelCreate>Sind Sie sicher, dass Sie die Erstellung dieser Metadaten stornieren möchten?</confirmCancelCreate>
 	<confirmDelete>Wollen Sie die Metadaten wirklich aus der Datenbank löschen?</confirmDelete>
 	<confirmBatchDelete>Sind Sie sicher, dass Sie alle $1 ausgewählten Metadatensätze löschen wollen?</confirmBatchDelete>
 	<confirmNewPassword>Neues Passwort bestätigen</confirmNewPassword>
@@ -489,6 +503,8 @@
 	<feedbackCardTitle>Feedback und Kommentare</feedbackCardTitle>
 	<feedbackComments>Feedback / Kommentare</feedbackComments>
 	<feedbackRequest>Bitte geben Sie Ihre Kontaktdaten vor dem Download ein</feedbackRequest>
+
+
 	<file>Datei</file>
 	<fileType>Dateityp:</fileType>
 	<fileUploadSuccessful>Dateiupload erfolgreich</fileUploadSuccessful>
@@ -508,6 +524,8 @@
 	<georss>Öffnen eines GeoRSS feed</georss>
 	<group>Gruppe</group>
 	<usergroups>Nutzergruppen</usergroups>
+	<choice>Choice</choice>
+	<sequence>Sequence</sequence>	
 	<groupManagement>Gruppen Management</groupManagement>
 	<groupManDes>Hinzufügen/Bearbeiten/Löschen und Ansehen von Gruppen</groupManDes>
 	<groups>Gruppen</groups>
@@ -547,6 +565,7 @@
 	<isoAll>ISO Komplett</isoAll>
 	<isoCore>ISO Core</isoCore>
 	<isoMinimum>ISO Minimum</isoMinimum>
+
 	<keyword>Schlüsselwort</keyword>
 	<keywords js="true">Schlüsselwörter</keywords>
 	<keywordshelp>Selektieren Sie mehrere Schlüsselwörter in dem Sie die Ctrl-Taste während der Selektion mit der Maus drücken</keywordshelp>
@@ -558,6 +577,7 @@
 	<kindChoice value="ngo">NGO</kindChoice>
 	<kindChoice value="other">Andere</kindChoice>
 	<kindChoice value="uni">Universität</kindChoice>
+
 	<label>Beschriftung</label>
 	<language>de</language>
 	<large_thumbnail>Klicken Sie hier um eine grosse Vorschau zu sehen</large_thumbnail>
@@ -598,6 +618,7 @@
 	<batchNewOwnerTitle>Massen-Neuer-Benutzer-Operation</batchNewOwnerTitle>
 	<batchUpdateCategoriesTitle>Massen-Update-Kategorien-Operation</batchUpdateCategoriesTitle>
 	<batchUpdatePrivilegesTitle>Massen-Update-Privilegien-Operation</batchUpdatePrivilegesTitle>
+
 	<max>Maximum</max>
 	<mdRating>Metadaten Bewertung</mdRating>
 	<mdUpdateError>Updatefehler</mdUpdateError>
@@ -615,30 +636,32 @@
 	<metadata.admin.index.wait js="true">Index operation läuft bereits, bitte warten.</metadata.admin.index.wait>
 	<metadata.admin.index.optimize.desc>Optimisierung des Lucene Index</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>XLink Cache leeren und Index von Daten mit XLinks neu aufbauen</metadata.admin.index.rebuildxlinks.desc>
+
 	<lucene.config.reload>Lucene Konfiguration neu laden</lucene.config.reload>
 	<reload>Neu laden</reload>
 	<rebuildxlinks>XLinks neu aufbauen</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">Diese Operation kann bei grossen Katalogen einige Zeit in Anspruch nehmen und sollte nicht während Spitzenzeiten ausgeführt werden. Weiterfahren?</doYouReallyWantToDoThis>
 	<optimize>Optimisieren</optimize>
 	<metadata.admin.index>Index Manager</metadata.admin.index>
-    <metadata-samples>Beispiel Metadaten</metadata-samples>
-    <metadata-samples-add>Beispiel Metadaten hinzufügen</metadata-samples-add>
-    <metadata-samples-add-failed>Beispiel Metadaten hinzufügen fehlgeschlagen</metadata-samples-add-failed>
-    <metadata-samples-add-success>Hinzugefügte Beispiel Metadaten</metadata-samples-add-success>
-  <metadata-template-add-success>Vorlage hinzufügen</metadata-template-add-success>
-  <metadata-template-order>Vorlagen sortieren</metadata-template-order>	
+	<metadata-samples>Beispiel Metadaten</metadata-samples>
+	<metadata-samples-add>Beispiel Metadaten hinzufügen</metadata-samples-add>
+	<metadata-samples-add-failed>Beispiel Metadaten hinzufügen fehlgeschlagen</metadata-samples-add-failed>
+	<metadata-samples-add-success>Hinzugefügte Beispiel Metadaten</metadata-samples-add-success>
+	<metadata-template-add-success>Vorlage hinzufügen</metadata-template-add-success>
+	<metadata-template-order>Vorlagen sortieren</metadata-template-order>	
 	<metadata-template-order-desc>Vorlagen sortieren</metadata-template-order-desc>
 	<metadata-template-add-default>Vorlagen hinzufügen</metadata-template-add-default>
+
 	<metadata>Metadaten</metadata>
 	<metadataAdded>Metadaten mit folgender ID hinzugefügt:</metadataAdded>
 	<metadataDeleted>Metadatamit folgender ID gelöscht:</metadataDeleted>
 	<metadataInsertResults>Ergebnis des Metadaten Imports</metadataInsertResults>
 	<metadataJSForm>Metadaten von einem JS Formular</metadataJSForm>
+	<failOnError>Fehlgeschlagen</failOnError>
+	<metadataRecordsProcessed>Anzahl prozessierter Metadaten:</metadataRecordsProcessed>
 	<metadataRecordsAdded>Anzahl der hinzugefügten Metadatensätze:</metadataRecordsAdded>
-  <failOnError>Fehlgeschlagen</failOnError>
-  <metadataRecordsProcessed>Anzahl prozessierter Metadaten:</metadataRecordsProcessed>
 	<min>Minimum</min>
-    <minor>Minimale Änderung</minor>
+	<minor>Minimale Änderung</minor>
 	<missing>Fehlt oder leer</missing>	
 	<missingSeeTab>Fehlt - Siehe folgender Gruppen-Eintrag in der Seitenleiste: </missingSeeTab>
 	<more>mehr</more>
@@ -677,6 +700,7 @@
 	<overwriteFile>Überschreiben?</overwriteFile>
 	<owner>Besitzer</owner>
 	<ownerRights>Löschen/Privilegien/Kategorien gesperrt: Sie haben keine Besitzerrechte</ownerRights>
+
 	<paper>Analog</paper>
 	<partial>Teilweise Überschneidung</partial>
 	<partialCooordinate>Partial coordinates </partialCooordinate>
@@ -737,9 +761,9 @@
 	<ress>Ergebnis</ress>
 	<restrictTo>Beschränken auf</restrictTo>
 	<result>Letzte Ergebnisse</result>
-  <searchResult>Suchergebnisse</searchResult>
-  <resources>Ressourcen</resources>
-  <visualizationService>Visualisierungsdienst URL (WMS)</visualizationService>
+	<searchResult>Suchergebnisse</searchResult>
+	<resources>Ressourcen</resources>
+	<visualizationService>Visualisierungsdienst URL (WMS)</visualizationService>
 	<resultsCoordinate>Ergebnisse, die auf Koordinatensuche zutreffen </resultsCoordinate>
 	<resultsFreeText>Ergebnisse, die auf Freitextsuche zutreffen </resultsFreeText>
 	<resultsMatching js="true">Suchergebnisse:</resultsMatching>
@@ -784,6 +808,7 @@
 	<site>Seite</site>
 	<siteId>Seiten ID</siteId>
 	<sizeBytes>Grösse (Bytes)</sizeBytes>
+
 	<sortBy js="true">Geordnet nach</sortBy>
 	<sortByType id="changeDate">Änderungsdatum Daten</sortByType>
 	<sortByType id="popularity">Popularität</sortByType>
@@ -811,6 +836,7 @@
 	<Term>Ausdruck</Term>
 	<thanks>Thank you for your effort. The GeoNetwork</thanks>
 	<theme>ISO Thema Kategorie</theme>
+
 	<thumbnails>Vorschau</thumbnails>
 	<timeout>Timeout</timeout>
 	<timeoutChoice value="10">nach 10 Sekunden</timeoutChoice>
@@ -821,6 +847,7 @@
 	<toDateSelector>Auswahl des Enddatums</toDateSelector>
 	<tools>Werkzeuge</tools>
 	<topic>Thema</topic>
+
 	<transferOwnership>Besitzer wechseln</transferOwnership>
 	<transferOwnershipDes>Wechseln der Metadaten Besitzrechte zu einem anderen Nutzer</transferOwnershipDes>
 	<type js="true">Typ</type>
@@ -1079,8 +1106,8 @@
 		<iso19139>Speichert ISO19115/19139 Metadaten als XML</iso19139>
 		<iso19139fra>Speichert ISO19115/19139 Fra Metadata als XML</iso19139fra>
 	</savexml>
-  <thesaurus>
-    <load>Aus dem GeoNetwork Thesaurusverzeichnis laden</load>    
+	<thesaurus>
+		<load>Aus dem GeoNetwork Thesaurusverzeichnis laden</load>    
 		<addelement>Element hinzufügen</addelement>
 		<admin>Thesaurus Management</admin>
 		<broader>weiterer Ausdruck</broader>
@@ -1115,7 +1142,7 @@
 		<thesaurus>Schlüsselwörter aus Thesaurus auswählen</thesaurus>
 	</searchhelp>
 
-    <inspire>
+	<inspire>
         <serviceType>
             <value id="discovery">Suchdienste (discovery)</value>
             <value id="view">Darstellungsdienste (view)</value>
@@ -1227,6 +1254,7 @@
                 <value id="comRemoteFileAndExecutableManagement">Dienst für den Zugriff auf externe Daten und Programme (comRemoteFileAndExecutableManagement)</value>
             </group>
         </spatialDataService>
+
         <what>
             <l1>INSPIRE Suchoptionen</l1>
             <l2>INSPIRE Metadaten</l2>
@@ -1243,7 +1271,7 @@
             <l13>INSPIRE Themen ausblenden</l13>
             <l14>INSPIRE Thema</l14>
             <l15>Art des Geodienstes</l15>
-        <l16>Klassifizierung von Daten und Diensten</l16>
+            <l16>Klassifizierung von Daten und Diensten</l16>
         </what>
         <annex1>
             <theme id="inspire_CoordinateRefSystems">Koordinatenreferenzsysteme</theme>
@@ -1286,39 +1314,38 @@
             <theme id="inspire_MineralResources">Mineralische Bodenschätze</theme>
         </annex3>
     </inspire>
-    
-    <selectMetadataFileAlert>Sie müssen einen Metadtensatz zum Einfügen auswählen</selectMetadataFileAlert>            
-    <showMoreSearchFields>Aus-/Einblenden weiterer Suchfelder</showMoreSearchFields>
-    <searchEitherOfTheWords>Einer der Begriffe</searchEitherOfTheWords>
-    <searchExactPhrase>Exakter Wortlaut</searchExactPhrase>
-    <searchAllWords>Alle Begriffe</searchAllWords>
-    <searchWithoutWords>Ohne diese Begriffe</searchWithoutWords>
-    
-    <showMap>Karte anzeigen</showMap>
-    <mapViewer>Karten-Viewer</mapViewer>
 
-    <uuid>Eindeutiger Identifikator</uuid>    
-    <mymetadata>Meine Metadaten</mymetadata>
-	
+	<selectMetadataFileAlert>Sie müssen einen Metadtensatz zum Einfügen auswählen</selectMetadataFileAlert>            
+	<showMoreSearchFields>Aus-/Einblenden weiterer Suchfelder</showMoreSearchFields>
+	<searchEitherOfTheWords>Einer der Begriffe</searchEitherOfTheWords>
+	<searchExactPhrase>Exakter Wortlaut</searchExactPhrase>
+	<searchAllWords>Alle Begriffe</searchAllWords>
+	<searchWithoutWords>Ohne diese Begriffe</searchWithoutWords>
+
+	<showMap>Karte anzeigen</showMap>
+	<mapViewer>Karten-Viewer</mapViewer>
+
+	<uuid>Eindeutiger Identifikator</uuid>    
 	<quickSearch>Schnellsuche-Links</quickSearch>
+	<mymetadata>Meine Metadaten</mymetadata>
 	<catalogueRecords>Katlogmetadaten (lokal)</catalogueRecords>
 	<harvestedRecords>Geharvestete Metadaten</harvestedRecords>
 	<catalogueTemplates>Katalogvorlagen</catalogueTemplates>
-    <addremove>Hinzufügen / Entfernen</addremove>
-    <enabled>Aktiviert</enabled>
-    <notifications>Mitteilung an ferne Ziele</notifications>
-    <url>URL</url>
+	<addremove>Hinzufügen / Entfernen</addremove>
+	<enabled>Aktiviert</enabled>
+	<notifications>Mitteilung an ferne Ziele</notifications>
 
-    <cswServer>CSW server</cswServer>
-    <cswServerDes>CSW Server Konfiguration</cswServerDes>
-    <cswServerConfig>CSW Server Konfiguration</cswServerConfig>
-    <cswServerEnable>Einschalten</cswServerEnable>
-    <cswServerMetadataPublic>Eingefügte Metadaten sind öffentlich (Transaction)</cswServerMetadataPublic>
-    <cswServerTitle>Titel</cswServerTitle>
-    <cswServerAbstract>Kurzbeschreibung</cswServerAbstract>
-    <cswServerFees>Gebühren</cswServerFees>
-    <cswServerAccessConstraints>Zugangsbeschränkungen</cswServerAccessConstraints>
-    <cswServerContact>Kontakt</cswServerContact>
+	<cswServer>CSW server</cswServer>
+	<cswServerDes>CSW Server Konfiguration</cswServerDes>
+	<cswServerConfig>CSW Server Konfiguration</cswServerConfig>
+	<cswServerEnable>Einschalten</cswServerEnable>
+	<cswServerMetadataPublic>Eingefügte Metadaten sind öffentlich (Transaction)</cswServerMetadataPublic>
+	<cswServerTitle>Titel</cswServerTitle>
+	<cswServerAbstract>Kurzbeschreibung</cswServerAbstract>
+	<cswServerFees>Gebühren</cswServerFees>
+	<cswServerAccessConstraints>Zugangsbeschränkungen</cswServerAccessConstraints>
+	<cswServerContact>Kontakt</cswServerContact>
+
 	<virtualcswServer>Configure virtual CSW access point</virtualcswServer>
 	<virtualcswServerDes>Configuration of virtual CSW servers</virtualcswServerDes>
 	<virtualcswServerConfig>Configuration of virtual CSW servers</virtualcswServerConfig>
@@ -1334,9 +1361,9 @@
 	<virtualcswServicenameSpecialChars>Service name must not contain special characters.</virtualcswServicenameSpecialChars>
 	<virtualcswClassnameMandatory>Class name is mandatory.</virtualcswClassnameMandatory>
 	<virtualcswServiceNameStartsWith>Service name must begin with \"csw-\".</virtualcswServiceNameStartsWith>
-	
+
 	<virtualcswUpdateService>Update a CSW virtual server</virtualcswUpdateService>
-	
+
 	<virtualcswAny>Free text</virtualcswAny>
 	<virtualcswTitle>Title</virtualcswTitle>
 	<virtualcswAbstract>Abstract</virtualcswAbstract>
@@ -1346,16 +1373,26 @@
 	<virtualcswGroup>Group</virtualcswGroup>
 	<virtualcswCategory>Category</virtualcswCategory>
 	<virtualcswType>Resource type</virtualcswType>
-    <customize-elementset>Suchelemente anpassen</customize-elementset>
-    <csw-server-disabled>CSW-Server ist deaktiviert.</csw-server-disabled>
-    <custom-elementset-intro>Definieren Sie Elemente für Ihr eigenes "elementSet" (Suchoptionen). Jedes Element muss mit vollem XPATH vom Wurzelknoten (root) identifiziert werden. Diese Elemente und ihre "Kinder" werden in Antworten auf Anfragen mit CSW GetRecord ElementSetName = FULL einbezogen werden.</custom-elementset-intro>
-    <custom-elementset-revert>Um wieder auf den Standardwert ElementSetName = FULL Antworten, löschen Sie alle Elemente aus dieser Liste.</custom-elementset-revert>
-    <custom-elementset-add>Element hinzufügen</custom-elementset-add>
 
-    <wmslayers>WMS layers</wmslayers>
-    <formatter.admin>Benutzerdefinierte Stylsheets verwalten</formatter.admin>
-    <formatter.admin.des>Verwaltung für benutzerdefinierte Darstellung von Metadaten</formatter.admin.des>
+	<customize-elementset>Suchelemente anpassen</customize-elementset>
+	<csw-server-disabled>CSW-Server ist deaktiviert.</csw-server-disabled>
+	<custom-elementset-intro>Definieren Sie Elemente für Ihr eigenes "elementSet" (Suchoptionen). Jedes Element muss mit vollem XPATH vom Wurzelknoten (root) identifiziert werden. Diese Elemente und ihre "Kinder" werden in Antworten auf Anfragen mit CSW GetRecord ElementSetName = FULL einbezogen werden.</custom-elementset-intro>
+	<custom-elementset-revert>Um wieder auf den Standardwert ElementSetName = FULL Antworten, löschen Sie alle Elemente aus dieser Liste.</custom-elementset-revert>
+	<custom-elementset-add>Element hinzufügen</custom-elementset-add>
+
+	<wmslayers>WMS layers</wmslayers>
+	<formatter.admin>Benutzerdefinierte Stylsheets verwalten</formatter.admin>
+	<formatter.admin.des>Verwaltung für benutzerdefinierte Darstellung von Metadaten</formatter.admin.des>
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+
+	<advancedOptions.show>show advanced options</advancedOptions.show>
+	<advancedOptions.hide>hide advanced options</advancedOptions.hide>
+	<latestDatasets>Latest</latestDatasets>
+	<popularDatasets>Popular</popularDatasets>
+	<filter>Filter</filter>
+	<welcome.text>Welcome to GeoNetwork</welcome.text>
+	<tag_label>Tags</tag_label>
+	<map_label>Map</map_label>
 </strings>

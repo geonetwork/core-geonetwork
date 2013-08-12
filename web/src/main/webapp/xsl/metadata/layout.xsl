@@ -16,6 +16,7 @@
   <xsl:include href="../utils-fn.xsl"/>
   <xsl:include href="../utils.xsl"/>
   <xsl:include href="utility.xsl"/>
+  <xsl:include href="validate-fn.xsl"/>
   <xsl:include href="layout-simple.xsl"/>
   <xsl:include href="layout-xml.xsl"/>
   <xsl:include href="controls.xsl"/>
@@ -1270,36 +1271,56 @@
     Template to create validation link popup on XSD errors
     or schematron errors.
   -->
-  <xsl:template name="validationLink
-    ">
+  <xsl:template name="validationLink">
     <xsl:param name="ref"/>
-
+    
     <xsl:if
       test="@geonet:xsderror
       or */@geonet:xsderror
       or //svrl:failed-assert[@ref=$ref]">
       <ul>
+        <xsl:variable name="labels" select="/root/gui"/>
+        
         <xsl:choose>
           <!-- xsd validation -->
           <xsl:when test="@geonet:xsderror">
-            <li>
-              <xsl:value-of select="concat(/root/gui/strings/xsdError,': ',@geonet:xsderror)"/>
-            </li>
+            <xsl:choose>
+              <xsl:when test="contains(@geonet:xsderror, '\n')">
+                <xsl:variable name="root" select="/"/>
+                <!-- DataManager#getXSDXmlReport concat errors in attribute -->
+                <xsl:for-each select="tokenize(@geonet:xsderror, '\\n')">
+                  <xsl:if test=". != ''">
+                    <li>
+                      <xsl:copy-of select="concat($root/root/gui/strings/xsdError, ': ',
+                        geonet:parse-xsd-error(., $schema, $labels))"/>
+                    </li>
+                  </xsl:if>
+                </xsl:for-each>         
+              </xsl:when>
+              <xsl:otherwise>
+                <li>
+                  <xsl:copy-of select="concat(/root/gui/strings/xsdError, ': ',
+                    geonet:parse-xsd-error(@geonet:xsderror, $schema, $labels))"/>
+                </li>
+              </xsl:otherwise>
+            </xsl:choose>
+            
           </xsl:when>
           <!-- some simple elements hide lower elements to remove some
-            complexity from the display (eg. gco: in iso19139) 
-            so check if they have a schematron/xsderror and move it up 
-            if they do -->
+                        complexity from the display (eg. gco: in iso19139) 
+                        so check if they have a schematron/xsderror and move it up 
+                        if they do -->
           <xsl:when test="*/@geonet:xsderror">
             <li>
-              <xsl:value-of select="concat(/root/gui/strings/xsdError,': ',*/@geonet:xsderror)"/>
+              <xsl:copy-of select="concat(/root/gui/strings/xsdError, ': ', 
+                geonet:parse-xsd-error(*/@geonet:xsderror, $schema, $labels))"/>
             </li>
           </xsl:when>
           <!-- schematrons -->
           <xsl:when test="//svrl:failed-assert[@ref=$ref]">
             <xsl:for-each select="//svrl:failed-assert[@ref=$ref]">
               <li><xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
-                  <xsl:copy-of select="svrl:text/*"/></li>
+                <xsl:copy-of select="svrl:text/*"/></li>
             </xsl:for-each>
           </xsl:when>
         </xsl:choose>
@@ -1819,7 +1840,7 @@
               </xsl:if>
               
               <xsl:choose>
-                <xsl:when test="$title!=''">
+                <xsl:when test="$helpLink!=''">
                   <xsl:value-of select="$title"/>
                 </xsl:when>
                 <xsl:otherwise>

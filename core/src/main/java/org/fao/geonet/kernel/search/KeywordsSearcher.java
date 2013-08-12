@@ -153,9 +153,12 @@ public class KeywordsSearcher {
      * @throws Exception hmm
      */
 	public void searchForRelated(String id, String sThesaurusName, KeywordRelation request, String... languages) throws Exception {
-	    Thesaurus thesaurus = _thesaurusFinder.getThesaurusByName(sThesaurusName);
+	    _results.clear();
+        Thesaurus thesaurus = _thesaurusFinder.getThesaurusByName(sThesaurusName);
 	    Query<KeywordBean> query = QueryBuilder.keywordQueryBuilder(_isoLanguageMapper, languages).select(Selectors.related(id,request), true).build();
-	    _results = query.execute(thesaurus);
+	    for (KeywordBean keywordBean : query.execute(thesaurus)) {
+            _results.add(keywordBean);
+        }
 	}
 
     /**

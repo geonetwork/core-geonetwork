@@ -27,6 +27,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
+import org.jfree.util.Log;
 
 /**
  * Params for local filesystem harvesting.
@@ -39,6 +40,7 @@ public class LocalFilesystemParams extends AbstractParams {
 	public String icon;
 	public String directoryname;
 	public boolean recurse;
+    public boolean checkFileLastModifiedForUpdate;
 	public boolean nodelete;
 	
 	public LocalFilesystemParams(DataManager dm) {
@@ -80,7 +82,9 @@ public class LocalFilesystemParams extends AbstractParams {
         recurse = (recurseString.equals("on") || recurseString.equals("true"));
         String nodeleteString = Util.getParam(site, "nodelete", "true");
         nodelete = (nodeleteString.equals("on") || nodeleteString.equals("true"));
-        System.out.println("recurse: " + recurse + " nodelete: " + nodelete);
+        String checkFileLastModifiedForUpdateString = Util.getParam(site, "checkFileLastModifiedForUpdate", "true");
+        checkFileLastModifiedForUpdate = (checkFileLastModifiedForUpdateString.equals("on") || checkFileLastModifiedForUpdateString.equals("true"));
+        
     }
 
 	public LocalFilesystemParams copy() {
@@ -90,6 +94,7 @@ public class LocalFilesystemParams extends AbstractParams {
 		copy.directoryname = directoryname;
 		copy.recurse = recurse;
 		copy.nodelete = nodelete;
-		return copy;		
+        copy.checkFileLastModifiedForUpdate = checkFileLastModifiedForUpdate;
+		return copy;
 	}
 }

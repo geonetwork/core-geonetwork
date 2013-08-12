@@ -1,34 +1,217 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <ara>عربي</ara> <!-- Do not translate! -->
-    <cat>Català</cat> <!-- Do not translate! -->
-    <chi>中文</chi> <!-- Do not translate! -->
-    <dut>Nederlands</dut> <!-- Do not translate -->
-    <eng>English</eng> <!-- Do not translate! -->
-    <fin>Suomeksi</fin>  <!-- Do not translate! -->
-    <fre>Français</fre> <!-- Do not translate! -->
-    <ger>Deutsch</ger> <!-- Do not translate! -->
-    <ita>Italiano</ita> <!-- Do not translate! -->
-    <nor>Norsk</nor>  <!-- Do not translate! -->
-    <por>Рortuguês</por> <!-- Do not translate! -->
-    <rus>Русский</rus> <!-- Do not translate! -->
-    <spa>Español</spa> <!-- Do not translate! -->
-    <tur>Türkçe</tur> <!-- Do not translate! -->
-    <pol>Polski</pol> <!-- Do not translate! -->
     
-    <useStopwords>Lucene indeksi bu diller için durma kelimelerini (stopwords) kullanır :</useStopwords>    
+	<recurse>Also search in subfolders</recurse>
+	<useStopwords>Lucene indeksi bu diller için durma kelimelerini (stopwords) kullanır :</useStopwords>    
     <rebuildIndexMessage>Bu değerleri değiştirirseniz, Lucene indeksini yeniden oluşturmanız tavsiye edilir.</rebuildIndexMessage>
 	<!-- new strings - SP 2.5 -->
 	<showRemoteHTML>Uzak sunucudan HTML göster</showRemoteHTML>
 	<!-- end new strings -->
+	<ara>عربي</ara> <!-- Do not translate! -->
+	<cat>Català</cat> <!-- Do not translate! -->
+	<chi>中文</chi> <!-- Do not translate! -->
+	<dut>Nederlands</dut> <!-- Do not translate! -->
+	<eng>English</eng> <!-- Do not translate! -->
+	<fin>Suomeksi</fin> <!-- Do not translate! -->
+	<fre>Français</fre> <!-- Do not translate! -->
+	<ger>Deutsch</ger> <!-- Do not translate! -->
+	<ita>Italiano</ita> <!-- Do not translate! -->
+	<nor>Norsk</nor> <!-- Do not translate! -->
+	<por>Рortuguês</por> <!-- Do not translate! -->
+	<rus>Русский</rus> <!-- Do not translate! -->
+	<spa>Español</spa> <!-- Do not translate! -->
+	<tur>Türkçe</tur> <!-- Do not translate! -->
+	<pol>Polski</pol> <!-- Do not translate! -->
+
+	<statusTitle> / Metadata Workflow</statusTitle>
+	<statusUserEdit>GeoNetwork user %s (%s) edited metadata record #%s</statusUserEdit>
+	<statusInform>%s / Metadata Workflow / Metadata record(s) %s by %s (%s) (%s)</statusInform>
+	<!--
+        legacy UI 
+        <statusSendEmail>Change log message: %s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
+        -->
+	<statusSendEmail>Change log message: %s\r\n\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
+
 	<otherValue>Other:</otherValue>
-	
+	<warning>Warning</warning>
 	<isAdmin>Is administrator ?</isAdmin>
+	<anyLanguage>Any language</anyLanguage>
+	<nodata>Null</nodata>
+	<extractRegisterItems>Extract Register Items</extractRegisterItems>
+	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
+	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
+	<batchExtractSubtemplatesTitle>Extract subtemplates from selected metadata</batchExtractSubtemplatesTitle>
+	<extractSubtemplates>Extract subtemplates</extractSubtemplates>
+	<xpathToExtract>XPath to extract as subtemplate</xpathToExtract>
+	<xsltToExtractTitle>XSLT to extract title from subtemplate</xsltToExtractTitle>
+	<xpathToExtractTitle>XPath to extract title from subtemplate</xpathToExtractTitle>
+	<categoryForSubtemplate>Category for subtemplates</categoryForSubtemplate>
+	<makeChanges>I really want to do this!</makeChanges>
+	<dontMakeChanges>By default, this operation will not make any changes to the database ie. it runs in test mode. Checking this box switches test mode off and changes will be made to the database.</dontMakeChanges>
+
+	<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
+	<createThesaurus>Create/Update Thesaurus</createThesaurus>
+	<thesaurusType>Thesaurus Type</thesaurusType>
+	<changeLogMessage>Change Log Message</changeLogMessage>
+	<status>Status</status>
+	<updateStatus>Update status</updateStatus>
+	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
+	<startVersion>Start Versioning</startVersion>
+	<batchStartVersionTitle>Batch Start Versioning</batchStartVersionTitle>
+	<editAttributes>Add more details</editAttributes>
+	<subtemplate.admin>Manage directories</subtemplate.admin>
+	<subtemplate.admin.desc>Add/modify/delete directories (eg. contact directories)</subtemplate.admin.desc>  
+	<surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
+	<firstnameMandatory>First name is Mandatory</firstnameMandatory>
+	<emailMandatory>email address is Mandatory</emailMandatory>
+	<forgottenPassword>Forgot your password?</forgottenPassword>
+	<selectTemplate>Select schemas</selectTemplate>
+	<useStopwords>Lucene indeksi bu diller için durma kelimelerini (stopwords) kullanır :</useStopwords>    
+	<rebuildIndexMessage>Bu değerleri değiştirirseniz, Lucene indeksini yeniden oluşturmanız tavsiye edilir.</rebuildIndexMessage>
+	<notificationsDes>Remote updates</notificationsDes>
+	<metadata-templates-samples-add>Add templates and samples</metadata-templates-samples-add>
+	<metadata-schema-select>Select a schema to add templates or sample data from</metadata-schema-select>
+	<templatesSamples>Manage templates and sample data</templatesSamples>
+	<simpleSearch>Simple Search</simpleSearch>
+	<advancedSearch>Advanced Search</advancedSearch>
+	<remoteSearch>Remote Search</remoteSearch>
+	<displayRemoteHtml>Display results using HTML from server?</displayRemoteHtml>
+	<noSearchCriteria js="true">Please enter or select some search criteria</noSearchCriteria>
+	<noServer js="true">Please select a server to search</noServer>
+	<anyWith>Any - with one of these words</anyWith>
+	<anyWithExactPhrase>Any - with this exact phrase</anyWithExactPhrase>
+	<anyWithAllWords>Any - with all of these words</anyWithAllWords>
+	<anyWithoutWords>Any - without these words</anyWithoutWords>
+	<dataDownload>Data for Download</dataDownload>
+	<addSchema>Add a metadata schema/profile</addSchema>
+	<updateSchema>Update a metadata schema/profile</updateSchema>
+	<deleteSchema>Delete a metadata schema/profile</deleteSchema>
+	<selectSchema>Select a metadata schema/profile</selectSchema>
+	<schemaFileName>Path to Schema Zip Archive</schemaFileName>
+	<schemaUrl>URL of Schema Zip Archive</schemaUrl>
+	<schemaUuid>UUID of local metadata record with GeoNetwork Metadata Schema Archive (URL) as online resource</schemaUuid>
+	<add>Add</add>
+	<schemaOps>Metadata Schema Operations</schemaOps>
+	<enterSchema>Enter a name for the schema to be added</enterSchema>
+	<selectSchemaOperations>Source of schema zip archive:</selectSchemaOperations>
+	<showRemoteHTML>Uzak sunucudan HTML göster</showRemoteHTML>
+	<searchStatistics>Search statistics</searchStatistics>
+	<searchStatisticsDes>See statistics about searches performed in the application</searchStatisticsDes>
+	
+	<stat.byDay>by Day</stat.byDay>
+	<stat.byMonth>by Month</stat.byMonth>
+	<stat.byWeek>by Week</stat.byWeek>
+	<stat.byYear>by Year</stat.byYear>
+	<stat.collapse>Collapse</stat.collapse>
+	<stat.numAutoGeneratedSearches>Number of auto-generated (guiservice) searches</stat.numAutoGeneratedSearches>
+	<stat.date>Date</stat.date>
+	<stat.day>Day</stat.day>
+	<stat.hits>Hits</stat.hits>
+	<stat.ip>IP</stat.ip>
+	<stat.noValue>no value</stat.noValue>
+	<stat.language>Language</stat.language>
+	<stat.month>Month</stat.month>
+	<stat.numberOfSearch>Number of search</stat.numberOfSearch>
+	<stat.requestDate>Date of request</stat.requestDate>
+	<stat.spatialFilter>Spatial filter</stat.spatialFilter>
+	<stat.totalsearches>Total user searches</stat.totalsearches>
+	<stat.year>Year</stat.year>
+	<stat.mdSheet>Metadata sheet</stat.mdSheet>
+	<stat.noTitle>no title</stat.noTitle>
+	<stat.csvExport>CSV export</stat.csvExport>
+	<stat.tabularStats>Tabular statistics</stat.tabularStats>
+	<stat.tip1begin>Click on a link below to display live statistics, click the little arrow </stat.tip1begin>
+	<stat.tip1end>to hide it</stat.tip1end>
+	<stat.lastMonthStats>Last Month statistics</stat.lastMonthStats>
+	<stat.userIpText>User IP during search (number of search per unique IP)</stat.userIpText>
+	<stat.mostSearchedKeywords>Most searched Keywords</stat.mostSearchedKeywords>
+	<stat.mostSearchedCategories>Most searched Categories</stat.mostSearchedCategories>
+	<stat.simpleVsAdvanced>Simple vs advanced search</stat.simpleVsAdvanced>
+	<stat.mdPopularity>Metadata popularity</stat.mdPopularity>
+	<stat.graphicalStats>Graphical statistics</stat.graphicalStats>
+	<stat.tip2>Choose a date unit (year, month, day) and a date range and click ok to display a graphic</stat.tip2>
+	<stat.numberOfRequests>Number of requests</stat.numberOfRequests>
+	<stat.chooseDateFrom>Choose a date from</stat.chooseDateFrom>
+	<stat.dateFrom>Date from</stat.dateFrom>
+	<stat.dateTo>Date to</stat.dateTo>
+	<stat.md>Metadata</stat.md>
+	<stat.popularity>Popularity</stat.popularity>
+	<stat.totalSearches>Total user searches</stat.totalSearches>
+	<stat.numSearchesPerDay>Number of user searches per day</stat.numSearchesPerDay>
+	<stat.numSearchesNoResult>Number of user searches with no results</stat.numSearchesNoResult>
+	<stat.simpleAdvancedSearch>Simple / advanced search</stat.simpleAdvancedSearch>
+	<stat.searchedTerm>Searched term</stat.searchedTerm>
+	<stat.count>Count</stat.count>
+	<stat.numSimpleSearch>Number of simple searches</stat.numSimpleSearch>
+	<stat.numAdvancedSearch>Number of advanced searches</stat.numAdvancedSearch>
+	<stat.></stat.>
+	<stat.exportRequests>Export Requests table (one entry per user request)</stat.exportRequests>
+	<stat.exportParams>Export Parameters table (request keywords, several entries per user request)</stat.exportParams>
+	<stat.csvSemiColumnDelimiter>Semicolon separator</stat.csvSemiColumnDelimiter>
+	<stat.rightClickSaveAs>Right-click on the link to save the CSV file</stat.rightClickSaveAs>
+	<stat.searchedKeywords>Searched Keywords</stat.searchedKeywords>
+	<stat.popuByGroup>Metadata popularity by group</stat.popuByGroup>
+	<stat.popuByCatalog>Metadata popularity by catalog (node id)</stat.popuByCatalog>
+	<stat.popularityByCategory>Metadata popularity by category</stat.popularityByCategory>
+	<stat.mdType>Type of metadata searched for</stat.mdType>
+	<stat.dsMsType>Dataset metadata</stat.dsMsType>
+	<stat.serviceMdType>Service metadata</stat.serviceMdType>
+	<stat.basicGeodataType>Basic geodata</stat.basicGeodataType>
+	<stat.allTypes>All</stat.allTypes>
+	<stat.seeAdminPage>See system configuration page to enable logging feature</stat.seeAdminPage>
+	<stat.logDisabled>The logging feature is currently disabled</stat.logDisabled>
+	<stat.maintenance>Maintenance</stat.maintenance>
+	<stat.deleteTmpImages>Deletes temporary graphic and CSV files</stat.deleteTmpImages>
+	<stat.deleteTmpFiles>Delete files now</stat.deleteTmpFiles>
+	<stat.filesDel> file(s) deleted.</stat.filesDel>
+	<stat.warnCsvExport>Caution: exporting log tables can take several minutes</stat.warnCsvExport>
+	<stat.clickToDownload>Click on the link to download the CSV file</stat.clickToDownload>
+
+	<drawRectangle js="true">Draw rectangle</drawRectangle>
+	<drawPolygon js="true">Draw polygon</drawPolygon>
+	<drawCircle js="true">Draw circle</drawCircle>
+	<geopublisher>GeoPublisher</geopublisher>
+	<geoPublisherWindowTitle js="true">Geo-publication: </geoPublisherWindowTitle>
+	<geopublisherHelp>Publish or unpublish dataset as WMS or WFS in remote geoserver.</geopublisherHelp>
+	<publish js="true">Publish</publish>
+	<publishTooltip js="true">Publish current dataset to remote node. If dataset is already publish in that node, it will be updated.</publishTooltip>
+	<publishError js="true">Publication failed.</publishError>
+	<publishErrorCode js="true">Error code:</publishErrorCode>
+	<publishSuccess js="true">Successful publication.</publishSuccess>
+	<publishLayerAdded js="true"> Layer added to map preview.</publishLayerAdded>
+	<unpublish js="true">Unpublish</unpublish>
+	<unpublishTooltip js="true">Remove current dataset from remote node.</unpublishTooltip>
+	<unpublishError js="true">Unpublication failed. </unpublishError>
+	<unpublishSuccess js="true">Successful unpublication.</unpublishSuccess>
+	<check js="true">Check</check>
+	<errorConnectionRefused js="true">Connection refused.</errorConnectionRefused>
+	<errorDatasetNotFound js="true">Dataset not found.</errorDatasetNotFound>
+	<datasetFound js="true">Dataset found and added to the map preview.</datasetFound>
+	<checkFailure js="true">Failed to check dataset in remote node.</checkFailure>
+	<addOnlineSource js="true">Add WMS info to online source</addOnlineSource>
+	<statusInformation js="true">Status information.</statusInformation>
+	<mapPreview js="true">Map preview</mapPreview>
+	<selectANode js="true">Select a node ...</selectANode>
+	<publishing js="true">Publishing ...</publishing>
+
+	<logo>Logo configuration</logo>
+	<logoSelectionWindow js="true">Choose a logo</logoSelectionWindow>
+	<chooseLogo>Choose logo</chooseLogo>
+	<orgLogo>Organisation logo</orgLogo>
+	<logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
+	<logoRegistered js="true">Registered logos</logoRegistered>
+	<logoAdd js="true">Add new logo</logoAdd>
+	<selectedLogo js="true">Selected logo:</selectedLogo>
+	<logoDel js="true">Remove</logoDel>
+	<logoForNode js="true">Use for the catalogue</logoForNode>
+	<logoForNodeFavicon js="true">Use as favorite icon</logoForNodeFavicon>
+	<logoSelect js="true">Select image for logo ...</logoSelect>
+	<url>URL</url>
 	<createChild>Çocuk (child)oluştur</createChild>
 	<updateChildren>Çocuk (child) güncelle</updateChildren>
 	<updateChildrenOk>Çocuklar (children) güncellendi</updateChildrenOk>
 	<updateChildrenFailed>Çocuklar (children) güncellenmesinde hata oluştu</updateChildrenFailed>
-	<massiveUpdateChildrenTitle>Çocukları (children) güncelle</massiveUpdateChildrenTitle>
+	<batchUpdateChildrenTitle>Çocukları (children) güncelle</batchUpdateChildrenTitle>
 	<updateMode>Ebevyenden çocuk güncellemesine uygulanacak stratejiyi seçiniz : </updateMode>
 	<addMode>Bölümler Ekle</addMode>
 	<replaceMode>Bölümleri Değiştir</replaceMode>
@@ -73,12 +256,10 @@
 	</helpShortcutsEditor>
 	<validationReport js="true">Doğrulama raporu</validationReport>
 	<errorsOnly>Sadece hataları görüntüle</errorsOnly>
-	<errorsOnly></errorsOnly>
 	<schematronReport>Metaveri tavsiyelerine uyumluluk (Schematron)</schematronReport>
 	<xsdReport>Metaveri standardına uyumluluk(XML Schema)</xsdReport>
 	<rules name="schematron-rules-inspire">INSPIRE uygulama kuralları</rules>
 	<rules name="schematron-rules-iso">ISO 19115/19119 kuralları</rules>
-	<rules name="schematron-rules-geonetwork">GeoNetwork recommandations</rules>	
 	<rules name="schematron-rules-geonetwork">GeoNetwork tavsiyeleri</rules>	
 	<getCapabilitiesLayer js="true">YetenekAl (GetCapabilities) katmanı</getCapabilitiesLayer>
 	<ServiceUpdateError js="true">Hizmet metaveri güncellemesi sırasında hata</ServiceUpdateError>
@@ -86,19 +267,21 @@
 	<NoServiceURLError js="true">Seçilen servis için URL'in tanımlı olduğunu kontrol ediniz.</NoServiceURLError>
 	<GetCapabilitiesDocumentError js="true">GetCapabilities hizmetini şu URL'den yüklerken hata oluştu : </GetCapabilitiesDocumentError>
 	<noOperatesOn>İlgili kayıt kümesi bulunmuyor</noOperatesOn>
-    <linkedDataset>İlgili kayıt kümeleri:</linkedDataset>
-    <linkedFeatureCatalogue>İlgili obje katalogları:</linkedFeatureCatalogue>
+	<linkedDataset>İlgili kayıt kümeleri:</linkedDataset>
+	<linkedFeatureCatalogue>İlgili obje katalogları:</linkedFeatureCatalogue>
 	<linkedFeatureCatalogueHelp>Mevcut metaveri kaydı ve özellik kataloğu arasında ISO 19110 standardında ilişki kur
 	</linkedFeatureCatalogueHelp>
 	<createLinkedFeatureCatalogue>Bağlantı özellik kataloğu</createLinkedFeatureCatalogue>
 	<layerNameHelp js="true">Veri kümesi üzerinde bir veya birden fazla meta veri olan hizmetlerin metaverisinin bağlantısında, eşleşen kaynak leman OGC servisinde tanımlanmış olan kaynağı içerebilir. Hizmet katmanlarının listesi metaveri editörünün yeni bir değer eklemesine yardımcı olabilir.
 	</layerNameHelp>
+
 	<layerName js="true">Katman İsmi</layerName>
 	<createIfNotExistButton js="true">Yeni bir metaveri kaydı oluştur</createIfNotExistButton>
 	<associateService js="true">Servis metaverisine ilişkilendir</associateService>
 	<associateDataset js="true">Metaveri veri kümesine ilişkilendir</associateDataset>
 	<associateServiceHelp>Metaveri servisine ilişki eklemek için, servisi arayın ve katman ismini tanımlayın.</associateServiceHelp>
 	<associateDatasetHelp>Bir veri kümesine ilişki ekleme için, ISO görüntüsü > Teşhis bölümüne gidin ve elemanlar üzerinde tanımlama işlemi yapın.</associateDatasetHelp>
+
 	<addParent>Ebevyen metaveri bölümünü güncelle veya ekle</addParent>
 	<createAssoService>İlişki oluştur</createAssoService>
 	<updateMdd>Veri kümesi metaverisini güncelle</updateMdd>
@@ -179,6 +362,7 @@
 	<any>- Herhangi -</any>
 	<anytime>Herhangi Zaman</anytime>
 	<appSchInfoTab>Uygulama şeması</appSchInfoTab>
+
 	<assigned>Atandı</assigned>
 	<attrlabl>Özellik etiketi</attrlabl>
 	<availability>Mümkünlük</availability>
@@ -227,10 +411,10 @@
 	<close js="true">Kapat</close>
 	<completeTab>Gelişkin Görünüm</completeTab>
 	<completeTabEditor>Gelişkin Editör</completeTabEditor>
-    <confirmCancel>Editörden çıkmak istediğinize emin misiniz ? (Kaydetmediğiniz bütün değişiklikler kaybolacaktır)</confirmCancel>
-    <confirmCancelCreate>Bu metaveriyi oluşturmayı iptal etmek istediğinizden emin misiniz ?</confirmCancelCreate>
+	<confirmCancel>Editörden çıkmak istediğinize emin misiniz ? (Kaydetmediğiniz bütün değişiklikler kaybolacaktır)</confirmCancel>
+	<confirmCancelCreate>Bu metaveriyi oluşturmayı iptal etmek istediğinizden emin misiniz ?</confirmCancelCreate>
 	<confirmDelete>Bu metaveriyi veritabanından silmek istediğinize  emin misiniz ?</confirmDelete>
-	<confirmMassiveDelete>Seçilen bütün $1  metaverisini veritabanından silmek istediğinize emin misiniz ?</confirmMassiveDelete>
+	<confirmBatchDelete>Seçilen bütün $1  metaverisini veritabanından silmek istediğinize emin misiniz ?</confirmBatchDelete>
 	<confirmNewPassword>Yeni şifreyi doğrula</confirmNewPassword>
 	<confirmPassword>Şifreyi doğrula</confirmPassword>
 	<constraintsTab>Kısıtlar</constraintsTab>
@@ -245,6 +429,10 @@
 	<createTip>Bu şablondan yeni bir metaveri oluştur</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:3786">Mesafe Koruyan Silindirik Dünya projeksiyonu (Sifer)</crs>
+
+
+
+
 	<cswTest>CSW ISO Profil Testi</cswTest>
 	<cswTestDesc>CSW ISO Profil katalog arayüzü için test arayüzü</cswTestDesc>
 	<dataQualityTab>Veri kalitesi</dataQualityTab>
@@ -315,6 +503,8 @@
 	<feedbackCardTitle>Geribesleme ve Yorumlar</feedbackCardTitle>
 	<feedbackComments>Geribesleme / yorumlar</feedbackComments>
 	<feedbackRequest>İndirmeden önce detayları veriniz</feedbackRequest>
+
+
 	<file>Dosya</file>
 	<fileType>Dosya türü:</fileType>
 	<fileUploadSuccessful>Dosya yüklemesi başarılı</fileUploadSuccessful>
@@ -333,13 +523,16 @@
 	<generateUUID>Seçilen metaveri için UUID oluştur</generateUUID>
 	<georss>GeoRSS feed aç</georss>
 	<group>Grup</group>
+	<usergroups>User groups</usergroups>
+	<choice>Choice</choice>
+	<sequence>Sequence</sequence>
 	<groupManagement>Grup yönetimi</groupManagement>
 	<groupManDes>Grupları ekle/düzenle/sil ve göster</groupManDes>
 	<groups>Gruplar</groups>
 	<harvestingManagement>Harmanlama yönetimi</harvestingManagement>
 	<harvestingManDes>Harmanlama görevlerini ekle/düzenle/sil/başlat/durdur</harvestingManDes>
 	<help>Yardım</help>
-    <helpLinkTooltip js="true">Yardım</helpLinkTooltip>
+	<helpLinkTooltip js="true">Yardım</helpLinkTooltip>
 	<helpComplete>Tam Yardım</helpComplete>
 	<helperList>Öneriler:</helperList>
 	<hideAdvancedOptions>Gelişkin seçenekleri sakla</hideAdvancedOptions>
@@ -361,8 +554,8 @@
 	<imZoomIn>Büyült</imZoomIn>
 	<imZoomOut>Küçült</imZoomOut>
 	<imZoomToLayer>Seçilen katman sınırına kadar büyült</imZoomToLayer>
-    <indexLanguages>Durdurma kelimeleri(Stopwords)</indexLanguages>
-    <indexLanguagesDes>Durdurma kelimeleri için kullanılan dilleri tanımlayabilirsiniz.</indexLanguagesDes>    
+	<indexLanguages>Durdurma kelimeleri(Stopwords)</indexLanguages>
+	<indexLanguagesDes>Durdurma kelimeleri için kullanılan dilleri tanımlayabilirsiniz.</indexLanguagesDes>    
 	<infoTitle>Bilgi</infoTitle>
 	<insert>Ekle</insert>
 	<insertFileMode js="true">Dosya Yükleme</insertFileMode>
@@ -377,6 +570,7 @@
 	<isoAll>Hepsi ISO</isoAll>
 	<isoCore>ISO Çekirdek</isoCore>
 	<isoMinimum>ISO Minimum</isoMinimum>
+
 	<keyword>anahtar kelime</keyword>
 	<keywords js="true">Anahtar kelimeler</keywords>
 	<keywordshelp>Fare ile seçerken Ctrl-tuşunu basılı tutarak birden fazla anahtar kelime seçebilirsiniz</keywordshelp>
@@ -388,6 +582,7 @@
 	<kindChoice value="ngo">Kar Amacı Gütmeyen Kurum (NPO)</kindChoice>
 	<kindChoice value="other">Diğer</kindChoice>
 	<kindChoice value="uni">Üniversite/Araştırma Merkezi</kindChoice>
+
 	<label>Etiketn</label>
 	<language>İngilizce</language>
 	<large_thumbnail>Daha büyük bir öngörünüm resmi için tıklayınız</large_thumbnail>
@@ -401,10 +596,7 @@
 	<loading>Yükleniyor...</loading>
 	<local>Yerel Arama</local>
 	<localiz>Yerelleştirme</localiz>
-	<localizationHelp>
-	
-	Önemli ! Bu form veritabanına Anahtar değer eklemenize izin verir. Anahtar içinde boşluk karakteri bulunamaz.<br/> 
-	Anahtar değerleri ekledikten sonra, Yönetim panelindeki "Yerelleştirme" formunu kullanarak web sitesinde farklı dillerde göstermek istediğiniz esas ismi girebilrisiniz</localizationHelp>
+	<localizationHelp>Önemli ! Bu form veritabanına Anahtar değer eklemenize izin verir. Anahtar içinde boşluk karakteri bulunamaz.<br/> Anahtar değerleri ekledikten sonra, Yönetim panelindeki "Yerelleştirme" formunu kullanarak web sitesinde farklı dillerde göstermek istediğiniz esas ismi girebilrisiniz</localizationHelp>
 	<localizDes>Gruplar, kategoriler vb. gibi yerelleştirilmiş varlıkların değiştirilmesine izin veri</localizDes>
 	<localType>Yerel</localType>
 	<location>Neresi?</location>
@@ -426,11 +618,12 @@
 	<mapViewerClose>Harita Görüntüleyicisini kapat</mapViewerClose>
 	<mapViewerLoading>Harita Görüntüleyicisini Yüklüyor...</mapViewerLoading>
 	<mapViewerOpen>Harita Görüntüleyicisini Aç</mapViewerOpen>
-	<massiveActions>Toplu İşlemler:</massiveActions>
-	<massiveDeleteTitle>Toplu Silme İşlemi</massiveDeleteTitle>
-	<massiveNewOwnerTitle>Toplu  Yeni Sahip İşlemi</massiveNewOwnerTitle>
-	<massiveUpdateCategoriesTitle>Toplu  Kategori Güncelleme İşlemi </massiveUpdateCategoriesTitle>
-	<massiveUpdatePrivilegesTitle>Toplu Yetki Güncelleme İşlemi</massiveUpdatePrivilegesTitle>
+	<batchActions>Toplu İşlemler:</batchActions>
+	<batchDeleteTitle>Toplu Silme İşlemi</batchDeleteTitle>
+	<batchNewOwnerTitle>Toplu  Yeni Sahip İşlemi</batchNewOwnerTitle>
+	<batchUpdateCategoriesTitle>Toplu  Kategori Güncelleme İşlemi </batchUpdateCategoriesTitle>
+	<batchUpdatePrivilegesTitle>Toplu Yetki Güncelleme İşlemi</batchUpdatePrivilegesTitle>
+
 	<max>Maksimum</max>
 	<mdRating>Veri Notu</mdRating>
 	<mdUpdateError>Güncelleme Hatası</mdUpdateError>
@@ -445,29 +638,37 @@
 	<metadata.admin.index.desc>Lucene indeksini yeniden oluştur (Rebuild)</metadata.admin.index.desc>
 	<metadata.admin.index.failed>İndeksleme işlemi başarısız oldu.</metadata.admin.index.failed>
 	<metadata.admin.index.success>İndeksleme işlemi başarılı oldu.</metadata.admin.index.success>
+	<metadata.admin.index.wait js="true">Index operation already in progress please wait.</metadata.admin.index.wait>
 	<metadata.admin.index.optimize.desc>Lucene indeksini optimize et</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>XLink Önbelleğini sil ve XLinks bağlantılı Kayıtların Indeksini yeniden oluştur</metadata.admin.index.rebuildxlinks.desc>
+
+	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>
+	<reload>Reload</reload>
 	<rebuildxlinks>XLinks Yeniden Oluştur</rebuildxlinks>
-	<doYouReallyWantToDoThis js="true">
-	Bu işlem büyük kataloglarda çok sürebilir ve yoğun kullanım sırasında yapılmamalıdır. Devam edilsin mi ?</doYouReallyWantToDoThis>
+	<doYouReallyWantToDoThis js="true">	Bu işlem büyük kataloglarda çok sürebilir ve yoğun kullanım sırasında yapılmamalıdır. Devam edilsin mi ?</doYouReallyWantToDoThis>
 	<optimize>Optimize Et</optimize>
 	<metadata.admin.index>Indeks Yöneticisi</metadata.admin.index>
-    <metadata-samples>Örnek metaveri</metadata-samples>
-    <metadata-samples-add>Örnek metaveri ekle</metadata-samples-add>
-    <metadata-samples-add-failed>Örnek metaveri ekleme başarısız oldu</metadata-samples-add-failed>
-    <metadata-samples-add-success>Örnek metaveri ekleme başarılı oldu</metadata-samples-add-success>
+	<metadata-samples>Örnek metaveri</metadata-samples>
+	<metadata-samples-add>Örnek metaveri ekle</metadata-samples-add>
+	<metadata-samples-add-failed>Örnek metaveri ekleme başarısız oldu</metadata-samples-add-failed>
+	<metadata-samples-add-success>Örnek metaveri ekleme başarılı oldu</metadata-samples-add-success>
+	<metadata-template-add-success>Metadata template added.</metadata-template-add-success>
 	<metadata-template-order>Şablonları sırala</metadata-template-order>	
 	<metadata-template-order-desc>Şablonlarınızı sırala</metadata-template-order-desc>	
 	<metadata-template-add-default>Şablonlar ekle</metadata-template-add-default>	
 	<metadata-template-add-default-desc>Varsayılan şablonu ekle</metadata-template-add-default-desc>	
 	<metadata-template-select>Eklemek istediğiniz şablonları seçiniz</metadata-template-select>	
-    <metadata>Metaveri</metadata>
+
+	<metadata>Metaveri</metadata>
 	<metadataAdded>Metaveri şu ID numarası ile eklendi:</metadataAdded>
 	<metadataDeleted>Metaveri şu ID numarası ile silindi:</metadataDeleted>
 	<metadataInsertResults>Metaveri içeri alma işleminin sonuçları</metadataInsertResults>
 	<metadataJSForm>JS Formundan Metaveri </metadataJSForm>
+	<failOnError>Fail on error</failOnError>
+	<metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>
 	<metadataRecordsAdded>Eklenen toplam metavi kayıt sayısı:</metadataRecordsAdded>
 	<min>Minimum</min>
+	<minor>Minor edit</minor>
 	<missing>KAYIP veya BOŞ</missing>
 	<missingSeeTab>KAYIP - Yan çubuktaki aşağıdaki guruba bakınız: </missingSeeTab>
 	<more>daha fazla</more>
@@ -493,7 +694,6 @@
 	<noTemplatesAvailable>Şablon yok, öncelikle metaveri içeri almalısınız.</noTemplatesAvailable>
 	<notfound>Bulunamadı</notfound>
 	<nothing>İçeri alma sonucu eylem olmadı</nothing>
-	<notifications>Uyarılar</notifications>
 	<online>İnteraktif Harita</online>
 	<onlink>Çevrimiçi bağlantı</onlink>
 	<opensearch>GeoNetwork opensearch servisi metaveri kataloğunda arama yapmaya izin verir.</opensearch>
@@ -508,6 +708,7 @@
 	<owner>Sahibi</owner>
 	<ownerRights>Silme/Haklar/Kategoriler Açıldı: Mülkiyet hakkına sahipsiniz</ownerRights>
 	<page>Sayfa</page>
+
 	<paper>Kağıt kopya</paper>
 	<partial>Kısmi olarak üst üste biniyor</partial>
 	<partialCooordinate>Kısmi Koordinatlar</partialCooordinate>
@@ -518,6 +719,11 @@
 	<passwordOldRequired>Eski şifre alanı mecburidir</passwordOldRequired>
 	<passwordSpace>Şifrede boşluk harfine izin verilmez.</passwordSpace>
 	<persInfo>Kişisel bilgi</persInfo>
+	<usersAndGroups>Users and groups</usersAndGroups>
+	<classification>Thesauri and classification systems</classification>
+	<catalogueConfiguration>Catalogue settings</catalogueConfiguration>
+	<indexConfiguration>Index settings</indexConfiguration>
+	<io>Import, export &amp; harvesting</io>
 	<placeKeyword>Anahtar kelimeleri girin</placeKeyword>
 	<porCatInfoTab>Katalog</porCatInfoTab>
 	<poweredBy>Desteklenmektedir </poweredBy>
@@ -526,9 +732,10 @@
 	<profile>Profil</profile>
 	<profileChoice value="Administrator">Yönetici</profileChoice>
 	<profileChoice value="Editor">Editör</profileChoice>
-	<profileChoice value="RegisteredUse">Kayıtlı Kullanıcı</profileChoice>
+	<profileChoice value="RegisteredUser">Kayıtlı Kullanıcı</profileChoice>
 	<profileChoice value="Reviewer">İçerik Değerlendirici</profileChoice>
 	<profileChoice value="UserAdmin">Kullanıcı Yöneticisi</profileChoice>
+	<profileChoice value="Monitor">System Monitor</profileChoice>
 	<progress>Progress</progress>
 	<progressChoice value="complete">tamamlandı</progressChoice>
 	<progressChoice value="in-work">çalışma aşamasında</progressChoice>
@@ -540,29 +747,29 @@
 	<protocolChoice show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Servisi</protocolChoice>
 	<protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML servisi (ver 2.0)</protocolChoice>
 	<protocolChoice show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</protocolChoice>
-    <protocolChoice show="-" value="OGC:KML">OGC-KML Keyhole İşaretleme Dili</protocolChoice>
-    <protocolChoice show="-" value="OGC:GML">OGC-GML Geography İşaretleme Dili</protocolChoice>
-    <protocolChoice show="-" value="OGC:ODS">OGC-ODS OpenLS Dizin Servisi</protocolChoice>
-    <protocolChoice show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Servisi</protocolChoice>
-    <protocolChoice show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Servisi</protocolChoice>
-    <protocolChoice show="-" value="OGC:OPS">OGC-ODS OpenLS Sunum Servisi</protocolChoice>
-    <protocolChoice show="-" value="OGC:ORS">OGC-ODS OpenLS Yönlendirme Servisi</protocolChoice>
-    <protocolChoice show="-" value="OGC:SOS">OGC-SOS Sensor Gözlem Servisi</protocolChoice>
-    <protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planlama Servisi</protocolChoice>
-    <protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Uyarı Servisi</protocolChoice>
-    <protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Servisi</protocolChoice>
-    <protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Servisi (ver 1.1.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Servisi</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Servisi</protocolChoice>
-    <protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Servisi (ver 1.0.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazetteer Service</protocolChoice>
-    <protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Servisi</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities Servisi (ver 1.1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Servisi (ver 1.1.1)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Servisi (ver 1.3.0)</protocolChoice>
-    <protocolChoice show="-" value="OGC:WNS">OGC-WNS Web Notification Servisi</protocolChoice>
-    <protocolChoice show="-" value="OGC:WPS">OGC-WPS Web Processing Servisi</protocolChoice>
+	<protocolChoice show="-" value="OGC:KML">OGC-KML Keyhole İşaretleme Dili</protocolChoice>
+	<protocolChoice show="-" value="OGC:GML">OGC-GML Geography İşaretleme Dili</protocolChoice>
+	<protocolChoice show="-" value="OGC:ODS">OGC-ODS OpenLS Dizin Servisi</protocolChoice>
+	<protocolChoice show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Servisi</protocolChoice>
+	<protocolChoice show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Servisi</protocolChoice>
+	<protocolChoice show="-" value="OGC:OPS">OGC-ODS OpenLS Sunum Servisi</protocolChoice>
+	<protocolChoice show="-" value="OGC:ORS">OGC-ODS OpenLS Yönlendirme Servisi</protocolChoice>
+	<protocolChoice show="-" value="OGC:SOS">OGC-SOS Sensor Gözlem Servisi</protocolChoice>
+	<protocolChoice show="-" value="OGC:SPS">OGC-SPS Sensor Planlama Servisi</protocolChoice>
+	<protocolChoice show="-" value="OGC:SAS">OGC-SAS Sensor Uyarı Servisi</protocolChoice>
+	<protocolChoice show="-" value="OGC:WCS">OGC-WCS Web Coverage Servisi</protocolChoice>
+	<protocolChoice show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Servisi (ver 1.1.0)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Servisi</protocolChoice>
+	<protocolChoice show="-" value="OGC:WFS">OGC-WFS Web Feature Servisi</protocolChoice>
+	<protocolChoice show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Servisi (ver 1.0.0)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WFS-G">OGC-WFS-G Gazetteer Service</protocolChoice>
+	<protocolChoice show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS">OGC-WMS Web Map Servisi</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities Servisi (ver 1.1.1)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Servisi (ver 1.1.1)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Servisi (ver 1.3.0)</protocolChoice>
+	<protocolChoice show="-" value="OGC:WNS">OGC-WNS Web Notification Servisi</protocolChoice>
+	<protocolChoice show="-" value="OGC:WPS">OGC-WPS Web Processing Servisi</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">File for download through FTP</protocolChoice>
 	<protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">File for download</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
@@ -571,7 +778,7 @@
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--related">Related link (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</protocolChoice>
 	<protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Showcase product (URL)</protocolChoice>
-    <protocolChoice show="-" value="UKST">Bilinmeyen Servis Türü</protocolChoice>
+	<protocolChoice show="-" value="UKST">Bilinmeyen Servis Türü</protocolChoice>
 	<pubdate>Yayınlanma Tarihi</pubdate>
 	<publicationDate>Yayınlanma Tarihi</publicationDate>
 	<publisher>Yayıncı</publisher>
@@ -590,7 +797,6 @@
 	<registrationDetails>Girilen anahtar kayıt detayları </registrationDetails>
 	<remote>Uzakten Arama</remote>
 	<remoteType>Uzaktan</remoteType>
-	<remoteUpdates>Uzaktan Güncellemeler</remoteUpdates>
 	<remove>kaldır</remove>
 	<res>sonuçlar</res>
 	<reset>Sıfırla</reset>
@@ -600,6 +806,9 @@
 	<ress>sonuç</ress>
 	<restrictTo>e kısıtla</restrictTo>
 	<result>Son Sonuçlar</result>
+	<searchResult>Search results</searchResult>
+	<resources>Resources</resources>
+	<visualizationService>Visualization service URL (WMS)</visualizationService>
 	<resultsCoordinate>Koordinat arama ile eşleşen sonuçlar</resultsCoordinate>
 	<resultsFreeText>Serbest aranan kelime ile eşleşen sonuçlar</resultsFreeText>
 	<resultsMatching>Arama kriteri ile eşleşen küme(aggregate)sonuçlar :</resultsMatching>
@@ -644,12 +853,14 @@
 	<site>Site</site>
 	<siteId>Site ID</siteId>
 	<sizeBytes>Boyut (bytes)</sizeBytes>
+
 	<sortBy>Sıralama sırası</sortBy>
 	<sortByType id="changeDate">Değişiklik Tarihi</sortByType>
 	<sortByType id="popularity">Popularite</sortByType>
 	<sortByType id="rating">Puanlama</sortByType>
 	<sortByType id="relevance">İlinti</sortByType>
 	<sortByType id="title">Başlık</sortByType>
+
 	<southbc>Güney Sınırlama Koordinatı</southbc>
 	<spacesNot js="true">Bu alanda boşluk karakterine izin verilmez</spacesNot>
 	<spatial2Tab>Mekansal Repr.</spatial2Tab>
@@ -664,10 +875,13 @@
 	<surName>Soyadı</surName>
 	<systemConfig>Sistem konfigurasyonu</systemConfig>
 	<systemConfigDes>Bazı sistem parametrelerini değiştirmeye izin verir</systemConfigDes>
+	<systemInfo>System information</systemInfo>
+	<systemInfoDes>Shows advanced information about catalogue, index, Java, operating system</systemInfoDes>
 	<template>Şablon</template>
 	<Term>Terim</Term>
 	<thanks>Çabanız için teşekkür ederiz. The GeoNetwork</thanks>
 	<theme>ISO başlık kategorisi</theme>
+
 	<thumbnails>Pul Resimler</thumbnails>
 	<timeout>Zaman Aşımı</timeout>
 	<timeoutChoice value="10">10 saniye sonra</timeoutChoice>
@@ -678,6 +892,7 @@
 	<toDateSelector>Tarih seçiniz (to date)</toDateSelector>
 	<tools>Araçlar</tools>
 	<topic>Konu</topic>
+
 	<transferOwnership>Aktarım mülkiyeti</transferOwnership>
 	<transferOwnershipDes>Metaveri mülkiyetini başka kullanıcıua aktar</transferOwnershipDes>
 	<type>Tür</type>
@@ -703,6 +918,7 @@
 	<userPwDes>Mevcut kullanıcının şifre değiştirmesine izin ver</userPwDes>
 	<uuidAction>İçeri alma işlemleri:</uuidAction>
 	<validate>Doğrulama</validate>
+	<assign>Assign to current catalog</assign>
 	<validityBegins>Doğrulama başlar</validityBegins>
 	<validityEnds>ve sona erer</validityEnds>
 	<view>Görüntüle</view>
@@ -712,8 +928,7 @@
 	<what>Ne?</what>
 	<when>Ne Zaman</when>
 	<where>Neresi?</where>
-	<winInfo1>
-	Bu pencere GeoNetwork kaynaklarını gösterir. Bu pencere internet tarayıcısının pencere idare yönetimine bağlı olarak zaman zaman gizlenebilir. Bu durumda gerekli olduğunda pencereyi kendiniz ön plana getirmelisiniz.</winInfo1>
+	<winInfo1>Bu pencere GeoNetwork kaynaklarını gösterir. Bu pencere internet tarayıcısının pencere idare yönetimine bağlı olarak zaman zaman gizlenebilir. Bu durumda gerekli olduğunda pencereyi kendiniz ön plana getirmelisiniz.</winInfo1>
 	<winInfo2>Yardım (?) simgesi size açıklamalara erişim sağlayacaktır. Bu simgeyi aktive ettiğinizde çıktısı bu pencerede gösterilecektir</winInfo2>
 	<wwwlink>Web bağlantısı</wwwlink>
 	<xmlInsert>Metaveri kaydını XML veya MEF formatında içeri al</xmlInsert>
@@ -887,7 +1102,7 @@
 	<xsdError>XSD Doğrulama Hatası</xsdError>
 	<yourRegistration js="true">Sizin Kaydınız...</yourRegistration>
 	<zip>Zip</zip>
-    	<header_meta>
+	<header_meta>
 		<meta name="keywords" content="GeoNetwork açık kaynak kodu metaveri ISO19115 ISO19139 ISO GIS uzaktan anlama veri shape dosyaları mekansal veri uydu görüntüler harita haritaları etkileşimli opengis makansal CSW referansı uygulama eşleştirme 19115 19139 coğrafi z39.50 katalog veri temizleme kapsamlar grid görüntü veri açık kaynak ağ"/>
 		<meta name="description" content="GeoNetwork açık kaynağı etkileşimli haritalara, uydu resimlerine ve ilgiki mekansal veritabanlarına İnternet erişimi sağlar. Amacı mekansal veri ve bilgiye olan erişim ve entegre kullanımı geliştirmektir. GeoNetwork açık kaynağı mekansal verileri farklı kullanıcılar arasında kolaylıkla paylaşmayı sağlar."/>
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
@@ -986,7 +1201,8 @@
 		<thesaurus>Eşanlamlılar Sözlüğünden anahtar kelimeler seçiniz</thesaurus>
 	</searchhelp>
 
-    <inspire>
+	<inspire>
+
         <what>
             <l1>INSPIRE arama seçenekleri</l1>
             <l2>INSPIRE metaveri</l2>
@@ -1045,34 +1261,38 @@
             <l21>Mineral kaynakları</l21>
         </annex3>
     </inspire>
-    
-    <selectMetadataFileAlert>Eklemek için bir metaveri seçmelisiniz</selectMetadataFileAlert>        
-    <showMoreSearchFields>Daha fazla arama alanı Göster/Gizle</showMoreSearchFields>
-    <searchEitherOfTheWords>Kelimelerden herhangi birisi</searchEitherOfTheWords>
-    <searchExactPhrase>Kesin İfade</searchExactPhrase>
-    <searchAllWords>Kelimelerin hepsi</searchAllWords>
-    <searchWithoutWords>Kelimeler olmadan</searchWithoutWords>
-    
-    <showMap>Haritayı Göster</showMap>
-    <mapViewer>Harita Göstergeci</mapViewer>
 
-    <uuid>Özgün Tanımlayıcı</uuid>
-    <mymetadata>Benim Metaverim</mymetadata>
-    <addremove>Ekle/Çıkart</addremove>
-    <enabled>Etkin yapılmış</enabled>
-    <notifications>Uzak hedeflere bildirim</notifications>
-    <url>URL</url>
-    
-    <cswServer>CSW sunucusu</cswServer>
-    <cswServerDes>CSW sunucusu konfigürasyonu</cswServerDes>
-    <cswServerConfig>CSW sunucusu konfigürasyonu</cswServerConfig>
-    <cswServerEnable>Etkinleştir</cswServerEnable>
-    <cswServerMetadataPublic>Eklenen metaveri geneldri (İşlem)</cswServerMetadataPublic>
-    <cswServerTitle>Başlık</cswServerTitle>
-    <cswServerAbstract>Özet</cswServerAbstract>
-    <cswServerFees>Ücretler</cswServerFees>
-    <cswServerAccessConstraints>Kısıtlar Erişimi</cswServerAccessConstraints>
-    <cswServerContact>İletişim</cswServerContact>
+	<selectMetadataFileAlert>Eklemek için bir metaveri seçmelisiniz</selectMetadataFileAlert>        
+	<showMoreSearchFields>Daha fazla arama alanı Göster/Gizle</showMoreSearchFields>
+	<searchEitherOfTheWords>Kelimelerden herhangi birisi</searchEitherOfTheWords>
+	<searchExactPhrase>Kesin İfade</searchExactPhrase>
+	<searchAllWords>Kelimelerin hepsi</searchAllWords>
+	<searchWithoutWords>Kelimeler olmadan</searchWithoutWords>
+
+	<showMap>Haritayı Göster</showMap>
+	<mapViewer>Harita Göstergeci</mapViewer>
+
+	<uuid>Özgün Tanımlayıcı</uuid>
+	<quickSearch>Quick search links</quickSearch>
+	<mymetadata>Benim Metaverim</mymetadata>
+	<catalogueRecords>Catalogue metadata</catalogueRecords>
+	<harvestedRecords>Harvested metadata</harvestedRecords>
+	<catalogueTemplates>Catalogue templates</catalogueTemplates>
+	<addremove>Ekle/Çıkart</addremove>
+	<enabled>Etkin yapılmış</enabled>
+	<notifications>Uzak hedeflere bildirim</notifications>    
+
+	<cswServer>CSW sunucusu</cswServer>
+	<cswServerDes>CSW sunucusu konfigürasyonu</cswServerDes>
+	<cswServerConfig>CSW sunucusu konfigürasyonu</cswServerConfig>
+	<cswServerEnable>Etkinleştir</cswServerEnable>
+	<cswServerMetadataPublic>Eklenen metaveri geneldri (İşlem)</cswServerMetadataPublic>
+	<cswServerTitle>Başlık</cswServerTitle>
+	<cswServerAbstract>Özet</cswServerAbstract>
+	<cswServerFees>Ücretler</cswServerFees>
+	<cswServerAccessConstraints>Kısıtlar Erişimi</cswServerAccessConstraints>
+	<cswServerContact>İletişim</cswServerContact>
+
 	<virtualcswServer>Configure virtual CSW access point</virtualcswServer>
 	<virtualcswServerDes>Configuration of virtual CSW servers</virtualcswServerDes>
 	<virtualcswServerConfig>Configuration of virtual CSW servers</virtualcswServerConfig>
@@ -1100,15 +1320,27 @@
 	<virtualcswGroup>Group</virtualcswGroup>
 	<virtualcswCategory>Category</virtualcswCategory>
 	<virtualcswType>Resource type</virtualcswType>
-    <customize-elementset>Eleman Setini özelleştir</customize-elementset>
-    <csw-server-disabled>CSW sunucusu hizmet dışı.</csw-server-disabled>
-    <custom-elementset-intro>Kendi özelleştirilmiş eleman verisinde bulunacak elemanları burada tanımlayın. Her eleman tam doküman kökünden tam XPATH ile teşhis edilebilmelidir.
+
+	<customize-elementset>Eleman Setini özelleştir</customize-elementset>
+	<csw-server-disabled>CSW sunucusu hizmet dışı.</csw-server-disabled>
+	<custom-elementset-intro>Kendi özelleştirilmiş eleman verisinde bulunacak elemanları burada tanımlayın. Her eleman tam doküman kökünden tam XPATH ile teşhis edilebilmelidir.
 	Bu elemanlar ve torunları ElementSetName=FULL ile gelen CSW GetRecord cevaplarında dahil edilecektir.</custom-elementset-intro>
-    <custom-elementset-revert>Varsayılan ElementSetName=FULL cevaplarına geri dönebilmek için, bu listeden bütün elemanları siliniz.</custom-elementset-revert>
-    <custom-elementset-add>Eleman Ekle</custom-elementset-add>
-  	<concealed>Concealed</concealed>
+	<custom-elementset-revert>Varsayılan ElementSetName=FULL cevaplarına geri dönebilmek için, bu listeden bütün elemanları siliniz.</custom-elementset-revert>
+	<custom-elementset-add>Eleman Ekle</custom-elementset-add>
 
-
+	<wmslayers>WMS layers</wmslayers>
+	<formatter.admin>Metadata Formatter Admin</formatter.admin>
+	<formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
+	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+	
+	<advancedOptions.show>show advanced options</advancedOptions.show>
+	<advancedOptions.hide>hide advanced options</advancedOptions.hide>
+	<latestDatasets>Latest</latestDatasets>
+	<popularDatasets>Popular</popularDatasets>
+	<filter>Filter</filter>
+	<welcome.text>Welcome to GeoNetwork</welcome.text>
+	<tag_label>Tags</tag_label>
+	<map_label>Map</map_label>
 </strings>

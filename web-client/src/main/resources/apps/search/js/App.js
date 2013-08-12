@@ -218,6 +218,7 @@ GeoNetwork.app = function () {
             valueField: 'value',
             displayField: 'value',
             valueDelimiter: ' or ',
+            listWidth: 'width:auto',
 //            tpl: tpl,
             fieldLabel: OpenLayers.i18n('org')
         });
@@ -475,6 +476,7 @@ GeoNetwork.app = function () {
     function createMainTagCloud() {
         var tagCloudView = new GeoNetwork.TagCloudView({
             catalogue: catalogue,
+            root: GeoNetwork.Settings.tagCloud.root,
             query: 'fast=true&summaryOnly=true',
             renderTo: 'tag',
             onSuccess: 'app.loadResults'
@@ -554,22 +556,6 @@ GeoNetwork.app = function () {
             }
         });
     }
-    
-    /**
-     * Main tagcloud displayed in the information panel
-     *
-     * @return
-     */
-    function createMainTagCloud(){
-        var tagCloudView = new GeoNetwork.TagCloudView({
-            catalogue: catalogue,
-            query: 'fast=true&summaryOnly=true',
-            renderTo: 'tag',
-            onSuccess: 'app.loadResults'
-        });
-        
-        return tagCloudView;
-    }
     /**
      * Create latest metadata panel.
      */
@@ -644,12 +630,16 @@ GeoNetwork.app = function () {
             }
         });
     }
-    function edit(metadataId, create, group, child){
+    function edit(metadataId, create, group, child, isTemplate, schema){
+        var record = catalogue.metadataStore.getAt(catalogue.metadataStore.find('id', metadataId));
         
         if (!this.editorWindow) {
             this.editorPanel = new GeoNetwork.editor.EditorPanel({
+                defaultEditMode : GeoNetwork.Settings.editor.defaultViewMode,
                 defaultViewMode: GeoNetwork.Settings.editor.defaultViewMode,
+                editMode : GeoNetwork.Settings.editor.editMode,
                 catalogue: catalogue,
+                selectionPanelImgPath: '../../apps/js/ext-ux/images',
                 xlinkOptions: {CONTACT: true}
             });
             
@@ -687,7 +677,8 @@ GeoNetwork.app = function () {
         
         if (metadataId) {
             this.editorWindow.show();
-            this.editorPanel.init(metadataId, create, group, child);
+            var recordSchema = record && record.get('schema');
+            this.editorPanel.init(metadataId, create, group, child, isTemplate, true, recordSchema || schema);
         }
     }
     
@@ -864,7 +855,7 @@ GeoNetwork.app = function () {
                 Ext.getCmp('geometryMap').map.zoomToExtent(urlParameters.bounds);
             }
             
-            var events = ['afterDelete', 'afterRating', 'afterLogout', 'afterLogin'];
+            var events = ['afterDelete', 'afterRating', 'afterStatus', 'afterLogout', 'afterLogin'];
             Ext.each(events, function (e) {
                 catalogue.on(e, function () {
                     if (searching === true) {

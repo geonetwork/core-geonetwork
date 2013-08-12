@@ -163,6 +163,7 @@ public final class Geonet {
 		public static final String SEARCH_REQUEST_ID 		= "search_request_id";		
 		public static final String METADATA_SHOW			= "metadata.show";
 		public static final String METADATA_EDITING		= "metadata.editing";
+        public static final String METADATA_EDITING_TAB   = "metadata.editing.tab";
 		public static final String METADATA_POSITION  = "metadata.position";
 		public static final String SEARCH_KEYWORDS_RESULT	= "search.keywords.result";
 		public static final String SELECTED_RESULT          = "selected.result";
@@ -559,6 +560,7 @@ public final class Geonet {
 	public static final String EDITOR				= GEONETWORK + ".editor";
 	public static final String EDITORADDELEMENT = GEONETWORK + ".editoraddelement";
 	public static final String EDITOREXPANDELEMENT = GEONETWORK + ".editorexpandelement";
+	public static final String EDITORFILLELEMENT = GEONETWORK + ".editorfillelement";
 	public static final String SPATIAL      = GEONETWORK + ".spatial";
 	public static final String REGION      = GEONETWORK + ".region";
     public static final String CSW_SEARCH   = CSW + ".search";

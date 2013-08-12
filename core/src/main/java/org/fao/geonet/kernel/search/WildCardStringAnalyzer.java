@@ -31,7 +31,9 @@ public class WildCardStringAnalyzer {
                     qPreserved.append('?').append(analyzedPart);
                 }
                 // remove leading ?
-                qPreserved.deleteCharAt(0);
+                if (qPreserved.length() > 0){
+                    qPreserved.deleteCharAt(0);
+                }
                 starsPreserved.append('*').append(qPreserved);
             }
             // no ? present

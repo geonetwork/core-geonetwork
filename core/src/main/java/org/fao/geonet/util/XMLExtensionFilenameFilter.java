@@ -45,10 +45,9 @@ public class XMLExtensionFilenameFilter implements FilenameFilter {
 	
 	public boolean accept(File dir, String name) {
 		if(acceptDirectories) {
-			System.out.println("checking: " + dir + File.separator + name);
 			File f = new File(dir + File.separator + name);
-			return f.isDirectory() || name.endsWith(".xml");
+			return f.isDirectory() || name.toLowerCase().endsWith(".xml");
 		}
-		return name.endsWith(".xml");	
+		return name.toLowerCase().endsWith(".xml");	
 	}
 }

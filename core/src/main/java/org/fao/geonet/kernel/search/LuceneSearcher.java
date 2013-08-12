@@ -193,28 +193,37 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 		performQuery(getFrom()-1, getTo(), buildSummary);
 		updateSearchRange(request);
 		
-		SettingInfo si = new SettingInfo(srvContext);
-		if (si.isSearchStatsEnabled()) {
-			if (_sm.getLogAsynch()) {
-				// Run asynch
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in asynch mode - start.");
-				GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-				gc.getThreadPool().runTask(new SearchLoggerTask(srvContext, _sm.getLogSpatialObject(), _sm.getLuceneTermsToExclude(), _query, _numHits, _sort, _geomWKT, config.getValue(Jeeves.Text.GUI_SERVICE,"n")));
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in asynch mode - end.");
-			} else {
-				// Run synch - alter search performance
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in synch mode - start.");
-				SearcherLogger searchLogger = new SearcherLogger(srvContext, _sm.getLogSpatialObject(), _sm.getLuceneTermsToExclude());
-				searchLogger.logSearch(_query, _numHits, _sort, _geomWKT, config.getValue(Jeeves.Text.GUI_SERVICE,"n"));
-                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in synch mode - end.");
-			}
-		}
+		
+		logSearch(srvContext, config, _query, _numHits, _sort, _geomWKT, _sm);
 	}
 
+    public static void logSearch(ServiceContext srvContext, ServiceConfig config, Query query, int numHits, Sort sort, String geomWKT,
+            SearchManager sm) {
+        SettingInfo si = new SettingInfo(srvContext);
+        if (si.isSearchStatsEnabled()) {
+            if (sm.getLogAsynch()) {
+                // Run asynch
+                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in asynch mode - start.");
+                GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+                gc.getThreadPool().runTask(new SearchLoggerTask(srvContext, sm.getLogSpatialObject(), 
+                        sm.getLuceneTermsToExclude(), query, numHits, sort, geomWKT, 
+                        config.getValue(Jeeves.Text.GUI_SERVICE,"n")));
+                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in asynch mode - end.");
+            } else {
+                // Run synch - alter search performance
+                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in synch mode - start.");
+                SearcherLogger searchLogger = new SearcherLogger(srvContext, sm.getLogSpatialObject(), 
+                        sm.getLuceneTermsToExclude());
+                searchLogger.logSearch(query, numHits, sort, geomWKT, 
+                        config.getValue(Jeeves.Text.GUI_SERVICE,"n"));
+                if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                    Log.debug(Geonet.SEARCH_ENGINE,"Log search in synch mode - end.");
+            }
+        }
+    }
     /**
      * TODO javadoc.
      *
@@ -1200,7 +1209,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 String facetName = config.getPlural();
 
 
-                Translator translator;
+                final Translator translator;
                 if (ServiceContext.get() != null) {
                     try {
                         ServiceContext context = ServiceContext.get();
@@ -1240,12 +1249,30 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                     // made by count descending order
                     if (Facet.SortBy.COUNT != config.getSortBy()) {
                         Comparator<Entry<String, Double>> c = null;
-                        if (Facet.SortBy.NUMVALUE == config.getSortBy()) {
+                        if (Facet.SortBy.LABEL == config.getSortBy()) {
+                            c = new Comparator<Entry<String, Double>>() {
+
+                                @Override
+                                public int compare(Entry<String, Double> o1, Entry<String, Double> o2) {
+                                    String label1 = null;
+                                    String label2 = null;
+                                    if (translator != null) {
+                                        label1 = translator.translate(o1.getKey());
+                                        label2 = translator.translate(o2.getKey());
+                                    }
+                                    if (label1 == null) {
+                                        label1 = o1.getKey();
+                                    }
+                                    if (label2 == null) {
+                                        label2 = o2.getKey();
+                                    }
+                                    return label1.compareTo(label2);
+                                }
+                            };
+                        } else if (Facet.SortBy.NUMVALUE == config.getSortBy()) {
                             // Create a numeric comparator
                             c = new Comparator<Entry<String, Double>>() {
-                                public int compare(
-                                        final Entry<String, Double> e1,
-                                        final Entry<String, Double> e2) {
+                                public int compare(final Entry<String, Double> e1, final Entry<String, Double> e2) {
                                     try {
                                         Double d1 = Double.valueOf(e1.getKey());
                                         Double d2 = Double.valueOf(e2.getKey());
@@ -1253,23 +1280,16 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                                         return d1.compareTo(d2);
                                     } catch (NumberFormatException e) {
                                         // String comparison
-                                        Log.warning(
-                                                Geonet.FACET_ENGINE,
-                                                "Failed to compare numeric values ("
-                                                        + e1.getKey()
-                                                        + " / "
-                                                        + e2.getKey()
+                                        Log.warning(Geonet.FACET_ENGINE,
+                                                "Failed to compare numeric values (" + e1.getKey() + " / " + e2.getKey()
                                                         + ") for facet. Check sortBy option in summary configuration.");
-                                        return e1.getKey().compareTo(
-                                                e2.getKey());
+                                        return e1.getKey().compareTo(e2.getKey());
                                     }
                                 }
                             };
                         } else {
                             c = new Comparator<Entry<String, Double>>() {
-                                public int compare(
-                                        final Entry<String, Double> e1,
-                                        final Entry<String, Double> e2) {
+                                public int compare(final Entry<String, Double> e1, final Entry<String, Double> e2) {
                                     return e1.getKey().compareTo(e2.getKey());
                                 }
                             };

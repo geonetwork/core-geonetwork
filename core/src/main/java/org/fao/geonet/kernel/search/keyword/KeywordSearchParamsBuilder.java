@@ -12,6 +12,8 @@ import jeeves.utils.Util;
 
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.rdf.QueryBuilder;
+import org.fao.geonet.kernel.rdf.Selector;
+import org.fao.geonet.kernel.rdf.Selectors;
 import org.fao.geonet.kernel.rdf.Where;
 import org.fao.geonet.kernel.rdf.Wheres;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -30,6 +32,7 @@ public class KeywordSearchParamsBuilder {
     private int offset = -1;
     private int maxResults = -1;
     private LinkedList<SearchClause> searchClauses = new LinkedList<SearchClause>();
+    private LinkedList<Selector> selectClauses = new LinkedList<Selector>();
     private boolean lenient;
     private boolean requireBoundedBy = false;
     
@@ -208,9 +211,16 @@ public class KeywordSearchParamsBuilder {
                 where = where.or(nextClause.toWhere(langs));
             }
         }
+        
         QueryBuilder<KeywordBean> builder = QueryBuilder.keywordQueryBuilder(isoLangMapper, new ArrayList<String>(langs), requireBoundedBy)
                 .offset(offset)
                 .where(where);
+        
+        if(!selectClauses.isEmpty()) {
+            for (Selector s : selectClauses) {
+                builder.select(s, false);
+            }
+        }
         
         return builder;
     }
@@ -293,6 +303,7 @@ public class KeywordSearchParamsBuilder {
         return this;
     }
     public void relationship(String relatedId, KeywordRelation relation, KeywordSearchType searchType, boolean ignoreCase) {
+        this.selectClauses.add(Selectors.BROADER);
         this.searchClauses.add(new RelationShipClause(relation, relatedId, searchType, ignoreCase));
         
     }

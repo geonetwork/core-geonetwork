@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <ara>عربي</ara> <!-- Do not translate! -->
-    <cat>Català</cat> <!-- Do not translate! -->
-    <chi>中文</chi> <!-- Do not translate! -->
-    <dut>Nederlands</dut> <!-- Do not translate -->
-    <eng>English</eng> <!-- Do not translate! -->
-    <fin>Suomeksi</fin>  <!-- Do not translate! -->
-    <fre>Français</fre> <!-- Do not translate! -->
-    <ger>Deutsch</ger> <!-- Do not translate! -->
-    <ita>Italiano</ita> <!-- Do not translate! -->
-    <nor>Norsk</nor>  <!-- Do not translate! -->
-    <por>Рortuguês</por> <!-- Do not translate! -->
-    <rus>Русский</rus> <!-- Do not translate! -->
-    <spa>Español</spa> <!-- Do not translate! -->
-    <tur>Türkçe</tur> <!-- Do not translate! -->
-    <pol>Polski</pol> <!-- Do not translate! -->
-    
+	<recurse>Also search in subfolders</recurse>
+	<ara>عربي</ara> <!-- Do not translate! -->
+	<cat>Català</cat> <!-- Do not translate! -->
+	<chi>中文</chi> <!-- Do not translate! -->
+	<dut>Nederlands</dut> <!-- Do not translate! -->
+	<eng>English</eng> <!-- Do not translate! -->
+	<fin>Suomeksi</fin> <!-- Do not translate! -->
+	<fre>Français</fre> <!-- Do not translate! -->
+	<ger>Deutsch</ger> <!-- Do not translate! -->
+	<ita>Italiano</ita> <!-- Do not translate! -->
+	<nor>Norsk</nor> <!-- Do not translate! -->
+	<por>Рortuguês</por> <!-- Do not translate! -->
+	<rus>Русский</rus> <!-- Do not translate! -->
+	<spa>Español</spa> <!-- Do not translate! -->
+	<tur>Türkçe</tur> <!-- Do not translate! -->
+	<pol>Polski</pol> <!-- Do not translate! -->
+
+	<statusTitle> / Metadata Workflow</statusTitle>
+	<statusUserEdit>GeoNetwork user %s (%s) edited metadata record #%s</statusUserEdit>
+	<statusInform>%s / Metadata Workflow / Metadata record(s) %s by %s (%s) (%s)</statusInform>
+	<!--
+        legacy UI 
+        <statusSendEmail>Change log message: %s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
+        -->
+	<statusSendEmail>Change log message: %s\r\n\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
+	
 	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>
 	<isAdmin>Is administrator ?</isAdmin>
-    <anyLanguage>mikä tahansa kieli</anyLanguage>
+	<anyLanguage>mikä tahansa kieli</anyLanguage>
 	<nodata>Null</nodata>
 	<extractRegisterItems>Extract Register Items</extractRegisterItems>
 	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
@@ -30,16 +40,29 @@
 	<xsltToExtractTitle>XSLT to extract title from subtemplate</xsltToExtractTitle>
 	<xpathToExtractTitle>XPath to extract title from subtemplate</xpathToExtractTitle>
 	<categoryForSubtemplate>Category for subtemplates</categoryForSubtemplate>
-  <subtemplate.admin>Hallitse hakemistot</subtemplate.admin>
-  <subtemplate.admin.desc>Lisää / muokata / poistaa hakemistoja (esim. yhteystiedot hakemistot)</subtemplate.admin.desc>  
-		<surnameMandatory>Sukunimi / sukunimi on pakollista</surnameMandatory>
+	<makeChanges>I really want to do this!</makeChanges>
+	<dontMakeChanges>By default, this operation will not make any changes to the database ie. it runs in test mode. Checking this box switches test mode off and changes will be made to the database.</dontMakeChanges>
+
+	<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
+	<createThesaurus>Create/Update Thesaurus</createThesaurus>
+	<thesaurusType>Thesaurus Type</thesaurusType>
+	<changeLogMessage>Change Log Message</changeLogMessage>
+	<status>Status</status>
+	<updateStatus>Update status</updateStatus>
+	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
+	<startVersion>Start Versioning</startVersion>
+	<batchStartVersionTitle>Batch Start Versioning</batchStartVersionTitle>
+	<editAttributes>Add more details</editAttributes>
+	<subtemplate.admin>Hallitse hakemistot</subtemplate.admin>
+	<subtemplate.admin.desc>Lisää / muokata / poistaa hakemistoja (esim. yhteystiedot hakemistot)</subtemplate.admin.desc>  
+	<surnameMandatory>Sukunimi / sukunimi on pakollista</surnameMandatory>
 	<firstnameMandatory>Etunimi on pakollinen</firstnameMandatory>
 	<emailMandatory>sähköpostiosoite on pakollinen</emailMandatory>		
 	<forgottenPassword>Unohtuiko salasana?</forgottenPassword>	
-  <selectTemplate>Select schemas</selectTemplate>
-  	<notificationsDes>Remote updates</notificationsDes>
-	<makeChanges>I really want to do this!</makeChanges>
-	<dontMakeChanges>By default, this operation will not make any changes to the database ie. it runs in test mode. Checking this box switches test mode off and changes will be made to the database.</dontMakeChanges>
+	<selectTemplate>Select schemas</selectTemplate>
+	<useStopwords>The Lucene indeksointi käyttää pysäytyssanoja näille kielille:</useStopwords>    
+	<rebuildIndexMessage>Jos muutat arvoja, on suositeltava tehdä Lucene-indeksointi uudelleen.</rebuildIndexMessage>
+	<notificationsDes>Remote updates</notificationsDes>
 	<metadata-templates-samples-add>Add templates and samples</metadata-templates-samples-add>
 	<metadata-schema-select>Select a schema to add templates or sample data from</metadata-schema-select>
 	<templatesSamples>Manage templates and sample data</templatesSamples>
@@ -47,8 +70,8 @@
 	<advancedSearch>Advanced Search</advancedSearch>
 	<remoteSearch>Remote Search</remoteSearch>
 	<displayRemoteHtml>Display results using HTML from server?</displayRemoteHtml>
-  <noSearchCriteria js="true">Please enter or select some search criteria</noSearchCriteria>
-  <noServer js="true">Please select a server to search</noServer>
+	<noSearchCriteria js="true">Please enter or select some search criteria</noSearchCriteria>
+	<noServer js="true">Please select a server to search</noServer>
 	<anyWith>Any - with one of these words</anyWith>
 	<anyWithExactPhrase>Any - with this exact phrase</anyWithExactPhrase>
 	<anyWithAllWords>Any - with all of these words</anyWithAllWords>
@@ -61,96 +84,128 @@
 	<schemaFileName>Path to Schema Zip Archive</schemaFileName>
 	<schemaUrl>URL of Schema Zip Archive</schemaUrl>
 	<schemaUuid>UUID of local metadata record with GeoNetwork Metadata Schema Archive (URL) as online resource</schemaUuid>
-		<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
-		<createThesaurus>Create/Update Thesaurus</createThesaurus>
-		<thesaurusType>Thesaurus Type</thesaurusType>
-    <stat.byDay>by Day</stat.byDay>
-    <stat.byMonth>by Month</stat.byMonth>
-    <stat.byWeek>by Week</stat.byWeek>
-    <stat.byYear>by Year</stat.byYear>
-    <stat.collapse>Collapse</stat.collapse>
-    <stat.numAutoGeneratedSearches>Number of auto-generated (guiservice) searches</stat.numAutoGeneratedSearches>
-    <stat.date>Date</stat.date>
-    <stat.day>Day</stat.day>
-    <stat.hits>Hits</stat.hits>
-    <stat.ip>IP</stat.ip>
-    <stat.noValue>no value</stat.noValue>
-    <stat.language>Language</stat.language>
-    <stat.month>Month</stat.month>
-    <stat.numberOfSearch>Number of search</stat.numberOfSearch>
-    <stat.requestDate>Date of request</stat.requestDate>
-    <stat.spatialFilter>Spatial filter</stat.spatialFilter>
-    <stat.totalsearches>Total user searches</stat.totalsearches>
-    <stat.year>Year</stat.year>
-    <stat.mdSheet>Metadata sheet</stat.mdSheet>
-    <stat.noTitle>no title</stat.noTitle>
-    <stat.csvExport>CSV export</stat.csvExport>
-    <stat.tabularStats>Tabular statistics</stat.tabularStats>
-    <stat.tip1begin>Click on a link below to display live statistics, click the little arrow </stat.tip1begin>
-    <stat.tip1end>to hide it</stat.tip1end>
-    <stat.lastMonthStats>Last Month statistics</stat.lastMonthStats>
-    <stat.userIpText>User IP during search (number of search per unique IP)</stat.userIpText>
-    <stat.mostSearchedKeywords>Most searched Keywords</stat.mostSearchedKeywords>
-    <stat.mostSearchedCategories>Most searched Categories</stat.mostSearchedCategories>
-    <stat.simpleVsAdvanced>Simple vs advanced search</stat.simpleVsAdvanced>
-    <stat.mdPopularity>Metadata popularity</stat.mdPopularity>
-    <stat.graphicalStats>Graphical statistics</stat.graphicalStats>
-    <stat.tip2>Choose a date unit (year, month, day) and a date range and click ok to display a graphic</stat.tip2>
-    <stat.numberOfRequests>Number of requests</stat.numberOfRequests>
-    <stat.chooseDateFrom>Choose a date from</stat.chooseDateFrom>
-    <stat.dateFrom>Date from</stat.dateFrom>
-    <stat.dateTo>Date to</stat.dateTo>
-    <stat.md>Metadata</stat.md>
-    <stat.popularity>Popularity</stat.popularity>
-    <stat.totalSearches>Total user searches</stat.totalSearches>
-    <stat.numSearchesPerDay>Number of user searches per day</stat.numSearchesPerDay>
-    <stat.numSearchesNoResult>Number of user searches with no results</stat.numSearchesNoResult>
-    <stat.simpleAdvancedSearch>Simple / advanced search</stat.simpleAdvancedSearch>
-    <stat.searchedTerm>Searched term</stat.searchedTerm>
-    <stat.count>Count</stat.count>
-    <stat.numSimpleSearch>Number of simple searches</stat.numSimpleSearch>
-    <stat.numAdvancedSearch>Number of advanced searches</stat.numAdvancedSearch>
-    <stat.></stat.>
-    <stat.exportRequests>Export Requests table (one entry per user request)</stat.exportRequests>
-    <stat.exportParams>Export Parameters table (request keywords, several entries per user request)</stat.exportParams>
-    <stat.csvSemiColumnDelimiter>Semicolon separator</stat.csvSemiColumnDelimiter>
-    <stat.rightClickSaveAs>Right-click on the link to save the CSV file</stat.rightClickSaveAs>
-    <stat.searchedKeywords>Searched Keywords</stat.searchedKeywords>
-    <stat.popuByGroup>Metadata popularity by group</stat.popuByGroup>
-    <stat.popuByCatalog>Metadata popularity by catalog (node id)</stat.popuByCatalog>
-    <stat.popularityByCategory>Metadata popularity by category</stat.popularityByCategory>
-    <stat.mdType>Type of metadata searched for</stat.mdType>
-    <stat.dsMsType>Dataset metadata</stat.dsMsType>
-    <stat.serviceMdType>Service metadata</stat.serviceMdType>
-    <stat.basicGeodataType>Basic geodata</stat.basicGeodataType>
-    <stat.allTypes>All</stat.allTypes>
-    <stat.seeAdminPage>See system configuration page to enable logging feature</stat.seeAdminPage>
-    <stat.logDisabled>The logging feature is currently disabled</stat.logDisabled>
-    <stat.maintenance>Maintenance</stat.maintenance>
-    <stat.deleteTmpImages>Deletes temporary graphic and CSV files</stat.deleteTmpImages>
-    <stat.deleteTmpFiles>Delete files now</stat.deleteTmpFiles>
-    <stat.filesDel> file(s) deleted.</stat.filesDel>
-    <stat.warnCsvExport>Caution: exporting log tables can take several minutes</stat.warnCsvExport>
-    <stat.clickToDownload>Click on the link to download the CSV file</stat.clickToDownload>
-
-	<status>Status</status>
-	<changeLogMessage>Change Log Message</changeLogMessage>
-	<updateStatus>Update status</updateStatus>
-	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
-	<startVersion>Start Versioning</startVersion>
-	<batchStartVersionTitle>Batch Start Versioning</batchStartVersionTitle>
-  <editAttributes>Add more details</editAttributes>
-    <useStopwords>The Lucene indeksointi käyttää pysäytyssanoja näille kielille:</useStopwords>    
-    <rebuildIndexMessage>Jos muutat arvoja, on suositeltava tehdä Lucene-indeksointi uudelleen.</rebuildIndexMessage>
-	<!-- new strings - SP 2.5 -->
+	<add>lisää</add>
+	<schemaOps>Metadata Schema Operations</schemaOps>
+	<enterSchema>Enter a name for the schema to be added</enterSchema>
+	<selectSchemaOperations>Source of schema zip archive:</selectSchemaOperations>
 	<showRemoteHTML>Näytä HTML etäpalvelimelta.</showRemoteHTML>
-	<!-- end new strings -->
-	
+	<searchStatistics>Search Statistics</searchStatistics>
+	<searchStatisticsDes>See statistics about searches performed in the application</searchStatisticsDes>
+
+	<stat.byDay>by Day</stat.byDay>
+	<stat.byMonth>by Month</stat.byMonth>
+	<stat.byWeek>by Week</stat.byWeek>
+	<stat.byYear>by Year</stat.byYear>
+	<stat.collapse>Collapse</stat.collapse>
+	<stat.numAutoGeneratedSearches>Number of auto-generated (guiservice) searches</stat.numAutoGeneratedSearches>
+	<stat.date>Date</stat.date>
+	<stat.day>Day</stat.day>
+	<stat.hits>Hits</stat.hits>
+	<stat.ip>IP</stat.ip>
+	<stat.noValue>no value</stat.noValue>
+	<stat.language>Language</stat.language>
+	<stat.month>Month</stat.month>
+	<stat.numberOfSearch>Number of search</stat.numberOfSearch>
+	<stat.requestDate>Date of request</stat.requestDate>
+	<stat.spatialFilter>Spatial filter</stat.spatialFilter>
+	<stat.totalsearches>Total user searches</stat.totalsearches>
+	<stat.year>Year</stat.year>
+	<stat.mdSheet>Metadata sheet</stat.mdSheet>
+	<stat.noTitle>no title</stat.noTitle>
+	<stat.csvExport>CSV export</stat.csvExport>
+	<stat.tabularStats>Tabular statistics</stat.tabularStats>
+	<stat.tip1begin>Click on a link below to display live statistics, click the little arrow </stat.tip1begin>
+	<stat.tip1end>to hide it</stat.tip1end>
+	<stat.lastMonthStats>Last Month statistics</stat.lastMonthStats>
+	<stat.userIpText>User IP during search (number of search per unique IP)</stat.userIpText>
+	<stat.mostSearchedKeywords>Most searched Keywords</stat.mostSearchedKeywords>
+	<stat.mostSearchedCategories>Most searched Categories</stat.mostSearchedCategories>
+	<stat.simpleVsAdvanced>Simple vs advanced search</stat.simpleVsAdvanced>
+	<stat.mdPopularity>Metadata popularity</stat.mdPopularity>
+	<stat.graphicalStats>Graphical statistics</stat.graphicalStats>
+	<stat.tip2>Choose a date unit (year, month, day) and a date range and click ok to display a graphic</stat.tip2>
+	<stat.numberOfRequests>Number of requests</stat.numberOfRequests>
+	<stat.chooseDateFrom>Choose a date from</stat.chooseDateFrom>
+	<stat.dateFrom>Date from</stat.dateFrom>
+	<stat.dateTo>Date to</stat.dateTo>
+	<stat.md>Metadata</stat.md>
+	<stat.popularity>Popularity</stat.popularity>
+	<stat.totalSearches>Total user searches</stat.totalSearches>
+	<stat.numSearchesPerDay>Number of user searches per day</stat.numSearchesPerDay>
+	<stat.numSearchesNoResult>Number of user searches with no results</stat.numSearchesNoResult>
+	<stat.simpleAdvancedSearch>Simple / advanced search</stat.simpleAdvancedSearch>
+	<stat.searchedTerm>Searched term</stat.searchedTerm>
+	<stat.count>Count</stat.count>
+	<stat.numSimpleSearch>Number of simple searches</stat.numSimpleSearch>
+	<stat.numAdvancedSearch>Number of advanced searches</stat.numAdvancedSearch>
+	<stat.></stat.>
+	<stat.exportRequests>Export Requests table (one entry per user request)</stat.exportRequests>
+	<stat.exportParams>Export Parameters table (request keywords, several entries per user request)</stat.exportParams>
+	<stat.csvSemiColumnDelimiter>Semicolon separator</stat.csvSemiColumnDelimiter>
+	<stat.rightClickSaveAs>Right-click on the link to save the CSV file</stat.rightClickSaveAs>
+	<stat.searchedKeywords>Searched Keywords</stat.searchedKeywords>
+	<stat.popuByGroup>Metadata popularity by group</stat.popuByGroup>
+	<stat.popuByCatalog>Metadata popularity by catalog (node id)</stat.popuByCatalog>
+	<stat.popularityByCategory>Metadata popularity by category</stat.popularityByCategory>
+	<stat.mdType>Type of metadata searched for</stat.mdType>
+	<stat.dsMsType>Dataset metadata</stat.dsMsType>
+	<stat.serviceMdType>Service metadata</stat.serviceMdType>
+	<stat.basicGeodataType>Basic geodata</stat.basicGeodataType>
+	<stat.allTypes>All</stat.allTypes>
+	<stat.seeAdminPage>See system configuration page to enable logging feature</stat.seeAdminPage>
+	<stat.logDisabled>The logging feature is currently disabled</stat.logDisabled>
+	<stat.maintenance>Maintenance</stat.maintenance>
+	<stat.deleteTmpImages>Deletes temporary graphic and CSV files</stat.deleteTmpImages>
+	<stat.deleteTmpFiles>Delete files now</stat.deleteTmpFiles>
+	<stat.filesDel> file(s) deleted.</stat.filesDel>
+	<stat.warnCsvExport>Caution: exporting log tables can take several minutes</stat.warnCsvExport>
+	<stat.clickToDownload>Click on the link to download the CSV file</stat.clickToDownload>
+
+	<drawRectangle js="true">Draw rectangle</drawRectangle>
+	<drawPolygon js="true">Draw polygon</drawPolygon>
+	<drawCircle js="true">Draw circle</drawCircle>
+	<geopublisher>GeoPublisher</geopublisher>
+	<geoPublisherWindowTitle js="true">Geo-publication: </geoPublisherWindowTitle>
+	<geopublisherHelp>Publish or unpublish dataset as WMS or WFS in remote geoserver.</geopublisherHelp>
+	<publish js="true">Publish</publish>
+	<publishTooltip js="true">Publish current dataset to remote node. If dataset is already publish in that node, it will be updated.</publishTooltip>
+	<publishError js="true">Publication failed.</publishError>
+	<publishErrorCode js="true">Error code:</publishErrorCode>
+	<publishSuccess js="true">Successful publication.</publishSuccess>
+	<publishLayerAdded js="true"> Layer added to map preview.</publishLayerAdded>
+	<unpublish js="true">Unpublish</unpublish>
+	<unpublishTooltip js="true">Remove current dataset from remote node.</unpublishTooltip>
+	<unpublishError js="true">Unpublication failed. </unpublishError>
+	<unpublishSuccess js="true">Successful unpublication.</unpublishSuccess>
+	<check js="true">Check</check>
+	<errorConnectionRefused js="true">Connection refused.</errorConnectionRefused>
+	<errorDatasetNotFound js="true">Dataset not found.</errorDatasetNotFound>
+	<datasetFound js="true">Dataset found and added to the map preview.</datasetFound>
+	<checkFailure js="true">Failed to check dataset in remote node.</checkFailure>
+	<addOnlineSource js="true">Add WMS info to online source</addOnlineSource>
+	<statusInformation js="true">Status information.</statusInformation>
+	<mapPreview js="true">Map preview</mapPreview>
+	<selectANode js="true">Select a node ...</selectANode>
+	<publishing js="true">Publishing ...</publishing>
+
+	<logo>Logo configuration</logo>
+	<logoSelectionWindow js="true">Choose a logo</logoSelectionWindow>
+	<chooseLogo>Choose logo</chooseLogo>
+	<orgLogo>Organisation logo</orgLogo>
+	<logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
+	<logoRegistered js="true">Registered logos</logoRegistered>
+	<logoAdd js="true">Add new logo</logoAdd>
+	<selectedLogo js="true">Selected logo:</selectedLogo>
+	<logoDel js="true">Remove</logoDel>
+	<logoForNode js="true">Use for the catalogue</logoForNode>
+	<logoForNodeFavicon js="true">Use as favorite icon</logoForNodeFavicon>
+	<logoSelect js="true">Select image for logo ...</logoSelect>
+	<url>WWW-osoite</url>
 	<createChild>Luo metatietodokumentille alidokumentti.</createChild>
 	<updateChildren>Päivitä alidokumentit.</updateChildren>
 	<updateChildrenOk>Alidokumentit päivitetty.</updateChildrenOk>
 	<updateChildrenFailed>Alidokumenttien päivitys epäonnistui.</updateChildrenFailed>
-	<massiveUpdateChildrenTitle>Päivitä alidokumentit.</massiveUpdateChildrenTitle>
+	<batchUpdateChildrenTitle>Päivitä alidokumentit</batchUpdateChildrenTitle>
 	<updateMode>Valitse strategia, jolla alidokumentit päivitetään : </updateMode>
 	<addMode>Lisää osio.</addMode>
 	<replaceMode>Korvaa osio.</replaceMode>
@@ -215,12 +270,14 @@
 	<layerNameHelp js="true">
 		Kun palvelun metatietodokumentti linkitetään aineistojen metatietodokumentteihin, liitännäisresurssi voi sisältää OGC-palvelussa määritellyn tason nimen. Palvelun karttatasolista voi auttaa metatietojen muokkaajaa lisäämään oikean arvon.
 	</layerNameHelp>
+
 	<layerName js="true">Karttatason nimi</layerName>
 	<createIfNotExistButton js="true">Luo uusi metatietodokumentti.</createIfNotExistButton>
 	<associateService js="true">Linkki palvelun metatietoihin</associateService>
 	<associateDataset js="true">Linkki aineiston metatietoihin</associateDataset>
 	<associateServiceHelp>Lisätäksesi linkin palvelun metatietoihin hae kyseinen palvelu ja määrittele karttatason nimi.</associateServiceHelp>
 	<associateDatasetHelp>Lisätäksesi linkin aineiston metatietoihin määrittele se tunnistetiedoissa (liitännäisresurssi).</associateDatasetHelp>
+
 	<addParent>Lisää tai päivitä metatietodokumentille ylämetatietodokumentti.</addParent>
 	<createAssoService>Luo linkki</createAssoService>
 	<updateMdd>Päivitä aineiston metatietodokumenttia.</updateMdd>
@@ -286,11 +343,12 @@
 	<crsSelectionWindowTitle js="true">Koordinaattireferenssijärjestelmän valinta</crsSelectionWindowTitle>
 	<selectedCRS js="true">Valitut koordinaattireferenssijärjestelmät</selectedCRS>
 	<foundCRS js="true">Saatavilla olevat koordinaattijärjestelmät</foundCRS>
+
 	<about>Tietoa palvelusta</about>
 	<abstract>Tiivistelmä</abstract>
 	<accept>Hyväksy</accept>
 	<actionOnSelect>valintatoiminnot</actionOnSelect>
-	<add>lisää</add>
+	<add js="true">add</add>
 	<addNewMetadata>Lisää uusia metatietoja</addNewMetadata>
 	<address>Osoite</address>
 	<admin>Ylläpito</admin>
@@ -300,6 +358,7 @@
 	<any>- Mikä tahansa -</any>
 	<anytime>Milloin tahansa</anytime>
 	<appSchInfoTab>Sovellusskeema</appSchInfoTab>
+
 	<assigned>Valittu</assigned>
 	<attrlabl>Attribuutin nimi</attrlabl>
 	<availability>Saatavuus</availability>
@@ -309,11 +368,6 @@
 	<backToPreviousPage>Takaisin edelliselle sivulle</backToPreviousPage>
 	<batchImport>Tuo kaikki XML-dokumentit paikallisesta hakemistosta</batchImport>
 	<batchImportTitle>Tuo useita tiedostoja</batchImportTitle>
-	<batchActions>Batch actions:</batchActions>
-	<batchDeleteTitle>Batch Delete Operation</batchDeleteTitle>
-	<batchNewOwnerTitle>Batch New Owner Operation</batchNewOwnerTitle>
-	<batchUpdateCategoriesTitle>Batch Update Categories Operation</batchUpdateCategoriesTitle>
-	<batchUpdatePrivilegesTitle>Batch Update Privileges Operation</batchUpdatePrivilegesTitle>	
 	<begdate>Alkupäivä</begdate>
 	<begtime>Alkupäivä</begtime>
 	<bgFileDescChoice value="large_thumbnail">Iso näytekuva</bgFileDescChoice>
@@ -341,13 +395,8 @@
 	<categoryManagement>Kategorioiden ylläpito</categoryManagement>
 	<categoryManDes>Selaa ja päivitä kategorioita.</categoryManDes>
 	<categoryNameMandatory>Kategorialle on annettava nimi.</categoryNameMandatory>
-	<catalogueConfiguration>Catalogue settings</catalogueConfiguration>
-	<indexConfiguration>Index settings</indexConfiguration>
-	<io>Import, export &amp; harvesting</io>	
 	<changeDate>Metatietodokumentin päivitysajankohta</changeDate>
 	<checkusername>Tarkista käyttäjätunnus.</checkusername>
-  <choice>Choice</choice>
-  <sequence>Sequence</sequence>	
 	<choose>-Valitse-</choose>
 	<chooseFile>Valitse tiedosto, jonka haluat ladata.</chooseFile>
 	<chooseLargeThumbnail>Valitse iso näytekuva.</chooseLargeThumbnail>
@@ -358,11 +407,10 @@
 	<close js="true">Sulje</close>
 	<completeTab>JHS 158</completeTab>
 	<completeTabEditor>Tarkennettu editori</completeTabEditor>
-	<confirmBatchDelete>Are you sure you want to delete all $1 selected metadata from the database?</confirmBatchDelete>	
 	<confirmCancel>Haluatko varmasti poistua editorista? Menetät kaikki tallentamattomat tiedot.</confirmCancel>
-    <confirmCancelCreate>Haluatko varmasti keskeyttää metatietofokumentin luonnin?</confirmCancelCreate>
+	<confirmCancelCreate>Haluatko varmasti keskeyttää metatietofokumentin luonnin?</confirmCancelCreate>
 	<confirmDelete>Haluatko varmasti poistaa metatiedot tietokannasta?</confirmDelete>
-	<confirmMassiveDelete>Haluatko varmasti poistaa kaikki valitut metatiedot tietokannasta?</confirmMassiveDelete>
+	<confirmBatchDelete>Are you sure you want to delete all $1 selected metadata from the database?</confirmBatchDelete>	
 	<confirmNewPassword>Kirjoita uusi salasana uudelleen.</confirmNewPassword>
 	<confirmPassword>Vahvista salasana</confirmPassword>
 	<constraintsTab>Rajoitteet</constraintsTab>
@@ -371,15 +419,13 @@
 	<contentInfoTab>Tietosisältö</contentInfoTab>
 	<convert>Muunna</convert>
 	<copyright1>Tekijänoikeudet</copyright1>
-	<copyright2>
-		<p>Kaikki oikeudet pidätetään.</p>
-	</copyright2>
+	<copyright2><p>Kaikki oikeudet pidätetään.</p></copyright2>
 	<country>Maa</country>
 	<create>Luo kopio</create>
 	<createTip>Luo uusi metatietodokumentti tämän metatietopohjan perusteella.</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:3786">World Equidistant Cylindrical (Sphere)</crs>
-  <crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
+	<crs code="EPSG:3035">ETRS89 / ETRS-LAEA</crs>
 	<crs code="EPSG:4258">ETRS 89</crs>
 	<crs code="EPSG:900913">Google Mercator</crs>
 	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>	
@@ -455,6 +501,8 @@
 	<feedbackRequest>Anna palautetta.</feedbackRequest>
 	<feedbackGuide>Jos haluat saada palautteeseesi vastauksen, muista täyttää sähköpostiosoite.</feedbackGuide>
 	<feedbackRegistration>Jos haluat rekisteröityä, täytä yhteystiedot ja kirjoita kommenttikenttään, että halua rekisteröityä. Tällöin nimi, organisaatio ja sähköpostiosoite ovat pakollisia.</feedbackRegistration>
+
+
 	<file>Tiedosto</file>
 	<fileType>Tiedostotyyppi:</fileType>
 	<fileUploadSuccessful>Tiedoston lataus onnistui.</fileUploadSuccessful>
@@ -474,14 +522,16 @@
 	<georss>Avaa GeoRSS-syöte</georss>
 	<group>Käyttäjäryhmä</group>
 	<usergroups>User groups</usergroups>
+	<choice>Choice</choice>
+	<sequence>Sequence</sequence>	
 	<groupManagement>Käyttäjäryhmien ylläpito</groupManagement>
 	<groupManDes>Selaa ja päivitä käyttäjäryhmiä.</groupManDes>
 	<groups>Ryhmät</groups>
 	<harvestingManagement>Aineistojen keruun ylläpito</harvestingManagement>
 	<harvestingManDes>Kerää aineistoja muualta Paikkatietohakemistoon (harvesting).</harvestingManDes>
 	<help>Ohje</help>
+	<helpLinkTooltip js="true">Help</helpLinkTooltip>  	
 	<helpComplete>Lisäohje</helpComplete>
-    <helpLinkTooltip js="true">Help</helpLinkTooltip>  	
 	<helperList>Ehdotukset:</helperList>
 	<hideAdvancedOptions>Piilota tarkennettu haku</hideAdvancedOptions>
 	<highlights>Suosituimmat</highlights>
@@ -513,6 +563,7 @@
 	<isoAll>JHS 158 - kaikki elementit</isoAll>
 	<isoCore>ISO 19115 - ydinkohdat</isoCore>
 	<isoMinimum>ISO 19115 - minimivaatimukset</isoMinimum>
+
 	<keyword>avainsana</keyword>
 	<keywords>Avainsanat</keywords>
 	<keywordshelp>Valitse useita avainsanoja pitämällä Ctrl-näppäintä pohjassa valitessasi avainsanan hiirellä.</keywordshelp>
@@ -524,6 +575,7 @@
 	<kindChoice value="ngo">Kansalaisjärjestö</kindChoice>
 	<kindChoice value="other">Muu organisaatio</kindChoice>
 	<kindChoice value="uni">Yliopisto tai tutkimuskeskus</kindChoice>
+
 	<label>Nimi</label>
 	<language>fi</language>
 	<large_thumbnail>Klikkaa nähdäksesi iso esikatselukuva.</large_thumbnail>
@@ -550,8 +602,6 @@
 	<longitude>Pituuspiiri</longitude>
 	<longMax>pituus (max)</longMax>
 	<longMin>pituus (min)</longMin>
-	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>	
-	<reload>Reload</reload>	
 	<mainpageTitle>Tervetuloa paikkatietohakemistoon!</mainpageTitle>
 	<maintenanceTab>Ylläpitotiedot</maintenanceTab>
 	<management>Ylläpito</management>
@@ -561,11 +611,17 @@
 	<mapViewerClose>Sulje karttanäkymä</mapViewerClose>
 	<mapViewerLoading>Karttanäkymä latautuu...</mapViewerLoading>
 	<mapViewerOpen>Avaa karttanäkymä</mapViewerOpen>
+	<batchActions>Batch actions:</batchActions>
+	<batchDeleteTitle>Batch Delete Operation</batchDeleteTitle>
+	<batchNewOwnerTitle>Batch New Owner Operation</batchNewOwnerTitle>
+	<batchUpdateCategoriesTitle>Batch Update Categories Operation</batchUpdateCategoriesTitle>
+	<batchUpdatePrivilegesTitle>Batch Update Privileges Operation</batchUpdatePrivilegesTitle>	
 	<massiveActions>Massiiviset toiminnot:</massiveActions>
 	<massiveDeleteTitle>Massiivinen poisto-operaatio</massiveDeleteTitle>
 	<massiveNewOwnerTitle>Massiivinen omistajanvaihto-operaatio</massiveNewOwnerTitle>
 	<massiveUpdateCategoriesTitle>Massiivinen kategorioiden päivitysoperaatio</massiveUpdateCategoriesTitle>
 	<massiveUpdatePrivilegesTitle>Massiivinen oikeuksien päivitysoperaatio</massiveUpdatePrivilegesTitle>
+
 	<max>Enintään</max>
 	<mdRating>Metatietojen arvostelu</mdRating>
 	<mdUpdateError>Virhe päivityksessä</mdUpdateError>
@@ -583,6 +639,9 @@
 	<metadata.admin.index.wait js="true">Index operation already in progress please wait.</metadata.admin.index.wait>
 	<metadata.admin.index.optimize.desc>Optimoi Lucene-indeksointi.</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Tyhjennä Xlink-välimuisti ja indeksoi uudelleen tietueet, joissa on Xlink-määrityksiä.</metadata.admin.index.rebuildxlinks.desc>
+
+	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>	
+	<reload>Reload</reload>	
 	<rebuildxlinks>Luo Xlink-määritykset uudelleen.</rebuildxlinks>
 	<doYouReallyWantToDoThis>Tämä operaatio voi kestää jonkin aikaa riippuen hakemiston koosta ja sitä ei pitäiis suorittaa käyttöruuhkien aikana. Jatketaanko?</doYouReallyWantToDoThis>
 	<optimize>Optimoi</optimize>
@@ -591,22 +650,23 @@
 	<metadata-samples-add>Lisää esimerkkimetatietodokumentti.</metadata-samples-add>
 	<metadata-samples-add-failed>Esimerkkimetatietodokumentin lisäys epäonnistui.</metadata-samples-add-failed>
 	<metadata-samples-add-success>Esimerkkimetatietodokumentin lisäys onnistui.</metadata-samples-add-success>
-  <metadata-template-add-success>Metadata template added.</metadata-template-add-success>	
+	<metadata-template-add-success>Metadata template added.</metadata-template-add-success>	
 	<metadata-template-order>Järjestä mallipohjat.</metadata-template-order>
 	<metadata-template-order-desc>Järjestä mallipohjat haluamaasi järjestykseen.</metadata-template-order-desc>
 	<metadata-template-add-default>Lisää valmiit mallipohjat</metadata-template-add-default>
 	<metadata-template-add-default-desc>Valitse mallipohjat</metadata-template-add-default-desc>
 	<metadata-template-select>Valitse lisättävät mallipohjat.</metadata-template-select>
+
 	<metadata>Metatietodokumentti</metadata>
 	<metadataAdded>Metatietodokumentti lisätty tunnisteella:</metadataAdded>
 	<metadataDeleted>Metatietodokumentti poistettu tunnisteella:</metadataDeleted>
 	<metadataInsertResults>Metatietojen tiedostolisäyksen tulokset</metadataInsertResults>
 	<metadataJSForm>Metatiedot JS-lomakkeelta</metadataJSForm>
-	<metadataRecordsAdded>Lisättyjen metatietodokumenttien kokonaismäärä :</metadataRecordsAdded>
-  <failOnError>Fail on error</failOnError>
+	<failOnError>Fail on error</failOnError>
 	<metadataRecordsProcessed>Total number of metadata records processed:</metadataRecordsProcessed>	
+	<metadataRecordsAdded>Lisättyjen metatietodokumenttien kokonaismäärä :</metadataRecordsAdded>
 	<min>Vähintään</min>
-    <minor>Minor edit</minor>	
+	<minor>Minor edit</minor>	
 	<missing>Puuttuva tai tyhjä elementti</missing>
 	<missingSeeTab>Puuttuva elementti - Katso vasemmalla oleva välilehti: </missingSeeTab>
 	<more>lisää</more>
@@ -646,6 +706,7 @@
 	<owner>Omistaja</owner>
 	<ownerRights>Sinulla on omistusoikeus kyseiseen metatietodokumenttiin.</ownerRights>
 	<page>Sivu</page>
+
 	<paper>Paperituloste</paper>
 	<partial>Osittain päällekkäin</partial>
 	<partialCooordinate>Osittaiset koordinaatit </partialCooordinate>
@@ -656,6 +717,11 @@
 	<passwordOldRequired>Vanha salasana on annettava.</passwordOldRequired>
 	<passwordSpace>Salasanassa ei saa olla välilyöntejä.</passwordSpace>
 	<persInfo>Käyttäjän tiedot</persInfo>
+	<usersAndGroups>Users and groups</usersAndGroups>
+	<classification>Thesauri and classification systems</classification>
+	<catalogueConfiguration>Catalogue settings</catalogueConfiguration>
+	<indexConfiguration>Index settings</indexConfiguration>
+	<io>Import, export &amp; harvesting</io>	
 	<placeKeyword>Paikkaan liittyvät avainsanat</placeKeyword>
 	<porCatInfoTab>Esitystapaluettelon tiedot</porCatInfoTab>
 	<poweredBy>Toimintaa tukee </poweredBy>
@@ -701,6 +767,9 @@
 	<ress>tulos</ress>
 	<restrictTo>Rajoita</restrictTo>
 	<result>Viimeiset tulokset</result>
+	<searchResult>Search results</searchResult>
+	<resources>Resources</resources>
+	<visualizationService>Visualization service URL (WMS)</visualizationService>	
 	<resultsCoordinate>Koordinaattihakua vastaavat tulokset </resultsCoordinate>
 	<resultsFreeText>Vapaan sanahaun tulokset </resultsFreeText>
 	<resultsMatching>Hakukriteereihin perustuvat tulokset :</resultsMatching>
@@ -721,9 +790,6 @@
 	<searching>...Hakee metatietoja...</searching>
 	<searchPage>Hakusivu</searchPage>
 	<searchPageDes>Hakusivulle</searchPageDes>
-  <searchResult>Search results</searchResult>
-  <resources>Resources</resources>
-  <visualizationService>Visualization service URL (WMS)</visualizationService>	
 	<searchTemplates>Metatietopohjien haku</searchTemplates>
 	<searchText>Mitä?</searchText>
 	<searchUnused>Hae käyttämättömiä tai tyhjiä metatietodokumentteja.</searchUnused>
@@ -748,12 +814,14 @@
 	<site>Sivusto</site>
 	<siteId>Sivuston tunniste</siteId>
 	<sizeBytes>Koko (tavuina)</sizeBytes>
+
 	<sortBy>Lajittele</sortBy>
 	<sortByType id="changeDate">Päivitysajankohdan mukaan</sortByType>
 	<sortByType id="popularity">Suosituimmuuden mukaan</sortByType>
 	<sortByType id="rating">Arvostelujen mukaan</sortByType>
 	<sortByType id="relevance">Relevanssin mukaan</sortByType>
 	<sortByType id="title">Otsikon mukaan</sortByType>
+
 	<southbc>Eteläraja</southbc>
 	<spacesNot js="true">Välilyönnit eivät ole sallittuja tässä kentässä.</spacesNot>
 	<spatial2Tab>Sijaintitiedon esitystapatiedot</spatial2Tab>
@@ -775,6 +843,7 @@
 	<thanks>Kiitos!</thanks>
 	<theme>Aiheluokka</theme>
 	<thesaurusInfo>Asiasanasto</thesaurusInfo>
+
 	<thumbnails>Näytekuvat</thumbnails>
 	<timeout>Aikalisä</timeout>
 	<timeoutChoice value="10">10 sekunnin päästä</timeoutChoice>
@@ -786,6 +855,7 @@
 	<tools>Työkalut</tools>
 	<topic>Aihe</topic>
 	<topicCategory>Aiheluokka</topicCategory>
+
 	<transferOwnership>Omistajuuden siirto</transferOwnership>
 	<transferOwnershipDes>Siirrä metatietodokumentin omistajuus toiselle käyttäjälle.</transferOwnershipDes>
 	<type>Tyyppi</type>
@@ -809,7 +879,6 @@
 	<usernameMandatory>Käyttäjätunnus on pakollinen.</usernameMandatory>
 	<userPw>Vaihda salasana</userPw>
 	<userPwDes>Vaihda Paikkatietohakemistossa käyttämäsi salasana.</userPwDes>
-	<usersAndGroups>Users and groups</usersAndGroups>	
 	<uuidAction>Tiedostotunniste</uuidAction>
 	<validate>Validoi</validate>
 	<assign>Assign to current catalog</assign>
@@ -828,292 +897,6 @@
 	<xmlInsert>Tuo metatietodokumentti XML- tai MEF-formaatissa.</xmlInsert>
 	<xmlInsertTitle>Metatietojen lisäys</xmlInsertTitle>
 	<xmlTab>XML</xmlTab>
-	<xsdError>Validoinnissa skeemaa vastaan tapahtui virhe.</xsdError>
-	<yourRegistration js="true">Rekisteröitymisesi...</yourRegistration>
-	<zip>Postinumero</zip>
-	<header_meta>
-		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
-		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
-		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
-		<meta name="DC.title" lang="English" content="GeoNetwork opensource portal to spatial data and information"/>
-		<meta name="DC.creator" content="GeoNetwork Team"/>
-		<meta name="DC.subject" lang="English" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
-		<meta name="DC.description" lang="English" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
-		<meta name="DC.publisher" content=""/>
-		<meta name="DC.date" content="02-07-2007"/>
-		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
-		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="English French Spanish Russian Chinese Dutch"/>
-		<meta name="DC.coverage" content="Global"/>
-	</header_meta>
-	<mainpage1>
-		<p>Paikkatietohakemistossa paikkatiedon tuottajat voivat luoda ja ylläpitää paikkatiedon metatietoja. Me-tatiedolla tarkoitetaan tietoa tiedosta ja paikkatiedolla tietoa kohteista, joiden sijainti Maan suhteen tunnetaan. Paikkatiedon metatieto siis kuvailee paikkatietoa.</p>
-
-<p>Paikkatietohakemistossa voi kuvailla paikkatietoa kolmella eri tasolla:
-<ul>
-<li>Paikkatietoaineisto on paikkatiedoista koostuva tietoaineisto eli yksilöitävissä oleva kokoelma tietoja.</li>
-<li>Paikkatietoaineistosarja on kokoelma tietoaineistoja, joihin liittyy pääosin sama metatietosisältö.</li>
-<li>Paikkatietopalvelu on paikkatietojen luovutukseen, käsittelyyn, muokkaukseen tai tulostukseen tarkoitettu palvelu.</li>
-</ul><br/>
-Kuvailujen tekemiseksi tarvitset käyttäjätunnuksen. Pyydä se osoitteesta <a href="mailto:metatieto@maanmittauslaitos.fi">metatieto@maanmittauslaitos.fi</a>. Samalla kannattaa kertoa, mitä paikkatietoaineistoja aiot kuvailla, niin voimme samalla antaa niille tunnisteet, joita tarvitset metatietoja täyttäessäsi.</p>
-
-<p>Kuvailujen tekemiseen löytyy ohjeistusta <a href="http://www.paikkatietoikkuna.fi/web/fi/metatiedot">Paikkatietoikkunasta Tukipalvelu-osiosta</a> ja <a href="http://www.paikkatietohakemisto.fi/geonetwork/docs/paikkatietohakemiston_kayttoohje.pdf">Paikkatietohakemiston käyttöohjeesta</a>. Kuvailuja voidaan luoda Paikkatietohakemiston editorin avulla tai tallentamalla itse luotu XML-tiedosto Paikkatietohakemistoon.</p>
-
-<p>Kuvailuja voi hakea ja selailla <a href="http://www.paikkatietoikkuna.fi/web/fi/paikkatietohaku">Paikkatietoikkunan paikkatietohaussa</a>, jossa on tarjolla useita eri hakuehtoja. Paikkatietohakemistoa käytetään ainoastaan metatietojen ylläpitoon.</p>
-
-<p>Kaikki julkaistut kuvailut haetaan Paikkatietohakemistosta CSW-rajapinnan kautta Paikkatietoikkunaan automaattisesti. CSW-rajapinnan saa mikä tahansa organisaatio käyttöönsä, joten jos haluat hakea esimerkiksi omat kuvailusi omille www-sivuillesi, ota yhteyttä <a href="mailto:metatieto@maanmittauslaitos.fi">metatieto@maanmittauslaitos.fi</a>. CSW-hakuja voi testata <a href="http://www.paikkatietohakemisto.fi/geonetwork/srv/fi/test.csw">täällä</a>.</p>
-	</mainpage1>
-	<mainpage2>
-	</mainpage2>
-	<mainhelp1> How to search... </mainhelp1>
-	<mainhelp2> Hide help... </mainhelp2>
-	<mainhelp3>
-		<p>
-			<font size="-2"> You can search using one of the provided options, or a combination of them.<br/> Only results matching all criteria will be displayed. </font>
-		</p>
-		<p>
-			<font size="-2"> The <b>What?</b> search searches for matching text in all metadata fields in GeoNetwork's content. <br/>
-				<i> When entering more than one word in the <b>Free text</b> textbox, they will be interpreted by the system as separated by AND. </i>
-			</font>
-		</p>
-		<p>
-			<font size="-2"> The <b>Topic</b> search will find maps matching a specific topic. </font>
-		</p>
-		<p>
-			<font size="-2"> The <b>Where?</b> search will find maps matching the bounding box of the selected area. </font>
-		</p>
-		<p>
-			<font size="-2"> Selecting the option "<b>
-					<input name="demo" type="checkbox" checked="checked"/> Including</b> the selected <b>Area</b>" will find maps that cover more than just the selected area.<br/>
-				<i>For example: Regional or Global maps that, among other countries, also cover the selected country</i>
-			</font>
-		</p>
-		<p>
-			<font size="-2"> Selecting the option "<b>
-					<input name="demo" type="checkbox" checked="checked"/> Partially overlapping</b> the selected <b>Area</b>" will also find maps that partially cover the selected area. </font>
-		</p>
-	</mainhelp3>
-	<savexml>
-		<dc>Tallenna Dublin Core-metatietodokumentti XML-tiedostoon</dc>
-		<fgdc>Tallenna FGDC-metatietodokumentti XML-tiedostoon</fgdc>
-		<iso19115Esri>Tallenna ISO19115-metatietodokumentti XML-tiedostoon for ESRI ArcCatalog</iso19115Esri>
-		<iso19139>Tallenna ISO19115/19139-metatietodokumentti XML-tiedostoon</iso19139>
-		<!--<iso19139fra>Tallenna ISO19115/19139 Fra-metatietodokumentti XML-tiedostoon</iso19139fra>-->
-	</savexml>
-	<thesaurus>
-		<addelement>Lisää elementti</addelement>
-		<admin>Asiasanastojen ylläpito</admin>
-		<broader>Laajempi käsite</broader>
-		<category>Sanaston kategoria</category>
-		<consultation>Selaa sanastoa</consultation>
-		<delete>Poista sanasto</delete>
-		<deleteelement>Poista elementti</deleteelement>
-		<download>Tallenna sanasto</download>
-		<edit>Muokkaa sanastoa</edit>
-		<editelement>Muokkaa elementtiä</editelement>
-		<edition>Muokkaa sanastoa</edition>
-		<en>in</en>
-		<foundKeyWords>Löydettyjen käsitteiden lukumäärä</foundKeyWords>
-		<foundKeyWordsLimit>Löydettyjen käsitteiden enimmäismäärä</foundKeyWordsLimit>
-		<keywordConfirm>Vahvista avainsanojen tiivistämisoperaatio</keywordConfirm>
-		<keywordDescription>Avainsanan määritelmä:</keywordDescription>
-		<management>Asiasanastojen ylläpito</management>
-		<manDes>Selaa ja päivitä asiasanastoja.</manDes>
-		<narrower>Kapeampi käsite</narrower>
-		<related>Liittyvä käsite</related>
-		<thesaurus>Sanasto</thesaurus>
-		<unknown>Tuntematon sanasto</unknown>
-		<update>Päivitä sanasto</update>
-		<updateelement>Päivitä elementti</updateelement>
-		<upload>Lataa sanasto</upload>
-	</thesaurus>
-	<searchhelp>
-		<searchAllText>Enter free text here</searchAllText>
-		<rtitle>Enter title here</rtitle>
-		<abstract>Enter abstract here</abstract>
-		<keywords>Pick keywords from existing metadata records</keywords>
-		<thesaurus>Pick keywords from thesauri</thesaurus>
-	</searchhelp>
-	<inspire>
-		<serviceType>
-            <value id="discovery">Discovery Service (discovery)</value>
-            <value id="view">View Service (view)</value>
-            <value id="download">Download Service (download)</value>
-            <value id="transformation">Transformation Service (transformation)</value>
-            <value id="invoke">Invoke Spatial Data Service (invoke)</value>
-            <value id="other">Other Services (other)</value>
-        </serviceType>
-        <spatialDataService>
-            <group label="Geographic human interaction services">
-                <value id="humanInteractionService">Geographic human interaction services</value>
-                <value id="humanCatalogueViewer">Catalogue viewer</value>
-                <value id="humanGeographicViewer">Geographic viewer</value>
-                <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
-                <value id="humanChainDefinitionEditor">Chain definition editor</value>
-                <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
-                <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
-                <value id="humanGeographicSymbolEditor">Geographic symbol editor</value>
-                <value id="humanFeatureGeneralizationEditor">Feature generalisation editor</value>
-                <value id="humanGeographicDataStructureViewer">Geographic data-structure viewer</value>
-            </group>
-
-            <group label="Geographic model/information management service">
-                <value id="infoManagementService">Geographic model/information management service</value>
-                <value id="infoFeatureAccessService">Feature access service</value>
-                <value id="infoMapAccessService">Map access service</value>
-                <value id="infoCoverageAccessService">Coverage access service</value>
-                <value id="infoSensorDescriptionService">Sensor description service</value>
-                <value id="infoProductAccessService">Product access service</value>
-                <value id="infoFeatureTypeService">Feature type service</value>
-                <value id="infoCatalogueService">Catalogue service</value>
-                <value id="infoRegistryService">Registry service</value>
-                <value id="infoGazetteerService">Gazetteer service</value>
-                <value id="infoOrderHandlingService">Order handling service</value>
-                <value id="infoStandingOrderService">Standing order service</value>
-            </group>
-
-            <group label="Geographic workflow/task management services">
-                <value id="taskManagementService">Geographic workflow/task management services</value>
-                <value id="chainDefinitionService">Chain definition service</value>
-                <value id="workflowEnactmentService">Workflow enactment service</value>
-                <value id="subscriptionService">Subscription service</value>
-            </group>
-
-            <group label="Geographic processing services – spatial">
-                <value id="spatialProcessingService">Geographic processing services – spatial</value>
-                <value id="spatialCoordinateConversionService">Coordinate conversion service </value>
-                <value id="spatialCoordinateTransformationService">Coordinate transformation service </value>
-                <value id="spatialCoverageVectorConversionService">Coverage/vector conversion service </value>
-                <value id="spatialImageCoordinateConversionService">Image coordinate conversion service</value>
-                <value id="spatialRectificationService">Rectification service</value>
-                <value id="spatialOrthorectificationService">Orthorectification service</value>
-                <value id="spatialSensorGeometryModelAdjustmentService">Sensor geometry model adjustment service</value>
-                <value id="spatialImageGeometryModelConversionService">Image geometry model conversion service</value>
-                <value id="spatialSubsettingService">Subsetting service</value>
-                <value id="spatialSamplingService">Sampling service</value>
-                <value id="spatialTilingChangeService">Tiling change service</value>
-                <value id="spatialDimensionMeasurementService">Dimension measurement service</value>
-                <value id="spatialFeatureManipulationService">Feature manipulation services</value>
-                <value id="spatialFeatureMatchingService">Feature matching service</value>
-                <value id="spatialFeatureGeneralizationService">Feature generalisation service</value>
-                <value id="spatialRouteDeterminationService">Route determination service</value>
-                <value id="spatialPositioningService">Positioning service</value>
-                <value id="spatialProximityAnalysisService">Proximity analysis service</value>
-            </group>
-
-            <group label="Geographic processing services – thematic">
-                <value id="thematicProcessingService">Geographic processing services – thematic</value>
-                <value id="thematicGoparameterCalculationService">Geoparameter calculation service</value>
-                <value id="thematicClassificationService">Thematic classification service</value>
-                <value id="thematicFeatureGeneralizationService">Feature generalisation service</value>
-                <value id="thematicSubsettingService">Subsetting service</value>
-                <value id="thematicSpatialCountingService">Spatial counting service</value>
-                <value id="thematicChangeDetectionService">Change detection service</value>
-                <value id="thematicGeographicInformationExtractionService">Geographic information extraction services</value>
-                <value id="thematicImageProcessingService">Image processing service</value>
-                <value id="thematicReducedResolutionGenerationService">Reduced resolution generation service</value>
-                <value id="thematicImageManipulationService">Image Manipulation Services</value>
-                <value id="thematicImageUnderstandingService">Image understanding services</value>
-                <value id="thematicImageSynthesisService">Image synthesis services</value>
-                <value id="thematicMultibandImageManipulationService">Multiband image manipulation</value>
-                <value id="thematicObjectDetectionService">Object detection service</value>
-                <value id="thematicGeoparsingService">Geoparsing service</value>
-                <value id="thematicGeocodingService">Geocoding service</value>
-            </group>
-
-             <group label="Geographic processing services – temporal">
-                <value id="temporalProcessingService">Geographic processing services – temporal</value>
-                <value id="temporalReferenceSystemTransformationService"> Temporal reference system transformation service</value>
-                <value id="temporalSubsettingService">Subsetting service</value>
-                <value id="temporalSamplingService">Sampling service</value>
-                <value id="temporalProximityAnalysisService">Temporal proximity analysis service</value>
-            </group>
-
-            <group label="Geographic processing services – metadata">
-                <value id="metadataProcessingService">Geographic processing services – metadata</value>
-                <value id="metadataStatisticalCalculationService">Statistical calculation service</value>
-                <value id="metadataGeographicAnnotationService">Geographic annotation services</value>
-            </group>
-
-            <group label="Geographic communication services">
-                <value id="comService">Geographic communication services</value>
-                <value id="comEncodingService">Encoding service</value>
-                <value id="comTransferService">Transfer service</value>
-                <value id="comGeographicCompressionService">Geographic compression service</value>
-                <value id="comGeographicFormatConversionService">Geographic format conversion service</value>
-                <value id="comMessagingService">Messaging service</value>
-                <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
-            </group>
-        </spatialDataService>
-		<what>
-			<l1>Inspire-hakuehdot</l1>
-			<l2>Inspire-metatiedot</l2>
-			<l3>Vain Inspire-metatiedot</l3>
-			<l4>Piilota Inspire-hakuehdot</l4>
-			<l5>Näytä Inspire-hakuehdot</l5>
-			<l6>Liite </l6>
-			<l7>Resurssin tyyppi</l7>
-			<l8>Kaikki</l8>
-			<l9>Paikkatietoaineistot ja -aineistosarjat</l9>
-			<l10>Paikkatietopalvelut</l10>
-			<l11>Organisaatio</l11>
-			<l12>Näytä Inspire-teemat</l12>
-			<l13>Piilota Inspire-teemat</l13>
-			<l14>Inspire-teema</l14>
-			<l15>Paikkatietopalvelun tyyppi</l15>
-		<l16>Classification of data services</l16>
-		</what>
-		<annex1>
-			<theme id="inspire_CoordinateRefSystems">Koordinaattireferenssijärjestelmät</theme>
-			<theme id="inspire_GeographicalGridSystems">Paikannusruudustot</theme>
-			<theme id="inspire_GeographicalNames">Paikannimet</theme>
-			<theme id="inspire_AdministrativeUnits">Hallinnolliset yksiköt</theme>
-			<theme id="inspire_Addresses">Osoitteet</theme>
-			<theme id="inspire_CadastralParcels">Kiinteistöt</theme>
-			<theme id="inspire_TransportNetworks">Liikenneverkot</theme>
-			<theme id="inspire_Hydrography">Hydrografia</theme>
-			<theme id="inspire_ProtectedSites">Suojellut alueet</theme>
-		</annex1>
-		<annex2>
-			<theme id="inspire_Elevation">Korkeus</theme>
-			<theme id="inspire_LandCover">Maanpeite</theme>
-			<theme id="inspire_Orthoimagery">Ortoilmakuvat</theme>
-			<theme id="inspire_Geology">Geologia</theme>
-		</annex2>
-		<annex3>
-			<theme id="inspire_StatisticalUnits">Tilastoyksiköt</theme>
-			<theme id="inspire_Buildings">Rakennukset</theme>
-			<theme id="inspire_Soil">Maaperä</theme>
-			<theme id="inspire_LandUse">Maankäyttö</theme>
-			<theme id="inspire_HumanHealthAndSafety">Väestön terveys ja turvallisuus</theme>
-			<theme id="inspire_UtilityAndGovernmentServices">Yleishyödylliset ja muut julkiset palvelut</theme>
-			<theme id="inspire_EnvironmentalMonitoringFacilities">Ympäristön tilan seurantalaitteet</theme>
-			<theme id="inspire_ProductionAndIndustrialFacilities">Tuotanto- ja teollisuuslaitokset</theme>
-			<theme id="inspire_AgriculturalAndAquacultureFacilities">Maatalous- ja vesiviljelylaitokset</theme>
-			<theme id="inspire_PopulationDistribution-Demography">Väestöjakauma - demografia</theme>
-			<theme id="inspire_AreaManagementRestrictionRegulationZonesAndReportingUnits">Aluesuunnittelun, rajoitusten ja sääntelyn piiriin kuuluvat alueet ja raportointiyksiköt</theme>
-			<theme id="inspire_NaturalRiskZones">Luonnonriskialueet</theme>
-			<theme id="inspire_AtmosphericConditions">Ilmakehän tila</theme>
-			<theme id="inspire_MeteorologicalGeographicalFeatures">Ilmaston maantieteelliset ominaispiirteet</theme>
-			<theme id="inspire_OceanographicGeographicalFeatures">Merentutkimuksen maantieteelliset ominaispiirteet</theme>
-			<theme id="inspire_SeaRegions">Merialueet</theme>
-			<theme id="inspire_Bio-geographicalRegions">Biomaantieteelliset alueet</theme>
-			<theme id="inspire_HabitatsAndBiotopes">Elinympäristöt ja biotoopit</theme>
-			<theme id="inspire_SpeciesDistribution">Lajien levinneisyys</theme>
-			<theme id="inspire_EnergyResources">Energiavarat</theme>
-			<theme id="inspire_MineralResources">Mineraalivarat</theme>
-		</annex3>
-	</inspire>
-	
-	<selectMetadataFileAlert>Valitse lisättävä tiedosto.</selectMetadataFileAlert>
-	<showMoreSearchFields>Näytä / piilota tarkemmat hakuehdot.</showMoreSearchFields>
-	<searchEitherOfTheWords>Jokin sanoista</searchEitherOfTheWords>
-	<searchExactPhrase>Täsmälleen</searchExactPhrase>
-	<searchAllWords>Kaikki sanat</searchAllWords>
-	<searchWithoutWords>Ei sisällä sanoja</searchWithoutWords>
-	<showMap>Näytä kartta</showMap>
-	<mapViewer>Karttaselain</mapViewer>
-	<uuid>Yksilöivä tunniste</uuid>
 	<inspireTab>Inspire-metatiedot</inspireTab>
 	<inspireSection>
 		<identification>
@@ -1287,27 +1070,318 @@ vaatimusten täyttämiseksi ilmoitetaan seuraavat kaksi metatietoelementtiä:
 		</metadata>
 	</inspireSection>
 	<inspireAddConformity>Lisää Inspire-sääntöjenmukaisuus.</inspireAddConformity>
-	
-	<mymetadata>Käyttäjän omistamat metatiedot</mymetadata>
+	<xsdError>Validoinnissa skeemaa vastaan tapahtui virhe.</xsdError>
+	<yourRegistration js="true">Rekisteröitymisesi...</yourRegistration>
+	<zip>Postinumero</zip>
+
+	<header_meta>
+		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
+		<meta name="DC.title" lang="English" content="GeoNetwork opensource portal to spatial data and information"/>
+		<meta name="DC.creator" content="GeoNetwork Team"/>
+		<meta name="DC.subject" lang="English" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="DC.description" lang="English" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<meta name="DC.publisher" content=""/>
+		<meta name="DC.date" content="02-07-2007"/>
+		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
+		<meta name="DC.format" content="text/html; charset=UTF-8"/>
+		<meta name="DC.language" content="English French Spanish Russian Chinese Dutch"/>
+		<meta name="DC.coverage" content="Global"/>
+	</header_meta>
+	<mainpage1>
+		<p>Paikkatietohakemistossa paikkatiedon tuottajat voivat luoda ja ylläpitää paikkatiedon metatietoja. Me-tatiedolla tarkoitetaan tietoa tiedosta ja paikkatiedolla tietoa kohteista, joiden sijainti Maan suhteen tunnetaan. Paikkatiedon metatieto siis kuvailee paikkatietoa.</p>
+
+<p>Paikkatietohakemistossa voi kuvailla paikkatietoa kolmella eri tasolla:
+<ul>
+<li>Paikkatietoaineisto on paikkatiedoista koostuva tietoaineisto eli yksilöitävissä oleva kokoelma tietoja.</li>
+<li>Paikkatietoaineistosarja on kokoelma tietoaineistoja, joihin liittyy pääosin sama metatietosisältö.</li>
+<li>Paikkatietopalvelu on paikkatietojen luovutukseen, käsittelyyn, muokkaukseen tai tulostukseen tarkoitettu palvelu.</li>
+</ul><br/>
+Kuvailujen tekemiseksi tarvitset käyttäjätunnuksen. Pyydä se osoitteesta <a href="mailto:metatieto@maanmittauslaitos.fi">metatieto@maanmittauslaitos.fi</a>. Samalla kannattaa kertoa, mitä paikkatietoaineistoja aiot kuvailla, niin voimme samalla antaa niille tunnisteet, joita tarvitset metatietoja täyttäessäsi.</p>
+
+<p>Kuvailujen tekemiseen löytyy ohjeistusta <a href="http://www.paikkatietoikkuna.fi/web/fi/metatiedot">Paikkatietoikkunasta Tukipalvelu-osiosta</a> ja <a href="http://www.paikkatietohakemisto.fi/geonetwork/docs/paikkatietohakemiston_kayttoohje.pdf">Paikkatietohakemiston käyttöohjeesta</a>. Kuvailuja voidaan luoda Paikkatietohakemiston editorin avulla tai tallentamalla itse luotu XML-tiedosto Paikkatietohakemistoon.</p>
+
+<p>Kuvailuja voi hakea ja selailla <a href="http://www.paikkatietoikkuna.fi/web/fi/paikkatietohaku">Paikkatietoikkunan paikkatietohaussa</a>, jossa on tarjolla useita eri hakuehtoja. Paikkatietohakemistoa käytetään ainoastaan metatietojen ylläpitoon.</p>
+
+<p>Kaikki julkaistut kuvailut haetaan Paikkatietohakemistosta CSW-rajapinnan kautta Paikkatietoikkunaan automaattisesti. CSW-rajapinnan saa mikä tahansa organisaatio käyttöönsä, joten jos haluat hakea esimerkiksi omat kuvailusi omille www-sivuillesi, ota yhteyttä <a href="mailto:metatieto@maanmittauslaitos.fi">metatieto@maanmittauslaitos.fi</a>. CSW-hakuja voi testata <a href="http://www.paikkatietohakemisto.fi/geonetwork/srv/fi/test.csw">täällä</a>.</p>
+	</mainpage1>
+	<mainpage2>
+	</mainpage2>
+	<mainhelp1> How to search... </mainhelp1>
+	<mainhelp2> Hide help... </mainhelp2>
+	<mainhelp3>
+		<p>
+			<font size="-2"> You can search using one of the provided options, or a combination of them.<br/> Only results matching all criteria will be displayed. </font>
+		</p>
+		<p>
+			<font size="-2"> The <b>What?</b> search searches for matching text in all metadata fields in GeoNetwork's content. <br/>
+				<i> When entering more than one word in the <b>Free text</b> textbox, they will be interpreted by the system as separated by AND. </i>
+			</font>
+		</p>
+		<p>
+			<font size="-2"> The <b>Topic</b> search will find maps matching a specific topic. </font>
+		</p>
+		<p>
+			<font size="-2"> The <b>Where?</b> search will find maps matching the bounding box of the selected area. </font>
+		</p>
+		<p>
+			<font size="-2"> Selecting the option "<b>
+					<input name="demo" type="checkbox" checked="checked"/> Including</b> the selected <b>Area</b>" will find maps that cover more than just the selected area.<br/>
+				<i>For example: Regional or Global maps that, among other countries, also cover the selected country</i>
+			</font>
+		</p>
+		<p>
+			<font size="-2"> Selecting the option "<b>
+					<input name="demo" type="checkbox" checked="checked"/> Partially overlapping</b> the selected <b>Area</b>" will also find maps that partially cover the selected area. </font>
+		</p>
+	</mainhelp3>
+	<savexml>
+		<dc>Tallenna Dublin Core-metatietodokumentti XML-tiedostoon</dc>
+		<fgdc>Tallenna FGDC-metatietodokumentti XML-tiedostoon</fgdc>
+		<iso19115Esri>Tallenna ISO19115-metatietodokumentti XML-tiedostoon for ESRI ArcCatalog</iso19115Esri>
+		<iso19139>Tallenna ISO19115/19139-metatietodokumentti XML-tiedostoon</iso19139>
+		<!--<iso19139fra>Tallenna ISO19115/19139 Fra-metatietodokumentti XML-tiedostoon</iso19139fra>-->
+	</savexml>
+	<thesaurus>
+
+		<addelement>Lisää elementti</addelement>
+		<admin>Asiasanastojen ylläpito</admin>
+		<broader>Laajempi käsite</broader>
+		<category>Sanaston kategoria</category>
+		<consultation>Selaa sanastoa</consultation>
+		<delete>Poista sanasto</delete>
+		<deleteelement>Poista elementti</deleteelement>
+		<download>Tallenna sanasto</download>
+		<edit>Muokkaa sanastoa</edit>
+		<editelement>Muokkaa elementtiä</editelement>
+		<edition>Muokkaa sanastoa</edition>
+		<en>in</en>
+		<foundKeyWords>Löydettyjen käsitteiden lukumäärä</foundKeyWords>
+		<foundKeyWordsLimit>Löydettyjen käsitteiden enimmäismäärä</foundKeyWordsLimit>
+		<keywordConfirm>Vahvista avainsanojen tiivistämisoperaatio</keywordConfirm>
+		<keywordDescription>Avainsanan määritelmä:</keywordDescription>
+		<management>Asiasanastojen ylläpito</management>
+		<manDes>Selaa ja päivitä asiasanastoja.</manDes>
+		<narrower>Kapeampi käsite</narrower>
+		<related>Liittyvä käsite</related>
+		<thesaurus>Sanasto</thesaurus>
+		<unknown>Tuntematon sanasto</unknown>
+		<update>Päivitä sanasto</update>
+		<updateelement>Päivitä elementti</updateelement>
+		<upload>Lataa sanasto</upload>
+	</thesaurus>
+	<searchhelp>
+		<searchAllText>Enter free text here</searchAllText>
+		<rtitle>Enter title here</rtitle>
+		<abstract>Enter abstract here</abstract>
+		<keywords>Pick keywords from existing metadata records</keywords>
+		<thesaurus>Pick keywords from thesauri</thesaurus>
+	</searchhelp>
+
+	<inspire>
+        <serviceType>
+            <value id="discovery">Discovery Service (discovery)</value>
+            <value id="view">View Service (view)</value>
+            <value id="download">Download Service (download)</value>
+            <value id="transformation">Transformation Service (transformation)</value>
+            <value id="invoke">Invoke Spatial Data Service (invoke)</value>
+            <value id="other">Other Services (other)</value>
+        </serviceType>
+        <spatialDataService>
+            <group label="Geographic human interaction services">
+                <value id="humanInteractionService">Geographic human interaction services</value>
+                <value id="humanCatalogueViewer">Catalogue viewer</value>
+                <value id="humanGeographicViewer">Geographic viewer</value>
+                <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
+                <value id="humanChainDefinitionEditor">Chain definition editor</value>
+                <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
+                <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
+                <value id="humanGeographicSymbolEditor">Geographic symbol editor</value>
+                <value id="humanFeatureGeneralizationEditor">Feature generalisation editor</value>
+                <value id="humanGeographicDataStructureViewer">Geographic data-structure viewer</value>
+            </group>
+
+            <group label="Geographic model/information management service">
+                <value id="infoManagementService">Geographic model/information management service</value>
+                <value id="infoFeatureAccessService">Feature access service</value>
+                <value id="infoMapAccessService">Map access service</value>
+                <value id="infoCoverageAccessService">Coverage access service</value>
+                <value id="infoSensorDescriptionService">Sensor description service</value>
+                <value id="infoProductAccessService">Product access service</value>
+                <value id="infoFeatureTypeService">Feature type service</value>
+                <value id="infoCatalogueService">Catalogue service</value>
+                <value id="infoRegistryService">Registry service</value>
+                <value id="infoGazetteerService">Gazetteer service</value>
+                <value id="infoOrderHandlingService">Order handling service</value>
+                <value id="infoStandingOrderService">Standing order service</value>
+            </group>
+
+            <group label="Geographic workflow/task management services">
+                <value id="taskManagementService">Geographic workflow/task management services</value>
+                <value id="chainDefinitionService">Chain definition service</value>
+                <value id="workflowEnactmentService">Workflow enactment service</value>
+                <value id="subscriptionService">Subscription service</value>
+            </group>
+
+            <group label="Geographic processing services – spatial">
+                <value id="spatialProcessingService">Geographic processing services – spatial</value>
+                <value id="spatialCoordinateConversionService">Coordinate conversion service </value>
+                <value id="spatialCoordinateTransformationService">Coordinate transformation service </value>
+                <value id="spatialCoverageVectorConversionService">Coverage/vector conversion service </value>
+                <value id="spatialImageCoordinateConversionService">Image coordinate conversion service</value>
+                <value id="spatialRectificationService">Rectification service</value>
+                <value id="spatialOrthorectificationService">Orthorectification service</value>
+                <value id="spatialSensorGeometryModelAdjustmentService">Sensor geometry model adjustment service</value>
+                <value id="spatialImageGeometryModelConversionService">Image geometry model conversion service</value>
+                <value id="spatialSubsettingService">Subsetting service</value>
+                <value id="spatialSamplingService">Sampling service</value>
+                <value id="spatialTilingChangeService">Tiling change service</value>
+                <value id="spatialDimensionMeasurementService">Dimension measurement service</value>
+                <value id="spatialFeatureManipulationService">Feature manipulation services</value>
+                <value id="spatialFeatureMatchingService">Feature matching service</value>
+                <value id="spatialFeatureGeneralizationService">Feature generalisation service</value>
+                <value id="spatialRouteDeterminationService">Route determination service</value>
+                <value id="spatialPositioningService">Positioning service</value>
+                <value id="spatialProximityAnalysisService">Proximity analysis service</value>
+            </group>
+
+            <group label="Geographic processing services – thematic">
+                <value id="thematicProcessingService">Geographic processing services – thematic</value>
+                <value id="thematicGoparameterCalculationService">Geoparameter calculation service</value>
+                <value id="thematicClassificationService">Thematic classification service</value>
+                <value id="thematicFeatureGeneralizationService">Feature generalisation service</value>
+                <value id="thematicSubsettingService">Subsetting service</value>
+                <value id="thematicSpatialCountingService">Spatial counting service</value>
+                <value id="thematicChangeDetectionService">Change detection service</value>
+                <value id="thematicGeographicInformationExtractionService">Geographic information extraction services</value>
+                <value id="thematicImageProcessingService">Image processing service</value>
+                <value id="thematicReducedResolutionGenerationService">Reduced resolution generation service</value>
+                <value id="thematicImageManipulationService">Image Manipulation Services</value>
+                <value id="thematicImageUnderstandingService">Image understanding services</value>
+                <value id="thematicImageSynthesisService">Image synthesis services</value>
+                <value id="thematicMultibandImageManipulationService">Multiband image manipulation</value>
+                <value id="thematicObjectDetectionService">Object detection service</value>
+                <value id="thematicGeoparsingService">Geoparsing service</value>
+                <value id="thematicGeocodingService">Geocoding service</value>
+            </group>
+
+             <group label="Geographic processing services – temporal">
+                <value id="temporalProcessingService">Geographic processing services – temporal</value>
+                <value id="temporalReferenceSystemTransformationService"> Temporal reference system transformation service</value>
+                <value id="temporalSubsettingService">Subsetting service</value>
+                <value id="temporalSamplingService">Sampling service</value>
+                <value id="temporalProximityAnalysisService">Temporal proximity analysis service</value>
+            </group>
+
+            <group label="Geographic processing services – metadata">
+                <value id="metadataProcessingService">Geographic processing services – metadata</value>
+                <value id="metadataStatisticalCalculationService">Statistical calculation service</value>
+                <value id="metadataGeographicAnnotationService">Geographic annotation services</value>
+            </group>
+
+            <group label="Geographic communication services">
+                <value id="comService">Geographic communication services</value>
+                <value id="comEncodingService">Encoding service</value>
+                <value id="comTransferService">Transfer service</value>
+                <value id="comGeographicCompressionService">Geographic compression service</value>
+                <value id="comGeographicFormatConversionService">Geographic format conversion service</value>
+                <value id="comMessagingService">Messaging service</value>
+                <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
+            </group>
+        </spatialDataService>
+
+		<what>
+			<l1>Inspire-hakuehdot</l1>
+			<l2>Inspire-metatiedot</l2>
+			<l3>Vain Inspire-metatiedot</l3>
+			<l4>Piilota Inspire-hakuehdot</l4>
+			<l5>Näytä Inspire-hakuehdot</l5>
+			<l6>Liite </l6>
+			<l7>Resurssin tyyppi</l7>
+			<l8>Kaikki</l8>
+			<l9>Paikkatietoaineistot ja -aineistosarjat</l9>
+			<l10>Paikkatietopalvelut</l10>
+			<l11>Organisaatio</l11>
+			<l12>Näytä Inspire-teemat</l12>
+			<l13>Piilota Inspire-teemat</l13>
+			<l14>Inspire-teema</l14>
+			<l15>Paikkatietopalvelun tyyppi</l15>
+		<l16>Classification of data services</l16>
+		</what>
+		<annex1>
+			<theme id="inspire_CoordinateRefSystems">Koordinaattireferenssijärjestelmät</theme>
+			<theme id="inspire_GeographicalGridSystems">Paikannusruudustot</theme>
+			<theme id="inspire_GeographicalNames">Paikannimet</theme>
+			<theme id="inspire_AdministrativeUnits">Hallinnolliset yksiköt</theme>
+			<theme id="inspire_Addresses">Osoitteet</theme>
+			<theme id="inspire_CadastralParcels">Kiinteistöt</theme>
+			<theme id="inspire_TransportNetworks">Liikenneverkot</theme>
+			<theme id="inspire_Hydrography">Hydrografia</theme>
+			<theme id="inspire_ProtectedSites">Suojellut alueet</theme>
+		</annex1>
+		<annex2>
+			<theme id="inspire_Elevation">Korkeus</theme>
+			<theme id="inspire_LandCover">Maanpeite</theme>
+			<theme id="inspire_Orthoimagery">Ortoilmakuvat</theme>
+			<theme id="inspire_Geology">Geologia</theme>
+		</annex2>
+		<annex3>
+			<theme id="inspire_StatisticalUnits">Tilastoyksiköt</theme>
+			<theme id="inspire_Buildings">Rakennukset</theme>
+			<theme id="inspire_Soil">Maaperä</theme>
+			<theme id="inspire_LandUse">Maankäyttö</theme>
+			<theme id="inspire_HumanHealthAndSafety">Väestön terveys ja turvallisuus</theme>
+			<theme id="inspire_UtilityAndGovernmentServices">Yleishyödylliset ja muut julkiset palvelut</theme>
+			<theme id="inspire_EnvironmentalMonitoringFacilities">Ympäristön tilan seurantalaitteet</theme>
+			<theme id="inspire_ProductionAndIndustrialFacilities">Tuotanto- ja teollisuuslaitokset</theme>
+			<theme id="inspire_AgriculturalAndAquacultureFacilities">Maatalous- ja vesiviljelylaitokset</theme>
+			<theme id="inspire_PopulationDistribution-Demography">Väestöjakauma - demografia</theme>
+			<theme id="inspire_AreaManagementRestrictionRegulationZonesAndReportingUnits">Aluesuunnittelun, rajoitusten ja sääntelyn piiriin kuuluvat alueet ja raportointiyksiköt</theme>
+			<theme id="inspire_NaturalRiskZones">Luonnonriskialueet</theme>
+			<theme id="inspire_AtmosphericConditions">Ilmakehän tila</theme>
+			<theme id="inspire_MeteorologicalGeographicalFeatures">Ilmaston maantieteelliset ominaispiirteet</theme>
+			<theme id="inspire_OceanographicGeographicalFeatures">Merentutkimuksen maantieteelliset ominaispiirteet</theme>
+			<theme id="inspire_SeaRegions">Merialueet</theme>
+			<theme id="inspire_Bio-geographicalRegions">Biomaantieteelliset alueet</theme>
+			<theme id="inspire_HabitatsAndBiotopes">Elinympäristöt ja biotoopit</theme>
+			<theme id="inspire_SpeciesDistribution">Lajien levinneisyys</theme>
+			<theme id="inspire_EnergyResources">Energiavarat</theme>
+			<theme id="inspire_MineralResources">Mineraalivarat</theme>
+		</annex3>
+	</inspire>
+
+	<selectMetadataFileAlert>Valitse lisättävä tiedosto.</selectMetadataFileAlert>
+	<showMoreSearchFields>Näytä / piilota tarkemmat hakuehdot.</showMoreSearchFields>
+	<searchEitherOfTheWords>Jokin sanoista</searchEitherOfTheWords>
+	<searchExactPhrase>Täsmälleen</searchExactPhrase>
+	<searchAllWords>Kaikki sanat</searchAllWords>
+	<searchWithoutWords>Ei sisällä sanoja</searchWithoutWords>
+
+	<showMap>Näytä kartta</showMap>
+	<mapViewer>Karttaselain</mapViewer>
+
+	<uuid>Yksilöivä tunniste</uuid>
 	<quickSearch>Quick search links</quickSearch>
+	<mymetadata>Käyttäjän omistamat metatiedot</mymetadata>
 	<catalogueRecords>Catalogue metadata</catalogueRecords>
 	<harvestedRecords>Harvested metadata</harvestedRecords>
 	<catalogueTemplates>Catalogue templates</catalogueTemplates>
 	<addremove>Lisää / Poista</addremove>
 	<enabled>Käytössä</enabled>
 	<notifications>Ilmoita etäkohteille</notifications>
-	<url>WWW-osoite</url>
-	
+
 	<cswServer>CSW-palvelin</cswServer>
-    <cswServerDes>CSW-palvelimen asetukset</cswServerDes>
-    <cswServerConfig>CSW-palvelimen asetusten ylläpito</cswServerConfig>
-    <cswServerEnable>Käytössä</cswServerEnable>
-    <cswServerMetadataPublic>Lisätty metatietodokumentti on julkinen (Transaction)</cswServerMetadataPublic>
-    <cswServerTitle>Nimi</cswServerTitle>
-    <cswServerAbstract>Tiivistelmä</cswServerAbstract>
-    <cswServerFees>Hinnat</cswServerFees>
-    <cswServerAccessConstraints>Saatavuusehdot</cswServerAccessConstraints>
-    <cswServerContact>Yhteystiedot</cswServerContact>
+	<cswServerDes>CSW-palvelimen asetukset</cswServerDes>
+	<cswServerConfig>CSW-palvelimen asetusten ylläpito</cswServerConfig>
+	<cswServerEnable>Käytössä</cswServerEnable>
+	<cswServerMetadataPublic>Lisätty metatietodokumentti on julkinen (Transaction)</cswServerMetadataPublic>
+	<cswServerTitle>Nimi</cswServerTitle>
+	<cswServerAbstract>Tiivistelmä</cswServerAbstract>
+	<cswServerFees>Hinnat</cswServerFees>
+	<cswServerAccessConstraints>Saatavuusehdot</cswServerAccessConstraints>
+	<cswServerContact>Yhteystiedot</cswServerContact>
+
 	<virtualcswServer>Configure virtual CSW access point</virtualcswServer>
 	<virtualcswServerDes>Configuration of virtual CSW servers</virtualcswServerDes>
 	<virtualcswServerConfig>Configuration of virtual CSW servers</virtualcswServerConfig>
@@ -1323,9 +1397,9 @@ vaatimusten täyttämiseksi ilmoitetaan seuraavat kaksi metatietoelementtiä:
 	<virtualcswServicenameSpecialChars>Service name must not contain special characters.</virtualcswServicenameSpecialChars>
 	<virtualcswClassnameMandatory>Class name is mandatory.</virtualcswClassnameMandatory>
 	<virtualcswServiceNameStartsWith>Service name must begin with \"csw-\".</virtualcswServiceNameStartsWith>
-	
+
 	<virtualcswUpdateService>Update a CSW virtual server</virtualcswUpdateService>
-	
+
 	<virtualcswAny>Free text</virtualcswAny>
 	<virtualcswTitle>Title</virtualcswTitle>
 	<virtualcswAbstract>Abstract</virtualcswAbstract>
@@ -1335,16 +1409,26 @@ vaatimusten täyttämiseksi ilmoitetaan seuraavat kaksi metatietoelementtiä:
 	<virtualcswGroup>Group</virtualcswGroup>
 	<virtualcswCategory>Category</virtualcswCategory>
 	<virtualcswType>Resource type</virtualcswType>
-    <customize-elementset>Muokkaa elementtijoukkoa.</customize-elementset>
-    <csw-server-disabled>CSW-palvelin ei ole käytössä.</csw-server-disabled>
-    <custom-elementset-intro>Määrittele elementit, jotka haluat liittää elementtijoukkoosi. Jokaisella elementillä pitää olla täydellinen XPATH-osoite alkaen dokumentin juuresta. Nämä elementit ja niiden alielementit liitetään CSW-vastauksiin, jos haluttu elementtijoukko on FULL.</custom-elementset-intro>
-    <custom-elementset-revert>Muokkaa oletusarvoista elementtijoukkoa FULL poistamalla elementtejä tästä listasta.</custom-elementset-revert>
-    <custom-elementset-add>Lisää elementti.</custom-elementset-add>
 
-    <wmslayers>WMS-karttatasot</wmslayers>
-    <formatter.admin>Metadata Formatter Admin</formatter.admin>
-    <formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
+	<customize-elementset>Muokkaa elementtijoukkoa.</customize-elementset>
+	<csw-server-disabled>CSW-palvelin ei ole käytössä.</csw-server-disabled>
+	<custom-elementset-intro>Määrittele elementit, jotka haluat liittää elementtijoukkoosi. Jokaisella elementillä pitää olla täydellinen XPATH-osoite alkaen dokumentin juuresta. Nämä elementit ja niiden alielementit liitetään CSW-vastauksiin, jos haluttu elementtijoukko on FULL.</custom-elementset-intro>
+	<custom-elementset-revert>Muokkaa oletusarvoista elementtijoukkoa FULL poistamalla elementtejä tästä listasta.</custom-elementset-revert>
+	<custom-elementset-add>Lisää elementti.</custom-elementset-add>
+
+	<wmslayers>WMS-karttatasot</wmslayers>
+	<formatter.admin>Metadata Formatter Admin</formatter.admin>
+	<formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+
+	<advancedOptions.show>show advanced options</advancedOptions.show>
+	<advancedOptions.hide>hide advanced options</advancedOptions.hide>
+	<latestDatasets>Latest</latestDatasets>
+	<popularDatasets>Popular</popularDatasets>
+	<filter>Filter</filter>
+	<welcome.text>Welcome to GeoNetwork</welcome.text>
+	<tag_label>Tags</tag_label>
+	<map_label>Map</map_label>
 </strings>

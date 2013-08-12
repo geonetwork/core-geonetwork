@@ -116,6 +116,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     
     newMetadataWindow: undefined,
     
+    insertMetadataWindow: undefined,
+    
     mdImportAction: undefined,
     
     adminAction: undefined,
@@ -232,6 +234,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         this.ownerAction = new Ext.menu.Item({
             text: OpenLayers.i18n('newOwner'),
             id: 'ownerAction',
+            iconCls: 'newOwnerIcon',
             handler: function(){
                 this.catalogue.massiveOp('NewOwner');
             },
@@ -242,6 +245,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         this.updateCategoriesAction = new Ext.menu.Item({
             text: OpenLayers.i18n('updateCategories'),
             id: 'updateCategoriesAction',
+            iconCls: 'categoryIcon',
             handler: function(){
                 this.catalogue.massiveOp('Categories');
             },
@@ -374,8 +378,31 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
 
         this.mdImportAction = new Ext.menu.Item({
             text: OpenLayers.i18n('importMetadata'),
+            iconCls: 'importIcon',
             handler: function(){
-                this.catalogue.metadataImport();
+                if (this.insertMetadataWindow) {
+                    this.insertMetadataWindow.close();
+                    this.insertMetadataWindow = undefined;
+                }
+                
+                // Create a window to choose the template and the group
+                if (!this.insertMetadataWindow) {
+                    var insertMetadataPanel = new GeoNetwork.editor.InsertMetadataPanel({
+                    });
+                    
+                    this.insertMetadataWindow = new Ext.Window({
+                        title: OpenLayers.i18n('importMetadata'),
+                        width: 660,
+                        height: 650,
+                        layout: 'fit',
+                        modal: true,
+                        items: insertMetadataPanel,
+                        closeAction: 'hide',
+                        constrain: true,
+                        iconCls: 'addIcon'
+                    });
+                }
+                this.insertMetadataWindow.show();
             },
             scope: this,
             hidden: hide
@@ -386,6 +413,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
 
         this.adminAction = new Ext.menu.Item({
             text: OpenLayers.i18n('administration'),
+            iconCls: 'adminIcon',
             handler: function(){
                 this.catalogue.admin();
             },
@@ -432,6 +460,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
          */
         var csvExportAction = new Ext.Action({
             text: OpenLayers.i18n('exportCsv'),
+            iconCls: 'csvIcon',
             handler: function(){
                 this.catalogue.csvExport();
             },

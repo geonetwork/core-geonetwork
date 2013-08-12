@@ -32,7 +32,13 @@ GeoNetwork.searchDefault = {
 GeoNetwork.advancedFormButton = true;
 
 GeoNetwork.Settings.editor = {
+    disableIfSubmittedForEditor: false,
     defaultViewMode : 'simple',
+    // Define which edit mode to use by default
+    // according to metadata schema
+    editMode: {
+//        'iso19139': 'identification'
+    },
     editHarvested: false
 //    defaultViewMode : 'inspire'
 };
@@ -56,6 +62,11 @@ GeoNetwork.hideLoginLabels = true;
 //GeoNetwork.Settings.mdStore = GeoNetwork.data.MetadataResultsStore;
 // IndexOnly mode (xml.search with lucene only) - recommended
 GeoNetwork.Settings.mdStore = GeoNetwork.data.MetadataResultsFastStore;
+
+GeoNetwork.Settings.tagCloud = {
+//    root: 'inspireThemes.inspireTheme'
+    root: 'keywords.keyword'
+};
 
 // List of facet to display. If none, the server configuration is use.
 GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'}, 

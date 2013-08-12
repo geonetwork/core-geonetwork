@@ -30,7 +30,7 @@ import java.util.Set;
 
 public interface StatusActions {
 
-	public void init(ServiceContext context, Dbms dbms);
+	public void init(ServiceContext context, Dbms dbms) throws Exception;
 
 	public void onEdit(int id, boolean minorEdit) throws Exception;
 

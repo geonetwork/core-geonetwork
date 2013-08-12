@@ -44,9 +44,7 @@ function init()
 	valid.add(
 	[
 		{ id:'filesystem.name', type:'length',   minSize :1,  maxSize :200 },
-		{ id:'filesystem.directoryname',     type:'length',   minSize :1,  maxSize :500 },
-		{ id:'filesystem.recurse',     type:'length',   minSize :1,  maxSize :10 },
-		{ id:'filesystem.nodelete',    type:'length',   minSize :1,  maxSize :10 }
+		{ id:'filesystem.directoryname',     type:'length',   minSize :1,  maxSize :500 }
 	]);
 
 }
@@ -79,7 +77,8 @@ function setData(node)
 	var nodelete = node.getElementsByTagName('nodelete')    [0];
 	hvutil.setOption(node, 'directory', 'filesystem.directoryname');
 	hvutil.setOption(node, 'recurse', 'filesystem.recurse');
-	hvutil.setOption(node, 'nodelete', 'filesystem.nodelete');
+	hvutil.setOption(node, 'checkFileLastModifiedForUpdate', 'filesystem.checkFileLastModifiedForUpdate');
+    hvutil.setOption(node, 'nodelete', 'filesystem.nodelete');
 	hvutil.setOption(node, 'icon', 'filesystem.icon');
 
 
@@ -106,9 +105,11 @@ function getData()
 
 	data.DIRECTORYNAME = $F('filesystem.directoryname');
 
-	data.RECURSE = $F('filesystem.recurse');
-	data.NODELETE = $F('filesystem.nodelete');
-
+	data.RECURSE = $('filesystem.recurse').checked;
+    data.NODELETE = $('filesystem.nodelete').checked;
+    data.checkFileLastModifiedForUpdate = $('filesystem.checkFileLastModifiedForUpdate').checked;
+    
+    
 	data.ICON = $F('filesystem.icon');
 	
 	//--- retrieve privileges and categories information

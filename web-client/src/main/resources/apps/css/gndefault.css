@@ -191,6 +191,8 @@ table.map {
 }
 #infoPanel {
   color: #777777;
+  overflow: auto;
+  height: 100%;
 }
 #infoPanel h3 {
   color: #000000;
@@ -373,6 +375,21 @@ table.related * a:hover,
 }
 .connect {
   background-image : url(../images/default/connect.png) !important;
+}
+.importIcon {
+  background-image : url(../images/default/import.png) !important;
+}
+.adminIcon {
+  background-image : url(../images/default/admin.png) !important;
+}
+.csvIcon {
+  background-image : url(../images/default/csv.png) !important;
+}
+.categoryIcon {
+  background-image : url(../images/default/tag_orange.png) !important;
+}
+.newOwnerIcon {
+  background-image : url(../images/default/newOwner.png) !important;
 }
 .subtemplateIcon {
   background-image : url(../images/default/report_magnify.png) !important;
@@ -566,8 +583,7 @@ div.facets * .facet-less-bt a {
 }
 .gn-bt-main * button ,
 .gn-bt-main * span {
-    /*font-weight: bold;*/
-    text-shadow: 0 0 0.1em grey;
+    font-weight: bolder;
 }
 .alert {
     padding: 8px 35px 8px 14px;
@@ -630,6 +646,12 @@ div.facets * .facet-less-bt a {
 }
 .label-info, .badge-info {
     background-color: #3A87AD;
+}
+.label-success-font {
+    color: #468847;
+}
+.label-error-font {
+    color: red;
 }
 .validation * h2, .validation * div {
     white-space: normal !important;
@@ -762,4 +784,23 @@ ul.gn-relation-thumbnail {
 }
 #login-form .gn-login {
     margin-left: 3px
+}
+
+.md-insert-status-title {
+	font-weight: 700;
+	padding-bottom: 5px;
+}
+.md-import-status-panel li {
+    padding-left: 15px;
+}
+
+.gn-onlineResForm {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.gn-onlineResForm-grid .x-panel-body {
+    padding-bottom: 15px;
+}
+.gn-onlineResForm-grid .x-panel-header {
+    background-image: none;
 }

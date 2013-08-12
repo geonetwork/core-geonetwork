@@ -85,7 +85,8 @@ public class SendLink extends MailSendingService {
 
 		// only let registered users change their password  
 		if (!elUser.getChild("record").getChild("profile").getText().equals(Geonet.Profile.REGISTERED_USER)) 
-			throw new OperationNotAllowedEx("Only users with profile RegisteredUser can change their password using this option");
+			// Don't throw OperationNotAllowedEx because it is not related to not having enough priviledges
+			throw new IllegalArgumentException("Only users with profile RegisteredUser can change their password using this option");
 		
 		// get mail settings		
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
