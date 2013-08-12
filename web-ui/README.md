@@ -38,14 +38,48 @@ JS dependencies needs to be updated when adding a new module.
 ```
 git clone http://code.google.com/p/closure-library/
 cd core-geonetwork/web-ui/src/main/resources
-python ../../../../../closure-library/closure/bin/build/depswriter.py --root_with_prefix="catalog/components ../../components" --root_with_prefix="catalog/js ../../js" --output_file=catalog/lib/closure/deps.js
+python ../../../../../closure-library/closure/bin/build/depswriter.py \
+    --root_with_prefix="catalog/components ../../components" \
+    --root_with_prefix="catalog/js ../../js" \
+    --output_file=catalog/lib/closure/deps.js
 ```
 
 TODO: Add to maven
 
 ### Minify
 
-TODO
+
+Download compiler from http://closure-compiler.googlecode.com/files/compiler-latest.zip
+
+See https://developers.google.com/closure/library/docs/closurebuilder?hl=fr
+
+
+Run closurebuilder to create minified version of each modules:
+```
+python ../../../../../closure-library/closure/bin/build/closurebuilder.py \
+  --root=catalog \
+  --namespace="gn" \
+  --output_mode=compiled \
+  --compiler_jar=../../../../compiler.jar \
+  > catalog/js/gn.min.js
+
+
+python ../../../../../closure-library/closure/bin/build/closurebuilder.py \
+  --root=catalog \
+  --namespace="gn_admin" \
+  --output_mode=compiled \
+  --compiler_jar=../../../../compiler.jar \
+  > catalog/js/gn_admin.min.js
+
+python ../../../../../closure-library/closure/bin/build/closurebuilder.py \
+  --root=catalog \
+  --namespace="gn_login" \
+  --output_mode=compiled \
+  --compiler_jar=../../../../compiler.jar \
+  > catalog/js/gn_login.min.js
+```
+
+TODO: Add to maven
 
 ### Compile
 

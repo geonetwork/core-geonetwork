@@ -2,8 +2,13 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata">
+  <!-- Provides XSL function related to metadata management like
+  retrieving labels, helper, -->
 
 
+  <!-- 
+    Return the label of an element looking in <schema>/loc/<lang>/labels.xml
+  -->
   <xsl:function name="gn-fn-metadata:getLabel" as="xs:string">
     <xsl:param name="schema" as="xs:string"/>
     <xsl:param name="name" as="xs:string"/>
@@ -15,6 +20,10 @@
 
 
 
+  <!-- 
+    Return the list of helper for an element looking in <schema>/loc/<lang>/labels.xml
+    helper tag.
+  -->
   <xsl:function name="gn-fn-metadata:getHelper" as="xs:string">
     <xsl:text/>
   </xsl:function>
@@ -31,6 +40,11 @@
     </xsl:copy>
   </xsl:template>
 
+
+
+  <!-- 
+    Return the xpath of a node.
+  -->
   <xsl:function name="gn-fn-metadata:getXPath" as="xs:string">
     <xsl:param name="node" as="node()"/>
     

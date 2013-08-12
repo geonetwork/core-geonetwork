@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  
+  <!-- The profile loader using the oasis-catalog to load
+  <schema>/layout/core.xsl in each activated schema plugins.
+  -->
   <xsl:include href="blanks/metadata-schema01/layout/core.xsl"/>
   <xsl:include href="blanks/metadata-schema02/layout/core.xsl"/>
   <xsl:include href="blanks/metadata-schema03/layout/core.xsl"/>

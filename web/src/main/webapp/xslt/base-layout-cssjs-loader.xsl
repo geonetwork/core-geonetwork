@@ -33,35 +33,46 @@
   
   
   <xsl:template name="javascript-load">
-    <script src="{$uiResourcesPath}lib/closure/base.js"></script>
-    <script src="{$uiResourcesPath}lib/jquery-2.0.2.js"></script>
-    <script src="{$uiResourcesPath}lib/angular-1.1.5.js"></script>
-    <script src="{$uiResourcesPath}lib/angular-translate-0.9.4.js"></script>
-    <script src="{$uiResourcesPath}lib/angular-translate-loader-static-files-0.1.2.js"></script>
-    <script src="{$uiResourcesPath}lib/bootstrap-3.0.0.js"></script>
     
-    <xsl:if test="$withD3">
-      <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
-      <script src="{$uiResourcesPath}lib/d3.ext/gauge.js"></script>
-      <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
-    </xsl:if>
     <script src="{$uiResourcesPath}lib/less-1.4.1.min.js"></script>
-    
-    
-    <!-- Use Closure to load the application scripts -->
-    <script>
-      window.CLOSURE_NO_DEPS = true;
-    </script>
-    
-    <script>
-      goog.require('<xsl:value-of select="$angularApp"/>');
-    </script>
     
     <xsl:choose>
       <xsl:when test="$isDebugMode">
+        <script src="{$uiResourcesPath}lib/closure/base.js"></script>
+        <script src="{$uiResourcesPath}lib/jquery-2.0.2.js"></script>
+        <script src="{$uiResourcesPath}lib/angular-1.1.5.js"></script>
+        <script src="{$uiResourcesPath}lib/angular-translate-0.9.4.js"></script>
+        <script src="{$uiResourcesPath}lib/angular-translate-loader-static-files-0.1.2.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-3.0.0.js"></script>
+        
+        <xsl:if test="$withD3">
+          <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
+          <script src="{$uiResourcesPath}lib/d3.ext/gauge.js"></script>
+          <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
+        </xsl:if>
+        
+        <!-- Use Closure to load the application scripts -->
+        <script>
+          window.CLOSURE_NO_DEPS = true;
+        </script>
+        
+        <script>
+          goog.require('<xsl:value-of select="$angularApp"/>');
+        </script>
       </xsl:when>
       <xsl:otherwise>
-        <!-- TODO minify JS -->
+        <script src="{$uiResourcesPath}lib/jquery-2.0.2.min.js"></script>
+        <script src="{$uiResourcesPath}lib/angular-1.1.5.min.js"></script>
+        <script src="{$uiResourcesPath}lib/angular-translate-0.9.4.min.js"></script>
+        <script src="{$uiResourcesPath}lib/angular-translate-loader-static-files-0.1.2.min.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-3.0.0.min.js"></script>
+        
+        <xsl:if test="$withD3">
+          <script src="{$uiResourcesPath}lib/d3.v3.min.js"></script>
+          <script src="{$uiResourcesPath}lib/d3.ext/gauge.js"></script>
+          <script src="{$uiResourcesPath}lib/nv.d3.min.js"></script>
+        </xsl:if>
+        <script src="{$uiResourcesPath}js/{$angularApp}.min.js"></script>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

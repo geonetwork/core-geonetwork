@@ -3,6 +3,8 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:gn="http://www.fao.org/geonetwork"
   >
+  <!-- Global XSL variables about the metadata record. This should be included for
+  service dealing with one metadata record (eg. viewing, editing). -->
   
   <xsl:include href="base-variables.xsl"/>
   

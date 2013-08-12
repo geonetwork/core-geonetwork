@@ -3,6 +3,7 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   exclude-result-prefixes="#all">
+  <!-- Rendering templates for creating HTML elements. -->
   
   <xsl:import href="common/base-variables-metadata.xsl"/>
   

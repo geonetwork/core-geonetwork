@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <!-- Global XSL variables about the catalog and user session -->
 
   <xsl:variable name="uiResourcesPath" select="'../../catalog/'"/>
   <xsl:variable name="service" select="/root/gui/reqService"/>
