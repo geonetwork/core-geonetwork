@@ -165,11 +165,9 @@ public class User implements JeevesUser {
      * Set all the email addresses.
      *
      * @param email all the email addresses.
-     * @return this user object
      */
-    public User setEmailAddresses(Set<String> email) {
+    protected void setEmailAddresses(Set<String> email) {
         this._email = email;
-        return this;
     }
 
     /**
@@ -188,9 +186,24 @@ public class User implements JeevesUser {
      * @param addresses all the user's addresses.
      * @return this user object
      */
-    public User setAddresses(Set<Address> addresses) {
+    protected User setAddresses(Set<Address> addresses) {
         this._addresses = addresses;
         return this;
+    }
+    
+    /**
+     * Get the first address in the list of the addresses.
+     * 
+     * @return the first address in the list of the addresses.
+     */
+    public @Nonnull Address getPrimaryAddress() {
+        Set<Address> addresses = getAddresses();
+        
+        if (addresses.isEmpty()) {
+            addresses.add(new Address());
+        }
+        
+        return addresses.iterator().next();
     }
 
     /**

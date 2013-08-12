@@ -13,6 +13,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserSecurity;
+import org.fao.geonet.domain.UserSecurityNotification;
 import org.fao.geonet.repository.UserRepository;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,8 +32,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 public class PasswordUtil {
 
-	public static final String HASH_UPDATE_REQUIRED = "update_hash_required";
-	public static final String SECURITY_FIELD = "security";
 	public static final String ENCODER_ID = "geonetworkEncoder";
 	public static final String PASSWORD_COLUMN = "password";
 
@@ -43,7 +42,7 @@ public class PasswordUtil {
 	 * @return true if the user needs its hash updated
 	 */
 	public static boolean hasOldHash(User user) {
-		return user.getSecurity().getSecurityNotifications().contains(HASH_UPDATE_REQUIRED);
+		return user.getSecurity().getSecurityNotifications().contains(UserSecurityNotification.HASH_UPDATE_REQUIRED);
 	}
 	/**
 	 * Compare the hash (read from database) to *all* type of hashes used by geonetwork.  This should not be used
@@ -70,28 +69,6 @@ public class PasswordUtil {
 		return unsaltedScramble(password).equals(hash) || oldScramble(password).equals(hash);
 	}
 
-	/**
-	 * Remove the {@value PasswordUtil.HASH_UPDATE_REQUIRED} tag from the security element of the userXml
-	 * and return the value of the security element (minus the tag)
-	 * 
-	 * @param userXml a database query for the user containing the security column
-	 * @return the value of the security element (minus the {@value PasswordUtil.HASH_UPDATE_REQUIRED} tag)
-	 */
-	public static String removeSecurityTag(User user) {
-		UserSecurity security = user.getSecurity();
-        String securityNote = security.getSecurityNotifications();
-		StringBuilder newSec = new StringBuilder();
-		for (String seg: securityNote.split(",")) {
-			if(newSec.length() > 0){
-				newSec.append(',');
-			}
-			if(!seg.trim().equals(HASH_UPDATE_REQUIRED)){
-				newSec.append(seg);
-			}
-		}
-		security.setSecurityNotifications(newSec.toString());
-		return newSec.toString();
-	}
 	/**
 	 * SHA-1 Cryptographic hash algorithm
 	 * See #191
@@ -215,7 +192,7 @@ public class PasswordUtil {
 			}
 		}
 		
-		removeSecurityTag (user);
+		user.getSecurity().getSecurityNotifications().remove(UserSecurityNotification.HASH_UPDATE_REQUIRED);
 		
 		String newPasswordHash = encoder.encode(newPassword);
 		user.getSecurity().setPassword(newPasswordHash.toCharArray());

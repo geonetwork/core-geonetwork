@@ -3,8 +3,10 @@ package org.fao.geonet.kernel.security;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.resources.ResourceManager;
 import junit.framework.TestCase;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserSecurityNotification;
 import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
 import org.junit.Before;
@@ -99,7 +101,7 @@ public class GeonetworkAuthenticationProviderTest {
     private void userFoundSetup() throws Exception{
         Element response = new Element("response");
         Element record = userXML();
-        Element security = new Element(PasswordUtil.SECURITY_FIELD);
+        Element security = new Element(UserSecurityNotification.HASH_UPDATE_REQUIRED.name());
         record.addContent(security);
         response.addContent(record);
         when(dbms.select(anyString(), anyString())).thenReturn(response);

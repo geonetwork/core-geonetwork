@@ -2,8 +2,6 @@ package org.fao.geonet;
 
 import static org.fao.geonet.Column.column;
 import static org.fao.geonet.repository.SpringDataTestSupport.updateNatively;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,8 +9,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -131,11 +127,11 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             "RELATIONS", "REQUESTS", "SERVICEPARAMETERS", "SERVICES", "SETTINGS", "SOURCES", "STATUSVALUES", "STATUSVALUESDES",
             "THESAURUS", "USERGROUPS", "USERS", "USER_ADDRESS", "VALIDATION" };
     Column[] FROM_COLUMNS_TABLE = new Column[] { column("CATEGORIES", "NAME", "<null>", "NO", "VARCHAR", "255"),
-            column("CATEGORIES", "ID", "<null>", "NO", "INTEGER", "10"), column("CATEGORIESDES", "LANGID", "<null>", "NO", "VARCHAR", "5"),
+            column("CATEGORIES", "ID", "<null>", "NO", "INTEGER", "10", true), column("CATEGORIESDES", "LANGID", "<null>", "NO", "VARCHAR", "5"),
             column("CATEGORIESDES", "LABEL", "<null>", "NO", "VARCHAR", "255"),
             column("CATEGORIESDES", "IDDES", "<null>", "NO", "INTEGER", "10"),
             column("CSWSERVERCAPABILITIESINFO", "LANGID", "<null>", "NO", "VARCHAR", "5"),
-            column("CSWSERVERCAPABILITIESINFO", "IDFIELD", "<null>", "NO", "INTEGER", "10"),
+            column("CSWSERVERCAPABILITIESINFO", "IDFIELD", "<null>", "NO", "INTEGER", "10", true),
             column("CSWSERVERCAPABILITIESINFO", "FIELD", "<null>", "NO", "VARCHAR", "32"),
             column("CSWSERVERCAPABILITIESINFO", "LABEL", "<null>", "YES", "CLOB", "2147483647"),
             column("CUSTOMELEMENTSET", "XPATH", "<null>", "NO", "VARCHAR", "1000"),
@@ -144,7 +140,7 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             column("GROUPS", "ID", "<null>", "NO", "INTEGER", "10", true), column("GROUPSDES", "LABEL", "<null>", "NO", "VARCHAR", "96"),
             column("GROUPSDES", "LANGID", "<null>", "NO", "VARCHAR", "5"), column("GROUPSDES", "IDDES", "<null>", "NO", "INTEGER", "10"),
             column("HARVESTHISTORY", "HARVESTDATE", "<null>", "YES", "VARCHAR", "30"),
-            column("HARVESTHISTORY", "ID", "<null>", "NO", "INTEGER", "10"),
+            column("HARVESTHISTORY", "ID", "<null>", "NO", "INTEGER", "10", true),
             column("HARVESTHISTORY", "ELAPSEDTIME", "<null>", "YES", "INTEGER", "10"),
             column("HARVESTHISTORY", "HARVESTERUUID", "<null>", "YES", "VARCHAR", "255"),
             column("HARVESTHISTORY", "HARVESTERNAME", "<null>", "YES", "VARCHAR", "255"),
@@ -152,14 +148,14 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             column("HARVESTHISTORY", "INFO", "<null>", "YES", "CLOB", "2147483647"),
             column("HARVESTHISTORY", "PARAMS", "<null>", "YES", "CLOB", "2147483647"),
             column("HARVESTHISTORY", "DELETED", "<null>", "NO", "CHAR", "1"), 
-            column("ISOLANGUAGES", "ID", "<null>", "NO", "INTEGER", "10"),
+            column("ISOLANGUAGES", "ID", "<null>", "NO", "INTEGER", "10", true),
             column("ISOLANGUAGES", "CODE", "<null>", "NO", "VARCHAR", "3"),
             column("ISOLANGUAGES", "SHORTCODE", "<null>", "YES", "VARCHAR", "2"),
             column("ISOLANGUAGESDES", "LABEL", "<null>", "NO", "VARCHAR", "255"),
             column("ISOLANGUAGESDES", "LANGID", "<null>", "NO", "VARCHAR", "5"),
             column("ISOLANGUAGESDES", "IDDES", "<null>", "NO", "INTEGER", "10"),
             column("LANGUAGES", "ISDEFAULT", "<null>", "YES", "CHAR", "1"), 
-            column("LANGUAGES", "ID", "<null>", "NO", "VARCHAR", "5"),
+            column("LANGUAGES", "ID", "<null>", "NO", "VARCHAR", "5", true),
             column("LANGUAGES", "NAME", "<null>", "NO", "VARCHAR", "255"), 
             column("LANGUAGES", "ISINSPIRE", "<null>", "YES", "CHAR", "1"),
             column("METADATA", "RATING", "<null>", "NO", "INTEGER", "10"), 
@@ -184,7 +180,7 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             column("METADATACATEG", "CATEGORYID", "<null>", "NO", "INTEGER", "10"),
             column("METADATACATEG", "METADATAID", "<null>", "NO", "INTEGER", "10"),
             column("METADATANOTIFICATIONS", "ERRORMSG", "<null>", "YES", "CLOB", "2147483647"),
-            column("METADATANOTIFICATIONS", "ACTION", "<null>", "NO", "CHAR", "1"),
+            column("METADATANOTIFICATIONS", "ACTION", "<null>", "NO", "INTEGER", "10"),
             column("METADATANOTIFICATIONS", "METADATAUUID", "<null>", "NO", "VARCHAR", "255"),
             column("METADATANOTIFICATIONS", "METADATAID", "<null>", "NO", "INTEGER", "10"),
             column("METADATANOTIFICATIONS", "NOTIFIERID", "<null>", "NO", "INTEGER", "10"),
@@ -194,7 +190,7 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             column("METADATANOTIFIERS", "ENABLED", "<null>", "NO", "CHAR", "1"),
             column("METADATANOTIFIERS", "URL", "<null>", "NO", "VARCHAR", "255"),
             column("METADATANOTIFIERS", "NAME", "<null>", "NO", "VARCHAR", "32"),
-            column("METADATANOTIFIERS", "ID", "<null>", "NO", "INTEGER", "10"),
+            column("METADATANOTIFIERS", "ID", "<null>", "NO", "INTEGER", "10", true),
             column("METADATARATING", "METADATAID", "<null>", "NO", "INTEGER", "10"),
             column("METADATARATING", "IPADDRESS", "<null>", "NO", "VARCHAR", ""+Constants.IP_ADDRESS_COLUMN_LENGTH),
             column("METADATARATING", "RATING", "<null>", "NO", "INTEGER", "10"),
@@ -238,7 +234,7 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             column("SERVICEPARAMETERS","VALUE","<null>","NO","VARCHAR","1024"),
             column("SERVICES","CLASS","<null>","NO","VARCHAR","1024"),
             column("SERVICES","DESCRIPTION","<null>","YES","VARCHAR","1024"),
-            column("SERVICES","ID","<null>","NO","INTEGER","10"),
+            column("SERVICES","ID","<null>","NO","INTEGER","10", true),
             column("SERVICES","NAME","<null>","NO","VARCHAR","255"),
             column("SETTINGS","ID","<null>","NO","INTEGER","10", true),
             column("SETTINGS","NAME","<null>","NO","VARCHAR","255"),
@@ -247,19 +243,19 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             column("SOURCES","ISLOCAL","<null>","NO","CHAR","1"),
             column("SOURCES","NAME","<null>","YES","VARCHAR","255"),
             column("SOURCES","UUID","<null>","NO","VARCHAR","255"),
-            column("STATUSVALUES","ID","<null>","NO","INTEGER","10"),
+            column("STATUSVALUES","ID","<null>","NO","INTEGER","10", true),
             column("STATUSVALUES","NAME","<null>","NO","VARCHAR","255"),
             column("STATUSVALUES","RESERVED","<null>","NO","CHAR","1"),
             column("STATUSVALUESDES","IDDES","<null>","NO","INTEGER","10"),
             column("STATUSVALUESDES","LABEL","<null>","NO","VARCHAR","255"),
             column("STATUSVALUESDES","LANGID","<null>","NO","VARCHAR","5"),
             column("THESAURUS","ACTIVATED","<null>","NO","CHAR","1"),
-            column("THESAURUS","ID","<null>","NO","VARCHAR","255"),
+            column("THESAURUS","ID","<null>","NO","VARCHAR","255", true),
             column("USERGROUPS","GROUPID","<null>","NO","INTEGER","10"),
             column("USERGROUPS","PROFILE","<null>","NO","INTEGER","10"),
             column("USERGROUPS","USERID","<null>","NO","INTEGER","10"),
             column("USERS", "AUTHTYPE", "<null>", "YES", "VARCHAR", "32"),
-            column("USERS", "ID", "<null>", "NO", "INTEGER", "10"),
+            column("USERS", "ID", "<null>", "NO", "INTEGER", "10", true),
             column("USERS", "KIND", "<null>", "YES", "VARCHAR", "16"),
             column("USERS", "NAME", "<null>", "YES", "VARCHAR", "255"),
             column("USERS", "ORGANISATION", "<null>", "YES", "VARCHAR", "255"),

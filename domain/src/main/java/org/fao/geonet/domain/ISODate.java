@@ -29,8 +29,13 @@ package org.fao.geonet.domain;
 
 import java.util.Calendar;
 
-//==============================================================================
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 
+//==============================================================================
+@Embeddable
 public class ISODate implements Cloneable
 {
 	public int year;	//--- 4 digits
@@ -167,14 +172,14 @@ public class ISODate implements Cloneable
 	}
 
 	//--------------------------------------------------------------------------
-
+	@Transient
 	public String getDate()
 	{
 		return year +"-"+ pad(month) +"-"+ pad(day);
 	}
 
 	//--------------------------------------------------------------------------
-
+	@Transient
 	public String getTime()
 	{
 		return pad(hour) +":"+ pad(min) +":"+ pad(sec);
@@ -184,11 +189,11 @@ public class ISODate implements Cloneable
 
 	public String toString()
 	{
-		return getDate() +"T"+ getTime();
+		return getTimeAndDate();
 	}
 
 	//---------------------------------------------------------------------------
-
+	@Transient
 	public long getSeconds()
 	{
 		synchronized(calendar)
@@ -252,6 +257,28 @@ public class ISODate implements Cloneable
         if (year != other.year)
             return false;
         return true;
+    }
+
+    /**
+     * Get the Time and Date encoded as a String.
+     */
+    public String getTimeAndDate() {
+        return getDate() +"T"+ getTime();
+    }
+    
+    public void setTimeAndDate(String timeAndDate) {
+        String[] parts = timeAndDate.split("T", 2);
+        if (parts.length != 2) {
+            parts = timeAndDate.split("t");
+        }
+        
+        if (parts.length == 1) {
+            if (parts[0].contains("-")) {
+                setDate(parts[0]);
+            } else {
+//                setTime(parts[0]);
+            }
+        }
     }
 }
 

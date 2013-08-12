@@ -1,8 +1,12 @@
 package org.fao.geonet.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.annotation.Nonnull;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 
 /**
  * Encapsulates security information about the user. This is a JPA Embeddable object that is embedded into a {@link User} Entity
@@ -11,33 +15,35 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 public class UserSecurity {
-    private char[] password;
-    private String securityNotifications = "";
-    private String authType;
+    private char[] _password;
+    private Set<UserSecurityNotification> _securityNotifications = new HashSet<UserSecurityNotification>();
+    private String _authType;
 
     /**
-     * Get the hashed password.  This is a required property.
-     *
+     * Get the hashed password. This is a required property.
+     * 
      * @return the hashed password
      */
     @Column(nullable = false, length = 120)
-    public @Nonnull char[] getPassword() {
-        return password;
+    public @Nonnull
+    char[] getPassword() {
+        return _password;
     }
 
     /**
-     * Set the hashed password.  This is a required property.
+     * Set the hashed password. This is a required property.
      * 
      * @param password the hashed password.
      * @return this UserSecurity object
      */
-    public @Nonnull UserSecurity setPassword(@Nonnull char[] password) {
-        this.password = password;
+    public @Nonnull
+    UserSecurity setPassword(@Nonnull char[] password) {
+        this._password = password;
         return this;
     }
 
     /**
-     * Set the hashed password.  This is a required property.
+     * Set the hashed password. This is a required property.
      * 
      * @param password the hashed password.
      * @return this UserSecurity object
@@ -47,23 +53,50 @@ public class UserSecurity {
         return this;
     }
 
+    /**
+     * Get the security notifications. This property used to store arbitrary security related notifications.
+     * 
+     * @return
+     */
     @Column(name = "security", length = 128)
-    public String getSecurityNotifications() {
-        return securityNotifications;
+    protected String getSecurityNotificationsString() {
+        StringBuilder builder = new StringBuilder();
+        for (UserSecurityNotification not : _securityNotifications) {
+            if (builder.length() > 0) {
+                builder.append(',');
+            }
+            builder.append(not.toString());
+        }
+        return builder.toString();
     }
 
-    public UserSecurity setSecurityNotifications(String securityNotifications) {
-        this.securityNotifications = securityNotifications;
+    protected UserSecurity setSecurityNotificationsString(String securityNotifications) {
+        _securityNotifications.clear();
+        String[] parts = getSecurityNotificationsString().split(",");
+
+        for (String string : parts) {
+            _securityNotifications.add(UserSecurityNotification.find(string));
+        }
         return this;
+    }
+
+    /**
+     * Get the mutable set if security notifications.
+     * 
+     * @return the mutable set if security notifications.
+     */
+    @Transient
+    public Set<UserSecurityNotification> getSecurityNotifications() {
+        return _securityNotifications;
     }
 
     @Column(name = "authtype", length = 32)
     public String getAuthType() {
-        return authType;
+        return _authType;
     }
 
     public UserSecurity setAuthType(String authType) {
-        this.authType = authType;
+        this._authType = authType;
         return this;
     }
 
@@ -78,7 +111,7 @@ public class UserSecurity {
             setPassword(otherSecurity.getPassword());
         }
         if (mergeNullData || otherSecurity.getSecurityNotifications() != null) {
-            setSecurityNotifications(otherSecurity.getSecurityNotifications());
+            setSecurityNotificationsString(otherSecurity.getSecurityNotificationsString());
         }
         if (mergeNullData || otherSecurity.getAuthType() != null) {
             setAuthType(otherSecurity.getAuthType());

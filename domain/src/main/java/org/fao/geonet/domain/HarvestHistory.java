@@ -21,7 +21,7 @@ import javax.persistence.Transient;
 public class HarvestHistory {
     private int _id;
     private String _harvestDate;
-    private long _elapsedTime;
+    private int _elapsedTime;
     private String _harvesterUuid;
     private String _harvesterName;
     private String _harvesterType;
@@ -80,7 +80,7 @@ public class HarvestHistory {
      * @return the time taken for the harvest.
      */
     @Column(name = "elapsedtime")
-    public long getElapsedTime() {
+    public int getElapsedTime() {
         return _elapsedTime;
     }
 
@@ -90,7 +90,7 @@ public class HarvestHistory {
      * @param elapsedTime the elapsed time
      * @return this entity object
      */
-    public HarvestHistory setElapsedTime(long elapsedTime) {
+    public HarvestHistory setElapsedTime(int elapsedTime) {
         this._elapsedTime = elapsedTime;
         return this;
     }

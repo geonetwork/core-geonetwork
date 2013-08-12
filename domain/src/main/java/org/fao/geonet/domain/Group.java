@@ -159,7 +159,8 @@ public class Group {
     }
 
     /**
-     * Set the referrer: TODO it is unknown what the "referrer" is at the moment.
+     * Set the referrer: 
+     * TODO DOC: it is unknown what the "referrer" is at the moment.
      * 
      * @param referrer the referrer.
      */

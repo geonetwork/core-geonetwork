@@ -93,9 +93,10 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
         User user = userDetails.getUser();
         user.setName(getUserInfo(userInfo, "name"))
                 .setSurname(getUserInfo(userInfo, "surname"))
-                .setEmail(getUserInfo(userInfo, "mail"))
                 .setOrganisation(getUserInfo(userInfo, "organisation"));
-        user.getAddress()
+        user.getEmailAddresses().clear();
+        user.getEmailAddresses().add(getUserInfo(userInfo, "mail"));
+        user.getPrimaryAddress()
                 .setAddress(getUserInfo(userInfo, "address"))
                 .setState(getUserInfo(userInfo, "state"))
                 .setZip(getUserInfo(userInfo, "zip"))
