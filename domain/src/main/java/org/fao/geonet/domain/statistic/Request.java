@@ -2,16 +2,17 @@ package org.fao.geonet.domain.statistic;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.ISODate;
 
 /**
  * An entity representing a request that was made by a user.  
@@ -24,7 +25,7 @@ import org.fao.geonet.domain.Constants;
 @Table(name="requests")
 public class Request {
     private int _id;
-    private String _requestDate;
+    private ISODate _requestDate;
     private String _ipAddress;
     private String _query;
     private int _hits;
@@ -52,12 +53,13 @@ public class Request {
     public void setParams(RequestParams params) {
         this._params = params;
     }
-    @Column(name = "requestdate", length=30)
-    public String getRequestDate() {
+
+    @AttributeOverride(name="dateAndTime", column = @Column(name = "requestdate", length=30))
+    public ISODate getRequestDate() {
         return _requestDate;
     }
 
-    public void setRequestDate(String requestDate) {
+    public void setRequestDate(ISODate requestDate) {
         this._requestDate = requestDate;
     }
 

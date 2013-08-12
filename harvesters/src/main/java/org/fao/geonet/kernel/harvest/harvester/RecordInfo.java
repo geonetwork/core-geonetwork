@@ -89,7 +89,7 @@ public class RecordInfo
 
         //--- modified:  we accept metadata modified from 24 hours before
         //--- to harvest several changes during a day (if short date format used) or date local differences
-        return (remoteDate.sub(localDate) > (-1) * SECONDS_PER_DAY);
+        return (remoteDate.timeDifferenceInSeconds(localDate) > (-1) * SECONDS_PER_DAY);
 	}
 
 	//-----------------------------------------------------------------------------
@@ -103,7 +103,7 @@ public class RecordInfo
 
         //--- modified:  we accept metadata modified from 24 hours before
         //--- to harvest several changes during a day (if short date format used) or date local differences
-        return (remoteDate.sub(localDate) > (-1) * SECONDS_PER_DAY);
+        return (remoteDate.timeDifferenceInSeconds(localDate) > (-1) * SECONDS_PER_DAY);
     }
 	//---------------------------------------------------------------------------
 

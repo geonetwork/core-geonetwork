@@ -257,7 +257,7 @@ public class Aligner extends BaseAligner
 					try {
                         os = new FileOutputStream(outFile);
     					BinaryFile.copy(is, os);
-    					IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, log.getModule());
+    					IO.setLastModified(outFile, new ISODate(changeDate).getTimeInSeconds() * 1000, log.getModule());
 					} finally {
 					    IOUtils.closeQuietly(os);
 					}
@@ -279,7 +279,7 @@ public class Aligner extends BaseAligner
 	                    try {
                             os = new FileOutputStream(outFile);
     	                    BinaryFile.copy(is, os);
-    	                    IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, log.getModule());
+    	                    IO.setLastModified(outFile, new ISODate(changeDate).getTimeInSeconds() * 1000, log.getModule());
 	                    } finally {
 	                        IOUtils.closeQuietly(os);
 	                    }
@@ -736,10 +736,10 @@ public class Aligner extends BaseAligner
 		String resourcesDir  = Lib.resource.getDir(context, dir, id);
 		File   locFile = new File(resourcesDir, file);
 
-		ISODate locIsoDate = new ISODate(locFile.lastModified());
+		ISODate locIsoDate = new ISODate(locFile.lastModified(), false);
 		ISODate remIsoDate = new ISODate(changeDate);
 
-		if (!locFile.exists() || remIsoDate.sub(locIsoDate) > 0)
+		if (!locFile.exists() || remIsoDate.timeDifferenceInSeconds(locIsoDate) > 0)
 		{
             if(log.isDebugEnabled()){ log.debug("  - Adding remote " + dir + "  file with name:"+ file);}
 
@@ -747,7 +747,7 @@ public class Aligner extends BaseAligner
 			try {
                 os = new FileOutputStream(locFile);
     			BinaryFile.copy(is, os);
-    			IO.setLastModified(locFile, remIsoDate.getSeconds() * 1000, log.getModule());
+    			IO.setLastModified(locFile, remIsoDate.getTimeInSeconds() * 1000, log.getModule());
 			} finally {
 			    IOUtils.closeQuietly(os);
 			}

@@ -95,7 +95,7 @@ class UnusedSearcher extends MetaSearcher
             ISODate createDate = new ISODate(rec.getChildText("createdate"));
             ISODate changeDate = new ISODate(rec.getChildText("changedate"));
 
-            if (changeDate.sub(createDate) / 60 < maxDiff) {
+            if (changeDate.timeDifferenceInSeconds(createDate) / 60 < maxDiff) {
                 if (!hasInternetGroup(context, id)) {
                     alResult.add(id);
                 }

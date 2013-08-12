@@ -196,6 +196,7 @@ public class User implements JeevesUser {
      * 
      * @return the first address in the list of the addresses.
      */
+    @Transient
     public @Nonnull Address getPrimaryAddress() {
         Set<Address> addresses = getAddresses();
         

@@ -182,7 +182,7 @@ class Harvester
 			// it must be converted to ISODate, 
 			// TODO: does it come in any other form??? Check geoportal stuff?
 			Date modDate = sdf.parse(modified);
-			modified = new ISODate(modDate.getTime()).toString(); 
+			modified = new ISODate(modDate.getTime(), false).toString(); 
 			if (modified != null && modified.length() == 0) modified = null;
 
 			if (log.isDebugEnabled())

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
@@ -19,8 +20,8 @@ import javax.persistence.Transient;
 public class MetadataDataInfo implements Serializable {
     private static final long serialVersionUID = 8049813754167665960L;
     private String _title;
-    private String _changeDate;
-    private String _createDate;
+    private ISODate _changeDate;
+    private ISODate _createDate;
     private String _schemaId;
     private char _template = 'n';
     private String _root;
@@ -225,8 +226,9 @@ public class MetadataDataInfo implements Serializable {
      * 
      * @return the date of the last change made to the metadata.
      */
-    @Column(nullable = false, length = 30)
-    public String getChangeDate() {
+
+    @AttributeOverride(name = "dateAndTime", column = @Column(name = "changedate", nullable = false, length = 30))
+    public ISODate getChangeDate() {
         return _changeDate;
     }
 
@@ -236,7 +238,7 @@ public class MetadataDataInfo implements Serializable {
      * @param changeDate the date of the last change made to the metadata.
      * @return this data info object
      */
-    public MetadataDataInfo setChangeDate(String changeDate) {
+    public MetadataDataInfo setChangeDate(ISODate changeDate) {
         this._changeDate = changeDate;
         return this;
     }
@@ -246,8 +248,8 @@ public class MetadataDataInfo implements Serializable {
      * 
      * @return the creation date.
      */
-    @Column(nullable = false, length = 30)
-    public String getCreateDate() {
+    @AttributeOverride(name="dateAndTime", column = @Column(name = "createdate", nullable = false, length = 30) )
+    public ISODate getCreateDate() {
         return _createDate;
     }
 
@@ -257,7 +259,7 @@ public class MetadataDataInfo implements Serializable {
      * @param createDate the creation date.
      * @return this data info object
      */
-    public MetadataDataInfo setCreateDate(String createDate) {
+    public MetadataDataInfo setCreateDate(ISODate createDate) {
         this._createDate = createDate;
         return this;
     }

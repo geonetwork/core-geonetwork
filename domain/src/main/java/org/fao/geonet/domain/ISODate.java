@@ -27,209 +27,182 @@
 
 package org.fao.geonet.domain;
 
+import static java.util.Calendar.*;
+
 import java.util.Calendar;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
+import javax.annotation.Nonnull;
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 
 //==============================================================================
 @Embeddable
-public class ISODate implements Cloneable
-{
-	public int year;	//--- 4 digits
-	public int month;	//--- 1..12
-	public int day;	//--- 1..31
-	public int hour;	//--- 0..23
-	public int min;	//--- 0..59
-	public int sec;	//--- 0..59
+public class ISODate implements Cloneable {
+    private boolean _shortDate; // --- 'true' if the format is yyyy-mm-dd
 
-	public boolean isShort; //--- 'true' if the format is yyyy-mm-dd
+    private Calendar _calendar = Calendar.getInstance();
 
-	//---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
+    // ---
+    // --- Constructor
+    // ---
+    // ---------------------------------------------------------------------------
 
-	private static Calendar calendar = Calendar.getInstance();
+    public ISODate() {
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
 
-	public ISODate()
-	{
-		this(System.currentTimeMillis());
-	}
+    public ISODate(long time, boolean shortDate) {
+        _calendar.setTimeInMillis(time);
+        _shortDate = shortDate;
+    }
 
-	//---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
 
-	public ISODate(long time)
-	{
-		synchronized(calendar)
-		{
-			calendar.setTimeInMillis(time);
+    public ISODate(String isoDate) {
+        setDateAndTime(isoDate);
+    }
 
-			year  = calendar.get(Calendar.YEAR);
-			month = calendar.get(Calendar.MONTH) +1;
-			day   = calendar.get(Calendar.DAY_OF_MONTH);
+    // ---------------------------------------------------------------------------
+    // ---
+    // --- API methods
+    // ---
+    // ---------------------------------------------------------------------------
 
-			hour  = calendar.get(Calendar.HOUR_OF_DAY);
-			min   = calendar.get(Calendar.MINUTE);
-			sec   = calendar.get(Calendar.SECOND);
-		}
-	}
-
-	//---------------------------------------------------------------------------
-
-	public ISODate(String isoDate)
-	{
-		setDate(isoDate);
-	}
-
-	//---------------------------------------------------------------------------
-
-	private ISODate(int y, int m, int d, int h, int mi, int s)
-	{
-		year  = y;
-		month = m;
-		day   = d;
-		hour  = h;
-		min   = mi;
-		sec   = s;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
-
-	public ISODate clone()
-	{
-	    ISODate clone;
+    public ISODate clone() {
+        ISODate clone;
         try {
             clone = (ISODate) super.clone();
-            clone.year = year;
-            clone.month = month;
-            clone.day = day;
-            clone.hour = hour;
-            clone.min = min;
-            clone.sec = sec;
+            clone._calendar = (Calendar) _calendar.clone();
+            clone._shortDate = _shortDate;
             return clone;
         } catch (CloneNotSupportedException e) {
-            return new ISODate(year, month, day, hour, min, sec);
+            return new ISODate(_calendar.getTimeInMillis(), _shortDate);
         }
-	}
+    }
 
-	//---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
+    /**
+     * Subtract a date from this date and return the seconds between them.
+     * <p>
+     * The value is always positive so that date1.timeDifferenceInSeconds(date2) == date2.timeDifferenceInSeconds(date1)
+     * </p>
+     */
+    public long timeDifferenceInSeconds(ISODate date) {
+        return Math.abs(getTimeInSeconds() - date.getTimeInSeconds());
+    }
 
-	public void setDate(String isoDate)
-	{
-		if (isoDate == null)
-			throw new IllegalArgumentException("ISO date is null");
+    // --------------------------------------------------------------------------
+    @Transient
+    public String getDate() {
+        return getYear() + "-" + pad(getMonth()) + "-" + pad(getDay());
+    }
 
-		if (isoDate.length() < 10)
-			throw new IllegalArgumentException("Invalid ISO date : "+ isoDate);
+    // --------------------------------------------------------------------------
 
-		try
-		{
-			year  = Integer.parseInt(isoDate.substring(0,  4));
-			month = Integer.parseInt(isoDate.substring(5,  7));
-			day   = Integer.parseInt(isoDate.substring(8, 10));
+    public String toString() {
+        return getDateAndTime();
+    }
 
-			isShort = true;
+    // ---------------------------------------------------------------------------
+    @Transient
+    public long getTimeInSeconds() {
+        return _calendar.getTimeInMillis() / 1000;
+    }
 
-			hour = 0;
-			min  = 0;
-			sec  = 0;
+    /**
+     * Get the Time and Date encoded as a String.
+     */
+    public String getDateAndTime() {
+        return getDate() + "T" + timeAsString();
+    }
 
-			//--- is the date in 'yyyy-mm-dd' or 'yyyy-mm-ddZ' format?
+    public void setDateAndTime(String timeAndDate) {
+        String[] parts = timeAndDate.toUpperCase().split("T", 2);
 
-			if (isoDate.length() < 12)
-				return;
+        if (parts.length == 1) {
+            if (parts[0].contains(":")) {
+                parseTime(parts[0]);
+            } else {
+                parseDate(parts[0]);
+            }
+        } else {
+            if (!parts[0].trim().isEmpty()) {
+                parseDate(parts[0]);
+            }
+            if (!parts[1].trim().isEmpty()) {
+                parseTime(parts[1]);
+            }
+        }
+    }
 
-			isoDate = isoDate.substring(11);
+    /**
+     * Return true if this object is only the date (year, month, day) and time should be ignored.
+     * 
+     * @return true if this object is only the date (year, month, day) and time should be ignored.
+     */
+    @Transient
+    public boolean isDateOnly() {
+        return _shortDate;
+    }
 
-			hour  = Integer.parseInt(isoDate.substring(0,2));
-			min   = Integer.parseInt(isoDate.substring(3,5));
-			sec   = Integer.parseInt(isoDate.substring(6,8));
+    /**
+     * Get the date's year.
+     */
+    @Transient
+    public int getYear() {
+        return _calendar.get(YEAR);
+    }
 
-			isShort = false;
-		}
-		catch(Exception e)
-		{
-			throw new IllegalArgumentException("Invalid ISO date : "+ isoDate);
-		}
-	}
+    /**
+     * Get the date's day of month starting at 1.
+     */
+    @Transient
+    public int getDay() {
+        return _calendar.get(DAY_OF_MONTH);
+    }
 
-	//---------------------------------------------------------------------------
-	/** Subtract a date from this date and return the seconds between them */
+    /**
+     * Get the date's month of the year starting at 1 and going to 12.
+     */
+    @Transient
+    public int getMonth() {
+        return _calendar.get(MONTH) + 1;
+    }
 
-	public long sub(ISODate date)
-	{
-		return getSeconds() - date.getSeconds();
-	}
+    /**
+     * Get the date's hour in 24 hour time starting at 0 and going to 23
+     */
+    @Transient
+    public int getHour() {
+        return _calendar.get(HOUR_OF_DAY);
+    }
 
-	//--------------------------------------------------------------------------
-	@Transient
-	public String getDate()
-	{
-		return year +"-"+ pad(month) +"-"+ pad(day);
-	}
+    /**
+     * Get the date's minute starting at 0 and going to 59
+     */
+    @Transient
+    public int getMinute() {
+        return _calendar.get(MINUTE);
+    }
 
-	//--------------------------------------------------------------------------
-	@Transient
-	public String getTime()
-	{
-		return pad(hour) +":"+ pad(min) +":"+ pad(sec);
-	}
+    /**
+     * Get the date's second starting at 0 and going to 59
+     */
+    @Transient
+    public int getSecond() {
+        return _calendar.get(SECOND);
+    }
 
-	//--------------------------------------------------------------------------
-
-	public String toString()
-	{
-		return getTimeAndDate();
-	}
-
-	//---------------------------------------------------------------------------
-	@Transient
-	public long getSeconds()
-	{
-		synchronized(calendar)
-		{
-			calendar.clear();
-   	   calendar.set(year, month -1, day, hour, min, sec);
-
-			return calendar.getTimeInMillis() / 1000;
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
-
-	private String pad(int value)
-	{
-		if (value > 9)
-			return Integer.toString(value);
-
-		return "0"+ value;
-	}
+    // ------------------------------- Private methods ----------------------------------------------------
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + day;
-        result = prime * result + hour;
-        result = prime * result + (isShort ? 1231 : 1237);
-        result = prime * result + min;
-        result = prime * result + month;
-        result = prime * result + sec;
-        result = prime * result + year;
+        result = prime * result + ((_calendar == null) ? 0 : _calendar.hashCode());
+        result = prime * result + (_shortDate ? 1231 : 1237);
         return result;
     }
 
@@ -242,48 +215,97 @@ public class ISODate implements Cloneable
         if (getClass() != obj.getClass())
             return false;
         ISODate other = (ISODate) obj;
-        if (day != other.day)
+        if (_calendar == null) {
+            if (other._calendar != null)
+                return false;
+        } else if (!_calendar.equals(other._calendar))
             return false;
-        if (hour != other.hour)
-            return false;
-        if (isShort != other.isShort)
-            return false;
-        if (min != other.min)
-            return false;
-        if (month != other.month)
-            return false;
-        if (sec != other.sec)
-            return false;
-        if (year != other.year)
+        if (_shortDate != other._shortDate)
             return false;
         return true;
     }
 
-    /**
-     * Get the Time and Date encoded as a String.
-     */
-    public String getTimeAndDate() {
-        return getDate() +"T"+ getTime();
-    }
-    
-    public void setTimeAndDate(String timeAndDate) {
-        String[] parts = timeAndDate.split("T", 2);
-        if (parts.length != 2) {
-            parts = timeAndDate.split("t");
-        }
-        
-        if (parts.length == 1) {
-            if (parts[0].contains("-")) {
-                setDate(parts[0]);
-            } else {
-//                setTime(parts[0]);
+    private void parseDate(@Nonnull String isoDate) {
+        try {
+            String[] parts = isoDate.split("-|/");
+            if (parts.length != 3) {
+                throw new IllegalArgumentException("Invalid ISO date : " + isoDate);
             }
+            int year;
+            if (parts[0].length() < 4) {
+                int shortYear = Integer.parseInt(parts[0]);
+                String thisYear = String.valueOf(Calendar.getInstance().get(YEAR));
+                int century = Integer.parseInt(thisYear.substring(0,2))*100;
+                int yearInCentury = Integer.parseInt(thisYear.substring(2));
+                
+                if (shortYear <= yearInCentury) {
+                    year = century + shortYear;
+                } else {
+                    year = century - 100 + shortYear;
+                }
+            } else {
+                year = Integer.parseInt(parts[0]);
+            }
+            int month = Integer.parseInt(parts[1]);
+            int day = Integer.parseInt(parts[2]);
+
+            _shortDate = true;
+
+            int hour = 0;
+            int minute = 0;
+            int second = 0;
+
+            _calendar.set(year, month - 1, day, hour, minute, second);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid ISO date : " + isoDate);
         }
     }
+
+    private void parseTime(@Nonnull String isoDate) {
+        try {
+            String[] parts = isoDate.split(":");
+            if (parts.length != 3) {
+                throw new IllegalArgumentException("Invalid ISO date : " + isoDate);
+            }
+
+            int hour = Integer.parseInt(parts[0]);
+            int minute = Integer.parseInt(parts[1]);
+            int second;
+            if (parts[2].toUpperCase().contains("Z")) {
+                String[] secondParts = parts[2].toUpperCase().split("Z");
+                second = Integer.parseInt(secondParts[0]);
+            } else {
+                second = Integer.parseInt(parts[2]);
+            }
+
+            _calendar.set(HOUR_OF_DAY, hour);
+            _calendar.set(MINUTE, minute);
+            _calendar.set(SECOND, second);
+
+            _shortDate = false;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid ISO date : " + isoDate);
+        }
+    }
+
+    // ---------------------------------------------------------------------------
+    // ---
+    // --- Private methods
+    // ---
+    // ---------------------------------------------------------------------------
+
+    // ------------------------------- Private methods ----------------------------------------------------
+
+    // --------------------------------------------------------------------------
+    private String timeAsString() {
+        return pad(getHour()) + ":" + pad(getMinute()) + ":" + pad(getSecond());
+    }
+
+    private String pad(int value) {
+        if (value > 9)
+            return Integer.toString(value);
+
+        return "0" + value;
+    }
+
 }
-
-//==============================================================================
-
-
-
-

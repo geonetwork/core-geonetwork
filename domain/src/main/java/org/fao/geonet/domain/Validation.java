@@ -3,6 +3,7 @@ package org.fao.geonet.domain;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -117,7 +118,7 @@ public class Validation {
      *
      * @return The moment that the validation completed.
      */
-    @AttributeOverride(name="date", column = @Column(name = "valdate", length = 30) )
+    @AttributeOverride(name="dateAndTime", column = @Column(name = "valdate", length = 30) )
     public ISODate getValidationDate() {
         return _validationDate;
     }

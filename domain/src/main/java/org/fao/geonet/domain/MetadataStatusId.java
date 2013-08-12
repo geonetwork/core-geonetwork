@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Transient;
 
 /**
  * The id object of {@link MetadataStatus}.
@@ -17,47 +17,28 @@ import javax.persistence.Transient;
 @Access(AccessType.PROPERTY)
 public class MetadataStatusId implements Serializable {
     private static final long serialVersionUID = -4395314364468537427L;
-    private String _changedate;
+    private ISODate _changedate;
     private int _metadataId;
     private int _statusId;
     private int _userId;
-
-    /**
-     * Get the date of the status change in string form. The dates are created by {@link ISODate}.
-     * 
-     * @return the date of the status change in string form.
-     */
-    @Column(length = 30)
-    public String getChangedate() {
-        return _changedate;
-    }
-
-    /**
-     * Set the date of the status change in string form. The dates are created by {@link ISODate}.
-     * 
-     * @param changedate the date of the status change in string form. The dates are created by {@link ISODate}.
-     */
-    public void setChangedate(String changedate) {
-        this._changedate = changedate;
-    }
 
     /**
      * Get the date of the status change in string form.
      * 
      * @return the date of the status change in string form.
      */
-    @Transient
-    public ISODate getChangeIsoDate() {
-        return new ISODate(_changedate);
+    @AttributeOverride(name="dateAndTime", column = @Column(name = "changedate", nullable = false, length = 30) )
+    public ISODate getChangeDate() {
+        return _changedate;
     }
 
     /**
-     * Set the date of the status change in string form.
+     * Set the date of the status change in string form. 
      * 
-     * @param changedate the date of the status change in string form.
+     * @param changedate the date of the status change in string form. 
      */
-    public void setChangedate(ISODate changedate) {
-        this._changedate = changedate.toString();
+    public void setChangeDate(ISODate changedate) {
+        this._changedate = changedate;
     }
 
     /**

@@ -407,7 +407,7 @@ public class Aligner
 
 		//--- accept if remote date is greater than local date
 
-		return (remote.sub(local) > 0);
+		return (remote.timeDifferenceInSeconds(local) > 0);
 	}
 
 	//--------------------------------------------------------------------------

@@ -550,7 +550,7 @@ public class Importer {
 		try {
             os = new FileOutputStream(outFile);
     		BinaryFile.copy(is, os);
-    		IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, Geonet.MEF);
+    		IO.setLastModified(outFile, new ISODate(changeDate).getTimeInSeconds() * 1000, Geonet.MEF);
 		} finally {
 		    IOUtils.closeQuietly(os);
 		}

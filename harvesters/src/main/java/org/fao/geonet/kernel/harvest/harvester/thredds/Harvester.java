@@ -534,7 +534,7 @@ class Harvester extends BaseAligner
 		
 		if (lastModifiedDate == null) return true;
 
-		String datasetModifiedDate = new ISODate(lastModifiedDate.getTime()).toString();
+		String datasetModifiedDate = new ISODate(lastModifiedDate.getTime(), false).toString();
 		
 		for (RecordInfo localRecord: localRecords) {
 			if (localRecord.isOlderThan(datasetModifiedDate)) return true;

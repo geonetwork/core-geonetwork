@@ -2,6 +2,7 @@ package org.fao.geonet.domain;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,7 +21,7 @@ import javax.persistence.Transient;
 @Table(name = "harvesthistory")
 public class HarvestHistory {
     private int _id;
-    private String _harvestDate;
+    private ISODate _harvestDate;
     private int _elapsedTime;
     private String _harvesterUuid;
     private String _harvesterName;
@@ -58,8 +59,9 @@ public class HarvestHistory {
      * 
      * @return the harvest date
      */
-    @Column(name = "harvestdate", length = 30)
-    public String getHarvestDate() {
+
+    @AttributeOverride(name="dateAndTime", column = @Column(name = "harvestdate", length = 30) )
+    public ISODate getHarvestDate() {
         return _harvestDate;
     }
 
@@ -69,7 +71,7 @@ public class HarvestHistory {
      * @param harvestDate the new harvest date
      * @return this entity object
      */
-    public HarvestHistory setHarvestDate(String harvestDate) {
+    public HarvestHistory setHarvestDate(ISODate harvestDate) {
         this._harvestDate = harvestDate;
         return this;
     }

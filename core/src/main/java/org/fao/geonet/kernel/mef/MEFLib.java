@@ -541,7 +541,7 @@ public class MEFLib {
 
 		if (files != null)
 			for (File file : files) {
-				String date = new ISODate(file.lastModified()).toString();
+				String date = new ISODate(file.lastModified(), false).toString();
 
 				Element el = new Element("file");
 				el.setAttribute("name", file.getName());

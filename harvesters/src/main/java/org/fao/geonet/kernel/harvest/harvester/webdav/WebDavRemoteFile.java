@@ -44,7 +44,7 @@ class WebDavRemoteFile implements RemoteFile {
 	public WebDavRemoteFile(WebdavResource wr) {
 		this.wr = wr;
 		path       = wr.getPath();
-		changeDate = new ISODate(wr.getGetLastModified()).toString();
+		changeDate = new ISODate(wr.getGetLastModified(), false).toString();
 	}
 
 	//---------------------------------------------------------------------------
@@ -74,7 +74,7 @@ class WebDavRemoteFile implements RemoteFile {
 		ISODate remoteDate = new ISODate(changeDate);
 		ISODate localDate  = new ISODate(localChangeDate);
 		//--- accept if remote date is greater than local date
-		return (remoteDate.sub(localDate) > 0);
+		return (remoteDate.timeDifferenceInSeconds(localDate) > 0);
 	}
 
 	//---------------------------------------------------------------------------

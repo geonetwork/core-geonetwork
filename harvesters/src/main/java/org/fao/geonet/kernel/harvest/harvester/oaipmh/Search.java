@@ -89,7 +89,7 @@ class Search
 		//--- check from <= until
 
 		if (fromDate != null && untilDate != null)
-			if (fromDate.sub(untilDate) > 0)
+			if (fromDate.timeDifferenceInSeconds(untilDate) > 0)
 				throw new BadParameterEx("from greater than until", from +">"+ until);
 	}
 
