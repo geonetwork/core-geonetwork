@@ -15,7 +15,6 @@
     function($scope, $routeParams, $http) {
       $scope.healthy = undefined;
       $scope.gauges = [];
-      $scope.tab;
       $scope.hits = 20;
 
       $http.get('../../criticalhealthcheck').success(function(data) {

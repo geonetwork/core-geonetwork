@@ -81,10 +81,10 @@
               $scope.user = data.me;
               $scope.authenticated = data.me['@authenticated'] !== 'false';
               // TODO : should not be here, redirect to home
-              if ($scope.authenticated) {
-              // User is logged in
-              } else {
-              }
+//              if ($scope.authenticated) {
+//              // User is logged in
+//              } else {
+//              }
             }).
             error(function(data, status, headers, config) {
                   // TODO : translate
