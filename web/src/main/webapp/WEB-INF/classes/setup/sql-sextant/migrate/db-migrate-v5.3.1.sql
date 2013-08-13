@@ -198,6 +198,15 @@ INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/password', '', 0, 643);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/ssl', false, 2, 641);
 
+ALTER TABLE StatusValues ADD displayorder int;
+
+UPDATE StatusValues SET displayorder = 0 WHERE id = 0;
+UPDATE StatusValues SET displayorder = 1 WHERE id = 1;
+UPDATE StatusValues SET displayorder = 3 WHERE id = 2;
+UPDATE StatusValues SET displayorder = 5 WHERE id = 3;
+UPDATE StatusValues SET displayorder = 2 WHERE id = 4;
+UPDATE StatusValues SET displayorder = 4 WHERE id = 5;
+
 -- Version update
 UPDATE Settings SET value='2.11.0' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
