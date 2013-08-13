@@ -858,7 +858,7 @@
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
-				<version>7.5.0.v20110901</version>
+        <version>8.1.9.v20130131</version>
         <configuration>
           <connectors>
             <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
@@ -881,13 +881,13 @@
             </connector>
           </connectors>
           <webAppSourceDirectory>${project.build.directory}/geonetwork</webAppSourceDirectory>
-          <webAppConfig>
+          <webApp>
             <contextPath>/geonetwork</contextPath>
-          	<descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
-						<baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-							<resourcesAsCSV>${basedir}/src/main/webapp,${build.webapp.resources}${widgets.webapp.resources}</resourcesAsCSV>
-						</baseResource>
-          </webAppConfig>
+            <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
+            <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
+              <resourcesAsCSV>${basedir}/src/main/webapp,${build.webapp.resources}${widgets.webapp.resources}</resourcesAsCSV>
+            </baseResource>
+          </webApp>
           <stopKey>JETTY_TOP</stopKey>
           <stopPort>8090</stopPort>
         </configuration>
