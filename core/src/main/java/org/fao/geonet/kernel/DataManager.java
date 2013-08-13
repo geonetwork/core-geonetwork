@@ -2713,7 +2713,7 @@ public class DataManager {
                 
                 // Settings were defined as an XML starting with root named config
                 // Only second level elements are defined (under system).
-                List config = settingMan.getAllAsXML().cloneContent();
+                List config = settingMan.getAllAsXML().cloneContent(true);
                 Element settings = (Element) config.get(0);
                 settings.setName("config");
                 env.addContent(settings);

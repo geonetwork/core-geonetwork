@@ -119,14 +119,31 @@ public class SettingManager {
             );
         }
     }
-    
-    public Element getAllAsXML() {
+    /**
+     * Return all settings sorted by key
+     * 
+     * @param asTree true to return an XML tree based on settings
+     * key or false to return a flat list.
+     * 
+     * @return
+     */
+    public Element getAllAsXML(boolean asTree) {
         Element env = new Element("settings");
         List<String> sortedSetting = new ArrayList<String>(settings.keySet());
         Collections.sort(sortedSetting);
         for(String key : sortedSetting) {
             // settings/site/host
-            buildTree(env, key, "");
+            if (asTree) {
+                buildTree(env, key, "");
+            } else {
+                SettingEntry entry = settings.get(key);
+                Element setting = new Element("setting");
+                setting.setAttribute("name", key);
+                setting.setAttribute("position", entry.getPosition() + "");
+                setting.setAttribute("datatype", entry.getDatatype() + "");
+                setting.setText(entry.getValue());
+                env.addContent(setting);
+            }
         }
         return env;
     }
