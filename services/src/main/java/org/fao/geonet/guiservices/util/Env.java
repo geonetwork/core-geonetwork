@@ -53,7 +53,7 @@ public class Env implements Service {
 
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		Element response  = gc.getBean(SettingManager.class).getAllAsXML();
+		Element response  = gc.getBean(SettingManager.class).getAllAsXML(true);
 
         Element readOnly = new Element(READ_ONLY);
         readOnly.setText(Boolean.toString(gc.isReadOnly()));
