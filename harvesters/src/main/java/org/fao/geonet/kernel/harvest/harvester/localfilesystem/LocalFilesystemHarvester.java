@@ -24,7 +24,6 @@ package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -187,7 +186,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
                         String createDate = new ISODate().toString();
                         // or the last modified date of the file
                         if (params.checkFileLastModifiedForUpdate) {
-                            createDate = new ISODate(file.lastModified()).toString();
+                            createDate = new ISODate(file.lastModified(), false).getDateAndTime();
 					    }
                         
                         
@@ -200,7 +199,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 					    if (params.checkFileLastModifiedForUpdate) {
     					    Date fileDate = new Date(file.lastModified());
     					    String modified = dataMan.getMetadataInfo(dbms, id).changeDate;
-    					    Date recordDate = new SimpleDateFormat(ISODate.ISO_DATE_FORMAT).parse(modified);
+    					    Date recordDate = new ISODate(modified).toDate();
                             
     					    log.debug(" File date is: " + fileDate.toString() + " / record date is: " + modified);
     					    if (recordDate.before(fileDate)) {

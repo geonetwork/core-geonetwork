@@ -1,6 +1,6 @@
 package org.fao.geonet.repository;
 
-import static org.fao.geonet.repository.SpringDataTestSupport.*;
+import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -12,7 +12,6 @@ import javax.persistence.PersistenceContext;
 
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.repository.GroupRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;

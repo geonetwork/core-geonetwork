@@ -42,9 +42,11 @@ public class UserGroup {
      * Set the id object.
      * 
      * @param id the id object.
+     * @return this usergroup entity
      */
-    public void setId(UserGroupId id) {
+    public UserGroup setId(UserGroupId id) {
         this._id = id;
+        return this;
     }
 
     /**

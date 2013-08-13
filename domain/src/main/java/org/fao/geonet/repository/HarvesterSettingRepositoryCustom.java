@@ -1,5 +1,6 @@
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
 
 /**
@@ -8,5 +9,5 @@ import org.fao.geonet.domain.Setting;
  * @author Jesse
  *
  */
-public interface SettingRepositoryCustom extends AbstractSettingRepoCustom<Setting> {
+public interface HarvesterSettingRepositoryCustom extends AbstractSettingRepoCustom<HarvesterSetting> {
 }

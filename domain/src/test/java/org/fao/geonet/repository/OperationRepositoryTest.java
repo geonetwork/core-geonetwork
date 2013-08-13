@@ -14,7 +14,6 @@ import javax.persistence.PersistenceContext;
 
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.repository.OperationRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

@@ -1,6 +1,5 @@
 package org.fao.geonet.repository;
 
-import static org.fao.geonet.domain.OperationAllowedNamedQueries.*;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -9,6 +8,8 @@ import javax.annotation.Nullable;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.OperationAllowedNamedQueries;
+import org.fao.geonet.domain.OperationAllowedNamedQueries.DeleteAllByMetadataIdExceptGroupId;
+import org.fao.geonet.domain.OperationAllowedNamedQueries.DeleteByMetadataId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;

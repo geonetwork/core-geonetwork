@@ -1,7 +1,7 @@
 package org.fao.geonet.domain;
 
-import static java.util.Calendar.*;
-import static org.junit.Assert.*;
+import static java.util.Calendar.YEAR;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Calendar;
 

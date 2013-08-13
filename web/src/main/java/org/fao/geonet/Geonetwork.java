@@ -217,10 +217,8 @@ public class Geonetwork implements ApplicationHandler {
 		logger.info("  - Setting manager...");
 
 		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
-
-		// --- Migrate database if an old one is found
-		migrateDatabase(servletContext, dbms, settingMan, version, subVersion, context.getAppPath());
-		
+        HarvesterSettingsManager harvesterSettingsMan = new HarvesterSettingsManager(dbms, context.getProviderManager());
+        
         // --- Migrate database if an old one is found
         migrateDatabase(servletContext, dbms, settingMan, harvesterSettingsMan, version, subVersion, context);
         

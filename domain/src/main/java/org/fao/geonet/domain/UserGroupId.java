@@ -16,6 +16,17 @@ public class UserGroupId implements Serializable {
     private int _userId;
     private int _groupId;
 
+    public UserGroupId() {
+        // Default constructor.
+    }
+    /**
+     * Convenenience constructor.
+     */
+    public UserGroupId(User user, Group group) {
+        setUserId(user.getId());
+        setGroupId(group.getId());
+    }
+
     /**
      * Get the id of the user.
      *

@@ -27,9 +27,15 @@
 
 package org.fao.geonet.domain;
 
-import static java.util.Calendar.*;
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.SECOND;
+import static java.util.Calendar.YEAR;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Embeddable;
@@ -103,6 +109,15 @@ public class ISODate implements Cloneable {
 
     public String toString() {
         return getDateAndTime();
+    }
+
+    /**
+     * Create a java.util.Date object from this.
+     *
+     * @return a java.util.Date object from this.
+     */
+    public Date toDate() {
+        return (Date) _calendar.getTime().clone();
     }
 
     // ---------------------------------------------------------------------------
@@ -288,15 +303,6 @@ public class ISODate implements Cloneable {
         }
     }
 
-    // ---------------------------------------------------------------------------
-    // ---
-    // --- Private methods
-    // ---
-    // ---------------------------------------------------------------------------
-
-    // ------------------------------- Private methods ----------------------------------------------------
-
-    // --------------------------------------------------------------------------
     private String timeAsString() {
         return pad(getHour()) + ":" + pad(getMinute()) + ":" + pad(getSecond());
     }

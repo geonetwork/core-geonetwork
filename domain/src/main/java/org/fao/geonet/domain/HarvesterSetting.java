@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Cacheable;
@@ -14,9 +15,8 @@ import javax.persistence.Table;
  * @author Jesse
  */
 @Entity
-@Table(name = "settings")
+@Table(name = "harvestersettings")
 @Cacheable
 @Access(AccessType.PROPERTY)
-public class Setting extends AbstractSetting<Setting> {
-
+public class HarvesterSetting extends AbstractSetting<HarvesterSetting> {
 }

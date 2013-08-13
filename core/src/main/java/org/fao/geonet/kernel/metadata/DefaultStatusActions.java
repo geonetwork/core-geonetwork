@@ -191,12 +191,10 @@ public class DefaultStatusActions implements StatusActions {
     * @param mdId The metadata id to unset privileges on
     */
   private void unsetAllOperations(int mdId) throws Exception {
-    String allGroup = "1";
-    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_VIEW);
-    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DOWNLOAD);
-    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_NOTIFY);
-    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_DYNAMIC);
-    dm.unsetOperation(context, dbms, mdId+"", allGroup, AccessManager.OPER_FEATURED);
+      String allGroup = "1";
+      for (ReservedOperation op : ReservedOperation.values()) {
+          dm.unsetOperation(context, dbms, mdId+"", allGroup, op);
+      }
   }
 
     /**

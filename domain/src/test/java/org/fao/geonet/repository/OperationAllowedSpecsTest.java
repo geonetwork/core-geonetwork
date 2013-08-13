@@ -1,7 +1,10 @@
 package org.fao.geonet.repository;
 
-import static org.junit.Assert.*;
-import static org.fao.geonet.domain.OperationAllowedNamedQueries.*;
+import static org.fao.geonet.domain.OperationAllowedNamedQueries.PATH_GROUP_ID;
+import static org.fao.geonet.domain.OperationAllowedNamedQueries.PATH_METADATA_ID;
+import static org.fao.geonet.domain.OperationAllowedNamedQueries.PATH_OPERATION_ID;
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
 import org.fao.geonet.domain.OperationAllowed;

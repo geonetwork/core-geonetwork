@@ -1,7 +1,8 @@
 package org.fao.geonet.repository;
 
-import static org.fao.geonet.repository.SpringDataTestSupport.*;
-import static org.junit.Assert.*;
+import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -9,7 +10,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.repository.MetadataRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;

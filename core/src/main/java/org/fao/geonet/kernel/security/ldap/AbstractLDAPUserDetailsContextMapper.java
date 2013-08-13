@@ -64,7 +64,7 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 
     Map<String, String[]> mapping;
 
-    Map<String, String> profileMapping;
+    Map<String, Profile> profileMapping;
 
     protected boolean importPrivilegesFromLdap;
 
@@ -125,9 +125,9 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
     protected void addProfile(@Nonnull LDAPUser userDetails, @Nonnull String profileName, @Nullable Set<Profile> profileList) {
         // Check if profile exist in profile mapping table
         if (profileMapping != null) {
-            String mapped = profileMapping.get(profileName);
+            Profile mapped = profileMapping.get(profileName);
             if (mapped != null) {
-                profileName = mapped;
+                profileName = mapped.name();
             }
         }
 
@@ -227,15 +227,15 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
         return mapping;
     }
 
-    public String getProfileMappingValue(String key) {
+    public Profile getProfileMappingValue(String key) {
         return profileMapping.get(key);
     }
 
-    public void setProfileMapping(Map<String, String> profileMapping) {
+    public void setProfileMapping(Map<String, Profile> profileMapping) {
         this.profileMapping = profileMapping;
     }
 
-    public Map<String, String> getProfileMapping() {
+    public Map<String, Profile> getProfileMapping() {
         return profileMapping;
     }
 
