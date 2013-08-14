@@ -128,8 +128,25 @@
     "n": "Template",
     "s": "Directory entry",
     
-    "dublin-core": "Dublin core",
-    "fgdc-std": "FGDC",
+    "dublin-core": "Dublin Core",
+    "dublin-core-acr": "DC",
+    "dublin-core-help": "",
+    "csw-record": "Dublin Core - CSW",
+    "csw-record-acr": "CSW-DC",
+    "csw-record-help": "Metadata records produced by CSW services.",
+    "fgdc-std": "Federal Geographic Data Committee (FGDC)",
+    "fgdc-std-acr": "FGDC",
+    "fgdc-std-help": "",
+    "iso19139": "Geographic information - Metadata (ISO/TS 19139:2007)",
+    "iso19139-acr": "ISO19139",
+    "iso19139-help": "",
+    "iso19115": "Geographic information - Metadata (ISO 19115:2003)",
+    "iso19115-acr": "ISO19115",
+    "iso19115-help": "Use for backward compatibilty with old metadata catalog (before 2007).",
+    "iso19110": "Geographic information - Methodology for feature cataloguing (ISO 19110:2005)",
+    "iso19110-acr": "ISO19110",
+    "iso19110-help": "",
+    
     
     "data.codeListDir": "Thesaurus folder: ",
     "data.configDir": "Configuration folder: ",
@@ -343,6 +360,8 @@
     "system/platform/version-help": "Version:",
     "system/platform/subVersion": "",
     "system/platform/subVersion-help": "Sub-version:",
+    
+    "metadataAndTemplates": "Metadata & templates",
     
     "errorIs": "Error is ",
     

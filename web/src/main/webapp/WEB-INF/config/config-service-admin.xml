@@ -6,6 +6,21 @@
       <class name=".services.config.Get"/>
     </service>
     
+    <service name="admin.schema.list">
+      <documentation>Retrieve the list of schema available in the catalog.</documentation>
+      <class name="org.fao.geonet.guiservices.schemas.Get"/>
+    </service>
+    
+    <service name="admin.load.templates">
+      <documentation>Load template records for one or more schema.</documentation>
+      <class name=".guiservices.templates.AddDefault"/>
+    </service>
+    
+    <service name="admin.load.samples">
+      <documentation>Load sample records for one or more schema.</documentation>
+      <class name=".guiservices.sampledata.Add"/>
+    </service>
+    
     <service name="admin.config.save">
       <class name=".services.config.Set">
         <param name="reloadServices" value="y"/>

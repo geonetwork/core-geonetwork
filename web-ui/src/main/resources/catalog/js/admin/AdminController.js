@@ -9,19 +9,30 @@
 
 
 
-  goog.require('gn_admintools_controller');
   goog.require('gn_cat_controller');
+  goog.require('gn_adminmetadata_controller');
+  goog.require('gn_admintools_controller');
   goog.require('gn_dashboard_controller');
   goog.require('gn_settings_controller');
   goog.require('gn_usergroup_controller');
+  goog.require('gn_translation');
+  goog.require('gn_translation_controller');
+  
 
   var module = angular.module('gn_admin_controller',
       ['gn_dashboard_controller', 'gn_usergroup_controller',
-       'gn_admintools_controller', 'gn_settings_controller']);
+       'gn_admintools_controller', 'gn_settings_controller', 
+       'gn_adminmetadata_controller']);
 
 
   module.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
+       when('/metadata', {
+         templateUrl: '../../catalog/templates/admin/metadata.html',
+         controller: 'GnAdminMetadataController'}).
+        when('/metadata/:metadataTab', {
+          templateUrl: '../../catalog/templates/admin/metadata.html',
+          controller: 'GnAdminMetadataController'}).
         when('/dashboard', {
           templateUrl: '../../catalog/templates/admin/dashboard.html',
           controller: 'GnDashboardController'}).
