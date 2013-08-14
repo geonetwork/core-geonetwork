@@ -11,7 +11,9 @@
    */
   module.controller('GnUserGroupController', [
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
-    function($scope, $routeParams, $http, $rootScope, $translate, $compile) {
+    'gnSearchManagerService',
+    function($scope, $routeParams, $http, $rootScope, $translate, $compile,
+            gnSearchManagerService) {
 
 
       var templateFolder = '../../catalog/templates/admin/usergroup/';
@@ -30,10 +32,12 @@
         return templateFolder + $scope.type + '.html';
       };
 
-
-      // TODO : should provide paging
-      $scope.maxHitsForPreview = 50;
-
+      // The pagination config
+      $scope.groupRecordsPagination = {
+        pages: -1,
+        currentPage: 0,
+        hitsPerPage: 10
+      };
 
       // Scope for group
       // List of catalog groups
@@ -41,9 +45,23 @@
       $scope.groupSelected = {id: $routeParams.groupId};
       // List of metadata records attached to the selected group
       $scope.groupRecords = null;
+      $scope.groupRecordsFilter = null;
       // On going changes group ...
       $scope.groupUpdated = false;
       $scope.groupSearch = {};
+
+      // Register the search results, filter and pager
+      // and get the search function back
+      $scope.groupRecordsSearch = gnSearchManagerService.register({
+        records: 'groupRecords',
+        filter: 'groupRecordsFilter',
+        pager: 'groupRecordsPagination'
+      }, $scope);
+
+      // When the current page change trigger the search
+      $scope.$watch('groupRecordsPagination.currentPage', function() {
+        $scope.groupRecordsSearch();
+      });
 
 
       // Scope for user
@@ -58,6 +76,31 @@
       // On going changes for user ...
       $scope.userUpdated = false;
       $scope.passwordCheck = '';
+      // The pagination config
+      $scope.userRecordsPagination = {
+        pages: -1,
+        currentPage: 0,
+        hitsPerPage: 10
+      };
+      // List of metadata records attached to the selected user
+      $scope.userRecords = null;
+      $scope.userRecordsFilter = null;
+
+      // Register the search results, filter and pager
+      // and get the search function back
+      $scope.userRecordsSearch = gnSearchManagerService.register({
+        records: 'userRecords',
+        filter: 'userRecordsFilter',
+        pager: 'userRecordsPagination'
+      }, $scope);
+
+      // When the current page change trigger the search
+      $scope.$watch('userRecordsPagination.currentPage', function() {
+        $scope.userRecordsSearch();
+      });
+
+
+
 
       function loadGroups() {
         $http.get($scope.url + 'admin.group.list@json').success(function(data) {
@@ -126,14 +169,15 @@
             }).error(function(data) {
               // TODO
             });
+
+
         // Retrieve records in that group
-        $http.get($scope.url + 'q@json?fast=index&template=y or n&_owner=' +
-                u.id + '&sortBy=title&from=1&to=' + $scope.maxHitsForPreview)
-                .success(function(data) {
-              $scope.userRecords = data.metadata;
-            }).error(function(data) {
-              // TODO
-            });
+        $scope.userRecordsFilter = {
+          template: 'y or n',
+          _owner: u.id,
+          sortBy: 'title'
+        };
+        $scope.userRecordsSearch();
         $scope.userUpdated = false;
       };
 
@@ -253,6 +297,16 @@
             });
       };
 
+      /**
+       * Return true if selected user has metadata record.
+       * This information could be useful to disable a delete button
+       * for example.
+       */
+      $scope.userHasRecords = function() {
+        return $scope.userRecords && $scope.userRecords.metadata &&
+            $scope.userRecords.metadata.length > 0;
+      };
+
 
 
 
@@ -338,7 +392,8 @@
        * for example.
        */
       $scope.groupHasRecords = function() {
-        return $scope.groupRecords && $scope.groupRecords.length > 0;
+        return $scope.groupRecords && $scope.groupRecords.metadata &&
+            $scope.groupRecords.metadata.length > 0;
       };
 
       $scope.unselectGroup = function() {
@@ -349,14 +404,14 @@
 
       $scope.selectGroup = function(g) {
         $scope.groupSelected = g;
+
         // Retrieve records in that group
-        $http.get($scope.url + 'q@json?fast=index&template=y or n&group=' +
-                g.id + '&sortBy=title&from=1&to=' + $scope.maxHitsForPreview)
-                .success(function(data) {
-              $scope.groupRecords = data.metadata;
-            }).error(function(data) {
-              // TODO
-            });
+        $scope.groupRecordsFilter = {
+          template: 'y or n',
+          group: g.id,
+          sortBy: 'title'
+        };
+        $scope.groupRecordsSearch();
         $scope.groupUpdated = false;
       };
 

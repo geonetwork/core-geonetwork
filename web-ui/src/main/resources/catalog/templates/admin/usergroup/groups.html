@@ -83,10 +83,18 @@
             
             
             <div data-ng-hide="!groupRecords">
-                <h3>{{groupRecords.length}} <span data-translate>recordsInGroup</span> {{groupSelected.name}}</h3>
-                <ul>
-                    <li data-ng-repeat="md in groupRecords">{{md.title}}</li>
-                </ul>
+              <h3>
+                <ng-pluralize count="groupRecords.count"
+                  when="{'0': ('noRecordFound' | translate),
+                  'one': '1' +  ('groupRecord' | translate) + ' {{groupSelected.label[lang]}}',
+                  'other': '{}' +  ('groupRecords' | translate) + ' {{groupSelected.label[lang]}}'}">
+                </ng-pluralize>
+              </h3>
+              
+              <div data-gn-search-results="groupRecords.metadata"
+                data-gn-search-results-allow-selection="false"/>
+              
+              <div data-gn-pagination="groupRecordsPagination"/>
             </div>
         </div>
     </div>

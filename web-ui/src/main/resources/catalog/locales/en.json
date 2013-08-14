@@ -25,6 +25,8 @@
     "previous": "Previous",
     "next": "Next",
     
+    "noRecordFound": "No record found.",
+    
     "any": "Full text",
     "orgName": "Contact for the resource",
     "createDateYear": "Creation year",
@@ -157,6 +159,8 @@
     "deleteUser": "Delete",
     "updateUser": "Update user ",
     "newUser": "New user ",
+    "userRecords": " records found for ",
+    "userRecord": " record found for ",
     "name": "Name",
     "usernameHelp": "Name to use when sign in",
     "email": "Email",
@@ -174,6 +178,8 @@
     
     "groups": "Groups",
     "groupName": "Name",
+    "groupRecords": " records found for ",
+    "groupRecord": " record found for ",
     "translationForGroup": "Translations for ",
     "groupNameHelp": "Identifier for the group. Do not forget to add translation for the label.",
     "groupDescription": "Description",

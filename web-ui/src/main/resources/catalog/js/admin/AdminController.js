@@ -70,22 +70,22 @@
           // TODO : create gn classes
           {name: 'metadatasAndTemplates', route: '#metadata',
             classes: 'btn-primary', icon: 'icon-archive'},
-          {name: 'io', url: 'import', classes: 'btn-primary'
-              , icon: 'icon-upload'},
+          {name: 'io', url: 'import', classes: 'btn-primary',
+            icon: 'icon-upload'},
           {name: 'harvesters', url: 'harvesting',
             classes: 'btn-primary', icon: 'icon-cloud-upload'},
           {name: 'statisticsAndStatus', route: '#dashboard',
             classes: 'btn-success', icon: 'icon-dashboard'},
-          {name: 'settings', route: '#settings', 
-                classes: 'btn-success', icon: 'icon-gear'},
-          {name: 'usersAndGroups', route: '#organization', 
-                    icon: 'icon-group'},
+          {name: 'settings', route: '#settings',
+            classes: 'btn-success', icon: 'icon-gear'},
+          {name: 'usersAndGroups', route: '#organization',
+            icon: 'icon-group'},
           {name: 'classificationSystems', url: 'admin',
             classes: 'btn-info', icon: 'icon-tags'},
-          {name: 'standards', url: 'admin', 
-                classes: 'btn-info', icon: 'icon-puzzle-piece'},
-          {name: 'tools', route: '#tools', 
-                    classes: 'btn-warning', icon: 'icon-medkit'}
+          {name: 'standards', url: 'admin',
+            classes: 'btn-info', icon: 'icon-puzzle-piece'},
+          {name: 'tools', route: '#tools',
+            classes: 'btn-warning', icon: 'icon-medkit'}
         ]
         // TODO : add other role menu
       };
