@@ -1,4 +1,6 @@
-<a class="navbar-brand" href="{{pages.home}}">{{info.site.name}}</a>
+<a class="navbar-brand" href="{{pages.home}}">
+  <img class="gn-logo" src="../../images/logos/{{info.site.siteId}}.gif"/>
+  {{info.site.name}}</a>
 <a class="navbar-brand" href="{{pages.signin}}" data-ng-show="!authenticated" data-translate>signIn</a>
 <a class="navbar-brand" href="{{pages.admin}}" data-ng-show="authenticated" data-translate>adminConsole</a>
 <p class="navbar-text pull-right" data-ng-show="authenticated"><span data-translate>signedInAs</span>

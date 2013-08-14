@@ -2,69 +2,22 @@
     <div class="col-lg-2">
       <div class="gn-sidebar affix">
           <ul class="nav nav-pills nav-stacked">
-            <li class="active">
-                <a href="#/settings" data-translate>settings</a>
+            <li data-ng-class="type === 'system' && 'active'">
+                <a href="#/settings/system" data-translate>settings</a>
             </li>
-            <ul class="nav">
-              <li data-ng-repeat="section in sectionsLevel2 | orderBy:getOrderBy" 
-                >
-                <a data-ng-click="scrollTo('#{{section.name.replace('/', '-')}}')">{{section.name | translate}}</a></li>
-            </ul>
+            <li data-ng-class="type === 'logo' && 'active'">
+              <a href="#/settings/logo" data-translate>manageLogo</a>
+            </li>
+            <li data-ng-class="type === 'csw' && 'active'">
+              <a href="#/settings/csw" data-translate>manageCSW</a>
+            </li>
+            <li data-ng-class="type === 'csw-virtual' && 'active'">
+              <a href="#/settings/csw-virtual" data-translate>manageVirtualCSW</a>
+            </li>
           </ul>
       </div>
     </div>
   
-  
-    <div class="col-lg-10">
-      <div class="panel">
-        <div class="panel-heading">
-          <span data-translate="">settings</span>
-          <button type="submit" class="btn btn-primary pull-right icon-save" 
-            data-ng-click="saveSettings('#gn-settings')"
-            data-translate="">saveSettings</button>
-        </div>
-          <form id="gn-settings">
-            <fieldset data-ng-repeat="section1 in sectionsLevel1 track by $index">
-              <h1>{{section1.name | translate}}</h1>
-              <fieldset data-ng-repeat="section in sectionsLevel2 | orderBy:getOrderBy"
-                id="{{section.name.replace('/', '-')}}">
-                <legend >{{section.name | translate}}</legend>
-                <div data-ng-repeat="s in filterBySection(section.name) | orderBy:getOrderBy"  
-                  data-ng-switch="s['@datatype']">
-                  <div data-ng-switch-when="2"
-                    class="checkbox">
-                    <label>
-                      <input
-                        type="checkbox"
-                        id="{{s['@name']}}" 
-                        name="{{s.formName}}"
-                        checked="{{s['#text']}}"
-                      /><span>{{s['@name'] | translate}}</span>
-                    </label>
-                    <p class="help-block">{{s['@name'] + '-help' | translate}}</p>
-                  </div>
-                  <div 
-                    data-ng-switch-default=""
-                    class="form-group" 
-                    <label for="{{s['@name']}}">{{s['@name'] | translate}}</label>
-                    <input 
-                      type="text" 
-                      class="form-control" 
-                      id="{{s['@name']}}" 
-                      name="{{s.formName}}"
-                      value="{{s['#text']}}"
-                    />
-                    <p class="help-block">{{s['@name'] + '-help' | translate}}</p>
-                  </div>
-                </div>
-                
-              </fieldset>
-              
-              <button type="submit" class="btn btn-primary pull-right icon-save" 
-                data-ng-click="saveSettings('#gn-settings')"
-                data-translate="">saveSettings</button>
-            </fieldset>
-          </form>
-      </div>
-    </div>
+  <div class="col-lg-10" ng-include="getTemplate()">
+  </div>
 </div>

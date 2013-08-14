@@ -1468,9 +1468,10 @@
 	guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
   
   <include>config/config-service-admin.xml</include>
+  <include>config/config-service-admin-logo.xml</include>
+  <include>config/config-service-admin-user-and-group.xml</include>
   <include>config/config-service-statistics.xml</include>
-	<include>config/config-service-admin-user-and-group.xml</include>
-
+	
 	<include>config/config-service-csw.xml</include>
 	<include>config/config-service-csw-virtual.xml</include>
 	<include>config/config-service-csw-admin.xml</include>

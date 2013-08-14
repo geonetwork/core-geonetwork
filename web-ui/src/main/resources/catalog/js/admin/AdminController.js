@@ -46,6 +46,9 @@
         when('/settings', {
           templateUrl: '../../catalog/templates/admin/settings.html',
           controller: 'GnSettingsController'}).
+        when('/settings/:settingType', {
+          templateUrl: '../../catalog/templates/admin/settings.html',
+          controller: 'GnSettingsController'}).
         otherwise({templateUrl: '../../catalog/templates/admin/admin.html'});
   }]);
 

@@ -18,6 +18,7 @@
       $scope.lang = 'eng';
       $scope.url = '';
       $scope.base = '../../catalog/';
+      $scope.logoPath = '../../images/harvesting/';
       $scope.pages = {
         home: 'catalog.search',
         admin: 'admin.console',
@@ -106,7 +107,6 @@
       };
       $scope.$on('StatusUpdated', function(event, status) {
         $.extend($scope.status, defaultStatus, status);
-
         $('.gn-info').show();
 
         // TODO : handle multiple messages

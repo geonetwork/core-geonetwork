@@ -33,6 +33,13 @@
 }
 
 /**
+ * Logo in nav bar can't be big
+ */
+.gn-logo {
+  max-height: 20px;
+}
+
+/**
  * Properly break stack trace error.
  */
 .gn-stack,

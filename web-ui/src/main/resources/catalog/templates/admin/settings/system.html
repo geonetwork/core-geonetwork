@@ -1,0 +1,64 @@
+<div class="panel" data-ng-controller="GnSystemSettingsController">
+  <div class="panel-heading">
+    <span data-translate="">settings</span>
+    
+    <div class="btn-group pull-right">
+      <button type="button" class="btn btn-default dropdown-toggle icon-sort-by-attributes" 
+          data-toggle="dropdown" 
+          ><span data-translate="">flyTo</span><span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+        <li data-ng-repeat="section in sectionsLevel2 | orderBy:getOrderBy" 
+          >
+          <a data-ng-click="scrollTo('#{{section.name.replace('/', '-')}}')">{{section.name | translate}}</a></li>
+      </ul>
+    </div>
+    
+    <!-- FIXME : space between button -->
+    <button type="submit" class="btn btn-primary pull-right icon-save" 
+      data-ng-click="saveSettings('#gn-settings')"
+      data-translate="">saveSettings</button>
+  </div>
+    <form id="gn-settings">
+      <fieldset data-ng-repeat="section1 in sectionsLevel1 track by $index">
+        <h1>{{section1.name | translate}}</h1>
+        <fieldset data-ng-repeat="section in sectionsLevel2 | orderBy:getOrderBy"
+          id="{{section.name.replace('/', '-')}}">
+          <legend >{{section.name | translate}}</legend>
+          <div data-ng-repeat="s in filterBySection(section.name) | orderBy:getOrderBy"  
+            data-ng-switch="s['@datatype']">
+            <div data-ng-switch-when="2"
+              class="checkbox">
+              <label>
+                <input
+                  type="checkbox"
+                  id="{{s['@name']}}" 
+                  name="{{s.formName}}"
+                  checked="{{s['#text']}}"
+                /><span>{{s['@name'] | translate}}</span>
+              </label>
+              <p class="help-block">{{s['@name'] + '-help' | translate}}</p>
+            </div>
+            <div 
+              data-ng-switch-default=""
+              class="form-group" 
+              <label for="{{s['@name']}}">{{s['@name'] | translate}}</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="{{s['@name']}}" 
+                name="{{s.formName}}"
+                value="{{s['#text']}}"
+              />
+              <p class="help-block">{{s['@name'] + '-help' | translate}}</p>
+            </div>
+          </div>
+          
+        </fieldset>
+        
+        <button type="submit" class="btn btn-primary pull-right icon-save" 
+          data-ng-click="saveSettings('#gn-settings')"
+          data-translate="">saveSettings</button>
+      </fieldset>
+    </form>
+</div>

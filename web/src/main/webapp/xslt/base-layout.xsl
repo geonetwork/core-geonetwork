@@ -15,13 +15,20 @@ from XSLT.
     <html ng-app="{$angularApp}" lang="{$lang}">
       <head>
         <title><xsl:value-of
-          select="concat($env/system/site/name, ' - ', $env/system/site/organisation)"/></title>
+          select="concat($env/system/site/name, ' - ', $env/system/site/organization)"/></title>
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         
         <meta name="description" content="" />
         <meta name="keywords" content="" />
+        
+        
+        <link rel="icon" type="image/gif" href="../../images/logos/favicon.gif" />
+        <link href="rss.latest?georss=gml" rel="alternate" type="application/rss+xml" 
+          title="{{concat($env/system/site/name, ' - ', $env/system/site/organization)}}"/>
+        <link href="portal.opensearch" rel="search" type="application/opensearchdescription+xml" 
+          title="concat($env/system/site/name, ' - ', $env/system/site/organization)"/>
         
         <xsl:call-template name="css-load"/>
         
