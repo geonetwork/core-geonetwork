@@ -43,12 +43,12 @@ import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
-import org.fao.geonet.repository.SettingRepository;
+import org.fao.geonet.repository.HarvesterSettingRepository;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -60,7 +60,7 @@ import org.springframework.stereotype.Component;
 public class AccessManager {
 
     @Autowired
-    private SettingRepository _settingRepository;
+    private HarvesterSettingRepository _settingRepository;
 
     @Autowired
     private OperationRepository _opRepository;
@@ -503,8 +503,8 @@ public class AccessManager {
 
         // IPv4
 
-		Setting network = _settingRepository.findOneByPath("system/intranet/network");
-		Setting netmask = _settingRepository.findOneByPath("system/intranet/netmask");
+		HarvesterSetting network = _settingRepository.findOneByPath("system/intranet/network");
+		HarvesterSetting netmask = _settingRepository.findOneByPath("system/intranet/netmask");
 
         try {
             if (network != null && netmask != null) {

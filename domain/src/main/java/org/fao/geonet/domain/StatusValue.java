@@ -28,6 +28,7 @@ public class StatusValue {
     private int _id;
     private String _name;
     private char _reserved = 'n';
+    private int displayOrder;
     private Map<String, String> _labelTranslations;
 
     /**
@@ -82,6 +83,7 @@ public class StatusValue {
 
     /**
      * Set the column value.
+     * 
      * @param reserved 'y' for true or 'n' for false.
      * @return
      */
@@ -91,7 +93,7 @@ public class StatusValue {
 
     /**
      * Return true if this is a reserved StatusValue.
-     *
+     * 
      * @return true if this is a reserved StatusValue.
      */
     @Transient
@@ -101,6 +103,7 @@ public class StatusValue {
 
     /**
      * Set true if this is a reserved StatusValue.
+     * 
      * @param reserved true if this is a reserved StatusValue.
      */
     public void setReserved(boolean reserved) {
@@ -125,5 +128,26 @@ public class StatusValue {
      */
     protected void setLabelTranslations(Map<String, String> localizedTranslations) {
         this._labelTranslations = localizedTranslations;
+    }
+
+    /**
+     * Get the order to display this value in the UI. This is just a hint to the ui that provides an priority/importance of the status value
+     * compared to the others.
+     * 
+     * @return the order to display this value in the UI.
+     */
+    @Column(name="displayorder")
+    public int getDisplayOrder() {
+        return displayOrder;
+    }
+
+    /**
+     * Set the order to display this value in the UI. This is just a hint to the ui that provides an priority/importance of the status value
+     * compared to the others.
+     * 
+     * @param displayOrder the order to display this value in the UI
+     */
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
     }
 }

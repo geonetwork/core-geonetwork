@@ -216,20 +216,15 @@ public class Geonetwork implements ApplicationHandler {
 
 		logger.info("  - Setting manager...");
 
-		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
-        HarvesterSettingsManager harvesterSettingsMan = new HarvesterSettingsManager(dbms, context.getProviderManager());
+		SettingManager settingMan = this._applicationContext.getBean(SettingManager.class);
+        HarvesterSettingsManager harvesterSettingsMan = this._applicationContext.getBean(HarvesterSettingsManager.class);
         
         // --- Migrate database if an old one is found
         migrateDatabase(servletContext, dbms, settingMan, harvesterSettingsMan, version, subVersion, context);
         
-        if (settingMan == null) {
-            throw new IllegalArgumentException("Failed to initialize setting managers. This is probably due to bad Settings table.");
-        }
-        
         // Reinitialized harvester manager which may be affected by migration
-        if (harvesterSettingsMan == null) {
-            harvesterSettingsMan = new HarvesterSettingsManager(dbms, context.getProviderManager());
-        }
+        settingMan.refresh();
+        harvesterSettingsMan.refresh();
         
 		//--- initialize ThreadUtils with setting manager and rm props
 		ThreadUtils.init(context.getResourceManager().getProps(Geonet.Res.MAIN_DB),
@@ -697,11 +692,10 @@ public class Geonetwork implements ApplicationHandler {
                                 
                                 // In 2.11, settingsManager was not able to initialized on previous
                                 // version db table due to structure changes
-	                        	if (settingMan != null && harvesterSettingsMan != null) {
-                                    settingMan.refresh();
-    	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
-    	                            task.update(settingMan, harvesterSettingsMan, dbms);
-	                        	}
+                                settingMan.refresh();
+                                harvesterSettingsMan.refresh();
+	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
+	                            task.update(settingMan, harvesterSettingsMan, dbms);
 	                        } catch (Exception e) {
 	                            logger.info("          Errors occurs during Java migration file: " + e.getMessage());
 	                            e.printStackTrace();
@@ -727,16 +721,10 @@ public class Geonetwork implements ApplicationHandler {
     		
 			// Refresh setting manager in case the migration task added some new settings.
             try {
-                if (settingMan != null) {
-                    settingMan.refresh();
-                } else {
-                    // Reinitialized settings
-                    settingMan = new SettingManager(dbms, context.getProviderManager());
-                    
-                    // Update the logo 
-                    String siteId = settingMan.getValue("system/site/siteId");
-                    initLogo(servletContext, dbms, siteId, context.getAppPath());
-                }
+                settingMan.refresh();
+                // Update the logo 
+                String siteId = settingMan.getValue("system/site/siteId");
+                initLogo(servletContext, dbms, siteId, context.getAppPath());
             } catch (Exception e) {
                 logger.info("      Errors occurs during settings manager refresh during migration. Error is: " + e.getMessage());
                 e.printStackTrace();

@@ -61,10 +61,6 @@ public class SettingManager {
             this.setDatatype(datatype);
         }
 
-        public String getName() {
-            return name;
-        }
-
         public void setName(String name) {
             this.name = name;
         }
