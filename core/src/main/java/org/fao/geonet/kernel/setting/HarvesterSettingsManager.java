@@ -68,10 +68,10 @@ import org.springframework.stereotype.Component;
 public class HarvesterSettingsManager {
 
     @Autowired
-    HarvesterSettingRepository _settingsRepo;
+    private HarvesterSettingRepository _settingsRepo;
 
     @PersistenceContext
-    EntityManager _entityManager;
+    private EntityManager _entityManager;
 
     // ---------------------------------------------------------------------------
     // ---

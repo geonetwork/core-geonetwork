@@ -779,7 +779,6 @@ public class JeevesEngine
             
             String selectServiceQuery = "SELECT * FROM Services";
 
-            @SuppressWarnings("unchecked")
             java.util.List<Element> serviceList = null;
             if (serviceIdentifierToLoad == -1) {
                 serviceList = _dbms.select(selectServiceQuery)

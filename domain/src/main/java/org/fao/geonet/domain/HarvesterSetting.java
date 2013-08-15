@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,15 +20,15 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 /**
- * An entity representing a system configuration setting.
+ * An entity representing a harvester configuration setting.
  * 
- * Settings are represented by a tree. One should use the {@link org.fao.geonet.repository.HarvesterSettingRepository} to traverse the hierarchy.
+ * Harvester settings are represented by a tree. One should use the {@link org.fao.geonet.repository.HarvesterSettingRepository} to traverse
+ * the hierarchy.
  * 
  * @author Jesse
  */
 @Entity
-@Table(name = "settings")
-@Cacheable
+@Table(name = "harvestersettings")
 @Access(AccessType.PROPERTY)
 public class HarvesterSetting {
     public static final int ROOT_ID = 0;
@@ -40,8 +39,9 @@ public class HarvesterSetting {
     private String _value;
 
     /**
-     * Get the setting id.  This is a generated value and as such new instances should not have this set as it will simply be ignored
-     * and could result in reduced performance.
+     * Get the setting id. This is a generated value and as such new instances should not have this set as it will simply be ignored and
+     * could result in reduced performance.
+     * 
      * @return the setting id
      */
     @Id
@@ -52,8 +52,9 @@ public class HarvesterSetting {
     }
 
     /**
-     * Set the setting id.  This is a generated value and as such new instances should not have this set as it will simply be ignored
-     * and could result in reduced performance.
+     * Set the setting id. This is a generated value and as such new instances should not have this set as it will simply be ignored and
+     * could result in reduced performance.
+     * 
      * @param _id the setting id
      * @return this setting object
      */
@@ -63,7 +64,7 @@ public class HarvesterSetting {
     }
 
     /**
-     * Get the parent setting object.  This is a nullable property.
+     * Get the parent setting object. This is a nullable property.
      */
     @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = { PERSIST, MERGE, DETACH })
     @JoinColumn(name = "parentid")
@@ -73,19 +74,20 @@ public class HarvesterSetting {
     }
 
     /**
-     * Set the parent setting object for this setting.  The may be null.
-     *
-     * @param parent the parent setting object 
+     * Set the parent setting object for this setting. The may be null.
+     * 
+     * @param parent the parent setting object
      * @return this setting object
      */
-    public @Nonnull HarvesterSetting setParent(@Nullable HarvesterSetting parent) {
+    public @Nonnull
+    HarvesterSetting setParent(@Nullable HarvesterSetting parent) {
         this._parent = parent;
         return this;
     }
 
     /**
-     * Get the setting name.  This is a required property.
-     *
+     * Get the setting name. This is a required property.
+     * 
      * @return the setting name.
      */
     @Column(name = "name", nullable = false)
@@ -95,22 +97,26 @@ public class HarvesterSetting {
     }
 
     /**
-     * Set the setting name.  This is a required property.
-     * @param name the setting name.   This is a required property.
+     * Set the setting name. This is a required property.
+     * 
+     * @param name the setting name. This is a required property.
      * @return this setting object
      */
-    public @Nonnull HarvesterSetting setName(@Nonnull String name) {
+    public @Nonnull
+    HarvesterSetting setName(@Nonnull String name) {
         this._name = name;
         return this;
     }
 
     /**
      * Get the setting value. This is a nullable property.
+     * 
      * @return
      */
     @Lob
     @Column(name = "value", nullable = true)
-    public @Nullable String getValue() {
+    public @Nullable
+    String getValue() {
         return _value;
     }
 
@@ -128,7 +134,7 @@ public class HarvesterSetting {
     @Transient
     public int getValueAsInt() throws NullPointerException, NumberFormatException {
         if (getValue() == null) {
-            throw new NullPointerException("Setting value of "+getName()+" is null");
+            throw new NullPointerException("Setting value of " + getName() + " is null");
         }
         return Integer.parseInt(getValue());
     }
@@ -140,18 +146,19 @@ public class HarvesterSetting {
      * @return this setting object
      */
     public HarvesterSetting setValue(int value) {
-       return setValue(String.valueOf(value));
+        return setValue(String.valueOf(value));
     }
 
     /**
-     * Get the values as a boolean.  Returns false if the values is not a boolean.
+     * Get the values as a boolean. Returns false if the values is not a boolean.
+     * 
      * @return the values as a boolean
      * @throws NullPointerException if the value is null.
      */
     @Transient
     public boolean getValueAsBool() throws NullPointerException {
         if (getValue() == null) {
-            throw new NullPointerException("Setting value of "+getName()+" is null");
+            throw new NullPointerException("Setting value of " + getName() + " is null");
         }
         return Boolean.parseBoolean(_value);
     }
@@ -163,7 +170,7 @@ public class HarvesterSetting {
      * @return this setting object
      */
     public HarvesterSetting setValue(boolean value) {
-       return setValue(String.valueOf(value));
+        return setValue(String.valueOf(value));
     }
 
     @Override

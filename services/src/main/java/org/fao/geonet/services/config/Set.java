@@ -23,25 +23,23 @@
 
 package org.fao.geonet.services.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
-
-import java.util.HashMap;
-import java.util.Map;
 
 //=============================================================================
 

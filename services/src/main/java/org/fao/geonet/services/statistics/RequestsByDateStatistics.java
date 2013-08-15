@@ -23,7 +23,6 @@
 package org.fao.geonet.services.statistics;
 
 import java.util.Hashtable;
-import java.util.List;
 
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;

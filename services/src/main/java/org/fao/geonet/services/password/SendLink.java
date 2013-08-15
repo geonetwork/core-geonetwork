@@ -25,7 +25,6 @@ package org.fao.geonet.services.password;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationAbortedEx;
-import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.exceptions.UserNotFoundEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
