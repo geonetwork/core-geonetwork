@@ -26,6 +26,8 @@ package org.fao.geonet.services.config;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
+import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -52,8 +54,9 @@ public class Get implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		boolean asTree = Util.getParam(params, "asTree", "true").equals("true");
 
-		Element system  = gc.getBean(SettingManager.class).getAllAsXML();
+        Element system  = gc.getBean(SettingManager.class).getAllAsXML(asTree);
 		return system;
 	}
 }

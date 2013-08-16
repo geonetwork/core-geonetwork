@@ -57,34 +57,54 @@ public class SettingManager {
     @PersistenceContext
     private EntityManager _entityManager;
 
-    public Element getAllAsXML() {
+    /**
+     * Get all settings as xml.
+     *
+     * @param asTree get the settings as a tree
+     *
+     * @return all settings as xml.
+     */
+    public Element getAllAsXML(boolean asTree) {
         Element env = new Element("settings");
         List<Setting> settings = _repo.findAll(new Sort(Setting_.name.getName()));
 
         Map<String, Element> pathElements = new HashMap<String, Element>();
 
         for (Setting setting : settings) {
-            String[] segments = setting.getName().split("/");
-            Element parent = env;
-            for (int i = 0; i < segments.length; i++) {
-                String segment = segments[i];
-                Element currentElement = pathElements.get(segment);
-                if (currentElement == null) {
-                    currentElement = new Element(segment);
-                    currentElement.setAttribute("position", String.valueOf(setting.getPosition()));
-                    if (i == segments.length - 1) {
-                        currentElement.setAttribute("datatype", String.valueOf(setting.getDataType().ordinal()));
-                        currentElement.setAttribute("datatypeName", setting.getDataType().name());
-                        currentElement.setText(setting.getValue());
-                    }
-                    parent.addContent(currentElement);
-                    pathElements.put(segment, currentElement);
-                }
-
-                parent = currentElement;
+            if (asTree) {
+                buildXmlTree(env, pathElements, setting);
+            } else {
+                Element settingEl = new Element("setting");
+                settingEl.setAttribute("name", setting.getName());
+                settingEl.setAttribute("position", String.valueOf(setting.getPosition()));
+                settingEl.setAttribute("datatype", String.valueOf(setting.getDataType()));
+                settingEl.setText(setting.getValue());
+                env.addContent(settingEl);
             }
         }
         return env;
+    }
+
+    private void buildXmlTree(Element env, Map<String, Element> pathElements, Setting setting) {
+        String[] segments = setting.getName().split("/");
+        Element parent = env;
+        for (int i = 0; i < segments.length; i++) {
+            String segment = segments[i];
+            Element currentElement = pathElements.get(segment);
+            if (currentElement == null) {
+                currentElement = new Element(segment);
+                currentElement.setAttribute("position", String.valueOf(setting.getPosition()));
+                if (i == segments.length - 1) {
+                    currentElement.setAttribute("datatype", String.valueOf(setting.getDataType().ordinal()));
+                    currentElement.setAttribute("datatypeName", setting.getDataType().name());
+                    currentElement.setText(setting.getValue());
+                }
+                parent.addContent(currentElement);
+                pathElements.put(segment, currentElement);
+            }
+
+            parent = currentElement;
+        }
     }
 
     /**
