@@ -13,7 +13,7 @@ public interface OperationAllowedRepositoryCustom {
      * Converts metadataId to integer and performs a search.
      *
      * @param metadataId id of metadata
-     * @return
+     * @return the OperationsAllowed entities with the given metadataId 
      */
     public List<OperationAllowed> findByMetadataId(String metadataId);
 }

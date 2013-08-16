@@ -142,3 +142,61 @@ CREATE TABLE MetadataNotifications
     primary key(metadataId,notifierId)
   );
   
+INSERT INTO MetadataNotifications SELECT * FROM MetadataNotifications_Tmp;
+DROP TABLE MetadataNotifications_Tmp;
+
+-- ----  Change params querytype column to map to the LuceneQueryParamType enumeration
+
+CREATE TABLE Params_TEMP
+  (
+    id          int           not null,
+    requestId   int,
+    queryType   int,
+    termField   varchar(128),
+    termText    varchar(128),
+    similarity  float,
+    lowerText   varchar(128),
+    upperText   varchar(128),
+    inclusive   char(1)
+);
+
+
+INSERT INTO Params_TEMP SELECT id, requestId, 0, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='BOOLEAN_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 1, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='TERM_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 2, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='FUZZY_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 3, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='PREFIX_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 4, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='MATCH_ALL_DOCS_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 5, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='WILDCARD_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 6, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='PHRASE_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 7, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='RANGE_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 8, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='NUMERIC_RANGE_QUERY';
+
+DROP TABLE Params;
+DROP INDEX ParamsNDX1 ON Params(requestId);
+DROP INDEX ParamsNDX2 ON Params(queryType);
+DROP INDEX ParamsNDX3 ON Params(termField);
+DROP INDEX ParamsNDX4 ON Params(termText);
+
+CREATE TABLE Params
+  (
+    id          int           not null,
+    requestId   int,
+    queryType   int,
+    termField   varchar(128),
+    termText    varchar(128),
+    similarity  float,
+    lowerText   varchar(128),
+    upperText   varchar(128),
+    inclusive   char(1),
+    primary key(id),
+    foreign key(requestId) references Requests(id)
+  );
+
+CREATE INDEX ParamsNDX1 ON Params(requestId);
+CREATE INDEX ParamsNDX2 ON Params(queryType);
+CREATE INDEX ParamsNDX3 ON Params(termField);
+CREATE INDEX ParamsNDX4 ON Params(termText);
+
+
+INSERT INTO Params SELECT * FROM Params_TEMP;
+DROP TABLE Params_TEMP;

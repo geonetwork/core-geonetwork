@@ -11,6 +11,12 @@ import org.fao.geonet.domain.ReservedGroup;
  * @author Jesse
  */
 public interface GroupRepositoryCustom {
+    /**
+     * Find a group given one of the Reserved groups enumeration values.
+     *
+     * @param groupEnum one of the Reserved groups enumeration values.
+     * @return the actual group.
+     */
     @Nonnull
     public Group findReservedGroup(@Nonnull ReservedGroup groupEnum);
 }

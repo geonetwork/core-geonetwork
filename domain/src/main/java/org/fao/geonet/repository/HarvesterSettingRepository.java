@@ -12,8 +12,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface HarvesterSettingRepository extends JpaRepository<HarvesterSetting, Integer>, HarvesterSettingRepositoryCustom {
 
-    public static final String ID_PREFIX = "id:";
+    /**
+     * The prefix in a path for finding a setting by its id.
+     */
+    String ID_PREFIX = "id:";
+    /**
+     * The path separator.
+     */
     String SEPARATOR = "/";
 
+    /**
+     * Find all the settings with the given name.
+     *
+     * @param name the setting name.
+     *
+     * @return All settings with the given name.
+     */
     List<HarvesterSetting> findByName(String name);
 }
