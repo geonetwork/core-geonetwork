@@ -27,8 +27,9 @@ import java.util.Hashtable;
 
 import javax.servlet.http.HttpSession;
 
-import jeeves.guiservices.session.JeevesUser;
 
+
+import org.fao.geonet.domain.User;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -114,7 +115,7 @@ public class UserSession
 
 	//--------------------------------------------------------------------------
     
-    public void loginAs(JeevesUser user) {
+    public void loginAs(User user) {
         SecurityContextImpl secContext = new SecurityContextImpl();
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 user, null);
@@ -129,7 +130,7 @@ public class UserSession
 	//--------------------------------------------------------------------------
 
 	public String getUserId() { 
-		JeevesUser userDetails = getPrincipal();
+		User userDetails = getPrincipal();
 		if (userDetails == null) {
 			return null;   
 		} else {
@@ -137,7 +138,7 @@ public class UserSession
 		}
 	}
 	public String getUsername() {
-		JeevesUser userDetails = getPrincipal();
+		User userDetails = getPrincipal();
 		if (userDetails == null) {
 			return null;   
 		} else {
@@ -145,7 +146,7 @@ public class UserSession
 		}
 	}
 	public String getName() {
-		JeevesUser userDetails = getPrincipal();
+		User userDetails = getPrincipal();
 		if (userDetails == null) {
 			return null;   
 		} else {
@@ -153,7 +154,7 @@ public class UserSession
 		}
 	}
 	public String getSurname() { 
-		JeevesUser userDetails = getPrincipal();
+		User userDetails = getPrincipal();
 		if (userDetails == null) {
 			return null;   
 		} else {
@@ -161,7 +162,7 @@ public class UserSession
 		}
 	}
 	public String getProfile() {
-		JeevesUser userDetails = getPrincipal();
+		User userDetails = getPrincipal();
 		if (userDetails == null) {
 			return null;   
 		} else {
@@ -169,7 +170,7 @@ public class UserSession
 		}
 	}
 	public String getEmailAddr() {
-		JeevesUser userDetails = getPrincipal();
+		User userDetails = getPrincipal();
 		if (userDetails == null) {
 			return null;   
 		} else {
@@ -191,10 +192,10 @@ public class UserSession
 			return authentication;
 		}
 	}
-	public JeevesUser getPrincipal() {
+	public User getPrincipal() {
 		Authentication auth = auth();
-		if (auth != null && auth.getPrincipal() instanceof JeevesUser) {
-			return (JeevesUser) auth.getPrincipal(); 
+		if (auth != null && auth.getPrincipal() instanceof User) {
+			return (User) auth.getPrincipal(); 
 		}
 		return null;
 	}

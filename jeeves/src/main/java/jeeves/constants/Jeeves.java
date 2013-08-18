@@ -23,6 +23,9 @@
 
 package jeeves.constants;
 
+import org.fao.geonet.Constants;
+import org.fao.geonet.domain.Profile;
+
 
 //=============================================================================
 
@@ -34,7 +37,7 @@ public final class Jeeves
     */
    private Jeeves() {}
    
-   public static final String ENCODING = System.getProperty("geonetwork.file.encoding", "UTF-8");
+   public static final String ENCODING = Constants.ENCODING;
    
    public static final int MAX_UPLOAD_SIZE = 50; // 50 MB
 
@@ -85,7 +88,7 @@ public final class Jeeves
 		public static final String STRINGS   = "strings";
 		public static final String SERVICES  = "services";
 		public static final String SERVICE   = "service";
-		public static final String PROFILES  = "profiles";
+		public static final String PROFILES  = Profile.PROFILES_ELEM_NAME;
 		public static final String FORWARD   = "forward";
 		public static final String ERROR     = "error";
 		public static final String SESSION   = "session";

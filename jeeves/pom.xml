@@ -33,6 +33,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>domain</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>

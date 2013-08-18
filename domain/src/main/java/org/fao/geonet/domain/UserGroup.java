@@ -11,8 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 
-import jeeves.interfaces.Profile;
-
 /**
  * The mapping between user, the groups a user is a part of and the profiles the user has for each group.
  * 

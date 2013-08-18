@@ -30,10 +30,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jeeves.component.ProfileManager;
-import jeeves.interfaces.Profile;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Profile;
 
 /**
  * Get all user information from the LDAP user's attributes (including profile

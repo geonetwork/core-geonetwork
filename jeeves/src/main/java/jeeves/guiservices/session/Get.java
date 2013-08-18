@@ -24,6 +24,8 @@
 package jeeves.guiservices.session;
 
 import java.util.*;
+
+import org.fao.geonet.domain.Profile;
 import org.jdom.*;
 
 import jeeves.interfaces.*;

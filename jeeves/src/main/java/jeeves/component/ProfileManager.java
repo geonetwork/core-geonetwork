@@ -29,10 +29,10 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
-import jeeves.interfaces.Profile;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 
+import org.fao.geonet.domain.Profile;
 import org.jdom.Element;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;

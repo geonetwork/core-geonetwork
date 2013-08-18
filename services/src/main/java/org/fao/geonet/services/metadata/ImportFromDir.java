@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.exceptions.XSDValidationErrorEx;
-import jeeves.interfaces.Profile;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -32,9 +31,11 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.IO;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.DataManager;

@@ -28,15 +28,16 @@ import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
-import jeeves.interfaces.Profile;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import jeeves.utils.QuartzSchedulerUtils;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;

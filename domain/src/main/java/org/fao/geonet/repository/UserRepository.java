@@ -2,8 +2,7 @@ package org.fao.geonet.repository;
 
 import java.util.List;
 
-import jeeves.interfaces.Profile;
-
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

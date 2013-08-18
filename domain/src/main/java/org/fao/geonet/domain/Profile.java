@@ -1,10 +1,8 @@
-package jeeves.interfaces;
+package org.fao.geonet.domain;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import jeeves.constants.Jeeves;
 
 import org.jdom.Element;
 
@@ -16,6 +14,7 @@ import org.jdom.Element;
 public enum Profile {
     Administrator, UserAdmin(Administrator), Reviewer(UserAdmin), Editor(Reviewer), RegisteredUser(Editor), Guest(RegisteredUser), Monitor;
 
+    public static final String PROFILES_ELEM_NAME = "profiles";
     private final Set<Profile> children;
 
     private Profile(Profile... children) {
@@ -66,7 +65,7 @@ public enum Profile {
     }
 
     public Element asElement() {
-        Element elResult = new Element(Jeeves.Elem.PROFILES);
+        Element elResult = new Element(PROFILES_ELEM_NAME);
 
         for (Profile profile : getAll()) {
             if (profile == Guest)

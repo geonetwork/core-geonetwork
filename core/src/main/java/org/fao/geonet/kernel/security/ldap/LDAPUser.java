@@ -24,8 +24,7 @@ package org.fao.geonet.kernel.security.ldap;
 
 import java.util.Collection;
 
-import jeeves.interfaces.Profile;
-
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

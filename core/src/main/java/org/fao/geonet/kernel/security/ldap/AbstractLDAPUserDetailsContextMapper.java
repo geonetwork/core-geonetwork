@@ -29,10 +29,10 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import jeeves.interfaces.Profile;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;

@@ -1,6 +1,5 @@
 package org.fao.geonet.domain;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,12 +20,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import jeeves.utils.Xml;
-
-import org.jdom.Element;
-import org.jdom.JDOMException;
 
 import com.vividsolutions.jts.util.Assert;
 
@@ -125,31 +118,6 @@ public class Metadata {
     public Metadata setData(String data) {
         this._data = data;
         return this;
-    }
-
-    /**
-     * Get the metadata data as xml. This method parses the data string and will throw exceptions if the data is not xml formatted.
-     * 
-     * @param validate true if the xml should be validated as it is parsed.
-     * 
-     * @return the metadata parsed into xml {@link Element} objects
-     * 
-     * @throws IOException if there is an error parsing
-     * @throws JDOMException if there is an error parsing
-     */
-    @Transient
-    public Element getXmlData(boolean validate) throws IOException, JDOMException {
-        return Xml.loadString(this._data, validate);
-    }
-
-    /**
-     * Set the metadata data.
-     * 
-     * @param data the data.
-     * @return this metadata entity.
-     */
-    public Metadata setXmlData(Element data) {
-        return setData(Xml.getString(data));
     }
 
     /**

@@ -30,11 +30,11 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 
-import jeeves.interfaces.Profile;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;

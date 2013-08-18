@@ -1,10 +1,11 @@
 package jeeves.interfaces;
 
-import static jeeves.interfaces.Profile.*;
+import static org.fao.geonet.domain.Profile.*;
 import static org.junit.Assert.*;
 
 import java.util.Set;
 
+import org.fao.geonet.domain.Profile;
 import org.junit.Test;
 
 public class ProfileTest {

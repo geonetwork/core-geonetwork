@@ -24,11 +24,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import jeeves.guiservices.session.JeevesUser;
-import jeeves.interfaces.Profile;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * A user entity. A user is used in spring security, controlling access to metadata as well as in the {@link jeeves.server.UserSession}.
@@ -38,7 +36,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "users")
-public class User implements JeevesUser {
+public class User implements UserDetails {
     private static final long serialVersionUID = 2589607276443866650L;
 
     int _id;
@@ -140,7 +138,11 @@ public class User implements JeevesUser {
         return this;
     }
 
-    @Override
+    /**
+     * Get the main email of the user.
+     *
+     * @return the main email address of the user.
+     */
     @Transient
     public String getEmail() {
         if (_email != null) {

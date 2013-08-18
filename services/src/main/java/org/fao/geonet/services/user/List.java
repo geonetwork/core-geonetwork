@@ -24,13 +24,14 @@
 package org.fao.geonet.services.user;
 
 import jeeves.component.ProfileManager;
-import jeeves.interfaces.Profile;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Profile;
 import org.jdom.Element;
 
 import java.util.ArrayList;

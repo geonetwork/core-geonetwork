@@ -32,8 +32,6 @@ import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.ServiceNotAllowedEx;
 import jeeves.exceptions.XSDValidationErrorEx;
-import jeeves.guiservices.session.JeevesUser;
-import jeeves.interfaces.Profile;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -55,6 +53,7 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
@@ -360,7 +359,7 @@ public class DataManager {
         private final List<String> ids;
         private int beginIndex;
         private int count;
-        private JeevesUser user;
+        private User user;
 
         IndexMetadataTask(ServiceContext context, List<String> ids) {
             synchronized (indexing) {
