@@ -1179,7 +1179,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             } else {
                 parameters += "&extra_metadata_uuid=" + (this.selectedMd ? this.selectedMd : "");
                 if (this.selectedLink.href) {
-                    parameters += "&url=" + this.selectedLink.href + 
+                    parameters += "&url=" + encodeURIComponent(this.selectedLink.href.split('?')[0]) + 
                         "&desc=" + this.selectedLink.title + 
                         "&protocol=" + this.selectedLink.protocol + 
                         "&name=" + ((this.selectedLink.protocol == 'OGC:WMS' || 
