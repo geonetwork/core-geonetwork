@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.persistence.EntityManager;
@@ -122,6 +123,20 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
         } finally {
             setId(ReservedGroup.all, normalId);
         }
+    }
+    
+    @Test
+    public void testFindAllIds() throws Exception {
+        Group g1 = repo.save(newGroup());
+        Group g2 = repo.save(newGroup());
+        Group g3 = repo.save(newGroup());
+        
+        List<Integer> ids = repo.findIds();
+        
+        assertEquals(3, ids.size());
+        assertEquals(g1.getId(), ids.get(0).intValue());
+        assertEquals(g2.getId(), ids.get(1).intValue());
+        assertEquals(g3.getId(), ids.get(2).intValue());
     }
 
     private void setId(ReservedGroup group, int normalId) throws Exception {

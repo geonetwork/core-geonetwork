@@ -1,5 +1,7 @@
 package org.fao.geonet.repository;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import org.fao.geonet.domain.Group;
@@ -19,4 +21,7 @@ public interface GroupRepositoryCustom {
      */
     @Nonnull
     public Group findReservedGroup(@Nonnull ReservedGroup groupEnum);
+    
+    @Nonnull
+    public List<Integer> findIds();
 }
