@@ -1695,7 +1695,7 @@
 		</entry>
 		<entry>
 			<code>imageryBaseMapsEarthCover_Imagery</code>
-			<label>A3 Luft- und Satellitenbilder</label>
+			<label>A3 Luft-, Satellitenbilder</label>
                           <description/>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1715,13 +1715,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>boundaries</code>
-			<label>D Grenzen</label>
+			<label>D Politische und administrative Grenzen</label>
 			<description>Gesetzlich festgelegte Grenzen, z.B. politische und administrative Grenzen</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>planningCadastre</code>
-			<label>E Raumplanung, Grundstückkataster</label>
+			<label>E Raumplanung, Grundstückskataster</label>
 			<description>Informationen für die Flächennutzungsplanung, z.B. Landnutzungspläne, Flächennutzungspläne, Katastervermessung, Liegenschaften, Bebauungspläne, Landschaftsprogramm</description>
 		</entry>
 		<entry>
@@ -1731,7 +1731,7 @@
 		</entry>
 		<entry>
 			<code>planningCadastre_Cadastre</code>
-			<label>E2 Grundstückkataster</label>
+			<label>E2 Grundstückskataster</label>
                           <description/>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
