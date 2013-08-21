@@ -28,6 +28,8 @@ cat.lang.en = {
     ,'chooseGroup': 'Select a catalog'
     ,"thumbnail_not_available": "Thumbnail not available"
     ,"click_to_zoom": "click to zoom to area"
+    ,"onlineResFromMD": "From metadatas"
+    ,"onlineResFromManual": "Manual input "
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, cat.lang.en);

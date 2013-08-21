@@ -31,5 +31,7 @@ cat.lang.fr = {
     ,'chooseGroup': 'Selectionner un catalogue'
     ,"thumbnail_not_available": "Imagette non disponible"
     ,"click_to_zoom": "cliquez pour zoomer sur la zone"
+    ,"onlineResFromMD": "A partir des fiches"
+    ,"onlineResFromManual": "Saisie manuelle"
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, cat.lang.fr);

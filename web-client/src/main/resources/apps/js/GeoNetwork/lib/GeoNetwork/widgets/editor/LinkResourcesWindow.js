@@ -748,6 +748,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         
         this.uploadForm = new Ext.form.FormPanel({
             fileUpload: true,
+            title: OpenLayers.i18n('onlineResFromManual'),
             defaults: {
                 width: 350
             },
@@ -1096,7 +1097,10 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         // Define which metadata to be modified
         // It could be the on in current editing or a related one
         var targetMetadataUuid = this.metadataUuid, parameters = "";
-        this.layerName = this.layerNames.join(',');
+        
+        if(this.layerNames) {
+            this.layerName = this.layerNames.join(',');
+        } 
         
         if (this.type === 'parent') {
             // Define the parent metadata record to link to
@@ -1208,14 +1212,16 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             
         } else if (this.type === 'onlinesrc') {
             // Combine all links if multiple selection is available
-            if (this.mdSelectedStore && this.mdSelectedStore.getCount() > 0) {
-                this.mdSelectedStore.each(function (record) {
-                    parameters += "&extra_metadata_uuid=" + record.get('uuid');
-                });
+            if (this.mdSelectedStore && this.formPanel.ownerCt.items.findIndex('id', this.formPanel.ownerCt.getActiveTab().id) == 1) {
+                if( this.mdSelectedStore.getCount() > 0) {
+                    this.mdSelectedStore.each(function (record) {
+                        parameters += "&extra_metadata_uuid=" + record.get('uuid');
+                    });
+                }
             } else {
                 parameters += "&extra_metadata_uuid=" + (this.selectedMd ? this.selectedMd : "");
                 if (this.selectedLink.href) {
-                    parameters += "&url=" + this.selectedLink.href + 
+                    parameters += "&url=" + encodeURIComponent(this.selectedLink.href.split('?')[0]) + 
                         "&desc=" + this.selectedLink.title + 
                         "&protocol=" + this.selectedLink.protocol + 
                         "&name=" + ((this.selectedLink.protocol == 'OGC:WMS' || 
@@ -1279,7 +1285,15 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
         if (this.type === 'thumbnail') {
             this.add(this.generateThumbnailForm(cancelBt));
         } else if (this.type === 'onlinesrc') {
-            this.add(this.generateMultipleMetadataSelector(cancelBt));
+            this.add(new Ext.TabPanel({
+                activeTab: 0,
+                bodyStyle: 'padding-top:20px;',
+                items: [
+                    this.generateDocumentUploadForm(cancelBt),
+                    this.generateMultipleMetadataSelector(cancelBt)
+                 ]
+            }));
+            this.doLayout();
         } else if (this.type === 'sibling') {
             this.add(this.getMultipleMetadataSelectorForSibling(cancelBt));
         } else {
@@ -1347,6 +1361,7 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
         
         this.formPanel = new Ext.form.FormPanel({
             items: [cmp],
+            title: OpenLayers.i18n('onlineResFromMD'),
             buttons: [{
                 text: OpenLayers.i18n('createLink'),
                 iconCls: 'linkIcon',
@@ -1361,7 +1376,7 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
     },
     initComponent: function () {
         Ext.applyIf(this, this.defaultConfig);
-        
+        this.layerNames = [];
         GeoNetwork.editor.LinkResourcesWindow.superclass.initComponent.call(this);
         
         this.setTitle(OpenLayers.i18n('linkAResource-' + this.type));
