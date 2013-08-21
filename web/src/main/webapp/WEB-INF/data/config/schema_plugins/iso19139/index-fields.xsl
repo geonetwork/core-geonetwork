@@ -4,6 +4,7 @@
 										xmlns:gml="http://www.opengis.net/gml"
 										xmlns:srv="http://www.isotc211.org/2005/srv"
 										xmlns:geonet="http://www.fao.org/geonetwork"
+										xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 										xmlns:gmx="http://www.isotc211.org/2005/gmx"
                                         xmlns:skos="http://www.w3.org/2004/02/skos/core#">
@@ -30,6 +31,11 @@
   
   <xsl:variable name="inspire-thesaurus" select="if ($inspire!='false') then document(concat('file:///', $thesauriDir, '/external/thesauri/theme/inspire-theme.rdf')) else ''"/>
   <xsl:variable name="inspire-theme" select="if ($inspire!='false') then $inspire-thesaurus//skos:Concept else ''"/>
+  
+  
+  <xsl:variable name="sextant-thesaurus" select="document(concat('file:///', $thesauriDir, '/local/thesauri/theme/sextant-theme.rdf'))"/>
+  <xsl:variable name="sextant-theme" select="$sextant-thesaurus//skos:Concept"/>
+ 
   
   <!-- If identification creation, publication and revision date
     should be indexed as a temporal extent information (eg. in INSPIRE 
@@ -220,6 +226,16 @@
 				<xsl:for-each select="gmd:keyword/gco:CharacterString|gmd:keyword/gmx:Anchor|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
                     <xsl:variable name="keywordLower" select="lower-case(.)"/>
                     <Field name="keyword" string="{string(.)}" store="true" index="true"/>
+					
+					<!-- Add Sextant theme -->
+					<xsl:variable name="sextantThemeKey">
+					<xsl:call-template name="getSextantThemeKey">
+						<xsl:with-param name="keyword" select="string(.)"/>
+					</xsl:call-template>
+					</xsl:variable>
+					<xsl:if test="normalize-space($sextantThemeKey)">
+						<Field name="sextantTheme" string="{normalize-space($sextantThemeKey)}" store="true" index="true"/>
+					</xsl:if>
 					
                     <xsl:if test="$inspire='true'">
                         <xsl:if test="string-length(.) &gt; 0">
@@ -757,4 +773,17 @@
 			<!-- inspire annex cannot be established: leave empty -->
 		</xsl:choose>
 	</xsl:template>
+	
+	
+	
+	<xsl:template name="getSextantThemeKey">
+		<xsl:param name="keyword"/>
+		
+		<xsl:for-each select="$sextant-theme/skos:prefLabel">
+			<xsl:if test="text() = $keyword">
+				<xsl:value-of select="../@rdf:about"/>
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:template>
+	
 </xsl:stylesheet>
