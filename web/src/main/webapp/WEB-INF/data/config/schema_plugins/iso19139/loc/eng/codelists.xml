@@ -1678,7 +1678,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>climatologyMeteorologyAtmosphere</code>
-			<label>K Atmosphere, climatology</label>
+			<label>K Atmosphere, Climatology</label>
 			<description>Processes and phenomena of the atmosphere. Examples: cloud cover, weather,
 				climate, atmospheric conditions, climate change, precipitation</description>
 		</entry>
@@ -1702,7 +1702,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>structure</code>
-			<label>O Buildings, Infrastructure</label>
+			<label>O Buildings, Infrastructure, Facilities</label>
 			<description>Man-made construction. Examples: buildings, museums, churches, factories,
 				housing, monuments, shops, towers</description>
 		</entry>
@@ -1717,7 +1717,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utilitiesCommunication</code>
-			<label>Q Utilities, Communication</label>
+			<label>Q Utilities, Supply, Disposal, Communication</label>
 			<description>Energy, water and waste systems and communications infrastructure and
 				services. Examples: hydroelectricity, geothermal, solar and nuclear sources of energy,
 				water purification and distribution, sewage collection and disposal, electricity and gas
