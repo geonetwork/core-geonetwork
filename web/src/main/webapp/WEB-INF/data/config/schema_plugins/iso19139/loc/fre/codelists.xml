@@ -1485,12 +1485,12 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>imageryBaseMapsEarthCover</code>
-			<label>A Cartes de référence, images</label>
+			<label>A Cartes de référence, couverture du sol, images aériennes</label>
 			<description>Carte de référence. Exemples : occupation des terres, imagerie aérienne et satellitale, carte thématiques, carte topographiques</description>
 		</entry>
 		<entry>
 			<code>imageryBaseMapsEarthCover_BaseMaps</code>
-			<label>A1 Cartes de référence</label>
+			<label>A1 Cartes de référence, modèles du territoire</label>
             <description/>
 		</entry>
 		<entry>
@@ -1506,7 +1506,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>location</code>
-			<label>B Localisation</label>
+			<label>B Localisation, systèmes de référence</label>
 			<description>Exemples : zones postales, adresses, points de contrôle, réseau géodésique</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1540,7 +1540,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>geoscientificInformation</code>
-			<label>F Géosciences, dangers naturels</label>
+			<label>F Géologie, sols, dangers naturels</label>
 			<description>Informations relatives aux sciences de la terre. Exemples : composants et processus géophysiques, géologie, minéralogie, tectonique, risque sismique</description>
 		</entry>
 		<entry>
@@ -1561,7 +1561,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>biota</code>
-			<label>G Forêt, faune et flore</label>
+			<label>G Forêt, flore, faune</label>
 			<description>Flore et faune dans un écosystème naturel. Exemples : habitat, écologie, faune sauvage, faune aquatique, sciences biologiques, zones humides, végétation, biodiversité</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1585,7 +1585,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>environment</code>
-			<label>L Environnement, nature</label>
+			<label>L Protection de l'environnement et de la nature</label>
 			<description>Ressources naturelles, protection, conservation des ressources naturelles. Exemples : pollution, traitement et stockage des déchets, suivi de l’environnement, gestion du risque, réserves naturelles, paysage</description>
 		</entry>
 		<entry>
@@ -1595,7 +1595,7 @@
 		</entry>
 		<entry>
 			<code>environment_NatureProtection</code>
-			<label>L2 Protection de la nature</label>
+			<label>L2 Protection de la nature et du paysage</label>
             <description>Protection de la nature et du paysage</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
