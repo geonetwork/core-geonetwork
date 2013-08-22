@@ -1523,7 +1523,7 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>imageryBaseMapsEarthCover</code>
-			<label>A Carte di base, immagini</label>
+			<label>A Carte di base, copertura del suolo, immagini aeree</label>
 			<description>Mappe di base
 				Esempi: copertura territoriale, carte topografiche, immagini</description>
 		</entry>
@@ -1562,14 +1562,14 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>boundaries</code>
-			<label>D Confini</label>
+			<label>D Confini politici ed amministrativi</label>
 			<description>Descrizione legale del territorio
 				Esempi: limiti politici e amministrativi</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>planningCadastre</code>
-			<label>E Pianificazione, catasto</label>
+			<label>E Pianificazione territoriale, catasto fondiario</label>
 			<description>Pianificazione del territorio
 				Esempi: carte dell’uso del
 				suolo, carte di zonizzazione,
@@ -1583,12 +1583,12 @@ polvere</description>
 		</entry>
 		<entry>
 			<code>planningCadastre_Cadastre</code>
-			<label>E2 Terreni catastali</label>
+			<label>E2 Catasto fondiario</label>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>geoscientificInformation</code>
-			<label>F Geoscienze, rischi</label>
+			<label>F Geologia, suolo, rischi naturali</label>
 			<description>Informazioni riguardanti le Scienze della Terra
 				Esempi: entità e processi geofisici, geologia, minerali,
 				struttura e origine delle rocce terrestri, rischi di terremoti,
@@ -1649,7 +1649,7 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>environment</code>
-			<label>L Protezione ambiente e natura</label>
+			<label>L Protezione dell'ambiente e della natura</label>
 			<description>Risorse ambientali, protezione e conservazione dell’ambiente
 				Esempi: inquinamento ambientale, trattamento dei rifiuti, valutazione di impatto ambientale,
 				monitoraggio del rischio ambientale, riserve naturali, paesaggio
@@ -1740,7 +1740,7 @@ polvere</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>intelligenceMilitary</code>
-			<label>R Armata, sicurezza</label>
+			<label>R Esercito, sicurezza</label>
 			<description>Basi, strutture e attività militari
 				Esempi: addestramento, trasporto militare, raccolta di informazioni</description>
 		</entry>
