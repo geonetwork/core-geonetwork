@@ -57,7 +57,11 @@ public class Env implements Service {
 
         Element readOnly = new Element(READ_ONLY);
         readOnly.setText(Boolean.toString(gc.isReadOnly()));
-        response.addContent(readOnly);
-        return response;
+        
+        // Get the system node (which is for the time being the only child node
+        // of settings
+        Element system = response.getChild("system");
+        system.addContent(readOnly);
+        return (Element) system.clone();
 	}
 }
