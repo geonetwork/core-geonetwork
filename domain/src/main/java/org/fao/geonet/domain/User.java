@@ -47,8 +47,8 @@ public class User implements UserDetails {
     Set<Address> _addresses = new HashSet<Address>();
     String _organisation;
     String _kind;
-    Profile _profile;
-    UserSecurity _security;
+    Profile _profile = Profile.RegisteredUser;
+    UserSecurity _security = new UserSecurity();
 
     /**
      * Get the userid.   This is a generated value and as such new instances should not have this set as it will simply be ignored

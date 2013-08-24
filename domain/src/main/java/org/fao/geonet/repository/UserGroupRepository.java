@@ -15,15 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  * @author Jesse
  */
-public interface UserGroupRepository extends JpaRepository<UserGroup, UserGroupId>, JpaSpecificationExecutor<UserGroup> {
+public interface UserGroupRepository extends JpaRepository<UserGroup, UserGroupId>, JpaSpecificationExecutor<UserGroup>, UserGroupRepositoryCustom {
 
     /**
      * Delete all users with the given userid.
      *
      * @param userId the userid.
      */
-    @Modifying
-    @Transactional
-    @Query(name = DeleteAllByUserId.QUERY)
-    void deleteAllByUserId(@Param(DeleteAllByUserId.PARAM_USERID) int userId);
+//    @Modifying
+//    @Transactional
+//    @Query(name = DeleteAllByUserId.QUERY)
+//    void deleteAllByUserId(@Param(DeleteAllByUserId.PARAM_USERID) int userId);
 }

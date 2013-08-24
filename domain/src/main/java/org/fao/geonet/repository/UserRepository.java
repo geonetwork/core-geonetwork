@@ -27,13 +27,6 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
      */
     public User findByUsernameAndSecurityAuthTypeIsNull(String username);
     /**
-     * Find all users with the given email address.
-     *
-     * @param email the email address to use in search query.
-     * @return
-     */
-    public List<User> findAllByEmail(String email);
-    /**
      * find all users with the given profile.
      * @param profile the profile to use in search query.
 

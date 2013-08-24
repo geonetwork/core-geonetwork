@@ -1,5 +1,7 @@
 package org.fao.geonet.repository;
 
+import java.util.List;
+
 import org.fao.geonet.domain.User;
 
 /**
@@ -16,4 +18,12 @@ public interface UserRepositoryCustom {
      * @return the use with the given userid 
      */
     User findOne(String userId);
+    
+    /**
+     * Find all users with the given email address.
+     *
+     * @param email the email address to use in search query.
+     * @return
+     */
+    public List<User> findAllByEmail(String email);
 }
