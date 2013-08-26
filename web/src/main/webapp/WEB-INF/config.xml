@@ -1421,7 +1421,6 @@
 	<include>config-statistics.xml</include>
 	<include>config-geoserverpublisher.xml</include>
 	<include>config-test.xml</include>
-	<include>config-monitoring.xml</include>
 
 	<!-- ====================================================================== -->
 
@@ -1452,4 +1451,6 @@
 	<include>config/config-ui-search.xml</include>
 	<include>config/config-ui-metadata.xml</include>
 	<include>config/config-ui-admin.xml</include>
+  
+  <include>config/config-service-monitoring.xml</include>
 </geonet>
