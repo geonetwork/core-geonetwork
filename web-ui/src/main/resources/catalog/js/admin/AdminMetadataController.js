@@ -83,23 +83,23 @@
           $scope.selectedSchemas.splice(idx, 1);
         }
       };
-      
+
       /**
        * Select one or more schemas. Schema parameter
        * could be string or array.
        */
       $scope.selectSchema = function(schema) {
-          if (Array.isArray(schema)) {
-              $.each(schema, function(index, value) {
-                  selectSchema(value);
-              });
-          } else {
-              selectSchema(schema);
-          }
-          $scope.loadReport = null;
-          $scope.loadTplReport = null;
-      }
-      
+        if (Array.isArray(schema)) {
+          $.each(schema, function(index, value) {
+            selectSchema(value);
+          });
+        } else {
+          selectSchema(schema);
+        }
+        $scope.loadReport = null;
+        $scope.loadTplReport = null;
+      };
+
 
       $scope.isSchemaSelected = function(schema) {
         return $scope.selectedSchemas.indexOf(schema) !== -1;

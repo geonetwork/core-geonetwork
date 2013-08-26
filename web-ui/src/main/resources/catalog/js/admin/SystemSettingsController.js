@@ -88,7 +88,9 @@
          * broadcast success status and reload catalog info.
          */
       $scope.saveSettings = function(formId) {
-        $http.get($scope.url + 'admin.config.save?' + $(formId).serialize())
+
+        $http.get($scope.url + 'admin.config.save?' +
+                gnUtilityService.serialize(formId))
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('settingsUpdated'),
