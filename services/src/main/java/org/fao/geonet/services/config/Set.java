@@ -94,7 +94,7 @@ public class Set implements Service {
         gc.getBean(SearchManager.class).setInspireEnabled(Boolean.valueOf((String) values.get("system/inspire/enable")));
         String newUuid = (String) values.get("system/site/siteId");
 
-        if (!currentUuid.equals(newUuid)) {
+        if (newUuid != null && !currentUuid.equals(newUuid)) {
             dbms.execute("UPDATE Metadata SET source=? WHERE isHarvested='n'", newUuid);
             dbms.execute("UPDATE Sources  SET uuid=? WHERE uuid=?", newUuid, currentUuid);
         }

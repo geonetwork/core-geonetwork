@@ -1,8 +1,109 @@
-<div class="panel">
+<span data-ng-controller="GnCSWSettingsController">
+  <div class="panel">
   <div class="panel-heading">
-    <span data-translate="">cswConfiguration</span>
+    <span data-translate="">cswService</span>
     <button type="submit" class="btn btn-primary pull-right icon-save" 
       data-ng-click="saveSettings('#gn-settings')"
       data-translate="">save</button>
   </div>
+  
+  
+  <form id="gn-settings">
+    <div>
+      <label>
+        <input
+          type="checkbox"
+          name="system.csw.enable"
+          data-ng-model="cswSettings['system/csw/enable']"
+        />
+        <span>{{'system/csw/enable' | translate}}</span>
+      </label>
+      
+      <p class="help-block">{{'system/csw/enable-help' | translate}}</p>
+    </div>
+    <div>
+      <label>
+        <input
+          type="checkbox"
+          name="system.csw.metadataPublic"
+          data-ng-model="cswSettings['system/csw/metadataPublic']"
+        />
+        <span>{{'system/csw/metadataPublic' | translate}}</span>
+      </label>
+      
+      <p class="help-block">{{'system/csw/metadataPublic-help' | translate}}</p>
+    </div>
+    <div>
+      <label for="{{system.csw.contactId}}">{{'system/csw/contactId' | translate}}</label>
+      <select
+        data-ng-model="cswSettings['system/csw/contactId']"
+        name="system.csw.contactId"
+        required=""
+        class="form-control" >
+        <option data-ng-repeat="u in users" value="{{u.id}}"
+          ng-selected="u.id == cswSettings['system/csw/contactId']">{{u.name + ' ' + u.surname}}</option>
+      </select>
+      <p class="help-block">{{'system/csw/contactId-help' | translate}}</p>
+  </div>
+  </form>
 </div>
+
+<div class="panel">
+  <div class="panel-heading">
+    <span data-translate="">cswCapabilitiesProperties</span>
+    <button type="submit" class="btn btn-primary pull-right icon-save" 
+      data-ng-click="saveProperties('#gn-csw-capabilities-properties')"
+      data-translate="">save</button>
+  </div>
+  <form id="gn-csw-capabilities-properties">
+    <table class="table table-striped">
+      <tr>
+        <th data-translate>properties</th>
+        <th data-translate>language</th>
+        <th data-translate>value</th>
+      </tr>
+      <tr>
+        <td>
+          <select
+            data-ng-model="cswFieldFilterValue"
+            class="form-control" >
+            <option value=""/>
+            <option data-ng-repeat="(key, value) in cswFields track by $index" value="{{key}}"
+              ng-selected="key == cswFieldFilterValue">{{key | translate}}</option>
+          </select>
+        </td>
+        <td>
+          <select
+            data-ng-model="cswLanguageFilterValue"
+            class="form-control" >
+            <option value=""/>
+            <option data-ng-repeat="(key, value) in cswLanguages track by $index" value="{{key}}"
+              ng-selected="key == cswLanguageFilterValue">{{key | translate}}</option>
+          </select>
+        </td>
+        <td></td>
+      </tr>
+      <tr 
+        data-ng-repeat="element in cswFilter(cswConfig) track by $index">
+        <td>{{element.field | translate}}</td>
+        <td>{{element.langid | translate}}</td>
+        <td><input type="text" class="form-control" 
+          name="csw.{{element.field}}_{{element.langid}}" value="{{element.label}}"
+          data-ng-model="element.label"
+        /></td>
+      </tr>
+    </table>
+  </form>
+</div>
+  
+  
+  <div class="panel">
+    <div class="panel-heading">
+      <span data-translate="">cswCapabilitiesAdvProperties</span>
+    </div>
+    
+    <a href="csw.customelementset.get" data-translate="">customizeElementSet</a>
+  </div>
+</span>
+
+
