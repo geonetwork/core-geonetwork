@@ -19,17 +19,23 @@ import org.fao.geonet.domain.User_;
 public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @PersistenceContext
-    EntityManager _entityManager;
+    private EntityManager _entityManager;
+
     @Override
     public User findOne(String userId) {
         return _entityManager.find(User.class, Integer.valueOf(userId));
     }
     @Override
     public List<User> findAllByEmail(String email) {
-        CriteriaBuilder builder = _entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> query = builder.createQuery(User.class);
+
+        // The following code uses the JPA Criteria API to build a query
+        // that is essentially:
+        //      Select * from Users where email in (SELECT
+        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> root = query.from(User.class);
-        query.where(builder.in(root.get(User_.emailAddresses)));
+
+        query.where(cb.isMember(email, root.get(User_.emailAddresses)));
         return _entityManager.createQuery(query).getResultList();
     }
 

@@ -22,12 +22,22 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
     public void testFindByEmailAddress() {
         User user1 = newUser();
         String add1 = "add1";
+        String add1b = "add1b";
         user1.getEmailAddresses().add(add1);
+        user1.getEmailAddresses().add(add1b);
         user1 = repo.save(user1);
+
+        User user2 = newUser();
+        String add2 = "add2";
+        String add2b = "add2b";
+        user2.getEmailAddresses().add(add2);
+        user2.getEmailAddresses().add(add2b);
+        user2 = repo.save(user2);
 
         List<User> users = repo.findAllByEmail(add1);
 
         assertEquals(1, users.size());
+        assertEquals(user1, users.get(0));
     }
 
     private User newUser() {
