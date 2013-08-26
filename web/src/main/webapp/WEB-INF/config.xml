@@ -1422,7 +1422,6 @@
 	<include>config-geoserverpublisher.xml</include>
 	<include>config-test.xml</include>
 	<include>config-monitoring.xml</include>
-    <include>config-dcat-rdf.xml</include>
 
 	<!-- ====================================================================== -->
 
@@ -1443,7 +1442,9 @@
   <include>config/config-service-rss.xml</include>
   
   <include>config/config-service-csv.xml</include>
-	
+  
+  <include>config/config-service-dcat-rdf.xml</include>
+  
 	<include>config/config-ui-search.xml</include>
 	<include>config/config-ui-metadata.xml</include>
 	<include>config/config-ui-admin.xml</include>

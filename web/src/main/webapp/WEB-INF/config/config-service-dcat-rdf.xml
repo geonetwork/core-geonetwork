@@ -9,7 +9,7 @@
         <param name="addRefs" value="n"/>
         <param name="cache" value="y"/>
       </class>
-      <output sheet="metadata/view/rdf.xsl" contentType="application/rdf+xml; charset=UTF-8">
+      <output sheet="../xslt/services/dcat/rdf.xsl" contentType="application/rdf+xml; charset=UTF-8">
         <call name="relation" class=".guiservices.metadata.GetRelated"/>
         <call name="isoLang" class=".guiservices.isolanguages.Get"/>
         <call name="thesaurus" class=".services.thesaurus.GetList"/>
@@ -21,8 +21,8 @@
     <service name="rdf.search">
       <documentation> Search the catalogue and return results in RDF/DCAT format. </documentation>
       <class name=".services.main.XmlSearch"/>
-      <output sheet="metadata/view/rdf.xsl" contentType=" application/rdf+xml; charset=UTF-8"/>
-      <error id="search-error" sheet="error-xml.xsl" statusCode="500"/>
+      <output sheet="../xslt/services/dcat/rdf.xsl" contentType=" application/rdf+xml; charset=UTF-8"/>
+      <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
     </service>
 
   </services>
