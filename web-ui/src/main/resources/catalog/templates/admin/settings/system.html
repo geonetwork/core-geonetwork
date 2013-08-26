@@ -31,16 +31,12 @@
               class="checkbox">
               <label>
                 <!-- FIXME: to be improved to properly checked/unchecked checkboxes -->
-                <input ng-if="s['#text'] == 'true' || s['#text'] == 'on'"
+                <input
                   type="checkbox"
                   id="{{s['@name']}}" 
                   name="{{s.formName}}"
-                  checked="checked"
-                />
-                <input ng-if="s['#text'] == 'false' || s['#text'] == 'off'"
-                  type="checkbox"
-                  id="{{s['@name']}}" 
-                  name="{{s.formName}}"
+                  value="{{s['#text'] == 'true' || s['#text'] == 'on'}}"
+                  ng-checked="{{s['#text'] == 'true' || s['#text'] == 'on'}}"
                 />
                 <span>{{s['@name'] | translate}}</span>
               </label>
