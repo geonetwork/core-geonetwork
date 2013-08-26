@@ -698,10 +698,10 @@ public class Geonetwork implements ApplicationHandler {
 			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
 			
 		    logger.info("      Loading SQL migration step configuration from config-db.xml ...");
-            @SuppressWarnings(value = "unchecked")
             Element migrationConfig = dbConfiguration.getChild("migrate");
             if (migrationConfig != null) {
-    	        List<Element> versions = migrationConfig.getChildren();
+                @SuppressWarnings(value = "unchecked")
+                List<Element> versions = migrationConfig.getChildren();
                 for(Element version : versions) {
                     int versionNumber = Integer.valueOf(version.getAttributeValue("id"));
                     if (versionNumber > from && versionNumber <= to) {
