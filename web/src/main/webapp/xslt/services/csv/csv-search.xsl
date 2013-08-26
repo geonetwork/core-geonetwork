@@ -47,8 +47,7 @@
 	<!-- Intra field separator -->
 	<xsl:variable name="internalSep" select="'###'"/>
 	
-	<xsl:include href="utils.xsl"/>
-	<xsl:include href="metadata.xsl"/>
+  <xsl:include href="../../common/profiles-loader-brief-tpl.xsl"/>
 
 	<!-- A template to add a new line \n with no extra space. -->	
 	<xsl:template name="newLine">

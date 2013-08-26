@@ -4,9 +4,11 @@
 
   <xsl:variable name="uiResourcesPath" select="'../../catalog/'"/>
   <xsl:variable name="service" select="/root/gui/reqService"/>
+  <xsl:variable name="siteURL" select="/root/gui/siteURL"/>
+  <xsl:variable name="baseURL" select="substring-before($siteURL,'/srv/')"/>
   
   <xsl:variable name="i18n" select="/root/gui/i18n"/>
-  <xsl:variable name="lang" select="/root/gui/lang"/>
+  <xsl:variable name="lang" select="/root/gui/language"/>
   
   <xsl:variable name="isDebugMode" select="/root/request/debug"/>
   <xsl:variable name="isReadOnly" select="/root/gui/env/readonly = 'true'"/>
@@ -18,7 +20,15 @@
     else if ($service = 'catalog.login') then 'gn_login'
     else 'gn'"/>
   
-  <xsl:variable name="env" select="/root/gui/env"/>
+  <!-- Catalog settings -->
+  <xsl:variable name="env" select="/root/gui/systemConfig"/>
+  
+  <!-- Only system settings (use for backward compatibility replacing
+  /root/gui/env by $envSystem is equivalent). New reference to setting
+  should use $env.
+  -->
+  <xsl:variable name="envSystem" select="/root/gui/systemConfig/system"/>
+  
   <xsl:variable name="isMailEnabled" select="$env/feedback/emailServer/host != ''"/>
   
   <xsl:variable name="session" select="/root/gui/session"/>
