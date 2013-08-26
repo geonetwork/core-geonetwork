@@ -46,23 +46,44 @@
         </div>
       
       
-      <div class="panel" data-ng-hide="!loadReport"
-        data-ng-class="loadReport['@status'] == 'true' ? 'panel-success' : 'panel-danger'"
+      <div class="panel" data-ng-hide="!loadReport && !loadTplReport"
+        data-ng-class="loadReport['@status'] == 'true' || loadTplReport['@status'] == 'true' ? 
+                        'panel-success' : 'panel-danger'"
         >
         <div class="panel-heading"
           data-translate="">loadReport</div>
         
-        <p data-ng-show="loadReport['@error']">{{loadReport['@error']}}</p>
+        <div data-ng-show="loadReport">
+          <h2 data-translate="">loadSampleReport</h2>
+          
+          <p data-ng-show="loadReport['@error']">{{loadReport['@error']}}</p>
+          
+          <ul class="icons-ul">
+            <li data-ng-repeat="schema in selectedSchemas"><i class="icon-li icon-archive"></i>{{schema | translate}}
+              <ul class="icons-ul">
+                <li data-ng-repeat="record in loadReport[schema]">
+                  <i class="icon-li" data-ng-class="record['@status'] == 'loaded' ? 'icon-ok' : 'icon-remove'"></i>
+                  {{record['@name']}}</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
         
-        <ul class="icons-ul">
-          <li data-ng-repeat="schema in selectedSchemas"><i class="icon-li icon-archive"></i>{{schema | translate}}
-            <ul class="icons-ul">
-              <li data-ng-repeat="record in loadReport[schema]">
-                <i class="icon-li" data-ng-class="record['@status'] == 'loaded' ? 'icon-ok' : 'icon-remove'"></i>
-                {{record['@name']}}</li>
-            </ul>
-          </li>
-        </ul>
+        <div data-ng-show="loadTplReport">
+          <h2 data-translate="">loadTemplatesReport</h2>
+          
+          <p data-ng-show="loadTplReport['@error']">{{loadTplReport['@error']}}</p>
+          
+          <ul class="icons-ul">
+            <li data-ng-repeat="schema in selectedSchemas"><i class="icon-li icon-archive"></i>{{schema | translate}}
+              <ul class="icons-ul">
+                <li data-ng-repeat="record in loadTplReport[schema]">
+                  <i class="icon-li" data-ng-class="record['@status'] == 'loaded' ? 'icon-ok' : 'icon-remove'"></i>
+                  {{record['@name']}}</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 </div>

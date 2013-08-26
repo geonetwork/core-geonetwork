@@ -41,6 +41,9 @@
         when('/metadata/:metadataTab', {
           templateUrl: '../../catalog/templates/admin/metadata.html',
           controller: 'GnAdminMetadataController'}).
+        when('/metadata/metadata-and-template/:metadataAction/:schema', {
+          templateUrl: '../../catalog/templates/admin/metadata.html',
+          controller: 'GnAdminMetadataController'}).
         when('/dashboard', {
           templateUrl: '../../catalog/templates/admin/dashboard.html',
           controller: 'GnDashboardController'}).
