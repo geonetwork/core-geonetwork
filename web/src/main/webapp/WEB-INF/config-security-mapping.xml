@@ -205,6 +205,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.suggestion!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.validate!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.processing!?.*" access="hasRole('Editor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.batch.processing.report!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.processing.new!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.processing!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.batch.extract.subtemplates.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
