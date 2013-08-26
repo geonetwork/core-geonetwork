@@ -377,6 +377,7 @@ CREATE TABLE StatusValues
     id        int           not null,
     name      varchar(32)   not null,
     reserved  char(1)       default 'n' not null,
+    displayorder int,
     primary key(id)
   );
 

@@ -549,12 +549,12 @@ INSERT INTO IsoLanguages VALUES  (484,'zza', NULL);
 -- === Table: StatusValues
 -- ======================================================================
 
-INSERT INTO StatusValues VALUES  (0,'unknown','y');
-INSERT INTO StatusValues VALUES  (1,'draft','y');
-INSERT INTO StatusValues VALUES  (2,'approved','y');
-INSERT INTO StatusValues VALUES  (3,'retired','y');
-INSERT INTO StatusValues VALUES  (4,'submitted','y');
-INSERT INTO StatusValues VALUES  (5,'rejected','y');
+INSERT INTO StatusValues VALUES  (0,'unknown','y', 0);
+INSERT INTO StatusValues VALUES  (1,'draft','y', 1);
+INSERT INTO StatusValues VALUES  (2,'approved','y', 3);
+INSERT INTO StatusValues VALUES  (3,'retired','y', 5);
+INSERT INTO StatusValues VALUES  (4,'submitted','y', 2);
+INSERT INTO StatusValues VALUES  (5,'rejected','y', 4);
 
 -- ======================================================================
 -- === Table: StatusValuesDes

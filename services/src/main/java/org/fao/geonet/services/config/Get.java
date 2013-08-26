@@ -56,7 +56,7 @@ public class Get implements Service
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		boolean asTree = Util.getParam(params, "asTree", "true").equals("true");
 
-		Element system  = gc.getBean(SettingManager.class).getAllAsXML(asTree);
+        Element system  = gc.getBean(SettingManager.class).getAllAsXML(asTree);
 		return system;
 	}
 }

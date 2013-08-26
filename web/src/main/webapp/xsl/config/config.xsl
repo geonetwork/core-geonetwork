@@ -71,9 +71,6 @@
 
 	<xsl:template name="panel">
 		<form action="config.set" name="settings" method="post">
-			<xsl:message>
-				<xsl:copy-of select="/root/settings/*"/>
-			</xsl:message>
 			<xsl:for-each select="/root/settings/*">
 				<xsl:sort select="@position" data-type="number"/>
 				<xsl:apply-templates mode="make-settings-form" select="."/>

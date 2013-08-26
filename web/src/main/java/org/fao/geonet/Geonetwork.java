@@ -698,49 +698,51 @@ public class Geonetwork implements ApplicationHandler {
 			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
 			
 		    logger.info("      Loading SQL migration step configuration from config-db.xml ...");
-            @SuppressWarnings(value = "unchecked")
-	        List<Element> versions = dbConfiguration.getChild("migrate").getChildren();
-            for(Element version : versions) {
-                int versionNumber = Integer.valueOf(version.getAttributeValue("id"));
-                if (versionNumber > from && versionNumber <= to) {
-                    logger.info("       - running tasks for " + versionNumber + "...");
-                    @SuppressWarnings(value = "unchecked")
-                    List<Element> versionConfiguration = version.getChildren();
-                    for(Element file : versionConfiguration) {
-                    	if(file.getName().equals("java")) {
-	                        try {
-                            	String className = file.getAttributeValue("class");
-                                logger.info("         - Java migration class:" + className);
-                                
-                                // In 2.11, settingsManager was not able to initialized on previous
-                                // version db table due to structure changes
-	                        	if (settingMan != null && harvesterSettingsMan != null) {
-                                    settingMan.refresh(dbms);
-    	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
-    	                            task.update(settingMan, harvesterSettingsMan, dbms);
-	                        	}
-	                        } catch (Exception e) {
-	                            logger.info("          Errors occurs during Java migration file: " + e.getMessage());
-	                            e.printStackTrace();
-	                            anyMigrationError = true;
-	                        }
-                    	} else {
-	                        String filePath = path + file.getAttributeValue("path");
-	                        String filePrefix = file.getAttributeValue("filePrefix");
-	                        anyMigrationAction = true;
-	                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
-	                        try {
-	                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
-	                        } catch (Exception e) {
-	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-	                            e.printStackTrace();
-	                            anyMigrationError = true;
-	                        }
-                    	}
+            Element migrationConfig = dbConfiguration.getChild("migrate");
+            if (migrationConfig != null) {
+                @SuppressWarnings(value = "unchecked")
+                List<Element> versions = migrationConfig.getChildren();
+                for(Element version : versions) {
+                    int versionNumber = Integer.valueOf(version.getAttributeValue("id"));
+                    if (versionNumber > from && versionNumber <= to) {
+                        logger.info("       - running tasks for " + versionNumber + "...");
+                        @SuppressWarnings(value = "unchecked")
+                        List<Element> versionConfiguration = version.getChildren();
+                        for(Element file : versionConfiguration) {
+                        	if(file.getName().equals("java")) {
+    	                        try {
+                                	String className = file.getAttributeValue("class");
+                                    logger.info("         - Java migration class:" + className);
+                                    
+                                    // In 2.11, settingsManager was not able to initialized on previous
+                                    // version db table due to structure changes
+    	                        	if (settingMan != null && harvesterSettingsMan != null) {
+                                        settingMan.refresh(dbms);
+        	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
+        	                            task.update(settingMan, harvesterSettingsMan, dbms);
+    	                        	}
+    	                        } catch (Exception e) {
+    	                            logger.info("          Errors occurs during Java migration file: " + e.getMessage());
+    	                            e.printStackTrace();
+    	                            anyMigrationError = true;
+    	                        }
+                        	} else {
+    	                        String filePath = path + file.getAttributeValue("path");
+    	                        String filePrefix = file.getAttributeValue("filePrefix");
+    	                        anyMigrationAction = true;
+    	                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
+    	                        try {
+    	                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
+    	                        } catch (Exception e) {
+    	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+    	                            e.printStackTrace();
+    	                            anyMigrationError = true;
+    	                        }
+                        	}
+                        }
                     }
                 }
             }
-			
     		
 			// Refresh setting manager in case the migration task added some new settings.
             try {
