@@ -58,7 +58,7 @@
         if ($routeParams.schema === 'all') {
           $scope.selectAllSchemas(true);
         } else if ($routeParams.schema !== undefined) {
-          $scope.selectSchema($routeParams.schema);
+          $scope.selectSchema($routeParams.schema.split(','));
         }
 
         // Load
@@ -75,16 +75,31 @@
         }
       }
 
-      $scope.selectSchema = function(schema) {
+      selectSchema = function(schema) {
         var idx = $scope.selectedSchemas.indexOf(schema);
         if (idx === -1) {
           $scope.selectedSchemas.push(schema);
         } else {
           $scope.selectedSchemas.splice(idx, 1);
         }
-        $scope.loadReport = null;
-        $scope.loadTplReport = null;
       };
+      
+      /**
+       * Select one or more schemas. Schema parameter
+       * could be string or array.
+       */
+      $scope.selectSchema = function(schema) {
+          if (Array.isArray(schema)) {
+              $.each(schema, function(index, value) {
+                  selectSchema(value);
+              });
+          } else {
+              selectSchema(schema);
+          }
+          $scope.loadReport = null;
+          $scope.loadTplReport = null;
+      }
+      
 
       $scope.isSchemaSelected = function(schema) {
         return $scope.selectedSchemas.indexOf(schema) !== -1;
