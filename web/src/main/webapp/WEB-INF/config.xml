@@ -30,7 +30,8 @@
 			<call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
 
 			<call name="session" class="jeeves.guiservices.session.Get" />
-			<call name="env" class="org.fao.geonet.guiservices.util.Env" />
+		  <call name="env" class="org.fao.geonet.guiservices.util.Env" />
+		  <call name="systemConfig" class="org.fao.geonet.services.config.Get" />
 			<call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
 			<call name="schemalist" class="org.fao.geonet.guiservices.schemas.Get" />
 			<call name="svnmanager" class="org.fao.geonet.guiservices.util.GetSvnDetails"/>
@@ -1307,44 +1308,6 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- RSS services -->
-
-		<service name="rss.search">
-			<documentation>
-				<![CDATA[
-				Search service returning results in RSS formats.
-				
-				Parameters:
-				* Any search criteria supported by Lucene search service.
-				* mdlinkonly: to return only the link pointing to the metadata record. If not defined
-				metadata link and links from the distribution section are returned. The alternate and 
-				type attribute can be used to make distinction between different types of link 
-				(eg. WMS, ZIP, HTML).
-				* georss: The type of geometry to return (simple return georss:box, simplepoint return
-				georss:point, otherwise georss:where).
-				]]>
-			</documentation>
-			<class name=".services.main.Search">
-				<param name="maxSummaryKeys" value="10" />
-				<param name="maxHitsInSummary" value="1000" />
-			</class>
-			<output sheet="rss-search.xsl" contentType="application/rss+xml; charset=UTF-8">
-				<call name="rssItems" class=".services.main.Result" />
-				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="rss.present">
-			<class name=".services.main.Result" />
-
-			<output sheet="rss-search.xsl" contentType="application/rss+xml; charset=UTF-8">
-				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- KML services -->
 
 		<!-- Show WMS service in GE -->
@@ -1394,21 +1357,6 @@
 			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
-
-
-		<!-- Service to export a GeoNetwork query in a text file output. -->
-		<service name="csv.search">
-			<class name=".services.main.SelectionSearch">
-				<param name="fast" value="false" />
-			</class>
-			<output forward="csv.present" />
-		</service>
-		<service name="csv.present">
-			<class name=".services.main.Result">
-				<param name="range" value="all" />
-			</class>
-			<output sheet="csv-search.xsl" contentType="text/plain; charset=UTF-8" />
-		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- relation services -->
@@ -1490,7 +1438,11 @@
 	<include>config/config-service-csw-virtual.xml</include>
 	<include>config/config-service-csw-admin.xml</include>
 	
-	<include>config/config-service-sru.xml</include>
+  <include>config/config-service-sru.xml</include>
+  
+  <include>config/config-service-rss.xml</include>
+  
+  <include>config/config-service-csv.xml</include>
 	
 	<include>config/config-ui-search.xml</include>
 	<include>config/config-ui-metadata.xml</include>
