@@ -1445,6 +1445,8 @@
   
   <include>config/config-service-dcat-rdf.xml</include>
   
+  <include>config/config-service-pdf.xml</include>
+  
 	<include>config/config-ui-search.xml</include>
 	<include>config/config-ui-metadata.xml</include>
 	<include>config/config-ui-admin.xml</include>
