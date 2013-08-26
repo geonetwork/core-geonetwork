@@ -1,8 +1,10 @@
 (function() {
   goog.provide('gn_usergroup_controller');
 
+  goog.require('gn_dbtranslation');
+
   var module = angular.module('gn_usergroup_controller',
-      []);
+      ['gn_dbtranslation']);
 
 
   /**
@@ -359,33 +361,7 @@
             });
       };
 
-      /**
-       * Save a translation
-       */
-      $scope.saveTranslation = function(e) {
-        // TODO: No need to save if translation not updated
 
-        // Save value in translation
-        // TODO : could we use Angular compile here ?
-        var xml = "<request><group id='{{id}}'>" +
-            '<label>' +
-            '<{{key}}>{{value}}</{{key}}>' +
-                        '</label>' +
-            '</group></request>';
-        xml = xml.replace('{{id}}', $scope.groupSelected.id)
-                    .replace(/{{key}}/g, e.key)
-                    .replace('{{value}}', e.value);
-        $http.post($scope.url + 'admin.group.update.labels', xml, {
-          headers: {'Content-type': 'application/xml'}
-        }).success(function(data) {
-        }).error(function(data) {
-          $rootScope.$broadcast('StatusUpdated', {
-            title: $translate('groupTranslationUpdateError'),
-            error: data,
-            timeout: 0,
-            type: 'danger'});
-        });
-      };
       /**
        * Return true if selected group has metadata record.
        * This information could be useful to disable a delete button

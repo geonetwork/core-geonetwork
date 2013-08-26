@@ -66,17 +66,7 @@
             
             <div data-ng-hide="!groupSelected.label">
                 <h3><span data-translate>translationForGroup</span> {{groupSelected.name}}</h3>
-                <table class="table table-striped">
-                    <tr 
-                        data-ng-repeat="(key, value) in groupSelected.label track by $index">
-                        <td>{{key}}</td>
-                        <td><input type="text" class="form-control" 
-                            id="translation-{{key}}" value="{{value}}"
-                            data-ng-model="groupSelected.label[key]" 
-                            data-ng-keyup="saveTranslation(this)"
-                            /></td>
-                    </tr>
-                </table>
+                <div data-gn-db-translation="groupSelected" data-type="group"></div>
             </div>
             
             
