@@ -104,21 +104,7 @@
 				<call name="sources"  class=".guiservices.util.Sources"/>
 			</output>
 		</service>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-      
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        
-		<service name="portal.sitemap">
-			<class name=".guiservices.metadata.Sitemap" />
-	      <output sheet="portal-sitemap.xsl" contentType="text/xml; charset=UTF-8"/>
-		</service>
-
-		<service name="robots.txt">
-			<output sheet="robots.xsl" contentType="text; charset=UTF-8"/>
-		</service>
-		
+	  
 		<service name="logo">
 			<output sheet="admin-logo.xsl"/>
 		</service>

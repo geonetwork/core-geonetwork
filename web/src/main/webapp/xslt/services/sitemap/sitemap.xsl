@@ -2,6 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
     xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="#all">
   
+  <xsl:include href="../../common/base-variables.xsl"/>
+  
   <xsl:variable name="format" select="/root/request/format"/>
   
   
@@ -38,11 +40,11 @@
                     <xsl:with-param name="uuid" select="$uuid"/>
                   </xsl:call-template>
                 </xsl:variable>
-                <xsl:value-of select="/root/gui/env/server/protocol"/>://<xsl:value-of select="/root/gui/env/server/host"/>:<xsl:value-of select="/root/gui/env/server/port"/><xsl:value-of select="/root/gui/locService"/>/<xsl:value-of select="$metadataUrlValue"/>
+                <xsl:value-of select="$env/system/server/protocol"/>://<xsl:value-of select="$env/system/server/host"/>:<xsl:value-of select="$env/system/server/port"/><xsl:value-of select="/root/gui/locService"/>/<xsl:value-of select="$metadataUrlValue"/>
               </xsl:when>
               
               <xsl:otherwise>
-                <xsl:value-of select="/root/gui/env/server/protocol"/>://<xsl:value-of select="/root/gui/env/server/host"/>:<xsl:value-of select="/root/gui/env/server/port"/><xsl:value-of select="/root/gui/url"/>/?uuid=<xsl:value-of select="$uuid"/>
+                <xsl:value-of select="$env/system/server/protocol"/>://<xsl:value-of select="$env/system/server/host"/>:<xsl:value-of select="$env/system/server/port"/><xsl:value-of select="/root/gui/url"/>/?uuid=<xsl:value-of select="$uuid"/>
               </xsl:otherwise>
             </xsl:choose>
           </loc>
@@ -59,9 +61,9 @@
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
       xmlns:sc="http://sw.deri.org/2007/07/sitemapextension/scschema.xsd">
       <sc:dataset>
-        <sc:datasetLabel><xsl:value-of select="/root/gui/env/site/name"/> content catalogue for Linked Data spiders (RDF)</sc:datasetLabel>
+        <sc:datasetLabel><xsl:value-of select="$env/system/site/name"/> content catalogue for Linked Data spiders (RDF)</sc:datasetLabel>
         <xsl:for-each select="response/record">
-          <sc:dataDumpLocation><xsl:value-of select="/root/gui/env/server/protocol"/>://<xsl:value-of select="/root/gui/env/server/host"/>:<xsl:value-of select="/root/gui/env/server/port"/><xsl:value-of select="/root/gui/url"/>/srv/eng/rdf.metadata.get?uuid=<xsl:value-of select="uuid"/></sc:dataDumpLocation>
+          <sc:dataDumpLocation><xsl:value-of select="$env/system/server/protocol"/>://<xsl:value-of select="$env/system/server/host"/>:<xsl:value-of select="$env/system/server/port"/><xsl:value-of select="/root/gui/url"/>/srv/eng/rdf.metadata.get?uuid=<xsl:value-of select="uuid"/></sc:dataDumpLocation>
         </xsl:for-each>
         <!--For 5 latests update:
         <sc:sampleURI>http://<server_host>:<server_port>/<catalogue>/metadata/<uuid>.rdf</sc:sampleURI>
