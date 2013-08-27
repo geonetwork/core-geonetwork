@@ -25,7 +25,7 @@ public abstract class AbstractOperationsAllowedTest extends AbstractSpringDataTe
     @Autowired
     protected OperationAllowedRepository _opAllowRepo;
     @PersistenceContext
-    private EntityManager _entityManager;
+    EntityManager _entityManager;
 
     protected Metadata _md1;
     protected Operation _viewOp;

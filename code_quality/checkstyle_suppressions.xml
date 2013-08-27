@@ -8,4 +8,5 @@
     <suppress files=".*Test.*\.java" checks="[a-zA-Z0-9]*"/>
     <suppress files=".*DummyGraph\.java" checks="[a-zA-Z0-9]*"/>
     <suppress files="[^d].+/.*" checks="[a-zA-Z0-9]*"/>
+    <suppress files="domain/.+/domain/.*" checks="DesignForExtension"/>
 </suppressions>

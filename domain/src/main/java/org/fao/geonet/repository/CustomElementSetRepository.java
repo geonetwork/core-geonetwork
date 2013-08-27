@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * 
  * @author Jesse
  */
-public interface CustomElementSetRepository extends JpaRepository<CustomElementSet, Integer>, JpaSpecificationExecutor<CustomElementSet> {
+public interface CustomElementSetRepository extends JpaRepository<CustomElementSet, String> {
 }

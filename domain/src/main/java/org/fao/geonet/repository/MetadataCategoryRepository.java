@@ -1,6 +1,5 @@
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.MetadataCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -12,11 +11,12 @@ import java.util.List;
  * 
  * @author Jesse
  */
-public interface HarvestHistoryRepository extends JpaRepository<HarvestHistory, Integer>, JpaSpecificationExecutor<HarvestHistory> {
+public interface MetadataCategoryRepository extends JpaRepository<MetadataCategory, Integer>, JpaSpecificationExecutor<MetadataCategory> {
     /**
-     * Find all the HarvestHistory objects of the given type.
+     * Find the category with the given name.
      *
-     * @param harvesterType the harvester type
+     * @param name the name
+     * @return category
      */
-    List<HarvestHistory> findAllByHarvesterType(String harvesterType);
+    MetadataCategory findOneByName(String name);
 }

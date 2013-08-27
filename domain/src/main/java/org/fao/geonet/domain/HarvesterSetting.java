@@ -6,18 +6,7 @@ import static javax.persistence.CascadeType.PERSIST;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  * An entity representing a harvester configuration setting.
@@ -29,6 +18,7 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name = "harvestersettings")
+@Cacheable
 @Access(AccessType.PROPERTY)
 public class HarvesterSetting {
     public static final int ROOT_ID = 0;
@@ -45,7 +35,7 @@ public class HarvesterSetting {
      * @return the setting id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     public int getId() {
         return _id;

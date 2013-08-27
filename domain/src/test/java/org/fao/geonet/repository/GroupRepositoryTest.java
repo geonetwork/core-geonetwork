@@ -21,105 +21,105 @@ import org.springframework.transaction.annotation.Transactional;
 public class GroupRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
-    GroupRepository repo;
+    GroupRepository _repo;
 
     @PersistenceContext
     EntityManager _entityManager;
 
-    private AtomicInteger nextId = new AtomicInteger();
+    private AtomicInteger _nextId = new AtomicInteger();
 
     @Test
     public void test_Save_Count_FindOnly_DeleteAll() throws Exception {
-        assertEquals(0, repo.count());
+        assertEquals(0, _repo.count());
         Group group = newGroup();
-        Group savedGroup = repo.save(group);
+        Group savedGroup = _repo.save(group);
 
-        repo.flush();
+        _repo.flush();
         _entityManager.clear();
 
         group.setId(savedGroup.getId());
-        assertEquals(1, repo.count());
-        assertSameContents(group, repo.findOne(group.getId()));
+        assertEquals(1, _repo.count());
+        assertSameContents(group, _repo.findOne(group.getId()));
         
-        repo.deleteAll();
+        _repo.deleteAll();
 
-        repo.flush();
+        _repo.flush();
         _entityManager.clear();
 
-        assertEquals(0, repo.count());
+        assertEquals(0, _repo.count());
     }
     
     @Test
     public void testUpdate() throws Exception {
-        assertEquals(0, repo.count());
+        assertEquals(0, _repo.count());
         Group group = newGroup();
 
-        Group savedGroup = repo.save(group);
+        Group savedGroup = _repo.save(group);
 
-        repo.flush();
+        _repo.flush();
         _entityManager.clear();
 
         group.setId(savedGroup.getId());
 
-        assertEquals(1, repo.count());
-        assertSameContents(group, repo.findOne(group.getId()));
+        assertEquals(1, _repo.count());
+        assertSameContents(group, _repo.findOne(group.getId()));
 
         group.setName("New Name");
-        Group savedGroup2 = repo.save(group);
+        Group savedGroup2 = _repo.save(group);
 
-        repo.flush();
+        _repo.flush();
         _entityManager.clear();
 
         assertSameContents(savedGroup, savedGroup2);
         
-        assertEquals(1, repo.count());
-        assertSameContents(group, repo.findOne(group.getId()));
+        assertEquals(1, _repo.count());
+        assertSameContents(group, _repo.findOne(group.getId()));
     }
 
     @Test
     public void testFindByName() throws Exception {
-        Group savedGroup = repo.save(newGroup());
+        Group savedGroup = _repo.save(newGroup());
 
-        repo.flush();
+        _repo.flush();
         _entityManager.clear();
 
-        assertSameContents(savedGroup, repo.findByName(savedGroup.getName()));
-        assertNull(repo.findByName("some wrong name"));
+        assertSameContents(savedGroup, _repo.findByName(savedGroup.getName()));
+        assertNull(_repo.findByName("some wrong name"));
     }
     
     @Test
     public void testFindByEmail() throws Exception {
-        Group savedGroup = repo.save(newGroup());
+        Group savedGroup = _repo.save(newGroup());
 
-        repo.flush();
+        _repo.flush();
         _entityManager.clear();
 
-        assertSameContents(savedGroup, repo.findByEmail(savedGroup.getEmail()));
-        assertNull(repo.findByEmail("some wrong email"));
+        assertSameContents(savedGroup, _repo.findByEmail(savedGroup.getEmail()));
+        assertNull(_repo.findByEmail("some wrong email"));
     }
     
     public void testFindReservedGroup() throws Exception {
-        Group savedGroup = repo.save(ReservedGroup.all.getGroupEntityTemplate());
+        Group savedGroup = _repo.save(ReservedGroup.all.getGroupEntityTemplate());
 
-        repo.flush();
+        _repo.flush();
         _entityManager.clear();
 
-        assertSameContents(savedGroup, repo.findReservedGroup(ReservedGroup.all));
+        assertSameContents(savedGroup, _repo.findReservedGroup(ReservedGroup.all));
     }
 
     @Test
     public void testFindReservedOperation() throws Exception {
         int normalId = ReservedGroup.all.getId();
-        int id = repo.save(ReservedGroup.all.getGroupEntityTemplate()).getId();
+        int id = _repo.save(ReservedGroup.all.getGroupEntityTemplate()).getId();
         setId(ReservedGroup.all, id);
         try {
-            repo.save(ReservedGroup.all.getGroupEntityTemplate());
+            _repo.save(ReservedGroup.all.getGroupEntityTemplate());
 
-            repo.flush();
+            _repo.flush();
             _entityManager.clear();
 
-            assertSameContents(ReservedGroup.all.getGroupEntityTemplate(), repo.findReservedGroup(ReservedGroup.all));
-            assertNull(repo.findReservedGroup(ReservedGroup.intranet));
+            assertSameContents(ReservedGroup.all.getGroupEntityTemplate(), _repo.findReservedGroup(ReservedGroup.all));
+            assertNull(_repo.findReservedGroup(ReservedGroup.intranet));
         } finally {
             setId(ReservedGroup.all, normalId);
         }
@@ -127,11 +127,11 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
     
     @Test
     public void testFindAllIds() throws Exception {
-        Group g1 = repo.save(newGroup());
-        Group g2 = repo.save(newGroup());
-        Group g3 = repo.save(newGroup());
+        Group g1 = _repo.save(newGroup());
+        Group g2 = _repo.save(newGroup());
+        Group g3 = _repo.save(newGroup());
         
-        List<Integer> ids = repo.findIds();
+        List<Integer> ids = _repo.findIds();
         
         assertEquals(3, ids.size());
         assertEquals(g1.getId(), ids.get(0).intValue());
@@ -146,7 +146,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
     }
 
     private Group newGroup() {
-        int id = nextId.incrementAndGet();
+        int id = _nextId.incrementAndGet();
         return new Group()
                 .setDescription("Desc "+id)
                 .setEmail(id+"@geonet.org")

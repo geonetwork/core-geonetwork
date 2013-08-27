@@ -26,7 +26,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
     AtomicInteger inc = new AtomicInteger();
 
     @Test
-    public void testfindByUUID() throws Exception {
+    public void testFindByUUID() throws Exception {
         Metadata metadata = repo.save(newMetadata());
 
         repo.flush();

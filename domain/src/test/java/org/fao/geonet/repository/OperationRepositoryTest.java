@@ -16,51 +16,47 @@ import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.ReservedOperation;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class OperationRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
-    OperationRepository repo;
-
-    @Autowired
-    ApplicationContext context;
+    OperationRepository _repo;
 
     @PersistenceContext
     EntityManager _entityManager;
 
-    private AtomicInteger nextId = new AtomicInteger(20);
+    private AtomicInteger _nextId = new AtomicInteger(20);
 
     @Test
     public void test_Save_Count_FindOnly_DeleteAll() throws Exception {
-        assertEquals(0, repo.count());
-        Operation savedOp = repo.save(newOperation());
+        assertEquals(0, _repo.count());
+        Operation savedOp = _repo.save(newOperation());
 
-        repo.flush();
+        _repo.flush();
         _entityManager.clear();
 
-        assertEquals(1, repo.count());
-        assertSameContents(savedOp, repo.findOne(savedOp.getId()));
+        assertEquals(1, _repo.count());
+        assertSameContents(savedOp, _repo.findOne(savedOp.getId()));
 
-        repo.deleteAll();
-        assertEquals(0, repo.count());
+        _repo.deleteAll();
+        assertEquals(0, _repo.count());
     }
 
     @Test
     public void testIsReserved() throws Exception {
         int normalId = ReservedOperation.view.getId();
-        int id = repo.save(ReservedOperation.view.getOperationEntity()).getId();
+        int id = _repo.save(ReservedOperation.view.getOperationEntity()).getId();
         setId(ReservedOperation.view, id);
         try {
-            repo.flush();
+            _repo.flush();
             _entityManager.clear();
-            assertEquals(1, repo.count());
-            List<Operation> all = repo.findAll();
+            assertEquals(1, _repo.count());
+            List<Operation> all = _repo.findAll();
             assertEquals(1, all.size());
 
-            Operation loadedOp = repo.findOne(ReservedOperation.view.getId());
+            Operation loadedOp = _repo.findOne(ReservedOperation.view.getId());
             assertTrue(loadedOp.isReserved());
             assertTrue(loadedOp.is(ReservedOperation.view));
         } finally {
@@ -76,64 +72,64 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
 
     @Test
     public void testUpdate() throws Exception {
-        assertEquals(0, repo.count());
+        assertEquals(0, _repo.count());
 
-        Operation operation = repo.save(newOperation());
+        Operation operation = _repo.save(newOperation());
 
-        repo.flush();
+        _repo.flush();
         _entityManager.clear();
 
-        assertEquals(1, repo.count());
-        assertSameContents(operation, repo.findOne(operation.getId()));
+        assertEquals(1, _repo.count());
+        assertSameContents(operation, _repo.findOne(operation.getId()));
 
         operation.setName("New Name");
-        Operation updatedOperation = repo.save(operation);
+        Operation updatedOperation = _repo.save(operation);
 
-        repo.flush();
+        _repo.flush();
         _entityManager.clear();
 
-        assertEquals(1, repo.count());
-        assertSameContents(operation, repo.findOne(operation.getId()));
+        assertEquals(1, _repo.count());
+        assertSameContents(operation, _repo.findOne(operation.getId()));
         assertSameContents(operation, updatedOperation);
-        assertSameContents(updatedOperation, repo.findOne(operation.getId()));
+        assertSameContents(updatedOperation, _repo.findOne(operation.getId()));
     }
 
     @Test
     public void testFindByName() throws Exception {
-        Operation savedOp = repo.save(newOperation());
+        Operation savedOp = _repo.save(newOperation());
 
-        repo.flush();
+        _repo.flush();
         _entityManager.clear();
 
-        assertSameContents(savedOp, repo.findByName(savedOp.getName()));
-        assertNull(repo.findByName("some wrong name"));
+        assertSameContents(savedOp, _repo.findByName(savedOp.getName()));
+        assertNull(_repo.findByName("some wrong name"));
     }
 
     @Test
     public void testFindReservedOperation() throws Exception {
         int normalId = ReservedOperation.view.getId();
-        int id = repo.save(ReservedOperation.view.getOperationEntity()).getId();
+        int id = _repo.save(ReservedOperation.view.getOperationEntity()).getId();
         setId(ReservedOperation.view, id);
         try {
-            repo.save(ReservedOperation.view.getOperationEntity());
+            _repo.save(ReservedOperation.view.getOperationEntity());
 
-            repo.flush();
+            _repo.flush();
             _entityManager.clear();
 
-            assertSameContents(ReservedOperation.view.getOperationEntity(), repo.findReservedOperation(ReservedOperation.view));
-            assertNull(repo.findReservedOperation(ReservedOperation.editing));
+            assertSameContents(ReservedOperation.view.getOperationEntity(), _repo.findReservedOperation(ReservedOperation.view));
+            assertNull(_repo.findReservedOperation(ReservedOperation.editing));
         } finally {
             setId(ReservedOperation.view, normalId);
         }
     }
 
     private Operation newOperation() {
-        int id = nextId.incrementAndGet();
+        int id = _nextId.incrementAndGet();
         return newOperation(id, "name " + id);
     }
 
     private Operation newOperation(int id, String name) {
-        return new Operation().setId(id).setName(name);
+        return new Operation().setName(name);
     }
 
 }

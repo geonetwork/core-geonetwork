@@ -12,10 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting_;
-import org.fao.geonet.repository.HarvesterSettingRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,163 +25,160 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
     }
 
     @Autowired
-    HarvesterSettingRepository repo;
+    HarvesterSettingRepository _repo;
 
-    @Autowired
-    ApplicationContext context;
+    private AtomicInteger _nextId = new AtomicInteger(20);
 
-    private AtomicInteger nextId = new AtomicInteger(20);
-
-    private String[] skipProps = new String[] { "getValueAsInt", "getValueAsBool" };
+    private String[] _skipProps = new String[] { "getValueAsInt", "getValueAsBool" };
 
     @Test
     public void testFindByName() throws Exception {
-        HarvesterSetting setting = repo.save(newSetting());
-        List<HarvesterSetting> found = repo.findByName(setting.getName());
+        HarvesterSetting setting = _repo.save(newSetting());
+        List<HarvesterSetting> found = _repo.findByName(setting.getName());
         assertEquals(1, found.size());
-        assertSameContents(setting, found.get(0), skipProps);
-        assertEquals(0, repo.findByName("some wrong name").size());
+        assertSameContents(setting, found.get(0), _skipProps);
+        assertEquals(0, _repo.findByName("some wrong name").size());
     }
 
     @Test
     public void testFindRoot() throws Exception {
-        HarvesterSetting actualRoot = repo.save(newSetting());
-        List<HarvesterSetting> roots = repo.findRoots();
+        HarvesterSetting actualRoot = _repo.save(newSetting());
+        List<HarvesterSetting> roots = _repo.findRoots();
         assertEquals(1, roots.size());
 
         HarvesterSetting root = roots.get(0);
-        assertSameContents(actualRoot, root, skipProps);
+        assertSameContents(actualRoot, root, _skipProps);
         assertNull(root.getParent());
     }
 
     @Test
     public void testFindChildren() throws Exception {
-        HarvesterSetting parent = repo.save(newSetting());
+        HarvesterSetting parent = _repo.save(newSetting());
         HarvesterSetting child = newSetting().setParent(parent);
-        repo.save(child);
+        _repo.save(child);
 
-        assertEquals(2, repo.count());
+        assertEquals(2, _repo.count());
 
-        List<HarvesterSetting> children = repo.findAllChildren(parent.getId());
+        List<HarvesterSetting> children = _repo.findAllChildren(parent.getId());
         assertEquals(1, children.size());
-        assertSameContents(child, children.get(0), skipProps);
+        assertSameContents(child, children.get(0), _skipProps);
 
     }
 
     @Test
     public void testFindChildByName() throws Exception {
-        HarvesterSetting parent = repo.save(newSetting());
-        repo.save(newSetting().setParent(parent));
-        HarvesterSetting child3 = repo.save(newSetting().setParent(parent));
+        HarvesterSetting parent = _repo.save(newSetting());
+        _repo.save(newSetting().setParent(parent));
+        HarvesterSetting child3 = _repo.save(newSetting().setParent(parent));
 
-        assertEquals(3, repo.count());
+        assertEquals(3, _repo.count());
 
-        List<HarvesterSetting> children = repo.findChildrenByName(parent.getId(), child3.getName());
+        List<HarvesterSetting> children = _repo.findChildrenByName(parent.getId(), child3.getName());
         assertEquals(1, children.size());
-        assertSameContents(child3, children.get(0), skipProps);
+        assertSameContents(child3, children.get(0), _skipProps);
 
     }
 
     @Test
     public void testFindByPathUsingId() throws Exception {
 
-        HarvesterSetting parent = repo.save(newSetting());
-        HarvesterSetting child2 = repo.save(newSetting().setParent(parent));
-        repo.save(newSetting().setParent(parent));
+        HarvesterSetting parent = _repo.save(newSetting());
+        HarvesterSetting child2 = _repo.save(newSetting().setParent(parent));
+        _repo.save(newSetting().setParent(parent));
 
-        List<HarvesterSetting> found = repo.findByPath("id:" + child2.getId());
+        List<HarvesterSetting> found = _repo.findByPath("id:" + child2.getId());
         assertEquals(1, found.size());
-        assertSameContents(child2, found.get(0), skipProps);
+        assertSameContents(child2, found.get(0), _skipProps);
 
-        found = repo.findByPath("id:" + parent.getId());
+        found = _repo.findByPath("id:" + parent.getId());
         assertEquals(1, found.size());
-        assertSameContents(parent, found.get(0), skipProps);
+        assertSameContents(parent, found.get(0), _skipProps);
     }
 
     @Test
     public void testFindByPathUsingTwoId() throws Exception {
-        HarvesterSetting parent = repo.save(newSetting());
-        HarvesterSetting child2 = repo.save(newSetting().setParent(parent));
-        repo.save(newSetting().setParent(parent));
+        HarvesterSetting parent = _repo.save(newSetting());
+        HarvesterSetting child2 = _repo.save(newSetting().setParent(parent));
+        _repo.save(newSetting().setParent(parent));
 
-        List<HarvesterSetting> found = repo.findByPath("id:" + Integer.MAX_VALUE + "/id:" + child2.getId());
+        List<HarvesterSetting> found = _repo.findByPath("id:" + Integer.MAX_VALUE + "/id:" + child2.getId());
         assertEquals(1, found.size());
-        assertSameContents(child2, found.get(0), skipProps);
+        assertSameContents(child2, found.get(0), _skipProps);
     }
 
     @Test
     public void testFindByPathUsingChildNamePath() throws Exception {
-        HarvesterSetting parent = repo.save(newSetting());
-        HarvesterSetting child2 = repo.save(newSetting().setParent(parent).setName("2"));
-        HarvesterSetting child3 = repo.save(newSetting().setParent(parent).setName("3"));
-        HarvesterSetting child4 = repo.save(newSetting().setParent(child3).setName("4"));
+        HarvesterSetting parent = _repo.save(newSetting());
+        HarvesterSetting child2 = _repo.save(newSetting().setParent(parent).setName("2"));
+        HarvesterSetting child3 = _repo.save(newSetting().setParent(parent).setName("3"));
+        HarvesterSetting child4 = _repo.save(newSetting().setParent(child3).setName("4"));
 
         String path = SEPARATOR + child3.getName() + SEPARATOR + child4.getName();
-        List<HarvesterSetting> found = repo.findByPath(path);
+        List<HarvesterSetting> found = _repo.findByPath(path);
         assertEquals(1, found.size());
-        assertSameContents(child4, found.get(0), skipProps);
+        assertSameContents(child4, found.get(0), _skipProps);
 
         String path2 = SEPARATOR + child2.getName() + SEPARATOR + child4.getName();
-        List<HarvesterSetting> found2 = repo.findByPath(path2);
+        List<HarvesterSetting> found2 = _repo.findByPath(path2);
         assertEquals(0, found2.size());
     }
 
     @Test
     public void testFindByPathFindingMany() throws Exception {
-        HarvesterSetting parent = repo.save(newSetting().setName("1"));
-        repo.save(newSetting().setParent(parent).setName("2"));
-        HarvesterSetting child3 = repo.save(newSetting().setParent(parent).setName("2"));
+        HarvesterSetting parent = _repo.save(newSetting().setName("1"));
+        _repo.save(newSetting().setParent(parent).setName("2"));
+        HarvesterSetting child3 = _repo.save(newSetting().setParent(parent).setName("2"));
 
         String path = child3.getName();
-        List<HarvesterSetting> found = repo.findByPath(path);
+        List<HarvesterSetting> found = _repo.findByPath(path);
         assertEquals(2, found.size());
     }
     
     @Test
     public void testFindByPathUsingIdAndChildNamePath() throws Exception {
-        HarvesterSetting parent = repo.save(newSetting().setName("2"));
-        HarvesterSetting child2 = repo.save(newSetting().setParent(parent).setName("2"));
-        HarvesterSetting child3 = repo.save(newSetting().setParent(parent).setName("3"));
-        HarvesterSetting child4 = repo.save(newSetting().setParent(child3).setName("4"));
+        HarvesterSetting parent = _repo.save(newSetting().setName("2"));
+        HarvesterSetting child2 = _repo.save(newSetting().setParent(parent).setName("2"));
+        HarvesterSetting child3 = _repo.save(newSetting().setParent(parent).setName("3"));
+        HarvesterSetting child4 = _repo.save(newSetting().setParent(child3).setName("4"));
         
         String path = ID_PREFIX + child3.getId() + SEPARATOR + child4.getName();
-        List<HarvesterSetting> found = repo.findByPath(path);
+        List<HarvesterSetting> found = _repo.findByPath(path);
         assertEquals(1, found.size());
-        assertSameContents(child4, found.get(0), skipProps);
+        assertSameContents(child4, found.get(0), _skipProps);
         
         String path2 = SEPARATOR + child2.getName() + SEPARATOR + child4.getName();
-        List<HarvesterSetting> found2 = repo.findByPath(path2);
+        List<HarvesterSetting> found2 = _repo.findByPath(path2);
         assertEquals(0, found2.size());
     }
 
     
     @Test
     public void testFindOneByPath() throws Exception {
-        HarvesterSetting parent = repo.save(newSetting().setName("2"));
-        HarvesterSetting child2 = repo.save(newSetting().setParent(parent).setName("2"));
-        HarvesterSetting child3 = repo.save(newSetting().setParent(parent).setName("2"));
-        HarvesterSetting child4 = repo.save(newSetting().setParent(child3).setName("4"));
+        HarvesterSetting parent = _repo.save(newSetting().setName("2"));
+        HarvesterSetting child2 = _repo.save(newSetting().setParent(parent).setName("2"));
+        HarvesterSetting child3 = _repo.save(newSetting().setParent(parent).setName("2"));
+        HarvesterSetting child4 = _repo.save(newSetting().setParent(child3).setName("4"));
         
         String path = child2.getName();
-        HarvesterSetting found = repo.findOneByPath(path);
+        HarvesterSetting found = _repo.findOneByPath(path);
         assertNotNull(found);
-        assertSameContents(child4, found, skipProps);
+        assertSameContents(child4, found, _skipProps);
     }
     
     @Test
     public void testFindAllAndSort() throws Exception {
-        repo.save(newSetting().setName("4"));
-        repo.save(newSetting().setName("2"));
-        repo.save(newSetting().setName("3"));
-        repo.save(newSetting().setName("1"));
+        _repo.save(newSetting().setName("4"));
+        _repo.save(newSetting().setName("2"));
+        _repo.save(newSetting().setName("3"));
+        _repo.save(newSetting().setName("1"));
         
-        List<HarvesterSetting> list = repo.findAll(new Sort(Setting_.name.getName()));
+        List<HarvesterSetting> list = _repo.findAll(new Sort(Setting_.name.getName()));
         assertEquals("1", list.get(0).getName());
         assertEquals("2", list.get(1).getName());
         assertEquals("3", list.get(2).getName());
         assertEquals("4", list.get(3).getName());
         
-        List<HarvesterSetting> list2 = repo.findAll(new Sort(Direction.DESC, Setting_.name.getName()));
+        List<HarvesterSetting> list2 = _repo.findAll(new Sort(Direction.DESC, Setting_.name.getName()));
         assertEquals("4", list2.get(0).getName());
         assertEquals("3", list2.get(1).getName());
         assertEquals("2", list2.get(2).getName());
@@ -191,7 +186,7 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
     }
     
     private HarvesterSetting newSetting() {
-        int id = nextId.incrementAndGet();
+        int id = _nextId.incrementAndGet();
         return new HarvesterSetting().setName("name " + id).setValue("value " + id);
     }
 

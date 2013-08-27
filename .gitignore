@@ -43,3 +43,4 @@ datadir/
 web/src/main/webapp/WEB-INF/data/removed/
 web/.springBeans
 web/images/
+*.launch
