@@ -529,7 +529,14 @@
     <xsl:template match="entry" mode="js-translations-topicCat">
         ,["<xsl:value-of select="code"/>", "<xsl:value-of select="label"/>"]</xsl:template>
 
-    <xsl:template match="record" mode="js-translations-sources-groups"><xsl:if test="position()>1">,</xsl:if><xsl:choose><xsl:when test="siteid">["_source/<xsl:value-of select="siteid"/>", "<xsl:value-of select="name"/>"</xsl:when><xsl:otherwise>["_groupOwner/<xsl:value-of select="id"/>", "<xsl:value-of select="label/*[name()=/root/gui/language]"/>"</xsl:otherwise></xsl:choose>]</xsl:template>
+    <xsl:template match="record" mode="js-translations-sources-groups">
+        <xsl:if test="position()>1">,</xsl:if>
+        <xsl:choose>
+            <xsl:when test="siteid">["_source/<xsl:value-of select="siteid"/>", "<xsl:value-of select="normalize-space(replace(translate(name,'&quot;', '`'), '[\n\r]+', ' '))"/>"</xsl:when>
+            <xsl:otherwise>["_groupOwner/<xsl:value-of select="id"/>", "<xsl:value-of select="normalize-space(replace(translate(label/*[name()=/root/gui/language],'&quot;', '`'), '[\n\r]+', ' '))"/>"
+            </xsl:otherwise>
+        </xsl:choose>]
+    </xsl:template>
 
     <xsl:template match="record" mode="js-translations-formats">
         ,["<xsl:value-of select="name"/><xsl:if test="version != '-'">_<xsl:value-of select="version"/></xsl:if>", "<xsl:value-of select="name"/> (<xsl:value-of select="version"/>)"]</xsl:template>
