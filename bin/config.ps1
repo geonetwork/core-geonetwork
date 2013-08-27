@@ -39,7 +39,7 @@ $LOGGING="-Dlog4j.debug=true -Dlog4j.configuration=$LOGFILE"
 $DB="geocat2_trunk"
 
 # The directory containing the postgis installation scripts.  For postgis 1.x it will contain postgis.sql and spatial_ref_sys.sql
-$SQL_DIR="C:\Program Files (x86)\PostgreSQL\9.2\share\contrib\postgis-2.0\"
+$SQL_DIR="C:\Program Files\PostgreSQL\9.2\share\contrib\postgis-2.0\"
 
 # A flag indicating how to create the postgis database.  You can look at clean.sh for the
 # implementation.  

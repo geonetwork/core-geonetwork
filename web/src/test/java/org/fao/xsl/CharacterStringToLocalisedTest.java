@@ -200,6 +200,70 @@ public class CharacterStringToLocalisedTest {
     }
 
     @Test
+    public void bug_AddsExtraPT_FreeTextElement() throws Exception {
+        String pathToXsl = TransformationTestSupport.geonetworkWebapp
+                + "/xsl/characterstring-to-localisedcharacterstring.xsl";
+
+        Element testData1 = Xml
+                .loadString(
+                        "<che:CHE_MD_Metadata  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:srv=\"http://www.isotc211.org/2005/srv\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:che=\"http://www.geocat.ch/2008/che\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gml=\"http://www.opengis.net/gml\" gco:isoType=\"gmd:MD_Metadata\">"
+                                + "   <gmd:language><gco:CharacterString>deu</gco:CharacterString></gmd:language>  <gmd:locale xmlns:xalan=\"http://xml.apache.org/xalan\" xmlns:comp=\"http://toignore\">\n" +
+                                "    <gmd:PT_Locale id=\"DE\">\n" +
+                                "      <gmd:languageCode>\n" +
+                                "        <gmd:LanguageCode codeList=\"#LanguageCode\" codeListValue=\"ger\" />\n" +
+                                "      </gmd:languageCode>\n" +
+                                "      <gmd:characterEncoding>\n" +
+                                "        <gmd:MD_CharacterSetCode codeList=\"#MD_CharacterSetCode\" codeListValue=\"utf8\">UTF8</gmd:MD_CharacterSetCode>\n" +
+                                "      </gmd:characterEncoding>\n" +
+                                "    </gmd:PT_Locale>\n" +
+                                "  </gmd:locale>\n" +
+                                "  <gmd:locale xmlns:xalan=\"http://xml.apache.org/xalan\" xmlns:comp=\"http://toignore\">\n" +
+                                "    <gmd:PT_Locale id=\"FR\">\n" +
+                                "      <gmd:languageCode>\n" +
+                                "        <gmd:LanguageCode codeList=\"#LanguageCode\" codeListValue=\"fre\" />\n" +
+                                "      </gmd:languageCode>\n" +
+                                "      <gmd:characterEncoding>\n" +
+                                "        <gmd:MD_CharacterSetCode codeList=\"#MD_CharacterSetCode\" codeListValue=\"utf8\">UTF8</gmd:MD_CharacterSetCode>\n" +
+                                "      </gmd:characterEncoding>\n" +
+                                "    </gmd:PT_Locale>\n" +
+                                "  </gmd:locale>\n" +
+                                "  <gmd:locale xmlns:xalan=\"http://xml.apache.org/xalan\" xmlns:comp=\"http://toignore\">\n" +
+                                "    <gmd:PT_Locale id=\"IT\">\n" +
+                                "      <gmd:languageCode>\n" +
+                                "        <gmd:LanguageCode codeList=\"#LanguageCode\" codeListValue=\"ita\" />\n" +
+                                "      </gmd:languageCode>\n" +
+                                "      <gmd:characterEncoding>\n" +
+                                "        <gmd:MD_CharacterSetCode codeList=\"#MD_CharacterSetCode\" codeListValue=\"utf8\">UTF8</gmd:MD_CharacterSetCode>\n" +
+                                "      </gmd:characterEncoding>\n" +
+                                "    </gmd:PT_Locale>\n" +
+                                "  </gmd:locale>\n" +
+                                "  <gmd:locale xmlns:xalan=\"http://xml.apache.org/xalan\" xmlns:comp=\"http://toignore\">\n" +
+                                "    <gmd:PT_Locale id=\"EN\">\n" +
+                                "      <gmd:languageCode>\n" +
+                                "        <gmd:LanguageCode codeList=\"#LanguageCode\" codeListValue=\"eng\" />\n" +
+                                "      </gmd:languageCode>\n" +
+                                "      <gmd:characterEncoding>\n" +
+                                "        <gmd:MD_CharacterSetCode codeList=\"#MD_CharacterSetCode\" codeListValue=\"utf8\">UTF8</gmd:MD_CharacterSetCode>\n" +
+                                "      </gmd:characterEncoding>\n" +
+                                "    </gmd:PT_Locale>\n" +
+                                "  </gmd:locale>\n"
+                                + "   <gmd:contactInstructions>"
+                                + "     <gco:CharacterString>character string</gco:CharacterString>"
+                                + "     <gmd:PT_FreeText><gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">Kundencenter</gmd:LocalisedCharacterString></gmd:textGroup></gmd:PT_FreeText>"
+                                + "   </gmd:contactInstructions>"
+                                + "</che:CHE_MD_Metadata>", false);
+
+        Element transformed1 = Xml.transform(testData1, pathToXsl).getChild("contactInstructions",
+                XslUtil.GMD_NAMESPACE);
+
+        assertNotNull(transformed1.getAttribute("type", XslUtil.XSI_NAMESPACE));
+        assertEquals(1, transformed1.getChildren("PT_FreeText", XslUtil.GMD_NAMESPACE).size());
+        Element pt_freeText = (Element) transformed1.getChildren("PT_FreeText", XslUtil.GMD_NAMESPACE).get(0);
+
+        assertEquals(0, pt_freeText.getChildren("PT_FreeText", XslUtil.GMD_NAMESPACE).size());
+    }
+
+    @Test
     public void noEmptyLocalisations() throws Exception {
         String pathToXsl = TransformationTestSupport.geonetworkWebapp
                 + "/xsl/characterstring-to-localisedcharacterstring.xsl";
