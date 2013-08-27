@@ -300,7 +300,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/view!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/edit!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/q!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/portal.search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/portal.opensearch!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/portal.search.keywords!?.*" access="permitAll"></sec:intercept-url>
@@ -392,7 +391,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
 
                 <!-- New section of services based on refactoring
                 guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
-                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/q!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/qi!?.*" access="permitAll"></sec:intercept-url>
+              
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.list!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.update!?.*" access="hasRole('Administrator')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.update.labels!?.*" access="hasRole('Administrator')"/>

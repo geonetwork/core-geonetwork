@@ -79,7 +79,7 @@
 				userLang = "eng";
 			}
 
-		  	window.location="srv/"+userLang+"/login.form"+window.location.search;
+		  	window.location="srv/"+userLang+"/catalog.signin"+window.location.search;
 		}
 		</script>
 	</head>

@@ -158,6 +158,7 @@
     "data.subversionPath": "Subversion repository: ",
     
     "q": "Search",
+    "qi": "Internal search",
     "main.home": "Old search",
     "rdf.search": "RDF",
     "rss.search": "RSS",

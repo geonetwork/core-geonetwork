@@ -26,8 +26,8 @@
       });
 
 
-      $http.get($scope.url +
-              'q@json?fast=index&sortBy=changeDate&' +
+      $http.get(
+          'qi@json?fast=index&sortBy=changeDate&' +
               '_indexingError=1&from=1&to=' +
               $scope.hits).success(function(data) {
         // TODO : mutualize search results formatting

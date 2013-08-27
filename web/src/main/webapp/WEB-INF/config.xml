@@ -1244,9 +1244,6 @@
 			<error id="search-error" sheet="error-xml.xsl" statusCode="500"/>
 		</service>
 
-		<service name="q">
-			<class name=".services.main.XmlSearch" />
-		</service>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.metadata.get">
@@ -1271,19 +1268,19 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- GeoNetwork Mapping Application XML services  -->
 
-		<service name="xml.user.list">
+		<service name="xml.user.list" deprecated="true">
 			<class name=".services.user.List" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.usergroups.list">
+	  <service name="xml.usergroups.list" deprecated="true">
 			<class name=".services.user.UserGroups" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.group.list">
+	  <service name="xml.group.list" deprecated="true">
 			<class name=".services.group.List" />
 		</service>
 
@@ -1393,7 +1390,7 @@
 			<class name=".services.config.SetSystemProperties" />
 		</service>
 
-		<service name="isolanguages">
+		<service name="isolanguages" deprecated="true">
 			<class name="org.fao.geonet.guiservices.isolanguages.Get" />
 		</service>
 		
@@ -1408,7 +1405,7 @@
         </service>
 	  
 	  
-	  <service name="csw.config.get">
+	  <service name="csw.config.get" deprecated="true">
 	    <class name=".guiservices.csw.Get"/>
 	    
 	    <output sheet="csw/config.xsl">
@@ -1433,7 +1430,7 @@
 	  </service>
 	  
 	  
-	  <service name="csw.config.set">
+	  <service name="csw.config.set" deprecated="true">
 	    <class name=".guiservices.csw.Set" />
 	    
 	    <output sheet="admin.xsl">
@@ -1441,13 +1438,13 @@
 	  </service>
 	  
 	  
-	  <service name="virtualcsw.config">
+	  <service name="virtualcsw.config" deprecated="true">
 	    <output sheet="csw/config-virtualcsw.xsl">
 	      <call name="services" class=".guiservices.csw.virtual.List"/>
 	    </output>
 	  </service>
 	  
-	  <service name="virtualcsw.config.get">
+	  <service name="virtualcsw.config.get" deprecated="true">
 	    <output sheet="csw/virtualcsw-new.xsl">
 	      <call name="services" class=".guiservices.csw.virtual.Get"/>
 	      <call name="groups" class=".guiservices.groups.GetMine"/>
@@ -1456,13 +1453,13 @@
 	    </output>
 	  </service>
 	  
-	  <service name="virtualcsw.config.update">
+	  <service name="virtualcsw.config.update" deprecated="true">
 	    <class name=".guiservices.csw.virtual.Update"/>
 	    <output forward="virtualcsw.config"/>
 	  </service>
 	  
 	  
-	  <service name="virtualcsw.config.edit">
+	  <service name="virtualcsw.config.edit" deprecated="true">
 	    <output sheet="csw/virtualcsw-update.xsl">
 	      <call name="services" class=".guiservices.csw.virtual.Get"/>
 	      <call name="groups" class=".guiservices.groups.GetMine"/>
@@ -1471,7 +1468,7 @@
 	    </output>
 	  </service>
 	  
-	  <service name="virtualcsw.config.delete">
+	  <service name="virtualcsw.config.delete" deprecated="true">
 	    <class name=".guiservices.csw.virtual.Delete"/>
 	    <output forward="virtualcsw.config"/>
 	  </service>
@@ -1496,6 +1493,13 @@
 	<!-- New section of services based on refactoring
 	guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
   
+  <include>config/config-service-search.xml</include>
+  <include>config/config-service-sru.xml</include>
+  <include>config/config-service-rss.xml</include>
+  <include>config/config-service-csv.xml</include>
+  <include>config/config-service-dcat-rdf.xml</include>
+  <include>config/config-service-pdf.xml</include>
+  
   <include>config/config-service-admin.xml</include>
   <include>config/config-service-admin-logo.xml</include>
   <include>config/config-service-admin-user-and-group.xml</include>
@@ -1506,16 +1510,6 @@
 	<include>config/config-service-csw.xml</include>
 	<include>config/config-service-csw-virtual.xml</include>
 	
-  <include>config/config-service-sru.xml</include>
-  
-  <include>config/config-service-rss.xml</include>
-  
-  <include>config/config-service-csv.xml</include>
-  
-  <include>config/config-service-dcat-rdf.xml</include>
-  
-  <include>config/config-service-pdf.xml</include>
-  
   <include>config/config-service-sitemap.xml</include>
   
 	<include>config/config-ui-search.xml</include>

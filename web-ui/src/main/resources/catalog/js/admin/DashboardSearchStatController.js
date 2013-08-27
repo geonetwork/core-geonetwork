@@ -38,7 +38,7 @@
 
       function getMainSearchStat() {
         // Get core statistics for q service
-        $http.get($scope.url + 'statistics-search@json?service=q')
+        $http.get('statistics-search@json?service=q')
         .success(function(data) {
               $scope.statistics.search.mainSearchStatistics.q = data;
             }).error(function(data) {
@@ -46,14 +46,14 @@
             });
 
         // Get core statistics for csw service
-        $http.get($scope.url + 'statistics-search@json?service=csw')
+        $http.get('statistics-search@json?service=csw')
         .success(function(data) {
               $scope.statistics.search.mainSearchStatistics.csw = data;
             }).error(function(data) {
               // TODO
             });
 
-        $http.get($scope.url + 'statistics-search-ip@json')
+        $http.get('statistics-search-ip@json')
         .success(function(data) {
               $scope.statistics.search.ip = data;
             }).error(function(data) {
@@ -175,7 +175,7 @@
 
       function getSearchStatByService() {
         // Search by service type statistics
-        $http.get($scope.url + 'statistics-search-by-service-type@json')
+        $http.get('statistics-search-by-service-type@json')
         .success(function(data) {
               var total = 0;
               for (var i in data) {
@@ -212,7 +212,7 @@
       };
 
       function getSearchStatForFieldsAndTerms() {
-        $http.get($scope.url + 'statistics-search-fields@json')
+        $http.get('statistics-search-fields@json')
         .success(function(data) {
               $scope.statistics.search.fields = data;
 
@@ -230,7 +230,7 @@
 
         $scope.viewTermsForField = function(field, service) {
           $scope.currentField = field;
-          $http.get($scope.url + 'statistics-search-terms@json?' +
+          $http.get('statistics-search-terms@json?' +
                   'field=' + field +
                   '&service=' + service)
                   .success(function(data) {
@@ -244,13 +244,13 @@
       }
 
       $scope.searchStatisticExport = function() {
-        $http.get($scope.url + 'stat.tableExport?tableToExport=requests')
+        $http.get('stat.tableExport?tableToExport=requests')
         .success(function(data) {
               $scope.requestsExport = data;
             }).error(function(data) {
               // TODO
             });
-        $http.get($scope.url + 'stat.tableExport?tableToExport=params')
+        $http.get('stat.tableExport?tableToExport=params')
         .success(function(data) {
               $scope.paramsExport = data;
             }).error(function(data) {

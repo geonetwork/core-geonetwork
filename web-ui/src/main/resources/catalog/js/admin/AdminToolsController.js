@@ -145,7 +145,7 @@
       $scope.recordsToProcessSearch = function() {
         var pageOptions = $scope.recordsToProcessPagination;
 
-        gnSearchManagerService.search($scope.url + 'q@json?fast=index' +
+        gnSearchManagerService.search('q@json?fast=index' +
             '&any=' + $scope.recordsToProcessFilter +
             '&from=' + (pageOptions.currentPage *
             pageOptions.hitsPerPage + 1) +
