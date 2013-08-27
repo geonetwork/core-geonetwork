@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <geonet>
   <services package="org.fao.geonet">
-    <service name="admin.logo.add">
+    <service name="admin.logo.upload">
       <documentation><![CDATA[Add a logo by uploading a file]]></documentation>
       <class name=".services.logo.Add"/>
       <error sheet="../xslt/error/error-json.xsl"/>
@@ -13,7 +13,7 @@
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
     
-    <service name="admin.logo.set">
+    <service name="admin.logo.update">
       <documentation><![CDATA[Set the logo for the catalog.
         Using favicon=1 parameter, set the favicon.]]></documentation>
       <class name=".services.logo.Set"/>

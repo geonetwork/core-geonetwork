@@ -26,12 +26,13 @@ goog.addDependency('../../js/admin/AdminController.js', ['gn_admin_controller'],
 goog.addDependency('../../js/admin/AdminMetadataController.js', ['gn_adminmetadata_controller'], []);
 goog.addDependency('../../js/admin/AdminToolsController.js', ['gn_admintools_controller'], []);
 goog.addDependency('../../js/admin/CSWSettingsController.js', ['gn_csw_settings_controller'], []);
+goog.addDependency('../../js/admin/CSWVirtualController.js', ['gn_csw_virtual_controller'], []);
 goog.addDependency('../../js/admin/DashboardContentStatController.js', ['gn_dashboard_content_stat_controller'], []);
 goog.addDependency('../../js/admin/DashboardController.js', ['gn_dashboard_controller'], ['gn_dashboard_content_stat_controller', 'gn_dashboard_search_stat_controller', 'gn_dashboard_status_controller']);
 goog.addDependency('../../js/admin/DashboardSearchStatController.js', ['gn_dashboard_search_stat_controller'], []);
 goog.addDependency('../../js/admin/DashboardStatusController.js', ['gn_dashboard_status_controller'], ['gn_gauge']);
 goog.addDependency('../../js/admin/LogoSettingsController.js', ['gn_logo_settings_controller'], []);
-goog.addDependency('../../js/admin/SettingsController.js', ['gn_settings_controller'], ['gn_csw_settings_controller', 'gn_logo_settings_controller', 'gn_system_settings_controller']);
+goog.addDependency('../../js/admin/SettingsController.js', ['gn_settings_controller'], ['gn_csw_settings_controller', 'gn_csw_virtual_controller', 'gn_logo_settings_controller', 'gn_system_settings_controller']);
 goog.addDependency('../../js/admin/SystemSettingsController.js', ['gn_system_settings_controller'], []);
 goog.addDependency('../../js/admin/UserGroupController.js', ['gn_usergroup_controller'], ['gn_dbtranslation']);
 goog.addDependency('../../js/search/SearchController.js', ['gn_search_controller'], []);

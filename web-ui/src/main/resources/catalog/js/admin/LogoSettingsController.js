@@ -59,7 +59,7 @@
       $scope.setCatalogLogo = function(logoName, favicon) {
         var setFavicon = favicon ? 1 : 0;
 
-        $http.get('admin.logo.set?fname=' + logoName +
+        $http.get('admin.logo.update?fname=' + logoName +
                   '&favicon=' + favicon)
           .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {

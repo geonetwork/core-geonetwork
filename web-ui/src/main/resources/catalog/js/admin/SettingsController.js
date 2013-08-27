@@ -4,13 +4,19 @@
 
 
 
+
+
+
+
   goog.require('gn_csw_settings_controller');
+  goog.require('gn_csw_virtual_controller');
   goog.require('gn_logo_settings_controller');
   goog.require('gn_system_settings_controller');
 
   var module = angular.module('gn_settings_controller',
       ['gn_system_settings_controller',
        'gn_csw_settings_controller',
+       'gn_csw_virtual_controller',
        'gn_logo_settings_controller']);
 
 
