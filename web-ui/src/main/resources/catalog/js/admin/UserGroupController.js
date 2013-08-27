@@ -105,14 +105,14 @@
 
 
       function loadGroups() {
-        $http.get($scope.url + 'admin.group.list@json').success(function(data) {
+        $http.get('admin.group.list@json').success(function(data) {
           $scope.groups = data;
         }).error(function(data) {
           // TODO
         });
       }
       function loadUsers() {
-        $http.get($scope.url + 'admin.user.list@json').success(function(data) {
+        $http.get('admin.user.list@json').success(function(data) {
           $scope.users = data;
         }).error(function(data) {
           // TODO
@@ -163,7 +163,7 @@
        */
       $scope.selectUser = function(u) {
         // Load user group and then select user
-        $http.get($scope.url + 'admin.usergroups.list@json?id=' + u.id)
+        $http.get('admin.usergroups.list@json?id=' + u.id)
                 .success(function(data) {
               $scope.userGroups = data;
               $scope.userSelected = u;
@@ -262,7 +262,7 @@
        * Save a user.
        */
       $scope.saveUser = function(formId) {
-        $http.get($scope.url + 'admin.user.update?' + $(formId).serialize())
+        $http.get('admin.user.update?' + $(formId).serialize())
         .success(function(data) {
               $scope.unselectUser();
               loadUsers();
@@ -284,7 +284,7 @@
        * Delete a user.
        */
       $scope.deleteUser = function(formId) {
-        $http.get($scope.url + 'admin.user.remove?id=' +
+        $http.get('admin.user.remove?id=' +
                 $scope.userSelected.id)
         .success(function(data) {
               $scope.unselectUser();
@@ -327,7 +327,7 @@
       };
 
       $scope.saveGroup = function(formId) {
-        $http.get($scope.url + 'admin.group.update?' + $(formId).serialize())
+        $http.get('admin.group.update?' + $(formId).serialize())
         .success(function(data) {
               $scope.unselectGroup();
               loadGroups();
@@ -346,7 +346,7 @@
       };
 
       $scope.deleteGroup = function(formId) {
-        $http.get($scope.url + 'admin.group.remove?id=' +
+        $http.get('admin.group.remove?id=' +
                 $scope.groupSelected.id)
         .success(function(data) {
               $scope.unselectGroup();
