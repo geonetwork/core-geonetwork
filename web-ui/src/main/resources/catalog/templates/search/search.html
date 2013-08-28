@@ -2,11 +2,11 @@
   
   <h1>Search Your Data, Maps &amp; Services</h1>
   
-  <input class="form-control" type="text" data-ng-model="searchRecordsFilter"
+  <input class="form-control" type="text" 
     placeholder="{{'anyPlaceHolder' | translate}}"
     data-ng-keyup="searchRecordsSearchFor($event)"/>
   <p>
-  <div data-gn-search-results="searchRecords"
+  <div data-gn-search-results="searchRecords.metadata"
     data-gn-search-results-selected-records-count="selectedRecordsCount"
     data-gn-search-results-allow-selection="false"/>
   

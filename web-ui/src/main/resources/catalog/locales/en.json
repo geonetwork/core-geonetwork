@@ -7,6 +7,8 @@
     "signIn": "Sign in",
     "signedInAs": "Signed in as ",
     
+    "eng": "English",
+    "title": "Title",
     
     "needAnAccount": "Need an account ?",
     "needAnAccountInfo": "Then sign right up, it only takes a minute.",
@@ -24,6 +26,8 @@
     "by": "by",
     "previous": "Previous",
     "next": "Next",
+    
+    "noRecordFound": "No record found.",
     
     "any": "Full text",
     "orgName": "Contact for the resource",
@@ -126,8 +130,25 @@
     "n": "Template",
     "s": "Directory entry",
     
-    "dublin-core": "Dublin core",
-    "fgdc-std": "FGDC",
+    "dublin-core": "Dublin Core",
+    "dublin-core-acr": "DC",
+    "dublin-core-help": "",
+    "csw-record": "Dublin Core - CSW",
+    "csw-record-acr": "CSW-DC",
+    "csw-record-help": "Metadata records produced by CSW services.",
+    "fgdc-std": "Federal Geographic Data Committee (FGDC)",
+    "fgdc-std-acr": "FGDC",
+    "fgdc-std-help": "",
+    "iso19139": "Geographic information - Metadata (ISO/TS 19139:2007)",
+    "iso19139-acr": "ISO19139",
+    "iso19139-help": "",
+    "iso19115": "Geographic information - Metadata (ISO 19115:2003)",
+    "iso19115-acr": "ISO19115",
+    "iso19115-help": "Use for backward compatibilty with old metadata catalog (before 2007).",
+    "iso19110": "Geographic information - Methodology for feature cataloguing (ISO 19110:2005)",
+    "iso19110-acr": "ISO19110",
+    "iso19110-help": "",
+    
     
     "data.codeListDir": "Thesaurus folder: ",
     "data.configDir": "Configuration folder: ",
@@ -137,6 +158,7 @@
     "data.subversionPath": "Subversion repository: ",
     
     "q": "Search",
+    "qi": "Internal search",
     "main.home": "Old search",
     "rdf.search": "RDF",
     "rss.search": "RSS",
@@ -157,6 +179,8 @@
     "deleteUser": "Delete",
     "updateUser": "Update user ",
     "newUser": "New user ",
+    "userRecords": " records found for ",
+    "userRecord": " record found for ",
     "name": "Name",
     "usernameHelp": "Name to use when sign in",
     "email": "Email",
@@ -174,6 +198,8 @@
     
     "groups": "Groups",
     "groupName": "Name",
+    "groupRecords": " records found for ",
+    "groupRecord": " record found for ",
     "translationForGroup": "Translations for ",
     "groupNameHelp": "Identifier for the group. Do not forget to add translation for the label.",
     "groupDescription": "Description",
@@ -337,6 +363,17 @@
     "system/platform/version-help": "Version:",
     "system/platform/subVersion": "",
     "system/platform/subVersion-help": "Sub-version:",
+    
+    "metadataAndTemplates": "Metadata & templates",
+    
+    "rebuildIndex": "Rebuild index",
+    "indexingInProgress": "Indexing in progress ...",
+    "recordsIndexed": " records indexed.",
+    "rebuildIndexHelp": "While rebuilding index, search may return incomplete results and CSW GetRecords operation is disabled. Use this function, when catalog traffic is low. It's recommended to rebuild index after reloading index configuration or making changes directly in the database.",
+    "optimizeIndex": "Optimize index",
+    "reloadLuceneConfig": "Reload index configuration",
+    "clearXLinkCache": "Clear XLink cache",
+    
     
     "errorIs": "Error is ",
     

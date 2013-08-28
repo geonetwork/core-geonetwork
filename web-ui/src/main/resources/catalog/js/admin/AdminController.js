@@ -9,20 +9,40 @@
 
 
 
+
+
+
+
+  goog.require('gn_adminmetadata_controller');
   goog.require('gn_admintools_controller');
   goog.require('gn_cat_controller');
+  goog.require('gn_classificationSystems_controller');
+  goog.require('gn_classification_controller');
   goog.require('gn_dashboard_controller');
   goog.require('gn_settings_controller');
+  goog.require('gn_translation');
+  goog.require('gn_translation_controller');
   goog.require('gn_usergroup_controller');
+
 
   var module = angular.module('gn_admin_controller',
       ['gn_dashboard_controller', 'gn_usergroup_controller',
        'gn_admintools_controller', 'gn_settings_controller',
-       'gn_classificationSystems_controller']);
+       'gn_classificationSystems_controller',
+       'gn_adminmetadata_controller', 'gn_classification_controller']);
 
 
   module.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
+        when('/metadata', {
+          templateUrl: '../../catalog/templates/admin/metadata.html',
+          controller: 'GnAdminMetadataController'}).
+        when('/metadata/:metadataTab', {
+          templateUrl: '../../catalog/templates/admin/metadata.html',
+          controller: 'GnAdminMetadataController'}).
+        when('/metadata/metadata-and-template/:metadataAction/:schema', {
+          templateUrl: '../../catalog/templates/admin/metadata.html',
+          controller: 'GnAdminMetadataController'}).
         when('/dashboard', {
           templateUrl: '../../catalog/templates/admin/dashboard.html',
           controller: 'GnDashboardController'}).
@@ -38,19 +58,28 @@
         when('/organization/groups/:groupId', {
           templateUrl: '../../catalog/templates/admin/organization.html',
           controller: 'GnUserGroupController'}).
+        when('/classification', {
+          templateUrl: '../../catalog/templates/admin/classification.html',
+          controller: 'GnClassificationController'}).
+        when('/classification/:tab', {
+          templateUrl: '../../catalog/templates/admin/classification.html',
+          controller: 'GnClassificationController'}).
         when('/tools', {
           templateUrl: '../../catalog/templates/admin/tools.html',
-          controller: 'GnDashboardController'}).
-        when('/tools/batch', {
+          controller: 'GnAdminToolsController'}).
+        when('/tools/:toolTab', {
           templateUrl: '../../catalog/templates/admin/tools.html',
-          controller: 'GnUserGroupController'}).
+          controller: 'GnAdminToolsController'}).
         when('/settings', {
           templateUrl: '../../catalog/templates/admin/settings.html',
           controller: 'GnSettingsController'}).
         when('/classificationSystems', {
-          templateUrl: '../../catalog/templates/admin/classificationSystems.html',
-          controller: 'GnClassificationSystemsController'
-        	  }).
+          templateUrl: '../../catalog/templates/admin/' +
+              'classificationSystems.html',
+          controller: 'GnClassificationSystemsController'}).
+        when('/settings/:settingType', {
+          templateUrl: '../../catalog/templates/admin/settings.html',
+          controller: 'GnSettingsController'}).
         otherwise({templateUrl: '../../catalog/templates/admin/admin.html'});
   }]);
 
@@ -71,19 +100,23 @@
         Administrator: [
           // TODO : create gn classes
           {name: 'metadatasAndTemplates', route: '#metadata',
-            classes: 'btn-primary'},
-          {name: 'io', url: 'import', classes: 'btn-primary'},
+            classes: 'btn-primary', icon: 'icon-archive'},
+          {name: 'io', url: 'import', classes: 'btn-primary',
+            icon: 'icon-upload'},
           {name: 'harvesters', url: 'harvesting',
-            classes: 'btn-primary'},
+            classes: 'btn-primary', icon: 'icon-cloud-upload'},
           {name: 'statisticsAndStatus', route: '#dashboard',
-            classes: 'btn-success'},
-          {name: 'settings', route: '#settings', classes: 'btn-success'},
-          {name: 'usersAndGroups', route: '#organization'},
-          {name: 'classificationSystems', route: '#classificationSystems',
-            classes: 'btn-info'},
-          {name: 'standards', url: 'admin', classes: 'btn-info'},
-          {name: 'tools', route: '#tools', classes: 'btn-warning'}
-        ]
+            classes: 'btn-success', icon: 'icon-dashboard'},
+          {name: 'classificationSystems', route: '#classification',
+            classes: 'btn-info', icon: 'icon-tags'},
+          {name: 'standards', url: 'admin',
+            classes: 'btn-info', icon: 'icon-puzzle-piece'},
+          {name: 'usersAndGroups', route: '#organization',
+            classes: 'btn-default', icon: 'icon-group'},
+          {name: 'settings', route: '#settings',
+            classes: 'btn-warning', icon: 'icon-gear'},
+          {name: 'tools', route: '#tools',
+            classes: 'btn-warning', icon: 'icon-medkit'}]
         // TODO : add other role menu
       };
 

@@ -1,18 +1,30 @@
-<div class="row" data-ng-controller="GnAdminToolsController" >
+<div class="row">
     <div class="col-lg-2">
         <div class="gn-sidebar affix">
             <ul class="nav nav-pills nav-stacked">
                 <li data-ng-class="type === 'batch' && 'active'">
-                    <a href="#/tools/batch" data-translate>batchProcess</a>
+                  <a href="#/tools/batch">
+                    <i class="icon-medkit"/>
+                    <span data-translate="">batchProcess</span>
+                  </a>
                 </li>
               <li data-ng-class="type === 'formatter' && 'active'">
-                <a href="#/tools/formatter" data-translate>formatter</a>
+                <a href="#/tools/formatter">
+                  <i class="icon-fixed-width"/>
+                  <span data-translate="">formatter</span>
+                </a>
               </li>
               <li data-ng-class="type === 'transfertPrivs' && 'active'">
-                <a href="#/tools/transfertPrivs" data-translate>transfertPrivs</a>
+                <a href="#/tools/transfertPrivs">
+                  <i class="icon-fixed-width"/>
+                  <span data-translate="">transfertPrivs</span>
+                </a>
               </li>
               <li data-ng-class="type === 'index' && 'active'">
-                <a href="#/tools/index" data-translate>indexAdmin</a>
+                <a href="#/tools/index">
+                  <i class="icon-search"/>
+                  <span data-translate="">indexAdmin</span>
+                </a>
               </li>
             </ul>
         </div>

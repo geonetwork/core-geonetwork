@@ -7,34 +7,34 @@
 	xmlns:gml="http://www.opengis.net/gml"
 	exclude-result-prefixes="geonet exslt">
 
-	<xsl:include href="metadata.xsl"/>
-	<xsl:include href="utils.xsl"/>
+  <xsl:include href="../../common/profiles-loader-brief-tpl.xsl"/>
 
 	<!-- Template that generates an item for every metadata record -->
 	<xsl:template match="*" mode="item">
-		<xsl:param name="siteURL" />
-		<xsl:variable name="baseURL" select="substring-before($siteURL,'/srv/')" />
-		<item>
+	   <item>
 			<xsl:variable name="md">
 				<xsl:apply-templates mode="brief" select="."/>
 			</xsl:variable>
+		  
+		  
 			<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
 			<xsl:variable name="mdURL" select="normalize-space(concat($baseURL, '?uuid=', geonet:info/uuid))"/>
 			<xsl:variable name="thumbnailLink" select="normalize-space($metadata/image[@type='thumbnail'])"/>
 			<xsl:variable name="bDynamic" select="geonet:info/dynamic" />
 			<xsl:variable name="bDownload" select="geonet:info/download" />
-<!--			<code><xsl:copy-of select="$metadata"/></code> -->
 			<title><xsl:value-of select="$metadata/title"/></title>
 			<link><xsl:value-of select="$mdURL"/></link>
 			
-			<xsl:apply-templates mode="link" select="$metadata/link">
-				<xsl:with-param name="north" select="$metadata/geoBox/northBL" />
-				<xsl:with-param name="south" select="$metadata/geoBox/southBL" />
-				<xsl:with-param name="west" select="$metadata/geoBox/westBL" />
-				<xsl:with-param name="east" select="$metadata/geoBox/eastBL" />
-				<xsl:with-param name="bDynamic" select="$bDynamic" />
-				<xsl:with-param name="bDownload" select="$bDownload" />
-			</xsl:apply-templates>
+			<xsl:if test="not(/root/request/mdlinkonly)">
+				<xsl:apply-templates mode="link" select="$metadata/link">
+					<xsl:with-param name="north" select="$metadata/geoBox/northBL" />
+					<xsl:with-param name="south" select="$metadata/geoBox/southBL" />
+					<xsl:with-param name="west" select="$metadata/geoBox/westBL" />
+					<xsl:with-param name="east" select="$metadata/geoBox/eastBL" />
+					<xsl:with-param name="bDynamic" select="$bDynamic" />
+					<xsl:with-param name="bDownload" select="$bDownload" />
+				</xsl:apply-templates>
+			</xsl:if>
 			
 			<category>Geographic metadata catalog</category>
 			
@@ -43,21 +43,14 @@
 				
 				<p>
 					<xsl:if test="string($thumbnailLink)!=''">
-						<a href="{$mdURL}"><img src="{$thumbnailLink}" align="left" alt="" border="0" width="100" style="padding:15px;"/></a>
+						<a href="{$mdURL}"><img src="{$thumbnailLink}" align="left" alt="" border="0" width="100"/></a>
 					</xsl:if>
 					<xsl:value-of select="$metadata/abstract"/>
 					<br />
-					<xsl:call-template name="socialBookmarks">
-						<xsl:with-param name="baseURL" select="$baseURL" /> <!-- The base URL of the local GeoNetwork site -->
-						<xsl:with-param name="mdURL" select="$mdURL" /> <!-- The URL of the metadata using the UUID -->
-						<xsl:with-param name="title" select="$metadata/title" />
-						<xsl:with-param name="abstract" select="$metadata/abstract" />
-					</xsl:call-template>
-
 					<xsl:if test="$bDynamic">
 						<xsl:apply-templates select="$metadata/link[contains(@type,'vnd.google-earth.km')][1]" mode="GoogleEarthWMS" >
 							<xsl:with-param name="url" select="$baseURL" />
-							<xsl:with-param name="viewInGE" select="/root/gui/strings/viewInGE" />
+							<xsl:with-param name="viewInGE" select="/root/gui/i18n/viewInGE" />
 						</xsl:apply-templates>
 					</xsl:if>
 					
@@ -231,8 +224,7 @@
 		<xsl:param name="url" />
 		<xsl:param name="viewInGE" />
 			<a href="{@href}" title="{@title}">
-				<img src="{$url}/images/google_earth_link_s.png" alt="{$viewInGE}" title="{$viewInGE}" 
-					style="border: 0px solid;padding:2px;"/>
+				<img src="{$url}/images/google_earth_link_s.png" alt="{$viewInGE}" title="{$viewInGE}"/>
 			</a>
 	</xsl:template>
 	

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    <service name="admin.logo.upload">
+      <documentation><![CDATA[Add a logo by uploading a file]]></documentation>
+      <class name=".services.logo.Add"/>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+    
+    <service name="admin.logo.remove">
+      <documentation><![CDATA[Remove a logo]]></documentation>
+      <class name=".services.logo.Delete"/>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+    
+    <service name="admin.logo.update">
+      <documentation><![CDATA[Set the logo for the catalog.
+        Using favicon=1 parameter, set the favicon.]]></documentation>
+      <class name=".services.logo.Set"/>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+    
+    <service name="admin.logo.list">
+      <documentation><![CDATA[List all logo available in the
+        catalog using type=icons parameter.]]></documentation>
+      <class name=".services.harvesting.Info"/>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+  </services>
+</geonet>

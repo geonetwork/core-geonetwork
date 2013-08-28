@@ -1,0 +1,62 @@
+<div class="row" data-ng-controller="GnThesaurusController">
+  <div class="col-lg-4">
+    <div class="panel">
+      <div class="panel-heading" data-translate="">thesaurus</div>
+
+      <input class="form-control" data-ng-model="thesaurusSearch.$"
+        placeholder="{{'filter' | translate}}"/>
+      <input type="hidden" data-ng-model="thesaurusSelected.id"/>
+      <div class="list-group">
+        <a class="list-group-item"
+          data-ng-repeat="t in thesaurus | filter:thesaurusSearch | orderBy:'title'"
+          data-ng-click="selectThesaurus(t)"> {{t.title}} ({{t.dname}}) </a>
+      </div>
+
+      <button type="button" class="btn btn-primary icon-plus" data-ng-click="addThesaurus()"
+        data-translate="">addThesaurus</button>
+    </div>
+  </div>
+
+  <div class="col-lg-8" data-ng-hide="thesaurusSelected.key == null">
+    <div class="panel">
+      <div class="panel-heading">
+        <span>{{thesaurusSelected.title}} ({{thesaurusSelected.dname}})</span>
+        <a href="{{thesaurusSelected.url}}" data-translate="">download</a>
+        <button type="button" class="btn btn-primary pull-right btn-danger icon-remove"
+          data-ng-click="deleteThesaurus(thesaurusSelected.key)" data-translate=""
+          >deleteThesaurus</button>
+      </div>
+
+      <ul>
+        <li data-ng-repeat="(key, value) in thesaurusSelected">{{key}}: {{value}}</li>
+      </ul>
+      <label>
+        <input type="checkbox" data-ng-model="thesaurusSelectedActivated"
+          data-ng-click="enableThesaurus()"/>
+        <span data-translate="">enable</span>
+      </label>
+    </div>
+
+    <div class="panel">
+      <div class="panel-heading">
+        <span data-translate="">keywords</span>
+      </div>
+
+      <form class="form-inline" role="form">
+        <div class="form-group">
+          <label for="maxNumberOfKeywords" data-translate="">maxNumberOfKeywords</label>
+          <input id="maxNumberOfKeywords" class="form-control" data-ng-model="maxNumberOfKeywords"
+            placeholder="{{'maxNumberOfKeywords' | translate}}"/>
+        </div>
+        <div class="form-group">
+          <label for="keywordFilter" data-translate="">keywordFilter</label>
+          <input id="keywordFilter" class="form-control" data-ng-model="keywordFilter"
+            placeholder="{{'keywordFilter' | translate}}"/>
+        </div>
+      </form>
+      <ul>
+        <li data-ng-repeat="k in keywords">{{k.value['#text']}}</li>
+      </ul>
+    </div>
+  </div>
+</div>

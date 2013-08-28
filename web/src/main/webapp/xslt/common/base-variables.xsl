@@ -3,10 +3,12 @@
   <!-- Global XSL variables about the catalog and user session -->
 
   <xsl:variable name="uiResourcesPath" select="'../../catalog/'"/>
+  
+  <!-- The current service name -->
   <xsl:variable name="service" select="/root/gui/reqService"/>
   
   <xsl:variable name="i18n" select="/root/gui/i18n"/>
-  <xsl:variable name="lang" select="/root/gui/lang"/>
+  <xsl:variable name="lang" select="/root/gui/language"/>
   
   <xsl:variable name="isDebugMode" select="/root/request/debug"/>
   <xsl:variable name="isReadOnly" select="/root/gui/env/readonly = 'true'"/>
@@ -18,7 +20,27 @@
     else if ($service = 'catalog.login') then 'gn_login'
     else 'gn'"/>
   
-  <xsl:variable name="env" select="/root/gui/env"/>
+  <!-- Catalog settings -->
+  <xsl:variable name="env" select="/root/gui/systemConfig"/>
+  
+  <!-- Only system settings (use for backward compatibility replacing
+  /root/gui/env by $envSystem is equivalent). New reference to setting
+  should use $env.
+  -->
+  <xsl:variable name="envSystem" select="/root/gui/systemConfig/system"/>
+  
+  <!-- URL for services - may not be defined FIXME or use fullURL instead -->
+  <xsl:variable name="siteURL" select="/root/gui/siteURL"/>
+  
+  <!-- URL for webapp root -->
+  <xsl:variable name="baseURL" select="substring-before($siteURL,'/srv/')"/>
+  <!-- Full URL with protocol, host and port -->
+  <xsl:variable name="fullURL" select="concat($env/system/server/protocol, '://',
+    $env/system/server/host, ':',
+    $env/system/server/port)"/>
+  <!-- Full URL for services -->
+  <xsl:variable name="fullURLForService" select="concat($fullURL, /root/gui/locService)"/>
+  
   <xsl:variable name="isMailEnabled" select="$env/feedback/emailServer/host != ''"/>
   
   <xsl:variable name="session" select="/root/gui/session"/>

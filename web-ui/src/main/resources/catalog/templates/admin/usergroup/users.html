@@ -177,11 +177,18 @@
             
             
             <div data-ng-hide="!userRecords">
-                <h3>{{userRecords.length}} <span data-translate>userRecords</span> 
-                    {{userSelected.name}} {{userSelected.surname}}</h3>
-                <ul>
-                    <li data-ng-repeat="md in userRecords">{{md.title}}</li>
-                </ul>
+                <h3>
+                  <ng-pluralize count="userRecords.count"
+                    when="{'0': ('noRecordFound' | translate),
+                    'one': '1' +  ('userRecord' | translate) + ' {{userSelected.name}} {{userSelected.surname}}',
+                    'other': '{}' +  ('userRecords' | translate) + ' {{userSelected.name}} {{userSelected.surname}}'}">
+                  </ng-pluralize>
+                </h3>
+                <div data-gn-search-results="userRecords.metadata"
+                  data-gn-search-results-allow-selection="false"/>
+                
+                <div data-gn-pagination="userRecordsPagination"/>
+              </div>
             </div>
         </div>
     </div>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    <!-- Search services -->
+    <service name="q">
+      <documentation><![CDATA[
+        Main search services.
+        
+        Parameters:
+        * All Lucene search field
+        * fast: (optional) if "index" the index is used to return the results 
+        (see dumpfields for output format configuration). if "false", the database 
+        is used to return the results in their original formats.
+        * hitsperpage: (optional) The number of hits to return
+        * summaryOnly: (optional) if "true", only the facets are retruned
+        * sortBy: (optional) Default relevance.
+        * sortOrder: (optional) reverse or empty.
+        
+        // TODO : improve
+        ]]></documentation>
+      <class name=".services.main.XmlSearch" />
+    </service>
+    
+    <service name="qi">
+      <![CDATA[
+      Same as q service but used internally by the application
+      in order to make distinction between user search and 
+      application search in statistics.
+      ]]>
+      <class name=".services.main.XmlSearch" />
+    </service>
+  </services>
+</geonet>

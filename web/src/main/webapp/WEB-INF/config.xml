@@ -30,7 +30,8 @@
 			<call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
 
 			<call name="session" class="jeeves.guiservices.session.Get" />
-			<call name="env" class="org.fao.geonet.guiservices.util.Env" />
+		  <call name="env" class="org.fao.geonet.guiservices.util.Env" />
+		  <call name="systemConfig" class="org.fao.geonet.services.config.Get" />
 			<call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
 			<call name="schemalist" class="org.fao.geonet.guiservices.schemas.Get" />
 			<call name="svnmanager" class="org.fao.geonet.guiservices.util.GetSvnDetails"/>
@@ -1072,7 +1073,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="lucene.config.reload">
+		<service name="lucene.config.reload" deprecated="true">
 			<class name=".services.config.Reload" />
 		</service>
 
@@ -1243,9 +1244,6 @@
 			<error id="search-error" sheet="error-xml.xsl" statusCode="500"/>
 		</service>
 
-		<service name="q">
-			<class name=".services.main.XmlSearch" />
-		</service>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.metadata.get">
@@ -1270,19 +1268,19 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- GeoNetwork Mapping Application XML services  -->
 
-		<service name="xml.user.list">
+		<service name="xml.user.list" deprecated="true">
 			<class name=".services.user.List" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.usergroups.list">
+	  <service name="xml.usergroups.list" deprecated="true">
 			<class name=".services.user.UserGroups" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.group.list">
+	  <service name="xml.group.list" deprecated="true">
 			<class name=".services.group.List" />
 		</service>
 
@@ -1304,30 +1302,6 @@
 
 		<service name="oaipmh">
 			<class name=".services.main.OaiPmhDispatcher" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- RSS services -->
-
-		<service name="rss.search">
-			<class name=".services.main.Search">
-				<param name="maxSummaryKeys" value="10" />
-				<param name="maxHitsInSummary" value="1000" />
-			</class>
-			<output sheet="rss-search.xsl" contentType="application/rss+xml; charset=UTF-8">
-				<call name="rssItems" class=".services.main.Result" />
-				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="rss.present">
-			<class name=".services.main.Result" />
-
-			<output sheet="rss-search.xsl" contentType="application/rss+xml; charset=UTF-8">
-				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
-			</output>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1381,21 +1355,6 @@
 		</service>
 
 
-
-		<!-- Service to export a GeoNetwork query in a text file output. -->
-		<service name="csv.search">
-			<class name=".services.main.SelectionSearch">
-				<param name="fast" value="false" />
-			</class>
-			<output forward="csv.present" />
-		</service>
-		<service name="csv.present">
-			<class name=".services.main.Result">
-				<param name="range" value="all" />
-			</class>
-			<output sheet="csv-search.xsl" contentType="text/plain; charset=UTF-8" />
-		</service>
-
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- relation services -->
 
@@ -1431,7 +1390,7 @@
 			<class name=".services.config.SetSystemProperties" />
 		</service>
 
-		<service name="isolanguages">
+		<service name="isolanguages" deprecated="true">
 			<class name="org.fao.geonet.guiservices.isolanguages.Get" />
 		</service>
 		
@@ -1444,7 +1403,76 @@
                 <call name="isoLang" class=".guiservices.isolanguages.Get" />
             </output>
         </service>
-
+	  
+	  
+	  <service name="csw.config.get" deprecated="true">
+	    <class name=".guiservices.csw.Get"/>
+	    
+	    <output sheet="csw/config.xsl">
+	      <call name="languages" class=".guiservices.languages.Get"/>
+	      
+	      <call name="users" class="jeeves.services.db.Select">
+	        <param name="db" value="main-db"/>
+	        <param name="query" value="SELECT * FROM Users ORDER BY name"/>
+	      </call>
+	    </output>
+	  </service>
+	  
+	  <service name="csw.customelementset.get">
+	    <output sheet="csw/customize-elementset.xsl">
+	      <call name="customelementsets" class=".guiservices.csw.customelementset.Get"/>
+	    </output>
+	  </service>
+	  
+	  <service name="csw.customelementset.set">
+	    <class name=".guiservices.csw.customelementset.Set"/>
+	    <output sheet="admin.xsl"> </output>
+	  </service>
+	  
+	  
+	  <service name="csw.config.set" deprecated="true">
+	    <class name=".guiservices.csw.Set" />
+	    
+	    <output sheet="admin.xsl">
+	    </output>
+	  </service>
+	  
+	  
+	  <service name="virtualcsw.config" deprecated="true">
+	    <output sheet="csw/config-virtualcsw.xsl">
+	      <call name="services" class=".guiservices.csw.virtual.List"/>
+	    </output>
+	  </service>
+	  
+	  <service name="virtualcsw.config.get" deprecated="true">
+	    <output sheet="csw/virtualcsw-new.xsl">
+	      <call name="services" class=".guiservices.csw.virtual.Get"/>
+	      <call name="groups" class=".guiservices.groups.GetMine"/>
+	      <call name="categories" class=".services.category.List"/>
+	      <call name="sources" class=".guiservices.util.Sources"/>
+	    </output>
+	  </service>
+	  
+	  <service name="virtualcsw.config.update" deprecated="true">
+	    <class name=".guiservices.csw.virtual.Update"/>
+	    <output forward="virtualcsw.config"/>
+	  </service>
+	  
+	  
+	  <service name="virtualcsw.config.edit" deprecated="true">
+	    <output sheet="csw/virtualcsw-update.xsl">
+	      <call name="services" class=".guiservices.csw.virtual.Get"/>
+	      <call name="groups" class=".guiservices.groups.GetMine"/>
+	      <call name="categories" class=".services.category.List"/>
+	      <call name="sources" class=".guiservices.util.Sources"/>
+	    </output>
+	  </service>
+	  
+	  <service name="virtualcsw.config.delete" deprecated="true">
+	    <class name=".guiservices.csw.virtual.Delete"/>
+	    <output forward="virtualcsw.config"/>
+	  </service>
+	  
 	</services>
 
 	<!-- ====================================================================== -->
@@ -1457,28 +1485,42 @@
 	<include>config-portal.xml</include>
 	<include>config-export.xml</include>
 	<include>config-statistics.xml</include>
-	<include>config-geoserverpublisher.xml</include>
-	<include>config-test.xml</include>
-	<include>config-monitoring.xml</include>
-    <include>config-dcat-rdf.xml</include>
+  <include>config-test.xml</include>
 
 	<!-- ====================================================================== -->
 
 	<!-- New section of services based on refactoring
 	guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
   
+  <include>config/config-service-search.xml</include>
+  <include>config/config-service-sru.xml</include>
+  <include>config/config-service-rss.xml</include>
+  <include>config/config-service-csv.xml</include>
+  <include>config/config-service-dcat-rdf.xml</include>
+  <include>config/config-service-pdf.xml</include>
+  
+  <include>config/config-service-thesaurus.xml</include>
+  
   <include>config/config-service-admin.xml</include>
-  <include>config/config-service-admin-category.xml</include>
-  <include>config/config-service-statistics.xml</include>
-	<include>config/config-service-admin-user-and-group.xml</include>
 
+  <include>config/config-service-admin-category.xml</include>
+
+  <include>config/config-service-admin-index.xml</include>
+  <include>config/config-service-admin-logo.xml</include>
+  <include>config/config-service-admin-user-and-group.xml</include>
+  <include>config/config-service-admin-geoserver-publication.xml</include>
+
+  <include>config/config-service-statistics.xml</include>
+  
+  <include>config/config-service-admin-csw.xml</include>
 	<include>config/config-service-csw.xml</include>
 	<include>config/config-service-csw-virtual.xml</include>
-	<include>config/config-service-csw-admin.xml</include>
 	
-	<include>config/config-service-sru.xml</include>
-	
+  <include>config/config-service-sitemap.xml</include>
+  
 	<include>config/config-ui-search.xml</include>
 	<include>config/config-ui-metadata.xml</include>
 	<include>config/config-ui-admin.xml</include>
+  
+  <include>config/config-service-monitoring.xml</include>
 </geonet>

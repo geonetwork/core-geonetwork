@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    <service name="admin.config.csw">
+      <documentation><![CDATA[
+          Get CSW configuration for capabilities properties.
+          ]]></documentation>
+      <class name=".guiservices.csw.Get"/>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+
+    <service name="admin.config.csw.save">
+      <documentation><![CDATA[
+          Save CSW configuration for capabilities properties such as
+          title, abstract, fees and access constraints in different
+          languages.
+          ]]></documentation>
+      <class name=".guiservices.csw.Set2"/>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+
+
+    <service name="admin.config.virtualcsw.list">
+      <documentation><![CDATA[
+        Get list of virtual CSW entry points.
+        ]]></documentation>
+      <class name=".guiservices.csw.virtual.List"/>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+    
+    <service name="admin.config.virtualcsw.get">
+      <documentation><![CDATA[
+        Get a virtual CSW entry point configuration.
+        ]]></documentation>
+      <class name=".guiservices.csw.virtual.Get"/>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+    
+    <service name="admin.config.virtualcsw.update">
+      <documentation><![CDATA[
+        Create or update a virtual CSW
+        ]]></documentation>
+      <class name=".guiservices.csw.virtual.Update"/>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+
+    <service name="admin.config.virtualcsw.remove">
+      <documentation><![CDATA[
+        Delete a virtual CSW
+        ]]></documentation>
+      <class name=".guiservices.csw.virtual.Delete"/>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+
+
+
+  </services>
+</geonet>

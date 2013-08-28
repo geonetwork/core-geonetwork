@@ -1,8 +1,10 @@
 (function() {
   goog.provide('gn_usergroup_controller');
 
+  goog.require('gn_dbtranslation');
+
   var module = angular.module('gn_usergroup_controller',
-      []);
+      ['gn_dbtranslation']);
 
 
   /**
@@ -11,7 +13,9 @@
    */
   module.controller('GnUserGroupController', [
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
-    function($scope, $routeParams, $http, $rootScope, $translate, $compile) {
+    'gnSearchManagerService',
+    function($scope, $routeParams, $http, $rootScope, $translate, $compile,
+            gnSearchManagerService) {
 
 
       var templateFolder = '../../catalog/templates/admin/usergroup/';
@@ -30,10 +34,12 @@
         return templateFolder + $scope.type + '.html';
       };
 
-
-      // TODO : should provide paging
-      $scope.maxHitsForPreview = 50;
-
+      // The pagination config
+      $scope.groupRecordsPagination = {
+        pages: -1,
+        currentPage: 0,
+        hitsPerPage: 10
+      };
 
       // Scope for group
       // List of catalog groups
@@ -41,9 +47,23 @@
       $scope.groupSelected = {id: $routeParams.groupId};
       // List of metadata records attached to the selected group
       $scope.groupRecords = null;
+      $scope.groupRecordsFilter = null;
       // On going changes group ...
       $scope.groupUpdated = false;
       $scope.groupSearch = {};
+
+      // Register the search results, filter and pager
+      // and get the search function back
+      $scope.groupRecordsSearch = gnSearchManagerService.register({
+        records: 'groupRecords',
+        filter: 'groupRecordsFilter',
+        pager: 'groupRecordsPagination'
+      }, $scope);
+
+      // When the current page change trigger the search
+      $scope.$watch('groupRecordsPagination.currentPage', function() {
+        $scope.groupRecordsSearch();
+      });
 
 
       // Scope for user
@@ -58,16 +78,41 @@
       // On going changes for user ...
       $scope.userUpdated = false;
       $scope.passwordCheck = '';
+      // The pagination config
+      $scope.userRecordsPagination = {
+        pages: -1,
+        currentPage: 0,
+        hitsPerPage: 10
+      };
+      // List of metadata records attached to the selected user
+      $scope.userRecords = null;
+      $scope.userRecordsFilter = null;
+
+      // Register the search results, filter and pager
+      // and get the search function back
+      $scope.userRecordsSearch = gnSearchManagerService.register({
+        records: 'userRecords',
+        filter: 'userRecordsFilter',
+        pager: 'userRecordsPagination'
+      }, $scope);
+
+      // When the current page change trigger the search
+      $scope.$watch('userRecordsPagination.currentPage', function() {
+        $scope.userRecordsSearch();
+      });
+
+
+
 
       function loadGroups() {
-        $http.get($scope.url + 'admin.group.list@json').success(function(data) {
+        $http.get('admin.group.list@json').success(function(data) {
           $scope.groups = data;
         }).error(function(data) {
           // TODO
         });
       }
       function loadUsers() {
-        $http.get($scope.url + 'admin.user.list@json').success(function(data) {
+        $http.get('admin.user.list@json').success(function(data) {
           $scope.users = data;
         }).error(function(data) {
           // TODO
@@ -118,7 +163,7 @@
        */
       $scope.selectUser = function(u) {
         // Load user group and then select user
-        $http.get($scope.url + 'admin.usergroups.list@json?id=' + u.id)
+        $http.get('admin.usergroups.list@json?id=' + u.id)
                 .success(function(data) {
               $scope.userGroups = data;
               $scope.userSelected = u;
@@ -126,14 +171,15 @@
             }).error(function(data) {
               // TODO
             });
+
+
         // Retrieve records in that group
-        $http.get($scope.url + 'q@json?fast=index&template=y or n&_owner=' +
-                u.id + '&sortBy=title&from=1&to=' + $scope.maxHitsForPreview)
-                .success(function(data) {
-              $scope.userRecords = data.metadata;
-            }).error(function(data) {
-              // TODO
-            });
+        $scope.userRecordsFilter = {
+          template: 'y or n',
+          _owner: u.id,
+          sortBy: 'title'
+        };
+        $scope.userRecordsSearch();
         $scope.userUpdated = false;
       };
 
@@ -216,7 +262,7 @@
        * Save a user.
        */
       $scope.saveUser = function(formId) {
-        $http.get($scope.url + 'admin.user.update?' + $(formId).serialize())
+        $http.get('admin.user.update?' + $(formId).serialize())
         .success(function(data) {
               $scope.unselectUser();
               loadUsers();
@@ -238,7 +284,7 @@
        * Delete a user.
        */
       $scope.deleteUser = function(formId) {
-        $http.get($scope.url + 'admin.user.remove?id=' +
+        $http.get('admin.user.remove?id=' +
                 $scope.userSelected.id)
         .success(function(data) {
               $scope.unselectUser();
@@ -251,6 +297,16 @@
                 timeout: 0,
                 type: 'danger'});
             });
+      };
+
+      /**
+       * Return true if selected user has metadata record.
+       * This information could be useful to disable a delete button
+       * for example.
+       */
+      $scope.userHasRecords = function() {
+        return $scope.userRecords && $scope.userRecords.metadata &&
+            $scope.userRecords.metadata.length > 0;
       };
 
 
@@ -271,7 +327,7 @@
       };
 
       $scope.saveGroup = function(formId) {
-        $http.get($scope.url + 'admin.group.update?' + $(formId).serialize())
+        $http.get('admin.group.update?' + $(formId).serialize())
         .success(function(data) {
               $scope.unselectGroup();
               loadGroups();
@@ -290,7 +346,7 @@
       };
 
       $scope.deleteGroup = function(formId) {
-        $http.get($scope.url + 'admin.group.remove?id=' +
+        $http.get('admin.group.remove?id=' +
                 $scope.groupSelected.id)
         .success(function(data) {
               $scope.unselectGroup();
@@ -305,40 +361,15 @@
             });
       };
 
-      /**
-       * Save a translation
-       */
-      $scope.saveTranslation = function(e) {
-        // TODO: No need to save if translation not updated
 
-        // Save value in translation
-        // TODO : could we use Angular compile here ?
-        var xml = "<request><group id='{{id}}'>" +
-            '<label>' +
-            '<{{key}}>{{value}}</{{key}}>' +
-                        '</label>' +
-            '</group></request>';
-        xml = xml.replace('{{id}}', $scope.groupSelected.id)
-                    .replace(/{{key}}/g, e.key)
-                    .replace('{{value}}', e.value);
-        $http.post($scope.url + 'admin.group.update.labels', xml, {
-          headers: {'Content-type': 'application/xml'}
-        }).success(function(data) {
-        }).error(function(data) {
-          $rootScope.$broadcast('StatusUpdated', {
-            title: $translate('groupTranslationUpdateError'),
-            error: data,
-            timeout: 0,
-            type: 'danger'});
-        });
-      };
       /**
        * Return true if selected group has metadata record.
        * This information could be useful to disable a delete button
        * for example.
        */
       $scope.groupHasRecords = function() {
-        return $scope.groupRecords && $scope.groupRecords.length > 0;
+        return $scope.groupRecords && $scope.groupRecords.metadata &&
+            $scope.groupRecords.metadata.length > 0;
       };
 
       $scope.unselectGroup = function() {
@@ -349,14 +380,14 @@
 
       $scope.selectGroup = function(g) {
         $scope.groupSelected = g;
+
         // Retrieve records in that group
-        $http.get($scope.url + 'q@json?fast=index&template=y or n&group=' +
-                g.id + '&sortBy=title&from=1&to=' + $scope.maxHitsForPreview)
-                .success(function(data) {
-              $scope.groupRecords = data.metadata;
-            }).error(function(data) {
-              // TODO
-            });
+        $scope.groupRecordsFilter = {
+          template: 'y or n',
+          group: g.id,
+          sortBy: 'title'
+        };
+        $scope.groupRecordsSearch();
         $scope.groupUpdated = false;
       };
 

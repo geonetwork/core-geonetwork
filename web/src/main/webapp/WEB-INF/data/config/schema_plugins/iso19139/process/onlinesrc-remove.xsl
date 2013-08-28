@@ -7,6 +7,7 @@ Stylesheet used to remove a reference to a online resource.
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	
 	<xsl:param name="url"/>
+	<xsl:param name="name" />
 	
 	<!-- Do a copy of every nodes and attributes -->
 	<xsl:template match="@*|node()">
@@ -16,6 +17,6 @@ Stylesheet used to remove a reference to a online resource.
 	</xsl:template>
 
 	<!-- Remove geonet:* elements. -->
-	<xsl:template match="geonet:*|gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url]" priority="2"/>
+	<xsl:template match="geonet:*|gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) = $name]" priority="2"/>
 	
 </xsl:stylesheet>

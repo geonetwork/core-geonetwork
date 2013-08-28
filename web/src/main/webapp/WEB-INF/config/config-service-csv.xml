@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+
+    <service name="csv.search">
+      <documentation><![CDATA[
+        Search service returning results in CSV format.
+        
+        Parameters:
+        * Any search criteria supported by Lucene search service.
+        ]]></documentation>
+      <class name=".services.main.SelectionSearch">
+        <param name="fast" value="false"/>
+      </class>
+      <output forward="csv.present"/>
+    </service>
+
+    <service name="csv.present" internal="true">
+      <documentation><![CDATA[
+        Service taking care of rendering results as CSV from csv.search service
+        ]]></documentation>
+      <class name=".services.main.Result">
+        <param name="range" value="all"/>
+      </class>
+      <output sheet="../xslt/services/csv/csv-search.xsl" contentType="text/plain; charset=UTF-8"/>
+      <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
+    </service>
+
+  </services>
+</geonet>

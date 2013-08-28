@@ -17,14 +17,14 @@
       $scope.hits = 10;
 
       function getMainStat() {
-        $http.get($scope.url + 'statistics-content@json')
+        $http.get('statistics-content@json')
         .success(function(data) {
               $scope.statistics.md.mainStatistics = data;
             }).error(function(data) {
               // TODO
             });
 
-        $http.get($scope.url + 'q@json?fast=index&' +
+        $http.get('qi@json?fast=index&' +
                 'sortBy=popularity&from=1&to=' + $scope.hits)
                 .success(function(data) {
               $scope.statistics.md.popularity = data.metadata;
@@ -32,7 +32,7 @@
               // TODO
             });
 
-        $http.get($scope.url + 'q@json?fast=index&' +
+        $http.get('qi@json?fast=index&' +
                 'sortBy=rating&from=1&to=' + $scope.hits)
         .success(function(data) {
               $scope.statistics.md.rating = data.metadata;
@@ -44,7 +44,7 @@
       function getMetadataStat(by, isTemplate) {
         isTemplate = isTemplate || 'n';
         // Search by service type statistics
-        $http.get($scope.url + 'statistics-content-metadata@json?' +
+        $http.get('statistics-content-metadata@json?' +
                 'by=' + by +
                 '&isTemplate=' + encodeURIComponent(isTemplate))
                   .success(function(data) {

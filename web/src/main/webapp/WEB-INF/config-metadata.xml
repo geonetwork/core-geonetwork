@@ -473,7 +473,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.admin.index.rebuild">
+	  <service name="metadata.admin.index.rebuild" deprecated="true">
 			<documentation>
 				<para>Service to force a complete rebuild of Lucene index</para>
 			</documentation>
@@ -482,7 +482,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.admin.index.rebuildxlinks">
+	  <service name="metadata.admin.index.rebuildxlinks" deprecated="true">
 			<documentation>
 				<para>Service to clear all cached xlinks and rebuild index for metadata records with xlinks</para>
 			</documentation>
@@ -494,7 +494,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 
-		<service name="metadata.admin.index.optimize">
+		<service name="metadata.admin.index.optimize" deprecated="true">
 			<documentation>
 				<para>Service to force optimization of Lucene index</para>
 			</documentation>

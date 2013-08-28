@@ -38,36 +38,26 @@
         hitsPerPage: 20
       };
 
+      // Register the search results, filter and pager
+      // and get the search function back
+      searchFn = gnSearchManagerService.register({
+        records: 'searchRecords',
+        filter: 'searchRecordsFilter',
+        pager: 'searchRecordsPagination'
+        //              error: function () {console.log('error');},
+        //              success: function () {console.log('succ');}
+      }, $scope);
+
+      // Update search filter and reset page
       $scope.searchRecordsSearchFor = function(e) {
-        $scope.searchRecordsFilter = (e ? e.target.value : '');
+        $scope.searchRecordsFilter = {any: (e ? e.target.value : '')};
         $scope.searchRecordsPagination.currentPage = 0;
-        $scope.searchRecordsSearch();
+        searchFn();
       };
 
-      // Run a search according to paging option
-      // This should probably move to some kind of SearchManager module
-      // FIXME : can't watch the searchRecordsFilter changes ?
-      $scope.searchRecordsSearch = function() {
-        var pageOptions = $scope.searchRecordsPagination;
-
-        gnSearchManagerService.search($scope.url + 'q@json?fast=index' +
-            '&any=' + $scope.searchRecordsFilter +
-            '&from=' + (pageOptions.currentPage *
-            pageOptions.hitsPerPage + 1) +
-            '&to=' + ((pageOptions.currentPage + 1) *
-                          pageOptions.hitsPerPage))
-          .then(function(data) {
-              $scope.searchRecords = data.metadata;
-              $scope.searchRecordsPagination.pages = Math.round(
-                  data.count /
-                  $scope.searchRecordsPagination.hitsPerPage, 0);
-            }, function(data) {
-              // TODO
-            });
-      };
       // When the current page change trigger the search
       $scope.$watch('searchRecordsPagination.currentPage', function() {
-        $scope.searchRecordsSearch();
+        searchFn();
       });
 
     }]);

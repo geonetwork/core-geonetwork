@@ -2,117 +2,50 @@
   goog.provide('gn_settings_controller');
 
 
+
+
+
+
+
+
+
+
+
+
+
+  goog.require('gn_csw_settings_controller');
+  goog.require('gn_csw_test_controller');
+  goog.require('gn_csw_virtual_controller');
+  goog.require('gn_logo_settings_controller');
+  goog.require('gn_system_settings_controller');
+
   var module = angular.module('gn_settings_controller',
-      []);
+      ['gn_system_settings_controller',
+       'gn_csw_settings_controller',
+       'gn_csw_virtual_controller',
+       'gn_csw_test_controller',
+       'gn_logo_settings_controller']);
 
 
   /**
-   * GnsettingsController provides management interface
-   * for catalog settings.
    *
-   * TODO:
-   *  * Add custom forms for some settings (eg. contact for CSW,
-   *  Metadata views > default views, Search only in requested language)
    */
-  module.controller('GnSettingsController', [
-    '$scope', '$http', '$rootScope', 'gnUtilityService',
-    function($scope, $http, $rootScope, gnUtilityService) {
+  module.controller('GnSettingsController', ['$scope', '$routeParams', '$http',
+    function($scope, $routeParams, $http) {
+      var templateFolder = '../../catalog/templates/admin/settings/';
+      var availableTemplates = [
+        'system', 'logo', 'csw', 'csw-virtual', 'csw-test'
+      ];
 
-      $scope.settings = [];
-      var sectionsLevel1 = [];
-      var sectionsLevel2 = [];
-      $scope.sectionsLevel1 = [];
-      $scope.sectionsLevel2 = [];
+      $scope.defaultSettingType = 'system';
 
-      /**
-         * Load catalog settings as a flat list and
-         * extract firs and second level sections.
-         *
-         * Form field name is also based on settings
-         * key replacing "/" by "." (to not create invalid
-         * element name in XML Jeeves request element).
-         */
-      function loadSettings() {
-        $http.get('xml.config.get@json?asTree=false').success(function(data) {
-          $scope.settings = data;
-          for (var i = 0; i < $scope.settings.length; i++) {
-            var tokens = $scope.settings[i]['@name'].split('/');
-            $scope.settings[i].formName =
-                $scope.settings[i]['@name'].replace(/\//g, '.');
-            // Extract level 1 and 2 sections
-            if (tokens) {
-              if (sectionsLevel1.indexOf(tokens[0]) === -1) {
-                sectionsLevel1.push(tokens[0]);
-                $scope.sectionsLevel1.push({
-                  'name': tokens[0],
-                  '@position': $scope.settings[i]['@position']});
-              }
-              var level2name = tokens[0] + '/' + tokens[1];
-              if (sectionsLevel2.indexOf(level2name) === -1) {
-                sectionsLevel2.push(level2name);
-                $scope.sectionsLevel2.push({
-                  'name': level2name,
-                  '@position': $scope.settings[i]['@position']});
-              }
-            }
-          }
-        }).error(function(data) {
-          // TODO
-        });
-      }
-
-      /**
-         * Filter all settings for a section
-         */
-      $scope.filterBySection = function(section) {
-        var settings = [];
-
-        for (var i = 0; i < $scope.settings.length; i++) {
-          var s = $scope.settings[i];
-          if (s['@name'].indexOf(section) !== -1) {
-            settings.push(s);
-          }
+      $scope.getTemplate = function() {
+        $scope.type = $scope.defaultSettingType;
+        if (availableTemplates.indexOf($routeParams.settingType) > -1) {
+          $scope.type = $routeParams.settingType;
         }
-        return settings;
+        return templateFolder + $scope.type + '.html';
       };
-
-      /**
-         * Order by position
-         */
-      $scope.getOrderBy = function(s) {
-        return s['@position'];
-      };
-
-      /**
-         * Save the form containing all settings. When saved,
-         * broadcast success status and reload catalog info.
-         */
-      $scope.saveSettings = function(formId) {
-        $http.get($scope.url + 'admin.config.save?' + $(formId).serialize())
-            .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('settingsUpdated'),
-                timeout: 2,
-                type: 'success'});
-
-              $scope.loadCatalogInfo();
-            })
-            .error(function(data) {
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate('settingsUpdateError'),
-                    error: data,
-                    timeout: 0,
-                    type: 'danger'});
-                });
-      };
-
-      /**
-         * Scroll to an element.
-         */
-      $scope.scrollTo = gnUtilityService.scrollTo;
-
-
-      loadSettings();
     }]);
 
 })();

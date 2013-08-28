@@ -6,20 +6,22 @@
   xmlns:void="http://www.w3.org/TR/void/" xmlns:dcat="http://www.w3.org/ns/dcat#"
   xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/"
   xmlns:dctype="http://purl.org/dc/dcmitype/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-  extension-element-prefixes="saxon" exclude-result-prefixes="geonet saxon">
+  extension-element-prefixes="saxon" exclude-result-prefixes="#all">
   
   <xsl:output indent="yes"/>
   
-  <xsl:variable name="port" select="/root/gui/env/server/port"/>
-  <xsl:variable name="url" select="concat(/root/gui/env/server/protocol, '://', 
-    /root/gui/env/server/host, 
+  <xsl:include href="../../common/base-variables.xsl"/>
+  <xsl:include href="../../common/profiles-loader-rdf-tpl.xsl"/>
+  
+  <xsl:variable name="port" select="$env/system/server/port"/>
+  <xsl:variable name="url" select="concat($env/system/server/protocol, '://', 
+    $env/system/server/host, 
     if ($port='80') then '' else concat(':', $port),
     /root/gui/url)"/>
   
   <!-- TODO: should use Java language code mapper -->
   <xsl:variable name="iso2letterLanguageCode" select="substring(/root/gui/language, 1, 2)"/>
   
-  <xsl:include href="../../schema-xsl-rdf-loader.xsl"/>
   
   <xsl:template match="/">
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -50,14 +52,14 @@
       
       <!-- A name given to the catalog. -->
       <dct:title xml:lang="{$iso2letterLanguageCode}">
-        <xsl:value-of select="/root/gui/env/site/name"/>
+        <xsl:value-of select="$env/system/site/name"/>
       </dct:title>
       
       <!-- free-text account of the catalog. -->
       <dct:description/>
       
       <rdfs:label xml:lang="{$iso2letterLanguageCode}">
-        <xsl:value-of select="/root/gui/env/site/name"/> (<xsl:value-of select="/root/gui/env/site/organization"/>)</rdfs:label>
+        <xsl:value-of select="$env/system/site/name"/> (<xsl:value-of select="$env/system/site/organization"/>)</rdfs:label>
       
       <!-- The homepage of the catalog -->
       <foaf:homepage><xsl:value-of select="$url"/></foaf:homepage>
@@ -114,7 +116,7 @@
     <!-- Organization in charge of the catalogue defined in the administration
     > system configuration -->
     <foaf:Organization rdf:about="{$url}/organization/0">
-      <foaf:name><xsl:value-of select="/root/gui/env/site/organization"></xsl:value-of></foaf:name>
+      <foaf:name><xsl:value-of select="$env/system/site/organization"></xsl:value-of></foaf:name>
     </foaf:Organization>
     
     <!-- ConceptScheme describes all thesaurus available in the catalogue

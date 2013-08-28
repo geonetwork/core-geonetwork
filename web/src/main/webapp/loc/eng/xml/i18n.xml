@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <i18n>
-    <search>Search</search>
-    <searchPlaceHolder>Search ...</searchPlaceHolder>
+  <viewInGE>View in Google Earth</viewInGE>
 </i18n>
