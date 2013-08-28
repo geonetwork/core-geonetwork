@@ -41,7 +41,7 @@ public class MetadataNotifierRepositoryTest extends AbstractSpringDataTest {
         List<MetadataNotifier> metadataCategory = _repo.findAllByEnabled(notifier1.isEnabled());
         assertEquals(notifier1.getName(), metadataCategory.get(0).getName());
 
-        metadataCategory = _repo.findAllByEnabled(notifier1.isEnabled());
+        metadataCategory = _repo.findAllByEnabled(notifier2.isEnabled());
         assertEquals(notifier2.getName(), metadataCategory.get(0).getName());
     }
 
