@@ -19,7 +19,7 @@ import javax.persistence.Transient;
 @Table(name = "thesaurus")
 public class ThesaurusActivation {
     private String _id;
-    private char _activated = 'y';
+    private char _activated = Constants.YN_ENABLED;
 
     /**
      * Get the id of the ThesaurusActivation.   This is a generated value and as such new instances should not have this set as it will simply be ignored
@@ -53,9 +53,9 @@ public class ThesaurusActivation {
     }
 
     /**
-     * Set the column value. 'y' for true 'n' for false.
+     * Set the column value. Constants.YN_ENABLED for true Constants.YN_DISABLED for false.
      * 
-     * @param activated the column value. 'y' for true 'n' for false.
+     * @param activated the column value. Constants.YN_ENABLED for true Constants.YN_DISABLED for false.
      * @return
      */
     protected void setActivated_JpaWorkaround(char activated) {
@@ -69,7 +69,7 @@ public class ThesaurusActivation {
      */
     @Transient
     public boolean isActivated() {
-        return _activated == 'y';
+        return Constants.toBoolean_fromYNChar(getActivated_JpaWorkaround());
     }
 
     /**
@@ -77,6 +77,6 @@ public class ThesaurusActivation {
      * @param activated true if the thesaurus is active.
      */
     public void setActivated(boolean activated) {
-        this._activated = activated ? 'y' : 'n';
+        setActivated_JpaWorkaround(Constants.toYN_EnabledChar(activated));
     }
 }

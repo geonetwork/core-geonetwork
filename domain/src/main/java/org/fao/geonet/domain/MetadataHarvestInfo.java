@@ -15,7 +15,7 @@ import javax.persistence.Transient;
 @Embeddable
 @Access(AccessType.PROPERTY)
 public class MetadataHarvestInfo {
-    private char _harvested = 'n';
+    private char _harvested = Constants.YN_DISABLED;
     private String _uuid;
     private String _uri;
 
@@ -24,14 +24,14 @@ public class MetadataHarvestInfo {
      * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
     @Column(name = "isharvested", length = 1, nullable = false)
-    protected char isHarvested_JPAWorkaround() {
+    protected char getHarvested_JPAWorkaround() {
         return _harvested;
     }
 
     /**
      * Set the code for the harvested column.
      * 
-     * @param harvested 'y' or 'n'
+     * @param harvested Constants.YN_ENABLED or Constants.YN_DISABLED
      */
     protected void setHarvested_JPAWorkaround(char harvested) {
         this._harvested = harvested;
@@ -44,7 +44,7 @@ public class MetadataHarvestInfo {
      */
     @Transient
     public boolean isHarvested() {
-        return _harvested == 'y';
+        return Constants.toBoolean_fromYNChar(getHarvested_JPAWorkaround());
     }
 
     /**
@@ -54,7 +54,7 @@ public class MetadataHarvestInfo {
      * @return this data info object
      */
     public MetadataHarvestInfo setHarvested(boolean harvested) {
-        this._harvested = harvested ? 'y' : 'n';
+        setHarvested_JPAWorkaround(Constants.toYN_EnabledChar(harvested));
         return this;
     }
 

@@ -30,7 +30,7 @@ public class MetadataNotifier {
     private int _id;
     private String _name;
     private String _url;
-    private char _enabled = 'n';
+    private char _enabled = Constants.YN_DISABLED;
     private String _username;
     private char[] _password;
     private List<MetadataNotification> _notifications = new ArrayList<MetadataNotification>();
@@ -100,14 +100,14 @@ public class MetadataNotifier {
      * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
     @Column(name = "enabled", length = 1, nullable = false)
-    protected char isEnabled_JPAWorkaround() {
+    protected char getEnabled_JPAWorkaround() {
         return _enabled;
     }
 
     /**
-     * Set the enabled column value as either 'y' or 'n'
+     * Set the enabled column value as either Constants.YN_ENABLED or Constants.YN_DISABLED
      * 
-     * @param enabled either 'y' for true or 'n' for false
+     * @param enabled either Constants.YN_ENABLED for true or Constants.YN_DISABLED for false
      */
     protected void setEnabled_JPAWorkaround(char enabled) {
         this._enabled = enabled;
@@ -120,7 +120,7 @@ public class MetadataNotifier {
      */
     @Transient
     public boolean isEnabled() {
-        return _enabled == 'y';
+        return Constants.toBoolean_fromYNChar(getEnabled_JPAWorkaround());
     }
 
     /**
@@ -129,7 +129,7 @@ public class MetadataNotifier {
      * @param enabled true if the notifier is enabled and should be notified of changes.
      */
     public void setEnabled(boolean enabled) {
-        this._enabled = enabled ? 'y' : 'n';
+        setEnabled_JPAWorkaround(Constants.toYN_EnabledChar(enabled));
     }
 
     /**

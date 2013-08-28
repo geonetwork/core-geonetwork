@@ -26,7 +26,7 @@ public class HarvestHistory {
     private String _harvesterUuid;
     private String _harvesterName;
     private String _harvesterType;
-    private char _deleted = 'n';
+    private char _deleted = Constants.YN_DISABLED;
     private String _info;
     private String _params;
 
@@ -182,7 +182,7 @@ public class HarvestHistory {
      */
     @Transient
     public boolean isDeleted() {
-        return _deleted == 'y';
+        return Constants.toBoolean_fromYNChar(getDeleted_JpaWorkaround());
     }
 
     /**
@@ -193,7 +193,7 @@ public class HarvestHistory {
      * @return this entity object
      */
     public HarvestHistory setDeleted(boolean deleted) {
-        setDeleted_JpaWorkaround(deleted ? 'y' : 'n');
+        setDeleted_JpaWorkaround(Constants.toYN_EnabledChar(deleted));
         return this;
     }
 

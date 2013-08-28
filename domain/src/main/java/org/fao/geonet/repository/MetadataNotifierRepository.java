@@ -11,10 +11,6 @@ import java.util.List;
  * 
  * @author Jesse
  */
-public interface MetadataNotifierRepository extends JpaRepository<MetadataNotifier, Integer>, JpaSpecificationExecutor<MetadataNotifier> {
-    /**
-     * Find all the enabled/disabled notifiers
-     * @param enabled if true then  find the enabled
-     */
-    List<MetadataNotifier> findAllByEnabled(boolean enabled);
+public interface MetadataNotifierRepository extends JpaRepository<MetadataNotifier, Integer>, MetadataNotifierRepositoryCustom {
+
 }

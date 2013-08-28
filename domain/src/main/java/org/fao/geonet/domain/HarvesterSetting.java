@@ -18,7 +18,6 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "harvestersettings")
-@Cacheable
 @Access(AccessType.PROPERTY)
 public class HarvesterSetting {
     public static final int ROOT_ID = 0;
@@ -45,11 +44,11 @@ public class HarvesterSetting {
      * Set the setting id. This is a generated value and as such new instances should not have this set as it will simply be ignored and
      * could result in reduced performance.
      * 
-     * @param _id the setting id
+     * @param id the setting id
      * @return this setting object
      */
-    public HarvesterSetting setId(int _id) {
-        this._id = _id;
+    public HarvesterSetting setId(int id) {
+        this._id = id;
         return this;
     }
 

@@ -5,9 +5,47 @@ package org.fao.geonet.domain;
  * 
  * @author Jesse
  */
-public interface Constants {
+public final class Constants {
+    private Constants(){}
+
     /**
      * The length to use for IP address columns.
      */
-    int IP_ADDRESS_COLUMN_LENGTH = 45;
+    public static final int IP_ADDRESS_COLUMN_LENGTH = 45;
+    /**
+     * The character used by the JPAWorkaround columns that need a character for boolean false.
+     */
+    public static final char YN_DISABLED = 'n';
+    /**
+     * The character used by the JPAWorkaround columns that need a character for boolean true.
+     */
+    public static final char YN_ENABLED = 'y';
+
+
+    /**
+     * Convert a boolean to the corresponding character to use for the boolean characters (A workaround for the API).
+     * Do a search for JPAWorkaround in domain package.
+     *
+     * @param enabled the value to convert
+     * @return the corresponding char
+     */
+    public static char toYN_EnabledChar(boolean enabled) {
+        char enabledChar;
+        if (enabled) {
+            enabledChar = YN_ENABLED;
+        } else {
+            enabledChar = YN_DISABLED;
+        }
+        return enabledChar;
+    }
+    /**
+     * Convert a character from one of the JPAWorkaround columns to the corresponding boolean value.
+     * Do a search for JPAWorkaround in domain package.
+     *
+     * @param enabled the value to convert
+     * @return the corresponding boolean value
+     */
+    public static boolean toBoolean_fromYNChar(char enabled) {
+        return enabled == Constants.YN_ENABLED;
+    }
 }

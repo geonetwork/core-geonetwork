@@ -27,7 +27,7 @@ import javax.persistence.Transient;
 public class StatusValue {
     private int _id;
     private String _name;
-    private char _reserved = 'n';
+    private char _reserved = Constants.YN_DISABLED;
     private int displayOrder;
     private Map<String, String> _labelTranslations;
 
@@ -84,7 +84,7 @@ public class StatusValue {
     /**
      * Set the column value.
      * 
-     * @param reserved 'y' for true or 'n' for false.
+     * @param reserved Constants.YN_ENABLED for true or Constants.YN_DISABLED for false.
      * @return
      */
     protected char setReserved_JpaWorkaround(char reserved) {
@@ -98,7 +98,7 @@ public class StatusValue {
      */
     @Transient
     public boolean isReserved() {
-        return _reserved == 'y';
+        return Constants.toBoolean_fromYNChar(getReserved_JpaWorkaround());
     }
 
     /**
@@ -107,7 +107,7 @@ public class StatusValue {
      * @param reserved true if this is a reserved StatusValue.
      */
     public void setReserved(boolean reserved) {
-        this._reserved = reserved ? 'y' : 'n';
+        setReserved_JpaWorkaround(Constants.toYN_EnabledChar(reserved));
     }
 
     /**

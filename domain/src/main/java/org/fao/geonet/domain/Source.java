@@ -19,7 +19,7 @@ import javax.persistence.Transient;
 public class Source {
     private String uuid;
     private String name;
-    private char _local = 'y';
+    private char _local = Constants.YN_ENABLED;
 
     /**
      * Get the uuid of the source.
@@ -69,7 +69,7 @@ public class Source {
 
     /**
      * Set the column values.
-     * @param local 'y' or 'n'
+     * @param local Constants.YN_ENABLED or Constants.YN_DISABLED
      */
     protected void setIsLocal_JpaWorkaround(char local) {
         _local = local;
@@ -82,7 +82,7 @@ public class Source {
      */
     @Transient
     public boolean isLocal() {
-        return _local == 'y';
+        return Constants.toBoolean_fromYNChar(getIsLocal_JpaWorkaround());
     }
 
     /**
@@ -90,6 +90,6 @@ public class Source {
      * @param local true is the source refers to the local geonetwork.
      */
     public void setLocal(boolean local) {
-        this._local = local ? 'y' : 'n';
+        setIsLocal_JpaWorkaround(Constants.toYN_EnabledChar(local));
     }
 }

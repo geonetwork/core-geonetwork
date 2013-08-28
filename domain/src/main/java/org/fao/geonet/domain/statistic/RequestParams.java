@@ -1,5 +1,7 @@
 package org.fao.geonet.domain.statistic;
 
+import org.fao.geonet.domain.Constants;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -28,7 +30,7 @@ public class RequestParams {
     private double _similarity;
     private String _lowerText;
     private String _upperText;
-    private char _inclusive = 'n';
+    private char _inclusive = Constants.YN_DISABLED;
     private SearchRequest _request;
 
     /**
@@ -191,13 +193,13 @@ public class RequestParams {
      * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
     @Column(name = "inclusive", length = 1, nullable = true)
-    protected char isInclusive_JPAWorkaround() {
+    protected char getInclusive_JPAWorkaround() {
         return _inclusive;
     }
 
     /**
-     * Set the inclusive column value 'y' or 'n'
-     * @param inclusive the inclusive column value 'y' or 'n'
+     * Set the inclusive column value Constants.YN_ENABLED or Constants.YN_DISABLED
+     * @param inclusive the inclusive column value Constants.YN_ENABLED or Constants.YN_DISABLED
      */
     protected void setInclusive_JPAWorkaround(char inclusive) {
         this._inclusive = inclusive;
@@ -209,7 +211,7 @@ public class RequestParams {
      */
     @Transient
     public boolean isInclusive() {
-        return _inclusive == 'y';
+        return Constants.toBoolean_fromYNChar(getInclusive_JPAWorkaround());
     }
 
     /**
@@ -217,6 +219,6 @@ public class RequestParams {
      * @param inclusive true if the query is a range query and is inclusive.
      */
     public void setInclusive(boolean inclusive) {
-        this._inclusive = inclusive ? 'y' : 'n';
+        setInclusive_JPAWorkaround(Constants.toYN_EnabledChar(inclusive));
     }
 }

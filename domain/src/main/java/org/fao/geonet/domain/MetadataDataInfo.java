@@ -23,7 +23,7 @@ public class MetadataDataInfo implements Serializable {
     private ISODate _changeDate;
     private ISODate _createDate;
     private String _schemaId;
-    private char _template = 'n';
+    private char _template = Constants.YN_DISABLED;
     private String _root;
     private String _doctype;
     private int _displayOrder;
@@ -74,14 +74,14 @@ public class MetadataDataInfo implements Serializable {
      * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
     @Column(name = "istemplate", length = 1, nullable = false)
-    protected char isTemplate_JPAWorkaround() {
+    protected char getTemplate_JPAWorkaround() {
         return _template;
     }
 
     /**
      * Set the code representing true or false for istemplate column.
      * 
-     * @param template 'y' or 'n'
+     * @param template Constants.YN_ENABLED or Constants.YN_DISABLED
      */
     protected void setTemplate_JPAWorkaround(char template) {
         this._template = template;
@@ -94,7 +94,7 @@ public class MetadataDataInfo implements Serializable {
      */
     @Transient
     public boolean isTemplate() {
-        return _template == 'y';
+        return Constants.toBoolean_fromYNChar(getTemplate_JPAWorkaround());
     }
 
     /**
@@ -104,7 +104,7 @@ public class MetadataDataInfo implements Serializable {
      * @return this data info object
      */
     public MetadataDataInfo setTemplate(boolean template) {
-        this._template = template ? 'y' : 'n';
+        setTemplate_JPAWorkaround(Constants.toYN_EnabledChar(template));
         return this;
     }
 

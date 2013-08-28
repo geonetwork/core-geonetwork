@@ -23,8 +23,8 @@ import javax.persistence.Transient;
 public class Languages {
     String _id;
     String _name;
-    char _inspire = 'n';
-    char _defaultLanguage = 'n';
+    char _inspire = Constants.YN_DISABLED;
+    char _defaultLanguage = Constants.YN_DISABLED;
 
     /**
      * Get the id of the language. This is a generated value and as such new instances should not have this set as it will simply be ignored
@@ -93,7 +93,7 @@ public class Languages {
      */
     @Transient
     public boolean isInspire() {
-        return _inspire == 'y';
+        return Constants.toBoolean_fromYNChar(getInspire_JPAWorkaround());
     }
 
     /**
@@ -102,7 +102,7 @@ public class Languages {
      * @param inspire true if required by inspire
      */
     public void setInspire(boolean inspire) {
-        this._inspire = inspire ? 'y' : 'n';
+        setInspire_JPAWorkaround(Constants.toYN_EnabledChar(inspire));
     }
 
     /**
@@ -125,7 +125,7 @@ public class Languages {
      */
     @Transient
     public boolean isDefaultLanguage() {
-        return _defaultLanguage == 'y';
+        return Constants.toBoolean_fromYNChar(getDefaultLanguage_JPAWorkaround());
     }
 
     /**
@@ -134,6 +134,6 @@ public class Languages {
      * @param newDefault true if this language is the new default.
      */
     public void setDefaultLanguage(boolean newDefault) {
-        this._defaultLanguage = newDefault ? 'y' : 'n';
+        setDefaultLanguage_JPAWorkaround(Constants.toYN_EnabledChar(newDefault));
     }
 }

@@ -19,7 +19,7 @@ import javax.persistence.Transient;
 @Table(name = "metadatanotifications")
 public class MetadataNotification {
     private MetadataNotificationId _id;
-    private char _notified = 'n';
+    private char _notified = Constants.YN_DISABLED;
     private String _metadataUuid;
     private MetadataNotificationAction _action;
     private String _errorMessage;
@@ -50,7 +50,7 @@ public class MetadataNotification {
      * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
     @Column(name = "notified", length = 1, nullable = false)
-    protected char isNotified_JPAWorkaround() {
+    protected char getNotified_JPAWorkaround() {
         return _notified;
     }
 
@@ -70,7 +70,7 @@ public class MetadataNotification {
      */
     @Transient
     public boolean isNotified() {
-        return _notified == 'y';
+        return Constants.toBoolean_fromYNChar(getNotified_JPAWorkaround());
     }
 
     /**
@@ -80,7 +80,7 @@ public class MetadataNotification {
      * @return this notification entity object
      */
     public MetadataNotification setNotified(boolean notified) {
-        this._notified = notified ? 'y' : 'n';
+        setNotified_JPAWorkaround(Constants.toYN_EnabledChar(notified));
         return this;
     }
 
