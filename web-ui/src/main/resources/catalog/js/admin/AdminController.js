@@ -3,6 +3,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_adminmetadata_controller');
   goog.require('gn_admintools_controller');
   goog.require('gn_cat_controller');
@@ -12,6 +22,7 @@
   goog.require('gn_translation');
   goog.require('gn_translation_controller');
   goog.require('gn_usergroup_controller');
+
 
   var module = angular.module('gn_admin_controller',
       ['gn_dashboard_controller', 'gn_usergroup_controller',
@@ -99,8 +110,7 @@
           {name: 'settings', route: '#settings',
             classes: 'btn-warning', icon: 'icon-gear'},
           {name: 'tools', route: '#tools',
-            classes: 'btn-warning', icon: 'icon-medkit'}
-        ]
+            classes: 'btn-warning', icon: 'icon-medkit'}]
         // TODO : add other role menu
       };
 

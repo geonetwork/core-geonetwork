@@ -405,6 +405,11 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.user.update!?.*" access="hasRole('UserAdmin')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.user.remove!?.*" access="hasRole('UserAdmin')"/>
                 
+
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.category.update!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.category.remove!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.category.update.labels!?.*" access="hasRole('UserAdmin')"/>
+                
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.logo.list!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.logo.update!?.*" access="hasRole('UserAdmin')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.logo.remove!?.*" access="hasRole('UserAdmin')"/>

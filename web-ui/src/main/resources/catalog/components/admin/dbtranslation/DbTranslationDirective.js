@@ -39,7 +39,9 @@
                       '<{{key}}>{{value}}</{{key}}>' +
                                   '</label>' +
                       '</' + scope.type + '></request>';
-                  xml = xml.replace('{{id}}', scope.element.id)
+                  
+                  // id may be in id property (eg. group) or @id (eg. category)
+                  xml = xml.replace('{{id}}', scope.element.id || scope.element['@id'])
                               .replace(/{{key}}/g, e.key)
                               .replace('{{value}}', e.value);
                   $http.post('admin.' + scope.type + '.update.labels', xml, {

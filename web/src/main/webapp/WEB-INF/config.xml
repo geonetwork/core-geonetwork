@@ -992,7 +992,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.category.update">
+		<service name="xml.category.update" deprecated="true">
 			<class name=".services.category.XmlUpdate" />
 		</service>
 
@@ -1502,11 +1502,14 @@
   <include>config/config-service-thesaurus.xml</include>
   
   <include>config/config-service-admin.xml</include>
+
+  <include>config/config-service-admin-category.xml</include>
+
   <include>config/config-service-admin-index.xml</include>
   <include>config/config-service-admin-logo.xml</include>
   <include>config/config-service-admin-user-and-group.xml</include>
   <include>config/config-service-admin-geoserver-publication.xml</include>
-  
+
   <include>config/config-service-statistics.xml</include>
   
   <include>config/config-service-admin-csw.xml</include>
