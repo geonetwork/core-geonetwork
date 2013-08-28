@@ -16,7 +16,6 @@
   goog.require('gn_adminmetadata_controller');
   goog.require('gn_admintools_controller');
   goog.require('gn_cat_controller');
-  goog.require('gn_classificationSystems_controller');
   goog.require('gn_classification_controller');
   goog.require('gn_dashboard_controller');
   goog.require('gn_settings_controller');
@@ -28,7 +27,6 @@
   var module = angular.module('gn_admin_controller',
       ['gn_dashboard_controller', 'gn_usergroup_controller',
        'gn_admintools_controller', 'gn_settings_controller',
-       'gn_classificationSystems_controller',
        'gn_adminmetadata_controller', 'gn_classification_controller']);
 
 
@@ -73,10 +71,6 @@
         when('/settings', {
           templateUrl: '../../catalog/templates/admin/settings.html',
           controller: 'GnSettingsController'}).
-        when('/classificationSystems', {
-          templateUrl: '../../catalog/templates/admin/' +
-              'classificationSystems.html',
-          controller: 'GnClassificationSystemsController'}).
         when('/settings/:settingType', {
           templateUrl: '../../catalog/templates/admin/settings.html',
           controller: 'GnSettingsController'}).

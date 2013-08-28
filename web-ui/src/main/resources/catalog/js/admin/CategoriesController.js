@@ -1,36 +1,17 @@
 (function() {
-  goog.provide('gn_classificationSystems_controller');
+  goog.provide('gn_categories_controller');
 
-  var module = angular.module('gn_classificationSystems_controller',
+  var module = angular.module('gn_categories_controller',
       []);
 
 
   /**
-   * classificationSystemsController provides all necessary operations
-   * to manage users and groups.
+   * CategoriesController provides all necessary operations
+   * to manage category.
    */
-  module.controller('GnClassificationSystemsController', [
-    '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
-    function($scope, $routeParams, $http, $rootScope, $translate, $compile) {
-
-
-      var templateFolder = '../../catalog/templates/admin/' +
-          'classificationSystems/';
-      var availableTemplates = [
-        'categories', 'thesaurus', 'directory'
-      ];
-
-      // By default display categories tab
-      $scope.defaultclassificationSystemsTab = 'categories';
-
-      $scope.getTemplate = function() {
-        $scope.type = $scope.defaultclassificationSystemsTab;
-        if (availableTemplates.indexOf($routeParams.classificationSystemsTab) >
-            -1) {
-          $scope.type = $routeParams.classificationSystemsTab;
-        }
-        return templateFolder + $scope.type + '.html';
-      };
+  module.controller('GnCategoriesController', [
+    '$scope', '$routeParams', '$http', '$rootScope', '$translate',
+    function($scope, $routeParams, $http, $rootScope, $translate) {
 
       $scope.categories = null;
       $scope.categorySelected = {id: $routeParams.categoryId};
@@ -38,7 +19,6 @@
       $scope.categoryUpdated = false;
 
       $scope.selectCategory = function(c) {
-        console.log(c);
         $scope.categorySelected = c;
       };
 
@@ -47,9 +27,7 @@
        * Delete a category
        */
       $scope.deleteCategory = function(id) {
-
-        console.log($scope.categoryId);
-        $http.get($scope.url + 'admin.category.remove?id=' +
+        $http.get('admin.category.remove?id=' +
             id)
         .success(function(data) {
               $scope.unselectCategory();
@@ -68,18 +46,18 @@
        * Save a category
        */
       $scope.saveCategory = function(formId) {
-        $http.get($scope.url + 'admin.category.update?' + $(formId).serialize())
+        $http.get('admin.category.update?' + $(formId).serialize())
           .success(function(data) {
               $scope.unselectCategory();
               loadCategories();
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('groupUpdated'),
+                msg: $translate('categoryUpdated'),
                 timeout: 2,
                 type: 'success'});
             })
           .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('groupUpdateError'),
+                title: $translate('categoryUpdateError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
@@ -102,14 +80,12 @@
       };
 
       function loadCategories() {
-        $http.get('xml.info@json?type=categories').success(function(data) {
+        $http.get('info@json?type=categories').success(function(data) {
           $scope.categories = data.categories;
-          console.log($scope.categories);
         }).error(function(data) {
           // TODO
         });
       }
-
       loadCategories();
     }]);
 

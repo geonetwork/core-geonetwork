@@ -22,14 +22,14 @@ goog.addDependency('../../js/GnLoginModule.js', ['gn_login'], ['gn_cat_controlle
 goog.addDependency('../../js/GnModule.js', ['gn'], ['gn_cat_controller', 'gn_metadata_manager', 'gn_pagination', 'gn_search_controller', 'gn_search_manager', 'gn_search_results', 'gn_translation', 'gn_translation_controller', 'gn_utility_service']);
 goog.addDependency('../../js/LoginController.js', ['gn_login_controller'], []);
 goog.addDependency('../../js/TranslationController.js', ['gn_translation_controller'], []);
-goog.addDependency('../../js/admin/AdminController.js', ['gn_admin_controller'], ['gn_adminmetadata_controller', 'gn_admintools_controller', 'gn_cat_controller', 'gn_classificationSystems_controller', 'gn_classification_controller', 'gn_dashboard_controller', 'gn_settings_controller', 'gn_translation', 'gn_translation_controller', 'gn_usergroup_controller']);
+goog.addDependency('../../js/admin/AdminController.js', ['gn_admin_controller'], ['gn_adminmetadata_controller', 'gn_admintools_controller', 'gn_cat_controller', 'gn_classification_controller', 'gn_dashboard_controller', 'gn_settings_controller', 'gn_translation', 'gn_translation_controller', 'gn_usergroup_controller']);
 goog.addDependency('../../js/admin/AdminMetadataController.js', ['gn_adminmetadata_controller'], []);
 goog.addDependency('../../js/admin/AdminToolsController.js', ['gn_admintools_controller'], []);
 goog.addDependency('../../js/admin/CSWSettingsController.js', ['gn_csw_settings_controller'], []);
 goog.addDependency('../../js/admin/CSWTestController.js', ['gn_csw_test_controller'], []);
 goog.addDependency('../../js/admin/CSWVirtualController.js', ['gn_csw_virtual_controller'], []);
-goog.addDependency('../../js/admin/ClassificationController.js', ['gn_classification_controller'], ['gn_thesaurus_controller']);
-goog.addDependency('../../js/admin/ClassificationSystemsController.js', ['gn_classificationSystems_controller'], []);
+goog.addDependency('../../js/admin/CategoriesController.js', ['gn_categories_controller'], []);
+goog.addDependency('../../js/admin/ClassificationController.js', ['gn_classification_controller'], ['gn_categories_controller', 'gn_thesaurus_controller']);
 goog.addDependency('../../js/admin/DashboardContentStatController.js', ['gn_dashboard_content_stat_controller'], []);
 goog.addDependency('../../js/admin/DashboardController.js', ['gn_dashboard_controller'], ['gn_dashboard_content_stat_controller', 'gn_dashboard_search_stat_controller', 'gn_dashboard_status_controller']);
 goog.addDependency('../../js/admin/DashboardSearchStatController.js', ['gn_dashboard_search_stat_controller'], []);

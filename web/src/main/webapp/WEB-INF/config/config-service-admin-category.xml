@@ -10,5 +10,9 @@
 			<class name=".services.category.Remove" />
             <error sheet="../xslt/error/error-json.xsl"/>
 		</service>
+		
+		<service name="admin.category.update.labels">
+			<class name=".services.category.XmlUpdate" />
+		</service>
 	</services>
 </geonet>

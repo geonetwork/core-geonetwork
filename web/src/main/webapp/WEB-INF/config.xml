@@ -992,7 +992,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.category.update">
+		<service name="xml.category.update" deprecated="true">
 			<class name=".services.category.XmlUpdate" />
 		</service>
 
