@@ -67,7 +67,7 @@ from XSLT.
   
   <xsl:template name="no-js-alert">
     <noscript>
-    <div class="alert" ng-hide="">
+    <div class="alert" data-ng-hide="">
       <strong>Warning!</strong> Javascript is not enabled. Enable it or click 
         <a href="catalog.search.nojs">here to search</a> in a degraded mode.
     </div>

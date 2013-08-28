@@ -51,8 +51,9 @@
           for (var i = 0; i < data.length; i++) {
             var setting = data[i];
             if (cswBooleanSettings.indexOf(setting['@name']) !== -1) {
+              var value = setting['#text'].toLowerCase();
               $scope.cswSettings[setting['@name']] =
-                  (setting['#text'] == 'true' || setting['#text'] == 'on');
+                  (value == 'true' || value == 'on');
             } else if (cswSettings.indexOf(setting['@name']) !== -1) {
               $scope.cswSettings[setting['@name']] = setting['#text'];
             }

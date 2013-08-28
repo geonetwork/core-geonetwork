@@ -2,6 +2,11 @@
 <geonet>
   <services package="org.fao.geonet">
     
+    <service name="info">
+      <class name=".services.main.Info" />
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+    
     <service name="admin.languages.get">
       <documentation><![CDATA[
         Return the list of languages

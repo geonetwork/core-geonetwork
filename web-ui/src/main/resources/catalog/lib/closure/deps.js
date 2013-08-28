@@ -26,6 +26,7 @@ goog.addDependency('../../js/admin/AdminController.js', ['gn_admin_controller'],
 goog.addDependency('../../js/admin/AdminMetadataController.js', ['gn_adminmetadata_controller'], []);
 goog.addDependency('../../js/admin/AdminToolsController.js', ['gn_admintools_controller'], []);
 goog.addDependency('../../js/admin/CSWSettingsController.js', ['gn_csw_settings_controller'], []);
+goog.addDependency('../../js/admin/CSWTestController.js', ['gn_csw_test_controller'], []);
 goog.addDependency('../../js/admin/CSWVirtualController.js', ['gn_csw_virtual_controller'], []);
 goog.addDependency('../../js/admin/DashboardContentStatController.js', ['gn_dashboard_content_stat_controller'], []);
 goog.addDependency('../../js/admin/DashboardController.js', ['gn_dashboard_controller'], ['gn_dashboard_content_stat_controller', 'gn_dashboard_search_stat_controller', 'gn_dashboard_status_controller']);

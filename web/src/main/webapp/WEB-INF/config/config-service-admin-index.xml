@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    <service name="admin.index.rebuild">
+      <documentation>
+        Service to force a complete rebuild of Lucene index
+      </documentation>
+      <class name=".services.metadata.IndexRebuild" />
+    </service>
+    
+    <service name="admin.index.rebuildxlinks">
+      <documentation>
+        Service to clear all cached xlinks and rebuild index for metadata records with xlinks
+      </documentation>
+      <class name=".services.metadata.IndexRebuild">
+        <param name="rebuildxlinkindex" value="yes" />
+      </class>
+    </service>
+    
+    <service name="admin.index.optimize">
+      <documentation>
+        Service to force optimization of Lucene index
+      </documentation>
+      <class name=".services.metadata.IndexOptimize" />
+    </service>
+    
+    
+    <service name="admin.index.config.reload">
+      <documentation>Reload Lucene configuration. If changes to the index
+      configuration was made, user should rebuild the index.</documentation>
+      <class name=".services.config.Reload" />
+    </service>
+    
+  </services>
+</geonet>

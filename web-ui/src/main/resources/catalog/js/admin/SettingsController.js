@@ -27,7 +27,7 @@
     function($scope, $routeParams, $http) {
       var templateFolder = '../../catalog/templates/admin/settings/';
       var availableTemplates = [
-        'system', 'logo', 'csw', 'csw-virtual'
+        'system', 'logo', 'csw', 'csw-virtual', 'csw-test'
       ];
 
       $scope.defaultSettingType = 'system';

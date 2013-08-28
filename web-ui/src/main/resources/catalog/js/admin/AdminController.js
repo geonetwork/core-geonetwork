@@ -61,10 +61,10 @@
           controller: 'GnUserGroupController'}).
         when('/tools', {
           templateUrl: '../../catalog/templates/admin/tools.html',
-          controller: 'GnDashboardController'}).
-        when('/tools/batch', {
+          controller: 'GnAdminToolsController'}).
+        when('/tools/:toolTab', {
           templateUrl: '../../catalog/templates/admin/tools.html',
-          controller: 'GnUserGroupController'}).
+          controller: 'GnAdminToolsController'}).
         when('/settings', {
           templateUrl: '../../catalog/templates/admin/settings.html',
           controller: 'GnSettingsController'}).

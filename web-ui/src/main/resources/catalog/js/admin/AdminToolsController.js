@@ -11,13 +11,31 @@
    */
   module.controller('GnAdminToolsController', [
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
+    '$q', '$timeout',
     'gnMetadataManagerService',
     'gnSearchManagerService',
     'gnUtilityService',
-    function($scope, $routeParams, $http, $rootScope, $translate, $compile,
+    function($scope, $routeParams, $http, $rootScope, $translate, $compile, 
+        $q, $timeout,
             gnMetadataManagerService, 
             gnSearchManagerService, 
             gnUtilityService) {
+
+      var templateFolder = '../../catalog/templates/admin/tools/';
+      var availableTemplates = [
+        'tools', 'index'
+      ];
+
+      $scope.defaultToolTab = 'batch';
+
+      $scope.getTemplate = function() {
+        $scope.type = $scope.defaultToolTab;
+        if (availableTemplates.indexOf($routeParams.toolTab) > -1) {
+          $scope.type = $routeParams.toolTab;
+        }
+        return templateFolder + $scope.type + '.html';
+      };
+
       /**
        * True if currently processing records
        */
@@ -87,27 +105,12 @@
       }];
 
 
-      var templateFolder = '../../catalog/templates/admin/tools/';
-      var availableTemplates = [
-        'tools'
-      ];
-
-      $scope.defaultToolTab = 'batch';
-
-      $scope.getTemplate = function() {
-        $scope.type = $scope.defaultToolTab;
-        if (availableTemplates.indexOf($routeParams.toolTab) > -1) {
-          $scope.type = $routeParams.toolTab;
-        }
-        return templateFolder + $scope.type + '.html';
-      };
-
 
 
       $scope.runProcess = function(formId) {
         $scope.processing = true;
         $scope.processReport = null;
-        $http.get($scope.url + 'md.processing.batch@json?' +
+        $http.get('md.processing.batch@json?' +
                 $(formId).serialize())
           .success(function(data) {
               $scope.processReport = data;
@@ -175,6 +178,105 @@
       gnMetadataManagerService.selectNone().then(function() {
         $scope.recordsToProcessSearch();
       });
+
+
+
+
+      // Indexing management
+
+      /**
+       * Inform if indexing is ongoing or not
+       */
+      $scope.isIndexing = false;
+
+      /**
+       * Number of records in the index
+       */
+      $scope.numberOfIndexedRecords = null;
+
+      /**
+       * Check index every ...
+       */
+      var indexCheckInterval = 1000;
+
+      /**
+       * Get number of record in the index and
+       * then check if indexing is ongoing or not every
+       * indexCheckInterval. Stop when not indexing.
+       *
+       * TODO: Could we kill the check when switching to somewhere else?
+       */
+      function checkIsIndexing() {
+        // Check if indexing
+        return $http.get('info@json?type=index').
+            success(function(data, status) {
+              $scope.isIndexing = data.index == 'true';
+              if ($scope.isIndexing) {
+                $timeout(checkIsIndexing, indexCheckInterval);
+              }
+              // Get the number of records (template, records, subtemplates)
+              $http.get('qi@json?template=y or n or s&summaryOnly=true').
+                 success(function(data, status) {
+                   $scope.numberOfIndexedRecords = data[0]['@count'];
+                 });
+            });
+      }
+
+      checkIsIndexing();
+
+      $scope.rebuildIndex = function() {
+        $http.get('admin.index.rebuild?reset=yes')
+            .success(function(data) {
+              checkIsIndexing();
+            })
+            .error(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('rebuildIndexError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
+      };
+
+      $scope.optimizeIndex = function() {
+        $http.get('admin.index.optimize')
+            .success(function(data) {
+            })
+            .error(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('rebuildIndexError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
+      };
+
+      $scope.reloadLuceneConfig = function() {
+        $http.get('admin.index.config.reload')
+            .success(function(data) {
+            })
+            .error(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('rebuildIndexError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
+      };
+
+      $scope.clearXLinkCache = function() {
+        $http.get('admin.index.rebuildxlinks')
+            .success(function(data) {
+            })
+            .error(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('rebuildIndexError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
+      };
+
     }]);
 
 })();

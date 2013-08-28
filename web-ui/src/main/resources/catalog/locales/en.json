@@ -366,6 +366,15 @@
     
     "metadataAndTemplates": "Metadata & templates",
     
+    "rebuildIndex": "Rebuild index",
+    "indexingInProgress": "Indexing in progress ...",
+    "recordsIndexed": " records indexed.",
+    "rebuildIndexHelp": "While rebuilding index, search may return incomplete results and CSW GetRecords operation is disabled. Use this function, when catalog traffic is low. It's recommended to rebuild index after reloading index configuration or making changes directly in the database.",
+    "optimizeIndex": "Optimize index",
+    "reloadLuceneConfig": "Reload index configuration",
+    "clearXLinkCache": "Clear XLink cache",
+    
+    
     "errorIs": "Error is ",
     
     "somethingWrong": "Something went wrong!",
