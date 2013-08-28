@@ -3,34 +3,20 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   goog.require('gn_adminmetadata_controller');
   goog.require('gn_admintools_controller');
   goog.require('gn_cat_controller');
+  goog.require('gn_classification_controller');
   goog.require('gn_dashboard_controller');
   goog.require('gn_settings_controller');
   goog.require('gn_translation');
   goog.require('gn_translation_controller');
   goog.require('gn_usergroup_controller');
 
-
   var module = angular.module('gn_admin_controller',
       ['gn_dashboard_controller', 'gn_usergroup_controller',
        'gn_admintools_controller', 'gn_settings_controller',
-       'gn_adminmetadata_controller']);
+       'gn_adminmetadata_controller', 'gn_classification_controller']);
 
 
   module.config(['$routeProvider', function($routeProvider) {
@@ -59,6 +45,12 @@
         when('/organization/groups/:groupId', {
           templateUrl: '../../catalog/templates/admin/organization.html',
           controller: 'GnUserGroupController'}).
+        when('/classification', {
+          templateUrl: '../../catalog/templates/admin/classification.html',
+          controller: 'GnClassificationController'}).
+        when('/classification/:tab', {
+          templateUrl: '../../catalog/templates/admin/classification.html',
+          controller: 'GnClassificationController'}).
         when('/tools', {
           templateUrl: '../../catalog/templates/admin/tools.html',
           controller: 'GnAdminToolsController'}).
@@ -98,7 +90,7 @@
             classes: 'btn-primary', icon: 'icon-cloud-upload'},
           {name: 'statisticsAndStatus', route: '#dashboard',
             classes: 'btn-success', icon: 'icon-dashboard'},
-          {name: 'classificationSystems', url: 'admin',
+          {name: 'classificationSystems', route: '#classification',
             classes: 'btn-info', icon: 'icon-tags'},
           {name: 'standards', url: 'admin',
             classes: 'btn-info', icon: 'icon-puzzle-piece'},

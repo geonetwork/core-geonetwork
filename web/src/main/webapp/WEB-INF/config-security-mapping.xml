@@ -435,6 +435,22 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.console!?.*" access="hasRole('RegisteredUser')"/>
                 
                 
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/keywords!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.upload!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.download!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.add.from.register!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.clear!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.update!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.remove!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.enable!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.keyword!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.keyword.links!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.keyword.add!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.keyword.update!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.keyword.remove!?.*" access="hasRole('Administrator')"/>
+                
+                
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.edit.save.and.close!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.edit.save!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.edit!?.*" access="hasRole('Editor')"/>
