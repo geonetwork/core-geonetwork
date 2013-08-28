@@ -32,7 +32,7 @@ public interface OperationAllowedRepository extends JpaRepository<OperationAllow
      * @return all operation allowed entities with the given groupid and metadataid
      */
     @Nonnull
-    List<OperationAllowed> findByGroupIdAndMetadataId(int groupId, int metadataId);
+    List<OperationAllowed> findByIdGroupIdAndIdMetadataId(int groupId, int metadataId);
 
     /**
      * Find all operations allowed entities with the given metadataid.
@@ -40,7 +40,7 @@ public interface OperationAllowedRepository extends JpaRepository<OperationAllow
      * @return all operation allowed entities with the given metadataid.
      */
     @Nonnull
-    List<OperationAllowed> findByMetadataId(int metadataId);
+    List<OperationAllowed> findByIdMetadataId(int metadataId);
 
     /**
      * Find all operations allowed entities with the given groupid.
@@ -48,7 +48,7 @@ public interface OperationAllowedRepository extends JpaRepository<OperationAllow
      * @return all operation allowed entities with the given groupid.
      */
     @Nonnull
-    List<OperationAllowed> findByGroupId(int groupId);
+    List<OperationAllowed> findByIdGroupId(int groupId);
 
     /**
      * Find all operations allowed entities with the given operationId.
@@ -56,7 +56,7 @@ public interface OperationAllowedRepository extends JpaRepository<OperationAllow
      * @return all operations allowed entities with the given operationId.
      */
     @Nonnull
-    List<OperationAllowed> findByOperationId(int operationId);
+    List<OperationAllowed> findByIdOperationId(int operationId);
 
     /**
      * Find the one OperationAllowed entity by the operation, metadata and group ids (or null if not found).
@@ -67,7 +67,7 @@ public interface OperationAllowedRepository extends JpaRepository<OperationAllow
      * @return the one OperationAllowed entity by the operation, metadata and group ids (or null if not found).
      */
     @Nullable
-    OperationAllowed findByGroupIdAndMetadataIdAndOperationId(int groupId, int metadataId, int operationId);
+    OperationAllowed findByIdGroupIdAndIdMetadataIdAndIdOperationId(int groupId, int metadataId, int operationId);
 
     /**
      * Delete all OperationsAllowed entities with the give metadata and group ids.

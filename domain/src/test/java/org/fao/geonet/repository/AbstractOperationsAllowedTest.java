@@ -46,21 +46,26 @@ public abstract class AbstractOperationsAllowedTest extends AbstractSpringDataTe
         
         this._allGroup = _groupRepo.save(ReservedGroup.all.getGroupEntityTemplate());
         this._intranetGroup = _groupRepo.save(ReservedGroup.intranet.getGroupEntityTemplate());
-    
-        Metadata newMd = new Metadata().setUuid("uuid1");
-        newMd.getSourceInfo().setOwner(1);
+
+        Metadata newMd = newMetadata(1);
         this._md1 = _mdRepo.save(newMd);
 
-        newMd = new Metadata().setUuid("uuid2");
-        newMd.getSourceInfo().setOwner(2);
+        newMd = newMetadata(2);
         this._md2 = _mdRepo.save(newMd);
     
-        this._opAllowed1 = _opAllowRepo.save(new OperationAllowed().setGroup(_allGroup).setMetadata(_md1).setOperation(_viewOp));
-        this._opAllowed2 = _opAllowRepo.save(new OperationAllowed().setGroup(_intranetGroup).setMetadata(_md2).setOperation(_downloadOp));
-        this._opAllowed3 = _opAllowRepo.save(new OperationAllowed().setGroup(_intranetGroup).setMetadata(_md1).setOperation(_downloadOp));
-        this._opAllowed4 = _opAllowRepo.save(new OperationAllowed().setGroup(_intranetGroup).setMetadata(_md1).setOperation(_viewOp));
+        this._opAllowed1 = _opAllowRepo.save(new OperationAllowed().setId(_md1, _allGroup, _viewOp));
+        this._opAllowed2 = _opAllowRepo.save(new OperationAllowed().setId(_md2, _intranetGroup, _downloadOp));
+        this._opAllowed3 = _opAllowRepo.save(new OperationAllowed().setId(_md1, _intranetGroup, _downloadOp));
+        this._opAllowed4 = _opAllowRepo.save(new OperationAllowed().setId(_md1, _intranetGroup, _viewOp));
     
         flushAndClear();
+    }
+
+    private Metadata newMetadata(int id) {
+        Metadata newMd = new Metadata().setUuid("uuid"+id).setData("data"+id);
+        newMd.getDataInfo().setSchemaId("schemaId"+id);
+        newMd.getSourceInfo().setOwner(id).setSource("source"+id);
+        return newMd;
     }
 
     protected void flushAndClear() {

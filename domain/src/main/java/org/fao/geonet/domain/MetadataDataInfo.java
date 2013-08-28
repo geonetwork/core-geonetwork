@@ -20,8 +20,8 @@ import javax.persistence.Transient;
 public class MetadataDataInfo implements Serializable {
     private static final long serialVersionUID = 8049813754167665960L;
     private String _title;
-    private ISODate _changeDate;
-    private ISODate _createDate;
+    private ISODate _changeDate = new ISODate();
+    private ISODate _createDate = new ISODate();
     private String _schemaId;
     private char _template = Constants.YN_DISABLED;
     private String _root;

@@ -34,11 +34,12 @@ public class MetadataSourceInfo {
      * Set the source of the metadata. The source identifies where the metadata came from. It is usually a uuid but can be any identifier.
      * Normally if the metadata is harvested this will be harvester uuid and if it is locally created it will typically be the siteid of the
      * geonetwork instance.
-     * 
+     *
      * @param source the source of the metadata.
      */
-    public void setSource(String source) {
+    public MetadataSourceInfo setSource(String source) {
         this._source = source;
+        return this;
     }
 
     /**
@@ -55,11 +56,12 @@ public class MetadataSourceInfo {
     /**
      * Set the group id that owns this metadata. A user can be part of several groups thus the group owner determines which one of those
      * groups the metadata belongs to.
-     * 
+     *
      * @param groupOwner the group id that owns this metadata.
      */
-    public void setGroupOwner(int groupOwner) {
+    public MetadataSourceInfo setGroupOwner(int groupOwner) {
         this._groupOwner = groupOwner;
+        return this;
     }
 
     /**
@@ -74,11 +76,12 @@ public class MetadataSourceInfo {
 
     /**
      * Set the id of the user that owns this metadata.
-     * 
+     *
      * @param owner the id of the user that owns this metadata.
      */
-    public void setOwner(int owner) {
+    public MetadataSourceInfo setOwner(int owner) {
         this._owner = owner;
+        return this;
     }
 
     @Override

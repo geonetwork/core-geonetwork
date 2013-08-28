@@ -4,15 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.data.jpa.domain.Specifications.*;
 
+import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.UserGroupId;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
@@ -39,8 +36,8 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
         
         assertEquals(4, repo.count());
         
-        int ug1Id = ug1.getId().getGroupId();
-        int ug2Id = ug2.getId().getGroupId();
+        int ug1Id = ug1.getId().getUserId();
+        int ug2Id = ug2.getId().getUserId();
         Specifications<UserGroup> ug1Or2Spec = where(UserGroupSpecs.hasUserId(ug1Id)).or(UserGroupSpecs.hasUserId(ug2Id));
         List<Integer> ug1Or2Ids = repo.findUserIds(ug1Or2Spec);
         
@@ -58,9 +55,9 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
         
         assertEquals(4, repo.count());
 
-        int ug1Id = ug1.getId().getUserId();
-        int ug2Id = ug2.getId().getUserId();
-        Specifications<UserGroup> ug1Or2Spec = where(UserGroupSpecs.hasUserId(ug1Id)).or(UserGroupSpecs.hasUserId(ug2Id));
+        int ug1Id = ug1.getId().getGroupId();
+        int ug2Id = ug2.getId().getGroupId();
+        Specifications<UserGroup> ug1Or2Spec = where(UserGroupSpecs.hasGroupId(ug1Id)).or(UserGroupSpecs.hasGroupId(ug2Id));
         List<Integer> ug1Or2Ids = repo.findGroupIds(ug1Or2Spec);
         
         assertTrue (ug1Or2Ids.contains(ug1Id));
@@ -70,9 +67,14 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
     private UserGroup newUserGroup() {
         int groupName = inc.incrementAndGet();
         int userName = inc.incrementAndGet();
-        User user = _userRepo.save(new User().setUsername(userName+""));
+        User user = new User().setUsername(userName+"");
+        user.getSecurity().setPassword("password"+userName);
+        user = _userRepo.save(user);
+
         Group group = _groupRepo.save(new Group().setName(groupName+""));
-        return new UserGroup().setGroup(group).setUser(user);
+        UserGroup userGroup = new UserGroup().setGroup(group).setUser(user).setId(new UserGroupId(user, group));
+        userGroup.setProfile(Profile.Editor);
+        return userGroup;
     }
 
 }

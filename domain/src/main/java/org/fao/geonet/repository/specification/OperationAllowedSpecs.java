@@ -23,7 +23,7 @@ public final class OperationAllowedSpecs {
      */
     public static Specification<OperationAllowed> hasMetadataId(final int metadataId) {
         return new Specification<OperationAllowed>() {
-            
+
             @Override
             public Predicate toPredicate(Root<OperationAllowed> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Path<Integer> mdIdAttributePath = root.get(OperationAllowed_.id).get(OperationAllowedId_.metadataId);
@@ -53,26 +53,11 @@ public final class OperationAllowedSpecs {
      */
     public static Specification<OperationAllowed> hasOperationId(final int operationId) {
         return new Specification<OperationAllowed>() {
-            
+
             @Override
             public Predicate toPredicate(Root<OperationAllowed> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Path<Integer> mdIdAttributePath = root.get(OperationAllowed_.id).get(OperationAllowedId_.operationId);
                 Predicate mdIdEqualPredicate = cb.equal(mdIdAttributePath, cb.literal(operationId));
-                return mdIdEqualPredicate;
-            }
-        };
-    }
-    /**
-     * A specification that is limits results to opAllowed objects whose metadata objects have the correct owner
-     * @param ownerId the id to match
-     */
-    public static Specification<OperationAllowed> metadataHasOwnerId(final int ownerId) {
-        return new Specification<OperationAllowed>() {
-            
-            @Override
-            public Predicate toPredicate(Root<OperationAllowed> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Integer> mdIdAttributePath = root.get(OperationAllowed_.metadata).get(Metadata_.sourceInfo).get(MetadataSourceInfo_.owner);
-                Predicate mdIdEqualPredicate = cb.equal(mdIdAttributePath, cb.literal(ownerId));
                 return mdIdEqualPredicate;
             }
         };

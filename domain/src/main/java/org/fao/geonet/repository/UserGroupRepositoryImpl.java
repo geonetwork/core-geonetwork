@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 
@@ -42,7 +43,8 @@ public class UserGroupRepositoryImpl implements UserGroupRepositoryCustom {
         CriteriaQuery<Integer> query = builder.createQuery(Integer.class);
         Root<UserGroup> from = query.from(UserGroup.class);
         query.select(from.get(UserGroup_.id).get(groupId));
-        spec.toPredicate(from, query, builder);
+        Predicate predicate = spec.toPredicate(from, query, builder);
+        query.where(predicate);
 
         return _entityManager.createQuery(query).getResultList();
     }

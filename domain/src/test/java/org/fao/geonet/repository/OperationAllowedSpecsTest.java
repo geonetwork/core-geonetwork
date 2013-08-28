@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import com.google.common.base.Optional;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.junit.Test;
@@ -24,12 +25,9 @@ public class OperationAllowedSpecsTest extends AbstractOperationsAllowedTest {
 
         assertEquals(found.size(), 3);
         assertEquals(_viewOp.getId(), found.get(0).getId().getOperationId());
-        assertEquals(_viewOp.getId(), found.get(1).getOperation().getId());
-        assertEquals(_viewOp.getId(), found.get(0).getId().getOperationId());
         assertEquals(_viewOp.getId(), found.get(1).getId().getOperationId());
         assertEquals(_downloadOp.getId(), found.get(2).getId().getOperationId());
         
-        assertEquals(_intranetGroup.getId(), found.get(1).getGroup().getId());
         assertEquals(_allGroup.getId(), found.get(0).getId().getGroupId());
 
         assertEquals(_md1.getId(), found.get(0).getId().getMetadataId());
@@ -63,26 +61,32 @@ public class OperationAllowedSpecsTest extends AbstractOperationsAllowedTest {
         
         assertEquals(found.size(), 2);
         assertEquals(_allGroup.getId(), found.get(0).getId().getGroupId());
-        assertEquals(_intranetGroup.getId(), found.get(1).getGroup().getId());
-        
+
         assertEquals(_viewOp.getId(), found.get(0).getId().getOperationId());
         assertEquals(_viewOp.getId(), found.get(1).getId().getOperationId());
         
         assertEquals(_md1.getId(), found.get(0).getId().getMetadataId());
         assertEquals(_md1.getId(), found.get(1).getId().getMetadataId());
     }
-    
+
     @Test
     public void testHasOwnerId() {
-        Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.metadataHasOwnerId(2);
-        List<OperationAllowed> found = _opAllowRepo.findAll(hasMetadataId);
-        
+        List<OperationAllowed> found = _opAllowRepo.findAllWithOwner(2, Optional.<Specification<OperationAllowed>>absent());
+
         assertEquals(found.size(), 1);
         assertEquals(_intranetGroup.getId(), found.get(0).getId().getGroupId());
-        
+
         assertEquals(_downloadOp.getId(), found.get(0).getId().getOperationId());
-        
+
         assertEquals(_md2.getId(), found.get(0).getId().getMetadataId());
+    }
+
+    @Test
+    public void testHasOwnerIdAndSpec() {
+        List<OperationAllowed> found = _opAllowRepo.findAllWithOwner(1, Optional.<Specification<OperationAllowed>>of
+                (OperationAllowedSpecs.hasGroupId(_intranetGroup.getId())));
+
+        assertEquals(found.size(), 2);
     }
 
 }

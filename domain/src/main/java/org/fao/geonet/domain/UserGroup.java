@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @Access(AccessType.PROPERTY)
 @Table(name = UserGroupNamedQueries.TABLE_NAME)
 public class UserGroup {
-    private UserGroupId _id;
+    private UserGroupId _id = new UserGroupId();
     private Group _group;
     private User _user;
     private Profile _profile;

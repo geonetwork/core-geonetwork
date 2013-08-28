@@ -455,7 +455,7 @@ public class MEFLib {
 		int iId = Integer.valueOf(id);
 
 		OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-		repository.findByMetadataId(iId);
+		repository.findByIdMetadataId(iId);
 
 		String grpOwnerQuery = "SELECT groupOwner FROM Metadata WHERE id = ?";
 		// Only one groupOwner per metadata
@@ -478,7 +478,7 @@ public class MEFLib {
 		// --- scan query result to collect info
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        List<OperationAllowed> opsAllowed = operationAllowedRepository.findByMetadataId(iId);
+        List<OperationAllowed> opsAllowed = operationAllowedRepository.findByIdMetadataId(iId);
 
         for (OperationAllowed operationAllowed : opsAllowed) {
             Group group = operationAllowed.getGroup();

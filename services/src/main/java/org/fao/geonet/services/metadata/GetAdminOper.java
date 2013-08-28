@@ -140,7 +140,7 @@ public class GetAdminOper implements Service
 			}
 
             //--- get all operations that this group can do on given metadata
-            List<OperationAllowed> opAllowList = opAllowRepository.findByGroupIdAndMetadataId(grpId, Integer.valueOf(id));
+            List<OperationAllowed> opAllowList = opAllowRepository.findByIdGroupIdAndIdMetadataId(grpId, Integer.valueOf(id));
 
 			for (Operation operation : operationList) {
 				String operId = Integer.toString(operation.getId());

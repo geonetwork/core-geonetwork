@@ -60,7 +60,10 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
     private Metadata newMetadata() {
         int val = inc.incrementAndGet();
-        return new Metadata().setUuid("uuid" + val);
+        Metadata metadata = new Metadata().setUuid("uuid" + val).setData("metadata" + val);
+        metadata.getDataInfo().setSchemaId("customSchema" + val);
+        metadata.getSourceInfo().setSource("source" + val);
+        return metadata;
     }
 
 }

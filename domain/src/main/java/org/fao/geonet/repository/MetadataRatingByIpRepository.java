@@ -18,5 +18,5 @@ public interface MetadataRatingByIpRepository extends JpaRepository<MetadataRati
      *
      * @param metadataId id of metadata.
      */
-    List<MetadataRatingByIp> findAllByMetadataId(int metadataId);
+    List<MetadataRatingByIp> findAllByIdMetadataId(int metadataId);
 }

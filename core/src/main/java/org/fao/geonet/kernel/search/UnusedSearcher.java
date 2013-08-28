@@ -174,7 +174,8 @@ class UnusedSearcher extends MetaSearcher
 	private boolean hasInternetGroup(ServiceContext context, String id) throws SQLException
 	{
 	    OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        List<OperationAllowed> opsAllowed = operationAllowedRepository.findByGroupIdAndMetadataId(ReservedGroup.all.getId(), Integer.valueOf(id));
+        List<OperationAllowed> opsAllowed = operationAllowedRepository.findByIdGroupIdAndIdMetadataId(ReservedGroup.all.getId(),
+                Integer.valueOf(id));
 		return !opsAllowed.isEmpty();
 	}
 

@@ -38,10 +38,9 @@ public class Metadata {
     private int _id;
     private String _uuid;
     private String _data;
-    private MetadataDataInfo _dataInfo;
-    private MetadataSourceInfo _sourceInfo;
-    private MetadataHarvestInfo _harvestInfo;
-    private List<OperationAllowed> _operationsAllowed = new ArrayList<OperationAllowed>();
+    private MetadataDataInfo _dataInfo = new MetadataDataInfo();
+    private MetadataSourceInfo _sourceInfo = new MetadataSourceInfo();
+    private MetadataHarvestInfo _harvestInfo = new MetadataHarvestInfo();
     private Set<MetadataCategory> _metadataCategories = new HashSet<MetadataCategory>();
 
     // private List<MetadataStatus> _metadataStatus;
@@ -236,58 +235,4 @@ public class Metadata {
         this._metadataCategories = categories;
     }
 
-    /**
-     * Add a new operation allowed object to this metadata object.
-     * 
-     * @param newOperationAllowed the new operation allowed
-     * 
-     * @return this metadata entity
-     */
-    public Metadata addOperationAllowed(OperationAllowed newOperationAllowed) {
-        internalAddOperationAllowed(newOperationAllowed);
-        newOperationAllowed.internalSetMetadata(this);
-        return this;
-    }
-
-    /**
-     * Remove an operation allowed object to this metadata object.
-     * 
-     * @param oldOperationAllowed the operation allowed object to remove
-     * 
-     * @return this metadata entity
-     */
-    public Metadata removeOperationAllowed(OperationAllowed oldOperationAllowed) {
-        internalRemoveOperationAllowed(oldOperationAllowed);
-        oldOperationAllowed.internalSetMetadata(null);
-        return this;
-    }
-
-    void internalAddOperationAllowed(OperationAllowed newOperationAllowed) {
-        Assert.isTrue(newOperationAllowed != null, OperationAllowed.class.getSimpleName() + " should not be null");
-        if (!_operationsAllowed.contains(newOperationAllowed)) {
-            this._operationsAllowed.add(newOperationAllowed);
-        }
-    }
-
-    /**
-     * Get the collection containing the operations allowed
-     */
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "metadataid")
-    public List<OperationAllowed> getOperationsAllowed() {
-        return this._operationsAllowed;
-    }
-
-    /**
-     * Set operationallowed collection. Should only be used when creating the object.
-     * 
-     * @param operationAllowed the operation allowed collection
-     */
-    protected void setOperationsAllowed(List<OperationAllowed> operationAllowed) {
-        this._operationsAllowed = operationAllowed;
-    }
-
-    void internalRemoveOperationAllowed(OperationAllowed operationAllowed) {
-        this._operationsAllowed.remove(operationAllowed);
-    }
 }
