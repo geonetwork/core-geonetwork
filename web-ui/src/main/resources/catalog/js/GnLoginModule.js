@@ -17,14 +17,19 @@
     'gn_cat_controller'
   ]);
 
-  module.config(['$translateProvider', function($translateProvider) {
-    $translateProvider.useStaticFilesLoader({
-      prefix: '../../catalog/locales/',
-      suffix: '.json'
-    });
+  //Define the translation files to load
+  module.constant('$LOCALES', ['core']);
 
-    var language = (navigator.userLanguage || navigator.language).split('-');
-    // TODO : Add URL parameter to set UI language
-    $translateProvider.preferredLanguage(language[0]);
-  }]);
+  module.config(['$translateProvider', '$LOCALES',
+                 function($translateProvider, $LOCALES) {
+      $translateProvider.useLoader('localeLoader', {
+        locales: $LOCALES,
+        prefix: '../../catalog/locales/',
+        suffix: '.json'
+      });
+
+      var language = (navigator.userLanguage || navigator.language).split('-');
+      // TODO : Add URL parameter to set UI language
+      $translateProvider.preferredLanguage(language[0]);
+    }]);
 })();

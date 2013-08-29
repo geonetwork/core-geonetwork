@@ -1,50 +1,4 @@
 {
-    "catalog": "catalog",
-    "poweredBy": "Powered by GeoNetwork opensource",
-    "username": "User name",
-    "password": "Password",
-    "rememberMe": "Remember me",
-    "signIn": "Sign in",
-    "signedInAs": "Signed in as ",
-    
-    "eng": "English",
-    "title": "Title",
-    
-    "needAnAccount": "Need an account ?",
-    "needAnAccountInfo": "Then sign right up, it only takes a minute.",
-    "createAnAccount": "Create an account",
-    "forgetDetails": "Forgotten your details?",
-    "forgetDetailsInfo": "Use password recovery to reset it.",
-    "recoverPassword": "Forgot your password",
-    "userPreferences": "User preferences",
-    "userDetails": "User details",
-    "notifications": "Notifications",
-    "signout": "Sign out",
-    
-    "from": "From",
-    "to": "To",
-    "by": "by",
-    "previous": "Previous",
-    "next": "Next",
-    
-    "noRecordFound": "No record found.",
-    
-    "any": "Full text",
-    "orgName": "Contact for the resource",
-    "createDateYear": "Creation year",
-    "_indexingError": "Indexing error",
-    "_cat": "Category",
-    "keyword": "Keyword",
-    "filter": "Filter",
-    
-    
-    "profile": "User profile",
-    "RegisteredUser": "Registered user",
-    "Editor": "Editor",
-    "Reviewer": "Reviewer",
-    "UserAdmin": "User administrator",
-    
-    "TODO-ADMIN": "################################ Admin strings - TODO : move to a dedicated file",
     "adminConsole": "Admin console",
     "latestNews": "Latest news",
     "quicklinks": "Quick links",
@@ -372,13 +326,7 @@
     "rebuildIndexHelp": "While rebuilding index, search may return incomplete results and CSW GetRecords operation is disabled. Use this function, when catalog traffic is low. It's recommended to rebuild index after reloading index configuration or making changes directly in the database.",
     "optimizeIndex": "Optimize index",
     "reloadLuceneConfig": "Reload index configuration",
-    "clearXLinkCache": "Clear XLink cache",
+    "clearXLinkCache": "Clear XLink cache"
     
     
-    "errorIs": "Error is ",
-    
-    "somethingWrong": "Something went wrong!",
-    "msgUserAuthenticated": "User {{username}} authenticated.",
-    "msgNoCatalogInfo": "Could not retrieved catalog information.",
-    "msgNoUserInfo": "Could not retrieve user details."
 }

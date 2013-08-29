@@ -3,6 +3,8 @@
 
   var module = angular.module('gn_login_controller', []);
 
+  module.constant('$LOCALES', ['core']);
+
   /**
    *
    */
