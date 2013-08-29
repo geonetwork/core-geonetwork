@@ -166,6 +166,11 @@
 		<service name="logo.set">
 			<class name=".services.logo.Set"/>
 		</service>
+
+		<service name="get.conversions.xsl">
+			<class name=".guiservices.util.GetImportXSLs" />
+		</service>
+		
 	</services>
 </geonet>
 

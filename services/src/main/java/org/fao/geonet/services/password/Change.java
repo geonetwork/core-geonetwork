@@ -91,7 +91,7 @@ public class Change extends NotInReadOnlyModeService {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		String todaysDate = sdf.format(cal.getTime());
-		boolean passwordMatches = PasswordUtil.encoder(context.getServlet().getServletContext()).matches(changeKey, scrambledPassword+todaysDate);
+		boolean passwordMatches = PasswordUtil.encoder(context.getServlet().getServletContext()).matches(scrambledPassword+todaysDate, changeKey);
 
 		//check change key
 		if (!passwordMatches)

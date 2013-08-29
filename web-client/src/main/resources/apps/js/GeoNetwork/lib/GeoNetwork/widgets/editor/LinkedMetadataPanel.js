@@ -167,15 +167,15 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 versionId: this.versionId,
                 metadataSchema: this.metadataSchema,
                 setThumbnail: this.catalogue.services.mdSetThumbnail,
-                bodyStyle: 'padding:10px;',
+                bodyStyle: 'padding:10px;background-color:white',
                 imagePath: this.imagePath
             };
         if (type === 'thumbnail') {
             config.height = 300;
             config.width = 500;
-        } else if (type === 'onlinesrc') {
-            config.height = 450;
-            config.width = 700;
+        } else if (type === 'onlinesrc' || type === 'service') {
+            config.height = 700;
+            config.width = 800;
         } else if (type === 'sibling') {
             config.height = 450;
             config.width = 700;
@@ -262,6 +262,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             parameters += "&uuidref=" + uuid;
         } else if (type === 'onlinesrc') {
             parameters += "&url=" + encodeURIComponent(id);
+            parameters += "&name=" + encodeURIComponent(uuid.trim().split(' ')[0]);
             
             // if a file is upload remove the file before removing the link
             if (uuid.indexOf('WWW:DOWNLOAD-1.0-http--download') !== -1) {

@@ -117,17 +117,28 @@ public class Info implements Service {
 			String type = el.getText();
 
 			if (type.equals("site")) {
-				result.addContent(gc.getBean(SettingManager.class).get("system", -1));
+				result.addContent(gc.getBean(SettingManager.class).getValues(
+                        new String[]{
+                                "system/site/name", 
+                                "system/site/organization", 
+                                "system/site/siteId", 
+                                "system/platform/version", 
+                                "system/platform/subVersion"
+                                }));
 			}
 
 			else if (type.equals("inspire"))
-				result.addContent(gc.getBean(SettingManager.class).get("system/inspire", -1));
-			
-			else if (type.equals("harvester"))
-				result.addContent(gc.getBean(SettingManager.class).get("system/harvester", -1));
+				result.addContent(gc.getBean(SettingManager.class).getValues(
+				            new String[]{
+				                         "system/inspire/enableSearchPanel", 
+				                         "system/inspire/enable"
+				                         }));
 
 			else if (type.equals("harvester"))
-			    result.addContent(gc.getBean(SettingManager.class).get("system/harvester", -1));
+			    result.addContent(gc.getBean(SettingManager.class).getValues(
+                        new String[]{
+                                "system/harvester/enableEditing"
+                                }));
 
 			else if (type.equals("categories"))
 				result.addContent(Lib.local.retrieve(dbms, "Categories"));

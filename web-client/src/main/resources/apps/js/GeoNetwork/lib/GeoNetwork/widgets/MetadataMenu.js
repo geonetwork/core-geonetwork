@@ -332,7 +332,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         					: 
         					false,
             status = this.record.get('status'),
-            disableIfSubmittedForEditor = (status == 4 && this.catalogue.identifiedUser.role === 'Editor' ? true : false),
+            // SEXTANT https://forge.ifremer.fr/mantis/view.php?id=15011#bugnotes
+            disableIfSubmittedForEditor = ((status == 4 || status == 2 || status == 3) 
+                    && this.catalogue.identifiedUser.role === 'Editor' ? true : false),
             isHarvested = this.record.get('isharvested') === 'y' ? true : false,
             harvesterType = this.record.get('harvestertype'),
             identified = this.catalogue.isIdentified() && 
@@ -403,7 +405,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         
         GeoNetwork.MetadataMenu.superclass.initComponent.call(this);
         
-        this.statusStore = new GeoNetwork.data.StatusStore(catalogue.services.getStatus);
+        this.statusStore = new GeoNetwork.data.StatusStore(this.catalogue.services.getStatus);
         this.statusStore.on('load', function () {
             this.create();
         }, this);

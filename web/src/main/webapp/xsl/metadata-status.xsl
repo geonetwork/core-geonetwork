@@ -27,7 +27,7 @@
 									select="count(/root/response/statusvalues/status[on and name='submitted']) = 1"/>
 
 								<xsl:for-each select="/root/response/statusvalues/status">
-								  <xsl:sort select="id"/>
+								  <xsl:sort select="displayorder"/>
 									<tr>
 										<td class="padded" align="left" colspan="2">
 											<xsl:variable name="profile" select="/root/gui/session/profile"/>

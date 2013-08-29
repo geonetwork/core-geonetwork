@@ -47,6 +47,9 @@ public class MailSender extends Thread
      *
      * @param server
      * @param port
+     * @param username TODO
+     * @param password TODO
+     * @param useSSL TODO
      * @param from
      * @param fromDescr
      * @param to
@@ -54,10 +57,16 @@ public class MailSender extends Thread
      * @param message
      * @throws EmailException
      */
-    private void setUp(String server, int port, String from, String fromDescr, String to, String subject, String message) throws EmailException {
+    private void setUp(String server, int port, String username, String password, boolean useSSL, String from, String fromDescr, String to, String subject, String message) throws EmailException {
         _mail.setHostName(server);
         _mail.setSmtpPort(port);
         _mail.setFrom(from, fromDescr);
+        if(!"".equals(username)) {
+            _mail.setAuthentication(username, password);
+        }
+        if(useSSL) {
+            _mail.setSSL(useSSL);
+        }
         _mail.addTo(to);
         _mail.setSubject(subject);
         _mail.setMsg(message);
@@ -68,6 +77,9 @@ public class MailSender extends Thread
      *
      * @param server
      * @param port
+     * @param username TODO
+     * @param password TODO
+     * @param useSSL TODO
      * @param from
      * @param fromDescr
      * @param to
@@ -75,10 +87,11 @@ public class MailSender extends Thread
      * @param subject
      * @param message
      */
-	public void send(String server, int port, String from, String fromDescr, String to, String toDescr, String subject, String message) {
+	public void send(String server, int port, String username, String password, boolean useSSL, 
+	        String from, String fromDescr, String to, String toDescr, String subject, String message) {
 		_mail = new SimpleEmail();
 		try {
-            setUp(server, port, from, fromDescr, to, subject, message);
+            setUp(server, port, username, password, useSSL, from, fromDescr, to, subject, message);
             start();
 		}
 		catch(EmailException e) {
@@ -100,10 +113,12 @@ public class MailSender extends Thread
      * @param subject
      * @param message
      */
-	public void sendWithReplyTo(String server, int port, String from, String fromDescr, String to, String toDescr, String replyTo, String replyToDesc, String subject, String message) {
+	public void sendWithReplyTo(String server, int port, String username, String password, boolean useSSL, 
+	        String from, String fromDescr, String to, String toDescr, 
+	        String replyTo, String replyToDesc, String subject, String message) {
 		_mail = new SimpleEmail();
 		try {
-            setUp(server, port, from, fromDescr, to, subject, message);
+            setUp(server, port, username, password, useSSL, from, fromDescr, to, subject, message);
             List<InternetAddress> addressColl = new ArrayList<InternetAddress>();
 			addressColl.add(new InternetAddress(replyTo, replyToDesc));
 			_mail.setReplyTo(addressColl);

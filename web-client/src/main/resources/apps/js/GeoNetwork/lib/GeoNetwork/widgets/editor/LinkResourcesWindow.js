@@ -171,7 +171,9 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     idField: undefined,
     versionField: undefined,
     mdStore: undefined,
-    getCapabilitiesCombo: null,
+    layerNames : undefined,
+
+    
     /**
      * Only used if multiple metadata selection form is provided.
      */
@@ -329,10 +331,10 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
      * 
      * TODO : Add other service type support.
      */
-    getFormFieldForService: function (items) {
+    getFormFieldForService: function () {
         var self = this;
         
-        if (this.type === 'service' || this.type === 'dataset') {
+        if (this.type === 'service' || this.type === 'dataset' || this.type === 'onlinesrc') {
             this.capabilitiesStore = new GeoExt.data.WMSCapabilitiesStore({
                 url: (this.type === 'dataset' ? this.mdServiceUrl : this.serviceUrl),
                 id: 'capabilitiesStore',
@@ -356,33 +358,54 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     scope: this
                 }
             });
-            this.getCapabilitiesCombo = new Ext.form.ComboBox({
-                fieldLabel: OpenLayers.i18n('getCapabilitiesLayer'),
-                store: this.capabilitiesStore,
-                valueField: 'name',
-                displayField: 'title',
-                triggerAction: 'all',
+            
+            var checkboxSM = new Ext.grid.CheckboxSelectionModel({
+                singleSelect: false,
+                header: '<div class="x-grid3-hd-checker">&#160;</div>',
                 listeners: {
-                    select: function(combo, record, index){
-                        Ext.getCmp('getCapabilitiesLayerName').setValue(combo.getValue());
+                    rowselect: {
+                        fn: function(sm, rowIndex, record) {
+                            this.layerNames.push(record.get('name'));
+                        },
+                        scope : this
+                    },
+                    rowdeselect: {
+                        fn: function(sm, rowIndex, record) {
+                            this.layerNames.splice(this.layerNames.indexOf(record.get('name')),1);
+                        },
+                        scope: this
                     }
                 }
             });
-            var layerName = {
-                xtype: 'textfield',
-                id: 'getCapabilitiesLayerName',
-                fieldLabel: OpenLayers.i18n('layerName'),
-                valueField: 'name',
-                displayField: 'title',
-                listeners: {
-                    'change': function (field) {
-                        this.layerName = field.getValue();
-                    },
-                    scope: this
-                }
-            };
             
-            items.push([this.getCapabilitiesCombo, layerName]);
+            var colModel = new Ext.grid.ColumnModel({
+                defaults: {
+                    sortable: true
+                },
+                columns: [
+                    checkboxSM,
+                    {id: 'name',  header: OpenLayers.i18n('layerName'), dataIndex: 'name'},
+                    {id: 'title', width: 180, header: OpenLayers.i18n('title'), dataIndex: 'title'},
+                    {id: 'abstract', width: 180, header: OpenLayers.i18n('abstract'), dataIndex: 'abstract'}
+                ]
+            });
+            
+            var grid = new Ext.grid.GridPanel({
+                title: OpenLayers.i18n('layerList'),
+                border: false,
+                anchor: '98%',
+                store: this.capabilitiesStore,
+                height: this.type === 'onlinesrc' ? 250 : 180,
+                colModel: colModel,
+                sm: checkboxSM,
+                name: 'capabilitiesGrid',
+                autoExpandColumn: 'name',
+                bodyCssClass: 'gn-onlineResForm-grid',
+                cls: 'gn-onlineResForm-grid',
+                hidden: true
+            });
+
+            return grid;
         }
     },
     /**
@@ -613,8 +636,11 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             checkboxToggle: true,
             title: OpenLayers.i18n('setAURL'),
             collapsed: this.uploadDocument,
+            anchor: '90%',
+            labelWidth: 90,
             items: [{
                 xtype: 'textfield',
+                anchor: '90%',
                 fieldLabel: OpenLayers.i18n('URL'),
                 name: 'href',
                 value: ''
@@ -650,7 +676,27 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             valueField: 'value',
             displayField: 'label',
             triggerAction: 'all',
-            mode: 'local'
+            mode: 'local',
+            itemCls: 'gn-onlineResForm',
+            listeners: {
+                select: {
+                    fn: function (combo, record, index) {
+                        var visible = (combo.getValue() == 'OGC:WMS' || 
+                                (combo.getValue().indexOf('OGC:WMS') >= 0 && combo.getValue().indexOf('get-map') >= 0));
+                        combo.ownerCt.find('name', 'name')[0].setVisible(!visible);
+                        combo.ownerCt.find('name', 'title')[0].setVisible(!visible);
+                        combo.ownerCt.find('name', 'capabilitiesGrid')[0].setVisible(visible);
+                        combo.ownerCt.find('name', 'refreshCapabilities-Btn')[0].setVisible(visible);
+                        
+                        var urlField = combo.ownerCt.find('name', 'href')[0];
+                        if(visible && urlField && urlField.isVisible() && urlField.getValue() != '') {
+                            this.capabilitiesStore.baseParams.url = urlField.getValue();
+                            this.capabilitiesStore.reload({params: {url: urlField.getValue()}});
+                        }
+                    },
+                    scope: this
+                }
+            }
         });
         
         
@@ -658,6 +704,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             checkboxToggle: true,
             title: OpenLayers.i18n('selectFile'),
             collapsed: !this.uploadDocument,
+            anchor: '90%',
+            labelWidth: 90,
             items: [{
                 xtype: 'fileuploadfield',
                 emptyText: OpenLayers.i18n('selectFile'),
@@ -698,9 +746,9 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             }
         });
         
-        
         this.uploadForm = new Ext.form.FormPanel({
             fileUpload: true,
+            title: OpenLayers.i18n('onlineResFromManual'),
             defaults: {
                 width: 350
             },
@@ -710,18 +758,33 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 allowBlank: false,
                 hidden: true,
                 value: 'private' // FIXME
-            }, fsUpload, fsUrl, 
+            }, fsUpload, fsUrl, protocolCombo,
             {
                 xtype: 'textfield',
                 fieldLabel: OpenLayers.i18n('Name'),
                 name: 'name',
                 value: ''
             }, {
+                xtype: 'button',
+                cls: 'gn-onlineResForm',
+                width: 24,
+                name: 'refreshCapabilities-Btn',
+                iconCls: 'x-tbar-loading',
+                hidden: true,
+                handler: function (btn) {
+                    var urlField = btn.ownerCt.find('name', 'href')[0];
+                    if(urlField && urlField.isVisible() && urlField.getValue() != '') {
+                        this.capabilitiesStore.baseParams.url = urlField.getValue();
+                        this.capabilitiesStore.reload({params: {url: urlField.getValue()}});
+                    }
+                },
+                scope: this
+            }, {
                 xtype: 'textarea',
                 fieldLabel: OpenLayers.i18n('Description'),
                 name: 'title',
                 value: ''
-            }, protocolCombo
+            }, this.getFormFieldForService()
             ],
             buttons: [{
                 text: OpenLayers.i18n('upload'),
@@ -753,7 +816,22 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         }
                     }
                 }
-            }, cancelBt]
+            }, cancelBt],
+            keys : [ {
+                key : [ Ext.EventObject.ENTER ],
+                handler : function(e, t) {
+                    if(t.target.name == 'href') {
+                        var urlField = this.uploadForm.find('name', 'href')[0];
+                        var visible = (protocolCombo.getValue().indexOf('OGC:WMS') >= 0);
+                        if(visible && urlField && urlField.isVisible() && urlField.getValue() != '') {
+                            this.capabilitiesStore.baseParams.url = urlField.getValue();
+                            this.capabilitiesStore.reload({params: {url: urlField.getValue()}});
+                        }
+                    }
+                    
+                },
+                scope: this
+            } ]
         });
         return this.uploadForm;
     },
@@ -778,7 +856,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             if (self.type === 'service') {
                 Ext.each(record.data.links, function (link) {
                     // FIXME: restrict
-                    if (self.protocolForServices.join(',').indexOf(link.protocol) !== -1) {
+                    if (self.protocolForServices.join(',').indexOf(link.type) !== -1) {
                         links += '<li><a target="_blank" href="' + link.href + '">' + link.href + '</a></li>';
                         // FIXME : when service contains multiple URL 
                         record.data.serviceUrl = link.href;
@@ -823,7 +901,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         
         var grid = new Ext.grid.GridPanel({
             border: false,
-            anchor: '100% 80%',
+            anchor: '100% 60%',
             store: this.mdStore,
             colModel: colModel,
             sm: checkboxSM,
@@ -838,6 +916,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 this.canEditTarget = r.data.edit === 'true';
                 // FIXME : only the first metadata link is selected
                 this.selectedLink = r.data.links;
+                grid.ownerCt.find('name', 'capabilitiesGrid')[0].setVisible(true);
                 
                 var url;
                 // If linking a service, the combo needs to be updated
@@ -845,8 +924,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 // Disable the getCapabilities combo
                 if (this.type === 'service') {
                     url = this.serviceUrl;
-                    this.getCapabilitiesCombo.setDisabled(url === undefined);
-                } else if (this.type === 'dataset'){
+                    grid.ownerCt.find('name', 'capabilitiesGrid')[0].setDisabled(url === undefined);
+                } else if (this.type === 'dataset') {
                     url = this.mdServiceUrl;
                 }
                 
@@ -879,10 +958,15 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         cmp.push(this.getSearchInput());
         cmp.push(this.getLimitInput());
         cmp.push(grid);
-        this.getFormFieldForService(cmp);
+        cmp.push({
+            xtype: 'spacer',
+            height: 20
+        });
+        cmp.push(this.getFormFieldForService());
         
         this.formPanel = new Ext.form.FormPanel({
             items: cmp,
+            labelWidth: 200,
             buttons: [{
                 text: OpenLayers.i18n('createLink'),
                 iconCls: 'linkIcon',
@@ -1013,7 +1097,10 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         // Define which metadata to be modified
         // It could be the on in current editing or a related one
         var targetMetadataUuid = this.metadataUuid, parameters = "";
-        this.layerName = Ext.getCmp('getCapabilitiesLayerName') && Ext.getCmp('getCapabilitiesLayerName').getValue();
+        
+        if(this.layerNames) {
+            this.layerName = this.layerNames.join(',');
+        } 
         
         if (this.type === 'parent') {
             // Define the parent metadata record to link to
@@ -1125,17 +1212,23 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             
         } else if (this.type === 'onlinesrc') {
             // Combine all links if multiple selection is available
-            if (this.mdSelectedStore && this.mdSelectedStore.getCount() > 0) {
-                this.mdSelectedStore.each(function (record) {
-                    parameters += "&extra_metadata_uuid=" + record.get('uuid');
-                });
+            if (this.mdSelectedStore && this.formPanel.ownerCt.items.findIndex('id', this.formPanel.ownerCt.getActiveTab().id) == 1) {
+                if( this.mdSelectedStore.getCount() > 0) {
+                    this.mdSelectedStore.each(function (record) {
+                        parameters += "&extra_metadata_uuid=" + record.get('uuid');
+                    });
+                }
             } else {
                 parameters += "&extra_metadata_uuid=" + (this.selectedMd ? this.selectedMd : "");
                 if (this.selectedLink.href) {
-                    parameters += "&url=" + this.selectedLink.href + 
+                    parameters += "&url=" + encodeURIComponent(this.selectedLink.href.split('?')[0]) + 
                         "&desc=" + this.selectedLink.title + 
                         "&protocol=" + this.selectedLink.protocol + 
-                        "&name=" + this.selectedLink.name;
+                        "&name=" + ((this.selectedLink.protocol == 'OGC:WMS' || 
+                                      (this.selectedLink.protocol.indexOf('OGC:WMS') >= 0 && 
+                                       this.selectedLink.protocol.indexOf('get-map') >= 0
+                                      )
+                                     ) ? this.layerName : this.selectedLink.name);
                 }
             }
         }
@@ -1162,6 +1255,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     },
     initComponent: function () {
         Ext.applyIf(this, this.defaultConfig);
+        this.layerNames = [];
         
         GeoNetwork.editor.LinkResourcesWindow.superclass.initComponent.call(this);
         
@@ -1191,7 +1285,15 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
         if (this.type === 'thumbnail') {
             this.add(this.generateThumbnailForm(cancelBt));
         } else if (this.type === 'onlinesrc') {
-            this.add(this.generateMultipleMetadataSelector(cancelBt));
+            this.add(new Ext.TabPanel({
+                activeTab: 0,
+                bodyStyle: 'padding-top:20px;',
+                items: [
+                    this.generateDocumentUploadForm(cancelBt),
+                    this.generateMultipleMetadataSelector(cancelBt)
+                 ]
+            }));
+            this.doLayout();
         } else if (this.type === 'sibling') {
             this.add(this.getMultipleMetadataSelectorForSibling(cancelBt));
         } else {
@@ -1259,6 +1361,7 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
         
         this.formPanel = new Ext.form.FormPanel({
             items: [cmp],
+            title: OpenLayers.i18n('onlineResFromMD'),
             buttons: [{
                 text: OpenLayers.i18n('createLink'),
                 iconCls: 'linkIcon',
@@ -1273,7 +1376,7 @@ GeoNetwork.editor.MyOceanLinkResourcesWindow = Ext.extend(GeoNetwork.editor.Link
     },
     initComponent: function () {
         Ext.applyIf(this, this.defaultConfig);
-        
+        this.layerNames = [];
         GeoNetwork.editor.LinkResourcesWindow.superclass.initComponent.call(this);
         
         this.setTitle(OpenLayers.i18n('linkAResource-' + this.type));

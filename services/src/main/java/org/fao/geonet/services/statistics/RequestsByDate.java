@@ -309,7 +309,6 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 
         JFreeChart chart = ChartFactory.getTimeSeriesChart(dataset, "toto", "titi", "MM/yy", true, true);
         ChartFactory.writeChartImage(chart, new File("/tmp/toto.png"), 600, 400, true, "imageMapName");
-        System.out.println("done.");
     }
 
     /**

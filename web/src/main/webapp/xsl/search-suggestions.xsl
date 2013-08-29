@@ -21,7 +21,7 @@
         </xsl:call-template>
         <xsl:if test="/root/request/withFrequency"> (<xsl:value-of select="@freq"/>)</xsl:if>
       </xsl:variable>
-      "<xsl:value-of select="$value"/>" <xsl:if test="position()!=last()"
+      "<xsl:value-of select="normalize-space($value)"/>" <xsl:if test="position()!=last()"
         >,</xsl:if>
     </xsl:for-each> ]
     <!-- Add Descriptions (not required) 
