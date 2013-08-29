@@ -59,7 +59,7 @@ public class Update extends NotInReadOnlyModeService
 
 		Element elRes = new Element(Jeeves.Elem.RESPONSE);
 
-		if (id == null)	// For Adding new category
+		if (id == null || "".equals(id))	// For Adding new category
 		{
 			int newId = context.getSerialFactory().getSerial(dbms, "Categories");
 

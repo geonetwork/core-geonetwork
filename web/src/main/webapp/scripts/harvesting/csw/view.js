@@ -266,7 +266,9 @@ function addEmptySearch()
     		var queryables = [];
     		
 			for(var i=0; i < nodes.length; i++) {
-				if (nodes[i].attributes[0].value =='SupportedISOQueryables' || nodes[i].attributes[0].value =='AdditionalQueryables')
+				if (nodes[i].attributes[0].value =='SupportedISOQueryables' || 
+				        nodes[i].attributes[0].value =='SupportedQueryables' || 
+				        nodes[i].attributes[0].value =='AdditionalQueryables')
 				for(var j=0; j < nodes[i].childNodes.length; j++) {
 					if (nodes[i].childNodes[j].nodeName == 'ows:Value'){
 					    queryables.push(nodes[i].childNodes[j].firstChild.nodeValue)

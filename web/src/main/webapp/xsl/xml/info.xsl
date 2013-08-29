@@ -94,6 +94,7 @@
 				<status id="{id}">
 					<xsl:copy-of select="name"/>
 					<xsl:copy-of select="reserved"/>
+					<xsl:copy-of select="displayorder"/>
 					<xsl:copy-of select="label"/>
 				</status>
 			</xsl:for-each>
