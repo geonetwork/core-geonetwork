@@ -12,7 +12,7 @@
 				<a class="list-group-item" data-ng-repeat="c in categories | filter:categorySearch"
 				data-ng-click="selectCategory(c)">
 				<img src="../../images/category/{{c.name}}.png" alt="{{'categoryLogo' | translate}}"/>
-				{{c.name}}</a>
+				{{c.label[lang]}}</a>
 			</div>
 			<button type="button" class="btn btn-primary icon-plus" data-ng-click="addCategory()" data-translate>
 				newCategory
