@@ -400,7 +400,11 @@ public class MetadataSchema
 	 * @return
 	 */
 	public String[] getSchematronRules() {
-        return this.schematronRules.clone() ;
+		if(schematronRules != null) {
+			return this.schematronRules.clone() ;
+		} else {
+			return new String[]{};
+		}
 	}
 
 	private void setSchematronRules(String[] schematronRules) {
