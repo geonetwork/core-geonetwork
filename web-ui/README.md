@@ -4,40 +4,6 @@
 
 This module contains a web user interface for GeoNetwork opensource based on AngularJS, Bootstrap and d3.js librairies.
 
-Currently supported features:
- * Authentification
-  * User authentification
- * Administration
-  * Metadata and template
-   * Load samples & templates
-  * Settings
-   * System settings
-   * Logo configuration
-   * CSW configuration
-   * Virtual CSW configuration
-  * Users & groups management
-  * Statistics & status
-   * Catalog status
-   * Search statisitcs
-   * catalog content statistics
-  * Tools
-   * Batch update
-   
-TODO:
- * Administration
-  * Classification system
-   * Category
-   * Thesaurus
-  * Import
-  * Remote notification
-  * Harvesting
-  * Standard
-  * Transfert ownership
-  * Formatter
-  * Index
-  * Sort template
-  * CSW element set name
-
 
 
 ## Compile
@@ -71,6 +37,8 @@ Maven compilation take care of running:
 
 ```
  mvn clean install -Dclosure.path=/path/to/closure-library
+or on windows
+ mvn clean install -Dclosure.path=c:/path/to/closure-library
 ```
 
 ### Build with closure utility with command line
