@@ -37,11 +37,12 @@ public class ServiceParameter implements Serializable {
     /**
      * Set the id of the parameter entity. This is a generated value and as such new instances should not have this set as it will simply be
      * ignored and could result in reduced performance.
-     * 
+     *
      * @param id the id of the parameter entity.
      */
-    public void setId(int id) {
+    public ServiceParameter setId(int id) {
         this._id = id;
+        return this;
     }
 
     /**
@@ -56,11 +57,12 @@ public class ServiceParameter implements Serializable {
 
     /**
      * Set the parameter name. This is a required property.
-     * 
+     *
      * @param name the parameter name.
      */
-    public void setName(String name) {
+    public ServiceParameter setName(String name) {
         this._name = name;
+        return this;
     }
 
     /**
@@ -75,10 +77,11 @@ public class ServiceParameter implements Serializable {
 
     /**
      * Set the parameter value. This is a required property.
-     * 
+     *
      * @param value the parameter value.
      */
-    public void setValue(String value) {
+    public ServiceParameter setValue(String value) {
         this._value = value;
+        return this;
     }
 }
