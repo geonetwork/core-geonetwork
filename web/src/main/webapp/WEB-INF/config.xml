@@ -1504,7 +1504,9 @@
   <include>config/config-service-admin.xml</include>
 
   <include>config/config-service-admin-category.xml</include>
-
+  
+  <include>config/config-service-admin-batchprocess.xml</include>
+  
   <include>config/config-service-admin-index.xml</include>
   <include>config/config-service-admin-logo.xml</include>
   <include>config/config-service-admin-user-and-group.xml</include>

@@ -408,7 +408,7 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<service name="metadata.batch.processing.report">
+		<service name="metadata.batch.processing.report" deprecated="true">
 			<documentation><![CDATA[
 Return the current or last batch process report in the user session.
 
@@ -453,7 +453,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 			<class name=".services.metadata.XslProcessingReportGet"/>
 		</service>
 		
-		<service name="metadata.batch.processing">
+		<service name="metadata.batch.processing" deprecated="true">
 			<class name=".services.metadata.BatchXslProcessing"/>
 			
 			<output sheet="metadata-batch-results.xsl">

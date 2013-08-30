@@ -64,19 +64,61 @@
     <div class="panel"
       data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'"
       >
-      <div class="panel-heading" 
-        data-translate="">processReport</div>
+      <div class="panel-heading">
+        <span data-translate="">processReportFor</span> {{processReport['@process']}}<br/>
+        
+        <p>
+          {{numberOfRecordsProcessed}} <span>recordsProcessed</span>
+          ({{processReport['@startDate']}} 
+          <span data-ng-show="processReport['@running'] == 'true'">...</span>
+          <span data-ng-show="processReport['@running'] != 'true'"> - {{processReport['@reportDate']}}</span>)
+        </p>
+      </div>
       
-      <div class="progress progress-striped active" data-ng-hide="processReport">
+      <div class="progress progress-striped active" data-ng-show="processReport['@running'] == 'true'">
         <div class="progress-bar" style="width: 100%"></div>
       </div>
       
-      <table class="table table-striped" data-ng-hide="!processReport">
-        <tr data-ng-repeat="(key, value) in processReport track by $index">
-          <td>{{('processReport-' + key) | translate}}</td>
-          <td class="text-right">{{value}}</td>
+    
+      
+      <table class="table table-striped">
+        <tr>
+          <td>{{('processReportTotalRecords') | translate}}</td>
+          <td class="text-right">{{processReport['@totalRecords']}}</td>
+        </tr><tr>
+          <td>{{('processReportProcessedRecords') | translate}}</td>
+          <td class="text-right">{{processReport['@processedRecords']}}</td>
+        </tr><tr>
+          <td>{{('processReportNullRecords') | translate}}</td>
+          <td class="text-right">{{processReport['@nullRecords']}}</td>
+        </tr><tr>
+          <td>{{('processReportErrors') | translate}}</td>
+          <td class="text-right">{{processReport.metadataErrorReport.length}}</td>
+        </tr><tr>
+          <td>{{('processReportNoProcessFound') | translate}}</td>
+          <td class="text-right">{{processReport['notProcessFound']}}</td>
+        </tr><tr>
+          <td>{{('processReportNotOwner') | translate}}</td>
+          <td class="text-right">{{processReport['notOwner']}}</td>
         </tr>
       </table>
+      
+      <div data-ng-hide="processReport.metadataErrorReport.length == 0">
+        <h2 data-translate="">metadataErrorReport</h2>
+        <table class="table table-striped">
+          <tr>
+            <th data-transalte="">identifier</th>
+            <th data-translate="">error</th>
+          </tr>
+          <tr data-ng-repeat="m in processReport.metadataErrorReport">
+            <td>{{m['@id']}}</td>
+            <td>
+              <h4>{{m.message}}</h4>
+              <pre>{{m.stack}}</pre>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 

@@ -38,12 +38,5 @@
 	  
 	  
 	  
-	  <service name="md.processing.batch">
-	    <documentation>Processing a set of metadata record previously selected.
-	    The process is an XSL schema dependant process defined in the 
-	    schema process folder.</documentation>
-	    <class name=".services.metadata.BatchXslProcessing"/>
-	    <error sheet="../xslt/error/error-json.xsl"/>
-	  </service>
 	</services>
 </geonet>

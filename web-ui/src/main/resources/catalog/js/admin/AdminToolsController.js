@@ -75,6 +75,7 @@
        * The list of records to be processed
        */
       $scope.recordsToProcess = null;
+      $scope.numberOfRecordsProcessed = null;
 
       /**
        * The pagination config
@@ -115,8 +116,25 @@
         ]
       }];
 
+      /**
+       * Check process progress every ...
+       */
+      var processCheckInterval = 1000;
 
 
+      function checkLastBatchProcessReport() {
+        // Check if processing
+        return $http.get('md.processing.batch.report@json').
+            success(function(data, status) {
+              if (data != 'null') {
+                $scope.processReport = data;
+                $scope.numberOfRecordsProcessed = data['@processedRecords'];
+              }
+              if ($scope.processReport['@running'] == 'true') {
+                  $timeout(checkLastBatchProcessReport, processCheckInterval);
+                }
+            });
+      }
 
       $scope.runProcess = function(formId) {
         $scope.processing = true;
@@ -134,7 +152,7 @@
                 type: 'success'});
               $scope.processing = false;
 
-              gnUtilityService.scrollTo('#gn-batch-process-report');
+              checkLastBatchProcessReport();
             })
           .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
@@ -145,8 +163,10 @@
               $scope.processing = false;
             });
 
+        gnUtilityService.scrollTo('#gn-batch-process-report');
+        $timeout(checkLastBatchProcessReport, processCheckInterval);
       };
-
+      checkLastBatchProcessReport();
       $scope.recordsToProcessSearchFor = function(e) {
         $scope.recordsToProcessFilter = (e ? e.target.value : '');
         $scope.recordsToProcessPagination.currentPage = 0;
@@ -160,6 +180,7 @@
         var pageOptions = $scope.recordsToProcessPagination;
 
         gnSearchManagerService.search('q@json?fast=index' +
+            '&template=y or n' +
             '&any=' + $scope.recordsToProcessFilter +
             '&from=' + (pageOptions.currentPage *
             pageOptions.hitsPerPage + 1) +

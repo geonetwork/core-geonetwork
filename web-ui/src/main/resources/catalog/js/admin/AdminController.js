@@ -115,13 +115,13 @@
             classes: 'btn-warning', icon: 'icon-medkit'}]
         // TODO : add other role menu
       };
-      
+
       /**
        * Define menu position on the left (nav-stacked)
        * or on top of the page.
        */
       $scope.navStacked = true;
-      
+
       $scope.getTpl = function(menu) {
         $scope.type = menu.defaultTab;
         $.each(menu.tabs, function(index, value) {
