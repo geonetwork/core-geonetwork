@@ -12,5 +12,11 @@ import java.util.List;
  * Time: 8:18 AM
  */
 public interface LanguageRepositoryCustom {
+    /**
+     * Find all the languages based on whether the language is an inspire language or not.
+     *
+     * @param inspire if true find all inspire languages
+     * @return Find all the languages based on whether the language is an inspire language or not.
+     */
     List<Language> findAllByInspireFlag(boolean inspire);
 }
