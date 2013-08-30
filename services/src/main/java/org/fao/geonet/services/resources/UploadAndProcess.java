@@ -23,6 +23,8 @@
 
 package org.fao.geonet.services.resources;
 
+import java.io.File;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
@@ -30,6 +32,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -37,11 +40,8 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.XslProcessing;
+import org.fao.geonet.services.metadata.XslProcessingReport;
 import org.jdom.Element;
-
-import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Handles the file upload and attach the uploaded service to the metadata record
@@ -91,21 +91,17 @@ public class UploadAndProcess implements Service {
         params.addContent(new Element("protocol")
                 .setText("WWW:DOWNLOAD-1.0-http--download"));
 
-        Set<Integer> metadata = new HashSet<Integer>();
-        Set<Integer> notFound = new HashSet<Integer>();
-        Set<Integer> notOwner = new HashSet<Integer>();
-        Set<Integer> notProcessFound = new HashSet<Integer>();
-
+        String process = "onlinesrc-add";
+        XslProcessingReport report = new XslProcessingReport(process);
+        
         Element processedMetadata;
         try {
-            processedMetadata = XslProcessing.process(id, "onlinesrc-add",
-                    true, context.getAppPath(), params, context, metadata,
-                    notFound, notOwner, notProcessFound, true,
-                    dataMan.getSiteURL(context));
+            processedMetadata = XslProcessing.process(id, process,
+                    true, context.getAppPath(), params, context, report, true, dataMan.getSiteURL(context));
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
-                        + notFound.size() + ", Not owner:" + notOwner.size()
-                        + ", No process found:" + notProcessFound.size() + ".");
+                        + report.getNotFoundMetadataCount() + ", Not owner:" + report.getNotEditableMetadataCount()
+                        + ", No process found:" + report.getNoProcessFoundCount() + ".");
             }
         } catch (Exception e) {
             throw e;

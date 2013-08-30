@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2013 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -21,47 +21,27 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.guiservices.util;
+package org.fao.geonet.services.metadata;
 
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
-/**
- * This service returns some useful information about GeoNetwork.
- */
-public class Env implements Service {
-    private static final String READ_ONLY = "readonly";
-    public void init(String appPath, ServiceConfig params) throws Exception {}
+public class XslProcessingReportGet implements Service {
+    public void init(String appPath, ServiceConfig config) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		// reset the thread local
-		XmlSerializer.clearThreadLocal();
-
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-		Element response  = gc.getBean(SettingManager.class).getAllAsXML(true);
-
-        Element readOnly = new Element(READ_ONLY);
-        readOnly.setText(Boolean.toString(gc.isReadOnly()));
-        
-        // Get the system node (which is for the time being the only child node
-        // of settings
-        Element system = response.getChild("system");
-        system.addContent(readOnly);
-        return (Element) system.clone();
-	}
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        UserSession session = context.getUserSession();
+        Object report = session.getProperty(Geonet.Session.BATCH_PROCESSING_REPORT);
+        if (report != null) {
+            return ((XslProcessingReport) report).toXml();
+        } else {
+            return null;
+        }
+    }
 }

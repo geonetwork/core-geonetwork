@@ -28,6 +28,27 @@
 				</tr>
 			</xsl:if>
 		</table>
+		
+		<xsl:if test="/root/response/metadataErrorReport/*">
+			<h2><xsl:value-of select="/root/gui/strings/errors"/></h2>
+			<ul>
+				<xsl:for-each select="/root/response/metadataErrorReport/metadata">
+				<li>id: <xsl:value-of select="@id"/>, <xsl:value-of select="message"/></li>
+				</xsl:for-each>
+			</ul>
+		</xsl:if>
+		
+		<ul>
+			<li>
+				<xsl:value-of select="/root/gui/strings/begdate"/>: 
+				<xsl:value-of select="/root/response/@startDate"/>
+			</li>
+			<li>
+				<xsl:value-of select="/root/gui/strings/enddate"/>: 
+				<xsl:value-of select="/root/response/@reportDate"/>
+			</li>
+		</ul>
+		
 	</xsl:template>
 	
 	<!--

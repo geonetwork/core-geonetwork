@@ -166,7 +166,7 @@ public class SettingManager {
         String value = getValue(key);
         if (value == null)
             return false;
-        return value.equals("true");
+        return Boolean.parseBoolean(value);
     }
 
     /**
@@ -178,7 +178,7 @@ public class SettingManager {
      */
     public boolean getValueAsBool(String key, boolean defaultValue) {
         String value = getValue(key);
-        return (value != null) ? value.equals("true") : defaultValue;
+        return (value != null) ? Boolean.parseBoolean(value) : defaultValue;
     }
 
     /**
