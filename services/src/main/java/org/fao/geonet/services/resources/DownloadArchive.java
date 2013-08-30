@@ -419,7 +419,11 @@ public class DownloadArchive implements Service
 
 						try {
 							MailSender sender = new MailSender(context);
-							sender.send(host, Integer.parseInt(port), from, fromDescr, email, null, subject, message);
+							sender.send(host, Integer.parseInt(port), 
+							        sm.getValue("system/feedback/mailServer/username"), 
+							        sm.getValue("system/feedback/mailServer/password"), 
+							        sm.getValueAsBool("system/feedback/mailServer/ssl"), 
+							        from, fromDescr, email, null, subject, message);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

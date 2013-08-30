@@ -2710,8 +2710,14 @@ public class DataManager {
                 result.addContent(md);
                 // add 'environment' to result
                 env.addContent(new Element("siteURL")   .setText(getSiteURL(context)));
-                Element system = settingMan.get("system", -1);
-                env.addContent(Xml.transform(system, appPath + Geonet.Path.STYLESHEETS+ "/xml/config.xsl"));
+                
+                // Settings were defined as an XML starting with root named config
+                // Only second level elements are defined (under system).
+                List config = settingMan.getAllAsXML(true).cloneContent();
+                Element settings = (Element) config.get(0);
+                settings.setName("config");
+                env.addContent(settings);
+                
                 result.addContent(env);
                 // apply update-fixed-info.xsl
                 String styleSheet = getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;

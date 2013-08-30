@@ -23,12 +23,16 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -37,10 +41,6 @@ import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 /**
  * Process a metadata with an XSL transformation declared for the metadata
@@ -95,29 +95,20 @@ public class BatchXslProcessing extends NotInReadOnlyModeService {
 		Dbms dbms = (Dbms) context.getResourceManager()
 				.open(Geonet.Res.MAIN_DB);
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
-		Set<Integer> notOwner = new HashSet<Integer>();
-		Set<Integer> notProcessFound = new HashSet<Integer>();
+        XslProcessingReport xslProcessingReport = new XslProcessingReport(process);
+        
 
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session);
 		
 		synchronized(sm.getSelection("metadata")) {
-			BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(dataMan, dbms, sm.getSelection("metadata").iterator(), process, _appPath, params, context, metadata, notFound, notOwner, notProcessFound);
+			xslProcessingReport.setTotalRecords(sm.getSelection("metadata").size());
+			BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(dataMan, dbms, sm.getSelection("metadata").iterator(), 
+					process, _appPath, params, context, xslProcessingReport);
 			m.process();
 		}
-
-
-		// -- for the moment just return the sizes - we could return the ids
-		// -- at a later stage for some sort of result display
-		return new Element(Jeeves.Elem.RESPONSE).addContent(
-				new Element("done").setText(metadata.size() + "")).addContent(
-				new Element("notProcessFound").setText(notProcessFound.size()
-						+ "")).addContent(
-				new Element("notOwner").setText(notOwner.size() + ""))
-				.addContent(
-						new Element("notFound").setText(notFound.size() + ""));
+		
+		return xslProcessingReport.toXml();
 	}
 
 	// --------------------------------------------------------------------------
@@ -133,9 +124,11 @@ public class BatchXslProcessing extends NotInReadOnlyModeService {
 		String appPath;
 		Element params;
 		ServiceContext context;
-        Set<Integer> metadata, notFound, notOwner, notProcessFound;
+        XslProcessingReport xslProcessingReport;
 
-        public BatchXslMetadataReindexer(DataManager dm, Dbms dbms, Iterator<String> iter, String process, String appPath, Element params, ServiceContext context, Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner, Set<Integer> notProcessFound) {
+        public BatchXslMetadataReindexer(DataManager dm, Dbms dbms, Iterator<String> iter, String process, 
+        		String appPath, Element params, ServiceContext context, 
+        		XslProcessingReport xslProcessingReport) {
             super(dm);
             this.dbms = dbms;
             this.iter = iter;
@@ -143,10 +136,7 @@ public class BatchXslProcessing extends NotInReadOnlyModeService {
             this.appPath = appPath;
             this.params = params;
             this.context = context;
-            this.metadata = metadata;
-            this.notFound = notFound;
-            this.notOwner = notOwner;
-            this.notProcessFound = notProcessFound;
+            this.xslProcessingReport = xslProcessingReport;
         }
 
         @Override
@@ -159,8 +149,12 @@ public class BatchXslProcessing extends NotInReadOnlyModeService {
                 String uuid = (String) iter.next();
                 String id = getDataManager().getMetadataId(dbms, uuid);
                 context.info("Processing metadata with id:" + id);
-
-                XslProcessing.process(id, process, true, appPath, params, context, metadata, notFound, notOwner, notProcessFound, true, dataMan.getSiteURL(context));
+                
+                XslProcessing.process(id, process, true, appPath, params, context, xslProcessingReport, true, dataMan.getSiteURL(context));
+                
+                UserSession  session = context.getUserSession();
+                session.setProperty("BATCH_PROCESSING_REPORT", xslProcessingReport);
+                
             }
         }
 	}

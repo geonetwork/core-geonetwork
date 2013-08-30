@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2013 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -23,663 +23,316 @@
 
 package org.fao.geonet.kernel.setting;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.resources.ProviderManager;
-import jeeves.server.resources.ResourceListener;
-import jeeves.server.resources.ResourceProvider;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-//=============================================================================
-
-/** Allows hierarchical management of application settings. The settings API
-  * has been designed with the following goals:
-  *
-  * - speed: all the settings tree is kept into memory
-  *
-  * - transactional: changes follow the rules of transactions. The only issue
-  *                  is that changes are not visible until commit. If a thread
-  *                  changes a value and then reads it, the thread gets the old
-  *                  value. Added settings will not be visible and removed ones
-  *                  will still be visible until commit.
-  *
-  * - concurrent: many thread can access the settings API at the same time. A
-  *               read/write lock is used to arbitrate threads
-  *
-  * Multiple removes: there are no issues. If thread A removes a subtree S1 and
-  * another thread B removes a subtree S2 inside S1, the first thread to commit
-  * succeeds while the second always rises a 'cannot serializable exception'.
-  * In any commit combination, the settings integrity is maintained.
-  *
-  * Tree structure:
-  *
-  * + system
-  * |   + options
-  * |       + useProxy
-  * |           + host
-  * |           + port
-  * |
-  * + harvesting
-  */
-
-public class SettingManager
-{
-	private Setting root;
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
-
-	public SettingManager(Dbms dbms, ProviderManager provMan) throws SQLException
-	{
-		init(dbms);
-
-		for(ResourceProvider rp : provMan.getProviders()) {
-		    if (rp.getName().equals(dbms.getURL())) {
-				rp.addListener(resList);
-			}
-		}
-	}
-
-	
-	/**
-	 * Init the settings tree from the Settings table content
-	 * 
-	 * @param dbms
-	 * @throws SQLException
-	 */
-	private void init(Dbms dbms) throws SQLException {
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select("SELECT * FROM Settings").getChildren();
-
-		root = new Setting(0, null, null);
-		createSubTree(root, list);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
-
-	//---------------------------------------------------------------------------
-	//--- Getters
-	//---------------------------------------------------------------------------
-	public Element get(String path, int level)
-	{
-		lock.readLock().lock();
-
-		try
-		{
-			Setting s = resolve(path);
-
-			return (s == null) ? null : build(s, level);
-		}
-		finally
-		{
-			lock.readLock().unlock();
-		}
-	}
-
-	//---------------------------------------------------------------------------
-
-	public String getValue(String path)
-	{
-		lock.readLock().lock();
-
-		try
-		{
-			Setting s = resolve(path);
-
-			return (s == null) ? null : s.getValue();
-		}
-		finally
-		{
-			lock.readLock().unlock();
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	//--- Setters
-	//---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     *
-     * @param dbms
-     * @param path
-     * @param name
-     * @return
-     * @throws SQLException
-     */
-	public boolean setName(Dbms dbms, String path, String name) throws SQLException
-	{
-		if (path == null)
-			throw new IllegalArgumentException("Path cannot be null");
-
-		lock.writeLock().lock();
-
-		try
-		{
-			Setting s = resolve(path);
-
-			if (s == null)
-				return false;
-
-			dbms.execute("UPDATE Settings SET name=? WHERE id=?", name, s.getId());
-			tasks.add(Task.getNameChangedTask(dbms, s, name));
-
-			return true;
-		}
-		finally
-		{
-			lock.writeLock().unlock();
-		}
-	}
-
-	//---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     *
-     * @param dbms
-     * @param path
-     * @param value
-     * @return
-     * @throws SQLException
-     */
-	public boolean setValue(Dbms dbms, String path, Object value) throws SQLException
-	{
-		Map<String, Object> values = new HashMap<String, Object>();
-		values.put(path, value);
-
-		return setValues(dbms, values);
-	}
-
-	//---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     *
-     * @param dbms
-     * @param values
-     * @return
-     * @throws SQLException
-     */
-	public boolean setValues(Dbms dbms, Map<String, Object> values) throws SQLException
-	{
-		lock.writeLock().lock();
-
-		try
-		{
-			boolean success = true;
-
-			for(Map.Entry<String, Object> entry : values.entrySet())
-			{
-				String path = entry.getKey();
-				String value= makeString(entry.getValue());
-                if(Log.isDebugEnabled(Geonet.SPATIAL))
-                    Log.debug(Geonet.SETTINGS, "Set path: " + path + ", value: " + value);
-
-				Setting s = resolve(path);
-
-				if (s == null) {
-					success = false;
-					Log.warning(Geonet.SETTINGS, "Unable to find Settings row for: " + path + ". Check settings table."); 
-				}
-				else
-				{
-					dbms.execute("UPDATE Settings SET value=? WHERE id=?", value, s.getId());
-					tasks.add(Task.getValueChangedTask(dbms, s, value));
-				}
-			}
-
-			return success;
-		} finally {
-			lock.writeLock().unlock();
-		}
-	}
-
-
-    /**
-     * When adding to a newly created node, path must be 'id:...'.
-     *
-     * @param dbms
-     * @param path
-     * @param name
-     * @param value
-     * @return
-     * @throws SQLException
-     */
-	public String add(Dbms dbms, String path, Object name, Object value) throws SQLException
-	{
-		if (name == null)
-			throw new IllegalArgumentException("Name cannot be null");
-
-		String sName  = makeString(name);
-		String sValue = makeString(value);
-
-		lock.writeLock().lock();
-
-		try
-		{
-			//--- first, we look into the tasks list because the 'id' could have been
-			//--- added just now
-
-			Setting parent = findAmongAdded(dbms, path);
-
-			//--- if we fail, just do a normal search
-
-			if (parent == null)
-				parent = resolve(path);
-
-			if (parent == null)
-					return null;
-
-			Setting child = new Setting(getNextSerial(dbms), sName, sValue);
-
-			String query = "INSERT INTO Settings(id, parentId, name, value) VALUES(?, ?, ?, ?)";
-
-			dbms.execute(query, child.getId(), parent.getId(), sName, sValue);
-
-			tasks.add(Task.getAddedTask(dbms, parent, child));
-
-			return Integer.toString(child.getId());
-		}
-		finally
-		{
-			lock.writeLock().unlock();
-		}
-	}
-
-	//---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     *
-     * @param dbms
-     * @param path
-     * @return
-     * @throws SQLException
-     */
-	public boolean remove(Dbms dbms, String path) throws SQLException
-	{
-		lock.writeLock().lock();
-
-		try
-		{
-			Setting s = resolve(path);
-
-			if (s == null)
-				return false;
-
-			remove(dbms, s);
-
-			return true;
-		}
-		finally
-		{
-			lock.writeLock().unlock();
-		}
-	}
-
-	//---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     *
-     * @param dbms
-     * @param path
-     * @return
-     * @throws SQLException
-     */
-	public boolean removeChildren(Dbms dbms, String path) throws SQLException
-	{
-		lock.writeLock().lock();
-
-		try
-		{
-			Setting s = resolve(path);
-
-			if (s == null)
-				return false;
-
-			for (Setting child : s.getChildren())
-				remove(dbms, child);
-
-			return true;
-		}
-		finally
-		{
-			lock.writeLock().unlock();
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	//--- Auxiliary methods
-	//---------------------------------------------------------------------------
-
-	/**
-	 * Refreshes current settings manager. This has to be used when updating the Settings table without using this
-     * class. For example when using an SQL script.
-	 */
-	public boolean refresh(Dbms dbms) throws SQLException
-	{
-		lock.readLock().lock();
-		try
-		{
-			this.init(dbms);
-			return true;
-		}
-		finally
-		{
-			lock.readLock().unlock();
-		}
-	}
-
-	
-	public boolean getValueAsBool(String path, boolean defValue)
-	{
-		String value = getValue(path);
-
-		return (value != null) ? value.equals("true") : defValue;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public boolean getValueAsBool(String path)
-	{
-		String value = getValue(path);
-
-		if (value == null)
-			return false;
-
-		return value.equals("true");
-	}
-
-	//---------------------------------------------------------------------------
-
-	public Integer getValueAsInt(String path)
-	{
-		String value = getValue(path);
-
-		if (value == null || value.trim().length() == 0)
-			return null;
-
-		return Integer.valueOf(value);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     *
-     * @param s
-     * @param elemList
-     */
-	private void createSubTree(Setting s, List<Element> elemList)
-	{
-		for(Iterator<Element> i=elemList.iterator(); i.hasNext(); )
-		{
-			Element elem  = (Element) i.next();
-			String  sParId= elem.getChildText("parentid");
-			int     parId = sParId.equals("") ? -1 : Integer.parseInt(sParId);
-
-			if (s.getId() == parId)
-			{
-				String id     = elem.getChildText("id");
-				String name   = elem.getChildText("name");
-				String value  = elem.getChildText("value");
-
-				Setting child = new Setting(Integer.parseInt(id), name, value);
-
-				s.addChild(child);
-				i.remove();
-			}
-		}
-
-		for(Setting child : s.getChildren())
-			createSubTree(child, elemList);
-	}
-
-	//---------------------------------------------------------------------------
-
-	private String makeString(Object obj)
-	{
-		return (obj == null) ? null : obj.toString();
-	}
-
-	//---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     *
-     * @param path
-     * @return
-     */
-	private Setting resolve(String path)
-	{
-		StringTokenizer st = new StringTokenizer(path, SEPARATOR);
-
-		Setting s = root;
-
-		while(s != null && st.hasMoreTokens())
-		{
-			String child = st.nextToken();
-
-			if (child.startsWith("id:"))	s = find(s, Integer.parseInt(child.substring(3)));
-				else								s = s.getChild(child);
-		}
-
-		return s;
-	}
-
-	//---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     *
-     * @param s
-     * @param id
-     * @return
-     */
-	private Setting find(Setting s, int id)
-	{
-		ArrayList<Setting> stack = new ArrayList<Setting>();
-
-		for (Setting child : s.getChildren())
-			stack.add(child);
-
-		while (!stack.isEmpty())
-		{
-			s = stack.get(0);
-			stack.remove(0);
-
-			if (s.getId() == id)
-				return s;
-
-			for (Setting child : s.getChildren())
-				stack.add(child);
-		}
-
-		return null;
-	}
-
-	//---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     *
-     * @param dbms
-     * @param path
-     * @return
-     */
-	private Setting findAmongAdded(Dbms dbms, String path)
-	{
-		if (!path.startsWith("id:"))
-			return null;
-
-		if (path.indexOf(SEPARATOR) != -1)
-			return null;
-
-		int id = Integer.parseInt(path.substring(3));
-
-		for (Task task : tasks)
-		{
-			Setting s = task.getAddedSetting(dbms, id);
-
-			if (s != null)
-				return s;
-		}
-
-		return null;
-	}
-
-	//---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     *
-     * @param s
-     * @param level
-     * @return
-     */
-	private Element build(Setting s, int level)
-	{
-		Element el = new Element(s.getName());
-		el.setAttribute("id", Integer.toString(s.getId()));
-
-		if (s.getValue() != null)
-		{
-			Element value = new Element("value");
-			value.setText(s.getValue());
-
-			el.addContent(value);
-		}
-
-		if (level != 0)
-		{
-			Element children = new Element("children");
-
-			for (Setting child : s.getChildren())
-				children.addContent(build(child, level -1));
-
-			if (children.getContentSize() != 0)
-				el.addContent(children);
-		}
-
-		return el;
-	}
-
-	//---------------------------------------------------------------------------
-
-	private int getNextSerial(Dbms dbms) throws SQLException
-	{
-		if (maxSerial == 0)
-		{
-			@SuppressWarnings("unchecked")
-            List<Element>   list = dbms.select("SELECT MAX(id) AS max FROM Settings").getChildren();
-			String max  = list.get(0).getChildText("max");
-
-			maxSerial = Integer.parseInt(max);
-		}
-
-		return ++maxSerial;
-	}
-
-	//---------------------------------------------------------------------------
-
-	private void remove(Dbms dbms, Setting s) throws SQLException
-	{
-		for (Setting child : s.getChildren())
-			remove(dbms, child);
-
-		dbms.execute("DELETE FROM Settings WHERE id=?", s.getId());
-		tasks.add(Task.getRemovedTask(dbms, s));
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- ResourceListener interface
-	//---
-	//---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     *
-     * @param resource
-     * @param commit
-     */
-	private void flush(Object resource, boolean commit)
-	{
-		lock.writeLock().lock();
-
-		try
-		{
-			for(Iterator<Task> i=tasks.iterator(); i.hasNext();)
-			{
-				Task task = i.next();
-
-				if (task.matches(resource))
-				{
-					i.remove();
-
-					if (commit)
-						task.commit();
-				}
-			}
-		}
-		finally
-		{
-			lock.writeLock().unlock();
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Vars
-	//---
-	//---------------------------------------------------------------------------
-
-	private static final String SEPARATOR = "/";
-
-	private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-
-	private List<Task> tasks = new ArrayList<Task>();
-
-	private int maxSerial = 0;
-
-    public String getSiteId()   { return getValue("system/site/siteId"); }
-    public String getSiteName() { return getValue("system/site/name");   }
+/**
+ * 
+ */
+public class SettingManager {
     
-	//---------------------------------------------------------------------------
+    private static final int DATATYPE_INT = 1;
+    private static final int DATATYPE_BOOLEAN = 2;
+
+    private class SettingEntry {
+        private String name;
+        private String value;
+        private int position;
+        private int datatype;
+        
+        public SettingEntry(String name, String value, int position, int datatype) {
+            this.setName(name);
+            this.setValue(value);
+            this.setPosition(position);
+            this.setDatatype(datatype);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public int getPosition() {
+            return position;
+        }
+
+        public void setPosition(int position) {
+            this.position = position;
+        }
+
+        public int getDatatype() {
+            return datatype;
+        }
+
+        public void setDatatype(int datatype) {
+            this.datatype = datatype;
+        }
+    }
+    private Map<String, SettingEntry> settings = new ConcurrentHashMap<String, SettingEntry>();
+
+    public SettingManager(Dbms dbms, ProviderManager provMan) throws SQLException {
+        init(dbms);
+    }
+
+    /**
+     * Init the settings map from the Settings table content
+     * 
+     * @param dbms
+     * @throws SQLException
+     */
+    private void init(Dbms dbms) throws SQLException {
+        @SuppressWarnings("unchecked")
+        List<Element> records = dbms.select("SELECT * FROM Settings").getChildren();
+        for (Iterator<Element> i = records.iterator(); i.hasNext();) {
+            Element elem = (Element) i.next();
+            settings.put(elem.getChildText("name"), 
+                    new SettingEntry(elem.getChildText("name"),
+                            elem.getChildText("value"),
+                            Integer.parseInt(elem.getChildText("position")),
+                            Integer.parseInt(elem.getChildText("datatype"))
+                            )
+            );
+        }
+    }
+    /**
+     * Return all settings sorted by key
+     * 
+     * @param asTree true to return an XML tree based on settings
+     * key or false to return a flat list.
+     * 
+     * @return
+     */
+    public Element getAllAsXML(boolean asTree) {
+        Element env = new Element("settings");
+        List<String> sortedSetting = new ArrayList<String>(settings.keySet());
+        Collections.sort(sortedSetting);
+        for(String key : sortedSetting) {
+            // settings/site/host
+            if (asTree) {
+                buildTree(env, key, "");
+            } else {
+                SettingEntry entry = settings.get(key);
+                Element setting = new Element("setting");
+                setting.setAttribute("name", key);
+                setting.setAttribute("position", entry.getPosition() + "");
+                setting.setAttribute("datatype", entry.getDatatype() + "");
+                setting.setText(entry.getValue());
+                env.addContent(setting);
+            }
+        }
+        return env;
+    }
+    private void buildTree(Element env, String key, String keyRoot) {
+        int separatorIndex = key.indexOf("/");
+        // settings
+        String start= key.substring(0, separatorIndex);
+        // site/host
+        String end = key.substring(separatorIndex + 1, key.length());
+        // Add settings to env if not exist
+        Element child = env.getChild(start);
+        // create it if not
+        if (child == null) {
+            child = new Element(start);
+            String id = (keyRoot.equals("") ? key : keyRoot.substring(1, keyRoot.length()) + "/" + key);
+            child.setAttribute("position", settings.get(id).getPosition() + "");
+            env.addContent(child);
+        }
+        
+        // site/host contains separator, continue
+        if (end.contains("/")) {
+            buildTree(child, end, keyRoot + "/" + start);
+        } else {
+            // host is a end node, add value
+            String id = keyRoot.substring(1, keyRoot.length()) + "/" + key;
+            Element setting = new Element(end);
+            setting.setAttribute("name", id);
+            setting.setAttribute("position", settings.get(id).getPosition() + "");
+            setting.setAttribute("datatype", settings.get(id).getDatatype() + "");
+            setting.setText(settings.get(id).getValue());
+            child.addContent(setting);
+        }
+    }
+    
+    /**
+     * Return a setting by its key
+     * 
+     * @param path eg. system/site/name
+     * @return
+     */
+    public String getValue(String path) {
+        if (Log.isDebugEnabled(Geonet.SETTINGS)) {
+            Log.debug(Geonet.SETTINGS, "Requested setting with name: " + path);
+        }
+        SettingEntry se = settings.get(path);
+        if (se == null) {
+            // TODO : When a settings is not available in the settings table
+            // we end here. It could be relevant to add a list of default
+            // settings and populate the settings table when the settings is 
+            // missing (due to bad migration for example).
+            Log.error(Geonet.SETTINGS, "  Requested setting with name: " + path + "  not found. Add it to the settings table.");
+            return null;
+        }
+        String value = se.getValue();
+        if (value == null) {
+            Log.warning(Geonet.SETTINGS, "  Requested setting with name: " + path + " but null value found. Check the settings table.");
+        }
+        return value;
+    }
+    
+    /**
+     * Return a set of values as XML
+     * @param keys  A list of setting's key to retrieve
+     * @return
+     */
+    public Element getValues(String[] keys) {
+        Element env = new Element("settings");
+        for (int i = 0; i < keys.length; i++) {
+            String key = keys[i];
+            SettingEntry se = settings.get(key);
+            if (se == null) {
+                Log.error(Geonet.SETTINGS, "  Requested setting with name: " + key + " not found. Add it to the settings table.");
+            } else {
+                String value = se.getValue();
+                if (value != null) {
+                    Element setting = new Element("setting");
+                    setting.setAttribute("name", key).setAttribute("value", value);
+                    env.addContent(setting);
+                }
+            }
+        }
+        return env;
+    }
+
+    /**
+     * Get value of a setting as boolean
+     * 
+     * @param key   The setting key
+     * @return  The setting valueThe setting key
+     */
+    public boolean getValueAsBool(String key) {
+        String value = getValue(key);
+        if (value == null)
+            return false;
+        return Boolean.parseBoolean(value);
+    }
+
+    /**
+     * Get value of a setting as boolean
+     * 
+     * @param key   The setting key
+     * @param defaultValue  The default value
+     * @return  The setting value as boolean
+     */
+    public boolean getValueAsBool(String key, boolean defaultValue) {
+        String value = getValue(key);
+        return (value != null) ? Boolean.parseBoolean(value) : defaultValue;
+    }
+
+    /**
+     * Get value of a setting as integer
+     * @param key   The setting key
+     * @return  The integer value of the setting or null
+     */
+    public Integer getValueAsInt(String key) {
+        String value = getValue(key);
+        if (value == null || value.trim().length() == 0)
+            return null;
+        return Integer.valueOf(value);
+    }
+
     /**
      * TODO javadoc.
+     * 
+     * @param dbms
+     * @param path
+     * @param value
+     * @return
+     * @throws SQLException
      */
-	private ResourceListener resList = new ResourceListener()
-	{
-		public void beforeClose(Object resource) {} // do nothing 
-		public void close(Object resource) { flush(resource, true);  }
-		public void abort(Object resource) { flush(resource, false); }
-	};
+    public boolean setValue(Dbms dbms, String path, String value) throws Exception {
+        Map<String, String> values = new HashMap<String, String>();
+        values.put(path, value);
+        return setValues(dbms, values);
+    }
+    public boolean setValue(Dbms dbms, String path, boolean value) throws Exception {
+        return setValue(dbms, path, String.valueOf(value));
+    }
+    
+    /**
+     * Set a list of settings.
+     * 
+     * @param dbms
+     * @param values    The settings to update
+     * @return
+     * @throws SQLException
+     */
+    public boolean setValues(Dbms dbms, Map<String, String> values) throws Exception {
+        boolean success = true;
+        for (Map.Entry<String, String> entry : values.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            SettingEntry setting = settings.get(key);
+            
+            if (Log.isDebugEnabled(Geonet.SETTINGS)) {
+                Log.debug(Geonet.SETTINGS, "Setting with name: " + key + ", value: " + value);
+            }
+            try {
+                if (setting.getDatatype() == DATATYPE_BOOLEAN) {
+                    dbms.execute("UPDATE Settings SET value=? WHERE name=?", Boolean.parseBoolean(value), key);
+                } else if (setting.getDatatype() == DATATYPE_INT && !"".equals(value)) {
+                    dbms.execute("UPDATE Settings SET value=? WHERE name=?", Integer.parseInt(value), key);
+                } else {
+                    dbms.execute("UPDATE Settings SET value=? WHERE name=?", value, key);
+                }
+                setting.setValue(value);
+            } catch (Exception e) {
+                Log.warning(Geonet.SETTINGS, "Failed to save setting with name: " + key + ", value: " + value + ". Error: " + e.getMessage());
+                throw e;
+            }
+        }
+        return success;
+    }
+
+    /**
+     * Refreshes current settings manager. This has to be used when updating the Settings table without 
+     * using this class. For example when
+     * using an SQL script.
+     */
+    public boolean refresh(Dbms dbms) throws SQLException {
+        this.init(dbms);
+        return true;
+    }
+
+    public String getSiteId() {
+        return getValue("system/site/siteId");
+    }
+    
+    public String getSiteName() {
+        return getValue("system/site/name");
+    }
 }
-
-//=============================================================================
-
-

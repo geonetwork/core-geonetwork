@@ -71,11 +71,13 @@ import org.fao.geonet.kernel.XmlSerializerSvn;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
+import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -86,7 +88,6 @@ import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;
@@ -213,12 +214,28 @@ public class Geonetwork implements ApplicationHandler {
 		//--- initialize settings subsystem
 
 		logger.info("  - Setting manager...");
-
-		SettingManager settingMan = new SettingManager(dbms, context.getProviderManager());
-
-		// --- Migrate database if an old one is found
-		migrateDatabase(servletContext, dbms, settingMan, version, subVersion, context.getAppPath());
+		SettingManager settingMan = null;
+		HarvesterSettingsManager harvesterSettingsMan = null;
+		try {
+    		settingMan = new SettingManager(dbms, context.getProviderManager());
+    		harvesterSettingsMan = new HarvesterSettingsManager(dbms, context.getProviderManager());
+		} catch (Exception e) {
+		    logger.info("     Failed to initialize setting managers. This is probably due to bad Settings table. Error is: " + 
+		                e.getMessage() + ". In case of database migration, the setting managers will be reinitialized.");
+		}
 		
+        // --- Migrate database if an old one is found
+        migrateDatabase(servletContext, dbms, settingMan, harvesterSettingsMan, version, subVersion, context);
+        
+        if (settingMan == null) {
+            throw new IllegalArgumentException("Failed to initialize setting managers. This is probably due to bad Settings table.");
+        }
+        
+        // Reinitialized harvester manager which may be affected by migration
+        if (harvesterSettingsMan == null) {
+            harvesterSettingsMan = new HarvesterSettingsManager(dbms, context.getProviderManager());
+        }
+        
 		//--- initialize ThreadUtils with setting manager and rm props
 		ThreadUtils.init(context.getResourceManager().getProps(Geonet.Res.MAIN_DB),
 		              	 settingMan); 
@@ -420,8 +437,7 @@ public class Geonetwork implements ApplicationHandler {
         gnContext.threadPool  = threadPool;
         gnContext.statusActionsClass = statusActionsClass;
 
-
-        HarvestManager harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
+        HarvestManager harvestMan = new HarvestManager(context, gnContext, harvesterSettingsMan, dataMan);
 
         //------------------------------------------------------------------------
         //--- return application context
@@ -432,6 +448,7 @@ public class Geonetwork implements ApplicationHandler {
 		beanFactory.registerSingleton("schemaManager", schemaMan);
 		beanFactory.registerSingleton("serviceHandlerConfig", handlerConfig);
 		beanFactory.registerSingleton("settingManager", settingMan);
+		beanFactory.registerSingleton("harvesterSettingsMan", harvesterSettingsMan);
 		beanFactory.registerSingleton("thesaurusManager", thesaurusMan);
 		beanFactory.registerSingleton("oaipmhDisatcher", oaipmhDis);
 		beanFactory.registerSingleton("metadataNotifierManager", metadataNotifierMan);
@@ -573,6 +590,59 @@ public class Geonetwork implements ApplicationHandler {
         return Integer.valueOf(number.replaceAll("\\.", ""));
     }
     
+    @SuppressWarnings("unchecked")
+    /**
+     * Return database version and subversion number.
+     * 
+     * @param dbms
+     * @return
+     */
+    private Pair<String, String> getDatabaseVersion(Dbms dbms) {
+        int VERSION_NUMBER_ID_BEFORE_2_11 = 15;
+        int SUBVERSION_NUMBER_ID_BEFORE_2_11 = 16;
+        String VERSION_NUMBER_KEY = "system/platform/version";
+        String SUBVERSION_NUMBER_KEY = "system/platform/subVersion";
+        String version = null;
+        String subversion = null;
+        
+        List<Element> results;
+        // Before 2.11, settings was a tree. Check using keys
+        try {
+            results = dbms.select("SELECT value FROM settings WHERE id = ?", VERSION_NUMBER_ID_BEFORE_2_11).getChildren();
+            if (results.size() != 0) {
+                Element record = (Element) results.get(0);
+                version = record.getChildText("value");
+            }
+            results = dbms.select("SELECT value FROM settings WHERE id = ?", SUBVERSION_NUMBER_ID_BEFORE_2_11).getChildren();
+            if (results.size() != 0) {
+                Element record = (Element) results.get(0);
+                subversion = record.getChildText("value");
+            }
+        } catch (SQLException e) {
+            logger.info("     Error getting database version: " + e.getMessage() + 
+                    ". Probably due to an old version. Trying with new Settings structure.");
+            dbms.abort();
+        }
+        
+        // Now settings is KVP
+        if (version == null) {
+            try {
+                results = dbms.select("SELECT value FROM settings WHERE name = ?", VERSION_NUMBER_KEY).getChildren();
+                if (results.size() != 0) {
+                    Element record = (Element) results.get(0);
+                    version = record.getChildText("value");
+                }
+                results = dbms.select("SELECT value FROM settings WHERE name = ?", SUBVERSION_NUMBER_KEY).getChildren();
+                if (results.size() != 0) {
+                    Element record = (Element) results.get(0);
+                   subversion = record.getChildText("value");
+                }
+            } catch (SQLException e) {
+                logger.info("     Error getting database version: " + e.getMessage() + ".");
+            }
+        }
+        return Pair.read(version, subversion);
+    }
 	/**
 	 * Checks if current database is running same version as the web application.
 	 * If not, apply migration SQL script :
@@ -580,18 +650,21 @@ public class Geonetwork implements ApplicationHandler {
 	 * eg. 2.4.3-to-2.5.0-default.sql
 	 *
      * @param servletContext
-     * @param dbms
-     * @param settingMan
-     * @param webappVersion
-     * @param subVersion
-     * @param appPath
+	 * @param dbms
+	 * @param settingMan
+	 * @param harvesterSettingsMan TODO
+	 * @param webappVersion
+	 * @param subVersion
+	 * @param appPath
      */
-	private void migrateDatabase(ServletContext servletContext, Dbms dbms, SettingManager settingMan, String webappVersion, String subVersion, String appPath) {
+	private void migrateDatabase(ServletContext servletContext, Dbms dbms, SettingManager settingMan, 
+	        HarvesterSettingsManager harvesterSettingsMan, String webappVersion, String subVersion, ServiceContext context) {
 		logger.info("  - Migration ...");
 		
 		// Get db version and subversion
-		String dbVersion = settingMan.getValue("system/platform/version");
-		String dbSubVersion = settingMan.getValue("system/platform/subVersion");
+		Pair<String, String> dbVersionInfo = getDatabaseVersion(dbms);
+		String dbVersion = dbVersionInfo.one();
+		String dbSubVersion = dbVersionInfo.two();
 		
 		// Migrate db if needed
 		logger.info("      Webapp   version:" + webappVersion + " subversion:" + subVersion);
@@ -620,70 +693,74 @@ public class Geonetwork implements ApplicationHandler {
 			boolean anyMigrationAction = false;
 			boolean anyMigrationError = false;
 			
-            try {
-            	new UpdateHarvesterIdsTask().update(settingMan,dbms);
-            } catch (Exception e) {
-                logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-                e.printStackTrace();
-                anyMigrationError = true;
-            }
-
 			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
 			String dbType = DatabaseType.lookup(dbms).toString();
 			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
 			
 		    logger.info("      Loading SQL migration step configuration from config-db.xml ...");
-            @SuppressWarnings(value = "unchecked")
-	        List<Element> versions = dbConfiguration.getChild("migrate").getChildren();
-            for(Element version : versions) {
-                int versionNumber = Integer.valueOf(version.getAttributeValue("id"));
-                if (versionNumber > from && versionNumber <= to) {
-                    logger.info("       - running tasks for " + versionNumber + "...");
-                    @SuppressWarnings(value = "unchecked")
-                    List<Element> versionConfiguration = version.getChildren();
-                    for(Element file : versionConfiguration) {
-                    	if(file.getName().equals("java")) {
-	                        try {
-                            	String className = file.getAttributeValue("class");
-                                logger.info("         - Java migration class:" + className);
-	                        	settingMan.refresh(dbms);
-	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
-	                            task.update(settingMan, dbms);
-	                        } catch (Exception e) {
-	                            logger.info("          Errors occurs during Java migration file: " + e.getMessage());
-	                            e.printStackTrace();
-	                            anyMigrationError = true;
-	                        }
-                    	} else {
-	                        String filePath = path + file.getAttributeValue("path");
-	                        String filePrefix = file.getAttributeValue("filePrefix");
-	                        anyMigrationAction = true;
-	                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
-	                        try {
-	                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
-	                        } catch (Exception e) {
-	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-	                            e.printStackTrace();
-	                            anyMigrationError = true;
-	                        }
-                    	}
+            Element migrationConfig = dbConfiguration.getChild("migrate");
+            if (migrationConfig != null) {
+                @SuppressWarnings(value = "unchecked")
+                List<Element> versions = migrationConfig.getChildren();
+                for(Element version : versions) {
+                    int versionNumber = Integer.valueOf(version.getAttributeValue("id"));
+                    if (versionNumber > from && versionNumber <= to) {
+                        logger.info("       - running tasks for " + versionNumber + "...");
+                        @SuppressWarnings(value = "unchecked")
+                        List<Element> versionConfiguration = version.getChildren();
+                        for(Element file : versionConfiguration) {
+                        	if(file.getName().equals("java")) {
+    	                        try {
+                                	String className = file.getAttributeValue("class");
+                                    logger.info("         - Java migration class:" + className);
+                                    
+                                    // In 2.11, settingsManager was not able to initialized on previous
+                                    // version db table due to structure changes
+    	                        	if (settingMan != null && harvesterSettingsMan != null) {
+                                        settingMan.refresh(dbms);
+        	                            DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
+        	                            task.update(settingMan, harvesterSettingsMan, dbms);
+    	                        	}
+    	                        } catch (Exception e) {
+    	                            logger.info("          Errors occurs during Java migration file: " + e.getMessage());
+    	                            e.printStackTrace();
+    	                            anyMigrationError = true;
+    	                        }
+                        	} else {
+    	                        String filePath = path + file.getAttributeValue("path");
+    	                        String filePrefix = file.getAttributeValue("filePrefix");
+    	                        anyMigrationAction = true;
+    	                        logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
+    	                        try {
+    	                            Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
+    	                        } catch (Exception e) {
+    	                            logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+    	                            e.printStackTrace();
+    	                            anyMigrationError = true;
+    	                        }
+                        	}
+                        }
                     }
                 }
             }
-			
     		
 			// Refresh setting manager in case the migration task added some new settings.
             try {
-                settingMan.refresh(dbms);
+                if (settingMan != null) {
+                    settingMan.refresh(dbms);
+                } else {
+                    // Reinitialized settings
+                    settingMan = new SettingManager(dbms, context.getProviderManager());
+                    
+                    // Update the logo 
+                    String siteId = settingMan.getValue("system/site/siteId");
+                    initLogo(servletContext, dbms, siteId, context.getAppPath());
+                }
             } catch (Exception e) {
                 logger.info("      Errors occurs during settings manager refresh during migration. Error is: " + e.getMessage());
                 e.printStackTrace();
                 anyMigrationError = true;
             }
-			
-			// Update the logo 
-			String siteId = settingMan.getValue("system/site/siteId");
-			initLogo(servletContext, dbms, siteId, appPath);
 			
 			// TODO : Maybe a force rebuild index is required in such situation.
 			

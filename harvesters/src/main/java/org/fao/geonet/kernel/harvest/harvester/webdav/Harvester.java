@@ -27,6 +27,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
@@ -154,6 +155,15 @@ class Harvester extends BaseAligner {
 	//--- Private methods : addMetadata
 	//---
 	//--------------------------------------------------------------------------
+	/**
+	 * 
+	 To determine the UUID we are going to use the following mechanism: 1.-
+	 * Look for the file identifier on the metadata xml 2.- If there is no file
+	 * identifier, then use the name of the file 3.- If there is a collision of
+	 * uuid with existent metadata, use a random one 4.- If we still don't have
+	 * a clear UUID, use a random one (backup plan)
+	 * 
+	 **/
 	private void addMetadata(RemoteFile rf) throws Exception {
 		Element md = retrieveMetadata(rf);
 		if (md == null) {
@@ -161,17 +171,44 @@ class Harvester extends BaseAligner {
 		}
 		//--- schema handled check already done
 		String schema = dataMan.autodetectSchema(md);
-		String uuid   = UUID.randomUUID().toString();
 
-        if(log.isDebugEnabled()) log.debug("  - Setting uuid for metadata with remote path : "+ rf.getPath());
 
-		//--- set uuid inside metadata and get new xml
-		try {
-			md = dataMan.setUUID(schema, uuid, md);
-		} catch(Exception e) {
-			log.error("  - Failed to set uuid for metadata with remote path : "+ rf.getPath());
-			return;
-		}
+        // 1.- Look for the file identifier on the metadata xml
+        String uuid = dataMan.extractUUID(schema,  md);
+
+        // 2.- If there is no file identifier, then use the name of the file
+        if (uuid == null) {
+                String path = rf.getPath();
+                int start = path.lastIndexOf("/") + 1;
+                uuid = path.substring(start, path.length() - 4);
+        }
+
+        // 3.- If there is a collision of uuid with existent metadata, use a
+        // random one
+        if (dataMan.existsMetadataUuid(dbms, uuid)) {
+                uuid = null;
+        }
+
+        // 4.- If we still don't have a clear UUID, use a random one (backup
+        // plan)
+        if (uuid == null) {
+                uuid = UUID.randomUUID().toString();
+                log.debug("  - Setting uuid for metadata with remote path : "
+                                + rf.getPath());
+
+                // --- set uuid inside metadata and get new xml
+                try {
+                        md = dataMan.setUUID(schema, uuid, md);
+                } catch (Exception e) {
+                        log.error("  - Failed to set uuid for metadata with remote path : "
+                                        + rf.getPath());
+                        return;
+                }
+        }
+
+        log.debug("  - Adding metadata with remote path : " + rf.getPath());
+
+
 
         if(log.isDebugEnabled()) log.debug("  - Adding metadata with remote path : "+ rf.getPath());
 
@@ -196,7 +233,7 @@ class Harvester extends BaseAligner {
 		dataMan.indexMetadata(dbms, id);
 		result.addedMetadata++;
 	}
-
+	
 	//--------------------------------------------------------------------------
 
 	private Element retrieveMetadata(RemoteFile rf) {
@@ -263,7 +300,12 @@ class Harvester extends BaseAligner {
             //--- In update we should use db uuid to update the xml uuid and keep in sych both.
             try {
                 String schema = dataMan.autodetectSchema(md);
-                md = dataMan.setUUID(schema, record.uuid, md);
+                
+                //Update only if different
+                String uuid = dataMan.extractUUID(schema,  md);
+                if (!record.uuid.equals(uuid)) {
+                	md = dataMan.setUUID(schema, record.uuid, md);
+                }
             } catch(Exception e) {
                 log.error("  - Failed to set uuid for metadata with remote path : "+ rf.getPath());
                 return;

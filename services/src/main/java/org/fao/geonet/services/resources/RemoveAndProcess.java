@@ -37,6 +37,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.XslProcessing;
+import org.fao.geonet.services.metadata.XslProcessingReport;
 import org.jdom.Element;
 
 import java.io.File;
@@ -92,21 +93,17 @@ public class RemoveAndProcess extends NotInReadOnlyModeService {
                 .getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
 
-        Set<Integer> metadata = new HashSet<Integer>();
-        Set<Integer> notFound = new HashSet<Integer>();
-        Set<Integer> notOwner = new HashSet<Integer>();
-        Set<Integer> notProcessFound = new HashSet<Integer>();
+        String process = "onlinesrc-remove";
+        XslProcessingReport report = new XslProcessingReport(process);
 
         Element processedMetadata;
         try {
-            processedMetadata = XslProcessing.process(id, "onlinesrc-remove",
-                    true, context.getAppPath(), params, context, metadata,
-                    notFound, notOwner, notProcessFound, true,
-                    dataMan.getSiteURL(context));
+            processedMetadata = XslProcessing.process(id, process,
+                    true, context.getAppPath(), params, context, report, true, dataMan.getSiteURL(context));
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
-                        + notFound.size() + ", Not owner:" + notOwner.size()
-                        + ", No process found:" + notProcessFound.size() + ".");
+                        + report.getNotFoundMetadataCount() + ", Not owner:" + report.getNotEditableMetadataCount()
+                        + ", No process found:" + report.getNoProcessFoundCount() + ".");
             }
         } catch (Exception e) {
             throw e;

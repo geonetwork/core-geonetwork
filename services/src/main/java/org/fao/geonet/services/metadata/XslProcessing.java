@@ -82,7 +82,7 @@ import java.util.*;
  */
 public class XslProcessing extends NotInReadOnlyModeService {
     private String _appPath;
-
+    
     public void init(String appPath, ServiceConfig params) throws Exception {
         _appPath = appPath;
 
@@ -105,23 +105,19 @@ public class XslProcessing extends NotInReadOnlyModeService {
 
         String process = Util.getParam(params, Params.PROCESS);
         boolean save = "1".equals(Util.getParam(params, Params.SAVE, "1"));
-
-        Set<Integer> metadata = new HashSet<Integer>();
-        Set<Integer> notFound = new HashSet<Integer>();
-        Set<Integer> notEditable = new HashSet<Integer>();
-        Set<Integer> notProcessFound = new HashSet<Integer>();
+        
+        XslProcessingReport xslProcessingReport = new XslProcessingReport(process);
 
         String id = Utils.getIdentifierFromParameters(params, context);
         Element processedMetadata;
         try {
             processedMetadata = process(id, process, save, _appPath, params,
-                    context, metadata, notFound, notEditable, notProcessFound, false, dataMan.getSiteURL(context));
+                    context, xslProcessingReport, false, dataMan.getSiteURL(context));
             if (processedMetadata == null) {
-                throw new BadParameterEx("Processing failed",
-                        "Not found:" + notFound.size() +
-                                ", Not owner:" + notEditable.size() +
-                                ", No process found:" + notProcessFound.size() +
-                                ".");
+                throw new BadParameterEx("Processing failed", "Not found:"
+                        + xslProcessingReport.getNotFoundMetadataCount() + 
+                        ", Not owner:" + xslProcessingReport.getNotEditableMetadataCount() + 
+                        ", No process found:" + xslProcessingReport.getNoProcessFoundCount() + ".");
             }
         } catch (Exception e) {
             throw e;
@@ -147,29 +143,38 @@ public class XslProcessing extends NotInReadOnlyModeService {
      * @param params	The input parameters
      * @param context	The current context
      * @param metadata
-     * @param notFound
-     * @param notEditable
-     * @param notProcessFound
+     * @param report
      * @return
      * @throws Exception
      */
     public static Element process(String id, String process, boolean save,
                                   String appPath, Element params, ServiceContext context,
-                                  Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notEditable,
-                                  Set<Integer> notProcessFound, boolean useIndexGroup, String siteUrl) throws Exception {
+                                  XslProcessingReport report, boolean useIndexGroup,
+                                  String siteUrl) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
         SchemaManager schemaMan = gc.getBean(SchemaManager.class);
         AccessManager accessMan = gc.getBean(AccessManager.class);
         Dbms dbms = (Dbms) context.getResourceManager()
                 .open(Geonet.Res.MAIN_DB);
-
+        
+        report.incrementProcessedRecords();
+        
+        // When a record is deleted the UUID is in the selection manager
+        // and when retrieving id, return null
+        if (id == null) {
+            report.incrementNullRecords();
+            return null;
+        }
+        
+        int iId = Integer.valueOf(id);
         MdInfo info = dataMan.getMetadataInfo(dbms, id);
-
+        
+        
         if (info == null) {
-            notFound.add(Integer.valueOf(id));
+            report.addNotFoundMetadataId(iId);
         } else if (!accessMan.canEdit(context, id)) {
-            notEditable.add(Integer.valueOf(id));
+            report.addNotEditableMetadataId(iId);
         } else {
 
             // -----------------------------------------------------------------------
@@ -180,65 +185,76 @@ public class XslProcessing extends NotInReadOnlyModeService {
             File xslProcessing = new File(filePath);
             if (!xslProcessing.exists()) {
                 context.info("  Processing instruction not found for " + schema + " schema. Looking for "+filePath);
-                notProcessFound.add(Integer.valueOf(id));
+                report.addNoProcessFoundMetadataId(iId);
                 return null;
             }
+            
+            
             // --- Process metadata
-            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
-            Element md = dataMan.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
-
-            // -- here we send parameters set by user from URL if needed.
-            @SuppressWarnings("unchecked")
-            List<Element> children = params.getChildren();
-            Map<String, String> xslParameter = new HashMap<String, String>();
-            xslParameter.put("guiLang", context.getLanguage());
-            xslParameter.put("baseUrl", context.getBaseUrl());
-            for (Element param : children) {
-                // Add extra metadata
-                if (param.getName().equals("extra_metadata_uuid")
-                        && !param.getTextTrim().equals("")) {
-                    String extraMetadataId = dataMan.getMetadataId(dbms,
-                            param.getTextTrim());
-                    if (extraMetadataId != null) {
-                        Element extraMetadata = dataMan.getMetadata(context,
-                                extraMetadataId, forEditing,
-                                withValidationErrors, keepXlinkAttributes);
-                        md.addContent(new Element("extra")
-                                .addContent(extraMetadata));
-                        xslParameter.put(param.getName(), param.getTextTrim());
-                    }
-                } else {
-                    // Or add parameter
-                    xslParameter.put(param.getName(), param.getTextTrim());
-                }
+            Element processedMetadata = null;
+            try {
+                boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
+	            Element md = dataMan.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+	
+	            // -- here we send parameters set by user from URL if needed.
+	            @SuppressWarnings("unchecked")
+	            List<Element> children = params.getChildren();
+	            Map<String, String> xslParameter = new HashMap<String, String>();
+	            xslParameter.put("guiLang", context.getLanguage());
+	            xslParameter.put("baseUrl", context.getBaseUrl());
+	            for (Element param : children) {
+	                // Add extra metadata
+	                if (param.getName().equals("extra_metadata_uuid")
+	                        && !param.getTextTrim().equals("")) {
+	                    String extraMetadataId = dataMan.getMetadataId(dbms,
+	                            param.getTextTrim());
+	                    if (extraMetadataId != null) {
+	                        Element extraMetadata = dataMan.getMetadata(context,
+	                                extraMetadataId, forEditing,
+	                                withValidationErrors, keepXlinkAttributes);
+	                        md.addContent(new Element("extra")
+	                                .addContent(extraMetadata));
+	                        xslParameter.put(param.getName(), param.getTextTrim());
+	                    }
+	                } else {
+	                    // Or add parameter
+	                    xslParameter.put(param.getName(), param.getTextTrim());
+	                }
+	            }
+	
+	
+	            xslParameter.put("siteUrl", siteUrl);
+	
+	            processedMetadata = Xml.transform(md, filePath, xslParameter);
+	
+	            // --- save metadata and return status
+	            if (save) {
+	                Lib.resource.checkEditPrivilege(context, id);
+	
+	                boolean validate = false;
+	                boolean ufo = true;
+	                boolean index = false;
+	                String language = context.getLanguage();
+	                // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
+	                boolean updateDateStamp = true;
+	                dataMan.updateMetadata(context, dbms, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
+	                if (useIndexGroup) {
+	                    dataMan.indexMetadata(dbms, id);
+	                }
+	                else {
+	                    dataMan.indexInThreadPool(context, id, dbms);
+	                }
+	            }
+	
+	            report.addMetadataId(iId);
+	            // TODO : it could be relevant to list at least
+	            // if there was any change in the record or not.
+	            // Using hash on processMd and metadata ?
+            } catch (Exception e) {
+            	report.addMetadataError(iId, e);
+            	context.error("  Processing failed with error " + e.getMessage());
+                e.printStackTrace();
             }
-
-
-            xslParameter.put("siteUrl", siteUrl);
-
-            Element processedMetadata = Xml.transform(md, filePath, xslParameter);
-
-            // --- save metadata and return status
-            if (save) {
-                Lib.resource.checkEditPrivilege(context, id);
-
-                boolean validate = true;
-                boolean ufo = true;
-                boolean index = false;
-                String language = context.getLanguage();
-                // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
-                boolean updateDateStamp = true;
-                dataMan.updateMetadata(context, dbms, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
-                if (useIndexGroup) {
-                    dataMan.indexMetadata(dbms, id);
-                }
-                else {
-                    dataMan.indexInThreadPool(context, id, dbms);
-                }
-            }
-
-            metadata.add(Integer.valueOf(id));
-
             return processedMetadata;
         }
         return null;
