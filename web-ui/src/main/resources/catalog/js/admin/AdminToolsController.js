@@ -131,8 +131,8 @@
                 $scope.numberOfRecordsProcessed = data['@processedRecords'];
               }
               if ($scope.processReport['@running'] == 'true') {
-                  $timeout(checkLastBatchProcessReport, processCheckInterval);
-                }
+                $timeout(checkLastBatchProcessReport, processCheckInterval);
+              }
             });
       }
 
@@ -273,11 +273,11 @@
       $scope.optimizeIndex = function() {
         $http.get('admin.index.optimize')
             .success(function(data) {
-                $rootScope.$broadcast('StatusUpdated', {
-                    msg: $translate('indexOptimizationInProgress'),
-                    timeout: 2,
-                    type: 'success'});
-                // TODO: Does this is asynch and make the search unavailable?
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('indexOptimizationInProgress'),
+                timeout: 2,
+                type: 'success'});
+              // TODO: Does this is asynch and make the search unavailable?
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
@@ -291,10 +291,10 @@
       $scope.reloadLuceneConfig = function() {
         $http.get('admin.index.config.reload')
             .success(function(data) {
-                $rootScope.$broadcast('StatusUpdated', {
-                    msg: $translate('luceneConfigReloaded'),
-                    timeout: 2,
-                    type: 'success'});
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('luceneConfigReloaded'),
+                timeout: 2,
+                type: 'success'});
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
@@ -308,11 +308,11 @@
       $scope.clearXLinkCache = function() {
         $http.get('admin.index.rebuildxlinks')
             .success(function(data) {
-                $rootScope.$broadcast('StatusUpdated', {
-                    msg: $translate('xlinkCacheCleared'),
-                    timeout: 2,
-                    type: 'success'});
-                // TODO: Does this is asynch and make the search unavailable?
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('xlinkCacheCleared'),
+                timeout: 2,
+                type: 'success'});
+              // TODO: Does this is asynch and make the search unavailable?
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {

@@ -40,6 +40,8 @@
       $scope.selectedSchemas = [];
       $scope.loadReport = null;
       $scope.loadTplReport = null;
+      $scope.tplLoadRunning = false;
+      $scope.sampleLoadRunning = false;
 
       function loadSchemas() {
         $http.get('admin.schema.list@json').success(function(data) {
@@ -116,19 +118,27 @@
       };
 
       $scope.loadTemplates = function() {
+        $scope.tplLoadRunning = true;
         $http.get('admin.load.templates@json?schema=' +
             $scope.selectedSchemas.join(',')
         ).success(function(data) {
           $scope.loadTplReport = data;
+          $scope.tplLoadRunning = false;
+        }).error(function(data) {
+          $scope.tplLoadRunning = false;
         });
       };
 
       $scope.loadSamples = function() {
+        $scope.sampleLoadRunning = true;
         $http.get('admin.load.samples@json?file_type=mef&uuidAction=overwrite' +
                 '&schema=' +
             $scope.selectedSchemas.join(',')
         ).success(function(data) {
           $scope.loadReport = data;
+          $scope.sampleLoadRunning = false;
+        }).error(function(data) {
+          $scope.sampleLoadRunning = false;
         });
       };
 
