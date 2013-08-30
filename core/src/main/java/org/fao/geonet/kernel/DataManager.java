@@ -533,7 +533,7 @@ public class DataManager {
 
             // get privileges
             OperationAllowedRepository operationAllowedRepository = servContext.getBean(OperationAllowedRepository.class);
-            List<OperationAllowed> operationsAllowed = operationAllowedRepository.findByIdMetadataId(id$);
+            List<OperationAllowed> operationsAllowed = operationAllowedRepository.findById_MetadataId(id$);
 
             for (OperationAllowed operationAllowed : operationsAllowed) {
                 OperationAllowedId operationAllowedId = operationAllowed.getId();
@@ -2415,7 +2415,7 @@ public class DataManager {
         }
         // Set operation
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        OperationAllowed opAllowed = operationAllowedRepository.findByIdGroupIdAndIdMetadataIdAndIdOperationId(mdId, grpId, opId);
+        OperationAllowed opAllowed = operationAllowedRepository.findById_GroupIdAndId_MetadataIdAndId_OperationId(mdId, grpId, opId);
         if (opAllowed == null) {
             opAllowed = new OperationAllowed(new OperationAllowedId().setGroupId(grpId).setMetadataId(mdId).setOperationId(opId));
             operationAllowedRepository.save(opAllowed);
@@ -3196,7 +3196,7 @@ public class DataManager {
             int groupId = ReservedGroup.guest.getId();
             int metadataId = Integer.parseInt(id);
             int operationId = ReservedOperation.download.getId();
-            OperationAllowed opAllowed = appContext.getBean(OperationAllowedRepository.class).findByIdGroupIdAndIdMetadataIdAndIdOperationId(groupId, metadataId, operationId);
+            OperationAllowed opAllowed = appContext.getBean(OperationAllowedRepository.class).findById_GroupIdAndId_MetadataIdAndId_OperationId(groupId, metadataId, operationId);
             boolean canDownload = opAllowed != null;
             addElement(info, Edit.Info.Elem.GUEST_DOWNLOAD, String.valueOf(canDownload));
         }

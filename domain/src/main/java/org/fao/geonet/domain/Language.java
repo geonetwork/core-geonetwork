@@ -20,7 +20,7 @@ import javax.persistence.Transient;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-public class Languages {
+public class Language {
     String _id;
     String _name;
     char _inspire = Constants.YN_DISABLED;

@@ -417,7 +417,7 @@ public class AccessManager {
      * @param opId the id of the operation to check for
      */
     public boolean hasPermission(Metadata metadata, Group group, int opId) {
-        return _opAllowedRepository.findByIdGroupIdAndIdMetadataIdAndIdOperationId(group.getId(), metadata.getId(), opId) != null;
+        return _opAllowedRepository.findById_GroupIdAndId_MetadataIdAndId_OperationId(group.getId(), metadata.getId(), opId) != null;
     }
 
     /**

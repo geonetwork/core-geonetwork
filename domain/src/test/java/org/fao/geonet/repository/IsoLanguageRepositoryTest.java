@@ -39,13 +39,13 @@ public class IsoLanguageRepositoryTest extends AbstractSpringDataTest {
         IsoLanguage isolang2 = newIsoLanguage();
         isolang2 = _repo.save(isolang2);
 
-        List<IsoLanguage> histories = _repo.findAllByCode(isolang1.getCode());
+        List<IsoLanguage> langs = _repo.findAllByCode(isolang1.getCode());
 
-        assertEquals(isolang1.getCode(), histories.get(0).getCode());
+        assertEquals(isolang1.getCode(), langs.get(0).getCode());
 
-        histories = _repo.findAllByCode(isolang2.getCode());
+        langs = _repo.findAllByCode(isolang2.getCode());
 
-        assertEquals(isolang2.getCode(), histories.get(0).getCode());
+        assertEquals(isolang2.getCode(), langs.get(0).getCode());
     }
 
     @Test
@@ -56,13 +56,13 @@ public class IsoLanguageRepositoryTest extends AbstractSpringDataTest {
         IsoLanguage isolang2 = newIsoLanguage();
         isolang2 = _repo.save(isolang2);
 
-        List<IsoLanguage> histories = _repo.findAllByShortCode(isolang1.getShortCode());
+        List<IsoLanguage> langs = _repo.findAllByShortCode(isolang1.getShortCode());
 
-        assertEquals(isolang1.getShortCode(), histories.get(0).getShortCode());
+        assertEquals(isolang1.getShortCode(), langs.get(0).getShortCode());
 
-        histories = _repo.findAllByShortCode(isolang2.getShortCode());
+        langs = _repo.findAllByShortCode(isolang2.getShortCode());
 
-        assertEquals(isolang2.getShortCode(), histories.get(0).getShortCode());
+        assertEquals(isolang2.getShortCode(), langs.get(0).getShortCode());
     }
 
     private IsoLanguage newIsoLanguage() {

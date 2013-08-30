@@ -65,7 +65,7 @@ public class Remove extends NotInReadOnlyModeService {
                 
         List<Element> reindex = new ArrayList<Element>();
 		Integer iId = Integer.valueOf(id);
-		List<OperationAllowed> operationsAllowed = repository.findByIdGroupId(iId);
+		List<OperationAllowed> operationsAllowed = repository.findById_GroupId(iId);
 		for (OperationAllowed operationAllowed : operationsAllowed) {
 		    Element record = new Element("record");
 		    record.addContent(new Element("metadataid").setText(Integer.toString(operationAllowed.getId().getMetadataId())));

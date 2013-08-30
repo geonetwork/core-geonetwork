@@ -139,7 +139,7 @@ public class Transfer extends NotInReadOnlyModeService {
         OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);
         final List<OperationAllowed> opsAllowed;
         if (userId == null) {
-            opsAllowed = opAllowedRepo.findByIdGroupId(groupId);
+            opsAllowed = opAllowedRepo.findById_GroupId(groupId);
         } else {
             Specifications<OperationAllowed> spec = where(hasGroupId(groupId)).and(metadataHasOwnerId(userId));
             opsAllowed = opAllowedRepo.findAll(spec);
