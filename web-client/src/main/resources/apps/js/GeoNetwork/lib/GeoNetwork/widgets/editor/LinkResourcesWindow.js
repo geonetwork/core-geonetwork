@@ -1263,13 +1263,12 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 parameters += "&extra_metadata_uuid=" + (this.selectedMd ? this.selectedMd : "");
                 if (this.selectedLink.href) {
                     var name, url, desc;
+                    url = encodeURIComponent(this.selectedLink.href);
                     if(this.isGetMap(this.selectedLink.protocol)) {
                         name = this.layerName;
-                        url = encodeURIComponent(this.selectedLink.href.split('?')[0]);
                         desc = layerTitle;
                     } else {
                         name = this.selectedLink.name;
-                        url = encodeURIComponent(this.selectedLink.href);
                         desc = this.selectedLink.title;
                     }
                     parameters += "&url=" + url + 
