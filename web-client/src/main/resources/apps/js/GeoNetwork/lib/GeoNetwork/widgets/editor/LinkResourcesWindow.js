@@ -365,13 +365,13 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 listeners: {
                     rowselect: {
                         fn: function(sm, rowIndex, record) {
-                            this.layerNames.push(record.get('name'));
+                            this.layerNames.push(record);
                         },
                         scope : this
                     },
                     rowdeselect: {
                         fn: function(sm, rowIndex, record) {
-                            this.layerNames.splice(this.layerNames.indexOf(record.get('name')),1);
+                            this.layerNames.remove(record);
                         },
                         scope: this
                     }
@@ -383,15 +383,26 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     sortable: true
                 },
                 columns: [
-                    checkboxSM,
-                    {id: 'name',  header: OpenLayers.i18n('layerName'), dataIndex: 'name'},
-                    {id: 'title', width: 180, header: OpenLayers.i18n('title'), dataIndex: 'title'},
+                    checkboxSM, {
+                        id: 'name',  
+                        header: OpenLayers.i18n('layerName'), 
+                        dataIndex: 'name'
+                    }, {
+                        id: 'title', 
+                        width: 180, 
+                        header: OpenLayers.i18n('title'), 
+                        dataIndex: 'title',
+                        editor: new Ext.form.TextField({
+                            allowBlank: false
+                        })
+                    },
                     {id: 'abstract', width: 180, header: OpenLayers.i18n('abstract'), dataIndex: 'abstract'}
                 ]
             });
             
-            var grid = new Ext.grid.GridPanel({
+            var grid = new Ext.grid.EditorGridPanel({
                 title: OpenLayers.i18n('layerList'),
+                clicksToEdit: 1,
                 border: false,
                 anchor: '98%',
                 store: this.capabilitiesStore,
@@ -609,6 +620,13 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         });
         return this.uploadForm;
     },
+    
+    isGetMap : function(protocol) {
+        return protocol == 'OGC:WMS' || 
+            (protocol.indexOf('OGC:WMS') >= 0 && protocol.indexOf('get-map') >= 0)
+    },
+
+    
     /**
      * Form for online resource 
      */
@@ -669,6 +687,25 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             }
         });
         
+        var reloadCapabilitiesStore = function(stringUrl, protocol) {
+            if(this.isGetMap(protocol)) {
+                var params = {
+                    request: 'getCapabilities',
+                    service: 'WMS'
+                };
+                
+                if(protocol && protocol.indexOf('1.3.0') >= 0 ) {
+                    params.version = '1.3.0';
+                } else if(protocol && protocol.indexOf('1.1.1') >= 0 ) {
+                    params.version = '1.1.1';
+                }
+                var url = Ext.urlAppend(stringUrl.split('?')[0], Ext.urlEncode(params));
+                
+                this.capabilitiesStore.baseParams.url = url;
+                this.capabilitiesStore.reload({params: {url: url}});
+            }
+        };
+        
         var protocolCombo = new Ext.form.ComboBox({
             name: 'protocol',
             fieldLabel: OpenLayers.i18n('Protocol'),
@@ -681,8 +718,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             listeners: {
                 select: {
                     fn: function (combo, record, index) {
-                        var visible = (combo.getValue() == 'OGC:WMS' || 
-                                (combo.getValue().indexOf('OGC:WMS') >= 0 && combo.getValue().indexOf('get-map') >= 0));
+                        var visible = this.isGetMap(combo.getValue());
                         combo.ownerCt.find('name', 'name')[0].setVisible(!visible);
                         combo.ownerCt.find('name', 'title')[0].setVisible(!visible);
                         combo.ownerCt.find('name', 'capabilitiesGrid')[0].setVisible(visible);
@@ -690,8 +726,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         
                         var urlField = combo.ownerCt.find('name', 'href')[0];
                         if(visible && urlField && urlField.isVisible() && urlField.getValue() != '') {
-                            this.capabilitiesStore.baseParams.url = urlField.getValue();
-                            this.capabilitiesStore.reload({params: {url: urlField.getValue()}});
+                            reloadCapabilitiesStore.call(this, urlField.getValue(), combo.getValue());
                         }
                     },
                     scope: this
@@ -774,8 +809,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 handler: function (btn) {
                     var urlField = btn.ownerCt.find('name', 'href')[0];
                     if(urlField && urlField.isVisible() && urlField.getValue() != '') {
-                        this.capabilitiesStore.baseParams.url = urlField.getValue();
-                        this.capabilitiesStore.reload({params: {url: urlField.getValue()}});
+                        reloadCapabilitiesStore.call(this, urlField.getValue(), protocolCombo.getValue());
                     }
                 },
                 scope: this
@@ -822,10 +856,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 handler : function(e, t) {
                     if(t.target.name == 'href') {
                         var urlField = this.uploadForm.find('name', 'href')[0];
-                        var visible = (protocolCombo.getValue().indexOf('OGC:WMS') >= 0);
-                        if(visible && urlField && urlField.isVisible() && urlField.getValue() != '') {
-                            this.capabilitiesStore.baseParams.url = urlField.getValue();
-                            this.capabilitiesStore.reload({params: {url: urlField.getValue()}});
+                        if(urlField && urlField.isVisible() && urlField.getValue() != '') {
+                            reloadCapabilitiesStore.call(this, urlField.getValue(), protocolCombo.getValue());
                         }
                     }
                     
@@ -1099,8 +1131,17 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         var targetMetadataUuid = this.metadataUuid, parameters = "";
         
         if(this.layerNames) {
-            this.layerName = this.layerNames.join(',');
-        } 
+            this.layerName = '';
+            var layerTitle = '';
+            
+            Ext.each(this.layerNames, function(rec) {
+                this.layerName += rec.get('name') + ',';
+                layerTitle += rec.get('title') + ',';
+            }, this);
+            
+            this.layerName = this.layerName.substring(this.layerName, this.layerName.length-1);
+            layerTitle = layerTitle.substring(layerTitle, layerTitle.length-1);
+        }
         
         if (this.type === 'parent') {
             // Define the parent metadata record to link to
@@ -1145,7 +1186,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             // Add a link in the distribution section of the dataset record
             parameters += "&uuidref=" + this.selectedMd;
             parameters += "&scopedName=" + this.layerName;
-            parameters += "&desc=" + this.layerName;
+            parameters += "&desc=" + layerTitle;
             parameters += "&url=" + this.serviceUrl;
             parameters += "&protocol=" + this.serviceProtocol;
         } else if (this.type === 'dataset') {
@@ -1155,7 +1196,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 var serviceUpdateUrl = this.catalogue.services.mdProcessingXml + 
                                             "?uuid=" + this.selectedMd + 
                                             "&process=onlinesrc-add" + 
-                                            "&desc=" + this.layerName + 
+                                            "&desc=" + layerTitle + 
                                             "&url=" + this.serviceUrl + 
                                             "&uuidref=" + targetMetadataUuid +
                                             "&name=" + this.layerName;
@@ -1221,14 +1262,20 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             } else {
                 parameters += "&extra_metadata_uuid=" + (this.selectedMd ? this.selectedMd : "");
                 if (this.selectedLink.href) {
-                    parameters += "&url=" + encodeURIComponent(this.selectedLink.href.split('?')[0]) + 
-                        "&desc=" + this.selectedLink.title + 
+                    var name, url, desc;
+                    if(this.isGetMap(this.selectedLink.protocol)) {
+                        name = this.layerName;
+                        url = encodeURIComponent(this.selectedLink.href.split('?')[0]);
+                        desc = layerTitle;
+                    } else {
+                        name = this.selectedLink.name;
+                        url = encodeURIComponent(this.selectedLink.href);
+                        desc = this.selectedLink.title;
+                    }
+                    parameters += "&url=" + url + 
+                        "&desc=" + desc + 
                         "&protocol=" + this.selectedLink.protocol + 
-                        "&name=" + ((this.selectedLink.protocol == 'OGC:WMS' || 
-                                      (this.selectedLink.protocol.indexOf('OGC:WMS') >= 0 && 
-                                       this.selectedLink.protocol.indexOf('get-map') >= 0
-                                      )
-                                     ) ? this.layerName : this.selectedLink.name);
+                        "&name=" + name;
                 }
             }
         }
