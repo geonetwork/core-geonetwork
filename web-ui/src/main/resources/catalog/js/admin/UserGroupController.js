@@ -17,21 +17,21 @@
     function($scope, $routeParams, $http, $rootScope, $translate, $compile,
             gnSearchManagerService) {
 
-
-      var templateFolder = '../../catalog/templates/admin/usergroup/';
-      var availableTemplates = [
-        'users', 'groups'
-      ];
-
-      // By default display groups tab
-      $scope.defaultUserGroupTab = 'groups';
-
-      $scope.getTemplate = function() {
-        $scope.type = $scope.defaultUserGroupTab;
-        if (availableTemplates.indexOf($routeParams.userGroupTab) > -1) {
-          $scope.type = $routeParams.userGroupTab;
-        }
-        return templateFolder + $scope.type + '.html';
+      $scope.menu = {
+        folder: 'usergroup/',
+        defaultTab: 'groups',
+        tabs:
+            [{
+              type: 'groups',
+              label: 'manageGroups',
+              icon: 'icon-group',
+              href: '#/organization/groups'
+            },{
+              type: 'users',
+              label: 'manageUsers',
+              icon: 'icon-user',
+              href: '#/organization/users'
+            }]
       };
 
       // The pagination config

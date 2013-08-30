@@ -16,12 +16,36 @@
   /**
    *
    */
-  module.controller('GnDashboardController', ['$scope', '$routeParams', '$http',
-    function($scope, $routeParams, $http) {
-      var templateFolder = '../../catalog/templates/admin/dashboard/';
-      var availableTemplates = [
-        'information', 'statistics-search', 'statistics-content', 'status'
-      ];
+  module.controller('GnDashboardController', ['$scope', '$http',
+    function($scope, $http) {
+
+
+      $scope.menu = {
+        folder: 'dashboard/',
+        defaultTab: 'status',
+        tabs:
+            [{
+              type: 'status',
+              label: 'status',
+              icon: 'icon-dashboard',
+              href: '#/dashboard/status'
+            },{
+              type: 'statistics-search',
+              label: 'searchStatistics',
+              icon: 'icon-search',
+              href: '#/dashboard/statistics-search'
+            },{
+              type: 'statistics-content',
+              label: 'contentStatistics',
+              icon: 'icon-bar-chart',
+              href: '#/dashboard/statistics-content'
+            },{
+              type: 'information',
+              label: 'information',
+              icon: 'icon-list-ul',
+              href: '#/dashboard/information'
+            }]
+      };
 
       $scope.info = {};
 
@@ -31,15 +55,6 @@
         // TODO
       });
 
-      $scope.defaultDashType = 'status';
-
-      $scope.getTemplate = function() {
-        $scope.type = $scope.defaultDashType;
-        if (availableTemplates.indexOf($routeParams.dashboardType) > -1) {
-          $scope.type = $routeParams.dashboardType;
-        }
-        return templateFolder + $scope.type + '.html';
-      };
     }]);
 
 })();

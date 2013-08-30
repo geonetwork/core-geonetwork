@@ -10,30 +10,41 @@
    * GnAdminToolsController provides administration tools
    */
   module.controller('GnAdminToolsController', [
-    '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
+    '$scope', '$http', '$rootScope', '$translate', '$compile',
     '$q', '$timeout',
     'gnMetadataManagerService',
     'gnSearchManagerService',
     'gnUtilityService',
-    function($scope, $routeParams, $http, $rootScope, $translate, $compile, 
+    function($scope, $http, $rootScope, $translate, $compile, 
         $q, $timeout,
             gnMetadataManagerService, 
             gnSearchManagerService, 
             gnUtilityService) {
 
-      var templateFolder = '../../catalog/templates/admin/tools/';
-      var availableTemplates = [
-        'tools', 'index'
-      ];
 
-      $scope.defaultToolTab = 'batch';
-
-      $scope.getTemplate = function() {
-        $scope.type = $scope.defaultToolTab;
-        if (availableTemplates.indexOf($routeParams.toolTab) > -1) {
-          $scope.type = $routeParams.toolTab;
-        }
-        return templateFolder + $scope.type + '.html';
+      $scope.menu = {
+        folder: 'tools/',
+        defaultTab: 'index',
+        tabs:
+            [{
+              type: 'index',
+              label: 'indexAdmin',
+              icon: 'icon-search',
+              href: '#/tools/index'
+            },{
+              type: 'batch',
+              label: 'batchProcess',
+              icon: 'icon-medkit',
+              href: '#/tools/batch'
+            },{
+              type: 'transfert-privs',
+              label: 'transfertPrivs',
+              href: 'transfer.ownership'
+            },{
+              type: 'formatter',
+              label: 'manageFormatter',
+              href: 'metadata.formatter.admin'
+            }]
       };
 
       /**

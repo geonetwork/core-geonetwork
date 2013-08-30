@@ -30,51 +30,53 @@
        'gn_adminmetadata_controller', 'gn_classification_controller']);
 
 
+  var tplFolder = '../../catalog/templates/admin/';
+
   module.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
         when('/metadata', {
-          templateUrl: '../../catalog/templates/admin/metadata.html',
+          templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminMetadataController'}).
-        when('/metadata/:metadataTab', {
-          templateUrl: '../../catalog/templates/admin/metadata.html',
+        when('/metadata/:tab', {
+          templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminMetadataController'}).
-        when('/metadata/metadata-and-template/:metadataAction/:schema', {
-          templateUrl: '../../catalog/templates/admin/metadata.html',
+        when('/metadata/:tab/:metadataAction/:schema', {
+          templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminMetadataController'}).
         when('/dashboard', {
-          templateUrl: '../../catalog/templates/admin/dashboard.html',
+          templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnDashboardController'}).
-        when('/dashboard/:dashboardType', {
-          templateUrl: '../../catalog/templates/admin/dashboard.html',
+        when('/dashboard/:tab', {
+          templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnDashboardController'}).
         when('/organization', {
-          templateUrl: '../../catalog/templates/admin/organization.html',
+          templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnUserGroupController'}).
-        when('/organization/:userGroupTab', {
-          templateUrl: '../../catalog/templates/admin/organization.html',
+        when('/organization/:tab', {
+          templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnUserGroupController'}).
         when('/organization/groups/:groupId', {
-          templateUrl: '../../catalog/templates/admin/organization.html',
+          templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnUserGroupController'}).
         when('/classification', {
-          templateUrl: '../../catalog/templates/admin/classification.html',
+          templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnClassificationController'}).
         when('/classification/:tab', {
-          templateUrl: '../../catalog/templates/admin/classification.html',
+          templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnClassificationController'}).
         when('/tools', {
-          templateUrl: '../../catalog/templates/admin/tools.html',
+          templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminToolsController'}).
-        when('/tools/:toolTab', {
-          templateUrl: '../../catalog/templates/admin/tools.html',
+        when('/tools/:tab', {
+          templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminToolsController'}).
         when('/settings', {
-          templateUrl: '../../catalog/templates/admin/settings.html',
+          templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnSettingsController'}).
-        when('/settings/:settingType', {
-          templateUrl: '../../catalog/templates/admin/settings.html',
+        when('/settings/:tab', {
+          templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnSettingsController'}).
-        otherwise({templateUrl: '../../catalog/templates/admin/admin.html'});
+        otherwise({templateUrl: tplFolder + 'admin.html'});
   }]);
 
   /**
@@ -85,8 +87,8 @@
    *     <body ng-controller="GnAdminController">
    */
   module.controller('GnAdminController', [
-    '$scope', '$http', '$q', '$rootScope', '$route',
-    function($scope, $http, $q, $rootScope, $route) {
+    '$scope', '$http', '$q', '$rootScope', '$route', '$routeParams',
+    function($scope, $http, $q, $rootScope, $route, $routeParams) {
       /**
        * Define admin console menu for each type of user
        */
@@ -113,6 +115,17 @@
             classes: 'btn-warning', icon: 'icon-medkit'}]
         // TODO : add other role menu
       };
+
+      $scope.getTpl = function(menu) {
+        $scope.type = menu.defaultTab;
+        $.each(menu.tabs, function(index, value) {
+          if (value.type === $routeParams.tab) {
+            $scope.type = $routeParams.tab;
+          }
+        });
+        return tplFolder + menu.folder + $scope.type + '.html';
+      };
+
 
       $scope.convertToCSV = function(objArray) {
         if (objArray === undefined) return;

@@ -30,21 +30,36 @@
   /**
    *
    */
-  module.controller('GnSettingsController', ['$scope', '$routeParams', '$http',
-    function($scope, $routeParams, $http) {
-      var templateFolder = '../../catalog/templates/admin/settings/';
-      var availableTemplates = [
-        'system', 'logo', 'csw', 'csw-virtual', 'csw-test'
-      ];
+  module.controller('GnSettingsController', ['$scope',
+    function($scope) {
 
-      $scope.defaultSettingType = 'system';
-
-      $scope.getTemplate = function() {
-        $scope.type = $scope.defaultSettingType;
-        if (availableTemplates.indexOf($routeParams.settingType) > -1) {
-          $scope.type = $routeParams.settingType;
-        }
-        return templateFolder + $scope.type + '.html';
+      $scope.menu = {
+        folder: 'settings/',
+        defaultTab: 'system',
+        tabs:
+            [{
+              type: 'system',
+              label: 'settings',
+              icon: 'icon-cogs',
+              href: '#/settings/system'
+            },{
+              type: 'logo',
+              label: 'manageLogo',
+              icon: 'icon-picture',
+              href: '#/settings/logo'
+            },{
+              type: 'csw',
+              label: 'manageCSW',
+              href: '#/settings/csw'
+            },{
+              type: 'csw-virtual',
+              label: 'manageVirtualCSW',
+              href: '#/settings/csw-virtual'
+            },{
+              type: 'csw-test',
+              label: 'testCSW',
+              href: '#/settings/csw-test'
+            }]
       };
     }]);
 

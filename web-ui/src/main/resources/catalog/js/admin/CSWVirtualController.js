@@ -122,7 +122,7 @@
       };
 
       $scope.getCapabilitiesUrl = function(v) {
-        if (v) {
+        if (v && v.record) {
           return v.record.name + '?SERVICE=CSW&REQUEST=GetCapabilities';
         } else {
           return null;

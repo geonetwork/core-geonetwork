@@ -13,22 +13,31 @@
    *
    */
   module.controller('GnClassificationController',
-      ['$scope', '$routeParams', '$http',
-       function($scope, $routeParams, $http) {
-         var templateFolder = '../../catalog/templates/admin/classification/';
-         var availableTemplates = [
-           'thesaurus', 'directory', 'categories'
-         ];
+      ['$scope', '$http',
+       function($scope, $http) {
 
-         $scope.defaultSettingType = 'thesaurus';
+          $scope.menu = {
+           folder: 'classification/',
+           defaultTab: 'thesaurus',
+           tabs:
+           [{
+             type: 'thesaurus',
+             label: 'manageThesaurus',
+             icon: 'icon-archive',
+             href: '#/classification/thesaurus'
+           },{
+                  type: 'directory',
+                  label: 'manageDirectory',
+                  icon: 'icon-list-ul',
+                  href: 'subtemplate.admin' // TODO
+                },{
+             type: 'categories',
+             label: 'manageCategory',
+             icon: 'icon-tags',
+             href: '#/classification/categories'
+           }]
+          };
 
-         $scope.getTemplate = function() {
-           $scope.type = $scope.defaultSettingType;
-           if (availableTemplates.indexOf($routeParams.tab) > -1) {
-             $scope.type = $routeParams.tab;
-           }
-           return templateFolder + $scope.type + '.html';
-         };
        }]);
 
 })();

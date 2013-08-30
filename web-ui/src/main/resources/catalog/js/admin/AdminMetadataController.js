@@ -20,21 +20,21 @@
             gnSearchManagerService, 
             gnUtilityService) {
 
-      var templateFolder = '../../catalog/templates/admin/metadata/';
-      var availableTemplates = [
-        'metadata-and-template'
-      ];
-
-      $scope.defaultMetadataTab = 'metadata-and-template';
-
-      $scope.getTemplate = function() {
-        $scope.type = $scope.defaultMetadataTab;
-        if (availableTemplates.indexOf($routeParams.metadataTab) > -1) {
-          $scope.type = $routeParams.metadataTab;
-        }
-        return templateFolder + $scope.type + '.html';
+      $scope.menu = {
+        folder: 'metadata/',
+        defaultTab: 'metadata-and-template',
+        tabs:
+            [{
+              type: 'metadata-and-template',
+              label: 'metadataAndTemplates',
+              icon: 'icon-archive',
+              href: '#/metadata/metadata-and-template'
+            },{
+              type: 'sort-template',
+              label: 'sortTemplate',
+              href: 'metadata.templates.list' // TODO
+            }]
       };
-
 
       $scope.schemas = [];
       $scope.selectedSchemas = [];

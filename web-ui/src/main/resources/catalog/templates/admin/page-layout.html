@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-lg-2">
+    <div class="gn-sidebar affix">
+      <ul class="nav nav-pills nav-stacked">
+        <li data-ng-repeat="t in menu.tabs"
+          data-ng-class="type === t.type && 'active'">
+          <a href="{{t.href}}">
+            <i class="{{t.icon || 'icon-fixed-width'}}"/>
+            <span data-translate="">{{t.label}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-lg-10" data-ng-include="getTpl(menu)"> </div>
+</div>
