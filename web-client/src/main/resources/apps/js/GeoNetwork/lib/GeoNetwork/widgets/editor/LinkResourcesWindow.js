@@ -347,15 +347,26 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     sortable: true
                 },
                 columns: [
-                    checkboxSM,
-                    {id: 'name',  header: OpenLayers.i18n('layerName'), dataIndex: 'name'},
-                    {id: 'title', width: 180, header: OpenLayers.i18n('title'), dataIndex: 'title'},
+                    checkboxSM, {
+                        id: 'name',  
+                        header: OpenLayers.i18n('layerName'), 
+                        dataIndex: 'name'
+                    }, {
+                        id: 'title', 
+                        width: 180, 
+                        header: OpenLayers.i18n('title'), 
+                        dataIndex: 'title',
+                        editor: new Ext.form.TextField({
+                            allowBlank: false
+                        })
+                    },
                     {id: 'abstract', width: 180, header: OpenLayers.i18n('abstract'), dataIndex: 'abstract'}
                 ]
             });
             
-            var grid = new Ext.grid.GridPanel({
+            var grid = new Ext.grid.EditorGridPanel({
                 title: OpenLayers.i18n('layerList'),
+                clicksToEdit: 1,
                 border: false,
                 anchor: '98%',
                 store: this.capabilitiesStore,
