@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2013 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -21,45 +21,27 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.services.config;
+package org.fao.geonet.services.metadata;
 
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
-import org.fao.geonet.GeonetContext;
+
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
-//=============================================================================
+public class XslProcessingReportGet implements Service {
+    public void init(String appPath, ServiceConfig config) throws Exception {
+    }
 
-public class Get implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
-
-	public void init(String appPath, ServiceConfig params) throws Exception {}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		boolean asTree = Util.getParam(params, "asTree", "true").equals("true");
-
-        Element system  = gc.getBean(SettingManager.class).getAllAsXML(asTree);
-		return system;
-	}
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        UserSession session = context.getUserSession();
+        Object report = session.getProperty(Geonet.Session.BATCH_PROCESSING_REPORT);
+        if (report != null) {
+            return ((XslProcessingReport) report).toXml();
+        } else {
+            return null;
+        }
+    }
 }
-
-//=============================================================================
-

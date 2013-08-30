@@ -28,6 +28,7 @@
 
 								<xsl:for-each select="/root/response/statusvalues/status">
 								  <xsl:sort select="displayorder"/>
+								  <xsl:sort select="label/child::*[name() = $lang]"/>
 									<tr>
 										<td class="padded" align="left" colspan="2">
 											<xsl:variable name="profile" select="/root/gui/session/profile"/>
