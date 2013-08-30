@@ -114,11 +114,10 @@ public class XslProcessing extends NotInReadOnlyModeService {
             processedMetadata = process(id, process, save, _appPath, params,
                     context, xslProcessingReport, false, dataMan.getSiteURL(context));
             if (processedMetadata == null) {
-                throw new BadParameterEx("Processing failed",
-                        "Not found:" + xslProcessingReport.notFound.size() +
-                                ", Not owner:" + xslProcessingReport.notEditable.size() +
-                                ", No process found:" + xslProcessingReport.noProcessFound.size() +
-                                ".");
+                throw new BadParameterEx("Processing failed", "Not found:"
+                        + xslProcessingReport.getNotFoundMetadataCount() + 
+                        ", Not owner:" + xslProcessingReport.getNotEditableMetadataCount() + 
+                        ", No process found:" + xslProcessingReport.getNoProcessFoundCount() + ".");
             }
         } catch (Exception e) {
             throw e;
@@ -159,12 +158,12 @@ public class XslProcessing extends NotInReadOnlyModeService {
         Dbms dbms = (Dbms) context.getResourceManager()
                 .open(Geonet.Res.MAIN_DB);
         
-        report.processedRecords ++;
+        report.incrementProcessedRecords();
         
         // When a record is deleted the UUID is in the selection manager
         // and when retrieving id, return null
         if (id == null) {
-            report.nullRecords ++;
+            report.incrementNullRecords();
             return null;
         }
         
@@ -173,9 +172,9 @@ public class XslProcessing extends NotInReadOnlyModeService {
         
         
         if (info == null) {
-            report.notFound.add(iId);
+            report.addNotFoundMetadataId(iId);
         } else if (!accessMan.canEdit(context, id)) {
-            report.notEditable.add(iId);
+            report.addNotEditableMetadataId(iId);
         } else {
 
             // -----------------------------------------------------------------------
@@ -186,7 +185,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
             File xslProcessing = new File(filePath);
             if (!xslProcessing.exists()) {
                 context.info("  Processing instruction not found for " + schema + " schema. Looking for "+filePath);
-                report.noProcessFound.add(iId);
+                report.addNoProcessFoundMetadataId(iId);
                 return null;
             }
             
@@ -247,12 +246,12 @@ public class XslProcessing extends NotInReadOnlyModeService {
 	                }
 	            }
 	
-	            report.metadata.add(iId);
+	            report.addMetadataId(iId);
 	            // TODO : it could be relevant to list at least
 	            // if there was any change in the record or not.
 	            // Using hash on processMd and metadata ?
             } catch (Exception e) {
-            	report.metadataErrors.put(iId, e);
+            	report.addMetadataError(iId, e);
             	context.error("  Processing failed with error " + e.getMessage());
                 e.printStackTrace();
             }
