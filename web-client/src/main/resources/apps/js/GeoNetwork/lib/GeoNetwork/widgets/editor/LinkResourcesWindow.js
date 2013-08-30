@@ -329,13 +329,13 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 listeners: {
                     rowselect: {
                         fn: function(sm, rowIndex, record) {
-                            this.layerNames.push(record.get('name'));
+                            this.layerNames.push(record);
                         },
                         scope : this
                     },
                     rowdeselect: {
                         fn: function(sm, rowIndex, record) {
-                            this.layerNames.splice(this.layerNames.indexOf(record.get('name')),1);
+                            this.layerNames.remove(record);
                         },
                         scope: this
                     }
@@ -1092,7 +1092,16 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         // Define which metadata to be modified
         // It could be the on in current editing or a related one
         var targetMetadataUuid = this.metadataUuid, parameters = "";
-        this.layerName = this.layerNames.join(',');
+        this.layerName = '';
+        var layerTitle = '';
+        
+        Ext.each(this.layerNames, function(rec) {
+            this.layerName += rec.get('name') + ',';
+            layerTitle += rec.get('title') + ',';
+        }, this);
+        
+        this.layerName = this.layerName.substring(this.layerName, this.layerName.length-1);
+        layerTitle = layerTitle.substring(layerTitle, layerTitle.length-1);
         
         if (this.type === 'parent') {
             // Define the parent metadata record to link to
@@ -1137,7 +1146,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             // Add a link in the distribution section of the dataset record
             parameters += "&uuidref=" + this.selectedMd;
             parameters += "&scopedName=" + this.layerName;
-            parameters += "&desc=" + this.layerName;
+            parameters += "&desc=" + layerTitle;
             parameters += "&url=" + this.serviceUrl;
             parameters += "&protocol=" + this.serviceProtocol;
         } else if (this.type === 'dataset') {
@@ -1147,7 +1156,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 var serviceUpdateUrl = this.catalogue.services.mdProcessingXml + 
                                             "?uuid=" + this.selectedMd + 
                                             "&process=onlinesrc-add" + 
-                                            "&desc=" + this.layerName + 
+                                            "&desc=" + layerTitle + 
                                             "&url=" + this.serviceUrl + 
                                             "&uuidref=" + targetMetadataUuid +
                                             "&name=" + this.layerName;
@@ -1211,16 +1220,18 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             } else {
                 parameters += "&extra_metadata_uuid=" + (this.selectedMd ? this.selectedMd : "");
                 if (this.selectedLink.href) {
-                    var name, url;
+                    var name, url, desc;
                     if(this.isGetMap(this.selectedLink.protocol)) {
                         name = this.layerName;
                         url = encodeURIComponent(this.selectedLink.href.split('?')[0]);
+                        desc = layerTitle;
                     } else {
                         name = this.selectedLink.name;
                         url = encodeURIComponent(this.selectedLink.href);
+                        desc = this.selectedLink.title;
                     }
                     parameters += "&url=" + url + 
-                        "&desc=" + this.selectedLink.title + 
+                        "&desc=" + desc + 
                         "&protocol=" + this.selectedLink.protocol + 
                         "&name=" + name;
                 }
