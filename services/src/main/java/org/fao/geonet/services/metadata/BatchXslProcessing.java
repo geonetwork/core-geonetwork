@@ -102,7 +102,7 @@ public class BatchXslProcessing extends NotInReadOnlyModeService {
 		SelectionManager sm = SelectionManager.getManager(session);
 		
 		synchronized(sm.getSelection("metadata")) {
-			xslProcessingReport.totalRecords = sm.getSelection("metadata").size();
+			xslProcessingReport.setTotalRecords(sm.getSelection("metadata").size());
 			BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(dataMan, dbms, sm.getSelection("metadata").iterator(), 
 					process, _appPath, params, context, xslProcessingReport);
 			m.process();

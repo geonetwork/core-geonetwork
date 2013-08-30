@@ -100,8 +100,8 @@ public class UploadAndProcess implements Service {
                     true, context.getAppPath(), params, context, report, true, dataMan.getSiteURL(context));
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
-                        + report.notFound.size() + ", Not owner:" + report.notEditable.size()
-                        + ", No process found:" + report.noProcessFound.size() + ".");
+                        + report.getNotFoundMetadataCount() + ", Not owner:" + report.getNotEditableMetadataCount()
+                        + ", No process found:" + report.getNoProcessFoundCount() + ".");
             }
         } catch (Exception e) {
             throw e;
