@@ -584,6 +584,13 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         });
         return this.uploadForm;
     },
+    
+    isGetMap : function(protocol) {
+        return protocol == 'OGC:WMS' || 
+            (protocol.indexOf('OGC:WMS') >= 0 && protocol.indexOf('get-map') >= 0)
+    },
+
+    
     /**
      * Form for online resource 
      */
@@ -644,6 +651,25 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             }
         });
         
+        var reloadCapabilitiesStore = function(stringUrl, protocol) {
+            if(this.isGetMap(protocol)) {
+                var params = {
+                    request: 'getCapabilities',
+                    service: 'WMS'
+                };
+                
+                if(protocol && protocol.indexOf('1.3.0') >= 0 ) {
+                    params.version = '1.3.0';
+                } else if(protocol && protocol.indexOf('1.1.1') >= 0 ) {
+                    params.version = '1.1.1';
+                }
+                var url = Ext.urlAppend(stringUrl.split('?')[0], Ext.urlEncode(params));
+                
+                this.capabilitiesStore.baseParams.url = url;
+                this.capabilitiesStore.reload({params: {url: url}});
+            }
+        };
+        
         var protocolCombo = new Ext.form.ComboBox({
             name: 'protocol',
             fieldLabel: OpenLayers.i18n('Protocol'),
@@ -656,8 +682,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             listeners: {
                 select: {
                     fn: function (combo, record, index) {
-                        var visible = (combo.getValue() == 'OGC:WMS' || 
-                                (combo.getValue().indexOf('OGC:WMS') >= 0 && combo.getValue().indexOf('get-map') >= 0));
+                        var visible = this.isGetMap(combo.getValue());
                         combo.ownerCt.find('name', 'name')[0].setVisible(!visible);
                         combo.ownerCt.find('name', 'title')[0].setVisible(!visible);
                         combo.ownerCt.find('name', 'capabilitiesGrid')[0].setVisible(visible);
@@ -665,8 +690,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         
                         var urlField = combo.ownerCt.find('name', 'href')[0];
                         if(visible && urlField && urlField.isVisible() && urlField.getValue() != '') {
-                            this.capabilitiesStore.baseParams.url = urlField.getValue();
-                            this.capabilitiesStore.reload({params: {url: urlField.getValue()}});
+                            reloadCapabilitiesStore.call(this, urlField.getValue(), combo.getValue());
                         }
                     },
                     scope: this
@@ -748,8 +772,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 handler: function (btn) {
                     var urlField = btn.ownerCt.find('name', 'href')[0];
                     if(urlField && urlField.isVisible() && urlField.getValue() != '') {
-                        this.capabilitiesStore.baseParams.url = urlField.getValue();
-                        this.capabilitiesStore.reload({params: {url: urlField.getValue()}});
+                        reloadCapabilitiesStore.call(this, urlField.getValue(), protocolCombo.getValue());
                     }
                 },
                 scope: this
@@ -796,10 +819,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 handler : function(e, t) {
                     if(t.target.name == 'href') {
                         var urlField = this.uploadForm.find('name', 'href')[0];
-                        var visible = (protocolCombo.getValue().indexOf('OGC:WMS') >= 0);
-                        if(visible && urlField && urlField.isVisible() && urlField.getValue() != '') {
-                            this.capabilitiesStore.baseParams.url = urlField.getValue();
-                            this.capabilitiesStore.reload({params: {url: urlField.getValue()}});
+                        if(urlField && urlField.isVisible() && urlField.getValue() != '') {
+                            reloadCapabilitiesStore.call(this, urlField.getValue(), protocolCombo.getValue());
                         }
                     }
                     
@@ -1190,14 +1211,18 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             } else {
                 parameters += "&extra_metadata_uuid=" + (this.selectedMd ? this.selectedMd : "");
                 if (this.selectedLink.href) {
-                    parameters += "&url=" + encodeURIComponent(this.selectedLink.href.split('?')[0]) + 
+                    var name, url;
+                    if(this.isGetMap(this.selectedLink.protocol)) {
+                        name = this.layerName;
+                        url = encodeURIComponent(this.selectedLink.href.split('?')[0]);
+                    } else {
+                        name = this.selectedLink.name;
+                        url = encodeURIComponent(this.selectedLink.href);
+                    }
+                    parameters += "&url=" + url + 
                         "&desc=" + this.selectedLink.title + 
                         "&protocol=" + this.selectedLink.protocol + 
-                        "&name=" + ((this.selectedLink.protocol == 'OGC:WMS' || 
-                                      (this.selectedLink.protocol.indexOf('OGC:WMS') >= 0 && 
-                                       this.selectedLink.protocol.indexOf('get-map') >= 0
-                                      )
-                                     ) ? this.layerName : this.selectedLink.name);
+                        "&name=" + name;
                 }
             }
         }
