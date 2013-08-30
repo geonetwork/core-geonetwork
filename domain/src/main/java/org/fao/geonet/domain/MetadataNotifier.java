@@ -16,8 +16,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.fao.geonet.repository.MetadataNoficationRepository;
-
 /**
  * An entity representing a service that desires to be notified when a metadata is modified.
  * 
@@ -183,7 +181,7 @@ public class MetadataNotifier {
     /**
      * Get the lazily loaded list of all the notifications for this notifier.
      * <p>
-     * For performance on might use the {@link MetadataNoficationRepository} to efficiently look up just the notifications needed.
+     * For performance on might use the {@link org.fao.geonet.repository.MetadataNotificationRepository} to efficiently look up just the notifications needed.
      * </p>
      * 
      * @return the lazily loaded list of all the notifications for this notifier.

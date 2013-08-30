@@ -1,6 +1,7 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.MetadataNotification;
+import org.fao.geonet.domain.MetadataNotificationId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -9,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * 
  * @author Jesse
  */
-public interface MetadataNoficationRepository extends JpaRepository<MetadataNotification, Integer>, JpaSpecificationExecutor<MetadataNotification> {
+public interface MetadataNotificationRepository extends JpaRepository<MetadataNotification, MetadataNotificationId> {
 }

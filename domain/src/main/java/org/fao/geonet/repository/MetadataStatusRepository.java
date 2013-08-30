@@ -1,6 +1,7 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -9,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * 
  * @author Jesse
  */
-public interface MetadataStatusRepository extends JpaRepository<MetadataStatus, Integer>, JpaSpecificationExecutor<MetadataStatus> {
+public interface MetadataStatusRepository extends JpaRepository<MetadataStatus, MetadataStatusId> {
 }
