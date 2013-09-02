@@ -1190,12 +1190,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                         app.onAfterBadLogin();
                     }
                     else  {
-                        
+                        var innerDoc = undefined;
                         var loginEvent = undefined;
                         try {
                         
                             var iframe = document.getElementById('casLoginFrame');
-                            var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+                            innerDoc = iframe.contentDocument || iframe.contentWindow.document;
                             
                             // Test if the CAS login form is in the iframe
                             if(innerDoc.forms.length == 1 && innerDoc.forms[0].id == 'fm1') {
@@ -1224,7 +1224,21 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                             app.onAfterBadLogin();
                         }
                         if(loginEvent == true) {
-                            app.isLoggedIn();
+                            var response = OpenLayers.Request.GET({
+                                url: app.services.getMyInfo,
+                                async: false
+                            }), exception, authenticated, me;
+                           
+                           me = response.responseXML.getElementsByTagName('me')[0];
+                           authenticated = me.getAttribute('authenticated') == 'true';
+                           exception = response.responseText.indexOf('Exception') !== -1;
+                           
+                           if (response.status === 200 && authenticated) {
+                               app.isLoggedIn();
+                           }
+                           else {
+                               innerDoc.location.reload(true);
+                           }
                         }
                         else if (loginEvent == false) {
                             app.onAfterBadLogin();

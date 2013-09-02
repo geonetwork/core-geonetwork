@@ -32,6 +32,14 @@
     </addXML>
 
   </file>
+  
+  <!-- In Sextant, the catalog administrator takes care of DB migration. -->
+  <file name=".*/WEB-INF/config-db.xml">
+    <removeXML xpath="data"/>
+    <removeXML xpath="migrate"/>
+    <removeXML xpath="create"/>
+  </file>
+  
   <file name=".*/WEB-INF/config.xml">
     <replaceText xpath="general/uploadDir">../../temp/</replaceText>
     <replaceText xpath="general/maxUploadSize">100</replaceText>
