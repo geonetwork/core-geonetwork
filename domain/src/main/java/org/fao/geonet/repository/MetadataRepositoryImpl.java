@@ -16,7 +16,7 @@ public class MetadataRepositoryImpl implements MetadataRepositoryCustom {
     EntityManager entityManager;
 
     @Override
-    public Metadata findByIdString(String id) {
+    public Metadata findOne(String id) {
         try {
             return entityManager.find(Metadata.class, Integer.parseInt(id));
         } catch (NumberFormatException e) {

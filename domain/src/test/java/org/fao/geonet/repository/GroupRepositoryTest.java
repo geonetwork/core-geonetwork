@@ -146,7 +146,10 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
     }
 
     private Group newGroup() {
-        int id = _nextId.incrementAndGet();
+        return newGroup(_nextId);
+    }
+    static Group newGroup(AtomicInteger nextId) {
+        int id = nextId.incrementAndGet();
         return new Group()
                 .setDescription("Desc "+id)
                 .setEmail(id+"@geonet.org")

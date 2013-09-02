@@ -1,4 +1,4 @@
-package org.fao.geonet.kernel.search.spatial;
+package org.fao.geonet.domain;
 
 /**
  * Just a container of 2 elements. Good for returning 2 values.

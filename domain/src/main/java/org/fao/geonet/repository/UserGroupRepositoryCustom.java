@@ -1,7 +1,9 @@
 package org.fao.geonet.repository;
 
 import java.util.List;
+import java.util.Set;
 
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroup;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -23,5 +25,4 @@ public interface UserGroupRepositoryCustom {
      * @param spec a UserGroup selector specification
      */
     List<Integer> findUserIds(Specification<UserGroup> spec);
-
 }

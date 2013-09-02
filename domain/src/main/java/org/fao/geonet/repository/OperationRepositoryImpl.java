@@ -2,9 +2,15 @@ package org.fao.geonet.repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.fao.geonet.domain.Operation;
+import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedOperation;
+
+import java.util.List;
 
 
 /**
@@ -15,10 +21,11 @@ import org.fao.geonet.domain.ReservedOperation;
 public class OperationRepositoryImpl implements OperationRepositoryCustom {
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private EntityManager _entityManager;
     
     @Override
     public Operation findReservedOperation(ReservedOperation operation) {
-        return entityManager.find(Operation.class, operation.getId());
+        return _entityManager.find(Operation.class, operation.getId());
     }
+
 }

@@ -23,16 +23,6 @@ import org.springframework.data.repository.query.Param;
  */
 public interface OperationAllowedRepository extends JpaRepository<OperationAllowed, OperationAllowedId>, OperationAllowedRepositoryCustom,
         JpaSpecificationExecutor<OperationAllowed> {
-    /**
-     * Find all operations allowed entities with the given groupid and metadataid
-     *
-     * @param groupId the id of the group
-     * @param metadataId the id of the metadata
-     * 
-     * @return all operation allowed entities with the given groupid and metadataid
-     */
-    @Nonnull
-    List<OperationAllowed> findById_GroupIdAndId_MetadataId(int groupId, int metadataId);
 
     /**
      * Find all operations allowed entities with the given metadataid.
@@ -40,7 +30,7 @@ public interface OperationAllowedRepository extends JpaRepository<OperationAllow
      * @return all operation allowed entities with the given metadataid.
      */
     @Nonnull
-    List<OperationAllowed> findById_MetadataId(int metadataId);
+    List<OperationAllowed> findAllById_MetadataId(int metadataId);
 
     /**
      * Find all operations allowed entities with the given groupid.
@@ -48,7 +38,7 @@ public interface OperationAllowedRepository extends JpaRepository<OperationAllow
      * @return all operation allowed entities with the given groupid.
      */
     @Nonnull
-    List<OperationAllowed> findById_GroupId(int groupId);
+    List<OperationAllowed> findAllById_GroupId(int groupId);
 
     /**
      * Find all operations allowed entities with the given operationId.
@@ -56,7 +46,7 @@ public interface OperationAllowedRepository extends JpaRepository<OperationAllow
      * @return all operations allowed entities with the given operationId.
      */
     @Nonnull
-    List<OperationAllowed> findById_OperationId(int operationId);
+    List<OperationAllowed> findAllById_OperationId(int operationId);
 
     /**
      * Find the one OperationAllowed entity by the operation, metadata and group ids (or null if not found).
@@ -67,7 +57,7 @@ public interface OperationAllowedRepository extends JpaRepository<OperationAllow
      * @return the one OperationAllowed entity by the operation, metadata and group ids (or null if not found).
      */
     @Nullable
-    OperationAllowed findById_GroupIdAndId_MetadataIdAndId_OperationId(int groupId, int metadataId, int operationId);
+    OperationAllowed findOneById_GroupIdAndId_MetadataIdAndId_OperationId(int groupId, int metadataId, int operationId);
 
     /**
      * Delete all OperationsAllowed entities with the give metadata and group ids.

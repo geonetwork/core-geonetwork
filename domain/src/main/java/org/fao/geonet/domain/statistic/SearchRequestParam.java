@@ -2,17 +2,7 @@ package org.fao.geonet.domain.statistic;
 
 import org.fao.geonet.domain.Constants;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  * Entity representing the search parameters of a request. Related to {@link SearchRequest}.
@@ -22,7 +12,7 @@ import javax.persistence.Transient;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "params")
-public class RequestParams {
+public class SearchRequestParam {
     private int _id;
     private LuceneQueryParamType _queryType;
     private String _termField;
@@ -57,10 +47,10 @@ public class RequestParams {
 
     /**
      * Get the request associated with this entity.
-     * 
+     *
      * @return the request associated with this entity.
      */
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id", name = "requestid")
     public SearchRequest getRequest() {
         return _request;
@@ -68,7 +58,7 @@ public class RequestParams {
 
     /**
      * Set the request associated with this entity.
-     * 
+     *
      * @param request the request associated with this entity.
      */
     public void setRequest(SearchRequest request) {

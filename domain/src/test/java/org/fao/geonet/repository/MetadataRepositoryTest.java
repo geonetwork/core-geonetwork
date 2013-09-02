@@ -48,14 +48,14 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(1, repo.count());
 
-        assertSameContents(metadata, repo.findByIdString(String.valueOf(metadata.getId())));
+        assertSameContents(metadata, repo.findOne(String.valueOf(metadata.getId())));
 
-        assertNull(repo.findByIdString("213213215"));
+        assertNull(repo.findOne("213213215"));
     }
 
     @Test(expected = InvalidDataAccessApiUsageException.class)
     public void testFindByIdStringBadId() throws Exception {
-        assertNull(repo.findByIdString("no a number"));
+        assertNull(repo.findOne("no a number"));
     }
 
     private Metadata newMetadata() {

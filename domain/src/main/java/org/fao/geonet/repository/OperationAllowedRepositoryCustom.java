@@ -1,9 +1,11 @@
 package org.fao.geonet.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.base.Optional;
 import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.Profile;
 import org.springframework.data.jpa.domain.Specification;
 
 /**

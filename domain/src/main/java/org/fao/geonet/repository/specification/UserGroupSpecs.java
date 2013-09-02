@@ -6,6 +6,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.domain.UserGroup_;
@@ -36,5 +37,17 @@ public final class UserGroupSpecs {
                 return userIdEqualPredicate;
             }
         };
+    }
+
+    public static Specification<UserGroup> hasProfile(final Profile profile) {
+        return new Specification<UserGroup>() {
+            @Override
+            public Predicate toPredicate(Root<UserGroup> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Profile> userIdAttributePath = root.get(UserGroup_.profile);
+                Predicate userIdEqualPredicate = cb.equal(userIdAttributePath, cb.literal(profile));
+                return userIdEqualPredicate;
+            }
+        };
+
     }
 }

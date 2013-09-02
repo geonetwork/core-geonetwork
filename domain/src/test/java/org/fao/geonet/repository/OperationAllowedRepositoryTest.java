@@ -1,5 +1,6 @@
 package org.fao.geonet.repository;
 
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -37,7 +38,7 @@ public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTes
     
     @Test
     public void testFindByMetadataId() {
-        List<OperationAllowed> opAllowedFound = _opAllowRepo.findById_MetadataId(_md1.getId());
+        List<OperationAllowed> opAllowedFound = _opAllowRepo.findAllById_MetadataId(_md1.getId());
         assertEquals(3, opAllowedFound.size());
         assertTrue(opAllowedFound.contains(_opAllowed1));
         assertFalse(opAllowedFound.contains(_opAllowed2));
@@ -47,7 +48,7 @@ public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTes
     
     @Test
     public void testFindByOperationId() {
-        List<OperationAllowed> opAllowedFound = _opAllowRepo.findById_OperationId(_viewOp.getId());
+        List<OperationAllowed> opAllowedFound = _opAllowRepo.findAllById_OperationId(_viewOp.getId());
         assertEquals(2, opAllowedFound.size());
         assertTrue(opAllowedFound.contains(_opAllowed1));
         assertFalse(opAllowedFound.contains(_opAllowed2));
@@ -57,7 +58,7 @@ public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTes
     
     @Test
     public void testFindByGroupId() {
-        List<OperationAllowed> opAllowedFound = _opAllowRepo.findById_GroupId(_allGroup.getId());
+        List<OperationAllowed> opAllowedFound = _opAllowRepo.findAllById_GroupId(_allGroup.getId());
 
         assertEquals(1, opAllowedFound.size());
         assertTrue(opAllowedFound.contains(_opAllowed1));
@@ -68,61 +69,19 @@ public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTes
 
     @Test
     public void testFindByGroupIdAndMetadataIdAndOperationId() {
-        OperationAllowed opAllowedFound = _opAllowRepo.findById_GroupIdAndId_MetadataIdAndId_OperationId(_intranetGroup.getId(),
+        OperationAllowed opAllowedFound = _opAllowRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(_intranetGroup.getId(),
                 _md1.getId(),
                 _viewOp.getId());
         assertEquals(_opAllowed4.getId(), opAllowedFound.getId());
         
-        opAllowedFound = _opAllowRepo.findById_GroupIdAndId_MetadataIdAndId_OperationId(_allGroup.getId(), _md1.getId(), _viewOp.getId());
+        opAllowedFound = _opAllowRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(_allGroup.getId(), _md1.getId(),
+                _viewOp.getId());
         assertEquals(_opAllowed1.getId(), opAllowedFound.getId());
         
-        opAllowedFound = _opAllowRepo.findById_GroupIdAndId_MetadataIdAndId_OperationId(_allGroup.getId(), _md1.getId(),
+        opAllowedFound = _opAllowRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(_allGroup.getId(), _md1.getId(),
                 Integer.MAX_VALUE / 2);
         assertNull(opAllowedFound);
     }        
-
-    @Test
-    public void testFindByGroupIdAndMetadataId() {
-        List<OperationAllowed> opAllowedFound = _opAllowRepo.findById_GroupIdAndId_MetadataId(_intranetGroup.getId(), _md1.getId());
-        
-        assertEquals(2, opAllowedFound.size());
-        assertFalse(opAllowedFound.contains(_opAllowed1));
-        assertFalse(opAllowedFound.contains(_opAllowed2));
-        assertTrue(opAllowedFound.contains(_opAllowed3));
-        assertTrue(opAllowedFound.contains(_opAllowed4));
-        
-        // search intranet + md2
-        
-        opAllowedFound = _opAllowRepo.findById_GroupIdAndId_MetadataId(_intranetGroup.getId(), _md2.getId());
-        
-        assertFalse(opAllowedFound.contains(_opAllowed1));
-        assertTrue(opAllowedFound.contains(_opAllowed2));
-        assertEquals(1, opAllowedFound.size());
-        assertFalse(opAllowedFound.contains(_opAllowed3));
-        assertFalse(opAllowedFound.contains(_opAllowed4));
-        
-        // search all + md2
-        
-        opAllowedFound = _opAllowRepo.findById_GroupIdAndId_MetadataId(_allGroup.getId(), _md2.getId());
-        
-        assertFalse(opAllowedFound.contains(_opAllowed1));
-        assertFalse(opAllowedFound.contains(_opAllowed2));
-        assertEquals(0, opAllowedFound.size());
-        assertFalse(opAllowedFound.contains(_opAllowed3));
-        assertFalse(opAllowedFound.contains(_opAllowed4));
-        
-        
-        // search all + md1
-        
-        opAllowedFound = _opAllowRepo.findById_GroupIdAndId_MetadataId(_allGroup.getId(), _md1.getId());
-        
-        assertTrue(opAllowedFound.contains(_opAllowed1));
-        assertFalse(opAllowedFound.contains(_opAllowed2));
-        assertEquals(1, opAllowedFound.size());
-        assertFalse(opAllowedFound.contains(_opAllowed3));
-        assertFalse(opAllowedFound.contains(_opAllowed4));
-    }
-    
 
     @Test
     public void deleteAllByMetadataIdExceptGroupId() {

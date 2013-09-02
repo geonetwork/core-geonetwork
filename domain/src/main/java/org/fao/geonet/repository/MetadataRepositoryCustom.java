@@ -18,5 +18,5 @@ public interface MetadataRepositoryCustom {
      * @param id the id in string form instead of integer.
      * @return
      */
-    Metadata findByIdString(String id);
+    Metadata findOne(String id);
 }
