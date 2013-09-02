@@ -699,6 +699,13 @@ div.facets * .facet-less-bt a {
 .linkPanel * .x-btn-bc {
     background: none;
 }
+.linkPanel * ul li a{
+	display:block;
+	clear:left;
+}
+.linkPanel * ul li div{
+	float:left;
+}
 .linkPanel * .x-btn-noicon .x-btn-small .x-btn-text {
     border-bottom: 1px black solid;
 }
