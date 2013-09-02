@@ -1752,8 +1752,7 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 		<label>Protocollo</label>
 		<description>Protocollo di connessione utilizzato</description>
 		<helper>
-			<option show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service: file di
-				configurazione (*.AXL)</option>
+			<option show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service: file di configurazione (*.AXL)</option>
 			<option show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service
 			</option>
 			<option show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service
@@ -1779,29 +1778,23 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 			</option>
 			<option show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</option>
 			<option show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</option>
-			<option show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver
-				1.1.0)</option>
-			<option show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation
-				Service</option>
+			<option show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</option>
+			<option show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</option>
 			<option show="-" value="OGC:WFS">OGC-WFS Web Feature Service</option>
-			<option show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)
-			</option>
+			<option show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</option>
 			<option show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
 			<option show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)
 			</option>
 			<option show="-" value="OGC:WMS">OGC-WMS Web Map Service</option>
-			<option show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver
-				1.1.1)</option>
-			<option show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver
-				1.3.0)</option>
+			<option show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</option>
+			<option show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)</option>
 			<option show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)
 			</option>
 			<option show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)
 			</option>
 			<option show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)
 			</option>
-			<option show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver
-				1.0.0)</option>
+			<option show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</option>
 			<option show="-" value="OGC:WNS">OGC-WNS Web Notification Service
 			</option>
 			<option show="-" value="OGC:WPS">OGC-WPS Web Processing Service</option>
