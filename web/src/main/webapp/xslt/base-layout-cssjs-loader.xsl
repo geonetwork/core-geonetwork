@@ -16,19 +16,15 @@
     </xsl:if>
     
     <link href="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-ui.css" rel="stylesheet"/>
-      
-    <link href="{$uiResourcesPath}style/app-admin.css" rel="stylesheet" media="screen" />
     
-    <link href="{$uiResourcesPath}style/app.css" rel="stylesheet" media="screen" />
-    <link href="{$uiResourcesPath}style/app.less" rel="stylesheet/less" media="screen" />
     <link rel="shortcut icon" type="image/x-icon" href="../../images/logos/favicon.ico" />
     
     <xsl:choose>
       <xsl:when test="$isDebugMode">
+        <link href="{$uiResourcesPath}style/{$angularApp}.less" rel="stylesheet/less" media="screen" />
       </xsl:when>
       <xsl:otherwise>
-        <!-- TODO : mini -->
-        
+        <link href="{$uiResourcesPath}style/{$angularApp}.css" rel="stylesheet" media="screen" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -36,10 +32,11 @@
   
   <xsl:template name="javascript-load">
     
-    <script src="{$uiResourcesPath}lib/less-1.4.1.min.js"></script>
     
     <xsl:choose>
       <xsl:when test="$isDebugMode">
+        <script src="{$uiResourcesPath}lib/less-1.4.1.min.js"></script>
+        
         <script src="{$uiResourcesPath}lib/closure/base.js"></script>
         
         <script src="{$uiResourcesPath}lib/jquery-2.0.2.js"></script>

@@ -33,6 +33,7 @@ Maven compilation take care of running:
  * gjslint for checking JS files
  * depswriter for building lib/closure.deps.js file containing JS dependency tree
  * closurebuilder for minifying JS files for each module
+ * LESS compilation in CSS (mvn lesscss:compile)
 
 
 ```
