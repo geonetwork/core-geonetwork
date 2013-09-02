@@ -172,6 +172,10 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     versionField: undefined,
     mdStore: undefined,
     layerNames : undefined,
+    editUrl: undefined,
+    editName: undefined,
+    editProtocol: undefined,
+    editDesc: undefined,
 
     
     /**
@@ -629,6 +633,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     
     /**
      * Form for online resource 
+     * 
+     * if editUrl is defined, then it means we want to edit an existing resource.
      */
     generateDocumentUploadForm: function (cancelBt) {
         var self = this, protocolStore = new Ext.data.JsonStore({
@@ -648,7 +654,6 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             value: this.versionId,
             hidden: true
         });
-        
 
         var fsUrl = new Ext.form.FieldSet({
             checkboxToggle: true,
@@ -660,8 +665,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 xtype: 'textfield',
                 anchor: '90%',
                 fieldLabel: OpenLayers.i18n('URL'),
-                name: 'href',
-                value: ''
+                value: this.editUrl,
+                name: 'href'
             }],
             listeners: {
                 collapse: {
@@ -713,12 +718,13 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             valueField: 'value',
             displayField: 'label',
             triggerAction: 'all',
+            value: this.editProtocol,
             mode: 'local',
             itemCls: 'gn-onlineResForm',
             listeners: {
                 select: {
                     fn: function (combo, record, index) {
-                        var visible = this.isGetMap(combo.getValue());
+                        var visible = this.isGetMap(combo.getValue()) && !this.editUrl;
                         combo.ownerCt.find('name', 'name')[0].setVisible(!visible);
                         combo.ownerCt.find('name', 'title')[0].setVisible(!visible);
                         combo.ownerCt.find('name', 'capabilitiesGrid')[0].setVisible(visible);
@@ -798,7 +804,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 xtype: 'textfield',
                 fieldLabel: OpenLayers.i18n('Name'),
                 name: 'name',
-                value: ''
+                value: this.editName
             }, {
                 xtype: 'button',
                 cls: 'gn-onlineResForm',
@@ -817,7 +823,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 xtype: 'textarea',
                 fieldLabel: OpenLayers.i18n('Description'),
                 name: 'title',
-                value: ''
+                value: this.editDescr,
             }, this.getFormFieldForService()
             ],
             buttons: [{
@@ -1264,7 +1270,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 if (this.selectedLink.href) {
                     var name, url, desc;
                     url = encodeURIComponent(this.selectedLink.href);
-                    if(this.isGetMap(this.selectedLink.protocol)) {
+                    if(this.isGetMap(this.selectedLink.protocol) && !this.editUrl) {
                         name = this.layerName;
                         desc = layerTitle;
                     } else {
@@ -1280,7 +1286,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         }
         var action = this.catalogue.services.mdProcessing + 
             "?id=" + this.metadataId + 
-            "&process=" + this.type + "-add" +
+            "&process=" + this.type + (this.editUrl ? "-edit" : "-add") +
             parameters;
         
         this.editor.process(action);
