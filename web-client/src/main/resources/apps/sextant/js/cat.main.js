@@ -27,7 +27,7 @@ cat.app = function() {
 	/**
 	 * An interactive map panel for data visualization
 	 */
-	var iMap, searchForm, resultsPanel, metadataResultsView, tBar, bBar, mainTagCloudViewPanel, tagCloudViewPanel, infoPanel, visualizationModeInitialized = false;
+	var iMap, searchForm, facetsPanel, searchModes, activeSearchMode, resultsPanel, metadataResultsView, tBar, bBar, mainTagCloudViewPanel, tagCloudViewPanel, infoPanel, visualizationModeInitialized = false;
 
 //	// Option 1 for https://forge.ifremer.fr/mantis/view.php?id=14387 - fields are blinking
 //	var fieldWithFilterApplied = [];
@@ -450,6 +450,9 @@ cat.app = function() {
 		var services = catalogue.services;
 		cat.what.createCmp(catalogue);
 		
+		searchModes = Ext.get(Ext.query('input[id*=configtypesearch]')[0]).getValue().split('');
+		activeSearchMode = searchModes.indexOf('simple') >= 0 ? 'simple' : searchModes[0];
+		
 		var whereForm = cat.where.createCmp();
 		var whatForm = cat.what.getPanel();
 		var whenForm = cat.when.createCmp();
@@ -497,23 +500,8 @@ cat.app = function() {
 			stateId : 's',
 			border : false,
 			bodyCssClass : 'search-panel-body',
-			headerCssClass : 'search-panel-header',
 			cls : 'search-panel',
 			buttonAlign : 'left',
-			title : '<span id="searchFormHeaderTitle" class="mainheader">'
-					+ '&nbsp;'
-					+ '</span>' + '<a id="searchFormHeaderLink" href="#">'
-					+ OpenLayers.i18n('search-header-advanced') + '</a>',
-			searchBt : new Ext.Button({
-				template: new Ext.Template(
-						'<div class="search-btn">',
-						'<div class="btnLeft">&nbsp;</div>',
-						'<div class="btnText"></div>',
-						'<div class="btnRight">&#160;</div>',
-						'</div>'),
-						buttonSelector: '.btnText',
-				text : OpenLayers.i18n('search')
-			}),
 			resetCb : function() {
 				this.getForm().reset();
 				var elt = this.findByType('gn_categorytree', true);
@@ -535,11 +523,18 @@ cat.app = function() {
 						'<div class="btnRight">&#160;</div>',
 						'</div>'),
 						buttonSelector: '.btnText'
-				}),
+			}),
+			searchBt : new Ext.Button({
+                template: new Ext.Template(
+                        '<div class="search-btn">',
+                        '<div class="btnLeft">&nbsp;</div>',
+                        '<div class="btnText"></div>',
+                        '<div class="btnRight">&#160;</div>',
+                        '</div>'),
+                        buttonSelector: '.btnText',
+                text : OpenLayers.i18n('search')
+            }),
 			searchCb : function() {
-
-				
-				
 				var any = Ext.get('E_any');
 				if (any) {
 					if (any.getValue() === OpenLayers.i18n('fullTextSearch')) {
@@ -560,45 +555,89 @@ cat.app = function() {
 				bodyStyle : 'background-color:white;padding:15px',
 				border : false
 			},
+			listeners: {
+                onreset: function () {
+                    facetsPanel.reset();
+
+                    // Remove field added by URL or quick search
+                    this.cascade(function(cur){
+                        if (cur.extraCriteria) {
+                            this.remove(cur);
+                        }
+                    }, this);
+                    
+                    this.fireEvent('search');
+                }
+            },
 			items : formItems
 		});
 		
 		// Manage header click event to toggle advanced or simple search
 		// criteria mode
 		searchForm.on('afterrender',function(cpt) {
-			cpt.advanced = false;
-			cpt.addEvents('advancedmode', 'simplemode');
-			cpt.header.on('click', function() {
-				cookie.set('cat.searchform.advanced', !this.advanced)
-				if (this.advanced) {
-					this.fireEvent('simplemode', this);
-					this.advanced = false;
-				} else {
-					this.fireEvent('advancedmode', this);
-					this.advanced = true;
-				}
+			cpt.addEvents('advancedmode', 'simplemode', 'facetmode');
+			cpt.ownerCt.header.on('click', function(e,v,t) {
+			    if(v.id == 'searchFormHeaderLinkAdvanced') {
+			        this.fireEvent('advancedmode', this);
+			        activeSearchMode = 'advanced';
+			    }
+			    else if(v.id == 'searchFormHeaderLinkSimple') {
+                    this.fireEvent('simplemode', this);
+                    activeSearchMode = 'simple';
+                }
+			    else if(v.id == 'searchFormHeaderLinkFacet') {
+                    this.fireEvent('facetmode', this);
+                    activeSearchMode = 'facet';
+                }
+				cookie.set('cat.searchform.viewmode', activeSearchMode)
 			}, cpt);
 
 			cpt.on('advancedmode',function(cpt) {
-				Ext.each(advandcedField,function(item) {
-					item.setVisible(!item.disabled);
-					if(!Ext.isIE) // temp
-					    whatForm.body && whatForm.body.removeClass('hidden');
-				});
-				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-simple');
+			    if(activeSearchMode != 'advanced') {
+			         cpt.setVisible(true);
+		             Ext.each(advandcedField,function(item) {
+	                    item.setVisible(!item.disabled);
+	                    if(!Ext.isIE) // temp
+	                        whatForm.body && whatForm.body.removeClass('hidden');
+	                });
+		            cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced').addClass('bold');
+	                cpt.ownerCt.header.child('#searchFormHeaderLinkSimple').removeClass('bold');
+	                cpt.ownerCt.header.child('#searchFormHeaderLinkFacet').removeClass('bold');
+			    }
 			});
 			cpt.on('simplemode',function() {
-				Ext.each(advandcedField,function(item) {
-					item.setVisible(false);
-					if(!Ext.isIE) //temp
-					    whatForm.body && whatForm.body.addClass('hidden');
-				});
-				cpt.header.child('#searchFormHeaderLink').dom.innerHTML = OpenLayers.i18n('search-header-advanced');
+			    if(activeSearchMode != 'simple') {
+			         cpt.setVisible(true);
+		             Ext.each(advandcedField,function(item) {
+	                    item.setVisible(false);
+	                    if(!Ext.isIE) //temp
+	                        whatForm.body && whatForm.body.addClass('hidden');
+	                });
+	                cpt.ownerCt.header.child('#searchFormHeaderLinkSimple').addClass('bold');
+	                cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced').removeClass('bold');
+                    cpt.ownerCt.header.child('#searchFormHeaderLinkFacet').removeClass('bold');
+			    } 
 			});
-			if(cookie.get('cat.searchform.advanced')) {
-				this.fireEvent('advancedmode', this);
-				this.advanced = true;
-			}
+			cpt.on('facetmode',function() {
+			    if(activeSearchMode != 'facet') {
+		             cpt.setVisible(false);
+		             cpt.ownerCt.header.child('#searchFormHeaderLinkFacet').addClass('bold');
+		             cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced').removeClass('bold');
+	                 cpt.ownerCt.header.child('#searchFormHeaderLinkSimple').removeClass('bold');
+			    }
+            });
+            if(cookie.get('cat.searchform.viewmode') == 'advanced') {
+                this.fireEvent('advancedmode', this);
+                activeSearchMode = 'advanced';
+            }
+            else if(cookie.get('cat.searchform.viewmode') == 'facet') {
+                this.fireEvent('facetmode', this);
+                activeSearchMode = 'facet';
+            } 
+            else if(cookie.get('cat.searchform.viewmode') == 'simple') {
+                this.fireEvent('simplemode', this);
+                activeSearchMode = 'simple';
+            }
 		});
 		
 		return searchForm;
@@ -659,7 +698,7 @@ cat.app = function() {
 			height=Ext.getBody().getViewSize().height-50;
 		}
 		o.setHeight(height);
-		searchForm.setHeight(height);
+		searchForm.setHeight(height-20);
 		
 		Ext.getBody().setHeight(Ext.getBody().getViewSize().height);
 		o.doLayout();
@@ -741,6 +780,24 @@ cat.app = function() {
 			
 			createLoginForm();
 			
+			var breadcrumb = new Ext.Panel({
+                layout:'table',
+                cls: 'breadcrumb',
+                defaultType: 'button',
+                border: false,
+                split: false,
+                layoutConfig: {
+                    columns:3
+                }
+            });
+			
+			facetsPanel = new GeoNetwork.FacetsPanel({
+                searchForm: searchForm,
+                breadcrumb: breadcrumb,
+                maxDisplayedItems: GeoNetwork.Settings.facetMaxItems || 7,
+                facetListConfig: GeoNetwork.Settings.facetListConfig || []
+            });
+			
 			var viewport = new Ext.Panel({
 				renderTo: 'main-viewport',
 				layout : 'border',
@@ -751,8 +808,24 @@ cat.app = function() {
 					region : 'west',
 					id : 'west',
 					bodyCssClass: 'west-panel-body',
-					cls: 'sxt-layout-border-white',
+					headerCssClass : 'search-panel-header',
+					cls: 'sxt-layout-border-white west-panel',
 					split : true,
+					title : '<span id="searchFormHeaderTitle" class="mainheader">'
+	                    + OpenLayers.i18n('search-view-form') + ' :'
+	                    + '</span>'
+                        + (searchModes.indexOf('facetted') ? 
+                                '<a id="searchFormHeaderLinkFacet" href="#">' + 
+                                OpenLayers.i18n('search-header-facet') + 
+                                '</a>' : '')
+	                    + (searchModes.indexOf('advanced') ? 
+	                            '<a id="searchFormHeaderLinkAdvanced" href="#">' + 
+	                            OpenLayers.i18n('search-header-advanced') + 
+	                            '</a>' : '')
+                        + (searchModes.indexOf('simple') ? 
+                                '<a id="searchFormHeaderLinkSimple" href="#">' + 
+                                OpenLayers.i18n('search-header-simple') + 
+                            '</a>' : ''),
 					border : false,
 					frame : false,
 					minWidth : 300,
@@ -765,7 +838,7 @@ cat.app = function() {
 					layoutConfig : {
 						animate : true
 					},
-					items : searchForm
+					items : [searchForm,breadcrumb,facetsPanel]
 				}, {
 					region : 'center',
 					id : 'center',
@@ -872,7 +945,8 @@ cat.app = function() {
 //		    clearAppSearchFilter();
 		    
 			initPanels();
-
+			facetsPanel.refresh(response);
+			
 			// FIXME : result panel need to update layout in case of slider
 			// Ext.getCmp('resultsPanel').syncSize();
 			Ext.getCmp('previousBt').setDisabled(catalogue.startRecord === 1);
