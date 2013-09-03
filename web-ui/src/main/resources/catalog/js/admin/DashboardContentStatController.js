@@ -7,7 +7,9 @@
 
 
   /**
-   *
+   * Provides statistics on the catalog content.
+   * 
+   * TODO: Move NVD3 calls to specific module
    */
   module.controller('GnDashboardContentStatController', [
     '$scope', '$routeParams', '$http', '$translate',
@@ -15,6 +17,54 @@
 
       $scope.statistics = {md: {}};
       $scope.hits = 10;
+      $scope.currentIndicator = null;
+      $scope.currentIndicatorData = null;
+
+      /**
+       * Refresh graph on currently selected facet
+       */
+      $scope.$watch('currentIndicator', function() {
+        // No data
+        if ($scope.currentIndicator === null) {
+          return;
+        }
+
+        // Format results
+        var data = [];
+        var total = 0;
+        $.each($scope.currentIndicator, function(index, value) {
+          var count = parseInt(value['@count']);
+          data.push({label: value['@name'], count: count});
+          total += count;
+        });
+
+        nv.addGraph(function() {
+          var chart = nv.models.pieChart()
+                       .x(function(d) { return d.label})
+              // TODO : Need to translate facet labels ?
+                       .y(function(d) { return d.count})
+                       .values(function(d) { return d})
+                       .tooltips(true)
+                       .tooltipContent(function(key, y, e, graph) {
+                // TODO : %age should be relative to
+                // the current set of displayed values
+                return '<h3>' + key + '</h3>' +
+                    '<p>' + parseInt(y).toFixed() + ' ' +
+                    $translate('records') + ' (' +
+                    (y / total * 100).toFixed() + '%)</p>';
+              })
+                       .showLabels(true);
+
+          d3.select('#gn-stat-md-by-facet')
+                     .datum([data])
+                     .transition().duration(1200)
+                     .call(chart);
+
+          return chart;
+
+        });
+
+      });
 
       function getMainStat() {
         $http.get('statistics-content@json')
@@ -48,11 +98,17 @@
                 'by=' + by +
                 '&isTemplate=' + encodeURIComponent(isTemplate))
                   .success(function(data) {
+
+              if (data == 'null') { // Null response returned
+                // TODO : Add no data message
+                return;
+              }
               var total = 0;
               for (var i in data) {
                 data[i].total = parseInt(data[i].total);
                 total += data[i].total;
               }
+
               $scope.statistics.md[by] = data;
               nv.addGraph(function() {
                 var chart = nv.models.pieChart()
@@ -64,9 +120,9 @@
                       // TODO : %age should be relative to
                       // the current set of displayed values
                       return '<h3>' + key + '</h3>' +
-                             '<p>' + parseInt(y).toFixed() + ' ' +
-                             $translate('records') + ' (' +
-                             (y / total * 100).toFixed() + '%)</p>';
+                          '<p>' + parseInt(y).toFixed() + ' ' +
+                          $translate('records') + ' (' +
+                          (y / total * 100).toFixed() + '%)</p>';
                     })
                          .showLabels(true);
 

@@ -326,7 +326,7 @@
     "rebuildIndexHelp": "While rebuilding index, search may return incomplete results and CSW GetRecords operation is disabled. Use this function, when catalog traffic is low. It's recommended to rebuild index after reloading index configuration or making changes directly in the database.",
     "optimizeIndex": "Optimize index",
     "reloadLuceneConfig": "Reload index configuration",
-    "clearXLinkCache": "Clear XLink cache"
+    "clearXLinkCache": "Clear XLink cache",
     
-    
+    "emptyCatalogShouldBeFilled": "The catalog is empty, you probably want to import new records or configure a harvester. You could also insert <a href='#/metadata/metadata-and-template/load-templates/all'>all templates</a>, <a href='#/metadata/metadata-and-template/load-samples/all'>all samples</a> or <a href='#/metadata/metadata-and-template/load-samples-and-templates/all'>both</a>."
 }

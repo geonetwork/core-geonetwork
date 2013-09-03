@@ -15,6 +15,11 @@
           // Retrieve facet and add name as property and remove @count
           var facets = {}, results = -1;
           
+          // When using summaryOnly=true, the facet is the root element
+          if (data[0] && data[0]['@count']) {
+              data.summary = data[0];
+          }
+          
           // Cleaning facets
           for (var facet in data.summary) {
               if (facet != '@count') {

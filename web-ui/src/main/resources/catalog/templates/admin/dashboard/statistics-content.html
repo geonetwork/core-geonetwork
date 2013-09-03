@@ -36,6 +36,16 @@
             </table>
             
             
+            <h2><span data-translate="">recordsBy</span>
+                <select class="form-control" data-ng-model="currentIndicator" 
+                    data-ng-options="(key | translate) for (key, value) in searchInfo.facet">
+                </select>
+            </h2>
+            
+            <svg id="gn-stat-md-by-facet" class="gn-chart"></svg>
+            
+            <div class="help-block" data-ng-translate="">facetIndicatorHelp</div>
+            
             <h2 data-translate>recordsByCategory</h2>
             <svg id="gn-stat-md-by-category" class="gn-chart"></svg>
             

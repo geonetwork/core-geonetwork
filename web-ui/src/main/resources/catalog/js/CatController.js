@@ -1,7 +1,9 @@
 (function() {
   goog.provide('gn_cat_controller');
 
-  var module = angular.module('gn_cat_controller', []);
+  goog.require('gn_search_manager');
+
+  var module = angular.module('gn_cat_controller', ['gn_search_manager']);
 
   /**
    * The catalogue controller.
@@ -12,7 +14,9 @@
    */
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
-    function($scope, $http, $q, $rootScope, $translate) {
+    'gnSearchManagerService',
+    function($scope, $http, $q, $rootScope, $translate,
+            gnSearchManagerService) {
       $scope.version = '0.0.1';
       // TODO : add language
       $scope.lang = 'eng';
@@ -41,6 +45,12 @@
       $scope.user = {};
       $scope.authenticated = false;
       $scope.initialized = false;
+
+      /**
+       * Catalog facet summary providing
+       * a global overview of the catalog content.
+       */
+      $scope.searchInfo = {};
 
       $scope.status = {};
       var defaultStatus = {
@@ -95,7 +105,19 @@
                 );
               });
         });
+
+
+        // Retrieve main search information
+        var searchInfo = userLogin.then(function(value) {
+          url = 'qi@json?summaryOnly=true';
+          return gnSearchManagerService.search(url).
+              then(function(data) {
+                $scope.searchInfo = data;
+              });
+        });
       };
+
+
 
       $scope.clearStatusMessage = function() {
         $scope.status = {};
