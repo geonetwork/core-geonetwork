@@ -16,9 +16,11 @@
 	<import resource="config-user-profiles.xml"/>
 	<import resource="classpath*:/config-spring-geonetwork.xml"/>
 	<import resource="classpath:JZkitApplicationContext.xml"/>
-	
-	<!-- Uncomment the database configuration you need to use -->
-	<import resource="config-db/h2.xml"/>
+
+    <import resource="config-db/database_migration.xml"/>
+
+    <!-- Uncomment the database configuration you need to use -->
+    <import resource="config-db/h2.xml"/>
 <!-- 	<import resource="config-db/jndi-postgres-postgis.xml"/> -->
 <!-- 	<import resource="config-db/mysql.xml"/> -->
 <!-- 	<import resource="config-db/config-spring-oracle.xml"/> -->

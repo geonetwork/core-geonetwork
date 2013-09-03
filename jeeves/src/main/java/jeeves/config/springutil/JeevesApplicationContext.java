@@ -20,7 +20,7 @@ public class JeevesApplicationContext extends XmlWebApplicationContext {
     public JeevesApplicationContext() {
         this(ConfigurationOverrides.DEFAULT);
     }
-    
+
     public JeevesApplicationContext(final ConfigurationOverrides configurationOverrides) {
         this._configurationOverrides = configurationOverrides;
         addApplicationListener(new ApplicationListener<ApplicationEvent>() {
@@ -41,10 +41,14 @@ public class JeevesApplicationContext extends XmlWebApplicationContext {
         });
     }
 
+    public String getAppPath() {
+        return appPath;
+    }
+
     public void setAppPath(String appPath) {
         this.appPath = appPath;
     }
-    
+
 	@Override
 	protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws IOException {
         reader.setValidating(false);

@@ -26,12 +26,14 @@ package jeeves.server.sources.http;
 import java.io.File;
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.FileUploadTooBigEx;
 import jeeves.server.JeevesEngine;
@@ -40,6 +42,7 @@ import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 //=============================================================================
 
@@ -60,25 +63,30 @@ public class JeevesServlet extends HttpServlet
 	//---------------------------------------------------------------------------
 
     public void init() throws ServletException {
-        String appPath = new File(getServletContext().getRealPath("/xsl")).getParent() + File.separator;
+        final ServletContext servletContext = getServletContext();
+        String appPath = new File(servletContext.getRealPath("/xsl")).getParent() + File.separator;
+
+        if (!appPath.endsWith(File.separator))
+            appPath += File.separator;
+
+        JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
+
+        jeevesAppContext.setAppPath(appPath);
 
         String baseUrl = "";
 
         try {
             // 2.5 servlet spec or later (eg. tomcat 6 and later)
-            baseUrl = getServletContext().getContextPath();
+            baseUrl = servletContext.getContextPath();
         } catch (java.lang.NoSuchMethodError ex) {
             // 2.4 or earlier servlet spec (eg. tomcat 5.5)
             try {
-                String resource = getServletContext().getResource("/").getPath();
+                String resource = servletContext.getResource("/").getPath();
                 baseUrl = resource.substring(resource.indexOf('/', 1), resource.length() - 1);
             } catch (java.net.MalformedURLException e) { // unlikely
-                baseUrl = getServletContext().getServletContextName();
+                baseUrl = servletContext.getServletContextName();
             }
         }
-
-        if (!appPath.endsWith(File.separator))
-            appPath += File.separator;
 
         String configPath = getServletConfig().getServletContext().getRealPath("/WEB-INF/config.xml");
         if (configPath == null) {

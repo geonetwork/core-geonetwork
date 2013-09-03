@@ -8,6 +8,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.apache.lucene.search.Query;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Pair;
 import org.geotools.data.FeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;

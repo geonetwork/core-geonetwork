@@ -34,10 +34,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Vector;
 
 import javax.servlet.ServletContext;
@@ -53,25 +53,26 @@ import jeeves.interfaces.Activator;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
-import jeeves.server.resources.ResourceProvider;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
 import jeeves.utils.TransformerFactoryFactory;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.PropertyConfigurator;
+import org.fao.geonet.domain.Service;
+import org.fao.geonet.domain.ServiceParameter;
+import org.fao.geonet.repository.ServiceRepository;
 import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 //=============================================================================
@@ -92,15 +93,12 @@ public class JeevesEngine
 	private boolean defaultLocal;
 	private boolean debugFlag;
 	
-    private Dbms dbms;;
-    
 	/** true if the 'general' part has been loaded */
 	private boolean generalLoaded;
 
 	private ServiceManager  serviceMan  = new ServiceManager();
 	private ProviderManager providerMan = new ProviderManager();
 	private ScheduleManager scheduleMan = new ScheduleManager();
-	private SerialFactory   serialFact  = new SerialFactory();
 
 	private Logger appHandLogger = Log.createLogger(Log.APPHAND);
 	private List<Element> appHandList = new ArrayList<Element>();
@@ -174,7 +172,6 @@ public class JeevesEngine
 			serviceMan.setMonitorMan(monitorManager);
 			serviceMan.setXmlCacheManager(xmlCacheManager );
 			serviceMan.setApplicationContext(jeevesAppContext);
-			serviceMan.setSerialFactory(serialFact);
 			serviceMan.setBaseUrl(baseUrl);
 			serviceMan.setServlet(servlet);
 
@@ -182,16 +179,12 @@ public class JeevesEngine
 			scheduleMan.setProviderMan(providerMan);
 			scheduleMan.setMonitorManager(monitorManager);
 			scheduleMan.setApplicationContext(jeevesAppContext);
-			scheduleMan.setSerialFactory(serialFact);
 			scheduleMan.setBaseUrl(baseUrl);
 			
-	        initResources(jeevesAppContext);
-
 			loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, serviceMan);
 
             // Add ResourceManager as a bean to the spring application context so that GeonetworkAuthentication can access it
             jeevesAppContext.getBeanFactory().registerSingleton("resourceManager", new ResourceManager(this.monitorManager, this.providerMan));
-            jeevesAppContext.getBeanFactory().registerSingleton("serialFactory", serialFact);
 
 			//--- handlers must be started here because they may need the context
 			//--- with the ProfileManager already loaded
@@ -448,61 +441,6 @@ public class JeevesEngine
 				serviceMan.addDefaultGui(guiElems.get(i));
 		}
 	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- 'resources' element
-	//---
-	//---------------------------------------------------------------------------
-
-	/** Setup resources from the resource element (config.xml)
-	  */
-    private void initResources(JeevesApplicationContext jeevesAppContext) {
-        boolean resourceFound = false;
-        info("Initializing resources...");
-
-        Map<String, ResourceProvider> resourceProviders = jeevesAppContext.getBeansOfType(ResourceProvider.class);
-        for (Entry<String, ResourceProvider> entry : resourceProviders.entrySet()) {
-            ResourceProvider provider = entry.getValue();
-            String name = entry.getKey();
-            try {
-                providerMan.register(provider, name);
-
-                // Try and open a resource from the provider
-                providerMan.getProvider(name).open();
-
-                if (name.equals("main-db")) {
-                    dbms = (Dbms) providerMan.getProvider(name).open();
-                }
-
-                resourceFound = true;
-            } catch (Exception e) {
-                Map<String, String> errors = new HashMap<String, String>();
-                String eS = "Raised exception while initializing resource " + name + ". Skipped.";
-                error(eS);
-                errors.put("Error", eS);
-                error("   Resource  : " + name);
-                errors.put("Resource", name);
-                error("   Provider  : " + provider.getClass().getName());
-                errors.put("Provider", provider.getClass().getName());
-                error("   Exception : " + e);
-                errors.put("Exception", e.toString());
-                error("   Message   : " + e.getMessage());
-                errors.put("Message", e.getMessage());
-                error("   Stack     : " + Util.getStackTrace(e));
-                errors.put("Stack", Util.getStackTrace(e));
-                error(errors.toString());
-                serviceMan.setStartupErrors(errors);
-            }
-        }
-
-        if (!resourceFound) {
-            Map<String, String> errors = new HashMap<String, String>();
-            errors.put("Error", "No database resources found to initialize - check spring configuration files");
-            error(errors.toString());
-            serviceMan.setStartupErrors(errors);
-        }
-    }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -772,48 +710,39 @@ public class JeevesEngine
      * @param _dbms
      * @param serviceIdentifierToLoad -1 for all or the service identifier
      */
-    public void loadConfigDB(Dbms _dbms, int serviceIdentifierToLoad) {
+    public void loadConfigDB(ApplicationContext context, int serviceIdentifierToLoad) {
         try {
             Element eltServices = new Element("services");
             eltServices.setAttribute("package", "org.fao.geonet");
             
-            String selectServiceQuery = "SELECT * FROM Services";
-
-            java.util.List<Element> serviceList = null;
+            java.util.List<Service> serviceList = null;
+            ServiceRepository serviceRepo = context.getBean(ServiceRepository.class);
             if (serviceIdentifierToLoad == -1) {
-                serviceList = _dbms.select(selectServiceQuery)
-                    .getChildren();
+                serviceList = serviceRepo.findAll();
             } else {
-                selectServiceQuery += " WHERE id=?";
-                serviceList = _dbms.select(selectServiceQuery, serviceIdentifierToLoad)
-                        .getChildren();
+                serviceList = Collections.singletonList(serviceRepo.findOne(serviceIdentifierToLoad));
             }
 
-            for (Element eltService : serviceList) {
-                Element srv = new Element("service");
-                Element cls = new Element("class");
-                String selectServiceParamsQuery = "SELECT name, value FROM ServiceParameters WHERE service =?";
-                Integer serviceId = Integer.valueOf(eltService.getChildText("id"));
-
-                @SuppressWarnings("unchecked")
-                java.util.List<Element> paramList = _dbms.select(selectServiceParamsQuery, serviceId).getChildren();
-
-                for (Element eltParam : paramList) {
-                    if (eltParam.getChildText("value") != null
-                            && !eltParam.getChildText("value").equals("")) {
-                        cls.addContent(new Element("param").setAttribute(
-                                "name", "filter").setAttribute(
-                                "value",
-                                "+" + eltParam.getChildText("name") + ":"
-                                        + eltParam.getChildText("value")));
+            for (Service service : serviceList) {
+                if (service != null) {
+                    Element srv = new Element("service");
+                    Element cls = new Element("class");
+                    
+                    List<ServiceParameter> paramList = service.getParameters();
+                    
+                    for (ServiceParameter serviceParam : paramList) {
+                        if (serviceParam.getValue() != null && !serviceParam.getValue().trim().isEmpty()) {
+                            cls.addContent(new Element("param").setAttribute("name", "filter").setAttribute("value",
+                                    "+" + serviceParam.getName() + ":" + serviceParam.getValue()));
+                        }
                     }
+    
+                    srv.setAttribute("name", service.getName())
+                            .addContent(
+                                    cls.setAttribute("name",
+                                            service.getClassName()));
+                    eltServices.addContent(srv);
                 }
-
-                srv.setAttribute("name", eltService.getChildText("name"))
-                        .addContent(
-                                cls.setAttribute("name",
-                                        eltService.getChildText("class")));
-                eltServices.addContent(srv);
             }
 
             dbservices.add(eltServices);

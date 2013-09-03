@@ -7,7 +7,6 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 	">
 	<context:property-placeholder location="WEB-INF/config-db/jdbc.properties" file-encoding="UTF-8" ignore-unresolvable="true" order="1"/>
-    <import resource="apache-dbc-pool-provider.xml"/>
 
     <bean id="hibernetJpaVendorAdapterDatabaseType" class="java.lang.String">
         <constructor-arg value="H2"/>

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.domain.Pair;
 
 /**
  * Servlet for serving up resources located in GeoNetwork data directory.  

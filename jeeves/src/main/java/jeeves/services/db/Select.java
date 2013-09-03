@@ -29,7 +29,6 @@ import java.util.Vector;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
@@ -42,7 +41,6 @@ import org.jdom.Element;
 
 public class Select implements Service
 {
-	private String dbName;
 	private String query;
 	private Vector<Element> inFields;
 	private Vector<Element> outFields;
@@ -55,7 +53,6 @@ public class Select implements Service
 
 	public void init(String appPath, ServiceConfig params) throws Exception
 	{
-		dbName = params.getMandatoryValue(Jeeves.Config.DB);
 		query  = params.getMandatoryValue(Jeeves.Config.QUERY);
 		List<Element> inList = params.getChildren(Jeeves.Config.IN_FIELDS, Jeeves.Config.FIELD);
 
@@ -83,10 +80,9 @@ public class Select implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		Dbms    dbms   = (Dbms) context.getResourceManager().open(dbName);
-		Vector<Object>  vArgs  = DBUtils.scanInFields(params, inFields, null, dbms);
+		Vector<Object>  vArgs  = DBUtils.scanInFields(params, inFields, null, context.getApplicationContext());
 		Hashtable<String, String> formats = DBUtils.scanOutFields(outFields);
-		return dbms.selectFull(query, formats, vArgs.toArray());
+		return DBUtils.selectFull(context.getApplicationContext(), query, formats, vArgs.toArray());
 	}
 }
 

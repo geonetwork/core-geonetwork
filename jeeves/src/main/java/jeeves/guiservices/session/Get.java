@@ -76,7 +76,7 @@ public class Get implements Service
 		String sUsername = session.getUsername();
 		String sName     = session.getName();
 		String sSurname  = session.getSurname();
-		String sProfile  = session.getProfile();
+		Profile sProfile  = session.getProfile();
 
 		if (sUsername == null)
 			sUsername = Profile.Guest.name();
@@ -88,13 +88,13 @@ public class Get implements Service
 			sSurname = "";
 
 		if (sProfile == null)
-			sProfile = Profile.Guest.name();
+			sProfile = Profile.Guest;
 
 		Element userId   = new Element("userId")  .addContent(session.getUserId());
 		Element username = new Element("username").addContent(sUsername);
 		Element name     = new Element("name")    .addContent(sName);
 		Element surname  = new Element("surname") .addContent(sSurname);
-		Element profile  = new Element("profile") .addContent(sProfile);
+		Element profile  = new Element("profile") .addContent(sProfile.name());
 
 		Element sEl = new Element(Jeeves.Elem.SESSION)
 			.addContent(userId)

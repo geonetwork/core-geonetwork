@@ -49,20 +49,13 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Operation;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
@@ -162,7 +155,7 @@ public class DataManager {
      * @param force         Force reindexing all from scratch
      *
      **/
-    public synchronized void init(ServiceContext context, Dbms dbms, Boolean force) throws Exception {
+    public synchronized void init(ServiceContext context, Boolean force) throws Exception {
 
 
         // get all metadata from DB
@@ -533,7 +526,7 @@ public class DataManager {
 
             // get privileges
             OperationAllowedRepository operationAllowedRepository = servContext.getBean(OperationAllowedRepository.class);
-            List<OperationAllowed> operationsAllowed = operationAllowedRepository.findById_MetadataId(id$);
+            List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id$);
 
             for (OperationAllowed operationAllowed : operationsAllowed) {
                 OperationAllowedId operationAllowedId = operationAllowed.getId();
@@ -1173,32 +1166,6 @@ public class DataManager {
         Element record = list.get(0);
 
         return record.getChildText("istemplate");
-    }
-
-    /**
-     *
-     * @param dbms
-     * @param id
-     * @return
-     * @throws Exception
-     */
-    public MdInfo getMetadataInfo(Dbms dbms, String id) throws Exception {
-        String query = "SELECT id, uuid, schemaId, isTemplate, isHarvested, createDate, "+
-                "       changeDate, source, title, root, owner, groupOwner, displayOrder "+
-                "FROM   Metadata "+
-                "WHERE id=?";
-
-        @SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
-
-        if (list.size() == 0)
-            return null;
-
-        Element record = list.get(0);
-
-        MdInfo info = new MdInfo(id, record);
-
-        return info;
     }
 
     /**
@@ -2376,8 +2343,8 @@ public class DataManager {
             // Check user privileges
             // Session may not be defined when a harvester is running
             if (context.getUserSession() != null) {
-                String userProfile = context.getUserSession().getProfile();
-                if (! (userProfile.equals(Geonet.Profile.ADMINISTRATOR) || userProfile.equals(Geonet.Profile.USER_ADMIN)) ) {
+                Profile userProfile = context.getUserSession().getProfile();
+                if (! (userProfile == Profile.Administrator || userProfile == Profile.UserAdmin) ) {
                     int userId = Integer.parseInt(context.getUserSession()
                             .getUserId());
                     // Reserved groups
@@ -2415,7 +2382,7 @@ public class DataManager {
         }
         // Set operation
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        OperationAllowed opAllowed = operationAllowedRepository.findById_GroupIdAndId_MetadataIdAndId_OperationId(mdId, grpId, opId);
+        OperationAllowed opAllowed = operationAllowedRepository.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(mdId, grpId, opId);
         if (opAllowed == null) {
             opAllowed = new OperationAllowed(new OperationAllowedId().setGroupId(grpId).setMetadataId(mdId).setOperationId(opId));
             operationAllowedRepository.save(opAllowed);
@@ -3196,7 +3163,7 @@ public class DataManager {
             int groupId = ReservedGroup.guest.getId();
             int metadataId = Integer.parseInt(id);
             int operationId = ReservedOperation.download.getId();
-            OperationAllowed opAllowed = appContext.getBean(OperationAllowedRepository.class).findById_GroupIdAndId_MetadataIdAndId_OperationId(groupId, metadataId, operationId);
+            OperationAllowed opAllowed = appContext.getBean(OperationAllowedRepository.class).findOneById_GroupIdAndId_MetadataIdAndId_OperationId(groupId, metadataId, operationId);
             boolean canDownload = opAllowed != null;
             addElement(info, Edit.Info.Elem.GUEST_DOWNLOAD, String.valueOf(canDownload));
         }

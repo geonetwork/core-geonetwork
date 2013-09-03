@@ -23,6 +23,7 @@
 
 package jeeves.guiservices.profiles;
 
+import org.fao.geonet.domain.Profile;
 import org.jdom.*;
 
 import jeeves.interfaces.*;
@@ -46,7 +47,7 @@ public class Get implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		String profile = context.getUserSession().getProfile();
+		Profile profile = context.getUserSession().getProfile();
 
 		return (Element) context.getProfileManager().getProfilesElement(profile);
 	}

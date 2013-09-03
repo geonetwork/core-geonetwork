@@ -1,6 +1,7 @@
 package org.fao.geonet.lib;
 
-import jeeves.resources.dbms.Dbms;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public enum DatabaseType {
 	defaultType(null), sqlserver("jdbc:sqlserver:"), postgis("jdbc:postgresql_postGIS:"), postgres("jdbc:postgresql:"), mysql("jdbc:mysql:"), db2("jdbc:db2:"), mckoi("jdbc:mckoi:"), oracle("jdbc:oracle:");
@@ -11,8 +12,8 @@ public enum DatabaseType {
 		this.urlPrefix = urlPrefix;
 	}
 	
-	public static DatabaseType lookup(Dbms dbms) {
-		String url = dbms.getURL();
+	public static DatabaseType lookup(Connection dbms) throws SQLException {
+		String url = dbms.getMetaData().getURL();
 		if(url == null) {
 			return defaultType;
 		}

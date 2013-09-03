@@ -80,9 +80,9 @@ public class ProfileManager
 	}
 	//--------------------------------------------------------------------------
 
-	public Element getProfilesElement(String profile)
+	public Element getProfilesElement(Profile profile)
 	{
-	    return Profile.valueOf(profile).asElement();
+	    return profile.asElement();
 	}
 
 	//--------------------------------------------------------------------------

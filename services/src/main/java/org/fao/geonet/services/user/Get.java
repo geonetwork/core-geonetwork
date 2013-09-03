@@ -31,6 +31,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Profile;
 import org.jdom.Element;
 
 //=============================================================================
@@ -61,12 +62,12 @@ public class Get implements Service
 		UserSession usrSess = context.getUserSession();
 		if (!usrSess.isAuthenticated()) return new Element(Jeeves.Elem.RESPONSE);
 
-		String      myProfile = usrSess.getProfile();
+		Profile myProfile = usrSess.getProfile();
 		String      myUserId  = usrSess.getUserId();
 
 		if (id == null) return new Element(Jeeves.Elem.RESPONSE);
 
-		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) || myProfile.equals(Geonet.Profile.USER_ADMIN) || myUserId.equals(id)) {
+		if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin || myUserId.equals(id)) {
 
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
@@ -86,7 +87,7 @@ public class Get implements Service
                 elGroups.addContent(new Element(Geonet.Elem.ID).setText(grpId).setAttribute("profile", grp.getChildText("profile")));
 			}
 
-			if (!(myUserId.equals(id)) && myProfile.equals(Geonet.Profile.USER_ADMIN)) {
+			if (!(myUserId.equals(id)) && myProfile == Profile.UserAdmin)) {
 			
 		//--- retrieve session user groups and check to see whether this user is 
 		//--- allowed to get this info

@@ -7,6 +7,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
 
@@ -53,7 +54,7 @@ public class GetByOwner implements Service {
         String query = null;
 
         String ownerId = context.getUserSession().getUserId();
-        String userProfile = context.getUserSession().getProfile();
+        Profile userProfile = context.getUserSession().getProfile();
 
         if (userProfile == null) {
            throw new OperationNotAllowedEx("Unauthorized user attempted to list editable metadata ");
@@ -62,19 +63,19 @@ public class GetByOwner implements Service {
 				boolean useOwnerId = true;
 
         // if the user is an admin, return all metadata
-        if(userProfile.equals(Geonet.Profile.ADMINISTRATOR)) {
+        if(userProfile == Profile.Administrator) {
             query = "SELECT id FROM Metadata WHERE isHarvested='n'" ;
 						useOwnerId = false;
         }
         // if the user is a reviewer, return all metadata of the user's groups
-        else if(userProfile.equals(Geonet.Profile.REVIEWER) || userProfile.equals(Geonet.Profile.USER_ADMIN)) {
+        else if(userProfile == Profile.Reviewer || userProfile == Profile.UserAdmin) {
             query = "SELECT id FROM Metadata "+
                     "WHERE groupOwner IN "+
 										"(SELECT groupId FROM UserGroups WHERE userId=? "+
                     "AND isHarvested='n')" ;
         }
         // if the user is an editor, return metadata owned by this user
-        else if(userProfile.equals(Geonet.Profile.EDITOR) ) {
+        else if(userProfile == Profile.Editor) {
             query = "SELECT id FROM Metadata WHERE owner=?"+
                         " AND isHarvested='n'" ;
         } else {

@@ -28,7 +28,7 @@ import java.util.Hashtable;
 import javax.servlet.http.HttpSession;
 
 
-
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -161,12 +161,12 @@ public class UserSession
 			return userDetails.getSurname();
 		}
 	}
-	public String getProfile() {
+	public Profile getProfile() {
 		User userDetails = getPrincipal();
 		if (userDetails == null) {
-			return null;   
+			return null;
 		} else {
-			return userDetails.getProfile().name();
+			return userDetails.getProfile();
 		}
 	}
 	public String getEmailAddr() {

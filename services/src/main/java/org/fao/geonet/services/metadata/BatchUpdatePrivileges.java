@@ -30,6 +30,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
@@ -93,8 +94,8 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 
 				//--- in case of owner, privileges for groups 0,1 and GUEST are 
 				//--- disabled and are not sent to the server. So we cannot remove them
-				boolean isAdmin = Geonet.Profile.ADMINISTRATOR.equals(us.getProfile());
-				boolean isReviewer= Geonet.Profile.REVIEWER.equals(us.getProfile());
+				boolean isAdmin = Profile.Administrator == us.getProfile();
+				boolean isReviewer= Profile.Reviewer == us.getProfile();
 
 				if (us.getUserId().equals(info.owner) && !isAdmin && !isReviewer)
 					skip = true;

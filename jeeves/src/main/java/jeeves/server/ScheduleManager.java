@@ -37,7 +37,6 @@ import jeeves.interfaces.Schedule;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.resources.ProviderManager;
 import jeeves.utils.QuartzSchedulerUtils;
-import jeeves.utils.SerialFactory;
 
 import org.jdom.Element;
 import org.quartz.JobDetail;
@@ -55,7 +54,6 @@ public class ScheduleManager
 	private String baseUrl;
 	private String instanceId = SCHEDULER_ID+"-"+UUID.randomUUID().toString();
 	private ProviderManager providMan;
-	private SerialFactory   serialFact;
     private MonitorManager monitorManager;
     private JeevesApplicationContext jeevesApplicationContext;
 
@@ -98,7 +96,6 @@ public class ScheduleManager
     public void setProviderMan  (ProviderManager p) { providMan  = p; }
     public void setMonitorManager (MonitorManager mm) { monitorManager  = mm; }
     public void setApplicationContext (JeevesApplicationContext jap) { jeevesApplicationContext  = jap; }
-	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
 	public void setAppPath(String  path)  { appPath = path;  }
 
     //--------------------------------------------------------------------------
@@ -106,7 +103,6 @@ public class ScheduleManager
     public String getAppPath() { return appPath;}
     public String getBaseUrl() {return baseUrl;}
     public ProviderManager getProvidMan() {return providMan;}
-    public SerialFactory getSerialFact() {return serialFact;}
     public MonitorManager getMonitorManager() {return monitorManager;}
     public JeevesApplicationContext getApplicationContext() { return jeevesApplicationContext; }
     public Hashtable<String, Object> getHtContexts() {return new Hashtable<String, Object>(htContexts);}

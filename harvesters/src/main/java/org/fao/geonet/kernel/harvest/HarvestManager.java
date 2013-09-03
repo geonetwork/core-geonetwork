@@ -42,6 +42,7 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.HarvestInfoProvider;
@@ -173,10 +174,10 @@ public class HarvestManager implements HarvestInfoProvider
             return null;
         }
 
-        String profile = context.getUserSession().getProfile();
+        Profile profile = context.getUserSession().getProfile();
 		if (id != null) {
             // you're an Administrator
-            if (profile.equals(Geonet.Profile.ADMINISTRATOR)) {
+            if (profile == Profile.Administrator) {
 			    result = transform(result);
 			    addInfo(result);
 		    }
@@ -202,7 +203,7 @@ public class HarvestManager implements HarvestInfoProvider
 			result = new Element("nodes");
 			if (nodes != null) {
                 // you're Administrator: all nodes are visible
-                if (profile.equals(Geonet.Profile.ADMINISTRATOR)) {
+                if (profile == Profile.Administrator) {
                     for (Object o : nodes.getChildren()) {
                         Element node = transform((Element) o);
                         addInfo(node);

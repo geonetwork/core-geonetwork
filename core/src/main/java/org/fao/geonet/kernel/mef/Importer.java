@@ -41,7 +41,7 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.lib.Lib;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.jdom.Element;

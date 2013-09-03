@@ -26,7 +26,6 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
 import jeeves.exceptions.JeevesException;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.IO;
 import jeeves.utils.Log;
@@ -74,7 +73,7 @@ import org.fao.geonet.kernel.search.spatial.IsFullyOutsideOfFilter;
 import org.fao.geonet.kernel.search.spatial.OgcGenericFilters;
 import org.fao.geonet.kernel.search.spatial.OrSpatialFilter;
 import org.fao.geonet.kernel.search.spatial.OverlapsFilter;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.search.spatial.TouchesFilter;
@@ -1357,7 +1356,6 @@ public class SearchManager {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		DataManager dataMan = gc.getBean(DataManager.class);
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		try {
 			if (reset) {
@@ -1369,7 +1367,7 @@ public class SearchManager {
 			    synchronized (_tracker) {
 			        setupIndex(true);
                 }
-			    dataMan.init(context, dbms, true);
+			    dataMan.init(context, true);
 			}
             else {
 				dataMan.rebuildIndexXLinkedMetadata(context);

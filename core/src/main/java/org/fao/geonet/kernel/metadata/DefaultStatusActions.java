@@ -31,16 +31,21 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -220,18 +225,25 @@ public class DefaultStatusActions implements StatusActions {
     /**
      * Inform owners of metadata records that the records have approved or rejected.
      * 
-     * @param metadata The selected set of metadata records
+     * @param metadataIds The selected set of metadata records
      * @param changeDate The date that of the change in status
      * @param changeMessage Message supplied by the user that set the status
      */
-    protected void informOwners(Set<Integer> metadata, String changeDate, String changeMessage, String status)
+    protected void informOwners(Set<Integer> metadataIds, String changeDate, String changeMessage, String status)
             throws Exception {
 
         // --- get metadata owners (sorted on owner userid)
-        Element owners = am.getOwners(dbms, metadata);
-
         String subject = String.format(LangUtils.translate(context, "statusInform").get(this.language), siteName,
                 LangUtils.dbtranslate(context, "StatusValues", status).get(this.language), replyToDescr, replyTo, changeDate);
+
+        Iterable<Metadata> metadata = this.context.getBean(MetadataRepository.class).findAll(metadataIds);
+        List<User> owners = new ArrayList<User>();
+        UserRepository userRepo = this.context.getBean(UserRepository.class);
+
+        for (Metadata md : metadata) {
+            int ownerId = md.getSourceInfo().getOwner();
+            owners.add(userRepo.findOne(ownerId));
+        }
 
         processList(owners, subject, status, changeDate, changeMessage);
 
@@ -246,21 +258,12 @@ public class DefaultStatusActions implements StatusActions {
      * @param changeDate Datestamp of status change
      * @param changeMessage The message indicating why the status has changed
      */
-    protected void processList(Element users, String subject, String status, String changeDate, String changeMessage) throws Exception {
+    protected void processList(List<User> users, String subject, String status, String changeDate,
+                               String changeMessage) throws Exception {
 
-        @SuppressWarnings("unchecked")
-        List<Element> userList = users.getChildren();
-
-        Set<String> emails = new HashSet<String>();
-
-        for (Element user : userList) {
-            emails.add(user.getChildText("email"));
+        for (User user : users) {
+            sendEmail(user.getEmail(), subject, status, changeDate, changeMessage);
         }
-
-        for (String email : emails) {
-            sendEmail(email, subject, status, changeDate, changeMessage);
-        }
-
     }
 
     /**

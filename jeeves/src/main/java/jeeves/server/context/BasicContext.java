@@ -29,7 +29,6 @@ import jeeves.monitor.MonitorManager;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
 
 import java.util.Collections;
 import java.util.Map;
@@ -43,7 +42,6 @@ public class BasicContext
 {
 	private ResourceManager resMan;
 	private ProviderManager provMan;
-	private SerialFactory   serialFact;
 
 	protected Logger logger = Log.createLogger(Log.JEEVES);
 	private   String baseUrl;
@@ -59,14 +57,13 @@ public class BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public BasicContext(JeevesApplicationContext jeevesApplicationContext, MonitorManager mm, ProviderManager pm, SerialFactory sf, Map<String, Object> contexts)
+	public BasicContext(JeevesApplicationContext jeevesApplicationContext, MonitorManager mm, ProviderManager pm, Map<String, Object> contexts)
 	{
 		resMan = new ResourceManager(mm, pm);
 
 		this.jeevesApplicationContext = jeevesApplicationContext;
         this.monitorManager = mm;
 		provMan    = pm;
-		serialFact = sf;
 		htContexts = Collections.unmodifiableMap(contexts);
 	}
 
@@ -79,7 +76,6 @@ public class BasicContext
 	//--- readonly objects
 
 	public ResourceManager getResourceManager() { return resMan;     }
-	public SerialFactory   getSerialFactory()   { return serialFact; }
 
 	//--- read/write objects
 

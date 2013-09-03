@@ -37,6 +37,7 @@ import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -46,7 +47,7 @@ import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.XPath;
@@ -234,11 +235,11 @@ private SearchController _searchController;
 		if (us.getUserId() == null)
 			throw new NoApplicableCodeEx("User not authenticated.");
 		
-		String profile = us.getProfile(); 
+		Profile profile = us.getProfile();
 		
 		// Only editors and above are allowed to insert metadata
-		if (!profile.equals(Geonet.Profile.EDITOR) && !profile.equals(Geonet.Profile.REVIEWER)
-				&& !profile.equals(Geonet.Profile.USER_ADMIN) && !profile.equals(Geonet.Profile.ADMINISTRATOR))
+		if (profile != Profile.Editor && profile != Profile.Reviewer
+				&& profile != Profile.UserAdmin && profile != Profile.Administrator)
 			throw new NoApplicableCodeEx("User not allowed to insert metadata.");
 		
 		int userId = us.getUserIdAsInt();

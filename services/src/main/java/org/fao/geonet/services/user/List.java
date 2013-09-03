@@ -69,7 +69,7 @@ public class List implements Service
 
 		Set<String> hsMyGroups = getGroups(dbms, session.getUserId(), session.getProfile());
 
-		Set<String> profileSet = ProfileManager.getProfilesSet(session.getProfile());
+		Set<Profile> profileSet = ProfileManager.getProfilesSet(session.getProfile());
 
 		//--- retrieve all users
 
@@ -79,13 +79,13 @@ public class List implements Service
 
 		java.util.List<Element> alToRemove = new ArrayList<Element>();
 
-		if (!session.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
+		if (session.getProfile() != Profile.Administrator) {
 			@SuppressWarnings("unchecked")
             java.util.List<Element> elUserList = elUsers.getChildren();
 			
 			for (Element elRec : elUserList) {
 				String userId = elRec.getChildText("id");
-				String profile= elRec.getChildText("profile");
+				Profile profile= elRec.getChildText("profile");
 				
 				Set<String> userGroups = getGroups(dbms, userId, profile);
 				// Is user belong to one of the current user admin group?
@@ -120,12 +120,12 @@ public class List implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private Set<String> getGroups(Dbms dbms, String id, String profile) throws Exception
+	private Set<String> getGroups(Dbms dbms, String id, Profile profile) throws Exception
 	{
 		Element groups;
-		if (profile.equals(Profile.Administrator.name())) {
+		if (profile == Profile.Administrator) {
 			groups = dbms.select("SELECT id FROM Groups");
-		} if (profile.equals(Geonet.Profile.USER_ADMIN)) {
+		} if (profile == Profile.UserAdmin) {
 			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE profile='UserAdmin' AND userId=?", Integer.valueOf(id));
 		} else {
 			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE userId=?", Integer.valueOf(id));

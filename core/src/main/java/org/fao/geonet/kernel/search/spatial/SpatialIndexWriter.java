@@ -41,6 +41,7 @@ import jeeves.utils.Xml;
 
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Pair;
 import org.geotools.data.DataStore;
 import org.geotools.data.FeatureEvent;
 import org.geotools.data.FeatureListener;

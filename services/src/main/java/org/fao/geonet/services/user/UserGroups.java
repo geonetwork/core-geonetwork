@@ -32,6 +32,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Profile;
 import org.jdom.Element;
 
 import java.util.List;
@@ -64,10 +65,10 @@ public class UserGroups implements Service
 		if (id == null) return new Element(Jeeves.Elem.RESPONSE);
 
 		UserSession usrSess = context.getUserSession();
-		String      myProfile = usrSess.getProfile();
+		Profile myProfile = usrSess.getProfile();
 		String      myUserId  = usrSess.getUserId();
 
-		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) || myProfile.equals(Geonet.Profile.USER_ADMIN) || myUserId.equals(id)) {
+		if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin || myUserId.equals(id)) {
 
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
@@ -86,7 +87,7 @@ public class UserGroups implements Service
 			Element elGroups = new Element(Geonet.Elem.GROUPS);
 			Element theGroups;
 			
-            if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) && (theProfile.equals(Geonet.Profile.ADMINISTRATOR))) {
+            if (myProfile == Profile.Administrator && theProfile.equals(Profile.Administrator.name())) {
                 theGroups = dbms.select("SELECT id, name, description, 'Administrator' AS profile FROM Groups");
             } else {
                 theGroups = dbms.select("SELECT id, name, description, profile FROM UserGroups, Groups WHERE groupId=id AND userId=?",Integer.valueOf(id));
@@ -99,7 +100,7 @@ public class UserGroups implements Service
 				elGroups.addContent((Element)group.clone());
 			}
 
-			if (!(myUserId.equals(id)) && myProfile.equals(Geonet.Profile.USER_ADMIN)) {
+			if (!(myUserId.equals(id)) && myProfile == Profile.UserAdmin)) {
 			
 		//--- retrieve session user groups and check to see whether this user is 
 		//--- allowed to get this info

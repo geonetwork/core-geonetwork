@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
@@ -75,7 +76,7 @@ public class Update extends NotInReadOnlyModeService {
 		String kind     = Util.getParam(params, Params.KIND,    "");
 
 		UserSession usrSess = context.getUserSession();
-		String      myProfile = usrSess.getProfile();
+		Profile myProfile = usrSess.getProfile();
 		String      myUserId  = usrSess.getUserId();
 		
 		@SuppressWarnings("unchecked")
@@ -89,8 +90,8 @@ public class Update extends NotInReadOnlyModeService {
 				userGroups = new ArrayList<Element>();
 		}
 
-		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) ||
-				myProfile.equals(Geonet.Profile.USER_ADMIN) ||
+		if (myProfile == Profile.Administrator ||
+				myProfile == Profile.UserAdmin ||
 				myUserId.equals(id)) {
 
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);

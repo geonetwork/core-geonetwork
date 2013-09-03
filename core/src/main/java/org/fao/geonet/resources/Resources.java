@@ -24,7 +24,7 @@ import jeeves.utils.Log;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.domain.Pair;
 
 /**
  * Utility methods for managing resources that are site dependent. In other words

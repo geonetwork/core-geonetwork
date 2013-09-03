@@ -12,7 +12,6 @@ import jeeves.exceptions.UserNotFoundEx;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserSecurity;
 import org.fao.geonet.domain.UserSecurityNotification;
 import org.fao.geonet.repository.UserRepository;
 import org.springframework.context.ApplicationContext;

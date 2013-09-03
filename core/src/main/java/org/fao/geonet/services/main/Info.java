@@ -35,6 +35,7 @@ import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
@@ -256,7 +257,7 @@ public class Info implements Service {
 		UserSession userSession = context.getUserSession();
 		if (userSession.isAuthenticated()) {
 			data.setAttribute("authenticated","true");
-			data.addContent(new Element(Geonet.Elem.PROFILE).setText(userSession.getProfile()))
+			data.addContent(new Element(Geonet.Elem.PROFILE).setText(userSession.getProfile().name()))
 				.addContent(new Element(Geonet.Elem.USERNAME).setText(userSession.getUsername()))
 				.addContent(new Element(Geonet.Elem.ID).setText(userSession.getUserId()))
 				.addContent(new Element(Geonet.Elem.NAME).setText(userSession.getName()))
@@ -319,7 +320,7 @@ public class Info implements Service {
 
         Element result;
         // you're Administrator
-		if (Geonet.Profile.ADMINISTRATOR.equals(session.getProfile())) {
+		if (Profile.Administrator == session.getProfile()) {
 
         // return all groups
 			result = Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
@@ -542,13 +543,13 @@ public class Info implements Service {
 
 		int id = Integer.parseInt(us.getUserId());
 
-		if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
+		if (us.getProfile() == Profile.Administrator) {
 			@SuppressWarnings("unchecked")
             List<Element> allUsers = dbms.select("SELECT * FROM Users").getChildren();
             return allUsers;
 		}
 
-		if (!us.getProfile().equals(Geonet.Profile.USER_ADMIN)) {
+		if (us.getProfile() != Profile.UserAdmin) {
             @SuppressWarnings("unchecked")
             List<Element> identifiedUsers = dbms.select("SELECT * FROM Users WHERE id=?", id).getChildren();
             return identifiedUsers;

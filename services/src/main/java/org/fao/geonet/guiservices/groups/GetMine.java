@@ -29,6 +29,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
@@ -64,7 +65,7 @@ public class GetMine implements Service
 
 		//--- retrieve user groups
 
-		if (Geonet.Profile.ADMINISTRATOR.equals(session.getProfile())) {
+		if (Profile.Administrator == session.getProfile()) {
 			return Lib.local.retrieveWhere(dbms, "Groups", "id > ?", 1);
 		} else {
 			Element list = null;

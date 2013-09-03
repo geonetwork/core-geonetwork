@@ -38,9 +38,13 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 
 import org.springframework.data.domain.Sort;
@@ -659,8 +663,20 @@ public class SvnManager {
         // get owner from the database
         Set<Integer> ids = new HashSet<Integer>();
         ids.add(Integer.valueOf(id));
-        Element owner = accessMan.getOwners(dbms, ids);
-        String now = Xml.getString(owner);
+        Metadata metadata = this.context.getBean(MetadataRepository.class).findOne(id);
+        User user = this.context.getBean(UserRepository.class).findOne(metadata.getSourceInfo().getOwner());
+        // Backwards compatibility.  Format the metadata as XML in same format as previous versions.
+        Element xml = new Element("results").addContent(
+                new Element("record")
+                        .addContent(new Element("metadataid").setText(id))
+                        .addContent(new Element("userid").setText("" + user.getId()))
+                        .addContent(new Element("name").setText(user.getName()))
+                        .addContent(new Element("surname").setText(user.getSurname()))
+                        .addContent(new Element("email").setText(user.getEmail()))
+                        .addContent(new Element("email").setText(user.getEmail()))
+        );
+        //
+        String now = Xml.getString(xml);
 
         if (exists(id + "/owner.xml")) {
             // Update the id/owner.xml item in the repository

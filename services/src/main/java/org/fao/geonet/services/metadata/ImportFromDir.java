@@ -211,7 +211,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 			this.failOnError = failOnError;
 			this.userId = Integer.valueOf(this.context.getUserSession().getUserId());
 			this.userName = this.context.getUserSession().getUsername();
-			this.userProfile = Profile.valueOf(this.context.getUserSession().getProfile());
+			this.userProfile = this.context.getUserSession().getProfile();
 		}
 		
 		private void login() {

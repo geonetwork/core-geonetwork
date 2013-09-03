@@ -28,6 +28,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Profile;
 import org.jdom.Element;
 
 import java.sql.SQLException;
@@ -73,7 +74,7 @@ public class OwnershipUtils
 
 		int id = us.getUserIdAsInt();
 
-		if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
+		if (us.getProfile() == Profile.Administrator))
 			return list;
 
 		//--- we have a user admin

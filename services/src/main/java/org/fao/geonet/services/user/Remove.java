@@ -32,6 +32,7 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
@@ -59,7 +60,7 @@ public class Remove extends NotInReadOnlyModeService {
 		String id = Util.getParam(params, Params.ID);
 
 		UserSession usrSess = context.getUserSession();
-		String      myProfile = usrSess.getProfile();
+		Profile myProfile = usrSess.getProfile();
 		String      myUserId  = usrSess.getUserId();
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -71,11 +72,11 @@ public class Remove extends NotInReadOnlyModeService {
 
 		int iId = Integer.parseInt(id);
 
-		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) || myProfile.equals("UserAdmin"))  {
+		if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin)  {
 
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-			if (myProfile.equals("UserAdmin")) {
+			if (myProfile ==  Profile.UserAdmin) {
 				Element admin = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId=? group by groupId having count(*) > 1", Integer.valueOf(myUserId), iId);
 				if (admin.getChildren().size() == 0) {
 				  throw new IllegalArgumentException("You don't have rights to delete this user because the user is not part of your group");

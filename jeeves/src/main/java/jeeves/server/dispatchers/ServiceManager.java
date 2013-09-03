@@ -64,7 +64,6 @@ import jeeves.utils.BLOB;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Log;
 import jeeves.utils.SOAPUtil;
-import jeeves.utils.SerialFactory;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
@@ -90,7 +89,6 @@ public class ServiceManager
     private MonitorManager monitorManager;
     private XmlCacheManager xmlCacheManager;
 
-	private SerialFactory   serialFact;
     private String  appPath;
     private String  baseUrl;
     private String  uploadDir;
@@ -121,7 +119,6 @@ public class ServiceManager
 	public void setXmlCacheManager  (XmlCacheManager xcm) { xmlCacheManager  = xcm; }
     public void setApplicationContext(JeevesApplicationContext c) { this.jeevesApplicationContext = c;}
 
-	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
 	public void setServlet(JeevesServlet serv) { servlet = serv; }
     public void setStartupErrors(Map<String,String> errors)   { startupErrors = errors; startupError = true; }
 	public boolean isStartupError() { return startupError; }
@@ -336,7 +333,7 @@ public class ServiceManager
 
 	public ServiceContext createServiceContext(String name, JeevesApplicationContext jeevesApplicationContext)
 	{
-		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, xmlCacheManager, monitorManager, providMan, serialFact, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, xmlCacheManager, monitorManager, providMan, profilMan, htContexts);
 
 		context.setBaseUrl(baseUrl);
 		context.setLanguage("?");
@@ -351,7 +348,7 @@ public class ServiceManager
 	}
 
 	public void dispatch(ServiceRequest req, UserSession session) {
-		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext, xmlCacheManager, monitorManager, providMan, serialFact, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext, xmlCacheManager, monitorManager, providMan, profilMan, htContexts);
 		dispatch(req, session, context);
 	}
 

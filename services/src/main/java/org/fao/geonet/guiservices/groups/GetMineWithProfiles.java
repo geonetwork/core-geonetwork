@@ -30,6 +30,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Profile;
 import org.jdom.Element;
 
 /**
@@ -50,7 +51,7 @@ public class GetMineWithProfiles implements Service {
 				.open(Geonet.Res.MAIN_DB);
 
 		// --- retrieve user groups
-		if (Geonet.Profile.ADMINISTRATOR.equals(session.getProfile())) {
+		if (Profile.Administrator == session.getProfile()) {
 			String query = "SELECT id, '' as profile FROM Groups WHERE id > 1";
 			return dbms.select(query);
 		} else {

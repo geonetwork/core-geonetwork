@@ -125,11 +125,11 @@ public abstract class JeevesException extends RuntimeException
 			at.setAttribute("method", (meth == null) ? "???" : meth);
 
 
-            if (--depth >= 0 || 
+            if (--depth >= 0 || (clas != null && (
                     clas.startsWith("org.fao") || 
                     clas.startsWith("org.wfp") || 
                     clas.startsWith("jeeves")  ||
-                    clas.startsWith("org.geonetwork")) {
+                    clas.startsWith("org.geonetwork")))) {
                 writing = true;
                 stack.addContent(at);
             } else if (writing) {
