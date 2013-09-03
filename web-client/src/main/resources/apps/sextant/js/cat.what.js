@@ -206,9 +206,37 @@ cat.what = function() {
                 dir: "asc"
             });
 
+            
+            
+            
+            var sextantThemeThesaurusStore = new Ext.data.Store({
+                url: services.searchKeyword,
+                baseParams: {
+                    pNewSearch: true,
+                    pTypeSearch: 1,
+                    pThesauri: 'local.theme.sextant-theme',
+                    pMode: 'searchBox',
+                    maxResults: 200
+                },
+                reader: new Ext.data.XmlReader({
+                    record: 'keyword',
+                    id: 'name'
+                }, Ext.data.Record.create([{
+                    name: 'label',
+                    mapping: 'value'
+                }, {
+                    name: 'name',
+                    mapping: 'uri'
+                }])),
+                fields: ["name", "label"],
+                listeners: {
+                }
+            });
+            sextantThemeThesaurusStore.load();
+            
 	        // Use searchSuggestion to load categories (that way they can be filtered)
 	        var baseParams = {
-				field : '_cat',
+				field : 'sextantTheme',
 				threshold: 1
 			};
 	        
@@ -217,15 +245,16 @@ cat.what = function() {
 	        	baseParams.groupPublished = groupToDisplay.join(' or ');
 	        }
 	        var categoryStore = new GeoNetwork.data.OpenSearchSuggestionStore({
-				url : services.opensearchSuggest,
-				rootId : 1,
-				baseParams : baseParams
-			});
-	
+                url : services.opensearchSuggest,
+                rootId : 1,
+                baseParams : baseParams
+            });
+	        
 			var categoryTree = new GeoNetwork.CategoryTree({
 				store : categoryStore,
 				lang: cat.language,
-				storeLabel: GeoNetwork.data.CategoryStore(services.getCategories),
+                name : 'E_sextantTheme',
+				storeLabel: sextantThemeThesaurusStore,
 				rootVisible: false,
 				autoWidth: true,
 				hidden: catCookie==1?false:true,

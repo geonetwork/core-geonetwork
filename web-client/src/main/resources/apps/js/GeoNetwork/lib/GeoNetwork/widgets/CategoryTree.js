@@ -128,8 +128,10 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
         if(idx>=0 && this.storeLabel.getAt(idx).get('label') &&
                 this.storeLabel.getAt(idx).get('label')[this.lang]) {
             return this.storeLabel.getAt(idx).get('label')[this.lang];
-        }
-        else return OpenLayers.i18n(value); // Will return the value if not defined
+        } else if (idx>=0 && this.storeLabel.getAt(idx).get('label')) {
+            return this.storeLabel.getAt(idx).get('label');
+            
+        } else return OpenLayers.i18n(value); // Will return the value if not defined
     },
     
     /**
