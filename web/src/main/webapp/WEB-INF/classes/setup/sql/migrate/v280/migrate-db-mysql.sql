@@ -68,7 +68,7 @@ CREATE TABLE Thesaurus (
     primary key(id)
   );
 
-ALTER TABLE Users ALTER COLUMN username varchar(256);
+ALTER TABLE Users ALTER COLUMN username varchar(255);
 
 ALTER TABLE Metadata ALTER COLUMN createDate varchar(30);
 ALTER TABLE Metadata ALTER COLUMN changeDate varchar(30);
