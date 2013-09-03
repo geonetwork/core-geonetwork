@@ -64,7 +64,7 @@ attached it to the metadata for data.
 									<xsl:copy-of
 										select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:transferSize"/>
 									<xsl:copy-of
-										select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:onLine"/>
+										select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) != $url or normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) != $name]"/>
 									
 									
 									<!-- Add all online source from the target metadata to the
@@ -80,36 +80,33 @@ attached it to the metadata for data.
 										</xsl:for-each>
 									</xsl:if>
 									<xsl:if test="$url">
-										<xsl:for-each select="tokenize($name, ',')">
-											<xsl:variable name="pos" select="position()"/>
-											<gmd:onLine>
-												<xsl:if test="$uuidref">
-													<xsl:attribute name="uuidref" select="$uuidref"/>
-												</xsl:if>
-												<gmd:CI_OnlineResource>
-													<gmd:linkage>
-														<gmd:URL>
-														<xsl:value-of select="$url"/>
-														</gmd:URL>
-													</gmd:linkage>
-													<gmd:protocol>
-														<gco:CharacterString>
-														<xsl:value-of select="$protocol"/>
-														</gco:CharacterString>
-													</gmd:protocol>
-													<gmd:name>
-														<gco:CharacterString>
-														<xsl:value-of select="."/>
-														</gco:CharacterString>
-													</gmd:name>
-													<gmd:description>
-														<gco:CharacterString>
-														<xsl:value-of select="tokenize($desc, ',')[position() = $pos]"/>
-														</gco:CharacterString>
-													</gmd:description>
-												</gmd:CI_OnlineResource>
-											</gmd:onLine>
-										</xsl:for-each>
+										<gmd:onLine>
+											<xsl:if test="$uuidref">
+												<xsl:attribute name="uuidref" select="$uuidref"/>
+											</xsl:if>
+											<gmd:CI_OnlineResource>
+												<gmd:linkage>
+													<gmd:URL>
+													<xsl:value-of select="$url"/>
+													</gmd:URL>
+												</gmd:linkage>
+												<gmd:protocol>
+													<gco:CharacterString>
+													<xsl:value-of select="$protocol"/>
+													</gco:CharacterString>
+												</gmd:protocol>
+												<gmd:name>
+													<gco:CharacterString>
+													<xsl:value-of select="$name"/>
+													</gco:CharacterString>
+												</gmd:name>
+												<gmd:description>
+													<gco:CharacterString>
+													<xsl:value-of select="$desc"/>
+													</gco:CharacterString>
+												</gmd:description>
+											</gmd:CI_OnlineResource>
+										</gmd:onLine>
 									</xsl:if>
 									<xsl:copy-of
 										select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:offLine"

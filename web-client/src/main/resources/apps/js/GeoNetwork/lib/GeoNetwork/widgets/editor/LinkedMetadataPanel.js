@@ -154,7 +154,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
     /** public: method[addRelation] 
      *  Open the GeoNetwork.editor.LinkResourcesWindow to add a relation
      */
-    addRelation: function (type) {
+    addRelation: function (type, url, name, protocol, descr) {
         var window, config = {
                 type: type,
                 editor: this.editor,
@@ -168,7 +168,11 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 metadataSchema: this.metadataSchema,
                 setThumbnail: this.catalogue.services.mdSetThumbnail,
                 bodyStyle: 'padding:10px;background-color:white',
-                imagePath: this.imagePath
+                imagePath: this.imagePath,
+                editUrl: url,
+                editName: name,
+                editProtocol: protocol,
+                editDescr: descr
             };
         if (type === 'thumbnail') {
             config.height = 300;
@@ -304,6 +308,27 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             this.editor.process(action);
         }
     },
+    
+    /** public: method[removeRelation] 
+     *  Remove a relation calling the appropiate XSL process with parameters.
+     */
+    editRelation: function (type, uuid, id, descr) {
+        // Define which metadata to be modified
+        // It could be the on in current editing or a related one
+        var targetMetadataUuid = this.metadataUuid;
+        var parameters = "", msg = "";
+        
+        if (type === 'onlinesrc') {
+//            // if a file is upload remove the file before removing the link
+//            if (uuid.indexOf('WWW:DOWNLOAD-1.0-http--download') !== -1) {
+//                this.removeUploadedFile(uuid, parameters);
+//                return;
+//            }
+            var info = uuid.trim().split(' ');
+            this.addRelation(type, id, info.shift(), info.join(' ').substring(1, info.join(' ').length -1), descr);
+        }
+    },
+    
     /** private: method[generateAddMenu] 
      * Generate a menu of actions to add relation.
      */
@@ -382,7 +407,10 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                     '</tpl>',
                     '<tpl if="subType"><span class="relation-type">({subType})</span></tpl>' +
                     '<tpl if="type === \'onlinesrc\'">',
-                      '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{title}' + this.sep + '{id}"></span>',
+                      '<div class="button" id="remove' + this.sep + '{type}' + this.sep + '{title}' + this.sep + '{id}"></div>',
+                      '<tpl if="!this.isDownloadProtocol(title)">',
+                          '<div class="button" id="edit' + this.sep + '{type}' + this.sep + '{title}' + this.sep + '{id}' + this.sep + '{abstract}"></div>',
+                      '</tpl>',
                     '</tpl>',
                     '<tpl if="type !== \'onlinesrc\'">',
                       '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{uuid}"></span></li>',
@@ -390,7 +418,12 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 '</tpl>',
               '</tpl>',
             '</tpl>',
-            '</ul>'
+            '</ul>',
+            {
+                isDownloadProtocol: function(protocol){
+                    return protocol.indexOf('WWW:DOWNLOAD-1.0-http--download') >= 0;
+                }
+            }
         );
         
         GeoNetwork.editor.LinkedMetadataPanel.superclass.initComponent.call(this);
@@ -478,6 +511,14 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                         renderTo: button,
                         handler: function () {
                             panel.removeRelation(info[1], info[2], info[3]);
+                        }
+                    });
+                } else if (info[0] === 'edit') {
+                    bt = new Ext.Button({
+                        text: OpenLayers.i18n('edit'),
+                        renderTo: button,
+                        handler: function () {
+                            panel.editRelation(info[1], info[2], info[3], info[4]);
                         }
                     });
                 } 

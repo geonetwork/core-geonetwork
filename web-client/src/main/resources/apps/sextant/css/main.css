@@ -40,7 +40,7 @@ table, tbody, tr, td, th {
 	position:absolute;
 	visibility:hidden;
 }
-.search-panel .search-panel-header {
+.west-panel .search-panel-header {
 	border: none;
 	background-color: #DEDEDE;
 	background-image: none;
@@ -50,10 +50,10 @@ table, tbody, tr, td, th {
 	cursor: pointer;
 	border-radius: 4px 4px 4px 4px;
 }
-.search-panel .search-panel-header .x-panel-header-text{
+.west-panel .search-panel-header .x-panel-header-text{
 	padding-left:10px;
 }
-.search-panel .search-panel-header .x-panel-header-text a{
+.west-panel .search-panel-header .x-panel-header-text a{
 	color: #626262;
     font-size: 90%;
     font-weight: normal;
@@ -61,7 +61,7 @@ table, tbody, tr, td, th {
     padding-right: 25px;
     text-decoration:underline;
 }
-.search-panel .x-panel-header-text a:hover{
+.west-panel .x-panel-header-text a:hover{
 	color: #FF7930;
 }
 .search-form-panel .olMap {
@@ -750,4 +750,7 @@ input[type="text"] {
 
 .gn table {
 	clear: right;
+}
+.bold {
+	font-weight: 700 !important;
 }
