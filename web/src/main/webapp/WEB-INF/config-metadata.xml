@@ -582,7 +582,11 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 
 			<output sheet="metadata-category.xsl"/>
 		</service>
-
+		
+		<service name="xml.metadata.category">
+			<class name=".services.metadata.GetCategories"/>
+		</service>
+		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.category">
