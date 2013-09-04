@@ -376,11 +376,12 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         /* Actions status depend on records */
         if(GeoNetwork.Settings && GeoNetwork.Settings.editor && GeoNetwork.Settings.editor.disableIfSubmittedForEditor) {
             this.editAction.setDisabled(disableIfSubmittedForEditor || !isEditable || isReadOnly);
+            this.statusAction.setDisabled(disableIfSubmittedForEditor || (!isEditable && !isHarvested) || isReadOnly);
         } else {
             this.editAction.setDisabled(!isEditable || isReadOnly);
+        	this.statusAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         }
         this.adminAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
-        this.statusAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         this.enableWorkflowAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         this.versioningAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         this.categoryAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
