@@ -802,7 +802,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Use for XslProcessing task
      */
     process: function(action) {
-        this.loadUrl(action, undefined,  this.loadCallback, true);
+        this.loadUrl('metadata.update.new', undefined, function () {
+            this.loadUrl(action, undefined,  this.loadCallback, true);
+        });
     },
     /** api: method[init]
      * 
