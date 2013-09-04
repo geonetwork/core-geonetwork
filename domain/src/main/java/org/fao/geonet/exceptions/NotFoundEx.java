@@ -21,12 +21,12 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.exceptions;
+package org.fao.geonet.exceptions;
 
 //=============================================================================
 
 @SuppressWarnings("serial")
-public abstract class BadInputEx extends JeevesClientEx
+public abstract class NotFoundEx extends JeevesClientEx
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -34,11 +34,12 @@ public abstract class BadInputEx extends JeevesClientEx
 	//---
 	//--------------------------------------------------------------------------
 
-	public BadInputEx(String message, Object object)
+	public NotFoundEx(String message, Object object)
 	{
 		super(message, object);
 
-		id = "bad-input";
+		id = "not-found";
+		code = 404;
 	}
 }
 

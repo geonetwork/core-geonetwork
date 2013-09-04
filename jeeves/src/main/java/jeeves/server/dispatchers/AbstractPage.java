@@ -26,7 +26,7 @@ package jeeves.server.dispatchers;
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.GuiService;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.jdom.Element;
 
 import java.util.List;

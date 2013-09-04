@@ -13,4 +13,8 @@
 	<category name="org.hibernate.SQL">
 		<priority value="DEBUG" />
 	</category>
+	<category name="org.hibernate.type">
+		<priority value="TRACE" />
+	</category>
+
 </log4j:configuration>

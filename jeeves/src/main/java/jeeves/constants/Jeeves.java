@@ -90,7 +90,7 @@ public final class Jeeves
 		public static final String SERVICE   = "service";
 		public static final String PROFILES  = Profile.PROFILES_ELEM_NAME;
 		public static final String FORWARD   = "forward";
-		public static final String ERROR     = "error";
+		public static final String ERROR     = Constants.ERROR;
 		public static final String SESSION   = "session";
 
 		public static final String BASE_URL     = "url";
@@ -160,7 +160,7 @@ public final class Jeeves
           */
 		   private Id() {}
          
-		   public static final String ERROR   = "error";
+		   public static final String ERROR   = Constants.ERROR;
 		}
 
 		//--- values of the type's attribute

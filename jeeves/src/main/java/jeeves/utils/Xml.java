@@ -23,7 +23,7 @@
 
 package jeeves.utils;
 import static org.fao.geonet.Constants.ENCODING;
-import jeeves.exceptions.XSDValidationErrorEx;
+import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.FeatureKeys;
 
@@ -97,7 +97,7 @@ import java.util.UUID;
 /**
  *  General class of useful static methods.
  */
-public final class Xml 
+public final class Xml
 {
 
 	public static final Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);

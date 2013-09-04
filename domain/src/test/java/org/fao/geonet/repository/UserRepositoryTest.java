@@ -60,7 +60,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         User editUser = _userRepo.save(newUser().setProfile(Profile.Editor));
         User reviewerUser = _userRepo.save(newUser().setProfile(Profile.Reviewer));
         User registeredUser = _userRepo.save(newUser().setProfile(Profile.RegisteredUser));
-        User adminUser = _userRepo.save(newUser().setProfile(Profile.Administrator));
+        _userRepo.save(newUser().setProfile(Profile.Administrator));
 
         Metadata md1 = MetadataRepositoryTest.newMetadata(inc);
         md1.getSourceInfo().setGroupOwner(group1.getId());
@@ -72,16 +72,15 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
 
         Metadata md3 = MetadataRepositoryTest.newMetadata(inc);
         md3.getSourceInfo().setGroupOwner(group2.getId());
-        md3 = _metadataRepo.save(md3);
+        _metadataRepo.save(md3);
 
-        UserGroup ug1 = _userGroupRepository.save(new UserGroup().setGroup(group1).setUser(editUser).setProfile(Profile.Editor));
-        UserGroup ug2 = _userGroupRepository.save(new UserGroup().setGroup(group2).setUser(registeredUser).setProfile(Profile.RegisteredUser));
-        UserGroup ug3 = _userGroupRepository.save(new UserGroup().setGroup(group2).setUser(reviewerUser).setProfile(Profile.Editor));
-        UserGroup ug4 = _userGroupRepository.save(new UserGroup().setGroup(group1).setUser(reviewerUser).setProfile(Profile.Reviewer));
+        _userGroupRepository.save(new UserGroup().setGroup(group1).setUser(editUser).setProfile(Profile.Editor));
+        _userGroupRepository.save(new UserGroup().setGroup(group2).setUser(registeredUser).setProfile(Profile.RegisteredUser));
+        _userGroupRepository.save(new UserGroup().setGroup(group2).setUser(reviewerUser).setProfile(Profile.Editor));
+        _userGroupRepository.save(new UserGroup().setGroup(group1).setUser(reviewerUser).setProfile(Profile.Reviewer));
 
-        List<Pair<Integer, User>> found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId()),
-                Optional.<Profile>absent(),
-                Optional.of(new Sort(User_.name.getName())));
+        List<Pair<Integer, User>> found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId()), null,
+                new Sort(User_.name.getName()));
 
         assertEquals(2, found.size());
         assertEquals(md1.getId(), found.get(0).one().intValue());
@@ -89,9 +88,8 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         assertEquals(editUser, found.get(0).two());
         assertEquals(reviewerUser, found.get(1).two());
 
-        found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId()),
-                Optional.<Profile>absent(),
-                Optional.of(new Sort(new Sort.Order(Sort.Direction.DESC, User_.name.getName()))));
+        found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId()), null,
+                new Sort(new Sort.Order(Sort.Direction.DESC, User_.name.getName())));
 
         assertEquals(2, found.size());
         assertEquals(md1.getId(), found.get(0).one().intValue());
@@ -100,9 +98,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         assertEquals(reviewerUser, found.get(0).two());
 
 
-        found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId(), md2.getId()),
-                Optional.<Profile>absent(),
-                Optional.<Sort>absent());
+        found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId(), md2.getId()), null, null);
 
         assertEquals(4, found.size());
         int md1Found = 0;

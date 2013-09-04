@@ -214,11 +214,7 @@ public class ISODate implements Cloneable {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((_calendar == null) ? 0 : _calendar.hashCode());
-        result = prime * result + (_shortDate ? 1231 : 1237);
-        return result;
+        return timeAsString().hashCode();
     }
 
     @Override
@@ -230,14 +226,7 @@ public class ISODate implements Cloneable {
         if (getClass() != obj.getClass())
             return false;
         ISODate other = (ISODate) obj;
-        if (_calendar == null) {
-            if (other._calendar != null)
-                return false;
-        } else if (!_calendar.equals(other._calendar))
-            return false;
-        if (_shortDate != other._shortDate)
-            return false;
-        return true;
+        return timeAsString().equals(other.timeAsString());
     }
 
     private void parseDate(@Nonnull String isoDate) {

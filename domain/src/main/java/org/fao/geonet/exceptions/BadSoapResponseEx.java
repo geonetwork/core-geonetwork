@@ -21,12 +21,14 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.exceptions;
+package org.fao.geonet.exceptions;
+
+import org.jdom.Element;
 
 //=============================================================================
 
 @SuppressWarnings("serial")
-public abstract class JeevesServerEx extends JeevesException
+public class BadSoapResponseEx extends BadResponseEx
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -34,12 +36,11 @@ public abstract class JeevesServerEx extends JeevesException
 	//---
 	//--------------------------------------------------------------------------
 
-	public JeevesServerEx(String message, Object object)
+	public BadSoapResponseEx(Element response)
 	{
-		super(message, object);
+		super("Bad SOAP response", response);
 
-		id   = "server";
-		code = 500;
+		id = "bad-soap-response";
 	}
 }
 

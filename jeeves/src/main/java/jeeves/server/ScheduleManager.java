@@ -48,7 +48,10 @@ import org.quartz.Trigger;
 
 public class ScheduleManager
 {
-    private static final String SCHEDULER_ID = "scheduleManager";
+    /**
+     * Id for the Quartz scheduler for the Schedule jobs.
+     */
+    public static final String SCHEDULER_ID = "scheduleManager";
 
 	private String appPath;
 	private String baseUrl;

@@ -26,13 +26,13 @@ package jeeves.services;
 import java.util.*;
 import java.util.regex.*;
 
+import jeeves.utils.Xml;
 import org.jdom.*;
 
 import jeeves.interfaces.*;
 import jeeves.server.*;
 import jeeves.server.context.*;
 import jeeves.constants.*;
-import jeeves.utils.*;
 
 //=============================================================================
 

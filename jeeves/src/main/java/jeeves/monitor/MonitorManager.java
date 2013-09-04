@@ -19,7 +19,7 @@ import javax.servlet.ServletContext;
 import jeeves.constants.ConfigFile;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 
 import org.apache.log4j.LogManager;
 import org.jdom.Element;

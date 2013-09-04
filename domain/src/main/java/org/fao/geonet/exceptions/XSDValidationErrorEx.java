@@ -21,12 +21,12 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.exceptions;
+package org.fao.geonet.exceptions;
 
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class MissingParameterEx extends BadInputEx
+public class XSDValidationErrorEx extends JeevesClientEx
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -34,15 +34,13 @@ public class MissingParameterEx extends BadInputEx
 	//---
 	//--------------------------------------------------------------------------
 
-	public MissingParameterEx(String name) { this(name, null); }
+	public XSDValidationErrorEx(String name) { this(name, null); }
 
-	//--------------------------------------------------------------------------
-
-	public MissingParameterEx(String name, Object container)
+	public XSDValidationErrorEx(String name, Object value)
 	{
-		super(name, container);
+		super(name, value);
 
-		id = "missing-parameter";
+		id = "xsd-validation-error";
 	}
 }
 

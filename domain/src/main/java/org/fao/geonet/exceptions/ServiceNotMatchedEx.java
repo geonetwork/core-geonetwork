@@ -21,12 +21,12 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.exceptions;
+package org.fao.geonet.exceptions;
 
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class OperationNotAllowedEx extends NotAllowedEx
+public class ServiceNotMatchedEx extends JeevesServerEx
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -34,20 +34,11 @@ public class OperationNotAllowedEx extends NotAllowedEx
 	//---
 	//--------------------------------------------------------------------------
 
-	public OperationNotAllowedEx()
+	public ServiceNotMatchedEx(String name)
 	{
-		super("Operation not allowed", null);
+		super("Service not matched in list", name);
 
-		id   = "operation-not-allowed";
-		code = 403;
-	}
-
-	public OperationNotAllowedEx(String message)
-	{
-		super("Operation not allowed", message);
-
-		id   = "operation-not-allowed";
-		code = 403;
+		id = "service-not-matched";
 	}
 }
 

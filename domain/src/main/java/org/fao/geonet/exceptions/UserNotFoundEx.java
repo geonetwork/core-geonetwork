@@ -21,12 +21,12 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.exceptions;
+package org.fao.geonet.exceptions;
 
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class ResourceNotFoundEx extends NotFoundEx
+public class UserNotFoundEx extends NotFoundEx
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -34,11 +34,11 @@ public class ResourceNotFoundEx extends NotFoundEx
 	//---
 	//--------------------------------------------------------------------------
 
-	public ResourceNotFoundEx(String name)
+	public UserNotFoundEx(String idOrName)
 	{
-		super("Resource not found", name);
+		super("User not found", idOrName);
 
-		id = "resource-not-found";
+		id = "user-not-found";
 	}
 }
 

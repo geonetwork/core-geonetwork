@@ -21,12 +21,12 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.exceptions;
+package org.fao.geonet.exceptions;
 
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class ServiceNotMatchedEx extends JeevesServerEx
+public class MissingParameterEx extends BadInputEx
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -34,11 +34,15 @@ public class ServiceNotMatchedEx extends JeevesServerEx
 	//---
 	//--------------------------------------------------------------------------
 
-	public ServiceNotMatchedEx(String name)
-	{
-		super("Service not matched in list", name);
+	public MissingParameterEx(String name) { this(name, null); }
 
-		id = "service-not-matched";
+	//--------------------------------------------------------------------------
+
+	public MissingParameterEx(String name, Object container)
+	{
+		super(name, container);
+
+		id = "missing-parameter";
 	}
 }
 

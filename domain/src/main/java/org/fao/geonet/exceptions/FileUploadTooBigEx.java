@@ -21,12 +21,12 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.exceptions;
+package org.fao.geonet.exceptions;
 
 //=============================================================================
 
 @SuppressWarnings("serial")
-public abstract class NotFoundEx extends JeevesClientEx
+public class FileUploadTooBigEx extends BadInputEx
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -34,12 +34,11 @@ public abstract class NotFoundEx extends JeevesClientEx
 	//---
 	//--------------------------------------------------------------------------
 
-	public NotFoundEx(String message, Object object)
+	public FileUploadTooBigEx()
 	{
-		super(message, object);
+		super("File upload too big", null);
 
-		id = "not-found";
-		code = 404;
+		id = "file-upload-too-big";
 	}
 }
 

@@ -22,12 +22,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.vividsolutions.jts.util.Assert;
+import org.jdom.Element;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 
 /**
- * An entity representing a metadata object in the database. The xml, groups and operations are lazily loaded so accessing then will need to
- * be done in a thread that has a bound EntityManager. Also they can trigger database access if they have not been cached and therefore can
+ * An entity representing a metadata object in the database. The xml, groups and operations are lazily loaded so accessing then will
+ * need to
+ * be done in a thread that has a bound EntityManager. Also they can trigger database access if they have not been cached and therefore
+ * can
  * cause slowdowns so they should only be accessed in need.
- * 
+ *
  * @author Jesse
  */
 @Entity
@@ -46,10 +51,12 @@ public class Metadata {
     // private List<MetadataStatus> _metadataStatus;
     // private Set<Operation> operations = new HashSet<Operation>();
     // private Set<Group> groups = new HashSet<Group>();
+
     /**
-     * Get the id of the metadata. This is a generated value and as such new instances should not have this set as it will simply be ignored
+     * Get the id of the metadata. This is a generated value and as such new instances should not have this set as it will simply be
+     * ignored
      * and could result in reduced performance.
-     * 
+     *
      * @return the id of the metadata
      */
     @Id
@@ -60,11 +67,11 @@ public class Metadata {
     }
 
     /**
-     * Set the id of the metadata. This is a generated value and as such new instances should not have this set as it will simply be ignored
+     * Set the id of the metadata. This is a generated value and as such new instances should not have this set as it will simply be
+     * ignored
      * and could result in reduced performance.
-     * 
+     *
      * @param _id the id of the metadata
-     * 
      * @return this entity object
      */
     public Metadata setId(int _id) {
@@ -74,7 +81,7 @@ public class Metadata {
 
     /**
      * Get the uuid of the metadata. This is a required property and thus must not be null.
-     * 
+     *
      * @return the uuid of the metadata.
      */
     @Column(nullable = false)
@@ -85,7 +92,7 @@ public class Metadata {
 
     /**
      * Set the metadata uuid.
-     * 
+     *
      * @param uuid the new uuid of the metadata
      * @return this eneity object
      */
@@ -98,7 +105,7 @@ public class Metadata {
 
     /**
      * Get the metadata data as a string (typically XML)
-     * 
+     *
      * @return the metadata data as a string.
      */
     @Column(nullable = false)
@@ -109,9 +116,8 @@ public class Metadata {
 
     /**
      * Set the metadata data as a string (typically XML)
-     * 
+     *
      * @param data the data for this metadata record.
-     * 
      * @return this metadata entity.
      */
     public Metadata setData(String data) {
@@ -119,9 +125,47 @@ public class Metadata {
         return this;
     }
 
+    public Metadata setDataAndFixCR(Element xml) {
+        XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+
+        String data = outputter.outputString(fixCR(xml));
+        setData(data);
+
+        return this;
+    }
+
+    private Element fixCR(Element xml) {
+        List<?> list = xml.getChildren();
+        if (list.size() == 0) {
+            String text = xml.getText();
+            xml.setText(replaceString(text, "\r\n", "\n"));
+        } else {
+            for (Object o : list) {
+                fixCR((Element) o);
+            }
+        }
+        return xml;
+    }
+
+    private static String replaceString(final String initialString, final String pattern, final String replacement) {
+        StringBuilder result = new StringBuilder();
+        String remainingString = initialString;
+        int i;
+
+        while ((i = remainingString.indexOf(pattern)) != -1) {
+            result.append(remainingString.substring(0, i));
+            result.append(replacement);
+            remainingString = remainingString.substring(i + pattern.length());
+        }
+
+        result.append(remainingString);
+        return result.toString();
+    }
+
+
     /**
      * Get the object representing metadata about the metadata (metadata creation date, etc...)
-     * 
+     *
      * @return the {@link MetadataDataInfo} for the metadata entity.
      */
     @Embedded
@@ -131,7 +175,7 @@ public class Metadata {
 
     /**
      * Set the {@link MetadataDataInfo}, the object representing metadata about the metadata (metadata creation date, etc...)
-     * 
+     *
      * @param dataInfo the new data info object
      */
     public void setDataInfo(MetadataDataInfo dataInfo) {
@@ -140,7 +184,7 @@ public class Metadata {
 
     /**
      * Get the object containing the source information about the metadata entity.
-     * 
+     *
      * @return the object containing the source information about the metadata entity.
      */
     @Embedded
@@ -150,7 +194,7 @@ public class Metadata {
 
     /**
      * Set the object containing the source information about the metadata entity.
-     * 
+     *
      * @param sourceInfo the object containing the source information about the metadata entity.
      */
     public void setSourceInfo(MetadataSourceInfo sourceInfo) {
@@ -159,7 +203,7 @@ public class Metadata {
 
     /**
      * Get the object containing information about how and from where the metadata was harvested (and whether it was harvested.)
-     * 
+     *
      * @return the harvest info object
      */
     @Embedded
@@ -169,7 +213,7 @@ public class Metadata {
 
     /**
      * Set the object containing information about how and from where the metadata was harvested (and whether it was harvested.)
-     * 
+     *
      * @param harvestInfo the harvest info object
      */
     public void setHarvestInfo(MetadataHarvestInfo harvestInfo) {
@@ -216,11 +260,12 @@ public class Metadata {
 
     /**
      * Get the set of metadata categories this metadata is part of.
-     * 
+     *
      * @return the metadata categories
      */
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "metadatacateg", joinColumns = @JoinColumn(name = "categoryid"), inverseJoinColumns = @JoinColumn(name = "metadataid"))
+    @JoinTable(name = "metadatacateg", joinColumns = @JoinColumn(name = "categoryid"), inverseJoinColumns = @JoinColumn(name =
+            "metadataid"))
     @Nonnull
     public Set<MetadataCategory> getCategories() {
         return _metadataCategories;
@@ -228,7 +273,7 @@ public class Metadata {
 
     /**
      * Set the metadata category
-     * 
+     *
      * @param categories
      */
     protected void setCategories(Set<MetadataCategory> categories) {

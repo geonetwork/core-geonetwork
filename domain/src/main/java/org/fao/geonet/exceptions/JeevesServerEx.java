@@ -21,12 +21,12 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.exceptions;
+package org.fao.geonet.exceptions;
 
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class BadServerCertificateEx extends BadResponseEx
+public abstract class JeevesServerEx extends JeevesException
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -34,11 +34,12 @@ public class BadServerCertificateEx extends BadResponseEx
 	//---
 	//--------------------------------------------------------------------------
 
-	public BadServerCertificateEx(String message)
+	public JeevesServerEx(String message, Object object)
 	{
-		super("Bad server certificate: "+message, null);
+		super(message, object);
 
-		id = "bad-server-certificate";
+		id   = "server";
+		code = 500;
 	}
 }
 

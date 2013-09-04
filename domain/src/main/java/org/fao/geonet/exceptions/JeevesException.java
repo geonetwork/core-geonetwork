@@ -21,10 +21,9 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.exceptions;
+package org.fao.geonet.exceptions;
 
-import jeeves.constants.Jeeves;
-
+import org.fao.geonet.Constants;
 import org.jdom.Element;
 
 //=============================================================================
@@ -69,7 +68,7 @@ public abstract class JeevesException extends RuntimeException
 	{
 		String msg = t.getMessage();
 		String cls = t.getClass().getSimpleName();
-		String id  = Jeeves.Attr.Id.ERROR;
+		String id  = Constants.ERROR;
 		Object obj = null;
 
 		if (t instanceof JeevesException)
@@ -80,7 +79,7 @@ public abstract class JeevesException extends RuntimeException
 			obj = je.getObject();
 		}
 
-		Element error = new Element(Jeeves.Elem.ERROR)
+		Element error = new Element(Constants.ERROR)
 								.addContent(new Element("message").setText(msg))
 								.addContent(new Element("class")  .setText(cls))
 								.addContent(getStackTrace(t, 10));

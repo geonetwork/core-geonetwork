@@ -21,12 +21,12 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.exceptions;
+package org.fao.geonet.exceptions;
 
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class FileUploadTooBigEx extends BadInputEx
+public class BadServerCertificateEx extends BadResponseEx
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -34,11 +34,11 @@ public class FileUploadTooBigEx extends BadInputEx
 	//---
 	//--------------------------------------------------------------------------
 
-	public FileUploadTooBigEx()
+	public BadServerCertificateEx(String message)
 	{
-		super("File upload too big", null);
+		super("Bad server certificate: "+message, null);
 
-		id = "file-upload-too-big";
+		id = "bad-server-certificate";
 	}
 }
 

@@ -48,7 +48,7 @@ import jeeves.component.ProfileManager;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadInputEx;
 import jeeves.interfaces.Activator;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
@@ -63,7 +63,7 @@ import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import jeeves.utils.Log;
 import jeeves.utils.TransformerFactoryFactory;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import jeeves.utils.Xml;
 
 import org.apache.commons.io.IOUtils;

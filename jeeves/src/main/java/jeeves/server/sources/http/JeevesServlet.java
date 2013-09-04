@@ -35,13 +35,13 @@ import javax.servlet.http.HttpSession;
 
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.FileUploadTooBigEx;
+import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
 import jeeves.utils.Log;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 //=============================================================================

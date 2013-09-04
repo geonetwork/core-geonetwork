@@ -23,7 +23,7 @@
 
 package jeeves.utils;
 
-import jeeves.exceptions.MissingParameterEx;
+import org.fao.geonet.exceptions.MissingParameterEx;
 import org.jdom.Element;
 import org.jdom.Namespace;
 

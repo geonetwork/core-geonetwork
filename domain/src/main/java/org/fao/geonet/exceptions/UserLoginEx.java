@@ -1,4 +1,3 @@
-//=============================================================================
 //===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
@@ -21,12 +20,12 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.exceptions;
+package org.fao.geonet.exceptions;
 
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class ServiceNotAllowedEx extends NotAllowedEx
+public class UserLoginEx extends NotAllowedEx
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -34,12 +33,11 @@ public class ServiceNotAllowedEx extends NotAllowedEx
 	//---
 	//--------------------------------------------------------------------------
 
-	public ServiceNotAllowedEx(String name)
+	public UserLoginEx(String name)
 	{
-		super("Service not allowed", name);
+		super("User login failed", name);
 
-		id   = "service-not-allowed";
-		code = 401;
+		id = "user-login";
 	}
 }
 

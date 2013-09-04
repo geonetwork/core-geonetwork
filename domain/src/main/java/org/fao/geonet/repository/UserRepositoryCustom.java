@@ -6,6 +6,8 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.springframework.data.domain.Sort;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.persistence.criteria.Order;
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +26,7 @@ public interface UserRepositoryCustom {
      * 
      * @return the use with the given userid 
      */
-    User findOne(String userId);
+    @Nonnull User findOne(@Nonnull String userId);
     
     /**
      * Find all users with the given email address.
@@ -32,17 +34,17 @@ public interface UserRepositoryCustom {
      * @param email the email address to use in search query.
      * @return
      */
-    public List<User> findAllByEmail(String email);
+    @Nonnull List<User> findAllByEmail(@Nonnull String email);
 
     /**
      * Find all the users that are part of the ownerGroup of a particular set of metadata.
      *
      * @param metadataIds the metadataIds of the metadata to inspect.
-     * @param profile if present then filter the users by the given profile.
-     * @param sort if present then Sort the results by the <em>User</em> property.  The sort object must contain user properties only.
+     * @param profile if non-null then filter the users by the given profile.
+     * @param sort if non-null then Sort the results by the <em>User</em> property.  The sort object must contain user properties only.
      *
      * @return all the users that are part of the ownerGroup of a particular set of metadata.
      */
-    List<Pair<Integer,User>> findAllByGroupOwnerNameAndProfile(Collection<Integer> metadataIds, Optional<Profile> profile,
-                                                               Optional<Sort> sort);
+    @Nonnull List<Pair<Integer,User>> findAllByGroupOwnerNameAndProfile(@Nonnull Collection<Integer> metadataIds,
+                                                                        @Nullable Profile profile, @Nullable Sort sort);
 }

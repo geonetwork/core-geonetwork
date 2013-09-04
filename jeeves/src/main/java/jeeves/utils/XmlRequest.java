@@ -23,8 +23,8 @@
 
 package jeeves.utils;
 
-import jeeves.exceptions.BadSoapResponseEx;
-import jeeves.exceptions.BadXmlResponseEx;
+import org.fao.geonet.exceptions.BadSoapResponseEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.Header;

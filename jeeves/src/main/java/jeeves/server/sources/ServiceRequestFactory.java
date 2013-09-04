@@ -24,7 +24,7 @@
 package jeeves.server.sources;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.FileUploadTooBigEx;
+import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;

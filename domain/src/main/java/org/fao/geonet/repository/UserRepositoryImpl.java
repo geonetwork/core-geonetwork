@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Tuple;
@@ -44,8 +46,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<Pair<Integer, User>> findAllByGroupOwnerNameAndProfile(Collection<Integer> metadataIds, Optional<Profile> profile,
-                                                                       Optional<Sort> sort) {
+    @Nonnull
+    public List<Pair<Integer,User>> findAllByGroupOwnerNameAndProfile(@Nonnull Collection<Integer> metadataIds,
+                                                               @Nullable Profile profile, @Nullable Sort sort) {
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> query = cb.createQuery(Tuple.class);
 
@@ -61,19 +64,15 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         Predicate userToGroupPredicate = cb.equal(userGroupRoot.get(UserGroup_.id).get(UserGroupId_.userId), userRoot.get(User_.id));
 
         Predicate basePredicate = cb.and(metadataPredicate, ownerPredicate, userToGroupPredicate);
-        if (profile.isPresent()) {
-            Expression<Boolean> profilePredicate = cb.equal(userGroupRoot.get(UserGroup_.profile), profile.get());
+        if (profile != null) {
+            Expression<Boolean> profilePredicate = cb.equal(userGroupRoot.get(UserGroup_.profile), profile);
             query.where(cb.and(basePredicate, profilePredicate));
         } else {
             query.where(basePredicate);
         }
-        if (sort.isPresent()) {
-            ArrayList<Order> jpaOrder = new ArrayList<Order>();
-            for (Sort.Order o : sort.get()) {
-                jpaOrder.add(new OrderImpl(userRoot.get(o.getProperty()), o.isAscending()));
-            }
-
-            query.orderBy(jpaOrder);
+        if (sort != null) {
+            List<Order> orders = SortUtils.sortToJpaOrders(cb, sort, userGroupRoot, metadataRoot, userRoot);
+            query.orderBy(orders);
         }
 
         List<Pair<Integer, User>> results = new ArrayList<Pair<Integer, User>>();

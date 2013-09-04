@@ -28,8 +28,9 @@ import javax.persistence.Table;
     public String getName() {
         return name;
     }
-    public void setName(String name) {
+    public Setting setName(String name) {
         this.name = name;
+        return this;
     }
 
     @Lob
@@ -37,21 +38,24 @@ import javax.persistence.Table;
     public String getValue() {
         return value;
     }
-    public void setValue(String value) {
+    public Setting setValue(String value) {
         this.value = value;
+        return this;
     }
     @Column(name="datatype")
     public SettingDataType getDataType() {
         return dataType;
     }
-    public void setDataType(SettingDataType dataType) {
+    public Setting setDataType(SettingDataType dataType) {
         this.dataType = dataType;
+        return this;
     }
     public int getPosition() {
         return position;
     }
-    public void setPosition(int position) {
+    public Setting setPosition(int position) {
         this.position = position;
+        return this;
     }
     
     
