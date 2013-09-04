@@ -28,7 +28,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.server.resources.ResourceManager;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import jeeves.xlink.Processor;
 
 import org.apache.commons.io.IOUtils;

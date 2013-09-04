@@ -1,7 +1,7 @@
 package org.fao.geonet.services.debug;
 
 import com.google.common.collect.Multimap;
-import jeeves.exceptions.JeevesException;
+import org.fao.geonet.exceptions.JeevesException;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;

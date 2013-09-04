@@ -495,7 +495,6 @@ public final class Geonet {
 		public static final String STAT_LUCENE_TERMS_EXCLUDE = "statLuceneTermsExclude";
 		public static final String STAT_LOG_ASYNCH = "statLogAsynch";
 		public static final String MAX_WRITES_IN_TRANSACTION = "maxWritesInTransaction";
-		public static final String USE_SUBVERSION  = "useSubversion";
 		public static final String SUBVERSION_PATH = "subversionPath";
 		public static final String STATUS_ACTIONS_CLASS = "statusActionsClass";
 		public static final String CONFIG_DIR = "configDir";

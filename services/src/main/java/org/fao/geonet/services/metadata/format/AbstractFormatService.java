@@ -1,6 +1,6 @@
 package org.fao.geonet.services.metadata.format;
 
-import jeeves.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;

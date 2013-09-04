@@ -29,15 +29,15 @@ package org.fao.geonet.kernel;
 
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.JeevesException;
-import jeeves.exceptions.ServiceNotAllowedEx;
-import jeeves.exceptions.XSDValidationErrorEx;
+import org.fao.geonet.exceptions.JeevesException;
+import org.fao.geonet.exceptions.ServiceNotAllowedEx;
+import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import jeeves.utils.Xml;
 import jeeves.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
@@ -59,6 +59,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserSpecs;
@@ -141,8 +142,8 @@ public class DataManager {
         session.loginAs(new User().setUsername("admin").setId(-1).setProfile(Profile.Administrator));
 
         servContext.setUserSession(session);
-        init(parameterObject.context, parameterObject.dbms, false);
         this._applicationContext = servContext.getApplicationContext();
+        init(parameterObject.context, false);
     }
 
     /**
@@ -151,13 +152,12 @@ public class DataManager {
      * index
      *
      * @param context
-     * @param dbms
      * @param force         Force reindexing all from scratch
      *
      **/
     public synchronized void init(ServiceContext context, Boolean force) throws Exception {
 
-
+        context.getBean(MetadataRepository.class).findAllIdsAndChangeDates()
         // get all metadata from DB
         Element result = dbms.select("SELECT id, changeDate FROM Metadata ORDER BY id ASC");
 
@@ -448,7 +448,7 @@ public class DataManager {
             int id$ = Integer.valueOf(id);
 
             // get metadata, extracting and indexing any xlinks
-            Element md   = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, true);
+            Element md   = xmlSerializer.selectNoXLinkResolver(id, true);
             if (xmlSerializer.resolveXLinks()) {
                 List<Attribute> xlinks = Processor.getXLinks(md);
                 if (xlinks.size() > 0) {
@@ -1444,7 +1444,7 @@ public class DataManager {
         }
 
         //--- store metadata
-        String id = xmlSerializer.insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, null, owner, groupOwner, "", context);
+        String id = xmlSerializer.insert(schema, xml, serial, source, uuid, null, null, isTemplate, null, owner, groupOwner, "", context);
         copyDefaultPrivForGroup(context, dbms, id, groupOwner, fullRightsForGroup);
 
         //--- store metadata categories copying them from the template
@@ -1507,7 +1507,7 @@ public class DataManager {
         }
 
         //--- store metadata
-        xmlSerializer.insert(dbms, schema, metadata, id, source, uuid, createDate, changeDate, isTemplate, title, owner, group, docType, context);
+        xmlSerializer.insert(schema, metadata, id, source, uuid, createDate, changeDate, isTemplate, title, owner, group, docType, context);
 
         copyDefaultPrivForGroup(context, dbms, id$, group, false);
 
@@ -1553,7 +1553,7 @@ public class DataManager {
      * @throws Exception
      */
     public Element getMetadata(Dbms dbms, String id) throws Exception {
-        Element md = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, false);
+        Element md = xmlSerializer.selectNoXLinkResolver(id, false);
         if (md == null) return null;
         md.detach();
         return md;
@@ -1574,7 +1574,7 @@ public class DataManager {
     public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
         Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
         boolean doXLinks = xmlSerializer.resolveXLinks();
-        Element md = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, false);
+        Element md = xmlSerializer.selectNoXLinkResolver(id, false);
         if (md == null) return null;
 
         String version = null;
@@ -1718,7 +1718,7 @@ public class DataManager {
         }
 
         //--- write metadata to dbms
-        xmlSerializer.update(dbms, id, md, changeDate, updateDateStamp, uuid, context);
+        xmlSerializer.update(id, md, changeDate, updateDateStamp, uuid, context);
 
         String isTemplate = getMetadataTemplate(dbms, id);
         // Notifies the metadata change to metatada notifier service
@@ -2004,7 +2004,7 @@ public class DataManager {
         dbms.execute("DELETE FROM MetadataStatus WHERE metadataId=?", Integer.valueOf(id));
 
         //--- remove metadata
-        xmlSerializer.delete(dbms, "Metadata", id, context);
+        xmlSerializer.delete(id, context);
     }
 
     /**
@@ -2086,7 +2086,7 @@ public class DataManager {
      * @throws Exception
      */
     public Element getThumbnails(Dbms dbms, String id) throws Exception {
-        Element md = xmlSerializer.select(dbms, "Metadata", id);
+        Element md = xmlSerializer.select(id);
 
         if (md == null)
             return null;
@@ -2209,7 +2209,7 @@ public class DataManager {
             uuid = extractUUID(schema, md);
         }
 
-        xmlSerializer.update(dbms, id, md, changeDate, true, uuid, context);
+        xmlSerializer.update(id, md, changeDate, true, uuid, context);
 
         if (indexAfterChange) {
             // Notifies the metadata change to metatada notifier service
@@ -2275,7 +2275,7 @@ public class DataManager {
      */
     private void manageCommons(Dbms dbms, ServiceContext context, String id, Element env, String styleSheet) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
-        Element md = xmlSerializer.select(dbms, "Metadata", id);
+        Element md = xmlSerializer.select(id);
 
         if (md == null) return;
 
@@ -2964,7 +2964,7 @@ public class DataManager {
                     + Geonet.File.UPDATE_CHILD_FROM_PARENT_INFO;
             Element childForUpdate = Xml.transform(rootEl, styleSheet, params);
 
-            xmlSerializer.update(dbms, childId, childForUpdate, new ISODate().toString(), true, null, srvContext);
+            xmlSerializer.update(childId, childForUpdate, new ISODate().toString(), true, null, srvContext);
 
 
             // Notifies the metadata change to metatada notifier service

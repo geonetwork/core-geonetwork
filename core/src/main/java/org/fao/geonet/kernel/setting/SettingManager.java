@@ -32,7 +32,6 @@ import java.util.NoSuchElementException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
@@ -202,7 +201,7 @@ public class SettingManager {
      * 
      * @return true if the types are correct and the setting is found.
      */
-    public boolean setValue(Dbms dbms, String key, String value) throws Exception {
+    public boolean setValue(String key, String value) {
         if (Log.isDebugEnabled(Geonet.SETTINGS)) {
             Log.debug(Geonet.SETTINGS, "Setting with name: " + key + ", value: " + value);
         }
@@ -227,31 +226,24 @@ public class SettingManager {
      * @param key the key/path/name of the setting.
      * @param value the new boolean value
      */
-    public boolean setValue(Dbms dbms, String key, boolean value) throws Exception {
-        return setValue(dbms, key, String.valueOf(value));
+    public boolean setValue(String key, boolean value) {
+        return setValue(key, String.valueOf(value));
     }
 
     /**
      * Set a list of settings.
      * 
-     * @param dbms
      * @param values The settings to update
      * @return true if the types are correct and the setting is found.
      * 
      * @throws SQLException
      */
-    public boolean setValues(Dbms dbms, Map<String, String> values) throws Exception {
+    public final boolean setValues(final Map<String, String> values) {
         boolean success = true;
         for (Map.Entry<String, String> entry : values.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            try {
-                setValue(dbms, key, value);
-            } catch (Exception e) {
-                Log.warning(Geonet.SETTINGS,
-                        "Failed to save setting with name: " + key + ", value: " + value + ". Error: " + e.getMessage());
-                throw e;
-            }
+            setValue(key, value);
         }
         return success;
     }
@@ -260,16 +252,16 @@ public class SettingManager {
      * Refreshes current settings manager. This has to be used when updating the Settings table without using this class. For example when
      * using an SQL script.
      */
-    public boolean refresh() throws SQLException {
+    public final boolean refresh() throws SQLException {
         _entityManager.getEntityManagerFactory().getCache().evict(HarvesterSetting.class);
         return true;
     }
 
-    public String getSiteId() {
+    public final String getSiteId() {
         return getValue("system/site/siteId");
     }
 
-    public String getSiteName() {
+    public final String getSiteName() {
         return getValue("system/site/name");
     }
 }

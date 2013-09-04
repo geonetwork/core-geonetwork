@@ -30,9 +30,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.JeevesException;
-import jeeves.exceptions.MissingParameterEx;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.JeevesException;
+import org.fao.geonet.exceptions.MissingParameterEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
@@ -51,7 +51,6 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarversterJobListener;
 import org.fao.geonet.kernel.harvest.harvester.HarvesterHistoryDao;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 import org.quartz.SchedulerException;
 

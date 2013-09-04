@@ -24,7 +24,7 @@
 package org.fao.geonet.services.user;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationNotAllowedEx;
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;

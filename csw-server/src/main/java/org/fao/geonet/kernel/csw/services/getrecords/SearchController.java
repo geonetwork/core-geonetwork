@@ -25,7 +25,7 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.Sort;

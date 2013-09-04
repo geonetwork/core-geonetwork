@@ -23,11 +23,11 @@
 
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
-import jeeves.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;

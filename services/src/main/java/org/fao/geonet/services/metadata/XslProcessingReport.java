@@ -30,7 +30,7 @@ import java.util.Map.Entry;
 import java.util.Set;
  
 import jeeves.constants.Jeeves;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
  
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;

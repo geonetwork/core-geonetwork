@@ -23,13 +23,13 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.exceptions.XSDValidationErrorEx;
+import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.IO;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;

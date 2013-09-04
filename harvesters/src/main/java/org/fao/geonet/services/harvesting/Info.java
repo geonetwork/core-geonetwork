@@ -32,16 +32,17 @@ import java.util.List;
 import java.util.Set;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.BadXmlResponseEx;
-import jeeves.exceptions.JeevesException;
-import jeeves.exceptions.MissingParameterEx;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
+import org.fao.geonet.exceptions.JeevesException;
+import org.fao.geonet.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.GeonetContext;
+import org.fao.geonet.*;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.lib.Lib;
@@ -85,8 +86,8 @@ public class Info implements Service
 	{
 		Element result = new Element("root");
 		
-		String schema = jeeves.utils.Util.getParam(params, "schema", "");
-		String serviceType = jeeves.utils.Util.getParam(params, "serviceType", "");
+		String schema = org.fao.geonet.Util.getParam(params, "schema", "");
+		String serviceType = Util.getParam(params, "serviceType", "");
 
 		@SuppressWarnings("unchecked")
         List<Element> paramChildren = params.getChildren();

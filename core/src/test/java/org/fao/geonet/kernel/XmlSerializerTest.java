@@ -21,6 +21,7 @@ import jeeves.utils.Xml;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 import org.junit.Test;
@@ -34,35 +35,35 @@ public class XmlSerializerTest {
 		}
 
 		@Override
-		public void delete(Dbms dbms, String table, String id,
-				ServiceContext context) throws Exception {
+		public void delete(String id,
+                           ServiceContext context) throws Exception {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public void update(Dbms dbms, String id, Element xml,
-				String changeDate, boolean updateDateStamp,
-				String uuid, ServiceContext context) throws Exception {
+		public void update(String id, Element xml,
+                           String changeDate, boolean updateDateStamp,
+                           String uuid, ServiceContext context) throws Exception {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public String insert(Dbms dbms, String schema, Element xml, int serial,
-				String source, String uuid, String createDate,
-				String changeDate, String isTemplate, String title, int owner,
-				String groupOwner, String docType, ServiceContext context)
+		public String insert(String schema, Element xml, int serial,
+                             String source, String uuid, String createDate,
+                             String changeDate, String isTemplate, String title, int owner,
+                             String groupOwner, String docType, ServiceContext context)
 				throws Exception {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public Element select(Dbms dbms, String table, String id)
+		public Metadata select(String id)
 				throws Exception {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask)
+		public Element selectNoXLinkResolver(String id, boolean isIndexingTask)
 				throws Exception {
 			throw new UnsupportedOperationException();
 		}

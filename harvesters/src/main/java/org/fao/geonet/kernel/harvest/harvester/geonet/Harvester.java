@@ -23,11 +23,11 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import jeeves.exceptions.BadServerResponseEx;
-import jeeves.exceptions.BadSoapResponseEx;
-import jeeves.exceptions.BadXmlResponseEx;
-import jeeves.exceptions.OperationAbortedEx;
-import jeeves.exceptions.UserNotFoundEx;
+import org.fao.geonet.exceptions.BadServerResponseEx;
+import org.fao.geonet.exceptions.BadSoapResponseEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;

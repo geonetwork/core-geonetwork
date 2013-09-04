@@ -26,7 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 import java.util.HashMap;
 import java.util.Map;
 
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.jdom.Element;
 
 //=============================================================================

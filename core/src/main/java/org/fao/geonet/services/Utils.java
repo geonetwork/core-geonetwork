@@ -1,9 +1,9 @@
 package org.fao.geonet.services;
 
-import jeeves.exceptions.MissingParameterEx;
+import org.fao.geonet.exceptions.MissingParameterEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;

@@ -25,7 +25,7 @@ package org.fao.geonet.services.main;
 
 import jeeves.component.ProfileManager;
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;

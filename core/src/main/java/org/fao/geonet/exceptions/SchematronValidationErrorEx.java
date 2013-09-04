@@ -23,8 +23,6 @@
 
 package org.fao.geonet.exceptions;
 
-import jeeves.exceptions.JeevesClientEx;
-
 //=============================================================================
 
 public class SchematronValidationErrorEx extends JeevesClientEx

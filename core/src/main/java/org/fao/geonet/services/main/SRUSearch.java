@@ -21,7 +21,7 @@
 package org.fao.geonet.services.main;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.MissingParameterEx;
+import org.fao.geonet.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;

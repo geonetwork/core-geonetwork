@@ -31,7 +31,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import jeeves.utils.Xml;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;

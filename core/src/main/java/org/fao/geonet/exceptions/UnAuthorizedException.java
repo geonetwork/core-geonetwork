@@ -22,8 +22,6 @@
 //==============================================================================package org.fao.geonet.exceptions;
 package org.fao.geonet.exceptions;
 
-import jeeves.exceptions.NotAllowedEx;
-
 /**
  * For when something is not allowed, but it's not that the Operation or Service invocation is not allowed.
  *

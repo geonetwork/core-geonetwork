@@ -30,6 +30,24 @@
 <!-- 	<import resource="config-db/config-spring-oracle"/> -->
 <!-- 	<import resource="config-db/config-spring-oracle"/> -->
 
+    <!--
+        Choose the XmlSerializer to use.
+        If the XmlSerializer is the SvnSerializer then subversion versioning will be enabled
+        otherwiser it will be disabled
+    -->
+    <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerSvn" />
+    <!-- <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb" /> -->
+
+     <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager"/>
+
+    <bean id="scheduler"
+          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
+    </bean>
+
+    <!-- Define the languages in the UI.  Seems like these should come from database at some point but at the momemtn they
+         are needed here.
+     -->
 	<util:set id="languages">
 		<value>ara</value>
 		<value>cat</value>
@@ -47,6 +65,7 @@
 		<value>spa</value>
 		<value>tur</value>
 	</util:set>
+
 	<bean id="RegionsDAO" class="org.fao.geonet.services.region.ThesaurusBasedRegionsDAO">
 		<constructor-arg ref="languages"></constructor-arg>
 		<property name="cacheAllRegionsInMemory" value="true"/>

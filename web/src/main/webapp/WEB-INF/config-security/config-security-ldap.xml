@@ -122,15 +122,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         
         <property name="contextSource" ref="contextSource" />
     </bean>-->
-    
-    
-    
-    
-    <bean id="scheduler"
-        class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
-    </bean>
-    
+
     <bean name="ldapSynchronizer" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
         <property name="jobClass" value="org.fao.geonet.kernel.security.ldap.LDAPSynchronizerJob"/>
         <property name="jobDataAsMap">

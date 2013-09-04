@@ -32,7 +32,7 @@ import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.utils.Log;
 import jeeves.utils.SOAPUtil;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;

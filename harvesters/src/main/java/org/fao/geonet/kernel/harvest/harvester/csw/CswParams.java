@@ -24,8 +24,8 @@
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadInputEx;
-import jeeves.utils.Util;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.Util;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;

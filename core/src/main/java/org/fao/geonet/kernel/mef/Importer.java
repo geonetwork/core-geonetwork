@@ -23,14 +23,14 @@
 
 package org.fao.geonet.kernel.mef;
 
-import jeeves.exceptions.BadFormatEx;
+import org.fao.geonet.exceptions.BadFormatEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.IO;
 import jeeves.utils.Log;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import jeeves.utils.Xml;
 
 import org.apache.commons.io.IOUtils;

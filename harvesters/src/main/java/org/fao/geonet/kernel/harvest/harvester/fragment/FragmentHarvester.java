@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.fragment;
 
-import jeeves.exceptions.BadXmlResponseEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;

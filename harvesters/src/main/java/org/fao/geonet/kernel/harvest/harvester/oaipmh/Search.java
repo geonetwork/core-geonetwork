@@ -23,9 +23,9 @@
 
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.utils.Util;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.Util;
 
 import org.fao.geonet.domain.ISODate;
 import org.jdom.Element;

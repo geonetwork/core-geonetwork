@@ -25,12 +25,12 @@ package org.fao.geonet.kernel;
 
 import java.sql.SQLException;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.xlink.Processor;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
@@ -59,8 +59,8 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @return
      * @throws Exception
      */
-	protected Element internalSelect(Dbms dbms, String table, String id, boolean isIndexingTask) throws Exception {
-		Element rec = super.internalSelect(dbms, table, id, isIndexingTask);
+	protected Element internalSelect(String id, boolean isIndexingTask) throws Exception {
+		Element rec = super.internalSelect(id, isIndexingTask);
 		if (rec != null) return (Element) rec.detach();
 		else return null;
 	}
@@ -70,14 +70,13 @@ public class XmlSerializerSvn extends XmlSerializer {
 		 *  is read from 'table' or the subversion repo and the string read
      *  is converted into xml, XLinks are resolved when config'd on.
      *
-     * @param dbms
-     * @param table
+     *
      * @param id
      * @return
      * @throws Exception
      */
-	public Element select(Dbms dbms, String table, String id) throws Exception {
-		Element rec = internalSelect(dbms, table, id, false);
+	public Element select(String id) throws Exception {
+		Element rec = internalSelect(id, false);
 		if (resolveXLinks()) Processor.detachXLink(rec);
 		return rec;
 	}
@@ -88,14 +87,13 @@ public class XmlSerializerSvn extends XmlSerializer {
      * converted into xml, XLinks are NOT resolved even if they are config'd 
 		 * on - this is used when you want to do XLink processing yourself.
      *
-     * @param dbms
-     * @param table
+     *
      * @param id
      * @return
      * @throws Exception
      */
-	public Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask) throws Exception {
-		return internalSelect(dbms, table, id, isIndexingTask);
+	public Element selectNoXLinkResolver(String id, boolean isIndexingTask) throws Exception {
+		return internalSelect(id, isIndexingTask);
 	}
 
     /**
@@ -103,7 +101,7 @@ public class XmlSerializerSvn extends XmlSerializer {
 		 * into the subversion repository. Instead this is done when an update
 		 * is generated on the metadata (eg. from editor).
      *
-     * @param dbms
+     *
      * @param schema
      * @param xml
      * @param id
@@ -116,17 +114,17 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @param owner
      * @param groupOwner
      * @param docType
-     * @param context 
+     * @param context
      * @return
      * @throws SQLException
      */
-	public String insert(Dbms dbms, String schema, Element xml, int id,
-					 String source, String uuid, String createDate,
-					 String changeDate, String isTemplate, String title,
-			 int owner, String groupOwner, String docType, ServiceContext context) 
+	public String insert(String schema, Element xml, int id,
+                         String source, String uuid, String createDate,
+                         String changeDate, String isTemplate, String title,
+                         int owner, String groupOwner, String docType, ServiceContext context)
 			 throws Exception {
 
-		return insertDb(dbms, schema, xml, id, source, uuid, createDate, changeDate, isTemplate, xml.getQualifiedName(), title, owner, groupOwner, docType);
+		return insertDb(schema, xml, id, source, uuid, createDate, changeDate, isTemplate, xml.getQualifiedName(), title, owner, groupOwner, docType);
 	}
 
     /**
@@ -136,25 +134,25 @@ public class XmlSerializerSvn extends XmlSerializer {
 		 *  an update is generated. In general the old metadata is diff'ed with 
 		 *  the new metadata to generate a delta in the subversion repository.
      *
-     * @param dbms
+     *
      * @param id
      * @param xml
      * @param changeDate
      * @param updateDateStamp
-     * @param context 
+     * @param context
      * @throws SQLException, SVNException
      */
-	public void update(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) throws Exception {
+	public void update(String id, Element xml, String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) throws Exception {
 
 		// old XML comes from the database
-		updateDb(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, uuid);
+		updateDb(id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, uuid);
 
 		if (svnMan == null) { // do nothing
 			Log.error(Geonet.DATA_MANAGER, "SVN repository for metadata enabled but no repository available");
 		} else {
 			// set subversion manager to record history on this metadata when commit
 			// takes place
-			svnMan.setHistory(dbms, id, context);
+			svnMan.setHistory(id, context);
 		}
 
 	}
@@ -163,15 +161,15 @@ public class XmlSerializerSvn extends XmlSerializer {
      * Deletes a metadata record given its id. The metadata record is deleted
 		 * from 'table' and from the subversion repo (if present).
      *
-     * @param dbms
-     * @param table
+     *
+     *
      * @param id
      * @param context
      * @throws SQLException, SVNException
      */
-	public void delete(Dbms dbms, String table, String id, ServiceContext context) throws Exception {
+	public void delete(String id, ServiceContext context) throws Exception {
 
-		deleteDb(dbms, table, id);
+		deleteDb(id);
 		if (svnMan == null) { // do nothing
 			Log.error(Geonet.DATA_MANAGER, "SVN repository for metadata enabled but no repository available");
 		} else {

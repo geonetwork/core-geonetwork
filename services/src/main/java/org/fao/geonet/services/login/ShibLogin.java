@@ -30,10 +30,10 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 import java.sql.SQLException;
 import java.util.Map;
 
-import jeeves.exceptions.UserLoginEx;
+import org.fao.geonet.exceptions.UserLoginEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;

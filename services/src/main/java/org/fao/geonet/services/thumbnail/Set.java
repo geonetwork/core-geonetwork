@@ -27,7 +27,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.IO;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import lizard.tiff.Tiff;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;

@@ -23,10 +23,10 @@ public abstract class AbstractThesaurusBasedTest {
 	protected static final String THESAURUS_KEYWORD_NS = "http://abstract.thesaurus.test#";
     protected static final IsoLanguagesMapper isoLangMapper = new IsoLanguagesMapper() {
 		{
-			isoLanguagesMap639.put("en", "eng");
-			isoLanguagesMap639.put("de", "ger");
-			isoLanguagesMap639.put("fr", "fre");
-			isoLanguagesMap639.put("it", "ita");
+			_isoLanguagesMap639.put("en", "eng");
+			_isoLanguagesMap639.put("de", "ger");
+			_isoLanguagesMap639.put("fr", "fre");
+			_isoLanguagesMap639.put("it", "ita");
 		}
 	};
     protected File thesaurusFile;

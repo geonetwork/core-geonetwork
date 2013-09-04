@@ -23,11 +23,11 @@
 
 package org.fao.geonet.services.schema;
 
-import jeeves.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;

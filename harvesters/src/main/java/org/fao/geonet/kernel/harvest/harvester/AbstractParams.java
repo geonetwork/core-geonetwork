@@ -23,12 +23,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.MissingParameterEx;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.MissingParameterEx;
 import jeeves.utils.Log;
 import jeeves.utils.QuartzSchedulerUtils;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import jeeves.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;

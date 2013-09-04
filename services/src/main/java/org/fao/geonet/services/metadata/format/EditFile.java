@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 
@@ -43,8 +44,8 @@ public class EditFile extends AbstractFormatService {
     public Element exec(Element params, ServiceContext context) throws Exception {
         ensureInitializedDir(context);
 
-        String xslid = jeeves.utils.Util.getParam(params, Params.ID);
-        String file = URLDecoder.decode(jeeves.utils.Util.getParam(params, Params.FNAME), Jeeves.ENCODING);
+        String xslid = Util.getParam(params, Params.ID);
+        String file = URLDecoder.decode(Util.getParam(params, Params.FNAME), Jeeves.ENCODING);
 
         File formatDir = getAndVerifyFormatDir(Params.ID, xslid);
 

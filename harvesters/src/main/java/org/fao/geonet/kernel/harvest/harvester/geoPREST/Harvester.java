@@ -24,7 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;

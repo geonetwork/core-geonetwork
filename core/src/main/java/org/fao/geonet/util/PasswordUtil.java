@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import javax.servlet.ServletContext;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.UserNotFoundEx;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.domain.User;

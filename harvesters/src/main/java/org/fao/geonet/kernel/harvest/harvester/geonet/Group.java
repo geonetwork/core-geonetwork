@@ -23,9 +23,9 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.MissingParameterEx;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.MissingParameterEx;
 import org.jdom.Element;
 
 //=============================================================================

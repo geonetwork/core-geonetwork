@@ -1,6 +1,6 @@
 package org.fao.geonet.kernel.region;
 
-import jeeves.exceptions.NotFoundEx;
+import org.fao.geonet.exceptions.NotFoundEx;
 
 public class RegionNotFoundEx extends NotFoundEx {
 

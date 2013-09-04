@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import jeeves.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;

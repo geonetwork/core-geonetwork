@@ -24,15 +24,11 @@
 package org.fao.geonet;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -46,19 +42,15 @@ import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
-import jeeves.server.resources.ResourceManager;
-import jeeves.utils.ProxyInfo;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlResolver;
+import jeeves.utils.*;
 import jeeves.xlink.Processor;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.domain.Setting;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.DataManagerParameter;
@@ -66,8 +58,6 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.kernel.XmlSerializerDb;
-import org.fao.geonet.kernel.XmlSerializerSvn;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
@@ -75,18 +65,16 @@ import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.languages.LanguageDetector;
-import org.fao.geonet.lib.DatabaseType;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.notifier.MetadataNotifierManager;
+import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
@@ -102,6 +90,7 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.jdom.Element;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
@@ -215,9 +204,6 @@ public class Geonetwork implements ApplicationHandler {
 		SettingManager settingMan = this._applicationContext.getBean(SettingManager.class);
         HarvesterSettingsManager harvesterSettingsMan = this._applicationContext.getBean(HarvesterSettingsManager.class);
         
-        // --- Migrate database if an old one is found
-        migrateDatabase(servletContext, dbms, settingMan, harvesterSettingsMan, version, subVersion, context);
-        
         // Reinitialized harvester manager which may be affected by migration
         settingMan.refresh();
         harvesterSettingsMan.refresh();
@@ -248,10 +234,9 @@ public class Geonetwork implements ApplicationHandler {
 				ContextContainer cc = (ContextContainer)appContext.getBean("ContextGateway");
 				cc.setSrvctx(context);
 
-				if (!z3950Enable)
+				if (!z3950Enable) {
 					logger.info("     Server is Disabled.");
-				else
-				{
+                } else {
 					logger.info("     Server is Enabled.");
 		
 					Server.init(z3950port, appContext);
@@ -341,16 +326,14 @@ public class Geonetwork implements ApplicationHandler {
 
 		logger.info("  - Xml serializer and Data manager...");
 
-		String useSubversion = handlerConfig.getMandatoryValue(Geonet.Config.USE_SUBVERSION);
+		SvnManager svnManager = _applicationContext.getBean(SvnManager.class);
+		XmlSerializer xmlSerializer = _applicationContext.getBean(XmlSerializer.class);
 
-		SvnManager svnManager = null;
-		XmlSerializer xmlSerializer = null;
-		if (useSubversion.equals("true")) {
+		if (svnManager != null) {
+            svnManager.setContext(context);
 			String subversionPath = handlerConfig.getValue(Geonet.Config.SUBVERSION_PATH);
-			svnManager = new SvnManager(context, settingMan, subversionPath, dbms, created);
-			xmlSerializer = new XmlSerializerSvn(settingMan, svnManager);
-		} else {
-			xmlSerializer = new XmlSerializerDb(settingMan);
+            svnManager.setSubversionPath(subversionPath);
+			svnManager.init();
 		}
 		
 		DataManagerParameter dataManagerParameter = new DataManagerParameter();
@@ -360,7 +343,6 @@ public class Geonetwork implements ApplicationHandler {
 		dataManagerParameter.xmlSerializer = xmlSerializer;
 		dataManagerParameter.schemaManager = schemaMan;
 		dataManagerParameter.accessManager = accessMan;
-		dataManagerParameter.dbms = dbms;
 		dataManagerParameter.settingsManager = settingMan;
 		dataManagerParameter.baseURL = baseURL;
 		dataManagerParameter.dataDir = dataDir;
@@ -373,7 +355,7 @@ public class Geonetwork implements ApplicationHandler {
         /**
          * Initialize iso languages mapper
          */
-        IsoLanguagesMapper.getInstance().init(dbms);
+        IsoLanguagesMapper.getInstance().init(_applicationContext);
         
         /**
          * Initialize language detector
@@ -463,7 +445,7 @@ public class Geonetwork implements ApplicationHandler {
         if(dbHeartBeatEnabled) {
             Integer dbHeartBeatInitialDelay = Integer.parseInt(handlerConfig.getValue(Geonet.Config.DB_HEARTBEAT_INITIALDELAYSECONDS, "5"));
             Integer dbHeartBeatFixedDelay = Integer.parseInt(handlerConfig.getValue(Geonet.Config.DB_HEARTBEAT_FIXEDDELAYSECONDS, "60"));
-            createDBHeartBeat(context.getResourceManager(), gnContext, dbHeartBeatInitialDelay, dbHeartBeatFixedDelay);
+            createDBHeartBeat(gnContext, dbHeartBeatInitialDelay, dbHeartBeatFixedDelay);
         }
 		return gnContext;
 	}
@@ -472,16 +454,10 @@ public class Geonetwork implements ApplicationHandler {
      * Sets up a periodic check whether GeoNetwork can successfully write to the database. If it can't, GeoNetwork will
      * automatically switch to read-only mode.
      */
-    private void createDBHeartBeat(final ResourceManager rm, final GeonetContext gc, Integer initialDelay, Integer fixedDelay) {
-        logger.info("creating DB heartbeat with initial delay of " + initialDelay + " s and fixed delay of " + fixedDelay + " s" );
+    private void createDBHeartBeat(final GeonetContext gc, Integer initialDelay, Integer fixedDelay) throws SchedulerException {
+        logger.info("creating DB heartbeat with initial delay of " + initialDelay + " s and fixed delay of " + fixedDelay + " s");
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         Runnable DBHeartBeat = new Runnable() {
-            private static final String INSERT = "INSERT INTO Settings(id, parentId, name, value) VALUES(?, ?, ?, ?)";
-            private static final String REMOVE = "DELETE FROM Settings WHERE id=?";
-
-            /**
-             *
-             */
             @Override
             public void run() {
                 try {
@@ -489,363 +465,45 @@ public class Geonetwork implements ApplicationHandler {
                     logger.debug("DBHeartBeat: GN is read-only ? " + readOnly);
                     boolean canWrite = checkDBWrite();
                     HarvestManager hm = gc.getBean(HarvestManager.class);
-                    if(readOnly && canWrite) {
+                    if (readOnly && canWrite) {
                         logger.warning("GeoNetwork can write to the database, switching to read-write mode");
                         readOnly = false;
                         gc.setReadOnly(readOnly);
                         hm.setReadOnly(readOnly);
-                    }
-                    else if(!readOnly && !canWrite) {
+                    } else if (!readOnly && !canWrite) {
                         logger.warning("GeoNetwork can not write to the database, switching to read-only mode");
                         readOnly = true;
                         gc.setReadOnly(readOnly);
                         hm.setReadOnly(readOnly);
-                    }
-                    else {
-                        if(readOnly) {
+                    } else {
+                        if (readOnly) {
                             logger.info("GeoNetwork remains in read-only mode");
-                        }
-                        else {
+                        } else {
                             logger.debug("GeoNetwork remains in read-write mode");
                         }
                     }
-                }
-                // any uncaught exception would cause the scheduled execution to silently stop
-                catch(Throwable x) {
+                } catch (Throwable x) {
+                    // any uncaught exception would cause the scheduled execution to silently stop
                     logger.error("DBHeartBeat error: " + x.getMessage() + " This error is ignored.");
                     x.printStackTrace();
                 }
             }
 
-            /**
-             *
-             * @return
-             */
             private boolean checkDBWrite() {
-                Dbms dbms = null;
+                SettingRepository settingsRepo = gc.getBean(SettingRepository.class);
                 try {
-                    Integer testId = Integer.valueOf("100000");
-                    dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
-                    dbms.execute(INSERT, testId, Integer.valueOf("1"), "DBHeartBeat", "Yeah !");
-                    dbms.execute(REMOVE, testId);
+                    Setting newSetting = settingsRepo.save(new Setting().setName("DBHeartBeat").setValue("value"));
+                    settingsRepo.flush();
+                    settingsRepo.delete(newSetting);
                     return true;
-                }
-                catch (Exception x) {
+                } catch (Exception x) {
                     logger.info("DBHeartBeat Exception: " + x.getMessage());
                     return false;
-                }
-                finally {
-                    try {
-                        if (dbms != null) rm.close(Geonet.Res.MAIN_DB, dbms);
-                    }
-                    catch (Exception x) {
-                        logger.error("DBHeartBeat failed to close DB connection. Your system is unstable! Error: " + x.getMessage());
-                        x.printStackTrace();
-                    }
                 }
             }
         };
         scheduledExecutorService.scheduleWithFixedDelay(DBHeartBeat, initialDelay, fixedDelay, TimeUnit.SECONDS);
     }
-
-    /**
-     * Parses a version number removing extra "-*" element and returning an integer. "2.7.0-SNAPSHOT" is returned as 270.
-     * 
-     * @param number The version number to parse
-     * @return The version number as an integer
-     * @throws Exception
-     */
-    private int parseVersionNumber(String number) throws Exception {
-        // Remove extra "-SNAPSHOT" info which may be in version number
-        int dashIdx = number.indexOf("-");
-        if (dashIdx != -1) {
-            number = number.substring(0, number.indexOf("-"));
-        }
-        return Integer.valueOf(number.replaceAll("\\.", ""));
-    }
-    
-    @SuppressWarnings("unchecked")
-    /**
-     * Return database version and subversion number.
-     * 
-     * @param dbms
-     * @return
-     */
-    private Pair<String, String> getDatabaseVersion(Dbms dbms) {
-        int VERSION_NUMBER_ID_BEFORE_2_11 = 15;
-        int SUBVERSION_NUMBER_ID_BEFORE_2_11 = 16;
-        String VERSION_NUMBER_KEY = "system/platform/version";
-        String SUBVERSION_NUMBER_KEY = "system/platform/subVersion";
-        String version = null;
-        String subversion = null;
-        
-        List<Element> results;
-        // Before 2.11, settings was a tree. Check using keys
-        try {
-            results = dbms.select("SELECT value FROM settings WHERE id = ?", VERSION_NUMBER_ID_BEFORE_2_11).getChildren();
-            if (results.size() != 0) {
-                Element record = (Element) results.get(0);
-                version = record.getChildText("value");
-            }
-            results = dbms.select("SELECT value FROM settings WHERE id = ?", SUBVERSION_NUMBER_ID_BEFORE_2_11).getChildren();
-            if (results.size() != 0) {
-                Element record = (Element) results.get(0);
-                subversion = record.getChildText("value");
-            }
-        } catch (SQLException e) {
-            logger.info("     Error getting database version: " + e.getMessage() + 
-                    ". Probably due to an old version. Trying with new Settings structure.");
-            dbms.abort();
-        }
-        
-        // Now settings is KVP
-        if (version == null) {
-            try {
-                results = dbms.select("SELECT value FROM settings WHERE name = ?", VERSION_NUMBER_KEY).getChildren();
-                if (results.size() != 0) {
-                    Element record = (Element) results.get(0);
-                    version = record.getChildText("value");
-                }
-                results = dbms.select("SELECT value FROM settings WHERE name = ?", SUBVERSION_NUMBER_KEY).getChildren();
-                if (results.size() != 0) {
-                    Element record = (Element) results.get(0);
-                   subversion = record.getChildText("value");
-                }
-            } catch (SQLException e) {
-                logger.info("     Error getting database version: " + e.getMessage() + ".");
-            }
-        }
-        return Pair.read(version, subversion);
-    }
-	/**
-	 * Checks if current database is running same version as the web application.
-	 * If not, apply migration SQL script :
-	 *  resources/sql/migration/{version}-to-{version}-{dbtype}.sql.
-	 * eg. 2.4.3-to-2.5.0-default.sql
-	 *
-     * @param servletContext
-	 * @param dbms
-	 * @param settingMan
-	 * @param harvesterSettingsMan TODO
-	 * @param webappVersion
-	 * @param subVersion
-	 * @param appPath
-     */
-	private void migrateDatabase(ServletContext servletContext, Dbms dbms, SettingManager settingMan, 
-	        HarvesterSettingsManager harvesterSettingsMan, String webappVersion, String subVersion, ServiceContext context) {
-		logger.info("  - Migration ...");
-		
-		// Get db version and subversion
-		Pair<String, String> dbVersionInfo = getDatabaseVersion(dbms);
-		String dbVersion = dbVersionInfo.one();
-		String dbSubVersion = dbVersionInfo.two();
-		
-		// Migrate db if needed
-		logger.info("      Webapp   version:" + webappVersion + " subversion:" + subVersion);
-		logger.info("      Database version:" + dbVersion + " subversion:" + dbSubVersion);
-		if (dbVersion == null || webappVersion == null) {
-			logger.warning("      Database does not contain any version information. Check that the database is a GeoNetwork database with data." + 
-							"      Migration step aborted.");
-			return;
-		}
-		
-		int from = 0, to = 0;
-
-		try {
-		    from = parseVersionNumber(dbVersion);
-		    to = parseVersionNumber(webappVersion);
-		} catch(Exception e) {
-		    logger.warning("      Error parsing version numbers: " + e.getMessage());
-            e.printStackTrace();
-		}
-		
-		if (from == to
-				//&& subVersion.equals(dbSubVersion) Check only on version number
-		) {
-			logger.info("      Webapp version = Database version, no migration task to apply.");
-		} else if (to > from) {
-			boolean anyMigrationAction = false;
-			boolean anyMigrationError = false;
-			
-			// Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
-			String dbType = DatabaseType.lookup(dbms).toString();
-			logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
-			
-		    logger.info("      Loading SQL migration step configuration from config-db.xml ...");
-            Element migrationConfig = dbConfiguration.getChild("migrate");
-            if (migrationConfig != null) {
-                @SuppressWarnings(value = "unchecked")
-                List<Element> versions = migrationConfig.getChildren();
-                for (Element version : versions) {
-                    int versionNumber = Integer.valueOf(version.getAttributeValue("id"));
-                    if (versionNumber > from && versionNumber <= to) {
-                        logger.info("       - running tasks for " + versionNumber + "...");
-                        @SuppressWarnings(value = "unchecked")
-                        List<Element> versionConfiguration = version.getChildren();
-                        for (Element file : versionConfiguration) {
-                            if (file.getName().equals("java")) {
-                                try {
-                                    String className = file.getAttributeValue("class");
-                                    logger.info("         - Java migration class:" + className);
-
-                                    // In 2.11, settingsManager was not able to initialized on previous
-                                    // version db table due to structure changes
-                                    settingMan.refresh();
-                                    harvesterSettingsMan.refresh();
-                                    DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
-                                    task.update(settingMan, harvesterSettingsMan, dbms);
-                                } catch (Exception e) {
-                                    logger.info("          Errors occurs during Java migration file: " + e.getMessage());
-                                    e.printStackTrace();
-                                    anyMigrationError = true;
-                                }
-                            } else {
-                                String filePath = path + file.getAttributeValue("path");
-                                String filePrefix = file.getAttributeValue("filePrefix");
-                                anyMigrationAction = true;
-                                logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
-                                try {
-                                    Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
-                                } catch (Exception e) {
-                                    logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-                                    e.printStackTrace();
-                                    anyMigrationError = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-    		
-			// Refresh setting manager in case the migration task added some new settings.
-            try {
-                settingMan.refresh();
-                // Update the logo 
-                String siteId = settingMan.getValue("system/site/siteId");
-                initLogo(servletContext, dbms, siteId, context.getAppPath());
-            } catch (Exception e) {
-                logger.info("      Errors occurs during settings manager refresh during migration. Error is: " + e.getMessage());
-                e.printStackTrace();
-                anyMigrationError = true;
-            }
-			
-			// TODO : Maybe a force rebuild index is required in such situation.
-			
-			if (anyMigrationAction && !anyMigrationError) {
-			    logger.info("      Successfull migration.\n" +
-                        "      Catalogue administrator still need to update the catalogue\n" +
-                        "      logo and data directory in order to complete the migration process.\n" +
-                        "      Lucene index rebuild is also recommended after migration."
-			            );
-			}
-			
-			if (!anyMigrationAction) {
-                logger.warning("      No migration task found between webapp and database version.\n" +
-                        "      The system may be unstable or may failed to start if you try to run \n" +
-                        "      the current GeoNetwork " + webappVersion + " with an older database (ie. " + dbVersion + "\n" +
-                        "      ). Try to run the migration task manually on the current database\n" +
-                        "      before starting the application or start with a new empty database.\n" +
-                        "      Sample SQL scripts for migration could be found in WEB-INF/sql/migrate folder.\n"
-                        );
-                
-            }
-			
-			if (anyMigrationError) {
-                logger.warning("      Error occurs during migration. Check the log file for more details.");
-            }
-			// TODO : Maybe some migration stuff has to be done in Java ?
-		} else {
-	          logger.info("      Running on a newer database version.");
-		}
-	}
-
-	/**
-	 * Database initialization. If no table in current database
-	 * create the GeoNetwork database. If an existing GeoNetwork database 
-	 * exists, try to migrate the content.
-	 * 
-	 * @param context
-	 * @return Pair with Dbms channel and Boolean set to true if db created
-	 * @throws Exception
-	 */
-	private Pair<Dbms, Boolean> initDatabase(ServiceContext context) throws Exception {
-		Dbms dbms = null;
-		try {
-			dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		} catch (Exception e) {
-			logger.error("    Failed to open database connection, Check config.xml db file configuration.");
-			logger.error(Util.getStackTrace(e));
-			throw new IllegalArgumentException("No database connection");
-		}
-	
-		String dbURL = dbms.getURL();
-		logger.info("  - Database connection on " + dbURL + " ...");
-
-        ServletContext servletContext = null;
-        if(context.getServlet() != null) {
-            servletContext = context.getServlet().getServletContext();
-        }
-
-		Boolean created = false;
-		// Create db if empty
-		if (!Lib.db.touch(dbms)) {
-			logger.info("      " + dbURL + " is an empty database (Metadata table not found).");
-
-            @SuppressWarnings(value = "unchecked")
-			List<Element> createConfiguration = dbConfiguration.getChild("create").getChildren();
-			for(Element file : createConfiguration) {
-			    String filePath = path + file.getAttributeValue("path");
-			    String filePrefix = file.getAttributeValue("filePrefix");
-			    logger.info("         - SQL create file:" + filePath + " prefix:" + filePrefix + " ...");
-                // Do we need to remove object before creating the database ?
-    			Lib.db.removeObjects(servletContext, dbms, path, filePath, filePrefix);
-    			Lib.db.createSchema(servletContext, dbms, path, filePath, filePrefix);
-			}
-			
-            @SuppressWarnings(value = "unchecked")
-	        List<Element> dataConfiguration = dbConfiguration.getChild("data").getChildren();
-	        for(Element file : dataConfiguration) {
-                String filePath = path + file.getAttributeValue("path");
-                String filePrefix = file.getAttributeValue("filePrefix");
-                logger.info("         - SQL data file:" + filePath + " prefix:" + filePrefix + " ...");
-                Lib.db.insertData(servletContext, dbms, path, filePath, filePrefix);
-	        }
-	        dbms.commit();
-            
-			// Copy logo
-			String uuid = UUID.randomUUID().toString();
-			initLogo(servletContext, dbms, uuid, context.getAppPath());
-			
-			context.getServlet().getEngine().loadConfigDB(dbms, -1);
-			
-			created = true;
-		} else {
-			logger.info("      Found an existing GeoNetwork database.");
-		}
-
-		return Pair.read(dbms, created);
-	}
-
-	/**
-	 * Copy the default dummy logo to the logo folder based on uuid
-     *
-     * @param servletContext
-     * @param dbms
-* @param nodeUuid
-* @param appPath
-* @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws SQLException
-	 */
-	private void initLogo(ServletContext servletContext, Dbms dbms, String nodeUuid, String appPath) {
-		createSiteLogo(nodeUuid, servletContext, appPath);
-		
-		try {
-			dbms.execute("UPDATE Settings SET value=? WHERE name='siteId'", nodeUuid);
-		} catch (SQLException e) {
-			logger.error("      Error when setting siteId values: " + e.getMessage());
-		}
-	}
 
     /**
      * Creates a default site logo, only if the logo image doesn't exists

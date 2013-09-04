@@ -25,7 +25,7 @@ package org.fao.geonet.services.config;
 
 import jeeves.JeevesProxyInfo;
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;

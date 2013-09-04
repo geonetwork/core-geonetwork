@@ -25,7 +25,7 @@ package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import jeeves.utils.Xml;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;

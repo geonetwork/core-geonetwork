@@ -23,12 +23,12 @@
 
 package org.fao.geonet.services.main;
 
-import jeeves.exceptions.MissingParameterEx;
-import jeeves.exceptions.UserNotFoundEx;
+import org.fao.geonet.exceptions.MissingParameterEx;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.lib.Lib;

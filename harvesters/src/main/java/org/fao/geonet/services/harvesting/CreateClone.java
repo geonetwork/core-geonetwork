@@ -24,7 +24,7 @@
 package org.fao.geonet.services.harvesting;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.ObjectNotFoundEx;
+import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;

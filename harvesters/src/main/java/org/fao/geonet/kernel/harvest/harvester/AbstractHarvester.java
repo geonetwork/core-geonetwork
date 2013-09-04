@@ -23,10 +23,10 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.JeevesException;
-import jeeves.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.JeevesException;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;

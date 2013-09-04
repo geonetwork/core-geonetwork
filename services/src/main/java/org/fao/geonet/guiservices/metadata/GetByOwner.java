@@ -1,6 +1,6 @@
 package org.fao.geonet.guiservices.metadata;
 
-import jeeves.exceptions.OperationNotAllowedEx;
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;

@@ -27,8 +27,8 @@
 package org.fao.geonet.kernel.harvest.harvester.thredds;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadServerCertificateEx;
-import jeeves.exceptions.BadXmlResponseEx;
+import org.fao.geonet.exceptions.BadServerCertificateEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;

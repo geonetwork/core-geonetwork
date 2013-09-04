@@ -280,7 +280,6 @@
 		-->
 		<param name="maxWritesInTransaction" value="1" />
 
-		<param name="useSubversion" value="true"/>
         <param name="DBHeartBeatEnabled" value="false"/>
         <param name="DBHeartBeatInitialDelaySeconds" value="20"/>
         <param name="DBHeartBeatFixedDelaySeconds" value="20"/>

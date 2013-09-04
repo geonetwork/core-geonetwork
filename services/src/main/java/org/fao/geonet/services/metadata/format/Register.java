@@ -28,6 +28,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.IO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.util.ZipUtil;
@@ -54,8 +55,8 @@ public class Register extends AbstractFormatService {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         ensureInitializedDir(context);
-        String fileName = jeeves.utils.Util.getParam(params, Params.FNAME);
-        String xslid = jeeves.utils.Util.getParam(params, Params.ID, null);
+        String fileName = Util.getParam(params, Params.FNAME);
+        String xslid = Util.getParam(params, Params.ID, null);
         if (xslid == null) {
             xslid = fileName;
             int extentionIdx = xslid.lastIndexOf('.');

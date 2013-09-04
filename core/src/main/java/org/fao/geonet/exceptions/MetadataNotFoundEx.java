@@ -23,8 +23,6 @@
 
 package org.fao.geonet.exceptions;
 
-import jeeves.exceptions.NotFoundEx;
-
 //=============================================================================
 
 public class MetadataNotFoundEx extends NotFoundEx

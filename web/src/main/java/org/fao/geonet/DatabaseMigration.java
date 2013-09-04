@@ -34,20 +34,24 @@ import java.util.Map;
  * Time: 8:01 PM
  */
 public class DatabaseMigration implements BeanPostProcessor, ApplicationContextAware {
-
+    private static final int VERSION_NUMBER_ID_BEFORE_2_11 = 15;
+    private static final int SUBVERSION_NUMBER_ID_BEFORE_2_11 = 16;
+    private static final String VERSION_NUMBER_KEY = "system/platform/version";
+    private static final String SUBVERSION_NUMBER_KEY = "system/platform/subVersion";
     private static final String JAVA_MIGRATION_PREFIX = "java:";
+
     private LinkedHashMap<Integer/*version number*/, List<String> /*path to sql files*/> _migration;
 
     private Logger _logger = Log.createLogger(Geonet.GEONETWORK);
     private JeevesApplicationContext _applicationContext;
 
     @Override
-    public final Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
+    public final Object postProcessBeforeInitialization(final Object bean, final String beanName) {
         return null;  // Do nothing
     }
 
     @Override
-    public final Object postProcessAfterInitialization(final Object bean, final String beanName) throws BeansException {
+    public final Object postProcessAfterInitialization(final Object bean, final String beanName) {
         if (beanName.equals("jdbcDataSource")) {
 
             ServletContext servletContext = _applicationContext.getServletContext();
@@ -95,7 +99,7 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
             _logger.info("      Database version:" + dbVersion + " subversion:" + dbSubVersion);
             if (dbVersion == null || webappVersion == null) {
                 _logger.warning("      Database does not contain any version information. Check that the database is a GeoNetwork "
-                        + "database with data.  Migration step aborted.");
+                                + "database with data.  Migration step aborted.");
                 return;
             }
 
@@ -148,20 +152,21 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
                     }
                 }
                 if (anyMigrationAction && !anyMigrationError) {
-                    _logger.info("      Successfull migration.\n" +
-                            "      Catalogue administrator still need to update the catalogue\n" +
-                            "      logo and data directory in order to complete the migration process.\n" +
-                            "      Lucene index rebuild is also recommended after migration."
+                    _logger.info("      Successfull migration.\n"
+                                 + "      Catalogue administrator still need to update the catalogue\n"
+                                 + "      logo and data directory in order to complete the migration process.\n"
+                                 + "      Lucene index rebuild is also recommended after migration."
                     );
                 }
 
                 if (!anyMigrationAction) {
-                    _logger.warning("      No migration task found between webapp and database version.\n" +
-                            "      The system may be unstable or may failed to start if you try to run \n" +
-                            "      the current GeoNetwork " + webappVersion + " with an older database (ie. " + dbVersion + "\n" +
-                            "      ). Try to run the migration task manually on the current database\n" +
-                            "      before starting the application or start with a new empty database.\n" +
-                            "      Sample SQL scripts for migration could be found in WEB-INF/sql/migrate folder.\n"
+                    _logger.warning("      No migration task found between webapp and database version.\n"
+                                    + "      The system may be unstable or may failed to start if you try to run \n"
+                                    + "      the current GeoNetwork " + webappVersion + " with an older database (ie. " + dbVersion
+                                    + "\n"
+                                    + "      ). Try to run the migration task manually on the current database\n"
+                                    + "      before starting the application or start with a new empty database.\n"
+                                   + "      Sample SQL scripts for migration could be found in WEB-INF/sql/migrate folder.\n"
                     );
 
                 }
@@ -207,17 +212,13 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
      * @return
      */
     private Pair<String, String> getDatabaseVersion(Statement statement) throws SQLException {
-        int VERSION_NUMBER_ID_BEFORE_2_11 = 15;
-        int SUBVERSION_NUMBER_ID_BEFORE_2_11 = 16;
-        String VERSION_NUMBER_KEY = "system/platform/version";
-        String SUBVERSION_NUMBER_KEY = "system/platform/subVersion";
         String version = null;
         String subversion = null;
 
         ResultSet results = null;
         // Before 2.11, settings was a tree. Check using keys
         try {
-            results = statement.executeQuery("SELECT value FROM settings WHERE id = "+VERSION_NUMBER_ID_BEFORE_2_11);
+            results = statement.executeQuery("SELECT value FROM settings WHERE id = " + VERSION_NUMBER_ID_BEFORE_2_11);
             if (results.next()) {
                 version = results.getString(0);
             }
@@ -228,7 +229,7 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
             }
         } catch (SQLException e) {
             _logger.info("     Error getting database version: " + e.getMessage() +
-                    ". Probably due to an old version. Trying with new Settings structure.");
+                         ". Probably due to an old version. Trying with new Settings structure.");
         } finally {
             if (results != null) {
                 results.close();

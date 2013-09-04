@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.mef;
 
-import jeeves.exceptions.BadFormatEx;
+import org.fao.geonet.exceptions.BadFormatEx;
 import jeeves.interfaces.Logger;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;

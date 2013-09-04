@@ -23,7 +23,7 @@
 
 package org.fao.geonet.lib;
 
-import jeeves.exceptions.OperationNotAllowedEx;
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;

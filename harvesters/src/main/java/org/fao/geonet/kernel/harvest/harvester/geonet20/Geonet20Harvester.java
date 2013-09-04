@@ -23,8 +23,8 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.UserNotFoundEx;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;

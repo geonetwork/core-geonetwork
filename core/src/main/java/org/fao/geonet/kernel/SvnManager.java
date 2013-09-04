@@ -25,7 +25,6 @@ package org.fao.geonet.kernel;
 
 import static org.fao.geonet.domain.OperationAllowedNamedQueries.PATH_OPERATION_ID;
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceListener;
@@ -38,15 +37,12 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
@@ -63,31 +59,61 @@ import org.tmatesoft.svn.core.SVNURL;
 
 import org.jdom.Element;
 
+import javax.sql.DataSource;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.sql.Connection;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SvnManager {
 
+    @Autowired
+    OperationAllowedRepository _operationAllowedRepository;
+    @Autowired
+    GroupRepository _groupRepository;
+    @Autowired
+    OperationRepository _operationRepository;
+    @Autowired
+    private SettingManager _settingManager;
+    @Autowired
+    private DataSource _dataSource;
+    @Autowired
+    private TransactionManager _transactionManager;
+
+    // configure via setter in Geonetwork app
     private ServiceContext context;
+    // configure in init method
     private SVNURL repoUrl;
+    // configure in spring configuration of bean
+    private String subversionPath;
 
     private static String username = "geonetwork";
     private static String password = "geonetwork";
 
-    private Map<Dbms, SvnTask> tasks = new ConcurrentHashMap<Dbms, SvnTask>();
+    private Map<Transaction, SvnTask> tasks = new ConcurrentHashMap<Transaction, SvnTask>();
 
     private ResourceListener resList = new ResourceListener() {
         public void beforeClose(Object resource) {
-            commit(resource);
+            try {
+                commit(_transactionManager.getTransaction());
+            } catch (SystemException e) {
+                Log.error(Geonet.SVN_MANAGER, "Error committing svn tasks.", e);
+            }
         }
 
         public void close(Object resource) {
         } // do nothing on commit
 
         public void abort(Object resource) {
-            rollback(resource);
+            try {
+                rollback(_transactionManager.getTransaction());
+            } catch (SystemException e) {
+                Log.error(Geonet.SVN_MANAGER, "Error rolling back svn tasks.", e);
+            }
         }
     };
 
@@ -101,22 +127,16 @@ public class SvnManager {
     /**
      * Constructor. Creates the subversion repository if it doesn't exist or just open the subversion repository if it does. Stores the URL
      * of the repository in repoUrl. Adds the commit/abort listeners to the DbmsPool resource provider.
-     * 
-     * @param context Service context used to get GeoNetwork context objects
-     * @param sm SettingManager used to get system settings like catalog id
-     * @param subversionPath File path of the subversion repository.
-     * @param dbms Database used to find resource provider
-     * @param created set to true if a new database has been created
      */
-    public SvnManager(ServiceContext context, SettingManager sm, String subversionPath, Dbms dbms, boolean created) throws Exception {
+    public void init() throws Exception {
 
-        String dbUrl = dbms.getURL();
-        this.context = context;
-        String uuid = sm.getValue("system/site/svnUuid");
+        String uuid = _settingManager.getValue("system/site/svnUuid");
 
+        boolean dbCreated = false;
         if (StringUtils.isEmpty(uuid)) {
+            dbCreated = true;
             uuid = UUID.randomUUID().toString();
-            sm.setValue(dbms, "system/site/svnUuid", uuid);
+            _settingManager.setValue("system/site/svnUuid", uuid);
         }
 
         File subFile = new File(subversionPath);
@@ -176,9 +196,20 @@ public class SvnManager {
             }
         }
 
+
+        Connection conn = null;
+        String dbUrl;
+        try {
+            conn = _dataSource.getConnection();
+            dbUrl = conn.getMetaData().getURL();
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+        }
         // set database URL as property on root of repository if database was
         // created or if new subversion repo created
-        if (created || repoCreated) {
+        if (dbCreated || repoCreated) {
             Map<String, String> props = new HashMap<String, String>();
             props.put(Params.Svn.DBURLPROP, dbUrl);
             ISVNEditor editor = getEditor("Setting " + Params.Svn.DBURLPROP + " to " + dbUrl);
@@ -210,6 +241,14 @@ public class SvnManager {
                 rp.addListener(resList);
             }
         }
+    }
+
+    public void setSubversionPath(String subversionPath) {
+        this.subversionPath = subversionPath;
+    }
+
+    public void setContext(ServiceContext context) {
+        this.context = context;
     }
 
     /**
@@ -262,12 +301,11 @@ public class SvnManager {
      * Creates a history request for this metadata id that will cause metadata and metadata properties to be committed/aborted when the
      * database is committed/aborted.
      * 
-     * @param dbms The database channel to listen for commit/abort on
      * @param id The metadata id that will be tracked
      * @param context Describing the servicer and user carrying out operation
      * @throws Exception when something goes wrong
      */
-    public void setHistory(Dbms dbms, String id, ServiceContext context) throws Exception {
+    public void setHistory(Transaction transaction, String id, ServiceContext context) throws Exception {
 
         if (!exists(id))
             return; // not in repo so exit
@@ -278,10 +316,10 @@ public class SvnManager {
         Map<String, String> props = new HashMap<String, String>();
         props = sessionToProps(context, props);
 
-        checkSvnTask(dbms, id, sessionToLogMessage(context), props);
+        checkSvnTask(transaction, id, sessionToLogMessage(context), props);
 
         if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-            Log.debug(Geonet.SVN_MANAGER, "Changes to metadata " + id + " will be committed/aborted with the database channel " + dbms);
+            Log.debug(Geonet.SVN_MANAGER, "Changes to metadata " + id + " will be committed/aborted with the database channel " + transaction);
         return;
     }
 
@@ -315,7 +353,7 @@ public class SvnManager {
      * @param md Metadata record - initial version
      * @throws Exception
      */
-    public void createMetadataDir(String id, ServiceContext context, Element md) throws Exception {
+    public void createMetadataDir(Transaction transaction, String id, ServiceContext context, Element md) throws Exception {
 
         if (exists(id))
             return; // already in repo so exit
@@ -341,13 +379,11 @@ public class SvnManager {
         }
 
         // Add the id/metadata.xml item plus properties to the repository
-        Dbms dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
         try {
-
             logMessage = sessionToLogMessage(context) + " adding initial version of metadata " + id;
             editor = getEditor(logMessage);
             editor.openRoot(-1);
-            commitMetadata(dbms, id, editor);
+            commitMetadata(transaction, id, editor);
             if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Metadata " + id + " was added");
             editor.closeDir();
@@ -358,8 +394,6 @@ public class SvnManager {
             editor.abortEdit();
             svne.printStackTrace();
             throw svne;
-        } finally {
-            context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
         }
     }
 
@@ -396,35 +430,32 @@ public class SvnManager {
     /**
      * Abort changes to the subversion repository. Actually just remove any task assigned to this dbms resource.
      * 
-     * @param resource The resource being aborted that we're listening too
+     * @param transaction The resource being aborted that we're listening too
      */
-    private void rollback(Object resource) {
-        Dbms dbms = (Dbms) resource;
+    private void rollback(Transaction transaction) {
 
-        SvnTask task = tasks.get(dbms);
+        SvnTask task = tasks.get(transaction);
         if (task != null)
-            tasks.remove(dbms);
+            tasks.remove(transaction);
     }
 
     /**
      * Commit changes to the subversion repository.
      * 
-     * @param resource The resource being committed that we're listening too
+     * @param transaction The resource being committed that we're listening too
      */
-    private void commit(Object resource) {
-        Dbms dbms = (Dbms) resource;
-
-        SvnTask task = tasks.get(dbms);
+    private void commit(Transaction transaction) {
+        SvnTask task = tasks.get(transaction);
 
         ISVNEditor editor = null;
 
         if (task != null) {
             try {
-                editor = getEditor(task.sessionLogMessage + " (committing dbms session " + dbms + ")");
+                editor = getEditor(task.sessionLogMessage + " (committing transaction " + transaction + ")");
                 editor.openRoot(-1); // open the root directory.
                 for (Iterator<String> it = task.ids.iterator(); it.hasNext();) {
                     String id = it.next();
-                    commitMetadata(dbms, id, editor);
+                    commitMetadata(transaction, id, editor);
                     it.remove();
                 }
                 editor.closeDir(); // close the root directory.
@@ -442,7 +473,7 @@ public class SvnManager {
                     }
                 }
             } finally {
-                tasks.remove(dbms);
+                tasks.remove(transaction);
             }
         }
     }
@@ -451,20 +482,20 @@ public class SvnManager {
      * Check (and create if not present) a subversion commit task for a metadata id. If a commit task exists then the metadata and
      * properties will be read at the end of the database commit and committed to the subversion repo.
      * 
-     * @param dbms The resource we will listen to for commits/aborts
+     * @param transaction The resource we will listen to for commits/aborts
      * @param id The metadata id we want to track
      * @param sessionLogMessage The log message used to record changes
      * @param props The properties we want to record on the metadata in repo
      * @throws Exception when something goes wrong with the commit
      */
-    private void checkSvnTask(Dbms dbms, String id, String sessionLogMessage, Map<String, String> props) throws Exception {
-        SvnTask task = tasks.get(dbms);
+    private void checkSvnTask(Transaction transaction, String id, String sessionLogMessage, Map<String, String> props) throws Exception {
+        SvnTask task = tasks.get(transaction);
         if (task == null) {
             task = new SvnTask();
             task.ids = new HashSet<String>();
             task.sessionLogMessage = sessionLogMessage;
             // task.props = props;
-            tasks.put(dbms, task);
+            tasks.put(transaction, task);
         }
 
         Set<String> ids = task.ids;
@@ -518,7 +549,7 @@ public class SvnManager {
      * @param editor ISVNEditor for commits to subversion repo
      * @throws SVNException if something goes wrong
      */
-    public void commitMetadata(Dbms dbms, String id, ISVNEditor editor) throws Exception {
+    public void commitMetadata(Transaction transaction, String id, ISVNEditor editor) throws Exception {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
@@ -526,19 +557,19 @@ public class SvnManager {
 
         try {
             // get the metadata record and if different commit changes
-            commitMetadataChanges(editor, id, dbms, dataMan);
+            commitMetadataChanges(editor, id, transaction, dataMan);
 
             // get the metadata owner and if different commit changes
-            commitMetadataOwner(editor, id, dbms, accessMan);
+            commitMetadataOwner(editor, id, transaction, accessMan);
 
             // get the metadata privileges and if different commit changes
-            commitMetadataPrivileges(editor, id, dbms);
+            commitMetadataPrivileges(editor, id, transaction);
 
             // get the metadata categories and if different commit changes
-            commitMetadataCategories(editor, id, dbms, dataMan);
+            commitMetadataCategories(editor, id, transaction, dataMan);
 
             // get the metadata status and if different commit changes
-            commitMetadataStatus(editor, id, dbms, dataMan);
+            commitMetadataStatus(editor, id, transaction, dataMan);
         } catch (Exception e) {
             editor.abortEdit();
             e.printStackTrace();
@@ -551,14 +582,14 @@ public class SvnManager {
      * 
      * @param editor ISVNEditor for commits to subversion repo
      * @param id Id number of metadata record being tracked for changes
-     * @param dbms Database channel used to extract info from database
+     * @param transaction Database channel used to extract info from database
      * @param dataMan DataManager object with extract methods
      * @throws Exception if something goes wrong
      */
-    private void commitMetadataCategories(ISVNEditor editor, String id, Dbms dbms, DataManager dataMan) throws Exception {
+    private void commitMetadataCategories(ISVNEditor editor, String id, Transaction transaction, DataManager dataMan) throws Exception {
 
         // get categories from the database
-        Element categs = dataMan.getCategories(dbms, id);
+        Element categs = dataMan.getCategories(id);
         String now = Xml.getString(categs);
 
         if (exists(id + "/categories.xml")) {
@@ -584,14 +615,14 @@ public class SvnManager {
      * 
      * @param editor ISVNEditor for commits to subversion repo
      * @param id Id number of metadata record being tracked for changes
-     * @param dbms Database channel used to extract info from database
+     * @param transaction Database channel used to extract info from database
      * @param dataMan DataManager object with extract methods
      * @throws Exception if something goes wrong
      */
-    private void commitMetadataStatus(ISVNEditor editor, String id, Dbms dbms, DataManager dataMan) throws Exception {
+    private void commitMetadataStatus(ISVNEditor editor, String id, Transaction transaction, DataManager dataMan) throws Exception {
 
         // get current status from the database
-        Element status = dataMan.getStatus(dbms, Integer.valueOf(id));
+        Element status = dataMan.getStatus(Integer.valueOf(id));
         if (status == null)
             return;
         @SuppressWarnings("unchecked")
@@ -628,9 +659,9 @@ public class SvnManager {
      * @param dataMan DataManager object with extract methods
      * @throws Exception if something goes wrong
      */
-    private void commitMetadataChanges(ISVNEditor editor, String id, Dbms dbms, DataManager dataMan) throws Exception {
+    private void commitMetadataChanges(ISVNEditor editor, String id, Transaction transaction, DataManager dataMan) throws Exception {
         // get metadata record from database
-        Element md = dataMan.getMetadata(dbms, id);
+        Element md = dataMan.getMetadata(id);
         String now = Xml.getString(md);
 
         if (exists(id + "/metadata.xml")) {
@@ -654,11 +685,11 @@ public class SvnManager {
      * 
      * @param editor ISVNEditor for commits to subversion repo
      * @param id Id number of metadata record being tracked for changes
-     * @param dbms Database channel used to extract info from database
+     * @param transaction Database channel used to extract info from database
      * @param accessMan AccessManager object with extract methods
      * @throws Exception if something goes wrong
      */
-    private void commitMetadataOwner(ISVNEditor editor, String id, Dbms dbms, AccessManager accessMan) throws Exception {
+    private void commitMetadataOwner(ISVNEditor editor, String id, Transaction transaction, AccessManager accessMan) throws Exception {
 
         // get owner from the database
         Set<Integer> ids = new HashSet<Integer>();
@@ -702,21 +733,23 @@ public class SvnManager {
      * 
      * @param editor ISVNEditor for commits to subversion repo
      * @param id Id number of metadata record being tracked for changes
-     * @param dbms Database channel used to extract info from database
+     * @param transaction Database channel used to extract info from database
      * @throws Exception if something goes wrong
      */
-    private void commitMetadataPrivileges(ISVNEditor editor, String id, Dbms dbms) throws Exception {
-        OperationAllowedRepository operationAllowedRepository = dbms.getBean(OperationAllowedRepository.class);
+    private void commitMetadataPrivileges(ISVNEditor editor, String id, Transaction transaction) throws Exception {
         Sort sort = new Sort(PATH_OPERATION_ID);
         Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasMetadataId(Integer.valueOf(id));
-        List<OperationAllowed> opsAllowed = operationAllowedRepository.findAll(hasMetadataId, sort);
+        List<OperationAllowed> opsAllowed = _operationAllowedRepository.findAll(hasMetadataId, sort);
         Element privs = new Element("response");
         for (OperationAllowed operationAllowed : opsAllowed) {
             Element record = new Element("record");
-            record.addContent(new Element("group_id").setText(Integer.toString(operationAllowed.getGroup().getId())));
-            record.addContent(new Element("group_name").setText(operationAllowed.getGroup().getName()));
-            record.addContent(new Element("operation_id").setText(Integer.toString(operationAllowed.getOperation().getId())));
-            record.addContent(new Element("operation_name").setText(operationAllowed.getOperation().getName()));
+            final OperationAllowedId operationAllowedId = operationAllowed.getId();
+            record.addContent(new Element("group_id").setText(Integer.toString(operationAllowedId.getGroupId())));
+            final Group group = _groupRepository.findOne(operationAllowedId.getGroupId());
+            record.addContent(new Element("group_name").setText(group.getName()));
+            final Operation operation = _operationRepository.findOne(operationAllowedId.getOperationId());
+            record.addContent(new Element("operation_id").setText(Integer.toString(operationAllowedId.getOperationId())));
+            record.addContent(new Element("operation_name").setText(operation.getName()));
             privs.addContent(record);
         }
 

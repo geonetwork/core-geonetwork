@@ -24,14 +24,14 @@
 package org.fao.geonet.services.password;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.OperationAbortedEx;
-import jeeves.exceptions.OperationNotAllowedEx;
-import jeeves.exceptions.UserNotFoundEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;

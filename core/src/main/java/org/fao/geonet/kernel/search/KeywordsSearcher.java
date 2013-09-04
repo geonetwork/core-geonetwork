@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;

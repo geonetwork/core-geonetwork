@@ -24,11 +24,11 @@
 package org.fao.geonet.services.resources;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -42,8 +42,6 @@ import org.jdom.Element;
 
 import java.io.File;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Delete an uploaded file from the data directory and remote its
