@@ -22,6 +22,7 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
@@ -39,6 +40,7 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
@@ -214,9 +216,9 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		// delete locally existing metadata from the same source if they were
 		// not in this harvesting result
 		//	
-		List<Element> existingMetadata = dataMan.getMetadataByHarvestingSource(dbms, params.uuid);
-		for(Element existingId : existingMetadata) {
-			String ex$ = existingId.getChildText("id");
+        List<Metadata> existingMetadata = context.getBean(MetadataRepository.class).findAllByHarvestInfo_Uuid(params.uuid);
+        for(Metadata existingId : existingMetadata) {
+            String ex$ = String.valueOf(existingId.getId());
 			if(!idsForHarvestingResult.contains(ex$)) {
 				dataMan.deleteMetadataGroup(context, dbms, ex$);
 				result.locallyRemoved++;

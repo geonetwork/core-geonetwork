@@ -353,8 +353,8 @@ public class SvnManager {
      * @param md Metadata record - initial version
      * @throws Exception
      */
-    public void createMetadataDir(Transaction transaction, String id, ServiceContext context, Element md) throws Exception {
-
+    public void createMetadataDir(String id, ServiceContext context, Element md) throws Exception {
+        Transaction transaction = this.context.getBean(TransactionManager.class).getTransaction();
         if (exists(id))
             return; // already in repo so exit
 
