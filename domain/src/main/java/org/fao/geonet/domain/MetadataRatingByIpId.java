@@ -21,6 +21,24 @@ public class MetadataRatingByIpId implements Serializable {
     private String _ipAddress;
 
     /**
+     * Default constructor used by JPA framework.
+     */
+    public MetadataRatingByIpId() {
+        // default constructor for JPA construction.
+    }
+
+    /**
+     * Convenience constructor.
+     *
+     * @param metatatId the metadata id that is being rated.
+     * @param ipAddress the id of the user making the rating.
+     */
+    public MetadataRatingByIpId(int metatatId, String ipAddress) {
+        this._metadataId = metatatId;
+        this._ipAddress = ipAddress;
+    }
+
+    /**
      * Get the id of the associated metadata.
      * 
      * @return the id of the associated metadata.

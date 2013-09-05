@@ -31,6 +31,45 @@ public class MetadataRatingByIpRepositoryTest extends AbstractSpringDataTest {
         assertEquals(rating2, _repo.findOne(rating2.getId()));
         assertEquals(rating1, _repo.findOne(rating1.getId()));
     }
+    @Test
+    public void testAverageRating() {
+        MetadataRatingByIp rating1 = _repo.save(newMetadataRatingByIp());
+        MetadataRatingByIp rating2 = _repo.save(updateMetadataId(rating1, newMetadataRatingByIp()));
+        MetadataRatingByIp rating3 = _repo.save(updateMetadataId(rating1, newMetadataRatingByIp()));
+        MetadataRatingByIp rating4 = _repo.save(newMetadataRatingByIp());
+
+        final double sum = (double) (rating1.getRating() + rating2.getRating() + rating3.getRating());
+        final double average = sum / 3;
+        assertEquals((int)average, _repo.averageRating(rating1.getId().getMetadataId()));
+    }
+
+    private MetadataRatingByIp updateMetadataId(MetadataRatingByIp source, MetadataRatingByIp toUpdate) {
+        toUpdate.getId().setMetadataId(source.getId().getMetadataId());
+
+        return toUpdate;
+    }
+
+    @Test
+    public void testSaveAndUpdate() {
+        MetadataRatingByIp rating1 = newMetadataRatingByIp();
+        rating1 = _repo.save(rating1);
+
+       MetadataRatingByIp rating2 = new MetadataRatingByIp();
+       final int newRating = rating1.getRating() * 100;
+       rating2.setRating(newRating);
+       rating2.setId(new MetadataRatingByIpId(rating1.getId().getMetadataId(), rating1.getId().getIpAddress()));
+
+       MetadataRatingByIp saved = _repo.save(rating2);
+
+       assertEquals(1, _repo.count());
+
+       MetadataRatingByIp loaded = _repo.findAll().get(0);
+
+       assertEquals(loaded.getRating(), newRating);
+       assertEquals(rating1.getId(), loaded.getId());
+       assertEquals(rating2.getId(), loaded.getId());
+       assertEquals(saved.getId(), loaded.getId());
+    }
 
     @Test
     public void testFindAllByMetadataId() {
