@@ -619,12 +619,15 @@ div.facets {
 div.facets * ul,
 div.facets * li {
     list-style: none;
+    font-size: 12px;
+    font-family: Arial,Helvetica,sans-serif;
 }
 /**
  * Facet category label
  */
 div.facets > ul > li {
-     margin: 0px 15px 0px 0px;
+	color: #444;
+    margin: 0px 15px 0px 0px;
     font-weight: bold;
 }
 /**
@@ -632,13 +635,20 @@ div.facets > ul > li {
  */
 div.facets ul ul {
     margin-bottom: 5px;
-    font-size: 85%;
+    font-size: 11px;
+    color: #444;
+}
+div.facets ul ul * a {
+    color: #444;
+}
+div.facets ul ul li{
+	padding-left: 4px;
 }
 /**
  * Facet count between (number) displayed next to a facet value
  */
 .facet-count {
-    color: #71C0DD;
+    color: #F28033;
     padding-left: 3px;
 }
 /**
@@ -650,6 +660,7 @@ div.facets * a {
 div.facets * .facet-more-bt, 
 div.facets * .facet-less-bt {
     margin-bottom: 10px;
+    margin-left: 5px;
 }
 div.facets * .facet-more-bt a, 
 div.facets * .facet-less-bt a {
@@ -668,8 +679,7 @@ div.facets * .facet-less-bt a {
     background: none;
 }
 .breadcrumb * button {
-    color: #0076A1;
-    font-size: smaller;
+    color: #F28033;
     font-weight: bold;
 }
 .breadcrumb * button:hover {

@@ -792,6 +792,8 @@ cat.app = function() {
                 defaultType: 'button',
                 border: false,
                 split: false,
+                bodyCssClass: 'west-panel-body',
+                bodyStyle: 'padding-top:20px;padding-left:20px',
                 layoutConfig: {
                     columns:3
                 }
@@ -800,6 +802,8 @@ cat.app = function() {
 			facetsPanel = new GeoNetwork.FacetsPanel({
                 searchForm: searchForm,
                 breadcrumb: breadcrumb,
+                bodyCssClass: 'west-panel-body',
+                bodyStyle: 'padding:20px',
                 maxDisplayedItems: GeoNetwork.Settings.facetMaxItems || 7,
                 facetListConfig: GeoNetwork.Settings.facetListConfig || []
             });
