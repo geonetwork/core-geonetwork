@@ -12,7 +12,7 @@ import java.util.List;
  * 
  * @author Jesse
  */
-public interface HarvestHistoryRepository extends JpaRepository<HarvestHistory, Integer>, JpaSpecificationExecutor<HarvestHistory> {
+public interface HarvestHistoryRepository extends GeonetRepository<HarvestHistory, Integer>, JpaSpecificationExecutor<HarvestHistory> {
     /**
      * Find all the HarvestHistory objects of the given type.
      *

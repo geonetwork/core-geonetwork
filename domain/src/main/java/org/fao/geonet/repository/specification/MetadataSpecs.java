@@ -40,7 +40,7 @@ public final class MetadataSpecs {
         return new Specification<Metadata>() {
             @Override
             public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<String> userNameAttributePath = root.get(Metadata_.uuid);
+                Path<String> userNameAttributePath = root.get(Metadata_.harvestInfo).get(MetadataHarvestInfo_.uuid);
                 Predicate uuidEqualPredicate = cb.equal(userNameAttributePath, cb.literal(harvesterUuid));
                 return uuidEqualPredicate;
             }

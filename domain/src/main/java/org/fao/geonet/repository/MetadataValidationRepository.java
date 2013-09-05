@@ -12,7 +12,7 @@ import java.util.List;
  * 
  * @author Jesse
  */
-public interface MetadataValidationRepository extends JpaRepository<MetadataValidation, MetadataValidationId>,
+public interface MetadataValidationRepository extends GeonetRepository<MetadataValidation, MetadataValidationId>,
         JpaSpecificationExecutor<MetadataValidation> {
     /**
      * Find all validation entities related to the metadata identified by metadataId.

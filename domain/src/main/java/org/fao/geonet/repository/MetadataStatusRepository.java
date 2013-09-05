@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author Jesse
  */
-public interface MetadataStatusRepository extends JpaRepository<MetadataStatus, MetadataStatusId> {
+public interface MetadataStatusRepository extends GeonetRepository<MetadataStatus, MetadataStatusId> {
     /**
      * Find all the MetadataStatus objects by the associated metadata id.
      *

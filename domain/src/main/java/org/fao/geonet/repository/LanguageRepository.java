@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * 
  * @author Jesse
  */
-public interface LanguageRepository extends JpaRepository<Language, String>, LanguageRepositoryCustom {
+public interface LanguageRepository extends GeonetRepository<Language, String>, LanguageRepositoryCustom {
 }

@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * 
  * @author Jesse
  */
-public interface MetadataNotificationRepository extends JpaRepository<MetadataNotification, MetadataNotificationId> {
+public interface MetadataNotificationRepository extends GeonetRepository<MetadataNotification, MetadataNotificationId> {
 }

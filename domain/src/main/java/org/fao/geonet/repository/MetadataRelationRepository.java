@@ -13,5 +13,5 @@ import java.util.List;
  *
  * @author Jesse
  */
-public interface MetadataRelationRepository extends JpaRepository<MetadataRelation, MetadataRelationId>, JpaSpecificationExecutor<MetadataRelation> {
+public interface MetadataRelationRepository extends GeonetRepository<MetadataRelation, MetadataRelationId>, JpaSpecificationExecutor<MetadataRelation> {
 }

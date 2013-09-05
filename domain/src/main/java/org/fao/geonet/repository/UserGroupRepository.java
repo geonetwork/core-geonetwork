@@ -19,15 +19,6 @@ import java.util.Set;
  * 
  * @author Jesse
  */
-public interface UserGroupRepository extends JpaRepository<UserGroup, UserGroupId>, JpaSpecificationExecutor<UserGroup>, UserGroupRepositoryCustom {
+public interface UserGroupRepository extends GeonetRepository<UserGroup, UserGroupId>, JpaSpecificationExecutor<UserGroup>, UserGroupRepositoryCustom {
 
-    /**
-     * Delete all users with the given userid.
-     *
-     * @param userId the userid.
-     */
-//    @Modifying
-//    @Transactional
-//    @Query(name = DeleteAllByUserId.QUERY)
-//    void deleteAllByUserId(@Param(DeleteAllByUserId.PARAM_USERID) int userId);
 }

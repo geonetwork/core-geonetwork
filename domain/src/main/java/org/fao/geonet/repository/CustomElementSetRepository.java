@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * 
  * @author Jesse
  */
-public interface CustomElementSetRepository extends JpaRepository<CustomElementSet, String> {
+public interface CustomElementSetRepository extends GeonetRepository<CustomElementSet, String> {
 }

@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * 
  * @author Jesse
  */
-public interface OperationRepository extends JpaRepository<Operation, Integer>, OperationRepositoryCustom {
+public interface OperationRepository extends GeonetRepository<Operation, Integer>, OperationRepositoryCustom {
     /**
      * Look up an operation using the name of the operation
      * 

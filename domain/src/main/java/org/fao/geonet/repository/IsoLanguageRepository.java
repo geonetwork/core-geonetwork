@@ -11,7 +11,7 @@ import java.util.List;
  * 
  * @author Jesse
  */
-public interface IsoLanguageRepository extends JpaRepository<IsoLanguage, Integer>, JpaSpecificationExecutor<IsoLanguage> {
+public interface IsoLanguageRepository extends GeonetRepository<IsoLanguage, Integer>, JpaSpecificationExecutor<IsoLanguage> {
     /**
      * Find all the IsoLanguages based on the code (the longer code).
      *

@@ -21,7 +21,7 @@ import org.springframework.data.repository.query.Param;
  *
  * @author Jesse
  */
-public interface OperationAllowedRepository extends JpaRepository<OperationAllowed, OperationAllowedId>, OperationAllowedRepositoryCustom,
+public interface OperationAllowedRepository extends GeonetRepository<OperationAllowed, OperationAllowedId>, OperationAllowedRepositoryCustom,
         JpaSpecificationExecutor<OperationAllowed> {
 
     /**

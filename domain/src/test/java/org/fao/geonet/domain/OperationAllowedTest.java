@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class OperationAllowedTest extends AbstractOperationsAllowedTest {
-    @Test @Ignore
+    @Test
     public void testGetGroup() {
         OperationAllowed operationAllowed = _opAllowRepo.findOne(_opAllowed1.getId());
         assertNotNull(operationAllowed);

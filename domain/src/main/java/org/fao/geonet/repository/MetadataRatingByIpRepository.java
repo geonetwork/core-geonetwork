@@ -12,7 +12,7 @@ import java.util.List;
  * 
  * @author Jesse
  */
-public interface MetadataRatingByIpRepository extends JpaRepository<MetadataRatingByIp, MetadataRatingByIpId>, JpaSpecificationExecutor<MetadataRatingByIp> {
+public interface MetadataRatingByIpRepository extends GeonetRepository<MetadataRatingByIp, MetadataRatingByIpId>, JpaSpecificationExecutor<MetadataRatingByIp> {
     /**
      * Find all the ratings for the given Metadata.
      *

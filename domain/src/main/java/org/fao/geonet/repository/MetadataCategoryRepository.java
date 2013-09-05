@@ -11,7 +11,7 @@ import java.util.List;
  * 
  * @author Jesse
  */
-public interface MetadataCategoryRepository extends JpaRepository<MetadataCategory, Integer>, JpaSpecificationExecutor<MetadataCategory> {
+public interface MetadataCategoryRepository extends GeonetRepository<MetadataCategory, Integer>, JpaSpecificationExecutor<MetadataCategory> {
     /**
      * Find the category with the given name.
      *

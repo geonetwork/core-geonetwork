@@ -9,6 +9,7 @@
 
     <!-- Look up the JPA repositories -->
     <jpa:repositories base-package="org.fao.geonet.repository"
+                      factory-class="org.fao.geonet.repository.GeonetRepositoryFactoryBean"
                       entity-manager-factory-ref="entityManagerFactory"
                       transaction-manager-ref="transactionManager"/>
 

@@ -11,7 +11,7 @@ import java.util.List;
  * 
  * @author Jesse
  */
-public interface CswServerCapabilitiesInfoRepository extends JpaRepository<CswServerCapabilitiesInfo, Integer>, JpaSpecificationExecutor<CswServerCapabilitiesInfo> {
+public interface CswServerCapabilitiesInfoRepository extends GeonetRepository<CswServerCapabilitiesInfo, Integer>, JpaSpecificationExecutor<CswServerCapabilitiesInfo> {
     /**
      * Find all the Capabilities Info objects for the given field.
      * @param fieldName the name of the field to find.

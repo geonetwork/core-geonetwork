@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author Jesse
  */
-public interface GroupRepository extends JpaRepository<Group, Integer>, GroupRepositoryCustom {
+public interface GroupRepository extends GeonetRepository<Group, Integer>, GroupRepositoryCustom {
     /**
      * Look up a group by its name
      * 

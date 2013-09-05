@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * 
  * @author Jesse
  */
-public interface HarvesterSettingRepository extends JpaRepository<HarvesterSetting, Integer>, HarvesterSettingRepositoryCustom {
+public interface HarvesterSettingRepository extends GeonetRepository<HarvesterSetting, Integer>, HarvesterSettingRepositoryCustom {
 
     /**
      * The prefix in a path for finding a setting by its id.

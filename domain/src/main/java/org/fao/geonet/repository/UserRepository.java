@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * 
  * @author Jesse
  */
-public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User>, UserRepositoryCustom {
+public interface UserRepository extends GeonetRepository<User, Integer>, JpaSpecificationExecutor<User>, UserRepositoryCustom {
     /**
      * Find the user identified by  the username.
      * 

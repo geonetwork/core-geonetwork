@@ -11,6 +11,6 @@ import java.util.List;
  * 
  * @author Jesse
  */
-public interface MetadataNotifierRepository extends JpaRepository<MetadataNotifier, Integer>, MetadataNotifierRepositoryCustom {
+public interface MetadataNotifierRepository extends GeonetRepository<MetadataNotifier, Integer>, MetadataNotifierRepositoryCustom {
 
 }

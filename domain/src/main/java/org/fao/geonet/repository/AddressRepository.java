@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Jesse
  */
-public interface AddressRepository extends JpaRepository<Address, Integer>, JpaSpecificationExecutor<Address> {
+public interface AddressRepository extends GeonetRepository<Address, Integer>, JpaSpecificationExecutor<Address> {
     /**
      * Find all the addresses in the given zip code.
      *
