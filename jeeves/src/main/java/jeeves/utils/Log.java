@@ -51,26 +51,10 @@ public final class Log
 	public static final String SERVICE = JEEVES + ".service";
 	public static final String SCHEDULER = JEEVES + ".scheduler";
 	public static final String RESOURCES = JEEVES + ".resources";
-	public static final String DBMS = JEEVES + ".dbms";
-	public static final String DBMSPOOL = JEEVES + ".dbmspool";
 	public static final String XLINK_PROCESSOR = JEEVES + ".xlinkprocessor";
 	public static final String XML_RESOLVER = JEEVES + ".xmlresolver";
 	public static final String TRANSFORMER_FACTORY = JEEVES
 			+ ".transformerFactory";
-
-    public static final class Dbms {
-
-        /**
-         * Default constructor.
-         * Builds a Log.Dbms.
-         */
-        private Dbms() {
-        }
-
-        public static final String SELECT = DBMS + ".select";
-        public static final String EXECUTE = DBMS + ".execute";
-        public static final String RESOURCE_TRACKING = DBMS + ".resourcetracking";
-    }
 
     //---------------------------------------------------------------------------
 	//---
