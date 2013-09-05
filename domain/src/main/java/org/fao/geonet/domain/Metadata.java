@@ -6,20 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.vividsolutions.jts.util.Assert;
 import org.jdom.Element;
@@ -110,6 +97,7 @@ public class Metadata {
      */
     @Column(nullable = false)
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     public String getData() {
         return _data;
     }

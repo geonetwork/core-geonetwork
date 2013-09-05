@@ -1,12 +1,6 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  * Entity representing metadata validation reports.
@@ -15,9 +9,10 @@ import javax.persistence.Transient;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-public class Validation {
-    private ValidationId _id;
-    private ValidationStatus _status;
+@Table(name = "validation")
+public class MetadataValidation {
+    private MetadataValidationId _id;
+    private MetadataValidationStatus _status;
     private int _tested;
     private int _failed;
     private ISODate _validationDate;
@@ -28,7 +23,7 @@ public class Validation {
      * @return the id object of this entity
      */
     @EmbeddedId
-    public ValidationId getId() {
+    public MetadataValidationId getId() {
         return _id;
     }
 
@@ -37,7 +32,7 @@ public class Validation {
      * 
      * @param id the id object of this entity. 
      */
-    public void setId(ValidationId id) {
+    public void setId(MetadataValidationId id) {
         this._id = id;
     }
 
@@ -47,7 +42,7 @@ public class Validation {
      * @return the validation status for this entity.
      */
     @Column(nullable=false)
-    public ValidationStatus getStatus() {
+    public MetadataValidationStatus getStatus() {
         return _status;
     }
 
@@ -55,27 +50,27 @@ public class Validation {
      * Set the validation status for this entity.
      * @param status the validation status for this entity.
      */
-    public void setStatus(ValidationStatus status) {
+    public void setStatus(MetadataValidationStatus status) {
         this._status = status;
     }
 
     /**
-     * Returns true if {@link #getStatus() == {@link ValidationStatus#VALID)
+     * Returns true if {@link #getStatus() == {@link MetadataValidationStatus#VALID)
      * 
-     * @return true if {@link #getStatus() == {@link ValidationStatus#VALID)
+     * @return true if {@link #getStatus() == {@link MetadataValidationStatus#VALID)
      */
     @Transient
     public boolean isValid() {
-        return getStatus() == ValidationStatus.VALID;
+        return getStatus() == MetadataValidationStatus.VALID;
     }
     
     /**
-     * Set the status as either {@link ValidationStatus#VALID) or
-     * {@link ValidationStatus#INVALID)
+     * Set the status as either {@link MetadataValidationStatus#VALID) or
+     * {@link MetadataValidationStatus#INVALID)
      * @param isValid
      */
     public void setValid(boolean isValid) {
-        setStatus(isValid ? ValidationStatus.VALID : ValidationStatus.INVALID);
+        setStatus(isValid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID);
     }
     /**
      * TODO DOC: The purpose for this is unknown as it is always 0 at the this class is created.

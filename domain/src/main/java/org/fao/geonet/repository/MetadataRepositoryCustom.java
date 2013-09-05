@@ -1,11 +1,13 @@
 package org.fao.geonet.repository;
 
+import com.google.common.base.Optional;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,5 +46,13 @@ public interface MetadataRepositoryCustom {
      * @return List of &lt;MetadataId, changeDate&gt;
      */
     @Nonnull
-    List<Pair<Integer, ISODate>> findAllIdsAndChangeDates(@Nonnull Pageable pageable);
+    Page<Pair<Integer, ISODate>> findAllIdsAndChangeDates(@Nonnull Pageable pageable);
+
+    /**
+     * Find the id of a metadata by its
+     * @param uuid
+     * @return
+     */
+    @Nonnull
+    List<Integer> findAllIdsBy(@Nonnull Specification<Metadata> spec);
 }

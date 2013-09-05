@@ -9,8 +9,11 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 
 import org.fao.geonet.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +38,13 @@ public class MetadataRepositoryImpl implements MetadataRepositoryCustom {
     }
 
     @Override
-    public @Nonnull List<Pair<Integer, ISODate>> findAllIdsAndChangeDates(@Nullable Pageable pageable) {
+    public @Nonnull Page<Pair<Integer, ISODate>> findAllIdsAndChangeDates(@Nullable Pageable pageable) {
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
         Root<Metadata> root = cbQuery.from(Metadata.class);
 
+        cbQuery.multiselect(cb.count(root));
+        Long total = (Long) _entityManager.createQuery(cbQuery).getSingleResult().get(0);
         cbQuery.multiselect(root.get(Metadata_.id), root.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate));
 
         if (pageable != null && pageable.getSort() != null) {
@@ -61,7 +66,19 @@ public class MetadataRepositoryImpl implements MetadataRepositoryCustom {
             final ISODate changeDate = (ISODate) tuple.get(1);
             finalResults.add(Pair.read(mdId, changeDate));
         }
-        return finalResults;
+        return new PageImpl<Pair<Integer, ISODate>>(finalResults, pageable, total);
+    }
+
+    @Nonnull
+    @Override
+    public List<Integer> findAllIdsBy(@Nonnull Specification<Metadata> spec) {
+        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        CriteriaQuery<Integer> cbQuery = cb.createQuery(Integer.class);
+        Root<Metadata> root = cbQuery.from(Metadata.class);
+        cbQuery.select(root.get(Metadata_.id));
+
+        cbQuery.where(spec.toPredicate(root, cbQuery, cb));
+        return _entityManager.createQuery(cbQuery).getResultList();
     }
 
 }

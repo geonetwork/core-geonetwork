@@ -8,13 +8,13 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
- * Id object for the {@link Validation} entity.
+ * Id object for the {@link MetadataValidation} entity.
  * 
  * @author Jesse
  */
 @Embeddable
 @Access(AccessType.PROPERTY)
-public class ValidationId implements Serializable {
+public class MetadataValidationId implements Serializable {
     private static final long serialVersionUID = -7162983572434017017L;
     private int _metadataId;
     private String _validationType;
@@ -53,7 +53,7 @@ public class ValidationId implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ValidationId other = (ValidationId) obj;
+        MetadataValidationId other = (MetadataValidationId) obj;
         if (_metadataId != other._metadataId)
             return false;
         if (_validationType == null) {

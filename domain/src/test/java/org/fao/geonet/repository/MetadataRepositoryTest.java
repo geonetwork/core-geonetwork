@@ -1,8 +1,7 @@
 package org.fao.geonet.repository;
 
 import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,8 +13,8 @@ import org.fao.geonet.domain.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +37,8 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(1, repo.count());
 
-        assertSameContents(metadata, repo.findByUuid(metadata.getUuid()));
-        assertNull(repo.findByUuid("wrong uuid"));
+        assertSameContents(metadata, repo.findOneByUuid(metadata.getUuid()));
+        assertNull(repo.findOneByUuid("wrong uuid"));
     }
 
     @Test
@@ -58,6 +57,28 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
     }
 
     @Test
+    public void testFindAllByHarvestInfo_Uuid() throws Exception {
+
+        Metadata metadata = repo.save(newMetadata());
+        Metadata metadata2 = repo.save(newMetadata());
+        Metadata metadata3 = newMetadata();
+        metadata3.getHarvestInfo().setUuid(metadata2.getHarvestInfo().getUuid());
+        metadata3 = repo.save(metadata3);
+
+        assertEquals(3, repo.count());
+
+        List<Metadata> found = repo.findAllByHarvestInfo_Uuid(metadata.getHarvestInfo().getUuid());
+        assertEquals(1, found.size());
+        assertSameContents(metadata, found.get(0));
+
+        found = repo.findAllByHarvestInfo_Uuid(metadata2.getHarvestInfo().getUuid());
+        assertEquals(2, found.size());
+
+        found = repo.findAllByHarvestInfo_Uuid("blarg");
+        assertEquals(0, found.size());
+    }
+
+    @Test
     public void testFindAllIdsAndChangeDates() throws Exception {
 
         Metadata metadata = repo.save(updateChangeDate(newMetadata(), "1990-12-13"));
@@ -67,19 +88,31 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         final Sort sortByIdAsc = new Sort(Sort.Direction.DESC, Metadata_.id.getName());
         PageRequest page1 = new PageRequest(0,2, sortByIdAsc);
         PageRequest page2 = new PageRequest(1,2, sortByIdAsc);
-        List<Pair<Integer, ISODate>> firstPage = repo.findAllIdsAndChangeDates(page1);
-        List<Pair<Integer, ISODate>> secondPage = repo.findAllIdsAndChangeDates(page2);
+        Page<Pair<Integer, ISODate>> firstPage = repo.findAllIdsAndChangeDates(page1);
+        Page<Pair<Integer, ISODate>> secondPage = repo.findAllIdsAndChangeDates(page2);
 
-        assertEquals(2, firstPage.size());
-        assertEquals(1, secondPage.size());
+        assertEquals(2, firstPage.getNumberOfElements());
+        assertEquals(1, firstPage.getNumber());
+        assertEquals(2, firstPage.getTotalPages());
+        assertEquals(3, firstPage.getTotalElements());
+        assertTrue(firstPage.isFirstPage());
+        assertTrue(firstPage.hasContent());
 
-        assertEquals((Integer) metadata3.getId(), firstPage.get(0).one());
-        assertEquals((Integer) metadata2.getId(), firstPage.get(1).one());
-        assertEquals((Integer) metadata.getId(), secondPage.get(0).one());
+        assertEquals(1, secondPage.getNumberOfElements());
+        assertEquals(2, secondPage.getNumber());
+        assertEquals(2, secondPage.getTotalPages());
+        assertEquals(3, secondPage.getTotalElements());
+        assertFalse(secondPage.isFirstPage());
+        assertTrue(secondPage.isFirstPage());
+        assertTrue(secondPage.hasContent());
 
-        assertEquals(metadata3.getDataInfo().getChangeDate(), firstPage.get(0).two());
-        assertEquals(metadata2.getDataInfo().getChangeDate(), firstPage.get(1).two());
-        assertEquals(metadata.getDataInfo().getChangeDate(), secondPage.get(0).two());
+        assertEquals((Integer) metadata3.getId(), firstPage.getContent().get(0).one());
+        assertEquals((Integer) metadata2.getId(), firstPage.getContent().get(1).one());
+        assertEquals((Integer) metadata.getId(), secondPage.getContent().get(0).one());
+
+        assertEquals(metadata3.getDataInfo().getChangeDate(), firstPage.getContent().get(0).two());
+        assertEquals(metadata2.getDataInfo().getChangeDate(), firstPage.getContent().get(1).two());
+        assertEquals(metadata.getDataInfo().getChangeDate(), secondPage.getContent().get(0).two());
 
         final Sort sortByChangeDate = new Sort(Metadata_.dataInfo.getName()+"."+ MetadataDataInfo_.changeDate.getName());
         page1 = new PageRequest(0,1, sortByChangeDate);
@@ -87,18 +120,18 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         firstPage = repo.findAllIdsAndChangeDates(page1);
         secondPage = repo.findAllIdsAndChangeDates(page2);
 
-        assertEquals(1, firstPage.size());
-        assertEquals(3, secondPage.size());
+        assertEquals(1, firstPage.getNumberOfElements());
+        assertEquals(3, secondPage.getNumberOfElements());
 
-        assertEquals((Integer) metadata2.getId(), firstPage.get(0).one());
-        assertEquals((Integer) metadata2.getId(), secondPage.get(0).one());
-        assertEquals((Integer) metadata.getId(), secondPage.get(1).one());
-        assertEquals((Integer) metadata3.getId(), secondPage.get(2).one());
+        assertEquals((Integer) metadata2.getId(), firstPage.getContent().get(0).one());
+        assertEquals((Integer) metadata2.getId(), secondPage.getContent().get(0).one());
+        assertEquals((Integer) metadata.getId(), secondPage.getContent().get(1).one());
+        assertEquals((Integer) metadata3.getId(), secondPage.getContent().get(2).one());
 
-        assertEquals(metadata2.getDataInfo().getChangeDate(), firstPage.get(0).two());
-        assertEquals(metadata2.getDataInfo().getChangeDate(), secondPage.get(0).two());
-        assertEquals(metadata.getDataInfo().getChangeDate(), secondPage.get(1).two());
-        assertEquals(metadata3.getDataInfo().getChangeDate(), secondPage.get(2).two());
+        assertEquals(metadata2.getDataInfo().getChangeDate(), firstPage.getContent().get(0).two());
+        assertEquals(metadata2.getDataInfo().getChangeDate(), secondPage.getContent().get(0).two());
+        assertEquals(metadata.getDataInfo().getChangeDate(), secondPage.getContent().get(1).two());
+        assertEquals(metadata3.getDataInfo().getChangeDate(), secondPage.getContent().get(2).two());
     }
 
     private Metadata updateChangeDate(Metadata metadata, String date) {
@@ -108,7 +141,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
     @Test(expected = InvalidDataAccessApiUsageException.class)
     public void testFindByIdStringBadId() throws Exception {
-        assertNull(repo.findOne("no a number"));
+        assertNull(repo.findOne("not a number"));
     }
 
     private Metadata newMetadata() {
@@ -125,6 +158,8 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         Metadata metadata = new Metadata().setUuid("uuid" + val).setData("metadata" + val);
         metadata.getDataInfo().setSchemaId("customSchema" + val);
         metadata.getSourceInfo().setSource("source" + val);
+        metadata.getHarvestInfo().setUuid("huuid" + val);
+        metadata.getHarvestInfo().setHarvested(val % 2 == 0);
         return metadata;
     }
 
