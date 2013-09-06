@@ -694,10 +694,15 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         
         var reloadCapabilitiesStore = function(stringUrl, protocol) {
             if(this.isGetMap(protocol)) {
-                var params = {
+                var params = {};
+                
+                if(stringUrl.split('?').length == 2) {
+                    params = Ext.urlDecode(stringUrl.split('?')[1]);
+                }
+                params = Ext.applyIf(params, {
                     request: 'getCapabilities',
                     service: 'WMS'
-                };
+                });
                 
                 if(protocol && protocol.indexOf('1.3.0') >= 0 ) {
                     params.version = '1.3.0';
