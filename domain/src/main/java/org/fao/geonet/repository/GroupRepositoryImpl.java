@@ -1,18 +1,16 @@
 package org.fao.geonet.repository;
 
-import java.util.List;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Group_;
+import org.fao.geonet.domain.ReservedGroup;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Group_;
-import org.fao.geonet.domain.ReservedGroup;
+import java.util.List;
 
 /**
  * Implementation for {@link GroupRepositoryCustom} queries.
@@ -23,6 +21,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
 
     @PersistenceContext
     private EntityManager _entityManager;
+
     @Override
     @Nonnull
     public Group findReservedGroup(@Nonnull ReservedGroup group) {

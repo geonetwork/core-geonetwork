@@ -1,16 +1,11 @@
 package org.fao.geonet.repository;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,11 +33,11 @@ public interface MetadataRepositoryCustom {
     /**
      * Find the list of Metadata Ids and changes dates for the metadata.
      * <p>
-     *     When constructing sort objects use the MetaModel objects:
-     *     <ul>
-     *         <li><code>new Sort(Metadata_.id.getName())</code></li>
-     *         <li><code>new Sort(Sort.Direction.ASC, Metadata_.id.getName())</code></li>
-     *     </ul>
+     * When constructing sort objects use the MetaModel objects:
+     * <ul>
+     * <li><code>new Sort(Metadata_.id.getName())</code></li>
+     * <li><code>new Sort(Sort.Direction.ASC, Metadata_.id.getName())</code></li>
+     * </ul>
      * </p>
      *
      * @param pageable if non-null then control which subset of the results to return (and how to sort the results).
@@ -53,8 +48,8 @@ public interface MetadataRepositoryCustom {
 
     /**
      * Find all ids of metadata that match the specification.
-     * @param spec the specification for identifying the metadata.
      *
+     * @param spec the specification for identifying the metadata.
      * @return all ids
      */
     @Nonnull

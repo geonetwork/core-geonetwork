@@ -1,12 +1,6 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  * The enumeration of all languages available in the system.
@@ -20,6 +14,7 @@ import javax.persistence.Transient;
  */
 @Entity
 @Access(AccessType.PROPERTY)
+@Table(name = "languages")
 public class Language {
     String _id;
     String _name;

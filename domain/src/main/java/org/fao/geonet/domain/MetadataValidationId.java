@@ -19,20 +19,51 @@ public class MetadataValidationId implements Serializable {
     private int _metadataId;
     private String _validationType;
 
+    /**
+     * Default constructor.
+     */
+    public MetadataValidationId() {
+    }
+
+    /**
+     * Convenience constructor.
+     * @param metadataId the metadata id
+     * @param validationType the validation type
+     */
+    public MetadataValidationId(final int metadataId, final String validationType) {
+        this._metadataId = metadataId;
+        this._validationType = validationType;
+    }
+
+    /**
+     * Get the id of the associate metadata.
+     */
     public int getMetadataId() {
         return _metadataId;
     }
 
-    public void setMetadataId(int metadataid) {
+    /**
+     * Set the metadata id.
+     * @param metadataid the metadata id
+     */
+    public void setMetadataId(final int metadataid) {
         this._metadataId = metadataid;
     }
 
+    /**
+     * Get a string representing the type of validation of this validation entity. (example: iso19139)
+     * @return a string representing the type of validation of this validation entity (example: iso19139)
+     */
     @Column(name = "valtype", length = 40)
     public String getValidationType() {
         return _validationType;
     }
 
-    public void setValidationType(String validationType) {
+    /**
+     * Set a string representing the type of validation of this validation entity. (example: iso19139)
+     * @param validationType a string representing the type of validation of this validation entity (example: iso19139)
+     */
+    public void setValidationType(final String validationType) {
         this._validationType = validationType;
     }
 

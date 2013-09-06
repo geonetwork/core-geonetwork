@@ -43,4 +43,13 @@ public enum ReservedGroup {
     public Group getGroupEntityTemplate() {
         return new Group().setId(_id).setName(name()).setDescription(name());
     }
+
+    public static boolean isReserved(int grpId) {
+        for (ReservedGroup reservedGroup : values()) {
+            if (reservedGroup.getId() == grpId) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

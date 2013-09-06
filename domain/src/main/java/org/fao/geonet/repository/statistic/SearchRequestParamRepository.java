@@ -2,7 +2,6 @@ package org.fao.geonet.repository.statistic;
 
 import org.fao.geonet.domain.statistic.SearchRequestParam;
 import org.fao.geonet.repository.GeonetRepository;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**

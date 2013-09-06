@@ -2,7 +2,6 @@ package org.fao.geonet.repository;
 
 
 import org.fao.geonet.domain.MetadataRatingByIp;
-import org.fao.geonet.domain.MetadataRatingByIp;
 import org.fao.geonet.domain.MetadataRatingByIpId;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +46,21 @@ public class MetadataRatingByIpRepositoryTest extends AbstractSpringDataTest {
         toUpdate.getId().setMetadataId(source.getId().getMetadataId());
 
         return toUpdate;
+    }
+    @Test
+    public void testDeleteAllById_MetadataId() throws Exception {
+        MetadataRatingByIp rating1 = _repo.save(newMetadataRatingByIp());
+        MetadataRatingByIp rating2 = newMetadataRatingByIp();
+        rating2.getId().setMetadataId(rating1.getId().getMetadataId());
+        rating2 = _repo.save(rating2);
+        MetadataRatingByIp rating3 = _repo.save(newMetadataRatingByIp());
+
+        assertEquals(3, _repo.count());
+        _repo.deleteAllById_MetadataId(rating1.getId().getMetadataId());
+        assertEquals(1, _repo.count());
+        final List<MetadataRatingByIp> all = _repo.findAll();
+        assertEquals(1, all.size());
+        assertEquals(rating3.getId(), all.get(0).getId());
     }
 
     @Test

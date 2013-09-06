@@ -1,6 +1,9 @@
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataHarvestInfo_;
+import org.fao.geonet.domain.MetadataSourceInfo_;
+import org.fao.geonet.domain.Metadata_;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
@@ -14,7 +17,7 @@ public final class MetadataSpecs {
     private MetadataSpecs() {
         // no instantiation
     }
-    
+
     public static Specification<Metadata> hasMetadataId(final int metadataId) {
         return new Specification<Metadata>() {
             @Override
@@ -36,6 +39,7 @@ public final class MetadataSpecs {
             }
         };
     }
+
     public static Specification<Metadata> hasHarvesterUuid(final String harvesterUuid) {
         return new Specification<Metadata>() {
             @Override
@@ -47,5 +51,14 @@ public final class MetadataSpecs {
         };
     }
 
-    
+    public static Specification<Metadata> isOwnedByUser(final int userId) {
+        return new Specification<Metadata>() {
+            @Override
+            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Integer> userNameAttributePath = root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.owner);
+                Predicate uuidEqualPredicate = cb.equal(userNameAttributePath, cb.literal(userId));
+                return uuidEqualPredicate;
+            }
+        };
+    }
 }

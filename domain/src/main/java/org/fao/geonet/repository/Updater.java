@@ -1,5 +1,7 @@
 package org.fao.geonet.repository;
 
+import javax.annotation.Nonnull;
+
 /**
  * Interface for methods that need to update the an entity in on of the repository APIs.
  *
@@ -8,7 +10,8 @@ package org.fao.geonet.repository;
 public interface Updater<T> {
     /**
      * Updates the input entity
+     *
      * @param entity the entity to update
      */
-    void apply(T entity);
+    void apply(@Nonnull T entity);
 }

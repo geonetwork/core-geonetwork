@@ -7,10 +7,11 @@ import java.util.List;
 
 /**
  * Data Access object for accessing {@link MetadataRatingByIp} entities.
- * 
+ *
  * @author Jesse
  */
-public interface MetadataRatingByIpRepository extends GeonetRepository<MetadataRatingByIp, MetadataRatingByIpId>, MetadataRatingByIpRepositoryCustom {
+public interface MetadataRatingByIpRepository extends GeonetRepository<MetadataRatingByIp, MetadataRatingByIpId>,
+        MetadataRatingByIpRepositoryCustom {
     /**
      * Find all the ratings for the given Metadata.
      *

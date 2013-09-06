@@ -1,9 +1,13 @@
 /**
- * 
+ *
  */
 package org.fao.geonet.repository;
 
-import java.util.List;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.UserGroupId;
+import org.fao.geonet.domain.UserGroupId_;
+import org.fao.geonet.domain.UserGroup_;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,32 +16,30 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
-
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.UserGroupId;
-import org.fao.geonet.domain.UserGroupId_;
-import org.fao.geonet.domain.UserGroup_;
-import org.springframework.data.jpa.domain.Specification;
+import java.util.List;
 
 /**
  * Implementation object for methods in {@link UserGroupRepositoryCustom}.
- * 
+ *
  * @author Jesse
  */
 public class UserGroupRepositoryImpl implements UserGroupRepositoryCustom {
 
     @PersistenceContext
     private EntityManager _entityManager;
+
     @Override
     public List<Integer> findGroupIds(Specification<UserGroup> spec) {
         return findIdsBy(spec, UserGroupId_.groupId);
 
     }
+
     @Override
     public List<Integer> findUserIds(Specification<UserGroup> spec) {
         return findIdsBy(spec, UserGroupId_.userId);
-        
+
     }
+
     private List<Integer> findIdsBy(Specification<UserGroup> spec, SingularAttribute<UserGroupId, Integer> groupId) {
         CriteriaBuilder builder = _entityManager.getCriteriaBuilder();
         CriteriaQuery<Integer> query = builder.createQuery(Integer.class);

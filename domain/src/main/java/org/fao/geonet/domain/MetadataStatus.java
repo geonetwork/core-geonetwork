@@ -1,11 +1,6 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * An entity that represents a status change of a metadata.
@@ -20,8 +15,9 @@ import javax.persistence.Table;
 @Access(AccessType.PROPERTY)
 @Table(name = "metadatastatus")
 public class MetadataStatus {
-    private MetadataStatusId id;
+    private MetadataStatusId id = new MetadataStatusId();
     private String changeMessage;
+    private StatusValue statusValue;
 
     /**
      * Get the id object of this metadata status object.
@@ -61,4 +57,15 @@ public class MetadataStatus {
         this.changeMessage = changeMessage;
     }
 
+    @ManyToOne
+    @JoinColumn(name="statusid",nullable=false, insertable=false, updatable=false)
+    @MapsId("statusId")
+    public StatusValue getStatusValue() {
+        return statusValue;
+    }
+
+    public void setStatusValue(StatusValue statusValue) {
+        this.statusValue = statusValue;
+        this.getId().setStatusId(statusValue.getId());
+    }
 }

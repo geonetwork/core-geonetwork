@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @author Jesse
  */
 @Entity
-@Table(name = "harvestersettings")
+@Table(name = "settings")
 @Cacheable
 @Access(AccessType.PROPERTY)public class Setting {
     private String name;
@@ -25,6 +25,7 @@ import javax.persistence.Table;
     private SettingDataType dataType;
     private int position;
     @Id
+    @Column(name = "name", nullable = false, length = 512)
     public String getName() {
         return name;
     }

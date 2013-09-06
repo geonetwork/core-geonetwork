@@ -1,11 +1,10 @@
 package org.fao.geonet.repository;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ReservedGroup;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Custom (non-spring-data) query methods for {@link Group} entities
@@ -21,7 +20,7 @@ public interface GroupRepositoryCustom {
      */
     @Nonnull
     public Group findReservedGroup(@Nonnull ReservedGroup groupEnum);
-    
+
     @Nonnull
     public List<Integer> findIds();
 }

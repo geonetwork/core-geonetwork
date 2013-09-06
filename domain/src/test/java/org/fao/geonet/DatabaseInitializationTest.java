@@ -66,7 +66,7 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             columns.add(column(column[0], column[1], column[2], column[3], column[4], column[5]));
         }
 
-        compareSameElements("Columns", FROM_COLUMNS_TABLE, columns);
+        compareSameElements("Columns", FROM_COLUMNS_TABLE, columns, false);
     }
 
     protected void checkTables(Statement statement) throws Throwable {
@@ -80,10 +80,10 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             }
         }
 
-        compareSameElements("Tables", ALL_TABLES, tablesEncountered);
+        compareSameElements("Tables", ALL_TABLES, tablesEncountered, false);
     }
 
-    private <T extends Comparable<T>> void compareSameElements(String type, T[] expected, List<T> actual) {
+    private <T extends Comparable<T>> void compareSameElements(String type, T[] expected, List<T> actual, boolean showAllInErrorMessage) {
         Collections.sort(actual);
         Arrays.sort(expected);
 
@@ -95,7 +95,23 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
         }
         
         if (!failures.isEmpty()) {
-            throw new AssertionError(failures.toString());
+            String msg = failures.toString();
+            if (showAllInErrorMessage) {
+                int max = Math.max(actual.size(), expected.length);
+                StringBuilder b = new StringBuilder();
+                for (int i = 0; i < max; i++) {
+                    String ne = i < expected.length ? expected[i].toString() : "";
+                    String na = i < actual.size() ? actual.get(i).toString() : "";
+                    b.append('\n');
+                    b.append(ne);
+                    for (int j = 0; j < 30-ne.length(); j++) {
+                        b.append(' ');
+                    }
+                    b.append(na);
+                }
+                msg = b.toString();
+            }
+            throw new AssertionError(msg);
         }
 
         if (expected.length < actual.size()) {
@@ -122,7 +138,7 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
     }
 
     String[] ALL_TABLES = { "ADDRESS", "EMAIL", "CATEGORIES", "CATEGORIESDES", "CSWSERVERCAPABILITIESINFO", "CUSTOMELEMENTSET", "GROUPS", "GROUPSDES",
-            "HARVESTHISTORY", "ISOLANGUAGES", "ISOLANGUAGESDES", "LANGUAGES", "METADATA", "METADATACATEG", "METADATANOTIFICATIONS",
+            "HARVESTERSETTINGS", "HARVESTHISTORY", "ISOLANGUAGES", "ISOLANGUAGESDES", "LANGUAGES", "METADATA", "METADATACATEG", "METADATANOTIFICATIONS",
             "METADATANOTIFIERS", "METADATARATING", "METADATASTATUS", "OPERATIONALLOWED", "OPERATIONS", "OPERATIONSDES", "PARAMS",
             "RELATIONS", "REQUESTS", "SERVICEPARAMETERS", "SERVICES", "SETTINGS", "SOURCES", "STATUSVALUES", "STATUSVALUESDES",
             "THESAURUS", "USERGROUPS", "USERS", "USER_ADDRESS", "VALIDATION" };
@@ -147,7 +163,11 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             column("HARVESTHISTORY", "HARVESTERTYPE", "<null>", "YES", "VARCHAR", "255"),
             column("HARVESTHISTORY", "INFO", "<null>", "YES", "CLOB", "2147483647"),
             column("HARVESTHISTORY", "PARAMS", "<null>", "YES", "CLOB", "2147483647"),
-            column("HARVESTHISTORY", "DELETED", "<null>", "NO", "CHAR", "1"), 
+            column("HARVESTHISTORY", "DELETED", "<null>", "NO", "CHAR", "1"),
+            column("HARVESTERSETTINGS","ID","<null>","NO","INTEGER","10", true),
+            column("HARVESTERSETTINGS","NAME","<null>","NO","VARCHAR","255"),
+            column("HARVESTERSETTINGS","PARENTID","<null>","YES","INTEGER","10"),
+            column("HARVESTERSETTINGS","VALUE","<null>","YES","CLOB","2147483647"),
             column("ISOLANGUAGES", "ID", "<null>", "NO", "INTEGER", "10", true),
             column("ISOLANGUAGES", "CODE", "<null>", "NO", "VARCHAR", "3"),
             column("ISOLANGUAGES", "SHORTCODE", "<null>", "YES", "VARCHAR", "2"),
@@ -207,27 +227,27 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             column("OPERATIONSDES", "IDDES", "<null>", "NO", "INTEGER", "10"),
             column("OPERATIONSDES", "LANGID", "<null>", "NO", "VARCHAR", "5"),
             column("PARAMS", "REQUESTID", "<null>", "YES", "INTEGER", "10"),
-            column("PARAMS", "QUERYTYPE", "<null>", "YES", "VARCHAR", "255"),
+            column("PARAMS", "QUERYTYPE", "<null>", "YES", "INTEGER", "10"),
             column("PARAMS", "TERMFIELD", "<null>", "YES", "VARCHAR", "255"),
             column("PARAMS", "TERMTEXT", "<null>", "YES", "VARCHAR", "255"),
             column("PARAMS", "SIMILARITY", "<null>", "NO", "DOUBLE", "17"),
             column("PARAMS", "LOWERTEXT", "<null>", "YES", "VARCHAR", "255"),
             column("PARAMS", "UPPERTEXT", "<null>", "YES", "VARCHAR", "255"), column("PARAMS", "INCLUSIVE", "<null>", "YES", "CHAR", "1"),
-            column("PARAMS", "ID", "<null>", "NO", "INTEGER", "10"),
+            column("PARAMS", "ID", "<null>", "NO", "INTEGER", "10", true),
             column("RELATIONS","ID","<null>","NO","INTEGER","10"),
             column("RELATIONS","RELATEDID","<null>","NO","INTEGER","10"),
             column("REQUESTS","AUTOGENERATED","<null>","NO","BOOLEAN","1"),
             column("REQUESTS","HITS","<null>","NO","INTEGER","10"),
-            column("REQUESTS","ID","<null>","NO","INTEGER","10"),
+            column("REQUESTS","ID","<null>","NO","INTEGER","10", true),
             column("REQUESTS","IP","<null>","YES","VARCHAR",""+Constants.IP_ADDRESS_COLUMN_LENGTH),
             column("REQUESTS","LANG","<null>","YES","VARCHAR","16"),
-            column("REQUESTS","QUERY","<null>","YES","VARCHAR","4000"),
+            column("REQUESTS","QUERY","<null>","YES","CLOB","2147483647"),
             column("REQUESTS","REQUESTDATE","<null>","YES","VARCHAR","30"),
             column("REQUESTS","SERVICE","<null>","YES","VARCHAR","255"),
             column("REQUESTS","SIMPLE","<null>","NO","BOOLEAN","1"),
             column("REQUESTS","SORTBY","<null>","YES","VARCHAR","255"),
-            column("REQUESTS","SPATIALFILTER","<null>","YES","VARCHAR","4000"),
-            column("REQUESTS","TYPE","<null>","YES","VARCHAR","4000"),
+            column("REQUESTS","SPATIALFILTER","<null>","YES","CLOB","2147483647"),
+            column("REQUESTS","TYPE","<null>","YES","CLOB","2147483647"),
             column("SERVICEPARAMETERS","ID","<null>","NO","INTEGER","10"),
             column("SERVICEPARAMETERS","NAME","<null>","NO","VARCHAR","255"),
             column("SERVICEPARAMETERS","SERVICE","<null>","NO","INTEGER","10"),
@@ -236,13 +256,14 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             column("SERVICES","DESCRIPTION","<null>","YES","VARCHAR","1024"),
             column("SERVICES","ID","<null>","NO","INTEGER","10", true),
             column("SERVICES","NAME","<null>","NO","VARCHAR","255"),
-            column("SETTINGS","ID","<null>","NO","INTEGER","10", true),
-            column("SETTINGS","NAME","<null>","NO","VARCHAR","255"),
-            column("SETTINGS","PARENTID","<null>","YES","INTEGER","10"),
+            column("SETTINGS","NAME","<null>","NO","VARCHAR","512"),
             column("SETTINGS","VALUE","<null>","YES","CLOB","2147483647"),
+            column("SETTINGS","DATATYPE","<null>","YES","INTEGER","10"),
+            column("SETTINGS","POSITION","<null>","NO","INTEGER","10"),
             column("SOURCES","ISLOCAL","<null>","NO","CHAR","1"),
             column("SOURCES","NAME","<null>","YES","VARCHAR","255"),
             column("SOURCES","UUID","<null>","NO","VARCHAR","255"),
+            column("STATUSVALUES","DISPLAYORDER","<null>","YES","INTEGER","10", true),
             column("STATUSVALUES","ID","<null>","NO","INTEGER","10", true),
             column("STATUSVALUES","NAME","<null>","NO","VARCHAR","255"),
             column("STATUSVALUES","RESERVED","<null>","NO","CHAR","1"),

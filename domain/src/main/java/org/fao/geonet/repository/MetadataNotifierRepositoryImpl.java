@@ -1,6 +1,5 @@
 package org.fao.geonet.repository;
 
-import static org.fao.geonet.domain.Constants.*;
 import org.fao.geonet.domain.MetadataNotifier;
 import org.fao.geonet.domain.MetadataNotifier_;
 
@@ -11,9 +10,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
+import static org.fao.geonet.domain.Constants.toYN_EnabledChar;
+
 /**
  * Implementation for MetadataNotifierRepositoryCustom methods.
- *
+ * <p/>
  * User: Jesse
  * Date: 8/28/13
  * Time: 7:31 AM

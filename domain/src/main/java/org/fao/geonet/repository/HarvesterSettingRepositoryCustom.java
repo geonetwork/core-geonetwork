@@ -1,16 +1,14 @@
 package org.fao.geonet.repository;
 
-import java.util.List;
+import org.fao.geonet.domain.HarvesterSetting;
 
 import javax.annotation.Nonnull;
-
-import org.fao.geonet.domain.HarvesterSetting;
+import java.util.List;
 
 /**
  * Custom (Non spring-data) Query methods for {@link HarvesterSetting} entities.
- * 
+ *
  * @author Jesse
- * 
  */
 public interface HarvesterSettingRepositoryCustom {
     /**
@@ -21,6 +19,7 @@ public interface HarvesterSettingRepositoryCustom {
 
     /**
      * Find all settings with the parent id
+     *
      * @param parentid an id of the parent setting
      * @return all settings with the parent id
      */
@@ -28,9 +27,10 @@ public interface HarvesterSettingRepositoryCustom {
     List<HarvesterSetting> findAllChildren(int parentid);
 
     /**
-     * Find all settings with the parent id and name. 
+     * Find all settings with the parent id and name.
+     *
      * @param parentid the parentid parameter
-     * @param name the name parameter
+     * @param name     the name parameter
      * @return
      */
     List<HarvesterSetting> findChildrenByName(int parentid, String name);
@@ -39,7 +39,6 @@ public interface HarvesterSettingRepositoryCustom {
      * Find all settings on the given path.
      *
      * @param pathToSetting the path to search for.
-     *
      * @return all settings on the given path.
      */
     List<HarvesterSetting> findByPath(String pathToSetting);
@@ -48,7 +47,6 @@ public interface HarvesterSettingRepositoryCustom {
      * Get the first setting with the given path.
      *
      * @param pathToSetting the path.
-     * 
      * @return the first setting with the given path.
      */
     HarvesterSetting findOneByPath(String pathToSetting);

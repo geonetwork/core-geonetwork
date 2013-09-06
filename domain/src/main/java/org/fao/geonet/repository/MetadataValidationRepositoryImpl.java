@@ -1,0 +1,27 @@
+package org.fao.geonet.repository;
+
+import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.MetadataValidationId_;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+/**
+ * Data Access object for accessing {@link org.fao.geonet.domain.MetadataValidation} entities.
+ *
+ * @author Jesse
+ */
+public class MetadataValidationRepositoryImpl implements MetadataValidationRepositoryCustom {
+
+    @PersistenceContext
+    EntityManager _entityManager;
+
+    @Override
+    public int deleteAllById_MetadataId(final int metadataId) {
+        String entityType = MetadataValidation.class.getSimpleName();
+        String metadataIdPropName = MetadataValidationId_.metadataId.getName();
+        Query query = _entityManager.createQuery("DELETE FROM " + entityType + " WHERE " + metadataIdPropName + " = " + metadataId);
+        return query.executeUpdate();
+    }
+}

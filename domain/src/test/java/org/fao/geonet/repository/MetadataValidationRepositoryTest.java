@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import org.fao.geonet.domain.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 9/4/13
  * Time: 4:01 PM
  */
+@Transactional
 public class MetadataValidationRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
@@ -39,6 +41,22 @@ public class MetadataValidationRepositoryTest extends AbstractSpringDataTest {
         found = _metadataValidationRepository.findAllById_MetadataId(val3.getId().getMetadataId());
         assertEquals (1, found.size());
         assertEquals (val3.getId(), found.get(0).getId());
+    }
+
+    @Test
+    public void testDeleteAllById_MetadataId() throws Exception {
+        MetadataValidation val1 = _metadataValidationRepository.save(newValidation());
+        MetadataValidation val2 = newValidation();
+        val2.getId().setMetadataId(val1.getId().getMetadataId());
+        val2 = _metadataValidationRepository.save(val2);
+        MetadataValidation val3 = _metadataValidationRepository.save(newValidation());
+
+        assertEquals(3, _metadataValidationRepository.count());
+        _metadataValidationRepository.deleteAllById_MetadataId(val1.getId().getMetadataId());
+        assertEquals(1, _metadataValidationRepository.count());
+        final List<MetadataValidation> all = _metadataValidationRepository.findAll();
+        assertEquals(1, all.size());
+        assertEquals(val3.getId(), all.get(0).getId());
     }
 
     private MetadataValidation newValidation() {

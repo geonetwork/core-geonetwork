@@ -247,11 +247,12 @@ public class Metadata {
     // }
 
     /**
-     * Get the set of metadata categories this metadata is part of.
+     * Get the set of metadata categories this metadata is part of.  This is lazily loaded and all operations are
+     * cascaded
      *
      * @return the metadata categories
      */
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "metadatacateg", joinColumns = @JoinColumn(name = "categoryid"), inverseJoinColumns = @JoinColumn(name =
             "metadataid"))
     @Nonnull

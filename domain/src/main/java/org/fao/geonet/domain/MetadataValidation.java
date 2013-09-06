@@ -30,10 +30,13 @@ public class MetadataValidation {
     /**
      * Set the id object of this entity. 
      * 
-     * @param id the id object of this entity. 
+     *
+     * @param id the id object of this entity.
+     * @return this entity object
      */
-    public void setId(MetadataValidationId id) {
+    public MetadataValidation setId(MetadataValidationId id) {
         this._id = id;
+        return this;
     }
 
     /**
@@ -49,9 +52,11 @@ public class MetadataValidation {
     /**
      * Set the validation status for this entity.
      * @param status the validation status for this entity.
+     * @return this entity object
      */
-    public void setStatus(MetadataValidationStatus status) {
+    public MetadataValidation setStatus(MetadataValidationStatus status) {
         this._status = status;
+        return this;
     }
 
     /**
@@ -68,9 +73,11 @@ public class MetadataValidation {
      * Set the status as either {@link MetadataValidationStatus#VALID) or
      * {@link MetadataValidationStatus#INVALID)
      * @param isValid
+     * @return this entity object
      */
-    public void setValid(boolean isValid) {
+    public MetadataValidation setValid(boolean isValid) {
         setStatus(isValid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID);
+        return this;
     }
     /**
      * TODO DOC: The purpose for this is unknown as it is always 0 at the this class is created.
@@ -83,10 +90,13 @@ public class MetadataValidation {
 
     /**
      * TODO DOC: The purpose for this is unknown as it is always 0 at the this class is created.
+     *
      * @param tested
+     * @return this entity object
      */
-    public void setTested(int tested) {
+    public MetadataValidation setTested(int tested) {
         this._tested = tested;
+        return this;
     }
 
     /**
@@ -101,10 +111,13 @@ public class MetadataValidation {
     /**
      * TODO DOC: The purpose for this is unknown as it is always 0 at the this class is created.
      *
+     *
      * @param failed
+     * @return this entity object
      */
-    public void setFailed(int failed) {
+    public MetadataValidation setFailed(int failed) {
         this._failed = failed;
+        return this;
     }
 
     /**
@@ -119,9 +132,13 @@ public class MetadataValidation {
 
     /**
      * 
+     *
      * @param validationDate
+     * @return this entity object
      */
-    public void setValidationDate(ISODate validationDate) {
+    public MetadataValidation setValidationDate(ISODate validationDate) {
         this._validationDate = validationDate;
+        return this;
+
     }
 }

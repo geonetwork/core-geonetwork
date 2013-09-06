@@ -1,23 +1,19 @@
 package org.fao.geonet.repository.specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.domain.UserGroup_;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.persistence.criteria.*;
+
 public final class UserGroupSpecs {
 
     private UserGroupSpecs() {
         // don't permit instantiation
     }
-    
+
     public static Specification<UserGroup> hasGroupId(final int groupId) {
         return new Specification<UserGroup>() {
             @Override
@@ -28,6 +24,7 @@ public final class UserGroupSpecs {
             }
         };
     }
+
     public static Specification<UserGroup> hasUserId(final int userId) {
         return new Specification<UserGroup>() {
             @Override

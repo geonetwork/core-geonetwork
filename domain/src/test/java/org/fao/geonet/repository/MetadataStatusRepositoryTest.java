@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.repository.MetadataRepositoryTest.newMetadata;
@@ -15,6 +16,8 @@ import static org.junit.Assert.assertEquals;
 @Transactional
 public class MetadataStatusRepositoryTest extends AbstractSpringDataTest {
 
+    @Autowired
+    StatusValueRepository _statusRepo;
     @Autowired
     MetadataStatusRepository _repo;
 
@@ -30,6 +33,21 @@ public class MetadataStatusRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(status1, _repo.findOne(status1.getId()));
         assertEquals(status, _repo.findOne(status.getId()));
+    }
+    @Test
+    public void testDeleteAllById_MetadataId() throws Exception {
+        MetadataStatus status1 = _repo.save(newMetadataStatus());
+        MetadataStatus status2 = newMetadataStatus();
+        status2.getId().setMetadataId(status1.getId().getMetadataId());
+        status2 = _repo.save(status2);
+        MetadataStatus status3 = _repo.save(newMetadataStatus());
+
+        assertEquals(3, _repo.count());
+        _repo.deleteAllById_MetadataId(status1.getId().getMetadataId());
+        assertEquals(1, _repo.count());
+        final List<MetadataStatus> all = _repo.findAll();
+        assertEquals(1, all.size());
+        assertEquals(status3.getId(), all.get(0).getId());
     }
 
     @Test
@@ -51,17 +69,23 @@ public class MetadataStatusRepositoryTest extends AbstractSpringDataTest {
     }
 
     private MetadataStatus newMetadataStatus() {
-        int val = _inc.incrementAndGet();
+
+        return newMetadataStatus(_inc, _statusRepo);
+    }
+
+    public static MetadataStatus newMetadataStatus(AtomicInteger inc, StatusValueRepository statusRepo) {
+        int val = inc.incrementAndGet();
 
         MetadataStatus metadataStatus = new MetadataStatus();
 
         MetadataStatusId id = new MetadataStatusId();
-        id.setMetadataId(_inc.incrementAndGet());
+        id.setMetadataId(inc.incrementAndGet());
         id.setChangeDate(new ISODate());
-        id.setStatusId(val);
-        id.setUserId(_inc.incrementAndGet());
+        id.setUserId(inc.incrementAndGet());
         metadataStatus.setId(id);
         metadataStatus.setChangeMessage("change message " + val);
+        final StatusValue statusValue = statusRepo.save(StatusValueRepositoryTest.newStatusValue(inc));
+        metadataStatus.setStatusValue(statusValue);
 
         return metadataStatus;
     }
