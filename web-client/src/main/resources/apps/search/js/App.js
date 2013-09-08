@@ -32,7 +32,7 @@ GeoNetwork.app = function () {
      * An interactive map panel for data visualization
      */
     var iMap, searchForm, facetsPanel, resultsPanel, metadataResultsView, tBar, bBar,
-        mainTagCloudViewPanel, infoPanel,
+        mainTagCloudViewPanel, infoPanel, latestView,
         visualizationModeInitialized = false;
     
     // private function:
@@ -148,9 +148,11 @@ GeoNetwork.app = function () {
         // Register events to set cookie values
         catalogue.on('afterLogin', function () {
             cookie.set('user', catalogue.identifiedUser);
+            loadNews();
         });
         catalogue.on('afterLogout', function () {
             cookie.set('user', undefined);
+            loadNews();
         });
         
         // Refresh login form if needed
@@ -484,26 +486,7 @@ GeoNetwork.app = function () {
         
         return tagCloudView;
     }
-    /**
-     * Create latest metadata panel.
-     */
-    function createLatestUpdate() {
-        var latestView = new GeoNetwork.MetadataResultsView({
-            catalogue: catalogue,
-            autoScroll: true,
-            tpl: GeoNetwork.Settings.latestTpl
-        });
-        var latestStore = GeoNetwork.Settings.mdStore();
-        latestView.setStore(latestStore);
-        latestStore.on('load', function () {
-            Ext.ux.Lightbox.register('a[rel^=lightbox]');
-        });
-        var p = new Ext.Panel({
-            border: false,
-            bodyCssClass: 'md-view',
-            items: latestView,
-            renderTo: 'latest'
-        });
+    function loadNews() {
         catalogue.kvpSearch(GeoNetwork.Settings.latestQuery, null, null, null, true, latestView.getStore());
     }
     function loadCallback(el, success, response, options) {
@@ -560,7 +543,7 @@ GeoNetwork.app = function () {
      * Create latest metadata panel.
      */
     function createLatestUpdate(){
-        var latestView = new GeoNetwork.MetadataResultsView({
+        latestView = new GeoNetwork.MetadataResultsView({
             catalogue: catalogue,
             autoScroll: true,
             tpl: GeoNetwork.Settings.latestTpl
@@ -576,7 +559,7 @@ GeoNetwork.app = function () {
             items: latestView,
             renderTo: 'latest'
         });
-        catalogue.kvpSearch(GeoNetwork.Settings.latestQuery, null, null, null, true, latestView.getStore());
+        loadNews();
     }
     function show(uuid, record, url, maximized, width, height) {
         var showFeedBackButton = record.get('email');
@@ -863,7 +846,6 @@ GeoNetwork.app = function () {
                     }
                 });
             });
-
             // Hack to run search after all app is rendered within a sec ...
             // It could have been better to trigger event in SearchFormPanel#applyState
             // FIXME
