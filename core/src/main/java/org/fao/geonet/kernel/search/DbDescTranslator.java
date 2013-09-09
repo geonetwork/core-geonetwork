@@ -23,78 +23,83 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
-import jeeves.resources.dbms.Dbms;
-
-import org.jdom.Element;
+import jeeves.utils.Log;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Localized;
 import org.jdom.JDOMException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
- * Translates keys into a language from a db table description table.
+ * Translates keys using a Repository class and property from the retrieved entity.
  *
  * @author jesse, francois
  */
 public class DbDescTranslator extends Translator {
 
     private static final long serialVersionUID = 1L;
-    private transient final Dbms _dbms;
-	private final String _langCode;
+    private final ApplicationContext _applicationContext;
+    private final String _langCode;
+    private final Class<? extends JpaRepository> _repositoryClass;
+    private final String _propertyName;
 
-	/**
-	 * Table with ids and keys
-	 */
-	private final String _tableName;
 
-	/**
-	 * Table with description
-	 */
-	private final String _descTableName;
+    public DbDescTranslator(ApplicationContext applicationContext, String langCode, String param)
+            throws IOException, JDOMException, ClassNotFoundException {
+        String[] parts = param.split(":", 2);
+        this._repositoryClass = (Class<? extends JpaRepository>) Class.forName(parts[0]);
+        this._propertyName = parts[1];
+        _applicationContext = applicationContext;
+        _langCode = langCode;
+    }
 
-	public DbDescTranslator(Dbms dbms, String langCode, String tableName)
-			throws IOException, JDOMException {
-		_tableName = tableName;
-		_descTableName = _tableName + "Des";
-		_dbms = dbms;
-		_langCode = langCode;
-	}
+    public String translate(String key) {
+        try {
+            JpaRepository repository = _applicationContext.getBean(_repositoryClass);
+            Localized entity = null;
+            Method[] methods = repository.getClass().getMethods();
+            for (Method method : methods) {
+                if (method.getName().equals("findOne") && method.getParameterTypes().length == 1) {
+                    Object convertedKey = convertKeyToType(key, method.getParameterTypes()[0]);
+                    entity = (Localized) method.invoke(repository, convertedKey);
+                }
+            }
 
-	public String translate(String key) {
-		if (_tableName == null || _descTableName == null) {
-			return key;
-		}
 
-		try {
-			// --- Get id
-			String query = "SELECT id FROM " + _tableName + " WHERE LOWER(name) = ?";
-			Element rec = _dbms.select(query, key.toLowerCase()).getChild("record");
-			if(rec == null) {
-			    return key;
-			}
-			String id = rec.getChildText("id");
+            if (entity == null) {
+                return key;
+            }
 
-			if (id == null)
-				return key;
 
-			// --- Get value in language
-			query = "SELECT label FROM " + _descTableName
-					+ " WHERE idDes = ? AND langId = ?";
-			rec = _dbms.select(query, Integer.parseInt(id), _langCode).getChild("record");
-			if( rec==null ){
-			    return key;
-			}
-			String label = rec.getChildText("label");
+            String label = entity.getLabel(_langCode);
 
-			if (label == null)
-				return key;
-			else
-				return label;
+            if (label == null) {
+                return key;
+            } else {
+                return label;
+            }
 
-		} catch (SQLException e) {
-			// TODO : Add debug
-			return key;
-		}
-	}
+        } catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Error translating a string", e);
+            return key;
+        }
+    }
+
+    private Object convertKeyToType(String key, Class<?> aClass) throws NoSuchMethodException, InvocationTargetException,
+            IllegalAccessException {
+
+        if (aClass == String.class) {
+            return key;
+        } else if (aClass.getMethod("valueOf", String.class) != null) {
+            Method converterMethod = aClass.getMethod("valueOf", String.class);
+            return converterMethod.invoke(null, key);
+        }
+
+        return key;
+    }
 
 }

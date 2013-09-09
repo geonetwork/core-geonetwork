@@ -31,7 +31,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 
 import jeeves.JeevesCacheManager;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 
 /**
@@ -75,8 +74,7 @@ public abstract class Translator implements Serializable {
             translator = JeevesCacheManager.findInTenSecondCache(key, new Callable<Translator>() {
                 public Translator call() {
                     try {
-                        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-                        return new DbDescTranslator(dbms, langCode, param);
+                        return new DbDescTranslator(context.getApplicationContext(), langCode, param);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

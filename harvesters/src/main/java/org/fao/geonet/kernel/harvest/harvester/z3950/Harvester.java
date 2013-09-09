@@ -31,6 +31,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -41,6 +42,7 @@ import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.services.main.Info;
 import org.jdom.DocType;
 import org.jdom.Document;
@@ -164,7 +166,8 @@ class Harvester extends BaseAligner {
 		Map <String,String> codes = new HashMap<String,String>();
 		Map <String,String> catCodes = new HashMap<String,String>();
 
-		// -- add new category for each repository
+        final MetadataCategoryRepository categoryRepository = this.context.getBean(MetadataCategoryRepository.class);
+        // -- add new category for each repository
 		boolean addcateg = false;
 		for (String repo : params.getRepositories()) {
 			Element repoElem = Xml.selectElement(repositories,"record[id='"+repo+"']");
@@ -181,15 +184,17 @@ class Harvester extends BaseAligner {
 				catCodes.put(repoId.getAttributeValue("serverCode")+":"+repoId.getAttributeValue("code"), categName);
 
 				if (Xml.selectElement(categories,"record[name='"+categName+"']") == null) {
-					int newId = context.getSerialFactory().getSerial(dbms, "Categories");
-					dbms.execute("INSERT INTO Categories(id, name) VALUES (?, ?)", newId, categName);
-					Lib.local.insert(dbms, "Categories", newId, repoName);
+                    MetadataCategory category = new MetadataCategory();
+                    category.setName(categName);
+                    categoryRepository.save(category);
 					addcateg = true;
 				}
 			}
 		}
 
-		if (addcateg) dbms.commit();
+		if (addcateg) {
+            categoryRepository.flush();
+        }
 
 		// --- return only maximum hits as directed by the harvest params
 		int nrGroups = (numberOfHits / groupSize) + 1;

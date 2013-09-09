@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.jdom.Element;
 
@@ -485,11 +486,13 @@ public class Aligner extends BaseAligner
 		if (hm == null)
 			return null;
 
-		int id = context.getSerialFactory().getSerial(dbms, "Groups");
+        org.fao.geonet.domain.Group group = new org.fao.geonet.domain.Group()
+                .setName(name);
+        group.getLabelTranslations().putAll(hm);
 
-		dbms.execute("INSERT INTO Groups(id, name) VALUES (?, ?)", id, name);
-		Lib.local.insert(dbms, "Groups", id, hm, "<"+name+">");
+        group = context.getBean(GroupRepository.class).save(group);
 
+        int id = group.getId();
 		localGroups.add(name, id +"");
 
 		return id +"";

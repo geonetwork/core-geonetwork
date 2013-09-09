@@ -30,11 +30,14 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Language;
 import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.LanguageRepository;
 import org.jdom.Element;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -71,15 +74,15 @@ public class Set implements Service {
         sm.setValue(dbms, "system/csw/contactId", contactIdValue);
     }
 
-    private void saveCswCapabilitiesInfo(Element params, GeonetContext gc, Dbms dbms)
+    private void saveCswCapabilitiesInfo(Element params, GeonetContext gc)
             throws Exception {
 
-        Map<String, String> langs = Lib.local.getLanguages(dbms);
+        List<Language> languages = gc.getBean(LanguageRepository.class).findAll();
 
-        for(String langId : langs.keySet()) {
-
+        for (Language language : languages) {
             CswCapabilitiesInfo cswCapInfo = new CswCapabilitiesInfo();
 
+            final String langId = language.getId();
             cswCapInfo.setLangId(langId);
             cswCapInfo.setTitle(params.getChild("csw.title_" + langId).getValue());
             cswCapInfo.setAbstract(params.getChild("csw.abstract_" + langId).getValue());
@@ -87,7 +90,7 @@ public class Set implements Service {
             cswCapInfo.setAccessConstraints(params.getChild("csw.accessConstraints_" + langId).getValue());
 
             // Save item
-            CswCapabilitiesInfo.saveCswCapabilitiesInfo(dbms, cswCapInfo);
+            CswCapabilitiesInfo.saveCswCapabilitiesInfo(gc, cswCapInfo);
         }
     }
 

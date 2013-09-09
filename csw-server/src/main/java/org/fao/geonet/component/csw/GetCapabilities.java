@@ -31,8 +31,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
@@ -47,6 +51,7 @@ import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.csw.common.exceptions.VersionNegotiationFailedEx;
+import org.fao.geonet.domain.Language;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
@@ -55,6 +60,7 @@ import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.LanguageRepository;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -124,37 +130,44 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 			setKeywords(capabilities, context, cswServiceSpecificContraint);
 			setOperationsParameters(capabilities);
 
-            Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
             String currentLanguage = "";
 
             // INSPIRE: Use language parameter if available, otherwise use default (using context.getLanguage())            
-            if (inspireEnabled){
+            if (inspireEnabled) {
                 String isoLangParamValue = request.getAttributeValue("language");
 
-                List<String> langs = Lib.local.getLanguagesInspire(dbms);
+
+                final LanguageRepository languageRepository = context.getBean(LanguageRepository.class);
+                List<Language> languageList = languageRepository.findAllByInspireFlag(true);
+
+                List<String> langCodes = Lists.transform(languageList, new Function<Language, String>() {
+                    @Nullable
+                    @Override
+                    public String apply(@Nonnull Language input) {
+                        return input.getId();
+                    }
+                });
 
                 if (isoLangParamValue != null) {
                     // Retrieve GN language id from Iso language id
-                    if (langs.contains(isoLangParamValue)) {
+                    if (langCodes.contains(isoLangParamValue)) {
                         currentLanguage = isoLangParamValue;
-
                     }
                 }
 
 
-                String defaultLanguage = Lib.local.getDefaultLanguage(dbms);
+                Language defaultLanguage = languageRepository.findOneByDefaultLanguage();
 
                 if (StringUtils.isEmpty(currentLanguage)) {
-                    currentLanguage = defaultLanguage;
+                    currentLanguage = defaultLanguage.getId();
                 }
 
-                setInspireLanguages(capabilities, langs, currentLanguage, defaultLanguage);
+                setInspireLanguages(capabilities, langCodes, currentLanguage, defaultLanguage.getId());
             } else {
                 currentLanguage = context.getLanguage();
             }
 
-            CswCapabilitiesInfo cswCapabilitiesInfo = CswCapabilitiesInfo.getCswCapabilitiesInfo(dbms, currentLanguage);
+            CswCapabilitiesInfo cswCapabilitiesInfo = CswCapabilitiesInfo.getCswCapabilitiesInfo(currentLanguage);
 
             // Retrieve contact data from users table
             String contactId = gc.getBean(SettingManager.class).getValue("system/csw/contactId");

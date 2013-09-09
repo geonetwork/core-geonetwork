@@ -25,9 +25,8 @@ package org.fao.geonet.kernel.csw.domain;
 
 import java.util.List;
 
-import jeeves.resources.dbms.Dbms;
-
 import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
 
 public class CswCapabilitiesInfo {
     private String title;
@@ -79,12 +78,11 @@ public class CswCapabilitiesInfo {
 
     /**
     *
-    * @param dbms
     * @param language
     * @return
     * @throws Exception
     */
-   public static CswCapabilitiesInfo getCswCapabilitiesInfo(Dbms dbms, String language) throws Exception {
+   public static CswCapabilitiesInfo getCswCapabilitiesInfo(ApplicationContext context, String language) throws Exception {
 
        CswCapabilitiesInfo cswCapabilitiesInfo = new CswCapabilitiesInfo();
        cswCapabilitiesInfo.setLangId(language);
@@ -98,14 +96,11 @@ public class CswCapabilitiesInfo {
 
            if (field.equals("title")) {
                cswCapabilitiesInfo.setTitle(label);
-           }
-           else if (field.equals("abstract")) {
+           } else if (field.equals("abstract")) {
                cswCapabilitiesInfo.setAbstract(label);
-           }
-           else if (field.equals("fees")) {
+           } else if (field.equals("fees")) {
                cswCapabilitiesInfo.setFees(label);
-           }
-           else if (field.equals("accessConstraints")) {
+           } else if (field.equals("accessConstraints")) {
                cswCapabilitiesInfo.setAccessConstraints(label);
            }
        }
@@ -114,21 +109,19 @@ public class CswCapabilitiesInfo {
 
    /**
     *
-    * @param dbms
     * @return
     * @throws Exception
     */
-   public static Element getCswCapabilitiesInfo(Dbms dbms) throws Exception {
+   public static Element getCswCapabilitiesInfo(ApplicationContext context) throws Exception {
        return dbms.select("SELECT * FROM CswServerCapabilitiesInfo");
    }
 
    /**
     *
-    * @param dbms
     * @param cswCapabilitiesInfo
     * @throws Exception
     */
-   public static void saveCswCapabilitiesInfo(Dbms dbms, CswCapabilitiesInfo cswCapabilitiesInfo)
+   public static void saveCswCapabilitiesInfo(ApplicationContext context, CswCapabilitiesInfo cswCapabilitiesInfo)
            throws Exception {
 
        String langId = cswCapabilitiesInfo.getLangId();

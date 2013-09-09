@@ -312,9 +312,7 @@ public class ResourceManager
 
     protected void closeMetrics(Object resource) {
         TimerContext context = timerContexts.get(resource);
-        if(context == null) {
-            Log.error(Log.DBMSPOOL, "A resource was closed that had not been marked as opened!");
-        } else {
+        if (context != null) {
             context.stop();
         }
 

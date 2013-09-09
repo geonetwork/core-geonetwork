@@ -69,8 +69,6 @@ public class GetStatus implements Service
 		DataManager dataMan = gc.getBean(DataManager.class);
 		AccessManager am = gc.getBean(AccessManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		String id = Utils.getIdentifierFromParameters(params, context);
 
 		//-----------------------------------------------------------------------
