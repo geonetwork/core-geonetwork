@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.jdom.Element;
+
 import javax.persistence.*;
 
 /**
@@ -15,6 +17,31 @@ import javax.persistence.*;
 @Access(AccessType.PROPERTY)
 @Table(name = "metadatastatus")
 public class MetadataStatus {
+    /**
+     * The Root element of the xml returned by {@link #getAsXml}.
+     */
+    public static final String EL_METADATA_STATUS = "metadataStatus";
+    /**
+     * One of the child elements of the xml returned by {@link #getAsXml}.
+     */
+    public static final String EL_STATUS_ID = "statusId";
+    /**
+     * One of the child elements of the xml returned by {@link #getAsXml}.
+     */
+    public static final String EL_USER_ID = "userId";
+    /**
+     * One of the child elements of the xml returned by {@link #getAsXml}.
+     */
+    public static final String EL_CHANGE_DATE = "changeDate";
+    /**
+     * One of the child elements of the xml returned by {@link #getAsXml}.
+     */
+    public static final String EL_CHANGE_MESSAGE = "changeMessage";
+    /**
+     * One of the child elements of the xml returned by {@link #getAsXml}.
+     */
+    public static final String EL_NAME = "name";
+
     private MetadataStatusId id = new MetadataStatusId();
     private String changeMessage;
     private StatusValue statusValue;
@@ -67,5 +94,15 @@ public class MetadataStatus {
     public void setStatusValue(StatusValue statusValue) {
         this.statusValue = statusValue;
         this.getId().setStatusId(statusValue.getId());
+    }
+
+    @Transient
+    public Element getAsXml() {
+        return new Element(EL_METADATA_STATUS)
+                .addContent(new Element(EL_STATUS_ID).setText(String.valueOf(getId().getStatusId())))
+                .addContent(new Element(EL_USER_ID).setText(String.valueOf(getId().getUserId())))
+                .addContent(new Element(EL_CHANGE_DATE).setText(getId().getChangeDate().getDateAndTime()))
+                .addContent(new Element(EL_CHANGE_MESSAGE).setText(getChangeMessage()))
+                .addContent(new Element(EL_NAME).setText(getStatusValue().getName()));
     }
 }

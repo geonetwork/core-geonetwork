@@ -265,7 +265,7 @@ public class Metadata {
      *
      * @param categories
      */
-    protected void setCategories(Set<MetadataCategory> categories) {
+    protected void setCategories(@Nonnull Set<MetadataCategory> categories) {
         this._metadataCategories = categories;
     }
 

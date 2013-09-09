@@ -46,7 +46,12 @@ public class MetadataNotifierRepositoryTest extends AbstractSpringDataTest {
     }
 
     private MetadataNotifier newMetadataNotifier() {
-        int val = _inc.incrementAndGet();
+        AtomicInteger inc = _inc;
+        return newMetadataNotifier(inc);
+    }
+
+    public static MetadataNotifier newMetadataNotifier(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
         MetadataNotifier metadataCategory = new MetadataNotifier();
         metadataCategory.setName("name"+val);
         metadataCategory.setPassword("password" + val);

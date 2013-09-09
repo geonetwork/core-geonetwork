@@ -1,12 +1,10 @@
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataHarvestInfo_;
-import org.fao.geonet.domain.MetadataSourceInfo_;
-import org.fao.geonet.domain.Metadata_;
+import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.util.Set;
 
 /**
  * Specifications for querying {@link org.fao.geonet.repository.UserRepository}.
@@ -56,8 +54,8 @@ public final class MetadataSpecs {
             @Override
             public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Path<Integer> userNameAttributePath = root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.owner);
-                Predicate uuidEqualPredicate = cb.equal(userNameAttributePath, cb.literal(userId));
-                return uuidEqualPredicate;
+                Predicate equalUserIdPredicate = cb.equal(userNameAttributePath, cb.literal(userId));
+                return equalUserIdPredicate;
             }
         };
     }

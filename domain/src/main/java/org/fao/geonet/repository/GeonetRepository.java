@@ -34,6 +34,6 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
      */
     @Transactional
     @Nonnull
-    T update(int id, @Nonnull Updater<T> updater);
+    T update(ID id, @Nonnull Updater<T> updater);
 
 }

@@ -52,11 +52,14 @@ public class MetadataStatusId implements Serializable {
 
     /**
      * Set the id of the metadata the status is related to.
-     * 
+     *
      * @param metadataId the id of the metadata the status is related to.
+     *
+     * @return this id object
      */
-    public void setMetadataId(int metadataId) {
+    public MetadataStatusId setMetadataId(int metadataId) {
         this._metadataId = metadataId;
+        return this;
     }
 
     /**
@@ -70,11 +73,14 @@ public class MetadataStatusId implements Serializable {
 
     /**
      * Set the id of the new status.
-     * 
+     *
      * @param statusId the id of the new status.
+     *
+     * @return this id object
      */
-    public void setStatusId(int statusId) {
+    public MetadataStatusId setStatusId(int statusId) {
         this._statusId = statusId;
+        return this;
     }
 
     /**
@@ -88,11 +94,14 @@ public class MetadataStatusId implements Serializable {
 
     /**
      * Set the user who is responsible for changing the status.
-     * 
+     *
      * @param userId the user who is responsible for changing the status.
+     *
+     * @return this id object
      */
-    public void setUserId(int userId) {
+    public MetadataStatusId setUserId(int userId) {
         this._userId = userId;
+        return this;
     }
 
     @Override

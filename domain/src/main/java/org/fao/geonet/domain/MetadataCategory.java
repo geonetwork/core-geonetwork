@@ -94,30 +94,21 @@ public class MetadataCategory {
         this._labelTranslations = localizedTranslations;
     }
 
+    // CHECKSTYLE:OFF
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + _id;
-        result = prime * result + ((_name == null) ? 0 : _name.hashCode());
-        return result;
-    }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        MetadataCategory other = (MetadataCategory) obj;
-        if (_name == null) {
-            if (other._name != null)
-                return false;
-        } else if (!_name.equals(other._name))
-            return false;
+        MetadataCategory category = (MetadataCategory) o;
+
+        if (_id != category._id) return false;
+
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        return _id;
+    }
 }
