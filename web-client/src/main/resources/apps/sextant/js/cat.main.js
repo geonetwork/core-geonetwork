@@ -926,7 +926,7 @@ cat.app = function() {
 
 			resultPanel.setHeight(Ext.getCmp('center').getHeight());
 
-			var events = [ 'afterDelete', 'afterRating', 'afterLogout', 'afterBadLogin',
+			var events = [ 'afterDelete', 'afterRating', 'afterStatus', 'afterLogout', 'afterBadLogin',
 					'afterLogin' ];
 
             var searchAfterLoggin = function() {
