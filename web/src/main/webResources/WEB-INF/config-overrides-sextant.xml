@@ -8,6 +8,13 @@
     <gn.webapp.dir>${gn.webappdir}</gn.webapp.dir>
   </properties>
   
+  <!-- Sextant Turn off NRT manager to reopen last index version
+    This is important to reflect status change quickly in the search
+    results. -->
+  <file name="WEB-INF/config-lucene.xml">
+    <replaceText xpath="index/useNRTManagerReopenThread">false</replaceText>
+  </file>
+  
   <file name=".*/WEB-INF/config-gui.xml">
     <replaceAtt xpath="client" attName="widget" value="true"/>
     <replaceAtt xpath="client" attName="url" value="${widget.url}"/>
