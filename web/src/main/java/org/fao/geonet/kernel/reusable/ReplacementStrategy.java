@@ -44,6 +44,8 @@ public abstract class ReplacementStrategy
     static final String                             REPORT_DESC    = "desc";
     static final String                             REPORT_URL     = "url";
     public static final String                             REPORT_ID      = "id";
+    public static final String                             REPORT_XLINK      = "xlink";
+    public static final String                             REPORT_TYPE      = "type";
     public static final Function<String,String> ID_FUNC = new Function<String,String>(){
 
         public String apply( String s) {

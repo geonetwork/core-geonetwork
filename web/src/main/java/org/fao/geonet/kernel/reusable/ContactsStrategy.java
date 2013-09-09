@@ -384,6 +384,8 @@ public final class ContactsStrategy extends ReplacementStrategy
 
             addChild(e, REPORT_URL, url);
             addChild(e, REPORT_ID, id);
+            addChild(e, REPORT_TYPE, "contact");
+            addChild(e, REPORT_XLINK, createXlinkHref(id, session, "") + "*");
             String email = result.getChildTextTrim("email");
             String username = result.getChildTextTrim("username");
             String name = result.getChildTextTrim("name");
@@ -414,7 +416,7 @@ public final class ContactsStrategy extends ReplacementStrategy
         dbms.execute("DELETE FROM UserGroups WHERE " + whereClause);
     }
 
-    public String createXlinkHref(String id, UserSession session, String strategySpecificData)
+    public String createXlinkHref(String id, UserSession session, String notRequired)
     {
         return XLink.LOCAL_PROTOCOL+"xml.user.get?id=" + id;
     }

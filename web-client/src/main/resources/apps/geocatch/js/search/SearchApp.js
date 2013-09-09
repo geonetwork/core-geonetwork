@@ -418,11 +418,16 @@ GeoNetwork.searchApp = function() {
                         hidden : !catalogue.isIdentified()
                     }) ]);
 
-            f.push({
-                xtype : "hidden",
-                name : "E_similarity",
-                value : GeoNetwork.util.SearchTools.DEFAULT_SIMILARITY
-            });
+            f.push([{
+                    xtype : "hidden",
+                    name : "E_similarity",
+                    value : GeoNetwork.util.SearchTools.DEFAULT_SIMILARITY
+                }, {
+                   xtype : "hidden",
+                   name : "customFilter",
+                   value : ""
+                }
+            ]);
             var d = [ {
                 xtype : "fieldset",
                 id : 'what-container',
@@ -1651,6 +1656,54 @@ GeoNetwork.searchApp = function() {
                 breadcrumb : breadcrumb,
                 maxDisplayedItems : GeoNetwork.Settings.facetMaxItems || 7,
                 facetListConfig : GeoNetwork.Settings.facetListConfig || []
+            });
+        },
+        indexSelectionAction : function () {
+            var toText = function (xml) {
+                if (!xml) {
+                    return "";
+                }
+                if (xml.textContent === undefined) {
+                    return xml.innerText;
+                } else {
+                    return xml.textContent;
+                }
+            };
+            var getElementsByTagName = function (xml, name) {
+                if (!xml) {
+                    return [];
+                }
+                if (xml.getElementsByTagName === undefined) {
+                    return [];
+                } else {
+                    return xml.getElementsByTagName(name);
+                }
+            };
+            var url = catalogue.services.rootUrl + "metadata.selection.index";
+            Ext.Ajax.request({
+                url: url,
+                method: "GET",
+                success : function(response) {
+                    var error = getElementsByTagName(response.responseXML, "error");
+
+                    if (error.length > 0) {
+                        Ext.MessageBox.alert(OpenLayers.i18n("error"), toText(error[0]));
+                    } else {
+                        var text = toText(response.responseXML.firstChild.attributes.item(0));
+                        Ext.MessageBox.alert("", OpenLayers.i18n("indexSelectionRunning")+text);
+                    }
+                },
+                failure : function(response) {
+                    var msgs = getElementsByTagName(response.responseXML, "message");
+
+                    var msg;
+                    if (msgs.length > 0) {
+                        msg = OpenLayers.i18n("indexSelectionError") + toText(msgs[0]);
+                    } else {
+                        msg = OpenLayers.i18n("indexSelectionError") + OpenLayers.i18n("error");
+                    }
+                    Ext.MessageBox.alert(OpenLayers.i18n("error"), msg);
+                },
             });
         }
     };

@@ -71,6 +71,10 @@
     </xsl:template>
     
     <xsl:template name="buttons">
+        <button class="content" id='edit' onclick="searchView('invalid')">
+            <xsl:value-of select="/root/gui/strings/openInSearch"/>
+        </button>
+                            &#160;
         <button class="content" id='edit' onclick="edit()">
             <xsl:value-of select="/root/gui/strings/edit"/>
         </button>

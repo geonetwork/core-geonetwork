@@ -222,9 +222,12 @@ public final class KeywordsStrategy extends ReplacementStrategy
           uriBuilder.append(URLEncoder.encode(bean.getUriCode(), "UTF-8"));
           uriBuilder.append("&lang=");
           uriBuilder.append(bean.getDefaultLang());
-          
-          addChild(e, REPORT_ID, Integer.toString(bean.getId()));
+
+            final String id = Integer.toString(bean.getId());
+            addChild(e, REPORT_ID, id);
           addChild(e, REPORT_URL, uriBuilder.toString());
+          addChild(e, REPORT_TYPE, "keyword");
+          addChild(e, REPORT_XLINK, createXlinkHref(id, session, bean.getThesaurusKey()));
           addChild(e, REPORT_DESC, bean.getDefaultValue());
           keywords.addContent(e);
         }

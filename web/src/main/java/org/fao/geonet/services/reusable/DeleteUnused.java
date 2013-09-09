@@ -88,8 +88,7 @@ public class DeleteUnused implements Service {
         
 	    List<String> luceneFields = new LinkedList<String>();
 	    luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
-	    luceneFields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
-	
+
         for (Element element : nonValidated) {
             String objId = element.getChildTextTrim(ReplacementStrategy.REPORT_ID);
 

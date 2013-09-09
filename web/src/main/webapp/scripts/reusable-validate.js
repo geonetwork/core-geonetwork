@@ -150,6 +150,37 @@ function edit() {
 
 }
 
+/**
+ * xlinkType == valid|invalid
+ */
+function searchView(xlinkType) {
+    var sm = grid.getSelectionModel();
+    var selected = sm.getSelections();
+
+    if (selected && selected[0]) {
+      var searchQuery = "";
+
+      var addAnd = false;
+      for (var i = 0; i < selected.length ; i++) {
+        if (addAnd) {
+            searchQuery += ",";
+        }
+        addAnd = true;
+        var url = selected[i].get('xlink');
+        searchQuery +=  encodeURIComponent(url);
+      }
+      var page = selected[0].get('type');
+      var url = Env.locService + "/geocat?s_search&customFilter=V_" + xlinkType + "_xlink_" + page +"%3D" + encodeURIComponent(searchQuery);
+
+      if (location.search.substring(1).indexOf("debug") > -1) {
+        url += "&debug";
+      }
+      window.open(url, "_searchXlinks");
+    } else {
+        Ext.MessageBox.alert("No Selection", "Select a shared object before searching for related metadata");
+    }
+}
+
 Ext.onReady(function () {
     Ext.get("banner-img2").remove();
     Ext.QuickTips.init();
@@ -185,7 +216,7 @@ function createGrid() {
         reader: new Ext.data.XmlReader({
             record: 'record',
             id: 'id'
-        }, ['id', 'url', 'desc', 'date']),
+        }, ['id', 'url', 'desc', 'date', 'xlink', 'type']),
         url: locUrl + '/reusable.non_validated.list?type=contacts',
         sortInfo: {
             field: 'desc',

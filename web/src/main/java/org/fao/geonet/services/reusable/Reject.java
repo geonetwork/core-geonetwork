@@ -73,14 +73,16 @@ public class Reject implements Service
         String[] ids = Util.getParamText(params, "id").split(",");
         String msg = Util.getParamText(params, "msg");
         boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
+        boolean isValidObject = Boolean.parseBoolean(Util.getParam(params, "isValidObject", "false"));
+
         
-        Element results = reject(context, ReusableTypes.valueOf(page), ids, msg, null, testing);
+        Element results = reject(context, ReusableTypes.valueOf(page), ids, msg, null, isValidObject, testing);
 
         return results;
     }
 
     public Element reject(ServiceContext context, ReusableTypes reusableType, String[] ids, String msg,
-            String strategySpecificData, boolean testing) throws Exception
+                          String strategySpecificData, boolean isValidObject, boolean testing) throws Exception
     {
         Log.debug(Geocat.Module.REUSABLE, "Starting to reject following reusable objects: \n"
                 + reusableType + " (" + Arrays.toString(ids) + ")\nRejection message is:\n" + msg);
@@ -93,7 +95,7 @@ public class Reject implements Service
         Element results = new Element("results");
         if (strategy != null) {
             results.addContent(performReject(ids, strategy, context, gc, dbms, session, baseUrl, msg,
-                    strategySpecificData, testing));
+                    strategySpecificData, testing, isValidObject));
         }
         Log.info(Geocat.Module.REUSABLE, "Successfully rejected following reusable objects: \n"
                 + reusableType + " (" + Arrays.toString(ids) + ")\nRejection message is:\n" + msg);
@@ -102,16 +104,19 @@ public class Reject implements Service
     }
 
     private List<Element> performReject(String[] ids, final ReplacementStrategy strategy, ServiceContext context,
-            GeonetContext gc, Dbms dbms, final UserSession session, String baseURL, String msg,
-            String strategySpecificData, boolean testing) throws Exception
+                                        GeonetContext gc, Dbms dbms, final UserSession session, String baseURL, String msg,
+                                        String strategySpecificData, boolean isValidObject, boolean testing) throws Exception
     {
 
         final Function<String,String> idConverter = strategy.numericIdToConcreteId(session);
 
 	    List<String> luceneFields = new LinkedList<String>();
-	    luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
-	    luceneFields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
-	
+        if (isValidObject) {
+            luceneFields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
+        } else {
+            luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
+        }
+
         Multimap<String/* ownerid */, String/* metadataid */> emailInfo = HashMultimap.create();
         List<Element> result = new ArrayList<Element>();
         ArrayList<String> allAffectedMdIds = new ArrayList<String>();

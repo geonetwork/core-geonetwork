@@ -100,6 +100,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     
     updatePrivilegesAction: undefined,
     
+    indexSelectionAction: undefined,
+
     updateStatusAction: undefined,
     
     updateVersionAction: undefined,
@@ -315,6 +317,15 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });
+        this.indexSelectionAction = new Ext.menu.Item({
+            text: OpenLayers.i18n('indexSelection'),
+            id: 'indexSelectionAction',
+            handler: function() {
+            	app.searchApp.indexSelectionAction();
+            },
+            scope: this,
+            hidden: hide
+        });
         this.unpublishSelectionAction = new Ext.menu.Item({
             text: OpenLayers.i18n('unpublishSlection'),
             id: 'unpublishSelectionAction',
@@ -368,7 +379,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         });*/
         
         this.selectionActions.push(this.deleteAction,this.notifyByMailAction, this.unpublishSelectionAction, this.ownerAction, this.updateCategoriesAction, 
-                this.updatePrivilegesAction); //, this.updateStatusAction, this.updateVersionAction);
+                this.updatePrivilegesAction, this.indexSelectionAction); //, this.updateStatusAction, this.updateVersionAction);
         
         this.actionMenu.addItem(this.notifyByMailAction);
         this.actionMenu.addItem(this.unpublishSelectionAction);
@@ -378,6 +389,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         //this.actionMenu.addItem(this.updateStatusAction);
         //this.actionMenu.addItem(this.updateVersionAction);
         this.actionMenu.addItem(this.deleteAction);
+        this.actionMenu.addItem(this.indexSelectionAction);
     },
     /** private: method[createAdminMenu] 
      *  Create quick admin action menu to not require to go to
@@ -667,7 +679,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                         this.updatePrivilegesAction, this.createMetadataAction,
                         this.mdImportAction],
             adminActions = [this.ownerAction],
-            onlyAdminActions = [this.notifyByMailAction, this.unpublishSelectionAction],
+            onlyAdminActions = [this.notifyByMailAction, this.unpublishSelectionAction, this.indexSelectionAction],
             actions = [this.adminAction, this.otherItem];
         
         Ext.each(actions, function(){

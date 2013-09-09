@@ -516,8 +516,22 @@ GeoNetwork.util.SearchTools = {
                         } else {
                             if (cur.getValue && cur.getValue()
                                     && cur.getValue() !== "") {
-                                GeoNetwork.util.SearchTools.addFieldValue(
+                                if (cur.getName() === "customFilter") {
+                                    var values = cur.getValue().split("&");
+                                    for (var i = 0; i < values.length; i++) {
+                                        var val = values[i];
+                                        var parts = val.split("=", 2);
+                                        if (parts[0].indexOf('V_') == 0) {
+                                            result[parts[0]] = parts[1];
+                                        } else {
+                                            GeoNetwork.util.SearchTools.addFieldValue(
+                                                result, parts[0], parts[1]);
+                                        }
+                                    }
+                                } else {
+                                    GeoNetwork.util.SearchTools.addFieldValue(
                                         result, cur.getName(), cur.getValue());
+                                }
                             } else {
 
                             }

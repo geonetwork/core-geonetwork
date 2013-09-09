@@ -19,6 +19,9 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.GeoCatCh.Lang');
 
 GeoNetwork.GeoCatCh.Lang.en = {
+	'indexSelection': 'Index Selected Metadata',
+	'indexSelectionRunning': 'Metadata Index process running. <br/><br/> Number of metadata being indexed: ',
+	'indexSelectionError': 'Error starting indexing: <br/><br/>',
 	'any': '- Any -',
 	'dataset': 'Data',
 	'basicgeodata': 'Basic Geodata',

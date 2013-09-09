@@ -517,6 +517,8 @@ public final class ExtentsStrategy extends ReplacementStrategy {
 
                 addChild(e, REPORT_URL, url);
                 addChild(e, REPORT_ID, id);
+                addChild(e, REPORT_TYPE, "extent");
+                addChild(e, REPORT_XLINK, createXlinkHref(id, session, featureType.typename) + "*");
 
                 Object att = feature.getAttribute(featureType.descColumn);
                 String desc = "No description";

@@ -150,6 +150,8 @@ public final class FormatsStrategy extends ReplacementStrategy
             addChild(e, REPORT_URL, url);
             addChild(e, REPORT_DESC, name+" ("+version+")");
             addChild(e, REPORT_ID, id);
+            addChild(e, REPORT_TYPE, "format");
+            addChild(e, REPORT_XLINK, createXlinkHref(id, session, ""));
 
             formats.addContent(e);
         }
@@ -157,7 +159,7 @@ public final class FormatsStrategy extends ReplacementStrategy
         return formats;
     }
 
-    public String createXlinkHref(String id, UserSession session, String strategySpecificData)
+    public String createXlinkHref(String id, UserSession session, String notRequired)
     {
         return XLink.LOCAL_PROTOCOL+"xml.format.get?id=" + id;
     }

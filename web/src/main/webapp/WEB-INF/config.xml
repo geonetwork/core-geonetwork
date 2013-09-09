@@ -1458,6 +1458,12 @@
 		<service name="isolanguages">
 			<class name="org.fao.geonet.guiservices.isolanguages.Get" />
 		</service>
+
+        <service name="metadata.selection.index">
+            <class name=".services.selection.Index">
+                <param name="maxToIndex" value="500" />
+            </class>
+        </service>
 	</services>
 
 	<!-- ====================================================================== -->

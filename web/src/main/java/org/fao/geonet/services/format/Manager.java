@@ -39,6 +39,8 @@ import org.fao.geonet.services.reusable.Reject;
 import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.kernel.reusable.ReusableTypes;
 
+import java.util.*;
+
 //=============================================================================
 
 /**
@@ -79,8 +81,13 @@ public class Manager implements Service {
 
 		if (action.equals("DELETE")) {
 	        if(!Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
+                java.util.List<Element> validated = dbms.select("Select validated from Formats where id=?",Integer.parseInt(id)).getChildren();
+                if (validated.isEmpty()) {
+                    return elRes;
+                }
 	            String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
-	            return new Reject().reject(context, ReusableTypes.formats, new String[]{id}, msg, null, testing);
+                boolean isValidated = "y".equalsIgnoreCase(validated.get(0).getChildTextTrim("validated"));
+	            return new Reject().reject(context, ReusableTypes.formats, new String[]{id}, msg, null, isValidated, testing);
 	        } else {
     			dbms.execute("DELETE FROM Formats WHERE id=" + id);
     			elRes.addContent(new Element(Jeeves.Elem.OPERATION)

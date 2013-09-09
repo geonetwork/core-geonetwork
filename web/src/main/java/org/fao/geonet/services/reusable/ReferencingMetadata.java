@@ -68,14 +68,12 @@ public class ReferencingMetadata implements Service
             fields.addAll(Arrays.asList(DeletedObjects.getLuceneIndexField()));
             idConverter= ReplacementStrategy.ID_FUNC;
         } else {
-
             final ReplacementStrategy replacementStrategy = Utils.strategy(ReusableTypes.valueOf(type), context);
             fields.addAll(Arrays.asList(replacementStrategy.getInvalidXlinkLuceneField()));
-            fields.addAll(Arrays.asList(replacementStrategy.getValidXlinkLuceneField()));
             idConverter=replacementStrategy.numericIdToConcreteId(context.getUserSession());
         }
 
-        Set<MetadataRecord> md = Utils.getReferencingMetadata(context, fields, id, true,idConverter);
+        Set<MetadataRecord> md = Utils.getReferencingMetadata(context, fields, id, true, idConverter);
         Element reponse = new Element("reponse");
         for (MetadataRecord metadataRecord : md) {
             

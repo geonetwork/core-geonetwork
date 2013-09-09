@@ -27,6 +27,8 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -174,12 +176,16 @@ public class UserQueryInput {
     private void addValues(Map<String, Set<String>> hash, String nodeName, String nodeValue) {
         Set<String> currentValues = searchCriteria.get(nodeName);
 
+        try {
         if (currentValues == null) {
             HashSet<String> values = new HashSet<String>();
-            values.add(nodeValue);
+            values.add(URLDecoder.decode(nodeValue, "UTF-8"));
             hash.put(nodeName, values);
         } else {
-            currentValues.add(nodeValue);
+            currentValues.add(URLDecoder.decode(nodeValue, "UTF-8"));
+        }
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
     }
 

@@ -424,6 +424,14 @@ Ext.onReady(function() {
             });
         }
 
+        // customFilter
+        if (OpenLayers.Util.getParameters().hasOwnProperty("customFilter")) {
+            Ext.each(Ext.query("input[name=customFilter]"), function(input) {
+                var param = OpenLayers.Util.getParameters().customFilter;
+                Ext.getCmp(input.id).setValue(param);
+            });
+        }
+
         showAdvancedSearch();
 
         Ext.getCmp('advanced-search-options-content-form').fireEvent('search');

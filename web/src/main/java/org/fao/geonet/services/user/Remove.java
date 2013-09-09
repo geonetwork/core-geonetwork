@@ -125,19 +125,22 @@ public class Remove implements Service
     	boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
 
     	Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-        Element profileQuery = dbms.select("Select profile from users where id=?",Integer.parseInt(id));
-        
+        Element profileQuery = dbms.select("Select profile, validated from users where id=?",Integer.parseInt(id));
+
+
         if(!profileQuery.getChildren().isEmpty()) {
-            for (Element e : (java.util.List<Element>) profileQuery.getChildren()) {
-                if( type == Type.NORMAL && Geocat.Profile.SHARED.equals(e.getChildTextTrim("profile")))
-                    throw new IllegalArgumentException("This remove user service instance cannot remove shared objects");
+            final Element child = (Element) profileQuery.getChildren().get(0);
+            if( type == Type.NORMAL && Geocat.Profile.SHARED.equals(child.getChildTextTrim("profile"))) {
+                throw new IllegalArgumentException("This remove user service instance cannot remove shared objects");
+            }
+
+            if(type != Type.NORMAL && !Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
+                String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
+                boolean isValidated = "y".equalsIgnoreCase(child.getChildTextTrim("validated"));
+                return new Reject().reject(context, ReusableTypes.contacts, new String[]{id}, msg, null, isValidated, testing);
             }
         }
-        
-        if(type != Type.NORMAL && !Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
-            String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
-            return new Reject().reject(context, ReusableTypes.contacts, new String[]{id}, msg, null, testing);
-        }
+
         return null;
     }
 }

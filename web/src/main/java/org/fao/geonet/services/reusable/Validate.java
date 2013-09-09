@@ -110,8 +110,7 @@ public class Validate implements Service
 	    UserSession session = context.getUserSession();
 	    List<String> luceneFields = new LinkedList<String>();
 	    luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
-	    luceneFields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
-	
+
 	    final Function<String, String> idConverter = strategy.numericIdToConcreteId(session);
 	    Set<MetadataRecord> results = Utils.getReferencingMetadata(context, luceneFields, id, true, idConverter);
 	

@@ -9,120 +9,121 @@
      	  url intercept mappings/expressions. -->
     <bean class="jeeves.config.springutil.GeonetworkFilterSecurityInterceptor" id="overridefilterSecurityInterceptor">
     	<constructor-arg value="__geonetwork_spring_security_filterSecurityInterceptor_overridesSecurityMapping_filterApplied"/>
-        <property name="authenticationManager" ref="authenticationManager"></property>
-        <property name="accessDecisionManager" ref="accessDecisionManager"></property>
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="accessDecisionManager" ref="accessDecisionManager"/>
         <property name="securityMetadataSource">
 			<sec:filter-security-metadata-source id="url-mapping-overrides" use-expressions="true" request-matcher="regex">
-			    <sec:intercept-url pattern="/srv/.*/metadata.xlink.add!?.*" access="hasRole('Editor')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/csw-publication!?.*" access="hasRole('Editor')"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/metadata.xlink.add!?.*" access="hasRole('Editor')"/>
+			    <sec:intercept-url pattern="/srv/.*/csw-publication!?.*" access="hasRole('Editor')"/>
 		
 				<!-- Search for metadata that has not recently been updated -->
-			    <sec:intercept-url pattern="/srv/.*/metadata.expired.email!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/metadata.expired.unpublish!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/metadata.expired.form!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/metadata.expired.email!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/metadata.expired.unpublish!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/metadata.expired.form!?.*" access="hasRole('Administrator')"/>
 		
 				<!-- Format facilities -->
-			    <sec:intercept-url pattern="/srv/.*/format.admin!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/format!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/format.admin!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/format!?.*" access="hasRole('Administrator')"/>
 		
 			    <!-- Unpublish facilities -->
-			    <sec:intercept-url pattern="/srv/.*/unpublish.invalid.metadata!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/unpublish.report.xml!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/unpublish.report.csv!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/unpublish.invalid.metadata!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/unpublish.report.xml!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/unpublish.report.csv!?.*" access="hasRole('Administrator')"/>
 			    
 			    <!-- Extent facilities -->
-			    <sec:intercept-url pattern="/srv/.*/xml.extent.add!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/xml.extent.delete!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/xml.extent.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/extent.admin!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/extent.edit!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/extent.select!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/xml.extent.add!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/xml.extent.delete!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/xml.extent.update!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/extent.admin!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/extent.edit!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/extent.select!?.*" access="hasRole('Administrator')"/>
 		
 				<!-- Reusable object admin facilities -->
-			    <sec:intercept-url pattern="/srv/.*/metadata.reusable.replace!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/reusable.non_validated.admin!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/reusable.non_validated.list!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/reusable.validate!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/reusable.reject!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/reusable.delete!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/reusable.references!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/reusable.duplicates.find!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/reusable.object.process!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/reusable.object.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/reusable.object.deleteUnused!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/metadata.reusable.replace!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/reusable.non_validated.admin!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/reusable.non_validated.list!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/reusable.validate!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/reusable.reject!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/reusable.delete!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/reusable.references!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/reusable.duplicates.find!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/reusable.object.process!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/reusable.object.update!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/reusable.object.deleteUnused!?.*" access="hasRole('Administrator')"/>
 		
 			    <!-- Allow a user to specify a XSL -->
-			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.register!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.remove!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.download!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.admin!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.files!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.edit!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.register!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.remove!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.download!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.admin!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.update!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.files!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.edit!?.*" access="hasRole('Administrator')"/>
 			    
 			    <!-- shared user services -->
-			    <sec:intercept-url pattern="/srv/.*/shared.user.edit!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/validated.shared.user.admin!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/nonvalidated.shared.user.admin!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/validated.shared.user.remove!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/validated.shared.user.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/nonvalidated.shared.user.remove!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/nonvalidated.shared.user.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/shared.user.remove!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/shared.user.edit!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/validated.shared.user.admin!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/nonvalidated.shared.user.admin!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/validated.shared.user.remove!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/validated.shared.user.update!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/nonvalidated.shared.user.remove!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/nonvalidated.shared.user.update!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/shared.user.remove!?.*" access="hasRole('Administrator')"/>
 			    
-			    <sec:intercept-url pattern="/srv/.*/thesaurus.editelement!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/geocat.thesaurus.updateelement!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/geocat.thesaurus.editelement!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/keywords.duplicate!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/thesaurus.editelement!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/geocat.thesaurus.updateelement!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/geocat.thesaurus.editelement!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/keywords.duplicate!?.*" access="hasRole('Administrator')"/>
 		
 		
-			    <sec:intercept-url pattern="/srv/.*/mapfish!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/geocat!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/oldgeocat!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/cgp!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/gm03.xml!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/gm03small.xml!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/monitoring.csv!?.*" access="permitAll"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/mapfish!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/geocat!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/oldgeocat!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/cgp!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/gm03.xml!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/gm03small.xml!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/monitoring.csv!?.*" access="permitAll"/>
 		
 				<!-- Extent services -->
-			    <sec:intercept-url pattern="/srv/.*/xml.extent.get!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/xml.extent.list!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/xml.extent.search!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/extent.search.list!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/extent.search.paging!?.*" access="permitAll"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/xml.extent.get!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/xml.extent.list!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/xml.extent.search!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/extent.search.list!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/extent.search.paging!?.*" access="permitAll"/>
 			    
 			    <!-- service for resolving xlinks that are pending deletion -->
-			    <sec:intercept-url pattern="/srv/.*/xml.reusable.deleted!?.*" access="permitAll"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/xml.reusable.deleted!?.*" access="permitAll"/>
 			    
-			    <sec:intercept-url pattern="/srv/.*/status!?.*" access="permitAll"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/status!?.*" access="permitAll"/>
 			    
 			    <!-- Metadata formatter -->
-			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.html!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.xml!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.resource!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.list!?.*" access="permitAll"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.html!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.xml!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.resource!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/metadata.formatter.list!?.*" access="permitAll"/>
 			    
-			    <sec:intercept-url pattern="/srv/.*/xml.format.get!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/xml.format.list!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/xml.user.get!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/shared.user.list!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/che.keyword.get!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/metadata.print!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/metadata.show.xml!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/csw.pdf!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/csw.csv!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/geocat.keywords.list!?.*" access="permitAll"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/download.backup!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-			    <sec:intercept-url pattern="/srv/.*/trigger.backup!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+			    <sec:intercept-url pattern="/srv/.*/xml.format.get!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/xml.format.list!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/xml.user.get!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/shared.user.list!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/che.keyword.get!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/metadata.print!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/metadata.show.xml!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/csw.pdf!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/csw.csv!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/geocat.keywords.list!?.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/download.backup!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/trigger.backup!?.*" access="hasRole('Administrator')"/>
 			    
 			    <!-- Notification on selection -->
-                <sec:intercept-url pattern="/srv/.*/metadata.select.notifybymail!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/metadata.select.unpublish!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/.*/metadata.select.info!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/metadata.select.notifybymail!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/.*/metadata.select.unpublish!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/.*/metadata.select.info!?.*" access="hasRole('Administrator')"/>
                 
-                <sec:intercept-url pattern="/srv/.*/csw-.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/.*/csw-.*" access="permitAll"/>
+			    <sec:intercept-url pattern="/srv/.*/monitoring.indexing!?.*" access="hasRole('Administrator')"/>
+			    <sec:intercept-url pattern="/srv/.*/metadata.selection.index!?.*" access="hasRole('Administrator')" />
 
-			    <sec:intercept-url pattern="/srv/.*/monitoring.indexing!?.*" access="hasRole('Administrator')"></sec:intercept-url>
 			</sec:filter-security-metadata-source>
 		</property>
 	</bean>
