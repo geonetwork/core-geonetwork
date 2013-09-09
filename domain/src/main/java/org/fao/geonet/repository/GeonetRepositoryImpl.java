@@ -29,7 +29,7 @@ public class GeonetRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
     }
 
 
-    public T update(int id, Updater<T> updater) {
+    public T update(ID id, Updater<T> updater) {
         final T entity = _entityManager.find(this._entityClass, id);
 
         if (entity == null) {
