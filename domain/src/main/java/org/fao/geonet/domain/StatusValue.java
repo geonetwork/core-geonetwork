@@ -24,12 +24,11 @@ import javax.persistence.Transient;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "statusvalues")
-public class StatusValue {
+public class StatusValue extends Localized {
     private int _id;
     private String _name;
     private char _reserved = Constants.YN_DISABLED;
     private int displayOrder;
-    private Map<String, String> _labelTranslations;
 
     /**
      * Get the id of the StatusValue object. This is a generated value and as such new instances should not have this set as it will simply
@@ -49,7 +48,7 @@ public class StatusValue {
      * 
      * @param id the id of the StatusValue object
      */
-    public void setId(int id) {
+    public void setId(final int id) {
         this._id = id;
     }
 
@@ -68,7 +67,7 @@ public class StatusValue {
      * 
      * @param name the name of the StatusValue object.
      */
-    public void setName(String name) {
+    public void setName(final String name) {
         this._name = name;
     }
 
@@ -87,7 +86,7 @@ public class StatusValue {
      * @param reserved Constants.YN_ENABLED for true or Constants.YN_DISABLED for false.
      * @return
      */
-    protected char setReserved_JpaWorkaround(char reserved) {
+    protected char setReserved_JpaWorkaround(final char reserved) {
         return _reserved = reserved;
     }
 
@@ -106,28 +105,17 @@ public class StatusValue {
      * 
      * @param reserved true if this is a reserved StatusValue.
      */
-    public void setReserved(boolean reserved) {
+    public void setReserved(final boolean reserved) {
         setReserved_JpaWorkaround(Constants.toYN_EnabledChar(reserved));
     }
 
-    /**
-     * Get the map of langid -> label translations for groups
-     */
+    @Override
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
     @CollectionTable(joinColumns = @JoinColumn(name = "iddes"), name = "statusvaluesdes")
     @MapKeyColumn(name = "langid", length = 5)
     @Column(name = "label", nullable = false)
     public Map<String, String> getLabelTranslations() {
-        return _labelTranslations;
-    }
-
-    /**
-     * Set new translations this should only be used for initialization. to add and remove translations use "get" and modify map.
-     * 
-     * @param localizedTranslations the translation map
-     */
-    protected void setLabelTranslations(Map<String, String> localizedTranslations) {
-        this._labelTranslations = localizedTranslations;
+        return super.getLabelTranslations();
     }
 
     /**

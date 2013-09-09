@@ -1,6 +1,5 @@
 package org.fao.geonet.domain;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.Access;
@@ -32,14 +31,13 @@ import javax.persistence.Table;
 @Table(name = "groups")
 @Cacheable
 @Access(AccessType.PROPERTY)
-public class Group {
+public class Group extends Localized {
 
     private int _id;
     private String _name;
     private String _description;
     private String _email;
     private int _referrer;
-    private Map<String, String> _labelTranslations = new HashMap<String, String>();
 
     /**
      * Get the id of the group.
@@ -168,24 +166,13 @@ public class Group {
         this._referrer = referrer;
     }
 
-    /**
-     * Get the map of langid -> label translations for groups
-     */
+    @Override
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
     @CollectionTable(joinColumns = @JoinColumn(name = "iddes"), name = "groupsdes")
     @MapKeyColumn(name = "langid", length = 5)
     @Column(name = "label", nullable = false, length = 96)
     public Map<String, String> getLabelTranslations() {
-        return _labelTranslations;
-    }
-
-    /**
-     * Set new translations this should only be used for initialization. To add and remove translations use "get" and modify map.
-     * 
-     * @param localizedTranslations the translation map
-     */
-    protected void setLabelTranslations(Map<String, String> localizedTranslations) {
-        this._labelTranslations = localizedTranslations;
+        return super.getLabelTranslations();
     }
 
     @Override

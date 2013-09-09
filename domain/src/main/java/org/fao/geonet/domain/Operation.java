@@ -1,6 +1,5 @@
 package org.fao.geonet.domain;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -30,10 +29,9 @@ import javax.persistence.Transient;
 @Table(name = "operations")
 @Cacheable
 @Access(AccessType.PROPERTY)
-public class Operation {
+public class Operation extends Localized {
     private int _id;
     private String _name;
-    private Map<String, String> _labelTranslations = new HashMap<String, String>();
 
     /**
      * Get the Id of the operation. This is a generated value and as such new instances should not have this set as it will simply be
@@ -55,7 +53,7 @@ public class Operation {
      * @param id the Id of the operation
      * @return this entity object.
      */
-    public Operation setId(int id) {
+    public Operation setId(final int id) {
         this._id = id;
         return this;
     }
@@ -73,8 +71,8 @@ public class Operation {
      * Return the name (untranslated) of the operation.
      */
     @Column(name = "name", nullable = false, length = 32)
-    public @Nonnull
-    String getName() {
+    @Nonnull
+    public String getName() {
         return _name;
     }
 
@@ -89,24 +87,13 @@ public class Operation {
         return this;
     }
 
-    /**
-     * Get the map of langid -> label translations for operations
-     */
+    @Override
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
     @CollectionTable(joinColumns = @JoinColumn(name = "iddes"), name = "operationsdes")
     @MapKeyColumn(name = "langid", length = 5)
     @Column(name = "label", nullable = false)
     public Map<String, String> getLabelTranslations() {
-        return _labelTranslations;
-    }
-
-    /**
-     * Set new translations this should only be used for initialization. to add and remove translations use "get" and modify map.
-     * 
-     * @param localizedTranslations the translation map
-     */
-    protected void setLabelTranslations(Map<String, String> localizedTranslations) {
-        this._labelTranslations = localizedTranslations;
+        return super.getLabelTranslations();
     }
 
     /**
