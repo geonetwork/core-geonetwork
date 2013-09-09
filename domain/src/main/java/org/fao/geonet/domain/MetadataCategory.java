@@ -1,6 +1,5 @@
 package org.fao.geonet.domain;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.Access;
@@ -26,10 +25,9 @@ import javax.persistence.Table;
 @Access(AccessType.PROPERTY)
 @Cacheable
 @Table(name = "categories")
-public class MetadataCategory {
+public class MetadataCategory extends Localised {
     private int _id;
     private String _name;
-    private Map<String, String> _labelTranslations = new HashMap<String, String>();
 
     /**
      * The id of the category. This is a generated value and not controlled by the developer.
@@ -71,27 +69,13 @@ public class MetadataCategory {
         this._name = name;
     }
 
-    /**
-     * Get the map of langid -> label translations for metadata categories. langid is an iso 3 character code for the language. For example:
-     * eng, ger, fra, etc...
-     * 
-     * @return the map of langid -> label
-     */
+    @Override
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
     @CollectionTable(joinColumns = @JoinColumn(name = "iddes"), name = "categoriesdes")
     @MapKeyColumn(name = "langid", length = 5)
     @Column(name = "label", nullable = false)
     public Map<String, String> getLabelTranslations() {
-        return _labelTranslations;
-    }
-
-    /**
-     * Set new translations this should only be used for initialization. to add and remove translations use "get" and modify map.
-     * 
-     * @param localizedTranslations the translation map
-     */
-    protected void setLabelTranslations(Map<String, String> localizedTranslations) {
-        this._labelTranslations = localizedTranslations;
+        return super.getLabelTranslations();
     }
 
     // CHECKSTYLE:OFF
