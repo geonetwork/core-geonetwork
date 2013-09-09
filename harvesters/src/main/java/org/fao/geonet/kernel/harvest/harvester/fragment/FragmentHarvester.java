@@ -377,7 +377,7 @@ public class FragmentHarvester extends BaseAligner {
         //
         String group= null, isTemplate= null, docType= null, category= null;
         boolean ufo= false, indexImmediate= false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.owner), group, params.uuid,
+        String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.owner), group, params.uuid,
                          isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -598,7 +598,7 @@ public class FragmentHarvester extends BaseAligner {
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, params.outputSchema, template, context.getSerialFactory().getSerial(dbms, "Metadata"), recUuid, Integer.parseInt(params.owner), group, params.uuid,
+        String id = dataMan.insertMetadata(context, params.outputSchema, templaterecUuid, Integer.parseInt(params.owner), group, params.uuid,
                 isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);

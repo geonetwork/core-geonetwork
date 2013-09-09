@@ -419,12 +419,10 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 		//-----------------------------------------------------------------------
 		//--- insert metadata into the system
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
         String docType = null, title = null, createDate = null, changeDate = null;
         boolean ufo = true, indexImmediate = true;
         String isTemplate = "n";
-        dm.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, context.getUserSession().getUserIdAsInt(), group, gc.getSiteId(),
+        dm.insertMetadata(context, schema, xml, uuid, context.getUserSession().getUserIdAsInt(), group, gc.getSiteId(),
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 	}

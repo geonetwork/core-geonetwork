@@ -23,36 +23,38 @@
 package org.fao.geonet.notifier;
 
 import jeeves.resources.dbms.Dbms;
+import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 
+import javax.transaction.TransactionManager;
+
 public class MetadataNotifierTask implements Runnable {
-    private ResourceManager rm;
+    private ServiceContext context;
     private GeonetContext gc;
 
-    public MetadataNotifierTask(ResourceManager rm, GeonetContext gc) {
-        this.rm = rm;
+    public MetadataNotifierTask(ServiceContext context, GeonetContext gc) {
+        this.context = context;
         this.gc = gc;
     }
 
     public void run() {
-        Dbms dbms = null;
         try {
-            dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
-            gc.getBean(MetadataNotifierManager.class).updateMetadataBatch(dbms, gc);
+            final TransactionManager manager = context.getBean(TransactionManager.class);
+            manager.begin();
+            try {
+                gc.getBean(MetadataNotifierManager.class).updateMetadataBatch(context, gc);
+                manager.commit();
+            } catch (Exception x) {
+                manager.rollback();
+                System.out.println(x.getMessage());
+                x.printStackTrace();
+            }
         } catch (Exception x) {
             System.out.println(x.getMessage());
             x.printStackTrace();
-        } finally {
-            if (dbms != null) {
-                try {
-                    rm.close(Geonet.Res.MAIN_DB, dbms);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }

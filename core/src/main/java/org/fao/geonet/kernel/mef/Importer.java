@@ -358,7 +358,7 @@ public class Importer {
                     int userid = context.getUserSession().getUserIdAsInt();
                     String group = null, docType = null, title = null, category = null;
                     boolean ufo = false, indexImmediate = false;
-                    String fcId = dm.insertMetadata(context, dbms, "iso19110", fc.get(index), context.getSerialFactory().getSerial(dbms, "Metadata"), uuid,
+                    String fcId = dm.insertMetadata(context, "iso19110", fc.get(index), uuid,
                             userid, group, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
                     if(Log.isDebugEnabled(Geonet.MEF))
@@ -493,51 +493,15 @@ public class Importer {
         if(Log.isDebugEnabled(Geonet.MEF))
             Log.debug(Geonet.MEF, "Adding metadata with uuid:" + uuid);
 		
-		// Try to insert record with localId provided, if not use a new id.
-		boolean insertedWithLocalId = false;
-		if (localId != null && !localId.equals("")) {
-			try {
-				int iLocalId = Integer.parseInt(localId);
-		
-				// Use the same id to insert the metadata record.
-				// This is an optional element. If present, indicates the
-				// id used locally by the sourceId actor to store the metadata. Its
-				// purpose is just to allow the reuse of the same local id when
-				// reimporting a metadata. 
-				if (!dm.existsMetadata(dbms, iLocalId)) {
-                    if(Log.isDebugEnabled(Geonet.MEF))
-                        Log.debug(Geonet.MEF, "Using given localId: " + localId);
-
-                    //
-                    // insert metadata
-                    //
-                    String docType = "", title = null, category = null;
-                    boolean ufo = false, indexImmediate = false;
-                    dm.insertMetadata(context, dbms, schema, md.get(index), iLocalId, uuid, context.getUserSession().getUserIdAsInt(), groupId, source,
-                        isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
-
-					id.add(index, Integer.toString(iLocalId));
-
-					insertedWithLocalId = true;
-				}
-			} catch (NumberFormatException e) {
-                if(Log.isDebugEnabled(Geonet.MEF)) {
-                    Log.debug(Geonet.MEF, "Invalid localId provided: " + localId + ". Adding record with a new id.");
-                }
-			}
-		} 
-		
-		if (!insertedWithLocalId) {
-            //
-            // insert metadata
-            //
-            int userid = context.getUserSession().getUserIdAsInt();
-            String docType = null, title = null, category = null;
-            boolean ufo = false, indexImmediate = false;
-            id.add(index,
-                    dm.insertMetadata(context, dbms, schema, md.get(index), context.getSerialFactory().getSerial(dbms, "Metadata"), uuid,
-                    userid, groupId, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate));
-		}
+        //
+        // insert metadata
+        //
+        int userid = context.getUserSession().getUserIdAsInt();
+        String docType = null, title = null, category = null;
+        boolean ufo = false, indexImmediate = false;
+        id.add(index,
+                dm.insertMetadata(context, schema, md.get(index), uuid,
+                userid, groupId, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate));
 
 	}
 
@@ -597,13 +561,13 @@ public class Importer {
 	 * 
 	 * @param context
 	 * @param dm
-	 * @param dbms
-	 * @param id
+	 * @param metadataId
 	 * @param privil
 	 * @throws Exception
 	 */
-	private static void addPrivileges(ServiceContext context, DataManager dm, Dbms dbms, String id,
+	private static void addPrivileges(ServiceContext context, DataManager dm,  String metadataId1,
 			Element privil) throws Exception {
+        Integer metadataId = Integer.valueOf(metadataId1);
 		@SuppressWarnings("unchecked")
         List<Element> locGrps = dbms.select("SELECT id,name FROM Groups").getChildren();
 		@SuppressWarnings("unchecked")
@@ -623,10 +587,10 @@ public class Importer {
 
                     if(Log.isDebugEnabled(Geonet.MEF))
                         Log.debug(Geonet.MEF, " - Setting privileges for group : " + grpName);
-				addOperations(context, dm, dbms, group, id, grpId);
+				addOperations(context, dm, group, metadataId, Integer.valueOf(grpId));
 				if (groupOwner) {
                     if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, grpName + " set as group Owner ");
-					dm.setGroupOwner(dbms, id, grpId);
+					dm.setGroupOwner(metadataId, Integer.valueOf(grpId));
 				}
 			}
 		}
@@ -637,14 +601,13 @@ public class Importer {
 	 * 
 	 * @param context
 	 * @param dm
-	 * @param dbms
 	 * @param group
-	 * @param id
+	 * @param metadataId
 	 * @param grpId
 	 * @throws Exception
 	 */
-	private static void addOperations(ServiceContext context, DataManager dm, Dbms dbms, Element group,
-			String id, String grpId) throws Exception {
+	private static void addOperations(ServiceContext context, DataManager dm, Element group,
+			int metadataId, int grpId) throws Exception {
 		@SuppressWarnings("unchecked")
         List<Element> opers = group.getChildren("operation");
 
@@ -660,7 +623,7 @@ public class Importer {
                 // --- operation exists locally
 
                 if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, "   Adding --> " + opName);
-                dm.setOperation(context, dbms, id, grpId, opId + "");
+                dm.setOperation(context, dbms, metadataId, grpId, opId + "");
             }
         }
 	}

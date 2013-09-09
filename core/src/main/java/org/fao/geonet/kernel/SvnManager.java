@@ -305,8 +305,9 @@ public class SvnManager {
      * @param context Describing the servicer and user carrying out operation
      * @throws Exception when something goes wrong
      */
-    public void setHistory(Transaction transaction, String id, ServiceContext context) throws Exception {
+    public void setHistory(String id, ServiceContext context) throws Exception {
 
+        Transaction transaction = context.getBean(TransactionManager.class).getTransaction();
         if (!exists(id))
             return; // not in repo so exit
 
@@ -589,8 +590,16 @@ public class SvnManager {
     private void commitMetadataCategories(ISVNEditor editor, String id, Transaction transaction, DataManager dataMan) throws Exception {
 
         // get categories from the database
-        Element categs = dataMan.getCategories(id);
-        String now = Xml.getString(categs);
+        Collection<MetadataCategory> categs = dataMan.getCategories(id);
+        Element catXml = new Element("results");
+        for (MetadataCategory categ : categs) {
+            catXml.addContent(
+                new Element("record")
+                    .addContent(new Element("id").setText(""+categ.getId()))
+                    .addContent(new Element("name").setText(categ.getName()))
+            );
+        }
+        String now = Xml.getString(catXml);
 
         if (exists(id + "/categories.xml")) {
             // Update the id/categories.xml item in the repository
@@ -622,15 +631,11 @@ public class SvnManager {
     private void commitMetadataStatus(ISVNEditor editor, String id, Transaction transaction, DataManager dataMan) throws Exception {
 
         // get current status from the database
-        Element status = dataMan.getStatus(Integer.valueOf(id));
+        MetadataStatus status = dataMan.getStatus(Integer.valueOf(id));
         if (status == null)
             return;
-        @SuppressWarnings("unchecked")
-        List<Element> statusKids = status.getChildren();
-        if (statusKids.size() == 0)
-            return;
-        status = statusKids.get(0);
-        String now = Xml.getString(status);
+
+        String now = Xml.getString(status.getAsXml());
 
         if (exists(id + "/status.xml")) {
             // Update the id/status.xml item in the repository

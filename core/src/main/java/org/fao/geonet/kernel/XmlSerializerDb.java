@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
@@ -74,28 +75,14 @@ public class XmlSerializerDb extends XmlSerializer {
      * TODO javadoc.
      *
      *
-     * @param schema
-     * @param xml
-     * @param serial
-     * @param source
-     * @param uuid
-     * @param createDate
-     * @param changeDate
-     * @param isTemplate
-     * @param title
-     * @param owner
-     * @param groupOwner
-     * @param docType
-		 * @return
+     * @param newMetadata the metadata to insert
+     * @param dataXml the data to set on the metadata before saving
+     * @param context a service context
+     * @return the saved metadata
      * @throws SQLException
      */
-	public String insert(String schema, Element xml, int serial,
-                         String source, String uuid, String createDate,
-                         String changeDate, String isTemplate, String title,
-                         int owner, String groupOwner, String docType, ServiceContext context)
-					 throws SQLException {
-
-		return insertDb(schema, xml, serial, source, uuid, createDate, changeDate, isTemplate, xml.getQualifiedName(), title, owner, groupOwner, docType);
+    public Metadata insert(final Metadata newMetadata, final Element dataXml,ServiceContext context) throws SQLException {
+		return insertDb(newMetadata, dataXml, context);
 
 	}
 

@@ -286,10 +286,6 @@ class Harvester extends BaseAligner {
 
 				//--- generate a new metadata id
 		
-				int id = context.getSerialFactory().getSerial(dbms, "Metadata");
-                // TODO end confusion about datatypes
-                String id$ = Integer.toString(id);
-
 				String docType = "";
 				if (!transformIt && (doc.getDocType() != null)) {
 					docType = Xml.getString(doc.getDocType());
@@ -298,7 +294,7 @@ class Harvester extends BaseAligner {
 				//--- check for duplicate uuid - violates constraints on metadata table
 				//--- if we attempt insert
 				boolean alreadyAdded = !newUuids.add(uuid);
-				boolean alreadyInDb  = (dataMan.getMetadataId(dbms,uuid) != null);
+				boolean alreadyInDb  = (dataMan.getMetadataId(uuid) != null);
 				if (alreadyAdded || alreadyInDb) {
 					log.error("Uuid "+uuid+" already exists in this set/database - cannot insert");
 					result.couldNotInsert++;
@@ -313,7 +309,7 @@ class Harvester extends BaseAligner {
                     int owner = 1;
                     String category = null, createDate = new ISODate().toString(), changeDate = createDate;
                     boolean ufo = false, indexImmediate = false;
-					dataMan.insertMetadata(context, dbms, schema, md, id, uuid, owner, groupOwner, params.uuid,
+					dataMan.insertMetadata(context, schema, md, uuid, owner, groupOwner, params.uuid,
                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 				}

@@ -102,29 +102,14 @@ public class XmlSerializerSvn extends XmlSerializer {
 		 * is generated on the metadata (eg. from editor).
      *
      *
-     * @param schema
-     * @param xml
-     * @param id
-     * @param source
-     * @param uuid
-     * @param createDate
-     * @param changeDate
-     * @param isTemplate
-     * @param title
-     * @param owner
-     * @param groupOwner
-     * @param docType
-     * @param context
-     * @return
+     * @param newMetadata the metadata to insert
+     * @param dataXml the data to set on the metadata before saving
+     * @param context a service context
+     * @return the saved metadata
      * @throws SQLException
      */
-	public String insert(String schema, Element xml, int id,
-                         String source, String uuid, String createDate,
-                         String changeDate, String isTemplate, String title,
-                         int owner, String groupOwner, String docType, ServiceContext context)
-			 throws Exception {
-
-		return insertDb(schema, xml, id, source, uuid, createDate, changeDate, isTemplate, xml.getQualifiedName(), title, owner, groupOwner, docType);
+    public Metadata insert(final Metadata newMetadata, final Element dataXml,ServiceContext context) throws SQLException {
+		return insertDb(newMetadata, dataXml, context);
 	}
 
     /**

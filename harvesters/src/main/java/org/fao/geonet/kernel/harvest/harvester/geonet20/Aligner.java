@@ -31,6 +31,7 @@ import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
@@ -169,7 +170,7 @@ public class Aligner
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), params.uuid, Integer.parseInt(params.ownerId), group, remoteUuid,
+        String id = dataMan.insertMetadata(context, schema, md, params.uuid, Integer.parseInt(params.ownerId), group, remoteUuid,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 
@@ -290,15 +291,17 @@ public class Aligner
 		//--- remove old categories
 
 		@SuppressWarnings("unchecked")
-        List<Element> locCateg = dataMan.getCategories(dbms, id).getChildren();
+        List<MetadataCategory> locCateg = dataMan.getCategories(dbms, id).getChildren();
 
-        for (Element el : locCateg) {
-            String catId = el.getChildText("id");
-            String catName = el.getChildText("name");
+        for (MetadataCategory el : locCateg) {
+            int catId = el.getId();
+            String catName = el.getName();
 
             if (!existsCategory(catList, catName)) {
-                if(log.isDebugEnabled()) log.debug("  - Unsetting category : " + catName);
-                dataMan.unsetCategory(context, dbms, id, catId);
+                if(log.isDebugEnabled()) {
+                    log.debug("  - Unsetting category : " + catName);
+                }
+                dataMan.unsetCategory(context, id, catId);
             }
         }
 
@@ -308,12 +311,13 @@ public class Aligner
             String catName = categ.getAttributeValue("name");
             String catId = localCateg.getID(catName);
 
-            if (catId != null)
-            //--- it is not necessary to query the db. Anyway...
-            {
-                if (!dataMan.isCategorySet(dbms, id, catId)) {
-                    if(log.isDebugEnabled()) log.debug("  - Setting category : " + catName);
-                    dataMan.setCategory(context, dbms, id, catId);
+            if (catId != null) {
+                //--- it is not necessary to query the db. Anyway...
+                if (!dataMan.isCategorySet(id, Integer.valueOf(catId))) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("  - Setting category : " + catName);
+                    }
+                    dataMan.setCategory(context, id, catId);
                 }
             }
         }

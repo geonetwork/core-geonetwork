@@ -198,7 +198,8 @@ public class Aligner extends BaseAligner
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, Integer.parseInt(params.ownerId), group, params.uuid,
+        String id = dataMan.insertMetadata(context, schema, md, ri.uuid,
+                Integer.parseInt(params.ownerId), group, params.uuid,
                          isTemplate, docType, title, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);

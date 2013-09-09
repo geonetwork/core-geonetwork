@@ -275,9 +275,9 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 						String group = "1"; 
 						int user = context.getUserSession().getUserIdAsInt(); 
 						boolean ufo = false, indexImmediate = false;
-						int sId = context.getSerialFactory().getSerial(dbms, "Metadata");
 
-						dataMan.insertMetadata(context, dbms, mdInfo.schemaId, (Element)elem.clone(), sId, uuid, user, group, gc.getSiteId(), "s", docType, title, category, createDate, changeDate, ufo, indexImmediate); 
+                        String sId = dataMan.insertMetadata(context, dbms, mdInfo.schemaId, (Element) elem.clone(), uuid, user, group,
+                                gc.getSiteId(), "s", docType, title, category, createDate, changeDate, ufo, indexImmediate);
 						subtemplates.add(sId);
 					}
 				}

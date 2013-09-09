@@ -129,10 +129,9 @@ public class AddDefault implements Service {
                     String groupOwner = "1";
                     String docType = null, category = null, createDate = null, changeDate = null;
                     boolean ufo = true, indexImmediate = true;
-					dataMan.insertMetadata(context, dbms, schemaName, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, owner, groupOwner, siteId,
+					dataMan.insertMetadata(context, schemaName, xml, uuid, owner, groupOwner, siteId,
                                            isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
-					dbms.commit();
 					status = "loaded";
 				} catch (Exception e) {
 					serviceStatus = "false";

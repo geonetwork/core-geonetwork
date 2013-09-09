@@ -30,6 +30,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
@@ -68,15 +69,15 @@ public class Get implements Service
 		//--- check access
 		int iLocalId = Integer.parseInt(id);
 		
-		if (!dataMan.existsMetadata(dbms, iLocalId))
+		if (!dataMan.existsMetadata(iLocalId))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		//-----------------------------------------------------------------------
 		//--- retrieve metadata status
 
-		Element stats = dataMan.getStatus(dbms, iLocalId);
-		stats.setName(Jeeves.Elem.RESPONSE);
-		return stats;
+		Element status = dataMan.getStatus(iLocalId).getAsXml();
+        status.setName(Jeeves.Elem.RESPONSE);
+		return status;
 	}
 }
 

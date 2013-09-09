@@ -260,7 +260,7 @@ private SearchController _searchController;
         //
         String docType = null, title = null, isTemplate = null;
         boolean ufo = true, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userId, group, source,
+        String id = dataMan.insertMetadata(context, schema, xml, uuid, userId, group, source,
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
         // Set metadata as public if setting enabled

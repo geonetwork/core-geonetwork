@@ -267,7 +267,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
         String createDate = new ISODate().toString();
         String docType = null, title = null, isTemplate = null, group = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.ownerId), group, source,
+        String id = dataMan.insertMetadata(context, schema, xml, uuid, Integer.parseInt(params.ownerId), group, source,
                          isTemplate, docType, title, category, createDate, createDate, ufo, indexImmediate);
 
 

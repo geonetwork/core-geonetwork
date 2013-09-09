@@ -236,64 +236,18 @@ public abstract class XmlSerializer {
      * TODO javadoc.
      *
      *
-     * @param schema
-     * @param xml
-     * @param serial
-     * @param source
-     * @param uuid
-     * @param createDateRaw
-     * @param changeDateRaw
-     * @param isTemplate
-     * @param root
-     * @param title
-     * @param owner
-     * @param groupOwner
-     * @param docType
-     * @return
+     * @param newMetadata the metadata to insert
+     * @param dataXml the data to set on the metadata before saving
+     * @param context a service context
+     * @return the saved metadata
      * @throws SQLException
      */
-	protected String insertDb(final String schema, final Element xml, final int serial,
-                              final String source, final String uuid, final String createDateRaw,
-                              final String changeDateRaw, final String isTemplate, final String root, final String title,
-                              final int owner, final String groupOwner, final String docType) throws SQLException {
+	protected Metadata insertDb(final Metadata newMetadata, final Element dataXml,ServiceContext context) throws SQLException {
+		if (resolveXLinks()) Processor.removeXLink(dataXml);
 
-
-		if (resolveXLinks()) Processor.removeXLink(xml);
-
-		String date = new ISODate().toString();
-
-        String createDate = createDateRaw;
-        if (createDate == null)
-			createDate = date;
-
-        String changeDate = changeDateRaw;
-        if (changeDate == null)
-			changeDate = date;
-
-        Metadata metadata = new Metadata();
-        metadata.setDataAndFixCR(xml)
-                .setUuid(uuid);
-        metadata.getSourceInfo()
-                .setOwner(owner)
-                .setSource(source);
-
-        if (groupOwner != null) {
-            metadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner));
-        }
-
-        metadata.getDataInfo()
-                .setSchemaId(schema)
-                .setChangeDate(new ISODate(changeDate))
-                .setCreateDate(new ISODate(createDate))
-                .setDoctype(docType)
-                .setRoot(root)
-                .setTemplate(Constants.toBoolean_fromYNChar(isTemplate.charAt(0)))
-                .setTitle(title);
-        metadata.getHarvestInfo()
-                .setHarvested(false);
-
-        Metadata savedMetadata = _metadataRepository.save(metadata);
-		return Integer.toString(savedMetadata.getId());
+        newMetadata.setData(Xml.getString(dataXml));
+        Metadata savedMetadata = _metadataRepository.save(newMetadata);
+		return savedMetadata;
 	}
 
     /**
@@ -382,10 +336,7 @@ public abstract class XmlSerializer {
                                 String changeDate, boolean updateDateStamp, String uuid, ServiceContext context)
 		 throws Exception;
 
-	public abstract String insert(String schema, Element xml,
-                                  int serial, String source, String uuid, String createDate,
-                                  String changeDate, String isTemplate, String title,
-                                  int owner, String groupOwner, String docType, ServiceContext context)
+	public abstract Metadata insert(Metadata metadata, Element dataXml, ServiceContext context)
 			 throws Exception;
 
 
