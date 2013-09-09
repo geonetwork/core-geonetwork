@@ -43,7 +43,7 @@
 								</xsl:call-template>
                                 <xsl:if test="/root/gui/reqService='metadata.show.embedded'">
                                     <br/><br/>
-                                    <a href="metadata.show?id={geonet:info/id}&#38;currTab=complete" target="_{$fileId}"><xsl:value-of select="/root/gui/strings/completeTab"/></a>
+                                    <a href="metadata.show?fileIdentifier={gmd:fileIdentifier/gco:CharacterString}&#38;currTab=complete" target="_{$fileId}"><xsl:value-of select="/root/gui/strings/completeTab"/></a>
                                 </xsl:if>
                             </td>
                         </tr>
