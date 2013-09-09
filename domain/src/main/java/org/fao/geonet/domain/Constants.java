@@ -15,11 +15,11 @@ public final class Constants {
     /**
      * The character used by the JPAWorkaround columns that need a character for boolean false.
      */
-    public static final char YN_DISABLED = 'n';
+    public static final char YN_FALSE = 'n';
     /**
      * The character used by the JPAWorkaround columns that need a character for boolean true.
      */
-    public static final char YN_ENABLED = 'y';
+    public static final char YN_TRUE = 'y';
 
 
     /**
@@ -32,9 +32,9 @@ public final class Constants {
     public static char toYN_EnabledChar(boolean enabled) {
         char enabledChar;
         if (enabled) {
-            enabledChar = YN_ENABLED;
+            enabledChar = YN_TRUE;
         } else {
-            enabledChar = YN_DISABLED;
+            enabledChar = YN_FALSE;
         }
         return enabledChar;
     }
@@ -46,6 +46,6 @@ public final class Constants {
      * @return the corresponding boolean value
      */
     public static boolean toBoolean_fromYNChar(char enabled) {
-        return enabled == Constants.YN_ENABLED;
+        return enabled == Constants.YN_TRUE;
     }
 }

@@ -23,7 +23,7 @@ public class MetadataDataInfo implements Serializable {
     private ISODate _changeDate = new ISODate();
     private ISODate _createDate = new ISODate();
     private String _schemaId;
-    private char _template = Constants.YN_DISABLED;
+    private char _template = Constants.YN_FALSE;
     private String _root;
     private String _doctype;
     private int _displayOrder;

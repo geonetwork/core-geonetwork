@@ -19,7 +19,7 @@ import javax.persistence.Transient;
 @Table(name = "thesaurus")
 public class ThesaurusActivation {
     private String _id;
-    private char _activated = Constants.YN_ENABLED;
+    private char _activated = Constants.YN_TRUE;
 
     /**
      * Get the id of the ThesaurusActivation.   This is a generated value and as such new instances should not have this set as it will simply be ignored

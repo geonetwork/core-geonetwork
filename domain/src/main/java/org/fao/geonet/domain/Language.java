@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import javax.annotation.Nonnull;
 import javax.persistence.*;
 
 /**
@@ -18,8 +19,8 @@ import javax.persistence.*;
 public class Language {
     String _id;
     String _name;
-    char _inspire = Constants.YN_DISABLED;
-    char _defaultLanguage = Constants.YN_DISABLED;
+    char _inspire = Constants.YN_FALSE;
+    char _defaultLanguage = Constants.YN_FALSE;
 
     /**
      * Get the id of the language. This is a generated value and as such new instances should not have this set as it will simply be ignored
@@ -30,6 +31,7 @@ public class Language {
     @Id
     @GeneratedValue
     @Column(length = 5)
+    @Nonnull
     public String getId() {
         return _id;
     }
@@ -40,7 +42,7 @@ public class Language {
      * 
      * @param id the id of the language
      */
-    public void setId(String id) {
+    public void setId(@Nonnull final String id) {
         this._id = id;
     }
 

@@ -28,7 +28,7 @@ public class MetadataNotifier {
     private int _id;
     private String _name;
     private String _url;
-    private char _enabled = Constants.YN_DISABLED;
+    private char _enabled = Constants.YN_FALSE;
     private String _username;
     private char[] _password;
     private List<MetadataNotification> _notifications = new ArrayList<MetadataNotification>();

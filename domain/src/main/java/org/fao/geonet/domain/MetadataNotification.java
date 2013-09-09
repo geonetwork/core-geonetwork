@@ -19,7 +19,7 @@ import javax.persistence.Transient;
 @Table(name = "metadatanotifications")
 public class MetadataNotification {
     private MetadataNotificationId _id;
-    private char _notified = Constants.YN_DISABLED;
+    private char _notified = Constants.YN_FALSE;
     private String _metadataUuid;
     private MetadataNotificationAction _action;
     private String _errorMessage;

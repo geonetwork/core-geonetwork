@@ -29,6 +29,17 @@ public class StatusValueRepositoryTest extends AbstractSpringDataTest {
         assertEquals(status1, _repo.findOne(status1.getId()));
         assertEquals(status, _repo.findOne(status.getId()));
     }
+    @Test
+    public void testFindOneByName() {
+        StatusValue status = newStatusValue();
+        status = _repo.save(status);
+
+        StatusValue status1 = newStatusValue();
+        status1 = _repo.save(status1);
+
+        assertEquals(status1, _repo.findOneByName(status1.getName()));
+        assertEquals(status, _repo.findOneByName(status.getName()));
+    }
     private StatusValue newStatusValue() {
 
         return newStatusValue(_inc);

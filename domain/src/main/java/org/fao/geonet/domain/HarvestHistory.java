@@ -26,7 +26,7 @@ public class HarvestHistory {
     private String _harvesterUuid;
     private String _harvesterName;
     private String _harvesterType;
-    private char _deleted = Constants.YN_DISABLED;
+    private char _deleted = Constants.YN_FALSE;
     private String _info;
     private String _params;
 

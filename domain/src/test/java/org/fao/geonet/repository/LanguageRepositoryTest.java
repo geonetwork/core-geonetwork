@@ -30,9 +30,21 @@ public class LanguageRepositoryTest extends AbstractSpringDataTest {
         assertEquals(language1, _repo.findOne(language1.getId()));
         assertEquals(language, _repo.findOne(language.getId()));
     }
+    @Test
+    public void testFindOneByDefaultLanguage() {
+        Language language = newLanguage();
+        language.setDefaultLanguage(true);
+        language = _repo.save(language);
+
+        Language language1 = newLanguage();
+        language1.setDefaultLanguage(false);
+        language1 = _repo.save(language1);
+
+        assertEquals(language1, _repo.findOneByDefaultLanguage());
+    }
 
     @Test
-    public void testFindByCode() {
+    public void testFindByInspireFlag() {
         Language language1 = newLanguage();
         language1 = _repo.save(language1);
 

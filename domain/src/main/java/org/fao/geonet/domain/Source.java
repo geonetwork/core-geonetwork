@@ -19,7 +19,7 @@ import javax.persistence.Transient;
 public class Source {
     private String uuid;
     private String name;
-    private char _local = Constants.YN_ENABLED;
+    private char _local = Constants.YN_TRUE;
 
     /**
      * Get the uuid of the source.

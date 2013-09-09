@@ -28,7 +28,7 @@ public class MetadataNotificationRepositoryImpl implements MetadataNotificationR
 
         final Path<Character> notifiedPath = notificationRoot.get(MetadataNotification_.notified_JPAWorkaround);
         final Predicate notifiedIsNull = cb.isNull(notifiedPath);
-        final Predicate notNotified = cb.equal(notifiedPath, Constants.YN_DISABLED);
+        final Predicate notNotified = cb.equal(notifiedPath, Constants.YN_FALSE);
 
         final Path<MetadataNotificationAction> actionPath = notificationRoot.get(MetadataNotification_.action);
 

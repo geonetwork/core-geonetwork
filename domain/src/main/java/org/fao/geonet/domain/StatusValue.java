@@ -27,7 +27,7 @@ import javax.persistence.Transient;
 public class StatusValue extends Localized {
     private int _id;
     private String _name;
-    private char _reserved = Constants.YN_DISABLED;
+    private char _reserved = Constants.YN_FALSE;
     private int displayOrder;
 
     /**

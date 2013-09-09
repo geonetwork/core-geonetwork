@@ -15,7 +15,7 @@ import javax.persistence.Transient;
 @Embeddable
 @Access(AccessType.PROPERTY)
 public class MetadataHarvestInfo {
-    private char _harvested = Constants.YN_DISABLED;
+    private char _harvested = Constants.YN_FALSE;
     private String _uuid;
     private String _uri;
 

@@ -19,4 +19,11 @@ public interface LanguageRepositoryCustom {
      * @return Find all the languages based on whether the language is an inspire language or not.
      */
     List<Language> findAllByInspireFlag(boolean inspire);
+
+    /**
+     * Find the default language.
+     *
+     * @return the default language.
+     */
+    Language findOneByDefaultLanguage();
 }

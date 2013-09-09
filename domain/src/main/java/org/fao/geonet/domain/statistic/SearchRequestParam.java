@@ -20,7 +20,7 @@ public class SearchRequestParam {
     private double _similarity;
     private String _lowerText;
     private String _upperText;
-    private char _inclusive = Constants.YN_DISABLED;
+    private char _inclusive = Constants.YN_FALSE;
     private SearchRequest _request;
 
     /**
