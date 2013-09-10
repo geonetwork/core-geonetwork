@@ -25,6 +25,7 @@ package org.fao.geonet.services.main;
 
 import jeeves.component.ProfileManager;
 import jeeves.constants.Jeeves;
+import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
@@ -43,6 +44,10 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.kernel.region.RegionsDAO;
+import org.fao.geonet.repository.IsoLanguageRepository;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
 import org.jdom.Element;
 
@@ -141,7 +146,7 @@ public class Info implements Service {
                                 }));
 
 			else if (type.equals("categories"))
-				result.addContent(Lib.local.retrieve(dbms, "Categories"));
+				result.addContent(context.getBean(MetadataCategoryRepository.class).findAllAsXml());
 
 			else if (type.equals("groups"))   {
                 Element r = getGroups(context, dbms, params.getChildText("profile"), false);
@@ -154,7 +159,7 @@ public class Info implements Service {
             }
 
 			else if (type.equals("operations"))
-				result.addContent(Lib.local.retrieve(dbms, "Operations"));
+				result.addContent(context.getBean(OperationRepository.class).findAllAsXml());
 
 			else if (type.equals("regions")) {
 		        RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
@@ -163,7 +168,7 @@ public class Info implements Service {
 			}
 
             else if (type.equals("isolanguages"))
-                result.addContent(Lib.local.retrieve(dbms, "IsoLanguages"));
+                result.addContent(context.getBean(IsoLanguageRepository.class).findAllAsXml());
 
 			else if (type.equals("sources"))
 				result.addContent(getSources(dbms, sm));
@@ -191,7 +196,7 @@ public class Info implements Service {
 				result.addContent(getSchemas(gc.getBean(SchemaManager.class)));
 
 			else if (type.equals("status"))
-				result.addContent(Lib.local.retrieve(dbms, "StatusValues"));
+				result.addContent(context.getBean(StatusValueRepository.class).findAllAsXml());
 
 			else
 				throw new BadParameterEx("Unknown type parameter value.", type);
@@ -312,7 +317,7 @@ public class Info implements Service {
      * @return
      * @throws java.sql.SQLException
      */
-    private Element getGroups(ServiceContext context, Dbms dbms, String profile, boolean includingSystemGroups) throws SQLException {
+    private Element getGroups(ServiceContext context, String profile, boolean includingSystemGroups) throws SQLException {
 		UserSession session = context.getUserSession();
 		if (!session.isAuthenticated()) {
 			return Lib.local.retrieveWhereOrderBy(dbms, "Groups", "id < ?", "id", 2);

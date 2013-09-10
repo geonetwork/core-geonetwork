@@ -30,6 +30,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.jdom.Element;
 
 //=============================================================================
@@ -49,9 +50,7 @@ public class List implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
-		return Lib.local.retrieve(dbms, "Categories").setName(Jeeves.Elem.RESPONSE);
+		return context.getBean(MetadataCategoryRepository.class).findAllAsXml().setName(Jeeves.Elem.RESPONSE);
 	}
 }
 

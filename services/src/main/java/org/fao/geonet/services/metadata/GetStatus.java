@@ -34,6 +34,7 @@ import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
@@ -96,7 +97,7 @@ public class GetStatus implements Service
 		//-----------------------------------------------------------------------
 		//--- retrieve status values
 
-		Element elStatus = Lib.local.retrieve(dbms, "StatusValues");
+		Element elStatus = gc.getBean(StatusValueRepository.class).findAllAsXml();
 
 		@SuppressWarnings("unchecked")
         List<Element> kids = elStatus.getChildren();
@@ -121,7 +122,7 @@ public class GetStatus implements Service
 		Set<Integer> ids = new HashSet<Integer>();
 		ids.add(Integer.valueOf(id));
 
-		Element cRevs = am.getContentReviewers(dbms, ids);
+		Element cRevs = am.getContentReviewers(ids);
 		cRevs.setName("contentReviewers");
 
 		//-----------------------------------------------------------------------

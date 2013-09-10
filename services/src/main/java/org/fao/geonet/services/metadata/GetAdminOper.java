@@ -23,24 +23,28 @@
 
 package org.fao.geonet.services.metadata;
 
+import static org.springframework.data.jpa.domain.Specifications.*;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.List;
 import java.util.Set;
@@ -73,24 +77,22 @@ public class GetAdminOper implements Service
 		DataManager   dm = gc.getBean(DataManager.class);
 		AccessManager am = gc.getBean(AccessManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		String id = Utils.getIdentifierFromParameters(params, context);
+		String metadataId = Utils.getIdentifierFromParameters(params, context);
 
 		//-----------------------------------------------------------------------
 		//--- check access
 
-		MdInfo info = dm.getMetadataInfo(dbms, id);
+		Metadata info = context.getBean(MetadataRepository.class).findOne(metadataId);
 
 		if (info == null)
-			throw new MetadataNotFoundEx(id);
+			throw new MetadataNotFoundEx(metadataId);
 
-		Element ownerId = new Element("ownerid").setText(info.owner);
-		Element groupOwner = new Element("groupOwner").setText(info.groupOwner);
-		Element hasOwner = new Element("owner"); 
-		if (am.isOwner(context,id)) 
-			hasOwner.setText("true");
-		else
+        Element ownerId = new Element("ownerid").setText(info.getSourceInfo().getOwner() + "");
+        Element groupOwner = new Element("groupOwner").setText(info.getSourceInfo().getGroupOwner() + "");
+        Element hasOwner = new Element("owner");
+        if (am.isOwner(context, metadataId))
+            hasOwner.setText("true");
+        else
 			hasOwner.setText("false");
 
 		//--- get all operations
@@ -113,10 +115,11 @@ public class GetAdminOper implements Service
         //-----------------------------------------------------------------------
 		//--- retrieve groups operations
 
-		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress(), false);
+		Set<Integer> userGroups = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
 
-		Element elGroup = Lib.local.retrieve(dbms, "Groups");
+		Element elGroup = context.getBean(GroupRepository.class).findAllAsXml();
 
+        final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
         OperationAllowedRepository opAllowRepository = context.getBean(OperationAllowedRepository.class);
 
 		@SuppressWarnings("unchecked")
@@ -129,18 +132,19 @@ public class GetAdminOper implements Service
 			//--- get all group informations (user member and user profile)
 			
 			el.setAttribute("userGroup", userGroups.contains(sGrpId) ? "true" : "false");
-			
-			String query = "SELECT profile FROM UserGroups WHERE userId=? AND groupId=?";
-			Element profiles = dbms.select(query, context.getUserSession().getUserIdAsInt(), grpId);
-			@SuppressWarnings("unchecked")
-            List<Element> profilesList = profiles.getChildren();
-			for (Element pEl : profilesList) {
-				String profile = pEl.getChildText("profile");
-				el.addContent(new Element("userProfile").setText(profile));
+
+            final Specifications<UserGroup> hasUserIdAndGroupId = where(UserGroupSpecs.hasGroupId(grpId)).and(UserGroupSpecs.hasUserId
+                    (context
+                    .getUserSession().getUserIdAsInt()));
+            List<UserGroup> userGroupEntities = userGroupRepository.findAll(hasUserIdAndGroupId);
+			for (UserGroup ug : userGroupEntities) {
+				el.addContent(new Element("userProfile").setText(ug.getProfile().toString()));
 			}
 
             //--- get all operations that this group can do on given metadata
-            List<OperationAllowed> opAllowList = opAllowRepository.findAllById_GroupIdAndId_MetadataId(grpId, Integer.valueOf(id));
+            Specifications<OperationAllowed> hasGroupIdAndMetadataId = where(OperationAllowedSpecs.hasGroupId(grpId)).and
+                    (OperationAllowedSpecs.hasMetadataId(metadataId));
+            List<OperationAllowed> opAllowList = opAllowRepository.findAll(hasGroupIdAndMetadataId);
 
 			for (Operation operation : operationList) {
 				String operId = Integer.toString(operation.getId());
@@ -151,15 +155,15 @@ public class GetAdminOper implements Service
 				boolean bFound = false;
 
 				for (OperationAllowed operationAllowed : opAllowList) {
-					if (operation.getId() == operationAllowed.getId().getOperationId())
-					{
+					if (operation.getId() == operationAllowed.getId().getOperationId()) {
 						bFound = true;
 						break;
 					}
 				}
 
-				if (bFound)
+				if (bFound) {
 					elGrpOper.addContent(new Element(Geonet.Elem.ON));
+                }
 
 				el.addContent(elGrpOper);
 			}
@@ -169,7 +173,7 @@ public class GetAdminOper implements Service
 		//--- put all together
 
 		Element elRes = new Element(Jeeves.Elem.RESPONSE)
-										.addContent(new Element(Geonet.Elem.ID).setText(id))
+										.addContent(new Element(Geonet.Elem.ID).setText(metadataId))
 										.addContent(elOper)
 										.addContent(elGroup)
 										.addContent(ownerId)

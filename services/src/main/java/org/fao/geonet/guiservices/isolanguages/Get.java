@@ -28,7 +28,9 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.IsoLanguageRepository;
 import org.jdom.Element;
 
 //=============================================================================
@@ -45,10 +47,9 @@ public class Get implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
 		if (languages == null)
-			languages = Lib.local.retrieve(dbms, "IsoLanguages");
+			languages = context.getBean(IsoLanguageRepository.class).findAllAsXml();
 
 		return (Element) languages.clone();
 	}

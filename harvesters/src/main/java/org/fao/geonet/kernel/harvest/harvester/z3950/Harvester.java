@@ -155,11 +155,10 @@ class Harvester extends BaseAligner {
 		request.addContent(new Element("from"));
 		request.addContent(new Element("to"));
 
-		Element categories = Lib.local.retrieve(dbms, "Categories");
-        if(log.isDebugEnabled()) log.debug("categories "+Xml.getString(categories));
-
 		Element repositories = new Info().getZRepositories(context, settingMan);
-        if(log.isDebugEnabled()) log.debug("repos "+Xml.getString(repositories));
+        if(log.isDebugEnabled()) {
+            log.debug("repos "+Xml.getString(repositories));
+        }
 
 		// -- build a map of collection code versus repository name for 
 		// -- assigning the categories
@@ -170,7 +169,7 @@ class Harvester extends BaseAligner {
         // -- add new category for each repository
 		boolean addcateg = false;
 		for (String repo : params.getRepositories()) {
-			Element repoElem = Xml.selectElement(repositories,"record[id='"+repo+"']");
+			Element repoElem = Xml.selectElement(repositories, "record[id='"+repo+"']");
 			if (repoElem != null) {
 				Element repoId  = repoElem.getChild("id");
 				String repoName = repoElem.getChildText("name");
@@ -183,7 +182,7 @@ class Harvester extends BaseAligner {
 				categName = categName.toLowerCase();
 				catCodes.put(repoId.getAttributeValue("serverCode")+":"+repoId.getAttributeValue("code"), categName);
 
-				if (Xml.selectElement(categories,"record[name='"+categName+"']") == null) {
+				if (categoryRepository.findOneByNameIgnoreCase(categName) == null) {
                     MetadataCategory category = new MetadataCategory();
                     category.setName(categName);
                     categoryRepository.save(category);

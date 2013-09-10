@@ -31,160 +31,114 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 //=============================================================================
 
-public class LocalLib
-{
+public class LocalLib {
 
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
-	public void update(Dbms dbms, String baseTable, int id, Element label) throws SQLException
-	{
-		@SuppressWarnings("unchecked")
-        List<Element> labels = label.getChildren();
+    public Element retrieveWhere(Dbms dbms, String table, String where, Object... args) throws SQLException {
+        return retrieve(dbms, table, null, where, null, args);
+    }
 
-		for (Element locText : labels)
-		{
-			String langId = locText.getName();
-			String value  = locText.getText();
+    //-----------------------------------------------------------------------------
 
-			update(dbms, baseTable, id, langId, value);
-		}
-	}
+    public Element retrieveWhereOrderBy(Dbms dbms, String table, String where, String orderBy, Object... args) throws SQLException {
+        return retrieve(dbms, table, null, where, orderBy, args);
+    }
 
-	//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
-	public void update(Dbms dbms, String baseTable, int id, String langId,
-							 String label) throws SQLException
-	{
-		String query = "UPDATE "+ baseTable +"Des SET label=? WHERE idDes=? AND langId=?";
+    public Element retrieveById(Dbms dbms, String table, String id) throws SQLException {
+        return retrieve(dbms, table, id, null, null, Integer.valueOf(id));
+    }
 
-		dbms.execute(query, label, id, langId);
-	}
+    //-----------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //-----------------------------------------------------------------------------
 
-	//-----------------------------------------------------------------------------
+    private Element retrieve(Dbms dbms, String table, String id, String where, String orderBy, Object... args)
+            throws SQLException {
+        String query1 = "SELECT * FROM " + table;
+        String query2 = "SELECT * FROM " + table + "Des";
 
-	public Element retrieve(Dbms dbms, String table) throws SQLException
-	{
-		return retrieve(dbms, table, null, null, null, (Object[])null);
-	}
+        if (id == null) {
+            if (where != null) {
+                query1 += " WHERE " + where;
+            }
+        } else {
+            query1 += " WHERE id=?";
+            query2 += " WHERE idDes=?";
+        }
 
-	//-----------------------------------------------------------------------------
+        if (orderBy != null)
+            query1 += " ORDER BY " + orderBy;
 
-	public Element retrieveWhere(Dbms dbms, String table, String where, Object... args) throws SQLException
-	{
-		return retrieve(dbms, table, null, where, null, args);
-	}
+        Element result = dbms.select(query1, args);
 
-	//-----------------------------------------------------------------------------
-
-	public Element retrieveWhereOrderBy(Dbms dbms, String table, String where, String orderBy, Object... args) throws SQLException
-	{
-		return retrieve(dbms, table, null, where, orderBy, args);
-	}
-
-	//-----------------------------------------------------------------------------
-
-	public Element retrieveById(Dbms dbms, String table, String id) throws SQLException
-	{
-		return retrieve(dbms, table, id, null, null, Integer.valueOf(id));
-	}
-
-	//-----------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//-----------------------------------------------------------------------------
-
-	private Element retrieve(Dbms dbms, String table, String id, String where, String orderBy, Object... args)
-												throws SQLException
-	{
-		String query1 = "SELECT * FROM "+table;
-		String query2 = "SELECT * FROM "+table+"Des";
-
-		if (id == null)
-		{
-			if (where != null)
-				query1 += " WHERE "+ where;
-		}
-		else
-		{
-			query1 += " WHERE id=?";
-			query2 += " WHERE idDes=?";
-		}
-
-		if (orderBy != null)
-			query1 += " ORDER BY "+ orderBy;
-
-		Element result = dbms.select(query1, args);
-
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> base = result.getChildren();
 
-		final List<Element> des;
-		if (id != null) {
-		    @SuppressWarnings("unchecked")
+        final List<Element> des;
+        if (id != null) {
+            @SuppressWarnings("unchecked")
             final List<Element> tmp = dbms.select(query2, args).getChildren();
-		    des = tmp;
-		}
-		else {
-		    @SuppressWarnings("unchecked")
+            des = tmp;
+        } else {
+            @SuppressWarnings("unchecked")
             final List<Element> tmp = dbms.select(query2).getChildren();
-		    des = tmp;
-		}
+            des = tmp;
+        }
 
-		//--- preprocess data for faster access
+        //--- preprocess data for faster access
 
-		Map<String, List<String>> langData = new HashMap<String, List<String>>();
+        Map<String, List<String>> langData = new HashMap<String, List<String>>();
 
-		for (Object o : des)
-		{
-			Element loc = (Element) o;
+        for (Object o : des) {
+            Element loc = (Element) o;
 
-			String iddes = loc.getChildText("iddes");
-			String lang  = loc.getChildText("langid");
-			String label = loc.getChildText("label");
+            String iddes = loc.getChildText("iddes");
+            String lang = loc.getChildText("langid");
+            String label = loc.getChildText("label");
 
-			List<String> list = langData.get(iddes);
+            List<String> list = langData.get(iddes);
 
-			if (list == null)
-			{
-				list = new ArrayList<String>();
-				langData.put(iddes, list);
-			}
+            if (list == null) {
+                list = new ArrayList<String>();
+                langData.put(iddes, list);
+            }
 
-			list.add(lang);
-			list.add(label);
-		}
+            list.add(lang);
+            list.add(label);
+        }
 
-		//--- fill results
+        //--- fill results
 
-		for (Object o : base)
-		{
-			Element record = (Element) o;
-			Element labels = new Element("label");
+        for (Object o : base) {
+            Element record = (Element) o;
+            Element labels = new Element("label");
 
-			record.addContent(labels);
+            record.addContent(labels);
 
-			id = record.getChildText("id");
+            id = record.getChildText("id");
 
-			List<String> list = langData.get(id);
-			if(list != null) {
-				for (int j=0; j<list.size(); j+=2) {
-					labels.addContent(new Element(list.get(j)).setText(list.get(j+1)));
-				}
-			}
-			else {
-				System.out.println("WARNING: CORRUPT DATA IN DATABASE: No localization found for record in table " + table + " with id: " + id + ", skipping it.");
+            List<String> list = langData.get(id);
+            if (list != null) {
+                for (int j = 0; j < list.size(); j += 2) {
+                    labels.addContent(new Element(list.get(j)).setText(list.get(j + 1)));
+                }
+            } else {
+                System.out.println("WARNING: CORRUPT DATA IN DATABASE: No localization found for record in table " + table + " with id: " + id + ", skipping it.");
 
-			}
+            }
 
-		}
+        }
 
-		return result.setName(table.toLowerCase());
-	}
+        return result.setName(table.toLowerCase());
+    }
 }
 
 //=============================================================================
