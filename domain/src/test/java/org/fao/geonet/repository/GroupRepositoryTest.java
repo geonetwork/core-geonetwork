@@ -97,7 +97,8 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
         assertSameContents(savedGroup, _repo.findByEmail(savedGroup.getEmail()));
         assertNull(_repo.findByEmail("some wrong email"));
     }
-    
+
+    @Test
     public void testFindReservedGroup() throws Exception {
         Group savedGroup = _repo.save(ReservedGroup.all.getGroupEntityTemplate());
 
@@ -148,7 +149,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
     private Group newGroup() {
         return newGroup(_nextId);
     }
-    static Group newGroup(AtomicInteger nextId) {
+    public static Group newGroup(AtomicInteger nextId) {
         int id = nextId.incrementAndGet();
         return new Group()
                 .setDescription("Desc "+id)

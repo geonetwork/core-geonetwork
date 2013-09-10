@@ -1,6 +1,7 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.Group;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -11,7 +12,7 @@ import javax.annotation.Nullable;
  * @author Jesse
  */
 public interface GroupRepository extends GeonetRepository<Group, Integer>, GroupRepositoryCustom,
-        LocalizedEntityRepository<Group, Integer> {
+        LocalizedEntityRepository<Group, Integer>, JpaSpecificationExecutor<Group> {
     /**
      * Look up a group by its name
      *

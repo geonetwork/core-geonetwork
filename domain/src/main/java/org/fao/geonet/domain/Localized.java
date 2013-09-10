@@ -1,10 +1,13 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.repository.LocalizedEntityRepositoryImpl;
 import org.jdom.Element;
+import org.springframework.beans.BeanWrapperImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
+import java.beans.PropertyDescriptor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,5 +93,39 @@ public abstract class Localized {
             String value = translation.getText();
             getLabelTranslations().put(langId, value);
         }
+    }
+
+    public Element asXml() {
+        Element record = new Element(LocalizedEntityRepositoryImpl.RECORD_EL_NAME);
+        BeanWrapperImpl wrapper = new BeanWrapperImpl(this);
+
+        for (PropertyDescriptor desc : wrapper.getPropertyDescriptors()) {
+            try {
+                if (desc.getReadMethod().getDeclaringClass() == getClass() && desc.getReadMethod().getAnnotation(Transient.class)
+                                                                               == null) {
+                    final String descName = desc.getName();
+                    if (descName.equalsIgnoreCase("labelTranslations")) {
+                        Element labelEl = new Element(LocalizedEntityRepositoryImpl.LABEL_EL_NAME);
+
+                        Map<String, String> labels = (Map<String, String>) desc.getReadMethod().invoke(this);
+                        for (Map.Entry<String, String> entry : labels.entrySet()) {
+                            labelEl.addContent(new Element(entry.getKey().toLowerCase()).setText(entry.getValue()));
+                        }
+
+                        record.addContent(labelEl);
+                    } else {
+                        final String value;
+                        value = desc.getReadMethod().invoke(this).toString();
+                        record.addContent(
+                                new Element(descName.toLowerCase()).setText(value)
+                        );
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return record;
     }
 }

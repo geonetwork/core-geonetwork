@@ -3,15 +3,15 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Localized;
 import org.jdom.Element;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.Transient;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.*;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,16 +38,39 @@ public abstract class LocalizedEntityRepositoryImpl<T extends Localized, ID exte
         this._entityType = entityType;
     }
 
+    /**
+     * Get the entity manager.
+     */
     protected abstract EntityManager getEntityManager();
 
     @Nonnull
     @Override
     public Element findAllAsXml() {
-        final CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        final CriteriaQuery<T> query = cb.createQuery(_entityType);
+        return findAllAsXml(null, null);
+    }
 
-        query.from(_entityType);
+    @Nonnull
+    @Override
+    public Element findAllAsXml(final Specification<T> specification) {
+        return findAllAsXml(specification, null);
+    }
 
+    @Nonnull
+    @Override
+    public Element findAllAsXml(final Specification<T> specification, final Sort sort) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<T> query = cb.createQuery(_entityType);
+        Root<T> root = query.from(_entityType);
+
+        if (specification != null) {
+            final Predicate predicate = specification.toPredicate(root, query, cb);
+            query.where(predicate);
+        }
+
+        if (sort != null) {
+            List<Order> orders = SortUtils.sortToJpaOrders(cb, sort, root);
+            query.orderBy(orders);
+        }
 
         return toXml(getEntityManager().createQuery(query).getResultList());
     }
@@ -56,36 +79,7 @@ public abstract class LocalizedEntityRepositoryImpl<T extends Localized, ID exte
         Element root = new Element(_entityType.getSimpleName().toLowerCase());
 
         for (T t : resultList) {
-            Element record = new Element(RECORD_EL_NAME);
-            root.addContent(record);
-            BeanWrapperImpl wrapper = new BeanWrapperImpl(t);
-
-            for (PropertyDescriptor desc : wrapper.getPropertyDescriptors()) {
-                try {
-                    if (desc.getReadMethod().getDeclaringClass() == _entityType && desc.getReadMethod().getAnnotation(Transient.class)
-                                                                                   == null) {
-                        final String descName = desc.getName();
-                        if (descName.equalsIgnoreCase("labelTranslations")) {
-                            Element labelEl = new Element(LABEL_EL_NAME);
-
-                            Map<String, String> labels = (Map<String, String>) desc.getReadMethod().invoke(t);
-                            for (Map.Entry<String, String> entry : labels.entrySet()) {
-                                labelEl.addContent(new Element(entry.getKey().toLowerCase()).setText(entry.getValue()));
-                            }
-
-                            record.addContent(labelEl);
-                        } else {
-                            final String value;
-                            value = desc.getReadMethod().invoke(t).toString();
-                            record.addContent(
-                                    new Element(descName.toLowerCase()).setText(value)
-                            );
-                        }
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            root.addContent(t.asXml());
         }
         return root;
     }
