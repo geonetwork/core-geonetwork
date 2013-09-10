@@ -25,6 +25,7 @@ package org.fao.geonet.services.main;
 
 import jeeves.component.ProfileManager;
 import jeeves.constants.Jeeves;
+import org.fao.geonet.domain.Group_;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
@@ -44,12 +45,11 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.kernel.region.RegionsDAO;
-import org.fao.geonet.repository.IsoLanguageRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.OperationRepository;
-import org.fao.geonet.repository.StatusValueRepository;
+import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
 import org.jdom.Element;
+import org.springframework.data.domain.Sort;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -311,34 +311,33 @@ public class Info implements Service {
      * Retrieves a user's groups.
      *
      * @param context
-     * @param dbms
      * @param profile
      * @param includingSystemGroups if true, also returns the system groups ('GUEST', 'intranet', 'all')
      * @return
      * @throws java.sql.SQLException
      */
     private Element getGroups(ServiceContext context, String profile, boolean includingSystemGroups) throws SQLException {
-		UserSession session = context.getUserSession();
-		if (!session.isAuthenticated()) {
-			return Lib.local.retrieveWhereOrderBy(dbms, "Groups", "id < ?", "id", 2);
-		}
+        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
+        final Sort sort = new Sort(Group_.id.getName());
+
+        UserSession session = context.getUserSession();
+        if (!session.isAuthenticated()) {
+            return groupRepository.findAllAsXml(GroupSpecs.isNotReserved(), sort);
+        }
 
         Element result;
         // you're Administrator
-		if (Profile.Administrator == session.getProfile()) {
-
-        // return all groups
-			result = Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
-        }
+        if (Profile.Administrator == session.getProfile()) {
+            // return all groups
+            result = groupRepository.findAllAsXml(null, sort);
+        } else {
             // you're no Administrator
-		else {
             // retrieve your groups
             Element list;
 			if (profile == null) {
 				String query = "SELECT groupId AS id FROM UserGroups WHERE userId=?";
 				list = dbms.select(query, session.getUserIdAsInt());
-			}
-            else {
+			} else {
 				String query = "SELECT groupId AS id FROM UserGroups WHERE userId=? and profile=?";
 				list = dbms.select(query, session.getUserIdAsInt(), profile);
 			}
@@ -346,7 +345,7 @@ public class Info implements Service {
 			Set<String> ids = Lib.element.getIds(list);
 
             // include system groups if requested (used in harvesters)
-            if(includingSystemGroups) {
+            if (includingSystemGroups) {
                 // these DB keys of system groups are hardcoded !
                 ids.add("-1");
                 ids.add("0");
@@ -354,7 +353,7 @@ public class Info implements Service {
             }
 
             // retrieve all groups
-            Element groups = Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
+            Element groups = groupRepository.findAllAsXml(null, sort);
 
             // filter all groups so only your groups (+ maybe system groups) are retained
             result = Lib.element.pruneChildren(groups, ids);

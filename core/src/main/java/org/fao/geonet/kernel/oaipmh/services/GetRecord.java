@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;

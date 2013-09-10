@@ -33,9 +33,12 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
@@ -63,32 +66,29 @@ public class Groups implements Service
 		UserSession   us = context.getUserSession();
 		AccessManager am = gc.getBean(AccessManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		Set<String> userGroups = am.getVisibleGroups(dbms, userId);
-		Set<String> myGroups   = am.getUserGroups(dbms, us, null, false);
+		Set<Integer> userGroups = am.getVisibleGroups(userId);
+		Set<Integer> myGroups   = am.getUserGroups(us, null, false);
 
 		//--- remove 'Intranet' and 'All' groups
-		myGroups.remove("0");
-		myGroups.remove("1");
+		myGroups.remove(ReservedGroup.intranet.getId());
+		myGroups.remove(ReservedGroup.all.getId());
 
 		Element response = new Element("response");
 
 		OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);
-		for (String groupId : userGroups)
+        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
+        for (Integer groupId : userGroups)
 		{
-		    int iGroupId = Integer.valueOf(groupId);
-            Specifications<OperationAllowed> spec = where(hasGroupId(iGroupId)).and(metadataHasOwnerId(userId));
+            Specifications<OperationAllowed> spec = where(hasGroupId(groupId)).and(hasMetadataId(userId));
 		    long count = opAllowedRepo.count(spec);
 
 			if (count > 0)
 			{
-				@SuppressWarnings("unchecked")
-                List<Element> records = Lib.local.retrieveById(dbms, "Groups", groupId).getChildren();
+                Group group = groupRepository.findOne(groupId);
 
-				if (!records.isEmpty())
+				if (group == null)
 				{
-					Element record  = records.get(0);
+					Element record  = group.asXml();
 					record.detach();
 					record.setName("group");
 
@@ -97,14 +97,14 @@ public class Groups implements Service
 			}
 		}
 
-		for (String groupId : myGroups)
+		for (Integer groupId : myGroups)
 		{
 			@SuppressWarnings("unchecked")
-            List<Element> records = Lib.local.retrieveById(dbms, "Groups", groupId).getChildren();
+            Group group = groupRepository.findOne(groupId);
 
-			if (!records.isEmpty())
+			if (group != null)
 			{
-				Element record  = records.get(0);
+				Element record  = group.asXml();
 				record.detach();
 				record.setName("targetGroup");
 				response.addContent(record);

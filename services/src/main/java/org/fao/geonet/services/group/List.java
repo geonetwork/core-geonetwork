@@ -29,8 +29,19 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Group_;
+import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.specification.GroupSpecs;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 //=============================================================================
 
@@ -49,9 +60,8 @@ public class List implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+		Element elRes = context.getBean(GroupRepository.class).findAllAsXml(GroupSpecs.isNotReserved());
 
-		Element elRes = Lib.local.retrieveWhere(dbms, "Groups", "id > ?", 1);
 		Element elOper= params.getChild(Jeeves.Elem.OPERATION);
 
 		if (elOper != null)

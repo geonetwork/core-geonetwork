@@ -29,9 +29,13 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group_;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.specification.GroupSpecs;
 import org.jdom.Element;
+import org.springframework.data.domain.Sort;
 
 import java.util.Set;
 
@@ -61,12 +65,10 @@ public class GetMine implements Service
 		if (!session.isAuthenticated())
 			return new Element(Geonet.Elem.GROUPS);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
 		//--- retrieve user groups
 
 		if (Profile.Administrator == session.getProfile()) {
-			return Lib.local.retrieveWhere(dbms, "Groups", "id > ?", 1);
+			return context.getBean(GroupRepository.class).findAllAsXml(GroupSpecs.isNotReserved());
 		} else {
 			Element list = null;
 			if (profile == null) {
@@ -77,7 +79,7 @@ public class GetMine implements Service
 				list = dbms.select(query, session.getUserIdAsInt(), profile);
 			}
 			Set<String> ids = Lib.element.getIds(list);
-			Element groups = Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
+			Element groups = context.getBean(GroupRepository.class).findAllAsXml(new Sort(Group_.id.getName()));
 
 			return Lib.element.pruneChildren(groups, ids);
 		}
