@@ -1,5 +1,8 @@
 package org.fao.geonet.repository;
 
+import org.jdom.Element;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,4 +39,46 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
     @Nonnull
     T update(ID id, @Nonnull Updater<T> updater);
 
+    /**
+     * Load all entities and convert each to XML of the form:
+     *     <pre>
+     *  &lt;entityName&gt;
+     *      &lt;property&gt;propertyValue&lt;/property&gt;
+     *      ...
+     *  &lt;/entityName&gt;
+     *     </pre>
+     * @return all entities in XML.
+     */
+    @Nonnull
+    Element findAllAsXml();
+
+    /**
+     * Load all entities that satisfy the criteria provided and convert each to XML of the form:
+     *     <pre>
+     *  &lt;entityName&gt;
+     *      &lt;property&gt;propertyValue&lt;/property&gt;
+     *      ...
+     *  &lt;/entityName&gt;
+     *     </pre>
+     *
+     * @param specification A specification of the criteria that must be satisfied for entity to be selected.
+     * @return  all entities in XML.
+     */
+    @Nonnull
+    Element findAllAsXml(Specification<T> specification);
+
+    /**
+     * Load all entities that satisfy the criteria provided and convert each to XML of the form:
+     *     <pre>
+     *  &lt;entityName&gt;
+     *      &lt;property&gt;propertyValue&lt;/property&gt;
+     *      ...
+     *  &lt;/entityName&gt;
+     *     </pre>
+     *
+     * @param specification A specification of the criteria that must be satisfied for entity to be selected.
+     * @return  all entities in XML.
+     */
+    @Nonnull
+    Element findAllAsXml(Specification<T> specification, Sort sort);
 }

@@ -23,19 +23,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Access(AccessType.PROPERTY)
 @Table(name = "users")
 @Cacheable
-public class User implements UserDetails {
+public class User extends GeonetEntity implements UserDetails {
     private static final long serialVersionUID = 2589607276443866650L;
 
-    int _id;
-    String _username;
-    String _surname;
-    String _name;
-    Set<String> _email = new HashSet<String>();
-    Set<Address> _addresses = new HashSet<Address>();
-    String _organisation;
-    String _kind;
-    Profile _profile = Profile.RegisteredUser;
-    UserSecurity _security = new UserSecurity();
+    private int _id;
+    private String _username;
+    private String _surname;
+    private String _name;
+    private Set<String> _email = new HashSet<String>();
+    private Set<Address> _addresses = new HashSet<Address>();
+    private String _organisation;
+    private String _kind;
+    private Profile _profile = Profile.RegisteredUser;
+    private UserSecurity _security = new UserSecurity();
 
     /**
      * Get the userid.   This is a generated value and as such new instances should not have this set as it will simply be ignored

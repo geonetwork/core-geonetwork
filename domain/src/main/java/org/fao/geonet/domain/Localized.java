@@ -38,7 +38,7 @@ import java.util.Map;
  * Date: 9/9/13
  * Time: 8:53 AM
  */
-public abstract class Localized {
+public abstract class Localized extends GeonetEntity {
 
     private Map<String, String> _labelTranslations = new HashMap<String, String>();
 
@@ -93,39 +93,5 @@ public abstract class Localized {
             String value = translation.getText();
             getLabelTranslations().put(langId, value);
         }
-    }
-
-    public Element asXml() {
-        Element record = new Element(LocalizedEntityRepositoryImpl.RECORD_EL_NAME);
-        BeanWrapperImpl wrapper = new BeanWrapperImpl(this);
-
-        for (PropertyDescriptor desc : wrapper.getPropertyDescriptors()) {
-            try {
-                if (desc.getReadMethod().getDeclaringClass() == getClass() && desc.getReadMethod().getAnnotation(Transient.class)
-                                                                               == null) {
-                    final String descName = desc.getName();
-                    if (descName.equalsIgnoreCase("labelTranslations")) {
-                        Element labelEl = new Element(LocalizedEntityRepositoryImpl.LABEL_EL_NAME);
-
-                        Map<String, String> labels = (Map<String, String>) desc.getReadMethod().invoke(this);
-                        for (Map.Entry<String, String> entry : labels.entrySet()) {
-                            labelEl.addContent(new Element(entry.getKey().toLowerCase()).setText(entry.getValue()));
-                        }
-
-                        record.addContent(labelEl);
-                    } else {
-                        final String value;
-                        value = desc.getReadMethod().invoke(this).toString();
-                        record.addContent(
-                                new Element(descName.toLowerCase()).setText(value)
-                        );
-                    }
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        return record;
     }
 }

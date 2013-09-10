@@ -16,10 +16,29 @@ import javax.persistence.Transient;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "sources")
-public class Source {
-    private String uuid;
-    private String name;
+public class Source extends GeonetEntity {
+    private String _uuid;
+    private String _name;
     private char _local = Constants.YN_TRUE;
+
+    /**
+     * Default constructor.  Required by framework.
+     */
+    public Source() {
+    }
+
+    /**
+     * Convenience constructor for quickly making a Source object.
+     *
+     * @param uuid the uuid of the source (also the ID)
+     * @param name the name
+     * @param local if the source is the local system
+     */
+    public Source(String uuid, String name, boolean local) {
+        this._uuid = uuid;
+        this._name = name;
+        this._local = Constants.toYN_EnabledChar(local);
+    }
 
     /**
      * Get the uuid of the source.
@@ -28,7 +47,7 @@ public class Source {
      */
     @Id
     public String getUuid() {
-        return uuid;
+        return _uuid;
     }
 
     /**
@@ -37,7 +56,7 @@ public class Source {
      * @param uuid the uuid of the source.
      */
     public void setUuid(String uuid) {
-        this.uuid = uuid;
+        this._uuid = uuid;
     }
 
     /**
@@ -46,7 +65,7 @@ public class Source {
      * @return the name of the source.
      */
     public String getName() {
-        return name;
+        return _name;
     }
 
     /**
@@ -55,7 +74,7 @@ public class Source {
      * @param name the name of the source.
      */
     public void setName(String name) {
-        this.name = name;
+        this._name = name;
     }
 
     /**

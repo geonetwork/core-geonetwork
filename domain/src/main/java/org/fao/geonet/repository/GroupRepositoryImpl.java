@@ -42,8 +42,4 @@ public class GroupRepositoryImpl extends LocalizedEntityRepositoryImpl<Group, In
         return _entityManager.createQuery(query).getResultList();
     }
 
-    @Override
-    protected EntityManager getEntityManager() {
-        return _entityManager;
-    }
 }

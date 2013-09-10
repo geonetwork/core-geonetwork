@@ -19,7 +19,7 @@ import javax.persistence.Transient;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "harvesthistory")
-public class HarvestHistory {
+public class HarvestHistory extends GeonetEntity {
     private int _id;
     private ISODate _harvestDate;
     private int _elapsedTime;

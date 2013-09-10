@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = UserGroupNamedQueries.TABLE_NAME)
-public class UserGroup {
+public class UserGroup extends GeonetEntity {
     private UserGroupId _id = new UserGroupId();
     private Group _group;
     private User _user;

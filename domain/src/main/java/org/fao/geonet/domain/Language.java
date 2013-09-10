@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "languages")
-public class Language {
+public class Language extends GeonetEntity {
     String _id;
     String _name;
     char _inspire = Constants.YN_FALSE;

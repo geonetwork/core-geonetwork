@@ -101,11 +101,13 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
     @Test
     public void testFindReservedGroup() throws Exception {
         Group savedGroup = _repo.save(ReservedGroup.all.getGroupEntityTemplate());
-
-        _repo.flush();
-        _entityManager.clear();
-
-        assertSameContents(savedGroup, _repo.findReservedGroup(ReservedGroup.all));
+        int normalId = ReservedGroup.all.getId();
+        try {
+            setId(ReservedGroup.all, savedGroup.getId());
+            assertSameContents(savedGroup, _repo.findReservedGroup(ReservedGroup.all));
+        } finally {
+            setId(ReservedGroup.all, normalId);
+        }
     }
 
     @Test

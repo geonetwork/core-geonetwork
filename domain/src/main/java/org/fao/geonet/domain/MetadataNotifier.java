@@ -24,7 +24,7 @@ import javax.persistence.Transient;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "metadatanotifiers")
-public class MetadataNotifier {
+public class MetadataNotifier extends GeonetEntity {
     private int _id;
     private String _name;
     private String _url;

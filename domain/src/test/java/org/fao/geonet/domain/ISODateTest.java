@@ -15,59 +15,59 @@ public class ISODateTest {
         ISODate date = new ISODate();
         date.setDateAndTime("1976-06-03");
         assertEquals(true, date.isDateOnly());
-        assertEquals(1976, date.getYear());
-        assertEquals(6, date.getMonth());
-        assertEquals(3, date.getDay());
-        assertEquals(0, date.getHour());
-        assertEquals(0, date.getMinute());
-        assertEquals(0, date.getSecond());
+        assertEquals(1976, date.getYears());
+        assertEquals(6, date.getMonths());
+        assertEquals(3, date.getDays());
+        assertEquals(0, date.getHours());
+        assertEquals(0, date.getMinutes());
+        assertEquals(0, date.getSeconds());
 
         date = new ISODate();
         date.setDateAndTime("1976-6-3");
         assertEquals(true, date.isDateOnly());
-        assertEquals(1976, date.getYear());
-        assertEquals(6, date.getMonth());
-        assertEquals(3, date.getDay());
-        assertEquals(0, date.getHour());
-        assertEquals(0, date.getMinute());
-        assertEquals(0, date.getSecond());
+        assertEquals(1976, date.getYears());
+        assertEquals(6, date.getMonths());
+        assertEquals(3, date.getDays());
+        assertEquals(0, date.getHours());
+        assertEquals(0, date.getMinutes());
+        assertEquals(0, date.getSeconds());
 
         date = new ISODate();
         date.setDateAndTime("1976-6-3T");
         assertEquals(true, date.isDateOnly());
-        assertEquals(1976, date.getYear());
-        assertEquals(6, date.getMonth());
-        assertEquals(3, date.getDay());
-        assertEquals(0, date.getHour());
-        assertEquals(0, date.getMinute());
-        assertEquals(0, date.getSecond());
+        assertEquals(1976, date.getYears());
+        assertEquals(6, date.getMonths());
+        assertEquals(3, date.getDays());
+        assertEquals(0, date.getHours());
+        assertEquals(0, date.getMinutes());
+        assertEquals(0, date.getSeconds());
 
         date = new ISODate();
         date.setDateAndTime("99-6-3");
         assertEquals(true, date.isDateOnly());
-        assertEquals(1999, date.getYear());
-        assertEquals(6, date.getMonth());
-        assertEquals(3, date.getDay());
-        assertEquals(0, date.getHour());
-        assertEquals(0, date.getMinute());
-        assertEquals(0, date.getSecond());
+        assertEquals(1999, date.getYears());
+        assertEquals(6, date.getMonths());
+        assertEquals(3, date.getDays());
+        assertEquals(0, date.getHours());
+        assertEquals(0, date.getMinutes());
+        assertEquals(0, date.getSeconds());
 
         date = new ISODate();
         date.setDateAndTime("10-6-3");
         assertEquals(true, date.isDateOnly());
-        assertEquals(2010, date.getYear());
-        assertEquals(6, date.getMonth());
-        assertEquals(3, date.getDay());
-        assertEquals(0, date.getHour());
-        assertEquals(0, date.getMinute());
-        assertEquals(0, date.getSecond());
+        assertEquals(2010, date.getYears());
+        assertEquals(6, date.getMonths());
+        assertEquals(3, date.getDays());
+        assertEquals(0, date.getHours());
+        assertEquals(0, date.getMinutes());
+        assertEquals(0, date.getSeconds());
         
         date = new ISODate();
         int expectedYear = Calendar.getInstance().get(YEAR);
         String shortYear = String.valueOf(expectedYear).substring(2);
         date.setDateAndTime(shortYear+"-6-3");
-        assertEquals(expectedYear, date.getYear());
-        assertEquals(0, date.getSecond());
+        assertEquals(expectedYear, date.getYears());
+        assertEquals(0, date.getSeconds());
     }
 
     @Test
@@ -77,56 +77,56 @@ public class ISODateTest {
         date.setDateAndTime("1976-06-03T01:02:03");
 
         assertEquals(false, date.isDateOnly());
-        assertEquals(1976, date.getYear());
-        assertEquals(6, date.getMonth());
-        assertEquals(3, date.getDay());
-        assertEquals(1, date.getHour());
-        assertEquals(2, date.getMinute());
-        assertEquals(3, date.getSecond());
+        assertEquals(1976, date.getYears());
+        assertEquals(6, date.getMonths());
+        assertEquals(3, date.getDays());
+        assertEquals(1, date.getHours());
+        assertEquals(2, date.getMinutes());
+        assertEquals(3, date.getSeconds());
 
         date = new ISODate();
         date.setDateAndTime("T01:02:03");
 
         assertEquals(false, date.isDateOnly());
-        assertEquals(Calendar.getInstance().get(Calendar.YEAR), date.getYear());
-        assertEquals(Calendar.getInstance().get(Calendar.MONTH) + 1, date.getMonth());
-        assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_MONTH), date.getDay());
-        assertEquals(1, date.getHour());
-        assertEquals(2, date.getMinute());
-        assertEquals(3, date.getSecond());
+        assertEquals(Calendar.getInstance().get(Calendar.YEAR), date.getYears());
+        assertEquals(Calendar.getInstance().get(Calendar.MONTH) + 1, date.getMonths());
+        assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_MONTH), date.getDays());
+        assertEquals(1, date.getHours());
+        assertEquals(2, date.getMinutes());
+        assertEquals(3, date.getSeconds());
 
         date = new ISODate();
         date.setDateAndTime("01:02:03");
 
         assertEquals(false, date.isDateOnly());
-        assertEquals(Calendar.getInstance().get(Calendar.YEAR), date.getYear());
-        assertEquals(Calendar.getInstance().get(Calendar.MONTH) + 1, date.getMonth());
-        assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_MONTH), date.getDay());
-        assertEquals(1, date.getHour());
-        assertEquals(2, date.getMinute());
-        assertEquals(3, date.getSecond());
+        assertEquals(Calendar.getInstance().get(Calendar.YEAR), date.getYears());
+        assertEquals(Calendar.getInstance().get(Calendar.MONTH) + 1, date.getMonths());
+        assertEquals(Calendar.getInstance().get(Calendar.DAY_OF_MONTH), date.getDays());
+        assertEquals(1, date.getHours());
+        assertEquals(2, date.getMinutes());
+        assertEquals(3, date.getSeconds());
 
         date = new ISODate();
         date.setDateAndTime("1976-6-3T1:2:3");
 
         assertEquals(false, date.isDateOnly());
-        assertEquals(1976, date.getYear());
-        assertEquals(6, date.getMonth());
-        assertEquals(3, date.getDay());
-        assertEquals(1, date.getHour());
-        assertEquals(2, date.getMinute());
-        assertEquals(3, date.getSecond());
+        assertEquals(1976, date.getYears());
+        assertEquals(6, date.getMonths());
+        assertEquals(3, date.getDays());
+        assertEquals(1, date.getHours());
+        assertEquals(2, date.getMinutes());
+        assertEquals(3, date.getSeconds());
 
         date = new ISODate();
         date.setDateAndTime("1976-6-3T1:2:3Z");
 
         assertEquals(false, date.isDateOnly());
-        assertEquals(1976, date.getYear());
-        assertEquals(6, date.getMonth());
-        assertEquals(3, date.getDay());
-        assertEquals(1, date.getHour());
-        assertEquals(2, date.getMinute());
-        assertEquals(3, date.getSecond());
+        assertEquals(1976, date.getYears());
+        assertEquals(6, date.getMonths());
+        assertEquals(3, date.getDays());
+        assertEquals(1, date.getHours());
+        assertEquals(2, date.getMinutes());
+        assertEquals(3, date.getSeconds());
     }
 
     @Test
@@ -137,12 +137,12 @@ public class ISODateTest {
         date.setDateAndTime("1976-6-3T1:2:3Z+1:00");
 
         assertEquals(false, date.isDateOnly());
-        assertEquals(1976, date.getYear());
-        assertEquals(6, date.getMonth());
-        assertEquals(3, date.getDay());
-        assertEquals(1, date.getHour());
-        assertEquals(2, date.getMinute());
-        assertEquals(3, date.getSecond());
+        assertEquals(1976, date.getYears());
+        assertEquals(6, date.getMonths());
+        assertEquals(3, date.getDays());
+        assertEquals(1, date.getHours());
+        assertEquals(2, date.getMinutes());
+        assertEquals(3, date.getSeconds());
 
     }
 

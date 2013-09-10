@@ -102,7 +102,7 @@ public class ISODate implements Cloneable {
     // --------------------------------------------------------------------------
     @Transient
     public String getDate() {
-        return getYear() + "-" + pad(getMonth()) + "-" + pad(getDay());
+        return getYears() + "-" + pad(getMonths()) + "-" + pad(getDays());
     }
 
     // --------------------------------------------------------------------------
@@ -166,7 +166,7 @@ public class ISODate implements Cloneable {
      * Get the date's year.
      */
     @Transient
-    public int getYear() {
+    public int getYears() {
         return _calendar.get(YEAR);
     }
 
@@ -174,7 +174,7 @@ public class ISODate implements Cloneable {
      * Get the date's day of month starting at 1.
      */
     @Transient
-    public int getDay() {
+    public int getDays() {
         return _calendar.get(DAY_OF_MONTH);
     }
 
@@ -182,7 +182,7 @@ public class ISODate implements Cloneable {
      * Get the date's month of the year starting at 1 and going to 12.
      */
     @Transient
-    public int getMonth() {
+    public int getMonths() {
         return _calendar.get(MONTH) + 1;
     }
 
@@ -190,7 +190,7 @@ public class ISODate implements Cloneable {
      * Get the date's hour in 24 hour time starting at 0 and going to 23
      */
     @Transient
-    public int getHour() {
+    public int getHours() {
         return _calendar.get(HOUR_OF_DAY);
     }
 
@@ -198,7 +198,7 @@ public class ISODate implements Cloneable {
      * Get the date's minute starting at 0 and going to 59
      */
     @Transient
-    public int getMinute() {
+    public int getMinutes() {
         return _calendar.get(MINUTE);
     }
 
@@ -206,7 +206,7 @@ public class ISODate implements Cloneable {
      * Get the date's second starting at 0 and going to 59
      */
     @Transient
-    public int getSecond() {
+    public int getSeconds() {
         return _calendar.get(SECOND);
     }
 
@@ -293,7 +293,7 @@ public class ISODate implements Cloneable {
     }
 
     private String timeAsString() {
-        return pad(getHour()) + ":" + pad(getMinute()) + ":" + pad(getSecond());
+        return pad(getHours()) + ":" + pad(getMinutes()) + ":" + pad(getSeconds());
     }
 
     private String pad(int value) {

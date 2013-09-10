@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "customelementset")
-public class CustomElementSet {
+public class CustomElementSet extends GeonetEntity {
     private String _xpath;
 
     /**

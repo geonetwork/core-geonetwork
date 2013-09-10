@@ -14,7 +14,7 @@ import javax.persistence.Id;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-public class Address {
+public class Address extends GeonetEntity {
     private int _id;
     private String _address;
     private String _city;

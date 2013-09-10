@@ -24,7 +24,7 @@ import javax.persistence.Table;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "services")
-public class Service {
+public class Service extends GeonetEntity {
     private int _id;
     private String _name;
     private String _className;

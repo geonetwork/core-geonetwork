@@ -26,7 +26,7 @@ import org.fao.geonet.domain.OperationAllowedNamedQueries.DeleteByMetadataId;
 @Access(AccessType.PROPERTY)
 @NamedQueries({ @NamedQuery(name = DeleteByMetadataId.NAME, query = DeleteByMetadataId.QUERY),
         @NamedQuery(name = DeleteAllByMetadataIdExceptGroupId.NAME, query = DeleteAllByMetadataIdExceptGroupId.QUERY) })
-public class OperationAllowed {
+public class OperationAllowed extends GeonetEntity {
     /**
      * Name of the operationallowed table.
      */

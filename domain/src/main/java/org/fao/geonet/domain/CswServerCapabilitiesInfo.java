@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "cswservercapabilitiesinfo")
-public class CswServerCapabilitiesInfo {
+public class CswServerCapabilitiesInfo extends GeonetEntity {
     private int _id;
     private String _langId;
     private String _field;

@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "validation")
-public class MetadataValidation {
+public class MetadataValidation extends GeonetEntity {
     private MetadataValidationId _id;
     private MetadataValidationStatus _status;
     private int _tested;

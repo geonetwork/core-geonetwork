@@ -24,8 +24,6 @@ import java.util.Map;
  */
 public abstract class LocalizedEntityRepositoryImpl<T extends Localized, ID extends Serializable> implements
         LocalizedEntityRepository<T, ID> {
-    public static final String LABEL_EL_NAME = "label";
-    public static final String RECORD_EL_NAME = "record";
 
     private Class<T> _entityType;
 
@@ -38,49 +36,4 @@ public abstract class LocalizedEntityRepositoryImpl<T extends Localized, ID exte
         this._entityType = entityType;
     }
 
-    /**
-     * Get the entity manager.
-     */
-    protected abstract EntityManager getEntityManager();
-
-    @Nonnull
-    @Override
-    public Element findAllAsXml() {
-        return findAllAsXml(null, null);
-    }
-
-    @Nonnull
-    @Override
-    public Element findAllAsXml(final Specification<T> specification) {
-        return findAllAsXml(specification, null);
-    }
-
-    @Nonnull
-    @Override
-    public Element findAllAsXml(final Specification<T> specification, final Sort sort) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<T> query = cb.createQuery(_entityType);
-        Root<T> root = query.from(_entityType);
-
-        if (specification != null) {
-            final Predicate predicate = specification.toPredicate(root, query, cb);
-            query.where(predicate);
-        }
-
-        if (sort != null) {
-            List<Order> orders = SortUtils.sortToJpaOrders(cb, sort, root);
-            query.orderBy(orders);
-        }
-
-        return toXml(getEntityManager().createQuery(query).getResultList());
-    }
-
-    private Element toXml(List<T> resultList) {
-        Element root = new Element(_entityType.getSimpleName().toLowerCase());
-
-        for (T t : resultList) {
-            root.addContent(t.asXml());
-        }
-        return root;
-    }
 }

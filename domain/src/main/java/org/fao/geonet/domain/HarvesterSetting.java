@@ -19,7 +19,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "harvestersettings")
 @Access(AccessType.PROPERTY)
-public class HarvesterSetting {
+public class HarvesterSetting extends GeonetEntity {
     public static final int ROOT_ID = 0;
 
     private int _id;

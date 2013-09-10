@@ -19,7 +19,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "settings")
 @Cacheable
-@Access(AccessType.PROPERTY)public class Setting {
+@Access(AccessType.PROPERTY)
+public class Setting extends GeonetEntity {
     private String name;
     private String value;
     private SettingDataType dataType;

@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "metadatastatus")
-public class MetadataStatus {
+public class MetadataStatus extends GeonetEntity {
     /**
      * The Root element of the xml returned by {@link #getAsXml}.
      */

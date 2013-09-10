@@ -24,8 +24,4 @@ public class StatusValueRepositoryImpl extends LocalizedEntityRepositoryImpl<Sta
         super(StatusValue.class);
     }
 
-    @Override
-    protected EntityManager getEntityManager() {
-        return _EntityManager;
-    }
 }

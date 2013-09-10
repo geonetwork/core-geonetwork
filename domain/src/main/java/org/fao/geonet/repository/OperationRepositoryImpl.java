@@ -26,8 +26,4 @@ public class OperationRepositoryImpl extends LocalizedEntityRepositoryImpl<Opera
         return _entityManager.find(Operation.class, operation.getId());
     }
 
-    @Override
-    protected EntityManager getEntityManager() {
-        return _entityManager;
-    }
 }

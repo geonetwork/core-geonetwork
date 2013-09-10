@@ -25,8 +25,4 @@ public class IsoLanguageRepositoryImpl extends LocalizedEntityRepositoryImpl<Iso
         super(IsoLanguage.class);
     }
 
-    @Override
-    protected EntityManager getEntityManager() {
-        return _entityManager;
-    }
 }

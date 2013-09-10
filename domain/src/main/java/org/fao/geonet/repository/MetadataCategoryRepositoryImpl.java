@@ -32,11 +32,6 @@ public class MetadataCategoryRepositoryImpl extends LocalizedEntityRepositoryImp
         super(MetadataCategory.class);
     }
 
-    @Override
-    protected EntityManager getEntityManager() {
-        return _entityManager;
-    }
-
     @Nullable
     @Override
     public MetadataCategory findOneByNameIgnoreCase(@Nonnull String name) {

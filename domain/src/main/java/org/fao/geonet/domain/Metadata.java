@@ -25,7 +25,7 @@ import org.jdom.output.XMLOutputter;
 @Entity
 @Table(name = "metadata")
 @Access(AccessType.PROPERTY)
-public class Metadata {
+public class Metadata extends GeonetEntity {
 
     private int _id;
     private String _uuid;

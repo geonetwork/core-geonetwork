@@ -1,12 +1,10 @@
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.UserGroupId_;
-import org.fao.geonet.domain.UserGroup_;
+import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.util.HashSet;
 
 public final class UserGroupSpecs {
 
@@ -45,6 +43,32 @@ public final class UserGroupSpecs {
                 return userIdEqualPredicate;
             }
         };
+    }
 
+    /**
+     * Specification for testing if the UserGroup is (or is not) a reserved group.
+     *
+     * @param isReservedGroup true if the groups should be a reserved group.
+     *
+     * @return Specification for testing if the UserGroup is (or is not) a reserved group.
+     */
+    public static Specification<UserGroup> isReservedGroup(final boolean isReservedGroup) {
+        return new Specification<UserGroup>() {
+            @Override
+            public Predicate toPredicate(Root<UserGroup> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                HashSet<Integer> ids = new HashSet<Integer>();
+                for (ReservedGroup reservedGroup : ReservedGroup.values()) {
+                    ids.add(reservedGroup.getId());
+                }
+
+                Predicate inIdsPredicate = root.get(UserGroup_.group).get(Group_.id).in(ids);
+
+                if (isReservedGroup) {
+                    return inIdsPredicate;
+                } else {
+                    return inIdsPredicate.not();
+                }
+            }
+        };
     }
 }
