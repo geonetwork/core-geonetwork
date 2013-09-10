@@ -10,8 +10,7 @@ import javax.annotation.Nullable;
  *
  * @author Jesse
  */
-public interface OperationRepository extends GeonetRepository<Operation, Integer>, OperationRepositoryCustom,
-        LocalizedEntityRepository<Operation, Integer> {
+public interface OperationRepository extends GeonetRepository<Operation, Integer>, OperationRepositoryCustom {
     /**
      * Look up an operation using the name of the operation
      *

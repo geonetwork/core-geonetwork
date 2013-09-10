@@ -12,16 +12,9 @@ import javax.persistence.PersistenceContext;
  * Date: 9/10/13
  * Time: 7:13 AM
  */
-public class StatusValueRepositoryImpl extends LocalizedEntityRepositoryImpl<StatusValue, Integer> {
+public class StatusValueRepositoryImpl {
 
     @PersistenceContext
     private EntityManager _EntityManager;
-
-    /**
-     * Constructor.
-     */
-    public StatusValueRepositoryImpl() {
-        super(StatusValue.class);
-    }
 
 }

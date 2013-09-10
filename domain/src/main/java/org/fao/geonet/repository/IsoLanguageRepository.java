@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author Jesse
  */
-public interface IsoLanguageRepository extends GeonetRepository<IsoLanguage, Integer>, LocalizedEntityRepository<IsoLanguage, Integer> {
+public interface IsoLanguageRepository extends GeonetRepository<IsoLanguage, Integer> {
     /**
      * Find all the IsoLanguages based on the code (the longer code).
      *

@@ -10,8 +10,7 @@ import java.util.List;
  *
  * @author Jesse
  */
-public interface MetadataCategoryRepository extends GeonetRepository<MetadataCategory, Integer>, MetadataCategoryRepositoryCustom,
-        LocalizedEntityRepository {
+public interface MetadataCategoryRepository extends GeonetRepository<MetadataCategory, Integer>, MetadataCategoryRepositoryCustom {
     /**
      * Find the category with the given name.
      *

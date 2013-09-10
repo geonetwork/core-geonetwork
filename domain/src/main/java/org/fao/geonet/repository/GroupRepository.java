@@ -11,8 +11,7 @@ import javax.annotation.Nullable;
  *
  * @author Jesse
  */
-public interface GroupRepository extends GeonetRepository<Group, Integer>, GroupRepositoryCustom,
-        LocalizedEntityRepository<Group, Integer>, JpaSpecificationExecutor<Group> {
+public interface GroupRepository extends GeonetRepository<Group, Integer>, GroupRepositoryCustom, JpaSpecificationExecutor<Group> {
     /**
      * Look up a group by its name
      *

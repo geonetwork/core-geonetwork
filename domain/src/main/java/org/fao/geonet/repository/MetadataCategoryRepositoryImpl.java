@@ -19,18 +19,11 @@ import javax.persistence.criteria.Root;
  * Date: 9/9/13
  * Time: 8:00 PM
  */
-public class MetadataCategoryRepositoryImpl extends LocalizedEntityRepositoryImpl<MetadataCategory, Integer> implements
-        MetadataCategoryRepositoryCustom {
+public class MetadataCategoryRepositoryImpl implements  MetadataCategoryRepositoryCustom {
 
     @PersistenceContext
     private EntityManager _entityManager;
 
-    /**
-     * Constructor.
-     */
-    public MetadataCategoryRepositoryImpl() {
-        super(MetadataCategory.class);
-    }
 
     @Nullable
     @Override

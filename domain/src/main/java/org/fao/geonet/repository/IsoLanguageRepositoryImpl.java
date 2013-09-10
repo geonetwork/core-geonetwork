@@ -13,16 +13,9 @@ import javax.persistence.PersistenceContext;
  * Date: 9/9/13
  * Time: 5:37 PM
  */
-public class IsoLanguageRepositoryImpl extends LocalizedEntityRepositoryImpl<IsoLanguage, Integer> {
+public class IsoLanguageRepositoryImpl {
 
     @PersistenceContext
     private EntityManager _entityManager;
-
-    /**
-     * Constructor.
-     */
-    public IsoLanguageRepositoryImpl() {
-        super(IsoLanguage.class);
-    }
 
 }
