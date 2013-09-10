@@ -1,13 +1,35 @@
 package org.fao.geonet.domain;
 
+import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Common superclass of entities that are have translated labels.
+ *
+ * <p>
+ *     A class that wants to extend this class has to also override #getLabelTranslations
+ *     and annotate that method with the table join annotions.  For example:
+ *     <p>
+ *         <pre>
+ *             <code> <![CDATA[
+ * @Override
+ * @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
+ * @CollectionTable(joinColumns = @JoinColumn(name = "iddes"), name = "groupsdes")
+ * @MapKeyColumn(name = "langid", length = 5)
+ * @Column(name = "label", nullable = false, length = 96)
+ *     public Map<String, String> getLabelTranslations() {
+ *     return super.getLabelTranslations();
+ * }
+ *             ]]></code>
+ *         </pre>
+ *     </p>
+ * </p>
  *
  * User: Jesse
  * Date: 9/9/13
@@ -48,5 +70,25 @@ public abstract class Localized {
      */
     protected void setLabelTranslations(@Nonnull Map<String, String> localizedTranslations) {
         this._labelTranslations = localizedTranslations;
+    }
+
+    /**
+     * Set translations of this localized objects to those contained in the list of elements.
+     * <p>
+     *     The translations elements have the form: <code>&lt;langId&gt;labelTranslation&lt;/langId&gt;</code>
+     *     <p>
+     *         For example:
+     *         <code>&lt;eng&gt;Catalog Group&lt;/eng&gt;</code>
+     *     </p>
+     * </p>
+     */
+    public void setLabelTranslations(List<Element> translations) {
+        getLabelTranslations().clear();
+
+        for (Element translation : translations) {
+            String langId = translation.getName();
+            String value = translation.getText();
+            getLabelTranslations().put(langId, value);
+        }
     }
 }

@@ -1,7 +1,6 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.IsoLanguage;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
@@ -10,7 +9,7 @@ import java.util.List;
  *
  * @author Jesse
  */
-public interface IsoLanguageRepository extends GeonetRepository<IsoLanguage, Integer>, JpaSpecificationExecutor<IsoLanguage> {
+public interface IsoLanguageRepository extends GeonetRepository<IsoLanguage, Integer>, LocalizedEntityRepository<IsoLanguage, Integer> {
     /**
      * Find all the IsoLanguages based on the code (the longer code).
      *
@@ -26,4 +25,5 @@ public interface IsoLanguageRepository extends GeonetRepository<IsoLanguage, Int
      * @return all the IsoLanguages based on the short code.
      */
     List<IsoLanguage> findAllByShortCode(String code);
+
 }

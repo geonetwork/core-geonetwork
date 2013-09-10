@@ -10,7 +10,8 @@ import javax.annotation.Nullable;
  *
  * @author Jesse
  */
-public interface GroupRepository extends GeonetRepository<Group, Integer>, GroupRepositoryCustom {
+public interface GroupRepository extends GeonetRepository<Group, Integer>, GroupRepositoryCustom,
+        LocalizedEntityRepository<Group, Integer> {
     /**
      * Look up a group by its name
      *

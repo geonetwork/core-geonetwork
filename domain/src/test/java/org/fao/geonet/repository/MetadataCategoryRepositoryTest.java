@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
@@ -30,7 +31,19 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
     }
 
     @Test
-    public void testFindByEmailMetadataCategory() {
+    public void testFindOneByNameIgnoreCase() {
+        MetadataCategory category1 = newMetadataCategory();
+        category1 = _repo.save(category1);
+
+        MetadataCategory category2 = newMetadataCategory();
+        _repo.save(category2);
+
+        assertEquals(category1, _repo.findOneByNameIgnoreCase(category1.getName().toLowerCase()));
+        assertEquals(category1, _repo.findOneByNameIgnoreCase(category1.getName().toUpperCase()));
+    }
+
+    @Test
+    public void testFindOneByName() {
         MetadataCategory category1 = newMetadataCategory();
         category1 = _repo.save(category1);
 

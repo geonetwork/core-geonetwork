@@ -25,11 +25,10 @@ import javax.persistence.Table;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "isolanguages")
-public class IsoLanguage {
+public class IsoLanguage extends Localized {
     private int id;
     private String code;
     private String shortCode;
-    private Map<String, String> _labelTranslations = new HashMap<String, String>();
 
     /**
      * Get the id for the lang code mapping. This is a generated value and as such new instances should not have this set as it will simply
@@ -101,16 +100,6 @@ public class IsoLanguage {
     @MapKeyColumn(name = "langid", length = 5)
     @Column(name = "label", nullable = false)
     public Map<String, String> getLabelTranslations() {
-        return _labelTranslations;
+        return super.getLabelTranslations();
     }
-
-    /**
-     * Set new translations this should only be used for initialization. to add and remove translations use "get" and modify map.
-     * 
-     * @param localizedTranslations the translation map
-     */
-    protected void setLabelTranslations(Map<String, String> localizedTranslations) {
-        this._labelTranslations = localizedTranslations;
-    }
-
 }

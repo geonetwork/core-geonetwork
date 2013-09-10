@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  *
  * @author Jesse
  */
-public interface StatusValueRepository extends GeonetRepository<StatusValue, Integer>, JpaSpecificationExecutor<StatusValue> {
+public interface StatusValueRepository extends GeonetRepository<StatusValue, Integer>, LocalizedEntityRepository<StatusValue, Integer> {
     StatusValue findOneByName(String statusValueName);
 }

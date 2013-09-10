@@ -17,10 +17,14 @@ import java.util.List;
  *
  * @author Jesse
  */
-public class GroupRepositoryImpl implements GroupRepositoryCustom {
+public class GroupRepositoryImpl extends LocalizedEntityRepositoryImpl<Group, Integer> implements GroupRepositoryCustom {
 
     @PersistenceContext
     private EntityManager _entityManager;
+
+    public GroupRepositoryImpl() {
+        super(Group.class);
+    }
 
     @Override
     @Nonnull
@@ -38,4 +42,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
         return _entityManager.createQuery(query).getResultList();
     }
 
+    @Override
+    protected EntityManager getEntityManager() {
+        return _entityManager;
+    }
 }

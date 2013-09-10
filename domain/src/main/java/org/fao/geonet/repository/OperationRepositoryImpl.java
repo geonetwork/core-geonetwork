@@ -12,14 +12,22 @@ import javax.persistence.PersistenceContext;
  *
  * @author Jesse
  */
-public class OperationRepositoryImpl implements OperationRepositoryCustom {
+public class OperationRepositoryImpl extends LocalizedEntityRepositoryImpl<Operation, Integer> implements OperationRepositoryCustom {
 
     @PersistenceContext
     private EntityManager _entityManager;
+
+    public OperationRepositoryImpl() {
+        super(Operation.class);
+    }
 
     @Override
     public Operation findReservedOperation(ReservedOperation operation) {
         return _entityManager.find(Operation.class, operation.getId());
     }
 
+    @Override
+    protected EntityManager getEntityManager() {
+        return _entityManager;
+    }
 }
