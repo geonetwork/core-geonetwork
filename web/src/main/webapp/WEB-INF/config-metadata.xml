@@ -834,6 +834,10 @@
            <output file="true"/>
            <error id="illegal-params" sheet="metadata-error.xsl"/>
        </service>
+
+         <service name="metadata.validation.status">
+           <class name=".services.metadata.GetValidationStatus"/>
+       </service>
         
     </services>
 </geonet>

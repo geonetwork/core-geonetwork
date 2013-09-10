@@ -3149,7 +3149,7 @@ public class DataManager {
      * @return
      * @throws Exception
      */
-	private Element buildInfoElem(ServiceContext context, String id, String version) throws Exception {
+	public Element buildInfoElem(ServiceContext context, String id, String version) throws Exception {
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, "+
