@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.metadata;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 
 import java.lang.reflect.Constructor;
@@ -47,18 +46,16 @@ public class StatusActionsFactory {
 	  * Creates a StatusActions class and initializes it using Reflections.
 		*
 		* @param context ServiceContext from Jeeves
-		* @param dbms Database management system channel
 		*/
-	public StatusActions createStatusActions(ServiceContext context, Dbms dbms) throws Exception {
+	public StatusActions createStatusActions(ServiceContext context) throws Exception {
 		Constructor<StatusActions> ct = statusRules.getConstructor();
 		StatusActions sa = (StatusActions)ct.newInstance();
 		
 		Method init = statusRules.getMethod("init", new Class[] {
 			ServiceContext.class, /* context */
-			Dbms.class            /* dbms channel */
 		});
 
-		init.invoke(sa, new Object [] { context, dbms }); 
+		init.invoke(sa, new Object [] { context });
 		return sa;
 	}
 

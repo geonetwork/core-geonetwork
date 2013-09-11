@@ -27,6 +27,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.geonet.kernel.DataManager;
@@ -39,7 +40,6 @@ import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.responses.GetRecordResponse;
 import org.fao.oaipmh.responses.Header;
 import org.fao.oaipmh.responses.Record;
-import org.fao.oaipmh.util.ISODate;
 import org.jdom.Attribute;
 import org.jdom.Element;
 

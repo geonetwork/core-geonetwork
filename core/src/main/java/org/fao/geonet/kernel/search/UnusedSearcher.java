@@ -22,7 +22,6 @@
 
 package org.fao.geonet.kernel.search;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
@@ -30,13 +29,19 @@ import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -80,24 +85,20 @@ class UnusedSearcher extends MetaSearcher
 		context.info("UnusedSearcher : using maxDiff="+maxDiff);
 
 		//--- proper search
+        final Specifications<Metadata> spec = Specifications.where(MetadataSpecs.isTemplate(true)).and(MetadataSpecs.isHarvested(false))
+                .and(MetadataSpecs.hasSource(siteId));
 
-		String query =	"SELECT DISTINCT id, createDate, changeDate "+
-							"FROM   Metadata "+
-							"WHERE  isTemplate='n' AND isHarvested='n' AND source=?";
+        final List<Metadata> list = context.getBean(MetadataRepository.class).findAll(spec);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, siteId).getChildren();
+        for (Metadata rec : list) {
+            int id = rec.getId();
 
-        for (Element rec : list) {
-            String id = rec.getChildText("id");
-
-            ISODate createDate = new ISODate(rec.getChildText("createdate"));
-            ISODate changeDate = new ISODate(rec.getChildText("changedate"));
+            ISODate createDate = rec.getDataInfo().getCreateDate();
+            ISODate changeDate = rec.getDataInfo().getChangeDate();
 
             if (changeDate.timeDifferenceInSeconds(createDate) / 60 < maxDiff) {
                 if (!hasInternetGroup(context, id)) {
-                    alResult.add(id);
+                    alResult.add("" + id);
                 }
             }
         }
@@ -171,12 +172,19 @@ class UnusedSearcher extends MetaSearcher
 	//---
 	//--------------------------------------------------------------------------
 
-	private boolean hasInternetGroup(ServiceContext context, String id) throws SQLException
+	private boolean hasInternetGroup(ServiceContext context, int id) throws SQLException
 	{
 	    OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        List<OperationAllowed> opsAllowed = operationAllowedRepository.findAllById_GroupIdAndId_MetadataId(ReservedGroup.all.getId(),
-                Integer.valueOf(id));
+
+        final Specification<OperationAllowed> hasGroupId = OperationAllowedSpecs.hasGroupId(ReservedGroup.all.getId());
+        final Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasMetadataId(id);
+        final Specifications<OperationAllowed> spec = Specifications.where(hasGroupId).and(hasMetadataId);
+        List<OperationAllowed> opsAllowed = operationAllowedRepository.findAll(spec);
 		return !opsAllowed.isEmpty();
+	}
+	private boolean hasInternetGroup(ServiceContext context, String id) throws SQLException
+	{
+		return hasInternetGroup(context, String.valueOf(id));
 	}
 
 	//--------------------------------------------------------------------------

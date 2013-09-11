@@ -22,7 +22,6 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
@@ -35,8 +34,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.oaipmh.Lib;
 
+import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
 
 import org.openrdf.sesame.Sesame;
@@ -88,8 +89,6 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * 
 	 * @param context ServiceContext used to check when servlet is up only
 	 * @param appPath to find conversion XSLTs etc
-	 * @param DataManager to retrieve metadata to convert to SKOS
-	 * @param resourceManager for database connections
 	 * @param thesauriRepository
 	 * @throws Exception
 	 */
@@ -269,29 +268,20 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * @param os OutputStream to write rdf to from XSLT conversion
 	 */
 	private void getRegisterMetadataAsRdf(String uuid, OutputStream os, ServiceContext context) throws Exception {
+        Metadata mdInfo = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
+        Integer id = mdInfo.getId();
+        Element md = dm.getMetadata("" + id);
+        Processor.detachXLink(md);
+        Element env = Lib.prepareTransformEnv(mdInfo.getUuid(), mdInfo.getDataInfo().getChangeDate().getDateAndTime(),
+                "", dm.getSiteURL(context), "");
 
+        //--- transform the metadata with the created env and specified stylesheet
+        Element root = new Element("root");
+        root.addContent(md);
+        root.addContent(env);
 
-		Dbms dbms = null;
-
-		try {
-			dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
-
-			String id = dm.getMetadataId(dbms, uuid);
-			Element md = dm.getMetadata(dbms, id);
-			Processor.detachXLink(md);
-			MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
-			Element env = Lib.prepareTransformEnv(mdInfo.uuid, mdInfo.changeDate, "", dm.getSiteURL(context), "");
-	
-			//--- transform the metadata with the created env and specified stylesheet
-			Element root = new Element("root");
-			root.addContent(md);
-			root.addContent(env);
-	
-			String styleSheet = dm.getSchemaDir("iso19135") + "convert/" + Geonet.File.EXTRACT_SKOS_FROM_ISO19135;
-			Xml.transform(root, styleSheet, os);
-		} finally {
-			if (dbms != null) rm.close(Geonet.Res.MAIN_DB, dbms);
-		}
+        String styleSheet = dm.getSchemaDir("iso19135") + "convert/" + Geonet.File.EXTRACT_SKOS_FROM_ISO19135;
+        Xml.transform(root, styleSheet, os);
 	}
 
 	/**

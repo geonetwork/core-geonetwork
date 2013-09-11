@@ -23,8 +23,8 @@
 
 package org.fao.oaipmh.responses;
 
+import org.fao.geonet.domain.ISODate;
 import org.fao.oaipmh.OaiPmh;
-import org.fao.oaipmh.util.ISODate;
 import org.jdom.Element;
 
 //=============================================================================

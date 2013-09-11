@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
@@ -59,7 +58,6 @@ public class ListSets implements OaiPmhService
 		if (req.getResumptionToken() != null)
 			throw new BadResumptionTokenException(req.getResumptionToken());
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String query = "SELECT name, label FROM Categories, CategoriesDes "+
 							"WHERE id=idDes AND langId=?";

@@ -1,6 +1,6 @@
 package org.fao.oaipmh.requests;
 
-import org.fao.oaipmh.util.ISODate;
+import org.fao.geonet.domain.ISODate;
 
 
 public abstract class TokenListRequest extends ListRequest {

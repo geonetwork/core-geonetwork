@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
@@ -39,9 +40,9 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
@@ -114,9 +115,10 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		
 			String id = settingMan.add(dbms, "harvesting", "node", getType());
 			storeNode(dbms, params, "id:"+id);
-			
-			Lib.sources.update(dbms, params.uuid, params.name, true);
-			Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
+
+        Source source = new Source(params.uuid, params.name, true);
+        context.getBean(SourceRepository.class).save(source);
+        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
 			
 			return id;
 	//	}
@@ -308,8 +310,9 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		//--- we update a copy first because if there is an exception ArcSDEParams
 		//--- could be half updated and so it could be in an inconsistent state
 
-		Lib.sources.update(dbms, copy.uuid, copy.name, true);
-		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
+        Source source = new Source(copy.uuid, copy.name, true);
+        context.getBean(SourceRepository.class).save(source);
+        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
 		
 		params = copy;
         super.setParams(params);

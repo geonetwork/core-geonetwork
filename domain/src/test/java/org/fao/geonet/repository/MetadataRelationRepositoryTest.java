@@ -5,6 +5,7 @@ import static org.fao.geonet.repository.MetadataRepositoryTest.newMetadata;
 
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataRelation;
+import org.fao.geonet.domain.MetadataRelationId;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,11 +37,11 @@ public class MetadataRelationRepositoryTest extends AbstractSpringDataTest {
     }
 
     private MetadataRelation newMetadataRelation() {
-        int val = _inc.incrementAndGet();
         Metadata metadata1 = _metadataRepo.save(newMetadata(_inc));
         Metadata metadata2 = _metadataRepo.save(newMetadata(_inc));
 
-        MetadataRelation relation = new MetadataRelation(metadata1, metadata2);
+        MetadataRelation relation = new MetadataRelation();
+        relation.setId(new MetadataRelationId(metadata1.getId(), metadata2.getId()));
 
         return relation;
     }

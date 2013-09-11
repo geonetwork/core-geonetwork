@@ -24,9 +24,9 @@
 package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.oaipmh.requests.AbstractRequest;
@@ -35,7 +35,6 @@ import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.responses.IdentifyResponse;
 import org.fao.oaipmh.responses.IdentifyResponse.DeletedRecord;
 import org.fao.oaipmh.responses.IdentifyResponse.Granularity;
-import org.fao.oaipmh.util.ISODate;
 import org.jdom.Element;
 
 import java.util.List;
@@ -73,8 +72,6 @@ public class Identify implements OaiPmhService
 
 	private ISODate getEarliestDS(ServiceContext context) throws Exception
 	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		String query = "SELECT min(changeDate) as mcd FROM Metadata";
 
 		@SuppressWarnings("unchecked")

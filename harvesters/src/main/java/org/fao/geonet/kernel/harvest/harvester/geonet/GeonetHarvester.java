@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
@@ -31,7 +32,7 @@ import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.SourceRepository;
 import org.jdom.Element;
 
 import java.sql.SQLException;
@@ -92,9 +93,10 @@ public class GeonetHarvester extends AbstractHarvester
 		String id = settingMan.add(dbms, "harvesting", "node", getType());
 
 		storeNode(dbms, params, "id:"+id);
-		Lib.sources.update(dbms, params.uuid, params.name, false);
+        Source source = new Source(params.uuid, params.name, false);
+        context.getBean(SourceRepository.class).save(source);
 
-		return id;
+        return id;
 	}
 
 	//---------------------------------------------------------------------------
@@ -121,9 +123,10 @@ public class GeonetHarvester extends AbstractHarvester
 		//--- we update a copy first because if there is an exception GeonetParams
 		//--- could be half updated and so it could be in an inconsistent state
 
-		Lib.sources.update(dbms, copy.uuid, copy.name, false);
+        Source source = new Source(copy.uuid, copy.name, false);
+        context.getBean(SourceRepository.class).save(source);
 
-		params = copy;
+        params = copy;
         super.setParams(params);
 
     }

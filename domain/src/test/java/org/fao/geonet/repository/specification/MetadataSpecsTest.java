@@ -32,7 +32,7 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
     @Test
     public void testHasMetadataId() throws Exception {
         Metadata md1 = _repository.save(newMetadata(_inc));
-        assertFindsCorrectMd(md1, hasMetadataId(md1.getId()));
+        assertFindsCorrectMd(md1, hasMetadataId(md1.getId()), true);
     }
 
     @Test
@@ -40,7 +40,7 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         Metadata md1 = _repository.save(newMetadata(_inc));
         Specification<Metadata> spec = hasMetadataUuid(md1.getUuid());
 
-        assertFindsCorrectMd(md1, spec);
+        assertFindsCorrectMd(md1, spec, true);
     }
 
 
@@ -48,12 +48,46 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
     public void testHasHarvesterUuid() throws Exception {
         Metadata md1 = _repository.save(newMetadata(_inc));
         Specification<Metadata> spec = hasHarvesterUuid(md1.getHarvestInfo().getUuid());
-        assertFindsCorrectMd(md1,spec);
+        assertFindsCorrectMd(md1,spec, true);
     }
 
-    private void assertFindsCorrectMd(Metadata md1, Specification<Metadata> spec) {
-        Metadata md2 = _repository.save(newMetadata(_inc));
+    @Test
+    public void testIsHarvested() throws Exception {
+        Metadata md1 = newMetadata(_inc);
+        md1.getHarvestInfo().setHarvested(false);
+        md1 = _repository.save(md1);
+        Metadata md2 = newMetadata(_inc);
+        md2.getHarvestInfo().setHarvested(true);
+        md2 = _repository.save(md2);
 
+        assertFindsCorrectMd(md1, isHarvested(false), false);
+        assertFindsCorrectMd(md2, isHarvested(true), false);
+    }
+
+    @Test
+    public void testIsTemplate() throws Exception {
+        Metadata md1 = newMetadata(_inc);
+        md1.getDataInfo().setTemplate(false);
+        md1 = _repository.save(md1);
+        Metadata md2 = newMetadata(_inc);
+        md2.getDataInfo().setTemplate(true);
+        md2 = _repository.save(md2);
+
+        assertFindsCorrectMd(md1, isTemplate(false), false);
+        assertFindsCorrectMd(md2, isTemplate(true), false);
+    }
+
+    @Test
+    public void testHasSource() throws Exception {
+        Metadata md1 = _repository.save(newMetadata(_inc));
+        Specification<Metadata> spec = hasSource(md1.getSourceInfo().getSourceId());
+        assertFindsCorrectMd(md1,spec, true);
+    }
+
+    private void assertFindsCorrectMd(Metadata md1, Specification<Metadata> spec, boolean addNewMetadata) {
+        if (addNewMetadata) {
+            _repository.save(newMetadata(_inc));
+        }
         List<Integer> found = _repository.findAllIdsBy(spec);
         assertEquals(1, found.size());
         assertEquals(md1.getId(), found.get(0).intValue());

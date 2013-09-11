@@ -25,6 +25,7 @@ package org.fao.oaipmh.util;
 
 import java.util.Map;
 
+import org.fao.geonet.domain.ISODate;
 import org.fao.oaipmh.OaiPmh;
 import org.jdom.Element;
 
@@ -44,7 +45,7 @@ public class Lib
 		root.setAttribute("schemaLocation", OaiPmh.SCHEMA_LOCATION, OaiPmh.Namespaces.XSI);
 
 		Element date = new Element("responseDate", OaiPmh.Namespaces.OAI_PMH)
-									.setText(new ISODate().toString() +"Z");
+									.setText(new ISODate().getDateAndTime() +"Z");
 
 		root.addContent(date);
 

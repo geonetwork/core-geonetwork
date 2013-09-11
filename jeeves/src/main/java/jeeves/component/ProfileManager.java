@@ -87,12 +87,6 @@ public class ProfileManager
 
 	//--------------------------------------------------------------------------
 
-	public static Set<String> getProfilesSet(String profile)
-	{
-		
-		return Profile.valueOf(profile).getAllNames();
-	}
-
     /**
      * Return the highest profile in the list by checking the number
      * of extended profiles for each.

@@ -58,8 +58,8 @@ import org.fao.geonet.kernel.harvest.harvester.wfsfeatures.WfsFeaturesHarvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950Config.Z3950ConfigHarvester;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.monitor.harvest.AbstractHarvesterErrorCounter;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
@@ -622,7 +622,7 @@ public abstract class AbstractHarvester extends BaseAligner {
             Log.warning(Geonet.HARVESTER+"."+getType(), "Unable to delete icon: "+icon);
         }
 
-        Lib.sources.delete(dbms, params.uuid);
+        context.getBean(SourceRepository.class).delete(params.uuid);
 
         // FIXME: Should also delete the categories we have created for servers
     }

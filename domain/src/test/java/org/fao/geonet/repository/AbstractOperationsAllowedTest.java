@@ -64,7 +64,7 @@ public abstract class AbstractOperationsAllowedTest extends AbstractSpringDataTe
     private Metadata newMetadata(int id) {
         Metadata newMd = new Metadata().setUuid("uuid"+id).setData("data"+id);
         newMd.getDataInfo().setSchemaId("schemaId"+id);
-        newMd.getSourceInfo().setOwner(id).setSource("source"+id);
+        newMd.getSourceInfo().setOwner(id).setSourceId("source" + id);
         return newMd;
     }
 

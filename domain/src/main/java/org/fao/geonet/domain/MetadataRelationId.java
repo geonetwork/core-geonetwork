@@ -2,6 +2,7 @@ package org.fao.geonet.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
@@ -17,17 +18,35 @@ public class MetadataRelationId implements Serializable {
     private int _relatedId;
 
     /**
+     * Default constructor, needed by JPA.
+     */
+    public MetadataRelationId() {
+    }
+
+    /**
+     * Convenience constructor.
+     *
+     * @param metadataId one side of the relation.
+     * @param _relatedId the other side of relation.
+     */
+    public MetadataRelationId(Integer metadataId, Integer _relatedId) {
+        this._metadataId = metadataId;
+        this._relatedId = _relatedId;
+    }
+
+    /**
      * Get the id of the first metadata.
      * 
      * @return the id of the first metadata.
      */
+    @Column(name = "metadataid")
     public int getMetadataId() {
         return _metadataId;
     }
 
     /**
      * Set the id of the first metadata.
-     * 
+     *
      * @param metadataId the id of the first metadata.
      */
     public void setMetadataId(int metadataId) {
@@ -36,9 +55,10 @@ public class MetadataRelationId implements Serializable {
 
     /**
      * Get the id of the second metadata.
-     * 
+     *
      * @return the id of the second metadata.
      */
+    @Column(name = "relatedid")
     public int getRelatedId() {
         return _relatedId;
     }

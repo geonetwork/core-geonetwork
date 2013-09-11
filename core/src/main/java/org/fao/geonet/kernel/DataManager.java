@@ -499,7 +499,7 @@ public class DataManager {
             final String  schema     = fullMd.getDataInfo().getSchemaId();
             final String  createDate = fullMd.getDataInfo().getCreateDate().getDateAndTime();
             final String  changeDate = fullMd.getDataInfo().getChangeDate().getDateAndTime();
-            final String  source     = fullMd.getSourceInfo().getSource();
+            final String  source     = fullMd.getSourceInfo().getSourceId();
             final String  isTemplate = String.valueOf(Constants.toYN_EnabledChar(fullMd.getDataInfo().isTemplate()));
             final String  root       = fullMd.getDataInfo().getRoot();
             final String  title      = fullMd.getDataInfo().getTitle();
@@ -1401,7 +1401,7 @@ public class DataManager {
         newMetadata.getSourceInfo()
                 .setGroupOwner(Integer.valueOf(groupOwner))
                 .setOwner(owner)
-                .setSource(source);
+                .setSourceId(source);
 
         Collection<MetadataCategory> copiedCategories = Collections2.transform(templateMetadata.getCategories(),
                 new Function<MetadataCategory, MetadataCategory>() {
@@ -1466,7 +1466,7 @@ public class DataManager {
         newMetadata.getSourceInfo()
                 .setGroupOwner(Integer.valueOf(groupOwner))
                 .setOwner(owner)
-                .setSource(source);
+                .setSourceId(source);
         if (category != null) {
             MetadataCategory metadataCategory = _applicationContext.getBean(MetadataCategoryRepository.class).findOneByName(category);
             if (metadataCategory == null) {
@@ -2287,27 +2287,60 @@ public class DataManager {
      */
     public void setOperation(ServiceContext context, int mdId, int grpId, int opId) throws Exception {
         OperationAllowedRepository opAllowedRepo = _applicationContext.getBean(OperationAllowedRepository.class);
+        Optional<OperationAllowed> opAllowed = getOperationAllowedToAdd(context, mdId, grpId, opId);
+
+        // Set operation
+        if (opAllowed.isPresent()) {
+            opAllowedRepo.save(opAllowed.get());
+            if (svnManager != null) {
+                svnManager.setHistory(mdId + "", context);
+            }
+        }
+    }
+
+    /**
+     * Check that the operation has not been added and if not that it can be added.
+     * <ul>
+     *     <li>
+     *         If the operation can be added then an non-empty optional is return.
+ *         </li>
+     *     <li>
+     *         If it has already been added the return empty optional
+     *     </li>
+     *     <li>
+     *         If it is not permitted to be added throw exception.
+     *     </li>
+     * </ul>
+     *
+     * @param context
+     * @param mdId
+     * @param grpId
+     * @param opId
+     * @return
+     */
+    public Optional<OperationAllowed> getOperationAllowedToAdd(final ServiceContext context, final int mdId, final int grpId, final int opId) {
+        OperationAllowedRepository opAllowedRepo = _applicationContext.getBean(OperationAllowedRepository.class);
         UserGroupRepository userGroupRepo = _applicationContext.getBean(UserGroupRepository.class);
+        final OperationAllowed operationAllowed = opAllowedRepo
+                .findOneById_GroupIdAndId_MetadataIdAndId_OperationId(grpId, mdId, opId);
 
-
-        OperationAllowed opAllowed= opAllowedRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(grpId, mdId, opId);
-
-        if (opAllowed == null) {
+        if (operationAllowed == null) {
             // Check user privileges
             // Session may not be defined when a harvester is running
             if (context.getUserSession() != null) {
                 Profile userProfile = context.getUserSession().getProfile();
-                if (! (userProfile == Profile.Administrator || userProfile == Profile.UserAdmin) ) {
+                if (!(userProfile == Profile.Administrator || userProfile == Profile.UserAdmin)) {
                     int userId = Integer.parseInt(context.getUserSession().getUserId());
                     // Reserved groups
                     if (ReservedGroup.isReserved(grpId)) {
 
-                        Specification<UserGroup> hasUserIdAndProfile  = Specifications.where(UserGroupSpecs.hasProfile(Profile.Reviewer))
+                        Specification<UserGroup> hasUserIdAndProfile = Specifications.where(UserGroupSpecs.hasProfile(Profile.Reviewer))
                                 .and(UserGroupSpecs.hasUserId(userId));
                         List<Integer> groupIds = userGroupRepo.findGroupIds(hasUserIdAndProfile);
 
                         if (groupIds.isEmpty()) {
-                            throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not a Reviewer of any group.");
+                            throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not a "
+                                                          + "Reviewer of any group.");
                         }
                     } else {
                         String userGroupsOnly = settingMan.getValue("system/metadataprivs/usergrouponly");
@@ -2315,24 +2348,22 @@ public class DataManager {
                             // If user is member of the group, user can set operation
 
                             if (userGroupRepo.exists(new UserGroupId().setGroupId(grpId).setUserId(userId))) {
-                                    throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not member of this group.");
+                                throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not"
+                                                              + " member of this group.");
                             }
                         }
                     }
                 }
             }
         }
-        // Set operation
-        OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        if (opAllowed == null) {
-            opAllowed = new OperationAllowed(new OperationAllowedId().setGroupId(grpId).setMetadataId(mdId).setOperationId(opId));
-            operationAllowedRepository.save(opAllowed);
-            if (svnManager != null) {
-                svnManager.setHistory(mdId+"", context);
-            }
+
+        if (operationAllowed == null) {
+            return Optional.of(new OperationAllowed(new OperationAllowedId().setGroupId(grpId).setMetadataId(mdId).setOperationId(opId)));
+        } else {
+            return Optional.absent();
         }
     }
-    
+
     /**
      *
      * @param context
@@ -2797,7 +2828,7 @@ public class DataManager {
         String schema = dataInfo.getSchemaId();
         String createDate = dataInfo.getCreateDate().getDateAndTime();
         String changeDate = dataInfo.getChangeDate().getDateAndTime();
-        String source = metadata.getSourceInfo().getSource();
+        String source = metadata.getSourceInfo().getSourceId();
         String isTemplate = "" + Constants.toYN_EnabledChar(dataInfo.isTemplate());
         String title = dataInfo.getTitle();
         String uuid = metadata.getUuid();

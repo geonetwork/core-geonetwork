@@ -23,11 +23,9 @@
 
 package org.fao.geonet.services.ownership;
 
-import jeeves.component.ProfileManager;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;
 import org.jdom.Element;
 
@@ -81,7 +79,7 @@ public class OwnershipUtils
 
 		Set<String> hsMyGroups = getUserGroups(dbms, id);
 
-        Set<String> profileSet = ProfileManager.getProfilesSet(us.getProfile());
+        Set<String> profileSet = us.getProfile().getAllNames();
 
 		//--- now filter them
 

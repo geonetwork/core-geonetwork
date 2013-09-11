@@ -31,25 +31,12 @@ import javax.persistence.Table;
 @Access(AccessType.PROPERTY)
 public class MetadataRelation extends GeonetEntity {
     private MetadataRelationId _id = new MetadataRelationId();
-    private Metadata _metadata;
-    private Metadata _related;
 
     /**
      * Default constructor, required by JPA.
      */
     public MetadataRelation() {
 
-    }
-
-    /**
-     * Convenience constructor.
-     *
-     * @param metadata1 metadata on one end of relationship
-     * @param related metadata on other end of relationship
-     */
-    public MetadataRelation(final Metadata metadata1, final Metadata related) {
-        setMetadata(metadata1);
-        setRelated(related);
     }
 
     /**
@@ -69,56 +56,5 @@ public class MetadataRelation extends GeonetEntity {
      */
     public void setId(final MetadataRelationId id) {
         this._id = id;
-    }
-
-    /**
-     * Get the one of the metadata in the relationship.
-     * 
-     * @return the one of the metadata in the relationship.
-     */
-    @MapsId("metadataId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", referencedColumnName = "id")
-
-    public Metadata getMetadata() {
-        return _metadata;
-    }
-
-    /**
-     * Set the one of the metadata in the relationship.
-     * <p>
-     *     The metadata must be a managed entity. (returned from repository save method or one of the find methods)
-     * </p>
-     * 
-     * @param metadata the one of the metadata in the relationship.
-     */
-    public void setMetadata(Metadata metadata) {
-        this._metadata = metadata;
-        _id.setMetadataId(metadata.getId());
-    }
-
-    /**
-     * Get the second of the related metadata.
-     * 
-     * @return the second of the related metadata.
-     */
-    @MapsId("relatedId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "relatedid", referencedColumnName = "id")
-    public Metadata getRelated() {
-        return _related;
-    }
-
-    /**
-     * Set the second of the related metadata.
-     * <p>
-     *     The metadata must be a managed entity. (returned from repository save method or one of the find methods)
-     * </p>
-     *
-     * @param related the second of the related metadata.
-     */
-    public void setRelated(Metadata related) {
-        this._related = related;
-        _id.setRelatedId(related.getId());
     }
 }

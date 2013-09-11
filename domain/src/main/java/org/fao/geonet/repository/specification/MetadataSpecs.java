@@ -53,9 +53,42 @@ public final class MetadataSpecs {
         return new Specification<Metadata>() {
             @Override
             public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Integer> userNameAttributePath = root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.owner);
-                Predicate equalUserIdPredicate = cb.equal(userNameAttributePath, cb.literal(userId));
+                Path<Integer> ownerPath = root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.owner);
+                Predicate equalUserIdPredicate = cb.equal(ownerPath, cb.literal(userId));
                 return equalUserIdPredicate;
+            }
+        };
+    }
+
+    public static Specification<Metadata> hasSource(final String sourceUuid) {
+        return new Specification<Metadata>() {
+            @Override
+            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<String> sourceAttributePath = root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.sourceId);
+                Predicate equalSourceIdPredicate = cb.equal(sourceAttributePath, cb.literal(sourceUuid));
+                return equalSourceIdPredicate;
+            }
+        };
+    }
+
+    public static Specification<Metadata> isTemplate(final boolean isTemplate) {
+        return new Specification<Metadata>() {
+            @Override
+            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Character> templateAttributePath = root.get(Metadata_.dataInfo).get(MetadataDataInfo_.template_JPAWorkaround);
+                Predicate equalTemplatePredicate = cb.equal(templateAttributePath, cb.literal(Constants.toYN_EnabledChar(isTemplate)));
+                return equalTemplatePredicate;
+            }
+        };
+    }
+
+    public static Specification<Metadata> isHarvested(final boolean isHarvested) {
+        return new Specification<Metadata>() {
+            @Override
+            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Character> userNameAttributePath = root.get(Metadata_.harvestInfo).get(MetadataHarvestInfo_.harvested_JPAWorkaround);
+                Predicate equalHarvestPredicate = cb.equal(userNameAttributePath, cb.literal(Constants.toYN_EnabledChar(isHarvested)));
+                return equalHarvestPredicate;
             }
         };
     }

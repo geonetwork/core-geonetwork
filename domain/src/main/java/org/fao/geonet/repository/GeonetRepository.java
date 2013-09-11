@@ -8,6 +8,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Serializable;
 
 /**
@@ -65,7 +66,7 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
      * @return  all entities in XML.
      */
     @Nonnull
-    Element findAllAsXml(Specification<T> specification);
+    Element findAllAsXml(@Nonnull Specification<T> specification);
 
     /**
      * Load all entities that satisfy the criteria provided and convert each to XML of the form:
@@ -80,5 +81,5 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
      * @return  all entities in XML.
      */
     @Nonnull
-    Element findAllAsXml(Specification<T> specification, Sort sort);
+    Element findAllAsXml(@Nullable Specification<T> specification, @Nullable Sort sort);
 }

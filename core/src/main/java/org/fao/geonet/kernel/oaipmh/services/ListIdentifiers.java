@@ -25,23 +25,24 @@ package org.fao.geonet.kernel.oaipmh.services;
 
 import java.util.List;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.oaipmh.requests.ListIdentifiersRequest;
 import org.fao.oaipmh.requests.TokenListRequest;
 import org.fao.oaipmh.responses.Header;
 import org.fao.oaipmh.responses.ListIdentifiersResponse;
 import org.fao.oaipmh.responses.ListResponse;
-import org.fao.oaipmh.util.ISODate;
 import org.fao.oaipmh.util.SearchResult;
-import org.jdom.Element;
 
 //=============================================================================
 
@@ -95,24 +96,20 @@ public class ListIdentifiers extends AbstractTokenLister
 	@SuppressWarnings("unchecked")
 	private Header buildHeader(ServiceContext context, int id, String prefix) throws Exception
 	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SchemaManager   sm = gc.getBean(SchemaManager.class);
 
-		String query = "SELECT uuid, schemaId, changeDate FROM Metadata WHERE id=?";
-
-		List<Element> list = dbms.select(query, id).getChildren();
+        final Metadata metadata = gc.getBean(MetadataRepository.class).findOne(id);
 
 		//--- maybe the metadata has been removed
 
-		if (list.size() == 0)
+		if (metadata == null) {
 			return null;
+        }
 
-		Element rec = list.get(0);
-
-		String uuid       = rec.getChildText("uuid");
-		String schema     = rec.getChildText("schemaid");
-		String changeDate = rec.getChildText("changedate");
+		String uuid       = metadata.getUuid();
+		String schema     = metadata.getDataInfo().getSchemaId();
+		ISODate changeDate = metadata.getDataInfo().getChangeDate();
 
 		//--- try to disseminate format if not by schema then by conversion
 
@@ -127,19 +124,13 @@ public class ListIdentifiers extends AbstractTokenLister
 		Header h = new Header();
 
 		h.setIdentifier(uuid);
-		h.setDateStamp(new ISODate(changeDate));
+		h.setDateStamp(changeDate);
 
 		//--- find and add categories (here called sets)
 
-		query = "SELECT name FROM Categories, MetadataCateg WHERE id=categoryId AND metadataId=?";
-
-		list = dbms.select(query, id).getChildren();
-
-		for (Object o : list)
+		for (MetadataCategory category : metadata.getCategories())
 		{
-			rec = (Element) o;
-
-			h.addSet(rec.getChildText("name"));
+			h.addSet(category.getName());
 		}
 
 		return h;

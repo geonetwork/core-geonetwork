@@ -22,12 +22,8 @@
 //==============================================================================
 package org.fao.geonet.notifier;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
-
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 
 import javax.transaction.TransactionManager;
 
