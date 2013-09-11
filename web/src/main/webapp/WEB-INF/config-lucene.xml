@@ -129,6 +129,8 @@
       <field name="_indexingError" tagName="idxError"/>
       <field name="_indexingErrorMsg" tagName="idxMsg"/>
       <field name="_op0" tagName="publishedForGroup"/>
+      <!-- Sextant -->
+      <field name="sextantTheme" tagName="sextantTheme"/>
     </dumpFields>
   </search>
 
