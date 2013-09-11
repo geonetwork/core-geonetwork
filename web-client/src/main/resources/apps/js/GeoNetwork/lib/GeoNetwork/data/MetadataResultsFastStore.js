@@ -274,6 +274,13 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             return '';
         }
     }
+    function getSextantTheme(v, record){
+        if (record.sextantTheme) {
+            return record.sextantTheme;
+        } else {
+            return '';
+        }
+    }
     function getChangeDate(v, record){
         if (record.geonet_info && record.geonet_info.changeDate) {
             return record.geonet_info.changeDate[0].value;
@@ -449,6 +456,9 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }, {
             name: 'idxMsg',
             convert: getIdxMsg
+        },{
+            name: 'sextantTheme',
+            convert: getSextantTheme
         }
         ]
     });

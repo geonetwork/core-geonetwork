@@ -253,6 +253,7 @@ cat.what = function() {
 			var categoryTree = new GeoNetwork.CategoryTree({
 				store : categoryStore,
 				lang: cat.language,
+                id : 'E_sextantTheme',
                 name : 'E_sextantTheme',
 				storeLabel: sextantThemeThesaurusStore,
 				rootVisible: false,
