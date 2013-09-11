@@ -63,8 +63,14 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     	if(type == 'wms') {
 	    	var c = link.split('|');
 	    	
-	    	if(this.getStore().getAt(this.curId).get("category")) {
-	    		Ext.get(Ext.query('input[id*=layergroup]')[0]).dom.value = this.getStore().getAt(this.curId).get("category")[0].value;
+	    	var theme = this.getStore().getAt(this.curId).get("sextantTheme")[0].value;
+	    	if(theme) {
+	    		var translationStore = Ext.getCmp('E_sextantTheme').storeLabel;
+	    		var idx = translationStore.find('name',theme, null, false);
+	            if(idx >= 0 && translationStore.getAt(idx).get('label')) {
+	            	Ext.get(Ext.query('input[id*=layergroup]')[0]).dom.value = 
+	            		translationStore.getAt(idx).get('label');
+	            }
 	    	}
 	    	
 	    	Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = c[0];
