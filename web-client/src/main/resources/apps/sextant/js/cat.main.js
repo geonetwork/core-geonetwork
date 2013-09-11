@@ -620,24 +620,25 @@ cat.app = function() {
 			});
 			cpt.on('facetmode',function() {
 			    if(activeSearchMode != 'facet') {
-		             cpt.setVisible(false);
-		             cpt.ownerCt.header.child('#searchFormHeaderLinkFacet').addClass('bold');
-		             cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced').removeClass('bold');
-	                 cpt.ownerCt.header.child('#searchFormHeaderLinkSimple').removeClass('bold');
+		            cpt.setVisible(false);
+		            if(cpt.ownerCt.header.child('#searchFormHeaderLinkFacet')) {
+		            	cpt.ownerCt.header.child('#searchFormHeaderLinkFacet').addClass('bold');
+		            }
+                    if(cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced')) {
+                        cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced').removeClass('bold');
+                    }
+                    if(cpt.ownerCt.header.child('#searchFormHeaderLinkSimple')) {
+                        cpt.ownerCt.header.child('#searchFormHeaderLinkSimple').removeClass('bold');
+                    }
 			    }
             });
-            if(cookie.get('cat.searchform.viewmode') == 'advanced') {
-                this.fireEvent('advancedmode', this);
-                activeSearchMode = 'advanced';
-            }
-            else if(cookie.get('cat.searchform.viewmode') == 'facet') {
-                this.fireEvent('facetmode', this);
-                activeSearchMode = 'facet';
-            } 
-            else if(cookie.get('cat.searchform.viewmode') == 'simple') {
-                this.fireEvent('simplemode', this);
-                activeSearchMode = 'simple';
-            }
+			
+			// get active serach mode from cookies, or from the first element of the config list
+			// then fire the event of the mode
+			var initMode = searchModes[0] || 'simple';
+			initMode = cookie.get('cat.searchform.viewmode') ? cookie.get('cat.searchform.viewmode') : initMode;
+			this.fireEvent(initMode + 'mode', this);
+			activeSearchMode = initMode;
 		});
 		
 		return searchForm;
@@ -814,7 +815,7 @@ cat.app = function() {
 					title : '<span id="searchFormHeaderTitle" class="mainheader">'
 	                    + OpenLayers.i18n('search-view-form') + ' :'
 	                    + '</span>'
-                        + (searchModes.indexOf('facetted') ? 
+                        + (searchModes.indexOf('facet') >= 0? 
                                 '<a id="searchFormHeaderLinkFacet" href="#">' + 
                                 OpenLayers.i18n('search-header-facet') + 
                                 '</a>' : '')
