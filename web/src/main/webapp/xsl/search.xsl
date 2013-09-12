@@ -410,7 +410,10 @@
 							<xsl:attribute name="src"><xsl:value-of
 								select="$baseUrl" />/apps/js/ext-ux/LightBox/lightbox.js</xsl:attribute>
 						</script>
-						
+					    <script type="text/javascript">
+					        <xsl:attribute name="src"><xsl:value-of
+					            select="$baseUrl" />/apps/js/ext-ux/CheckColumn.js</xsl:attribute>
+					    </script>
 						<script type="text/javascript">
 							<xsl:attribute name="src"><xsl:value-of
 								select="$baseUrl" />/apps/js/proj4js-compressed.js</xsl:attribute>

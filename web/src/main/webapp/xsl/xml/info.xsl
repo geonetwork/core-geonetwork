@@ -148,6 +148,11 @@
 					<enable><xsl:value-of select="setting[@name='system/harvester/enableEditing']/@value"/></enable>
 				</harvester>
 			</xsl:when>
+		    <xsl:when test="not(setting[@name='system/site/name']) and setting[@name='system/metadataprivs/usergrouponly']">
+		        <metadataprivs>
+		            <userGroupOnly><xsl:value-of select="setting[@name='system/metadataprivs/usergrouponly']/@value"/></userGroupOnly>
+		        </metadataprivs>
+		    </xsl:when>
 			<xsl:otherwise>
 				<!-- Not needed -->
 			</xsl:otherwise>

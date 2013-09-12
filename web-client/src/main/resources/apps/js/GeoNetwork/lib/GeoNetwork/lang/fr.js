@@ -21,6 +21,8 @@ Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 GeoNetwork.Lang.fr = {
     'metadata-not-found': 'La métadonnée avec l\'identifiant ${uuid} n\'a pas été trouvée ou n\'est pas partagée avec vous.',
     'Administrator': 'Administrateur',
+    'filterGroup': 'Filtrer les groupes ...',
+    'checkAllOrNone': 'Cocher tout/rien',
     'Reviewer': 'Relecteur',
     'RegisteredUser': 'Utilisateur inscrit',
     'Editor': 'Éditeur',
@@ -454,6 +456,7 @@ GeoNetwork.Lang.fr = {
     'metadata.update.forget.new': 'Ré-initialisation en cours ...',
     'ownerName': 'Rédacteur de la métadonnée',
     'setPrivileges': 'Définir les privilèges',
+    'setBatchPrivileges': 'Modifier tous les privilèges des fiches sélectionnées',
     'setCategories': 'Choisir les catégories',
     'massiveOp': 'Opération sur la sélection',
     'prepareDownload': 'Télécharger les fichiers',
