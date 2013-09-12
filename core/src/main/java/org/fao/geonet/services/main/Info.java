@@ -139,6 +139,12 @@ public class Info implements Service {
                         new String[]{
                                 "system/harvester/enableEditing"
                                 }));
+			
+			else if (type.equals("userGroupOnly"))
+                result.addContent(gc.getBean(SettingManager.class).getValues(
+                        new String[]{
+                                "system/metadataprivs/usergrouponly"
+                                }));
 
 			else if (type.equals("categories"))
 				result.addContent(Lib.local.retrieve(dbms, "Categories"));

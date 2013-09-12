@@ -123,7 +123,8 @@
                 <include>${project.build.directory}/classes/apps/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.js</include>
                 <include>${project.build.directory}/classes/apps/js/ext-ux/LightBox/lightbox.js</include>
                 <include>${project.build.directory}/classes/apps/js/ext-ux/SuperBoxSelect/SuperBoxSelect.js</include>
-
+                <include>${project.build.directory}/classes/apps/js/ext-ux/CheckColumn.js</include>
+                
                 <include>${project.build.directory}/classes/apps/js/proj4js-compressed.js</include>
 
 
@@ -411,7 +412,8 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/MetadataInsertPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/SubTemplateManagerPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/ThesaurusManagerPanel.js</include>
-
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/PrivilegesPanel.js</include>
+                
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/OGCServiceQuickRegister.js</include>
 
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/ExtentMap.js</include>

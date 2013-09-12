@@ -332,7 +332,7 @@ GeoNetwork.editor.InsertMetadataPanel = Ext.extend(Ext.form.FormPanel, {
                              failure: function(form, action) {
                                  this.updateStatus(action.response, false);
                              },
-                             scope: this,
+                             scope: this
                         });
                     }
                 }
