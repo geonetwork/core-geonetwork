@@ -62,7 +62,7 @@ public class ResourceLib {
 
 	/**
 	 * Get metadata public or private data directory. See
-	 * {@link #getDir(String, String, String)}.
+	 * {@link #getDir(jeeves.server.context.ServiceContext, String, int)}.
 	 */
 	public String getDir(ServiceContext context, String access, String id) {
 		return getDir(getDataDir(context), access, id);
@@ -78,16 +78,17 @@ public class ResourceLib {
 	/**
 	 * Get metadata public or private data directory
 	 * 
-	 * @param dataDir
-	 *            The root data directory
-	 * @param access
-	 *            The type of data directory. {@link Params.Access#PUBLIC} or
-	 *            {@link Params.Access#PRIVATE}
-	 * @param id
-	 *            The metadata identifier
-	 * @return The data directory
+	 *
+     * @param dataDir
+     *            The root data directory
+     * @param access
+     *            The type of data directory. {@link org.fao.geonet.constants.Params.Access#PUBLIC} or
+     *            {@link org.fao.geonet.constants.Params.Access#PRIVATE}
+     * @param id
+     *            The metadata identifier
+     * @return The data directory
 	 */
-	public String getDir(String dataDir, String access, String id) {
+	public String getDir(ServiceContext dataDir, String access, int id) {
 		String mdDir = getMetadataDir(dataDir, id);
 		String subDir = (access != null && access.equals(Params.Access.PUBLIC)) ? Params.Access.PUBLIC
 				: Params.Access.PRIVATE;

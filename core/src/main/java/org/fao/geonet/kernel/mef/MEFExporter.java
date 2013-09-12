@@ -24,9 +24,10 @@
 package org.fao.geonet.kernel.mef;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
@@ -66,21 +67,15 @@ class MEFExporter {
 	 */
 	public static String doExport(ServiceContext context, String uuid,
 			Format format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
+		Metadata record = MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
 
-		Element record = MEFLib.retrieveMetadata(context, dbms, uuid, resolveXlink, removeXlinkAttribute);
-
-		String id = record.getChildText("id");
-		String data = record.getChildText("data");
-		String isTemp = record.getChildText("istemplate");
-
-		if (!"y".equals(isTemp) && !"n".equals(isTemp))
+		if (record.getDataInfo().getType() != MetadataType.METADATA) {
 			throw new Exception("Cannot export sub template");
+        }
 
 		File file = File.createTempFile("mef-", ".mef");
-		String pubDir = Lib.resource.getDir(context, "public", id);
-		String priDir = Lib.resource.getDir(context, "private", id);
+		String pubDir = Lib.resource.getDir(context, "public", record.getId());
+		String priDir = Lib.resource.getDir(context, "private", record.getId());
 
 		FileOutputStream fos = new FileOutputStream(file);
 		ZipOutputStream zos = new ZipOutputStream(fos);
@@ -92,10 +87,11 @@ class MEFExporter {
 
 		// --- save metadata
 
-		if (!data.startsWith("<?xml"))
-			data = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + data;
+		if (!record.getData().startsWith("<?xml")) {
+			record.setData("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + record.getData());
+        }
 
-		byte[] binData = data.getBytes(Jeeves.ENCODING);
+		byte[] binData = record.getData().getBytes(Jeeves.ENCODING);
 
 		MEFLib.addFile(zos, FILE_METADATA, new ByteArrayInputStream(binData));
 
@@ -113,7 +109,7 @@ class MEFExporter {
 
 		if (format == Format.FULL) {
 			try {
-                Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
+                Lib.resource.checkPrivilege(context, "" + record.getId(), ReservedOperation.download);
 				MEFLib.savePrivate(zos, priDir, null);
 			} catch (Exception e) {
 				// Current user could not download private data

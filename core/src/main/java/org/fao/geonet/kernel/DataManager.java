@@ -500,7 +500,7 @@ public class DataManager {
             final String  createDate = fullMd.getDataInfo().getCreateDate().getDateAndTime();
             final String  changeDate = fullMd.getDataInfo().getChangeDate().getDateAndTime();
             final String  source     = fullMd.getSourceInfo().getSourceId();
-            final String  isTemplate = String.valueOf(Constants.toYN_EnabledChar(fullMd.getDataInfo().isTemplate()));
+            final String  isTemplate = String.valueOf(Constants.toYN_EnabledChar(fullMd.getDataInfo().getType()));
             final String  root       = fullMd.getDataInfo().getRoot();
             final String  title      = fullMd.getDataInfo().getTitle();
             final String  uuid       = fullMd.getUuid();
@@ -1132,7 +1132,7 @@ public class DataManager {
      * @throws Exception
      */
     public String getMetadataTemplate(String id) throws Exception {
-        return String.valueOf(Constants.toYN_EnabledChar(_metadataRepository.findOne(id).getDataInfo().isTemplate()));
+        return String.valueOf(Constants.toYN_EnabledChar(_metadataRepository.findOne(id).getDataInfo().getType()));
     }
 
     /**
@@ -1183,7 +1183,7 @@ public class DataManager {
                     dataInfo.setTitle(title);
                 }
 
-                dataInfo.setTemplate(isTemplate);
+                dataInfo.setType(isTemplate);
             }
         });
     }
@@ -1397,7 +1397,7 @@ public class DataManager {
                 .setChangeDate(new ISODate())
                 .setCreateDate(new ISODate())
                 .setSchemaId(schema)
-                .setTemplate(Constants.toBoolean_fromYNChar(isTemplate.charAt(0)));
+                .setType(Constants.toBoolean_fromYNChar(isTemplate.charAt(0)));
         newMetadata.getSourceInfo()
                 .setGroupOwner(Integer.valueOf(groupOwner))
                 .setOwner(owner)
@@ -1462,7 +1462,7 @@ public class DataManager {
                 .setSchemaId(schema)
                 .setDoctype(docType)
                 .setTitle(title)
-                .setTemplate(Constants.toBoolean_fromYNChar(isTemplate.charAt(0)));
+                .setType(Constants.toBoolean_fromYNChar(isTemplate.charAt(0)));
         newMetadata.getSourceInfo()
                 .setGroupOwner(Integer.valueOf(groupOwner))
                 .setOwner(owner)
@@ -1492,7 +1492,7 @@ public class DataManager {
         setNamespacePrefixUsingSchemas(schema, metadataXml);
 
 
-        if (updateFixedInfo && newMetadata.getDataInfo().isTemplate()) {
+        if (updateFixedInfo && newMetadata.getDataInfo().getType()) {
             String parentUuid = null;
             metadataXml = updateFixedInfo(schema, Optional.<Integer>absent(), newMetadata.getUuid(), metadataXml, parentUuid, updateDatestamp, context);
         }
@@ -2663,7 +2663,7 @@ public class DataManager {
             Metadata metadata = null;
             if (metadataId.isPresent()) {
                 metadata = _metadataRepository.findOne(metadataId.get());
-                boolean isTemplate = metadata != null && metadata.getDataInfo().isTemplate();
+                boolean isTemplate = metadata != null && metadata.getDataInfo().getType();
 
                 // don't process templates
                 if(isTemplate) {
@@ -2829,7 +2829,7 @@ public class DataManager {
         String createDate = dataInfo.getCreateDate().getDateAndTime();
         String changeDate = dataInfo.getChangeDate().getDateAndTime();
         String source = metadata.getSourceInfo().getSourceId();
-        String isTemplate = "" + Constants.toYN_EnabledChar(dataInfo.isTemplate());
+        String isTemplate = "" + Constants.toYN_EnabledChar(dataInfo.getType());
         String title = dataInfo.getTitle();
         String uuid = metadata.getUuid();
         String isHarvested = "" + Constants.toYN_EnabledChar(metadata.getHarvestInfo().isHarvested());

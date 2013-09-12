@@ -23,15 +23,6 @@ public class ResourceTracker {
     private static final Lock trackerLock = new ReentrantLock(false);
 
     private void open(Object resource, Multimap<Object, Exception> tracker) {
-        boolean debugEnabled = Log.isDebugEnabled(Log.Dbms.RESOURCE_TRACKING);
-        if(debugEnabled) {
-            try {
-                trackerLock.lock();
-                tracker.put(resource, new Exception());
-            } finally {
-            	trackerLock.unlock();
-            }
-        }
 
     }
     /**

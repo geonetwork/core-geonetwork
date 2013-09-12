@@ -388,7 +388,7 @@ public class Importer {
                         if (finalRating != null) {
                             dataInfo.setRating(Integer.valueOf(finalRating));
                         }
-                        dataInfo.setTemplate(Constants.toBoolean_fromYNChar(isTemplate.charAt(0)));
+                        dataInfo.setType(Constants.toBoolean_fromYNChar(isTemplate.charAt(0)));
                         metadata.getHarvestInfo().setHarvested(false);
 
                         addCategoriesToMetadata(metadata, finalCategs, context);

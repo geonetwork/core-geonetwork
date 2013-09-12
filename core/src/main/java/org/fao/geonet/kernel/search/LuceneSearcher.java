@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.search;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -556,11 +555,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 		if (srvContext != null) {
 			GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
 	
-			Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
-
             @SuppressWarnings("unchecked")
             List<Element> requestedGroups = request.getChildren(SearchParameter.GROUP);
-            Set<String> userGroups = gc.getBean(AccessManager.class).getUserGroups(dbms, srvContext.getUserSession(), srvContext.getIpAddress(), false);
+            Set<Integer> userGroups = gc.getBean(AccessManager.class).getUserGroups(srvContext.getUserSession(), srvContext.getIpAddress(), false);
             UserSession userSession = srvContext.getUserSession();
             // unless you are logged in as Administrator, check if you are allowed to query the groups in the query
             if (userSession == null || userSession.getProfile() == null ||
@@ -568,7 +565,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             	if(!CollectionUtils.isEmpty(requestedGroups)) {
                     for(Element group : requestedGroups) {
                         if(! "".equals(group.getText()) 
-                        		&& ! userGroups.contains(group.getText())) {
+                        		&& ! userGroups.contains(Integer.valueOf(group.getText()))) {
                             throw new UnAuthorizedException("You are not authorized to do this.", null);
                         }
                     }
@@ -583,8 +580,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 			// if 'restrict to' is set then don't add any other user/group info
 			if ((request.getChild(SearchParameter.GROUP) == null) ||
                 (StringUtils.isEmpty(request.getChild(SearchParameter.GROUP).getText().trim()))) {
-				for (String group : userGroups) {
-					request.addContent(new Element(SearchParameter.GROUP).addContent(group));
+				for (Integer group : userGroups) {
+					request.addContent(new Element(SearchParameter.GROUP).addContent(""+group));
                 }
                 String owner = null;
                 if (userSession != null) {
@@ -1337,7 +1334,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 	 * Build facet search params according to the summary configuration file.
 	 * 
 	 * FacetRequest sort order and sort by option is the default (ie. by count descending).
-	 * Then the results may be sorted when creating the summary {@link #buildFacetSummary(Element, Map, FacetsCollector)}.
+	 * Then the results may be sorted when creating the summary {@link #buildFacetSummary(org.jdom.Element, java.util.Map, org.apache.lucene.facet.search.FacetsCollector, String)}.
 	 * 
 	 * @param summaryConfigValues
 	 * @return

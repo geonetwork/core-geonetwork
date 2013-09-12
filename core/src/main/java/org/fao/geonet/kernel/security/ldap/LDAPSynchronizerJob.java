@@ -22,26 +22,38 @@
 //==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.UserSpecs;
 import org.jdom.Element;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchResult;
+import javax.transaction.TransactionManager;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,26 +98,20 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
             
             DirContext dc = contextSource.getReadOnlyContext();
             
-            // Get database
-            ResourceManager resourceManager = applicationContext
-                    .getBean(ResourceManager.class);
-            Dbms dbms = null;
-            
+            // start transaction
+            final TransactionManager transactionManager = applicationContext.getBean(TransactionManager.class);
+            transactionManager.begin();
+
             try {
-                dbms = (Dbms) resourceManager.openDirect(Geonet.Res.MAIN_DB);
-                
                 // Users
-                synchronizeUser(ldapUserSearchFilter, ldapUserSearchBase,
-                        ldapUserSearchAttribute, dc, dbms);
+                synchronizeUser(applicationContext, ldapUserSearchFilter, ldapUserSearchBase,
+                        ldapUserSearchAttribute, dc);
                 
                 // And optionaly groups
                 String createNonExistingLdapGroup = (String) jdm
                         .get("createNonExistingLdapGroup");
                 
                 if ("true".equals(createNonExistingLdapGroup)) {
-                    SerialFactory serialFactory = applicationContext
-                            .getBean(SerialFactory.class);
-                    
                     String ldapGroupSearchFilter = (String) jdm
                             .get("ldapGroupSearchFilter");
                     String ldapGroupSearchBase = (String) jdm
@@ -115,19 +121,24 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                     String ldapGroupSearchPattern = (String) jdm
                             .get("ldapGroupSearchPattern");
                     
-                    synchronizeGroup(ldapGroupSearchFilter,
+                    synchronizeGroup(applicationContext, ldapGroupSearchFilter,
                             ldapGroupSearchBase, ldapGroupSearchAttribute,
-                            ldapGroupSearchPattern, dc, dbms, serialFactory);
+                            ldapGroupSearchPattern, dc);
                 }
             } catch (NamingException e1) {
+                try {
+                    transactionManager.rollback();
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                    Log.error(Geonet.LDAP, "Error rolling back transaction", e2);
+                }
                 e1.printStackTrace();
             } catch (Exception e) {
                 try {
-                    resourceManager.abort(Geonet.Res.MAIN_DB, dbms);
-                    dbms = null;
+                    transactionManager.rollback();
                 } catch (Exception e2) {
                     e.printStackTrace();
-                    Log.error(Geonet.LDAP, "Error closing dbms" + dbms, e2);
+                    Log.error(Geonet.LDAP, "Error rolling back transaction", e2);
                 }
                 Log.error(
                         Geonet.LDAP,
@@ -140,14 +151,12 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                if (dbms != null) {
                     try {
-                        resourceManager.close(Geonet.Res.MAIN_DB, dbms);
+                        transactionManager.commit();
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.error(Geonet.LDAP, "Error closing dbms" + dbms, e);
+                        Log.error(Geonet.LDAP, "Error committing transaction" , e);
                     }
-                }
             }
         } catch (Exception e) {
             Log.error(
@@ -163,51 +172,49 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
     }
     
     
-    private void synchronizeUser(String ldapUserSearchFilter,
-            String ldapUserSearchBase, String ldapUserSearchAttribute,
-            DirContext dc, Dbms dbms) throws NamingException, SQLException {
+    private void synchronizeUser(ApplicationContext applicationContext, String ldapUserSearchFilter,
+                                 String ldapUserSearchBase, String ldapUserSearchAttribute,
+                                 DirContext dc) throws NamingException, SQLException {
         // Do something for LDAP users ? Currently user is updated on log
         // in only.
         NamingEnumeration<?> userList = dc.search(ldapUserSearchBase,
                 ldapUserSearchFilter, null);
         
         // Build a list of LDAP users
-        StringBuffer usernames = new StringBuffer();
+        Set<String> usernames = new HashSet<String>();
         while (userList.hasMore()) {
             SearchResult sr = (SearchResult) userList.next();
-            usernames.append("'");
-            usernames.append(sr.getAttributes().get(ldapUserSearchAttribute)
-                    .get());
-            usernames.append("', ");
+            final String username = sr.getAttributes().get(ldapUserSearchAttribute)
+                    .get().toString();
+            usernames.add(username);
         }
-        
+
         // Remove LDAP user available in db and not in LDAP if not linked to
         // metadata
-        String query = "SELECT id FROM Users WHERE authtype=? AND username NOT IN ("
-                + usernames.toString() + "'')";
-        Element e = dbms.select(query, LDAPConstants.LDAP_FLAG);
-        for (Object record : e.getChildren("record")) {
-            Element r = (Element) record;
-            int userId = Integer.valueOf(r.getChildText("id"));
-            Log.debug(Geonet.LDAP, "  - Removing user: " + userId);
-            try {
-                dbms.execute("DELETE FROM UserGroups WHERE userId=?", userId);
-                dbms.execute("DELETE FROM Users WHERE authtype=? AND id=?",
-                        LDAPConstants.LDAP_FLAG, userId);
-            } catch (Exception ex) {
-                Log.error(Geonet.LDAP, "Failed to remove LDAP user with id "
-                        + userId
-                        + " in database. User is probably a metadata owner."
-                        + " Transfer owner first.", ex);
+        final UserRepository userRepository = applicationContext.getBean(UserRepository.class);
+        final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
+        final Specifications<User> spec = Specifications.where(
+                UserSpecs.hasAuthType(LDAPConstants.LDAP_FLAG)
+        ).and(
+                Specifications.not(UserSpecs.userIsNameNotOneOf(usernames))
+        );
+
+        final List<User> usersFound = userRepository.findAll(spec);
+        Collection<Integer> userIds = Collections2.transform(usersFound, new Function<User, Integer>() {
+            @Nullable
+            @Override
+            public Integer apply(@Nonnull User input) {
+                return input.getId();
             }
-        }
+        });
+        userGroupRepository.deleteAllWithUserIdsIn(userIds);
+        userRepository.deleteInBatch(usersFound);
     }
     
     
-    private void synchronizeGroup(String ldapGroupSearchFilter,
-            String ldapGroupSearchBase, String ldapGroupSearchAttribute,
-            String ldapGroupSearchPattern, DirContext dc, Dbms dbms,
-            SerialFactory serialFactory) throws NamingException, SQLException {
+    private void synchronizeGroup(ApplicationContext applicationContext, String ldapGroupSearchFilter,
+                                  String ldapGroupSearchBase, String ldapGroupSearchAttribute,
+                                  String ldapGroupSearchPattern, DirContext dc) throws NamingException, SQLException {
         
         NamingEnumeration<?> groupList = dc.search(ldapGroupSearchBase,
                 ldapGroupSearchFilter, null);
@@ -233,7 +240,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                 }
             }
             
-            GroupRepository groupRepo = applicationContext.getBean(GroupRepository.class);
+            GroupRepository groupRepo = this.applicationContext.getBean(GroupRepository.class);
             Group group = groupRepo.findByName(groupName);
             
             if (group == null) {

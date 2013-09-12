@@ -32,7 +32,6 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
@@ -111,13 +110,12 @@ public class HarvesterSettingsManager {
     /**
      * TODO javadoc.
      * 
-     * @param dbms
      * @param path
      * @param name
      * @return
      * @throws SQLException
      */
-    public boolean setName(Dbms dbms, String path, String name) throws SQLException {
+    public boolean setName(String path, String name) throws SQLException {
         if (path == null)
             throw new IllegalArgumentException("Path cannot be null");
 
@@ -137,17 +135,16 @@ public class HarvesterSettingsManager {
     /**
      * TODO javadoc.
      * 
-     * @param dbms
      * @param path
      * @param value
      * @return
      * @throws SQLException
      */
-    public boolean setValue(Dbms dbms, String path, Object value) throws SQLException {
+    public boolean setValue(String path, Object value) throws SQLException {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put(path, value);
 
-        return setValues(dbms, values);
+        return setValues(values);
     }
 
     // ---------------------------------------------------------------------------
@@ -155,12 +152,11 @@ public class HarvesterSettingsManager {
     /**
      * TODO javadoc.
      * 
-     * @param dbms
      * @param values
      * @return
      * @throws SQLException
      */
-    public boolean setValues(Dbms dbms, Map<String, Object> values) throws SQLException {
+    public boolean setValues(Map<String, Object> values) throws SQLException {
         boolean success = true;
 
         List<HarvesterSetting> toSave = new ArrayList<HarvesterSetting>(values.size());
@@ -190,14 +186,13 @@ public class HarvesterSettingsManager {
     /**
      * When adding to a newly created node, path must be 'id:...'.
      * 
-     * @param dbms
      * @param path
      * @param name
      * @param value
      * @return
      * @throws SQLException
      */
-    public String add(Dbms dbms, String path, Object name, Object value) throws SQLException {
+    public String add(String path, Object name, Object value) throws SQLException {
         if (name == null)
             throw new IllegalArgumentException("Name cannot be null");
 
@@ -223,12 +218,11 @@ public class HarvesterSettingsManager {
     /**
      * TODO javadoc.
      * 
-     * @param dbms
      * @param path
      * @return
      * @throws SQLException
      */
-    public boolean remove(Dbms dbms, String path) throws SQLException {
+    public boolean remove(String path) throws SQLException {
         HarvesterSetting s = _settingsRepo.findOneByPath(path);
         if (s == null)
             return false;
@@ -242,12 +236,11 @@ public class HarvesterSettingsManager {
     /**
      * TODO javadoc.
      * 
-     * @param dbms
      * @param path
      * @return
      * @throws SQLException
      */
-    public boolean removeChildren(Dbms dbms, String path) throws SQLException {
+    public boolean removeChildren(String path) throws SQLException {
         HarvesterSetting parent = _settingsRepo.findOneByPath(path);
 
         if (parent == null)
@@ -255,7 +248,7 @@ public class HarvesterSettingsManager {
 
         List<HarvesterSetting> children = _settingsRepo.findAllChildren(parent.getId());
         for (HarvesterSetting child : children) {
-            remove(dbms, child);
+            remove(child);
         }
 
         return true;
@@ -343,7 +336,7 @@ public class HarvesterSettingsManager {
 
     // ---------------------------------------------------------------------------
 
-    private void remove(Dbms dbms, HarvesterSetting s) throws SQLException {
+    private void remove(HarvesterSetting s) throws SQLException {
         _settingsRepo.delete(s);
     }
 
