@@ -93,8 +93,8 @@ public class MetadataDataInfo implements Serializable {
      * @return true if the metadata is a template.
      */
     @Transient
-    public boolean isTemplate() {
-        return Constants.toBoolean_fromYNChar(getTemplate_JPAWorkaround());
+    public MetadataType getType() {
+        return MetadataType.lookup(getTemplate_JPAWorkaround());
     }
 
     /**
@@ -103,8 +103,8 @@ public class MetadataDataInfo implements Serializable {
      * @param template true if the metadata is a template
      * @return this data info object
      */
-    public MetadataDataInfo setTemplate(boolean template) {
-        setTemplate_JPAWorkaround(Constants.toYN_EnabledChar(template));
+    public MetadataDataInfo setType(MetadataType template) {
+        setTemplate_JPAWorkaround(template.code);
         return this;
     }
 

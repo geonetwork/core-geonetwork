@@ -5,6 +5,7 @@ import static org.fao.geonet.repository.specification.MetadataSpecs.*;
 import static org.fao.geonet.repository.MetadataRepositoryTest.*;
 
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.MetadataRepository;
 import org.junit.Test;
@@ -67,14 +68,14 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
     @Test
     public void testIsTemplate() throws Exception {
         Metadata md1 = newMetadata(_inc);
-        md1.getDataInfo().setTemplate(false);
+        md1.getDataInfo().setType(MetadataType.METADATA);
         md1 = _repository.save(md1);
         Metadata md2 = newMetadata(_inc);
-        md2.getDataInfo().setTemplate(true);
+        md2.getDataInfo().setType(MetadataType.SUB_TEMPLATE);
         md2 = _repository.save(md2);
 
-        assertFindsCorrectMd(md1, isTemplate(false), false);
-        assertFindsCorrectMd(md2, isTemplate(true), false);
+        assertFindsCorrectMd(md1, isType(MetadataType.METADATA), false);
+        assertFindsCorrectMd(md2, isType(MetadataType.SUB_TEMPLATE), false);
     }
 
     @Test

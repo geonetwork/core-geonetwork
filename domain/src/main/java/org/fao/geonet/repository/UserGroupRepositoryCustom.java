@@ -1,8 +1,10 @@
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -24,4 +26,11 @@ public interface UserGroupRepositoryCustom {
      * @param spec a UserGroup selector specification
      */
     List<Integer> findUserIds(Specification<UserGroup> spec);
+
+    /**
+     * Delete all entities for the users in the collection.
+     *
+     * @param userIds the collection of userIds that specifies which user groups to delete
+     */
+    int deleteAllWithUserIdsIn(Collection<Integer> userIds);
 }

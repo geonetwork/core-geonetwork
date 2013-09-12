@@ -364,4 +364,9 @@ public class User extends GeonetEntity implements UserDetails {
         _addresses.addAll(otherAddresses);
         getSecurity().mergeSecurity(otherUser.getSecurity(), mergeNullData);
     }
+
+    @Override
+    public String toString() {
+        return getUsername()+"("+getId()+") - "+getProfile();
+    }
 }

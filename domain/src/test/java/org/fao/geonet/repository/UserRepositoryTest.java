@@ -6,15 +6,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.google.common.base.Optional;
 import org.fao.geonet.domain.*;
-import org.hibernate.ejb.criteria.OrderImpl;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.criteria.Order;
 
 @Transactional
 public class UserRepositoryTest extends AbstractSpringDataTest {
@@ -28,7 +24,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     UserRepository _userRepo;
 
-    AtomicInteger inc = new AtomicInteger();
+    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testFindByEmailAddress() {
@@ -54,23 +50,23 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
 
     @Test
     public void testFindAllByGroupOwnerNameAndProfile() {
-        Group group1 = _groupRepo.save(GroupRepositoryTest.newGroup(inc));
-        Group group2 = _groupRepo.save(GroupRepositoryTest.newGroup(inc));
+        Group group1 = _groupRepo.save(GroupRepositoryTest.newGroup(_inc));
+        Group group2 = _groupRepo.save(GroupRepositoryTest.newGroup(_inc));
 
         User editUser = _userRepo.save(newUser().setProfile(Profile.Editor));
         User reviewerUser = _userRepo.save(newUser().setProfile(Profile.Reviewer));
         User registeredUser = _userRepo.save(newUser().setProfile(Profile.RegisteredUser));
         _userRepo.save(newUser().setProfile(Profile.Administrator));
 
-        Metadata md1 = MetadataRepositoryTest.newMetadata(inc);
+        Metadata md1 = MetadataRepositoryTest.newMetadata(_inc);
         md1.getSourceInfo().setGroupOwner(group1.getId());
         md1 = _metadataRepo.save(md1);
 
-        Metadata md2 = MetadataRepositoryTest.newMetadata(inc);
+        Metadata md2 = MetadataRepositoryTest.newMetadata(_inc);
         md2.getSourceInfo().setGroupOwner(group1.getId());
         md2 = _metadataRepo.save(md2);
 
-        Metadata md3 = MetadataRepositoryTest.newMetadata(inc);
+        Metadata md3 = MetadataRepositoryTest.newMetadata(_inc);
         md3.getSourceInfo().setGroupOwner(group2.getId());
         _metadataRepo.save(md3);
 
@@ -115,6 +111,11 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
     }
 
     private User newUser() {
+        User user = newUser(_inc);
+        return user;
+    }
+
+    public static User newUser(AtomicInteger inc) {
         int val = inc.incrementAndGet();
         User user = new User().setName("name" + val).setUsername("username" + val);
         user.getSecurity().setPassword("1234567");

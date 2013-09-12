@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 @Transactional
@@ -85,6 +85,27 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
         assertTrue(found.contains(ug2));
         assertEquals(2, found.size());
     }
+
+    @Test
+    public void testDeleteAllWithUserIdsIn() {
+        UserGroup ug1 = _repo.save(newUserGroup());
+        UserGroup ug2 = _repo.save(newUserGroup());
+        final UserGroup ug3 = _repo.save(newUserGroup());
+        final UserGroup ug4 = _repo.save(newUserGroup());
+
+        assertEquals(4, _repo.count());
+
+        int deleted = _repo.deleteAllWithUserIdsIn(Arrays.asList(ug1.getId().getUserId(), ug2.getId().getUserId()));
+        assertEquals(2, deleted);
+        assertEquals(2, _repo.count());
+
+        assertFalse(_repo.exists(ug1.getId()));
+        assertFalse(_repo.exists(ug2.getId()));
+        assertTrue(_repo.exists(ug3.getId()));
+        assertTrue(_repo.exists(ug4.getId()));
+
+    }
+
 
     private UserGroup newUserGroup() {
         return getUserGroup(_inc, _userRepo, _groupRepo);

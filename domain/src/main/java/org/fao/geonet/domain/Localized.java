@@ -1,13 +1,9 @@
 package org.fao.geonet.domain;
 
-import org.fao.geonet.repository.LocalizedEntityRepositoryImpl;
 import org.jdom.Element;
-import org.springframework.beans.BeanWrapperImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.persistence.*;
-import java.beans.PropertyDescriptor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

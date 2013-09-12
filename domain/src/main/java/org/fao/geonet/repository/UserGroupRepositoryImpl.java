@@ -16,6 +16,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -37,7 +38,23 @@ public class UserGroupRepositoryImpl implements UserGroupRepositoryCustom {
     @Override
     public List<Integer> findUserIds(Specification<UserGroup> spec) {
         return findIdsBy(spec, UserGroupId_.userId);
+    }
 
+    @Override
+    public int deleteAllWithUserIdsIn(Collection<Integer> userIds) {
+
+        String userIdPath = UserGroup_.id.getName() + "." + UserGroupId_.userId.getName();
+
+        StringBuilder userIdsString = new StringBuilder();
+
+        for (Integer userId : userIds) {
+            if (userIdsString.length() > 0) {
+                userIdsString.append(",");
+            }
+            userIdsString.append(userId);
+        }
+        return _entityManager.createQuery("DELETE FROM " + UserGroup.class.getSimpleName() + " WHERE " + userIdPath + " IN (" + userIdsString
+                                   + ")").executeUpdate();
     }
 
     private List<Integer> findIdsBy(Specification<UserGroup> spec, SingularAttribute<UserGroupId, Integer> groupId) {

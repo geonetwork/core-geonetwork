@@ -78,10 +78,13 @@ public class SearchRequestParam {
     /**
      * Set the type of query parameter
      * 
+     *
      * @param queryType the type of query parameter
+     * @return this entity
      */
-    public void setQueryType(LuceneQueryParamType queryType) {
+    public SearchRequestParam setQueryType(LuceneQueryParamType queryType) {
         this._queryType = queryType;
+        return this;
     }
 
     /**
@@ -96,11 +99,13 @@ public class SearchRequestParam {
 
     /**
      * Set the name of the term used in the search parameter.
-     * 
+     *
      * @param termField the name of the term used in the search parameter.
+     * @return this entity
      */
-    public void setTermField(String termField) {
+    public SearchRequestParam setTermField(String termField) {
         this._termField = termField;
+        return this;
     }
 
     /**
@@ -116,10 +121,13 @@ public class SearchRequestParam {
     /**
      * Set the value searched for in the current search parameter.
      * 
+     *
      * @param termText the value searched for in the current search parameter.
+     * @return this entity
      */
-    public void setTermText(String termText) {
+    public SearchRequestParam setTermText(String termText) {
         this._termText = termText;
+        return this;
     }
 
     /**
@@ -134,10 +142,13 @@ public class SearchRequestParam {
     /**
      * Set the similarity level.
      * 
+     *
      * @param similarity the similarity level.
+     * @return this entity
      */
-    public void setSimilarity(double similarity) {
+    public SearchRequestParam setSimilarity(double similarity) {
         this._similarity = similarity;
+        return this;
     }
 
     /**
@@ -153,10 +164,13 @@ public class SearchRequestParam {
     /**
      * Set the lower level if the search parameter is a range query.
      * 
+     *
      * @param lowerText the lower level if the search parameter is a range query.
+     * @return this entity
      */
-    public void setLowerText(String lowerText) {
+    public SearchRequestParam setLowerText(String lowerText) {
         this._lowerText = lowerText;
+        return this;
     }
 
     /**
@@ -172,10 +186,13 @@ public class SearchRequestParam {
     /**
      * Set the upper level if the search parameter is a range query.
      * 
+     *
      * @param upperText the upper level if the search parameter is a range query.
+     * @return this entity
      */
-    public void setUpperText(String upperText) {
+    public SearchRequestParam setUpperText(String upperText) {
         this._upperText = upperText;
+        return this;
     }
 
     /**
@@ -189,10 +206,13 @@ public class SearchRequestParam {
 
     /**
      * Set the inclusive column value Constants.YN_ENABLED or Constants.YN_DISABLED
+     *
      * @param inclusive the inclusive column value Constants.YN_ENABLED or Constants.YN_DISABLED
+     * @return this entity
      */
-    protected void setInclusive_JPAWorkaround(char inclusive) {
+    protected SearchRequestParam setInclusive_JPAWorkaround(char inclusive) {
         this._inclusive = inclusive;
+        return this;
     }
 
     /**
@@ -206,9 +226,11 @@ public class SearchRequestParam {
 
     /**
      * Set true if the query is a range query and is inclusive.
+     *
      * @param inclusive true if the query is a range query and is inclusive.
+     * @return this entity
      */
-    public void setInclusive(boolean inclusive) {
-        setInclusive_JPAWorkaround(Constants.toYN_EnabledChar(inclusive));
+    public SearchRequestParam setInclusive(boolean inclusive) {
+        return setInclusive_JPAWorkaround(Constants.toYN_EnabledChar(inclusive));
     }
 }

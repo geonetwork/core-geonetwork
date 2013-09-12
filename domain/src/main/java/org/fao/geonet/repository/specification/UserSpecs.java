@@ -7,6 +7,8 @@ import org.fao.geonet.repository.UserRepository;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * Specifications for querying {@link UserRepository}.
@@ -52,4 +54,23 @@ public final class UserSpecs {
         };
     }
 
+    public static Specification<User> hasAuthType(final String authType) {
+        return new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<String> authTypeAttributePath = root.get(User_.security).get(UserSecurity_.authType);
+                Predicate userIdEqualPredicate = cb.equal(authTypeAttributePath, authType);
+                return userIdEqualPredicate;
+            }
+        };
+    }
+
+    public static Specification<User> userIsNameNotOneOf(final Collection<String> usernames) {
+        return new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return root.get(User_.username).in(usernames);
+            }
+        };
+    }
 }

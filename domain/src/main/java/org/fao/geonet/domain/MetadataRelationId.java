@@ -39,7 +39,7 @@ public class MetadataRelationId implements Serializable {
      * 
      * @return the id of the first metadata.
      */
-    @Column(name = "metadataid")
+    @Column(name = "id")
     public int getMetadataId() {
         return _metadataId;
     }

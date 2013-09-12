@@ -71,12 +71,12 @@ public final class MetadataSpecs {
         };
     }
 
-    public static Specification<Metadata> isTemplate(final boolean isTemplate) {
+    public static Specification<Metadata> isType(final MetadataType type) {
         return new Specification<Metadata>() {
             @Override
             public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Path<Character> templateAttributePath = root.get(Metadata_.dataInfo).get(MetadataDataInfo_.template_JPAWorkaround);
-                Predicate equalTemplatePredicate = cb.equal(templateAttributePath, cb.literal(Constants.toYN_EnabledChar(isTemplate)));
+                Predicate equalTemplatePredicate = cb.equal(templateAttributePath, cb.literal(type.code));
                 return equalTemplatePredicate;
             }
         };
