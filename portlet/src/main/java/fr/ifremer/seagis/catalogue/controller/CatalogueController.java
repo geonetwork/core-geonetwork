@@ -62,7 +62,7 @@ public class CatalogueController implements Serializable {
             mdviewerurl = sextantConfig.getMdViewerUrl();
             geoviewerurl = sextantConfig.getGeoviewerUrl();
             panierurl = sextantConfig.getPanierUrl();
-            
+            typeSearch= sextantConfig.getCatalogueTypeSearch();
         } else {
             maxextent = null;
             geonetworkurl = null;
@@ -71,6 +71,7 @@ public class CatalogueController implements Serializable {
             mdviewerurl = null;
             geoviewerurl = null;
             panierurl = null;
+	    typeSearch = null;
         }
     	
     }
