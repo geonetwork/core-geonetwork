@@ -450,7 +450,7 @@ cat.app = function() {
 		var services = catalogue.services;
 		cat.what.createCmp(catalogue);
 		
-		searchModes = Ext.get(Ext.query('input[id*=configtypesearch]')[0]).getValue().split('');
+		searchModes = Ext.get(Ext.query('input[id*=configtypesearch]')[0]).getValue().split(',');
 		activeSearchMode = searchModes.indexOf('simple') >= 0 ? 'simple' : searchModes[0];
 		
 		var whereForm = cat.where.createCmp();
@@ -600,9 +600,9 @@ cat.app = function() {
 	                    if(!Ext.isIE) // temp
 	                        whatForm.body && whatForm.body.removeClass('hidden');
 	                });
-		            cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced').addClass('bold');
-	                cpt.ownerCt.header.child('#searchFormHeaderLinkSimple').removeClass('bold');
-	                cpt.ownerCt.header.child('#searchFormHeaderLinkFacet').removeClass('bold');
+		            cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced').addClass('bold');
+		            cpt.ownerCt.header.child('#searchFormHeaderLinkSimple') && cpt.ownerCt.header.child('#searchFormHeaderLinkSimple').removeClass('bold');
+	                cpt.ownerCt.header.child('#searchFormHeaderLinkFacet') && cpt.ownerCt.header.child('#searchFormHeaderLinkFacet').removeClass('bold');
 			    }
 			});
 			cpt.on('simplemode',function() {
@@ -613,9 +613,9 @@ cat.app = function() {
 	                    if(!Ext.isIE) //temp
 	                        whatForm.body && whatForm.body.addClass('hidden');
 	                });
-	                cpt.ownerCt.header.child('#searchFormHeaderLinkSimple').addClass('bold');
-	                cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced').removeClass('bold');
-                    cpt.ownerCt.header.child('#searchFormHeaderLinkFacet').removeClass('bold');
+		             cpt.ownerCt.header.child('#searchFormHeaderLinkSimple') && cpt.ownerCt.header.child('#searchFormHeaderLinkSimple').addClass('bold');
+		             cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced').removeClass('bold');
+		             cpt.ownerCt.header.child('#searchFormHeaderLinkFacet') && cpt.ownerCt.header.child('#searchFormHeaderLinkFacet').removeClass('bold');
 			    } 
 			});
 			cpt.on('facetmode',function() {
@@ -637,7 +637,7 @@ cat.app = function() {
 			// then fire the event of the mode
 			var initMode = searchModes[0] || 'simple';
 			initMode = cookie.get('cat.searchform.viewmode') ? cookie.get('cat.searchform.viewmode') : initMode;
-			this.fireEvent(initMode + 'mode', this);
+            this.fireEvent(initMode + 'mode', this);
 			activeSearchMode = initMode;
 		});
 		
@@ -814,16 +814,16 @@ cat.app = function() {
 					split : true,
 					title : '<span id="searchFormHeaderTitle" class="mainheader">'
 	                    + OpenLayers.i18n('search-view-form') + ' :'
-	                    + '</span>'
-                        + (searchModes.indexOf('facet') >= 0? 
+	                    + '</span>' 
+                        + (searchModes.indexOf('facet') >= 0 ? 
                                 '<a id="searchFormHeaderLinkFacet" href="#">' + 
                                 OpenLayers.i18n('search-header-facet') + 
                                 '</a>' : '')
-	                    + (searchModes.indexOf('advanced') ? 
+	                    + (searchModes.indexOf('advanced') >= 0 ? 
 	                            '<a id="searchFormHeaderLinkAdvanced" href="#">' + 
 	                            OpenLayers.i18n('search-header-advanced') + 
 	                            '</a>' : '')
-                        + (searchModes.indexOf('simple') ? 
+                        + (searchModes.indexOf('simple') >= 0 ? 
                                 '<a id="searchFormHeaderLinkSimple" href="#">' + 
                                 OpenLayers.i18n('search-header-simple') + 
                             '</a>' : ''),
