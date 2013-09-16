@@ -1,0 +1,13 @@
+C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bin\Debug\resources.pri
+C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bin\Debug\AppxManifest.xml
+C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bin\Debug\app.build.appxrecipe
+C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bld\Debug\priconfig.xml.intermediate
+C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bld\Debug\layout.resfiles.intermediate
+C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bld\Debug\resources.resfiles.intermediate
+C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bld\Debug\pri.resfiles.intermediate
+C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bld\Debug\priconfig.xml
+C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bld\Debug\layout.resfiles
+C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bld\Debug\resources.resfiles
+C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bld\Debug\pri.resfiles
+C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bld\Debug\LanguageQualifiers.txt
+C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bld\Debug\ProjectArchitectures.txt

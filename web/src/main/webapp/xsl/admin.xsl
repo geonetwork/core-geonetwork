@@ -577,8 +577,8 @@
                         
                         <xsl:call-template name="addrow">
                             <xsl:with-param name="service" select="'reusable.non_validated.admin'"/>
-                            <xsl:with-param name="title" select="/root/gui/strings/reusable/nonValidTitle"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/reusable/nonValidDesc"/>
+                            <xsl:with-param name="title" select="/root/gui/strings/reusable_nonValidTitle"/>
+                            <xsl:with-param name="desc" select="/root/gui/strings/reusable_nonValidDesc"/>
                         </xsl:call-template>
                         
                         <xsl:call-template name="addrow">

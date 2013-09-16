@@ -127,6 +127,9 @@
 
 			    <sec:intercept-url pattern="/srv/.*/metadata.validation.status!?.*" access="permitAll" />
 
+                <sec:intercept-url pattern="/srv/.*/header-template.xml!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/.*/reusable.list.js!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/apps/shared-objects/app/.*" access="hasRole('Administrator')"/>
 			</sec:filter-security-metadata-source>
 		</property>
 	</bean>

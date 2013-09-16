@@ -1,0 +1,75 @@
+<div ng-include src="'partials/menubar.html'"></div>
+<table class="table table-condensed">
+
+    <div class="alert alert-info" ng-show="data.length == 0" class="ng-hide">{{translate('noRecords')}}</div>
+
+    <thead ng-show="data.length > 0" >
+        <tr>
+            <td>#</td>
+            <td>Description</td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="row in data" class="highlight-on-hover" data-ng-mouseover="select(row)" >
+            <td style="width: 5%">
+                <div class="panel-group" id="Div1">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                {{row.id}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td style="width: 85%">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <a class="accordion-toggle " data-toggle="collapse" data-parent="#accordion"
+                                    data-ng-click="loadReferencedMetadata(row.id, 'collapse-'+row.id, 'collapse-body-'+row.id)">{{row.desc}}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="collapse-{{row.id}}" class="panel-collapse collapse">
+                        <table class="table table-condensed">
+                            <tr data-ng-repeat="md in metadata[row.id]" >
+                                <td style="width: 5%">{{md.id}}</td>
+                                <td style="width: 60%">{{md.title}}</td>
+                                <td style="width: 10%">{{md.name}}</td>
+                                <td style="width: 20%">{{md.email}}</td>
+                                <td style="width: 5%"><button type="button" class="btn btn-primary" data-ng-click="open('metadata.show?id=' + md.id)">Show</button></td>
+                            </tr>
+                        </table>
+                   <!--     <div class="panel-title">
+                            <a style="text-align: left; font-size: .8em;" data-ng-repeat="md in metadata[row.id]">{{md.title}} ({{md.name}} <{{md.email}}>)</a>
+                        </div>-->
+                    </div>
+                </div>
+            </td>
+            <td style="width: 10%">
+                <button ng-show="hideTypeSelector" class="btn btn-default" data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</button>
+                <div ng-hide="hideTypeSelector" class="dropdown">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" >{{translate('actions')}} <span class="caret"></span></button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <!--<li><a data-ng-click="open('geocat', {s_search:'', customFilter: luceneIndexField + '=' + row.xlink}, '_sharedObject')">{{translate('search')}}</a></li>-->
+                        <li><a data-ng-click="open(row.url)">{{translate('edit')}}</a></li>
+                        <li ng-show="!isValidated"><a data-toggle="modal" href="#confirmValidateModal" >{{translate('validate')}}</a></li>
+                        <li ng-show="!isValidated"><a data-toggle="modal" href="#rejectModal" >{{translate('reject')}}</a></li>
+                        <li ng-show="isValidated"><a data-toggle="modal" href="#rejectModal" >{{translate('delete')}}</a></li>
+                        <li ng-show="hideTypeSelector"><a data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div ng-include src="'partials/modal-confirm-delete.html'"></div>
+<div ng-include src="'partials/modal-confirm-validate.html'"></div>
+<div ng-include src="'partials/modal-reject.html'"></div>
+<div ng-include src="'partials/modal-executing-operation.html'"></div>
+<div ng-include src="'partials/modal-create-format.html'"></div>
+<div ng-include src="'partials/modal-create-keyword.html'"></div>
+

@@ -273,7 +273,11 @@
         </service>
 
         <service name="reusable.non_validated.list">
-            <class name=".services.reusable.ViewNonValidated" />
+            <class name=".services.reusable.List" />
+        </service>
+        <service name="reusable.list.js">
+            <class name=".services.reusable.List" />
+            <output sheet="shared-list-json.xsl" contentType="application/json"/>
         </service>
 
         <service name="xml.reusable.deleted">
@@ -294,6 +298,7 @@
 
         <service name="reusable.references">
             <class name=".services.reusable.ReferencingMetadata" />
+            <output sheet="shared-list-json.xsl" contentType="application/json"/>
         </service>
 
         <service name="metadata.ext.edit" type="html">
@@ -550,6 +555,10 @@
 			<class name=".services.selection.Unpublish">
 			</class>
 		</service>
+
+        <service name="header-template.xml">
+            <output sheet="banner-template.xsl" />
+        </service>
 
     </services>
 </geonet>

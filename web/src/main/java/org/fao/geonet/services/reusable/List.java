@@ -36,16 +36,17 @@ import org.fao.geonet.kernel.reusable.*;
 import org.jdom.Element;
 
 /**
- * Makes a list of all the non-validated elements
+ * Makes a list of all the shared elements of the given type (parameter validated selects if validated are listed)
  *
  * @author jeichar
  */
-public class ViewNonValidated implements Service
+public class List implements Service
 {
 
     public Element exec(Element params, ServiceContext context) throws Exception
     {
         String type = Util.getParam(params, "type", "contacts");
+        boolean validated = Boolean.parseBoolean(Util.getParam(params, "validated", "false"));
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
@@ -78,7 +79,7 @@ public class ViewNonValidated implements Service
             throw new IllegalArgumentException(type + " is not a reusable object type");
         }
 
-        return strategy.findNonValidated(session);
+        return strategy.find(session, validated);
     }
 
     public void init(String appPath, ServiceConfig params) throws Exception

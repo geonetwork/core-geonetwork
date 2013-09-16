@@ -497,8 +497,14 @@ public final class ExtentsStrategy extends ReplacementStrategy {
 
     }
 
-    public Element findNonValidated(UserSession session) throws Exception {
-        FeatureType featureType = _extentMan.getSource().getFeatureType(NON_VALIDATED_TYPE);
+    public Element find(UserSession session, boolean validated) throws Exception {
+        FeatureType featureType;
+        if (validated) {
+            featureType = _extentMan.getSource().getFeatureType(XLINK_TYPE);
+        } else {
+            featureType = _extentMan.getSource().getFeatureType(NON_VALIDATED_TYPE);
+        }
+
         FeatureSource<SimpleFeatureType, SimpleFeature> featureSource = featureType.getFeatureSource();
 
         String[] properties = { featureType.idColumn, featureType.descColumn, featureType.geoIdColumn };

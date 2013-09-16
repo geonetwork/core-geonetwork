@@ -1,0 +1,39 @@
+<!-- Fixed navbar -->
+<div class="navbar navbar-default navbar-fixed-top">
+    <div ng-include src="'../../../srv/{{language}}/header-template.xml'" />
+<!--    <div class="container">-->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">{{translate('SharedObjects')}}</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle capitalized" data-toggle="dropdown">{{validatedTitle}} <b class="caret"></b></a>
+                    <ul class="dropdown-menu capitalized">
+                        <li><a ng-href="#/validated/{{type}}">Validated</a></li>
+                        <li><a ng-href="#/nonvalidated/{{type}}">Non-validated</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle capitalized" data-toggle="dropdown">{{translate(type)}}<b class="caret"></b></a>
+                    <ul class="dropdown-menu capitalized">
+                        <li><a ng-href="#/{{validated}}/users">{{translate('users')}}</a></li>
+                        <li><a ng-href="#/{{validated}}/formats">{{translate('formats')}}</a></li>
+                        <li><a ng-href="#/{{validated}}/extents">{{translate('extents')}}</a></li>
+                        <li><a ng-href="#/{{validated}}/keywords">{{translate('keywords')}}</a></li>
+                        <li><a ng-href="#/deleted">{{translate('deleted')}}</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><input type="search" class="form-control" placeholder="Filter ..." name="filter"></li>
+            </ul>
+        </div>
+        <!--/.nav-collapse -->
+    <!--</div>-->
+</div>

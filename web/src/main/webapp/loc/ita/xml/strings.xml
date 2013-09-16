@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
+    <noRecords js='true'>No Records found</noRecords>
+    <edit js='true'>Edit</edit>
+    <searchView js='true'>Search</searchView>
+    <actions js='true'>Actions</actions>
+    <contacts js='true'>Contacts</contacts>
+    <SharedObjects js='true'>Shared Objects</SharedObjects>
+    <openInSearch>Search View</openInSearch>
+    <reusable_confirmValidate js="true">Confirm Validate Action</reusable_confirmValidate>
+    <reusable_confirmDelete js="true">Confirm Delete Action</reusable_confirmDelete>
+    <reusable_confirmDeleteMsg js="true">Are you sure you wish to delete the selected object?</reusable_confirmDeleteMsg>
+    <reusable_confirmValidateMsg js="true">Are you sure you wish to validate the selected object?</reusable_confirmValidateMsg>
+    <reusable_validated js="true">Convalidato</reusable_validated>
+    <reusable_nonValidated js="true">Non convalidato</reusable_nonValidated>
+    <reusable_nonValidTitle js="true">Gestione degli oggetti riutilizzabili non convalidati</reusable_nonValidTitle>
+    <reusable_nonValidDesc js="true">Validare/Rifiutare oggetti riutilizzabili non ancore convalidati</reusable_nonValidDesc>
+    <reusable_rejectTitle js="true">Messago di rifiuto</reusable_rejectTitle>
+    <reusable_rejectDefaultMsg js="true">Selezionare un'altro oggetto riutilizzabile...</reusable_rejectDefaultMsg>
+    <archived>Archived</archived>
+    <performingOperation>Performing Operation.  Please wait...</performingOperation>
+
+
 	<local._none_.non_validated>geocat.ch Thesaurus (non confermato)</local._none_.non_validated>
 	<local._none_.geocat.ch>geocat.ch Thesaurus</local._none_.geocat.ch>
 	<external.theme.gemet-theme>GEMET themes</external.theme.gemet-theme>
@@ -131,7 +152,7 @@
 	<monitoring.service.disk>Disk monitor</monitoring.service.disk>
 	<monitoring.freespace>Memoria libera</monitoring.freespace>
 
-    <reject>Rifiuta</reject>
+    <reject js='true'>Rifiuta</reject>
     <rejected>Rifiutato</rejected>
     <replaceSharedObjects>Convalidare oggetti riutilizzabili</replaceSharedObjects>
     <format>
@@ -140,18 +161,10 @@
     </format>
     <formats>Formati</formats>
     <extents>Estensioni</extents>
-    <deleted>Eliminati</deleted>
+    <deleted js='true'>Eliminati</deleted>
     <insufficient.privileges.import.replace>Esiste un metadato che non può rimpiazzare perché non ha i diritti necessari</insufficient.privileges.import.replace>
     <updateDatasetTitle>Attualizzare dataset</updateDatasetTitle>
     <updateDatasetMsg>Voglia segnare con uno x \'Attualizzare metadati dataset\' per aggiungere une sezione risorsa online per i dati senza diritti</updateDatasetMsg>
-    <reusable>
-        <validated>Convalidato</validated>
-        <nonValidated>Non convalidato</nonValidated>
-        <nonValidTitle>Gestione degli oggetti riutilizzabili non convalidati </nonValidTitle>
-        <nonValidDesc>Validare/Rifiutare oggetti riutilizzabili non ancore convalidati</nonValidDesc>
-        <rejectTitle>Messago di rifiuto</rejectTitle>
-        <rejectDefaultMsg>Selezionare un'altro oggetto riutilizzabile...</rejectDefaultMsg>
-    </reusable>
     <deletedSharedObject>
         <msg>Messaggio inviato automaticamente.
     Oggetti riutilizzabili utilizzati nei Suoi metadati sono eliminati. La lista completa dei metadati toccati si trova sottostante. Voglia per favore attualizzare questi metadati.</msg>
@@ -641,7 +654,7 @@
 	
 	<about>Info</about>
 	<abstract>Descrizione</abstract>
-	<accept>Invia</accept>
+	<accept js="true">Invia</accept>
 	<actionOnSelect>Azioni sulla selezione</actionOnSelect>
 	<add js="true">Aggiungi</add>
 	<addNewMetadata>Crea un nuovo metadato</addNewMetadata>
@@ -683,7 +696,7 @@
 	<browset>Sfoglia tipi di file grafici</browset>>
 	<byGroup>Vista per Gruppo</byGroup>
 	<byPackage>Vista per Package</byPackage>
-	<cancel>Annulla</cancel>
+	<cancel js="true">Annulla</cancel>
 	<categories>Categorie</categories>
 	<category>Categoria</category>
 	<categoryManagement>Gestione categorie</categoryManagement>
@@ -924,7 +937,7 @@
 	<metadata.admin.index.optimize.desc>Ottimizza l'indice Lucene</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Pulisce la cache XLink e ricostruisce l'indice dei record con XLinks</metadata.admin.index.rebuildxlinks.desc>
 	<lucene.config.reload>Ricarica la configurazione di Lucene</lucene.config.reload>
-	<reload>Ricarica</reload>
+	<reload js="true">Ricarica</reload>
 	<rebuildxlinks>Ricostruisce XLinks</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">Questa operazione potrebbe richiedere molto tempo sui cataloghi di grandi dimensioni e non dovrebbe essere effettuata nei periodi di massimo carico. Continuare?</doYouReallyWantToDoThis>
 	<optimize>Ottimizza</optimize>
@@ -1151,7 +1164,7 @@
 	<userPw>Cambia password</userPw>
 	<userPwDes>Permette all'utente corrente di cambiare la password</userPwDes>
 	<uuidAction>Importa azioni:</uuidAction>
-	<validate>Valida</validate>
+	<validate js='true'>Valida</validate>
 	<assign>Assegna al catalogo corrente</assign>
 	<validityBegins>Inizio validazione</validityBegins>
 	<validityEnds>e fine</validityEnds>

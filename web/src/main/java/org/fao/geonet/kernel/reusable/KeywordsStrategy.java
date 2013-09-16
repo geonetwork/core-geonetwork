@@ -198,8 +198,16 @@ public final class KeywordsStrategy extends ReplacementStrategy
         return searcher;
     }
 
-    public Element findNonValidated(UserSession session) throws Exception
+    public Element find(UserSession session, boolean validated) throws Exception
     {
+
+        String thesaurusName;
+
+        if (validated) {
+            thesaurusName = GEOCAT_THESAURUS_NAME;
+        } else {
+            thesaurusName = NON_VALID_THESAURUS_NAME;
+        }
         KeywordsSearcher searcher = new KeywordsSearcher(_thesaurusMan);
 
         KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(IsoLanguagesMapper.getInstance());

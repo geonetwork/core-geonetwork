@@ -379,6 +379,10 @@
 			<output sheet="home.xsl"/>
 		</service>
 
+		<service name="strings.js">
+			<output sheet="strings.xsl" contentType="application/json"/>
+		</service>
+
 		<service name="main.home">
 			<output sheet="main-page.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />

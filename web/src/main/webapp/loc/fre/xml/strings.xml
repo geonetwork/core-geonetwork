@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
+    <noRecords js='true'>No Records found</noRecords>
+    <edit js='true'>Edit</edit>
+    <searchView js='true'>Search</searchView>
+    <actions js='true'>Actions</actions>
+    <contacts js='true'>Contacts</contacts>
+    <SharedObjects js='true'>Shared Objects</SharedObjects>
+    <actions js='true'>Actions</actions>
+    <reusable_confirmValidate js="true">Confirm Validate Action</reusable_confirmValidate>
+    <reusable_confirmDelete js="true">Confirm Delete Action</reusable_confirmDelete>
+    <reusable_confirmDeleteMsg js="true">Are you sure you wish to delete the selected object?</reusable_confirmDeleteMsg>
+    <reusable_confirmValidateMsg js="true">Are you sure you wish to validate the selected object?</reusable_confirmValidateMsg>
+    <reusable_validated js="true">validé</reusable_validated>
+    <reusable_nonValidated js="true">non validé</reusable_nonValidated>
+    <reusable_nonValidTitle js="true">Gérer les objets réutilisables non validés</reusable_nonValidTitle>
+    <reusable_nonValidDesc js="true">Valider/rejeter les objets réutilisables non validés</reusable_nonValidDesc>
+    <reusable_rejectTitle js="true">Message de rejet</reusable_rejectTitle>
+    <reusable_rejectDefaultMsg js="true">Choisissez un autre objet réutilisable...</reusable_rejectDefaultMsg>
+    <archived>Archived</archived>
+    <performingOperation>Performing Operation.  Please wait...</performingOperation>
+
+
 	<local._none_.non_validated>geocat.ch Thesaurus (non validié)</local._none_.non_validated>
 	<local._none_.geocat.ch>geocat.ch Thesaurus</local._none_.geocat.ch>
 	<external.theme.gemet-theme>GEMET themes</external.theme.gemet-theme>
@@ -126,7 +147,7 @@
     <monitoring.service.disk>Monitor du disque</monitoring.service.disk>
     <monitoring.freespace>Espace libre</monitoring.freespace>
 
-    <reject>Refuser</reject>
+    <reject js='true'>Refuser</reject>
     <rejected>rejeté</rejected>
     <replaceSharedObjects>Remplacer par des objets réutilisables</replaceSharedObjects>
     <format>
@@ -135,18 +156,10 @@
     </format>
     <formats>Formats</formats>
     <extents>Etendues</extents>
-    <deleted>Supprimé</deleted>
+    <deleted js='true'>Supprimé</deleted>
     <insufficient.privileges.import.replace>Une métadonnée avec le même identifiant existe déjà. Vos privilèges ne suffisent pas pour la remplacer.</insufficient.privileges.import.replace>
     <updateDatasetTitle>Mettre à jour une MDD</updateDatasetTitle>
     <updateDatasetMsg>Il faut cocher \'Mettre à jour une MDD\' pour ajouter une section "ressource online" si on n\'a pas droit d\'édition sur la MDS</updateDatasetMsg>
-    <reusable>
-        <validated>validé</validated>
-        <nonValidated>non validé</nonValidated>
-        <nonValidTitle>Gérer les objets réutilisables non validés</nonValidTitle>
-        <nonValidDesc>Valider/rejeter les objets réutilisables non validés</nonValidDesc>
-        <rejectTitle>Message de rejet</rejectTitle>
-        <rejectDefaultMsg>Choisissez un autre objet réutilisable...</rejectDefaultMsg>
-    </reusable>
     <deletedSharedObject>
         <msg>Mail envoyé automatiquement.
 Des objets réutilisables que vous utilisez dans vos métadonnées ont été rejetés. Vous trouverez ci-contre la liste des métadonnées concernées et la raison du rejet. Nous vous prions de bien vouloir adapter ces métadonnées et de les republier. N&apos;hésitez pas à prendre contact avec nous en cas de questions: geocat@swisstopo.ch
@@ -650,7 +663,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	
 	<about>A propos</about>
 	<abstract js="true">Résumé</abstract>
-	<accept>Accepter</accept>
+	<accept js="true">Accepter</accept>
 	<actionOnSelect>Actions sur la sélection</actionOnSelect>
 	<add js="true">Ajouter</add>
 	<addNewMetadata>Créer une nouvelle fiche de métadonnées</addNewMetadata>
@@ -692,7 +705,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<browset>Browse Graphic File Type</browset>
 	<byGroup>Vue ISO</byGroup>
 	<byPackage>Vue Avancée</byPackage>
-	<cancel>Annuler</cancel>
+	<cancel js="true">Annuler</cancel>
 	<categories>Catégories</categories>
 	<category js="true">Catégorie</category>
 	<categoryManagement>Gestion des catégories</categoryManagement>
@@ -930,7 +943,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<metadata.admin.index.optimize.desc>Optimisation de l'index Lucene</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Vider le cache d'XLink et reconstruire l'index</metadata.admin.index.rebuildxlinks.desc>
 	<lucene.config.reload>Recharger la configuration Lucene</lucene.config.reload>
-	<reload>Recharger</reload>
+	<reload js="true">Recharger</reload>
 	<rebuildxlinks>Reconstruire</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">Cette opération peut prendre du temps sur des catalogues volumineux. Il n'est pas recommandé de la lancer lors des périodes d'utilisation intense. Continuer ?</doYouReallyWantToDoThis>
 	<optimize>Optimiser</optimize>
@@ -1175,7 +1188,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<userPw>Modifier le mot de passe</userPw>
 	<userPwDes>Autoriser l'utilisateur en cours de changer le mot de passe</userPwDes>
 	<uuidAction>Actions à l'import :</uuidAction>
-	<validate>Valider</validate>
+	<validate js='true'>Valider</validate>
 	<assign>Affecter à ce catalogue</assign>
 	<validityBegins>Date de début de validité</validityBegins>
 	<validityEnds> et fin </validityEnds>

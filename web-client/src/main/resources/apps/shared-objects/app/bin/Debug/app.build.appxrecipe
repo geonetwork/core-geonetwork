@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Machine>KTUNAXA</Machine>
+    <WindowsUser>Jesse</WindowsUser>
+    <SolutionConfiguration>Debug|AnyCPU</SolutionConfiguration>
+    <PackageArchitecture>neutral</PackageArchitecture>
+  </PropertyGroup>
+  <ItemGroup>
+    <AppXManifest Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bin\Debug\AppxManifest.xml">
+      <PackagePath>AppxManifest.xml</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+    </AppXManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\css\app.css">
+      <PackagePath>css\app.css</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\bootstrap3\css\bootstrap-theme.css">
+      <PackagePath>lib\bootstrap3\css\bootstrap-theme.css</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\bootstrap3\css\bootstrap-theme.min.css">
+      <PackagePath>lib\bootstrap3\css\bootstrap-theme.min.css</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\bootstrap3\css\bootstrap.css">
+      <PackagePath>lib\bootstrap3\css\bootstrap.css</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\bootstrap3\css\bootstrap.min.css">
+      <PackagePath>lib\bootstrap3\css\bootstrap.min.css</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\img\.gitkeep">
+      <PackagePath>img\.gitkeep</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\partials\.gitkeep">
+      <PackagePath>partials\.gitkeep</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\index-eng.html">
+      <PackagePath>index-eng.html</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\partials\shared.html">
+      <PackagePath>partials\shared.html</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\partials\deleted.html">
+      <PackagePath>partials\deleted.html</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\partials\menubar.html">
+      <PackagePath>partials\menubar.html</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\js\app.js">
+      <PackagePath>js\app.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\js\controllers.js">
+      <PackagePath>js\controllers.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\js\directives.js">
+      <PackagePath>js\directives.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\js\filters.js">
+      <PackagePath>js\filters.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\js\factories.js">
+      <PackagePath>js\factories.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\angular\angular-cookies.js">
+      <PackagePath>lib\angular\angular-cookies.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\angular\angular-cookies.min.js">
+      <PackagePath>lib\angular\angular-cookies.min.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\angular\angular-loader.js">
+      <PackagePath>lib\angular\angular-loader.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\angular\angular-loader.min.js">
+      <PackagePath>lib\angular\angular-loader.min.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\angular\angular-resource.js">
+      <PackagePath>lib\angular\angular-resource.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\angular\angular-resource.min.js">
+      <PackagePath>lib\angular\angular-resource.min.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\angular\angular-sanitize.js">
+      <PackagePath>lib\angular\angular-sanitize.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\angular\angular-sanitize.min.js">
+      <PackagePath>lib\angular\angular-sanitize.min.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\angular\angular.js">
+      <PackagePath>lib\angular\angular.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\angular\angular.min.js">
+      <PackagePath>lib\angular\angular.min.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\bootstrap3\js\bootstrap.js">
+      <PackagePath>lib\bootstrap3\js\bootstrap.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\bootstrap3\js\bootstrap.min.js">
+      <PackagePath>lib\bootstrap3\js\bootstrap.min.js</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\angular\version.txt">
+      <PackagePath>lib\angular\version.txt</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\bootstrap3\fonts\glyphicons-halflings-regular.eot">
+      <PackagePath>lib\bootstrap3\fonts\glyphicons-halflings-regular.eot</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\bootstrap3\fonts\glyphicons-halflings-regular.svg">
+      <PackagePath>lib\bootstrap3\fonts\glyphicons-halflings-regular.svg</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\bootstrap3\fonts\glyphicons-halflings-regular.ttf">
+      <PackagePath>lib\bootstrap3\fonts\glyphicons-halflings-regular.ttf</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\lib\bootstrap3\fonts\glyphicons-halflings-regular.woff">
+      <PackagePath>lib\bootstrap3\fonts\glyphicons-halflings-regular.woff</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\bin\Debug\resources.pri">
+      <PackagePath>resources.pri</PackagePath>
+    </AppxPackagedFile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResolvedSDKReference Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows\v8.0\ExtensionSDKs\Microsoft.WinJS.1.0\1.0\">
+      <Name>Microsoft.WinJS.1.0</Name>
+      <Version>1.0.8514.0</Version>
+      <Architecture>Neutral</Architecture>
+      <FrameworkIdentity>Name=Microsoft.WinJS.1.0, MinVersion=1.0.8514.0</FrameworkIdentity>
+      <AppxLocation>C:\Program Files %28x86%29\Microsoft SDKs\Windows\v8.0\ExtensionSDKs\Microsoft.WinJS.1.0\1.0\Microsoft.WinJS.1.0.appx</AppxLocation>
+    </ResolvedSDKReference>
+  </ItemGroup>
+</Project>

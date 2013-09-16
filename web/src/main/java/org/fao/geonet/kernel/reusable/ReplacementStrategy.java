@@ -76,7 +76,7 @@ public abstract class ReplacementStrategy
     /**
      * Construct a list of the non_validated objects
      */
-    public abstract Element findNonValidated(UserSession session) throws Exception;
+    public abstract Element find(UserSession session, boolean validated) throws Exception;
 
     /**
      * Deletes the objects. No other function

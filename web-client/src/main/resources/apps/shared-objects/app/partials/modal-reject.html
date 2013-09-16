@@ -1,0 +1,18 @@
+<div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">{{translate('reusable_rejectTitle')}}</h4>
+        </div>
+        <div class="modal-body">
+            <textarea class="form-control" rows="3" data-ng-model="message" data-ng-required="true" data-ng-init="message=translate('reusable_rejectDefaultMsg')">
+            </textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{translate('cancel')}}</button>
+          <button type="button" class="btn btn-primary" data-ng-click="performOperation('reusable.reject')">{{translate('accept')}}</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->

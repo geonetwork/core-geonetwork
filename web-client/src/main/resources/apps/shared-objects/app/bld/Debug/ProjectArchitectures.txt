@@ -1,0 +1,1 @@
+C:\GitHub\geonetwork\geocat\web-client\src\main\resources\apps\shared-objects\app\app.jsproj;neutral

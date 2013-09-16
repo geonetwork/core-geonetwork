@@ -82,7 +82,7 @@ public class DeleteUnused implements Service {
     private void process(ReplacementStrategy strategy, ServiceContext context, Dbms dbms) throws Exception {
         UserSession userSession = context.getUserSession();
         @SuppressWarnings("unchecked")
-        List<Element> nonValidated = strategy.findNonValidated(userSession).getChildren();
+        List<Element> nonValidated = strategy.find(userSession, false).getChildren();
         List<String> toDelete = new ArrayList<String>();
         final Function<String, String> idConverter = strategy.numericIdToConcreteId(userSession);
         

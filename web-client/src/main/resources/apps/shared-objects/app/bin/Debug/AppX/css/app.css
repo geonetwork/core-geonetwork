@@ -1,0 +1,73 @@
+/* app css stylesheet */
+
+body {
+    padding-top: 200px;
+}
+
+.capitalized {
+     text-transform:capitalize;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+td.banner-menu {
+    font-family: arial,helvetica,sans-serif;
+    height: 0px;
+    background: #CCCCCC;
+}
+
+td.banner-menu a {
+    font-size: 0.7em;
+    background: #CCCCCC;
+    color: black;
+    padding: 0 3px;
+}
+
+td.banner-nav {
+    font-size: 1.0em;
+    color: #FFFFFF;
+    background: #CCCCCC;
+    border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+    height: 29px;
+    vertical-align: middle;
+}
+
+input[type="search"] {
+    border-radius: 20px;
+    margin-top: 7px;
+    height: 30px;
+}
+
+td.banner-nav td.first a {
+    padding-left: 14px;
+}
+
+td.banner-nav a {
+    background: #01669E;
+    color: #FFFFFF;
+    border: 1px solid white;
+    border-left: none;
+    font-family: arial,helvetica,sans-serif;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 5px 14px;
+    white-space: nowrap;
+}
+
+td.banner-login {
+    font-size: 8pt;
+    color: #ffffff;
+    /*
+	background-image: url('images/blue-background.gif');
+	*/
+    background: #CCCCCC;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+    height: 16px;
+    vertical-align: middle;
+    white-space: nowrap;
+    vertical-align: middle;
+}

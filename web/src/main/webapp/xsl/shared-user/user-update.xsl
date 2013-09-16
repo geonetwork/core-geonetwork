@@ -25,7 +25,7 @@
 					return;
 				}
 				// all ok, proceed
-				if (window.location.search.indexOf("?closeOnSave") != -1) {
+				if (window.location.search.indexOf("closeOnSave") != -1) {
 				   new Ajax.Request($('userupdateform').action,
 					{
 			            method: 'post',

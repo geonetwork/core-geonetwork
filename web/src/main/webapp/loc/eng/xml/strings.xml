@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
+    <format_name>Enter format name</format_name>
+    <format_version>Enter format version</format_version>
+    <noRecords js='true'>No Records found</noRecords>
+    <edit js='true'>Edit</edit>
+    <searchView js='true'>Search</searchView>
+    <actions js='true'>Actions</actions>
+    <contacts js='true'>Contacts</contacts>
+    <SharedObjects js='true'>Shared Objects</SharedObjects>
     <openInSearch>Search View</openInSearch>
-	<archived>Archived</archived>
+    <reusable_confirmValidate js="true">Confirm Validate Action</reusable_confirmValidate>
+    <reusable_confirmDelete js="true">Confirm Delete Action</reusable_confirmDelete>
+    <reusable_confirmDeleteMsg js="true">Are you sure you wish to delete the selected object?</reusable_confirmDeleteMsg>
+    <reusable_confirmValidateMsg js="true">Are you sure you wish to validate the selected object?</reusable_confirmValidateMsg>
+    <reusable_validated js="true">Validated</reusable_validated>
+    <reusable_nonValidated js="true">Non-validated</reusable_nonValidated>
+    <reusable_nonValidTitle js="true">Non-validated shared objects</reusable_nonValidTitle>
+    <reusable_nonValidDesc js="true">Validate/Reject shared objects that have not yet been validated</reusable_nonValidDesc>
+    <reusable_rejectTitle js="true">Rejection Message</reusable_rejectTitle>
+    <reusable_rejectDefaultMsg js="true">Choose another shared object...</reusable_rejectDefaultMsg>
+    <archived>Archived</archived>
+    <performingOperation>Performing Operation.  Please wait...</performingOperation>
+
+
 	<local._none_.non_validated>geocat.ch Thesaurus (non validated)</local._none_.non_validated>
 	<local._none_.geocat.ch>geocat.ch Thesaurus</local._none_.geocat.ch>
 	<external.theme.gemet-theme>GEMET themes</external.theme.gemet-theme>
@@ -141,7 +162,7 @@
 	<monitoring.service.disk>Disk monitor</monitoring.service.disk>
 	<monitoring.freespace>Free space</monitoring.freespace>
 
-    <reject>Reject</reject>
+    <reject js='true'>Reject</reject>
     <rejected>Rejected</rejected>
     <replaceSharedObjects>Validate shared objects</replaceSharedObjects>
     <format>
@@ -149,19 +170,11 @@
            <manDes>Add/modify/delete and show distribution formats</manDes>
     </format>
     <formats>Formats</formats>
-    <extents>Extents</extents>
-    <deleted>Deleted</deleted>
+    <extents js='true'>Extents</extents>
+    <deleted js='true'>Deleted</deleted>
     <insufficient.privileges.import.replace>A metadata record exists that you cannot replace because of insufficient privileges</insufficient.privileges.import.replace>
     <updateDatasetTitle>Update dataset</updateDatasetTitle>
     <updateDatasetMsg>You have to check \'Update dataset metadata\' to add an onlineResource section for not allowed metadata</updateDatasetMsg>
-    <reusable>
-        <validated>Validated</validated>
-        <nonValidated>Non-validated</nonValidated>
-        <nonValidTitle>Non-validated shared objects</nonValidTitle>
-        <nonValidDesc>Validate/Reject shared objects that have not yet been validated</nonValidDesc>
-        <rejectTitle>Rejection Message</rejectTitle>
-        <rejectDefaultMsg>Choose another shared object...</rejectDefaultMsg>
-    </reusable>
     <deletedSharedObject>
         <msg>Mail sent automatically.
     Shared metadata elements have been deleted that affect metadata document(s) that you own. The complete list of affected metadata objects are listed bellow. Please update the documents listed in this email.</msg>
@@ -652,7 +665,7 @@
 	
 	<about>About</about>
 	<abstract js="true">Abstract</abstract>
-	<accept>Accept</accept>
+	<accept js="true">Accept</accept>
 	<actionOnSelect>actions on selection</actionOnSelect>
 	<add js="true">add</add>
 	<addNewMetadata>Add new metadata</addNewMetadata>
@@ -694,7 +707,7 @@
 	<browset>Browse Graphic File Type</browset>
 	<byGroup>By Group</byGroup>
 	<byPackage>By Package</byPackage>
-	<cancel>Cancel</cancel>
+	<cancel js="true">Cancel</cancel>
 	<categories>Categories</categories>
 	<category js="true">Category</category>
 	<categoryManagement>Category management</categoryManagement>
@@ -933,7 +946,7 @@
 	<metadata.admin.index.optimize.desc>Optimize Lucene index</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
 	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>
-	<reload>Reload</reload>
+	<reload js="true">Reload</reload>
 	<rebuildxlinks>Rebuild XLinks</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">This operation may take some time on large catalogs and should not be done during peak usage. Continue?</doYouReallyWantToDoThis>
 	<optimize>Optimize</optimize>
@@ -1202,7 +1215,7 @@
 	<userPw>Change password</userPw>
 	<userPwDes>Allow current user to change password</userPwDes>
 	<uuidAction>Import actions:</uuidAction>
-	<validate>Validate</validate>
+	<validate js='true'>Validate</validate>
 	<assign>Assign to current catalog</assign>
 	<validityBegins>Validity begins</validityBegins>
 	<validityEnds>and ends</validityEnds>

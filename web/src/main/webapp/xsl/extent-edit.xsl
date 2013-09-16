@@ -185,7 +185,7 @@
 		    </xsl:choose>
 	    </xsl:variable>
     
-	   <FORM id="editform" action="{$action}" method="post">
+	   <FORM id="editform" action="{$action}" method="post" style="padding: 20px">
    	    <P>
    	       <table>
                   <tr><td>Geo Id:</td><td>

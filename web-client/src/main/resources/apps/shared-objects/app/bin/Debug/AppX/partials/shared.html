@@ -1,0 +1,56 @@
+<div ng-include src="'partials/menubar.html'"></div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <td>#</td>
+            <td>Description</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="row in data">
+            <td>
+                <div class="panel-group" id="Div1">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                {{row.id}}
+                            </div>
+                        </div>
+                    </div>
+            </td>
+            <td>
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <a class="accordion-toggle " data-toggle="collapse" data-parent="#accordion" href="#collapse-{{row.id}}"
+                                    data-ng-click="loadReferencedMetadata(row.id, 'collapse-body-'+row.id)">{{row.desc}}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="collapse-{{row.id}}" class="panel-collapse collapse">
+                        <div id="collapse-body-{{row.id}}" class="panel-body">
+                            <div class="progress progress-striped active">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+                                    <span class="sr-only">45% Complete</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="dropdown">
+                    <button type="button" class="btn btn-default" data-toggle="dropdown" href="#">{{translate('actions')}}<b class="caret"></b></button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <li><a ng-href="#/validated/{{type}}">{{translate('search')}}</a></li>
+                        <li><a ng-href="#/validated/{{type}}">{{translate('edit')}}</a></li>
+                        <li><a ng-href="#/validated/{{type}}">{{translate('validate')}}</a></li>
+                        <li><a ng-href="#/validated/{{type}}">{{translate('reject')}}</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>

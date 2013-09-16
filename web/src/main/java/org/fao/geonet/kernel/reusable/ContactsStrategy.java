@@ -371,11 +371,12 @@ public final class ContactsStrategy extends ReplacementStrategy
         return email != null && email.trim().length() > 0;
     }
 
-    public Element findNonValidated(UserSession session) throws Exception
+    public Element find(UserSession session, boolean validated) throws Exception
     {
+
         final String query = "SELECT id,email,username,name,surname FROM Users WHERE profile='" + SHARED
-                + "' AND validated='n'";
-        List<Element> results = _dbms.select(query).getChildren("record");
+                + "' AND validated=?";
+        List<Element> results = _dbms.select(query, validated ? 'y' : 'n').getChildren("record");
         Element category = new Element(REPORT_ROOT);
         for (Element result : results) {
             Element e = new Element(REPORT_ELEMENT);

@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
+    <noRecords js='true'>No Records found</noRecords>
+    <edit js='true'>Edit</edit>
+    <searchView js='true'>Search</searchView>
+    <actions js='true'>Actions</actions>
+    <contacts js='true'>Contacts</contacts>
+    <SharedObjects js='true'>Shared Objects</SharedObjects>
+    <actions js='true'>Actions</actions>
+    <reusable_confirmValidate js="true">Confirm Validate Action</reusable_confirmValidate>
+    <reusable_confirmDelete js="true">Confirm Delete Action</reusable_confirmDelete>
+    <reusable_confirmDeleteMsg js="true">Are you sure you wish to delete the selected object?</reusable_confirmDeleteMsg>
+    <reusable_confirmValidateMsg js="true">Are you sure you wish to validate the selected object?</reusable_confirmValidateMsg>
+    <reusable_validated js="true">Bestätigt</reusable_validated>
+    <reusable_nonValidated js="true">Unbestätigt</reusable_nonValidated>
+    <reusable_nonValidTitle js="true">Unbestätigte wiederverwendbare Objekte</reusable_nonValidTitle>
+    <reusable_nonValidDesc js="true">Wiederverwendbare Objekte bestätigen/ablehnen</reusable_nonValidDesc>
+    <reusable_rejectTitle js="true">Nachricht zur Ablehnung von wiederverwendbaren Objekten</reusable_rejectTitle>
+    <reusable_rejectDefaultMsg js="true">Wählen Sie ein anderes wiederverwendbares Objekt...</reusable_rejectDefaultMsg>
+    <archived>Archived</archived>
+    <performingOperation>Performing Operation.  Please wait...</performingOperation>
+
+
 	<local._none_.non_validated>geocat.ch Thesaurus (nicht validiert)</local._none_.non_validated>
 	<local._none_.geocat.ch>geocat.ch Thesaurus</local._none_.geocat.ch>
 	<external.theme.gemet-theme>GEMET Themen</external.theme.gemet-theme>
@@ -129,7 +150,7 @@
     <monitoring.service.disk>Disk Monitor</monitoring.service.disk>
     <monitoring.freespace>Freier Speicherplatz</monitoring.freespace>  
 
-    <reject>Ablehnen</reject>
+    <reject js='true'>Ablehnen</reject>
     <rejected>abgelehnt</rejected>
     <replaceSharedObjects>Wiederverwendbare Elemente bestätigen</replaceSharedObjects>
     <format>
@@ -138,18 +159,10 @@
     </format>
     <formats>Format</formats>
     <extents>Ausdehnung</extents>
-    <deleted>Gelöscht</deleted>
+    <deleted js='true'>Gelöscht</deleted>
     <insufficient.privileges.import.replace>Es gibt einen Metadatensatz mit diesem Identifikator, der nicht ersetzt werden kann, da Sie nicht über die nötigen Rechte verfügen.</insufficient.privileges.import.replace>
     <updateDatasetTitle>Datensatz updaten</updateDatasetTitle>
     <updateDatasetMsg>\'Datensatz updaten\' muss angekreuzt sein, um eine online Ressource bei Metadaten anzufügen, wo man kein Schreibrecht hat</updateDatasetMsg>
-    <reusable>
-        <validated>Bestätigt</validated>
-        <nonValidated>Unbestätigt</nonValidated>
-        <nonValidTitle>Unbestätigte wiederverwendbare Objekte</nonValidTitle>
-        <nonValidDesc>Wiederverwendbare Objekte bestätigen/ablehnen</nonValidDesc>
-        <rejectTitle>Nachricht zur Ablehnung von wiederverwendbaren Objekten</rejectTitle>
-        <rejectDefaultMsg>Wählen Sie ein anderes wiederverwendbares Objekt...</rejectDefaultMsg>
-    </reusable>
     <deletedSharedObject>
         <msg>Automatisch versendetes E-mail.
 Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgend finden Sie die Liste der betroffenen Metadatensätze und die Begründung der Ablehnung. Wir bitten Sie, diese Metadaten anzupassen und erneut zu publizieren. Nehmen Sie bei Fragen bitte direkt mit uns Kontakt auf geocat@swisstopo.ch.
@@ -627,7 +640,7 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	
 	<about>Über</about>
 	<abstract js="true">Zusammenfassung</abstract>
-	<accept>Abschicken</accept>
+	<accept js="true">Abschicken</accept>
 	<actionOnSelect>Aktionen für ausgwählte Metadaten</actionOnSelect>
 	<add js="true">hinzufügen</add>
 	<addNewMetadata>Neue Metadaten</addNewMetadata>
@@ -669,7 +682,7 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<browset>Grafik Typ durchsuchen</browset>
 	<byGroup>Nach Gruppe</byGroup>
 	<byPackage>Nach Paket</byPackage>
-	<cancel>Abbrechen</cancel>
+	<cancel js="true">Abbrechen</cancel>
 	<categories>Kategorien</categories>
 	<category js="true">Kategorie</category>
 	<categoryManagement>Kategorie Management</categoryManagement>
@@ -902,7 +915,7 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<metadata.admin.index.optimize.desc>Optimisierung des Lucene Index</metadata.admin.index.optimize.desc>
 	<metadata.admin.index.rebuildxlinks.desc>XLink Cache leeren und Index von Daten mit XLinks neu aufbauen</metadata.admin.index.rebuildxlinks.desc>
 	<lucene.config.reload>Lucene Konfiguration neu laden</lucene.config.reload>
-	<reload>Neu laden</reload>
+	<reload js="true">Neu laden</reload>
 	<rebuildxlinks>XLinks neu aufbauen</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">Diese Operation kann bei grossen Katalogen einige Zeit in Anspruch nehmen und sollte nicht während Spitzenzeiten ausgeführt werden. Weiterfahren?</doYouReallyWantToDoThis>
 	<optimize>Optimisieren</optimize>
@@ -1151,7 +1164,7 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<userPw>Passwort ändern</userPw>
 	<userPwDes>Benutzerpasswort für Metadatenkatalog ändern</userPwDes>
 	<uuidAction>Import Aktionen:</uuidAction>
-	<validate>Validieren</validate>
+	<validate js='true'>Validieren</validate>
 	<assign>Diesem Katalog zuteilen</assign>
 	<validityBegins>Gültigkeit ab</validityBegins>
 	<validityEnds>und endet</validityEnds>

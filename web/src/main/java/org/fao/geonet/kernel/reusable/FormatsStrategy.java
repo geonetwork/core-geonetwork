@@ -130,9 +130,13 @@ public final class FormatsStrategy extends ReplacementStrategy
         }
     }
 
-    public Element findNonValidated(UserSession session) throws Exception
+    public Element find(UserSession session, boolean validated) throws Exception
     {
-        List<Element> results = _dbms.select("SELECT "+ID_COL+","+NAME_COL+","+VERSION_COL+" FROM "+TABLE+" WHERE "+VALIDATED_COL+"='n'").getChildren("record");
+
+        @SuppressWarnings("unchecked")
+        List<Element> results = _dbms.select("SELECT " + ID_COL + "," + NAME_COL + "," + VERSION_COL + " FROM " + TABLE + " WHERE "
+                + VALIDATED_COL + "=?", validated ? 'y' : 'n').getChildren("record");
+
         Element formats = new Element(REPORT_ROOT);
 
         for (Element result : results) {
