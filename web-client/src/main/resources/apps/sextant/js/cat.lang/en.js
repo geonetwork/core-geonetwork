@@ -6,7 +6,7 @@ cat.lang.en = {
     "search-header-criteria-advanced": "Advanced selection criteria",
     "search-header-simple": "Simple",
     "search-header-advanced": "Advanced",
-    "search-header-facet": "Facets",
+    "search-header-facet": "Facetted",
     "search-view-form": "View",
     "result-list-view": "View",
     "result-list-download": "Download",

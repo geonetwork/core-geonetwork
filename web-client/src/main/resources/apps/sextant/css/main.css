@@ -42,6 +42,7 @@ table, tbody, tr, td, th {
 }
 .west-panel .search-panel-header {
 	border: none;
+	font-family: Arial,Helvetica,sans-serif;
 	background-color: #DEDEDE;
 	background-image: none;
 	color: #626262;
@@ -53,10 +54,12 @@ table, tbody, tr, td, th {
 .west-panel .search-panel-header .x-panel-header-text{
 	padding-left:10px;
 }
+
 .west-panel .search-panel-header .x-panel-header-text a{
 	color: #626262;
     font-size: 90%;
     font-weight: normal;
+	font-family: Arial,Helvetica,sans-serif;
     float: right;
     padding-right: 25px;
     text-decoration:underline;

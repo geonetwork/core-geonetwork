@@ -577,60 +577,63 @@ cat.app = function() {
 		searchForm.on('afterrender',function(cpt) {
 			cpt.addEvents('advancedmode', 'simplemode', 'facetmode');
 			cpt.ownerCt.header.on('click', function(e,v,t) {
-			    if(v.id == 'searchFormHeaderLinkAdvanced') {
+			    if(v.id == 'searchFormHeaderLinkadvanced') {
 			        this.fireEvent('advancedmode', this);
 			        activeSearchMode = 'advanced';
 			    }
-			    else if(v.id == 'searchFormHeaderLinkSimple') {
+			    else if(v.id == 'searchFormHeaderLinksimple') {
                     this.fireEvent('simplemode', this);
                     activeSearchMode = 'simple';
                 }
-			    else if(v.id == 'searchFormHeaderLinkFacet') {
+			    else if(v.id == 'searchFormHeaderLinkfacet') {
                     this.fireEvent('facetmode', this);
                     activeSearchMode = 'facet';
                 }
 				cookie.set('cat.searchform.viewmode', activeSearchMode)
 			}, cpt);
-
-			cpt.on('advancedmode',function(cpt) {
-			    if(activeSearchMode != 'advanced') {
-			         cpt.setVisible(true);
-		             Ext.each(advandcedField,function(item) {
-	                    item.setVisible(!item.disabled);
-	                    if(!Ext.isIE) // temp
-	                        whatForm.body && whatForm.body.removeClass('hidden');
-	                });
-		            cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced').addClass('bold');
-		            cpt.ownerCt.header.child('#searchFormHeaderLinkSimple') && cpt.ownerCt.header.child('#searchFormHeaderLinkSimple').removeClass('bold');
-	                cpt.ownerCt.header.child('#searchFormHeaderLinkFacet') && cpt.ownerCt.header.child('#searchFormHeaderLinkFacet').removeClass('bold');
-			    }
+			
+			
+			cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced').setVisibilityMode(Ext.Element.DISPLAY);
+            cpt.ownerCt.header.child('#searchFormHeaderLinksimple') && cpt.ownerCt.header.child('#searchFormHeaderLinksimple').setVisibilityMode(Ext.Element.DISPLAY);
+            cpt.ownerCt.header.child('#searchFormHeaderLinkfacet') && cpt.ownerCt.header.child('#searchFormHeaderLinkfacet').setVisibilityMode(Ext.Element.DISPLAY);
+	    
+			cpt.on('advancedmode',function(cpt) {			
+		        cpt.setVisible(true);
+	            Ext.each(advandcedField,function(item) {
+                    item.setVisible(!item.disabled);
+                    if(!Ext.isIE) // temp
+                        whatForm.body && whatForm.body.removeClass('hidden');
+                });
+	            cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced').hide();
+	            cpt.ownerCt.header.child('#searchFormHeaderLinksimple') && cpt.ownerCt.header.child('#searchFormHeaderLinksimple').show();
+                cpt.ownerCt.header.child('#searchFormHeaderLinkfacet') && cpt.ownerCt.header.child('#searchFormHeaderLinkfacet').show();
+				document.getElementById('currentSearchMode').innerHTML = OpenLayers.i18n('search-header-advanced');
 			});
 			cpt.on('simplemode',function() {
-			    if(activeSearchMode != 'simple') {
-			         cpt.setVisible(true);
-		             Ext.each(advandcedField,function(item) {
-	                    item.setVisible(false);
-	                    if(!Ext.isIE) //temp
-	                        whatForm.body && whatForm.body.addClass('hidden');
-	                });
-		             cpt.ownerCt.header.child('#searchFormHeaderLinkSimple') && cpt.ownerCt.header.child('#searchFormHeaderLinkSimple').addClass('bold');
-		             cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced').removeClass('bold');
-		             cpt.ownerCt.header.child('#searchFormHeaderLinkFacet') && cpt.ownerCt.header.child('#searchFormHeaderLinkFacet').removeClass('bold');
-			    } 
+				document.getElementById('currentSearchMode').innerHTML = OpenLayers.i18n('search-header-simple');
+		        cpt.setVisible(true);
+	            Ext.each(advandcedField,function(item) {
+                    item.setVisible(false);
+                    if(!Ext.isIE) //temp
+                        whatForm.body && whatForm.body.addClass('hidden');
+                });
+
+	             cpt.ownerCt.header.child('#searchFormHeaderLinksimple') && cpt.ownerCt.header.child('#searchFormHeaderLinksimple').hide();
+	             cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced').show();
+	             cpt.ownerCt.header.child('#searchFormHeaderLinkfacet') && cpt.ownerCt.header.child('#searchFormHeaderLinkfacet').show();
 			});
 			cpt.on('facetmode',function() {
-			    if(activeSearchMode != 'facet') {
-		            cpt.setVisible(false);
-		            if(cpt.ownerCt.header.child('#searchFormHeaderLinkFacet')) {
-		            	cpt.ownerCt.header.child('#searchFormHeaderLinkFacet').addClass('bold');
-		            }
-                    if(cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced')) {
-                        cpt.ownerCt.header.child('#searchFormHeaderLinkAdvanced').removeClass('bold');
-                    }
-                    if(cpt.ownerCt.header.child('#searchFormHeaderLinkSimple')) {
-                        cpt.ownerCt.header.child('#searchFormHeaderLinkSimple').removeClass('bold');
-                    }
-			    }
+				document.getElementById('currentSearchMode').innerHTML = OpenLayers.i18n('search-header-facet');
+	            cpt.setVisible(false);
+	            if(cpt.ownerCt.header.child('#searchFormHeaderLinkfacet')) {
+	            	cpt.ownerCt.header.child('#searchFormHeaderLinkfacet').hide();
+	            }
+                if(cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced')) {
+                    cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced').show();
+                }
+                if(cpt.ownerCt.header.child('#searchFormHeaderLinksimple')) {
+                    cpt.ownerCt.header.child('#searchFormHeaderLinksimple').show();
+                }
             });
 			
 			// get active serach mode from cookies, or from the first element of the config list
@@ -639,6 +642,17 @@ cat.app = function() {
 			initMode = cookie.get('cat.searchform.viewmode') ? cookie.get('cat.searchform.viewmode') : initMode;
             this.fireEvent(initMode + 'mode', this);
 			activeSearchMode = initMode;
+			
+			// Set title
+			document.getElementById('currentSearchMode').innerHTML = OpenLayers.i18n('search-header-' + initMode);
+		    if(cpt.ownerCt.header.child('#searchFormHeaderLink' + initMode)) {
+	           	cpt.ownerCt.header.child('#searchFormHeaderLink' + initMode).hide();
+	        }
+		    // Hide title if one search mode choice
+			if (searchModes.length == 1) {
+				Ext.getCmp('west').setTitle('');
+			}
+	    	
 		});
 		
 		return searchForm;
@@ -813,18 +827,19 @@ cat.app = function() {
 					cls: 'sxt-layout-border-white west-panel',
 					split : true,
 					title : '<span id="searchFormHeaderTitle" class="mainheader">'
-	                    + OpenLayers.i18n('search-view-form') + ' :'
-	                    + '</span>' 
+	                    + OpenLayers.i18n('search-view-form') + ' '
+	                    + '</span>'
+	                    + '<span id="currentSearchMode"></span>'
                         + (searchModes.indexOf('facet') >= 0 ? 
-                                '<a id="searchFormHeaderLinkFacet" href="#">' + 
+                                '<a id="searchFormHeaderLinkfacet" href="#">' + 
                                 OpenLayers.i18n('search-header-facet') + 
                                 '</a>' : '')
 	                    + (searchModes.indexOf('advanced') >= 0 ? 
-	                            '<a id="searchFormHeaderLinkAdvanced" href="#">' + 
+	                            '<a id="searchFormHeaderLinkadvanced" href="#">' + 
 	                            OpenLayers.i18n('search-header-advanced') + 
 	                            '</a>' : '')
                         + (searchModes.indexOf('simple') >= 0 ? 
-                                '<a id="searchFormHeaderLinkSimple" href="#">' + 
+                                '<a id="searchFormHeaderLinksimple" href="#">' + 
                                 OpenLayers.i18n('search-header-simple') + 
                             '</a>' : ''),
 					border : false,
