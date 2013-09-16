@@ -385,7 +385,11 @@
 			
 			<output sheet="metadata-admin.xsl"/>
 		</service>
-
+	    
+	    <service name="xml.metadata.batch.admin.form">
+	        <class name=".services.metadata.PrepareBatchUpdatePrivileges"/>
+	    </service>
+	    
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.batch.update.privileges">
@@ -395,7 +399,11 @@
 				<xml name="info" file="xml/metadata-batchUpdatePrivileges.xml" />
 			</output>
 		</service>
-		
+	    
+	    <service name="xml.metadata.batch.update.privileges">
+	        <class name=".services.metadata.BatchUpdatePrivileges"/>
+	    </service>
+	    
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Update child -->
 		
@@ -552,6 +560,9 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 
 			<output sheet="metadata-admin.xsl"/>
 		</service>
+	    <service name="xml.metadata.admin.form">
+	        <class name=".services.metadata.GetAdminOper"/>
+	    </service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 

@@ -116,7 +116,9 @@
     </service>
     
     <service name="metadata.create.new">
-      <class name=".services.metadata.Create"/>
+      <class name=".services.metadata.Create">
+        <param name="editTab" value="true"/>
+      </class>
 
       <output forward="edit"/>
     </service>

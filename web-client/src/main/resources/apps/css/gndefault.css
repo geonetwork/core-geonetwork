@@ -732,6 +732,30 @@ ul.gn-relation-thumbnail {
     display: none;
 }
 
+.filter-text-icon {
+   background-image: url(../images/default/find.png) !important;
+   width: 16px;
+   height: 16px;
+   border-color: transparent !important;
+   margin: 4px;
+}
+
+.privilges-not-user-groups .x-grid3-cell-inner {
+    color: gray;
+}
+.privileges-internal .x-grid3-cell-inner {
+    font-weight: bold;
+}
+
+.privileges-grid-disable {
+    color: gray;
+}
+
+.privileges-grid-disable .x-grid3-check-col,
+.privileges-grid-disable .x-grid3-check-col-on {
+    opacity:0.4;
+}
+
 #user-info-tip {
     border-top: 1px solid #b6b6b6;
 }

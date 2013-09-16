@@ -42,8 +42,12 @@ import org.jdom.Element;
  * Creates a metadata copying data from a given template.
  */
 public class Create extends NotInReadOnlyModeService {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    boolean useEditTab = false;
 
+    public void init(String appPath, ServiceConfig params) throws Exception {
+        useEditTab = params.getValue("editTab", "false").equals("true");
+    }
+    
 	//--------------------------------------------------------------------------
 	//---
 	//--- Service
@@ -90,7 +94,6 @@ public class Create extends NotInReadOnlyModeService {
             java.util.List<Element> list = dbms.select(selectGroupIdQuery, 
 						Integer.valueOf(user.getUserId()),
 						Integer.valueOf(groupOwner)).getChildren();
-			System.out.println("Group found: " + list.size());
 			if (list.size() == 0) {
 				throw new ServiceNotAllowedEx("Service not allowed. User needs to be Editor in group with id " + groupOwner);
 			}
@@ -104,6 +107,14 @@ public class Create extends NotInReadOnlyModeService {
 
         Element response = new Element(Jeeves.Elem.RESPONSE);
         response.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
+        
+        String sessionTabProperty = useEditTab ? Geonet.Session.METADATA_EDITING_TAB : Geonet.Session.METADATA_SHOW;
+        
+        // Set current tab for new editing session if defined.
+        Element elCurrTab = params.getChild(Params.CURRTAB);
+        if (elCurrTab != null) {
+            context.getUserSession().setProperty(sessionTabProperty, elCurrTab.getText());
+        }
         response.addContent(new Element(Geonet.Elem.ID).setText(newId));
 		return response;
 	}

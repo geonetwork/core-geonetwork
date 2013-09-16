@@ -312,7 +312,6 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
             autoHide: false,
             bodyBorder: false,
             border: false,
-            frame: false,
             defaults: {
                 border: false
             },
