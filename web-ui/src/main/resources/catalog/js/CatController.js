@@ -124,9 +124,6 @@
         $('.gn-info').hide();
       };
 
-      $scope.metadataEdit = function(uuid) {
-        console.log('Edit: ' + uuid);
-      };
       $scope.$on('StatusUpdated', function(event, status) {
         $.extend($scope.status, defaultStatus, status);
         $('.gn-info').show();

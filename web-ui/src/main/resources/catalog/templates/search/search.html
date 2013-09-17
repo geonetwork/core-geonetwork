@@ -1,6 +1,6 @@
 <div class="container" data-ng-controller="GnSearchController">
 
-  <h1>Search Your Data, Maps &amp; Services</h1>
+  <h1 data-ng-translate="">Search Your Data, Maps &amp; Services</h1>
 
   <div class="row">
     <div class="col-lg-12">
@@ -8,11 +8,11 @@
         data-ng-keyup="searchRecordsSearchFor($event)"/>
     </div>
   </div>
-
   <p>
     <div data-gn-search-results="searchRecords.metadata"
-      data-gn-search-results-selected-records-count="selectedRecordsCount"
-      data-gn-search-results-allow-selection="false"/>
+      data-selected-records-count="selectedRecordsCount"
+      data-allow-selection="false"
+      data-authenticated="authenticated"/>
 
     <div data-gn-pagination="searchRecordsPagination"/>
   </p>

@@ -12,19 +12,22 @@
             replace: true,
             transclude: true,
             scope: { 
-                allowSelection: '@gnSearchResultsAllowSelection',
-                selectedRecordsCount: '=gnSearchResultsSelectedRecordsCount',
+                allowSelection: '@allowSelection',
+                authenticated: '=authenticated',
+                selectedRecordsCount: '=selectedRecordsCount',
                 searchResults: '=gnSearchResults'
             },
             templateUrl: '../../catalog/components/searchresults/partials/' +
               'searchresults.html',
             link : function(scope, element, attrs) {
-                scope.select = function (uuid, e) {
-                    var fn = $(e.target).toggleClass(activeClass).hasClass(activeClass) ? 
-                                gnMetadataManagerService.select : 
-                                gnMetadataManagerService.unselect;
+                scope.select = function (md, e) {
+                    var uuid = md['geonet:info'].uuid;
+                    var fn = $("#gn-record-" + uuid).hasClass(activeClass) ? 
+                                gnMetadataManagerService.unselect : 
+                                gnMetadataManagerService.select;
                     fn(uuid).then(function (data) {
                         scope.selectedRecordsCount = data[0];
+                        md['geonet:info'].selected = md['geonet:info'].selected !== true;
                     });
                 }
                 scope.selectAll = function (all) {
@@ -33,15 +36,16 @@
                             gnMetadataManagerService.selectNone;
                     fn().then(function (data) {
                         scope.selectedRecordsCount = data[0];
-                        element.find('.gn-record').toggleClass(activeClass, all);
-                        // Tested with checkbox for selection
-                        // For some obscur reason, the following checked and
-                        // unchecked properly only one time ?
-                        // element.find('input:checkbox').attr('checked', e.target.checked);
-//                        element.find('input:checkbox').each(function (i, checkbox) {
-//                          checkbox.checked = all;
-//                        });
+                        angular.forEach(scope.searchResults, function (md) {
+                            md['geonet:info'].selected = all ? true : false;
+                        });
                     });
+                }
+                scope.view = function (md, e) {
+                    gnMetadataManagerService.view(md);
+                }
+                scope.edit = function (md, e) {
+                    gnMetadataManagerService.edit(md);
                 }
             }
         };

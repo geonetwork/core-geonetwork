@@ -8,7 +8,7 @@
 
   /**
    * Provides statistics on the catalog content.
-   * 
+   *
    * TODO: Move NVD3 calls to specific module
    */
   module.controller('GnDashboardContentStatController', [

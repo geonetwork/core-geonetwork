@@ -43,6 +43,9 @@
                   if (typeof metadata.link === 'string') {
                       metadata.link = [metadata.link];
                   }
+                  
+                  // Parse selected to boolean
+                  metadata['geonet:info'].selected = metadata['geonet:info'].selected == 'true';
               }
           }
           

@@ -130,7 +130,7 @@
                 $scope.processReport = data;
                 $scope.numberOfRecordsProcessed = data['@processedRecords'];
               }
-              if ($scope.processReport['@running'] == 'true') {
+              if ($scope.processReport && $scope.processReport['@running'] == 'true') {
                 $timeout(checkLastBatchProcessReport, processCheckInterval);
               }
             });

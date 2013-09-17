@@ -17,10 +17,21 @@
 
   <div>
     <div class="list-group">
-      <a class="list-group-item gn-record" data-ng-repeat="md in searchResults"
-        data-ng-click="allowSelection == 'true' ? select(md['geonet:info'].uuid, $event) : ''"
-        data-ng-class="md['geonet:info'].selected == 'true' ? 'active' : ''"> {{md.title ||
-        md.defaultTitle}} </a>
+        <a class="list-group-item gn-record" data-ng-repeat="md in searchResults"
+            id="gn-record-{{md['geonet:info'].uuid}}" 
+            data-ng-class="md['geonet:info'].selected == true ? 'active' : ''">
+          <h4 class="list-group-item-heading">
+              <i class="" 
+              data-ng-class="md['geonet:info'].selected == true ? 'icon-check' : 'icon-check-empty'" 
+              data-ng-show="allowSelection == 'true'" 
+              data-ng-click="select(md, $event)"></i>
+              <span class="" data-ng-click="view(md)">{{md.title || md.defaultTitle}}</span>
+              <i class="icon-edit pull-right" 
+                  data-ng-show="authenticated" 
+                  data-ng-click="edit(md)"></i>
+          </h4>
+          <!--<p class="list-group-item-text">{{md.abstract}}</p>-->
+      </a>
     </div>
   </div>
 </div>

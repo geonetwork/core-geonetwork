@@ -33,11 +33,23 @@
       var selectNone = function () {
           return _select(null, false, 'remove-all');
       };
+      var view = function(md) {
+          console.log('View:');
+          console.log(md);
+          // TODO: Open metadata view mode according to GUI
+          window.open('../../apps/search?uuid=' + md['geonet:info'].uuid, 'gn-view');
+      };
+      var edit = function(md) {
+        console.log('Edit:');
+        console.log(md);
+      };
       return {
           select: select,
           unselect: unselect,
           selectAll: selectAll,
-          selectNone: selectNone
+          selectNone: selectNone,
+          view: view,
+          edit: edit
       };
   };
 
