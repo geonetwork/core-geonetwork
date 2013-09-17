@@ -36,7 +36,7 @@
                             gnMetadataManagerService.selectNone;
                     fn().then(function (data) {
                         scope.selectedRecordsCount = data[0];
-                        angular.forEach(scope.searchResults, function (md) {
+                        angular.forEach(scope.searchResults.metadata, function (md) {
                             md['geonet:info'].selected = all ? true : false;
                         });
                     });

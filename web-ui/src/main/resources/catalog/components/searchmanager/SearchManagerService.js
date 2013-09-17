@@ -18,6 +18,7 @@
           // When using summaryOnly=true, the facet is the root element
           if (data[0] && data[0]['@count']) {
               data.summary = data[0];
+              results = data[0]['@count'];
           }
           
           // Cleaning facets

@@ -1,5 +1,12 @@
 <div>
   <div class="clearfix">
+      <div>
+          <ng-pluralize count="searchResults.count"
+              when="{'0 ': ('noRecordFound' | translate),
+              'one': '1 ' +  ('record' | translate),
+              'other': '{} ' +  ('records' | translate)}">
+          </ng-pluralize>
+      </div>
     <div class="btn-group pull-right" data-ng-show="allowSelection">
       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
         {{selectedRecordsCount}} <span data-translate="">selected</span><span class="caret"/>
@@ -15,9 +22,9 @@
     </div>
   </div>
 
-  <div>
+    <div>
     <div class="list-group">
-        <a class="list-group-item gn-record" data-ng-repeat="md in searchResults"
+        <a class="list-group-item gn-record" data-ng-repeat="md in searchResults.metadata"
             id="gn-record-{{md['geonet:info'].uuid}}" 
             data-ng-class="md['geonet:info'].selected == true ? 'active' : ''">
           <h4 class="list-group-item-heading">

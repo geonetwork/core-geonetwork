@@ -117,6 +117,39 @@
       }];
 
       /**
+       * Search filter selected for metadata and template type
+       */
+      $scope.batchSearchTemplateY = true;
+      $scope.batchSearchTemplateN = true;
+      $scope.batchSearchTemplateS = false;
+      $scope.batchSearchGroups = {};
+      $scope.batchSearchUsers = {};
+      $scope.batchSearchCategories = {};
+
+      function loadGroups() {
+        $http.get('admin.group.list@json').success(function(data) {
+          $scope.batchSearchGroups = data;
+        }).error(function(data) {
+          // TODO
+        });
+      }
+      function loadUsers() {
+        $http.get('admin.user.list@json').success(function(data) {
+          $scope.batchSearchUsers = data;
+        }).error(function(data) {
+          // TODO
+        });
+      }
+
+      function loadCategories() {
+        $http.get('info@json?type=categories').success(function(data) {
+          $scope.batchSearchCategories = data.categories;
+        }).error(function(data) {
+          // TODO
+        });
+      }
+
+      /**
        * Check process progress every ...
        */
       var processCheckInterval = 1000;
@@ -130,7 +163,8 @@
                 $scope.processReport = data;
                 $scope.numberOfRecordsProcessed = data['@processedRecords'];
               }
-              if ($scope.processReport && $scope.processReport['@running'] == 'true') {
+              if ($scope.processReport &&
+                      $scope.processReport['@running'] == 'true') {
                 $timeout(checkLastBatchProcessReport, processCheckInterval);
               }
             });
@@ -166,7 +200,14 @@
         gnUtilityService.scrollTo('#gn-batch-process-report');
         $timeout(checkLastBatchProcessReport, processCheckInterval);
       };
+
+      // TODO: Should only do that if batch process is the current page
       checkLastBatchProcessReport();
+      loadGroups();
+      loadUsers();
+      loadCategories();
+
+
       $scope.recordsToProcessSearchFor = function(e) {
         $scope.recordsToProcessFilter = (e ? e.target.value : '');
         $scope.recordsToProcessPagination.currentPage = 0;
@@ -174,20 +215,57 @@
       };
 
       // Run a search according to paging option
-      // This should probably move to some kind of SearchManager module
+      // TODO Search criteria logic should probably move
+      // to some kind of SearchManager module
       // FIXME : can't watch the recordsToProcessFilter changes ?
       $scope.recordsToProcessSearch = function() {
-        var pageOptions = $scope.recordsToProcessPagination;
+        var pageOptions = $scope.recordsToProcessPagination,
+            criteria = [
+                        {fast: 'index'},
+                        {from:
+                    (pageOptions.currentPage * pageOptions.hitsPerPage + 1)},
+                        {to:
+                    (pageOptions.currentPage + 1) * pageOptions.hitsPerPage},
+                        {any: $scope.recordsToProcessFilter}],
+            fields = {'#gn-batchSearchTemplateY': 'y',
+                      '#gn-batchSearchTemplateN': 'n',
+                      '#gn-batchSearchTemplateS': 's'};
+        templateValues = [];
 
-        gnSearchManagerService.search('q@json?fast=index' +
-            '&template=y or n' +
-            '&any=' + $scope.recordsToProcessFilter +
-            '&from=' + (pageOptions.currentPage *
-            pageOptions.hitsPerPage + 1) +
-            '&to=' + ((pageOptions.currentPage + 1) *
-                          pageOptions.hitsPerPage))
+        angular.forEach(fields, function(value, key) {
+          $(key)[0] && $(key)[0].checked && templateValues.push(value);
+        });
+        criteria.push({template: templateValues.join(' or ')});
+
+        if ($('#gn-batchSearchGroupOwner')[0]) {
+          var g = $('#gn-batchSearchGroupOwner')[0]
+                        .options[$('#gn-batchSearchGroupOwner')[0]
+                            .selectedIndex]
+                        .value;
+          g !== '' && criteria.push({group: g});
+        }
+
+        if ($('#gn-batchSearchOwner')[0]) {
+          var g = $('#gn-batchSearchOwner')[0]
+                        .options[$('#gn-batchSearchOwner')[0].selectedIndex]
+                        .value;
+          g !== '' && criteria.push({_owner: g});
+        }
+        if ($('#gn-batchSearchCategory')[0]) {
+          var g = $('#gn-batchSearchCategory')[0]
+                        .options[$('#gn-batchSearchCategory')[0].selectedIndex]
+                        .value;
+          g !== '' && criteria.push({category: g});
+        }
+        var params = '';
+        angular.forEach(criteria, function(value) {
+          angular.forEach(value, function(val, key) {
+            params += key + '=' + val + '&';
+          });
+        });
+        gnSearchManagerService.search('q@json?' + params)
           .then(function(data) {
-              $scope.recordsToProcess = data.metadata;
+              $scope.recordsToProcess = data;
               $scope.recordsToProcessPagination.pages = Math.round(
                   data.count /
                   $scope.recordsToProcessPagination.hitsPerPage, 0);
@@ -195,10 +273,14 @@
               // TODO
             });
       };
-      // When the current page change trigger the search
-      $scope.$watch('recordsToProcessPagination.currentPage', function() {
-        $scope.recordsToProcessSearch();
-      });
+
+      // When the current page or search criteria change trigger the search
+      angular.forEach(['recordsToProcessPagination.currentPage'],
+          function(value) {
+            $scope.$watch(value, function() {
+              $scope.recordsToProcessSearch();
+            });
+          });
 
       // Search when typing a new filter FIXME ?
       //      $scope.$watch('recordsToProcessFilter', function() {
