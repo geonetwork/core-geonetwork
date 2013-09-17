@@ -672,7 +672,13 @@ public final class Xml
      * @throws IOException
      */
     public static String getJSON (Element xml) throws IOException {
-        XMLSerializer xmlSerializer = new XMLSerializer(); 
+        XMLSerializer xmlSerializer = new XMLSerializer();
+        
+        // Disable type hints. When enable, a type attribute in the root 
+        // element will throw NPE.
+        // http://sourceforge.net/mailarchive/message.php?msg_id=27646519
+        xmlSerializer.setTypeHintsEnabled(false);
+        xmlSerializer.setTypeHintsCompatibility(false);
         JSON json = xmlSerializer.read(Xml.getString(xml));
         return json.toString(2);
     }
