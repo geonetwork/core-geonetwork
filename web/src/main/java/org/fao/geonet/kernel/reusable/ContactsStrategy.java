@@ -401,6 +401,7 @@ public final class ContactsStrategy extends ReplacementStrategy
             desc = name + " " + surname + " &lt;" + desc + "&gt;";
 
             addChild(e, REPORT_DESC, desc);
+            addChild(e, REPORT_SEARCH, id+desc);
 
             category.addContent(e);
         }

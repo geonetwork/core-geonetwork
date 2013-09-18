@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
+    <eng js="true">Inglese</eng>
+    <fre js="true">Francese</fre>
+    <ger js="true">Tedesco</ger>
+    <ita js="true">Italiano</ita>
+    <roh js="true">Rumantsch</roh>
+    <createNewSharedObject js="true">Edit %objtype%</createNewSharedObject>
     <noRecords js='true'>No Records found</noRecords>
     <edit js='true'>Edit</edit>
     <searchView js='true'>Search</searchView>
@@ -19,7 +25,7 @@
     <reusable_rejectTitle js="true">Messago di rifiuto</reusable_rejectTitle>
     <reusable_rejectDefaultMsg js="true">Selezionare un'altro oggetto riutilizzabile...</reusable_rejectDefaultMsg>
     <archived>Archived</archived>
-    <performingOperation>Performing Operation.  Please wait...</performingOperation>
+    <performingOperation js="true">Performing Operation.  Please wait...</performingOperation>
 
 
 	<local._none_.non_validated>geocat.ch Thesaurus (non confermato)</local._none_.non_validated>

@@ -538,10 +538,10 @@ public final class ExtentsStrategy extends ReplacementStrategy {
                 if (att != null) {
                     String geoIdAt = ExtentHelper.decodeDescription(att.toString());
                     String geoId = LangUtils.getTranslation(geoIdAt, _currentLocale);
-                    addChild(e, REPORT_DESC, desc + " &lt;" + geoId + "&gt;");
-                } else {
-                    addChild(e, REPORT_DESC, desc);
+                    desc = desc + " &lt;" + geoId + "&gt;";
                 }
+                addChild(e, REPORT_DESC, desc);
+                addChild(e, REPORT_SEARCH, id+desc);
 
                 extents.addContent(e);
             }

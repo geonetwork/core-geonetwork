@@ -1,0 +1,10 @@
+<form class="form-inline" role="form">
+    <div class="form-group">
+        <label class="sr-only" for="inputName">{{translate('format_name')}}</label>
+        <input type="text" class="form-control" data-ng-model="format.name" name="formatName" id="inputName" required placeholder="{{translate('format_name')}}">
+    </div>
+    <div class="form-group">
+        <label class="sr-only" for="inputVersion">{{translate('format_version')}}</label>
+        <input type="text" class="form-control" id="inputVersion" data-ng-model="format.version" name="formatVersion" required placeholder="{{translate('format_version')}}">
+    </div>
+</form>

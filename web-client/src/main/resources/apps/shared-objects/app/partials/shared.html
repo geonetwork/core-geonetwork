@@ -1,9 +1,6 @@
 <div ng-include src="'partials/menubar.html'"></div>
 <table class="table table-condensed">
-
-    <div class="alert alert-info" ng-show="data.length == 0" class="ng-hide">{{translate('noRecords')}}</div>
-
-    <thead ng-show="data.length > 0" >
+    <thead>
         <tr>
             <td>#</td>
             <td>Description</td>
@@ -11,7 +8,10 @@
         </tr>
     </thead>
     <tbody>
-        <tr data-ng-repeat="row in data" class="highlight-on-hover" data-ng-mouseover="select(row)" >
+        <tr data-ng-show="data.length == 0" >
+            <td></td><td colspan="2"><div class="alert alert-info">{{translate('noRecords')}}</div></td>
+        </tr>
+        <tr data-ng-repeat="row in data | filter:search:strict" class="highlight-on-hover" data-ng-mouseover="select(row)" >
             <td style="width: 5%">
                 <div class="panel-group" id="Div1">
                     <div class="panel panel-default">
@@ -50,16 +50,16 @@
                 </div>
             </td>
             <td style="width: 10%">
-                <button ng-show="hideTypeSelector" class="btn btn-default" data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</button>
-                <div ng-hide="hideTypeSelector" class="dropdown">
+                <button ng-show="isDeletePage" class="btn btn-default" data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</button>
+                <div ng-hide="isDeletePage" class="dropdown">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" >{{translate('actions')}} <span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <!--<li><a data-ng-click="open('geocat', {s_search:'', customFilter: luceneIndexField + '=' + row.xlink}, '_sharedObject')">{{translate('search')}}</a></li>-->
-                        <li><a data-ng-click="open(row.url)">{{translate('edit')}}</a></li>
+                        <li><a data-ng-click="edit(row)">{{translate('edit')}}</a></li>
                         <li ng-show="!isValidated"><a data-toggle="modal" href="#confirmValidateModal" >{{translate('validate')}}</a></li>
                         <li ng-show="!isValidated"><a data-toggle="modal" href="#rejectModal" >{{translate('reject')}}</a></li>
                         <li ng-show="isValidated"><a data-toggle="modal" href="#rejectModal" >{{translate('delete')}}</a></li>
-                        <li ng-show="hideTypeSelector"><a data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</a></li>
+                        <li ng-show="isDeletePage"><a data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</a></li>
                     </ul>
                 </div>
             </td>
@@ -70,6 +70,5 @@
 <div ng-include src="'partials/modal-confirm-validate.html'"></div>
 <div ng-include src="'partials/modal-reject.html'"></div>
 <div ng-include src="'partials/modal-executing-operation.html'"></div>
-<div ng-include src="'partials/modal-create-format.html'"></div>
-<div ng-include src="'partials/modal-create-keyword.html'"></div>
+<div ng-include src="'partials/modal-edit-common.html'"></div>
 

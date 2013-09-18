@@ -79,7 +79,8 @@ public class List implements Service
             throw new IllegalArgumentException(type + " is not a reusable object type");
         }
 
-        return strategy.find(session, validated);
+        final Element element = strategy.find(session, validated);
+        return element;
     }
 
     public void init(String appPath, ServiceConfig params) throws Exception

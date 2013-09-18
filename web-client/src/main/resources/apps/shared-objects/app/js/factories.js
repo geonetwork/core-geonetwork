@@ -46,7 +46,12 @@ angular.module('SharedObjects.factories', []).
               
               $scope.translate = Geonet.translate;
               $scope.language = Geonet.language;
-
+              $scope.search = {
+                  search: ''
+              };
+              $scope.edit = {
+                  
+              };
               var baseUrl = '../../../srv/' + $scope.language;
               $scope.baseUrl = baseUrl;
               $scope.filter = "";
@@ -74,7 +79,9 @@ angular.module('SharedObjects.factories', []).
                          alert("An error occurred when loading referenced metadata");
                      });
               };
-
+              $scope.edit = function (row) {
+                  $scope.open(row.url);
+              };
               $scope.open = function (url, params) {
                   var finalUrl = baseUrl + '/' + url;
                   if (params) {
@@ -86,18 +93,17 @@ angular.module('SharedObjects.factories', []).
                   }
                   window.open(finalUrl, '_sharedTab');
               };
-              $scope.performOperation = function (service) {
+              $scope.editTitle = Geonet.translate('createNewSharedObject').replace(/\%objtype\%/g, Geonet.translate($scope.type))
+              $scope.startCreateNew = function () {
+                  $scope.finishEdit = $scope.createNewObject;
+                  $('#editModal').modal('show');
+              };
+              $scope.performOperation = function (requestObject) {
                   $('.modal').modal('hide');
                   var executeModal = $('#executingOperation');
 
                   executeModal.modal('show');
-                  var params = { type: $scope.type, id: $scope.selected.id };
-
-                  if ($scope.message) {
-                      params.msg = $scope.message;
-                  };
-
-                  $http({ method: 'GET', url: baseUrl + '/' + service, params: params })
+                  var promise = $http(requestObject)
                   .success(function (data, status, headers, config) {
                       executeModal.modal('hide');
                       loadRecords($scope);
@@ -105,6 +111,21 @@ angular.module('SharedObjects.factories', []).
                   .error(function (data, status, headers, config) {
                       executeModal.modal('hide');
                       alert('An error occurred during validation');
+                  });
+
+                  return promise;
+              }
+              
+              $scope.performUpdateOperation = function (service) {
+                  var params = { type: $scope.type, id: $scope.selected.id };
+
+                  if ($scope.message) {
+                      params.msg = $scope.message;
+                  };
+                  $scope.performOperation({
+                      method: 'GET',
+                      url: baseUrl + '/' + service,
+                      params: params
                   });
               };
 

@@ -1,0 +1,17 @@
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div data-ng-form="editForm" class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">{{editTitle}}</h4>
+        </div>
+        <div class="modal-body" data-ng-include="'partials/modal-edit-'+type+'.html'">
+         
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{translate('cancel')}}</button>
+          <button type="button" class="btn btn-primary" data-ng-disabled="!editForm.$valid" data-ng-click="finishEdit()">{{translate('accept')}}</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->

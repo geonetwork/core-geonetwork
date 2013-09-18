@@ -20,7 +20,7 @@
                     <li><a ng-href="#/deleted">{{translate('deleted')}}</a></li>
                 </ul>
             </li>
-            <li class="dropdown" data-ng-hide="hideTypeSelector">
+            <li class="dropdown" data-ng-hide="isDeletePage">
                 <a href="#" class="dropdown-toggle capitalized" data-toggle="dropdown">{{translate(type)}}<b class="caret"></b></a>
                 <ul class="dropdown-menu capitalized">
                     <li><a ng-href="#/{{validated}}/contacts">{{translate('contacts')}}</a></li>
@@ -31,17 +31,18 @@
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li data-ng-hide="!isValidated || hideTypeSelector">
+            <li data-ng-hide="!isValidated || isDeletePage">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{translate('actions')}} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a data-ng-click="reloadData()">{{translate('reload')}}</a></li>
-                        <li><a data-ng-click="createNewObject()">{{translate('create')}}</a></li>
+                        <li><a data-ng-click="startCreateNew()">{{translate('create')}}</a></li>
                     </ul>
                 </li>
             </li>
             <li>
-                <input type="search" class="form-control" placeholder="Filter ..." name="filter"></li>
+                <input type="search" class="form-control" data-ng-model="search.search" placeholder="Filter ..." name="filter"/>
+            </li>
         </ul>
     </div>
     <!--/.nav-collapse -->

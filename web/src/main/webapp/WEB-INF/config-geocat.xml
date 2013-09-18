@@ -416,6 +416,38 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+        <service name="json.format.get">
+            <class name=".services.format.Get">
+                <param name="xml" />
+            </class>
+            <output sheet="format-json.xsl" contentType="application/json; charset=UTF-8" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="json.format.get">
+            <class name=".services.format.Get">
+                <param name="xml" />
+            </class>
+            <output sheet="format-json.xsl" contentType="application/json; charset=UTF-8" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="json.keyword.get">
+            <documentation>
+                transformation: Name of the template to use to return the keyword (eg. to-iso19139-with-anchor).
+                keywordOnly: Skip thesaurus citation section if defined (default no).
+
+            </documentation>
+            <class name=".services.thesaurus.GetKeywordById"/>
+            <output sheet="thesaurus/convert-json.xsl" contentType="application/json; charset=UTF-8" >
+                <call name="thesaurus" class=".services.thesaurus.GetList" />
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
         <service name="format.admin">
             <output sheet="format-admin.xsl">
                 <call name="formats" class="jeeves.services.db.Select">

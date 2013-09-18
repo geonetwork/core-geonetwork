@@ -152,10 +152,12 @@ public final class FormatsStrategy extends ReplacementStrategy
                 version = "";
             }
             addChild(e, REPORT_URL, url);
-            addChild(e, REPORT_DESC, name+" ("+version+")");
+            final String desc = name + " (" + version + ")";
+            addChild(e, REPORT_DESC, desc);
             addChild(e, REPORT_ID, id);
             addChild(e, REPORT_TYPE, "format");
             addChild(e, REPORT_XLINK, createXlinkHref(id, session, ""));
+            addChild(e, REPORT_SEARCH, id+desc);
 
             formats.addContent(e);
         }

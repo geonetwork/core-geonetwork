@@ -83,11 +83,17 @@
     <Content Include="lib\bootstrap3\js\bootstrap.js" />
     <Content Include="lib\bootstrap3\js\bootstrap.min.js" />
     <Content Include="partials\.gitkeep" />
+    <Content Include="partials\modal-edit-common.html" />
+    <Content Include="partials\modal-edit-contacts.html" />
+    <Content Include="partials\modal-edit-extents.html" />
+    <Content Include="partials\modal-edit-keywords.html" />
+    <Content Include="partials\modal-edit-formats.html" />
+    <Content Include="partials\modal-executing-operation.html" />
     <Content Include="partials\modal-confirm-validate.html" />
     <Content Include="partials\modal-confirm-delete.html" />
     <Content Include="partials\modal-reject.html" />
     <Content Include="partials\shared.html" />
-    <Content Include="partials\deleted.html" />
+    <Content Include="partials\createFormat.html" />
     <Content Include="partials\menubar.html" />
     <None Include="app_TemporaryKey.pfx" />
   </ItemGroup>
