@@ -1,0 +1,30 @@
+<fieldset>
+    <legend data-translate="">harvesterIdentification</legend>
+    <div data-ng-class="harvester.site.name == '' ? 'has-error' : ''">
+        <label class="control-label" data-translate="">harvesterName</label>
+        <input type="text" class="form-control" data-ng-model="harvester.site.name"/>
+        <p class="help-block" data-translate="">harvesterNameHelp</p>
+    </div>
+    
+    <div data-ng-class="harvester.site.icon == '' ? 'has-error' : ''">
+        <input type="hidden" class="form-control" data-ng-model="harvester.site.icon"/>
+        <!-- TODO: List -->
+        <div class="thumbnail">
+            <img src="../../images/harvesting/{{harvester.site.icon}}" 
+                alt="{{'harvesterLogo' | translate}}"/>
+            <div class="caption">
+                <h3 data-translate="">harvesterIcon</h3>
+                <p class="help-block" data-translate="">harvesterIconHelp</p>
+                <p><a class="btn btn-primary">chooseThumbnail</a></p>
+            </div>
+        </div>
+        
+       
+    </div>
+    
+    <div data-ng-class="harvester.site.ownerGroup == '' ? 'has-error' : ''">
+        <label class="control-label" data-translate="">harvesterGroup</label>
+        <input type="text" class="form-control" data-ng-model="harvester.site.ownerGroup"/>
+        <p class="help-block" data-translate="">harvesterGroupHelp</p>
+    </div>
+</fieldset>

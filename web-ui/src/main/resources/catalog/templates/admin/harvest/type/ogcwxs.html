@@ -1,0 +1,102 @@
+<form data-ng-keypress="updatingHarvester()">
+    
+    
+    <div class="row">
+        <div class="col-lg-6" 
+            data-gn-harvester-identification="harvesterSelected"></div>
+        
+        <div class="col-lg-6" 
+            data-gn-harvester-schedule="harvesterSelected"></div>
+    </div>
+    
+    
+    <fieldset>
+        <legend data-translate="">harvesterMainConfiguration</legend>
+        <div data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
+            <label class="control-label" data-translate="">serviceUrl</label>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.url"/>
+            <p class="help-block" data-translate="">serviceUrlHelp</p>
+        </div>
+        <div data-ng-class="harvesterSelected.site.ogctype == '' ? 'has-error' : ''">
+            <label class="control-label" data-translate="">serviceType</label>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.ogctype"/>
+            <p class="help-block" data-translate="">serviceTypeHelp</p>
+        </div>
+    </fieldset>
+    
+    
+    <fieldset>
+        <legend data-translate="">harvesterAdvancedConfiguration</legend>
+        
+        
+        <div data-gn-harvester-account="harvesterSelected"/>
+        
+        
+        <div>
+            <label class="control-label">
+                <input type="checkbox"
+                    data-ng-model="harvesterSelected.options.createThumbnails"/>
+                <span data-translate="">createThumbnails</label>
+            <p class="help-block" data-translate="">createThumbnailsHelp</p>
+        </div>
+        
+        <div>
+            <label class="control-label">
+                <input type="checkbox"
+                    data-ng-model="harvesterSelected.options.useLayer"/>
+                <span data-translate="">createMetadataForEachLayer</label>
+            <p class="help-block" data-translate="">createMetadataForEachLayerHelp</p>
+        </div>
+        
+        <div>
+            <label class="control-label">
+                <input type="checkbox"
+                    data-ng-model="harvesterSelected.options.useLayerMd"/>
+                <span data-translate="">createMetadataForEachLayerUsingMetadataURL</label>
+            <p class="help-block" data-translate="">createMetadataForEachLayerUsingMetadataURLHelp</p>
+        </div>
+        
+        <div>
+            <label class="control-label" data-translate="">topicCategory</label>
+            <input type="text" class="form-control" 
+                data-ng-model="harvesterSelected.options.topic"/>
+        </div>
+        
+        <div>
+            <label class="control-label" data-translate="">datasetCategory</label>
+            <input type="text" class="form-control" 
+                data-ng-model="harvesterSelected.options.datasetCategory"/>
+        </div>
+        
+        <div>
+            <label class="control-label" data-translate="">metadataLanguage</label>
+            <input type="text" class="form-control" 
+                data-ng-model="harvesterSelected.options.lang"/>
+        </div>
+        
+        <div>
+            <label class="control-label" data-translate="">outputSchema</label>
+            <input type="text" class="form-control" 
+                data-ng-model="harvesterSelected.options.outputSchema"/>
+        </div>
+        
+        <div>
+            <label class="control-label">
+                <input type="checkbox"
+                    data-ng-model="harvesterSelected.content.validate"/>
+                <span data-translate="">validateRecord</span></label>
+            
+            <p class="help-block" data-translate="">validateRecordHelp</p>
+        </div>
+        <div>
+            <label class="control-label" data-translate="">applyXSLToRecord</label>
+            <input type="text" class="form-control" 
+                data-ng-model="harvesterSelected.content.importxslt"/>
+            <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
+        </div>
+    </fieldset>
+    
+    
+    
+    <div data-gn-harvester-privileges="harvesterSelected"></div>
+</form>

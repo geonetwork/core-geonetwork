@@ -2,6 +2,8 @@
 // Please do not edit.
 goog.addDependency('../../components/admin/dbtranslation/DbTranslationDirective.js', ['gn_dbtranslation_directive'], []);
 goog.addDependency('../../components/admin/dbtranslation/DbTranslationModule.js', ['gn_dbtranslation'], ['gn_dbtranslation_directive']);
+goog.addDependency('../../components/admin/harvester/HarvesterDirective.js', ['gn_harvester_directive'], []);
+goog.addDependency('../../components/admin/harvester/HarvesterModule.js', ['gn_harvester'], ['gn_harvester_directive']);
 goog.addDependency('../../components/dv/GaugeDirective.js', ['gn_gauge_directive'], []);
 goog.addDependency('../../components/dv/GaugeModule.js', ['gn_gauge'], ['gn_gauge_directive']);
 goog.addDependency('../../components/metadatamanager/MetadataManagerModule.js', ['gn_metadata_manager'], ['gn_metadata_manager_service']);
@@ -24,7 +26,7 @@ goog.addDependency('../../js/GnLoginModule.js', ['gn_login'], ['gn_cat_controlle
 goog.addDependency('../../js/GnModule.js', ['gn'], ['gn_cat_controller', 'gn_metadata_manager', 'gn_pagination', 'gn_search_controller', 'gn_search_manager', 'gn_search_results', 'gn_translation', 'gn_translation_controller', 'gn_utility_service']);
 goog.addDependency('../../js/LoginController.js', ['gn_login_controller'], []);
 goog.addDependency('../../js/TranslationController.js', ['gn_translation_controller'], []);
-goog.addDependency('../../js/admin/AdminController.js', ['gn_admin_controller'], ['gn_adminmetadata_controller', 'gn_admintools_controller', 'gn_cat_controller', 'gn_classification_controller', 'gn_dashboard_controller', 'gn_settings_controller', 'gn_translation', 'gn_translation_controller', 'gn_usergroup_controller']);
+goog.addDependency('../../js/admin/AdminController.js', ['gn_admin_controller'], ['gn_adminmetadata_controller', 'gn_admintools_controller', 'gn_cat_controller', 'gn_classification_controller', 'gn_dashboard_controller', 'gn_harvest_controller', 'gn_settings_controller', 'gn_translation', 'gn_translation_controller', 'gn_usergroup_controller']);
 goog.addDependency('../../js/admin/AdminMetadataController.js', ['gn_adminmetadata_controller'], []);
 goog.addDependency('../../js/admin/AdminToolsController.js', ['gn_admintools_controller'], []);
 goog.addDependency('../../js/admin/CSWSettingsController.js', ['gn_csw_settings_controller'], []);
@@ -36,6 +38,7 @@ goog.addDependency('../../js/admin/DashboardContentStatController.js', ['gn_dash
 goog.addDependency('../../js/admin/DashboardController.js', ['gn_dashboard_controller'], ['gn_dashboard_content_stat_controller', 'gn_dashboard_search_stat_controller', 'gn_dashboard_status_controller']);
 goog.addDependency('../../js/admin/DashboardSearchStatController.js', ['gn_dashboard_search_stat_controller'], []);
 goog.addDependency('../../js/admin/DashboardStatusController.js', ['gn_dashboard_status_controller'], ['gn_gauge']);
+goog.addDependency('../../js/admin/HarvestController.js', ['gn_harvest_controller'], ['gn_harvester']);
 goog.addDependency('../../js/admin/LogoSettingsController.js', ['gn_logo_settings_controller'], []);
 goog.addDependency('../../js/admin/SettingsController.js', ['gn_settings_controller'], ['gn_csw_settings_controller', 'gn_csw_test_controller', 'gn_csw_virtual_controller', 'gn_logo_settings_controller', 'gn_system_settings_controller']);
 goog.addDependency('../../js/admin/SystemSettingsController.js', ['gn_system_settings_controller'], []);

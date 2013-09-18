@@ -2,22 +2,12 @@
   goog.provide('gn_admin_controller');
 
 
-
-
-
-
-
-
-
-
-
-
-
   goog.require('gn_adminmetadata_controller');
   goog.require('gn_admintools_controller');
   goog.require('gn_cat_controller');
   goog.require('gn_classification_controller');
   goog.require('gn_dashboard_controller');
+  goog.require('gn_harvest_controller');
   goog.require('gn_settings_controller');
   goog.require('gn_translation');
   goog.require('gn_translation_controller');
@@ -27,7 +17,8 @@
   var module = angular.module('gn_admin_controller',
       ['gn_dashboard_controller', 'gn_usergroup_controller',
        'gn_admintools_controller', 'gn_settings_controller',
-       'gn_adminmetadata_controller', 'gn_classification_controller']);
+       'gn_adminmetadata_controller', 'gn_classification_controller',
+       'gn_harvest_controller']);
 
 
   var tplFolder = '../../catalog/templates/admin/';
@@ -70,6 +61,9 @@
         when('/tools/:tab', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminToolsController'}).
+        when('/harvest', {
+          templateUrl: tplFolder + 'page-layout.html',
+          controller: 'GnHarvestController'}).
         when('/settings', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnSettingsController'}).
@@ -99,8 +93,8 @@
             classes: 'btn-primary', icon: 'icon-archive'},
           {name: 'io', url: 'import', classes: 'btn-primary',
             icon: 'icon-upload'},
-          {name: 'harvesters', url: 'harvesting',
-            classes: 'btn-primary', icon: 'icon-cloud-upload'},
+          {name: 'harvesters', route: '#harvest', //url: 'harvesting',
+            classes: 'btn-primary', icon: 'icon-cloud-download'},
           {name: 'statisticsAndStatus', route: '#dashboard',
             classes: 'btn-success', icon: 'icon-dashboard'},
           {name: 'classificationSystems', route: '#classification',

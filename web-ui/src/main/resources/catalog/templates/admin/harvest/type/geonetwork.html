@@ -1,0 +1,31 @@
+<form data-ng-keypress="updatingHarvester()">
+    
+    <div class="row">
+        <div class="col-lg-6" 
+            data-gn-harvester-identification="harvesterSelected"></div>
+        
+        <div class="col-lg-6" 
+            data-gn-harvester-schedule="harvesterSelected"></div>
+    </div>
+    
+    <fieldset>
+        <legend data-translate="">harvesterMainConfiguration</legend>
+        <div data-ng-class="harvesterSelected.site.host == '' ? 'has-error' : ''">
+            <label class="control-label" data-translate="">geonetworkhost</label>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.host"/>
+            <p class="help-block" data-translate="">geonetworkhostHelp</p>
+        </div>
+    </fieldset>
+    
+    
+    <fieldset>
+        <legend data-translate="">harvesterAdvancedConfiguration</legend>
+        
+        <div data-gn-harvester-account="harvesterSelected"/>
+        
+        
+    </fieldset>
+    
+    
+    <div data-gn-harvester-privileges="harvesterSelected"></div>
+</form>
