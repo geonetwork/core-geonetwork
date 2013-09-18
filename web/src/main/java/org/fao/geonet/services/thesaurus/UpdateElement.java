@@ -23,7 +23,10 @@
 
 package org.fao.geonet.services.thesaurus;
 
+import static org.fao.geonet.services.thesaurus.AddElement.*;
 import java.net.URLEncoder;
+import java.util.Map;
+import java.util.Set;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
@@ -39,6 +42,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Element;
 
 //=============================================================================
@@ -70,14 +74,12 @@ public class UpdateElement implements Service {
 		String newid = Util.getParam(params, "newid");
 		String namespace = Util.getParam(params, "namespace");
 		String thesaType = Util.getParam(params, "refType");
-		String prefLab = Util.getParam(params, "prefLab");
-		String lang = Util.getParam(params, "lang");
-		String definition = Util.getParam(params, "definition","");
 
 		ThesaurusManager manager = gc.getThesaurusManager();
 		Thesaurus thesaurus = manager.getThesaurusByName(ref);
 		Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL+"che.keyword.get?thesaurus=" + ref + "&id=" + URLEncoder.encode(namespace+oldid, "UTF-8").toLowerCase() + "&locales=en,it,de,fr");
 		Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL+"che.keyword.get?thesaurus=" + ref + "&id=" + URLEncoder.encode(namespace+oldid, "UTF-8") + "&locales=en,it,de,fr");
+
 		if (!(oldid.equals(newid))) {
 			if (thesaurus.isFreeCode(namespace, newid)) {
 				thesaurus.updateCode(namespace, oldid, newid);
@@ -89,10 +91,33 @@ public class UpdateElement implements Service {
 		}
 		KeywordBean bean = new KeywordBean(thesaurus.getIsoLanguageMapper())
 			.setNamespaceCode(namespace)
-            .setRelativeCode(newid)
-            .setValue(prefLab, lang)
-            .setDefinition(definition, lang);
-    
+            .setRelativeCode(newid);
+
+        Map<Pair<String, String>, String> localizations = getLocalizedElements(params);
+        if (localizations.isEmpty()) {
+            String prefLab = Util.getParam(params, PREF_LAB);
+            String lang = Util.getParam(params, "lang");
+            String definition = Util.getParam(params, DEFINITION, "");
+
+            bean.setValue(prefLab, lang).setDefinition(definition, lang);
+        } else {
+            Set<Map.Entry<Pair<String, String>, String>> entries = localizations.entrySet();
+
+            for (Map.Entry<Pair<String, String>, String> entry : entries) {
+                String lang = entry.getKey().one();
+                if (entry.getKey().two().equals(DEFINITION)) {
+                    final String definition = entry.getValue();
+                    bean.setDefinition(definition, lang);
+                } else if (entry.getKey().two().equals(PREF_LAB)) {
+                    final String label = entry.getValue();
+                    bean.setValue(label, lang);
+                } else {
+                    throw new IllegalArgumentException("Unknown localization type: "+entry.getKey().two());
+                }
+
+            }
+        }
+
         if (thesaType.equals("place")) {
             bean.setCoordEast(Util.getParam(params, "east"))
                 .setCoordNorth(Util.getParam(params, "north"))
