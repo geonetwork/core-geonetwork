@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
-    <eng js="true">Inglese</eng>
-    <fre js="true">Francese</fre>
-    <ger js="true">Tedesco</ger>
-    <ita js="true">Italiano</ita>
-    <roh js="true">Rumantsch</roh>
     <createNewSharedObject js="true">Edit %objtype%</createNewSharedObject>
     <noRecords js='true'>No Records found</noRecords>
     <edit js='true'>Edit</edit>

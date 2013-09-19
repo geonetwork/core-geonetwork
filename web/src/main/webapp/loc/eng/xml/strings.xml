@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
-    <eng js="true">English</eng>
-    <fre js="true">French</fre>
-    <ger js="true">German</ger>
-    <ita js="true">Italian</ita>
-    <roh js="true">Rumantsch</roh>
     <createNewSharedObject js="true">Edit %objtype%</createNewSharedObject>
     <format_name js="true">Enter format name</format_name>
     <format_version js="true">Enter format version</format_version>
