@@ -22,6 +22,8 @@ Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 GeoNetwork.Lang.es = {
     'metadata-not-found': 'Metadata with UUID ${uuid} not found or not shared with you.',
     'updateUserInfo': 'Edit my profile',
+    'filterGroup': 'Filter group ...',
+    'checkAllOrNone': 'Check all/none',
     'updatePassword': 'Change my password',
     'myMetadata': 'My metadata',
     '_owner': 'User identifier',
@@ -428,6 +430,7 @@ GeoNetwork.Lang.es = {
     'removeSelected':'Eliminar la selección',
     'ownerName':'Propietario del registro de metadatos',
     'setPrivileges':'Establecer privilegios',
+    'setBatchPrivileges': 'Overwrite privileges of selected records',
     'setCategories':'Establecer categorías',
     'massiveOp':'Modo por lotes',
     'prepareDownload':'Descarga de archivos',

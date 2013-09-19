@@ -38,7 +38,7 @@
   </xsl:template>
 
   <!-- Do a copy of every nodes and attributes -->
-  <xsl:template match="@*|node()">
+    <xsl:template match="@*|node()">
       <xsl:copy>
           <xsl:apply-templates select="@*|node()"/>
       </xsl:copy>
@@ -48,7 +48,7 @@
   <xsl:template match="geonet:*" priority="2"/>
 
   <!-- Apply to all keywords having "," in it. -->
-  <xsl:template match="gmd:MD_Keywords[contains(gmd:keyword, ',')]" priority="2">
+    <xsl:template match="gmd:MD_Keywords" priority="2">
       <xsl:copy>
           <xsl:apply-templates select="@*"/>
           <xsl:for-each select="gmd:keyword">

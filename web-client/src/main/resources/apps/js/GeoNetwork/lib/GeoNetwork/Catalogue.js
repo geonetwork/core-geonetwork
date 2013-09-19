@@ -291,6 +291,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdProcessing: serviceUrl + 'metadata.processing.new',
             mdMassiveChildrenForm: serviceUrl + 'metadata.batch.children.form',
             mdAdmin: serviceUrl + 'metadata.admin.form',
+            mdAdminSave: serviceUrl + 'metadata.admin',
+            mdAdminXml: serviceUrl + 'xml.metadata.admin.form',
+            mdBatchAdminXml: serviceUrl + 'xml.metadata.batch.admin.form',
+            mdBatchSaveXml: serviceUrl + 'xml.metadata.batch.update.privileges',
             mdValidate: serviceUrl + 'xml.metadata.validate',
             mdSuggestion: serviceUrl + 'metadata.suggestion',
             mdCategory: serviceUrl + 'metadata.category.form',
@@ -350,7 +354,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             getRegions: serviceUrl + 'xml.info?type=regions',
             getSources: serviceUrl + 'xml.info?type=sources',
             getUsers: serviceUrl + 'xml.info?type=users',
-            getSiteInfo: serviceUrl + 'xml.info?type=site&type=auth',
+            getSiteInfo: serviceUrl + 'xml.info?type=site&type=auth&type=userGroupOnly',
             getInspireInfo: serviceUrl + 'xml.info?type=inspire',
             getIsoLanguages: serviceUrl + 'isolanguages',
             schemaInfo: serviceUrl + 'xml.schema.info',
@@ -416,6 +420,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     isAdmin: function(){
         return this.identifiedUser.role === "Administrator";
+    },
+    /** api: method[canSetInternalPrivileges]
+     *  Return true if current user can set privileges to internal groups (ie. internet, intranet)
+     */
+    canSetInternalPrivileges: function(){
+        return this.identifiedUser.role === "Administrator" || this.identifiedUser.role === "Reviewer";
     },
     /** api: method[isReadOnly]
      *  Return true if GN is is read-only mode
@@ -537,7 +547,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     getInfo: function (refresh) {
         if (refresh || this.info === null) {
             this.info = {};
-            var properties = ['name', 'organization', 'siteId', 'casEnabled'];
+            var properties = ['name', 'organization', 'siteId', 'casEnabled', 'userGroupOnly'];
             var request = OpenLayers.Request.GET({
                 url: this.services.getSiteInfo,
                 async: false
@@ -1111,6 +1121,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             }
         });
     },
+    getNodeText: function(node){
+        if (node) {
+            return node.innerText || node.textContent || node.text;
+        } else {
+            return '';
+        }
+    },
     /** api: method[isLoggedIn]
      * 
      *  Get the xml.info for me. If user is not identified
@@ -1134,13 +1151,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         
         if (response.status === 200 && authenticated) {
             this.identifiedUser = {
-                id: me.getElementsByTagName('id')[0].innerText || me.getElementsByTagName('id')[0].textContent,
-                username: me.getElementsByTagName('username')[0].innerText || me.getElementsByTagName('username')[0].textContent,
-                name: me.getElementsByTagName('name')[0].innerText || me.getElementsByTagName('name')[0].textContent,
-                surname: me.getElementsByTagName('surname')[0].innerText || me.getElementsByTagName('surname')[0].textContent,
-                email: me.getElementsByTagName('email')[0].innerText || me.getElementsByTagName('email')[0].textContent,
-                hash: me.getElementsByTagName('hash')[0].innerText || me.getElementsByTagName('hash')[0].textContent,
-                role: me.getElementsByTagName('profile')[0].innerText || me.getElementsByTagName('profile')[0].textContent
+                id: this.getNodeText(me.getElementsByTagName('id')[0]),
+                username: this.getNodeText(me.getElementsByTagName('username')[0]),
+                name: this.getNodeText(me.getElementsByTagName('name')[0]),
+                surname: this.getNodeText(me.getElementsByTagName('surname')[0]),
+                email: this.getNodeText(me.getElementsByTagName('email')[0]), 
+                hash: this.getNodeText(me.getElementsByTagName('hash')[0]),
+                role: this.getNodeText(me.getElementsByTagName('profile')[0])
             };
             this.onAfterLogin();
             return true;
@@ -1314,38 +1331,44 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  FIXME : Need work on GeoNetwork side to fix JS calls
      */
     massiveOp: function(type, cb){
-        var url = this.services.massiveOp[type];
-        this.modalAction(OpenLayers.i18n('massiveOp') + " - " + type, url, cb);
+        if (type === 'Privileges') {
+            var url = this.services.mdBatchAdminXml + "?id=" + id;
+            var privilegesPanel = new GeoNetwork.admin.PrivilegesPanel({
+                id: id,
+                url: url,
+                batch: true,
+                onlyUserGroup: this.info.userGroupOnly.toLowerCase() === 'true' || false
+            });
+            this.modalAction(OpenLayers.i18n('setBatchPrivileges'), privilegesPanel, cb);
+        } else {
+            var url = this.services.massiveOp[type];
+            this.modalAction(OpenLayers.i18n('massiveOp') + " - " + type, url, cb);
+        }
     },
     /** private: method[modalAction]
      *  
-     *  Create a modal window and load the URL content.
+     *  Create a modal window and load the URL content or add the panel
+     *  in the modal window.
+     *  
      *  If no callback provided, default callback on error, close the window.
      *  
      *  TODO : retrieve error message on error (currently HTML services are
      *  called with HTML response not easy to parse)
      */
-    modalAction: function(title, url, cb){
-        if (url) {
+    modalAction: function(title, urlOrPanel, cb){
+        if (urlOrPanel) {
             var app = this, win, defaultCb = function(el, success, response, options) {
                 if (!success){
                     app.showError('Catalogue error', title);
                     win.close();
                 }
             };
-            win = new Ext.Window({
-                id: 'modalWindow',
-                layout: 'fit',
-                width: 700,
-                height: 400,
-                closeAction: 'destroy',
-                plain: true,
-                modal: true,
-                draggable: false,
-                title: title,
-                items: new Ext.Panel({
+            
+            var item;
+            if(typeof(urlOrPanel) == 'string') {
+                item = new Ext.Panel({
                     autoLoad: {
-                        url: url,
+                        url: urlOrPanel,
                         callback: cb || defaultCb,
                         scope: win
                     },
@@ -1353,6 +1376,21 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                     frame: false,
                     autoScroll: true
                 })
+            }
+            else {
+                item =urlOrPanel;
+            }
+            win = new Ext.Window({
+                id: 'modalWindow',
+                layout: 'fit',
+                width: 900,
+                height: 500,
+                closeAction: 'destroy',
+                plain: true,
+                modal: true,
+                draggable: false,
+                title: title,
+                items: item
             });
             win.show(this);
             win.alignTo(Ext.getBody(), 't-t');
@@ -1363,8 +1401,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Metadata admin form for privileges
      */
     metadataAdmin: function(id){
-        var url = this.services.mdAdmin + "?id=" + id;
-        this.modalAction(OpenLayers.i18n('setPrivileges'), url);
+        var url = this.services.mdAdminXml + "?id=" + id;
+        var privilegesPanel = new GeoNetwork.admin.PrivilegesPanel({
+            id: id,
+            url: url,
+            onlyUserGroup: this.info.userGroupOnly.toLowerCase() === 'true' || false
+        });
+        this.modalAction(OpenLayers.i18n('setPrivileges'), privilegesPanel);
     },
     /** api: method[metadataStatus]
      *  Open status form to update metadata status

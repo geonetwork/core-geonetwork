@@ -1388,6 +1388,20 @@
 		<!-- RSS services -->
 
 		<service name="rss.search">
+			<documentation>
+				<![CDATA[
+				Search service returning results in RSS formats.
+				
+				Parameters:
+				* Any search criteria supported by Lucene search service.
+				* mdlinkonly: to return only the link pointing to the metadata record. If not defined
+				metadata link and links from the distribution section are returned. The alternate and 
+				type attribute can be used to make distinction between different types of link 
+				(eg. WMS, ZIP, HTML).
+				* georss: The type of geometry to return (simple return georss:box, simplepoint return
+				georss:point, otherwise georss:where).
+				]]>
+			</documentation>
 			<class name=".services.main.Search">
 				<param name="maxSummaryKeys" value="10" />
 				<param name="maxHitsInSummary" value="1000" />

@@ -27,14 +27,16 @@
 			<title><xsl:value-of select="$metadata/title"/></title>
 			<link><xsl:value-of select="$mdURL"/></link>
 			
-			<xsl:apply-templates mode="link" select="$metadata/link">
-				<xsl:with-param name="north" select="$metadata/geoBox/northBL" />
-				<xsl:with-param name="south" select="$metadata/geoBox/southBL" />
-				<xsl:with-param name="west" select="$metadata/geoBox/westBL" />
-				<xsl:with-param name="east" select="$metadata/geoBox/eastBL" />
-				<xsl:with-param name="bDynamic" select="$bDynamic" />
-				<xsl:with-param name="bDownload" select="$bDownload" />
-			</xsl:apply-templates>
+			<xsl:if test="not(/root/request/mdlinkonly)">
+				<xsl:apply-templates mode="link" select="$metadata/link">
+					<xsl:with-param name="north" select="$metadata/geoBox/northBL" />
+					<xsl:with-param name="south" select="$metadata/geoBox/southBL" />
+					<xsl:with-param name="west" select="$metadata/geoBox/westBL" />
+					<xsl:with-param name="east" select="$metadata/geoBox/eastBL" />
+					<xsl:with-param name="bDynamic" select="$bDynamic" />
+					<xsl:with-param name="bDownload" select="$bDownload" />
+				</xsl:apply-templates>
+			</xsl:if>
 			
 			<category>Geographic metadata catalog</category>
 			
