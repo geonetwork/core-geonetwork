@@ -28,14 +28,16 @@
           <p> {{(s + '-help') | translate}} </p>
         </a>
       </div>
-
-      <button type="button" class="btn btn-primary icon-upload"
-        data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadTemplates()"
-        data-translate="">loadTemplatesForSelectedSchema</button>
-
-      <button type="button" class="btn btn-primary icon-upload"
-        data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadSamples()"
-        data-translate="">loadSamplesForSelectedSchema</button>
+        
+        <div class="btn-toolbar">
+          <button type="button" class="btn btn-primary icon-upload"
+            data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadTemplates()"
+            data-translate="">loadTemplatesForSelectedSchema</button>
+    
+          <button type="button" class="btn btn-primary icon-upload"
+            data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadSamples()"
+            data-translate="">loadSamplesForSelectedSchema</button>
+        </div>
     </div>
 
     <div class="progress progress-striped active"

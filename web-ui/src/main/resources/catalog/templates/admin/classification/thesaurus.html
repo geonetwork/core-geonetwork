@@ -38,8 +38,10 @@
         <span>{{thesaurusSelected.title}} ({{thesaurusSelected.dname}})</span>
         <a href="{{thesaurusSelected.url}}" data-translate="">download</a>
 
-        <button type="button" class="btn btn-primary pull-right btn-danger icon-remove"
-          data-ng-click="deleteThesaurus()" data-translate="">deleteThesaurus</button>
+        <div class="btn-toolbar">
+            <button type="button" class="btn btn-primary pull-right btn-danger icon-remove"
+              data-ng-click="deleteThesaurus()" data-translate="">deleteThesaurus</button>
+        </div>
       </div>
 
       <!--<ul>

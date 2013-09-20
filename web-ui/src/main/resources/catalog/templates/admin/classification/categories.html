@@ -26,6 +26,8 @@
 			<div class="panel-heading">
 				<span data-ng-hide="categorySelected['@id'] == ''" data-translate>updateCategory</span>
 				<span data-ng-hide="categorySelected['@id'] != ''" data-translate>newCategory</span>
+			    
+			    <div class="btn-toolbar">
 				<button type="button" class="btn btn-primary pull-right icon-save"
 				data-ng-disabled="!categoryUpdated"
 				data-ng-click="saveCategory('#gn-category-edit')"
@@ -38,6 +40,7 @@
 				data-translate>
 					deleteCategory
 				</button>
+			    </div>
 			</div>
 			<form id="gn-category-edit"
 			data-ng-keypress="updatingCategory()">

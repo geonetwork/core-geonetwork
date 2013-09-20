@@ -8,8 +8,9 @@
             <div class="list-group">
                 <a class="list-group-item" 
                     data-ng-repeat="h in harvesters | filter:harvesterSearch | orderBy:'name'"  
-                    data-ng-click="selectHarvester(h)">
-                    {{h.site.name}} ({{h['@type']}}) 
+                    data-ng-click="selectHarvester(h)" title="{{h.info.lastRun}}">
+                    <!-- TODO : Add a tooltip with last run info -->
+                    {{h.site.name}} ({{('protocol' + h['@type']) | translate}}) 
                     <i data-ng-show="h.info.running" class="icon-spinner icon-spin pull-right"/>
                 </a>
             </div>
@@ -24,7 +25,7 @@
                         >
                         <a data-ng-click="addHarvester(key)" 
                             title="{{key + 'HarvesterHelp' | translate}}">
-                            {{value.label}} <span data-ng-hide="value.loaded">(notYetSupported)</span>
+                            {{('protocol' + value.label) | translate}} <span data-ng-hide="value.loaded" data-translate="">notYetSupported</span>
                         </a>
                     </li>
                 </ul>
@@ -62,12 +63,12 @@
         
         
         <div class="panel">
-            <div class="panel-heading">harvesterHistory</div>
+            <div class="panel-heading" data-translate="">harvesterHistory</div>
         </div>
         
         
         <div class="panel">
-            <div class="panel-heading">harvesterRecords</div>
+            <div class="panel-heading" data-translate="">harvesterRecords</div>
         </div>
     </div>
 </div>

@@ -29,6 +29,7 @@
                 <span data-ng-hide="userSelected.id == ''" data-translate>updateUser</span>
                 <span data-ng-hide="userSelected.id != ''" data-translate>newUser</span>
                 <span>{{userSelected.name}} {{userSelected.surname}}</span>
+                <div class="btn-toolbar">
                 <button type="button" class="btn btn-primary pull-right icon-save" 
                     data-ng-disabled="!userUpdated"
                     data-ng-click="saveUser('#gn-user-edit')" 
@@ -38,6 +39,7 @@
                     data-ng-hide="userSelected.id == ''"
                     data-ng-click="deleteUser(userSelected.id)" 
                     data-translate>deleteUser</button>
+                </div>
             </div>
             
             

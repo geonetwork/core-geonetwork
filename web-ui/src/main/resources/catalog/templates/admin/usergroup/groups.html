@@ -29,6 +29,7 @@
                 title="{{groupHasRecords() ? ('cantDeleteGroupHavingRecords' | translate) : ''}}">
                 <span data-ng-hide="groupSelected.id == ''" data-translate>updateGroup</span>
                 <span data-ng-hide="groupSelected.id != ''" data-translate>newGroup</span><span>{{groupSelected.name}}</span>
+                <div class="btn-toolbar">
                 <button type="button" class="btn btn-primary pull-right icon-save" 
                     data-ng-disabled="!groupUpdated"
                     data-ng-click="saveGroup('#gn-group-edit')" 
@@ -38,6 +39,7 @@
                     data-ng-hide="groupSelected.id == ''"
                     data-ng-click="deleteGroup(groupSelected.id)" 
                     data-translate>deleteGroup</button>
+                </div>
             </div>
             
             

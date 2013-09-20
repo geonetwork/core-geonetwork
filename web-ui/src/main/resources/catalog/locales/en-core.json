@@ -10,6 +10,7 @@
     "eng": "English",
     "title": "Title",
     
+    "adminConsole": "Admin console",
     "needAnAccount": "Need an account ?",
     "needAnAccountInfo": "Then sign right up, it only takes a minute.",
     "createAnAccount": "Create an account",
@@ -29,6 +30,7 @@
     
     "noRecordFound": "No record found.",
     
+    "anyPlaceHolder": "Search ...",
     "any": "Full text",
     "orgName": "Contact for the resource",
     "createDateYear": "Creation year",
