@@ -103,8 +103,8 @@
 		<!-- Update the properties file -->
 		<propertyfile
 		    file="../web/src/main/webapp/WEB-INF/server.prop"
-		    comment="GeoNetwork opensource properties. These are also used by both gast and geonetwork at runtime">
-			<!-- These are used by both gast and geonetwork at runtime -->
+		    comment="GeoNetwork opensource properties. These are also used by geonetwork at runtime">
+			<!-- These are used by geonetwork at runtime -->
 			<!-- Do not remove !! -->
 			<entry  key="version" value="${version}"/>
 			<entry  key="subVersion" value="${subVersion}"/>
