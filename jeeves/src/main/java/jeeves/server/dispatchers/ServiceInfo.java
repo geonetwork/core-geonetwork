@@ -26,7 +26,7 @@ package jeeves.server.dispatchers;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.util.Vector;

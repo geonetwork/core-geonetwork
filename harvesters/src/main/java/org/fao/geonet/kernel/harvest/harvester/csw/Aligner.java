@@ -29,10 +29,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.fao.geonet.exceptions.OperationAbortedEx;
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;

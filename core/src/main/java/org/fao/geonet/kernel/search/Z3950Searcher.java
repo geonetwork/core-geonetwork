@@ -41,9 +41,9 @@ import javax.xml.transform.stream.StreamResult;
 import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.TransformerFactoryFactory;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.TransformerFactoryFactory;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;

@@ -48,10 +48,11 @@ import jeeves.component.ProfileManager;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
+import org.fao.geonet.Constants;
 import org.fao.geonet.exceptions.BadInputEx;
 import jeeves.interfaces.Activator;
 import jeeves.interfaces.ApplicationHandler;
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
@@ -61,10 +62,10 @@ import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
-import jeeves.utils.Log;
-import jeeves.utils.TransformerFactoryFactory;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.PropertyConfigurator;
@@ -247,7 +248,7 @@ public class JeevesEngine
         try {
             
             if(in != null) {
-                br = new BufferedReader(new InputStreamReader(in, Jeeves.ENCODING));
+                br = new BufferedReader(new InputStreamReader(in, Constants.ENCODING));
                 String line;
                 while ((line = br.readLine()) != null)   {
                     if(line.length() == 0) {

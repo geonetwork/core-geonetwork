@@ -23,13 +23,13 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.IO;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlRequest;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;

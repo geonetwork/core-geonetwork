@@ -24,7 +24,7 @@
 package org.fao.geonet.kernel.mef;
 
 import org.fao.geonet.exceptions.BadFormatEx;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.io.File;

@@ -26,7 +26,7 @@ package jeeves.services;
 import java.util.*;
 import java.util.regex.*;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.jdom.*;
 
 import jeeves.interfaces.*;

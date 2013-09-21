@@ -36,8 +36,8 @@ import java.util.logging.Level;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;

@@ -35,17 +35,14 @@ import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContext;
 
-import jeeves.JeevesJCS;
 import jeeves.JeevesProxyInfo;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
-import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
-import jeeves.interfaces.Logger;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
-import jeeves.utils.*;
+import org.fao.geonet.utils.*;
 import jeeves.xlink.Processor;
 
 import org.fao.geonet.constants.Geonet;
@@ -540,18 +537,18 @@ public class Geonetwork implements ApplicationHandler {
 
 		//--- Set jeeves.xml.catalog.files property
 		//--- this is critical to schema support so must be set correctly
-		String catalogProp = System.getProperty(Jeeves.XML_CATALOG_FILES);
+		String catalogProp = System.getProperty(Constants.XML_CATALOG_FILES);
 		if (catalogProp == null) catalogProp = "";
 		if (!catalogProp.equals("")) {
-			logger.info("Overriding "+Jeeves.XML_CATALOG_FILES+" property (was set to "+catalogProp+")");
+			logger.info("Overriding "+ Constants.XML_CATALOG_FILES+" property (was set to "+catalogProp+")");
 		} 
 		catalogProp = webapp + "oasis-catalog.xml;" + handlerConfig.getValue(Geonet.Config.CONFIG_DIR) + File.separator + "schemaplugin-uri-catalog.xml";
-		System.setProperty(Jeeves.XML_CATALOG_FILES, catalogProp);
-		logger.info(Jeeves.XML_CATALOG_FILES+" property set to "+catalogProp);
+		System.setProperty(Constants.XML_CATALOG_FILES, catalogProp);
+		logger.info(Constants.XML_CATALOG_FILES+" property set to "+catalogProp);
 		
 		String blankXSLFile = path + "xsl" + FS + "blanks.xsl";
-		System.setProperty(Jeeves.XML_CATALOG_BLANKXSLFILE, blankXSLFile);
-		logger.info(Jeeves.XML_CATALOG_BLANKXSLFILE + " property set to " + blankXSLFile);
+		System.setProperty(Constants.XML_CATALOG_BLANKXSLFILE, blankXSLFile);
+		logger.info(Constants.XML_CATALOG_BLANKXSLFILE + " property set to " + blankXSLFile);
 		
 		//--- Set mime-mappings
 		String mimeProp = System.getProperty("mime-mappings");
@@ -629,7 +626,7 @@ public class Geonetwork implements ApplicationHandler {
 		} else {
 			logger.info("Using shapefile "+file.getAbsolutePath());
 		}
-		IndexedShapefileDataStore ids = new IndexedShapefileDataStore(file.toURI().toURL(), new URI("http://geonetwork.org"), false, false, IndexType.QIX, Charset.forName(Jeeves.ENCODING));
+		IndexedShapefileDataStore ids = new IndexedShapefileDataStore(file.toURI().toURL(), new URI("http://geonetwork.org"), false, false, IndexType.QIX, Charset.forName(Constants.ENCODING));
 		CoordinateReferenceSystem crs = CRS.decode("EPSG:4326");
 
 		if (crs != null) {

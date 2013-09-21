@@ -35,8 +35,8 @@ import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.MissingParameterEx;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
@@ -48,7 +48,6 @@ import org.fao.geonet.kernel.HarvestInfoProvider;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarversterJobListener;
-import org.fao.geonet.kernel.harvest.harvester.HarvesterHistoryDao;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.jdom.Element;

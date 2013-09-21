@@ -24,11 +24,11 @@
 package jeeves.server.context;
 
 import jeeves.config.springutil.JeevesApplicationContext;
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import java.util.Collections;
 import java.util.Map;

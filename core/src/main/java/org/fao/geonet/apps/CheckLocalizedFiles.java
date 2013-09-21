@@ -23,7 +23,7 @@
 
 package org.fao.geonet.apps;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
 

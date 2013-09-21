@@ -27,8 +27,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;

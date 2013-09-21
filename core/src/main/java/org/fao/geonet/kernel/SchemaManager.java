@@ -27,15 +27,15 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.constants.Jeeves;
+import org.fao.geonet.Constants;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.overrides.ConfigurationOverrides;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.IO;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -948,7 +948,7 @@ public class SchemaManager {
         // -- property for resolver to pick up
 
         if (new File(oasisCatFile).exists()) {
-            String catalogProp = System.getProperty(Jeeves.XML_CATALOG_FILES);
+            String catalogProp = System.getProperty(Constants.XML_CATALOG_FILES);
             if (catalogProp == null)
                 catalogProp = ""; // shouldn't happen
             if (catalogProp.equals("")) {
@@ -956,7 +956,7 @@ public class SchemaManager {
             } else {
                 catalogProp = catalogProp + ";" + oasisCatFile;
             }
-            System.setProperty(Jeeves.XML_CATALOG_FILES, catalogProp);
+            System.setProperty(Constants.XML_CATALOG_FILES, catalogProp);
         }
 
         Pair<String, String> idInfo = extractIdInfo(xmlIdFile, name);
@@ -979,7 +979,7 @@ public class SchemaManager {
                 extractDepends(xmlIdFile));
 
         if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
-            Log.debug(Geonet.SCHEMA_MANAGER, "Property " + Jeeves.XML_CATALOG_FILES + " is " + System.getProperty(Jeeves.XML_CATALOG_FILES));
+            Log.debug(Geonet.SCHEMA_MANAGER, "Property " + Constants.XML_CATALOG_FILES + " is " + System.getProperty(Constants.XML_CATALOG_FILES));
         }
 
         // -- Add entry for presentation xslt to schemaPlugins catalog

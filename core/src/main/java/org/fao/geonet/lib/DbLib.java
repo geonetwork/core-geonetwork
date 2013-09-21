@@ -23,20 +23,16 @@
 
 package org.fao.geonet.lib;
 
-import jeeves.constants.Jeeves;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
 
 import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -72,7 +68,7 @@ public class DbLib {
 	}
 
 	public void runSQL(ServletContext servletContext, Statement statement, File sqlFile, boolean failOnError) throws Exception {
-		List<String> data = Lib.text.load(servletContext, sqlFile.getCanonicalPath(), Jeeves.ENCODING);
+		List<String> data = Lib.text.load(servletContext, sqlFile.getCanonicalPath(), Constants.ENCODING);
 		runSQL(statement, data, failOnError);
 	}
 	
@@ -194,7 +190,7 @@ public class DbLib {
 		String file = checkFilePath(filePath, filePrefix, DatabaseType.lookup(statement.getConnection()).toString());
 		
 		// --- load the sql data
-		return Lib.text.load(servletContext, appPath, file, Jeeves.ENCODING);
+		return Lib.text.load(servletContext, appPath, file, Constants.ENCODING);
 	}
 
 	private String getObjectName(String createStatem) {

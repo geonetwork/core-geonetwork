@@ -25,8 +25,8 @@
 
 package jeeves;
 
-import jeeves.utils.ProxyInfo;
-import jeeves.utils.ResolverWrapper;
+import org.fao.geonet.utils.ProxyInfo;
+import org.fao.geonet.utils.ResolverWrapper;
 
 /**
 	* Singleton which handles the interface to Jeeves classes that need

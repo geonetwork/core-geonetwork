@@ -3,20 +3,17 @@ package org.fao.geonet.kernel;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.*;
-import static org.mockito.Matchers.anyVararg;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;

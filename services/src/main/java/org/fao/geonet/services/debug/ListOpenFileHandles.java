@@ -1,9 +1,9 @@
 package org.fao.geonet.services.debug;
 
-import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.apache.commons.io.IOUtils;
 import org.jdom.Element;
@@ -62,7 +62,7 @@ public class ListOpenFileHandles implements Service {
         Process process = Runtime.getRuntime().exec(new String[] { "lsof", "-p", pid.toString() });
         BufferedReader in = null;
         try {
-            in = new BufferedReader(new InputStreamReader(process.getInputStream(), Jeeves.ENCODING));
+            in = new BufferedReader(new InputStreamReader(process.getInputStream(), Constants.ENCODING));
             
             String line;
             int total = 0;

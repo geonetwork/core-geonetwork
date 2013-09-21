@@ -29,7 +29,7 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;

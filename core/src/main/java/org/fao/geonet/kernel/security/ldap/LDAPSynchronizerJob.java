@@ -24,8 +24,7 @@ package org.fao.geonet.kernel.security.ldap;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
-import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.User;
@@ -33,7 +32,6 @@ import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserSpecs;
-import org.jdom.Element;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

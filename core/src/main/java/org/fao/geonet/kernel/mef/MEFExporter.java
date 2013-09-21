@@ -23,16 +23,14 @@
 
 package org.fao.geonet.kernel.mef;
 
-import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.Constants;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.lib.Lib;
-import org.jdom.Element;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -91,14 +89,14 @@ class MEFExporter {
 			record.setData("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + record.getData());
         }
 
-		byte[] binData = record.getData().getBytes(Jeeves.ENCODING);
+		byte[] binData = record.getData().getBytes(Constants.ENCODING);
 
 		MEFLib.addFile(zos, FILE_METADATA, new ByteArrayInputStream(binData));
 
 		// --- save info file
 
 		binData = MEFLib.buildInfoFile(context, record, format, pubDir, priDir,
-				skipUUID).getBytes(Jeeves.ENCODING);
+				skipUUID).getBytes(Constants.ENCODING);
 
 		MEFLib.addFile(zos, FILE_INFO, new ByteArrayInputStream(binData));
 

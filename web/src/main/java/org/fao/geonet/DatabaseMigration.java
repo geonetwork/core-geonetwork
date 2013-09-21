@@ -2,8 +2,7 @@ package org.fao.geonet;
 
 import com.vividsolutions.jts.util.Assert;
 import jeeves.config.springutil.JeevesApplicationContext;
-import jeeves.interfaces.Logger;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.lib.DatabaseType;

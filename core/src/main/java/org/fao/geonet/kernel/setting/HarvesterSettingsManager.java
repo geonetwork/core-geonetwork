@@ -32,7 +32,7 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.HarvesterSetting;

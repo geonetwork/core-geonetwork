@@ -3,7 +3,7 @@ package jeeves.server;
 import org.fao.geonet.exceptions.JeevesException;
 import jeeves.interfaces.Schedule;
 import jeeves.server.context.ScheduleContext;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 
 import org.quartz.Job;

@@ -32,7 +32,7 @@ import jeeves.monitor.MonitorManager;
 import jeeves.monitor.ResourceTracker;
 import jeeves.monitor.timer.ResourceManagerResourceIsOpenTimer;
 import jeeves.monitor.timer.ResourceManagerWaitForResourceTimer;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import com.google.common.collect.Multimap;
 import com.yammer.metrics.core.Timer;

@@ -1,6 +1,6 @@
-package jeeves.utils;
+package org.fao.geonet.utils;
 
-import jeeves.JeevesJCS;
+import org.fao.geonet.JeevesJCS;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.xerces.dom.DOMInputImpl;
 import org.apache.xerces.util.XMLCatalogResolver;

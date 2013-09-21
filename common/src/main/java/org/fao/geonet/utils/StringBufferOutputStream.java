@@ -1,10 +1,10 @@
-package jeeves.utils;
+package org.fao.geonet.utils;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
-import jeeves.constants.Jeeves;
+import org.fao.geonet.Constants;
 
 /**
  * Allows OutputStream to be mapped to StringBuffer.
@@ -57,7 +57,7 @@ public class StringBufferOutputStream extends OutputStream
 			throw new IndexOutOfBoundsException("offset and length are negative or extend outside array bounds");
 		}
 
-		String str = new String(b, offset, length, Charset.forName(Jeeves.ENCODING));
+		String str = new String(b, offset, length, Charset.forName(Constants.ENCODING));
 		strBuffer.append(str);
 	}
 

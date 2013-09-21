@@ -24,15 +24,15 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 
 import jeeves.config.springutil.JeevesApplicationContext;
-import jeeves.constants.Jeeves;
-import jeeves.utils.Log;
-import jeeves.utils.XPath;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.XPath;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.spi.LoggerRepository;
+import org.fao.geonet.Constants;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -668,7 +668,7 @@ public class ConfigurationOverrides {
             BufferedReader reader = null;
             if (in != null) {
                 try {
-                    reader = new BufferedReader(new InputStreamReader(in, Charset.forName(Jeeves.ENCODING)));
+                    reader = new BufferedReader(new InputStreamReader(in, Charset.forName(Constants.ENCODING)));
                     StringBuilder data = new StringBuilder();
                     String line;
                     while ((line = reader.readLine()) != null) {

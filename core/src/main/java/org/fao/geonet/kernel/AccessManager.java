@@ -27,16 +27,12 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.*;
 import static org.springframework.data.jpa.domain.Specifications.where;
 import java.util.*;
 
-import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
-import jeeves.utils.Log;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.*;
-import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -22,8 +22,8 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;

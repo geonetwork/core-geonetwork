@@ -31,7 +31,7 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;

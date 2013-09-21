@@ -30,7 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jeeves.component.ProfileManager;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;

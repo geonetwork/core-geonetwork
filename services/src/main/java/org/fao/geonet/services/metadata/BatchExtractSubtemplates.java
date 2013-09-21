@@ -29,7 +29,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import jeeves.xlink.XLink;
 
 import org.fao.geonet.GeonetContext;

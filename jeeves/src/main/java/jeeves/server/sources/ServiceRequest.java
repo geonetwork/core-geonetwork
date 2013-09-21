@@ -24,7 +24,7 @@
 package jeeves.server.sources;
 
 import jeeves.constants.Jeeves;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
 

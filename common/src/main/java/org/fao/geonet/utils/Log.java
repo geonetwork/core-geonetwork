@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.utils;
+package org.fao.geonet.utils;
 
 
 import org.apache.log4j.Logger;
@@ -137,9 +137,9 @@ public final class Log
 	//--------------------------------------------------------------------------
 	/** Returns a simple logger object */
 
-	public static jeeves.interfaces.Logger createLogger(final String module)
+	public static org.fao.geonet.Logger createLogger(final String module)
 	{
-		return new jeeves.interfaces.Logger()
+		return new org.fao.geonet.Logger()
 		{
 
 		    @Override public boolean isDebugEnabled() { return Log.isDebugEnabled(module);}

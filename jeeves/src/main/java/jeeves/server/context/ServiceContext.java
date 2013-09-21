@@ -30,7 +30,7 @@ import javax.annotation.CheckForNull;
 
 import jeeves.component.ProfileManager;
 import jeeves.config.springutil.JeevesApplicationContext;
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.UserSession;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
@@ -40,7 +40,7 @@ import jeeves.server.resources.ResourceManager;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.JeevesServlet;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.jdom.Element;
 

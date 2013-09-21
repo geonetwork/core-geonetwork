@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 
-import jeeves.constants.Jeeves;
+import org.fao.geonet.Constants;
 
 /**
  * Created by IntelliJ IDEA.
@@ -68,7 +68,7 @@ public class RequestUtil {
 
         InputStream stream = request.getInputStream();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(stream, Jeeves.ENCODING));
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream, Constants.ENCODING));
         StringBuilder sb = new StringBuilder();
         String line = null;
 

@@ -24,8 +24,8 @@ package org.fao.geonet.notifier;
 
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;

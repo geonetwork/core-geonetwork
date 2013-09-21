@@ -1,7 +1,7 @@
 package org.fao.geonet.services.metadata.format;
 
-import jeeves.constants.Jeeves;
 import org.apache.commons.io.FileUtils;
+import org.fao.geonet.Constants;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -81,7 +81,7 @@ public class ConfigFile {
 	public static void generateDefault(File bundleDir) throws IOException {
         File configFile = new File(bundleDir, CONFIG_PROPERTIES_FILENAME);
         if(!configFile.exists()) {
-            PrintStream out = new PrintStream(configFile, Jeeves.ENCODING);
+            PrintStream out = new PrintStream(configFile, Constants.ENCODING);
             try {
                 out.println("# Generated as part of download");
                 out.println("# This file is an example of a metadata formatter configuration file");

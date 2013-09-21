@@ -23,7 +23,7 @@
 
 package org.fao.geonet.services.util.z3950;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.jzkit.z3950.server.Z3950Listener;
 import org.springframework.context.ApplicationContext;

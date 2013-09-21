@@ -1,6 +1,6 @@
 package org.fao.geonet.util.xml;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.test.GeonetworkTestCase;
 import org.jdom.Element;
 import org.jdom.Namespace;

@@ -35,28 +35,25 @@ import static org.fao.geonet.kernel.mef.MEFConstants.SCHEMA;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
-import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
+import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataRelation;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
-import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 class MEF2Exporter {
@@ -159,7 +156,7 @@ class MEF2Exporter {
 
 		// --- save info file
 		byte[] binData = MEFLib.buildInfoFile(context, record, format, pubDir,
-				priDir, skipUUID).getBytes(Jeeves.ENCODING);
+				priDir, skipUUID).getBytes(Constants.ENCODING);
 
 		MEFLib.addFile(zos, uuid + FS + FILE_INFO, new ByteArrayInputStream(
 				binData));
@@ -220,7 +217,7 @@ class MEF2Exporter {
 			data = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + data;
         }
 
-		byte[] binData = data.getBytes(Jeeves.ENCODING);
+		byte[] binData = data.getBytes(Constants.ENCODING);
 
 		return new ByteArrayInputStream(binData);
 	}

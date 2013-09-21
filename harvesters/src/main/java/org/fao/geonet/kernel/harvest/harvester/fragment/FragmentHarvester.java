@@ -27,9 +27,9 @@ import com.google.common.base.Optional;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;

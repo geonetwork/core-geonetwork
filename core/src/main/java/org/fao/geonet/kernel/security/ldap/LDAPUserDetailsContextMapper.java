@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;

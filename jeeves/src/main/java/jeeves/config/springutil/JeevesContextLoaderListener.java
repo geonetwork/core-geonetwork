@@ -3,7 +3,7 @@ package jeeves.config.springutil;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.context.Lifecycle;

@@ -36,7 +36,7 @@ import jeeves.constants.ConfigFile;
 import jeeves.interfaces.Schedule;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.resources.ProviderManager;
-import jeeves.utils.QuartzSchedulerUtils;
+import org.fao.geonet.utils.QuartzSchedulerUtils;
 
 import org.jdom.Element;
 import org.quartz.JobDetail;

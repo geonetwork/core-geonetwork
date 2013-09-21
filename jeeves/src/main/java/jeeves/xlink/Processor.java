@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import jeeves.JeevesJCS;
+import org.fao.geonet.JeevesJCS;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.jcs.access.exception.CacheException;
 import org.jdom.Attribute;

@@ -5,13 +5,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 public class LangUtils {
 

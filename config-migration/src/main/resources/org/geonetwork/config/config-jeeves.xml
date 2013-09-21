@@ -16,7 +16,7 @@
 		class="jeeves.server.JeevesEngine">
 	</bean>
 	<bean id="serialFactory"
-		class="jeeves.utils.SerialFactory">
+		class="org.fao.geonet.utils.SerialFactory">
 	</bean>
 	<bean id="providerManager"
 		class="jeeves.server.resources.ProviderManager">

@@ -26,14 +26,12 @@ package org.fao.geonet.kernel.oaipmh;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.oaipmh.exceptions.IdDoesNotExistException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.jdom.Element;
 

@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 
 import jeeves.component.ProfileManager;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;

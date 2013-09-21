@@ -39,12 +39,12 @@ import java.util.StringTokenizer;
 
 import javax.annotation.Nonnull;
 
-import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
@@ -694,7 +694,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
         encoder.setNamespaceAware(true);
 
         encoder.encode(SpatialIndexWriter.toMultiPolygon(fullGeom), org.geotools.gml3.GML.MultiPolygon, out);
-        Element geomElem = org.fao.geonet.csw.common.util.Xml.loadString(out.toString(Jeeves.ENCODING), false);
+        Element geomElem = org.fao.geonet.csw.common.util.Xml.loadString(out.toString(Constants.ENCODING), false);
         parentElement.setContent(index, geomElem);
     }
 

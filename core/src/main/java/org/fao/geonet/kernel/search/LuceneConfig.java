@@ -38,8 +38,8 @@ import javax.servlet.ServletContext;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.NumericUtils;

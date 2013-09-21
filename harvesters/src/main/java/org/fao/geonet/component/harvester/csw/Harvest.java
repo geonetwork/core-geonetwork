@@ -23,11 +23,10 @@
 
 package org.fao.geonet.component.harvester.csw;
 
-import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
@@ -39,6 +38,7 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -915,7 +915,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
                 // transfer file
                 //
                 String filename = "CSW.Harvest.result";
-                InputStream is = new ByteArrayInputStream(harvestResponse.getBytes(Jeeves.ENCODING));
+                InputStream is = new ByteArrayInputStream(harvestResponse.getBytes(Constants.ENCODING));
                 ftpClient.storeFile(filename, is);
                 is.close();
                 ftpClient.logout();

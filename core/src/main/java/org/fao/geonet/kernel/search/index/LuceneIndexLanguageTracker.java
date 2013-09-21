@@ -12,8 +12,8 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import jeeves.utils.IO;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;

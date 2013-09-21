@@ -21,42 +21,19 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.utils.format;
-
-import java.util.StringTokenizer;
+package org.fao.geonet;
 
 //=============================================================================
 
-/** Represents a database field formatter
-  */
-
-public class Date implements Formatter
+public interface Logger
 {
-	public String toDB(String in, String format)
-		throws Exception
-	{
-		if      (format.equalsIgnoreCase("dd-mm-yyyy")) return swap(in, "-", "-");
-		else if (format.equalsIgnoreCase("dd/mm/yyyy")) return swap(in, "/", "-");
-		else if (format.equalsIgnoreCase("yyyy/mm/dd")) return in.replace('/', '-');
-		else return in; // other formats are tolerated
-	}
-
-	public String fromDB(String out, String format)
-	{
-		if      (format.equalsIgnoreCase("dd-mm-yyyy")) return swap(out, "-", "-");
-		else if (format.equalsIgnoreCase("dd/mm/yyyy")) return swap(out, "-", "/");
-		else if (format.equalsIgnoreCase("yyyy/mm/dd")) return out.replace('-', '/');
-		else return out; // other formats are tolerated
-	}
-
-	private String swap(String in, String inDelimiter, String outDelimiter)
-	{
-		StringTokenizer st = new StringTokenizer(in, inDelimiter);
-		String first = st.nextToken();
-		String second = st.nextToken();
-		String third = st.nextToken();
-		return third + outDelimiter + second + outDelimiter + first;
-	}
+    public boolean isDebugEnabled();
+	public void debug  (String message);
+	public void info   (String message);
+	public void warning(String message);
+	public void error  (String message);
+	public void fatal  (String message);
+    public String getModule();
 }
 
 //=============================================================================

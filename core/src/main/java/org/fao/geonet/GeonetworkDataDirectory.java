@@ -9,8 +9,8 @@ import java.net.MalformedURLException;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Log;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;

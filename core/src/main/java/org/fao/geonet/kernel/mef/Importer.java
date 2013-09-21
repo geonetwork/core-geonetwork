@@ -28,11 +28,11 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadFormatEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.IO;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;

@@ -29,7 +29,7 @@ import java.util.Map;
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;

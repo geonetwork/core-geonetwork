@@ -31,7 +31,7 @@ import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.util.Lib;
 //import org.fao.oaipmh.util.Xml;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;

@@ -26,7 +26,7 @@ package org.fao.geonet.services.thumbnail;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.IO;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.Util;
 import lizard.tiff.Tiff;
 import org.apache.commons.io.FileUtils;

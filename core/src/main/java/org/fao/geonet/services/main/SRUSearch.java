@@ -25,7 +25,7 @@ import org.fao.geonet.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.util.z3950.*;

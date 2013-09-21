@@ -36,7 +36,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchResult;
 
 import jeeves.component.ProfileManager;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;

@@ -1,7 +1,7 @@
 package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;

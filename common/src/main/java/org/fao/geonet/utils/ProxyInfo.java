@@ -23,7 +23,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package jeeves.utils;
+package org.fao.geonet.utils;
 
 import java.util.ArrayList;
 import java.util.Iterator;

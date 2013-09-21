@@ -3,7 +3,7 @@ package jeeves.server.overrides;
 import java.beans.PropertyDescriptor;
 import java.util.Properties;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.jdom.Element;
 import org.springframework.beans.BeanUtils;

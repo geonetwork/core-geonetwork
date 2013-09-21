@@ -60,12 +60,12 @@ import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
-import jeeves.utils.BLOB;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.Log;
-import jeeves.utils.SOAPUtil;
+import org.fao.geonet.utils.BLOB;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.SOAPUtil;
 import org.fao.geonet.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.jdom.Element;
 import org.springframework.transaction.annotation.Isolation;

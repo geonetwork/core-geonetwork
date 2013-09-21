@@ -40,7 +40,7 @@ import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 

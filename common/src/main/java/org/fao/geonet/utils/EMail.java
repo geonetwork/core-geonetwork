@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.utils;
+package org.fao.geonet.utils;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -36,7 +36,7 @@ import java.util.Date;
 
 import org.apache.commons.io.IOUtils;
 
-import jeeves.constants.Jeeves;
+import org.fao.geonet.Constants;
 
 //=============================================================================
 
@@ -129,7 +129,7 @@ public class EMail
 	{
 		Socket socket = new Socket(sMailServer, iPort);
 		try {
-    		in  = new BufferedReader(new InputStreamReader(new DataInputStream(socket.getInputStream()), Charset.forName(Jeeves.ENCODING)));
+    		in  = new BufferedReader(new InputStreamReader(new DataInputStream(socket.getInputStream()), Charset.forName(Constants.ENCODING)));
     		out = new OutputStreamWriter(new DataOutputStream(socket.getOutputStream()), "ISO-8859-1");
     
     		if (lookMailServer())

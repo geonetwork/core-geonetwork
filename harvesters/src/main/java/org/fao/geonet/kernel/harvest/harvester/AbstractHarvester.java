@@ -23,18 +23,17 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.OperationAbortedEx;
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
-import jeeves.utils.QuartzSchedulerUtils;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.QuartzSchedulerUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;

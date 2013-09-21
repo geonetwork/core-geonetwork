@@ -24,7 +24,7 @@
 package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
+import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.Util;
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.zip.ZipEntry;

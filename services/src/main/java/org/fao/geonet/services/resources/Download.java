@@ -28,7 +28,7 @@ import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
+import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;

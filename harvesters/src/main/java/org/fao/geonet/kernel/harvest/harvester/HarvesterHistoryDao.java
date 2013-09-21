@@ -23,10 +23,8 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import jeeves.resources.dbms.Dbms;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
-import jeeves.utils.Xml;
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.SerialFactory;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import java.sql.SQLException;
 import java.util.List;

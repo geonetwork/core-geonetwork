@@ -22,9 +22,9 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.utils.IO;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import jeeves.server.resources.ResourceManager;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;

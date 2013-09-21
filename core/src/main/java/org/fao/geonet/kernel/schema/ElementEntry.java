@@ -30,7 +30,7 @@ package org.fao.geonet.kernel.schema;
 import java.util.ArrayList;
 import java.util.List;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Attribute;

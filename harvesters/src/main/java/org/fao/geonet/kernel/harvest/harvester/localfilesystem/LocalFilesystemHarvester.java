@@ -32,12 +32,12 @@ import java.util.UUID;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
-import jeeves.utils.IO;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;

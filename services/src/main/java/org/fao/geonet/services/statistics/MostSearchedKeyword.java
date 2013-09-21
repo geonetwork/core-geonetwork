@@ -3,7 +3,7 @@ package org.fao.geonet.services.statistics;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;

@@ -30,10 +30,10 @@ import java.util.Map;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
-import jeeves.utils.Log;
-import jeeves.utils.SOAPUtil;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.SOAPUtil;
 import org.fao.geonet.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.CatalogException;

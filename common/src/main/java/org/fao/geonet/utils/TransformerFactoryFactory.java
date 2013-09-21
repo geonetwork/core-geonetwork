@@ -1,4 +1,4 @@
-package jeeves.utils;
+package org.fao.geonet.utils;
 
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;

@@ -1,5 +1,7 @@
 package jeeves;
 
+import org.fao.geonet.JeevesJCS;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;

@@ -38,10 +38,10 @@ import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
-import jeeves.utils.Xml;
-import jeeves.utils.Xml.ErrorHandler;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
 
 import org.apache.commons.lang.StringUtils;

@@ -21,12 +21,11 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.utils;
-
-import jeeves.constants.Jeeves;
+package org.fao.geonet.utils;
 
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
+import org.fao.geonet.Constants;
 
 import java.util.Vector;
 
@@ -71,24 +70,24 @@ public final class Resolver implements ProxyInfoObserver
 		CatalogManager catMan = new CatalogManager();
 		catMan.setAllowOasisXMLCatalogPI(false);
 		catMan.setCatalogClassName("org.apache.xml.resolver.Catalog");
-		String catFiles = System.getProperty(Jeeves.XML_CATALOG_FILES);
+		String catFiles = System.getProperty(Constants.XML_CATALOG_FILES);
 		if (catFiles == null) catFiles="";
         if(Log.isDebugEnabled(Log.JEEVES)) Log.debug(Log.JEEVES,"Using oasis catalog files "+catFiles);
 
-        setBlankXSLFile(System.getProperty(Jeeves.XML_CATALOG_BLANKXSLFILE));
+        setBlankXSLFile(System.getProperty(Constants.XML_CATALOG_BLANKXSLFILE));
         
 		catMan.setCatalogFiles(catFiles);
 		catMan.setIgnoreMissingProperties(true);
 		catMan.setPreferPublic(true);
 		catMan.setRelativeCatalogs(false);
 		catMan.setUseStaticCatalog(false);
-		String catVerbosity = System.getProperty(Jeeves.XML_CATALOG_VERBOSITY);
+		String catVerbosity = System.getProperty(Constants.XML_CATALOG_VERBOSITY);
 		if (catVerbosity == null) catVerbosity = "1";
 		int iCatVerb = 1;
 		try {
 			iCatVerb = Integer.parseInt(catVerbosity);
 		} catch (NumberFormatException nfe) {
-			Log.error(Log.JEEVES, "Failed to parse "+Jeeves.XML_CATALOG_VERBOSITY+" "+catVerbosity);
+			Log.error(Log.JEEVES, "Failed to parse "+ Constants.XML_CATALOG_VERBOSITY+" "+catVerbosity);
 			nfe.printStackTrace();
 		}
         if(Log.isDebugEnabled(Log.JEEVES)) Log.debug(Log.JEEVES,"Using catalog resolver verbosity "+iCatVerb);

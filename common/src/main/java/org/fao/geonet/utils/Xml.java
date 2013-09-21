@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.utils;
+package org.fao.geonet.utils;
 import static org.fao.geonet.Constants.ENCODING;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import net.sf.saxon.Configuration;
@@ -935,7 +935,7 @@ public final class Xml
 			Element elem = (Element) so.getLocator().getNode();
 			Element x = new Element("xpath", ns);
 			try {
-				String xpath = jeeves.utils.XPath.getXPath(elem);
+				String xpath = org.fao.geonet.utils.XPath.getXPath(elem);
 				//-- remove the first element to ensure XPath fits XML passed with
 				//-- root element
 				if (xpath.startsWith("/")) { 

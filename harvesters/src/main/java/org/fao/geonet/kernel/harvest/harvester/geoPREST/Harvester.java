@@ -23,13 +23,13 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
-import jeeves.constants.Jeeves;
+import org.fao.geonet.Constants;
 import org.fao.geonet.exceptions.OperationAbortedEx;
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlRequest;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.domain.ISODate;
@@ -169,7 +169,7 @@ class Harvester
 			// uuid is in <guid> child
 			String guidLink = record.getChildText("guid");
 			if (guidLink != null) {
-				guidLink = URLDecoder.decode(guidLink, Jeeves.ENCODING);
+				guidLink = URLDecoder.decode(guidLink, Constants.ENCODING);
 				identif = StringUtils.substringAfter(guidLink, "id=");
 			}
 			if (identif.length() == 0) {

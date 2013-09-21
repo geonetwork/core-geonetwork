@@ -44,7 +44,7 @@ import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
 import jeeves.constants.Jeeves;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.jdom.Element;
 import org.springframework.context.ApplicationContext;

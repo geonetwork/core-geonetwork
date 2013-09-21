@@ -1,7 +1,7 @@
 package org.fao.geonet.kernel.search.log;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.statistic.LuceneQueryParamType;
@@ -12,11 +12,9 @@ import org.fao.geonet.repository.statistic.SearchRequestRepository;
 import org.springframework.util.Assert;
 
 import javax.annotation.Nonnull;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * A bean representing a query request.

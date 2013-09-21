@@ -25,24 +25,27 @@ public class GeonetEntity {
 
         for (PropertyDescriptor desc : wrapper.getPropertyDescriptors()) {
             try {
-                if (desc.getReadMethod().getDeclaringClass() == getClass() && desc.getReadMethod().getAnnotation(Transient.class)
-                                                                              == null) {
+                if (desc.getReadMethod() != null && desc.getReadMethod().getDeclaringClass() == getClass()
+                    && desc.getReadMethod().getAnnotation(Transient.class) == null) {
                     final String descName = desc.getName();
                     if (descName.equalsIgnoreCase("labelTranslations")) {
                         Element labelEl = new Element(LABEL_EL_NAME);
 
                         Map<String, String> labels = (Map<String, String>) desc.getReadMethod().invoke(this);
-                        for (Map.Entry<String, String> entry : labels.entrySet()) {
-                            labelEl.addContent(new Element(entry.getKey().toLowerCase()).setText(entry.getValue()));
+                        if (labels != null) {
+                            for (Map.Entry<String, String> entry : labels.entrySet()) {
+                                labelEl.addContent(new Element(entry.getKey().toLowerCase()).setText(entry.getValue()));
+                            }
                         }
 
                         record.addContent(labelEl);
                     } else {
-                        final String value;
-                        value = desc.getReadMethod().invoke(this).toString();
-                        record.addContent(
-                                new Element(descName.toLowerCase()).setText(value)
-                        );
+                        final Object rawData = desc.getReadMethod().invoke(this);
+                        if (rawData != null) {
+                            final String value = rawData.toString();
+                            record.addContent(new Element(descName.toLowerCase()).setText(value)
+                            );
+                        }
                     }
                 }
             } catch (Exception e) {

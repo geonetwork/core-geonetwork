@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;

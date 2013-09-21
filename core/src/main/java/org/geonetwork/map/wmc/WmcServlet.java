@@ -6,6 +6,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.fao.geonet.Constants;
 import org.geonetwork.http.proxy.util.RequestUtil;
 import org.pvalsecc.misc.FileUtilities;
 
@@ -18,8 +19,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import jeeves.constants.Jeeves;
 
 
 public class WmcServlet extends HttpServlet {
@@ -134,8 +133,8 @@ public class WmcServlet extends HttpServlet {
                         TempFile tempFile = new TempFile(File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX, getTempDir()));
                         final String id = generateId(tempFile);
                         try {
-                            Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), Jeeves.ENCODING));
-                            fw.write(new String(data, Jeeves.ENCODING));
+                            Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), Constants.ENCODING));
+                            fw.write(new String(data, Constants.ENCODING));
                             fw.close();
                             out.write("{success: true, url: '" + getBaseUrl(request) + "/" + id + TEMP_FILE_SUFFIX + "'}");
 
@@ -215,7 +214,7 @@ public class WmcServlet extends HttpServlet {
             String wmcContent = RequestUtil.inputStreamAsString(httpServletRequest);
             wmcContent = XML_HEADER + "\n" + wmcContent;
 
-            Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), Jeeves.ENCODING));
+            Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), Constants.ENCODING));
             fw.write(wmcContent);
             fw.close();
 

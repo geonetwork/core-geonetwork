@@ -35,11 +35,28 @@ public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
     @Test
     public void testFindCustomFindAllAsXml() {
         HarvestHistory history1 = newHarvestHistory();
-        history1 = _repo.save(history1);
+        String infoText = "this is the info string";
+        String paramText = "this is the param string";
+        history1.setInfo("<infodata>"+infoText+"</infodata>");
+        history1.setParams("<params><param1>"+paramText+"</param1></params>");
+        _repo.save(history1);
 
         Element xml = _repo.findAllAsXml();
 
+        Element history1AsEl = (Element) xml.getChildren().get(0);
+        final Element info = history1AsEl.getChild("info");
+        assertNotNull(info);
+        final Element infodata = info.getChild("infodata");
+        assertNotNull(infodata);
+        assertEquals(infoText, infodata.getText());
 
+        final Element params = history1AsEl.getChild("params");
+        assertNotNull(params);
+        final Element params2 = params.getChild("params");
+        assertNotNull(params2);
+        final Element param1 = params2.getChild("param1");
+        assertNotNull(param1);
+        assertEquals(paramText, param1.getText());
     }
 
     @Test
@@ -80,7 +97,11 @@ public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
     }
 
     private HarvestHistory newHarvestHistory() {
-        int val = _inc.incrementAndGet();
+        return createHarvestHistory(_inc);
+    }
+
+    public static HarvestHistory createHarvestHistory(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
         HarvestHistory customElementSet = new HarvestHistory()
                 .setDeleted(val % 2 == 0)
                 .setHarvesterName("name" + val)

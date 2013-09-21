@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.search;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Localized;
 import org.jdom.JDOMException;

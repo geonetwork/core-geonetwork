@@ -27,8 +27,8 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;

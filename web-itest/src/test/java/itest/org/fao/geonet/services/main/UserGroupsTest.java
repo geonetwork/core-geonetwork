@@ -2,7 +2,7 @@ package itest.org.fao.geonet.services.main;
 
 import itest.org.fao.geonet.Utils;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.junit.Test;
 

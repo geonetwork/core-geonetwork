@@ -23,22 +23,6 @@
 
 package org.fao.geonet.lib;
 
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.IO;
-import jeeves.utils.XmlRequest;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.resources.Resources;
-import org.jdom.Element;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.List;
-
 //=============================================================================
 
 public class SourcesLib {

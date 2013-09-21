@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.httpclient.HttpException;
 import org.apache.webdav.lib.WebdavResource;

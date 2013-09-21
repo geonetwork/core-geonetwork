@@ -25,7 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.thredds;
 
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;

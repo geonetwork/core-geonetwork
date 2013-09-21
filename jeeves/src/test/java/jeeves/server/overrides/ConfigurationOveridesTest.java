@@ -16,10 +16,10 @@ import java.util.Collection;
 import java.util.List;
 
 import jeeves.config.springutil.JeevesApplicationContext;
-import jeeves.constants.Jeeves;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.log4j.Level;
+import org.fao.geonet.Constants;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class ConfigurationOveridesTest {
     static {
         try {
             classLoader = ConfigurationOveridesTest.class.getClassLoader();
-            String base = URLDecoder.decode(classLoader.getResource("test-config.xml").getFile(), Jeeves.ENCODING);
+            String base = URLDecoder.decode(classLoader.getResource("test-config.xml").getFile(), Constants.ENCODING);
             appPath = new File(new File(base).getParentFile(), "correct-webapp").getAbsolutePath();
             falseAppPath = new File(new File(base).getParentFile(), "false-webapp").getAbsolutePath();
             loader = new ConfigurationOverrides.ServletResourceLoader(null, appPath);
@@ -99,7 +99,7 @@ public class ConfigurationOveridesTest {
     @Test //@Ignore
     public void loadFile() throws JDOMException, IOException {
     	URL resourceAsStream = classLoader.getResource("test-sql.sql");
-    	BufferedReader reader = new BufferedReader(new InputStreamReader(resourceAsStream.openStream(), Jeeves.ENCODING));
+    	BufferedReader reader = new BufferedReader(new InputStreamReader(resourceAsStream.openStream(), Constants.ENCODING));
     	try {
     	    // note first , is intentional to verify that it will be ignored
 			List<String> lines = new ConfigurationOverrides("/WEB-INF/overrides-config.xml,/WEB-INF/overrides-config-overlay.xml").loadTextFileAndUpdate("test-sql.sql", null, appPath, reader);

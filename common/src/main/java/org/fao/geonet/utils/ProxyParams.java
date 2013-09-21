@@ -1,5 +1,5 @@
 
-package jeeves.utils;
+package org.fao.geonet.utils;
 
 public class ProxyParams {
 	String username, password, proxyHost;

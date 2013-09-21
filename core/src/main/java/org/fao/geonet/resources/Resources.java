@@ -18,9 +18,9 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.IO;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;

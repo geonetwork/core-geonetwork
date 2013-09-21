@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package jeeves;
+package org.fao.geonet;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

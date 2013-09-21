@@ -1,4 +1,4 @@
-package jeeves.utils;
+package org.fao.geonet.utils;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;

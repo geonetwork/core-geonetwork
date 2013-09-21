@@ -64,7 +64,7 @@
 
 
 
-package jeeves.utils;
+package org.fao.geonet.utils;
 
 import org.jdom.Comment;
 import org.jdom.Element;

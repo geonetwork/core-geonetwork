@@ -27,7 +27,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.Stats;
-import jeeves.utils.TransformerFactoryFactory;
+import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;

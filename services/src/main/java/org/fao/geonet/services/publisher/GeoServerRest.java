@@ -22,11 +22,11 @@
 //==============================================================================
 package org.fao.geonet.services.publisher;
 
-import jeeves.constants.Jeeves;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.*;
+import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.util.Xml;
 import org.jdom.Element;
@@ -677,7 +677,7 @@ public class GeoServerRest {
 			}
 			if (postData != null) {
 				((PutMethod) m).setRequestEntity(new StringRequestEntity(
-						postData, contentType, Jeeves.ENCODING));
+						postData, contentType, Constants.ENCODING));
 			}
 		} else if (method.equals(METHOD_DELETE)) {
 			m = new DeleteMethod(url);
@@ -685,7 +685,7 @@ public class GeoServerRest {
 			m = new PostMethod(url);
 			if (postData != null) {
 				((PostMethod) m).setRequestEntity(new StringRequestEntity(
-						postData, contentType, Jeeves.ENCODING));
+						postData, contentType, Constants.ENCODING));
 			}
 
 		} else {

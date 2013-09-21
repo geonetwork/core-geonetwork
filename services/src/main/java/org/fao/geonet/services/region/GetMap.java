@@ -30,7 +30,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
+import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.Util;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Params;

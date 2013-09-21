@@ -30,7 +30,7 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.domain.Profile;
 import org.jdom.Element;

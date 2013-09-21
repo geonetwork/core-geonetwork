@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import jeeves.constants.Jeeves;
+import org.fao.geonet.Constants;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.Util;
 import org.fao.geonet.kernel.DataManager;
@@ -65,7 +65,7 @@ public class CswParams extends AbstractParams {
         rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource",  false);
         
         try {
-            capabUrl = URLDecoder.decode(capabUrl, Jeeves.ENCODING);
+            capabUrl = URLDecoder.decode(capabUrl, Constants.ENCODING);
         }
         catch (UnsupportedEncodingException x) {
             System.out.println(x.getMessage());
@@ -104,7 +104,7 @@ public class CswParams extends AbstractParams {
         rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource",  rejectDuplicateResource);
         
         try {
-            capabUrl = URLDecoder.decode(capabUrl, Jeeves.ENCODING);
+            capabUrl = URLDecoder.decode(capabUrl, Constants.ENCODING);
         }
         catch (UnsupportedEncodingException x) {
             System.out.println(x.getMessage());

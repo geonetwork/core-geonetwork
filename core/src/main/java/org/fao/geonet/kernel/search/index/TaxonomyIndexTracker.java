@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import jeeves.utils.IO;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;

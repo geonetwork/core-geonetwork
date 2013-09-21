@@ -36,19 +36,10 @@ public final class Jeeves
     * Builds a Jeeves.
     */
    private Jeeves() {}
-   
-   public static final String ENCODING = Constants.ENCODING;
-   
-   public static final int MAX_UPLOAD_SIZE = 50; // 50 MB
 
 	public static final String CONFIG_FILE = "config.xml";
 
-	public static final String XML_CATALOG_FILES = "jeeves.xml.catalog.files";
-	public static final String XML_CATALOG_VERBOSITY = "jeeves.xml.catalog.verbosity";
-
-    public static final String XML_CATALOG_BLANKXSLFILE = "jeeves.xml.catalog.blankxslfile";
-
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 	//---
 	//--- Url prefixes
 	//---

@@ -24,7 +24,7 @@
 package org.fao.geonet.services.config;
 
 import jeeves.config.springutil.JeevesApplicationContext;
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;

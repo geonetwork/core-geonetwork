@@ -26,7 +26,7 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
+import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;

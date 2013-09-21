@@ -22,7 +22,7 @@
 //==============================================================================
 package org.fao.geonet.kernel.security;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.UserRepository;

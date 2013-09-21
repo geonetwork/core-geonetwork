@@ -23,13 +23,13 @@
 
 package org.fao.geonet.services.thesaurus;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.*;
+import org.fao.geonet.utils.*;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;

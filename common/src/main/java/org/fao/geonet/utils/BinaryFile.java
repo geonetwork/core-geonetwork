@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.utils;
+package org.fao.geonet.utils;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -31,6 +31,7 @@ import com.jcraft.jsch.UserInfo;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+import org.fao.geonet.Constants;
 import org.globus.ftp.DataSink;
 import org.globus.ftp.FTPClient;
 import org.globus.ftp.Session;
@@ -49,8 +50,6 @@ import java.io.Reader;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
-
-import jeeves.constants.Jeeves;
 
 //=============================================================================
 
@@ -424,7 +423,7 @@ public final class BinaryFile
       	    throw new IllegalStateException("Unable to read file name");
       	}
       	if(buf[i]==(byte)0x0a) {
-      		file=new String(buf, 0, i, Charset.forName(Jeeves.ENCODING));
+      		file=new String(buf, 0, i, Charset.forName(Constants.ENCODING));
       		break;
       	}
       }

@@ -1,6 +1,6 @@
 package org.fao.geonet.kernel.harvest;
 
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;

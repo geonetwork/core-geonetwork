@@ -29,8 +29,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import jeeves.constants.Jeeves;
-
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.Header;
@@ -45,6 +43,7 @@ import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.fao.geonet.Constants;
 import org.fao.oaipmh.util.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -304,7 +303,7 @@ public class Transport
 		try
 		{
 			if (response != null)
-				receivedData += new String(response, Jeeves.ENCODING);
+				receivedData += new String(response, Constants.ENCODING);
 		}
 		catch (UnsupportedEncodingException e) {
 		    throw new RuntimeException(e);

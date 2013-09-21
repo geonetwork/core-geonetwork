@@ -29,7 +29,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-import jeeves.utils.XmlRequest;
+import org.fao.geonet.utils.XmlRequest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;

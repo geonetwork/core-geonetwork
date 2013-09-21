@@ -26,14 +26,14 @@
 
 package org.fao.geonet.kernel.harvest.harvester.thredds;
 
-import jeeves.constants.Jeeves;
+import org.fao.geonet.Constants;
 import org.fao.geonet.exceptions.BadServerCertificateEx;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlRequest;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import jeeves.xlink.Processor;
 
 import org.apache.commons.io.IOUtils;
@@ -680,7 +680,7 @@ class Harvester extends BaseAligner
 	
 	private String getSubsetUrl(InvDataset ds) {
 	    try {
-	        return ds.getParentCatalog().getUriString() + "?dataset=" + URLEncoder.encode(ds.getID(),Jeeves.ENCODING);
+	        return ds.getParentCatalog().getUriString() + "?dataset=" + URLEncoder.encode(ds.getID(), Constants.ENCODING);
         } catch (UnsupportedEncodingException e) {
 			log.error("Thrown Exception "+e+" during dataset processing");
 	        e.printStackTrace();
@@ -1036,7 +1036,7 @@ class Harvester extends BaseAligner
 			InputStream is = null;
 			try {
 			    is = conn.getInputStream();
-			    isr = new InputStreamReader(is, Jeeves.ENCODING);
+			    isr = new InputStreamReader(is, Constants.ENCODING);
                 dis = new BufferedReader(isr);
     			while ((inputLine = dis.readLine()) != null) {
     					version.append(inputLine+"\n");	

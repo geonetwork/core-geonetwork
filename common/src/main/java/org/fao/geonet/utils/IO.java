@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.utils;
+package org.fao.geonet.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,10 +35,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.io.IOUtils;
+import org.fao.geonet.Constants;
+import org.fao.geonet.Logger;
 
 //=============================================================================
 
@@ -68,7 +67,7 @@ public final class IO
 		try
 		{
             in = new FileInputStream(name);
-            rdr = new BufferedReader(new InputStreamReader(in, Charset.forName(Jeeves.ENCODING)));
+            rdr = new BufferedReader(new InputStreamReader(in, Charset.forName(Constants.ENCODING)));
 
 			String inputLine;
 
@@ -137,7 +136,7 @@ public final class IO
         }
     }
 
-    public static void delete(File file, boolean throwException, ServiceContext context) {
+    public static void delete(File file, boolean throwException, Logger context) {
         if (!file.delete() && file.exists()) {
             if(throwException) {
                 throw new RuntimeException("Unable to delete "+file.getAbsolutePath());

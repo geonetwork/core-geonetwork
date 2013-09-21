@@ -24,8 +24,8 @@
 package org.fao.geonet.component.csw;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.Sort;

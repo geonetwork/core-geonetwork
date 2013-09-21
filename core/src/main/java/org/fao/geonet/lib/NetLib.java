@@ -24,8 +24,8 @@
 package org.fao.geonet.lib;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.XmlRequest;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.XmlRequest;
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;

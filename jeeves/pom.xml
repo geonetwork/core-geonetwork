@@ -37,30 +37,10 @@
 			<artifactId>domain</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>jaxen</groupId>
-			<artifactId>jaxen</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-fileupload</groupId>
-			<artifactId>commons-fileupload</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
@@ -72,34 +52,6 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>jsch</groupId>
-			<artifactId>jsch</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.xmlgraphics</groupId>
-			<artifactId>fop</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.jcs</groupId>
-			<artifactId>jcs</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.saxon</groupId>
-			<artifactId>saxon</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>globus</groupId>
-			<artifactId>cog-jglobus</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>xerces</groupId>
-			<artifactId>xercesImpl</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>xml-resolver</groupId>
-			<artifactId>xml-resolver</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.geotools.jdbc</groupId>
@@ -124,10 +76,6 @@
 		<dependency>
 			<groupId>org.geotools.jdbc</groupId>
 			<artifactId>gt-jdbc-oracle</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.googlecode.juniversalchardet</groupId>
-			<artifactId>juniversalchardet</artifactId>
 		</dependency>
 
 		<!-- Monitoring libraries -->

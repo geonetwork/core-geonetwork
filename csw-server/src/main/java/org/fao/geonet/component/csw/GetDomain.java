@@ -34,7 +34,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;

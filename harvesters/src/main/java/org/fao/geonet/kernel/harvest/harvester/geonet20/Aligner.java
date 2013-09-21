@@ -23,10 +23,10 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.XmlRequest;
+import org.fao.geonet.utils.XmlRequest;
 
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;

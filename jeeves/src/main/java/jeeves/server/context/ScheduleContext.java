@@ -26,7 +26,7 @@ package jeeves.server.context;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.resources.ProviderManager;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import java.util.Hashtable;
 

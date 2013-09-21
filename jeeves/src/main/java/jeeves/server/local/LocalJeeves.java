@@ -2,7 +2,7 @@ package jeeves.server.local;
 
 import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;

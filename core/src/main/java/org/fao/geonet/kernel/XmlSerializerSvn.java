@@ -26,7 +26,7 @@ package org.fao.geonet.kernel;
 import java.sql.SQLException;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import jeeves.xlink.Processor;
 
 import org.fao.geonet.constants.Geonet;

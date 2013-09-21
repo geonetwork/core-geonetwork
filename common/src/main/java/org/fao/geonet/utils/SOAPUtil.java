@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: GeoNetwork@fao.org
 //==============================================================================
 
-package jeeves.utils;
+package org.fao.geonet.utils;
 
 import org.fao.geonet.exceptions.MissingParameterEx;
 import org.jdom.Element;

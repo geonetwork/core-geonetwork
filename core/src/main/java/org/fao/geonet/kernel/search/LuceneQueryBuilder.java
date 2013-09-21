@@ -24,7 +24,7 @@
 package org.fao.geonet.kernel.search;
 
 import com.google.common.base.Splitter;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;

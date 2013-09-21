@@ -24,7 +24,7 @@
 package org.fao.geonet.csw.common.requests;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 
 import org.apache.commons.httpclient.Cookie;

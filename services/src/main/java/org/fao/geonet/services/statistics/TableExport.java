@@ -1,12 +1,13 @@
 package org.fao.geonet.services.statistics;
 
 import jeeves.constants.Jeeves;
+import org.fao.geonet.Constants;
 import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.IO;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
@@ -106,7 +107,7 @@ public class TableExport extends NotInReadOnlyModeService {
             stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             rs = stmt.executeQuery(query);
             fileOutputStream = new FileOutputStream(tableDumpFile);
-            out = new BufferedWriter(new OutputStreamWriter(fileOutputStream, Jeeves.ENCODING));
+            out = new BufferedWriter(new OutputStreamWriter(fileOutputStream, Constants.ENCODING));
             ResultSetMetaData rsMetaData = rs.getMetaData();
 
             if (this.dumpHeader) {

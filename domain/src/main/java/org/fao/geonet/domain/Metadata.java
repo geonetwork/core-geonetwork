@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,7 +10,9 @@ import javax.annotation.Nonnull;
 import javax.persistence.*;
 
 import com.vividsolutions.jts.util.Assert;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
@@ -113,6 +116,13 @@ public class Metadata extends GeonetEntity {
         return this;
     }
 
+    /**
+     * Set the data and convert all the end of line characters to be only a \n character.
+     *
+     * @param xml the data as XML.
+     *
+     * @return this entity.
+     */
     public Metadata setDataAndFixCR(Element xml) {
         XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 
@@ -133,6 +143,20 @@ public class Metadata extends GeonetEntity {
             }
         }
         return xml;
+    }
+
+    /**
+     * Parse the data as xml and return the data.
+     * @param validate if true validate the XML while parsing.
+     *
+     * @return the parsed metadata.
+     *
+     * @throws IOException
+     * @throws JDOMException
+     */
+    @Transient
+    public Element getXmlData(boolean validate) throws IOException, JDOMException {
+            return Xml.loadString(getData(), validate);
     }
 
     private static String replaceString(final String initialString, final String pattern, final String replacement) {

@@ -24,12 +24,13 @@
 package jeeves.server.sources;
 
 import jeeves.constants.Jeeves;
+import org.fao.geonet.Constants;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -78,7 +79,7 @@ public final class ServiceRequestFactory
 
 		if (encoding == null) {
 			try {
-				req.setCharacterEncoding(Jeeves.ENCODING);
+				req.setCharacterEncoding(Constants.ENCODING);
 			} catch (UnsupportedEncodingException ex) {
 				ex.printStackTrace();
 			}

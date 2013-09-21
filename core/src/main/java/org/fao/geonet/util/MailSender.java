@@ -23,7 +23,7 @@
 
 package org.fao.geonet.util;
 
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.apache.commons.mail.EmailException;

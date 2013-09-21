@@ -3,7 +3,7 @@ package org.fao.geonet.kernel.search.index;
 import java.io.IOException;
 import java.util.List;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.taxonomy.CategoryPath;

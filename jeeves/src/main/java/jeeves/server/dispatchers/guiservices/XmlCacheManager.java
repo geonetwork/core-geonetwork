@@ -9,8 +9,8 @@ import java.util.WeakHashMap;
 import javax.servlet.ServletContext;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.XmlFileCacher;
+import org.fao.geonet.utils.Log;
+import jeeves.XmlFileCacher;
 
 import org.jdom.Element;
 import org.jdom.JDOMException;

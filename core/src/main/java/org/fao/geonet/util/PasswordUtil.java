@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 
-import jeeves.constants.Jeeves;
+import org.fao.geonet.Constants;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import jeeves.server.context.ServiceContext;
 
@@ -80,7 +80,7 @@ public class PasswordUtil {
 	{
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-1") ;
-			md.update(text.getBytes(Jeeves.ENCODING));
+			md.update(text.getBytes(Constants.ENCODING));
 			byte[] raw = md.digest();
 			if (raw == null) {
 				return null;
@@ -109,7 +109,7 @@ public class PasswordUtil {
 		{
 			MessageDigest md = MessageDigest.getInstance("SHA-1") ;
 	
-			md.update(text.getBytes(Jeeves.ENCODING));
+			md.update(text.getBytes(Constants.ENCODING));
 	
 			StringBuffer sb = new StringBuffer();
 	

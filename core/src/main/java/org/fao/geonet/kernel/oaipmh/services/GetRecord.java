@@ -24,7 +24,7 @@
 package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
