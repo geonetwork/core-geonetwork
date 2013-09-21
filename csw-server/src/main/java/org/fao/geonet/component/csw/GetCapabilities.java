@@ -37,7 +37,6 @@ import javax.servlet.ServletContext;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.utils.Log;
@@ -51,16 +50,21 @@ import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.csw.common.exceptions.VersionNegotiationFailedEx;
+import org.fao.geonet.domain.Address;
+import org.fao.geonet.domain.CswCapabilitiesInfoField;
 import org.fao.geonet.domain.Language;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
-import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.CswCapabilitiesInfo;
+import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
 import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -167,14 +171,17 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                 currentLanguage = context.getLanguage();
             }
 
-            CswCapabilitiesInfo cswCapabilitiesInfo = CswCapabilitiesInfo.getCswCapabilitiesInfo(currentLanguage);
+            final CswCapabilitiesInfoFieldRepository infoRepository = context.getBean(CswCapabilitiesInfoFieldRepository.class);
+            CswCapabilitiesInfo cswCapabilitiesInfo = infoRepository.findCswCapabilitiesInfo(currentLanguage);
 
             // Retrieve contact data from users table
             String contactId = gc.getBean(SettingManager.class).getValue("system/csw/contactId");
-            if ((contactId == null) || (contactId.equals(""))) contactId = "-1";
-            Element contact = dbms.select("SELECT * FROM Users WHERE id = ?", Integer.valueOf(contactId));
+            if ((contactId == null) || (contactId.equals(""))) {
+                contactId = "-1";
+            }
+            User user = context.getBean(UserRepository.class).findOne(contactId);
 
-            substitute(context, capabilities, cswCapabilitiesInfo,  contact.getChild("record"), currentLanguage);
+            substitute(context, capabilities, cswCapabilitiesInfo,  user, currentLanguage);
 
 			handleSections(request, capabilities);
 
@@ -346,6 +353,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
     /**
      * TODO javadoc.
      *
+     *
      * @param context
      * @param capab
      * @param cswCapabilitiesInfo
@@ -353,7 +361,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
      * @param langId
      * @throws Exception
      */
-	private void substitute(ServiceContext context, Element capab, CswCapabilitiesInfo cswCapabilitiesInfo, Element contact, String langId) throws Exception
+	private void substitute(ServiceContext context, Element capab, CswCapabilitiesInfo cswCapabilitiesInfo, User contact, String langId) throws Exception
 	{
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
@@ -373,17 +381,18 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
 		// Set CSW contact information
         if (contact != null) {
-            vars.put("$IND_NAME", contact.getChild("name").getValue() + " " + contact.getChild("surname").getValue());
-            vars.put("$ORG_NAME", contact.getChild("organisation").getValue());
-            vars.put("$POS_NAME", contact.getChild("profile").getValue());
+            vars.put("$IND_NAME", contact.getName() + " " + contact.getSurname());
+            vars.put("$ORG_NAME", contact.getOrganisation());
+            vars.put("$POS_NAME", contact.getProfile().name());
             vars.put("$VOICE", "");
             vars.put("$FACSCIMILE", "");
-            vars.put("$DEL_POINT", contact.getChild("address").getValue());
-            vars.put("$CITY", contact.getChild("city").getValue());
-            vars.put("$ADMIN_AREA", contact.getChild("state").getValue());
-            vars.put("$POSTAL_CODE", contact.getChild("zip").getValue());
-            vars.put("$COUNTRY", contact.getChild("country").getValue());
-            vars.put("$EMAIL", contact.getChild("email").getValue());
+            final Address address = contact.getPrimaryAddress();
+            vars.put("$DEL_POINT", address.getAddress());
+            vars.put("$CITY", address.getCity());
+            vars.put("$ADMIN_AREA", address.getState());
+            vars.put("$POSTAL_CODE", address.getZip());
+            vars.put("$COUNTRY", address.getCountry());
+            vars.put("$EMAIL", contact.getEmail());
             vars.put("$HOUROFSERVICE", "");
             vars.put("$CONTACT_INSTRUCTION","");
         } else {

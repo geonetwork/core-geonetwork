@@ -22,6 +22,8 @@ public class MetadataStatusRepositoryImpl implements MetadataValidationRepositor
         String entityType = MetadataStatus.class.getSimpleName();
         String metadataIdPropName = MetadataStatusId_.metadataId.getName();
         Query query = _entityManager.createQuery("DELETE FROM " + entityType + " WHERE " + metadataIdPropName + " = " + metadataId);
-        return query.executeUpdate();
+        final int deleted = query.executeUpdate();
+        _entityManager.clear();
+        return deleted;
     }
 }

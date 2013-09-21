@@ -214,7 +214,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
     
     private void synchronizeGroup(ApplicationContext applicationContext, String ldapGroupSearchFilter,
                                   String ldapGroupSearchBase, String ldapGroupSearchAttribute,
-                                  String ldapGroupSearchPattern, DirContext dc) throws NamingException, SQLException {
+                                  String ldapGroupSearchPattern, DirContext dc) throws  NamingException, SQLException {
         
         NamingEnumeration<?> groupList = dc.search(ldapGroupSearchBase,
                 ldapGroupSearchFilter, null);

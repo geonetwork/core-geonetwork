@@ -6,6 +6,8 @@ import org.fao.geonet.domain.Pair;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,4 +56,14 @@ public interface MetadataRepositoryCustom {
      */
     @Nonnull
     List<Integer> findAllIdsBy(@Nonnull Specification<Metadata> spec);
+
+    /**
+     * Find the metadata that has the oldest change date.
+     *
+     * @return the metadata with the oldest change date
+     */
+    @Modifying
+    @Transactional
+    Metadata findOneOldestByChangeDate();
+
 }

@@ -47,7 +47,7 @@ public class Util
 
 	public interface Job
 	{
-		public OperResult execute(Dbms dbms, HarvestManager hm, String id) throws Exception;
+		public OperResult execute(HarvestManager hm, String id) throws Exception;
 	}
 
 	//--------------------------------------------------------------------------

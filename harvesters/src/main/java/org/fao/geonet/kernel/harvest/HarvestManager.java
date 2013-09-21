@@ -33,7 +33,6 @@ import java.util.Set;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.MissingParameterEx;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
@@ -51,6 +50,7 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarversterJobListener;
 import org.fao.geonet.kernel.harvest.harvester.HarvesterHistoryDao;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
+import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.jdom.Element;
 import org.quartz.SchedulerException;
 
@@ -179,19 +179,16 @@ public class HarvestManager implements HarvestInfoProvider
             if (profile == Profile.Administrator) {
 			    result = transform(result);
 			    addInfo(result);
-		    }
-            // you're not an Administrator: only return harvest nodes from groups visible to you
-            else {
+		    } else {
+                // you're not an Administrator: only return harvest nodes from groups visible to you
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
                 AccessManager am = gc.getBean(AccessManager.class);
-                Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-                Set<String> groups = am.getVisibleGroups(dbms, context.getUserSession().getUserId() );
+                Set<Integer> groups = am.getVisibleGroups(context.getUserSession().getUserIdAsInt());
                 result = transform(result);
                 Element nodeGroup =  result.getChild("ownerGroup");
-                if ((nodeGroup != null) && (groups.contains(nodeGroup.getValue()))) {
+                if ((nodeGroup != null) && (groups.contains(Integer.valueOf(nodeGroup.getValue())))) {
                     addInfo(result);
-                }
-                else {
+                } else {
                     return null;
                 }
             }
@@ -213,19 +210,20 @@ public class HarvestManager implements HarvestInfoProvider
                 else {
                     GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
                     AccessManager am = gc.getBean(AccessManager.class);
-                    Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-                    Set<String> groups = am.getVisibleGroups(dbms, context.getUserSession().getUserId() );
+                    Set<Integer> groups = am.getVisibleGroups(context.getUserSession().getUserIdAsInt());
 				    for (Object o : nodes.getChildren()) {
 					    Element node = transform((Element) o);
                         Element nodeGroup =  node.getChild("ownerGroup");
-                        if ((nodeGroup != null) && (groups.contains(nodeGroup.getValue()))) {
+                        if ((nodeGroup != null) && (groups.contains(Integer.valueOf(nodeGroup.getValue())))) {
 					        addInfo(node);
 					        result.addContent(node);
 				        }
                     }
                 }
 				// sort according to sort field
-				if (sort != null) result = transformSort(result,sort);
+				if (sort != null) {
+                    result = transformSort(result,sort);
+                }
 			}
 		}
 		return result;
@@ -234,14 +232,13 @@ public class HarvestManager implements HarvestInfoProvider
     /**
      * TODO javadoc.
      *
-     * @param dbms dbms
      * @param node harvester config
      * @param ownerId the id of the user doing this
      * @return id of new harvester
      * @throws JeevesException hmm
      * @throws SQLException hmm
      */
-	public String add(Dbms dbms, Element node, String ownerId) throws JeevesException, SQLException {
+	public String add(Element node, String ownerId) throws JeevesException, SQLException {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
         }
@@ -252,7 +249,7 @@ public class HarvestManager implements HarvestInfoProvider
         ownerIdE.setText(ownerId);
         node.addContent(ownerIdE);
 
-		ah.add(dbms, node);
+		ah.add(node);
 		hmHarvesters.put(ah.getID(), ah);
 		hmHarvestLookup.put(ah.getParams().uuid, ah);
 
@@ -265,20 +262,19 @@ public class HarvestManager implements HarvestInfoProvider
     /**
      * TODO Javadoc.
      *
-     * @param dbms
      * @param node
      * @return
      * @throws JeevesException
      * @throws SQLException
      */
-	public String add2(Dbms dbms, Element node) throws JeevesException, SQLException {
+	public String add2(Element node) throws JeevesException, SQLException {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN)){
             Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
         }
 		String type = node.getAttributeValue("type");
 		AbstractHarvester ah = AbstractHarvester.create(type, context, settingMan, dataMan);
 
-		ah.add(dbms, node);
+		ah.add(node);
 		hmHarvesters.put(ah.getID(), ah);
 		hmHarvestLookup.put(ah.getParams().uuid, ah);
 
@@ -291,13 +287,12 @@ public class HarvestManager implements HarvestInfoProvider
     /**
      * TODO javadoc.
      *
-     * @param dbms
      * @param id
      * @param ownerId id of the user doing this
      * @return
      * @throws Exception
      */
-	public synchronized String createClone(Dbms dbms, String id, String ownerId, ServiceContext context) throws Exception {
+	public synchronized String createClone(String id, String ownerId, ServiceContext context) throws Exception {
 		// get the specified harvester from the settings table
 		Element node = get(id, context, null);
 		if (node == null) return null;
@@ -322,13 +317,12 @@ public class HarvestManager implements HarvestInfoProvider
         node.addContent(ownerIdE);
 
 		// now add a new harvester based on the settings in the old
-		return add(dbms, node, ownerId);
+		return add(node, ownerId);
 	}
 
     /**
      * TODO javadoc.
      *
-     * @param dbms
      * @param node
      * @param ownerId id of the user doing this
      * @return
@@ -336,7 +330,7 @@ public class HarvestManager implements HarvestInfoProvider
      * @throws SQLException
      * @throws SchedulerException
      */
-	public synchronized boolean update(Dbms dbms, Element node, String ownerId) throws BadInputEx, SQLException, SchedulerException {
+	public synchronized boolean update(Element node, String ownerId) throws BadInputEx, SQLException, SchedulerException {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Updating harvesting node : \n"+ Xml.getString(node));
         }
@@ -355,19 +349,18 @@ public class HarvestManager implements HarvestInfoProvider
         ownerIdE.setText(ownerId);
         node.addContent(ownerIdE);
 
-		ah.update(dbms, node);
+		ah.update(node);
 		return true;
 	}
 
     /**
      * This method must be synchronized because it cannot run if we are updating some entries.
      *
-     * @param dbms
      * @param id
      * @return
      * @throws Exception
      */
-	public synchronized OperResult remove(Dbms dbms, String id) throws Exception {
+	public synchronized OperResult remove(String id) throws Exception {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN)){
             Log.debug(Geonet.HARVEST_MAN, "Removing harvesting with id : "+ id);
         }
@@ -377,25 +370,25 @@ public class HarvestManager implements HarvestInfoProvider
 			return OperResult.NOT_FOUND;
         }
 		hmHarvestLookup.remove(ah.getParams().uuid);
-		ah.destroy(dbms);
+		ah.destroy();
 		hmHarvesters.remove(id);
-		settingMan.remove(dbms, "harvesting/id:"+id);
+		settingMan.remove("harvesting/id:"+id);
 
-		// set deleted status in harvest history table to 'y'
-		HarvesterHistoryDao.setDeleted(dbms, ah.getParams().uuid);
+        final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
+        // set deleted status in harvest history table to 'y'
+        historyRepository.markAllAsDeleted(ah.getParams().uuid);
 		return OperResult.OK;
 	}
 
     /**
      * TODO Javadoc.
      *
-     * @param dbms
      * @param id
      * @return
      * @throws SQLException
      * @throws SchedulerException
      */
-	public OperResult start(Dbms dbms, String id) throws SQLException, SchedulerException {
+	public OperResult start(String id) throws SQLException, SchedulerException {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Starting harvesting with id : "+ id);
         }
@@ -404,19 +397,18 @@ public class HarvestManager implements HarvestInfoProvider
 		if (ah == null) {
 			return OperResult.NOT_FOUND;
         }
-		return ah.start(dbms);
+		return ah.start();
 	}
 
     /**
      * TODO Javadoc.
      *
-     * @param dbms
      * @param id
      * @return
      * @throws SQLException
      * @throws SchedulerException
      */
-	public OperResult stop(Dbms dbms, String id) throws SQLException, SchedulerException {
+	public OperResult stop(String id) throws SQLException, SchedulerException {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Stopping harvesting with id : "+ id);
         }
@@ -425,19 +417,18 @@ public class HarvestManager implements HarvestInfoProvider
 		if (ah == null){
 			return OperResult.NOT_FOUND;
         }
-		return ah.stop(dbms);
+		return ah.stop();
 	}
 
     /**
      * TODO Javadoc.
      *
-     * @param dbms
      * @param id
      * @return
      * @throws SQLException
      * @throws SchedulerException
      */
-	public OperResult run(Dbms dbms, String id) throws SQLException, SchedulerException {
+	public OperResult run(String id) throws SQLException, SchedulerException {
         // READONLYMODE
         if(!this.readOnly) {
             if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
@@ -448,7 +439,7 @@ public class HarvestManager implements HarvestInfoProvider
             if (ah == null) {
                 return OperResult.NOT_FOUND;
             }
-            return ah.run(dbms);
+            return ah.run();
         }
         else {
             if(Log.isDebugEnabled(Geonet.HARVEST_MAN)){
@@ -476,7 +467,7 @@ public class HarvestManager implements HarvestInfoProvider
             if (ah == null) {
                 return OperResult.NOT_FOUND;
             }
-            return ah.invoke(resourceManager);
+            return ah.invoke();
         }
         else {
             if(Log.isDebugEnabled(Geonet.HARVEST_MAN)){

@@ -28,10 +28,7 @@ import org.fao.geonet.Util;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
@@ -85,7 +82,7 @@ class UnusedSearcher extends MetaSearcher
 		context.info("UnusedSearcher : using maxDiff="+maxDiff);
 
 		//--- proper search
-        final Specifications<Metadata> spec = Specifications.where(MetadataSpecs.isType(true)).and(MetadataSpecs.isHarvested(false))
+        final Specifications<Metadata> spec = Specifications.where(MetadataSpecs.isType(MetadataType.TEMPLATE)).and(MetadataSpecs.isHarvested(false))
                 .and(MetadataSpecs.hasSource(siteId));
 
         final List<Metadata> list = context.getBean(MetadataRepository.class).findAll(spec);

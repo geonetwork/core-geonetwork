@@ -64,10 +64,21 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
 
     @Nonnull
     @Override
+    public Element findAllAsXml(final Sort sort) {
+        return findAllAsXml(null, sort);
+    }
+
+    @Nonnull
+    @Override
     public Element findAllAsXml(final Specification<T> specification, final Sort sort) {
-        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
-        CriteriaQuery<T> query = cb.createQuery(_entityClass);
-        Root<T> root = query.from(_entityClass);
+        return findAllAsXml(_entityManager, _entityClass, specification, sort);
+    }
+
+    protected static <T extends GeonetEntity> Element findAllAsXml(EntityManager entityManager, Class<T> entityClass,
+                                                                   Specification<T> specification, Sort sort) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<T> query = cb.createQuery(entityClass);
+        Root<T> root = query.from(entityClass);
 
         if (specification != null) {
             final Predicate predicate = specification.toPredicate(root, query, cb);
@@ -79,15 +90,11 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
             query.orderBy(orders);
         }
 
-        return toXml(_entityManager.createQuery(query).getResultList());
-    }
+        Element rootEl = new Element(entityClass.getSimpleName().toLowerCase());
 
-    private Element toXml(List<T> resultList) {
-        Element root = new Element(_entityClass.getSimpleName().toLowerCase());
-
-        for (T t : resultList) {
-            root.addContent(t.asXml());
+        for (T t : entityManager.createQuery(query).getResultList()) {
+            rootEl.addContent(t.asXml());
         }
-        return root;
+        return rootEl;
     }
 }

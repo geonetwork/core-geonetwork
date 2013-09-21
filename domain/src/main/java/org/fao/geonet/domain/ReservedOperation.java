@@ -71,4 +71,8 @@ public enum ReservedOperation {
     public Operation getOperationEntity() {
         return new Operation().setId(_id).setName(name());
     }
+
+    public String getLuceneIndexCode() {
+        return "_op"+_id;
+    }
 }

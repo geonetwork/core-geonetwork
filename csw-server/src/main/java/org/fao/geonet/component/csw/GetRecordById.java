@@ -26,7 +26,6 @@ package org.fao.geonet.component.csw;
 import java.util.Iterator;
 import java.util.Map;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import org.fao.geonet.Util;
@@ -116,9 +115,8 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 			while(ids.hasNext())
 			{
 				String  uuid = ids.next().getText();
-				Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-				String id = gc.getBean(DataManager.class).getMetadataId(dbms, uuid);
+				String id = gc.getBean(DataManager.class).getMetadataId(uuid);
 				
 				// Metadata not found, search for next ids
 				if (id == null)

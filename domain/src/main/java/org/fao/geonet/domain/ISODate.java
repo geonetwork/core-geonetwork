@@ -43,7 +43,7 @@ import javax.persistence.Transient;
 
 //==============================================================================
 @Embeddable
-public class ISODate implements Cloneable {
+public class ISODate implements Cloneable, Comparable<ISODate> {
     private boolean _shortDate; // --- 'true' if the format is yyyy-mm-dd
 
     private Calendar _calendar = Calendar.getInstance();
@@ -303,4 +303,8 @@ public class ISODate implements Cloneable {
         return "0" + value;
     }
 
+    @Override
+    public int compareTo(ISODate o) {
+        return _calendar.compareTo(o._calendar);
+    }
 }

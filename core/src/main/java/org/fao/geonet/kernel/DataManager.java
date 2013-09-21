@@ -500,7 +500,7 @@ public class DataManager {
             final String  createDate = fullMd.getDataInfo().getCreateDate().getDateAndTime();
             final String  changeDate = fullMd.getDataInfo().getChangeDate().getDateAndTime();
             final String  source     = fullMd.getSourceInfo().getSourceId();
-            final String  isTemplate = String.valueOf(Constants.toYN_EnabledChar(fullMd.getDataInfo().getType()));
+            final String  isTemplate = fullMd.getDataInfo().getType().code + "";
             final String  root       = fullMd.getDataInfo().getRoot();
             final String  title      = fullMd.getDataInfo().getTitle();
             final String  uuid       = fullMd.getUuid();
@@ -1129,16 +1129,6 @@ public class DataManager {
      *
      * @param id
      * @return
-     * @throws Exception
-     */
-    public String getMetadataTemplate(String id) throws Exception {
-        return String.valueOf(Constants.toYN_EnabledChar(_metadataRepository.findOne(id).getDataInfo().getType()));
-    }
-
-    /**
-     *
-     * @param id
-     * @return
      */
     public String getVersion(String id) {
         return editLib.getVersion(id);
@@ -1157,12 +1147,12 @@ public class DataManager {
      * TODO javadoc.
      *
      * @param id
-     * @param isTemplate
+     * @param type
      * @param title
      * @throws Exception
      */
-    public void setTemplate(final int id, final boolean isTemplate, final String title) throws Exception {
-        setTemplateExt(id, isTemplate, title);
+    public void setTemplate(final int id, final MetadataType type, final String title) throws Exception {
+        setTemplateExt(id, type, title);
         indexInThreadPoolIfPossible(Integer.toString(id));
     }
 
@@ -1170,11 +1160,11 @@ public class DataManager {
      * TODO javadoc.
      *
      * @param id
-     * @param isTemplate
+     * @param type
      * @param title
      * @throws Exception
      */
-    public void setTemplateExt(final int id, final boolean isTemplate, final String title) throws Exception {
+    public void setTemplateExt(final int id, final MetadataType metadataType, final String title) throws Exception {
         _metadataRepository.update(id, new Updater<Metadata>() {
             @Override
             public void apply(@Nonnull Metadata metadata) {
@@ -1183,7 +1173,7 @@ public class DataManager {
                     dataInfo.setTitle(title);
                 }
 
-                dataInfo.setType(isTemplate);
+                dataInfo.setType(metadataType);
             }
         });
     }
@@ -1397,7 +1387,7 @@ public class DataManager {
                 .setChangeDate(new ISODate())
                 .setCreateDate(new ISODate())
                 .setSchemaId(schema)
-                .setType(Constants.toBoolean_fromYNChar(isTemplate.charAt(0)));
+                .setType(MetadataType.lookup(isTemplate.charAt(0)));
         newMetadata.getSourceInfo()
                 .setGroupOwner(Integer.valueOf(groupOwner))
                 .setOwner(owner)
@@ -1462,7 +1452,7 @@ public class DataManager {
                 .setSchemaId(schema)
                 .setDoctype(docType)
                 .setTitle(title)
-                .setType(Constants.toBoolean_fromYNChar(isTemplate.charAt(0)));
+                .setType(MetadataType.lookup(isTemplate.charAt(0)));
         newMetadata.getSourceInfo()
                 .setGroupOwner(Integer.valueOf(groupOwner))
                 .setOwner(owner)
@@ -1492,7 +1482,7 @@ public class DataManager {
         setNamespacePrefixUsingSchemas(schema, metadataXml);
 
 
-        if (updateFixedInfo && newMetadata.getDataInfo().getType()) {
+        if (updateFixedInfo && newMetadata.getDataInfo().getType() == MetadataType.METADATA) {
             String parentUuid = null;
             metadataXml = updateFixedInfo(schema, Optional.<Integer>absent(), newMetadata.getUuid(), metadataXml, parentUuid, updateDatestamp, context);
         }
@@ -1705,9 +1695,8 @@ public class DataManager {
         //--- write metadata to dbms
         xmlSerializer.update(metadataId, metadataXml, changeDate, updateDateStamp, uuid, context);
 
-        String isTemplate = getMetadataTemplate(metadataId);
         // Notifies the metadata change to metatada notifier service
-        if (isTemplate.equals("n")) {
+        if (_metadataRepository.findOne(metadataId).getDataInfo().getType() == MetadataType.METADATA) {
             // Notifies the metadata change to metatada notifier service
             notifyMetadataChange(metadataXml, metadataId);
         }
@@ -1989,11 +1978,12 @@ public class DataManager {
      */
     public synchronized void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
         String uuid = getMetadataUuid(metadataId);
-        String isTemplate = getMetadataTemplate(metadataId);
+        boolean isMetadata = _metadataRepository.findOne(metadataId).getDataInfo().getType() == MetadataType.METADATA;
+
         deleteMetadataFromDB(context, metadataId);
 
         // Notifies the metadata change to metatada notifier service
-        if (isTemplate.equals("n")) {
+        if (isMetadata) {
             GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
             gc.getBean(MetadataNotifierManager.class).deleteMetadata(metadataId, uuid, gc);
         }
@@ -2663,7 +2653,7 @@ public class DataManager {
             Metadata metadata = null;
             if (metadataId.isPresent()) {
                 metadata = _metadataRepository.findOne(metadataId.get());
-                boolean isTemplate = metadata != null && metadata.getDataInfo().getType();
+                boolean isTemplate = metadata != null && metadata.getDataInfo().getType() != MetadataType.METADATA;
 
                 // don't process templates
                 if(isTemplate) {
@@ -2692,7 +2682,7 @@ public class DataManager {
             }
             if (metadataId.isPresent()) {
                 String metadataIdString = String.valueOf(metadataId.get());
-                env.addContent(new Element("datadir").setText(Lib.resource.getDir(dataDir, Params.Access.PRIVATE, metadataIdString)));
+                env.addContent(new Element("datadir").setText(Lib.resource.getDir(context, Params.Access.PRIVATE, metadataIdString)));
             }
 
             // add original metadata to result
@@ -2829,7 +2819,7 @@ public class DataManager {
         String createDate = dataInfo.getCreateDate().getDateAndTime();
         String changeDate = dataInfo.getChangeDate().getDateAndTime();
         String source = metadata.getSourceInfo().getSourceId();
-        String isTemplate = "" + Constants.toYN_EnabledChar(dataInfo.getType());
+        String isTemplate = "" + dataInfo.getType().code;
         String title = dataInfo.getTitle();
         String uuid = metadata.getUuid();
         String isHarvested = "" + Constants.toYN_EnabledChar(metadata.getHarvestInfo().isHarvested());
@@ -3068,9 +3058,8 @@ public class DataManager {
      * @throws Exception
      */
     public void notifyMetadataChange (Element md, String metadataId) throws Exception {
-        String isTemplate = getMetadataTemplate(metadataId);
 
-        if (isTemplate.equals("n")) {
+        if (_metadataRepository.findOne(metadataId).getDataInfo().getType() == MetadataType.METADATA) {
             GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
 
             XmlSerializer.removeWithheldElements(md, gc.getBean(SettingManager.class));

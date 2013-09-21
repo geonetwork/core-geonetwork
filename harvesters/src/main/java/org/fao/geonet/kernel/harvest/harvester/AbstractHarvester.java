@@ -23,12 +23,13 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
+import jeeves.utils.Xml;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
@@ -37,8 +38,6 @@ import jeeves.utils.QuartzSchedulerUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.BaseAligner;
@@ -59,8 +58,11 @@ import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
 import org.fao.geonet.kernel.harvest.harvester.z3950Config.Z3950ConfigHarvester;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.monitor.harvest.AbstractHarvesterErrorCounter;
+import org.fao.geonet.repository.HarvestHistoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 import org.joda.time.DateTime;
@@ -69,7 +71,9 @@ import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+import org.springframework.data.jpa.domain.Specifications;
 
+import javax.transaction.TransactionManager;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
@@ -123,17 +127,17 @@ public abstract class AbstractHarvester extends BaseAligner {
      * @param harvester
      * @throws Exception
      */
-	private static void register(ServiceContext context, Class<?> harvester) throws Exception {
-		try {
-			Method initMethod = harvester.getMethod("init", context.getClass());
-			initMethod.invoke(null, context);
-			AbstractHarvester ah = (AbstractHarvester) harvester.newInstance();
-			hsHarvesters.put(ah.getType(), harvester);
-		}
-		catch(Exception e) {
-			throw new Exception("Cannot register harvester : "+harvester, e);
-		}
-	}
+    private static void register(ServiceContext context, Class<?> harvester) throws Exception {
+        try {
+            Method initMethod = harvester.getMethod("init", context.getClass());
+            initMethod.invoke(null, context);
+            AbstractHarvester ah = (AbstractHarvester) harvester.newInstance();
+            ah.setContext(context);
+            hsHarvesters.put(ah.getType(), harvester);
+        } catch (Exception e) {
+            throw new Exception("Cannot register harvester : " + harvester, e);
+        }
+    }
 
     /**
      * TODO javadoc.
@@ -180,15 +184,14 @@ public abstract class AbstractHarvester extends BaseAligner {
     /**
      * TODO javadoc.
      *
-     * @param dbms
      * @param node
      * @throws BadInputEx
      * @throws SQLException
      */
-	public void add(Dbms dbms, Element node) throws BadInputEx, SQLException {
+	public void add(Element node) throws BadInputEx, SQLException {
 		status   = Status.INACTIVE;
 		error    = null;
-		id       = doAdd(dbms, node);
+		id       = doAdd(node);
 	}
 
 	public synchronized void init(Element node) throws BadInputEx, SchedulerException
@@ -257,36 +260,33 @@ public abstract class AbstractHarvester extends BaseAligner {
     /**
      * Called when the harvesting entry is removed from the system. It is used to remove harvested metadata.
      *
-     * @param dbms
      * @throws Exception
 	  */
-	public synchronized void destroy(Dbms dbms) throws Exception {
+	public synchronized void destroy() throws Exception {
 	    doUnschedule();
-		//--- remove all harvested metadata
-		String getQuery = "SELECT id FROM Metadata WHERE harvestUuid=?";
-		for (Object o : dbms.select(getQuery, getParams().uuid).getChildren()) {
-			Element el = (Element) o;
-			String  id = el.getChildText("id");
 
-			dataMan.deleteMetadata(context, dbms, id);
-			dbms.commit();
+        final MetadataRepository metadataRepository = getContext().getBean(MetadataRepository.class);
+        final Specifications<Metadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().uuid));
+        for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
+			dataMan.deleteMetadata(context, "" + id);
 		}
-		doDestroy(dbms);
+
+        context.getBean(TransactionManager.class).commit();
+		doDestroy();
 	}
 
     /**
      * TODO Javadoc.
      *
-     * @param dbms
      * @return
      * @throws SQLException
      * @throws SchedulerException
      */
-	public synchronized OperResult start(Dbms dbms) throws SQLException, SchedulerException {
+	public synchronized OperResult start() throws SQLException, SchedulerException {
 		if (status != Status.INACTIVE){
 			return OperResult.ALREADY_ACTIVE;
         }
-		settingMan.setValue(dbms, "harvesting/id:"+id+"/options/status", Status.ACTIVE);
+		settingMan.setValue("harvesting/id:"+id+"/options/status", Status.ACTIVE);
 
 		status     = Status.ACTIVE;
 		error      = null;
@@ -299,16 +299,15 @@ public abstract class AbstractHarvester extends BaseAligner {
     /**
      * TODO Javadoc.
      *
-     * @param dbms
      * @return
      * @throws SQLException
      * @throws SchedulerException
      */
-	public synchronized OperResult stop(Dbms dbms) throws SQLException, SchedulerException {
+	public synchronized OperResult stop() throws SQLException, SchedulerException {
 		if (status != Status.ACTIVE) {
 			return OperResult.ALREADY_INACTIVE;
         }
-		settingMan.setValue(dbms, "harvesting/id:"+id+"/options/status", Status.INACTIVE);
+		settingMan.setValue("harvesting/id:"+id+"/options/status", Status.INACTIVE);
 		doUnschedule();
 		status   = Status.INACTIVE;
 		return OperResult.OK;
@@ -317,14 +316,13 @@ public abstract class AbstractHarvester extends BaseAligner {
     /**
      * TODO Javadoc.
      *
-     * @param dbms
      * @return
      * @throws SQLException
      * @throws SchedulerException
      */
-    public synchronized OperResult run(Dbms dbms) throws SQLException, SchedulerException {
+    public synchronized OperResult run() throws SQLException, SchedulerException {
 		if (status == Status.INACTIVE) {
-			start(dbms);
+			start();
         }
 		if (running) {
 			return OperResult.ALREADY_RUNNING;
@@ -336,10 +334,9 @@ public abstract class AbstractHarvester extends BaseAligner {
     /**
      * TODO Javadoc.
      *
-     * @param rm
      * @return
      */
-	public synchronized OperResult invoke(ResourceManager rm) {
+	public synchronized OperResult invoke() {
 		// Cannot do invoke if this harvester was started (iei active)
 		if (status != Status.INACTIVE){
 			return OperResult.ALREADY_ACTIVE;
@@ -350,11 +347,9 @@ public abstract class AbstractHarvester extends BaseAligner {
 		try {
 			status = Status.ACTIVE;
 			log.info("Started harvesting from node : " + nodeName);
-			doHarvest(log, rm);
+			doHarvest(log);
 			log.info("Ended harvesting from node : " + nodeName);
-			rm.close();
-		}
-		catch(Throwable t) {
+		} catch(Throwable t) {
             context.getMonitorManager().getCounter(AbstractHarvesterErrorCounter.class).inc();
 			result = OperResult.ERROR;
 			log.warning("Raised exception while harvesting from : " + nodeName);
@@ -362,16 +357,7 @@ public abstract class AbstractHarvester extends BaseAligner {
 			log.warning(" (C) Message : " + t.getMessage());
 			error = t;
 			t.printStackTrace();
-
-			try {
-				rm.abort();
-			}
-			catch (Exception ex) {
-				log.warning("CANNOT ABORT EXCEPTION");
-				log.warning(" (C) Exc : " + ex);
-			}
-		}
-        finally {
+		} finally {
 			status = Status.INACTIVE;
 		}
 		return result;
@@ -380,14 +366,13 @@ public abstract class AbstractHarvester extends BaseAligner {
     /**
      * TODO Javadoc.
      *
-     * @param dbms
      * @param node
      * @throws BadInputEx
      * @throws SQLException
      * @throws SchedulerException
      */
-	public synchronized void update(Dbms dbms, Element node) throws BadInputEx, SQLException, SchedulerException {
-		doUpdate(dbms, id, node);
+	public synchronized void update(Element node) throws BadInputEx, SQLException, SchedulerException {
+		doUpdate(id, node);
 
 		if (status == Status.ACTIVE) {
 			//--- stop executor
@@ -420,7 +405,7 @@ public abstract class AbstractHarvester extends BaseAligner {
 		doAddInfo(node);
 
 		//--- add error information
-		if (error != null){
+		if (error != null) {
 			node.addContent(JeevesException.toElement(error));
 	}
 	}
@@ -436,7 +421,15 @@ public abstract class AbstractHarvester extends BaseAligner {
 		info.addContent(new Element("type").setText(getType()));
 	}
 
-	//---------------------------------------------------------------------------
+    private void setContext(ServiceContext context) {
+        this.context = context;
+    }
+
+    protected ServiceContext getContext() {
+        return context;
+    }
+
+    //---------------------------------------------------------------------------
 	//---
 	//--- Package methods (called by Executor)
 	//---
@@ -446,19 +439,16 @@ public abstract class AbstractHarvester extends BaseAligner {
      *  Nested class to handle harvesting with fast indexing.
      */
 	public class HarvestWithIndexProcessor extends MetadataIndexerProcessor {
-		ResourceManager rm;
 		Logger logger;
 
         /**
          *
          * @param dm
          * @param logger
-         * @param rm
          */
-		public HarvestWithIndexProcessor(DataManager dm, Logger logger, ResourceManager rm) {
+		public HarvestWithIndexProcessor(DataManager dm, Logger logger) {
 			super(dm);
 			this.logger = logger;
-			this.rm = rm;
 		}
 
         /**
@@ -467,7 +457,7 @@ public abstract class AbstractHarvester extends BaseAligner {
          */
 		@Override
 		public void process() throws Exception {
-			doHarvest(logger, rm);
+			doHarvest(logger);
 		}
 	}
 	
@@ -507,83 +497,76 @@ public abstract class AbstractHarvester extends BaseAligner {
     /**
      *
      */
-	void harvest()  {
-	    running = true;
-	    long startTime = System.currentTimeMillis();
-	    try {
+    void harvest() {
+        running = true;
+        long startTime = System.currentTimeMillis();
+        try {
             error = null;
-		ResourceManager rm = new ResourceManager(context.getMonitorManager(), context.getProviderManager());
-		Logger logger = Log.createLogger(Geonet.HARVESTER);
+            Logger logger = Log.createLogger(Geonet.HARVESTER);
+            String nodeName = getParams().name + " (" + getClass().getSimpleName() + ")";
             String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
-		String nodeName = getParams().name +" ("+ getClass().getSimpleName() +")";
-		    try {
-		login();
-			Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
+            final TransactionManager transactionManager = context.getBean(TransactionManager.class);
+            transactionManager.begin();
+            try {
+                login();
 
-			//--- update lastRun
-			settingMan.setValue(dbms, "harvesting/id:"+ id +"/info/lastRun", lastRun);
+                //--- update lastRun
+                settingMan.setValue("harvesting/id:" + id + "/info/lastRun", lastRun);
 
-			//--- proper harvesting
-			logger.info("Started harvesting from node : "+ nodeName);
-			HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger, rm);
-			    // todo check (was: processwithfastindexing)
-			h.process();
-			logger.info("Ended harvesting from node : "+ nodeName);
+                //--- proper harvesting
+                logger.info("Started harvesting from node : " + nodeName);
+                HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger);
+                // todo check (was: processwithfastindexing)
+                h.process();
+                logger.info("Ended harvesting from node : " + nodeName);
 
-			    if (getParams().oneRunOnly){
-				stop(dbms);
+                if (getParams().oneRunOnly) {
+                    stop();
                 }
-			rm.close();
-		}
-            catch(Throwable t) {
-			logger.warning("Raised exception while harvesting from : "+ nodeName);
-			logger.warning(" (C) Class   : "+ t.getClass().getSimpleName());
-			logger.warning(" (C) Message : "+ t.getMessage());
-			error = t;
-			t.printStackTrace();
+            } catch (Throwable t) {
+                logger.warning("Raised exception while harvesting from : " + nodeName);
+                logger.warning(" (C) Class   : " + t.getClass().getSimpleName());
+                logger.warning(" (C) Message : " + t.getMessage());
+                error = t;
+                t.printStackTrace();
                 try {
-				rm.abort();
-			}
-                catch (Exception ex) {
-				logger.warning("CANNOT ABORT EXCEPTION");
-				logger.warning(" (C) Exc : "+ ex);
-			}
-		}
-        long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
+                    transactionManager.rollback();
+                } catch (Exception ex) {
+                    logger.warning("CANNOT ABORT EXCEPTION");
+                    logger.warning(" (C) Exc : " + ex);
+                }
+            } finally {
+                transactionManager.commit();
+            }
+            long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
 
             // record the results/errors for this harvest in the database
-		Dbms dbms = null;
-		try {
-			dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
-			Element result = getResult();
-			if (error != null) result = JeevesException.toElement(error);
-			HarvesterHistoryDao.write(dbms, context.getSerialFactory(), getType(), getParams().name, getParams().uuid, elapsedTime, lastRun, getParams().node, result);
+            try {
+                Element result = getResult();
+                if (error != null) result = JeevesException.toElement(error);
+                final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
+                final HarvestHistory history = new HarvestHistory()
+                        .setHarvesterType(getType())
+                        .setHarvesterName(getParams().name)
+                        .setHarvesterUuid(getParams().uuid)
+                        .setElapsedTime((int) elapsedTime)
+                        .setHarvestDate(new ISODate(lastRun))
+                        .setParams(Xml.getString(getParams().node));
+                historyRepository.save(history);
+            } catch (Exception e) {
+                logger.warning("Raised exception while attempting to store harvest history from : " + nodeName);
+                e.printStackTrace();
+                logger.warning(" (C) Exc   : " + e);
             }
-            catch (Exception e) {
-			logger.warning("Raised exception while attempting to store harvest history from : "+ nodeName);
-			e.printStackTrace();
-			logger.warning(" (C) Exc   : "+ e);
-            }
-            finally {
-			try {
-                    if (dbms != null) {
-                        rm.close(Geonet.Res.MAIN_DB, dbms);
-                    }
-                }
-                catch (Exception dbe) {
-				dbe.printStackTrace();
-				logger.error("Raised exception while attempting to close dbms connection to harvest history table");
-				logger.error(" (C) Exc   : "+ dbe);
-			}
-		}
-	    }
-        finally {
-	        running  = false;
-	    }
+        } catch (Exception e) {
+           Log.error(Geonet.HARVESTER, "Error occurred opening transaction manager", e);
+        } finally {
+            running = false;
+        }
 
-	}
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 	//---
 	//--- Abstract methods that must be overridden
 	//---
@@ -612,10 +595,9 @@ public abstract class AbstractHarvester extends BaseAligner {
 
     /**
      *
-     * @param dbms
      * @throws SQLException
      */
-    protected void doDestroy(Dbms dbms) throws SQLException {
+    protected void doDestroy() throws SQLException {
         File icon = new File(Resources.locateLogosDir(context), params.uuid +".gif");
 
         if (!icon.delete() && icon.exists()) {
@@ -629,23 +611,21 @@ public abstract class AbstractHarvester extends BaseAligner {
 
     /**
      *
-     * @param dbms
      * @param node
      * @return
      * @throws BadInputEx
      * @throws SQLException
      */
-	protected abstract String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException;
+	protected abstract String doAdd(Element node) throws BadInputEx, SQLException;
 
     /**
      *
-     * @param dbms
      * @param id
      * @param node
      * @throws BadInputEx
      * @throws SQLException
      */
-	protected abstract void doUpdate(Dbms dbms, String id, Element node) throws BadInputEx, SQLException;
+	protected abstract void doUpdate(String id, Element node) throws BadInputEx, SQLException;
 
     /**
      *
@@ -667,10 +647,9 @@ public abstract class AbstractHarvester extends BaseAligner {
     /**
      *
      * @param l
-     * @param rm
      * @throws Exception
      */
-	protected abstract void doHarvest(Logger l, ResourceManager rm) throws Exception;
+	protected abstract void doHarvest(Logger l) throws Exception;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -681,74 +660,72 @@ public abstract class AbstractHarvester extends BaseAligner {
     /**
      * Invoked from doAdd and doUpdate in sub class implementations.
      *
-     * @param dbms
      * @param params
      * @param path
      * @throws SQLException
      */
-	protected void storeNode(Dbms dbms, AbstractParams params, String path) throws SQLException {
-		String siteId    = settingMan.add(dbms, path, "site",    "");
-		String optionsId = settingMan.add(dbms, path, "options", "");
-		String infoId    = settingMan.add(dbms, path, "info",    "");
-		String contentId = settingMan.add(dbms, path, "content", "");
+	protected void storeNode(AbstractParams params, String path) throws SQLException {
+		String siteId    = settingMan.add(path, "site",    "");
+		String optionsId = settingMan.add(path, "options", "");
+		String infoId    = settingMan.add(path, "info",    "");
+		String contentId = settingMan.add(path, "content", "");
 
 		//--- setup site node ----------------------------------------
 
-		settingMan.add(dbms, "id:"+siteId, "name",     params.name);
-		settingMan.add(dbms, "id:"+siteId, "uuid",     params.uuid);
+		settingMan.add("id:"+siteId, "name",     params.name);
+		settingMan.add("id:"+siteId, "uuid",     params.uuid);
 
         /**
          * User who created or updated this node.
          */
-        settingMan.add(dbms, "id:"+siteId, "ownerId", params.ownerId);
+        settingMan.add("id:"+siteId, "ownerId", params.ownerId);
         /**
          * Group selected by user who created or updated this node.
          */
-        settingMan.add(dbms, "id:"+siteId, "ownerGroup", params.ownerIdGroup);
+        settingMan.add("id:"+siteId, "ownerGroup", params.ownerIdGroup);
 
-		String useAccId = settingMan.add(dbms, "id:"+siteId, "useAccount", params.useAccount);
+		String useAccId = settingMan.add("id:"+siteId, "useAccount", params.useAccount);
 
-		settingMan.add(dbms, "id:"+useAccId, "username", params.username);
-		settingMan.add(dbms, "id:"+useAccId, "password", params.password);
+		settingMan.add("id:"+useAccId, "username", params.username);
+		settingMan.add("id:"+useAccId, "password", params.password);
 
 		//--- setup options node ---------------------------------------
 
-		settingMan.add(dbms, "id:"+optionsId, "every",      params.every);
-		settingMan.add(dbms, "id:"+optionsId, "oneRunOnly", params.oneRunOnly);
-		settingMan.add(dbms, "id:"+optionsId, "status",     status);
+		settingMan.add("id:"+optionsId, "every",      params.every);
+		settingMan.add("id:"+optionsId, "oneRunOnly", params.oneRunOnly);
+		settingMan.add("id:"+optionsId, "status",     status);
 
 		//--- setup content node ---------------------------------------
 
-		settingMan.add(dbms, "id:"+contentId, "importxslt", params.importXslt);
-		settingMan.add(dbms, "id:"+contentId, "validate",   params.validate);
+		settingMan.add("id:"+contentId, "importxslt", params.importXslt);
+		settingMan.add("id:"+contentId, "validate",   params.validate);
 
 		//--- setup stats node ----------------------------------------
 
-		settingMan.add(dbms, "id:"+infoId, "lastRun", "");
+		settingMan.add("id:"+infoId, "lastRun", "");
 
 		//--- store privileges and categories ------------------------
 
-		storePrivileges(dbms, params, path);
-		storeCategories(dbms, params, path);
+		storePrivileges(params, path);
+		storeCategories(params, path);
 
-		storeNodeExtra(dbms, params, path, siteId, optionsId);
+		storeNodeExtra(params, path, siteId, optionsId);
 	}
 
     /**
      * Override this method with an empty body to avoid privileges storage.
      *
-     * @param dbms
      * @param params
      * @param path
      * @throws SQLException
      */
-	protected void storePrivileges(Dbms dbms, AbstractParams params, String path) throws SQLException {
-		String privId = settingMan.add(dbms, path, "privileges", "");
+	protected void storePrivileges(AbstractParams params, String path) throws SQLException {
+		String privId = settingMan.add(path, "privileges", "");
 
 		for (Privileges p : params.getPrivileges()) {
-			String groupId = settingMan.add(dbms, "id:"+ privId, "group", p.getGroupId());
+			String groupId = settingMan.add("id:"+ privId, "group", p.getGroupId());
 			for (int oper : p.getOperations()) {
-				settingMan.add(dbms, "id:"+ groupId, "operation", oper);
+				settingMan.add("id:"+ groupId, "operation", oper);
 		    }
 	    }
 	}
@@ -756,16 +733,15 @@ public abstract class AbstractHarvester extends BaseAligner {
     /**
      * Override this method with an empty body to avoid categories storage.
      *
-     * @param dbms
      * @param params
      * @param path
      * @throws SQLException
      */
-	protected void storeCategories(Dbms dbms, AbstractParams params, String path) throws SQLException {
-		String categId = settingMan.add(dbms, path, "categories", "");
+	protected void storeCategories(AbstractParams params, String path) throws SQLException {
+		String categId = settingMan.add(path, "categories", "");
 
 		for (String id : params.getCategories()) {
-			settingMan.add(dbms, "id:"+ categId, "category", id);
+			settingMan.add("id:"+ categId, "category", id);
 	}
 	}
 
@@ -773,14 +749,13 @@ public abstract class AbstractHarvester extends BaseAligner {
      *  Override this method to store harvesting node's specific settings.
      *
      *
-     * @param dbms
      * @param params
      * @param path
      * @param siteId
      * @param optionsId
      * @throws SQLException
      */
-	protected void storeNodeExtra(Dbms dbms, AbstractParams params, String path, String siteId, String optionsId) throws SQLException {}
+	protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {}
 
     /**
      *

@@ -9,14 +9,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Tuple;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Root;
+import javax.persistence.*;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +77,16 @@ public class MetadataRepositoryImpl implements MetadataRepositoryCustom {
 
         cbQuery.where(spec.toPredicate(root, cbQuery, cb));
         return _entityManager.createQuery(cbQuery).getResultList();
+    }
+
+    @Override
+    public Metadata findOneOldestByChangeDate() {
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Metadata> query = cb.createQuery(Metadata.class);
+        final Root<Metadata> metadataRoot = query.from(Metadata.class);
+        final Path<ISODate> changeDate = metadataRoot.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate);
+        query.orderBy(cb.asc(changeDate));
+        return _entityManager.createQuery(query).setMaxResults(1).getSingleResult();
     }
 
 }

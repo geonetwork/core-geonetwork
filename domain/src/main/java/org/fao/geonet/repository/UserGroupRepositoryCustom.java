@@ -3,6 +3,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.Collection;
 import java.util.List;

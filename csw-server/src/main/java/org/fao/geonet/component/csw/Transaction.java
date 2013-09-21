@@ -23,7 +23,6 @@
 
 package org.fao.geonet.component.csw;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -172,7 +171,7 @@ private SearchController _searchController;
 		finally
 		{
             try {
-                dataMan.indexInThreadPool(context, new ArrayList<String>(toIndex), null);
+                dataMan.indexInThreadPool(context, new ArrayList<String>(toIndex));
             } catch (SQLException e) {
                 Log.error(Geonet.CSW, "cannot index");
                 Log.error(Geonet.CSW, " (C) StackTrace\n" + Util.getStackTrace(e));
@@ -245,15 +244,14 @@ private SearchController _searchController;
 		int userId = us.getUserIdAsInt();
 
         AccessManager am = gc.getBean(AccessManager.class);
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         // Set default group: user first group
-        Set<String> userGroups = am.getVisibleGroups(dbms, userId);
+        Set<Integer> userGroups = am.getVisibleGroups(userId);
         String group;
 		if (userGroups.isEmpty()) {
 			group = null;
 		} else {
-			group = (String) userGroups.iterator().next();
+			group = userGroups.iterator().next().toString();
 		}
         //
         // insert metadata
@@ -268,22 +266,21 @@ private SearchController _searchController;
         boolean metadataPublic = sm.getValueAsBool("system/csw/metadataPublic", false);
 
         if (metadataPublic) {
-            dataMan.setOperation(context, dbms, id, "1", ReservedOperation.view);
+            dataMan.setOperation(context, id, "1", ReservedOperation.view);
         }
 
 
         // Privileges for the user group that inserts the metadata (same permissions as when inserting xml file from UI)
         if (group != null) {
             for (ReservedOperation op : ReservedOperation.values()) {
-                dataMan.unsetOperation(context, dbms, id, group, op);
+                dataMan.unsetOperation(context, id, group, op);
             }
         }
 
-		dataMan.indexMetadata(dbms, id);
+		dataMan.indexMetadata(id);
 		
 		fileIds.add( uuid );
 		
-		dbms.commit();
         toIndex.add(id);
 		return true;
 	}
@@ -321,8 +318,6 @@ private SearchController _searchController;
             }
 
             // Retrieve the metadata identifier
-            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 
             String uuid = gc.getBean(DataManager.class).extractUUID(schemaId, xml);
 
@@ -331,7 +326,7 @@ private SearchController _searchController;
             }
 
              // Update metadata record
-            String id = dataMan.getMetadataId(dbms, uuid);
+            String id = dataMan.getMetadataId(uuid);
 
             if (id == null)
                 return totalUpdated;
@@ -345,9 +340,8 @@ private SearchController _searchController;
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, changeDate, false);
+            dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate, false);
 
-            dbms.commit();
             toIndex.add(id);
 
            totalUpdated++;
@@ -369,15 +363,13 @@ private SearchController _searchController;
             if( !it.hasNext() )
                 return totalUpdated;
 
-            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
             Set<String> updatedMd = new HashSet<String>();
             // Process all records selected
             while( it.hasNext() )
             {
                 Element result = it.next();
                 String uuid = result.getChildText("identifier", Csw.NAMESPACE_DC);
-                String id = dataMan.getMetadataId(dbms, uuid);
+                String id = dataMan.getMetadataId(uuid);
                 String changeDate = null;
 
                 if( id == null )
@@ -444,7 +436,7 @@ private SearchController _searchController;
                     boolean ufo = false;
                     boolean index = false;
                     String language = context.getLanguage();
-                    dataMan.updateMetadata(context, dbms, id, metadata, validate, ufo, index, language, changeDate, false);
+                    dataMan.updateMetadata(context, id, metadata, validate, ufo, index, language, changeDate, false);
 
                     updatedMd.add(id);
 
@@ -452,7 +444,6 @@ private SearchController _searchController;
                 }
 
             }
-            dbms.commit();
             toIndex.addAll(updatedMd);
 
            return totalUpdated;
@@ -486,22 +477,22 @@ private SearchController _searchController;
 		if( !i.hasNext() )
 			return	deleted;
 		
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		
 		// delete all matching records
 		while( i.hasNext() )
 		{
 			Element result = i.next();
 			String uuid = result.getChildText("identifier", Csw.NAMESPACE_DC);
-			String id = dataMan.getMetadataId(dbms, uuid);
+			String id = dataMan.getMetadataId(uuid);
 			
-			if( id == null )
+			if( id == null ) {
 				return deleted;
+            }
 			
-			if (!dataMan.getAccessManager().canEdit(context, id))
+			if (!dataMan.getAccessManager().canEdit(context, id)) {
 				throw new NoApplicableCodeEx("User not allowed to delete metadata : "+id);
+            }
 	
-			dataMan.deleteMetadata(context, dbms, id);
+			dataMan.deleteMetadata(context, id);
 			deleted++;
 		}
 		

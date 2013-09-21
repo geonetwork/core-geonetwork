@@ -1,7 +1,6 @@
 package org.fao.geonet.kernel.harvest;
 
 import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -20,12 +19,11 @@ public abstract class BaseAligner {
      * @param categories
      * @param localCateg
      * @param dataMan
-     * @param dbms
      * @param context
      * @param log
      * @throws Exception
      */
-    protected void addCategories(String id, Iterable<String> categories, CategoryMapper localCateg, DataManager dataMan, Dbms dbms, ServiceContext context, Logger log, String serverCategory) throws Exception {
+    protected void addCategories(String id, Iterable<String> categories, CategoryMapper localCateg, DataManager dataMan, ServiceContext context, Logger log, String serverCategory) throws Exception {
         for(String catId : categories)  {
             String name = localCateg.getName(catId);
 
@@ -38,7 +36,7 @@ public abstract class BaseAligner {
                 if(log.isDebugEnabled()) {
                     log.debug("    - Setting category : "+ name);
                 }
-                dataMan.setCategory(context, dbms, id, catId);
+                dataMan.setCategory(context, id, catId);
             }
         }
 
@@ -46,9 +44,8 @@ public abstract class BaseAligner {
             String catId = localCateg.getID(serverCategory);
             if (catId == null) {
                 if(log.isDebugEnabled()) log.debug("    - Skipping removed category :" + serverCategory);
-            }
-            else {
-                dataMan.setCategory(context, dbms, id, catId);
+            } else {
+                dataMan.setCategory(context, id, catId);
             }
         }
     }
@@ -60,11 +57,10 @@ public abstract class BaseAligner {
      * @param localGroups
      * @param dataMan
      * @param context
-     * @param dbms
      * @param log
      * @throws Exception
      */
-    protected void addPrivileges(String id, Iterable<Privileges> privilegesIterable, GroupMapper localGroups, DataManager dataMan, ServiceContext context, Dbms dbms, Logger log) throws Exception {
+    protected void addPrivileges(String id, Iterable<Privileges> privilegesIterable, GroupMapper localGroups, DataManager dataMan, ServiceContext context, Logger log) throws Exception {
         for (Privileges priv : privilegesIterable) {
             String name = localGroups.getName(priv.getGroupId());
 
@@ -86,7 +82,7 @@ public abstract class BaseAligner {
                         if(log.isDebugEnabled()) {
                             log.debug("       --> "+ name);
                         }
-                        dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId +"");
+                        dataMan.setOperation(context, id, priv.getGroupId(), opId +"");
                     }
                     else {
                         if(log.isDebugEnabled()) {

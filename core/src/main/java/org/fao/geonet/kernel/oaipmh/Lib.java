@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.oaipmh;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
@@ -33,6 +32,7 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.oaipmh.exceptions.IdDoesNotExistException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.jdom.Element;
@@ -53,25 +53,6 @@ public class Lib
 	//---
 	//--- API methods
 	//---
-	//---------------------------------------------------------------------------
-
-	public static String getMetadataSchema(ServiceContext context, String uuid) throws Exception
-	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		String query = "SELECT schemaId FROM Metadata WHERE uuid=?";
-
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, uuid).getChildren();
-
-		if (list.isEmpty())
-			throw new IdDoesNotExistException(uuid);
-
-		Element elem = list.get(0);
-
-		return elem.getChildText("schemaid");
-	}
-
 	//---------------------------------------------------------------------------
 
 	public static boolean existsConverter(String schemaDir, String prefix) {

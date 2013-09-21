@@ -57,6 +57,7 @@ public class MetadataValidationRepositoryTest extends AbstractSpringDataTest {
         final List<MetadataValidation> all = _metadataValidationRepository.findAll();
         assertEquals(1, all.size());
         assertEquals(val3.getId(), all.get(0).getId());
+        assertNull(_metadataValidationRepository.findOne(val1.getId()));
     }
 
     private MetadataValidation newValidation() {

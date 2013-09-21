@@ -2,16 +2,24 @@ package org.fao.geonet.services.harvesting;
 
 
 import jeeves.constants.Jeeves;
+import org.fao.geonet.domain.HarvestHistory;
+import org.fao.geonet.domain.HarvestHistory_;
 import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.HarvesterHistoryDao;
+import org.fao.geonet.repository.HarvestHistoryRepository;
+import org.fao.geonet.repository.specification.HarvestHistorySpecs;
 import org.jdom.Element;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
+
+import static org.fao.geonet.repository.specification.HarvestHistorySpecs.hasHarvesterUuid;
 
 
 public class History  implements Service
@@ -39,23 +47,31 @@ public class History  implements Service
 		String sortCriteria = "date";
 		if ((sort != null) && (sort.equals("type"))) sortCriteria = "type";
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        final Sort.Order harvestDateOrder = new Sort.Order(Sort.Direction.DESC, HarvestHistory_.harvestDate.getName());
+        final Sort.Order harvesterUuidOrder = new Sort.Order(HarvestHistory_.harvesterUuid.getName());
+        final Sort.Order harvesterTypeSort = new Sort.Order(HarvestHistory_.harvesterType.getName());
 
-		Element result = null;
-		if ((uuid == null) || (uuid.equals(""))) {
-			result = HarvesterHistoryDao.retrieveSort(dbms, sortCriteria);
+        Element result = null;
+        if ((uuid == null) || (uuid.equals(""))) {
+            Sort springSort;
+            if (sortCriteria.equals("date")) {
+                springSort = new Sort(harvestDateOrder, harvesterUuidOrder);
+            } else {
+                springSort = new Sort(harvesterTypeSort, harvestDateOrder);
+            }
+            result = historyRepository.findAllAsXml(springSort);
 		} else {
-      result = HarvesterHistoryDao.retrieve(dbms, uuid);
-    }
+            result = historyRepository.findAllAsXml(hasHarvesterUuid(uuid), new Sort(harvestDateOrder, harvesterUuidOrder));
+        }
 
 
 
-		if (result != null) {
+		if (!result.getChildren().isEmpty()) {
 			String id = params.getChildText("id");
 
-			Element harvesterInfo = gc.getBean(HarvestManager.class).get(id, context, null);
+			Element harvesterInfo = context.getBean(HarvestManager.class).get(id, context, null);
 			Element response = new Element(Jeeves.Elem.RESPONSE);
 
 			response.addContent(result.detach());

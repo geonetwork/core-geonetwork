@@ -27,8 +27,10 @@ import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.oaipmh.requests.AbstractRequest;
 import org.fao.oaipmh.requests.IdentifyRequest;
 import org.fao.oaipmh.responses.AbstractResponse;
@@ -72,21 +74,13 @@ public class Identify implements OaiPmhService
 
 	private ISODate getEarliestDS(ServiceContext context) throws Exception
 	{
-		String query = "SELECT min(changeDate) as mcd FROM Metadata";
-
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query).getChildren();
+        final Metadata oldestByChangeDate = context.getBean(MetadataRepository.class).findOneOldestByChangeDate();
 
 		//--- if we don't have metadata, just return 'now'
-		if (list.isEmpty())
+		if (oldestByChangeDate == null)
 			return new ISODate();
 
-		Element rec = list.get(0);
-	
-		String date = rec.getChildText("mcd");
-		if (date == null || date.equals("")) return new ISODate();
-
-		return new ISODate(date);
+		return oldestByChangeDate.getDataInfo().getChangeDate();
 	}
 }
 

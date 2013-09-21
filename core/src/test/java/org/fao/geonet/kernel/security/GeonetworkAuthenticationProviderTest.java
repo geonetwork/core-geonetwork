@@ -1,6 +1,5 @@
 package org.fao.geonet.kernel.security;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.resources.ResourceManager;
 import junit.framework.TestCase;
 
@@ -19,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Random;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -42,7 +42,6 @@ public class GeonetworkAuthenticationProviderTest {
     //
 
     private UsernamePasswordAuthenticationToken authentication;
-    private Dbms dbms;
     private ApplicationContext applicationContext;
 
     /**
@@ -53,13 +52,6 @@ public class GeonetworkAuthenticationProviderTest {
      */
     @Before
     public void setUp() throws Exception{
-        dbms = mock(Dbms.class);
-        ResourceManager resourceManager = mock(ResourceManager.class);
-        when(resourceManager.openDirect(Geonet.Res.MAIN_DB)).thenReturn(dbms);
-
-        applicationContext = mock(ApplicationContext.class);
-        when(applicationContext.getBean(ResourceManager.class)).thenReturn(resourceManager);
-
         geonetworkAuthenticationProvider = new GeonetworkAuthenticationProvider();
     }
 
@@ -70,7 +62,8 @@ public class GeonetworkAuthenticationProviderTest {
      */
     private void userNotFoundSetup() throws Exception{
         Element response = new Element("response");
-        when(dbms.select(anyString(), anyString())).thenReturn(response);
+        fail("not implemented");
+//        when(dbms.select(anyString(), anyString())).thenReturn(response);
     }
 
     @Test(expected = UsernameNotFoundException.class)
@@ -104,7 +97,8 @@ public class GeonetworkAuthenticationProviderTest {
         Element security = new Element(UserSecurityNotification.HASH_UPDATE_REQUIRED.name());
         record.addContent(security);
         response.addContent(record);
-        when(dbms.select(anyString(), anyString())).thenReturn(response);
+//        when(dbms.select(anyString(), anyString())).thenReturn(response);
+        fail("Not updated");
     }
 
     @Test

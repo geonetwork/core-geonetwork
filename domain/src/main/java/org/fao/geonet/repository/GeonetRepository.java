@@ -78,8 +78,25 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
      *     </pre>
      *
      * @param specification A specification of the criteria that must be satisfied for entity to be selected.
+     * @param sort the order to sort the results by
+     *
      * @return  all entities in XML.
      */
     @Nonnull
     Element findAllAsXml(@Nullable Specification<T> specification, @Nullable Sort sort);
+
+    /**
+     * Load all entities that satisfy the criteria provided and convert each to XML of the form:
+     *     <pre>
+     *  &lt;entityName&gt;
+     *      &lt;property&gt;propertyValue&lt;/property&gt;
+     *      ...
+     *  &lt;/entityName&gt;
+     *     </pre>
+     *
+     * @param sort the order to sort the results by
+     * @return  all entities in XML.
+     */
+    @Nonnull
+    Element findAllAsXml(@Nullable Sort sort);
 }

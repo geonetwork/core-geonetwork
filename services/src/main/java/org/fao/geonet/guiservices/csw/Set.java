@@ -31,14 +31,12 @@ import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Language;
-import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
+import org.fao.geonet.repository.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.LanguageRepository;
 import org.jdom.Element;
 
 import java.util.List;
-import java.util.Map;
 
 
 public class Set implements Service {
@@ -80,7 +78,7 @@ public class Set implements Service {
         List<Language> languages = gc.getBean(LanguageRepository.class).findAll();
 
         for (Language language : languages) {
-            CswCapabilitiesInfo cswCapInfo = new CswCapabilitiesInfo();
+            CswCapabilitiesInfo cswCapInfo = new CswCapabilitiesInfo(allFieldsForLang);
 
             final String langId = language.getId();
             cswCapInfo.setLangId(langId);

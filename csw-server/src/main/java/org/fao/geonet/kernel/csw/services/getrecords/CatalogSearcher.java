@@ -40,7 +40,6 @@ import java.util.StringTokenizer;
 import javax.annotation.Nonnull;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -75,6 +74,7 @@ import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.SearchExpiredEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.region.Region;
@@ -716,23 +716,16 @@ public class CatalogSearcher implements MetadataRecordSelector {
 	 * search.
 	 */
 	public static Query getGroupsQuery(ServiceContext context) throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
-
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		AccessManager am = gc.getBean(AccessManager.class);
-		Set<String> hs = am.getUserGroups(dbms, context.getUserSession(),
-				context.getIpAddress(), false);
+		AccessManager am = context.getBean(AccessManager.class);
+		Set<Integer> hs = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
 
 		BooleanQuery query = new BooleanQuery();
 
-		String operView = "_op0";
 
 		BooleanClause.Occur occur = LuceneUtils
 				.convertRequiredAndProhibitedToOccur(false, false);
-		for (Object group : hs) {
-			TermQuery tq = new TermQuery(new Term(operView, group.toString()));
+		for (Integer groupId : hs) {
+			TermQuery tq = new TermQuery(new Term(ReservedOperation.view.getLuceneIndexCode(), groupId.toString()));
 			query.add(tq, occur);
 		}
 

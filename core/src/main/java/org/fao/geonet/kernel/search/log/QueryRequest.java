@@ -213,7 +213,7 @@ public class QueryRequest {
 		if (this.queryInfos != null) {
 			simpleQuery = true;
 			for (SearchRequestParam qi : this.queryInfos) {
-				if ( QueryInfo.MATCH_ALL_DOCS_QUERY.equals(qi.getQueryType()) ||
+				if ( LuceneQueryParamType.MATCH_ALL_DOCS == qi.getQueryType() ||
 				        !"any".equals(qi.getTermField()) &&
 						! "type".equals(qi.getTermField()) &&
 						! "_owner".equals(qi.getTermField()) &&

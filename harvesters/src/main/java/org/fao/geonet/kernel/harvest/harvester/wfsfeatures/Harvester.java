@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
 import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlElementReader;
@@ -44,10 +43,12 @@ import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.Fragme
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
+import javax.transaction.TransactionManager;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -126,15 +127,13 @@ class Harvester
      *  
      * @param log		
      * @param context									Jeeves context
-     * @param dbms 										Database
      * @param params	harvesting configuration for the node
      * 
      * @return null
      */
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, WfsFeaturesParams params) {
+	public Harvester(Logger log, ServiceContext context, WfsFeaturesParams params) {
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 
 		result = new HarvestResult ();
@@ -194,7 +193,8 @@ class Harvester
 		log.info("Retrieving metadata fragments for : " + params.name);
         
 		//--- collect all existing metadata uuids before we update
-		localUuids = new UUIDMapper(dbms, params.uuid);
+        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        localUuids = new UUIDMapper(metadataRepository, params.uuid);
 
 		//--- parse the xml query from the string - TODO: default should be 
 		//--- get everything
@@ -209,7 +209,7 @@ class Harvester
 		}
 
 		//--- harvest metadata and subtemplates from fragments using generic fragment harvester
-		FragmentHarvester fragmentHarvester = new FragmentHarvester(log, context, dbms, getFragmentHarvesterParams());
+		FragmentHarvester fragmentHarvester = new FragmentHarvester(log, context, getFragmentHarvesterParams());
 
 		if (params.streamFeatures) {
 			harvestFeatures(wfsQuery, fragmentHarvester);
@@ -329,7 +329,7 @@ class Harvester
 
 			if (!updatedMetadata.contains(uuid)) {	
 				String id = localUuids.getID(uuid);
-				dataMan.deleteMetadata(context, dbms, id);
+				dataMan.deleteMetadata(context, id);
 			
 				if (isTemplate.equals("s")) {
 					result.subtemplatesRemoved ++;
@@ -340,7 +340,7 @@ class Harvester
 		}
 		
 		if (result.subtemplatesRemoved + result.recordsRemoved > 0)  {
-			dbms.commit();
+			context.getBean(TransactionManager.class).commit();
 		}
     }
 
@@ -370,7 +370,6 @@ class Harvester
 
 	private Logger         log;
 	private ServiceContext context;
-	private Dbms           dbms;
 	private WfsFeaturesParams   params;
 	private DataManager    dataMan;
 	private SchemaManager  schemaMan;

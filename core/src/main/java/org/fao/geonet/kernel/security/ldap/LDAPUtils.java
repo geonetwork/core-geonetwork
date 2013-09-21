@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel.security.ldap;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,9 +51,7 @@ public class LDAPUtils {
 	 * Unique key constraint should return errors.
 	 * 
 	 * @param user
-	 * @param dbms
-	 * @param serialFactory 
-	 * @throws Exception 
+	 * @throws Exception
 	 */
     static void saveUser(LDAPUser user, UserRepository userRepo, GroupRepository groupRepo, UserGroupRepository userGroupRepo,
             boolean importPrivilegesFromLdap, boolean createNonExistingLdapGroup) throws Exception {
@@ -74,7 +73,7 @@ public class LDAPUtils {
 
             // Delete user groups
             if (importPrivilegesFromLdap) {
-                userGroupRepo.deleteAllByUserId(toSave.getId());
+                userGroupRepo.deleteAllWithUserIdsIn(Collections.singleton(toSave.getId()));
             }
         } else {
             if (Log.isDebugEnabled(Geonet.LDAP)) {
@@ -85,7 +84,7 @@ public class LDAPUtils {
 
 		// Add user groups
 		if (importPrivilegesFromLdap && !Profile.Administrator.equals(user.getUser().getProfile())) {
-		    userGroupRepo.deleteAllByUserId(user.getUser().getId());
+            userGroupRepo.deleteAllWithUserIdsIn(Collections.singleton(user.getUser().getId()));
 			for(Map.Entry<String, Profile> privilege : user.getPrivileges().entries()) {
 				// Add group privileges for each groups
 				

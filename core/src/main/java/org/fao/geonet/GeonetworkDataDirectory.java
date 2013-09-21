@@ -33,8 +33,6 @@ public class GeonetworkDataDirectory {
 	public static final String GEONETWORK_DIR_KEY = "geonetwork.dir";
 
 	private String systemDataDir;
-	private JeevesServlet jeevesServlet;
-    private JeevesApplicationContext appContext;
 
 	/**
 	 * Check and create if needed GeoNetwork data directory.
@@ -61,9 +59,8 @@ public class GeonetworkDataDirectory {
         if (Log.isDebugEnabled(Geonet.DATA_DIRECTORY))
             Log.debug(Geonet.DATA_DIRECTORY,
 				"Check and create if needed GeoNetwork data directory");
-		this.jeevesServlet = jeevesServlet;
-		this.appContext = appContext;
-		setDataDirectory(webappName, path, handlerConfig);
+		setDataDirectory(jeevesServlet, appContext, webappName, path, handlerConfig);
+        appContext.getBeanFactory().registerSingleton(GeonetworkDataDirectory.GEONETWORK_DIR_KEY, this);
 	}
 
 	/**
@@ -78,9 +75,7 @@ public class GeonetworkDataDirectory {
 	 * 
 	 * Inspired by GeoServer mechanism.
 	 * @param handlerConfig TODO
-	 * @param servContext
-	 *            The servlet context.
-	 * 
+	 *
 	 * @return String The absolute path to the data directory, or
 	 *         <code>null</code> if it could not be found.
 	 */
@@ -136,8 +131,8 @@ public class GeonetworkDataDirectory {
 	/**
 	 * 
 	 */
-	private String setDataDirectory(String webappName, String path,
-			ServiceConfig handlerConfig) {
+	private String setDataDirectory(JeevesServlet jeevesServlet, JeevesApplicationContext appContext, String webappName, String path,
+                                    ServiceConfig handlerConfig) {
 
 		// System property defined according to webapp name
 		systemDataDir = GeonetworkDataDirectory.lookupProperty(jeevesServlet,
@@ -201,13 +196,14 @@ public class GeonetworkDataDirectory {
 		Log.info(Geonet.DATA_DIRECTORY, "   - Data directory is: "
 				+ systemDataDir);
 		System.setProperty(webappName + KEY_SUFFIX + "", systemDataDir);
+
 		ConfigurableListableBeanFactory beanFactory = appContext.getBeanFactory();
         beanFactory.registerSingleton(webappName + KEY_SUFFIX + "", systemDataDir);
 
 		// Set subfolder data directory
-		setResourceDir(webappName, handlerConfig, systemDataDir, ".lucene" + KEY_SUFFIX,
+		setResourceDir(appContext, jeevesServlet, webappName, handlerConfig, systemDataDir, ".lucene" + KEY_SUFFIX,
 				"index", Geonet.Config.LUCENE_DIR);
-		File spatialIndexPath = setResourceDir("", handlerConfig, systemDataDir, "spatial" + KEY_SUFFIX,
+		File spatialIndexPath = setResourceDir(appContext, jeevesServlet, "", handlerConfig, systemDataDir, "spatial" + KEY_SUFFIX,
 		        "spatialindex", null);
 		try {
 		    // this is added for the shapefile-datastore.xml config file or other file based
@@ -216,21 +212,21 @@ public class GeonetworkDataDirectory {
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
-		setResourceDir(webappName, handlerConfig, systemDataDir, ".config" + KEY_SUFFIX,
+		setResourceDir(appContext, jeevesServlet, webappName, handlerConfig, systemDataDir, ".config" + KEY_SUFFIX,
 				"config", Geonet.Config.CONFIG_DIR);
-		setResourceDir(webappName, handlerConfig, systemDataDir,
+		setResourceDir(appContext, jeevesServlet, webappName, handlerConfig, systemDataDir,
 				".codeList" + KEY_SUFFIX, "config" + File.separator + "codelist",
 				Geonet.Config.CODELIST_DIR);
-		setResourceDir(webappName, handlerConfig, systemDataDir, ".schema" + KEY_SUFFIX,
+		setResourceDir(appContext, jeevesServlet, webappName, handlerConfig, systemDataDir, ".schema" + KEY_SUFFIX,
 				"config" + File.separator + "schema_plugins",
 				Geonet.Config.SCHEMAPLUGINS_DIR);
-		setResourceDir(webappName, handlerConfig, systemDataDir, ".data" + KEY_SUFFIX,
+		setResourceDir(appContext, jeevesServlet, webappName, handlerConfig, systemDataDir, ".data" + KEY_SUFFIX,
 				"data" + File.separator + "metadata_data",
 				Geonet.Config.DATA_DIR);
-		setResourceDir(webappName, handlerConfig, systemDataDir, ".svn" + KEY_SUFFIX,
+		setResourceDir(appContext, jeevesServlet, webappName, handlerConfig, systemDataDir, ".svn" + KEY_SUFFIX,
 				"data" + File.separator + "metadata_subversion",
 				Geonet.Config.SUBVERSION_PATH);
-		setResourceDir(webappName, handlerConfig, systemDataDir,
+		setResourceDir(appContext, jeevesServlet, webappName, handlerConfig, systemDataDir,
 				".resources" + KEY_SUFFIX, "data" + File.separator + "resources",
 				Geonet.Config.RESOURCES_DIR);
 
@@ -249,7 +245,6 @@ public class GeonetworkDataDirectory {
 	 * Checks if data directory is empty or not. If empty, add mandatory
 	 * elements (ie. codelist).
 	 * 
-	 * @param dataSystemDir
 	 * @param path
 	 */
 	private void initDataDirectory(String path, ServiceConfig handlerConfig) {
@@ -305,16 +300,18 @@ public class GeonetworkDataDirectory {
 	 * <geonetwork.dir>/folder and set the system property value. Create the
 	 * folder if does not exist.
 	 * 
-	 * @param webappName
-	 * @param handlerConfig
-	 * @param systemDataDir
-	 * @param key
-	 * @param folder
-	 * @param handlerKey
-	 * @return 
+	 *
+     * @param appContext
+     * @param jeevesServlet
+     *@param webappName
+     * @param handlerConfig
+     * @param systemDataDir
+     * @param key
+     * @param folder
+     * @param handlerKey       @return
 	 */
-	private File setResourceDir(String webappName, ServiceConfig handlerConfig,
-			String systemDataDir, String key, String folder, String handlerKey) {
+	private File setResourceDir(JeevesApplicationContext appContext, JeevesServlet jeevesServlet, String webappName, ServiceConfig handlerConfig,
+                                String systemDataDir, String key, String folder, String handlerKey) {
 		String envKey = webappName + key;
 		String dir = GeonetworkDataDirectory.lookupProperty(
 				jeevesServlet, handlerConfig, envKey);
@@ -344,4 +341,7 @@ public class GeonetworkDataDirectory {
 		return file;
 	}
 
+    public String getSystemDataDir() {
+        return systemDataDir;
+    }
 }

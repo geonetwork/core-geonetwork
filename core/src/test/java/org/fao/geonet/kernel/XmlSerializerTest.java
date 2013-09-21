@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.*;
 import static org.mockito.Matchers.anyVararg;
 import static org.mockito.Mockito.doCallRealMethod;
@@ -14,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 
@@ -47,17 +47,15 @@ public class XmlSerializerTest {
 			throw new UnsupportedOperationException();
 		}
 
+
 		@Override
-		public String insert(String schema, Element xml, int serial,
-                             String source, String uuid, String createDate,
-                             String changeDate, String isTemplate, String title, int owner,
-                             String groupOwner, String docType, ServiceContext context)
+		public Metadata insert(Metadata metadata, Element dataXml, ServiceContext context)
 				throws Exception {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public Metadata select(String id)
+		public Element select(String id)
 				throws Exception {
 			throw new UnsupportedOperationException();
 		}
@@ -69,9 +67,9 @@ public class XmlSerializerTest {
 		}
 		
 		@Override
-		public Element internalSelect(Dbms dbms, String table, String id, boolean isIndexingTask)
+		public Element internalSelect(String id, boolean isIndexingTask)
 				throws Exception {
-			return super.internalSelect(dbms, table, id, isIndexingTask);
+			return super.internalSelect(id, isIndexingTask);
 		}
 
 	}
@@ -124,13 +122,12 @@ public class XmlSerializerTest {
 		
 		SettingManager settingManager = mockSettingManager(true, false);
 		XmlSerializer xmlSerializer = new DummyXmlSerializer(settingManager);
-		
-		Dbms dbms = mockDbms();
-		
-		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", false);
+
+		Element loadedMetadata = xmlSerializer.internalSelect("1", false);
 		List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
 
 		assertEquals(0, withheld.size());
+        fail("Not updated");
 	}
 
 	@Test
@@ -147,9 +144,6 @@ public class XmlSerializerTest {
 		assertHiddenElements(false);
 	}
 
-	/**
-	 * @param userId null if not logged in non-null to login
-	 */
 	private ServiceContext mockServiceContext(boolean canEdit) throws Exception{//boolean isAdmin, String userId) {
         ServiceContext context = mock(ServiceContext.class);
         doCallRealMethod().when(context).setAsThreadLocal();
@@ -182,9 +176,7 @@ public class XmlSerializerTest {
 		SettingManager settingManager = mockSettingManager(isEnabled);
 		XmlSerializer xmlSerializer = new DummyXmlSerializer(settingManager);
 		
-		Dbms dbms = mockDbms();
-		
-		Element loadedMetadata = xmlSerializer.internalSelect(dbms, "metadata", "1", false);
+		Element loadedMetadata = xmlSerializer.internalSelect("1", false);
 		List<?> resolutionElem = Xml.selectNodes(loadedMetadata, "*//gmd:MD_Resolution", Arrays.asList(Geonet.Namespaces.GMD));
 		assertEquals(numberMdResolution, resolutionElem.size());
 		
@@ -205,17 +197,6 @@ public class XmlSerializerTest {
 		if(checkElementsAreHidden) {
 			assertEquals("", withheld.get(0).getText());
 		}
-	}
-
-	private Dbms mockDbms() throws SQLException {
-		Element record = new Element(Jeeves.Elem.RECORD).addContent(new Element("data").addContent(metadata));
-		record.addContent(new Element("owner").setText(OWNER_ID));
-		Element response = new Element("result").addContent(record);
-		Dbms dbms = mock(Dbms.class);
-		when(dbms.select(anyString())).thenReturn(response);
-		when(dbms.select(anyString(), anyVararg())).thenReturn(response);
-		when(dbms.select(anyString(), anyMapOf(String.class, String.class))).thenReturn(response);
-		return dbms;
 	}
 
 	private SettingManager mockSettingManager(boolean enabled) {

@@ -23,13 +23,10 @@
 package org.fao.geonet.guiservices.csw;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
 import org.jdom.Element;
 
 public class Get implements Service {
@@ -37,17 +34,17 @@ public class Get implements Service {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	public Element exec(Element params, ServiceContext context) throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SettingManager sm = gc.getBean(SettingManager.class);
+        SettingManager sm = context.getBean(SettingManager.class);
 
         boolean cswEnabled = sm.getValueAsBool("system/csw/enable");
         boolean cswMetadataPublic = sm.getValueAsBool("system/csw/metadataPublic");
         String cswContactIdValue = sm.getValue("system/csw/contactId");
-        if (cswContactIdValue == null) cswContactIdValue = "-1";
+        if (cswContactIdValue == null) {
+            cswContactIdValue = "-1";
+        }
 
-        Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
-        Element cswCapabilitiesConfig = CswCapabilitiesInfo.getCswCapabilitiesInfo(dbms);
+        final CswCapabilitiesInfoFieldRepository infoFieldRepository = context.getBean(CswCapabilitiesInfoFieldRepository.class);
+        Element cswCapabilitiesConfig = infoFieldRepository.findAllAsXml();
 
         // Build response
         Element cswEnable = new Element("cswEnable");

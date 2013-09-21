@@ -78,7 +78,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         Metadata metadata2 = _repo.save(newMetadata());
         Metadata metadata3 = newMetadata();
         metadata3.getHarvestInfo().setUuid(metadata2.getHarvestInfo().getUuid());
-        metadata3 = _repo.save(metadata3);
+        _repo.save(metadata3);
 
         assertEquals(3, _repo.count());
 
@@ -91,6 +91,24 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
         found = _repo.findAllByHarvestInfo_Uuid("blarg");
         assertEquals(0, found.size());
+    }
+
+    @Test
+    public void testFindOneOldestByChangeDate() throws Exception {
+
+        Metadata metadata1 = newMetadata();
+        metadata1.getDataInfo().setChangeDate(new ISODate("1960-01-01"));
+        _repo.save(metadata1);
+
+        Metadata metadata2 = newMetadata();
+        metadata2.getDataInfo().setChangeDate(new ISODate("1920-01-01"));
+        _repo.save(metadata2);
+
+        assertEquals(2, _repo.count());
+
+        Metadata found = _repo.findOneOldestByChangeDate();
+        assertNotNull(found);
+        assertSameContents(metadata1, found);
     }
 
     @Test

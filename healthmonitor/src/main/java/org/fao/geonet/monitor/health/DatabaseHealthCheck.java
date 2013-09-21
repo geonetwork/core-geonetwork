@@ -2,9 +2,10 @@ package org.fao.geonet.monitor.health;
 
 import com.yammer.metrics.core.HealthCheck;
 import jeeves.monitor.HealthCheckFactory;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.repository.SettingRepository;
+
+import javax.transaction.TransactionManager;
 
 /**
  * Checks to ensure that the database is accessible and readable
@@ -18,17 +19,16 @@ public class DatabaseHealthCheck implements HealthCheckFactory {
         return new HealthCheck("Database Connection") {
             @Override
             protected Result check() throws Exception {
-                Dbms dbms = null;
+                final TransactionManager transactionManager = context.getBean(TransactionManager.class);
+                transactionManager.begin();
                 try {
-                    // TODO add timeout
-                    dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
-                    dbms.select("SELECT count(*) as count from settings");
+                    context.getBean(SettingRepository.class).count();
                     return Result.healthy();
                 } catch (Throwable e) {
                     return Result.unhealthy(e);
                 } finally {
-                    if (dbms != null)
-                        context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+                    if (transactionManager != null)
+                        transactionManager.rollback();
                 }
 
             }

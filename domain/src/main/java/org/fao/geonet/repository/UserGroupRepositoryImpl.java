@@ -53,8 +53,10 @@ public class UserGroupRepositoryImpl implements UserGroupRepositoryCustom {
             }
             userIdsString.append(userId);
         }
-        return _entityManager.createQuery("DELETE FROM " + UserGroup.class.getSimpleName() + " WHERE " + userIdPath + " IN (" + userIdsString
-                                   + ")").executeUpdate();
+        final String qlString = "DELETE FROM " + UserGroup.class.getSimpleName() + " WHERE " + userIdPath + " IN (" + userIdsString + ")";
+        final int deleted = _entityManager.createQuery(qlString).executeUpdate();
+        _entityManager.clear();
+        return deleted;
     }
 
     private List<Integer> findIdsBy(Specification<UserGroup> spec, SingularAttribute<UserGroupId, Integer> groupId) {

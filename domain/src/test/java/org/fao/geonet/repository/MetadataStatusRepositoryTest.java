@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static org.fao.geonet.repository.MetadataRepositoryTest.newMetadata;
 import static org.junit.Assert.assertEquals;
 
@@ -45,9 +47,13 @@ public class MetadataStatusRepositoryTest extends AbstractSpringDataTest {
         assertEquals(3, _repo.count());
         _repo.deleteAllById_MetadataId(status1.getId().getMetadataId());
         assertEquals(1, _repo.count());
+        assertNull(_repo.findOne(status1.getId()));
+        assertNull(_repo.findOne(status2.getId()));
+
         final List<MetadataStatus> all = _repo.findAll();
         assertEquals(1, all.size());
         assertEquals(status3.getId(), all.get(0).getId());
+        assertNotNull(_repo.findOne(status3.getId()));
     }
 
     @Test

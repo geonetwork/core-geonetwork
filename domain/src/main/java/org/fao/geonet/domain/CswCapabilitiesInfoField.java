@@ -19,11 +19,11 @@ import javax.persistence.Table;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "cswservercapabilitiesinfo")
-public class CswServerCapabilitiesInfo extends GeonetEntity {
-    private int _id;
+public class CswCapabilitiesInfoField extends GeonetEntity {
+    private int _id = -1;
     private String _langId;
-    private String _field;
-    private String _label;
+    private String _fieldName;
+    private String _value;
 
     /**
      * The id of the entity. This is a generated value and not controlled by the developer.
@@ -42,7 +42,7 @@ public class CswServerCapabilitiesInfo extends GeonetEntity {
      * @param id the id.
      * @return this object
      */
-    public CswServerCapabilitiesInfo setId(int id) {
+    public CswCapabilitiesInfoField setId(int id) {
         this._id = id;
         return this;
     }
@@ -66,7 +66,7 @@ public class CswServerCapabilitiesInfo extends GeonetEntity {
      * @param langid the iso 3 language code (eng, fre, ger)
      * @return this object
      */
-    public CswServerCapabilitiesInfo setLangId(String langid) {
+    public CswCapabilitiesInfoField setLangId(String langid) {
         this._langId = langid;
         return this;
     }
@@ -78,22 +78,22 @@ public class CswServerCapabilitiesInfo extends GeonetEntity {
      * 
      * @return the field name.
      */
-    @Column(nullable = false, length = 32)
-    public String getField() {
-        return _field;
+    @Column(name="field", nullable = false, length = 32)
+    public String getFieldName() {
+        return _fieldName;
     }
 
     /**
      * Set the field name that this info item applies to. <br/>
      * This is a required property <br/>
-     * This has a set maximum length that must be respected or a database error will be thrown on save. See {@link #getField()} annotation
+     * This has a set maximum length that must be respected or a database error will be thrown on save. See {@link #getFieldName()} annotation
      * for maximum length.
      * 
-     * @param field the field name.
+     * @param fieldName the field name.
      * @return this object
      */
-    public CswServerCapabilitiesInfo setField(String field) {
-        this._field = field;
+    public CswCapabilitiesInfoField setFieldName(String fieldName) {
+        this._fieldName = fieldName;
         return this;
     }
 
@@ -103,18 +103,19 @@ public class CswServerCapabilitiesInfo extends GeonetEntity {
      * @return translated label
      */
     @Lob
-    public String getLabel() {
-        return _label;
+    @Column(name = "label")
+    public String getValue() {
+        return _value;
     }
 
     /**
      * Set the translated label for this field.
      * 
-     * @param label the translated label.
+     * @param newValue the translated label.
      * @return this object
      */
-    public CswServerCapabilitiesInfo setLabel(String label) {
-        this._label = label;
+    public CswCapabilitiesInfoField setValue(String newValue) {
+        this._value = newValue;
         return this;
     }
 
