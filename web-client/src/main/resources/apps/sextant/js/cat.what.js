@@ -261,7 +261,11 @@ cat.what = function() {
 				hidden: catCookie==1?false:true,
 				disabled: catCookie==1?false:true
 			});
-			
+			new Ext.tree.TreeSorter(categoryTree, {
+                folderSort: true,
+                dir: "asc"
+            });
+
 			var sep1 = createSep();
 			var sep2 = createSep();
 			
