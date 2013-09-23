@@ -541,6 +541,9 @@ div.facets * .facet-less-bt a {
     color: #777777 !important;
 }
 
+.breadcrumb table.x-btn {
+    float: left;
+}
 .breadcrumb * .x-btn-tl, 
 .breadcrumb * .x-btn-tr, 
 .breadcrumb * .x-btn-tc, 

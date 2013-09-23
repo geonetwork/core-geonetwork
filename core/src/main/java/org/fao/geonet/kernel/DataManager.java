@@ -1732,7 +1732,8 @@ public class DataManager {
         }
 
         String uuid = null;
-        if (schemaMan.getSchema(schema).isReadwriteUUID()) {
+        if (schemaMan.getSchema(schema).isReadwriteUUID()
+                && !getMetadataTemplate(dbms, id).equals("s")) {
             uuid = extractUUID(schema, md);
         }
 

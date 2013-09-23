@@ -98,13 +98,9 @@
 			
 			<singlefile target="$INSTALL_PATH/bin/start-geonetwork.bat" src="../bin/jre/start-geonetwork-jre.bat" override="true"/>
 			<singlefile target="$INSTALL_PATH/bin/stop-geonetwork.bat" src="../bin/jre/stop-geonetwork-jre.bat" override="true"/>
-			<singlefile target="$INSTALL_PATH/bin/gast.bat" src="../bin/jre/gast-jre.bat" override="true"/>
 			
 			<fileset dir="../jre1.5.0_12"  targetdir="$INSTALL_PATH/jre1.5.0_12" />
 			
-			<fileset dir="../gast"  targetdir="$INSTALL_PATH/gast">			
-				<exclude name="logs/gast.log*"/>
-			</fileset>
 			
 			<fileset dir="../jetty" targetdir="$INSTALL_PATH/jetty">
 				<exclude name="logs/*.log"/>
@@ -137,31 +133,7 @@
 			
 			<executable targetfile="$INSTALL_PATH/bin/start-geonetwork.sh" />
 			<executable targetfile="$INSTALL_PATH/bin/stop-geonetwork.sh" />
-			<executable targetfile="$INSTALL_PATH/bin/gast.sh" />
-			<executable targetfile="$INSTALL_PATH/gast/gast.jar" 
-							type      ="jar" 
-							keep      ="true"
-							stage     ="postinstall">
-				<args>
-					<arg value="-setup"/>
-				</args>
-			</executable>
 		</pack>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<pack name="Sample metadata" required="no" preselected="yes" id="idSampleM">
-			<description/>
-			<executable targetfile="$INSTALL_PATH/gast/gast.jar" 
-							type      ="jar" 
-							keep      ="true"
-							stage     ="postinstall">
-				<args>
-					<arg value="-sampleData"/>
-				</args>
-			</executable>
-		</pack>		
-
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<pack name="GeoServer web map server" required="no" preselected="yes" id="geoserver">

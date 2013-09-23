@@ -272,11 +272,17 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             count : node.getAttribute('count')
         };
         // Only display a facet if it's not part of current filter
-        
         if (this.currentFilterStore.getCount() === 0 ||
-                this.currentFilterStore.query('value', data.node).length === 0) {
+                this.currentFilterStore.queryBy(function (r) {
+                    if (r.get('value') == data.node && r.get('facet') == data.facet) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }).length === 0) {
             var recId = this.facetsStore.getCount() + 1,
-                 r = new this.facetsStore.recordType(data, recId); 
+                 r = new this.facetsStore.recordType(data, recId);
+
             this.facetsStore.add(r);
             return "<li class='" + (visible ? '' : 'facet-more') + "' style='" + (visible ? '' : 'display:none;') + "'><a href='javascript:void(0);' class='facet-link' id='" + recId + "'>" + 
                     (data.label != null ? data.label : data.node) + "<span class='facet-count'>(" + data.count + ")</span></a></li>";
@@ -329,8 +335,9 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             bcid: 'bc_' + id, 
             fieldid: 'field_' + id
         };
-        var filter = new this.currentFilterStore.recordType(data, this.currentFilterStore.getCount() + 1);
-        this.currentFilterStore.insert(0, filter);
+        
+        var filter = new this.currentFilterStore.recordType(data, id);
+        this.currentFilterStore.add(filter);
         
         form.insert(0, new Ext.form.TextField({
             id: data.fieldid,
@@ -389,7 +396,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         
         // Search in current filter
         var filter = this.currentFilterStore.query('id', filterKey).get(0);
-        
+
         var field = Ext.getCmp(filter.get('fieldid')),
             switcher = Ext.getCmp(filter.get('bcid'));
         

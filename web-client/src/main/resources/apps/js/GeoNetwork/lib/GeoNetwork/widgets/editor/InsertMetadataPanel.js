@@ -30,6 +30,7 @@ GeoNetwork.editor.InsertMetadataPanel = Ext.extend(Ext.form.FormPanel, {
     importXSLStore: undefined,
     groupStore : undefined,
     categoryStore : undefined,
+    categoryCombo : undefined,
     statusPanel : undefined,
     
     /**
@@ -75,6 +76,8 @@ GeoNetwork.editor.InsertMetadataPanel = Ext.extend(Ext.form.FormPanel, {
                         }
                     },  this.groupStore);
                     
+                    this.groupStore.sort('labelInLang', 'ASC');
+                    
                     // set first group as default value of the combo box
                     if (this.groupStore.getCount() > 0) {
                         var recordSelected = this.groupStore.getAt(0);
@@ -96,7 +99,12 @@ GeoNetwork.editor.InsertMetadataPanel = Ext.extend(Ext.form.FormPanel, {
      */
     getCategoryStore: function () {
         if(!this.categoryStore) {
+            var self = this;
             this.categoryStore = new GeoNetwork.data.CategoryStore(catalogue.services.getCategories);
+            this.categoryStore.on('load', function () {
+                self.categoryCombo.setVisible(this.totalLength !== 0);
+                
+            });
             this.categoryStore.load();
         }
         return this.categoryStore;
@@ -134,6 +142,24 @@ GeoNetwork.editor.InsertMetadataPanel = Ext.extend(Ext.form.FormPanel, {
      */
     getItems: function() {
 
+        this.categoryCombo = new Ext.form.ComboBox({
+                // Categories Combo Box
+                xtype: 'combo',
+                fieldLabel: OpenLayers.i18n('category'),
+                typeAhead: true,
+                triggerAction: 'all',
+                name: 'category',
+                hiddenName: 'category',
+                lazyRender:true,
+                emptyText: OpenLayers.i18n('chooseCategory'),
+                mode: 'local',
+                defaultValue: 1,
+                store: this.getCategoryStore(),
+                valueField: 'id',
+                displayField: 'name',
+                tpl: '<tpl for="."><div class="x-combo-list-item">{[values.label.' + catalogue.LANG + ']}</div></tpl>'
+            });
+        
         var items = [{
             // Insert Mode Radio Group
             xtype: 'radiogroup',
@@ -258,23 +284,8 @@ GeoNetwork.editor.InsertMetadataPanel = Ext.extend(Ext.form.FormPanel, {
             displayField: 'name',
             hiddenName: 'group',
             tpl: '<tpl for="."><div class="x-combo-list-item">{[values.label.' + catalogue.LANG + ']}</div></tpl>'
-        },{
-            // Categories Combo Box
-            xtype: 'combo',
-            fieldLabel: OpenLayers.i18n('category'),
-            typeAhead: true,
-            triggerAction: 'all',
-            name: 'category',
-            hiddenName: 'category',
-            lazyRender:true,
-            emptyText: OpenLayers.i18n('chooseCategory'),
-            mode: 'local',
-            defaultValue: 1,
-            store: this.getCategoryStore(),
-            valueField: 'id',
-            displayField: 'name',
-            tpl: '<tpl for="."><div class="x-combo-list-item">{[values.label.' + catalogue.LANG + ']}</div></tpl>'
-        }];
+        },
+        this.categoryCombo];
         return items;
     },
     
@@ -332,7 +343,7 @@ GeoNetwork.editor.InsertMetadataPanel = Ext.extend(Ext.form.FormPanel, {
                              failure: function(form, action) {
                                  this.updateStatus(action.response, false);
                              },
-                             scope: this
+                             scope: this,
                         });
                     }
                 }
