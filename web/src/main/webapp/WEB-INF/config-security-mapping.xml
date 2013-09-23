@@ -439,6 +439,22 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.load.samples!?.*" access="hasRole('Administrator')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.load.templates!?.*" access="hasRole('Administrator')"/>
                 
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.list!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.add!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.update!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.clone!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.remove!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.stop!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.start!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.run!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.info!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.history!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.history.full!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.history.delete!?.*" access="hasRole('UserAdmin')"/>
+                
+                
+                
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.languages.get!?.*" access="permitAll"/>
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.console!?.*" access="hasRole('RegisteredUser')"/>

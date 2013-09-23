@@ -1502,6 +1502,7 @@
   <include>config/config-service-thesaurus.xml</include>
   
   <include>config/config-service-admin.xml</include>
+  <include>config/config-service-admin-harvesting.xml</include>
 
   <include>config/config-service-admin-category.xml</include>
   
