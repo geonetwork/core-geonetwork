@@ -76,6 +76,8 @@ GeoNetwork.editor.InsertMetadataPanel = Ext.extend(Ext.form.FormPanel, {
                         }
                     },  this.groupStore);
                     
+                    this.groupStore.sort('labelInLang', 'ASC');
+                    
                     // set first group as default value of the combo box
                     if (this.groupStore.getCount() > 0) {
                         var recordSelected = this.groupStore.getAt(0);
