@@ -9,9 +9,6 @@
    *
    */
   module.controller('GnLoginController', ['$scope', function($scope) {
-    $scope.initForm = function() {
-      $('#inputUsername').focus();
-    };
   }]);
 
 })();

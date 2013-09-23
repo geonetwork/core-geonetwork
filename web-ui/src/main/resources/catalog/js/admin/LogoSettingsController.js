@@ -66,6 +66,7 @@
                 msg: $translate('logoUpdated'),
                 timeout: 2,
                 type: 'success'});
+              $rootScope.$broadcast('loadCatalogInfo');
             })
           .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {

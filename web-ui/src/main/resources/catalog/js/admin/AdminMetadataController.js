@@ -20,7 +20,7 @@
             gnSearchManagerService, 
             gnUtilityService) {
 
-      $scope.menu = {
+      $scope.pageMenu = {
         folder: 'metadata/',
         defaultTab: 'metadata-and-template',
         tabs:

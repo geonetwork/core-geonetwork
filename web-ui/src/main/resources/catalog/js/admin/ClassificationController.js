@@ -16,7 +16,7 @@
       ['$scope', '$http',
        function($scope, $http) {
 
-          $scope.menu = {
+          $scope.pageMenu = {
            folder: 'classification/',
            defaultTab: 'thesaurus',
            tabs:

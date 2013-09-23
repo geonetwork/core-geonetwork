@@ -17,7 +17,7 @@
     function($scope, $routeParams, $http, $rootScope, $translate, $compile,
             gnSearchManagerService) {
 
-      $scope.menu = {
+      $scope.pageMenu = {
         folder: 'usergroup/',
         defaultTab: 'groups',
         tabs:

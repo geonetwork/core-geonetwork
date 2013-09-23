@@ -1,10 +1,12 @@
 (function() {
   goog.provide('gn_harvest_controller');
 
+
+  goog.require('gn_category');
   goog.require('gn_harvester');
 
   var module = angular.module('gn_harvest_controller',
-      ['gn_harvester']);
+      ['gn_harvester', 'gn_category']);
 
 
   /**
@@ -14,7 +16,7 @@
     '$scope', '$http', '$translate', '$injector',
     function($scope, $http, $translate, $injector) {
 
-      $scope.menu = {
+      $scope.pageMenu = {
         folder: 'harvest/',
         defaultTab: 'harvest',
         tabs: []
@@ -24,6 +26,7 @@
       $scope.harvesterSelected = null;
       $scope.harvesterUpdated = false;
       $scope.harvesterNew = false;
+      $scope.harvesterHistory = {};
 
       function parseBoolean(object) {
         angular.forEach(object, function(value, key) {
@@ -38,17 +41,27 @@
       }
 
       function loadHarvesters() {
-        $http.get('xml.harvesting.get@json').success(function(data) {
+        $http.get('admin.harvester.list@json').success(function(data) {
           $scope.harvesters = data;
           parseBoolean($scope.harvesters);
         }).error(function(data) {
           // TODO
         });
       }
-      function loadHarvesterTypes() {
-        $http.get('xml.harvesting.info@json?type=harvesterTypes')
-        .success(function(data) {
 
+
+      function loadHistory() {
+        $http.get('admin.harvester.history@json?uuid=' +
+                $scope.harvesterSelected.site.uuid).success(function(data) {
+          $scope.harvesterHistory = data;
+        }).error(function(data) {
+          // TODO
+        });
+      }
+
+      function loadHarvesterTypes() {
+        $http.get('admin.harvester.info@json?type=harvesterTypes')
+        .success(function(data) {
               angular.forEach(data[0], function(value) {
                 $scope.harvesterTypes[value] = {label: $translate(value)};
                 $.getScript('../../catalog/templates/admin/harvest/type/' +
@@ -70,7 +83,7 @@
       $scope.getTplForHarvester = function() {
         // TODO : return view by calling harvester ?
         if ($scope.harvesterSelected) {
-          return '../../catalog/templates/admin/' + $scope.menu.folder +
+          return '../../catalog/templates/admin/' + $scope.pageMenu.folder +
               'type/' + $scope.harvesterSelected['@type'] + '.html';
         } else {
           return null;
@@ -111,12 +124,12 @@
         var body = window['gnHarvester' + $scope.harvesterSelected['@type']]
                             .buildResponse($scope.harvesterSelected, $scope);
 
-        $http.post('xml.harvesting.' +
+        $http.post('admin.harvester.' +
                 ($scope.harvesterNew ? 'add' : 'update') +
             '@json', body, {
               headers: {'Content-type': 'application/xml'}
             }).success(function(data) {
-          console.log(data);
+          loadHarvesters();
         }).error(function(data) {
           console.log(data);
         });
@@ -126,8 +139,22 @@
         $scope.harvesterUpdated = false;
         $scope.harvesterNew = false;
       };
+
+      $scope.deleteHarvester = function() {
+        $http.get('admin.harvester.remove@json?id=' +
+                  $scope.harvesterSelected['@id'])
+              .success(function(data) {
+              $scope.harvesterSelected = {};
+              $scope.harvesterUpdated = false;
+              $scope.harvesterNew = false;
+              loadHarvesters();
+            }).error(function(data) {
+              console.log(data);
+            });
+      };
+
       $scope.runHarvester = function() {
-        $http.get('xml.harvesting.run@json?id=' +
+        $http.get('admin.harvester.run@json?id=' +
                 $scope.harvesterSelected['@id'])
             .success(function(data) {
               console.log(data);
@@ -135,8 +162,10 @@
               console.log(data);
             });
       };
+
       loadHarvesters();
       loadHarvesterTypes();
+
     }]);
 
 })();

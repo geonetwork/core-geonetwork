@@ -40,9 +40,12 @@
         <script src="{$uiResourcesPath}lib/closure/base.js"></script>
         
         <script src="{$uiResourcesPath}lib/jquery-2.0.2.js"></script>
+          
+        <script src="{$uiResourcesPath}lib/angular/angular.js"></script>
+        <script src="{$uiResourcesPath}lib/angular/angular-resource.js"></script>
+        <script src="{$uiResourcesPath}lib/angular/angular-route.js"></script>
         
-        <script src="{$uiResourcesPath}lib/angular-1.1.5.js"></script>
-        <script src="{$uiResourcesPath}lib/angular-translate-0.9.4.js"></script>
+        <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
         
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.0.js"></script>
         
@@ -69,8 +72,12 @@
       </xsl:when>
       <xsl:otherwise>
         <script src="{$uiResourcesPath}lib/jquery-2.0.2.min.js"></script>
-        <script src="{$uiResourcesPath}lib/angular-1.1.5.min.js"></script>
-        <script src="{$uiResourcesPath}lib/angular-translate-0.9.4.min.js"></script>
+          
+        <script src="{$uiResourcesPath}lib/angular/angular.min.js"></script>
+        <script src="{$uiResourcesPath}lib/angular/angular-resource.min.js"></script>
+        <script src="{$uiResourcesPath}lib/angular/angular-route.min.js"></script>
+          
+        <script src="{$uiResourcesPath}lib/angular-translate.min.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.0.min.js"></script>
         
         <xsl:if test="$withD3">

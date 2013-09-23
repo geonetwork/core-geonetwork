@@ -136,6 +136,12 @@
         };
 
         $('#thesaurusModal').modal();
+        $('#thesaurusModal').on('shown.bs.modal', function() {
+          var id = $scope.importAs === 'new' ? '#gn-thesaurus-title' :
+              ($scope.importAs === 'file' ? '#gn-thesaurus-file' :
+                  '#gn-thesaurus-url');
+          $(id).focus();
+        });
       };
 
       /**
@@ -201,10 +207,10 @@
       /**
        * Thesaurus uploaded with error, broadcast it.
        */
-      uploadThesaurusError = function(e, data) {
+      uploadThesaurusError = function(data) {
         $rootScope.$broadcast('StatusUpdated', {
           title: $translate('thesaurusUploadError'),
-          error: data.jqXHR.responseJSON,
+          error: data,
           timeout: 0,
           type: 'danger'});
       };

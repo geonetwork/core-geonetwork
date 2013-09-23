@@ -3,7 +3,7 @@
     
     <div class="row">
         <div class="col-lg-6" 
-            data-gn-harvester-identification="harvesterSelected"></div>
+            data-gn-harvester-identification="harvesterSelected" lang=""></div>
         
         <div class="col-lg-6" 
             data-gn-harvester-schedule="harvesterSelected"></div>
@@ -19,7 +19,12 @@
         </div>
         <div data-ng-class="harvesterSelected.site.ogctype == '' ? 'has-error' : ''">
             <label class="control-label" data-translate="">serviceType</label>
-            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.ogctype"/>
+            
+            <select class="form-control" data-ng-model="harvesterSelected.site.ogctype">
+                <option data-ng-repeat="t in ['WMS1.0.0', 'WMS1.1.1', 'WMS1.3.0', 'WFS1.0.0', 'WFS1.1.0', 'WCS1.0.0', 'CSW2.0.2', 'WPS0.4.0', 'WPS1.0.0', 'SOS1.0.0']" value="{{t}}" 
+                    data-ng-selected="t == harvesterSelected.site.ogctype">{{t | translate}}</option>
+            </select>
+            
             <p class="help-block" data-translate="">serviceTypeHelp</p>
         </div>
     </fieldset>
@@ -64,8 +69,12 @@
         
         <div>
             <label class="control-label" data-translate="">datasetCategory</label>
-            <input type="text" class="form-control" 
-                data-ng-model="harvesterSelected.options.datasetCategory"/>
+            
+            <div data-gn-category="harvesterSelected.options.datasetCategory"/>
+            <select class="form-control" data-ng-model="harvesterSelected.options.datasetCategory">
+                <option data-ng-repeat="c in categories" value="{{c['@id']}}" 
+                    data-ng-selected="c['@id'] == harvesterSelected.options.datasetCategory">{{c.label[lang] | translate}}</option>
+            </select>
         </div>
         
         <div>

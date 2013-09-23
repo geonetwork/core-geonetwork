@@ -2,9 +2,11 @@
   <div class="panel">
   <div class="panel-heading">
     <span data-translate="">cswService</span>
-    <button type="submit" class="btn btn-primary pull-right icon-save" 
-      data-ng-click="saveSettings('#gn-settings')"
-      data-translate="">save</button>
+    <div class="btn-toolbar">
+        <button type="submit" class="btn btn-primary pull-right icon-save" 
+          data-ng-click="saveSettings('#gn-settings')"
+          data-translate="">save</button>
+    </div>
   </div>
   
   
@@ -53,37 +55,30 @@
 <div class="panel">
   <div class="panel-heading">
     <span data-translate="">cswCapabilitiesProperties</span>
-    <button type="submit" class="btn btn-primary pull-right icon-save" 
-      data-ng-click="saveProperties('#gn-csw-capabilities-properties')"
-      data-translate="">save</button>
+    <div class="btn-toolbar">
+        <button type="submit" class="btn btn-primary pull-right icon-save" 
+          data-ng-click="saveProperties('#gn-csw-capabilities-properties')"
+          data-translate="">save</button>
+    </div>
   </div>
   <form id="gn-csw-capabilities-properties">
     <table class="table table-striped">
       <tr>
-        <th data-translate>properties</th>
-        <th data-translate>language</th>
-        <th data-translate>value</th>
-      </tr>
-      <tr>
-        <td>
-          <select
-            data-ng-model="cswFieldFilterValue"
-            class="form-control" >
-            <option value=""/>
-            <option data-ng-repeat="(key, value) in cswFields track by $index" value="{{key}}"
-              ng-selected="key == cswFieldFilterValue">{{key | translate}}</option>
-          </select>
-        </td>
-        <td>
-          <select
-            data-ng-model="cswLanguageFilterValue"
-            class="form-control" >
-            <option value=""/>
-            <option data-ng-repeat="(key, value) in cswLanguages track by $index" value="{{key}}"
-              ng-selected="key == cswLanguageFilterValue">{{key | translate}}</option>
-          </select>
-        </td>
-        <td></td>
+          <th><span data-translate="">properties</span><select
+              data-ng-model="cswFieldFilterValue"
+              class="form-control" >
+              <option value=""/>
+              <option data-ng-repeat="(key, value) in cswFields track by $index" value="{{key}}"
+                  ng-selected="key == cswFieldFilterValue">{{key | translate}}</option>
+          </select></th>
+          <th><span data-translate="">language</span><select
+              data-ng-model="cswLanguageFilterValue"
+              class="form-control" >
+              <option value=""/>
+              <option data-ng-repeat="(key, value) in cswLanguages track by $index" value="{{key}}"
+                  ng-selected="key == cswLanguageFilterValue">{{key | translate}}</option>
+          </select></th>
+          <th >value</th>
       </tr>
       <tr 
         data-ng-repeat="element in cswFilter(cswConfig) track by $index">

@@ -22,7 +22,7 @@
             gnUtilityService) {
 
 
-      $scope.menu = {
+      $scope.pageMenu = {
         folder: 'tools/',
         defaultTab: 'index',
         tabs:

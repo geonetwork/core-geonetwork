@@ -19,6 +19,7 @@
       $scope.categoryUpdated = false;
 
       $scope.selectCategory = function(c) {
+        $scope.cateroryUpdated = false;
         $scope.categorySelected = c;
       };
 
@@ -76,7 +77,7 @@
         $scope.categorySelected = {};
       };
       $scope.updatingCategory = function() {
-        $scope.cateroryUpdated = true;
+        $scope.categoryUpdated = true;
       };
 
       function loadCategories() {

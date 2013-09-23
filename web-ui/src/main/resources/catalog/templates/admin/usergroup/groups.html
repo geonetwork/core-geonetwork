@@ -4,7 +4,9 @@
         <div class="panel">
             <div class="panel-heading"
                 data-translate>groups</div>
-            <input class="form-control" data-ng-model="groupSearch.$" placeholder="{{'filter' | translate}}"/>
+            <input class="form-control" data-ng-model="groupSearch.$"
+                autofocus=""
+                placeholder="{{'filter' | translate}}"/>
             <input type="hidden" data-ng-model="groupSelected.id"/>
             <div class="list-group">
                 <a class="list-group-item" 
@@ -27,8 +29,8 @@
         <div class="panel">
             <div class="panel-heading"
                 title="{{groupHasRecords() ? ('cantDeleteGroupHavingRecords' | translate) : ''}}">
-                <span data-ng-hide="groupSelected.id == ''" data-translate>updateGroup</span>
-                <span data-ng-hide="groupSelected.id != ''" data-translate>newGroup</span><span>{{groupSelected.name}}</span>
+                <span data-ng-hide="groupSelected.id == ''" data-translate="">updateGroup</span>
+                <span data-ng-hide="groupSelected.id != ''" data-translate="">newGroup</span><strong>{{groupSelected.name}}</strong>
                 <div class="btn-toolbar">
                 <button type="button" class="btn btn-primary pull-right icon-save" 
                     data-ng-disabled="!groupUpdated"

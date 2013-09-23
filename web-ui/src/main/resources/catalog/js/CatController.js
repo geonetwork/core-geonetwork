@@ -52,7 +52,7 @@
        */
       $scope.searchInfo = {};
 
-      $scope.status = {};
+      $scope.status = null;
       var defaultStatus = {
         title: '',
         link: '',
@@ -72,6 +72,11 @@
           return $http.get(url).
               success(function(data, status) {
                 $scope.info = data;
+                // Add the last time catalog info where updated.
+                // That could be useful to append to catalog image URL
+                // in order to trigger a reload of the logo when info are
+                // reloaded.
+                $scope.info.site.lastUpdate = new Date();
                 $scope.initialized = true;
               }).
               error(function(data, status, headers, config) {
@@ -118,16 +123,19 @@
       };
 
 
+      $scope.$on('loadCatalogInfo', function(event, status) {
+        $scope.loadCatalogInfo();
+      });
 
       $scope.clearStatusMessage = function() {
-        $scope.status = {};
+        $scope.status = null;
         $('.gn-info').hide();
       };
 
       $scope.$on('StatusUpdated', function(event, status) {
+        $scope.status = {};
         $.extend($scope.status, defaultStatus, status);
         $('.gn-info').show();
-
         // TODO : handle multiple messages
         if ($scope.status.timeout > 0) {
           setTimeout(function() {

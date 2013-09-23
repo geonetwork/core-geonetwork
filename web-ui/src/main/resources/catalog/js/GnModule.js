@@ -15,6 +15,7 @@
   goog.require('gn_utility_service');
 
   var module = angular.module('gn', [
+    'ngRoute',
     'pascalprecht.translate',
     'gn_utility_service',
     'gn_search_manager',

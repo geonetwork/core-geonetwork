@@ -5,26 +5,37 @@
         <input type="text" class="form-control" data-ng-model="harvester.site.name"/>
         <p class="help-block" data-translate="">harvesterNameHelp</p>
     </div>
-    
+
     <div data-ng-class="harvester.site.icon == '' ? 'has-error' : ''"
         data-ng-hide="harvester['@type'] == 'geonetwork'">
         <input type="hidden" class="form-control" data-ng-model="harvester.site.icon"/>
-        <!-- TODO: List -->
-        <div class="thumbnail">
-            <img src="../../images/harvesting/{{harvester.site.icon}}" 
-                alt="{{'harvesterLogo' | translate}}"/>
-            <div class="caption">
-                <p class="help-block" data-translate="">harvesterIconHelp</p>
-                <p><a class="btn btn-primary">chooseThumbnail</a></p>
-            </div>
+
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle icon-plus"
+                data-toggle="dropdown">
+                <span data-translate="">
+                    <img src="../../images/harvesting/{{harvester.site.icon}}"
+                        alt="{{'harvesterLogoHelo' | translate}}"/>
+                </span>
+                <span class="caret"/>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li data-ng-repeat="i in icons">
+                    <a data-ng-click="setIcon(i)" title="">
+                        <img class="gn-logo-small" src="../../images/harvesting/{{i}}"/>
+                    </a>
+                </li>
+            </ul>
         </div>
-        
-       
     </div>
-    
+
     <div data-ng-class="harvester.site.ownerGroup == '' ? 'has-error' : ''">
         <label class="control-label" data-translate="">harvesterGroup</label>
-        <input type="text" class="form-control" data-ng-model="harvester.site.ownerGroup"/>
+        <select class="form-control" data-ng-model="harvester.ownerGroup">
+            <option data-ng-repeat="g in groups" value="{{g['id']}}" 
+                data-ng-selected="g['id'] == harvester.ownerGroup">{{g.label[lang]}}</option>
+        </select>
+        
         <p class="help-block" data-translate="">harvesterGroupHelp</p>
     </div>
 </fieldset>

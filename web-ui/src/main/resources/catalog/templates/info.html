@@ -1,5 +1,5 @@
 <div class="gn-info alert fade in" 
-    data-ng-hide="status.length == null"
+    data-ng-hide="status === null"
     data-ng-class="'alert-' + status.type" >
     <button type="button" class="close" data-ng-click="clearStatusMessage()">×</button>
     <h4 data-ng-hide="!status.title">{{status.title}}</h4>

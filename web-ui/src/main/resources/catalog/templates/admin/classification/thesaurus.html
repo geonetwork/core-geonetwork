@@ -3,7 +3,8 @@
     <div class="panel">
       <div class="panel-heading" data-translate="">thesaurus</div>
 
-      <input class="form-control" data-ng-model="thesaurusSearch.$"
+        <input class="form-control"
+            autofocus="" data-ng-model="thesaurusSearch.$"
         placeholder="{{'filter' | translate}}"/>
       <input type="hidden" data-ng-model="thesaurusSelected.id"/>
       <div class="list-group">
@@ -19,13 +20,13 @@
         </button>
         <ul class="dropdown-menu" role="menu">
           <li>
-            <a data-ng-click="addThesaurus('new')">newEmptyThesaurus</a>
+            <a data-ng-click="addThesaurus('new')" data-translate="">newEmptyThesaurus</a>
           </li>
           <li>
-            <a data-ng-click="addThesaurus('file')">fromLocalFile</a>
+            <a data-ng-click="addThesaurus('file')" data-translate="">fromLocalFile</a>
           </li>
           <li>
-            <a data-ng-click="addThesaurus('url')">fromURL</a>
+            <a data-ng-click="addThesaurus('url')" data-translate="">fromURL</a>
           </li>
         </ul>
       </div>
@@ -35,7 +36,7 @@
   <div class="col-lg-8" data-ng-show="thesaurusSelected.key">
     <div class="panel">
       <div class="panel-heading">
-        <span>{{thesaurusSelected.title}} ({{thesaurusSelected.dname}})</span>
+        <strong>{{thesaurusSelected.title}} ({{thesaurusSelected.dname}})</strong>
         <a href="{{thesaurusSelected.url}}" data-translate="">download</a>
 
         <div class="btn-toolbar">
@@ -117,10 +118,10 @@
         </li>
       </ul>
 
-
-      <button type="button" class="btn btn-primary pull-right icon-plus"
-        data-ng-click="addKeyword()" data-translate="">addKeyword</button>
-
+      <div class="btn-toolbar">
+        <button type="button" class="btn btn-primary pull-right icon-plus"
+            data-ng-click="addKeyword()" data-translate="">addKeyword</button>
+      </div>
     </div>
   </div>
 
@@ -137,7 +138,7 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
             >&times;</button>
-          <h4 class="modal-title">createThesaurus</h4>
+          <h4 class="modal-title" data-translate="">createThesaurusTitle</h4>
         </div>
         <div class="modal-body">
 
@@ -150,7 +151,7 @@
               class="btn btn-success fileinput-button" ng-class="{disabled: disabled}">
               <i class="icon-plus icon-white"/>
               <span data-translate="">chooseThesaurus</span>
-              <input type="file" name="fname" multiple="true" ng-disabled="disabled"/>
+                <input type="file" id="gn-thesaurus-file" name="fname" multiple="true" ng-disabled="disabled"/>
             </span>
 
             <!-- TODO : Add thesaurus combo from repository.
@@ -158,6 +159,7 @@
             <div data-ng-show="importAs == 'url'">
               <label class="control-label" data-translate="">thesaurusUrl</label>
               <input type="url" name="url" data-ng-model="thesaurusUrl" 
+                id="gn-thesaurus-url" 
                 class="form-control" placeholder="http://"/>
             </div>
 
@@ -187,7 +189,8 @@
             <div>
               <label class="control-label" data-translate="">thesaurusTitle</label>
               <input type="text" name="title" class="form-control" data-ng-disabled="!isNew()"
-                data-ng-model="thesaurusSelected.title"/>
+                  id="gn-thesaurus-title" 
+                  data-ng-model="thesaurusSelected.title"/>
             </div>
 
             <div>
@@ -221,7 +224,7 @@
           <button type="button" class="btn btn-primary icon-add" data-translate=""
             data-ng-hide="importAs == 'new'"
             data-ng-disabled="queue.length === 0 && thesaurusUrl == ''"
-            data-ng-click="importThesaurus('#gn-upload-thesaurus')">uploadThesaurus</button>
+            data-ng-click="importThesaurus('#gn-upload-thesaurus')" data-translate="">uploadThesaurus</button>
         </div>
       </div>
     </div>
@@ -242,7 +245,8 @@
           <form id="gn-edit-keyword" name="gn-edit-keyword">
             <div>
               <label class="control-label" data-translate="">keywordLabel</label>
-              <input type="text" name="name" class="form-control" data-ng-disabled="isExternal()"
+              <input type="text" name="name" class="form-control" 
+                data-ng-disabled="isExternal()"
                 data-ng-keyup="computeKeywordId()" data-ng-model="keywordSelected.value['#text']"/>
             </div>
 

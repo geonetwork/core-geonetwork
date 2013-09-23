@@ -5,7 +5,9 @@
             <div class="panel-heading"
                 data-translate>users</div>
             
-            <input class="form-control" data-ng-model="userSearch.$" placeholder="{{'filter' | translate}}"/>
+            <input class="form-control" data-ng-model="userSearch.$" 
+                autofocus=""
+                placeholder="{{'filter' | translate}}"/>
             <input type="hidden" data-ng-model="userSelected.id"/>
             <div class="list-group">
                 <a class="list-group-item" 
@@ -26,9 +28,9 @@
         <div class="panel">
             <div class="panel-heading"
                 title="{{userHasRecords() ? ('cantDeleteUserHavingRecords' | translate) : ''}}">
-                <span data-ng-hide="userSelected.id == ''" data-translate>updateUser</span>
-                <span data-ng-hide="userSelected.id != ''" data-translate>newUser</span>
-                <span>{{userSelected.name}} {{userSelected.surname}}</span>
+                <span data-ng-hide="userSelected.id == ''" data-translate="">updateUser</span>
+                <span data-ng-hide="userSelected.id != ''" data-translate="">newUser</span>
+                <strong>{{userSelected.name}} {{userSelected.surname}}</strong>
                 <div class="btn-toolbar">
                 <button type="button" class="btn btn-primary pull-right icon-save" 
                     data-ng-disabled="!userUpdated"

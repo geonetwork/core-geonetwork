@@ -33,7 +33,7 @@
   module.controller('GnSettingsController', ['$scope',
     function($scope) {
 
-      $scope.menu = {
+      $scope.pageMenu = {
         folder: 'settings/',
         defaultTab: 'system',
         tabs:

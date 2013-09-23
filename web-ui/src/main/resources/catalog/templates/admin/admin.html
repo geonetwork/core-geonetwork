@@ -1,15 +1,16 @@
-<div class="col-lg-8">
-    <a data-ng-repeat="m in getMenu(user.role)" href="{{getMenuUrl(m)}}" 
+<div class="col-lg-8" data-ng-controller="GnAdminController">
+    <div class="clearfix">
+      <a data-ng-repeat="m in getMenu()" href="{{getMenuUrl(m)}}" 
         class="btn btn-large btn-block {{m.classes}} gn-btn-admin">
       <i class="{{m.icon}} icon-3x"/><p data-translate="">{{m.name}}</p></a>
-      
+    </div>
 </div>
 <div class="col-lg-4">
-    <div class="panel">
-        <div class="panel-heading" data-translate>latestNews</div>
+    <div class="panel" data-ng-hide="true">
+        <div class="panel-heading" data-translate="">latestNews</div>
     </div>
-    <div class="panel">
-        <div class="panel-heading" data-translate>quicklinks</div>
+    <div class="panel" data-ng-hide="true">
+        <div class="panel-heading" data-translate="">quicklinks</div>
     </div>
     <div class="panel text-center">
         <div data-ng-hide="searchInfo.count == 0">

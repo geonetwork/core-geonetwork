@@ -116,14 +116,14 @@
        */
       $scope.navStacked = true;
 
-      $scope.getTpl = function(menu) {
-        $scope.type = menu.defaultTab;
-        $.each(menu.tabs, function(index, value) {
+      $scope.getTpl = function(pageMenu) {
+        $scope.type = pageMenu.defaultTab;
+        $.each(pageMenu.tabs, function(index, value) {
           if (value.type === $routeParams.tab) {
             $scope.type = $routeParams.tab;
           }
         });
-        return tplFolder + menu.folder + $scope.type + '.html';
+        return tplFolder + pageMenu.folder + $scope.type + '.html';
       };
 
 

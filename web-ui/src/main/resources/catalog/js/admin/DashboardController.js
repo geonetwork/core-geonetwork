@@ -20,7 +20,7 @@
     function($scope, $http) {
 
 
-      $scope.menu = {
+      $scope.pageMenu = {
         folder: 'dashboard/',
         defaultTab: 'status',
         tabs:

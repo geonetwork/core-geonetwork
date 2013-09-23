@@ -1,0 +1,54 @@
+{
+    "catalog": "catalogue",
+    "poweredBy": "Propulsé par GeoNetwork opensource",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "rememberMe": "Se souvenir de moi",
+    "signIn": "S'identifier",
+    "signedInAs": "Identifié en tant que ",
+    
+    "eng": "English",
+    "title": "Titre",
+    
+    "needAnAccount": "Besoin d'un compte?",
+    "needAnAccountInfo": "Enregistrez-vous, cela ne prend qu'une minute.",
+    "createAnAccount": "Créer un compte",
+    "forgetDetails": "Vous avez oublié vos données?",
+    "forgetDetailsInfo": "Utiliser le service de récupration de mot de passe afin de le réinitialiser.",
+    "recoverPassword": "Vous avez oublié votre mot de passe",
+    "userPreferences": "Préférences utilisateur",
+    "userDetails": "Données utilisateur",
+    "notifications": "Notifications",
+    "signout": "Se déconnecter",
+    
+    "from": "De",
+    "to": "A",
+    "by": "par",
+    "previous": "Précédent",
+    "next": "Après",
+    
+    "noRecordFound": "Pas d'enregistrement trouvé",
+    
+    "any": "Plein texte",
+    "orgName": "Contact de la ressource",
+    "createDateYear": "Année de création",
+    "_indexingError": "Erreur d'indexatin",
+    "_cat": "Catégorie",
+    "keyword": "Mot-clé",
+    "filter": "Filtre",
+    
+    
+    "profile": "Profil utilisateur",
+    "RegisteredUser": "Utilisateur enregistré",
+    "Editor": "Editeur",
+    "Reviewer": "Reviewer",
+    "UserAdmin": "Utilisateur administrateur",
+    
+    
+    "errorIs": "L'erreur est ",
+    
+    "somethingWrong": "Quelque chose s'est mal déroulé!",
+    "msgUserAuthenticated": "L'utilisateur {{username}} est authentifié.",
+    "msgNoCatalogInfo": "Ne peut retrouver les informations catalogue",
+    "msgNoUserInfo": "Ne peut retrouver les informations utilisateurs"
+}
