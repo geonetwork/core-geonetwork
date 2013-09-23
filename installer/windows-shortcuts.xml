@@ -63,24 +63,6 @@
 		<createForPack name="Core"/>
    </shortcut>
 	
-	<!-- =================================================================================== -->
-	<!-- GAST -->
-   
-	<shortcut
-		os="windows"
-		name="Start GAST"
-		description="This starts GeoNetwork's Administrator Survival Tool"
-		programGroup="yes"
-		desktop="no"
-		target="$INSTALL_PATH/bin/gast.bat"
-		initialState="noShow"
-		workingDirectory="$INSTALL_PATH/bin"
-		type="Application"
-		iconFile="$INSTALL_PATH/bin/ico/gast.ico"
-		iconIndex="0"
-		encoding="UTF-8">
-		<createForPack name="GAST"/>
-   </shortcut>
 	
 	<!-- =================================================================================== -->
 	<!-- Documentation -->
