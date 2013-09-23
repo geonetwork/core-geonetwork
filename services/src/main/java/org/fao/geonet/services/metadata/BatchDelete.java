@@ -70,14 +70,14 @@ public class BatchDelete extends BackupFileService {
 		Set<Integer> notFound = new HashSet<Integer>();
 		Set<Integer> notOwner = new HashSet<Integer>();
 
-        if(context.isDebug())
+        if(context.isDebugEnabled())
             context.debug("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session);
 
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 			String uuid = (String) iter.next();
-            if(context.isDebug())
+            if(context.isDebugEnabled())
                 context.debug("Deleting metadata with uuid:"+ uuid);
 
 			String id   = dataMan.getMetadataId(dbms, uuid);
@@ -105,12 +105,12 @@ public class BatchDelete extends BackupFileService {
 	
 					//--- delete metadata and return status
 					dataMan.deleteMetadata(context, dbms, id);
-                    if(context.isDebug())
+                    if(context.isDebugEnabled())
                         context.debug("  Metadata with id " + id + " deleted.");
 					metadata.add(Integer.valueOf(id));
 				}
 			} else
-            if(context.isDebug())
+            if(context.isDebugEnabled())
                 context.debug("  Metadata not found in db:"+ uuid);
 				// TODO : add to notFound set
 			}

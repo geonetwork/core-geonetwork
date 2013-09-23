@@ -66,7 +66,7 @@ public class UserGroupRepositoryImpl implements UserGroupRepositoryCustom {
         query.select(from.get(UserGroup_.id).get(groupId));
         Predicate predicate = spec.toPredicate(from, query, builder);
         query.where(predicate);
-
+        query.distinct(true);
         return _entityManager.createQuery(query).getResultList();
     }
 

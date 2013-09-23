@@ -154,7 +154,7 @@ public class Rate extends NotInReadOnlyModeService {
 
 	private int setRemoteRating(ServiceContext context, GeonetParams params, String uuid, int rating) throws Exception
 	{
-        if(context.isDebug()) context.debug("Rating remote metadata with uuid:"+ uuid);
+        if(context.isDebugEnabled()) context.debug("Rating remote metadata with uuid:"+ uuid);
 
 		XmlRequest req = new XmlRequest(new URL(params.host));
 

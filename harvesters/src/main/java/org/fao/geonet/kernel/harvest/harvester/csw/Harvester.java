@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -65,11 +64,10 @@ class Harvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, CswParams params)
+	public Harvester(Logger log, ServiceContext context, CswParams params)
 	{
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 	}
 
@@ -116,7 +114,7 @@ class Harvester
 
 		//--- align local node
 
-		Aligner aligner = new Aligner(log, context, dbms, server, params);
+		Aligner aligner = new Aligner(log, context, server, params);
 
 		return aligner.align(records);
 	}
@@ -575,7 +573,6 @@ class Harvester
 	private static String CONSTRAINT_LANGUAGE_VERSION = "1.1.0";
 	private static String GETCAPABILITIES_PARAMETERS = "SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2";
 	private Logger         log;
-	private Dbms           dbms;
 	private CswParams      params;
 	private ServiceContext context;
 }

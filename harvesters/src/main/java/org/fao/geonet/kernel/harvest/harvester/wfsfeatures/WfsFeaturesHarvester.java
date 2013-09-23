@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.constants.Geonet;
@@ -80,7 +79,7 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
+	protected String doAdd(Element node) throws BadInputEx, SQLException
 	{
 		params = new WfsFeaturesParams(dataMan);
         super.setParams(params);
@@ -91,9 +90,9 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
 
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
+		String id = settingMan.add("harvesting", "node", getType());
 
-		storeNode(dbms, params, "id:"+id);
+		storeNode(params, "id:"+id);
         Source source = new Source(params.uuid, params.name, true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
@@ -107,7 +106,7 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doUpdate(Dbms dbms, String id, Element node)
+	protected void doUpdate(String id, Element node)
 									throws BadInputEx, SQLException
 	{
 		WfsFeaturesParams copy = params.copy();
@@ -117,10 +116,10 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 
 		String path = "harvesting/id:"+ id;
 
-		settingMan.removeChildren(dbms, path);
+		settingMan.removeChildren(path);
 
 		//--- update database
-		storeNode(dbms, copy, path);
+		storeNode(copy, path);
 
 		//--- we update a copy first because if there is an exception Params
 		//--- could be half updated and so it could be in an inconsistent state
@@ -135,21 +134,21 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 
-	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path,
+	protected void storeNodeExtra(AbstractParams p, String path,
 											String siteId, String optionsId) throws SQLException
 	{
 		WfsFeaturesParams params = (WfsFeaturesParams) p;
 
-		settingMan.add(dbms, "id:"+siteId, "url",  params.url);
-		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
-		settingMan.add(dbms, "id:"+optionsId, "lang",  params.lang);
-		settingMan.add(dbms, "id:"+optionsId, "query",  params.query);
-		settingMan.add(dbms, "id:"+optionsId, "outputSchema",  params.outputSchema);
-		settingMan.add(dbms, "id:"+optionsId, "stylesheet",  params.stylesheet);
-		settingMan.add(dbms, "id:"+optionsId, "streamFeatures",  params.streamFeatures);
-		settingMan.add(dbms, "id:"+optionsId, "createSubtemplates",  params.createSubtemplates);
-		settingMan.add(dbms, "id:"+optionsId, "templateId",  params.templateId);
-		settingMan.add(dbms, "id:"+optionsId, "recordsCategory",  params.recordsCategory);
+		settingMan.add("id:"+siteId, "url",  params.url);
+		settingMan.add("id:"+siteId, "icon", params.icon);
+		settingMan.add("id:"+optionsId, "lang",  params.lang);
+		settingMan.add("id:"+optionsId, "query",  params.query);
+		settingMan.add("id:"+optionsId, "outputSchema",  params.outputSchema);
+		settingMan.add("id:"+optionsId, "stylesheet",  params.stylesheet);
+		settingMan.add("id:"+optionsId, "streamFeatures",  params.streamFeatures);
+		settingMan.add("id:"+optionsId, "createSubtemplates",  params.createSubtemplates);
+		settingMan.add("id:"+optionsId, "templateId",  params.templateId);
+		settingMan.add("id:"+optionsId, "recordsCategory",  params.recordsCategory);
 	}
 
 	//---------------------------------------------------------------------------
@@ -158,11 +157,10 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doHarvest(Logger log, ResourceManager rm) throws Exception
+	protected void doHarvest(Logger log) throws Exception
 	{
-		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
-		Harvester h = new Harvester(log, context, dbms, params);
+		Harvester h = new Harvester(log, context, params);
 		result = h.harvest();
 	}
 

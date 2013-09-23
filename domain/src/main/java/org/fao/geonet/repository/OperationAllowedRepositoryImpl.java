@@ -3,6 +3,7 @@ package org.fao.geonet.repository;
 import com.google.common.base.Optional;
 import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,6 +11,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
 
 /**
@@ -54,6 +56,17 @@ public class OperationAllowedRepositoryImpl implements OperationAllowedRepositor
             query.where(mdIdEquals, userEqualsPredicate);
         }
 
+        return _entityManager.createQuery(query).getResultList();
+    }
+
+    @Override
+    public List<Integer> findAllIds(Specification<OperationAllowed> spec, SingularAttribute<OperationAllowedId, Integer> idAttribute) {
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Integer> query = cb.createQuery(Integer.class);
+        final Root<OperationAllowed> root = query.from(OperationAllowed.class);
+        query.where(spec.toPredicate(root, query, cb));
+        query.select(root.get(OperationAllowed_.id).get(idAttribute));
+        query.distinct(true);
         return _entityManager.createQuery(query).getResultList();
     }
 }

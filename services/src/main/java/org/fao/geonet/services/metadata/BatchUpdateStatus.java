@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -40,6 +39,7 @@ import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -76,8 +76,6 @@ public class BatchUpdateStatus extends NotInReadOnlyModeService {
 		AccessManager accessMan = gc.getBean(AccessManager.class);
 		UserSession us = context.getUserSession();
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(us);
 
@@ -85,19 +83,20 @@ public class BatchUpdateStatus extends NotInReadOnlyModeService {
 		Set<Integer> notFound = new HashSet<Integer>();
 		Set<Integer> notOwner = new HashSet<Integer>();
 
-		synchronized(sm.getSelection("metadata")) {
+        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 			String uuid = (String) iter.next();
-			String id   = dm.getMetadataId(dbms, uuid);
-								
-			MdInfo info = dm.getMetadataInfo(dbms, id);
+			String id   = dm.getMetadataId(uuid);
 
-			if (info == null) {
-				notFound.add(Integer.valueOf(id));
+
+            final Integer iId = Integer.valueOf(id);
+            if (metadataRepository.exists(iId)) {
+				notFound.add(iId);
 			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(Integer.valueOf(id));
+				notOwner.add(iId);
 			} else {
-				metadata.add(Integer.valueOf(id));
+				metadata.add(iId);
 			}
 		}
 		}
@@ -108,13 +107,13 @@ public class BatchUpdateStatus extends NotInReadOnlyModeService {
     //--- change status and carry out behaviours for status changes
     StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
 
-    StatusActions sa = saf.createStatusActions(context, dbms);
+    StatusActions sa = saf.createStatusActions(context);
 
     Set<Integer> noChange = saf.statusChange(sa, status, metadata, changeDate, changeMessage);
 
 		//--- reindex metadata
 		context.info("Re-indexing metadata");
-		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, dbms, metadata);
+		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
 		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids

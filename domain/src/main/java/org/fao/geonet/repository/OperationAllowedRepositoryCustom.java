@@ -3,7 +3,10 @@ package org.fao.geonet.repository;
 import com.google.common.base.Optional;
 import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 
+import javax.annotation.Nonnull;
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
 
 /**
@@ -18,7 +21,8 @@ public interface OperationAllowedRepositoryCustom {
      * @param metadataId id of metadata
      * @return the OperationsAllowed entities with the given metadataId
      */
-    List<OperationAllowed> findByMetadataId(String metadataId);
+    @Nonnull
+    List<OperationAllowed> findByMetadataId(@Nonnull String metadataId);
 
     /**
      * Find all the metadata owned by the user with the given userId and that satisfy the given specification.
@@ -27,5 +31,16 @@ public interface OperationAllowedRepositoryCustom {
      * @param specification an optional specification further restricting the OperationAllowed to load.
      * @return all the metadata owned by the user with the given userId and that satisfy the given specification.
      */
-    List<OperationAllowed> findAllWithOwner(int userId, Optional<Specification<OperationAllowed>> specification);
+    @Nonnull
+    List<OperationAllowed> findAllWithOwner(@Nonnull int userId, @Nonnull Optional<Specification<OperationAllowed>> specification);
+
+    /**
+     * Find all the ids identified by the idAttribute of the values returned by the spec.
+     * @param spec the specification for selecting which elements to load
+     * @param idAttribute the attribute of the OperationAllowedId to return in the list
+     *
+     * @return the list of ids returned.
+     */
+    @Nonnull
+    List<Integer> findAllIds(@Nonnull Specification<OperationAllowed> spec, @Nonnull SingularAttribute<OperationAllowedId, Integer> idAttribute);
 }

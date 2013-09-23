@@ -23,9 +23,11 @@
 
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
+import com.google.common.base.Optional;
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -53,6 +55,7 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
+import javax.transaction.TransactionManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -147,18 +150,15 @@ class Harvester extends BaseAligner
      *  
      * @param log		
      * @param context		Jeeves context
-     * @param dbms 			Database
      * @param params	Information about harvesting configuration for the node
      * 
      * @return null
      */
 	public Harvester(Logger log, 
 						ServiceContext context, 
-						Dbms dbms, 
 						OgcWxSParams params) {
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 
 		result = new HarvestResult ();
@@ -185,7 +185,7 @@ class Harvester extends BaseAligner
         // If harvest failed (ie. if node unreachable), metadata will be removed, and
         // the node will not be referenced in the catalogue until next harvesting.
         // TODO : define a rule for UUID in order to be able to do an update operation ? 
-        UUIDMapper localUuids = new UUIDMapper(dbms, params.uuid);
+        UUIDMapper localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
 
 
         // Try to load capabilities document
@@ -220,18 +220,19 @@ class Harvester extends BaseAligner
 			unsetThumbnail (id);
 			
 			// Remove metadata
-			dataMan.deleteMetadata (context, dbms, id);
+			dataMan.deleteMetadata (context, id);
 			
 			result.locallyRemoved ++;
 		}
 		
-		if (result.locallyRemoved > 0)
-			dbms.commit ();
+		if (result.locallyRemoved > 0) {
+            context.getBean(TransactionManager.class).commit();
+        }
 		
         // Convert from GetCapabilities to ISO19119
         addMetadata (xml);
-        
-        dbms.commit ();
+
+        context.getBean(TransactionManager.class).commit();
             
         result.totalMetadata = result.addedMetadata + result.layer;
     
@@ -259,8 +260,8 @@ class Harvester extends BaseAligner
 			return;
 
 		//--- Loading categories and groups
-		localCateg 	= new CategoryMapper (dbms);
-		localGroups = new GroupMapper (dbms);
+		localCateg 	= new CategoryMapper (context);
+		localGroups = new GroupMapper (context);
 
 		// md5 the full capabilities URL
 		String uuid = Sha1Encoder.encodeString (this.capabilitiesUrl); // is the service identifier
@@ -339,13 +340,13 @@ class Harvester extends BaseAligner
 
 		int iId = Integer.parseInt(id);
 
-         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-         addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 		
-		dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url);
-		dataMan.setTemplate(dbms, iId, "n", null);
-		
-		dbms.commit();
+		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url));
+		dataMan.setTemplate(iId, MetadataType.METADATA, null);
+
+         context.getBean(TransactionManager.class).commit();
 		//dataMan.indexMetadata(dbms, id); setTemplate update the index
 		
 		result.addedMetadata++;
@@ -576,7 +577,7 @@ class Harvester extends BaseAligner
 						// Extract uuid from loaded xml document
 						// FIXME : uuid could be duplicate if metadata already exist in catalog
 						reg.uuid = dataMan.extractUUID(schema, xml);
-						exist = dataMan.existsMetadataUuid(dbms, reg.uuid);
+						exist = dataMan.existsMetadataUuid(reg.uuid);
 						
 						if (exist) {
 							log.warning("    Metadata uuid already exist in the catalogue. Metadata will not be loaded.");
@@ -642,24 +643,25 @@ class Harvester extends BaseAligner
             
 			schema = dataMan.autodetectSchema (xml);
 			
-            reg.id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), reg.uuid, Integer.parseInt(params.ownerId), group, params.uuid,
+            reg.id = dataMan.insertMetadata(context, schema, xml, reg.uuid, Integer.parseInt(params.ownerId), group, params.uuid,
                          isTemplate, docType, title, category, date, date, ufo, indexImmediate);
 
 			int iId = Integer.parseInt(reg.id);
             if(log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
 
             if(log.isDebugEnabled()) log.debug("    - Set Privileges and category.");
-            addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+            addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-            if (params.datasetCategory!=null && !params.datasetCategory.equals(""))
-				dataMan.setCategory (context, dbms, reg.id, params.datasetCategory);
+            if (params.datasetCategory!=null && !params.datasetCategory.equals("")) {
+				dataMan.setCategory (context, reg.id, params.datasetCategory);
+            }
 
             if(log.isDebugEnabled()) log.debug("    - Set Harvested.");
-			dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url); // FIXME : harvestUuid should be a MD5 string
+			dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url)); // FIXME : harvestUuid should be a MD5 string
+
+            context.getBean(TransactionManager.class).commit();
 			
-			dbms.commit();
-			
-			dataMan.indexMetadata(dbms, reg.id);
+			dataMan.indexMetadata(reg.id);
 			
 			try {
     			// Load bbox info for later use (eg. WMS thumbnails creation)
@@ -732,8 +734,9 @@ class Harvester extends BaseAligner
 				par.addContent(new Element ("smallScalingDir").setText("width"));
 				
 				// Call the services 
-				s.execOnHarvest(par, context, dbms, dataMan);
-				dbms.commit();
+				s.execOnHarvest(par, context, dataMan);
+                context.getBean(TransactionManager.class).commit();
+
 				result.thumbnails ++;
 			} else
 				result.thumbnailsFailed ++;

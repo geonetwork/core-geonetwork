@@ -349,7 +349,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 
 		for(int i=0; i<sites.length; i++)
 		{
-            if(context.isDebug())
+            if(context.isDebugEnabled())
                 context.debug("Scanning site : "+sites[i]);
 
 			File categs[] = sites[i].listFiles(filter);
@@ -359,7 +359,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 
 			for(int j=0; j<categs.length; j++)
 			{
-                if(context.isDebug())
+                if(context.isDebugEnabled())
                     context.debug("   Scanning category : "+categs[j]);
 
 				String catDir  = categs[j].getName();

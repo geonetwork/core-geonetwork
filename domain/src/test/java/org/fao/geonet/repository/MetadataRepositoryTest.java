@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.google.common.base.Optional;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -54,6 +56,22 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         List<Integer> ids = _repo.findAllIdsBy(MetadataSpecs.hasMetadataUuid(metadata.getUuid()));
 
         assertArrayEquals(new Integer[]{metadata.getId()}, ids.toArray(new Integer[1]));
+    }
+
+    @Test
+    public void testSumPopularity() throws Exception {
+        final Metadata metadata = newMetadata();
+        metadata.getDataInfo().setPopularity(1);
+        _repo.save(metadata);
+        Metadata metadata1 = newMetadata();
+        metadata1.getDataInfo().setPopularity(2);
+        metadata1 = _repo.save(metadata1);
+        final Metadata metadata2 = newMetadata();
+        metadata2.getDataInfo().setPopularity(3);
+        _repo.save(metadata2);
+        assertEquals(6, _repo.sumOfPopularity(Optional.<Specification<Metadata>>absent()));
+        assertEquals(2, _repo.sumOfPopularity(Optional.of(MetadataSpecs.hasMetadataId(metadata1.getId()))));
+
     }
 
     @Test

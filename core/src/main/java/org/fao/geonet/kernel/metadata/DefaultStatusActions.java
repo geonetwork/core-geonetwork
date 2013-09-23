@@ -40,7 +40,6 @@ import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.MailSender;
-import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.data.domain.Sort;
 
@@ -161,7 +160,7 @@ public class DefaultStatusActions implements StatusActions {
 
             // --- if the status is already set to value of status then do nothing
             if (status.equals(currentStatus)) {
-                if (context.isDebug())
+                if (context.isDebugEnabled())
                     context.debug("Metadata " + mid + " already has status " + mid);
                 unchanged.add(mid);
             }

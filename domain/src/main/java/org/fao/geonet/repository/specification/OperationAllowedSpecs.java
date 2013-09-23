@@ -75,9 +75,9 @@ public final class OperationAllowedSpecs {
 
             @Override
             public Predicate toPredicate(Root<OperationAllowed> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Integer> mdIdAttributePath = root.get(OperationAllowed_.id).get(OperationAllowedId_.operationId);
-                Predicate mdIdEqualPredicate = cb.equal(mdIdAttributePath, cb.literal(operationId));
-                return mdIdEqualPredicate;
+                Path<Integer> opIdAttributePath = root.get(OperationAllowed_.id).get(OperationAllowedId_.operationId);
+                Predicate opIdEqualPredicate = cb.equal(opIdAttributePath, cb.literal(operationId));
+                return opIdEqualPredicate;
             }
         };
     }

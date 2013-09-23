@@ -24,8 +24,9 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.XmlRequest;
 
 import org.fao.geonet.constants.Edit;
@@ -38,6 +39,8 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.jdom.Element;
 
+import javax.transaction.TransactionManager;
+import java.util.Collection;
 import java.util.List;
 
 //=============================================================================
@@ -51,13 +54,12 @@ public class Aligner
 	//--------------------------------------------------------------------------
 
 	public Aligner(Logger log, XmlRequest req, GeonetParams params, DataManager dm,
-                   Dbms dbms, ServiceContext sc, CategoryMapper cm)
+                   ServiceContext sc, CategoryMapper cm)
 	{
 		this.log        = log;
 		this.req        = req;
 		this.params     = params;
 		this.dataMan    = dm;
-		this.dbms       = dbms;
 		this.context    = sc;
 		this.localCateg = cm;
     }
@@ -81,7 +83,7 @@ public class Aligner
 		//-----------------------------------------------------------------------
 		//--- retrieve local uuids for given site-id
 
-		localUuids = new UUIDMapper(dbms, siteId);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), siteId);
 
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
@@ -92,8 +94,8 @@ public class Aligner
 				String id = localUuids.getID(uuid);
 
                 if(log.isDebugEnabled()) log.debug("  - Removing old metadata with id="+ id);
-				dataMan.deleteMetadata(context, dbms, id);
-				dbms.commit();
+				dataMan.deleteMetadata(context, id);
+                context.getBean(TransactionManager.class).commit();
 				this.result.locallyRemoved++;
 			}
 
@@ -117,7 +119,7 @@ public class Aligner
                 this.result.schemaSkipped++;
             }
             else {
-                String id = dataMan.getMetadataId(dbms, remoteUuid);
+                String id = dataMan.getMetadataId(remoteUuid);
 
                 if (id == null) {
                     id = addMetadata(info);
@@ -126,12 +128,12 @@ public class Aligner
                     updateMetadata(siteId, info, id);
                 }
 
-                dbms.commit();
+                context.getBean(TransactionManager.class).commit();
 
                 //--- maybe the metadata was unretrievable
 
                 if (id != null) {
-                    dataMan.indexMetadata(dbms, id);
+                    dataMan.indexMetadata(id);
                 }
             }
         }
@@ -176,8 +178,8 @@ public class Aligner
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplate(dbms, iId, "n", null);
-		dataMan.setHarvested(dbms, iId, params.uuid);
+		dataMan.setTemplate(iId, MetadataType.METADATA, null);
+		dataMan.setHarvested(iId, params.uuid);
 
 		result.addedMetadata++;
 
@@ -204,7 +206,7 @@ public class Aligner
                 //--- remote category exists locally
 
                 if(log.isDebugEnabled()) log.debug("    - Setting category : " + catName);
-                dataMan.setCategory(context, dbms, id, catId);
+                dataMan.setCategory(context, id, catId);
             }
         }
 	}
@@ -216,8 +218,8 @@ public class Aligner
 	private void addPrivileges(String id) throws Exception
 	{
 		//--- set view privilege for both groups 'intranet' and 'all'
-		dataMan.setOperation(context, dbms, id, "0", "0");
-		dataMan.setOperation(context, dbms, id, "1", "0");
+		dataMan.setOperation(context, id, "0", "0");
+		dataMan.setOperation(context, id, "1", "0");
 	}
 
 	//--------------------------------------------------------------------------
@@ -253,20 +255,17 @@ public class Aligner
 	{
 		String date = localUuids.getChangeDate(remoteUuid);
 
-		if (!updateCondition(date, changeDate))
-		{
+		if (!updateCondition(date, changeDate)) {
             if(log.isDebugEnabled()) log.debug("  - XML not changed to local metadata with id="+ id);
 			result.unchangedMetadata++;
-		}
-		else
-		{
+		} else {
             if(log.isDebugEnabled()) log.debug("  - Updating local metadata with id="+ id);
 
 			Element md = getRemoteMetadata(req, remoteId);
 
-			if (md == null)
+			if (md == null) {
 				log.warning("  - Cannot get metadata (possibly bad XML) with remote id="+ remoteId);
-			else {
+            } else {
                 //
                 // update metadata
                 //
@@ -274,7 +273,7 @@ public class Aligner
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, changeDate, false);
+                dataMan.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false);
 
 				result.updatedMetadata++;
 			}
@@ -291,7 +290,7 @@ public class Aligner
 		//--- remove old categories
 
 		@SuppressWarnings("unchecked")
-        List<MetadataCategory> locCateg = dataMan.getCategories(dbms, id).getChildren();
+        Collection<MetadataCategory> locCateg = dataMan.getCategories(id);
 
         for (MetadataCategory el : locCateg) {
             int catId = el.getId();
@@ -420,7 +419,6 @@ public class Aligner
 	//---
 	//--------------------------------------------------------------------------
 
-	private Dbms           dbms;
 	private Logger         log;
 	private XmlRequest     req;
 	private GeonetParams   params;

@@ -23,12 +23,22 @@
 
 package org.fao.geonet.services.ownership;
 
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.repository.specification.UserSpecs;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specifications;
 
+import javax.annotation.Nullable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,44 +50,44 @@ import java.util.Set;
 public class OwnershipUtils
 {
 
-	public static List<Element> getOwnerUsers(ServiceContext context, UserSession us, Dbms dbms) throws SQLException
+	public static List<Element> getOwnerUsers(ServiceContext context, UserSession us) throws SQLException
 	{
 		if (!us.isAuthenticated())
 			return new ArrayList<Element>();
 
+        final List<User> allUsersThatOwnMetadata = context.getBean(UserRepository.class).findAllUsersThatOwnMetadata();
 
-		String query = "SELECT DISTINCT Users.id, username, name, surname, profile FROM Users, Metadata WHERE owner=Users.id";
-
-		@SuppressWarnings("unchecked")
-        List<Element> list  = dbms.select(query).getChildren();
-
-		return getUsers(context,us,dbms,list);
+		return getUsers(context, us, allUsersThatOwnMetadata);
 	}
 
-	public static List<Element> getEditorUsers(ServiceContext context, UserSession us, Dbms dbms) throws SQLException
+	public static List<Element> getEditorUsers(ServiceContext context, UserSession us) throws SQLException
 	{
 		if (!us.isAuthenticated())
 			return new ArrayList<Element>();
 
-		String query = "SELECT DISTINCT id, username, name, surname, profile FROM Users WHERE profile not like 'RegisteredUser'";
-
-		@SuppressWarnings("unchecked")
-        List<Element>   list  = dbms.select(query).getChildren();
-
-		return getUsers(context,us,dbms,list);
+        List<User> users = context.getBean(UserRepository.class).findAll(Specifications.not(UserSpecs.hasProfile(Profile.RegisteredUser)));
+        return getUsers(context,us,users);
 	}
 
-	public static List<Element> getUsers(ServiceContext context, UserSession us, Dbms dbms, List<Element> list) throws SQLException
+	public static List<Element> getUsers(ServiceContext context, UserSession us, List<User> users) throws SQLException
 	{
 
 		int id = us.getUserIdAsInt();
 
-		if (us.getProfile() == Profile.Administrator))
-			return list;
+		if (us.getProfile() == Profile.Administrator){
+			return Lists.transform(users, new Function<User, Element>() {
+                @Nullable
+                @Override
+                public Element apply(@Nullable User input) {
+                   return input.asXml();
+
+                }
+            });
+        }
 
 		//--- we have a user admin
 
-		Set<String> hsMyGroups = getUserGroups(dbms, id);
+		Set<String> hsMyGroups = getUserGroups(context, id);
 
         Set<String> profileSet = us.getProfile().getAllNames();
 
@@ -85,14 +95,16 @@ public class OwnershipUtils
 
 		List<Element> newList = new ArrayList<Element>();
 
-		for (Element elRec : list)
+		for (User elRec : users)
 		{
-			String userId = elRec.getChildText("id");
-			String profile= elRec.getChildText("profile");
+            int userId = elRec.getId();
+            Profile profile = elRec.getProfile();
 
-			if (profileSet.contains(profile))
-				if (hsMyGroups.containsAll(getUserGroups(dbms, Integer.parseInt(userId))))
-					newList.add(elRec);
+			if (profileSet.contains(profile)) {
+				if (hsMyGroups.containsAll(getUserGroups(context, userId))) {
+					newList.add(elRec.asXml());
+                }
+            }
 		}
 
 		//--- return result
@@ -106,19 +118,16 @@ public class OwnershipUtils
 	//---
 	//--------------------------------------------------------------------------
 
-	private static Set<String> getUserGroups(Dbms dbms, int id) throws SQLException
+	private static Set<String> getUserGroups(ServiceContext context, int id) throws SQLException
 	{
+        HashSet<String> groupIds = new HashSet<String>();
 
-		Set<String> hs = new HashSet<String>();
-
-		String query = "SELECT groupId AS id FROM UserGroups WHERE userId=?";
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, id).getChildren();
-		for (Element el : list) {
-			hs.add(el.getChildText("id"));
+        final List<UserGroup> users = context.getBean(UserGroupRepository.class).findAll(UserGroupSpecs.hasUserId(id));
+		for (UserGroup el : users) {
+			groupIds.add("" + el.getId().getGroupId());
 		}
 
-		return hs;
+		return groupIds;
 	}
 }
 

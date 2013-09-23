@@ -23,10 +23,10 @@
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.utils.Log;
@@ -46,6 +46,7 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
+import javax.transaction.TransactionManager;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -79,19 +80,19 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	}
 
 	@Override
-	protected void storeNodeExtra(Dbms dbms, AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
+	protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
 		ArcSDEParams as = (ArcSDEParams) params;
         super.setParams(as);
-		settingMan.add(dbms, "id:"+siteId, "icon", as.icon);
-		settingMan.add(dbms, "id:"+siteId, "server", as.server);
-		settingMan.add(dbms, "id:"+siteId, "port", as.port);
-		settingMan.add(dbms, "id:"+siteId, "username", as.username);
-		settingMan.add(dbms, "id:"+siteId, "password", as.password);
-		settingMan.add(dbms, "id:"+siteId, "database", as.database);
+		settingMan.add("id:"+siteId, "icon", as.icon);
+		settingMan.add("id:"+siteId, "server", as.server);
+		settingMan.add("id:"+siteId, "port", as.port);
+		settingMan.add("id:"+siteId, "username", as.username);
+		settingMan.add("id:"+siteId, "password", as.password);
+		settingMan.add("id:"+siteId, "database", as.database);
 	}
 	
 	@Override
-	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException {
+	protected String doAdd(Element node) throws BadInputEx, SQLException {
 	/*	try {
 			@SuppressWarnings("unused")
 			int test = GeoToolsDummyAPI.DUMMY_API_VERSION;
@@ -113,8 +114,8 @@ public class ArcSDEHarvester extends AbstractHarvester {
 			//--- force the creation of a new uuid
 			params.uuid = UUID.randomUUID().toString();
 		
-			String id = settingMan.add(dbms, "harvesting", "node", getType());
-			storeNode(dbms, params, "id:"+id);
+			String id = settingMan.add("harvesting", "node", getType());
+			storeNode(params, "id:"+id);
 
         Source source = new Source(params.uuid, params.name, true);
         context.getBean(SourceRepository.class).save(source);
@@ -144,24 +145,23 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	}
 
 	@Override
-	protected void doHarvest(Logger l, ResourceManager rm) throws Exception {
+	protected void doHarvest(Logger l) throws Exception {
 	    Log.info(ARCSDE_LOG_MODULE_NAME, "ArcSDE harvest starting");
 		ArcSDEMetadataAdapter adapter = new ArcSDEMetadataAdapter(params.server, params.port, params.database, params.username, params.password);
 		List<String> metadataList = adapter.retrieveMetadata();
-		align(metadataList, rm);
+		align(metadataList);
 		Log.info(ARCSDE_LOG_MODULE_NAME, "ArcSDE harvest finished");
 	}
 	
-	private void align(List<String> metadataList, ResourceManager rm) throws Exception {
+	private void align(List<String> metadataList) throws Exception {
 	    Log.info(ARCSDE_LOG_MODULE_NAME, "Start of alignment for : "+ params.name);
 		result = new HarvestResult();
-		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 		//----------------------------------------------------------------
 		//--- retrieve all local categories and groups
 		//--- retrieve harvested uuids for given harvesting node
-		CategoryMapper localCateg = new CategoryMapper(dbms);
-		GroupMapper localGroups = new GroupMapper(dbms);
-		dbms.commit();		
+		CategoryMapper localCateg = new CategoryMapper(context);
+		GroupMapper localGroups = new GroupMapper(context);
+        context.getBean(TransactionManager.class).commit();
 		List<String> idsForHarvestingResult = new ArrayList<String>();
 		//-----------------------------------------------------------------------
 		//--- insert/update metadata		
@@ -184,8 +184,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 				if(uuid == null || uuid.equals("")) {
 				    Log.info(ARCSDE_LOG_MODULE_NAME, "Skipping metadata due to failure extracting uuid (uuid null or empty).");
 					result.badFormat++;
-				}
-				else {
+				} else {
 
                     // validate it here if requested
                     if (params.validate) {
@@ -199,15 +198,15 @@ public class ArcSDEHarvester extends AbstractHarvester {
 					//
 					// add / update the metadata from this harvesting result
 					//
-					String id = dataMan.getMetadataId(dbms, uuid);
+					String id = dataMan.getMetadataId(uuid);
 					if (id == null)	{
 					    Log.info(ARCSDE_LOG_MODULE_NAME, "adding new metadata");
-						id = addMetadata(iso19139, uuid, dbms, schema, localGroups, localCateg);
+						id = addMetadata(iso19139, uuid, schema, localGroups, localCateg);
 						result.addedMetadata++;
 					}
 					else {
 					    Log.info(ARCSDE_LOG_MODULE_NAME, "updating existing metadata, id is: " + id);
-						updateMetadata(iso19139, id, dbms, localGroups, localCateg);
+						updateMetadata(iso19139, id, localGroups, localCateg);
 						result.updatedMetadata++;
 					}
 					idsForHarvestingResult.add(id);
@@ -222,13 +221,13 @@ public class ArcSDEHarvester extends AbstractHarvester {
         for(Metadata existingId : existingMetadata) {
             String ex$ = String.valueOf(existingId.getId());
 			if(!idsForHarvestingResult.contains(ex$)) {
-				dataMan.deleteMetadataGroup(context, dbms, ex$);
+				dataMan.deleteMetadataGroup(context, ex$);
 				result.locallyRemoved++;
 			}
 		}			
 	}
 
-	private void updateMetadata(Element xml, String id, Dbms dbms, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
+	private void updateMetadata(Element xml, String id, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
 	    Log.info(ARCSDE_LOG_MODULE_NAME, "  - Updating metadata with id: "+ id);
         //
         // update metadata
@@ -237,29 +236,31 @@ public class ArcSDEHarvester extends AbstractHarvester {
         boolean ufo = false;
         boolean index = false;
         String language = context.getLanguage();
-        dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, new ISODate().toString(), false);
+        final Metadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, new ISODate().toString(),
+                false);
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
         operationAllowedRepository.deleteAllByMetadataId(Integer.parseInt(id));
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+        metadata.getCategories().clear();
 
-		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+        context.getBean(MetadataRepository.class).save(metadata);
+        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+
+        context.getBean(TransactionManager.class).commit();
+		dataMan.indexMetadata(id);
 	}
 	/**
 	 * Inserts a metadata into the database. Lucene index is updated after insertion.
 	 * @param xml
 	 * @param uuid
-	 * @param dbms
 	 * @param schema
 	 * @param localGroups
 	 * @param localCateg
 	 * @throws Exception
 	 */
-	private String addMetadata(Element xml, String uuid, Dbms dbms, String schema, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
+	private String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
 	    Log.info(ARCSDE_LOG_MODULE_NAME, "  - Adding metadata with remote uuid: "+ uuid);
 
         //
@@ -275,14 +276,14 @@ public class ArcSDEHarvester extends AbstractHarvester {
 
 
 		int iId = Integer.parseInt(id);
-		dataMan.setTemplateExt(dbms, iId, "n", null);
-		dataMan.setHarvestedExt(dbms, iId, source);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+		dataMan.setHarvestedExt(iId, source);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+        context.getBean(TransactionManager.class).commit();
+		dataMan.indexMetadata(id);
 		return id;
 	}
 	
@@ -294,7 +295,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	}
 
 	@Override
-	protected void doUpdate(Dbms dbms, String id, Element node) throws BadInputEx, SQLException {
+	protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
 		ArcSDEParams copy = params.copy();
 
 		//--- update variables
@@ -302,10 +303,10 @@ public class ArcSDEHarvester extends AbstractHarvester {
 
 		String path = "harvesting/id:"+ id;
 
-		settingMan.removeChildren(dbms, path);
+		settingMan.removeChildren(path);
 
 		//--- update database
-		storeNode(dbms, copy, path);
+		storeNode(copy, path);
 
 		//--- we update a copy first because if there is an exception ArcSDEParams
 		//--- could be half updated and so it could be in an inconsistent state

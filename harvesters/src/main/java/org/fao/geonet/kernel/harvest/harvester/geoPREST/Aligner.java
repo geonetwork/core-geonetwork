@@ -24,8 +24,10 @@
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
@@ -40,6 +42,7 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.jdom.Element;
 
+import javax.transaction.TransactionManager;
 import java.net.URL;
 import java.util.Set;
 
@@ -53,10 +56,9 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public Aligner(Logger log, ServiceContext sc, Dbms dbms, GeoPRESTParams params) throws Exception {
+	public Aligner(Logger log, ServiceContext sc, GeoPRESTParams params) throws Exception {
 		this.log        = log;
 		this.context    = sc;
-		this.dbms       = dbms;
 		this.params     = params;
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -82,10 +84,10 @@ public class Aligner extends BaseAligner
 		//--- retrieve all local categories and groups
 		//--- retrieve harvested uuids for given harvesting node
 
-		localCateg = new CategoryMapper(dbms);
-		localGroups= new GroupMapper(dbms);
-		localUuids = new UUIDMapper(dbms, params.uuid);
-		dbms.commit();
+		localCateg = new CategoryMapper(context);
+		localGroups= new GroupMapper(context);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
+        context.getBean(TransactionManager.class).commit();
 
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
@@ -96,8 +98,8 @@ public class Aligner extends BaseAligner
 
 				if(log.isDebugEnabled())
 					log.debug("  - Removing old metadata with local id:"+ id);
-				dataMan.deleteMetadata(context, dbms, id);
-				dbms.commit();
+				dataMan.deleteMetadata(context, id);
+                context.getBean(TransactionManager.class).commit();
 				result.locallyRemoved++;
 			}
 		}
@@ -108,7 +110,7 @@ public class Aligner extends BaseAligner
 		for (RecordInfo ri : records) {
 			result.totalMetadata++;
 
-			String id = dataMan.getMetadataId(dbms, ri.uuid);
+			String id = dataMan.getMetadataId(ri.uuid);
 
 			if (id == null)	addMetadata(ri);
 			else				updateMetadata(ri, id);
@@ -149,18 +151,18 @@ public class Aligner extends BaseAligner
 		int userid = 1;
 		String group = null, isTemplate = null, docType = null, title = null, category = null;
 		boolean ufo = false, indexImmediate = false;
-		String id = dataMan.insertMetadata(context, dbms, schema, md, ri.uuid, userid, group, params.uuid, isTemplate, docType, title, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
+		String id = dataMan.insertMetadata(context, schema, md, ri.uuid, userid, group, params.uuid, isTemplate, docType, title, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplateExt(dbms, iId, "n", null);
-		dataMan.setHarvestedExt(dbms, iId, params.uuid);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+		dataMan.setHarvestedExt(iId, params.uuid);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+        context.getBean(TransactionManager.class).commit();
+		dataMan.indexMetadata(id);
 		result.addedMetadata++;
 	}
 
@@ -202,17 +204,18 @@ public class Aligner extends BaseAligner
 				boolean ufo = false;
 				boolean index = false;
 				String language = context.getLanguage();
-				dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, false);
+                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
                 repository.deleteAllByMetadataId(Integer.parseInt(id));
-                addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+                addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-				dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-                addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+                metadata.getCategories().clear();
+                context.getBean(MetadataRepository.class).save(metadata);
+                addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-				dbms.commit();
-				dataMan.indexMetadata(dbms, id);
+                context.getBean(TransactionManager.class).commit();
+				dataMan.indexMetadata(id);
 				result.updatedMetadata++;
 			}
 		}
@@ -314,7 +317,6 @@ public class Aligner extends BaseAligner
 
 	private Logger         log;
 	private ServiceContext context;
-	private Dbms           dbms;
 	private XmlRequest		 request;
 	private GeoPRESTParams params;
 	private DataManager    dataMan;

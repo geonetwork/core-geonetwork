@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import org.fao.geonet.exceptions.BadParameterEx;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Log;
@@ -85,7 +84,6 @@ class EditUtils {
      */
 	public void preprocessUpdate(Element params, ServiceContext context) throws Exception {
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		String id = Util.getParam(params, Params.ID);
 
 		//-----------------------------------------------------------------------
@@ -106,7 +104,7 @@ class EditUtils {
 		//--- check access
 		int iLocalId = Integer.parseInt(id);
 
-		if (!dataManager.existsMetadata(dbms, iLocalId))
+		if (!dataManager.existsMetadata(iLocalId))
 			throw new BadParameterEx("id", id);
 
 		if (!accessMan.canEdit(context, id))
@@ -133,7 +131,6 @@ class EditUtils {
      * @throws Exception
      */
 	public void updateContent(Element params, boolean validate, boolean embedded) throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		String id      = Util.getParam(params, Params.ID);
 		String version = Util.getParam(params, Params.VERSION);
         String minor      = Util.getParam(params, Params.MINOREDIT, "false");
@@ -157,7 +154,7 @@ class EditUtils {
 		// update element and return status
         //
 
-        boolean result = false;
+        Metadata result = null;
         // whether to request automatic changes (update-fixed-info)
         boolean ufo = true;
         // whether to index on update
@@ -166,18 +163,18 @@ class EditUtils {
         boolean updateDateStamp = !minor.equals("true");
         String changeDate = null;
 		if (embedded) {
-            Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(dbms, id, htChanges, version);
+            Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(id, htChanges, version);
             if(updatedMetada != null) {
-                result = dataManager.updateMetadata(context, dbms, id, updatedMetada, false, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
+                result = dataManager.updateMetadata(context, id, updatedMetada, false, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
             }
    		}
         else {
-            Element updatedMetada = applyChanges(dbms, id, htChanges, version);
+            Element updatedMetada = applyChanges(id, htChanges, version);
             if(updatedMetada != null) {
-			    result = dataManager.updateMetadata(context, dbms, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
+			    result = dataManager.updateMetadata(context, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
             }
 		}
-		if (!result) {
+		if (result == null) {
 			throw new ConcurrentUpdateEx(id);
         }
 	}
@@ -185,16 +182,15 @@ class EditUtils {
     /**
      * TODO javadoc.
      *
-     * @param dbms
      * @param id
      * @param changes
      * @param currVersion
      * @return
      * @throws Exception
      */
-    private Element applyChanges(Dbms dbms, String id, Map<String, String> changes, String currVersion) throws Exception {
+    private Element applyChanges(String id, Map<String, String> changes, String currVersion) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
-        Metadata md = xmlSerializer.select(id);
+        Element md = xmlSerializer.select(id);
 
 		//--- check if the metadata has been deleted
 		if (md == null) {
@@ -203,7 +199,7 @@ class EditUtils {
 
         EditLib editLib = dataManager.getEditLib();
 
-        String schema = dataManager.getMetadataSchema(dbms, id);
+        String schema = dataManager.getMetadataSchema(id);
 		editLib.expandElements(schema, md);
 		editLib.enumerateTree(md);
 

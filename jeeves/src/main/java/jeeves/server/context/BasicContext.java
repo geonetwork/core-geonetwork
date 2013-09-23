@@ -38,7 +38,7 @@ import java.util.Map;
 /** Contains a minimun context for a job execution (schedule, service etc...)
   */
 
-public class BasicContext
+public class BasicContext implements Logger
 {
 	private ResourceManager resMan;
 	private ProviderManager provMan;
@@ -121,11 +121,20 @@ public class BasicContext
 
 	//--------------------------------------------------------------------------
 
-    public boolean isDebug() {return logger.isDebugEnabled();}
-	public void debug  (String message) { logger.debug  (message); }
-	public void info   (String message) { logger.info   (message); }
-	public void warning(String message) { logger.warning(message); }
-	public void error  (String message) { logger.error  (message); }
+    @Override
+    public boolean isDebugEnabled() { return logger.isDebugEnabled(); }
+    @Override
+	public void debug(final String message) { logger.debug(message); }
+    @Override
+	public void info(final String message) { logger.info(message); }
+    @Override
+	public void warning(final String message) { logger.warning(message); }
+    @Override
+	public void error(final String message) { logger.error(message); }
+    @Override
+    public void fatal(final String message) { logger.fatal(message); }
+    @Override
+    public String getModule() { return logger.getModule(); }
 }
 
 //=============================================================================

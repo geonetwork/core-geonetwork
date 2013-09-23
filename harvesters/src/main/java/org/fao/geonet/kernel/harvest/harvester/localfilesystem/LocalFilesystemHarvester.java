@@ -30,10 +30,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.utils.IO;
@@ -54,6 +54,8 @@ import org.fao.geonet.util.XMLExtensionFilenameFilter;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+import javax.transaction.TransactionManager;
+
 /**
  * Harvester for local filesystem.
  * 
@@ -68,19 +70,19 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	}
 	
 	@Override
-	protected void storeNodeExtra(Dbms dbms, AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
+	protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
 		LocalFilesystemParams lp = (LocalFilesystemParams) params;
         super.setParams(lp);
         
-        settingMan.add(dbms, "id:"+siteId, "icon", lp.icon);
-		settingMan.add(dbms, "id:"+siteId, "recurse", lp.recurse);
-		settingMan.add(dbms, "id:"+siteId, "directory", lp.directoryname);
-		settingMan.add(dbms, "id:"+siteId, "nodelete", lp.nodelete);
-        settingMan.add(dbms, "id:"+siteId, "checkFileLastModifiedForUpdate", lp.checkFileLastModifiedForUpdate);
+        settingMan.add( "id:"+siteId, "icon", lp.icon);
+		settingMan.add( "id:"+siteId, "recurse", lp.recurse);
+		settingMan.add( "id:"+siteId, "directory", lp.directoryname);
+		settingMan.add( "id:"+siteId, "nodelete", lp.nodelete);
+        settingMan.add( "id:"+siteId, "checkFileLastModifiedForUpdate", lp.checkFileLastModifiedForUpdate);
 	}
 
 	@Override
-	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException {
+	protected String doAdd(Element node) throws BadInputEx, SQLException {
 		params = new LocalFilesystemParams(dataMan);
         super.setParams(params);
 
@@ -90,8 +92,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
 		
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
-		storeNode(dbms, params, "id:"+id);
+		String id = settingMan.add( "harvesting", "node", getType());
+		storeNode( params, "id:"+id);
 
         Source source = new Source(params.uuid, params.name, true);
         context.getBean(SourceRepository.class).save(source);
@@ -106,13 +108,11 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	 * on modification date are done; the result gets inserted or replaced if the result appears to
 	 * be in a supported schema.
 	 * @param listOfFiles
-	 * @param rm
 	 * @throws Exception
 	 */
-	private HarvestResult align(List<File> listOfFiles, ResourceManager rm) throws Exception {
+	private HarvestResult align(List<File> listOfFiles) throws Exception {
 		log.debug("Start of alignment for : "+ params.name);
 		result = new HarvestResult();
-		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
 		boolean transformIt = false;
 		String thisXslt = context.getAppPath() + Geonet.Path.IMPORT_STYLESHEETS + "/";
@@ -124,9 +124,9 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		//----------------------------------------------------------------
 		//--- retrieve all local categories and groups
 		//--- retrieve harvested uuids for given harvesting node
-		CategoryMapper localCateg = new CategoryMapper(dbms);
-		GroupMapper localGroups = new GroupMapper(dbms);
-		dbms.commit();		
+		CategoryMapper localCateg = new CategoryMapper(context);
+		GroupMapper localGroups = new GroupMapper(context);
+
 		List<String> idsForHarvestingResult = new ArrayList<String>();
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata
@@ -183,7 +183,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 					result.badFormat++;
 				}
 				else {
-					String id = dataMan.getMetadataId(dbms, uuid);
+					String id = dataMan.getMetadataId( uuid);
 					if (id == null)	{
 					    // For new record change date will be the time
 					    // the record was harvested
@@ -195,20 +195,22 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
                         
                         
 						log.debug("adding new metadata");
-						id = addMetadata(xml, uuid, dbms, schema, localGroups, localCateg, createDate);
+						id = addMetadata(xml, uuid, schema, localGroups, localCateg, createDate);
 						result.addedMetadata++;
 					} else {
 					    // Check last modified date of the file with the record change date
 					    // to check if an update is required
 					    if (params.checkFileLastModifiedForUpdate) {
     					    Date fileDate = new Date(file.lastModified());
-    					    String modified = dataMan.getMetadataInfo(dbms, id).changeDate;
-    					    Date recordDate = new ISODate(modified).toDate();
+
+                            final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+                            final ISODate modified = metadata.getDataInfo().getChangeDate();
+                            Date recordDate = modified.toDate();
                             
     					    log.debug(" File date is: " + fileDate.toString() + " / record date is: " + modified);
     					    if (recordDate.before(fileDate)) {
     					        log.debug("  Db record is older than file. Updating record with id: " + id);
-    					        updateMetadata(xml, id, dbms, localGroups, localCateg);
+    					        updateMetadata(xml, id, localGroups, localCateg);
                                 result.updatedMetadata ++;
     					    } else {
     					        log.debug("  Db record is not older than last modified date of file. No need for update.");
@@ -216,7 +218,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
     					    }
 					    } else {
     					    log.debug("  updating existing metadata, id is: " + id);
-    						updateMetadata(xml, id, dbms, localGroups, localCateg);
+    						updateMetadata(xml, id, localGroups, localCateg);
     						result.updatedMetadata++;
 					    }
 					}
@@ -235,7 +237,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 				String ex$ = String.valueOf(existingId.getId());
 				if(!idsForHarvestingResult.contains(ex$)) {
 				    log.debug("  Removing: " + ex$);
-					dataMan.deleteMetadata(context, dbms, ex$);
+					dataMan.deleteMetadata(context, ex$);
 					result.locallyRemoved++;
 				}
 			}			
@@ -244,7 +246,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		return result;
 	}
 
-	private void updateMetadata(Element xml, String id, Dbms dbms, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
+	private void updateMetadata(Element xml, String id, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
 		log.debug("  - Updating metadata with id: "+ id);
 
         //
@@ -254,17 +256,21 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
         boolean ufo = false;
         boolean index = false;
         String language = context.getLanguage();
-        dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, new ISODate().toString(), false);
+        final Metadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, new ISODate().toString(),
+                false);
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByMetadataId(Integer.parseInt(id));
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+        metadata.getCategories().clear();
+        context.getBean(MetadataRepository.class).save(metadata);
 
-		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+
+        context.getBean(TransactionManager.class).commit();
+
+		dataMan.indexMetadata(id);
 	}
 
 	
@@ -272,14 +278,13 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	 * Inserts a metadata into the database. Lucene index is updated after insertion.
 	 * @param xml
 	 * @param uuid
-	 * @param dbms
 	 * @param schema
 	 * @param localGroups
 	 * @param localCateg
 	 * @param createDate TODO
 	 * @throws Exception
 	 */
-	private String addMetadata(Element xml, String uuid, Dbms dbms, String schema, GroupMapper localGroups, CategoryMapper localCateg, String createDate) throws Exception {
+	private String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, CategoryMapper localCateg, String createDate) throws Exception {
 		log.debug("  - Adding metadata with remote uuid: "+ uuid);
 
 		String source = params.uuid;
@@ -293,24 +298,24 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
                          isTemplate, docType, title, category, createDate, createDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
-		dataMan.setTemplateExt(dbms, iId, "n", null);
-		dataMan.setHarvestedExt(dbms, iId, source);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+		dataMan.setHarvestedExt(iId, source);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+		context.getBean(TransactionManager.class).commit();
+		dataMan.indexMetadata(id);
 		return id;
     }
 
 	@Override
-	protected void doHarvest(Logger l, ResourceManager rm) throws Exception {
+	protected void doHarvest(Logger l) throws Exception {
 		log.debug("LocalFilesystem doHarvest: top directory is " + params.directoryname + ", recurse is " + params.recurse);
 		File directory = new File(params.directoryname);
 		List<File> results = IO.getFilesInDirectory(directory, params.recurse, new XMLExtensionFilenameFilter(XMLExtensionFilenameFilter.ACCEPT_DIRECTORIES));
 		log.debug("LocalFilesystem doHarvest: found #" + results.size() + " XML files.");
-		this.result = align(results, rm);
+		this.result = align(results);
 	}
 
 	@Override
@@ -321,7 +326,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	}
 
 	@Override
-	protected void doUpdate(Dbms dbms, String id, Element node) throws BadInputEx, SQLException {
+	protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
 		LocalFilesystemParams copy = params.copy();
 
 		//--- update variables
@@ -329,10 +334,10 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 
 		String path = "harvesting/id:"+ id;
 
-		settingMan.removeChildren(dbms, path);
+		settingMan.removeChildren(path);
 
 		//--- update database
-		storeNode(dbms, copy, path);
+		storeNode(copy, path);
 
 		//--- we update a copy first because if there is an exception LocalFilesystemParams
 		//--- could be half updated and so it could be in an inconsistent state

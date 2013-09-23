@@ -450,7 +450,7 @@ public class Importer {
 		return metadataIdMap;
 	}
 
-    private static void addCategoriesToMetadata(Metadata metadata, Element finalCategs, ServiceContext context) {
+    public static void addCategoriesToMetadata(Metadata metadata, Element finalCategs, ServiceContext context) {
         if (finalCategs != null) {
             final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
             for (Object cat : finalCategs.getChildren()) {

@@ -23,7 +23,6 @@
 
 package org.fao.geonet.component.harvester.csw;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -490,9 +489,8 @@ public class Harvest extends AbstractOperation implements CatalogService {
          */
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         HarvestManager hm = gc.getBean(HarvestManager.class);
-        String uuid = hm.add2(dbms, node);
+        String uuid = hm.add2(node);
         node.setAttribute("uuid", uuid);
         node.addContent(new Element("info"));
         AbstractHarvester harvester = hm.getHarvester(uuid);
@@ -660,11 +658,11 @@ public class Harvest extends AbstractOperation implements CatalogService {
 		// run
         Element response = Util.exec(activeParams, context, new Util.Job() {
             
-            public OperResult execute(Dbms dbms, HarvestManager hm, String id) throws Exception {
+            public OperResult execute(HarvestManager hm, String id) throws Exception {
                 if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
                     Log.debug(Geonet.CSW_HARVEST, "doHarvest starting harvester job");
-					hm.start(dbms, id);
-					return hm.run(dbms, id);
+					hm.start(id);
+					return hm.run(id);
 				}
 			});
 

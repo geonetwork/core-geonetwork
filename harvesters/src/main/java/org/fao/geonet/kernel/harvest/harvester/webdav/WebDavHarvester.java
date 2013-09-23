@@ -25,7 +25,6 @@ package org.fao.geonet.kernel.harvest.harvester.webdav;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.constants.Geonet;
@@ -74,7 +73,7 @@ public class WebDavHarvester extends AbstractHarvester {
 	//--- Add
 	//---
 	//---------------------------------------------------------------------------
-	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException {
+	protected String doAdd(Element node) throws BadInputEx, SQLException {
 		params = new WebDavParams(dataMan);
         super.setParams(params);
 
@@ -82,8 +81,8 @@ public class WebDavHarvester extends AbstractHarvester {
 		params.create(node);
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
-		storeNode(dbms, params, "id:"+id);
+		String id = settingMan.add("harvesting", "node", getType());
+		storeNode(params, "id:"+id);
         Source source = new Source(params.uuid, params.name, true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
@@ -95,14 +94,14 @@ public class WebDavHarvester extends AbstractHarvester {
 	//--- Update
 	//---
 	//---------------------------------------------------------------------------
-	protected void doUpdate(Dbms dbms, String id, Element node) throws BadInputEx, SQLException {
+	protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
 		WebDavParams copy = params.copy();
 		//--- update variables
 		copy.update(node);
 		String path = "harvesting/id:"+ id;
-		settingMan.removeChildren(dbms, path);
+		settingMan.removeChildren(path);
 		//--- update database
-		storeNode(dbms, copy, path);
+		storeNode(copy, path);
 		//--- we update a copy first because if there is an exception CswParams
 		//--- could be half updated and so it could be in an inconsistent state
         Source source = new Source(copy.uuid, copy.name, true);
@@ -115,13 +114,13 @@ public class WebDavHarvester extends AbstractHarvester {
     }
 
 	//---------------------------------------------------------------------------
-	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
+	protected void storeNodeExtra(AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
 		WebDavParams params = (WebDavParams) p;
-		settingMan.add(dbms, "id:"+siteId, "url",  params.url);
-		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
-		settingMan.add(dbms, "id:"+optionsId, "validate", params.validate);
-		settingMan.add(dbms, "id:"+optionsId, "recurse",  params.recurse);
-		settingMan.add(dbms, "id:"+optionsId, "subtype", params.subtype);
+		settingMan.add("id:"+siteId, "url",  params.url);
+		settingMan.add("id:"+siteId, "icon", params.icon);
+		settingMan.add("id:"+optionsId, "validate", params.validate);
+		settingMan.add("id:"+optionsId, "recurse",  params.recurse);
+		settingMan.add("id:"+optionsId, "subtype", params.subtype);
 	}
 
 	//---------------------------------------------------------------------------
@@ -129,10 +128,9 @@ public class WebDavHarvester extends AbstractHarvester {
 	//--- Harvest
 	//---
 	//---------------------------------------------------------------------------
-	protected void doHarvest(Logger log, ResourceManager rm) throws Exception {
+	protected void doHarvest(Logger log) throws Exception {
 		log.info("WebDav doHarvest start");
-		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
-		Harvester h = new Harvester(log, context, dbms, params);
+		Harvester h = new Harvester(log, context, params);
 		result = h.harvest();
 		log.info("WebDav doHarvest end");
 	}

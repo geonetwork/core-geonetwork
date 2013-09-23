@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -63,6 +65,26 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
 
         assertFindsCorrectMd(md1, isHarvested(false), false);
         assertFindsCorrectMd(md2, isHarvested(true), false);
+    }
+
+    @Test
+    public void testHasMetadataIdIn() throws Exception {
+        Metadata md1 = newMetadata(_inc);
+        md1 = _repository.save(md1);
+        Metadata md2 = newMetadata(_inc);
+        md2 = _repository.save(md2);
+
+        List<Metadata> all = _repository.findAll(hasMetadataIdIn(Arrays.asList(md1.getId())));
+        assertEquals(1, all.size());
+        assertEquals(md1.getId(), all.get(0).getId());
+
+        all = _repository.findAll(hasMetadataIdIn(Arrays.asList(md1.getId(), md2.getId())));
+        assertEquals(2, all.size());
+
+        all = _repository.findAll(hasMetadataIdIn(Collections.<Integer>emptyList()));
+        assertTrue(all.isEmpty());
+
+
     }
 
     @Test

@@ -4,6 +4,7 @@ import static org.fao.geonet.repository.UserRepositoryTest.*;
 import static org.fao.geonet.repository.specification.UserSpecs.*;
 import static org.junit.Assert.assertEquals;
 
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.UserRepository;
@@ -60,6 +61,24 @@ public class UserSpecsTest extends AbstractSpringDataTest {
         final List<User> found = _userRepo.findAll(hasNullAuthType());
         assertEquals(1, found.size());
         assertEquals(user1.getId(), found.get(0).getId());
+    }
+
+    @Test
+    public void testHasProfile() throws Exception {
+        final User user1 = newUser(_inc);
+        user1.setProfile(Profile.RegisteredUser);
+        _userRepo.save(user1);
+        final User user2 = newUser(_inc);
+        user2.setProfile(Profile.Reviewer);
+        _userRepo.save(user2);
+
+        List<User> found = _userRepo.findAll(hasProfile(Profile.RegisteredUser));
+        assertEquals(1, found.size());
+        assertEquals(user1.getId(), found.get(0).getId());
+
+        found = _userRepo.findAll(hasProfile(Profile.Reviewer));
+        assertEquals(1, found.size());
+        assertEquals(user2.getId(), found.get(0).getId());
     }
 
     @Test

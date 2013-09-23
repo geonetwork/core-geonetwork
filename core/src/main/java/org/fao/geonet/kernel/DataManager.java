@@ -1667,10 +1667,10 @@ public class DataManager {
      * @param changeDate
      * @param updateDateStamp
      *
-     * @return
+     * @return metadata if the that was updated
      * @throws Exception
      */
-    public synchronized boolean updateMetadata(final ServiceContext context, final String metadataId, final Element md,
+    public synchronized Metadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
                                                final boolean validate, final boolean ufo, final boolean index, final String lang,
                                                final String changeDate, final boolean updateDateStamp) throws Exception {
         Element metadataXml = md;
@@ -1696,7 +1696,8 @@ public class DataManager {
         xmlSerializer.update(metadataId, metadataXml, changeDate, updateDateStamp, uuid, context);
 
         // Notifies the metadata change to metatada notifier service
-        if (_metadataRepository.findOne(metadataId).getDataInfo().getType() == MetadataType.METADATA) {
+        final Metadata metadata = _metadataRepository.findOne(metadataId);
+        if (metadata.getDataInfo().getType() == MetadataType.METADATA) {
             // Notifies the metadata change to metatada notifier service
             notifyMetadataChange(metadataXml, metadataId);
         }
@@ -1712,7 +1713,7 @@ public class DataManager {
                 indexMetadata(metadataId);
             }
         }
-        return true;
+        return metadata;
     }
 
     /**

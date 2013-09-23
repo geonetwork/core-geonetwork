@@ -6,7 +6,7 @@ package org.fao.geonet.domain;
  * @author Jesse
  */
 public enum MetadataValidationStatus {
-    INVALID, VALID;
+    INVALID, VALID, NEVER_CALCULATED;
 
     public String getCode() {
         return String.valueOf(ordinal());

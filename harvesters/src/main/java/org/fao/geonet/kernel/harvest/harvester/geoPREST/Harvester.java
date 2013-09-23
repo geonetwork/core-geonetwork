@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 import org.fao.geonet.Constants;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -56,11 +55,10 @@ class Harvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, GeoPRESTParams params)
+	public Harvester(Logger log, ServiceContext context, GeoPRESTParams params)
 	{
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 
 	}
@@ -90,7 +88,7 @@ class Harvester
 
 		//--- align local node
 
-		Aligner aligner = new Aligner(log, context, dbms, params);
+		Aligner aligner = new Aligner(log, context, params);
 
 		return aligner.align(records);
 	}
@@ -204,7 +202,6 @@ class Harvester
 	//---
 	//---------------------------------------------------------------------------
 	private Logger         log;
-	private Dbms           dbms;
 	private GeoPRESTParams params;
 	private ServiceContext context;
 	private SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");

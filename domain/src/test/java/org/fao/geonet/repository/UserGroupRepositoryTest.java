@@ -50,7 +50,9 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
     public void testFindGroupIds() {
         UserGroup ug1 = _repo.save(newUserGroup());
         UserGroup ug2 = _repo.save(newUserGroup());
-        _repo.save(newUserGroup());
+        final UserGroup entity = newUserGroup();
+        entity.setGroup(ug2.getGroup());
+        _repo.save(entity);
         _repo.save(newUserGroup());
 
         assertEquals(4, _repo.count());

@@ -107,7 +107,7 @@ public class SelectionSearch implements Service
 						uuids = uuids +" or "+ uuid;
 				}
 			}
-            if(context.isDebug())
+            if(context.isDebugEnabled())
                 context.debug("List of selected uuids: " + uuids);
 			params.addContent(new Element(Geonet.SearchResult.UUID).setText(uuids));
 

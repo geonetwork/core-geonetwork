@@ -1,5 +1,6 @@
 package org.fao.geonet.repository.specification;
 
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserSecurity_;
 import org.fao.geonet.domain.User_;
@@ -26,6 +27,17 @@ public final class UserSpecs {
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Path<Integer> userIdAttributePath = root.get(User_.id);
                 Predicate userIdEqualPredicate = cb.equal(userIdAttributePath, cb.literal(userId));
+                return userIdEqualPredicate;
+            }
+        };
+    }
+
+    public static Specification<User> hasProfile(final Profile profile) {
+        return new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Profile> profilePath = root.get(User_.profile);
+                Predicate userIdEqualPredicate = cb.equal(profilePath, cb.literal(profile));
                 return userIdEqualPredicate;
             }
         };

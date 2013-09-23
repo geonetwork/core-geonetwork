@@ -24,8 +24,11 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataRatingByIp;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
@@ -53,6 +56,7 @@ import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.jdom.Element;
 
+import javax.transaction.TransactionManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -73,12 +77,11 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public Aligner(Logger log, ServiceContext context, Dbms dbms, XmlRequest req,
+	public Aligner(Logger log, ServiceContext context, XmlRequest req,
 						GeonetParams params, Element remoteInfo)
 	{
 		this.log     = log;
 		this.context = context;
-		this.dbms    = dbms;
 		this.request = req;
 		this.params  = params;
 
@@ -127,10 +130,10 @@ public class Aligner extends BaseAligner
 		//--- retrieve all local categories and groups
 		//--- retrieve harvested uuids for given harvesting node
 
-		localCateg = new CategoryMapper(dbms);
-		localGroups= new GroupMapper(dbms);
-		localUuids = new UUIDMapper(dbms, params.uuid);
-		dbms.commit();
+		localCateg = new CategoryMapper(context);
+		localGroups= new GroupMapper(context);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
+        context.getBean(TransactionManager.class).commit();
 
 
 		parseXSLFilter();
@@ -144,8 +147,8 @@ public class Aligner extends BaseAligner
 				String id = localUuids.getID(uuid);
 
                 if(log.isDebugEnabled()) log.debug("  - Removing old metadata with id:"+ id);
-				dataMan.deleteMetadata(context, dbms, id);
-				dbms.commit();
+				dataMan.deleteMetadata(context, id);
+                context.getBean(TransactionManager.class).commit();
 				result.locallyRemoved++;
 			}
 
@@ -165,7 +168,7 @@ public class Aligner extends BaseAligner
 			}
 			else
 			{
-				String id = dataMan.getMetadataId(dbms, ri.uuid);
+				String id = dataMan.getMetadataId(ri.uuid);
 
 				// look up value of localrating/enable
 				GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -342,17 +345,24 @@ public class Aligner extends BaseAligner
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplateExt(dbms, iId, isTemplate, null);
-		dataMan.setHarvestedExt(dbms, iId, params.uuid);
+        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        Metadata metadata = metadataRepository.findOne(iId);
+
+		dataMan.setTemplateExt(iId, MetadataType.lookup(isTemplate.charAt(0)), null);
+		dataMan.setHarvestedExt(iId, params.uuid);
 		
 		if(!localRating) {
 			String rating = general.getChildText("rating");
-			if (rating != null)
-				dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", Integer.valueOf(rating), iId);
+			if (rating != null) {
+                metadata.getDataInfo().setRating(Integer.valueOf(rating));
+            }
 		}
 		
-		if (popularity != null)
-			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", Integer.valueOf(popularity), iId);
+		if (popularity != null) {
+            metadata.getDataInfo().setPopularity(Integer.valueOf(popularity));
+        }
+
+        metadataRepository.save(metadata);
 
 		String pubDir = Lib.resource.getDir(context, "public",  id);
 		String priDir = Lib.resource.getDir(context, "private", id);
@@ -360,17 +370,17 @@ public class Aligner extends BaseAligner
 		IO.mkdirs(new File(pubDir), "Geonet Aligner public resources directory for metadata " + id);
 		IO.mkdirs(new File(priDir), "Geonet Aligner private resources directory for metadata " + id);
 
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 		if (params.createRemoteCategory) {
     		Element categs = info.getChild("categories");
     		if (categs != null) {
-    		    Importer.addCategories(context, dataMan, dbms, id, categs);
+    		    Importer.addCategoriesToMetadata(metadata, categs, context);
     		}
 		}
 		addPrivileges(id, info.getChild("privileges"));
 
-		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+        context.getBean(TransactionManager.class).commit();
+		dataMan.indexMetadata(id);
 		result.addedMetadata++;
 
 		return id;
@@ -470,7 +480,7 @@ public class Aligner extends BaseAligner
 			//--- allow only: view, download, dynamic, featured
 			if (opId == 0 || opId == 1 || opId == 5 || opId == 6) {
                 if(log.isDebugEnabled()) log.debug("       --> "+ opName);
-				dataMan.setOperation(context, dbms, id, groupId, opId +"");
+				dataMan.setOperation(context, id, groupId, opId +"");
 			} else {
                 if(log.isDebugEnabled()) log.debug("       --> "+ opName +" (skipped)");
             }
@@ -588,12 +598,14 @@ public class Aligner extends BaseAligner
                 return;
             }
         }
-
-		if (!ri.isMoreRecentThan(date))
+        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        final Metadata metadata;
+        if (!ri.isMoreRecentThan(date))
 		{
             if(log.isDebugEnabled())
                 log.debug("  - XML not changed for local metadata with uuid:"+ ri.uuid);
 			result.unchangedMetadata++;
+            metadata = metadataRepository.findOne(id);
 		}
 		else {
 			md = processMetadata(ri, md);
@@ -607,9 +619,10 @@ public class Aligner extends BaseAligner
             boolean index = false;
             boolean updateDateStamp = true;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, updateDateStamp);
+            metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
+                    updateDateStamp);
 
-			result.updatedMetadata++;
+            result.updatedMetadata++;
 		}
 
 		Element general = info.getChild("general");
@@ -618,19 +631,23 @@ public class Aligner extends BaseAligner
 
 		if(!localRating) {
 			String rating = general.getChildText("rating");
-			if (rating != null)
-				dbms.execute("UPDATE Metadata SET rating=? WHERE id=?", Integer.valueOf(rating), Integer.valueOf(id));
+			if (rating != null) {
+				metadata.getDataInfo().setRating(Integer.valueOf(rating));
+            }
 		}
 		
-		if (popularity != null)
-			dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?", Integer.valueOf(popularity), Integer.valueOf(id));
+		if (popularity != null) {
+            metadata.getDataInfo().setPopularity(Integer.valueOf(popularity));
+        }
 
-		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+        metadata.getCategories().clear();
+        metadataRepository.save(metadata);
+
+        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 		if (params.createRemoteCategory) {
             Element categs = info.getChild("categories");
             if (categs != null) {
-                Importer.addCategories(context, dataMan, dbms, id, categs);
+                Importer.addCategoriesToMetadata(metadata, categs, context);
             }
         }
 		
@@ -638,8 +655,8 @@ public class Aligner extends BaseAligner
         repository.deleteAllByMetadataId(Integer.parseInt(id));
 		addPrivileges(id, info.getChild("privileges"));
 
-		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+        context.getBean(TransactionManager.class).commit();
+		dataMan.indexMetadata(id);
 	}
 
 	/**
@@ -802,7 +819,6 @@ public class Aligner extends BaseAligner
 
 	private Logger         log;
 	private ServiceContext context;
-	private Dbms           dbms;
 	private XmlRequest     request;
 	private GeonetParams   params;
 	private DataManager    dataMan;

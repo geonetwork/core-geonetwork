@@ -82,4 +82,22 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         return results;
     }
 
+    @Nonnull
+    @Override
+    public List<User> findAllUsersThatOwnMetadata() {
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaQuery<User> query = cb.createQuery(User.class);
+
+        final Root<Metadata> metadataRoot = query.from(Metadata.class);
+        final Root<User> userRoot = query.from(User.class);
+
+        query.select(userRoot);
+
+        final Path<Integer> ownerPath = metadataRoot.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.owner);
+        Expression<Boolean> ownerExpression = cb.equal(ownerPath, userRoot.get(User_.id));
+        query.where(ownerExpression);
+
+        return _entityManager.createQuery(query).getResultList();
+    }
+
 }

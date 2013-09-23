@@ -124,8 +124,6 @@
                     <!--  the sql query to generate graph. CAUTION when modifying this query: java code and XSL page 
                     expect the following columns to be returned:  
                     	popularity (sum of popu per category), categoryid: the category identifier, categoryname: the category name -->
-                    <param name="query"
-                    		value="select sum(metadata.popularity) as popularity, metadatacateg.categoryid as categoryid, categories.name as categoryname from metadata, metadatacateg, categories where metadata.id = metadatacateg.metadataid and metadatacateg.categoryid = categories.id group by metadatacateg.categoryid, categories.name"/>
                 </call>
             </output>
         </service>

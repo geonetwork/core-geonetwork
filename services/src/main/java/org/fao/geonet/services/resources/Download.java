@@ -113,11 +113,11 @@ public class Download implements Service
 			String fromDescr = "GeoNetwork administrator";
 
 			if (host.trim().length() == 0 || from.trim().length() == 0)
-                if(context.isDebug())
+                if(context.isDebugEnabled())
                     context.debug("Skipping email notification");
 			else
 			{
-                if(context.isDebug()) {
+                if(context.isDebugEnabled()) {
                     context.debug("Sending email notification for file : "+ file);
                 }
 

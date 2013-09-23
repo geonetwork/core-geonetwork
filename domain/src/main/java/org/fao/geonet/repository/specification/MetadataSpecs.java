@@ -4,6 +4,8 @@ import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -89,6 +91,16 @@ public final class MetadataSpecs {
                 Path<Character> userNameAttributePath = root.get(Metadata_.harvestInfo).get(MetadataHarvestInfo_.harvested_JPAWorkaround);
                 Predicate equalHarvestPredicate = cb.equal(userNameAttributePath, cb.literal(Constants.toYN_EnabledChar(isHarvested)));
                 return equalHarvestPredicate;
+            }
+        };
+    }
+
+
+    public static Specification<Metadata> hasMetadataIdIn(final Collection<Integer> mdIds) {
+        return new Specification<Metadata>() {
+            @Override
+            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return root.get(Metadata_.id).in(mdIds);
             }
         };
     }

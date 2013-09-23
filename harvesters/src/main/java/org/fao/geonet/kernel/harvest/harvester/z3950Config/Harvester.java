@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.harvest.harvester.z3950Config;
 import jeeves.constants.Jeeves;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -50,7 +49,7 @@ class Harvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, Z3950ConfigParams params)
+	public Harvester(Logger log, ServiceContext context, Z3950ConfigParams params)
 	{
 		this.log    = log;
 		this.params = params;

@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -94,6 +95,25 @@ public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
         assertFalse(found2.get(0).isDeleted());
         assertTrue(_repo.findOne(history1.getId()).isDeleted());
         assertFalse(_repo.findOne(history2.getId()).isDeleted());
+    }
+
+    @Test
+    public void testDeleteAllById() {
+        HarvestHistory history1 = newHarvestHistory();
+        history1.setDeleted(false);
+        history1 = _repo.save(history1);
+
+        HarvestHistory history2 = newHarvestHistory();
+        history2.setDeleted(false);
+        history2 = _repo.save(history2);
+
+        _repo.deleteAllById(Arrays.asList(history1.getId()));
+
+        List<HarvestHistory> found = _repo.findAll();
+        assertEquals(1, found.size());
+        assertEquals(history2.getId(), found.get(0).getId());
+
+        assertNull(_repo.findOne(history1.getId()));
     }
 
     private HarvestHistory newHarvestHistory() {

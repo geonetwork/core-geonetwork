@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.constants.Geonet;
@@ -80,7 +79,7 @@ public class OgcWxSHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
+	protected String doAdd(Element node) throws BadInputEx, SQLException
 	{
 		params = new OgcWxSParams(dataMan);
         super.setParams(params);
@@ -91,9 +90,9 @@ public class OgcWxSHarvester extends AbstractHarvester
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
 
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
+		String id = settingMan.add("harvesting", "node", getType());
 
-		storeNode(dbms, params, "id:"+id);
+		storeNode(params, "id:"+id);
         Source source = new Source(params.uuid, params.name, true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
@@ -107,7 +106,7 @@ public class OgcWxSHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doUpdate(Dbms dbms, String id, Element node)
+	protected void doUpdate(String id, Element node)
 									throws BadInputEx, SQLException
 	{
 		OgcWxSParams copy = params.copy();
@@ -117,10 +116,10 @@ public class OgcWxSHarvester extends AbstractHarvester
 
 		String path = "harvesting/id:"+ id;
 
-		settingMan.removeChildren(dbms, path);
+		settingMan.removeChildren(path);
 
 		//--- update database
-		storeNode(dbms, copy, path);
+		storeNode(copy, path);
 
 		//--- we update a copy first because if there is an exception Params
 		//--- could be half updated and so it could be in an inconsistent state
@@ -135,22 +134,22 @@ public class OgcWxSHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 
-	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path,
+	protected void storeNodeExtra(AbstractParams p, String path,
 											String siteId, String optionsId) throws SQLException
 	{
 		OgcWxSParams params = (OgcWxSParams) p;
         super.setParams(params);
 
-        settingMan.add(dbms, "id:"+siteId, "url",  params.url);
-		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
-		settingMan.add(dbms, "id:"+siteId, "ogctype", params.ogctype);
-		settingMan.add(dbms, "id:"+optionsId, "lang",  params.lang);
-		settingMan.add(dbms, "id:"+optionsId, "topic",  params.topic);
-		settingMan.add(dbms, "id:"+optionsId, "createThumbnails",  params.createThumbnails);
-		settingMan.add(dbms, "id:"+optionsId, "useLayer",  params.useLayer);
-		settingMan.add(dbms, "id:"+optionsId, "useLayerMd",  params.useLayerMd);
-		settingMan.add(dbms, "id:"+optionsId, "datasetCategory",  params.datasetCategory);
-		settingMan.add(dbms, "id:"+optionsId, "outputSchema",  params.outputSchema);
+        settingMan.add("id:"+siteId, "url",  params.url);
+		settingMan.add("id:"+siteId, "icon", params.icon);
+		settingMan.add("id:"+siteId, "ogctype", params.ogctype);
+		settingMan.add("id:"+optionsId, "lang",  params.lang);
+		settingMan.add("id:"+optionsId, "topic",  params.topic);
+		settingMan.add("id:"+optionsId, "createThumbnails",  params.createThumbnails);
+		settingMan.add("id:"+optionsId, "useLayer",  params.useLayer);
+		settingMan.add("id:"+optionsId, "useLayerMd",  params.useLayerMd);
+		settingMan.add("id:"+optionsId, "datasetCategory",  params.datasetCategory);
+		settingMan.add("id:"+optionsId, "outputSchema",  params.outputSchema);
 	}
 
 	//---------------------------------------------------------------------------
@@ -159,11 +158,9 @@ public class OgcWxSHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doHarvest(Logger log, ResourceManager rm) throws Exception
+	protected void doHarvest(Logger log) throws Exception
 	{
-		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
-
-		Harvester h = new Harvester(log, context, dbms, params);
+		Harvester h = new Harvester(log, context, params);
 		result = h.harvest();
 	}
 

@@ -26,11 +26,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester.thredds;
 
+import com.google.common.base.Optional;
 import org.fao.geonet.Constants;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.BadServerCertificateEx;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -76,6 +77,7 @@ import ucar.nc2.units.DateType;
 import ucar.unidata.util.StringUtil;
 
 import javax.net.ssl.SSLHandshakeException;
+import javax.transaction.TransactionManager;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -181,16 +183,14 @@ class Harvester extends BaseAligner
 	 *  
 	 * @param log		
 	 * @param context		Jeeves context
-	 * @param dbms 			Database
 	 * @param params	Information about harvesting configuration for the node
 	 * 
 	 * @return null
      **/
 	
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, ThreddsParams params) {
+	public Harvester(Logger log, ServiceContext context, ThreddsParams params) {
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 
 		result = new HarvestResult ();
@@ -206,12 +206,12 @@ class Harvester extends BaseAligner
 		
 		//--- Create fragment harvester for atomic datasets if required
 		if (params.createAtomicDatasetMd && params.atomicMetadataGeneration.equals(ThreddsParams.FRAGMENTS)) {
-			atomicFragmentHarvester = new FragmentHarvester(log, context, dbms, getAtomicFragmentParams());
+			atomicFragmentHarvester = new FragmentHarvester(log, context, getAtomicFragmentParams());
 		}
 		
 		//--- Create fragment harvester for collection datasets if required
 		if (params.createCollectionDatasetMd && params.collectionMetadataGeneration.equals(ThreddsParams.FRAGMENTS)) {
-			collectionFragmentHarvester = new FragmentHarvester(log, context, dbms, getCollectionFragmentParams());
+			collectionFragmentHarvester = new FragmentHarvester(log, context, getCollectionFragmentParams());
 		}
 	}
 
@@ -232,7 +232,7 @@ class Harvester extends BaseAligner
         
 		//--- Get uuid's and change dates of metadata records previously 
 		//--- harvested by this harvester grouping by harvest uri
-		localUris = new UriMapper(dbms, params.uuid);
+		localUris = new UriMapper(context, params.uuid);
 
 		//--- Try to load thredds catalog document
 		String url = params.url;
@@ -260,7 +260,7 @@ class Harvester extends BaseAligner
 			if (!harvestUris.contains(localUri)) {
 				for (RecordInfo record: localUris.getRecords(localUri)) {
                     if(log.isDebugEnabled()) log.debug ("  - Removing deleted metadata with id: " + record.id);
-					dataMan.deleteMetadata (context, dbms, record.id);
+					dataMan.deleteMetadata (context, record.id);
 		
 					if (record.isTemplate.equals("s")) {
 						//--- Uncache xlinks if a subtemplate
@@ -272,8 +272,8 @@ class Harvester extends BaseAligner
 				}
 			}
 		}
-		
-		dbms.commit();
+
+        context.getBean(TransactionManager.class).commit();
 		
 	    result.totalMetadata = result.serviceRecords + result.collectionDatasetRecords + result.atomicDatasetRecords;
 		return result;
@@ -309,8 +309,8 @@ class Harvester extends BaseAligner
 			return;
 
 		//--- loading categories and groups
-		localCateg 	= new CategoryMapper (dbms);
-		localGroups = new GroupMapper (dbms);
+		localCateg 	= new CategoryMapper (context);
+		localGroups = new GroupMapper (context);
 
 		//--- Setup proxy authentication  
 		Lib.net.setupProxy(context);
@@ -452,15 +452,15 @@ class Harvester extends BaseAligner
                      isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 		
-		dataMan.setTemplateExt(dbms, iId, "n", null);
-		dataMan.setHarvestedExt(dbms, iId, params.uuid, uri);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(uri));
 
-        dataMan.indexMetadata(dbms, id);
-		
-		dbms.commit();
+        dataMan.indexMetadata(id);
+
+        context.getBean(TransactionManager.class).commit();
 	}
 
 	//---------------------------------------------------------------------------
@@ -557,7 +557,7 @@ class Harvester extends BaseAligner
 		if (localRecords == null) return;
 
 		for (RecordInfo record: localRecords) {
-			dataMan.deleteMetadata (context, dbms, record.id);
+			dataMan.deleteMetadata (context, record.id);
 
 			if (record.isTemplate.equals("s")) {
 				//--- Uncache xlinks if a subtemplate
@@ -1324,7 +1324,6 @@ class Harvester extends BaseAligner
 
 	private Logger         log;
 	private ServiceContext context;
-	private Dbms           dbms;
 	private ThreddsParams  params;
 	private DataManager    dataMan;
 	private SchemaManager  schemaMan;

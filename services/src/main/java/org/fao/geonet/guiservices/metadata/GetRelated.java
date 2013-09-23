@@ -25,7 +25,6 @@ package org.fao.geonet.guiservices.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Log;
@@ -104,15 +103,13 @@ public class GetRelated implements Service {
         GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
-        Dbms dbms = null;
 
         if (info == null) {
             String mdId = Utils.getIdentifierFromParameters(params, context);
             if (mdId == null)
                 throw new MetadataNotFoundEx("Metadata not found.");
 
-            dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-            uuid = dm.getMetadataUuid(dbms, mdId);
+            uuid = dm.getMetadataUuid(mdId);
             if (uuid == null)
                 throw new MetadataNotFoundEx("Metadata not found.");
 
@@ -141,14 +138,13 @@ public class GetRelated implements Service {
                 if (parent != null) {
                     String parentUuid = parent.getChildText("CharacterString", gco);
 
-									if(dbms == null) dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-									Element parentContent = getRecord(parentUuid, context, dbms, dm);
-									if (parentContent != null) {
-										relatedRecords.addContent(new Element("parent")
-											.addContent(new Element("response")
-											.addContent(parentContent)));
-									}
-								}
+                    Element parentContent = getRecord(parentUuid, context, dm);
+                    if (parentContent != null) {
+                        relatedRecords.addContent(new Element("parent")
+                                .addContent(new Element("response")
+                                        .addContent(parentContent)));
+                    }
+                }
             }
         }
         if (type.equals("") || type.contains("siblings")) {
@@ -173,8 +169,7 @@ public class GetRelated implements Service {
 										String initType = sib.getChild("initiativeType", gmd) 
 																 .getChild("DS_InitiativeTypeCode", gmd).getAttributeValue("codeListValue");
 
-										if(dbms == null) dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-										Element sibContent = getRecord(sibUuid, context, dbms, dm);
+										Element sibContent = getRecord(sibUuid, context, dm);
 										if (sibContent != null) {
 											Element sibling = new Element("sibling");
 											sibling.setAttribute("initiative",initType);
@@ -310,10 +305,10 @@ public class GetRelated implements Service {
         }
     }
 
-		private Element getRecord(String uuid, ServiceContext context, Dbms dbms, DataManager dm) {
+		private Element getRecord(String uuid, ServiceContext context, DataManager dm) {
 			Element content = null;
 			try {
-				String id = dm.getMetadataId(dbms, uuid);
+				String id = dm.getMetadataId(uuid);
 				boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
 
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.view);

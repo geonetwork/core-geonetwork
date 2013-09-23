@@ -21,10 +21,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester.z3950;
 
+import com.google.common.base.Optional;
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
@@ -47,6 +49,7 @@ import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
 
+import javax.transaction.TransactionManager;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -68,7 +71,7 @@ class Harvester extends BaseAligner {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, Z3950Params params) {
+	public Harvester(Logger log, ServiceContext context, Z3950Params params) {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		this.context = context;
 		this.log = log;
@@ -76,7 +79,6 @@ class Harvester extends BaseAligner {
 		this.dataMan = gc.getBean(DataManager.class);
 		this.settingMan = gc.getBean(SettingManager.class);
 		this.context = context;
-		this.dbms = dbms;
 		this.params = params;
 	}
 
@@ -96,18 +98,19 @@ class Harvester extends BaseAligner {
 		Z3950ServerResults serverResults = new Z3950ServerResults();
 
 		// --- Clean all before harvest : Remove/Add mechanism
-		localUuids = new UUIDMapper(dbms, params.uuid);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
 
 		// --- remove old metadata
 		for (String uuid : localUuids.getUUIDs()) {
 			String id = localUuids.getID(uuid);
             if(log.isDebugEnabled()) log.debug("  - Removing old metadata before update with id: " + id);
-			dataMan.deleteMetadataGroup(context, dbms, id);
+			dataMan.deleteMetadataGroup(context, id);
 			serverResults.locallyRemoved++;
 		}
 
-		if (serverResults.locallyRemoved > 0)
-			dbms.commit();
+		if (serverResults.locallyRemoved > 0) {
+            context.getBean(TransactionManager.class).commit();
+        }
 
 		// --- Search remote node
 		MetaSearcher s = searchMan.newSearcher(SearchManager.Z3950, Geonet.File.SEARCH_Z3950_CLIENT);
@@ -206,8 +209,8 @@ class Harvester extends BaseAligner {
 			List<Document> list = s.presentDocuments(context, request, config);
 
 			// --- Loading categories and groups
-			localCateg = new CategoryMapper(dbms);
-			localGroups = new GroupMapper(dbms);
+			localCateg = new CategoryMapper(context);
+			localGroups = new GroupMapper(context);
 
             if(log.isDebugEnabled())
                 log.debug("There are "+(list.size()-1)+" children in the results ("+lower+" to "+upper+")");
@@ -304,6 +307,7 @@ class Harvester extends BaseAligner {
 					continue;
 				}
 
+                final String id;
                 //
                 // insert metadata
                 //
@@ -312,10 +316,10 @@ class Harvester extends BaseAligner {
                     int owner = 1;
                     String category = null, createDate = new ISODate().toString(), changeDate = createDate;
                     boolean ufo = false, indexImmediate = false;
-					dataMan.insertMetadata(context, schema, md, uuid, owner, groupOwner, params.uuid,
-                        isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                    id = dataMan.insertMetadata(context, schema, md, uuid, owner, groupOwner, params.uuid,
+                            isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
-				}
+                }
                 catch (Exception e) {
 					log.error("Unable to insert metadata "+e.getMessage());
 					e.printStackTrace();
@@ -323,12 +327,13 @@ class Harvester extends BaseAligner {
 					continue;
 				}
 
-                addPrivileges(id$, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-                addCategories(id$, params.getCategories(), localCateg, dataMan, dbms, context, log, catCodes.get(colCode));
+                addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+                addCategories(id, params.getCategories(), localCateg, dataMan, context, log, catCodes.get(colCode));
 
 
-                dataMan.setTemplateExt(dbms, id, "n", null);
-				dataMan.setHarvestedExt(dbms, id, params.uuid, params.name);
+                final Integer iId = Integer.valueOf(id);
+                dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+				dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.name));
 
 				// validate it here if requested
 				if (params.validate) {
@@ -339,18 +344,18 @@ class Harvester extends BaseAligner {
 						docVal = new Document(md);
 					}
 
-					if (!dataMan.doValidate(dbms, schema, id$, docVal, context.getLanguage())) {
+					if (!dataMan.doValidate(schema, id, docVal, context.getLanguage())) {
 						result.doesNotValidate++;
 					} 
 				}
 			
-				dataMan.indexMetadata(dbms, id$);
+				dataMan.indexMetadata(id);
 
-				result.addedMetadata++;
-			}
-		}
+                context.getBean(TransactionManager.class).commit();
+                result.addedMetadata++;
+            }
+        }
 
-		dbms.commit();
 		return serverResults;
 	}
 
@@ -361,7 +366,6 @@ class Harvester extends BaseAligner {
 	// ---------------------------------------------------------------------------
 
 	private final Logger log;
-	private final Dbms dbms;
 	private final Z3950Params params;
 	private ServiceContext context;
 	private CategoryMapper localCateg;

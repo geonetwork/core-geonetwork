@@ -2,22 +2,15 @@ package org.fao.geonet.services.harvesting;
 
 
 import jeeves.constants.Jeeves;
-import org.fao.geonet.domain.HarvestHistory;
-import org.fao.geonet.domain.HarvestHistory_;
-import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.HarvestHistory_;
+import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import org.fao.geonet.kernel.harvest.HarvestManager;
-import org.fao.geonet.kernel.harvest.harvester.HarvesterHistoryDao;
 import org.fao.geonet.repository.HarvestHistoryRepository;
-import org.fao.geonet.repository.specification.HarvestHistorySpecs;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 
 import static org.fao.geonet.repository.specification.HarvestHistorySpecs.hasHarvesterUuid;
 

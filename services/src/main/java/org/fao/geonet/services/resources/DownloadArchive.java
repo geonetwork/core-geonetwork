@@ -182,7 +182,7 @@ public class DownloadArchive implements Service
 			Element details = BinaryFile.encode(200, file.getAbsolutePath(), false);
 			String remoteURL = details.getAttributeValue("remotepath");
 			if (remoteURL != null) {
-                if(context.isDebug())
+                if(context.isDebugEnabled())
                     context.debug("Downloading "+remoteURL+" to archive "+zFile.getName());
 				fileInfo.setAttribute("size","unknown");
 				fileInfo.setAttribute("datemodified","unknown");
@@ -190,7 +190,7 @@ public class DownloadArchive implements Service
 				notifyAndLog(doNotify, id, info.uuid, access, username, remoteURL+" (local config: "+file.getAbsolutePath()+")", context);
 				fname = details.getAttributeValue("remotefile");
 			} else {
-                if(context.isDebug())
+                if(context.isDebugEnabled())
                     context.debug("Writing "+fname+" to archive "+zFile.getName());
 				fileInfo.setAttribute("size",file.length()+"");
 				fileInfo.setAttribute("name",fname);
@@ -222,7 +222,7 @@ public class DownloadArchive implements Service
 		root.addContent(downloaded);
 		root.addContent(entered);
 		root.addContent(userDetails);
-        if(context.isDebug())
+        if(context.isDebugEnabled())
             context.debug("Passed to metadata-license-annex.xsl:\n "+Xml.getString(root));
 
 		//--- create the license annex html file using the info in root element and
@@ -274,11 +274,11 @@ public class DownloadArchive implements Service
 		Element license = Xml.selectElement(root, "metadata/*/licenseLink");
 		if (license != null) {
 			String licenseURL = license.getText();
-            if(context.isDebug())
+            if(context.isDebugEnabled())
                 context.debug("license URL = " + licenseURL);
 
 			String licenseFilesPath = getLicenseFilesPath(licenseURL, context);
-            if(context.isDebug())
+            if(context.isDebugEnabled())
                 context.debug(" licenseFilesPath = " + licenseFilesPath);
 
 			if (licenseFilesPath != null) {
@@ -286,7 +286,7 @@ public class DownloadArchive implements Service
 				File[] licenseFiles = licenseFilesDir.listFiles();
 				if (licenseFiles == null) return;
 				for (File licenseFile : licenseFiles) {
-                    if(context.isDebug())
+                    if(context.isDebugEnabled())
                         context.debug("adding " + licenseFile.getAbsolutePath() + " to zip file");
 					InputStream in = new FileInputStream(licenseFile);
 					addFile(out, licenseFile.getName(), in);
@@ -305,18 +305,18 @@ public class DownloadArchive implements Service
 		//--- Get license files subdirectory for license
 		URL url = new URL(licenseURL);
 		String licenseFilesPath = url.getHost() + url.getPath();
-        if(context.isDebug())
+        if(context.isDebugEnabled())
             context.debug("licenseFilesPath= " + licenseFilesPath);
 
 		//--- Get local mirror directory for license files
 		String path    = context.getAppPath();
-        if(context.isDebug())
+        if(context.isDebugEnabled())
             context.debug("path= " + path);
 
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		ServiceConfig configHandler = gc.getBean(ServiceConfig.class);
 		String licenseDir = configHandler.getValue(Geonet.Config.LICENSE_DIR);
-        if(context.isDebug())
+        if(context.isDebugEnabled())
             context.debug("licenseDir= " + licenseDir);
 		if (licenseDir == null) return null;
 
@@ -388,9 +388,9 @@ public class DownloadArchive implements Service
 			context.info("DOWNLOADED:"+theFile+","+id+","+uuid+","+context.getIpAddress()+","+username);
 
 			if (host.trim().length() == 0 || from.trim().length() == 0) {
-                if(context.isDebug()) context.debug("Skipping email notification");
+                if(context.isDebugEnabled()) context.debug("Skipping email notification");
 			} else {
-                if(context.isDebug()) context.debug("Sending email notification for file : "+ theFile);
+                if(context.isDebugEnabled()) context.debug("Sending email notification for file : "+ theFile);
 
                 OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);
                 List<OperationAllowed> opsAllowed = opAllowedRepo.findByMetadataId(id);

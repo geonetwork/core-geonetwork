@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -15,7 +16,8 @@ import java.util.List;
  *
  * @author Jesse
  */
-public interface HarvestHistoryRepository extends GeonetRepository<HarvestHistory, Integer>, JpaSpecificationExecutor<HarvestHistory> {
+public interface HarvestHistoryRepository extends GeonetRepository<HarvestHistory, Integer>, HarvestHistoryRepositoryCustom,
+        JpaSpecificationExecutor<HarvestHistory> {
     /**
      * Find all the HarvestHistory objects of the given type.
      *

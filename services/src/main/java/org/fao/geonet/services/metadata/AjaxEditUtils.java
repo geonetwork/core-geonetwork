@@ -1,6 +1,6 @@
 package org.fao.geonet.services.metadata;
 
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Log;
@@ -68,17 +68,16 @@ public class AjaxEditUtils extends EditUtils {
      * 
      * <p>
      * 
-     * @param dbms
      * @param id        Metadata internal identifier.
      * @param changes   List of changes to apply.
      * @param currVersion       Editing version which is checked against current editing version.
      * @return  The update metadata record
      * @throws Exception
      */
-    protected Element applyChangesEmbedded(Dbms dbms, String id, 
+    protected Element applyChangesEmbedded(String id,
                                         Map<String, String> changes, String currVersion) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
-        String schema = dataManager.getMetadataSchema(dbms, id);
+        String schema = dataManager.getMetadataSchema(id);
         EditLib editLib = dataManager.getEditLib();
 
         // --- check if the metadata has been modified from last time
@@ -130,7 +129,7 @@ public class AjaxEditUtils extends EditUtils {
             
             // Process attribute
             if (attribute != null) {
-                Pair<Namespace, String> attInfo = parseAttributeName(attribute, COLON_SEPARATOR, id, md, dbms, editLib);
+                Pair<Namespace, String> attInfo = parseAttributeName(attribute, COLON_SEPARATOR, id, md, editLib);
                 String localname = attInfo.two();
                 Namespace attrNS = attInfo.one();
                 if (el.getAttribute(localname, attrNS) != null) {
@@ -273,7 +272,6 @@ public class AjaxEditUtils extends EditUtils {
     /**
      * For Ajax Editing : adds an element or an attribute to a metadata element ([add] link).
      *
-     * @param dbms
      * @param session
      * @param id
      * @param ref
@@ -282,9 +280,9 @@ public class AjaxEditUtils extends EditUtils {
      * @return
      * @throws Exception
      */
-	public synchronized Element addElementEmbedded(Dbms dbms, UserSession session, String id, String ref, String name, String childName)  throws Exception {
+	public synchronized Element addElementEmbedded(UserSession session, String id, String ref, String name, String childName)  throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
-		String  schema = dataManager.getMetadataSchema(dbms, id);
+		String  schema = dataManager.getMetadataSchema(id);
 		//--- get metadata from session
 		Element md = getMetadataFromSession(session, id);
 
@@ -316,7 +314,7 @@ public class AjaxEditUtils extends EditUtils {
 					}
 				}
 				
-				Pair<Namespace, String> attInfo = parseAttributeName(name, ":", id, md, dbms, editLib);
+				Pair<Namespace, String> attInfo = parseAttributeName(name, ":", id, md, editLib);
 			    //--- Add new attribute with default value
                 el.setAttribute(new Attribute(attInfo.two(), defaultValue, attInfo.one()));
                 
@@ -384,10 +382,10 @@ public class AjaxEditUtils extends EditUtils {
      * @return
      * @throws Exception
      */
-	public synchronized Element deleteElementEmbedded(Dbms dbms, UserSession session, String id, String ref, String parentRef) throws Exception {
+	public synchronized Element deleteElementEmbedded(UserSession session, String id, String ref, String parentRef) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
 
-		String schema = dataManager.getMetadataSchema(dbms, id);
+		String schema = dataManager.getMetadataSchema(id);
 
 		//--- get metadata from session
 		Element md = getMetadataFromSession(session, id);
@@ -467,14 +465,13 @@ public class AjaxEditUtils extends EditUtils {
 	/**
 	 * Removes attribute in embedded mode.
 	 *
-	 * @param dbms
 	 * @param session
 	 * @param id
 	 * @param ref	Attribute identifier (eg. _169_uom).
 	 * @return
 	 * @throws Exception
 	 */
-	public synchronized Element deleteAttributeEmbedded(Dbms dbms, UserSession session, String id, String ref) throws Exception {
+	public synchronized Element deleteAttributeEmbedded(UserSession session, String id, String ref) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
 
 	    String[] token = ref.split("_");
@@ -490,7 +487,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, elementId);
 
 		if (el != null) {
-		    Pair<Namespace, String> attInfo = parseAttributeName(attributeName, ":", id, md, dbms, editLib);
+		    Pair<Namespace, String> attInfo = parseAttributeName(attributeName, ":", id, md, editLib);
 		    el.removeAttribute(attInfo.two(), attInfo.one());
 		}
 
@@ -501,7 +498,7 @@ public class AjaxEditUtils extends EditUtils {
 	}
 
     private Pair<Namespace, String> parseAttributeName(String attributeName, String separator,
-            String id, Element md, Dbms dbms, EditLib editLib) throws Exception {
+            String id, Element md, EditLib editLib) throws Exception {
         
         Integer indexColon = attributeName.indexOf(separator);
         String localname = attributeName;
@@ -510,7 +507,7 @@ public class AjaxEditUtils extends EditUtils {
         if (indexColon != -1) {
             String prefix = attributeName.substring(0, indexColon);
             localname = attributeName.substring(indexColon + separator.length());
-            String  schema = dataManager.getMetadataSchema(dbms, id);
+            String  schema = dataManager.getMetadataSchema(id);
             String namespace = editLib.getNamespace(prefix + ":" + localname, md, dataManager.getSchema(schema));
             attrNS = Namespace.getNamespace(prefix, namespace);
         }
@@ -519,17 +516,16 @@ public class AjaxEditUtils extends EditUtils {
     /**
      * For Ajax Editing : swap element with sibling ([up] and [down] links).
      *
-     * @param dbms
      * @param session
      * @param id
      * @param ref
      * @param down
      * @throws Exception
      */
-	public synchronized void swapElementEmbedded(Dbms dbms, UserSession session, String id, String ref, boolean down) throws Exception {
+	public synchronized void swapElementEmbedded(UserSession session, String id, String ref, boolean down) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
 
-	    dataManager.getMetadataSchema(dbms, id);
+	    dataManager.getMetadataSchema(id);
 
 		//--- get metadata from session
 		Element md = getMetadataFromSession(session, id);
@@ -571,14 +567,13 @@ public class AjaxEditUtils extends EditUtils {
      * For Ajax Editing : retrieves metadata from session and validates it.
      *
      * @param session
-     * @param dbms
      * @param id
      * @param lang
      * @return
      * @throws Exception
      */
-	public Element validateMetadataEmbedded(UserSession session, Dbms dbms, String id, String lang) throws Exception {
-		String schema = dataManager.getMetadataSchema(dbms, id);
+	public Element validateMetadataEmbedded(UserSession session, String id, String lang) throws Exception {
+		String schema = dataManager.getMetadataSchema(id);
 
 		//--- get metadata from session and clone it for validation
 		Element realMd = getMetadataFromSession(session, id);
@@ -589,10 +584,10 @@ public class AjaxEditUtils extends EditUtils {
 		editLib.removeEditingInfo(md);
 		editLib.contractElements(md);
         String parentUuid = null;
-        md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms, context);
+        md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, DataManager.UpdateDatestamp.no, context);
 
 		//--- do the validation on the metadata
-		return dataManager.doValidate(session, dbms, schema, id, md, lang, false).one();
+		return dataManager.doValidate(session, schema, id, md, lang, false).one();
 
 	}
 
@@ -600,7 +595,6 @@ public class AjaxEditUtils extends EditUtils {
      * For Editing : adds an attribute from a metadata ([add] link).
 	 * FIXME: Modify and use within Ajax controls
      *
-     * @param dbms
      * @param id
      * @param ref
      * @param name
@@ -608,7 +602,7 @@ public class AjaxEditUtils extends EditUtils {
      * @return
      * @throws Exception
      */
-	public synchronized boolean addAttribute(Dbms dbms, String id, String ref, String name, String currVersion) throws Exception {
+	public synchronized boolean addAttribute(String id, String ref, String name, String currVersion) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
 
 		Element md = xmlSerializer.select(id);
@@ -617,7 +611,7 @@ public class AjaxEditUtils extends EditUtils {
 		if (md == null)
 			return false;
 
-		String schema = dataManager.getMetadataSchema(dbms, id);
+		String schema = dataManager.getMetadataSchema(id);
         EditLib editLib = dataManager.getEditLib();
 		editLib.expandElements(schema, md);
 		editLib.enumerateTree(md);
@@ -642,15 +636,15 @@ public class AjaxEditUtils extends EditUtils {
 
         editLib.contractElements(md);
         String parentUuid = null;
-		md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms, context);
+		md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, DataManager.UpdateDatestamp.no, context);
         String changeDate = null;
-				xmlSerializer.update(id, md, changeDate, false, null, context);
+        xmlSerializer.update(id, md, changeDate, false, null, context);
 
         // Notifies the metadata change to metatada notifier service
-        dataManager.notifyMetadataChange(dbms, md, id);
+        dataManager.notifyMetadataChange(md, id);
 
 		//--- update search criteria
-        dataManager.indexInThreadPoolIfPossible(dbms,id);
+        dataManager.indexInThreadPoolIfPossible(id);
 
 		return true;
 	}
@@ -659,7 +653,6 @@ public class AjaxEditUtils extends EditUtils {
      * For Editing : removes an attribute from a metadata ([del] link).
 	 * FIXME: Modify and use within Ajax controls
      *
-     * @param dbms
      * @param id
      * @param ref
      * @param name
@@ -667,7 +660,7 @@ public class AjaxEditUtils extends EditUtils {
      * @return
      * @throws Exception
      */
-	public synchronized boolean deleteAttribute(Dbms dbms, String id, String ref, String name, String currVersion) throws Exception {
+	public synchronized boolean deleteAttribute(String id, String ref, String name, String currVersion) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
 
 		Element md = xmlSerializer.select(id);
@@ -676,7 +669,7 @@ public class AjaxEditUtils extends EditUtils {
 		if (md == null)
 			return false;
 
-		String schema = dataManager.getMetadataSchema(dbms, id);
+		String schema = dataManager.getMetadataSchema(id);
         EditLib editLib = dataManager.getEditLib();
 		editLib.expandElements(schema, md);
 		editLib.enumerateTree(md);
@@ -698,16 +691,16 @@ public class AjaxEditUtils extends EditUtils {
 
 		editLib.contractElements(md);
         String parentUuid = null;
-        md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms, context);
+        md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, DataManager.UpdateDatestamp.no, context);
 
         String changeDate = null;
 				xmlSerializer.update(id, md, changeDate, false, null, context);
 
         // Notifies the metadata change to metatada notifier service
-        dataManager.notifyMetadataChange(dbms, md, id);
+        dataManager.notifyMetadataChange(md, id);
 
 		//--- update search criteria
-        dataManager.indexInThreadPoolIfPossible(dbms, id);
+        dataManager.indexInThreadPoolIfPossible(id);
 
 		return true;
 	}

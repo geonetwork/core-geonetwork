@@ -1,8 +1,10 @@
 package org.fao.geonet.repository;
 
+import com.google.common.base.Optional;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.repository.statistic.MetadataStatisticsQueries;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,6 +21,14 @@ import java.util.List;
  * @author Jesse
  */
 public interface MetadataRepositoryCustom {
+    /**
+     * Return an object that contains functions for calculating several different statistical calculations (related to the metadata)
+     * based on the data in the database.
+     *
+     * @return an object for performing statistic calculation queries.
+     */
+    MetadataStatisticsQueries getMetadataStatistics();
+
     /**
      * Permit finding a metadata by its ids as a string.
      * <p/>
@@ -66,4 +76,11 @@ public interface MetadataRepositoryCustom {
     @Transactional
     Metadata findOneOldestByChangeDate();
 
+    /**
+     * Sum all the popularity of the selected metadata.
+     * @param optionalSpec an optional specification for selecting which metadata to sum.
+     *
+     * @return the sum all the popularity of the selected metadata.
+     */
+    int sumOfPopularity(Optional<Specification<Metadata>> optionalSpec);
 }

@@ -1,6 +1,7 @@
 package org.fao.geonet.repository;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -109,6 +110,42 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         assertEquals(2, md1Found);
         assertEquals(2, md2Found);
     }
+
+    @Test
+    public void testFindAllUsersThatOwnMetadata() {
+
+        User editUser = _userRepo.save(newUser().setProfile(Profile.Editor));
+        User reviewerUser = _userRepo.save(newUser().setProfile(Profile.Reviewer));
+        _userRepo.save(newUser().setProfile(Profile.RegisteredUser));
+        _userRepo.save(newUser().setProfile(Profile.Administrator));
+
+        Metadata md1 = MetadataRepositoryTest.newMetadata(_inc);
+        md1.getSourceInfo().setOwner(editUser.getId());
+        _metadataRepo.save(md1);
+
+        Metadata md2 = MetadataRepositoryTest.newMetadata(_inc);
+        md2.getSourceInfo().setOwner(reviewerUser.getId());
+        _metadataRepo.save(md2);
+
+        List<User> found = _userRepo.findAllUsersThatOwnMetadata();
+
+        assertEquals(2, found.size());
+        boolean editUserFound = false;
+        boolean reviewerUserFound = false;
+
+        for (User user : found) {
+            if (user.getId() == editUser.getId()) {
+                editUserFound = true;
+            }
+            if (user.getId() == reviewerUser.getId()) {
+                reviewerUserFound = true;
+            }
+        }
+
+        assertTrue(editUserFound);
+        assertTrue(reviewerUserFound);
+    }
+
 
     private User newUser() {
         User user = newUser(_inc);

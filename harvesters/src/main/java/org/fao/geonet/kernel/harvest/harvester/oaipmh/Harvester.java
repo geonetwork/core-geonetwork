@@ -23,11 +23,14 @@
 
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -47,10 +50,10 @@ import org.fao.oaipmh.requests.Transport;
 import org.fao.oaipmh.responses.GetRecordResponse;
 import org.fao.oaipmh.responses.Header;
 import org.fao.oaipmh.responses.ListIdentifiersResponse;
-import org.fao.oaipmh.util.ISODate;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+import javax.transaction.TransactionManager;
 import java.io.File;
 import java.net.URL;
 import java.util.HashSet;
@@ -66,11 +69,10 @@ class Harvester extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, OaiPmhParams params)
+	public Harvester(Logger log, ServiceContext context, OaiPmhParams params)
 	{
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 
 		result = new HarvestResult();
@@ -186,10 +188,10 @@ class Harvester extends BaseAligner
 		//--- retrieve all local categories and groups
 		//--- retrieve harvested uuids for given harvesting node
 
-		localCateg = new CategoryMapper(dbms);
-		localGroups= new GroupMapper(dbms);
-		localUuids = new UUIDMapper(dbms, params.uuid);
-		dbms.commit();
+		localCateg = new CategoryMapper(context);
+		localGroups= new GroupMapper(context);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
+        context.getBean(TransactionManager.class).commit();
 
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
@@ -200,8 +202,8 @@ class Harvester extends BaseAligner
 				String id = localUuids.getID(uuid);
 
                 if(log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
-				dataMan.deleteMetadataGroup(context, dbms, id);
-				dbms.commit();
+				dataMan.deleteMetadataGroup(context, id);
+                context.getBean(TransactionManager.class).commit();
 				result.locallyRemoved++;
 			}
 
@@ -262,14 +264,14 @@ class Harvester extends BaseAligner
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplateExt(dbms, iId, "n", null);
-		dataMan.setHarvestedExt(dbms, iId, params.uuid);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+		dataMan.setHarvestedExt(iId, params.uuid);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+        context.getBean(TransactionManager.class).commit();
+		dataMan.indexMetadata(id);
 		result.addedMetadata++;
 	}
 
@@ -406,20 +408,23 @@ class Harvester extends BaseAligner
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate.toString(), false);
+            final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate.toString(),
+                    false);
 
-			//--- the administrator could change privileges and categories using the
+            //--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
 
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
             repository.deleteAllByMetadataId(Integer.parseInt(id));
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-			dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-            addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+            metadata.getCategories().clear();
+            context.getBean(MetadataRepository.class).save(metadata);
 
-			dbms.commit();
-			dataMan.indexMetadata(dbms, id);
+            addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+
+            context.getBean(TransactionManager.class).commit();
+			dataMan.indexMetadata(id);
 			result.updatedMetadata++;
 		}
 	}
@@ -432,7 +437,6 @@ class Harvester extends BaseAligner
 
 	private Logger         log;
 	private ServiceContext context;
-	private Dbms           dbms;
 	private OaiPmhParams   params;
 	private DataManager    dataMan;
 	private CategoryMapper localCateg;

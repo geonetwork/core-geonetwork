@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  * Implementation for custom methods for the HarvestHistoryRepository class.
@@ -18,7 +19,7 @@ import javax.persistence.PersistenceContext;
  * Date: 9/20/13
  * Time: 4:03 PM
  */
-public class HarvestHistoryRepositoryImpl {
+public class HarvestHistoryRepositoryImpl implements HarvestHistoryRepositoryCustom {
 
     @PersistenceContext
     EntityManager _entityManager;
@@ -75,5 +76,24 @@ public class HarvestHistoryRepositoryImpl {
         }
         return result;
 
+    }
+
+    @Override
+    public int deleteAllById(Iterable<Integer> ids) {
+        StringBuilder idString = new StringBuilder();
+        for (Integer id : ids) {
+            if (idString.length() > 0) {
+                idString.append(',');
+            }
+            idString.append(id);
+        }
+
+        final Query query = _entityManager.createQuery("DELETE FROM " + HarvestHistory.class.getSimpleName() + " where id in (" +
+                                                       idString + ")");
+
+        final int deleted = query.executeUpdate();
+        _entityManager.clear();
+
+        return deleted;
     }
 }

@@ -1,14 +1,17 @@
 package org.fao.geonet.services.harvesting;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.harvest.harvester.HarvesterHistoryDao;
+import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.jdom.Element;
-import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
 
 public class HistoryDelete implements Service
 {
@@ -29,10 +32,15 @@ public class HistoryDelete implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		@SuppressWarnings("unchecked")
-        List<Element> ids = params.getChildren("id");
+        Collection<Integer> ids = Collections2.transform(params.getChildren("id"), new Function<Object, Integer>() {
+            @Nullable
+            @Override
+            public Integer apply(@Nonnull Object input) {
+                return Integer.valueOf(((Element)input).getText());
+            }
+        });
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		int nrRecs = HarvesterHistoryDao.deleteHistory(dbms, ids);
+        int nrRecs = context.getBean(HarvestHistoryRepository.class).deleteAllById(ids);
 
 		return new Element(Jeeves.Elem.RESPONSE).setText(nrRecs+"");
 	}

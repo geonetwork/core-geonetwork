@@ -99,7 +99,7 @@ public class Unset extends NotInReadOnlyModeService {
 				context.error("Error while deleting thumbnail: " + file);
 			}
 		} else {
-            if(context.isDebug())
+            if(context.isDebugEnabled())
 			    context.debug("Thumbnail does not exist: " + file);
 		}
 		
