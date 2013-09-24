@@ -12,9 +12,11 @@
    * to manage users and groups.
    */
   module.controller('GnUserGroupController', [
-    '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
+    '$scope', '$routeParams', '$http', '$rootScope', 
+    '$translate', '$compile', '$location',
     'gnSearchManagerService',
-    function($scope, $routeParams, $http, $rootScope, $translate, $compile,
+    function($scope, $routeParams, $http, $rootScope, 
+            $translate, $compile, $location,
             gnSearchManagerService) {
 
       $scope.pageMenu = {
@@ -44,7 +46,7 @@
       // Scope for group
       // List of catalog groups
       $scope.groups = null;
-      $scope.groupSelected = {id: $routeParams.groupId};
+      $scope.groupSelected = {id: $routeParams.userOrGroup};
       // List of metadata records attached to the selected group
       $scope.groupRecords = null;
       $scope.groupRecordsFilter = null;
@@ -103,12 +105,23 @@
 
 
 
-
       function loadGroups() {
         $http.get('admin.group.list@json').success(function(data) {
           $scope.groups = data;
         }).error(function(data) {
           // TODO
+        }).then(function () {
+            // Search if requested group in location is
+            // in the list and trigger selection.
+            // TODO: change route path when selected (issue - controller is
+            // reloaded)
+            if ($routeParams.userOrGroup) {
+                angular.forEach($scope.groups, function (u) {
+                    if (u.name === $routeParams.userOrGroup) {
+                        $scope.selectGroup(u);
+                    }
+                });
+            }
         });
       }
       function loadUsers() {
@@ -116,6 +129,16 @@
           $scope.users = data;
         }).error(function(data) {
           // TODO
+        }).then(function () {
+            // Search if requested user in location is 
+            // in the list and trigger user selection.
+            if ($routeParams.userOrGroup) {
+                angular.forEach($scope.users, function (u) {
+                    if (u.username === $routeParams.userOrGroup) {
+                        $scope.selectUser(u);
+                    }
+                });
+            }
         });
       }
 
@@ -380,7 +403,7 @@
 
       $scope.selectGroup = function(g) {
         $scope.groupSelected = g;
-
+        
         // Retrieve records in that group
         $scope.groupRecordsFilter = {
           template: 'y or n',

@@ -11,6 +11,7 @@
             <div class="list-group">
                 <a class="list-group-item" 
                     data-ng-repeat="g in groups | filter:groupSearch | orderBy:'name'"  
+                    data-ng-class="g.id === groupSelected.id ? 'active' : ''"
                     data-ng-click="selectGroup(g)">
                     {{g.label[lang]}}
                 </a>

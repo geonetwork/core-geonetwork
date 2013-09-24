@@ -46,7 +46,7 @@
         when('/organization/:tab', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnUserGroupController'}).
-        when('/organization/groups/:groupId', {
+        when('/organization/:tab/:userOrGroup', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnUserGroupController'}).
         when('/classification', {

@@ -12,6 +12,7 @@
             <div class="list-group">
                 <a class="list-group-item" 
                     data-ng-repeat="u in users | filter:userSearch | orderBy:'name'"  
+                    data-ng-class="u.id === userSelected.id ? 'active' : ''"
                     data-ng-click="selectUser(u)">
                     {{u.name}} {{u.surname}}
                 </a>
