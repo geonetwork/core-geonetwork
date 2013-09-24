@@ -530,6 +530,7 @@
     "standardLoadHelp": "In order to update an existing standard use its identifier.",
     "namespace": "Namespace",
     
+    "saveOrder": "Save order",
     
     "emptyCatalogShouldBeFilled": "The catalog is empty, you probably want to import new records or configure a harvester. You could also insert <a href='#/metadata/metadata-and-template/load-templates/all'>all templates</a>, <a href='#/metadata/metadata-and-template/load-samples/all'>all samples</a> or <a href='#/metadata/metadata-and-template/load-samples-and-templates/all'>both</a>."
 }

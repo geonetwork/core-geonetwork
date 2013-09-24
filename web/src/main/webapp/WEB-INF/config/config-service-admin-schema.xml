@@ -12,6 +12,20 @@
           <class name=".guiservices.templates.AddDefault"/>
       </service>
       
+      <service name="admin.templates.list">
+          <documentation><![CDATA[
+              Get a list of templates with sorting order information.
+              ]]></documentation>
+          <class name=".guiservices.templates.Get"/>
+      </service>
+      
+      <service name="admin.templates.save.order">
+          <documentation><![CDATA[
+              Save template order.
+              ]]></documentation>
+          <class name=".guiservices.templates.SaveDisplayOrder"/>
+      </service>
+      
       <service name="admin.load.samples">
           <documentation>Load sample records for one or more schema.</documentation>
           <class name=".guiservices.sampledata.Add"/>

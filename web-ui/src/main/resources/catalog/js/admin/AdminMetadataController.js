@@ -30,9 +30,10 @@
               icon: 'icon-archive',
               href: '#/metadata/metadata-and-template'
             },{
-              type: 'sort-template',
+              type: 'template-sort',
               label: 'sortTemplate',
-              href: 'metadata.templates.list' // TODO
+              icon: 'icon-sort',
+              href: '#/metadata/template-sort'
             }]
       };
 
@@ -143,7 +144,38 @@
       };
 
 
-      loadSchemas();
+      $scope.templates = null;
+      
+      var loadTemplates = function() {
+        $http.get('admin.templates.list@json')
+        .success(function(data) {
+          $scope.templates = data;
+        });
+      };
+
+      $scope.saveOrder = function(formId) {
+          $http.get('admin.templates.save.order?' + $(formId).serialize())
+          .success(function(data) {
+              loadTemplates();
+              })
+          .error(function(data) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate('saveTemplateOrderError'),
+                  error: data,
+                  timeout: 0,
+                  type: 'danger'});
+              });
+      }
+      
+      $scope.sortOrder = function (item) {
+          return parseInt(item.displayorder);
+      }
+      
+      if ($routeParams.tab === 'template-sort') {
+          loadTemplates();
+      } else {
+          loadSchemas();
+      }
 
     }]);
 

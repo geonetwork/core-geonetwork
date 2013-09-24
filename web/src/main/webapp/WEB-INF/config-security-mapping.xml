@@ -422,6 +422,11 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.list!?.*" access="hasRole('Administrator')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.save!?.*" access="hasRole('Administrator')"/>
                 
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.notifications.list!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.notifications.save!?.*" access="hasRole('Administrator')"/>
+                
+                
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.csw!?.*" access="hasRole('Administrator')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.csw.save!?.*" access="hasRole('Administrator')"/>
                 
@@ -443,6 +448,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.load.samples!?.*" access="hasRole('Administrator')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.load.templates!?.*" access="hasRole('Administrator')"/>
                 
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.templates.list!?.*" access="hasRole('Reviewer')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.templates.save.order!?.*" access="hasRole('Reviewer')"/>
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.list!?.*" access="hasRole('UserAdmin')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.add!?.*" access="hasRole('UserAdmin')"/>
@@ -456,7 +463,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.history!?.*" access="hasRole('UserAdmin')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.history.full!?.*" access="hasRole('UserAdmin')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.history.delete!?.*" access="hasRole('UserAdmin')"/>
-                
                 
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.languages.get!?.*" access="permitAll"/>

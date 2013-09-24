@@ -1509,6 +1509,7 @@
   
   <include>config/config-service-admin-batchprocess.xml</include>
   
+  <include>config/config-service-admin-notification.xml</include>
   <include>config/config-service-admin-index.xml</include>
   <include>config/config-service-admin-logo.xml</include>
   <include>config/config-service-admin-user-and-group.xml</include>
