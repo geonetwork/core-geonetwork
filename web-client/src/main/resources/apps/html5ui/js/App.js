@@ -583,7 +583,7 @@ GeoNetwork.app = function() {
                         statusBarId : 'info',
                         hostUrl : geonetworkUrl,
                         mdOverlayedCmpId : 'resultsPanel',
-                        adminAppUrl : geonetworkUrl + '/srv/' + lang + '/admin',
+                        adminAppUrl : geonetworkUrl + '/srv/' + lang + '/admin.console',
                         // Declare default store to be used for records and
                         // summary
                         metadataStore : GeoNetwork.Settings.mdStore ? new GeoNetwork.Settings.mdStore()
