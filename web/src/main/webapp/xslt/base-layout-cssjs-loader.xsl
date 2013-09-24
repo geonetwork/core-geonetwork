@@ -40,7 +40,9 @@
         <script src="{$uiResourcesPath}lib/closure/base.js"></script>
         
         <script src="{$uiResourcesPath}lib/jquery-2.0.2.js"></script>
-          
+        
+        <script src="{$uiResourcesPath}lib/moment+langs.min.js"></script>
+        
         <script src="{$uiResourcesPath}lib/angular/angular.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-resource.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-route.js"></script>
