@@ -75,6 +75,8 @@
       <xsl:otherwise>
         <script src="{$uiResourcesPath}lib/jquery-2.0.2.min.js"></script>
           
+        <script src="{$uiResourcesPath}lib/moment+langs.min.js"></script>
+        
         <script src="{$uiResourcesPath}lib/angular/angular.min.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-resource.min.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-route.min.js"></script>
