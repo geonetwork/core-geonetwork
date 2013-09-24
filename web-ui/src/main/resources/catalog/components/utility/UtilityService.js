@@ -36,5 +36,10 @@
 
 
   module.factory('gnUtilityService', gnUtilityService);
-
+  
+  module.filter('gnFromNow', function() {
+    return function(dateString) {
+      return moment(new Date(dateString)).fromNow()
+    };
+  });
 })();

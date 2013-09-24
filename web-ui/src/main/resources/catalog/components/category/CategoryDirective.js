@@ -8,15 +8,16 @@
      * exist in the catalog
      * 
      */
-    module.directive('gncategory', ['$http', '$translate', '$rootScope', 
-        function($http, $translate, $rootScope) {
+    module.directive('gnCategory', ['$http', '$translate', 
+        function($http, $translate) {
         
         return {
             restrict : 'A',
             replace: true,
             transclude: true,
             scope: {
-                element: '=gncategory'
+                element: '=gnCategory',
+                lang: '@lang'
             },
             templateUrl: '../../catalog/components/category/partials/' +
               'category.html',

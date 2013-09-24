@@ -11,7 +11,7 @@
     
     
     <fieldset>
-        <legend data-translate="">harvesterMainConfiguration</legend>
+        <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' + harvesterSelected['@type']) | translate}}</legend>
         <div data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
             <label class="control-label" data-translate="">serviceUrl</label>
             <input type="text" class="form-control" data-ng-model="harvesterSelected.site.url"/>
@@ -31,7 +31,7 @@
     
     
     <fieldset>
-        <legend data-translate="">harvesterAdvancedConfiguration</legend>
+        <legend><span data-translate="">harvesterAdvancedConfigurationFor</span> {{harvesterSelected['@type'] | translate}}</legend>
         
         
         <div data-gn-harvester-account="harvesterSelected"/>
@@ -41,50 +41,54 @@
             <label class="control-label">
                 <input type="checkbox"
                     data-ng-model="harvesterSelected.options.createThumbnails"/>
-                <span data-translate="">createThumbnails</label>
-            <p class="help-block" data-translate="">createThumbnailsHelp</p>
+                <span data-translate="">ogcwxs-createThumbnails</label>
+            <p class="help-block" data-translate="">ogcwxs-createThumbnailsHelp</p>
         </div>
         
         <div>
             <label class="control-label">
                 <input type="checkbox"
                     data-ng-model="harvesterSelected.options.useLayer"/>
-                <span data-translate="">createMetadataForEachLayer</label>
-            <p class="help-block" data-translate="">createMetadataForEachLayerHelp</p>
+                <span data-translate="">ogcwxs-createMetadataForEachLayer</label>
+            <p class="help-block" data-translate="">ogcwxs-createMetadataForEachLayerHelp</p>
         </div>
         
         <div>
             <label class="control-label">
                 <input type="checkbox"
                     data-ng-model="harvesterSelected.options.useLayerMd"/>
-                <span data-translate="">createMetadataForEachLayerUsingMetadataURL</label>
-            <p class="help-block" data-translate="">createMetadataForEachLayerUsingMetadataURLHelp</p>
+                <span data-translate="">ogcwxs-createMetadataForEachLayerUsingMetadataURL</label>
+            <p class="help-block" data-translate="">ogcwxs-createMetadataForEachLayerUsingMetadataURLHelp</p>
         </div>
         
         <div>
-            <label class="control-label" data-translate="">topicCategory</label>
+            <label class="control-label" data-translate="">ogcwxs-topicCategory</label>
             <input type="text" class="form-control" 
                 data-ng-model="harvesterSelected.options.topic"/>
         </div>
         
         <div>
-            <label class="control-label" data-translate="">datasetCategory</label>
+            <label class="control-label" data-translate="">ogcwxs-serviceCategory</label>
             
-            <div data-gn-category="harvesterSelected.options.datasetCategory"/>
-            <select class="form-control" data-ng-model="harvesterSelected.options.datasetCategory">
-                <option data-ng-repeat="c in categories" value="{{c['@id']}}" 
-                    data-ng-selected="c['@id'] == harvesterSelected.options.datasetCategory">{{c.label[lang] | translate}}</option>
-            </select>
+            <div data-gn-category="harvesterSelected.categories[0]['@id']" lang="{{lang}}"/>
         </div>
         
         <div>
-            <label class="control-label" data-translate="">metadataLanguage</label>
+            <label class="control-label" data-translate="">ogcwxs-datasetCategory</label>
+            
+            <div data-gn-category="harvesterSelected.options.datasetCategory" lang="{{lang}}"/>
+        </div>
+        
+        
+        <!-- TODO: Could be nicer to have a list of languages -->
+        <div>
+            <label class="control-label" data-translate="">ogcwxs-metadataLanguage</label>
             <input type="text" class="form-control" 
                 data-ng-model="harvesterSelected.options.lang"/>
         </div>
         
         <div>
-            <label class="control-label" data-translate="">outputSchema</label>
+            <label class="control-label" data-translate="">ogcwxs-outputSchema</label>
             <input type="text" class="form-control" 
                 data-ng-model="harvesterSelected.options.outputSchema"/>
         </div>
@@ -93,14 +97,14 @@
             <label class="control-label">
                 <input type="checkbox"
                     data-ng-model="harvesterSelected.content.validate"/>
-                <span data-translate="">validateRecord</span></label>
-            
-            <p class="help-block" data-translate="">validateRecordHelp</p>
+                <span data-translate="">harvesterValidate</span>
+            </label>
+            <p class="help-block" data-translate="">harvesterValidateHelp</p>
         </div>
         <div>
             <label class="control-label" data-translate="">applyXSLToRecord</label>
-            <input type="text" class="form-control" 
-                data-ng-model="harvesterSelected.content.importxslt"/>
+            <div data-gn-import-xsl="harvesterSelected.content.importxslt"/>
+            
             <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
         </div>
     </fieldset>

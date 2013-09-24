@@ -43,7 +43,7 @@ var gnHarvesterogcwxs = {
                     "@name" : "dynamic"
                 } ]
             } ],
-            "categories" : [],
+            "categories" : [{'@id': ''}],
             "info" : {
                 "lastRun" : [],
                 "running" : "false"

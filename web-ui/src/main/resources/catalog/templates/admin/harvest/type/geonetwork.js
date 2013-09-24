@@ -29,7 +29,20 @@ var gnHarvestergeonetwork = {
               "oneRunOnly": "false",
               "status": ""
             },
-            "searches": [],
+            "searches": [{
+                "freeText": "",
+                "title": "",
+                "abstract": "",
+                "keywords": "",
+                "digital": "",
+                "hardcopy": "",
+                "anyField": "",
+                "anyValue": "",
+                "source": {
+                  "uuid": [],
+                  "name": []
+                }
+              }],
             "privileges": [{
               "@id": "1",
               "operation":     [
@@ -61,7 +74,22 @@ var gnHarvestergeonetwork = {
                 + '      <password>' + h.site.account.password[0] + '</password>' 
                 + '    </account>'
                 + '  </site>' 
-                + '  <searches/>'
+                + '  <searches>'
+                + '    <search>'
+                + '      <freeText>' + h.searches[0].freeText + '</freeText>'
+                + '      <title>' + (h.searches[0].title || '') + '</title>'
+                + '      <abstract>' + (h.searches[0]['abstract'] || '') + '</abstract>'
+                + '      <keywords>' + (h.searches[0].keywords || '') + '</keywords>'
+                + '      <digital>' + (h.searches[0].digital || '') + '</digital>'
+                + '      <hardcopy>' + (h.searches[0].hardcopy || '') + '</hardcopy>'
+                + '      <anyField>' + (h.searches[0].anyField || '') + '</anyField>'
+                + '      <anyValue>' + (h.searches[0].anyValue || '') + '</anyValue>'
+                + '      <source>'
+                + '        <uuid>' + (h.searches[0].source.uuid || '') + '</uuid>'
+                + '        <name/>'
+                + '      </source>'
+                + '    </search>'
+                + '  </searches>'
                 + '  <options>' 
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
                 + '    <every>' + h.options.every + '</every>' 

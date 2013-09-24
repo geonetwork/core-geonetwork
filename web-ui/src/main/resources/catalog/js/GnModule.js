@@ -70,6 +70,7 @@
       var language = (navigator.userLanguage || navigator.language).split('-');
       // TODO : Add URL parameter to set UI language
       $translateProvider.preferredLanguage(language[0]);
+      moment.lang(language[0]);
     }]);
 
 })();

@@ -22,6 +22,7 @@
       $scope.lang = 'eng';
       $scope.url = '';
       $scope.base = '../../catalog/';
+      $scope.proxyUrl = '../../proxy?url=';
       $scope.logoPath = '../../images/harvesting/';
       $scope.pages = {
         home: 'catalog.search',
