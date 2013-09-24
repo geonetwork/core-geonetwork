@@ -7,6 +7,7 @@
     data-translate="">signIn</a>
 <a class="navbar-brand" href="{{pages.admin}}" data-ng-show="authenticated" data-translate>adminConsole</a>
 <p class="navbar-text pull-right" data-ng-show="authenticated"><span data-translate>signedInAs</span>
+    <img src="http://gravatar.com/avatar/{{user.hash}}?s=18"/>
     <a href="#userDetails"  title="{{'userDetails' | translate}}" class="navbar-link">
     {{user.name}} {{user.surname}} ({{user.profile | translate}})</a>
     <a href="#/organization/users/{{user.username}}" title="{{'userPreferences' | translate}}"><i class="icon-user"></i></a>
