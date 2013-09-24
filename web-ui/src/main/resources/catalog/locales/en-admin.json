@@ -517,5 +517,19 @@
     "processReportNoProcessFound": "Records with process not defined in its standard",
     "processReportNotOwner": "Not editable records",
     
+    "availableStandards": "Standards available",
+    "addOrUpdateStandards": "Add or update standards",
+    "standardName": "Standard identifier",
+    "standardFilePath": "Path to standard ZIP archive",
+    "standardUrl": "URL to standard ZIP archive",
+    "standardRecordUUID": "UUID of local metadata record with GeoNetwork Metadata Schema Archive (URL) as online resource ",
+    "removeStandard": "Remove",
+    "standardsDeleteError": "Error while deleting standards",
+    "addStandard": "Add",
+    "updateStandard": "Update",
+    "standardLoadHelp": "In order to update an existing standard use its identifier.",
+    "namespace": "Namespace",
+    
+    
     "emptyCatalogShouldBeFilled": "The catalog is empty, you probably want to import new records or configure a harvester. You could also insert <a href='#/metadata/metadata-and-template/load-templates/all'>all templates</a>, <a href='#/metadata/metadata-and-template/load-samples/all'>all samples</a> or <a href='#/metadata/metadata-and-template/load-samples-and-templates/all'>both</a>."
 }

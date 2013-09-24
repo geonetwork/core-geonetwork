@@ -1503,7 +1503,8 @@
   
   <include>config/config-service-admin.xml</include>
   <include>config/config-service-admin-harvesting.xml</include>
-
+  
+  <include>config/config-service-admin-schema.xml</include>
   <include>config/config-service-admin-category.xml</include>
   
   <include>config/config-service-admin-batchprocess.xml</include>
@@ -1512,18 +1513,18 @@
   <include>config/config-service-admin-logo.xml</include>
   <include>config/config-service-admin-user-and-group.xml</include>
   <include>config/config-service-admin-geoserver-publication.xml</include>
-
+  
   <include>config/config-service-statistics.xml</include>
   
   <include>config/config-service-admin-csw.xml</include>
-	<include>config/config-service-csw.xml</include>
-	<include>config/config-service-csw-virtual.xml</include>
-	
+  <include>config/config-service-csw.xml</include>
+  <include>config/config-service-csw-virtual.xml</include>
+  
   <include>config/config-service-sitemap.xml</include>
   
-	<include>config/config-ui-search.xml</include>
-	<include>config/config-ui-metadata.xml</include>
-	<include>config/config-ui-admin.xml</include>
+  <include>config/config-ui-search.xml</include>
+  <include>config/config-ui-metadata.xml</include>
+  <include>config/config-ui-admin.xml</include>
   
   <include>config/config-service-monitoring.xml</include>
 </geonet>

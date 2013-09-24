@@ -436,6 +436,10 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.index.config.reload!?.*" access="hasRole('Administrator')"/>
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.schema.list!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.schema.update!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.schema.add!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.schema.remove!?.*" access="hasRole('Administrator')"/>
+                
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.load.samples!?.*" access="hasRole('Administrator')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.load.templates!?.*" access="hasRole('Administrator')"/>
                 

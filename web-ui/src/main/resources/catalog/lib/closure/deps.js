@@ -30,7 +30,7 @@ goog.addDependency('../../js/GnLoginModule.js', ['gn_login'], ['gn_cat_controlle
 goog.addDependency('../../js/GnModule.js', ['gn'], ['gn_cat_controller', 'gn_metadata_manager', 'gn_pagination', 'gn_search_controller', 'gn_search_manager', 'gn_search_results', 'gn_translation', 'gn_translation_controller', 'gn_utility_service']);
 goog.addDependency('../../js/LoginController.js', ['gn_login_controller'], []);
 goog.addDependency('../../js/TranslationController.js', ['gn_translation_controller'], []);
-goog.addDependency('../../js/admin/AdminController.js', ['gn_admin_controller'], ['gn_adminmetadata_controller', 'gn_admintools_controller', 'gn_cat_controller', 'gn_classification_controller', 'gn_dashboard_controller', 'gn_harvest_controller', 'gn_settings_controller', 'gn_translation', 'gn_translation_controller', 'gn_usergroup_controller']);
+goog.addDependency('../../js/admin/AdminController.js', ['gn_admin_controller'], ['gn_adminmetadata_controller', 'gn_admintools_controller', 'gn_cat_controller', 'gn_classification_controller', 'gn_dashboard_controller', 'gn_harvest_controller', 'gn_settings_controller', 'gn_standards_controller', 'gn_translation', 'gn_translation_controller', 'gn_usergroup_controller']);
 goog.addDependency('../../js/admin/AdminMetadataController.js', ['gn_adminmetadata_controller'], []);
 goog.addDependency('../../js/admin/AdminToolsController.js', ['gn_admintools_controller'], []);
 goog.addDependency('../../js/admin/CSWSettingsController.js', ['gn_csw_settings_controller'], []);
@@ -45,6 +45,7 @@ goog.addDependency('../../js/admin/DashboardStatusController.js', ['gn_dashboard
 goog.addDependency('../../js/admin/HarvestController.js', ['gn_harvest_controller'], ['gn_category', 'gn_harvester', 'gn_importxsl']);
 goog.addDependency('../../js/admin/LogoSettingsController.js', ['gn_logo_settings_controller'], []);
 goog.addDependency('../../js/admin/SettingsController.js', ['gn_settings_controller'], ['gn_csw_settings_controller', 'gn_csw_test_controller', 'gn_csw_virtual_controller', 'gn_logo_settings_controller', 'gn_system_settings_controller']);
+goog.addDependency('../../js/admin/StandardsController.js', ['gn_standards_controller'], []);
 goog.addDependency('../../js/admin/SystemSettingsController.js', ['gn_system_settings_controller'], []);
 goog.addDependency('../../js/admin/ThesaurusController.js', ['gn_thesaurus_controller'], ['gn_thesaurus_type']);
 goog.addDependency('../../js/admin/UserGroupController.js', ['gn_usergroup_controller'], ['gn_dbtranslation']);

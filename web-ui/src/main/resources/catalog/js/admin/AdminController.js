@@ -2,6 +2,7 @@
   goog.provide('gn_admin_controller');
 
 
+
   goog.require('gn_adminmetadata_controller');
   goog.require('gn_admintools_controller');
   goog.require('gn_cat_controller');
@@ -9,6 +10,7 @@
   goog.require('gn_dashboard_controller');
   goog.require('gn_harvest_controller');
   goog.require('gn_settings_controller');
+  goog.require('gn_standards_controller');
   goog.require('gn_translation');
   goog.require('gn_translation_controller');
   goog.require('gn_usergroup_controller');
@@ -18,7 +20,7 @@
       ['gn_dashboard_controller', 'gn_usergroup_controller',
        'gn_admintools_controller', 'gn_settings_controller',
        'gn_adminmetadata_controller', 'gn_classification_controller',
-       'gn_harvest_controller']);
+       'gn_harvest_controller', 'gn_standards_controller']);
 
 
   var tplFolder = '../../catalog/templates/admin/';
@@ -70,6 +72,9 @@
         when('/settings/:tab', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnSettingsController'}).
+        when('/standards', {
+          templateUrl: tplFolder + 'page-layout.html',
+          controller: 'GnStandardsController'}).
         otherwise({templateUrl: tplFolder + 'admin.html'});
   }]);
 
@@ -91,7 +96,10 @@
           // TODO : create gn classes
           {name: 'metadatasAndTemplates', route: '#metadata',
             classes: 'btn-primary', icon: 'icon-archive'},
-          {name: 'io', url: 'import', classes: 'btn-primary',
+          {name: 'io',
+            // Metadata import is made in the widget apps
+            url: 'search?import',
+            classes: 'btn-primary',
             icon: 'icon-upload'},
           {name: 'harvesters', route: '#harvest', //url: 'harvesting',
             classes: 'btn-primary', icon: 'icon-cloud-download'},
@@ -99,7 +107,7 @@
             classes: 'btn-success', icon: 'icon-dashboard'},
           {name: 'classificationSystems', route: '#classification',
             classes: 'btn-info', icon: 'icon-tags'},
-          {name: 'standards', url: 'admin',
+          {name: 'standards', route: '#standards',
             classes: 'btn-info', icon: 'icon-puzzle-piece'},
           {name: 'usersAndGroups', route: '#organization',
             classes: 'btn-default', icon: 'icon-group'},
