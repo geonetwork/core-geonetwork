@@ -93,7 +93,7 @@ GeoNetwork.util.SearchTools = {
                         metadataStore.loadData(currentRecords);
                     }
                     
-                    if (isCatalogueSStore) {
+                    if (isCatalogueSStore && summaryStore !== null) {
                         var summary = currentRecords.summary;
                         var type = summaryStore.root.split('.');
                         var root = (type !== undefined ? type[0] : 'keywords');
