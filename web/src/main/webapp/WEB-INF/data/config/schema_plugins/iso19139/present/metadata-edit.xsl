@@ -2967,7 +2967,9 @@
       </xsl:variable>
       
       <xsl:variable name="title">
-        <xsl:apply-templates mode="escapeXMLEntities" select="/root/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
+        <xsl:apply-templates mode="escapeXMLEntities" select="/root/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString">
+          <xsl:with-param name="includingCRLF" select="true()"/>
+        </xsl:apply-templates>
       </xsl:variable>
     
       <xsl:variable name="abstract">
