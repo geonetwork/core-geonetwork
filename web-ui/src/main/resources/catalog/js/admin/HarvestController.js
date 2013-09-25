@@ -95,7 +95,7 @@
         $http.get('admin.harvester.info@json?type=harvesterTypes')
         .success(function(data) {
               angular.forEach(data[0], function(value) {
-                $scope.harvesterTypes[value] = {label: $translate(value)};
+                $scope.harvesterTypes[value] = {label: value};
                 $.getScript('../../catalog/templates/admin/harvest/type/' +
                     value + '.js')
                     .done(function(script, textStatus) {

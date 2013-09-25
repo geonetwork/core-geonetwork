@@ -38,6 +38,13 @@
     "_cat": "Category",
     "keyword": "Keyword",
     "filter": "Filter",
+    "_groupPublished": "Published in that group",
+    "_source": "Catalog",
+    "_groupOwner": "Group",
+    "owner": "Owner",
+    "selectAll": "All",
+    "selectNone": "None",
+    
     
     
     "profile": "User profile",

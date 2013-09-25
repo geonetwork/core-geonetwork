@@ -92,29 +92,12 @@
 
       /**
        * The list of batch process available.
-       * TODO : move to a config file or add
-       * service to retrieve list from server
+       * Stored in batch-process-cfg.json. 
+       * TODO: Move to server side configuration.
+       * TODO: i18n should not be shared in en-admin.json
+       * 
        */
-      $scope.batchProcesses = [{
-        key: 'thumbnails-host-url-relocator',
-        params: [
-                 {name: 'urlPrefix', value: 'http://oldurl'},
-                 {name: 'newUrlPrefix', value: 'http://newurl'}
-        ]
-      },{
-        key: 'keywords-mapper',
-        params: [
-          {name: 'search', value: 'key1;key2'},
-          {name: 'replace', value: 'newkey1;newkey2'}
-        ]
-      },{
-        key: 'contact-updater',
-        params: [
-          {name: 'emailToSearch', value: '', type: 'email'},
-          {name: 'contactAsXML', value: '', type: 'textarea',
-            help: 'contactUpdaterXMLParam'}
-        ]
-      }];
+      $scope.batchProcesses = null;
 
       /**
        * Search filter selected for metadata and template type
@@ -125,6 +108,12 @@
       $scope.batchSearchGroups = {};
       $scope.batchSearchUsers = {};
       $scope.batchSearchCategories = {};
+
+      function loadProcessConfig() {
+        $http.get($scope.base + 'js/batch-process-cfg.json').success(function(data) {
+          $scope.batchProcesses = data.config;
+        });
+      }
 
       function loadGroups() {
         $http.get('admin.group.list@json').success(function(data) {
@@ -202,6 +191,7 @@
       };
 
       // TODO: Should only do that if batch process is the current page
+      loadProcessConfig();
       checkLastBatchProcessReport();
       loadGroups();
       loadUsers();

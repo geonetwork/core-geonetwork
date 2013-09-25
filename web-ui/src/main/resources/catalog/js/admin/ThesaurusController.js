@@ -17,6 +17,7 @@
    *  * Only keyword in the GUI language will be displayed
    * and edited. TODO
    *  * Keyword relation can't be modified.
+   *  * Thesaurus properties once created can't be modified
    *
    */
   module.controller('GnThesaurusController', [

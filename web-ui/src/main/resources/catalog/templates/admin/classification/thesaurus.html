@@ -13,8 +13,9 @@
           data-ng-click="selectThesaurus(t)"> {{t.title}} ({{t.dname}}) </a>
       </div>
 
-      <div class="btn-group">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+      <div class="btn-group btn-block">
+        <button type="button" class="btn btn-primary btn-block dropdown-toggle" data-toggle="dropdown">
+          <i class="icon-plus"></i>
           <span data-translate="">addThesaurus</span>
           <span class="caret"/>
         </button>
@@ -48,7 +49,6 @@
       <!--<ul>
         <li data-ng-repeat="(key, value) in thesaurusSelected">{{key}}: {{value}}</li>
       </ul>-->
-
       <form id="gn-edit-thesaurus" name="gn-edit-thesaurus">
         <fieldset>
           <div>
@@ -98,17 +98,24 @@
         <span data-translate="">keywords</span>
       </div>
 
-      <form class="form-inline" role="form">
+      <form class="form-horizontal" role="form">
         <div class="form-group">
-          <label for="maxNumberOfKeywords" data-translate="">maxNumberOfKeywords</label>
-          <input id="maxNumberOfKeywords" class="form-control" data-ng-model="maxNumberOfKeywords"
-            placeholder="{{'maxNumberOfKeywords' | translate}}"/>
+          <label for="keywordFilter" class="col-lg-4" data-translate="">keywordFilter</label>
+          <div class="col-lg-8">
+            <input id="keywordFilter" class="form-control" 
+                autofocus=""
+                data-ng-model="keywordFilter"
+                placeholder="{{'keywordFilter' | translate}}"/>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="keywordFilter" data-translate="">keywordFilter</label>
-          <input id="keywordFilter" class="form-control" data-ng-model="keywordFilter"
-            placeholder="{{'keywordFilter' | translate}}"/>
-        </div>
+          <div class="form-group">
+              <label for="maxNumberOfKeywords" class="col-lg-4" 
+                  data-translate="">maxNumberOfKeywords</label>
+              <div class="col-lg-8">
+                  <input id="maxNumberOfKeywords" class="form-control" data-ng-model="maxNumberOfKeywords"
+                      placeholder="{{'maxNumberOfKeywords' | translate}}"/>
+              </div>
+          </div>
       </form>
       <ul>
         <li data-ng-repeat="k in keywords">{{k.value['#text']}} <i
@@ -148,7 +155,7 @@
             data-ng-show="importAs == 'file' || importAs == 'url'" action="thesaurus.upload@json" method="POST"
             enctype="multipart/form-data" data-file-upload="thesaurusUploadOptions">
             <span data-ng-show="importAs == 'file'" 
-              class="btn btn-success fileinput-button" ng-class="{disabled: disabled}">
+              class="btn btn-success btn-block fileinput-button" ng-class="{disabled: disabled}">
               <i class="icon-plus icon-white"/>
               <span data-translate="">chooseThesaurus</span>
                 <input type="file" id="gn-thesaurus-file" name="fname" multiple="true" ng-disabled="disabled"/>
@@ -216,12 +223,12 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" data-translate=""
+          <button type="button" class="btn icon-ban-circle" data-dismiss="modal" data-translate=""
             >cancel</button>
-          <button type="button" class="btn btn-primary icon-add" data-translate=""
+          <button type="button" class="btn btn-primary icon-plus" data-translate=""
             data-ng-show="importAs == 'new'"
             data-ng-click="createThesaurus()">createThesaurus</button>
-          <button type="button" class="btn btn-primary icon-add" data-translate=""
+          <button type="button" class="btn btn-primary icon-plus" data-translate=""
             data-ng-hide="importAs == 'new'"
             data-ng-disabled="queue.length === 0 && thesaurusUrl == ''"
             data-ng-click="importThesaurus('#gn-upload-thesaurus')" data-translate="">uploadThesaurus</button>
@@ -295,11 +302,11 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" data-translate=""
+          <button type="button" class="btn icon-ban-circle" data-dismiss="modal" data-translate=""
             >cancel</button>
-          <button type="button" class="btn btn-primary" data-ng-hide="isNewKeyword()"
+          <button type="button" class="btn btn-primary icon-save" data-ng-hide="isNewKeyword()"
             data-translate="" data-ng-click="updateKeyword()">updateKeyword</button>
-          <button type="button" class="btn btn-primary" data-ng-show="isNewKeyword()"
+          <button type="button" class="btn btn-primary icon-plus" data-ng-show="isNewKeyword()"
             data-translate="" data-ng-click="createKeyword()">createKeyword</button>
         </div>
       </div>

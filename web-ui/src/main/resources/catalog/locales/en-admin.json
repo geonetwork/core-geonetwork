@@ -112,6 +112,24 @@
     "data.resources": "Resources folder: ",
     "data.schemaPluginsDir": "Standard folder: ",
     "data.subversionPath": "Subversion repository: ",
+    "db.maxactive": "Maximum number of connections",
+    "db.numactive": "Active connections",
+    "db.numidle": "Available connections",
+    "db.openattempt": "Status",
+    "db.url": "JDBC URL",
+    "java.version": "JVM version",
+    "java.vm.name": "JVM name",
+    "java.vm.vendor": "JVM vendor",
+    "mem.free": "Total free memory",
+    "mem.total": "Total memory",
+    "os.arch": "System architecture",
+    "os.name": "System name",
+    "xslt.factory": "XSLT factory",
+    "index.lucene.config": "Lucene configuration",
+    "index.path": "Index directory",
+    "index.size": "Total index size (ko)",
+    "index.size.lucene": "Lucene index size (ko)",
+    
     
     "q": "Search",
     "qi": "Internal search",
@@ -174,7 +192,6 @@
     "urlUpdater": "Update URLs in metadata records",
     "processReport-done": "Number of records proccessed",
     
-    "contactUpdaterXMLParam": "<h5>Example:</h5><code class='gn-code'>&lt;gmd:CI_ResponsibleParty xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\"&gt;&lt;gmd:individualName&gt;&lt;gco:CharacterString&gt;A new user&lt;/gco:CharacterString&gt;&lt;/gmd:individualName&gt;&lt;gmd:organisationName&gt;&lt;gco:CharacterString&gt;Organisation&lt;/gco:CharacterString&gt;&lt;/gmd:organisationName&gt;&lt;gmd:contactInfo&gt;&lt;gmd:CI_Contact&gt;&lt;gmd:address&gt;&lt;gmd:CI_Address&gt;&lt;gmd:electronicMailAddress&gt;&lt;gco:CharacterString&gt;newemail@organisation.org&lt;/gco:CharacterString&gt;&lt;/gmd:electronicMailAddress&gt;&lt;/gmd:CI_Address&gt;&lt;/gmd:address&gt;&lt;/gmd:CI_Contact&gt;&lt;/gmd:contactInfo&gt;&lt;gmd:role&gt;&lt;gmd:CI_RoleCode codeListValue=\"pointOfContact\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode\"/&gt;&lt;/gmd:role&gt;&lt;/gmd:CI_ResponsibleParty&gt;</code>",
     
     "saveSettings": "Save settings",
     "system": "System settings",
@@ -325,8 +342,9 @@
     "sortTemplate": "Sort metadata templates",
     
     "harvester": "Harvester",
-    "newHarvester": "New harvester",
+    "newHarvester": "Harvest from ",
     "deleteHarvester": "Delete",
+    "deleteHarvesterHelp": "Delete harvester and all related records",
     "saveHarvester": "Save",
     "runHarvester": "Harvest",
     "lastRun": "Last run ",
@@ -443,6 +461,7 @@
     "use": "Use ",
     "createKeyword": "Add",
     "addKeyword": "Add",
+    "updateKeyword": "Save",
     "broader": "Broader",
     "narrower": "Narrower",
     "related": "Related",
@@ -475,6 +494,8 @@
     "virtualCSW": "Virtual CSW",
     "newVirtualCSW": "New virtual CSW",
     "saveVirtualCSW": "Save",
+    "deleteVirtualCSW": "Delete",
+    "updateVirtualCSW": "Update ",
     "serviceDescription": "Service description",
     "virtualCSWName": "Name",
     "virtualCSWNameHelp": "The virtual CSW name MUST start with csw-.",
@@ -485,6 +506,7 @@
     "testCSW": "CSW test",
     "cswRequest": "CSW request",
     "cswResponse": "CSW response",
+    "runCSWRequest": "Send CSW request",
     "cswSampleGetRequest": "CSW Get request examples",
     
     "enable": "Enable",
@@ -534,6 +556,18 @@
     "namespace": "Namespace",
     
     "saveOrder": "Save order",
+    
+    "thumbnails-host-url-relocator": "URL replacer",
+    "contact-updater": "Contact updater (searching using contact email)",
+    "keywords-mapper": "Keyword mapper",
+    "urlPrefix": "URL prefix to search",
+    "newUrlPrefix": "Replace prefix by",
+    "search": "Search",
+    "replace": "Replace",
+    "emailToSearch": "Email to search",
+    "contactAsXML": "XML snippet to insert to replace the matching contact",
+    "contactAsXML-help": "<h5>Example:</h5><code class='gn-code'>&lt;gmd:CI_ResponsibleParty xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\"&gt;&lt;gmd:individualName&gt;&lt;gco:CharacterString&gt;A new user&lt;/gco:CharacterString&gt;&lt;/gmd:individualName&gt;&lt;gmd:organisationName&gt;&lt;gco:CharacterString&gt;Organisation&lt;/gco:CharacterString&gt;&lt;/gmd:organisationName&gt;&lt;gmd:contactInfo&gt;&lt;gmd:CI_Contact&gt;&lt;gmd:address&gt;&lt;gmd:CI_Address&gt;&lt;gmd:electronicMailAddress&gt;&lt;gco:CharacterString&gt;newemail@organisation.org&lt;/gco:CharacterString&gt;&lt;/gmd:electronicMailAddress&gt;&lt;/gmd:CI_Address&gt;&lt;/gmd:address&gt;&lt;/gmd:CI_Contact&gt;&lt;/gmd:contactInfo&gt;&lt;gmd:role&gt;&lt;gmd:CI_RoleCode codeListValue=\"pointOfContact\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode\"/&gt;&lt;/gmd:role&gt;&lt;/gmd:CI_ResponsibleParty&gt;</code>",
+    
     
     "emptyCatalogShouldBeFilled": "The catalog is empty, you probably want to import new records or configure a harvester. You could also insert <a href='#/metadata/metadata-and-template/load-templates/all'>all templates</a>, <a href='#/metadata/metadata-and-template/load-samples/all'>all samples</a> or <a href='#/metadata/metadata-and-template/load-samples-and-templates/all'>both</a>."
 }

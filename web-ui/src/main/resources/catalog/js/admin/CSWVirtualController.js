@@ -59,6 +59,8 @@
         $http.get('admin.config.virtualcsw.get@json?id=' + v.id)
               .success(function(data) {
               $scope.virtualCSWSelected = data;
+              // FIXME: XML to JSON converter only convert
+              // lonely child as array and not as object
               $scope.virtualCSWUpdated = false;
             }).error(function(data) {
               // TODO

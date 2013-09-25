@@ -7,7 +7,7 @@
                 <table class="table">
                     <tr data-ng-repeat="(key, value) in info.catalogue">
                         <td>{{key | translate}}</td>
-                        <td>{{value}}</td>
+                        <td><strong>{{value}}</strong></td>
                     </tr>
                 </table>
             </span>
@@ -22,7 +22,7 @@
                 <table class="table">
                     <tr data-ng-repeat="(key, value) in info.database">
                         <td>{{key | translate}}</td>
-                        <td>{{value}}</td>
+                        <td><strong>{{value}}</strong></td>
                     </tr>
                 </table>
             </span>
@@ -37,7 +37,7 @@
                 <table class="table">
                     <tr data-ng-repeat="(key, value) in info.main">
                         <td>{{key | translate}}</td>
-                        <td>{{value}}</td>
+                        <td><strong>{{value}}</strong></td>
                     </tr>
                 </table>
             </span>
@@ -52,7 +52,14 @@
                 <table class="table">
                     <tr data-ng-repeat="(key, value) in info.index">
                         <td>{{key | translate}}</td>
-                        <td>{{value}}</td>
+                        <td>
+                            <span data-ng-switch="" data-on="key">
+                                <pre data-ng-switch-when="index.lucene.config">
+                                    {{value}}
+                                </pre>
+                                <strong data-ng-switch-default>{{value}}</strong>
+                            </span>
+                        </td>
                     </tr>
                 </table>
             </span>

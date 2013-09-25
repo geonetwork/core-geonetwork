@@ -7,7 +7,7 @@
 
       <div class="clearfix">
         <div class="btn-group pull-right">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
             {{selectedSchemas.length}} <span data-translate="">selected</span><span class="caret"/>
           </button>
           <ul class="dropdown-menu">
@@ -29,14 +29,17 @@
         </a>
       </div>
         
-        <div class="btn-toolbar">
-          <button type="button" class="btn btn-primary icon-upload"
-            data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadTemplates()"
-            data-translate="">loadTemplatesForSelectedSchema</button>
-    
-          <button type="button" class="btn btn-primary icon-upload"
-            data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadSamples()"
-            data-translate="">loadSamplesForSelectedSchema</button>
+        <div class="row">
+            <div class="col-lg-6">
+                <button type="button" class="btn btn-primary btn-block"
+                data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadTemplates()">
+                    <i class="icon-upload"></i> <span data-translate="">loadTemplatesForSelectedSchema</span></button>
+            </div>
+            <div class="col-lg-6">
+                <button type="button" class="btn btn-primary btn-block"
+                data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadSamples()">
+                    <i class="icon-upload"></i> <span data-translate="">loadSamplesForSelectedSchema</span></button>
+            </div>
         </div>
     </div>
 
