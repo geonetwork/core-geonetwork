@@ -40,6 +40,7 @@
 	</xsl:template>
 
 	<xsl:template mode="escapeXMLEntities" match="text()">
+		<xsl:param name="includingCRLF" select="false()"/>
 	
 		<xsl:variable name="expr" select="."/>
 		
@@ -74,15 +75,23 @@
 		<xsl:variable name="e5">
 			<xsl:call-template name="replaceString">
 				<xsl:with-param name="expr"        select="$e4"/>
-				<xsl:with-param name="pattern"     select="'&#10;'"/>
-				<xsl:with-param name="replacement" select="'\\n'"/>
+				<xsl:with-param name="pattern"     select="'&quot;'"/>
+				<xsl:with-param name="replacement" select="'&amp;quot;'"/>
 			</xsl:call-template>
 		</xsl:variable>
-		<xsl:call-template name="replaceString">
-			<xsl:with-param name="expr"        select="$e5"/>
-			<xsl:with-param name="pattern"     select="'&quot;'"/>
-			<xsl:with-param name="replacement" select="'&amp;quot;'"/>
-		</xsl:call-template>
+		
+		<xsl:choose>
+			<xsl:when test="$includingCRLF">
+				<xsl:call-template name="replaceString">
+					<xsl:with-param name="expr"        select="$e5"/>
+					<xsl:with-param name="pattern"     select="'&#10;'"/>
+					<xsl:with-param name="replacement" select="'\\n'"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$e5"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="replaceString">
