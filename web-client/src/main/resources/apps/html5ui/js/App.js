@@ -649,7 +649,7 @@ GeoNetwork.app = function() {
                 actionCtn.createMetadataAction.handler.apply(actionCtn);
             }
 
-            if (urlParameters.import !== undefined) {
+            if (urlParameters.insert !== undefined) {
                 setTimeout(function () {
                     var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
                     actionCtn.mdImportAction.handler.apply(actionCtn);

@@ -145,36 +145,36 @@
 
 
       $scope.templates = null;
-      
+
       var loadTemplates = function() {
         $http.get('admin.templates.list@json')
         .success(function(data) {
-          $scope.templates = data;
-        });
+              $scope.templates = data;
+            });
       };
 
       $scope.saveOrder = function(formId) {
-          $http.get('admin.templates.save.order?' + $(formId).serialize())
+        $http.get('admin.templates.save.order?' + $(formId).serialize())
           .success(function(data) {
               loadTemplates();
-              })
+            })
           .error(function(data) {
-                $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate('saveTemplateOrderError'),
-                  error: data,
-                  timeout: 0,
-                  type: 'danger'});
-              });
-      }
-      
-      $scope.sortOrder = function (item) {
-          return parseInt(item.displayorder);
-      }
-      
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('saveTemplateOrderError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
+      };
+
+      $scope.sortOrder = function(item) {
+        return parseInt(item.displayorder);
+      };
+
       if ($routeParams.tab === 'template-sort') {
-          loadTemplates();
+        loadTemplates();
       } else {
-          loadSchemas();
+        loadSchemas();
       }
 
     }]);

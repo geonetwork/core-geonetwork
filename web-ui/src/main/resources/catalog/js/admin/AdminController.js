@@ -98,7 +98,7 @@
             classes: 'btn-primary', icon: 'icon-archive'},
           {name: 'io',
             // Metadata import is made in the widget apps
-            url: 'search?import',
+            url: 'home?insert',
             classes: 'btn-primary',
             icon: 'icon-upload'},
           {name: 'harvesters', route: '#harvest', //url: 'harvesting',

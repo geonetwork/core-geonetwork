@@ -1037,7 +1037,7 @@ GeoNetwork.app = function () {
                 catalogue.metadataShowById(urlParameters.id, true);
             }
 
-            if (urlParameters.import !== undefined) {
+            if (urlParameters.insert !== undefined) {
                 setTimeout(function () {
                     var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
                     actionCtn.mdImportAction.handler.apply(actionCtn);
