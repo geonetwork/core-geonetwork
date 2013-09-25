@@ -648,6 +648,13 @@ GeoNetwork.app = function() {
                 var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
                 actionCtn.createMetadataAction.handler.apply(actionCtn);
             }
+
+            if (urlParameters.import !== undefined) {
+                setTimeout(function () {
+                    var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
+                    actionCtn.mdImportAction.handler.apply(actionCtn);
+                }, 500);
+            }
         },
         edit : function(uuid) {
             edit(uuid);
