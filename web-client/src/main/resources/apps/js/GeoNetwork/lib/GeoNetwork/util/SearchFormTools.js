@@ -387,7 +387,15 @@ GeoNetwork.util.SearchFormTools = {
             inputType: 'hidden',
             linkedCombo: combo
         });
+        
+        // Set default value
         combo.setValue(defaultValue || 'relevance#');
+        if (defaultValue) {
+            var tokens = defaultValue.split('#');
+            sortByField.setValue(tokens[0]);
+            sortOrderField.setValue(tokens[1]);
+        }
+        
         return [sortByField, sortOrderField, combo];
     },
     /** api:method[getSortByStore]
