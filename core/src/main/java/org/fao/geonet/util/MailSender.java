@@ -26,55 +26,46 @@ package org.fao.geonet.util;
 import jeeves.interfaces.Logger;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+
+import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
 import javax.mail.internet.InternetAddress;
+
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * see {@link MailUtil}
+ * 
+ * @author delawen
+ *
+ */
+@Deprecated 
 public class MailSender extends Thread
 {
 	Logger      _logger;
-	SimpleEmail _mail;
+	Email _mail;
 
+    @Deprecated
 	public MailSender(ServiceContext context)
 	{
 		_logger = context.getLogger();
 	}
 
-    /**
-     *
-     * @param server
-     * @param port
-     * @param username TODO
-     * @param password TODO
-     * @param useSSL TODO
-     * @param from
-     * @param fromDescr
-     * @param to
-     * @param subject
-     * @param message
-     * @throws EmailException
-     */
-    private void setUp(String server, int port, String username, String password, boolean useSSL, String from, String fromDescr, String to, String subject, String message) throws EmailException {
-        _mail.setHostName(server);
-        _mail.setSmtpPort(port);
-        _mail.setFrom(from, fromDescr);
-        if(!"".equals(username)) {
-            _mail.setAuthentication(username, password);
-        }
-        if(useSSL) {
-            _mail.setSSL(useSSL);
-        }
-        _mail.addTo(to);
-        _mail.setSubject(subject);
-        _mail.setMsg(message);
+    public MailSender(Email email, ServiceContext context) {
+        _mail = email;
+        _logger = context.getLogger();
+    }
+
+    public MailSender(Email email) {
+        _mail = email;
     }
 
     /**
-     * TODO Javadoc.
-     *
+     * Better use through MailUtil, as it takes the settings directly from the
+     * BBDD.
+     * 
      * @param server
      * @param port
      * @param username TODO
@@ -87,11 +78,18 @@ public class MailSender extends Thread
      * @param subject
      * @param message
      */
+    @Deprecated
 	public void send(String server, int port, String username, String password, boolean useSSL, 
 	        String from, String fromDescr, String to, String toDescr, String subject, String message) {
 		_mail = new SimpleEmail();
 		try {
-            setUp(server, port, username, password, useSSL, from, fromDescr, to, subject, message);
+            _mail.setHostName(server);
+            _mail.setSmtpPort(port);
+            _mail.setFrom(from, fromDescr);
+            _mail.addTo(to);
+            _mail.setSubject(subject);
+            _mail.setMsg(message);
+
             start();
 		}
 		catch(EmailException e) {
@@ -100,8 +98,9 @@ public class MailSender extends Thread
 	}
 
     /**
-     * TODO Javadoc.
-     *
+     * Better use through MailUtil, as it takes the settings directly from the
+     * BBDD.
+     * 
      * @param server
      * @param port
      * @param from
@@ -113,17 +112,24 @@ public class MailSender extends Thread
      * @param subject
      * @param message
      */
+    @Deprecated
 	public void sendWithReplyTo(String server, int port, String username, String password, boolean useSSL, 
 	        String from, String fromDescr, String to, String toDescr, 
 	        String replyTo, String replyToDesc, String subject, String message) {
 		_mail = new SimpleEmail();
 		try {
-            setUp(server, port, username, password, useSSL, from, fromDescr, to, subject, message);
+            _mail.setDebug(true);
+            _mail.setHostName(server);
+            _mail.setSmtpPort(port);
+            _mail.setFrom(from, fromDescr);
+            _mail.addTo(to);
+            _mail.setSubject(subject);
+            _mail.setMsg(message);
             List<InternetAddress> addressColl = new ArrayList<InternetAddress>();
-			addressColl.add(new InternetAddress(replyTo, replyToDesc));
-			_mail.setReplyTo(addressColl);
+            addressColl.add(new InternetAddress(replyTo, replyToDesc));
+            _mail.setReplyTo(addressColl);
 
-			start();
+            start();
 		}
 		catch(Exception e) {
 			logEx(e);
@@ -143,6 +149,16 @@ public class MailSender extends Thread
 			logEx(e);
 		}
 	}
+
+    public void send() {
+        if (_mail == null) {
+            _logger.error("Unable to send mail, no mail defined");
+            return;
+        }
+
+        start();
+    }
+
 
 	private void logEx(Exception e)
 	{
