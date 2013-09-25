@@ -92,10 +92,10 @@
 
       /**
        * The list of batch process available.
-       * Stored in batch-process-cfg.json. 
+       * Stored in batch-process-cfg.json.
        * TODO: Move to server side configuration.
        * TODO: i18n should not be shared in en-admin.json
-       * 
+       *
        */
       $scope.batchProcesses = null;
 
@@ -110,9 +110,10 @@
       $scope.batchSearchCategories = {};
 
       function loadProcessConfig() {
-        $http.get($scope.base + 'js/batch-process-cfg.json').success(function(data) {
-          $scope.batchProcesses = data.config;
-        });
+        $http.get($scope.base + 'js/batch-process-cfg.json')
+        .success(function(data) {
+              $scope.batchProcesses = data.config;
+            });
       }
 
       function loadGroups() {
