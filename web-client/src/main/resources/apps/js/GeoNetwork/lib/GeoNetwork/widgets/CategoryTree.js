@@ -237,10 +237,13 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     	var c = cookie.get('cat.searchform.' + this.name);
     	var checkedCat = c ? c.split(' or ') : [];
     	Ext.each(checkedCat, function(label) {
-    	    if(this.separator != '') {
+    	    if(this.separator != '' && 
+    	    		this.name !== 'E_sextantTheme'	// Hack for sextant theme. Not sure about the leading separator
+    	    			) {
     	        label = this.separator + label;
     	    }
-    		var node = this.root.findChild('category', label, true);
+
+    		var node = this.root.findChild('category', this.getLabel(label), true);
     		if(node) {
     			node.getUI().toggleCheck(true);
     		}

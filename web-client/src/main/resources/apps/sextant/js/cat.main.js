@@ -885,6 +885,8 @@ cat.app = function() {
 								}
 							}
 							var searchPage = cookie.get('cat.search.page');
+							
+							
 							if (urlParameters.s_search !== undefined) {
 								searchForm.reset();
 								setHiddenField('E__owner');
