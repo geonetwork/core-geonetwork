@@ -34,6 +34,7 @@
       $scope.harvesterNew = false;
       $scope.harvesterHistory = {};
 
+
       var unbindStatusListener = null;
       $scope.harvesterRecordsPagination = {
         pages: -1,
@@ -70,8 +71,10 @@
 
       function loadHarvesters() {
         return $http.get('admin.harvester.list@json').success(function(data) {
-          $scope.harvesters = data;
-          parseBoolean($scope.harvesters);
+          if (data != 'null') {
+            $scope.harvesters = data;
+            parseBoolean($scope.harvesters);
+          }
         }).error(function(data) {
           // TODO
         });
@@ -158,7 +161,6 @@
       $scope.buildResponseCategory = function(h) {
         var cats = '';
         angular.forEach(h.categories, function(c) {
-
           cats +=
               '<category id="' + c['@id'] + '"/>';
         });
@@ -292,6 +294,93 @@
               // TODO
             });
       };
+
+
+      // TODO: Should move to a CSW controller
+      $scope.cswCriteria = [];
+      $scope.cswCriteriaInfo = null;
+
+      /**
+       * Retrieve GetCapabilities document to retrieve
+       * the list of possible search fields declared
+       * in *Queryables.
+       *
+       * If the service is unavailable for a while and a user
+       * go to the admin page, it may loose its filter.
+       */
+      $scope.cswGetCapabilities = function() {
+        $scope.cswCriteriaInfo = null;
+
+        if ($scope.harvesterSelected &&
+                $scope.harvesterSelected.site &&
+                $scope.harvesterSelected.site.capabilitiesUrl) {
+
+
+          var url = $scope.harvesterSelected.site.capabilitiesUrl;
+
+          // Add GetCapabilities if not already in URL
+          // Parameter value is case sensitive.
+          // Append a ? if not already in there and if not &
+          if (url.indexOf('GetCapabilities') === -1) {
+            url += (url.indexOf('?') === -1 ? '?' : '&') +
+                'SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2';
+          }
+
+          $http.get($scope.proxyUrl +
+                  encodeURIComponent(url))
+           .success(function(data) {
+                $scope.cswCriteria = [];
+
+                var i = 0;
+                try {
+                  var xmlDoc = $.parseXML(data);
+
+                  // Create properties in model if no criteria defined
+                  if (!$scope.harvesterSelected.searches) {
+                    $scope.harvesterSelected.searches = [{}];
+                  }
+
+                  var $xml = $(xmlDoc);
+                  var matches = ['SupportedISOQueryables',
+                    'SupportedQueryables',
+                    'AdditionalQueryables'];
+
+                  $xml.find('Constraint').each(function() {
+                    if (matches.indexOf($(this).attr('name')) !== -1) {
+
+                      // Add all queryables to the list of possible parameters
+                      // and to the current harvester if not exist.
+                      // When harvester is saved only criteria with
+                      // value will be saved.
+                      $(this).find('Value').each(function() {
+                        var name = $(this).text();
+                        $scope.cswCriteria.push(name);
+                        if (!$scope.harvesterSelected.searches[0][name]) {
+                          $scope.harvesterSelected.searches[0][name] =
+                              {value: ''};
+                        }
+                      });
+                    }
+                  });
+
+                  $scope.cswCriteria.sort();
+
+                } catch (e) {
+                  $scope.cswCriteriaInfo =
+                      $translate('csw-FailedToParseCapabilities');
+                }
+
+              }).error(function(data) {
+                // TODO
+              });
+        }
+      };
+
+
+
+      $scope.$watch('harvesterSelected.site.capabilitiesUrl', function() {
+        $scope.cswGetCapabilities();
+      });
 
     }]);
 

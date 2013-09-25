@@ -14,7 +14,7 @@
                     <!-- TODO : Add a tooltip with last run info -->
                     <i data-ng-show="h.options.status === 'active'" class="icon-play"/>
                     <i data-ng-show="h.options.status === 'inactive'" class="icon-pause"/>
-                    {{h.site.name}} ({{('protocol' + h['@type']) | translate}}) 
+                    {{h.site.name}} ({{('harvester-' + h['@type']) | translate}}) 
                     <span class="badge">{{h.info.result.total}}</span>
                     <i data-ng-show="h.info.running" class="icon-spinner icon-spin"/>
                 </a>
@@ -31,7 +31,7 @@
                         <a data-ng-click="addHarvester(key)" 
                             data-ng-click="refreshHarvester()"
                             title="{{key + 'HarvesterHelp' | translate}}">
-                            {{('protocol' + value.label) | translate}} <span data-ng-hide="value.loaded" data-translate="">notYetSupported</span>
+                            {{('harvester-' + value.label) | translate}} <span data-ng-hide="value.loaded" data-translate="">notYetSupported</span>
                         </a>
                     </li>
                 </ul>
@@ -54,7 +54,6 @@
             </button>
         </div>
     </div>
-    
     
     
     <div class="col-lg-8" 

@@ -372,6 +372,13 @@
     "ogcwxs-metadataLanguage": "Metadata language",
     "ogcwxs-outputSchema": "Output schema",
     
+    "harvester-csw": "OGC CSW 2.0.2",
+    "csw-capabilitiesUrlHelp": "CSW URL with or without GetCapabilities parameters",
+    "csw-FailedToParseCapabilities": "Error while parsing GetCapabilities",
+    "csw-rejectDuplicateResource": "Check for duplicate resources based on the resource identifier",
+    "csw-rejectDuplicateResourceHelp": "Comparison is made on the element 'gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString'. It only applies to records in ISO19139 or ISO profiles.",
+    "csw-category": "Category for harvested records",
+    
     "harvestedRecordPrivileges": "Privileges for harvested records",
     "visibleToAll": "Public",
     "visibleToNobody": "Private",
@@ -390,10 +397,6 @@
     "useAccount": "Remote authentication",
     "updateHarvester": "Update harvester ",
     "notYetSupported": "Not supported yet",
-    "protocolgeonetwork": "GeoNetwork protocol",
-    "protocolCSW": "OGC CSW protocol",
-    "protocolscan": "Metadata scanner",
-    "protocologcwxs": "OGC Web Services",
     "serviceUrl": "Service URL",
     
     

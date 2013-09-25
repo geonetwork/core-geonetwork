@@ -16,39 +16,52 @@
             <p class="help-block" data-translate="">geonetwork-hostHelp</p>
         </div>
         
-        <fieldset>
+        <fieldset class="form-horizontal">
             <legend data-translate="">harvesterFilter</legend>
             
             <div>
-                <label class="control-label" data-translate="">any</label>
-                <input type="text" class="form-control" data-ng-model="harvesterSelected.searches[0].freeText"/>
+                <label class="control-label col-lg-4" data-translate="">any</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" data-ng-model="harvesterSelected.searches[0].freeText"/>
+                </div>
             </div>
             
             <div>
-                <label class="control-label" data-translate="">title</label>
-                <input type="text" class="form-control" data-ng-model="harvesterSelected.searches[0].title"/>
+                <label class="control-label col-lg-4" data-translate="">title</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" data-ng-model="harvesterSelected.searches[0].title"/>
+                </div>
             </div>
             
             <div>
-                <label class="control-label" data-translate="">abstract</label>
-                <input type="text" class="form-control" data-ng-model="harvesterSelected.searches[0].abstract"/>
+                <label class="control-label col-lg-4" data-translate="">abstract</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" data-ng-model="harvesterSelected.searches[0].abstract"/>
+                </div>
             </div>
             
             <div>
-                <label class="control-label" data-translate="">keyword</label>
-                <input type="text" class="form-control" data-ng-model="harvesterSelected.searches[0].keyword"/>
+                <label class="control-label col-lg-4" data-translate="">keyword</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" data-ng-model="harvesterSelected.searches[0].keyword"/>
+                </div>
             </div>
             
             
-            <fieldset><strong data-translate="">geonetwork-customCriteria</strong>
-                <input type="text" class="form-control" 
+            <h4 data-translate="">geonetwork-customCriteria</h4>
+            <div>
+                <label class="control-label col-lg-4">
+                    <input type="text" class="form-control" 
                     placeholder="criteria"
                     data-ng-model="harvesterSelected.searches[0].anyField"/>
-                <input type="text" class="form-control" 
+                </label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" 
                     placeholder="value"
                     data-ng-model="harvesterSelected.searches[0].anyValue"/>
-                <p class="help-block" data-translate="">geonetwork-customCriteriaHelp</p>
-            </f>
+                </div>
+            </div>
+            <p class="help-block" data-translate="">geonetwork-customCriteriaHelp</p>
             
             
             <div>
