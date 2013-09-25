@@ -1352,7 +1352,9 @@
     <xsl:param name="thesaurusId"/>
     <xsl:param name="listOfKeywords"/>
     <xsl:param name="listOfTransformations"/>
-    <xsl:param name="transformation"/>
+    <xsl:param name="transformation"/> 
+    <xsl:param name="maxKeywords" select="'100'"/>
+    <xsl:param name="searchOnLoad" select="'true'"/>
     <xsl:param name="itemSelectorHeight" select="'undefined'" required="no"/>
     <xsl:param name="itemSelectorWidth" select="'undefined'" required="no"/>
     <xsl:param name="identificationMode" select="'value'" required="no"/>
@@ -1360,7 +1362,7 @@
     <!-- The widget configuration -->
     <div class="thesaurusPickerCfg" id="thesaurusPicker_{$elementRef}" 
       config="{{mode: '{$widgetMode}', thesaurus:'{$thesaurusId
-      }',keywords: ['{$listOfKeywords
+      }', maxKeywords: {$maxKeywords}, searchOnLoad: '{$searchOnLoad}', keywords: ['{$listOfKeywords
       }'], transformations: [{$listOfTransformations
       }], transformation: '{$transformation
       }', identificationMode: '{$identificationMode}', itemSelectorHeight: {$itemSelectorHeight}, itemSelectorWidth: {$itemSelectorWidth}}}"/>
