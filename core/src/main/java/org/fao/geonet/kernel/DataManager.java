@@ -27,6 +27,27 @@
 
 package org.fao.geonet.kernel;
 
+import java.io.File;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
@@ -42,6 +63,7 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
@@ -67,25 +89,6 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import java.io.File;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
  *
@@ -101,6 +104,7 @@ public class DataManager {
     //---
     //--------------------------------------------------------------------------
 
+    private static final String MD_ON_HARV = "(SELECT id FROM Metadata WHERE harvestUuid=?)";
     /**
      *
      * @return
@@ -2049,6 +2053,69 @@ public class DataManager {
         searchMan.delete("_id", id+"");
     }
 
+
+    /**
+     * Removes all metadata associated to one harvester. Faster than doing one by one.
+     * 
+     * @param context
+     * @param dbms
+     * @param id
+     * @throws Exception
+     */
+    public synchronized void deleteBatchMetadata(ServiceContext context,
+            Dbms dbms, String harvesterId) throws Exception {
+
+        // --- remove operations
+        deleteBatchMetadataOper(dbms, harvesterId, false);
+
+        // --- remove categories
+        deleteBatchAllMetadataCateg(dbms, harvesterId);
+
+        dbms.execute(
+                "DELETE FROM MetadataRating WHERE metadataId in " + DataManager.MD_ON_HARV,
+                harvesterId);
+        dbms.execute(
+                "DELETE FROM Validation WHERE metadataId in " + DataManager.MD_ON_HARV,
+                harvesterId);
+
+        dbms.execute(
+                "DELETE FROM MetadataStatus WHERE metadataId in " + DataManager.MD_ON_HARV,
+                harvesterId);
+        
+        
+        //Notify templates in Batch
+        String getQuery = "SELECT id, uuid FROM Metadata WHERE harvestUuid=? AND isTemplate like 'n'";
+        for (Object o : dbms.select(getQuery, harvesterId).getChildren())
+        {
+            Element el = (Element) o;
+            String  id = el.getChildText("id");
+            String uuid = el.getChildText("uuid");
+            notifyMetadataDelete(dbms, id, uuid);
+        }
+                
+        //TODO improve this, try to do it batch too
+        getQuery = "SELECT id FROM Metadata WHERE harvestUuid=?";
+        List<String> ids = new LinkedList<String>();
+        for (Object o : dbms.select(getQuery, harvesterId).getChildren())
+        {
+            Element el = (Element) o;
+            String  id = el.getChildText("id");
+
+            // --- remove metadata
+            xmlSerializer.delete(dbms, "Metadata", id, context);
+
+            ids.add(id);
+        }
+
+        // --- update search criteria
+        searchMan.delete("_id", ids);
+
+        dbms.execute(
+                "DELETE FROM Metadata WHERE harvestUuid = ?",
+                harvesterId);
+        dbms.commit();
+    }
+
     /**
      *
      * @param context
@@ -2077,7 +2144,21 @@ public class DataManager {
 
         dbms.execute(query, Integer.valueOf(id));
     }
+    /**
+     * Removes all operations stored for all metadata on a harvester.
+     * @param dbms
+     * @param harvesterId
+     * @param skipAllIntranet
+     * @throws Exception
+     */
+    public void deleteBatchMetadataOper(Dbms dbms, String harvesterId, boolean skipAllIntranet) throws Exception {
+        String query = "DELETE FROM OperationAllowed WHERE metadataId in " + DataManager.MD_ON_HARV;
 
+        if (skipAllIntranet)
+            query += " AND groupId>1";
+
+        dbms.execute(query, harvesterId);
+    }
     /**
      * Removes all categories stored for a metadata.
      *
@@ -2089,6 +2170,19 @@ public class DataManager {
         String query = "DELETE FROM MetadataCateg WHERE metadataId=?";
 
         dbms.execute(query, Integer.valueOf(id));
+    }
+
+    /**
+     * Removes all categories stored for all metadata in a harvester
+     *
+     * @param dbms
+     * @param harvesterId
+     * @throws Exception
+     */
+    public void deleteBatchAllMetadataCateg(Dbms dbms, String harvesterId) throws Exception {
+        String query = "DELETE FROM MetadataCateg WHERE metadataId in " + DataManager.MD_ON_HARV;
+
+        dbms.execute(query, harvesterId);
     }
 
     //--------------------------------------------------------------------------
