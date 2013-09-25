@@ -292,7 +292,7 @@ GeoNetwork.util.SearchFormTools = {
             items.push(GeoNetwork.util.SearchFormTools.getRequestedLanguageCombo(services.getIsoLanguages));
         }
         
-        items.push(GeoNetwork.util.SearchFormTools.getSortByCombo());
+        items.push(GeoNetwork.util.SearchFormTools.getSortByCombo(config.sortBy));
         
         items.push(new Ext.form.ComboBox({
             id: 'E_hitsperpage',
