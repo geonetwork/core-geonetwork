@@ -322,7 +322,8 @@
 
       // TODO : enable watch only if OAIPMH
       $scope.$watch('harvesterSelected.site.url', function() {
-        if ($scope.harvesterSelected && $scope.harvesterSelected['@type'] === 'oaipmh') {
+        if ($scope.harvesterSelected &&
+                $scope.harvesterSelected['@type'] === 'oaipmh') {
           $scope.oaipmhGet();
         }
       });
@@ -407,12 +408,48 @@
         }
       };
 
-
-
       $scope.$watch('harvesterSelected.site.capabilitiesUrl', function() {
         $scope.cswGetCapabilities();
       });
 
+
+
+
+      // WFS GetFeature harvester
+      $scope.harvesterTemplates = null;
+      var loadHarvesterTemplates = function() {
+        $http.get('info@json?type=templates')
+          .success(function(data) {
+              console.log(data);
+              $scope.harvesterTemplates = data.templates;
+            });
+      };
+
+
+      $scope.harvesterGetFeatureXSLT = null;
+      var wfsGetFeatureXSLT = function() {
+        $scope.oaipmhInfo = null;
+        var body = '<request><type>wfsFragmentStylesheets</type><schema>' +
+            $scope.harvesterSelected.options.outputSchema +
+            '</schema></request>';
+        $http.post('admin.harvester.info@json', body, {
+          headers: {'Content-type': 'application/xml'}
+        }).success(function(data) {
+          console.log(data);
+          $scope.harvesterGetFeatureXSLT = data[0];
+        });
+      };
+
+
+      // When schema change reload the available XSLTs and templates
+      $scope.$watch('harvesterSelected.options.outputSchema', function() {
+        console.log($scope.harvesterSelected);
+        if ($scope.harvesterSelected &&
+                $scope.harvesterSelected['@type'] === 'wfsfeatures') {
+          wfsGetFeatureXSLT();
+          loadHarvesterTemplates();
+        }
+      });
     }]);
 
 })();
