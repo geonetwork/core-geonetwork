@@ -29,7 +29,6 @@
                         data-ng-class="value.loaded ? '' : 'disabled'"
                         >
                         <a data-ng-click="addHarvester(key)" 
-                            data-ng-click="refreshHarvester()"
                             title="{{'harvester-' + value.label + 'Help' | translate}}">
                             {{('harvester-' + value.label) | translate}} <span data-ng-hide="value.loaded" data-translate="">notYetSupported</span>
                         </a>
@@ -90,7 +89,9 @@
             <div data-ng-include="getTplForHarvester()"> </div>
         </div>
         
-        <div class="panel">
+        <div class="panel"
+            data-ng-hide="harvesterSelected['@id'] == ''"
+            >
             <div class="panel-heading"><span data-translate="">harvesterHistory</span>
                 <div class="btn-toolbar">
                     <button type="button" class="btn btn-primary pull-right btn-danger icon-remove" 
@@ -116,7 +117,12 @@
                     <td>{{h.elapsedtime}}</td>
                     <td>
                         <ul>
-                            <li data-ng-repeat="(key, value) in h.info[0]">{{key}}: {{value}}</li>
+                            <li data-ng-repeat="(key, value) in h.info[0]">{{key}}: 
+                                <span data-ng-switch="" data-on="key">
+                                    <pre data-ng-switch-when="stack">{{value}}</pre>
+                                    <span data-ng-switch-default="">{{value}}</span>
+                                </span>
+                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -125,7 +131,9 @@
         </div>
         
         
-        <div class="panel">
+        <div class="panel"
+            data-ng-hide="harvesterSelected['@id'] == ''"
+            >
             <div class="panel-heading" data-translate="">harvesterRecords</div>
             <!-- This information is not relevant for GeoNetwork protocol
             which attach records to the source catalogs which has different

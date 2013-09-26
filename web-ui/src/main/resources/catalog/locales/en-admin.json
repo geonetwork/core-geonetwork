@@ -365,6 +365,9 @@
     "applyXSLToRecordHelp": "",
     "harvesterScheduleinactive": "Failed to activate harvester.",
     
+    "harvester-geonetwork20": "GeoNetwork (Old node)",
+    "harvester-geonetwork20Help": "Harvest GeoNetwork node in 2.0 or lower version. Please notice that harvesting old GeoNetwork nodes is unsafe. The old nodes do not have unique site ids and this could cause unpredictable results (like removing nodes from other harvestings).",
+    
     "harvester-geonetwork": "GeoNetwork",
     "harvester-geonetworkHelp": "Harvest from another GeoNetwork catalog.",
     "geonetwork-host": "Catalog URL",
@@ -422,7 +425,7 @@
     "webdav-recurseHelp": "",
     
     "harvester-oaipmh": "OAI/PMH",
-    "harvester-webdavHelp": "Harvest using OAI Protocol for metadata harvesting 2.0",
+    "harvester-oaipmhHelp": "Harvest using OAI Protocol for metadata harvesting 2.0",
     "oaipmh-url": "URL",
     "oaipmh-FailedToGetSetsAndPrefix": "Failed to retrieve sets and prefixes. Check server URL",
     "oaipmh-urlHelp": "",

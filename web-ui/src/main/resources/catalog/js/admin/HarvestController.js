@@ -126,6 +126,7 @@
       };
       $scope.addHarvester = function(type) {
         $scope.harvesterNew = true;
+        $scope.harvesterHistory = {};
         $scope.harvesterSelected = window['gnHarvester' + type].createNew();
       };
 
@@ -190,6 +191,8 @@
         $scope.harvesterSelected = h;
         $scope.harvesterUpdated = false;
         $scope.harvesterNew = false;
+        $scope.harvesterHistory = {};
+        $scope.harvesterRecords = null;
 
         loadHistory();
 
