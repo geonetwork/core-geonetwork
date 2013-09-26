@@ -366,6 +366,7 @@
     "harvesterScheduleinactive": "Failed to activate harvester.",
     
     "harvester-geonetwork": "GeoNetwork",
+    "harvester-geonetworkHelp": "Harvest from another GeoNetwork catalog.",
     "geonetwork-host": "Catalog URL",
     "geonetwork-hostHelp": "URL with catalog name only eg. http://www.fao.org/geonetwork.",
     "geonetwork-mefFormatFull": "Use full MEF format",
@@ -378,6 +379,7 @@
     "geonetwork-customCriteriaHelp": "Define whatever criteria supported by the remote node and not available in the predifined filters (eg. 'similarity' set to '1' for non fuzzy search).",
     
     "harvester-ogcwxs": "OGC Web Services",
+    "harvester-ogcwxsHelp": "Harvest the GetCapabilities document from an OGC server (eg. WMS, WFS, WCS, SOS, WPS, CSW).",
     "ogcwxs-serviceCategory": "Category for service metadata",
     "ogcwxs-datasetCategory": "Category for datasets metadata",
     "ogcwxs-topicCategory": "ISO category",
@@ -391,11 +393,23 @@
     "ogcwxs-outputSchema": "Output schema",
     
     "harvester-csw": "OGC CSW 2.0.2",
+    "harvester-cswHelp": "Harvest from a CSW server",
     "csw-capabilitiesUrlHelp": "CSW URL with or without GetCapabilities parameters",
     "csw-FailedToParseCapabilities": "Error while parsing GetCapabilities",
     "csw-rejectDuplicateResource": "Check for duplicate resources based on the resource identifier",
     "csw-rejectDuplicateResourceHelp": "Comparison is made on the element 'gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString'. It only applies to records in ISO19139 or ISO profiles.",
     "csw-category": "Category for harvested records",
+    
+    "harvester-filesystem": "Directory",
+    "harvester-filesystemHelp": "Harvest from a directory on the server",
+    "filesystem-directory": "Directory",
+    "filesystem-directoryHelp": "File path to the directory to harvest on the server",
+    "filesystem-recurse": "Also search in subfolders",
+    "filesystem-recurseHelp": "",
+    "filesystem-nodelete": "Keep catalog record even if deleted at source",
+    "filesystem-nodeleteHelp": "",
+    "filesystem-checkFileLastModifiedForUpdate": "Update catalog record only if file was updated",
+    "filesystem-checkFileLastModifiedForUpdateHelp": "",
     
     "harvestedRecordPrivileges": "Privileges for harvested records",
     "visibleToAll": "Public",

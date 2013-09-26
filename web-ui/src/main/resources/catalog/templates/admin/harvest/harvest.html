@@ -30,7 +30,7 @@
                         >
                         <a data-ng-click="addHarvester(key)" 
                             data-ng-click="refreshHarvester()"
-                            title="{{key + 'HarvesterHelp' | translate}}">
+                            title="{{'harvester-' + value.label + 'Help' | translate}}">
                             {{('harvester-' + value.label) | translate}} <span data-ng-hide="value.loaded" data-translate="">notYetSupported</span>
                         </a>
                     </li>
