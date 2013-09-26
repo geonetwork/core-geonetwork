@@ -414,7 +414,13 @@
     "filesystem-checkFileLastModifiedForUpdate": "Update catalog record only if file was updated",
     "filesystem-checkFileLastModifiedForUpdateHelp": "",
     
-     
+    
+    "harvester-geoPREST": "GeoPortal REST",
+    "harvester-geoPRESTHelp": "Harvest from an ESRI GeoPortal using the REST API.",
+    "geoPREST-anyHelp": "<a href='http://webhelp.esri.com/geoportal_extension/9.3.1/index.htm#srch_lucene.htm' target='_blank'>Lucene syntax help</a>",
+    "geoPREST-host": "URL",
+    "geoPREST-hostHelp": "",
+    
     "harvester-z3950": "Z3950",
     "harvester-z3950Help": "Remote search on a Z39.50 server.",
     "harvester-z3950Config": "Z3950 (Server Config)",
