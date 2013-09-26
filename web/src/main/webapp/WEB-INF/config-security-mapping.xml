@@ -429,6 +429,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.csw!?.*" access="hasRole('Administrator')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.csw.save!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.csw.customelementset!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.csw.customelementset.save!?.*" access="hasRole('Administrator')"/>
+                
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.virtualcsw.list!?.*" access="hasRole('Administrator')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.virtualcsw.get!?.*" access="hasRole('Administrator')"/>

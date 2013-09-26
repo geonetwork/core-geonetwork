@@ -24,6 +24,11 @@
       $scope.cswSettings = {};
 
       /**
+       * CSW element set name (an array of xpath).
+       */
+      $scope.cswElementSetName = [];
+
+      /**
        * The filter for field column
        */
       $scope.cswFieldFilterValue = '';
@@ -86,7 +91,26 @@
         });
       }
 
-
+      function loadCSWElementSetName() {
+        $http.get('admin.config.csw.customelementset@json')
+        .success(function(data) {
+              $scope.cswElementSetName = data.xpath;
+            });
+      }
+      $scope.addCSWElementSetName = function() {
+        $scope.cswElementSetName.push(['']);
+      };
+      $scope.deleteElementSetName = function(e) {
+        var index = $.inArray(e, $scope.cswElementSetName);
+        $scope.cswElementSetName.splice(index, 1);
+      };
+      $scope.saveCSWElementSetName = function(formId) {
+        $http.get('admin.config.csw.customelementset.save@json?' +
+                $(formId).serialize())
+          .success(function(data) {
+              loadCSWElementSetName();
+            });
+      };
 
       /**
        * Save the form containing all settings. When saved,
@@ -166,6 +190,7 @@
 
       loadUsers();  // Which then load settings
       loadCSWConfig();
+      loadCSWElementSetName();
 
     }]);
 
