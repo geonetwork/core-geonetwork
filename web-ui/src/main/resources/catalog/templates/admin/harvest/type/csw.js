@@ -72,8 +72,8 @@ var gnHarvestercsw = {
                 + '    <icon>' + h.site.icon + '</icon>' 
                 + '    <account>'
                 + '      <use>' + h.site.account.use + '</use>'
-                + '      <username>' + h.site.account.username[0] + '</username>' 
-                + '      <password>' + h.site.account.password[0] + '</password>' 
+                + '      <username>' + h.site.account.username + '</username>' 
+                + '      <password>' + h.site.account.password + '</password>' 
                 + '    </account>'
                 + '  </site>' 
                 + gnHarvestercsw.buildResponseCSWSearch($scope)

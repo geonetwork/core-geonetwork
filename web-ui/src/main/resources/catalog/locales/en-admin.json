@@ -432,6 +432,16 @@
     "z3950-port": "Port",
     "z3950-portPort": "",
     
+    "harvester-arcsde": "ArcSDE",
+    "harvester-arcsdeHelp": "Harvest metadata records from an ArcSDE database.",
+    "arcsde-server": "Server",
+    "arcsde-serverHelp": "",
+    "arcsde-port": "Port",
+    "arcsde-portHelp": "",
+    "arcsde-database": "Database",
+    "arcsde-databaseHelp": "",
+    
+    
     "harvester-webdav": "WebDAV / WAF",
     "harvester-webdavHelp": "Harvest from a remote WebDAV or WAF server",
     "webdav-url": "URL",
