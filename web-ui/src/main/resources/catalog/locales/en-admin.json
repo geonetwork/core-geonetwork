@@ -414,6 +414,17 @@
     "filesystem-checkFileLastModifiedForUpdate": "Update catalog record only if file was updated",
     "filesystem-checkFileLastModifiedForUpdateHelp": "",
     
+     
+    "harvester-z3950": "Z3950",
+    "harvester-z3950Help": "Remote search on a Z39.50 server.",
+    "harvester-z3950Config": "Z3950 (Server Config)",
+    "harvester-z3950ConfigHelp": "Load harvester configuration from remote server.",
+    "z3950-clearConfig": "Clear Z3950 Server Configuration",
+    "z3950-clearConfigHelp": "",
+    "z3950-host": "Host",
+    "z3950-hostHelp": "",
+    "z3950-port": "Port",
+    "z3950-portPort": "",
     
     "harvester-webdav": "WebDAV / WAF",
     "harvester-webdavHelp": "Harvest from a remote WebDAV or WAF server",
