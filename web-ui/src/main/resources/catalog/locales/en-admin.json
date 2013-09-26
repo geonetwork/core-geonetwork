@@ -411,6 +411,16 @@
     "filesystem-checkFileLastModifiedForUpdate": "Update catalog record only if file was updated",
     "filesystem-checkFileLastModifiedForUpdateHelp": "",
     
+    
+    "harvester-webdav": "WebDAV / WAF",
+    "harvester-webdavHelp": "Harvest from a remote WebDAV or WAF server",
+    "webdav-url": "URL",
+    "webdav-urlHelp": "",
+    "webdav-subtype": "Type of protocol",
+    "webdav-subtypeHelp": "",
+    "webdav-recurse": "Also search in subfolders",
+    "webdav-recurseHelp": "",
+    
     "harvestedRecordPrivileges": "Privileges for harvested records",
     "visibleToAll": "Public",
     "visibleToNobody": "Private",

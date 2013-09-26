@@ -1,19 +1,21 @@
 // This is not that much elegant and should be replaced by some kind
 // of Angular module.
-var gnHarvesterfilesystem = {
+var gnHarvesterwebdav = {
     createNew : function() {
         return {
             "@id" : "",
-            "@type" : "filesystem",
+            "@type" : "webdav",
             "owner" : [],
             "ownerGroup" : [],
             "site" : {
                 "name" : "",
                 "uuid" : "",
-                "directory" : "/filesystem/path",
-                "recurse" : "true",
-                "nodelete" : "true",
-                "checkFileLastModifiedForUpdate" : "true",
+                "url" : "http://",
+                "account" : {
+                    "use" : "false",
+                    "username" : [],
+                    "password" : []
+                },
                 "icon" : "blank.gif"
             },
             "content" : {
@@ -23,7 +25,9 @@ var gnHarvesterfilesystem = {
             "options" : {
                 "every" : "0 0 0 ? * *",
                 "oneRunOnly" : "false",
-                "status" : "active"
+                "status" : "active",
+                "recurse" : "true",
+                "subtype" : "waf"
             },
             "privileges" : [ {
                 "@id" : "1",
@@ -46,15 +50,19 @@ var gnHarvesterfilesystem = {
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
                 + '    <name>' + h.site.name + '</name>' 
-                + '    <recurse>' + h.site.recurse + '</recurse>'
-                + '    <nodelete>' + h.site.nodelete + '</nodelete>'
-                + '    <checkFileLastModifiedForUpdate>' + h.site.checkFileLastModifiedForUpdate + '</checkFileLastModifiedForUpdate>'
-                + '    <directory>' + h.site.directory + '</directory>'
+                + '    <url>' + h.site.url + '</url>'
                 + '    <icon>' + h.site.icon + '</icon>'
                 + '  </site>' 
+                + '    <account>'
+                + '      <use>' + h.site.account.use + '</use>'
+                + '      <username>' + h.site.account.username[0] + '</username>' 
+                + '      <password>' + h.site.account.password[0] + '</password>' 
+                + '    </account>'
                 + '  <options>' 
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
                 + '    <every>' + h.options.every + '</every>' 
+                + '    <recurse>' + h.options.recurse + '</recurse>'
+                + '    <subtype>' + h.options.subtype + '</subtype>'
                 + '  </options>' 
                 + '  <content>'
                 + '    <validate>' + h.content.validate + '</validate>'
