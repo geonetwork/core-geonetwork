@@ -1328,13 +1328,6 @@
     
     <xsl:variable name="listOfTransformations">'to-iso19139-keyword'</xsl:variable>
     
-    <!-- Create custom widget: 
-      * '' for item selector, 
-      * 'combo' for simple combo, 
-      * 'list' for selection list, 
-      * 'multiplelist' for multiple selection list
-      -->
-    <xsl:variable name="widgetMode" select="''"/>
     
     <!-- Retrieve the thesaurus identifier from the thesaurus citation. The thesaurus 
     identifier should be defined in the citation identifier. By default, GeoNetwork
@@ -1346,6 +1339,15 @@
       gmd:identifier/gmd:MD_Identifier/gmd:code/*[1]) then gmd:thesaurusName/gmd:CI_Citation/
       gmd:identifier/gmd:MD_Identifier/gmd:code/*[1] else /root/gui/thesaurus/thesauri/thesaurus[title=$thesaurusName]/key"/>
     
+    <!-- Create custom widget: 
+      * '' for item selector, 
+      * 'combo' for simple combo, 
+      * 'list' for selection list, 
+      * 'multiplelist' for multiple selection list
+      -->
+    <xsl:variable name="widgetMode" select="if ($thesaurusId = 'geonetwork.thesaurus.local.theme.sextant-theme') 
+                                            then 'combo' 
+                                            else ''"/>
     
     <!-- The element identifier in the metadocument-->
     <xsl:variable name="elementRef" select="../geonet:element/@ref"/>
