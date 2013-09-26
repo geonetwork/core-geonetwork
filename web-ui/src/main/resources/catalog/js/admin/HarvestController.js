@@ -295,6 +295,34 @@
             });
       };
 
+      // TODO: Should move to OAIPMH
+      $scope.oaipmhSets = null;
+      $scope.oaipmhPrefix = null;
+      $scope.oaipmhInfo = null;
+      $scope.oaipmhGet = function() {
+        $scope.oaipmhInfo = null;
+        var body = '<request><type url="' +
+            $scope.harvesterSelected.site.url +
+            '">oaiPmhServer</type></request>';
+        $http.post('admin.harvester.info@json', body, {
+          headers: {'Content-type': 'application/xml'}
+        }).success(function(data) {
+          if (data[0].sets && data[0].formats) {
+            $scope.oaipmhSets = data[0].sets;
+            $scope.oaipmhPrefix = data[0].formats;
+          } else {
+            $scope.oaipmhInfo = $translate('oaipmh-FailedToGetSetsAndPrefix');
+          }
+        }).error(function(data) {
+        });
+      };
+
+      // TODO : enable watch only if OAIPMH
+      $scope.$watch('harvesterSelected.site.url', function() {
+        if ($scope.harvesterSelected && $scope.harvesterSelected['@type'] === 'oaipmh') {
+          $scope.oaipmhGet();
+        }
+      });
 
       // TODO: Should move to a CSW controller
       $scope.cswCriteria = [];

@@ -24,6 +24,7 @@
     
     "from": "From",
     "to": "To",
+    "until": "Until",
     "by": "by",
     "previous": "Previous",
     "next": "Next",

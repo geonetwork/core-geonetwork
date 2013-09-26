@@ -421,6 +421,14 @@
     "webdav-recurse": "Also search in subfolders",
     "webdav-recurseHelp": "",
     
+    "harvester-oaipmh": "OAI/PMH",
+    "harvester-webdavHelp": "Harvest using OAI Protocol for metadata harvesting 2.0",
+    "oaipmh-url": "URL",
+    "oaipmh-FailedToGetSetsAndPrefix": "Failed to retrieve sets and prefixes. Check server URL",
+    "oaipmh-urlHelp": "",
+    "set": "Set",
+    "prefix": "Prefix",
+    
     "harvestedRecordPrivileges": "Privileges for harvested records",
     "visibleToAll": "Public",
     "visibleToNobody": "Private",
