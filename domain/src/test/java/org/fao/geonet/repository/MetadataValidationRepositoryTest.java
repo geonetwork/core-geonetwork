@@ -22,7 +22,7 @@ public class MetadataValidationRepositoryTest extends AbstractSpringDataTest {
     private MetadataValidationRepository _metadataValidationRepository;
     @Autowired
     private MetadataRepository _metadataRepository;
-    private AtomicInteger inc = new AtomicInteger();
+    private AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testFindById_MetadataId() throws Exception {
@@ -61,9 +61,12 @@ public class MetadataValidationRepositoryTest extends AbstractSpringDataTest {
     }
 
     private MetadataValidation newValidation() {
+        return newValidation(_inc, _metadataRepository);
+    }
+    public static MetadataValidation newValidation(AtomicInteger inc, MetadataRepository metadataRepository) {
         int val = inc.incrementAndGet();
 
-        Metadata metadata = _metadataRepository.save(MetadataRepositoryTest.newMetadata(inc));
+        Metadata metadata = metadataRepository.save(MetadataRepositoryTest.newMetadata(inc));
 
         MetadataValidation validation = new MetadataValidation();
         MetadataValidationId id = new MetadataValidationId();

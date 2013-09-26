@@ -111,4 +111,26 @@ public class Source extends GeonetEntity {
     public void setLocal(boolean local) {
         setIsLocal_JpaWorkaround(Constants.toYN_EnabledChar(local));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Source source = (Source) o;
+
+        if (_local != source._local) return false;
+        if (_name != null ? !_name.equals(source._name) : source._name != null) return false;
+        if (_uuid != null ? !_uuid.equals(source._uuid) : source._uuid != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = _uuid != null ? _uuid.hashCode() : 0;
+        result = 31 * result + (_name != null ? _name.hashCode() : 0);
+        result = 31 * result + (int) _local;
+        return result;
+    }
 }

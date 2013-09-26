@@ -74,7 +74,7 @@ public class MetadataDataInfo implements Serializable {
      * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
     @Column(name = "istemplate", length = 1, nullable = false)
-    protected char getTemplate_JPAWorkaround() {
+    protected char getType_JPAWorkaround() {
         return _template;
     }
 
@@ -83,7 +83,7 @@ public class MetadataDataInfo implements Serializable {
      * 
      * @param template Constants.YN_ENABLED or Constants.YN_DISABLED
      */
-    protected void setTemplate_JPAWorkaround(char template) {
+    protected void setType_JPAWorkaround(char template) {
         this._template = template;
     }
 
@@ -94,7 +94,7 @@ public class MetadataDataInfo implements Serializable {
      */
     @Transient
     public MetadataType getType() {
-        return MetadataType.lookup(getTemplate_JPAWorkaround());
+        return MetadataType.lookup(getType_JPAWorkaround());
     }
 
     /**
@@ -104,7 +104,7 @@ public class MetadataDataInfo implements Serializable {
      * @return this data info object
      */
     public MetadataDataInfo setType(MetadataType template) {
-        setTemplate_JPAWorkaround(template.code);
+        setType_JPAWorkaround(template.code);
         return this;
     }
 

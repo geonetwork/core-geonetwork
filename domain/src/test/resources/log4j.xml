@@ -14,7 +14,7 @@
 		<priority value="DEBUG" />
 	</category>
 	<category name="org.hibernate.type">
-		<priority value="TRACE" />
+		<priority value="DEBUG" />
 	</category>
 
 </log4j:configuration>

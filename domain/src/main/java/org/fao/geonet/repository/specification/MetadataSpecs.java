@@ -5,8 +5,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Specifications for querying {@link org.fao.geonet.repository.UserRepository}.
@@ -77,7 +75,7 @@ public final class MetadataSpecs {
         return new Specification<Metadata>() {
             @Override
             public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Character> templateAttributePath = root.get(Metadata_.dataInfo).get(MetadataDataInfo_.template_JPAWorkaround);
+                Path<Character> templateAttributePath = root.get(Metadata_.dataInfo).get(MetadataDataInfo_.type_JPAWorkaround);
                 Predicate equalTemplatePredicate = cb.equal(templateAttributePath, cb.literal(type.code));
                 return equalTemplatePredicate;
             }

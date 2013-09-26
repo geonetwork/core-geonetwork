@@ -58,7 +58,10 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
     }
 
     private MetadataCategory newMetadataCategory() {
-        int val = _inc.incrementAndGet();
+        return newMetadataCategory(_inc);
+    }
+    public static MetadataCategory newMetadataCategory(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
         MetadataCategory metadataCategory = new MetadataCategory();
         metadataCategory.setName("name"+val);
         metadataCategory.getLabelTranslations().put("eng", "engLab"+val);
