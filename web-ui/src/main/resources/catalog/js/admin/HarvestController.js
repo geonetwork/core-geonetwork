@@ -95,7 +95,10 @@
         $http.get('admin.harvester.info@json?type=harvesterTypes')
         .success(function(data) {
               angular.forEach(data[0], function(value) {
-                $scope.harvesterTypes[value] = {label: value};
+                $scope.harvesterTypes[value] = {
+                        label: value, 
+                        text: $translate(value)
+                        };
                 $.getScript('../../catalog/templates/admin/harvest/type/' +
                     value + '.js')
                     .done(function(script, textStatus) {
@@ -188,6 +191,15 @@
         });
       };
       $scope.selectHarvester = function(h) {
+
+        // TODO: Specific to thredds
+        if (h['@type'] === 'thredds') {
+
+          $scope.threddsCollectionsMode = h.options.outputSchemaOnAtomicsDIF !== '' ? 'DIF' : 'UNIDATA';
+          $scope.threddsAtomicsMode = h.options.outputSchemaOnCollectionsDIF !== '' ? 'DIF' : 'UNIDATA';
+
+
+        }
         $scope.harvesterSelected = h;
         $scope.harvesterUpdated = false;
         $scope.harvesterNew = false;
@@ -420,7 +432,6 @@
       var loadHarvesterTemplates = function() {
         $http.get('info@json?type=templates')
           .success(function(data) {
-              console.log(data);
               $scope.harvesterTemplates = data.templates;
             });
       };
@@ -435,7 +446,6 @@
         $http.post('admin.harvester.info@json', body, {
           headers: {'Content-type': 'application/xml'}
         }).success(function(data) {
-          console.log(data);
           $scope.harvesterGetFeatureXSLT = data[0];
         });
       };
@@ -443,10 +453,44 @@
 
       // When schema change reload the available XSLTs and templates
       $scope.$watch('harvesterSelected.options.outputSchema', function() {
-        console.log($scope.harvesterSelected);
         if ($scope.harvesterSelected &&
                 $scope.harvesterSelected['@type'] === 'wfsfeatures') {
           wfsGetFeatureXSLT();
+          loadHarvesterTemplates();
+        }
+      });
+
+
+
+      // Thredds
+      $scope.threddsCollectionsMode = 'DIF';
+      $scope.threddsAtomicsMode = 'DIF';
+      $scope.harvesterThreddsXSLT = null;
+      var threddsGetXSLT = function() {
+        $scope.oaipmhInfo = null;
+        var schema = ($scope.threddsCollectionsMode === 'DIF' ?
+                $scope.harvesterSelected.options.outputSchemaOnCollectionsDIF :
+                $scope.harvesterSelected.options.outputSchemaOnCollectionsFragments);
+        var body = '<request><type>threddsFragmentStylesheets</type><schema>' +
+            schema +
+            '</schema></request>';
+        $http.post('admin.harvester.info@json', body, {
+          headers: {'Content-type': 'application/xml'}
+        }).success(function(data) {
+          $scope.harvesterThreddsXSLT = data[0];
+        });
+      };
+      $scope.$watch('harvesterSelected.options.outputSchemaOnCollectionsDIF', function() {
+        if ($scope.harvesterSelected &&
+            $scope.harvesterSelected['@type'] === 'thredds') {
+          threddsGetXSLT();
+          loadHarvesterTemplates();
+        }
+      });
+      $scope.$watch('harvesterSelected.options.outputSchemaOnCollectionsFragments', function() {
+        if ($scope.harvesterSelected &&
+            $scope.harvesterSelected['@type'] === 'thredds') {
+          threddsGetXSLT();
           loadHarvesterTemplates();
         }
       });

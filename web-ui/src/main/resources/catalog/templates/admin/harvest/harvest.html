@@ -35,12 +35,13 @@
                     </li>
                 </ul>
             </div>
+            
             <div class="btn-group">
                 <button type="button" class="btn dropdown-toggle icon-copy" data-toggle="dropdown">
                     <span data-translate="">cloneHarvester</span> <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li data-ng-repeat="h in harvesters">
+                    <li data-ng-repeat="h in harvesters | orderBy:'site.name'">
                         <a data-ng-click="cloneHarvester(h['@id'])" 
                             title="{{'cloneHarvester' | translate}} {{h.site.name}}">
                             {{h.site.name}} ({{('harvester-' + h['@type']) | translate}}) 
