@@ -45,7 +45,15 @@
     "owner": "Owner",
     "selectAll": "All",
     "selectNone": "None",
-    
+    "createDateYears": "Years",
+    "denominators": "Scale denominators",
+    "inspireThemes": "INSPIRE themes",
+    "Keywords": "Keywords",
+    "metadataPOCs": "Contact for the metadata",
+    "orgNames": "Contact for the resource",
+    "serviceTypes": "Type of services",
+    "spatialRepresentationTypes": "Spatial types",
+    "types": "Data types",
     
     
     "profile": "User profile",

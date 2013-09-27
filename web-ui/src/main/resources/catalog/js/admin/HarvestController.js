@@ -96,9 +96,9 @@
         .success(function(data) {
               angular.forEach(data[0], function(value) {
                 $scope.harvesterTypes[value] = {
-                        label: value, 
-                        text: $translate(value)
-                        };
+                  label: value,
+                  text: $translate(value)
+                };
                 $.getScript('../../catalog/templates/admin/harvest/type/' +
                     value + '.js')
                     .done(function(script, textStatus) {
@@ -195,8 +195,10 @@
         // TODO: Specific to thredds
         if (h['@type'] === 'thredds') {
 
-          $scope.threddsCollectionsMode = h.options.outputSchemaOnAtomicsDIF !== '' ? 'DIF' : 'UNIDATA';
-          $scope.threddsAtomicsMode = h.options.outputSchemaOnCollectionsDIF !== '' ? 'DIF' : 'UNIDATA';
+          $scope.threddsCollectionsMode =
+              h.options.outputSchemaOnAtomicsDIF !== '' ? 'DIF' : 'UNIDATA';
+          $scope.threddsAtomicsMode =
+              h.options.outputSchemaOnCollectionsDIF !== '' ? 'DIF' : 'UNIDATA';
 
 
         }
@@ -468,9 +470,10 @@
       $scope.harvesterThreddsXSLT = null;
       var threddsGetXSLT = function() {
         $scope.oaipmhInfo = null;
+        var opt = $scope.harvesterSelected.options;
         var schema = ($scope.threddsCollectionsMode === 'DIF' ?
-                $scope.harvesterSelected.options.outputSchemaOnCollectionsDIF :
-                $scope.harvesterSelected.options.outputSchemaOnCollectionsFragments);
+                opt.outputSchemaOnCollectionsDIF :
+                opt.outputSchemaOnCollectionsFragments);
         var body = '<request><type>threddsFragmentStylesheets</type><schema>' +
             schema +
             '</schema></request>';
@@ -480,20 +483,23 @@
           $scope.harvesterThreddsXSLT = data[0];
         });
       };
-      $scope.$watch('harvesterSelected.options.outputSchemaOnCollectionsDIF', function() {
-        if ($scope.harvesterSelected &&
-            $scope.harvesterSelected['@type'] === 'thredds') {
-          threddsGetXSLT();
-          loadHarvesterTemplates();
-        }
-      });
-      $scope.$watch('harvesterSelected.options.outputSchemaOnCollectionsFragments', function() {
-        if ($scope.harvesterSelected &&
-            $scope.harvesterSelected['@type'] === 'thredds') {
-          threddsGetXSLT();
-          loadHarvesterTemplates();
-        }
-      });
+      $scope.$watch('harvesterSelected.options.outputSchemaOnCollectionsDIF',
+          function() {
+            if ($scope.harvesterSelected &&
+                $scope.harvesterSelected['@type'] === 'thredds') {
+              threddsGetXSLT();
+              loadHarvesterTemplates();
+            }
+          });
+      $scope.$watch(
+          'harvesterSelected.options.outputSchemaOnCollectionsFragments',
+          function() {
+            if ($scope.harvesterSelected &&
+                $scope.harvesterSelected['@type'] === 'thredds') {
+              threddsGetXSLT();
+              loadHarvesterTemplates();
+            }
+          });
     }]);
 
 })();

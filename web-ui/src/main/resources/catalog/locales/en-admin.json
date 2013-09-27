@@ -19,6 +19,8 @@
     "information": "Information",
     
     "dbUrl": "Database",
+    "recordsBy": "Record's statistics by",
+    "facetIndicatorHelp": "Statistics by records are defined based on facets configuration and may represent only the most frequent values.",
     "catalogInformation": "Catalog information",
     "dbInformation": "Database",
     "indexInformation": "Index",
