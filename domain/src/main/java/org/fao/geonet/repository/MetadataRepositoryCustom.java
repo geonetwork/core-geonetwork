@@ -76,11 +76,4 @@ public interface MetadataRepositoryCustom {
     @Transactional
     Metadata findOneOldestByChangeDate();
 
-    /**
-     * Sum all the popularity of the selected metadata.
-     * @param optionalSpec an optional specification for selecting which metadata to sum.
-     *
-     * @return the sum all the popularity of the selected metadata.
-     */
-    int sumOfPopularity(Optional<Specification<Metadata>> optionalSpec);
 }

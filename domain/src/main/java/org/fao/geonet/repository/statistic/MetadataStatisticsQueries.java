@@ -1,6 +1,8 @@
 package org.fao.geonet.repository.statistic;
 
+import com.google.common.base.Optional;
 import org.fao.geonet.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -255,9 +257,12 @@ public class MetadataStatisticsQueries {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
         final Root<MetadataStatus> metadataStatusRoot = cbQuery.from(MetadataStatus.class);
-        final Path<Integer> metadataStatusMetadataId = metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.metadataId);
+        final Root<StatusValue> statusValueRoot = cbQuery.from(StatusValue.class);
 
-        cbQuery.select(cb.tuple(metadataStatusRoot, cb.count(metadataStatusMetadataId))).groupBy(metadataStatusRoot);
+        final Path<StatusValue> statusValuePath = metadataStatusRoot.get(MetadataStatus_.statusValue);
+        cbQuery.select(cb.tuple(statusValueRoot, cb.count(metadataStatusRoot)))
+                .where(cb.equal(statusValuePath, statusValueRoot))
+                .groupBy(statusValuePath);
 
         Map<StatusValue, Integer> results = new HashMap<StatusValue, Integer>();
         for (Tuple tuple : _entityManager.createQuery(cbQuery).getResultList()) {
@@ -273,17 +278,108 @@ public class MetadataStatisticsQueries {
      * @return a mapping from MetadataValidationStatus to the number of metadata with that validation type.
      */
     public Map<MetadataValidationStatus, Integer> getMetadataValidationStatusToMetadataCountMap() {
-        return null;
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
+        final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
+        final Root<MetadataValidation> metadataValidationRoot = cbQuery.from(MetadataValidation.class);
+
+        final Path<MetadataValidationStatus> statusPath = metadataValidationRoot.get(MetadataValidation_.status);
+        final Expression<Integer> metadataIdPath = metadataRoot.get(Metadata_.id);
+        Expression<Integer> metadataValidationMetadataIdPath = metadataValidationRoot.get(MetadataValidation_.id).get
+                (MetadataValidationId_.metadataId);
+
+
+        final Long notValidatedCount = countMetadataNotValidated(cb, cbQuery);
+
+        cbQuery.select(cb.tuple(statusPath, cb.count(metadataRoot)))
+                .where(cb.equal(metadataIdPath, metadataValidationMetadataIdPath))
+                .groupBy(statusPath);
+
+        Map<MetadataValidationStatus, Integer> results = new HashMap<MetadataValidationStatus, Integer>();
+
+        results.put(MetadataValidationStatus.NEVER_CALCULATED, notValidatedCount.intValue());
+        for (Tuple tuple : _entityManager.createQuery(cbQuery).getResultList()) {
+            results.put(tuple.get(0, MetadataValidationStatus.class), tuple.get(1, Long.class).intValue());
+        }
+
+        return results;
+    }
+
+    private Long countMetadataNotValidated(CriteriaBuilder cb, CriteriaQuery<Tuple> cbQuery) {
+        final CriteriaQuery<Long> notValidatedQuery = cb.createQuery(Long.class);
+        final Root<Metadata> metadataRoot = notValidatedQuery.from(Metadata.class);
+
+
+        final Subquery<Integer> selectMetadataValidationMetadataIds = notValidatedQuery.subquery(Integer.class);
+        final Root<MetadataValidation> metadataValidationRoot = selectMetadataValidationMetadataIds.from(MetadataValidation.class);
+        final Path<Integer> metadataValidationMetadataIdPath = metadataValidationRoot.get(MetadataValidation_.id).get
+                (MetadataValidationId_.metadataId);
+        selectMetadataValidationMetadataIds.select(metadataValidationMetadataIdPath);
+
+
+        final Path<Integer> metadataIdPath = metadataRoot.get(Metadata_.id);
+        notValidatedQuery.select(cb.count(metadataRoot)).where(cb.not(metadataIdPath.in(selectMetadataValidationMetadataIds)));
+        return _entityManager.createQuery(notValidatedQuery).getSingleResult();
     }
 
     /**
      * Calculate the number of metadata grouped by validation type and each MetadataValidationStatus.
+     * <p>
+     * The metadata that have not been validated are also in the map as Pair.read(null, MetadataValidationStatus.NEVER_CALCULATED)
+     * </p>
      *
      * @return a mapping from Pair&lt;ValidationType, MetadataValidationStatus>
      */
     public Map<Pair<String, MetadataValidationStatus>, Integer> getMetadataValidationTypeAndStatusToMetadataCountMap() {
-        return null;
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
+        final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
+        final Root<MetadataValidation> metadataValidationRoot = cbQuery.from(MetadataValidation.class);
+
+        final Path<String> statusTypePath = metadataValidationRoot.get(MetadataValidation_.id).get(MetadataValidationId_.validationType);
+        final Path<MetadataValidationStatus> statusPath = metadataValidationRoot.get(MetadataValidation_.status);
+        final Expression<Integer> metadataIdPath = metadataRoot.get(Metadata_.id);
+        Expression<Integer> metadataValidationMetadataIdPath = metadataValidationRoot.get(MetadataValidation_.id).get
+                (MetadataValidationId_.metadataId);
+
+
+        final Long notValidatedCount = countMetadataNotValidated(cb, cbQuery);
+
+        cbQuery.select(cb.tuple(statusTypePath, statusPath, cb.count(metadataRoot)))
+                .where(cb.equal(metadataIdPath, metadataValidationMetadataIdPath))
+                .groupBy(statusTypePath, statusPath);
+
+        Map<Pair<String, MetadataValidationStatus>, Integer> results = new HashMap<Pair<String, MetadataValidationStatus>, Integer>();
+
+        results.put(Pair.<String, MetadataValidationStatus>read(null, MetadataValidationStatus.NEVER_CALCULATED),
+                notValidatedCount.intValue());
+        for (Tuple tuple : _entityManager.createQuery(cbQuery).getResultList()) {
+            final String metadataValidationType = tuple.get(0, String.class);
+            final MetadataValidationStatus metadataValidationStatus = tuple.get(1, MetadataValidationStatus.class);
+            final int count = tuple.get(2, Long.class).intValue();
+            results.put(Pair.read(metadataValidationType, metadataValidationStatus), count);
+        }
+
+        return results;
     }
 
+    /**
+     * Sum all the popularity of the selected metadata.
+     * @param optionalSpec an optional specification for selecting which metadata to sum.
+     *
+     * @return the sum all the popularity of the selected metadata.
+     */
+    public int sumOfPopularity(Optional<Specification<Metadata>> optionalSpec) {
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Integer> query = cb.createQuery(Integer.class);
+        final Root<Metadata> root = query.from(Metadata.class);
+
+        if (optionalSpec.isPresent()) {
+            query.where(optionalSpec.get().toPredicate(root, query, cb));
+        }
+
+        query.select(cb.sum(root.get(Metadata_.dataInfo).get(MetadataDataInfo_.popularity)));
+        return _entityManager.createQuery(query).getSingleResult();
+    }
 
 }

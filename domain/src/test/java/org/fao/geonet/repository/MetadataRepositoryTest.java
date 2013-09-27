@@ -59,22 +59,6 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
     }
 
     @Test
-    public void testSumPopularity() throws Exception {
-        final Metadata metadata = newMetadata();
-        metadata.getDataInfo().setPopularity(1);
-        _repo.save(metadata);
-        Metadata metadata1 = newMetadata();
-        metadata1.getDataInfo().setPopularity(2);
-        metadata1 = _repo.save(metadata1);
-        final Metadata metadata2 = newMetadata();
-        metadata2.getDataInfo().setPopularity(3);
-        _repo.save(metadata2);
-        assertEquals(6, _repo.sumOfPopularity(Optional.<Specification<Metadata>>absent()));
-        assertEquals(2, _repo.sumOfPopularity(Optional.of(MetadataSpecs.hasMetadataId(metadata1.getId()))));
-
-    }
-
-    @Test
     public void testFindByIdString() throws Exception {
 
         Metadata metadata = _repo.save(newMetadata());

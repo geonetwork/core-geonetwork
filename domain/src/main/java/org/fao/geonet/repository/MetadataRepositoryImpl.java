@@ -96,18 +96,4 @@ public class MetadataRepositoryImpl implements MetadataRepositoryCustom {
         return _entityManager.createQuery(query).setMaxResults(1).getSingleResult();
     }
 
-    @Override
-    public int sumOfPopularity(Optional<Specification<Metadata>> optionalSpec) {
-        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Integer> query = cb.createQuery(Integer.class);
-        final Root<Metadata> root = query.from(Metadata.class);
-
-        if (optionalSpec.isPresent()) {
-            query.where(optionalSpec.get().toPredicate(root, query, cb));
-        }
-
-        query.select(cb.sum(root.get(Metadata_.dataInfo).get(MetadataDataInfo_.popularity)));
-        return _entityManager.createQuery(query).getSingleResult();
-    }
-
 }

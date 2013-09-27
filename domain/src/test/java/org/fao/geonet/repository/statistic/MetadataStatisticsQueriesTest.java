@@ -1,10 +1,13 @@
 package org.fao.geonet.repository.statistic;
 
+import com.google.common.base.Optional;
 import junit.framework.Assert;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
@@ -264,16 +267,20 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
 
         final MetadataStatus metadataStatus2 = MetadataStatusRepositoryTest.newMetadataStatus(_inc, _statusValueRepository);
         metadataStatus2.setStatusValue(metadataStatus1.getStatusValue());
+        metadataStatus2.getId().setMetadataId(md1.getId());
         _metadataStatusRepository.save(metadataStatus2);
 
-        _metadataStatusRepository.save(MetadataStatusRepositoryTest.newMetadataStatus(_inc, _statusValueRepository));
+        final MetadataStatus metadataStatus3 = MetadataStatusRepositoryTest.newMetadataStatus(_inc, _statusValueRepository);
+        metadataStatus3.getId().setMetadataId(md2.getId());
+        _metadataStatusRepository.save(metadataStatus3);
+
 
         final Map<StatusValue, Integer> sourceToMetadataCountMap = _metadataRepository.getMetadataStatistics()
                 .getStatusValueToMetadataCountMap();
 
         assertEquals(2, sourceToMetadataCountMap.size());
         assertEquals(2, sourceToMetadataCountMap.get(metadataStatus1.getStatusValue()).intValue());
-        assertEquals(1, sourceToMetadataCountMap.get(metadataStatus2.getStatusValue()).intValue());
+        assertEquals(1, sourceToMetadataCountMap.get(metadataStatus3.getStatusValue()).intValue());
     }
 
     @Test
@@ -302,7 +309,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertEquals(3, statusToMetadataCountMap.size());
         Assert.assertEquals(2, statusToMetadataCountMap.get(MetadataValidationStatus.VALID).intValue());
         Assert.assertEquals(1, statusToMetadataCountMap.get(MetadataValidationStatus.INVALID).intValue());
-        Assert.assertEquals(3, statusToMetadataCountMap.get(MetadataValidationStatus.NEVER_CALCULATED).intValue());
+        Assert.assertEquals(4, statusToMetadataCountMap.get(MetadataValidationStatus.NEVER_CALCULATED).intValue());
     }
 
     @Test
@@ -333,12 +340,38 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         validation6.setValid(false);
         _metadataValidationRepository.save(validation6);
 
-        final Map<Pair<String, MetadataValidationStatus>, Integer> map =
+        Map<Pair<String, MetadataValidationStatus>, Integer> map =
                 _metadataRepository.getMetadataStatistics().getMetadataValidationTypeAndStatusToMetadataCountMap();
 
-        assertEquals(3, map.size());
-        assertEquals(1, map.get(Pair.read(validation.getId().getValidationType(), true)).intValue());
-        assertEquals(2, map.get(Pair.read(validation.getId().getValidationType(), false)).intValue());
-        assertEquals(3, map.get(Pair.read(validation3.getId().getValidationType(), false)).intValue());
+        assertEquals(6, map.size());
+        assertEquals(1, map.get(Pair.read(validation.getId().getValidationType(), MetadataValidationStatus.VALID)).intValue());
+        assertEquals(2, map.get(Pair.read(validation.getId().getValidationType(), MetadataValidationStatus.INVALID)).intValue());
+        assertEquals(1, map.get(Pair.read(validation4.getId().getValidationType(), MetadataValidationStatus.INVALID)).intValue());
+        assertEquals(1, map.get(Pair.read(validation5.getId().getValidationType(), MetadataValidationStatus.INVALID)).intValue());
+        assertEquals(1, map.get(Pair.read(validation6.getId().getValidationType(), MetadataValidationStatus.INVALID)).intValue());
+        assertNull(map.get(Pair.read(validation4.getId().getValidationType(), MetadataValidationStatus.VALID)));
+        assertNull(map.get(Pair.read(validation5.getId().getValidationType(), MetadataValidationStatus.VALID)));
+        assertNull(map.get(Pair.read(validation6.getId().getValidationType(), MetadataValidationStatus.VALID)));
+        assertEquals(0, map.get(Pair.read(null, MetadataValidationStatus.NEVER_CALCULATED)).intValue());
+
+        _metadataRepository.save(MetadataRepositoryTest.newMetadata(_inc));
+        map = _metadataRepository.getMetadataStatistics().getMetadataValidationTypeAndStatusToMetadataCountMap();
+        assertEquals(1, map.get(Pair.read(null, MetadataValidationStatus.NEVER_CALCULATED)).intValue());
+
     }
-}
+
+    @Test
+    public void testSumPopularity() throws Exception {
+        final Metadata metadata = MetadataRepositoryTest.newMetadata(_inc);
+        metadata.getDataInfo().setPopularity(1);
+        _metadataRepository.save(metadata);
+        Metadata metadata1 = MetadataRepositoryTest.newMetadata(_inc);
+        metadata1.getDataInfo().setPopularity(2);
+        metadata1 = _metadataRepository.save(metadata1);
+        final Metadata metadata2 = MetadataRepositoryTest.newMetadata(_inc);
+        metadata2.getDataInfo().setPopularity(3);
+        _metadataRepository.save(metadata2);
+        assertEquals(6, _metadataRepository.getMetadataStatistics().sumOfPopularity(Optional.<Specification<Metadata>>absent()));
+        assertEquals(2, _metadataRepository.getMetadataStatistics().sumOfPopularity(Optional.of(MetadataSpecs.hasMetadataId(metadata1.getId()))));
+
+    }}
