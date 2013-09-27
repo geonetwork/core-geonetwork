@@ -25,6 +25,7 @@ package org.fao.geonet.util;
 
 import jeeves.interfaces.Logger;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Util;
 
 import org.apache.commons.mail.Email;
@@ -56,10 +57,6 @@ public class MailSender extends Thread
     public MailSender(Email email, ServiceContext context) {
         _mail = email;
         _logger = context.getLogger();
-    }
-
-    public MailSender(Email email) {
-        _mail = email;
     }
 
     /**
@@ -162,10 +159,12 @@ public class MailSender extends Thread
 
 	private void logEx(Exception e)
 	{
+		if(_logger != null) {
 		_logger.error("Unable to mail feedback");
 		_logger.error("  Exception : " + e);
 		_logger.error("  Message   : " + e.getMessage());
 		_logger.error("  Stack     : " + Util.getStackTrace(e));
+		}
 	}
 };
 

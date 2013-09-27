@@ -54,6 +54,18 @@
 	<setting name="system/harvester/enableEditing" label="Allow editing on harvested records"/>
 	
 	
+	<setting name="harvesting" label="Harvester notification"/>
+	<setting name="system/harvesting/mail/recipient" label="Send to"/>
+	<setting name="system/harvesting/mail/template" label="Default template"/>
+	<setting name="system/harvesting/mail/templateError" label="Error template"/>
+	<setting name="system/harvesting/mail/templateWarning" label="Warning template"/>
+	<setting name="system/harvesting/mail/enabled" label="Activate"/>
+	<setting name="system/harvesting/mail/subject" label="Subject"/>
+	<setting name="system/harvesting/mail/level1" label="Send on Success"/>
+	<setting name="system/harvesting/mail/level2" label="Send on Warning"/>
+	<setting name="system/harvesting/mail/level3" label="Send on Error"/>
+	
+	
 	<setting name="hidewithheldelements" label="Metadata / ISO19139 / Nil reason attribute with held"/>
 	<setting name="system/hidewithheldelements/enable" label="Hide Withheld Elements"/>
 	<setting name="system/hidewithheldelements/keepMarkedElement" label="Keep Marked Element"/>

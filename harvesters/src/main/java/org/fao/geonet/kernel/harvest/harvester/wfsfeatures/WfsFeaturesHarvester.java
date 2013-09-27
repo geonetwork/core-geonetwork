@@ -28,9 +28,11 @@ import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
@@ -41,7 +43,7 @@ import java.util.UUID;
 
 //=============================================================================
 
-public class WfsFeaturesHarvester extends AbstractHarvester
+public class WfsFeaturesHarvester extends AbstractHarvester<HarvestResult>
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -159,8 +161,8 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 	{
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
-		Harvester h = new Harvester(log, context, dbms, params);
-		result = h.harvest();
+		h = new Harvester(log, context, dbms, params);
+        result = h.harvest(log);
 	}
 
 	//---------------------------------------------------------------------------

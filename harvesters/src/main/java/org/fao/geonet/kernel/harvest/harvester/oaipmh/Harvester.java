@@ -29,13 +29,17 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
+import org.eclipse.emf.common.command.AbortExecutionException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.oaipmh.OaiPmh;
@@ -51,14 +55,18 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 //=============================================================================
 
-class Harvester extends BaseAligner
+class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 {
+	private HarvestResult result;
 	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -84,13 +92,22 @@ class Harvester extends BaseAligner
 	//---
 	//---------------------------------------------------------------------------
 
-	public HarvestResult harvest() throws Exception
+	public HarvestResult harvest(Logger log) throws Exception 
 	{
+	    this.log = log;
+	    
 		ListIdentifiersRequest req = new ListIdentifiersRequest();
 		req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
 
 		Transport t = req.getTransport();
-		t.setUrl(new URL(params.url));
+		try {
+			t.setUrl(new URL(params.url));
+        } catch (MalformedURLException e1) {
+            HarvestError harvestError = new HarvestError(e1, log);
+            harvestError.setDescription(harvestError.getDescription() + " " + params.url);
+            errors.add(harvestError);
+            throw new AbortExecutionException(e1);
+        }
 
 		if (params.useAccount)
 			t.setCredentials(params.username, params.password);
@@ -102,11 +119,38 @@ class Harvester extends BaseAligner
 
 		Set<RecordInfo> records = new HashSet<RecordInfo>();
 
-		for(Search s : params.getSearches())
-			records.addAll(search(req, s));
+        for (Search s : params.getSearches()) {
+            try {
+                records.addAll(search(req, s));
+            } catch (Exception e) {
+                log.error("Unknown error trying to harvest");
+                log.error(e.getMessage());
+                e.printStackTrace();
+                errors.add(new HarvestError(e, log));
+            } catch (Throwable e) {
+                log.fatal("Something unknown and terrible happened while harvesting");
+                log.fatal(e.getMessage());
+                e.printStackTrace();
+                errors.add(new HarvestError(e, log));
+            }
+        }
 
-		if (params.isSearchEmpty())
-			records.addAll(search(req, Search.createEmptySearch()));
+        if (params.isSearchEmpty()) {
+            try {
+                log.debug("Doing an empty search");
+                records.addAll(search(req, Search.createEmptySearch()));
+            } catch(Exception e) {
+                log.error("Unknown error trying to harvest");
+                log.error(e.getMessage());
+                e.printStackTrace();
+                errors.add(new HarvestError(e, log));
+            } catch(Throwable e) {
+                log.fatal("Something unknown and terrible happened while harvesting");
+                log.fatal(e.getMessage());
+                e.printStackTrace();
+                errors.add(new HarvestError(e, log));
+            }
+        }
 
 		log.info("Total records processed in all searches :"+ records.size());
 
@@ -163,7 +207,8 @@ class Harvester extends BaseAligner
 		}
 		catch(NoRecordsMatchException e)
 		{
-			//--- return gracefully
+			log.warning("No records were matched: " + e.getMessage());
+			this.errors.add(new HarvestError(e, log));
 			return records;
 		}
 
@@ -171,6 +216,7 @@ class Harvester extends BaseAligner
 		{
 			log.warning("Raised exception when searching : "+ e);
 			log.warning(Util.getStackTrace(e));
+            this.errors.add(new HarvestError(e, log));
 			throw new OperationAbortedEx("Raised exception when searching", e);
 		}
 	}
@@ -320,14 +366,19 @@ class Harvester extends BaseAligner
 
 		catch(JDOMException e)
 		{
-			log.warning("Skipping metadata with bad XML format. Remote id : "+ ri.id);
+            HarvestError harvestError = new HarvestError(e, log);
+            harvestError.setDescription("Skipping metadata with bad XML format. Remote id : "+ ri.id);
+            harvestError.printLog(log);
+            this.errors.add(harvestError);
 			result.badFormat++;
 		}
 
 		catch(Exception e)
 		{
-			log.warning("Raised exception while getting metadata file : "+ e);
-			log.warning(Util.getStackTrace(e));
+            HarvestError harvestError = new HarvestError(e, log);
+            harvestError.setDescription("Raised exception while getting metadata file : "+ e);
+            this.errors.add(harvestError);
+            harvestError.printLog(log);
 			result.unretrievable++;
 		}
 
@@ -354,7 +405,10 @@ class Harvester extends BaseAligner
 		}
 		catch (Exception e)
 		{
-			log.warning("Cannot convert oai_dc to dublin core : "+ e);
+            HarvestError harvestError = new HarvestError(e, log);
+            harvestError.setDescription("Cannot convert oai_dc to dublin core : "+ e);
+            this.errors.add(harvestError);
+            harvestError.printLog(log);
 			return null;
 		}
 	}
@@ -370,6 +424,8 @@ class Harvester extends BaseAligner
 		}
 		catch (Exception e)
 		{
+            HarvestError harvestError = new HarvestError(e, log);
+            this.errors.add(harvestError);
 			return false;
 		}
 	}
@@ -422,6 +478,11 @@ class Harvester extends BaseAligner
 		}
 	}
 
+
+    public List<HarvestError> getErrors() {
+        return errors;
+    }
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Variables
@@ -436,5 +497,12 @@ class Harvester extends BaseAligner
 	private CategoryMapper localCateg;
 	private GroupMapper    localGroups;
 	private UUIDMapper     localUuids;
-	private HarvestResult   result;
+    /**
+     * Contains a list of accumulated errors during the executing of this harvest.
+     */
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
 }
+
+//=============================================================================
+
+

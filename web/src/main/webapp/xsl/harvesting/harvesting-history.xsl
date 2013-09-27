@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0" 
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:java="http://xml.apache.org/xslt/java"  
+		exclude-result-prefixes="java">
 
 	<xsl:include href="../main.xsl"/>
 
@@ -46,7 +49,15 @@
 							if (check.checked) {
 								var toks = check.name.split('_');
 								if (toks[1] != 'all') {
-									params += '&amp;id='+toks[1];	
+									params += '&amp;id='+toks[1];
+									
+									//add filename
+									var links = check.parentElement.parentElement.getElementsByTagName("a");
+									for(var i = 0; i &lt; links.length; i++) {
+										if(links[i].href.indexOf("harvesting.log?file=") &gt; 0) {
+											params += '&amp;file='+links[i].href.substring(links[i].href.indexOf("harvesting.log?file=") + 20);
+										}
+									}
 								}
 							}
 						});
@@ -137,6 +148,7 @@
 						<th class="padded" style="width:64px;text-align:center"><b><xsl:value-of select="/root/gui/harvesting/elapsedTime"/></b></th>
 						<th class="padded" style="width:32px"><b><xsl:value-of select="/root/gui/harvesting/ok"/></b></th>
 						<th class="padded" style="width:384px;text-align:center"><b><xsl:value-of select="/root/gui/harvesting/detail"/></b></th>
+						<th class="padded" style="width:64px;text-align:center"><b><xsl:value-of select="/root/gui/harvesting/log"/></b></th>
 						<xsl:if test="$fullHistory">
 							<th class="padded" style="width:32px"><b><xsl:value-of select="/root/gui/harvesting/status"/></b></th>
 							<th class="padded" style="width:32px"><b><xsl:value-of select="/root/gui/harvesting/deleted"/></b></th>
@@ -222,6 +234,21 @@
 									</table>
 								</td>
 
+								<!-- column: download log -->
+								<td class="padded">
+									<xsl:variable name="logfile"><xsl:value-of select="info/*/logfile"/></xsl:variable>
+									
+									<xsl:choose>
+										<xsl:when test="$logfile != ''">
+											<a>
+												<xsl:attribute name="href">harvesting.log?file=<xsl:value-of select="$logfile"/></xsl:attribute>
+												<xsl:value-of select="/root/gui/harvesting/viewLog"/>
+											</a>
+										</xsl:when>
+										<xsl:otherwise><xsl:value-of select="/root/gui/harvesting/noLogAvailable"/></xsl:otherwise>
+									</xsl:choose>
+								</td>
+
 								<xsl:if test="$fullHistory">
 									<!-- column: status -->
 									<td class="padded" style="text-align:center"><xsl:value-of select="/root/response/nodes/node[site/uuid=$uuid]/options/status" /></td>
@@ -301,16 +328,62 @@
 				</tr>
 			</xsl:if>
 			<xsl:choose>
+				<xsl:when test="count(*[name()='cleared'])>0">
+					<tr>
+						<td colspan="2"  style="width:80%"><span style="margin-left:8px"><xsl:value-of select="/root/gui/harvesting/harvestedClear"/></span></td>
+					</tr>
+				</xsl:when>
 				<xsl:when test="count(*[name()!='stats' and number()!=0])>0">
-					<xsl:for-each select="*[name()!='stats']">
+                    <xsl:variable name="total" select="*[name() = 'totalMetadata']" />  
+                    
+					<xsl:for-each select="*[name()!='stats' and name()!='startTime' and name()!='endTime' and name()!='executionTime']">
 						<xsl:if test="number()!=0">
-							<tr>
-								<xsl:variable name="statName" select="name(.)"/>
-								<td style="width:80%"><span style="margin-left:8px"><xsl:value-of select="/root/gui/harvesting/tipHeader/*[name()=$statName]"/></span></td>
-								<td style="width:20%"><span style="margin-left:8px"><xsl:value-of select="."/></span></td>
-							</tr>
+
+                            <xsl:choose>
+                                <xsl:when test="name()='added' or name()='updated'">
+                                    <tr>
+                                        <xsl:variable name="statName" select="name(.)"/>
+                                        <td><span style="margin-left:8px"><xsl:value-of select="/root/gui/harvesting/tipHeader/*[name()=$statName]"/></span></td>
+                                         <xsl:if test="$total!=''">
+                                        	<td><span style="margin-left:8px"><xsl:value-of select="."/> (<xsl:value-of select="format-number((. div $total) * 100, '###.##')"/> %)</span></td>
+                                        </xsl:if>
+                                    </tr>
+
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <tr>
+                                        <xsl:variable name="statName" select="name(.)"/>
+                                        <td><span style="margin-left:8px"><xsl:value-of select="/root/gui/harvesting/tipHeader/*[name()=$statName]"/></span></td>
+                                        <td><span style="margin-left:8px"><xsl:value-of select="."/></span></td>
+                                    </tr>
+                                </xsl:otherwise>
+                            </xsl:choose>
 						</xsl:if>
 					</xsl:for-each>
+
+                    <tr>
+                        <td colspan="2"  style="width:80%">&#160;</td>
+                    </tr>
+
+                    <xsl:for-each select="*[name()='startTime' or name()='endTime' or name()='executionTime']">
+                        <xsl:if test="number()!=0">
+                            <tr>
+                                <xsl:variable name="statName" select="name(.)"/>
+                                <td><span style="margin-left:8px"><xsl:value-of select="/root/gui/harvesting/tipHeader/*[name()=$statName]"/></span></td>
+                                <td><span style="margin-left:8px">
+                                	<xsl:value-of select="."/>
+<!--                                     <xsl:choose>
+                                        <xsl:when test="name() = 'startTime' or name() = 'endTime'">
+                                            <xsl:value-of select="java:formatDatetime(.)" />
+                                        </xsl:when>
+                                        <xsl:when test="name() = 'executionTime' ">
+                                            <xsl:value-of select="java:formatDuration(.)" />
+                                        </xsl:when>
+                                    </xsl:choose>
+ -->                                </span></td>
+                            </tr>
+                        </xsl:if>
+                    </xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>
 					<tr>

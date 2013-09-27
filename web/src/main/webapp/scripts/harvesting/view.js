@@ -11,6 +11,7 @@ var SHOW = new Object();
 SHOW.LIST = new Object();
 SHOW.ADD  = new Object();
 SHOW.EDIT = new Object();
+SHOW.NOTIFICATIONS = new Object();
 
 //=====================================================================================
 
@@ -19,8 +20,8 @@ function View(xmlLoader)
 	var rowTransf = new XSLTransformer('harvesting/client-node-row.xsl',  xmlLoader);
 	var errTransf = new XSLTransformer('harvesting/client-error-tip.xsl', xmlLoader);
 	
-	var panelSwitcher = new TabSwitcher(['listPanel',   'addPanel',   'editPanel'], 
-													 ['listButtons', 'addButtons', 'editButtons']);
+	var panelSwitcher = new TabSwitcher(['listPanel',   'addPanel',   'editPanel', 'notifPanel'], 
+													 ['listButtons', 'addButtons', 'editButtons', 'notifButtons']);
 
 	var editSwitcher = new TabSwitcher([]);	
 
@@ -79,6 +80,9 @@ function show(obj)
 		
 	else if (obj == SHOW.EDIT)
 		panelSwitcher.show('editPanel', 'editButtons');
+	
+    else if (obj == SHOW.NOTIFICATIONS)
+        panelSwitcher.show('notifPanel', 'notifButtons');
 		
 	else
 		throw 'Unknown object to show : '+ obj;		

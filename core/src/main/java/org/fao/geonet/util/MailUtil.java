@@ -242,10 +242,21 @@ public class MailUtil {
         return send(email);
     }
 
-    private static Boolean send(Email email) {
+    private static Boolean send(final Email email) {
         try {
-            MailSender sender = new MailSender(email);
-            sender.start();
+        	Thread t = new Thread() {
+        		@Override
+        		public void run() {
+        			super.run();
+                    try {
+						email.send();
+					} catch (EmailException e) {
+						e.printStackTrace();
+					}
+        		}
+        	};
+        	
+        	t.start();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -327,7 +338,7 @@ public class MailUtil {
         if(ssl != null) {
             email.setSSL(ssl);
         }
-        if (from != null) {
+        if (from != null && !from.isEmpty()) {
             try {
                 email.setFrom(from);
             } catch (EmailException e) {
