@@ -139,12 +139,6 @@
                     <param name="chartHeight" value="400"/>
                     <!--  default chart height. can be overloaded through UI -->
                     <param name="chartWidth" value="600"/>
-                    <!--  the sql query to generate graph. CAUTION when modifying this query: java code and XSL page 
-                    expect the following columns to be returned:  
-                    	popularity (sum of popu per group), groupid: the group identifier, groupname: the group name -->
-                    <param name="query"
-                    		value="select sum(popularity) as popu, source from metadata group by source"/>
-                </call>
             </output>
         </service>
         

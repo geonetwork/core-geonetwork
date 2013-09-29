@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * Class responsible for querying the data layer in order to calculate various statistics related to the metadata.
  * <p/>
- * User: Jesse
+ * StatusValue: Jesse
  * Date: 9/21/13
  * Time: 4:23 PM
  */
@@ -35,13 +35,15 @@ public class MetadataStatisticsQueries {
     }
 
     /**
-     * Calculate the sum of the popularity of each metadata in a category and return the results as a map from a category to
-     * the popularity sum.
+     * Calculate a value (determined by spec) of each metadata in a category and return the results as a map from a category to
+     * the statistic value. If a category is not in the map then there are no metadata in that category (and thus the statistic is 0
+     * for that category).
      *
-     * @return A mapping from a MetadataCategory to the sum of the popularity of all metadata in that category. If a category is not in
-     *         the map then there are no metadata in that category (and thus the popularity is 0 for that category).
+     * @param spec the spec that calculates the value associated with each grouping
+     * @return A mapping from a MetadataCategory to the statistic of all metadata in that category. If a category is not in
+     *         the map then there are no metadata in that category (and thus the statistic is 0 for that category).
      */
-    public Map<MetadataCategory, Integer> getMetadataCategoryToPopularityMap() {
+    public Map<MetadataCategory, Integer> getMetadataCategoryToStatMap(MetadataStatisticSpec spec) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
         final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
@@ -53,8 +55,7 @@ public class MetadataStatisticsQueries {
         final Path<Integer> metadataCategoryIdPath = metadataCategoryRoot.get(MetadataCategory_.id);
         cbQuery.groupBy(metadataCategoryIdPath);
 
-        Path<Integer> popularityPath = metadataRoot.get(Metadata_.dataInfo).get(MetadataDataInfo_.popularity);
-        cbQuery.select(cb.tuple(metadataCategoryRoot, cb.sum(popularityPath)));
+        cbQuery.select(cb.tuple(metadataCategoryRoot, spec.getSelection(cb, metadataRoot)));
 
         Map<MetadataCategory, Integer> results = new HashMap<MetadataCategory, Integer>();
         for (Tuple tuple : _entityManager.createQuery(cbQuery).getResultList()) {
@@ -64,39 +65,15 @@ public class MetadataStatisticsQueries {
     }
 
     /**
-     * Count the number of metadata in a category and return the results as a map from a category to
-     * the metadata count.
+     * Calculate a value (determined by spec) of each metadata with the given group owner and return the results as a map from a group to
+     * the statistic value. If a group is not in the map then there are no metadata in that group (and thus the statistic is 0
+     * for that group).
      *
-     * @return A mapping from a MetadataCategory to the number of metadata in that category.  If a category is not in
-     *         the map then there are no metadata in that category.
+     * @param spec the spec that calculates the value associated with each grouping
+     * @return A mapping from a Group to the statistic of all metadata in that category. If a group is not in
+     *         the map then there are no metadata in that group (and thus the statistic is 0 for that group).
      */
-    public Map<MetadataCategory, Integer> getMetadataCategoryToMetadataCountMap() {
-        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
-        final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
-        final Root<MetadataCategory> metadataCategoryRoot = cbQuery.from(MetadataCategory.class);
-
-        final Expression<Set<MetadataCategory>> metadataCategoriesPath = metadataRoot.get(Metadata_.categories);
-        cbQuery.where(cb.isMember(metadataCategoryRoot, metadataCategoriesPath));
-
-        final Path<Integer> metadataCategoryIdPath = metadataCategoryRoot.get(MetadataCategory_.id);
-        cbQuery.groupBy(metadataCategoryIdPath);
-
-        cbQuery.select(cb.tuple(metadataCategoryRoot, cb.count(metadataRoot)));
-
-        Map<MetadataCategory, Integer> results = new HashMap<MetadataCategory, Integer>();
-        for (Tuple tuple : _entityManager.createQuery(cbQuery).getResultList()) {
-            results.put(tuple.get(0, MetadataCategory.class), tuple.get(1, Long.class).intValue());
-        }
-        return results;
-    }
-
-    /**
-     * Count the number of metadata per group.
-     *
-     * @return A mapping from group to the number of metadata in that group.
-     */
-    public Map<Group, Integer> getGroupOwnerToMetadataCountMap() {
+    public Map<Group, Integer> getGroupOwnerToStatMap(MetadataStatisticSpec spec) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
         final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
@@ -108,7 +85,7 @@ public class MetadataStatisticsQueries {
 
         cbQuery.groupBy(groupOwnerPath);
 
-        cbQuery.select(cb.tuple(groupRoot, cb.count(metadataRoot)));
+        cbQuery.select(cb.tuple(groupRoot, spec.getSelection(cb, metadataRoot)));
 
         Map<Group, Integer> results = new HashMap<Group, Integer>();
         for (Tuple tuple : _entityManager.createQuery(cbQuery).getResultList()) {
@@ -118,12 +95,15 @@ public class MetadataStatisticsQueries {
     }
 
     /**
-     * Count the number of metadata owner per user.
+     * Calculate a value (determined by spec) of each metadata with the given owner and return the results as a map from a StatusValue to
+     * the statistic value. If a StatusValue is not in the map then there are no metadata in that StatusValue (and thus the statistic is 0
+     * for that StatusValue).
      *
-     * @return a mapping from a user to the number of metadata that user owns.  If a user is not in the listing then the user does
-     *         not own any metadata.
+     * @param spec the spec that calculates the value associated with each StatusValue
+     * @return A mapping from a StatusValue to the statistic of all metadata in that category. If a StatusValue is not in
+     *         the map then there are no metadata in that StatusValue (and thus the statistic is 0 for that StatusValue).
      */
-    public Map<User, Integer> getOwnerToMetadataCountMap() {
+    public Map<User, Integer> getOwnerToStatMap(MetadataStatisticSpec spec) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
         final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
@@ -135,7 +115,7 @@ public class MetadataStatisticsQueries {
 
         cbQuery.groupBy(ownerPath);
 
-        cbQuery.select(cb.tuple(userRoot, cb.count(metadataRoot)));
+        cbQuery.select(cb.tuple(userRoot, spec.getSelection(cb, metadataRoot)));
 
         Map<User, Integer> results = new HashMap<User, Integer>();
         for (Tuple tuple : _entityManager.createQuery(cbQuery).getResultList()) {
@@ -146,12 +126,15 @@ public class MetadataStatisticsQueries {
     }
 
     /**
-     * Count the number metadata per metadata source.
+     * Calculate a value (determined by spec) of each metadata with the given owner and return the results as a map from a source to
+     * the statistic value. If a source is not in the map then there are no metadata in that source (and thus the statistic is 0
+     * for that source).
      *
-     * @return a mapping from a source to the number of metadata from that source.  If a source is not in the mapping then the source
-     *         does not own any metadata.
+     * @param spec the spec that calculates the value associated with each source
+     * @return A mapping from a Source to the statistic of all metadata in that category. If a source is not in
+     *         the map then there are no metadata in that source (and thus the statistic is 0 for that source).
      */
-    public Map<Source, Integer> getSourceToMetadataCountMap() {
+    public Map<Source, Integer> getSourceToStatMap(MetadataStatisticSpec spec) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
         final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
@@ -160,7 +143,7 @@ public class MetadataStatisticsQueries {
         final Path<String> sourcePathInMetadata = metadataRoot.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.sourceId);
         final Path<String> sourceUuidPath = sourceRoot.get(Source_.uuid);
 
-        cbQuery.select(cb.tuple(sourceRoot, cb.count(metadataRoot)))
+        cbQuery.select(cb.tuple(sourceRoot, spec.getSelection(cb, metadataRoot)))
                 .where(cb.equal(sourcePathInMetadata, sourceUuidPath))
                 .groupBy(sourceUuidPath);
 
@@ -172,18 +155,22 @@ public class MetadataStatisticsQueries {
     }
 
     /**
-     * Count the number of metadata per schema type.
+     * Calculate a value (determined by spec) of each metadata with the given owner and return the results as a map from a schema to
+     * the statistic value. If a schema is not in the map then there are no metadata in that schema (and thus the statistic is 0
+     * for that schema).
      *
-     * @return a mapping from schemaId to number of metadata in that schema.
+     * @param spec the spec that calculates the value associated with each schema
+     * @return A mapping from a Schema to the statistic of all metadata in that category. If a schema is not in
+     *         the map then there are no metadata in that schema (and thus the statistic is 0 for that schema).
      */
-    public Map<String, Integer> getSchemaToMetadataCountMap() {
+    public Map<String, Integer> getSchemaToStatMap(MetadataStatisticSpec spec) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
         final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
 
         final Path<String> schemaTypePath = metadataRoot.get(Metadata_.dataInfo).get(MetadataDataInfo_.schemaId);
 
-        cbQuery.select(cb.tuple(schemaTypePath, cb.count(metadataRoot)))
+        cbQuery.select(cb.tuple(schemaTypePath, spec.getSelection(cb, metadataRoot)))
                 .groupBy(schemaTypePath);
 
         Map<String, Integer> results = new HashMap<String, Integer>();
@@ -195,18 +182,22 @@ public class MetadataStatisticsQueries {
     }
 
     /**
-     * Count the number of metadata per MetadataType (template, metadata, sub-template).
+     * Calculate a value (determined by spec) of each metadata with the given owner and return the results as a map from a metadatatype to
+     * the statistic value. If a metadatatype is not in the map then there are no metadata in that metadatatype (and thus the statistic is 0
+     * for that metadatatype).
      *
-     * @return a mapping from MetadataType to number of metadata in that type.
+     * @param spec the spec that calculates the value associated with each metadatatype
+     * @return A mapping from a Metadatatype to the statistic of all metadata in that category. If a metadatatype is not in
+     *         the map then there are no metadata in that metadatatype (and thus the statistic is 0 for that metadatatype).
      */
-    public Map<MetadataType, Integer> getMetadataTypeToMetadataCountMap() {
+    public Map<MetadataType, Integer> getMetadataTypeToStatMap(MetadataStatisticSpec spec) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
         final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
 
         final Path<Character> typePath = metadataRoot.get(Metadata_.dataInfo).get(MetadataDataInfo_.type_JPAWorkaround);
 
-        cbQuery.select(cb.tuple(typePath, cb.count(metadataRoot))).groupBy(typePath);
+        cbQuery.select(cb.tuple(typePath, spec.getSelection(cb, metadataRoot))).groupBy(typePath);
 
         Map<MetadataType, Integer> results = new HashMap<MetadataType, Integer>();
 
@@ -222,19 +213,22 @@ public class MetadataStatisticsQueries {
     }
 
     /**
-     * Calculate the number of harvested vs non-harvested metadata.
+     * Calculate a value (determined by spec) of each metadata with the given owner and return the results as a map from a IsHarvested value to
+     * the statistic value. If a IsHarvested value is not in the map then there are no metadata in that IsHarvested value (and thus the statistic is 0
+     * for that IsHarvested value).
      *
-     * @param typesToInclude the metadata types to include in the calculation.
-     * @return a mapping from isHarvested (true is harvested) to the number of metadata.
+     * @param spec the spec that calculates the value associated with each IsHarvested value
+     * @return A mapping from a IsHarvested value to the statistic of all metadata in that category. If a IsHarvested value is not in
+     *         the map then there are no metadata in that IsHarvested value (and thus the statistic is 0 for that IsHarvested value).
      */
-    public Map<Boolean, Integer> getIsHarvestedToMetadataCountMap(MetadataType... typesToInclude) {
+    public Map<Boolean, Integer> getIsHarvestedToStatMap(MetadataStatisticSpec spec) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
         final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
 
         final Path<Character> isHarvestedPath = metadataRoot.get(Metadata_.harvestInfo).get(MetadataHarvestInfo_.harvested_JPAWorkaround);
 
-        cbQuery.select(cb.tuple(isHarvestedPath, cb.count(metadataRoot)))
+        cbQuery.select(cb.tuple(isHarvestedPath, spec.getSelection(cb, metadataRoot)))
                 .groupBy(isHarvestedPath);
 
         Map<Boolean, Integer> results = new HashMap<Boolean, Integer>();
@@ -249,19 +243,27 @@ public class MetadataStatisticsQueries {
     }
 
     /**
-     * Calculate the number of metadata for the given MetadataStatus type.
+     * Calculate a value (determined by spec) of each metadata with the given owner and return the results as a map from a StatusValue to
+     * the statistic value. If a StatusValue is not in the map then there are no metadata in that StatusValue (and thus the statistic is 0
+     * for that StatusValue).
      *
-     * @return a mapping from MetadataStatus to the number of metadata that have that status.
+     * @param spec the spec that calculates the value associated with each StatusValue
+     * @return A mapping from a StatusValue to the statistic of all metadata in that category. If a StatusValue is not in
+     *         the map then there are no metadata in that StatusValue (and thus the statistic is 0 for that StatusValue).
      */
-    public Map<StatusValue, Integer> getStatusValueToMetadataCountMap() {
+    public Map<StatusValue, Integer> getStatusValueToStatMap(MetadataStatisticSpec spec) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
+        final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
         final Root<MetadataStatus> metadataStatusRoot = cbQuery.from(MetadataStatus.class);
         final Root<StatusValue> statusValueRoot = cbQuery.from(StatusValue.class);
 
         final Path<StatusValue> statusValuePath = metadataStatusRoot.get(MetadataStatus_.statusValue);
-        cbQuery.select(cb.tuple(statusValueRoot, cb.count(metadataStatusRoot)))
-                .where(cb.equal(statusValuePath, statusValueRoot))
+        final Predicate equalMetadataId = cb.equal(metadataRoot.get(Metadata_.id), metadataStatusRoot.get(MetadataStatus_.id).get
+                (MetadataStatusId_.metadataId));
+        final Predicate equalStatusValue = cb.equal(statusValuePath, statusValueRoot);
+        cbQuery.select(cb.tuple(statusValueRoot, spec.getSelection(cb, metadataRoot)))
+                .where(cb.and(equalStatusValue, equalMetadataId))
                 .groupBy(statusValuePath);
 
         Map<StatusValue, Integer> results = new HashMap<StatusValue, Integer>();
@@ -273,11 +275,15 @@ public class MetadataStatisticsQueries {
     }
 
     /**
-     * Calculate the number of metadata that have a given MetadataValidationStatus.
+     * Calculate a value (determined by spec) of each metadata with the given owner and return the results as a map from a MetadataValidationStatus to
+     * the statistic value. If a MetadataValidationStatus is not in the map then there are no metadata in that MetadataValidationStatus (and thus the statistic is 0
+     * for that MetadataValidationStatus).
      *
-     * @return a mapping from MetadataValidationStatus to the number of metadata with that validation type.
+     * @param spec the spec that calculates the value associated with each MetadataValidationStatus
+     * @return A mapping from a MetadataValidationStatus to the statistic of all metadata in that category. If a MetadataValidationStatus is not in
+     *         the map then there are no metadata in that MetadataValidationStatus (and thus the statistic is 0 for that MetadataValidationStatus).
      */
-    public Map<MetadataValidationStatus, Integer> getMetadataValidationStatusToMetadataCountMap() {
+    public Map<MetadataValidationStatus, Integer> getMetadataValidationStatusToStatMap(MetadataStatisticSpec spec) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
         final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
@@ -289,9 +295,9 @@ public class MetadataStatisticsQueries {
                 (MetadataValidationId_.metadataId);
 
 
-        final Long notValidatedCount = countMetadataNotValidated(cb, cbQuery);
+        final Long notValidatedCount = calculateNotValidatedStat(spec, cb);
 
-        cbQuery.select(cb.tuple(statusPath, cb.count(metadataRoot)))
+        cbQuery.select(cb.tuple(statusPath, spec.getSelection(cb, metadataRoot)))
                 .where(cb.equal(metadataIdPath, metadataValidationMetadataIdPath))
                 .groupBy(statusPath);
 
@@ -305,8 +311,8 @@ public class MetadataStatisticsQueries {
         return results;
     }
 
-    private Long countMetadataNotValidated(CriteriaBuilder cb, CriteriaQuery<Tuple> cbQuery) {
-        final CriteriaQuery<Long> notValidatedQuery = cb.createQuery(Long.class);
+    private Long calculateNotValidatedStat(MetadataStatisticSpec spec, CriteriaBuilder cb) {
+        final CriteriaQuery<Number> notValidatedQuery = cb.createQuery(Number.class);
         final Root<Metadata> metadataRoot = notValidatedQuery.from(Metadata.class);
 
 
@@ -318,19 +324,26 @@ public class MetadataStatisticsQueries {
 
 
         final Path<Integer> metadataIdPath = metadataRoot.get(Metadata_.id);
-        notValidatedQuery.select(cb.count(metadataRoot)).where(cb.not(metadataIdPath.in(selectMetadataValidationMetadataIds)));
-        return _entityManager.createQuery(notValidatedQuery).getSingleResult();
+        notValidatedQuery.select(spec.getSelection(cb, metadataRoot)).where(cb.not(metadataIdPath.in(selectMetadataValidationMetadataIds)));
+
+        final Number singleResult = _entityManager.createQuery(notValidatedQuery).getSingleResult();
+        if (singleResult == null) {
+            return 0L;
+        }
+        return singleResult.longValue();
     }
 
     /**
-     * Calculate the number of metadata grouped by validation type and each MetadataValidationStatus.
+     * Calculate the statistic grouped by validation type and each MetadataValidationStatus.
      * <p>
      * The metadata that have not been validated are also in the map as Pair.read(null, MetadataValidationStatus.NEVER_CALCULATED)
      * </p>
      *
-     * @return a mapping from Pair&lt;ValidationType, MetadataValidationStatus>
+     * @param spec the spec that calculates the value associated with each grouping
+     * @return a mapping from Pair&lt;ValidationType, MetadataValidationStatus> to the statistical value
      */
-    public Map<Pair<String, MetadataValidationStatus>, Integer> getMetadataValidationTypeAndStatusToMetadataCountMap() {
+    public Map<Pair<String, MetadataValidationStatus>, Integer> getMetadataValidationTypeAndStatusToStatMap
+    (MetadataStatisticSpec spec) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
         final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
@@ -343,9 +356,9 @@ public class MetadataStatisticsQueries {
                 (MetadataValidationId_.metadataId);
 
 
-        final Long notValidatedCount = countMetadataNotValidated(cb, cbQuery);
+        final Long notValidatedCount = calculateNotValidatedStat(spec, cb);
 
-        cbQuery.select(cb.tuple(statusTypePath, statusPath, cb.count(metadataRoot)))
+        cbQuery.select(cb.tuple(statusTypePath, statusPath, spec.getSelection(cb, metadataRoot)))
                 .where(cb.equal(metadataIdPath, metadataValidationMetadataIdPath))
                 .groupBy(statusTypePath, statusPath);
 
@@ -364,22 +377,27 @@ public class MetadataStatisticsQueries {
     }
 
     /**
-     * Sum all the popularity of the selected metadata.
-     * @param optionalSpec an optional specification for selecting which metadata to sum.
+     * Calculate the statistic of all the selected metadata.
      *
-     * @return the sum all the popularity of the selected metadata.
+     * @param spec         the spec that calculates the value associated with each grouping
+     * @param optionalSpec an optional specification for selecting which metadata to sum.
+     * @return the total of the statistic of all the selected metadata.
      */
-    public int sumOfPopularity(Optional<Specification<Metadata>> optionalSpec) {
+    public int getTotalStat(MetadataStatisticSpec spec, Optional<Specification<Metadata>> optionalSpec) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
-        final CriteriaQuery<Integer> query = cb.createQuery(Integer.class);
+        final CriteriaQuery<Number> query = cb.createQuery(Number.class);
         final Root<Metadata> root = query.from(Metadata.class);
 
         if (optionalSpec.isPresent()) {
             query.where(optionalSpec.get().toPredicate(root, query, cb));
         }
 
-        query.select(cb.sum(root.get(Metadata_.dataInfo).get(MetadataDataInfo_.popularity)));
-        return _entityManager.createQuery(query).getSingleResult();
+        query.select(spec.getSelection(cb, root));
+        final Number result = _entityManager.createQuery(query).getSingleResult();
+        if (result == null) {
+            return 0;
+        }
+        return result.intValue();
     }
 
 }

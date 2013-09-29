@@ -3,7 +3,6 @@ package org.fao.geonet.services.statistics;
 import jeeves.constants.Jeeves;
 import org.fao.geonet.Constants;
 import org.fao.geonet.exceptions.BadParameterEx;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.IO;
@@ -14,6 +13,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import javax.sql.DataSource;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -96,14 +96,14 @@ public class TableExport extends NotInReadOnlyModeService {
         String query = "select * from " + tableToExport;
         if (Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
             Log.debug(Geonet.SEARCH_LOGGER, "Export Statistics table: query to get table:\n" + query);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         // use connection by hand, to allow us to control the resultset and avoid Java Heap Space Exception
-        Connection con = dbms.getConnection();
+        Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
         FileOutputStream fileOutputStream = null;
         BufferedWriter out = null;
         try {
+            con = context.getBean(DataSource.class).getConnection();
             stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             rs = stmt.executeQuery(query);
             fileOutputStream = new FileOutputStream(tableDumpFile);

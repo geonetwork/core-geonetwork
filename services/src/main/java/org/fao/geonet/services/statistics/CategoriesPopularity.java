@@ -5,10 +5,10 @@ import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.statistic.MetadataStatisticsQueries;
 import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
@@ -19,7 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.awt.*;
 import java.io.File;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Service to get the db-stored requests information group by source (node) id
@@ -73,31 +73,19 @@ public class CategoriesPopularity extends NotInReadOnlyModeService {
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
         String message = "";
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        final int cnt = metadataRepository.sumOfPopularity(Optional.<Specification<Metadata>>absent());
+        final MetadataStatisticsQueries metadataStatistics = metadataRepository.getMetadataStatistics();
+        final int totalMetadataPopularity = metadataStatistics.getTotalStat(Optional.<Specification<Metadata>>absent());
+        final Map<MetadataCategory,Integer> metadataCategoryToPopularityMap = metadataStatistics.getMetadataCategoryToStatMap();
 
+        DefaultPieDataset dataset = new DefaultPieDataset();
 
-		DefaultPieDataset dataset = new DefaultPieDataset();
+        for(Map.Entry<MetadataCategory, Integer> entry: metadataCategoryToPopularityMap.entrySet()) {
+            final double percentageOfPopularity = (entry.getValue().doubleValue() / totalMetadataPopularity) * 100;
+            dataset.setValue(entry.getKey().getName(), percentageOfPopularity);
+        }
 
-
-		@SuppressWarnings("unchecked")
-
-        "select sum(metadata.popularity) as popularity, metadatacateg.categoryid as categoryid, categories.name as categoryname from metadata, metadatacateg, categories where metadata.id = metadatacateg.metadataid and metadatacateg.categoryid = categories.id group by metadatacateg.categoryid, categories.name"
-        List<Element> resultSet = dbms.select(query).getChildren();
-		
-		for (Element record : resultSet) {
-			String popularity = record.getChildText("popularity");
-			if (!popularity.equals("0")) {
-				Double d = 0.0;
-				if (popularity.length() > 0 ) {
-					d = (Double.parseDouble(popularity) / cnt ) * 100; 
-				}
-				dataset.setValue(record.getChildText("categoryname"),d);
-			}
-		}
-		
 		// create a chart... 
 		JFreeChart chart = ChartFactory.createPieChart( 
 			null, 
@@ -112,7 +100,7 @@ public class CategoriesPopularity extends NotInReadOnlyModeService {
 		chart.setBackgroundPaint(Color.decode("#E7EDF5"));
 		String chartFilename = "popularitybycategory_" + System.currentTimeMillis() + ".png";
 		
-		File statFolder = new File(gc.getBean(ServiceConfig.class).getMandatoryValue(
+		File statFolder = new File(context.getBean(ServiceConfig.class).getMandatoryValue(
 				Geonet.Config.RESOURCES_DIR) + File.separator + "images" + File.separator + "statTmp");
 		IO.mkdirs(statFolder, "Statistices tmp dir");
 		File f = new File(statFolder, chartFilename);
@@ -128,8 +116,8 @@ public class CategoriesPopularity extends NotInReadOnlyModeService {
 		Element elTooltipImageMap = new Element("tooltipImageMap").addContent(
 				this.createTooltips ? this.imageMap : "");
 		
-		Element elMessage = new Element("message").setText(message);		
-		Element elChartWidth= new Element("chartWidth").setText("" + this.chartWidth);		
+		Element elMessage = new Element("message").setText(message);
+		Element elChartWidth= new Element("chartWidth").setText("" + this.chartWidth);
 		Element elChartHeight= new Element("chartHeight").setText("" + this.chartHeight);	
 		
 		elResp.addContent(elchartUrl);
