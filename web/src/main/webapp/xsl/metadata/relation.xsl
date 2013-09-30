@@ -103,5 +103,15 @@
       <xsl:copy-of select="$metadata"/>
     </relation>
   </xsl:template>
-
+  
+  <!-- Add the default title as title. This may happen
+  when title is retrieve from index and the record is
+  not available in current language. eg. iso19110 records
+  are only indexed with no language info. -->
+  <xsl:template mode="superBrief" match="metadata[not(title)]">
+    <xsl:copy>
+      <xsl:copy-of select="*"/>
+      <title><xsl:value-of select="defaultTitle"/></title>
+    </xsl:copy>
+  </xsl:template>
 </xsl:stylesheet>
