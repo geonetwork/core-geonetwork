@@ -70,7 +70,6 @@ import org.fao.geonet.utils.Xml;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.fao.geonet.domain.Service;
-import org.fao.geonet.domain.ServiceParameter;
 import org.fao.geonet.repository.ServiceRepository;
 import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
@@ -708,7 +707,6 @@ public class JeevesEngine
      * Create or reload Jeeves services from a configuration stored in the Services table
      * of the DBMS resource.
      * 
-     * @param _dbms
      * @param serviceIdentifierToLoad -1 for all or the service identifier
      */
     public void loadConfigDB(ApplicationContext context, int serviceIdentifierToLoad) {
@@ -728,13 +726,13 @@ public class JeevesEngine
                 if (service != null) {
                     Element srv = new Element("service");
                     Element cls = new Element("class");
+
+                    Map<String, String> paramList = service.getParameters();
                     
-                    List<ServiceParameter> paramList = service.getParameters();
-                    
-                    for (ServiceParameter serviceParam : paramList) {
+                    for (Map.Entry<String, String> serviceParam : paramList.entrySet()) {
                         if (serviceParam.getValue() != null && !serviceParam.getValue().trim().isEmpty()) {
                             cls.addContent(new Element("param").setAttribute("name", "filter").setAttribute("value",
-                                    "+" + serviceParam.getName() + ":" + serviceParam.getValue()));
+                                    "+" + serviceParam.getKey() + ":" + serviceParam.getValue()));
                         }
                     }
     

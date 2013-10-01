@@ -20,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import com.google.common.base.Function;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class DatabaseInitializationTest extends AbstractSpringDataTest {
     public final String SCHEMA = "PUBLIC";
 
@@ -248,7 +250,6 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             column("REQUESTS","SORTBY","<null>","YES","VARCHAR","255"),
             column("REQUESTS","SPATIALFILTER","<null>","YES","CLOB","2147483647"),
             column("REQUESTS","TYPE","<null>","YES","CLOB","2147483647"),
-            column("SERVICEPARAMETERS","ID","<null>","NO","INTEGER","10"),
             column("SERVICEPARAMETERS","NAME","<null>","NO","VARCHAR","255"),
             column("SERVICEPARAMETERS","SERVICE","<null>","NO","INTEGER","10"),
             column("SERVICEPARAMETERS","VALUE","<null>","NO","VARCHAR","1024"),

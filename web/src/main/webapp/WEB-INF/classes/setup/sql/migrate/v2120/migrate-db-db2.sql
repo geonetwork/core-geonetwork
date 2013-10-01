@@ -1,4 +1,5 @@
 ALTER TABLE operations DROP COLUMN reserved;
+ALTER TABLE service DROP COLUMN id;
 
 -- Convert Profile column to the profile enumeration ordinal
 CREATE TABLE USERGROUPS_TMP 

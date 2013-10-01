@@ -23,15 +23,22 @@
 
 package org.fao.geonet.services.relations;
 
+import static org.fao.geonet.repository.specification.MetadataRelationSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.MetadataRelationSpecs.hasRelatedId;
+import static org.springframework.data.jpa.domain.Specifications.where;
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.MetadataRelation;
+import org.fao.geonet.domain.MetadataRelationId;
+import org.fao.geonet.repository.MetadataRelationRepository;
+import org.fao.geonet.repository.specification.MetadataRelationSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specifications;
 
 //=============================================================================
 
@@ -63,20 +70,16 @@ public class Insert extends NotInReadOnlyModeService {
 		int childId = Integer.parseInt(Utils.getIdentifierFromParameters(
 				params, context, Params.CHILD_UUID, Params.CHILD_ID));
 
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
+        final Specifications<MetadataRelation> spec = where(hasMetadataId(parentId)).and(hasRelatedId(childId));
+        final MetadataRelationRepository metadataRelationRepository = context.getBean(MetadataRelationRepository.class);
+        final long count = metadataRelationRepository.count(spec);
 
-		String query = "Select count(*) as exist from Relations where id=? and relatedId=?";
-		Element record = dbms.select(query, parentId, childId).getChild("record");
-		boolean exist = false;
-		if (record.getChild("exist").getText().equals("1")) {
+        boolean exist = false;
+		if (count == 1) {
 			exist = true;
 		} else {
-			// Add new relation
-			query = "INSERT INTO Relations (id, relatedId) "
-					+ "VALUES (?, ?)";
-	
-			dbms.execute(query, parentId, childId);
+            MetadataRelation entity = new MetadataRelation().setId(new MetadataRelationId(parentId, childId));
+            metadataRelationRepository.save(entity);
 		}
 		
 		Element response = new Element(Jeeves.Elem.RESPONSE)

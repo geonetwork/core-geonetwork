@@ -9,6 +9,7 @@ import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.GroupRepositoryTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
@@ -24,6 +25,7 @@ import static org.junit.Assert.assertEquals;
  * Date: 9/10/13
  * Time: 10:22 AM
  */
+@Transactional
 public class GroupSpecsTest extends AbstractSpringDataTest {
 
     @Autowired

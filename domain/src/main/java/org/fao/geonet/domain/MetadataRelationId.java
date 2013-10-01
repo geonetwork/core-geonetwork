@@ -27,11 +27,11 @@ public class MetadataRelationId implements Serializable {
      * Convenience constructor.
      *
      * @param metadataId one side of the relation.
-     * @param _relatedId the other side of relation.
+     * @param relatedId the other side of relation.
      */
-    public MetadataRelationId(Integer metadataId, Integer _relatedId) {
+    public MetadataRelationId(Integer metadataId, Integer relatedId) {
         this._metadataId = metadataId;
-        this._relatedId = _relatedId;
+        this._relatedId = relatedId;
     }
 
     /**

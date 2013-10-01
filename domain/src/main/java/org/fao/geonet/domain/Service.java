@@ -1,19 +1,11 @@
 package org.fao.geonet.domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * One of the entities responsible for dynamic service configuration. Entity representing a {@link jeeves.interfaces.Service}. Originally
@@ -29,7 +21,7 @@ public class Service extends GeonetEntity {
     private String _name;
     private String _className;
     private String description;
-    private List<ServiceParameter> _parameters = new ArrayList<ServiceParameter>();
+    private Map<String, String> _parameters = new HashMap<String, String>();
 
     /**
      * Get the id of the service entity. This is a generated value and as such new instances should not have this set as it will simply be
@@ -58,7 +50,7 @@ public class Service extends GeonetEntity {
      * 
      * @return the name of the service.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     public String getName() {
         return _name;
     }
@@ -111,22 +103,24 @@ public class Service extends GeonetEntity {
     }
 
     /**
-     * Get the init parameters to pass to the service.
+     * Get the init parameters to pass to the service.  The Key is the parameter name the value is the parameter value.
      * 
-     * @return the init parameters to pass to the service.
+     * @return the init parameters to pass to the service.  The Key is the parameter name the value is the parameter value.
      */
-    @ElementCollection(fetch = FetchType.LAZY, targetClass = ServiceParameter.class)
-    @CollectionTable(joinColumns = @JoinColumn(name = "service"), name = "serviceparameters")
-    public List<ServiceParameter> getParameters() {
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(joinColumns = @JoinColumn(name = "service", insertable = true, updatable = true, unique = false, nullable = false), name = "serviceparameters")
+    @MapKeyColumn(name = "name")
+    @Column(name = "value", nullable = false, length = 1024)
+    public Map<String, String> getParameters() {
         return _parameters;
     }
 
     /**
-     * Set the init parameters to pass to the service.
+     * Set the init parameters to pass to the service. The Key is the parameter name the value is the parameter value.
      * 
-     * @param parameters the init parameters to pass to the service.
+     * @param parameters the init parameters to pass to the service.  The Key is the parameter name the value is the parameter value.
      */
-    public void setParameters(List<ServiceParameter> parameters) {
+    public void setParameters(final Map<String, String> parameters) {
         this._parameters = parameters;
     }
 

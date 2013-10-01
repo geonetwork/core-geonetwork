@@ -51,10 +51,11 @@ public class MetadataRelation extends GeonetEntity {
 
     /**
      * Set the metadata relation id object.
-     * 
+     *
      * @param id the metadata relation id object.
      */
-    public void setId(final MetadataRelationId id) {
+    public MetadataRelation setId(final MetadataRelationId id) {
         this._id = id;
+        return this;
     }
 }

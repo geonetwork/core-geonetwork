@@ -23,14 +23,11 @@
 
 package org.fao.geonet.services.operation;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Operation;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;

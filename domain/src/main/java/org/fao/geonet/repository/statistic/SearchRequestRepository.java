@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @author Jesse
  */
 public interface SearchRequestRepository extends GeonetRepository<SearchRequest, Integer>,
-        JpaSpecificationExecutor<SearchRequest> {
+        JpaSpecificationExecutor<SearchRequest>, SearchRequestRepositoryCustom {
 }

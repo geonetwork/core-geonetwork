@@ -237,9 +237,6 @@
                 <call name="tagcloud" class=".services.statistics.TagCloud">
                     <!-- the max number of result to display in the UI -->
                     <param name="limit" value="10"/>
-                    <param name="query"
-                    	value="select count(termtext) as tagcount, termtext from params where termfield not in ('_op0','_op1','_op2','_op3','_op4','_op5','_op6','_isTemplate', '_locale', '_owner', '_groupOwner', '_cat', '_dummy', 'type') group by termtext having count(termtext) > 0  order by tagcount desc"
-                    />
                 </call>
             </output>
         </service>

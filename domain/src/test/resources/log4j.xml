@@ -11,10 +11,10 @@
 		<appender-ref ref="CA" />
 	</root>
 	<category name="org.hibernate.SQL">
-		<priority value="DEBUG" />
+		<priority value="TRACE" />
 	</category>
 	<category name="org.hibernate.type">
-		<priority value="DEBUG" />
+		<priority value="TRACE" />
 	</category>
 
 </log4j:configuration>

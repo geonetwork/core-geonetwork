@@ -24,17 +24,18 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -67,26 +68,24 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 		AccessManager accessMan = gc.getBean(AccessManager.class);
 		UserSession   us = context.getUserSession();
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(us);
 
 		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
+		Set<String> notFound = new HashSet<Integer>();
 		Set<Integer> notOwner = new HashSet<Integer>();
 
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
-			String uuid = (String) iter.next();
-			String id   = dm.getMetadataId(dbms, uuid);
+			String uuid = iter.next();
 
 			//--- check access
-			MdInfo info = dm.getMetadataInfo(dbms, id);
+
+			Metadata info = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
 			if (info == null) {
-				notFound.add(Integer.valueOf(id));
-			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(Integer.valueOf(id));
+				notFound.add(uuid);
+			} else if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {
+				notOwner.add(info.getId());
 			} else {
 
 				//--- remove old operations
@@ -97,10 +96,10 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 				boolean isAdmin = Profile.Administrator == us.getProfile();
 				boolean isReviewer= Profile.Reviewer == us.getProfile();
 
-				if (us.getUserId().equals(info.owner) && !isAdmin && !isReviewer)
+				if (us.getUserId().equals(info.getSourceInfo().getOwner()) && !isAdmin && !isReviewer)
 					skip = true;
 
-				dm.deleteMetadataOper(context, id, skip);
+				dm.deleteMetadataOper(context, "" + info.getId(), skip);
 
 				//--- set new ones
 				@SuppressWarnings("unchecked")
@@ -115,17 +114,17 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 						String groupId = st.nextToken();
 						String operId  = st.nextToken();
 
-						dm.setOperation(context, dbms, id, groupId, operId);
+						dm.setOperation(context, "" + info.getId(), groupId, operId);
 					}
 				}
-				metadata.add(Integer.valueOf(id));
+				metadata.add(info.getId());
 			}
 		}
 		}
 
 		//--- reindex metadata
 		context.info("Re-indexing metadata");
-		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, dbms, metadata);
+		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
 		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids

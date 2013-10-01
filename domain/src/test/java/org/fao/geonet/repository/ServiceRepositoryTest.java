@@ -1,18 +1,26 @@
 package org.fao.geonet.repository;
 
 
+import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
 import org.fao.geonet.domain.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @Transactional
 public class ServiceRepositoryTest extends AbstractSpringDataTest {
+
+    @PersistenceContext
+    EntityManager _EntityManager;
 
     @Autowired
     ServiceRepository _repo;
@@ -20,15 +28,35 @@ public class ServiceRepositoryTest extends AbstractSpringDataTest {
     AtomicInteger _inc = new AtomicInteger();
 
     @Test
-    public void testFindOne() {
+    public void testFindOne() throws Exception {
         Service service = newService();
         service = _repo.save(service);
 
         Service service1 = newService();
         service1 = _repo.save(service1);
 
-        assertEquals(service1, _repo.findOne(service1.getId()));
-        assertEquals(service, _repo.findOne(service.getId()));
+        _EntityManager.clear();
+
+        final Service found1 = _repo.findOne(service1.getId());
+        assertEquals(2, found1.getParameters().size());
+        assertSameContents(service1, found1);
+        final Service found = _repo.findOne(service.getId());
+        assertEquals(2, found.getParameters().size());
+        assertSameContents(service, found);
+
+
+    }
+
+    @Test
+    public void testFindOneByName() {
+        Service service = newService();
+        service = _repo.save(service);
+
+        Service service1 = newService();
+        service1 = _repo.save(service1);
+
+        assertEquals(service1, _repo.findOneByName(service1.getName()));
+        assertEquals(service, _repo.findOneByName(service.getName()));
     }
 
     private Service newService() {
@@ -41,9 +69,9 @@ public class ServiceRepositoryTest extends AbstractSpringDataTest {
         service.setClassName("classname" + val);
         service.setDescription("description" + val);
 
-        ArrayList<ServiceParameter> params = new ArrayList<ServiceParameter>();
-        params.add(new ServiceParameter().setId(val).setName("name_1_" + val).setValue("value_1_" + val));
-        params.add(new ServiceParameter().setId(val).setName("name_2_" + val).setValue("value_2_" + val));
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("name_1_" + val, "value_1_" + val);
+        params.put("name_2_" + val, "value_2_" + val);
         service.setParameters(params);
 
         return service;

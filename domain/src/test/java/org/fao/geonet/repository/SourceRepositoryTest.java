@@ -3,6 +3,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Source;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -15,6 +16,7 @@ import static org.junit.Assert.assertEquals;
  * Date: 9/10/13
  * Time: 12:04 PM
  */
+@Transactional
 public class SourceRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     private SourceRepository _repo;

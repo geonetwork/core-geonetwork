@@ -434,12 +434,9 @@ CREATE TABLE Services
 
 CREATE TABLE ServiceParameters
   (
-    id         int,
     service     int,
     name       varchar(64)   not null,
     value       varchar(1048)   not null,
-    
-    primary key(id)
   );
 
 

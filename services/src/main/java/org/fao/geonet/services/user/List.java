@@ -23,15 +23,23 @@
 
 package org.fao.geonet.services.user;
 
+import static org.fao.geonet.repository.specification.UserGroupSpecs.*;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.User_;
+import org.fao.geonet.repository.GeonetRepositoryImpl;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.jdom.Element;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -64,53 +72,53 @@ public class List implements Service
 
 		//--- retrieve groups for myself
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-		Set<String> hsMyGroups = getGroups(dbms, session.getUserId(), session.getProfile());
+		Set<Integer> hsMyGroups = getGroups(context, session.getUserIdAsInt(), session.getProfile());
 
         Set<String> profileSet = session.getProfile().getAllNames();
 
 		//--- retrieve all users
-
-		Element elUsers = dbms.select ("SELECT * FROM Users ORDER BY username");
+        final java.util.List<User> all = context.getBean(UserRepository.class).findAll(new Sort(User_.username.getName()));
 
 		//--- now filter them
 
-		java.util.List<Element> alToRemove = new ArrayList<Element>();
+		java.util.Set<Integer> usersToRemove = new HashSet<Integer>();
 
 		if (session.getProfile() != Profile.Administrator) {
-			@SuppressWarnings("unchecked")
-            java.util.List<Element> elUserList = elUsers.getChildren();
-			
-			for (Element elRec : elUserList) {
-				String userId = elRec.getChildText("id");
-				Profile profile= elRec.getChildText("profile");
-				
-				Set<String> userGroups = getGroups(dbms, userId, profile);
+
+			for (User user : all) {
+				int userId = user.getId();
+				Profile profile= user.getProfile();
+
+				Set<Integer> userGroups = getGroups(context, userId, profile);
 				// Is user belong to one of the current user admin group?
 				boolean isInCurrentUserAdminGroups = false;
-				for (String userGroup : userGroups) {
+				for (Integer userGroup : userGroups) {
 					if (hsMyGroups.contains(userGroup)) {
 						isInCurrentUserAdminGroups = true;
 						break;
 					}
 				}
 				//if (!hsMyGroups.containsAll(userGroups))
-				if (!isInCurrentUserAdminGroups)
-					alToRemove.add(elRec);
-	
-				if (!profileSet.contains(profile))
-					alToRemove.add(elRec);
-				
+				if (!isInCurrentUserAdminGroups) {
+					usersToRemove.add(user.getId());
+                }
+
+				if (!profileSet.contains(profile)) {
+					usersToRemove.add(user.getId());
+                }
 			}
 		}
-		//--- remove unwanted users
 
-		for (Element elem : alToRemove) elem.detach();
+        Element rootEl = new Element(User.class.getSimpleName().toLowerCase());
 
-		//--- return result
+        for (User user : all) {
+            if (!usersToRemove.contains(user.getId())) {
+                rootEl.addContent(user.asXml());
+            }
+        }
 
-		return elUsers;
+        return rootEl;
 	}
 
 	//--------------------------------------------------------------------------
@@ -119,25 +127,18 @@ public class List implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private Set<String> getGroups(Dbms dbms, String id, Profile profile) throws Exception
-	{
-		Element groups;
-		if (profile == Profile.Administrator) {
-			groups = dbms.select("SELECT id FROM Groups");
-		} if (profile == Profile.UserAdmin) {
-			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE profile='UserAdmin' AND userId=?", Integer.valueOf(id));
-		} else {
-			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE userId=?", Integer.valueOf(id));
-		}
+	private Set<Integer> getGroups(ServiceContext context, final int id, final Profile profile) throws Exception {
+        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
+        final UserGroupRepository userGroupRepo = context.getBean(UserGroupRepository.class);
+        Set<Integer> hs = new HashSet<Integer>();
 
-		@SuppressWarnings("unchecked")
-        java.util.List<Element> list = groups.getChildren();
-
-		Set<String> hs = new HashSet<String>();
-
-		for(Element el : list) {
-			hs.add(el.getChildText("id"));
-		}
+        if (profile == Profile.Administrator) {
+            hs.addAll(groupRepository.findIds());
+        } else if (profile == Profile.UserAdmin) {
+            hs.addAll(userGroupRepo.findGroupIds(Specifications.where(hasProfile(profile)).and(hasUserId(id))));
+        } else {
+            hs.addAll(userGroupRepo.findGroupIds(hasUserId(id)));
+        }
 
 		return hs;
 	}

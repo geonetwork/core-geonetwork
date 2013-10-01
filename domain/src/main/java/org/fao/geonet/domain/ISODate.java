@@ -41,7 +41,12 @@ import javax.annotation.Nonnull;
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 
-//==============================================================================
+/**
+ * Represents a date at a given time.  Provides methods for representing the date as a string and parsing from string.
+ * <p>
+ *     String format is: yyyy-mm-ddThh:mm:ss
+ * </p>
+ */
 @Embeddable
 public class ISODate implements Cloneable, Comparable<ISODate> {
     private boolean _shortDate; // --- 'true' if the format is yyyy-mm-dd

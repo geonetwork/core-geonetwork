@@ -6,6 +6,7 @@ import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.fao.geonet.repository.HarvestHistoryRepositoryTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,6 +21,7 @@ import static org.junit.Assert.fail;
  * Date: 9/20/13
  * Time: 4:01 PM
  */
+@Transactional
 public class HarvestHistorySpecsTest extends AbstractSpringDataTest {
 
     @Autowired
