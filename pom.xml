@@ -1012,7 +1012,7 @@
         <module>web-itest</module>
       </modules>
     </profile>
-    <profile>
+    <!--<profile>
       <id>geoserver</id>
       <activation>
         <file>
@@ -1022,7 +1022,7 @@
       <modules>
         <module>geoserver</module>
       </modules>
-    </profile>
+    </profile>-->
     <profile>
       <id>jmeter</id>
       <modules>
