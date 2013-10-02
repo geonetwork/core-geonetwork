@@ -25,16 +25,24 @@
 								<!-- loop on all status -->
 								<xsl:variable name="isSubmitted" 
 									select="count(/root/response/statusvalues/status[on and name='submitted']) = 1"/>
-
+								<xsl:variable name="profile" select="/root/gui/session/profile"/>
+								<xsl:variable name="userId" select="/root/gui/session/userId"/>
+								<xsl:variable name="isReviewer" select="count(/root/response/contentReviewers/record[userid=$userId]) > 0"/>
+								
+								<!--<ul>
+									<li>Profile: <xsl:value-of select="$profile"/></li>
+									<li>User: <xsl:value-of select="$userId"/></li>
+									<li>Reviewer: <xsl:value-of select="$isReviewer"/></li>
+									<li>Has edit perm: <xsl:value-of select="/root/response/hasEditPermission"/></li>
+									<li>Owner: <xsl:value-of select="/root/response/isOwner"/></li>
+								</ul>-->
 								<xsl:for-each select="/root/response/statusvalues/status">
 								  <xsl:sort select="displayorder"/>
 								  <xsl:sort select="label/child::*[name() = $lang]"/>
 									<tr>
 										<td class="padded" align="left" colspan="2">
-											<xsl:variable name="profile" select="/root/gui/session/profile"/>
-											<xsl:variable name="userId" select="/root/gui/session/userId"/>
-											<xsl:variable name="isReviewer" select="count(/root/response/contentReviewers/record[userid=$userId]) > 0"/>
-
+											
+											
 											<input type="radio" name="status" value="{id}" id="st{id}">
 												<xsl:if test="on">
 													<xsl:attribute name="checked"/>
@@ -43,14 +51,16 @@
 												<xsl:if test="$isReviewer or contains($profile,'Admin')">-->
 												
 												<!-- status value draft and unkown disabled once submitted -->
-												<xsl:if test="$isSubmitted">
+												<xsl:if test="$isSubmitted and not($isReviewer)">
 													<xsl:if test="name='unknown' or name='draft'">
 														<xsl:attribute name="disabled"/>
 													</xsl:if>
 												</xsl:if>
 
 												<!-- some status values are not available to Editors -->
-												<xsl:if test="/root/response/hasEditPermission = 'true' and not($isReviewer)">
+												<xsl:if test="(/root/response/hasEditPermission = 'true' or
+													/root/response/isOwner = 'true')
+													and not($isReviewer)">
 													<xsl:if test="name='approved' or name='retired' or name='rejected'">
 														<xsl:attribute name="disabled"/>
 													</xsl:if>
