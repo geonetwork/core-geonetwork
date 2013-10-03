@@ -28,8 +28,10 @@
         suffix: '.json'
       });
 
-      var language = (navigator.userLanguage || navigator.language).split('-');
-      // TODO : Add URL parameter to set UI language
-      $translateProvider.preferredLanguage(language[0]);
+      var pathArray = window.location.pathname.split('/');
+      var lang = pathArray[3][0] + pathArray[3][1];
+
+      $translateProvider.preferredLanguage(lang);
+      moment.lang(lang);
     }]);
 })();

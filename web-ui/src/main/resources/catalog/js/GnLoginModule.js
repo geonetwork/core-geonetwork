@@ -3,13 +3,6 @@
 
 
 
-
-
-  goog.require('gn_cat_controller');
-  goog.require('gn_login_controller');
-  goog.require('gn_translation');
-  goog.require('gn_translation_controller');
-
   var module = angular.module('gn', [
     'pascalprecht.translate',
     'gn_translation_controller',
@@ -28,8 +21,11 @@
         suffix: '.json'
       });
 
-      var language = (navigator.userLanguage || navigator.language).split('-');
-      // TODO : Add URL parameter to set UI language
-      $translateProvider.preferredLanguage(language[0]);
+
+      var pathArray = window.location.pathname.split('/');
+      var lang = pathArray[3][0] + pathArray[3][1];
+
+      $translateProvider.preferredLanguage(lang);
+      moment.lang(lang);
     }]);
 })();

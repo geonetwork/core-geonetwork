@@ -80,10 +80,9 @@
       });
       var pathArray = window.location.pathname.split('/');
       var lang = pathArray[3][0] + pathArray[3][1];
-      
+
       $translateProvider.preferredLanguage(lang);
       moment.lang(lang);
-
     }]);
 
 })();

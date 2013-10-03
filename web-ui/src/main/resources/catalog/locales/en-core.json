@@ -8,7 +8,16 @@
     "signedInAs": "",
     
     "eng": "English",
+    "fre": "Français",
     "title": "Title",
+    
+    "east": "East",
+    "west": "West",
+    "north": "North",
+    "south": "South",
+    
+    "add": "Add",
+    "save": "Save",
     
     "adminConsole": "Admin console",
     "needAnAccount": "Need an account ?",

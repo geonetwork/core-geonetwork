@@ -5,11 +5,23 @@
     "password": "Mot de passe",
     "rememberMe": "Se souvenir de moi",
     "signIn": "S'identifier",
-    "signedInAs": "Identifié en tant que ",
+    "signedInAs": "",
     
     "eng": "English",
+    "fre": "Français",
     "title": "Titre",
     
+    "east": "Est",
+    "west": "Ouest",
+    "north": "Nord",
+    "south": "Sud",
+    "selected": " selectionné(s)",
+    
+    "add": "Ajouter",
+    "save": "Enregistrer",
+    "records": " fiche(s)",
+    
+    "adminConsole": "Console d'admin",
     "needAnAccount": "Besoin d'un compte?",
     "needAnAccountInfo": "Enregistrez-vous, cela ne prend qu'une minute.",
     "createAnAccount": "Créer un compte",
@@ -22,10 +34,12 @@
     "signout": "Se déconnecter",
     
     "from": "De",
-    "to": "A",
+    "to": " à ",
     "by": "par",
     "previous": "Précédent",
-    "next": "Après",
+    "next": "Suivant",
+    "selectAll": "Tous",
+    "selectNone": "Aucun",
     
     "noRecordFound": "Pas d'enregistrement trouvé",
     

@@ -36,7 +36,7 @@
                 </ul>
             </div>
             
-            <div class="btn-group">
+            <div class="btn-group" data-ng-show="harvesters.length > 0">
                 <button type="button" class="btn dropdown-toggle icon-copy" data-toggle="dropdown">
                     <span data-translate="">cloneHarvester</span> <span class="caret"></span>
                 </button>
@@ -50,6 +50,7 @@
                 </ul>
             </div>
             <button type="button" class="btn icon-refresh" 
+                data-ng-show="harvesters.length > 0"
                 data-ng-click="refreshHarvester()" title="{{'refreshHarvester' | translate}}">
             </button>
         </div>

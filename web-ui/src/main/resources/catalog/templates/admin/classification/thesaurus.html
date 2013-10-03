@@ -280,7 +280,7 @@
               <legend data-translate="">keywordCoordinates</legend>
 
               <div data-ng-repeat="(key, value) in keywordSelected.geo track by $index">
-                <label class="control-label" data-translate="">{{key}}</label>
+                <label class="control-label" data-translate="">{{key | translate}}</label>
                 <!-- TODO: use type="number" min="-180" max="180" but there is
                         some issue in Angular - maybe https://github.com/angular/angular.js/issues/2144-->
                 <input name="{{key}}" class="form-control" type="text"
@@ -293,7 +293,7 @@
             <div class="panel-heading" data-translate="">keywordRelation</div>
             
             <div data-ng-repeat="(key, value) in keywordSelectedRelation">
-              <h3 data-ng-translate="" data-ng-show="value.length !== 0">{{key}}</h3>
+              <h3 data-ng-translate="" data-ng-show="value.length !== 0">{{key | translate}}</h3>
               <ul>
                 <li data-ng-repeat="k in value"><a data-ng-click="editKeyword(k)">{{k.value['#text']}}</a></li>
               </ul>
