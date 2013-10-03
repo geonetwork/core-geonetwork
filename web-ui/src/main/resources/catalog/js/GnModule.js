@@ -4,7 +4,18 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_cat_controller');
+  goog.require('gn_language_switcher');
   goog.require('gn_metadata_manager');
   goog.require('gn_pagination');
   goog.require('gn_search_controller');
@@ -17,6 +28,7 @@
   var module = angular.module('gn', [
     'ngRoute',
     'pascalprecht.translate',
+    'gn_language_switcher',
     'gn_utility_service',
     'gn_search_manager',
     'gn_metadata_manager',
@@ -66,11 +78,12 @@
         prefix: '../../catalog/locales/',
         suffix: '.json'
       });
+      var pathArray = window.location.pathname.split('/');
+      var lang = pathArray[3][0] + pathArray[3][1];
+      
+      $translateProvider.preferredLanguage(lang);
+      moment.lang(lang);
 
-      var language = (navigator.userLanguage || navigator.language).split('-');
-      // TODO : Add URL parameter to set UI language
-      $translateProvider.preferredLanguage(language[0]);
-      moment.lang(language[0]);
     }]);
 
 })();
