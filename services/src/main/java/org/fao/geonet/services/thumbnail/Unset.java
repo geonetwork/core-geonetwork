@@ -24,7 +24,6 @@
 package org.fao.geonet.services.thumbnail;
 
 import org.fao.geonet.exceptions.OperationAbortedEx;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
@@ -68,14 +67,12 @@ public class Unset extends NotInReadOnlyModeService {
 
 		DataManager dataMan = gc.getBean(DataManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		//--- check if the metadata has been modified from last time
 
 		if (version != null && !dataMan.getVersion(id).equals(version))
 			throw new ConcurrentUpdateEx(id);
 
-		Element result = dataMan.getThumbnails(dbms, id);
+		Element result = dataMan.getThumbnails(id);
 
 		if (result == null)
 			throw new OperationAbortedEx("Metadata not found", id);
@@ -90,7 +87,7 @@ public class Unset extends NotInReadOnlyModeService {
 		//-----------------------------------------------------------------------
 		//--- remove thumbnail
 
-		dataMan.unsetThumbnail(context, dbms, id, type.equals("small"), true);
+		dataMan.unsetThumbnail(context, id, type.equals("small"), true);
 		
 		
 		File thumbnail = new File(file);
@@ -110,33 +107,6 @@ public class Unset extends NotInReadOnlyModeService {
 		response.addContent(new Element("version").setText(dataMan.getNewVersion(id)));
 
 		return response;
-	}
-
-	/*
-	 * Remove thumbnail images. 
-	 * (Useful for harvester which can not edit metadata but could have
-	 * set up a thumbnail on harvesting
-	 * )
-	 */
-	public void removeThumbnailFile (String id,  String type, ServiceContext context) throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-		DataManager dataMan = gc.getBean(DataManager.class);
-
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		
-		Element result = dataMan.getThumbnails(dbms, id);
-		
-		if (result == null)
-			throw new OperationAbortedEx("Metadata not found", id);
-		
-		if (type == null) {
-			remove (result, "thumbnail", id, context);
-			remove (result, "large_thumbnail", id, context);
-		} else {
-			remove (result, type, id, context);
-		}
-		
 	}
 	
 	private void remove (Element result, String type, String id, ServiceContext context) throws Exception {

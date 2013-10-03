@@ -1,6 +1,8 @@
 package org.fao.geonet.repository;
 
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
@@ -43,11 +45,23 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         user2.getEmailAddresses().add(add2b);
         user2 = _userRepo.save(user2);
 
-        List<User> users = _userRepo.findAllByEmail(add1);
+        User foundUser = _userRepo.findOneByEmail(add1);
+        assertNotNull(foundUser);
+        assertEquals(user1.getId(), foundUser.getId());
 
-        assertEquals(1, users.size());
-        assertEquals(user1, users.get(0));
+        foundUser = _userRepo.findOneByEmail(add1b);
+        assertNotNull(foundUser);
+        assertEquals(user1.getId(), foundUser.getId());
+
+        foundUser = _userRepo.findOneByEmail(add2b);
+        assertNotNull(foundUser);
+        assertEquals(user2.getId(), foundUser.getId());
+
+        foundUser = _userRepo.findOneByEmail("xjkjk");
+        assertNull(foundUser);
     }
+
+
 
     @Test
     public void testFindAllByGroupOwnerNameAndProfile() {

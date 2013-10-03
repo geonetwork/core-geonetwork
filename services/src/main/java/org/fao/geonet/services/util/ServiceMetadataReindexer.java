@@ -18,7 +18,6 @@
 
 package org.fao.geonet.services.util;
 
-import jeeves.resources.dbms.Dbms;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.jdom.Element;
@@ -27,24 +26,22 @@ import java.util.List;
 
 /**
  * Class that extends MetadataIndexerProcessor to reindex the metadata
- * changed in any service that processes a list of metadata documents (as JDOM 
+ * changed in any service that processes a list of metadata documents (as JDOM
  * Elements)
  */
 public class ServiceMetadataReindexer extends MetadataIndexerProcessor {
     List<Element> reindex;
-		Dbms dbms;
 
-    public ServiceMetadataReindexer(DataManager dm, Dbms dbms, List<Element> reindex) {
+    public ServiceMetadataReindexer(DataManager dm, List<Element> reindex) {
         super(dm);
-				this.dbms = dbms;
-				this.reindex = reindex;
+        this.reindex = reindex;
     }
 
     @Override
     public void process() throws Exception {
-			for (Element md : reindex) {
-				String  mdId = md.getChildText("metadataid");
-				getDataManager().indexMetadata(dbms, mdId);
-			}
+        for (Element md : reindex) {
+            String mdId = md.getChildText("metadataid");
+            getDataManager().indexMetadata(mdId);
+        }
     }
 }

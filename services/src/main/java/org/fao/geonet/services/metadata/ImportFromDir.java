@@ -23,11 +23,12 @@
 
 package org.fao.geonet.services.metadata;
 
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -480,11 +481,9 @@ class ImportConfig
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getBean(DataManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		Element config = Xml.loadFile(configFile);
 
-		fillCategIds(dbms);
+		fillCategIds(context);
 
 		mapCategor(config.getChild(CATEGORY_MAPPING));
 		mapSchemas(config.getChild(SCHEMA_MAPPING), dm);
@@ -524,16 +523,12 @@ class ImportConfig
 	//---
 	//--------------------------------------------------------------------------
 
-	private void fillCategIds(Dbms dbms) throws Exception
-	{
-		String query = "SELECT * FROM Categories";
+	private void fillCategIds(ServiceContext context) throws Exception {
+        final List<MetadataCategory> metadataCategories = context.getBean(MetadataCategoryRepository.class).findAll();
 
-		@SuppressWarnings("unchecked")
-        List<Element> idsList = dbms.select(query).getChildren();
-
-		for (Element record : idsList) {
-			String id   = record.getChildText("id");
-			String name = record.getChildText("name");
+		for (MetadataCategory record : metadataCategories) {
+			String id   = "" + record.getId();
+			String name = record.getName();
 
 			htCategId.put(name, id);
 		}

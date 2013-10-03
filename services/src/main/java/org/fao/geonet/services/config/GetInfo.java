@@ -23,7 +23,6 @@
 package org.fao.geonet.services.config;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.Stats;
@@ -35,8 +34,11 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
+import javax.sql.DataSource;
 import javax.xml.transform.TransformerFactory;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -56,7 +58,6 @@ public class GetInfo implements Service {
 	private HashMap<String, String> systemProperties = new HashMap<String, String>();
 	private HashMap<String, String> databaseProperties = new HashMap<String, String>();
 	private SearchManager sm;
-	private Dbms dbms; 
 
 	final Properties properties = System.getProperties();
 
@@ -68,8 +69,7 @@ public class GetInfo implements Service {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		sm = gc.getBean(SearchManager.class);
-		dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		
+
 		String luceneDir = gc.getBean(ServiceConfig.class).getMandatoryValue(
 				Geonet.Config.LUCENE_DIR);
 		loadSystemInfo();
@@ -103,8 +103,6 @@ public class GetInfo implements Service {
 
     /**
      * Load catalogue properties
-     * 
-     * @param dataDir
      */
     private void loadCatalogueInfo(GeonetContext gc) {
     	ServiceConfig sc = gc.getBean(ServiceConfig.class);
@@ -170,8 +168,18 @@ public class GetInfo implements Service {
 	 * 
 	 * @param context
 	 */
-	private void loadDatabaseInfo(ServiceContext context) {
-		String dbURL = dbms.getURL();
+	private void loadDatabaseInfo(ServiceContext context) throws SQLException {
+		String dbURL = null;
+
+        Connection connection = null;
+        try {
+            connection = context.getBean(DataSource.class).getConnection();
+            dbURL = connection.getMetaData().getURL();
+        } finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
 		databaseProperties.put("db.url", dbURL);
 
 		try {

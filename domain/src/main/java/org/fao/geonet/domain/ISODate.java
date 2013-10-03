@@ -273,18 +273,20 @@ public class ISODate implements Cloneable, Comparable<ISODate> {
     private void parseTime(@Nonnull String isoDate) {
         try {
             String[] parts = isoDate.split(":");
-            if (parts.length != 3) {
+            if (parts.length == 1 || parts.length > 3) {
                 throw new IllegalArgumentException("Invalid ISO date : " + isoDate);
             }
 
             int hour = Integer.parseInt(parts[0]);
             int minute = Integer.parseInt(parts[1]);
-            int second;
-            if (parts[2].toUpperCase().contains("Z")) {
-                String[] secondParts = parts[2].toUpperCase().split("Z");
-                second = Integer.parseInt(secondParts[0]);
-            } else {
-                second = Integer.parseInt(parts[2]);
+            int second = 0;
+            if (parts.length == 3) {
+                if (parts[2].toUpperCase().contains("Z")) {
+                    String[] secondParts = parts[2].toUpperCase().split("Z");
+                    second = Integer.parseInt(secondParts[0]);
+                } else {
+                    second = Integer.parseInt(parts[2]);
+                }
             }
 
             _calendar.set(HOUR_OF_DAY, hour);

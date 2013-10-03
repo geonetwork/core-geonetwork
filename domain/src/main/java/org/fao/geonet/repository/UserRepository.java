@@ -36,5 +36,4 @@ public interface UserRepository extends GeonetRepository<User, Integer>, JpaSpec
      * @return all users with the given profile.
      */
     public List<User> findAllByProfile(Profile profile);
-
 }

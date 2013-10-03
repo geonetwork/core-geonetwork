@@ -6,10 +6,12 @@ import static org.fao.geonet.repository.MetadataRepositoryTest.*;
 
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.MetadataRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,56 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
     public void testHasMetadataId() throws Exception {
         Metadata md1 = _repository.save(newMetadata(_inc));
         assertFindsCorrectMd(md1, hasMetadataId(md1.getId()), true);
+    }
+
+    @Test
+    public void testHasMetadataType() throws Exception {
+        final Metadata metadata = newMetadata(_inc);
+        metadata.getDataInfo().setType(MetadataType.METADATA);
+        Metadata md1 = _repository.save(metadata);
+
+        final Metadata metadata2 = newMetadata(_inc);
+        metadata2.getDataInfo().setType(MetadataType.SUB_TEMPLATE);
+        Metadata md2 = _repository.save(metadata2);
+
+        final Metadata metadata3 = newMetadata(_inc);
+        metadata3.getDataInfo().setType(MetadataType.TEMPLATE);
+        Metadata md3 = _repository.save(metadata3);
+
+        assertEquals(1, _repository.findAll(hasType(MetadataType.METADATA)).size());
+        assertEquals(1, _repository.findAll(hasType(MetadataType.SUB_TEMPLATE)).size());
+        assertEquals(1, _repository.findAll(hasType(MetadataType.TEMPLATE)).size());
+
+        assertEquals(md1.getId(), _repository.findOne(hasType(MetadataType.METADATA)).getId());
+        assertEquals(md2.getId(), _repository.findOne(hasType(MetadataType.SUB_TEMPLATE)).getId());
+        assertEquals(md3.getId(), _repository.findOne(hasType(MetadataType.TEMPLATE)).getId());
+    }
+
+    @Test
+    public void testIsOwnedByOneOfFollowingGroups() throws Exception {
+
+
+        final Metadata metadata = newMetadata(_inc);
+        metadata.getSourceInfo().setGroupOwner(1);
+        Metadata md1 = _repository.save(metadata);
+
+        final Metadata metadata2 = newMetadata(_inc);
+        metadata2.getSourceInfo().setGroupOwner(2);
+        _repository.save(metadata2);
+
+
+        final Metadata metadata3 = newMetadata(_inc);
+        metadata3.getSourceInfo().setGroupOwner(3);
+        Metadata md3 = _repository.save(metadata3);
+
+        List<Metadata> found = _repository.findAll(isOwnedByOneOfFollowingGroups(Arrays.asList(1)));
+        assertEquals(1, found.size());
+        assertEquals(md1.getId(), found.get(0).getId());
+
+        found = _repository.findAll(isOwnedByOneOfFollowingGroups(Arrays.asList(1,3)), new Sort(Metadata_.id.getName()));
+        assertEquals(2, found.size());
+        assertEquals(md1.getId(), found.get(0).getId());
+        assertEquals(md3.getId(), found.get(1).getId());
     }
 
     @Test

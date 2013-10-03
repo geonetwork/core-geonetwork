@@ -24,15 +24,17 @@
 package org.fao.geonet.services.thesaurus;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.repository.ThesaurusRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -79,10 +81,12 @@ public class Add extends NotInReadOnlyModeService {
 		tm.addThesaurus(thesaurus, true);
 
 		// Save activated status in the database
-		String query = "INSERT INTO Thesaurus (id, activated) VALUES (?,?)";
-                Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-		dbms.execute(query, fname, activated);
-		
+        ThesaurusActivation activation = new ThesaurusActivation();
+        activation.setActivated(Constants.toBoolean_fromYNChar(activated.charAt(0)));
+        activation.setId(fname);
+
+        context.getBean(ThesaurusRepository.class).save(activation);
+
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		Element elRef = new Element("ref");		
 		elRef.addContent(thesaurus.getKey());

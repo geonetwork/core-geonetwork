@@ -24,7 +24,6 @@
 package org.fao.geonet.services.user;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -34,8 +33,18 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specifications;
+
+import java.util.*;
+import java.util.List;
+
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
+import static org.springframework.data.jpa.domain.Specifications.*;
 
 /**
  * Removes a user from the system. It removes the relationship to a group too.
@@ -70,15 +79,15 @@ public class Remove extends NotInReadOnlyModeService {
 			throw new IllegalArgumentException("You cannot delete yourself from the user database");
 		}
 
-		int iId = Integer.parseInt(id);
+        final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
+        int iId = Integer.parseInt(id);
 
 		if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin)  {
 
-			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
 			if (myProfile ==  Profile.UserAdmin) {
-				Element admin = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId=? group by groupId having count(*) > 1", Integer.valueOf(myUserId), iId);
-				if (admin.getChildren().size() == 0) {
+                final Integer iMyUserId = Integer.valueOf(myUserId);
+                final List<Integer> groupIds = userGroupRepository.findGroupIds(where(hasUserId(iMyUserId)).or(hasUserId(iId)));
+                if (groupIds.isEmpty()) {
 				  throw new IllegalArgumentException("You don't have rights to delete this user because the user is not part of your group");
 				}
 			}
@@ -86,16 +95,16 @@ public class Remove extends NotInReadOnlyModeService {
 			// Before processing DELETE check that the user is not referenced 
 			// elsewhere in the GeoNetwork database - an exception is thrown if
 			// this is the case
-			if (dataMan.isUserMetadataOwner(dbms, iId)) {
+			if (dataMan.isUserMetadataOwner(iId)) {
 				throw new IllegalArgumentException("Cannot delete a user that is also a metadata owner");
 			}
 
-			if (dataMan.isUserMetadataStatus(dbms, iId)) {
+			if (dataMan.isUserMetadataStatus(iId)) {
 				throw new IllegalArgumentException("Cannot delete a user that has set a metadata status");
 			}
 
-			dbms.execute ("DELETE FROM UserGroups WHERE userId=?",iId);
-			dbms.execute ("DELETE FROM Users      WHERE     id=?",iId);
+            userGroupRepository.deleteAllWithUserIdsIn(Arrays.asList(iId));
+            context.getBean(UserRepository.class).delete(iId);
 		} else {
 			throw new IllegalArgumentException("You don't have rights to delete this user");
 		}

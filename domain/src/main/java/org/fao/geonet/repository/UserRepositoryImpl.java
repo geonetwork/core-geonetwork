@@ -1,6 +1,7 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.*;
+import org.fao.geonet.utils.Log;
 import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nonnull;
@@ -29,7 +30,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<User> findAllByEmail(String email) {
+    public User findOneByEmail(String email) {
 
         // The following code uses the JPA Criteria API to build a query
         // that is essentially:
@@ -39,7 +40,14 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         Root<User> root = query.from(User.class);
 
         query.where(cb.isMember(email, root.get(User_.emailAddresses)));
-        return _entityManager.createQuery(query).getResultList();
+        final List<User> resultList = _entityManager.createQuery(query).getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        if (resultList.size() > 1) {
+            Log.error(Constants.DOMAIN_LOG_MODULE, "The database is inconsistent.  There are multiple users with the email address: "+email);
+        }
+        return resultList.get(0);
     }
 
     @Override

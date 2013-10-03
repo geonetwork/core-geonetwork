@@ -1,5 +1,6 @@
 package org.fao.geonet.services.statistics;
 
+import org.fao.geonet.repository.statistic.DateInterval;
 import org.jdom.Element;
 import org.jfree.data.time.RegularTimePeriod;
 
@@ -26,7 +27,7 @@ public class RequestsByDateParams {
     /**
      * the type of graphic (by year, month or day to display
      */
-    private String graphicType;
+    private DateInterval graphicType;
 
     /** the graph factory used to write images */
     //private ChartFactory chartFact;
@@ -67,12 +68,18 @@ public class RequestsByDateParams {
         this.dateTo = dateTo;
     }
 
-    public String getGraphicType() {
+    public DateInterval getGraphicType() {
         return graphicType;
     }
 
     public void setGraphicType(String graphicType) {
-        this.graphicType = graphicType;
+        if (graphicType.equals(RequestsByDate.BY_MONTH)) {
+            this.graphicType = new DateInterval.Month();
+        } else if (graphicType.equals(RequestsByDate.BY_DAY)) {
+            this.graphicType = new DateInterval.Day();
+        } else if (graphicType.equals(RequestsByDate.BY_YEAR)) {
+            this.graphicType = new DateInterval.Year();
+        }
     }
 
     public Class<? extends RegularTimePeriod> getChartClass() {

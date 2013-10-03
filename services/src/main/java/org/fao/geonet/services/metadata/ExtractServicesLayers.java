@@ -30,7 +30,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -70,7 +69,6 @@ public class ExtractServicesLayers  implements Service {
 		DataManager dm = gc.getBean(DataManager.class);
 		UserSession us = context.getUserSession();
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(us);
@@ -85,7 +83,7 @@ public class ExtractServicesLayers  implements Service {
 		    synchronized(sm.getSelection("metadata")) {
 		        for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 		            String uuid = (String) iter.next();
-		            String id   = dm.getMetadataId(dbms, uuid);
+		            String id   = dm.getMetadataId(uuid);
 		            lst.add(id);
 		        }
 		    }

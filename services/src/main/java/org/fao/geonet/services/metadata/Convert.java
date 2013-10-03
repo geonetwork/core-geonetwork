@@ -24,18 +24,20 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.oaipmh.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
@@ -76,10 +78,14 @@ public class Convert implements Service
 		String styleSheet = Util.getParam(params, Params.STYLESHEET);
 
 		//--- get metadata info and create an env that works with oai translators
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
-		String schemaDir = sm.getSchemaDir(mdInfo.schemaId);
-		Element env = Lib.prepareTransformEnv(mdInfo.uuid, mdInfo.changeDate, context.getBaseUrl(), dm.getSiteURL(context), gc.getSiteName());
+        final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+		String schemaDir = sm.getSchemaDir(metadata.getDataInfo().getSchemaId());
+        final String baseUrl = context.getBaseUrl();
+        final ISODate changeDate = metadata.getDataInfo().getChangeDate();
+        final String uuid = metadata.getUuid();
+        final String siteURL = dm.getSiteURL(context);
+        final String siteName = gc.getSiteName();
+        Element env = Lib.prepareTransformEnv(uuid, changeDate.getDateAndTime(), baseUrl, siteURL, siteName);
 
 		//--- transform the metadata with the created env and specified stylesheet
 		return Lib.transform(schemaDir, env, elMd, styleSheet);

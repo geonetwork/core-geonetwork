@@ -24,10 +24,13 @@
 package org.fao.geonet.services.register;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -38,6 +41,7 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
 
+import javax.transaction.TransactionManager;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Random;
@@ -88,9 +92,6 @@ public class SelfRegister extends NotInReadOnlyModeService {
 		String organ = Util.getParam(params, Params.ORG, "");
 		String kind = Util.getParam(params, Params.KIND, "");
 
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
-		
 		String username = email;
 		String password = getInitPassword();
 
@@ -112,32 +113,37 @@ public class SelfRegister extends NotInReadOnlyModeService {
 		element.setAttribute(Params.NAME,name);
 		element.setAttribute(Params.EMAIL,email);
 
-		if (userExists(dbms, email)) {
-			return element.addContent(new Element("result").setText("errorEmailAddressAlreadyRegistered"));
-		}
+        final UserRepository userRepository = context.getBean(UserRepository.class);
+        if (userRepository.findOneByEmail(email) != null) {
+            return element.addContent(new Element("result").setText("errorEmailAddressAlreadyRegistered"));
+        }
 
-		// Add new user to database
+        // Add new user to database
 
-		String id = context.getSerialFactory().getSerial(dbms, "Users")
-					+ "";
-		String group = getGroupID(dbms);
-		String query = "INSERT INTO Users (id, username, password, surname, name, profile, "
-				+ "address, city, state, zip, country, email, organisation, kind) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Group group = getGroup(context);
+        String passwordHash = PasswordUtil.encode(context, password);
+        User user = new User()
+                .setKind(kind)
+                .setName(name)
+                .setOrganisation(organ)
+                .setProfile(Profile.findProfileIgnoreCase(profile))
+                .setSurname(surname)
+                .setUsername(username);
+        user.getSecurity().setPassword(passwordHash);
+        user.getEmailAddresses().add(email);
+        user.getAddresses().add(new Address().setAddress(address).setCountry(country).setCity(city).setState(state).setZip(zip));
 
-		String passwordHash = PasswordUtil.encode(context, password);
-		dbms.execute(query, Integer.valueOf(id), username, passwordHash, surname, name, PROFILE, address,
-				city, state, zip, country, email, organ, kind);
+        userRepository.save(user);
 
-		dbms.execute("INSERT INTO UserGroups(userId, profile, groupId) VALUES (?, ?, ?)", Integer.valueOf(id), PROFILE, Integer.valueOf(group));
-
+        UserGroup userGroup = new UserGroup().setUser(user).setGroup(group);
+        context.getBean(UserGroupRepository.class).save(userGroup);
 		// Send email to user confirming registration
 
     SettingInfo si = new SettingInfo(context);
     String siteURL = si.getSiteUrl() + context.getBaseUrl();
 
     if (!sendRegistrationEmail(params, password, host, port, from, thisSite, siteURL)) {
-      dbms.abort();
+      context.getBean(TransactionManager.class).rollback();
       return element.addContent(new Element("result").setText("errorEmailToAddressFailed"));
     }
 
@@ -218,35 +224,18 @@ public class SelfRegister extends NotInReadOnlyModeService {
         return sendMail(host, Integer.parseInt(port), subject, from, from, message, PROTOCOL);
     }
 
-	/**
-	 * Check if the user exists. 
-   *
-	 * @param dbms
-	 * @param mail
-	 * @return
-	 * @throws java.sql.SQLException
-	 */
-	boolean userExists(Dbms dbms, String mail) throws SQLException {
-		Element e = dbms.select("SELECT email " +
-                "FROM Users " +
-                "WHERE lower(username)=lower(?)",
-                 mail);
-		return (e.getChildren().size() > 0);
-	}
-
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
 
 	/**
 	 * Get group id.
    *
-	 * @param dbms
+	 * @param context
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
-	String getGroupID(Dbms dbms) throws SQLException {
-		String sql = "select id from Groups where name=?";
-		Element e = dbms.select(sql, "GUEST");
-		return e.getChild("record").getChild("id").getText();
+	Group getGroup(ServiceContext context) throws SQLException {
+        final GroupRepository bean = context.getBean(GroupRepository.class);
+        return bean.findOne(ReservedGroup.guest.getId());
 	}
 
 	// --------------------------------------------------------------------------

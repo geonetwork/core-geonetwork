@@ -48,4 +48,9 @@ public final class Constants {
     public static boolean toBoolean_fromYNChar(char enabled) {
         return enabled == Constants.YN_TRUE;
     }
+
+    /**
+     * The module name for logging domain information.
+     */
+    public static final String DOMAIN_LOG_MODULE = "geonetwork.domain";
 }

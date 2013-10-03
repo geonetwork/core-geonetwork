@@ -23,11 +23,10 @@
 package org.fao.geonet.guiservices.csw.virtual;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.repository.ServiceRepository;
 import org.jdom.Element;
 
 /**
@@ -39,11 +38,6 @@ public class List implements Service {
 
     public Element exec(Element params, ServiceContext context)
             throws Exception {
-        Dbms dbms = (Dbms) context.getResourceManager()
-                .open(Geonet.Res.MAIN_DB);
-
-        String query = "SELECT * FROM Services";
-
-        return dbms.select(query);
+        return context.getBean(ServiceRepository.class).findAllAsXml();
     }
 }

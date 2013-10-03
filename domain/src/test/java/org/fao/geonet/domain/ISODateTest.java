@@ -127,6 +127,17 @@ public class ISODateTest {
         assertEquals(1, date.getHours());
         assertEquals(2, date.getMinutes());
         assertEquals(3, date.getSeconds());
+
+        date = new ISODate();
+        date.setDateAndTime("1976-6-3T10:02");
+
+        assertEquals(false, date.isDateOnly());
+        assertEquals(1976, date.getYears());
+        assertEquals(6, date.getMonths());
+        assertEquals(3, date.getDays());
+        assertEquals(10, date.getHours());
+        assertEquals(2, date.getMinutes());
+        assertEquals(0, date.getSeconds());
     }
 
     @Test

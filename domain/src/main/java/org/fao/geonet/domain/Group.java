@@ -2,20 +2,7 @@ package org.fao.geonet.domain;
 
 import java.util.Map;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * An entity representing group of users. Groups in conjunction with {@link Operation}s control what operations users can perform on
@@ -200,5 +187,10 @@ public class Group extends Localized {
         if (_id != other._id)
             return false;
         return true;
+    }
+
+    @Transient
+    public boolean isReserved() {
+        return ReservedGroup.isReserved(getId());
     }
 }

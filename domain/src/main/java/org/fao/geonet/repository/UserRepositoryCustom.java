@@ -26,15 +26,6 @@ public interface UserRepositoryCustom {
     User findOne(@Nonnull String userId);
 
     /**
-     * Find all users with the given email address.
-     *
-     * @param email the email address to use in search query.
-     * @return
-     */
-    @Nonnull
-    List<User> findAllByEmail(@Nonnull String email);
-
-    /**
      * Find all the users that are part of the ownerGroup of a particular set of metadata.
      *
      * @param metadataIds the metadataIds of the metadata to inspect.
@@ -47,5 +38,18 @@ public interface UserRepositoryCustom {
     List<Pair<Integer, User>> findAllByGroupOwnerNameAndProfile(@Nonnull Collection<Integer> metadataIds,
                                                                 @Nullable Profile profile, @Nullable Sort sort);
 
+    /**
+     * Find all the users that own at least one metadata element.
+     *
+     * @return all the users that own at least one metadata element.
+     */
     @Nonnull List<User> findAllUsersThatOwnMetadata();
+
+    /**
+     * Find a user by looking up their email address
+     * @param email the email address to search for
+     * @return a user if found or null if not.
+     */
+    @Nullable
+    User findOneByEmail(@Nonnull String email);
 }

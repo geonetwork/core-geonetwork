@@ -5,8 +5,12 @@ import com.google.common.cache.CacheBuilder;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.statistic.SearchRequestParam;
+import org.fao.geonet.repository.statistic.DateInterval;
 import org.fao.geonet.repository.statistic.SearchRequestParamRepository;
+import org.fao.geonet.repository.statistic.SearchRequestRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
@@ -120,50 +124,41 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 		String message = "";
 
 		// initialize some variables needed by JFreeChart
-		if (dateParams.getGraphicType().equals(RequestsByDate.BY_MONTH)) {
+		if (dateParams.getGraphicType() instanceof DateInterval.Month) {
             dateParams.setChartClass(Month.class);
-        } else if (dateParams.getGraphicType().equals(RequestsByDate.BY_YEAR)) {
+        } else if (dateParams.getGraphicType() instanceof DateInterval.Year) {
             dateParams.setChartClass(Year.class);
-        } else if (dateParams.getGraphicType().equals(RequestsByDate.BY_DAY)) {
+        } else if (dateParams.getGraphicType()  instanceof DateInterval.Day) {
             dateParams.setChartClass(Day.class);
-        }
-
-		// query to values according to type,
-		Specification<SearchRequestParam> query = buildQuery(dateParams);
-
-        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) {
-            Log.debug(Geonet.SEARCH_LOGGER,"query to get count by date:\n" + query);
         }
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		
-		TimeSeries ts = new TimeSeries("By " + dateParams.getGraphicType().toLowerCase(), dateParams.getChartClass());
+		TimeSeries ts = new TimeSeries("By " + dateParams.getGraphicType().getClass().getSimpleName(), dateParams.getChartClass());
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
 
-        final SearchRequestParamRepository repository = context.getBean(SearchRequestParamRepository.class);
+        SearchRequestRepository repository = context.getBean(SearchRequestRepository.class);
 
-        repository.findAll(query);
-        @SuppressWarnings("unchecked")
-        List<Element> resultSet = dbms.select(query, this.dateFrom, this.dateTo).getChildren();
-		for (Element record : resultSet) {
-			String curDate = record.getChildText("reqdate");
-			ts.add(getTimePeriod(
-                    dateParams.getGraphicType(),
-					curDate),
-					Double.parseDouble(record.getChildText("number")));
+        List<Pair<DateInterval, Integer>> countMap = repository.getRequestDateToRequestCountBetween(dateParams.getGraphicType(),
+                new ISODate(dateParams.getDateFrom()),
+                new ISODate(dateParams.getDateTo()));
+		for (Pair<DateInterval, Integer> record : countMap) {
+			String curDate = record.one().getDateString();
+
+			ts.add(getTimePeriod(dateParams.getGraphicType(), curDate), record.two());
 		}
 		dataset.addSeries(ts);
 
    		String axisFormat = "MM/yy";
-		if ("MONTH".equals(dateParams.getGraphicType())) {
+		if (dateParams.getGraphicType()  instanceof DateInterval.Month) {
 			axisFormat = "MM/yy";
-		} else if ("YEAR".equals(dateParams.getGraphicType())) {
+		} else if (dateParams.getGraphicType()  instanceof DateInterval.Year) {
 			axisFormat = "yyyy";
-		} else if ("DAY".equals(dateParams.getGraphicType())) {
+		} else if (dateParams.getGraphicType()  instanceof DateInterval.Day) {
 			axisFormat = "dd/MM/yy";
 		}
 
-        String xAxisLabel = this.getI18NValue(dateParams, "stat." + dateParams.getGraphicType().toLowerCase());
+        String xAxisLabel = this.getI18NValue(dateParams, "stat." + dateParams.getGraphicType().getClass().getSimpleName().toLowerCase());
         String yAxisLabel = this.getI18NValue(dateParams, "stat.numberOfSearch");
 
         JFreeChart chart = ChartFactory.getTimeSeriesChart(
@@ -177,7 +172,7 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 		// chart filename is built here with pattern:
 		// type_datefrom_dateto.png, after having removed time from date
 		// build tmp path from Jeeves context
-		String chartFilename = getFileName();
+		String chartFilename = getFileName(dateParams);
 
 		File statFolder = new File(gc.getBean(ServiceConfig.class).getMandatoryValue(
 				Geonet.Config.RESOURCES_DIR) + SEP + "images" + SEP + "statTmp");
@@ -205,11 +200,9 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		Element elDateFrom = new Element("dateFrom").setText(dateParams.getDateFrom());
 		Element elDateTo = new Element("dateTo").setText(dateParams.getDateTo());
-		Element elGraph = new Element("graphicType").setText(dateParams.getGraphicType());
-		Element elchartUrl = new Element("graphByDateUrl").setText(context.getBaseUrl() +
-				"/images/statTmp/" + chartFilename);
-		Element elTooltipImageMap = new Element("tooltipImageMap").addContent(
-				this.createTooltips ? dateParams.getImageMap() : "");
+		Element elGraph = new Element("graphicType").setText(dateParams.getGraphicType().getClass().toString().toUpperCase());
+		Element elchartUrl = new Element("graphByDateUrl").setText(context.getBaseUrl() + "/images/statTmp/" + chartFilename);
+		Element elTooltipImageMap = new Element("tooltipImageMap").addContent(this.createTooltips ? dateParams.getImageMap() : "");
 
 		Element elMessage = new Element("message").setText(message);
 		Element elChartWidth= new Element("chartWidth").setText("" + this.chartWidth);
@@ -225,23 +218,6 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 		elResp.addContent(elChartHeight);
 
 		return elResp;
-	}
-
-	public Specification<SearchRequestParam> buildQuery(RequestsByDateParams dateParams) {
-
-        String requestDateSubstring = this.queryFragments.get(dateParams.getGraphicType());
-
-		StringBuilder query = new StringBuilder("SELECT ");
-        query.append(requestDateSubstring);
-        query.append(" as reqdate, count(*) as number FROM Requests ");
-		query.append(" where requestdate >= ?");
-		query.append(" and requestdate <= ?");
-        query.append(" GROUP BY ");
-        query.append(requestDateSubstring);
-        query.append(" ORDER BY ");
-        query.append(requestDateSubstring);
-
-		return query.toString();
 	}
 
 	/**
@@ -264,15 +240,15 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 	 * @return a timePeriod with the right type
 	 */
     RegularTimePeriod getTimePeriod(
-            String dateType,
+            DateInterval dateType,
             String date) throws Exception {
 
-		if ("MONTH".equals(dateType)) {
+		if (dateType instanceof DateInterval.Month) {
 			return new Month(Integer.parseInt(date.substring(5, 7)), Integer
 					.parseInt(date.substring(0, 4)));
-		} else if ("YEAR".equals(dateType)) {
+		} else if (dateType instanceof DateInterval.Year) {
 			return new Year(Integer.parseInt(date.substring(0, 4)));
-		} else if ("DAY".equals(dateType)) {
+		} else if (dateType instanceof DateInterval.Day) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			return new Day(dateFormat.parse(date));
 		}

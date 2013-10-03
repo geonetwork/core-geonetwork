@@ -101,11 +101,6 @@
                     <param name="chartHeight" value="400"/>
                     <!--  default chart height. can be overloaded through UI -->
                     <param name="chartWidth" value="600"/>
-                    <!--  the sql query to generate graph. CAUTION when modifying this query: java code and XSL page 
-                    expect the following columns to be returned:  
-                    	popularity (sum of popu per group), groupid: the group identifier, groupname: the group name -->
-                    <param name="query"
-                    		value="select sum(metadata.popularity) as popularity, groups.id as groupid, groups.name as groupname from metadata right join groups 	on metadata.groupowner = groups.id where groups.id > 1 group by groups.id, groups.name"/>
                 </call>
             </output>
         </service>
@@ -169,8 +164,6 @@
                     Please also have a look at WEB-INF/config.xml, for the statLuceneTermsToExlude parameter, that also controls
                     which lucene terms are logged
                  -->
-                    <param name="luceneTermFieldsToExclude" value="'_op0','_op1','_op2','_op3','_op4','_op5','_op6','_isTemplate', '_locale', '_cat', '_owner', '_groupOwner', '_dummy', 'type'"/>
-                    <!-- the maximum number of results to return, as it may be huge, or -1 to get all results. -->
                     <param name="maxHits" value="20"/>
                 </call>
             </output>

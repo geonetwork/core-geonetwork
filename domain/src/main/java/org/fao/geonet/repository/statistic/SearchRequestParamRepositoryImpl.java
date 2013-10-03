@@ -39,7 +39,7 @@ public class SearchRequestParamRepositoryImpl implements SearchRequestParamRepos
     EntityManager _EntityManager;
 
     @Override
-    public List<Pair<String, Integer>> getTagCloudSummary(int limit) {
+    public List<Pair<String, Integer>> getTermTextToRequestCount(int limit) {
         final CriteriaBuilder cb = _EntityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
 
@@ -66,5 +66,4 @@ public class SearchRequestParamRepositoryImpl implements SearchRequestParamRepos
             }
         });
     }
-
 }

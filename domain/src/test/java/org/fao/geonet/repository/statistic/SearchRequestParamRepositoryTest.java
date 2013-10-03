@@ -28,14 +28,14 @@ public class SearchRequestParamRepositoryTest extends AbstractSpringDataTest {
     AtomicInteger _inc = new AtomicInteger();
 
     @Test
-    public void testTagCloud() {
+    public void testGetTermTextToRequestCount() {
+        SearchRequestParam param3 = _paramRepo.save(newRequestParam(_inc));
+        SearchRequestParam param4 = _paramRepo.save(newRequestParam(_inc));
         SearchRequestParam param1 = newRequestParam(_inc);
         param1 = _paramRepo.save(param1);
         SearchRequestParam param2 = newRequestParam(_inc);
         param2.setTermText(param1.getTermText());
         _paramRepo.save(param2);
-        SearchRequestParam param3 = _paramRepo.save(newRequestParam(_inc));
-        SearchRequestParam param4 = _paramRepo.save(newRequestParam(_inc));
         SearchRequestParam param5 = _paramRepo.save(newRequestParam(_inc));
         SearchRequestParam param6 = newRequestParam(_inc);
         param6.setTermField(SearchRequestParamRepositoryImpl.TERMS_TO_EXCLUDE_FROM_TAG_CLOUD[0]);
@@ -43,14 +43,14 @@ public class SearchRequestParamRepositoryTest extends AbstractSpringDataTest {
         param7.setTermText("");
         _paramRepo.save(param7);
 
-        List<Pair<String, Integer>> tagCloudSummary = _paramRepo.getTagCloudSummary(10);
+        List<Pair<String, Integer>> tagCloudSummary = _paramRepo.getTermTextToRequestCount(10);
         assertEquals(4, tagCloudSummary.size());
         assertEquals(2, find(tagCloudSummary, param1.getTermText()));
         assertEquals(1, find(tagCloudSummary, param3.getTermText()));
         assertEquals(1, find(tagCloudSummary, param4.getTermText()));
         assertEquals(1, find(tagCloudSummary, param5.getTermText()));
 
-        tagCloudSummary = _paramRepo.getTagCloudSummary(2);
+        tagCloudSummary = _paramRepo.getTermTextToRequestCount(2);
         assertEquals(2, tagCloudSummary.size());
         assertEquals(2, find(tagCloudSummary, param1.getTermText()));
     }

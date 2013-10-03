@@ -24,11 +24,12 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.BadParameterEx;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
@@ -143,7 +144,6 @@ public class XslProcessing extends NotInReadOnlyModeService {
      * @param appPath	The application path (use to get the process XSL)
      * @param params	The input parameters
      * @param context	The current context
-     * @param metadata
      * @param report
      * @return
      * @throws Exception
@@ -156,9 +156,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
         DataManager dataMan = gc.getBean(DataManager.class);
         SchemaManager schemaMan = gc.getBean(SchemaManager.class);
         AccessManager accessMan = gc.getBean(AccessManager.class);
-        Dbms dbms = (Dbms) context.getResourceManager()
-                .open(Geonet.Res.MAIN_DB);
-        
+
         report.incrementProcessedRecords();
         
         // When a record is deleted the UUID is in the selection manager
@@ -169,7 +167,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
         }
         
         int iId = Integer.valueOf(id);
-        MdInfo info = dataMan.getMetadataInfo(dbms, id);
+        Metadata info = context.getBean(MetadataRepository.class).findOne(id);
         
         
         if (info == null) {
@@ -180,7 +178,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
 
             // -----------------------------------------------------------------------
             // --- check processing exist for current schema
-            String schema = info.schemaId;
+            String schema = info.getDataInfo().getSchemaId();
 
             String filePath = schemaMan.getSchemaDir(schema) + "/process/" + process + ".xsl";
             File xslProcessing = new File(filePath);
@@ -207,8 +205,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
 	                // Add extra metadata
 	                if (param.getName().equals("extra_metadata_uuid")
 	                        && !param.getTextTrim().equals("")) {
-	                    String extraMetadataId = dataMan.getMetadataId(dbms,
-	                            param.getTextTrim());
+	                    String extraMetadataId = dataMan.getMetadataId(param.getTextTrim());
 	                    if (extraMetadataId != null) {
 	                        Element extraMetadata = dataMan.getMetadata(context,
 	                                extraMetadataId, forEditing,
@@ -238,12 +235,12 @@ public class XslProcessing extends NotInReadOnlyModeService {
 	                String language = context.getLanguage();
 	                // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
 	                boolean updateDateStamp = true;
-	                dataMan.updateMetadata(context, dbms, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
+	                dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
 	                if (useIndexGroup) {
-	                    dataMan.indexMetadata(dbms, id);
+	                    dataMan.indexMetadata(id);
 	                }
 	                else {
-	                    dataMan.indexInThreadPool(context, id, dbms);
+	                    dataMan.indexInThreadPool(context, id);
 	                }
 	            }
 	

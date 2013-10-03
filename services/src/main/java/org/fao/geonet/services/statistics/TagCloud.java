@@ -42,7 +42,7 @@ public class TagCloud implements Service {
      * returning the URL of the file to get.
      */
     public Element exec(Element params, ServiceContext context) throws Exception {
-        final List<Pair<String, Integer>> tagCloudSummary = context.getBean(SearchRequestParamRepository.class).getTagCloudSummary(limit);
+        final List<Pair<String, Integer>> tagCloudSummary = context.getBean(SearchRequestParamRepository.class).getTermTextToRequestCount(limit);
 
 
         Element response = new Element("tagcloud");

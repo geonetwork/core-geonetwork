@@ -1,10 +1,12 @@
 package org.fao.geonet.repository.specification;
 
 import org.fao.geonet.domain.*;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Specifications for querying {@link org.fao.geonet.repository.UserRepository}.
@@ -99,6 +101,25 @@ public final class MetadataSpecs {
             @Override
             public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 return root.get(Metadata_.id).in(mdIds);
+            }
+        };
+    }
+
+    public static Specification<Metadata> hasType(final MetadataType metadataType) {
+        return new Specification<Metadata>() {
+            @Override
+            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                final Path<Character> typeChar = root.get(Metadata_.dataInfo).get(MetadataDataInfo_.type_JPAWorkaround);
+                return cb.equal(typeChar, metadataType.code);
+            }
+        };
+    }
+
+    public static Specification<Metadata> isOwnedByOneOfFollowingGroups(final List<Integer> groups) {
+        return new Specification<Metadata>() {
+            @Override
+            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner).in(groups);
             }
         };
     }

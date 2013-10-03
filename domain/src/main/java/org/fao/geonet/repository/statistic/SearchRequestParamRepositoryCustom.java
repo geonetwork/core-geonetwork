@@ -1,6 +1,5 @@
 package org.fao.geonet.repository.statistic;
 
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Pair;
 
 import java.util.List;
@@ -19,5 +18,5 @@ public interface SearchRequestParamRepositoryCustom {
      * @return a list of search term to number of requests containing that search term.
      * @param limit the max number of elements to show
      */
-    List<Pair<String, Integer>> getTagCloudSummary(int limit);
+    List<Pair<String, Integer>> getTermTextToRequestCount(int limit);
 }

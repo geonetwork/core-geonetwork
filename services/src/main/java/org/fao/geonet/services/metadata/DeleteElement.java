@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -55,7 +54,6 @@ public class DeleteElement extends NotInReadOnlyModeService {
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		UserSession session = context.getUserSession();
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id      		= Util.getParam(params, Params.ID);
 		String[] ref     		= Util.getParam(params, Params.REF).split(",");
@@ -63,7 +61,7 @@ public class DeleteElement extends NotInReadOnlyModeService {
 
 		Element child = null;
 		for (int i = 0; i < ref.length; i++) {
-			child = new AjaxEditUtils(context).deleteElementEmbedded(dbms, session, id, ref[i], parentRef);
+			child = new AjaxEditUtils(context).deleteElementEmbedded(session, id, ref[i], parentRef);
 		}
 
 		// -- The metadata-edit-embedded.xsl searches for a taged element to
