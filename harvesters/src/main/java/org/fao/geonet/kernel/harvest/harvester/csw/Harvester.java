@@ -231,6 +231,8 @@ class Harvester implements IHarvester<HarvestResult>
 		//request.setOutputSchema(OutputSchema.OGC_CORE);	// Use default value
 		request.setElementSetName(ElementSetName.SUMMARY);
 		request.setMaxRecords(GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE +"");
+        request.setDistribSearch(params.queryScope.equalsIgnoreCase("true"));
+        request.setHopCount(params.hopCount + "");
 
 		CswOperation oper = server.getOperation(CswServer.GET_RECORDS);
 

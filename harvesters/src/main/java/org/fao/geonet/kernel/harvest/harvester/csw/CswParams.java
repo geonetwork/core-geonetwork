@@ -63,6 +63,8 @@ public class CswParams extends AbstractParams {
 
 		capabUrl = Util.getParam(site, "capabilitiesUrl", "");
         rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource",  false);
+        queryScope = Util.getParam(site, "queryScope", "off");
+        hopCount = Util.getParam(site, "hopCount", 2);
         
         try {
             capabUrl = URLDecoder.decode(capabUrl, Jeeves.ENCODING);
@@ -111,6 +113,8 @@ public class CswParams extends AbstractParams {
             x.printStackTrace();
             // TODO should not swallow
         }
+        queryScope = Util.getParam(site, "queryScope", queryScope);
+        hopCount = Util.getParam(site, "hopCount", hopCount);
 
 		icon     = Util.getParam(site, "icon",            icon);
 
@@ -164,6 +168,8 @@ public class CswParams extends AbstractParams {
 		copy.capabUrl = capabUrl;
 		copy.icon     = icon;
 		copy.rejectDuplicateResource = rejectDuplicateResource;
+	 	copy.queryScope = queryScope;
+	 	copy.hopCount = hopCount;
 
 		for (Search s : alSearches)
 			copy.alSearches.add(s.copy());
@@ -206,6 +212,8 @@ public class CswParams extends AbstractParams {
 	public String capabUrl;
 	public String icon;
     public boolean rejectDuplicateResource;
+    public String queryScope;
+    public Integer hopCount;
 
 	private List<Search> alSearches = new ArrayList<Search>();	
 	public List<Element> eltSearches = new ArrayList<Element>();

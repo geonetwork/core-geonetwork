@@ -411,11 +411,11 @@ span.buttons a.small span {
 }
 .buttons a.add span {
   background-image : url(../images/default/bullet_toggle_plus.png);
-  background-size: 8px;
+  background-size: 10px;
 }
 .buttons a.del span {
   background-image : url(../images/default/bullet_toggle_minus.png);
-  background-size: 8px;
+  background-size: 10px;
 }
 .buttons a.up span {
   background-image : url(../images/default/bullet_arrow_up.png);

@@ -136,6 +136,10 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
          *  ``String`` Identify keyword by their label (default) or uri (requires to use gmx:Anchor in the metadata).
          */
         identificationMode: 'value',
+        /** api: config[triggerSearch] 
+         *  ``Boolean`` Trigger search when initialized (not used for combo and multiple list mode)
+         */
+        searchOnLoad: false,
         /**
          * relative imagePath for ItemSelector
          */
@@ -375,6 +379,10 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                         self.generateXML();
                     });
                     
+                    if (self.searchOnLoad) {
+                    	self.keywordStore.baseParams.pThesauri = self.thesaurusIdentifier;
+                    	self.keywordStore.reload();
+                    }
                 }
             }
         });
@@ -484,9 +492,10 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
     getLimitInput: function () {
         this.nbResultsField = new Ext.form.TextField({
             name: 'maxResults',
-            value: '50',
+            value: this.maxKeywords || 50,
             width: 40
         });
+        
         return this.nbResultsField;
     },
     /** private: method[getThesaurusSelector]
@@ -755,7 +764,6 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function (cfg) {
                 config = thesaurusPicker.getAttribute("config"),
                 jsonConfig = Ext.decode(config);
             var p = Ext.get(id + '_panel');
-            
             if (p.dom.innerHTML === '') {
                 var panel = new GeoNetwork.editor.ConceptSelectionPanel({
                     catalogue: catalogue,
@@ -763,6 +771,8 @@ GeoNetwork.editor.ConceptSelectionPanel.init = function (cfg) {
                     mode: jsonConfig.mode,
                     initialKeyword: jsonConfig.keywords,
                     imagePath: cfg.imagePath,
+                    maxKeywords: jsonConfig.maxKeywords,
+                    searchOnLoad: jsonConfig.searchOnLoad == 'true',
                     transformations: jsonConfig.transformations,
                     transformation: jsonConfig.transformation,
                     identificationMode: jsonConfig.identificationMode,

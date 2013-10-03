@@ -1596,6 +1596,24 @@ public class DataManager {
      */
     public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
         Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+        return getMetadata(srvContext, dbms, id, forEditing, withEditorValidationErrors, keepXlinkAttributes);
+    }
+
+    /**
+     * Retrieves a metadata (in xml) given its id; adds editing information if requested and validation errors if
+     * requested.
+     *
+     * @param srvContext
+     * @param dbms
+     * @param id
+     * @param forEditing        Add extra element to build metadocument {@link EditLib#expandElements(String, Element)}
+     * @param withEditorValidationErrors
+     * @param keepXlinkAttributes When XLinks are resolved in non edit mode, do not remove XLink attributes.
+     * @return
+     * @throws Exception
+     */
+    public Element getMetadata(ServiceContext srvContext, Dbms dbms, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
         boolean doXLinks = xmlSerializer.resolveXLinks();
         Element md = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, false);
         if (md == null) return null;
@@ -2270,7 +2288,7 @@ public class DataManager {
     private void manageThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, Element env,
                                  String styleSheet, boolean indexAfterChange) throws Exception {
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
-        Element md = getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+        Element md = getMetadata(context, dbms, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
         if (md == null)
             return;
