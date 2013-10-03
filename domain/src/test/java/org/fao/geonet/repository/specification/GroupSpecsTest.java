@@ -9,6 +9,7 @@ import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.GroupRepositoryTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
@@ -16,7 +17,10 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.fao.geonet.repository.specification.GroupSpecs.isReserved;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.data.jpa.domain.Specifications.not;
 
 /**
  * Test the Group specs.
@@ -45,7 +49,14 @@ public class GroupSpecsTest extends AbstractSpringDataTest {
 
         Group notReserved = _repo.save(GroupRepositoryTest.newGroup(_inc));
 
-        List<Group> found = _repo.findAll(GroupSpecs.isNotReserved());
+        List<Group> found = _repo.findAll(isReserved());
+
+        assertEquals(ReservedGroup.values().length, found.size());
+        for (Group group : found) {
+            assertTrue(group.isReserved());
+        }
+
+        found = _repo.findAll(not(isReserved()));
 
         assertEquals(1, found.size());
         assertSameContents(notReserved, found.get(0));

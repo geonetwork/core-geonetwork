@@ -29,6 +29,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -77,7 +78,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.search.LuceneConfig.Facet;
 import org.fao.geonet.kernel.search.LuceneConfig.FacetConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
@@ -1480,9 +1480,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      * @return
      * @throws Exception
      */
-    public Map<Integer,MdInfo> getAllMdInfo(int maxHits) throws Exception {
+    public Map<Integer,Metadata> getAllMdInfo(int maxHits) throws Exception {
 
-      Map<Integer,MdInfo> response = new HashMap<Integer,MdInfo>();
+      Map<Integer,Metadata> response = new HashMap<Integer,Metadata>();
       TopDocs tdocs = performQuery(0, maxHits, false);
       IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language, _versionToken);
       _versionToken = indexAndTaxonomy.version;
@@ -1492,10 +1492,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                       "_source", "_isTemplate", "_title", "_uuid", "_isHarvested", "_owner", "_groupOwner");
               indexAndTaxonomy.indexReader.document(sdoc.doc, docVisitor);
               Document doc = docVisitor.getDocument();
-    
-              MdInfo mdInfo = new MdInfo(doc);
 
-              response.put(Integer.parseInt(mdInfo.id), mdInfo);
+              Metadata mdInfo = Metadata.createFromLuceneIndexDocument(doc);
+              response.put(mdInfo.getId(), mdInfo);
           }
       } finally {
           _sm.releaseIndexReader(indexAndTaxonomy);

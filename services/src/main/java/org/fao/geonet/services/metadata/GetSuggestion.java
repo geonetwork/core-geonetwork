@@ -33,7 +33,6 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;

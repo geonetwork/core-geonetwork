@@ -33,7 +33,6 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
@@ -72,7 +71,7 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 		SelectionManager sm = SelectionManager.getManager(us);
 
 		Set<Integer> metadata = new HashSet<Integer>();
-		Set<String> notFound = new HashSet<Integer>();
+		Set<String> notFound = new HashSet<String>();
 		Set<Integer> notOwner = new HashSet<Integer>();
 
 		synchronized(sm.getSelection("metadata")) {

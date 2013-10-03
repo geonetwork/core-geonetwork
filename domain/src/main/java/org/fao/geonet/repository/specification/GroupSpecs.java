@@ -11,7 +11,7 @@ public final class GroupSpecs {
         // don't permit instantiation
     }
 
-    public static Specification<Group> isNotReserved() {
+    public static Specification<Group> isReserved() {
         return new Specification<Group>() {
             @Override
             public Predicate toPredicate(Root<Group> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -22,7 +22,7 @@ public final class GroupSpecs {
                     }
                 }
 
-                return cb.greaterThan(root.get(Group_.id), maxId);
+                return cb.lessThanOrEqualTo(root.get(Group_.id), maxId);
             }
         };
     }

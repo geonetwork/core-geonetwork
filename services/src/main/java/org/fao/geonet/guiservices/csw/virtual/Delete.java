@@ -27,9 +27,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.repository.ServiceRepository;
 import org.jdom.Element;
 
 /**
@@ -44,11 +43,7 @@ public class Delete implements Service {
         String id = Util.getParam(params, Params.ID);
         int iId = Integer.parseInt(id);
 
-        Dbms dbms = (Dbms) context.getResourceManager()
-                .open(Geonet.Res.MAIN_DB);
-
-        dbms.execute("DELETE FROM ServiceParameters WHERE service=?", iId);
-        dbms.execute("DELETE FROM Services WHERE id=?", iId);
+        context.getBean(ServiceRepository.class).delete(iId);
 
         return new Element(Jeeves.Elem.RESPONSE);
     }

@@ -313,7 +313,7 @@ public class Info implements Service {
 
         UserSession session = context.getUserSession();
         if (!session.isAuthenticated()) {
-            return groupRepository.findAllAsXml(GroupSpecs.isNotReserved(), sort);
+            return groupRepository.findAllAsXml(Specifications.not(GroupSpecs.isReserved()), sort);
         }
 
         Element result;
