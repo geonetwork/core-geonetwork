@@ -27,12 +27,14 @@
 									select="count(/root/response/statusvalues/status[on and name='submitted']) = 1"/>
 								<xsl:variable name="profile" select="/root/gui/session/profile"/>
 								<xsl:variable name="userId" select="/root/gui/session/userId"/>
-								<xsl:variable name="isReviewer" select="count(/root/response/contentReviewers/record[userid=$userId]) > 0"/>
+								<xsl:variable name="isReviewerOrAdmin" select="
+									count(/root/response/contentReviewers/record[userid=$userId]) > 0
+									or $profile = 'Administrator'"/>
 								
 								<!--<ul>
 									<li>Profile: <xsl:value-of select="$profile"/></li>
 									<li>User: <xsl:value-of select="$userId"/></li>
-									<li>Reviewer: <xsl:value-of select="$isReviewer"/></li>
+									<li>Reviewer: <xsl:value-of select="$isReviewerOrAdmin"/></li>
 									<li>Has edit perm: <xsl:value-of select="/root/response/hasEditPermission"/></li>
 									<li>Owner: <xsl:value-of select="/root/response/isOwner"/></li>
 								</ul>-->
@@ -51,7 +53,7 @@
 												<xsl:if test="$isReviewer or contains($profile,'Admin')">-->
 												
 												<!-- status value draft and unkown disabled once submitted -->
-												<xsl:if test="$isSubmitted and not($isReviewer)">
+												<xsl:if test="$isSubmitted and not($isReviewerOrAdmin)">
 													<xsl:if test="name='unknown' or name='draft'">
 														<xsl:attribute name="disabled"/>
 													</xsl:if>
@@ -60,7 +62,7 @@
 												<!-- some status values are not available to Editors -->
 												<xsl:if test="(/root/response/hasEditPermission = 'true' or
 													/root/response/isOwner = 'true')
-													and not($isReviewer)">
+													and not($isReviewerOrAdmin)">
 													<xsl:if test="name='approved' or name='retired' or name='rejected'">
 														<xsl:attribute name="disabled"/>
 													</xsl:if>
