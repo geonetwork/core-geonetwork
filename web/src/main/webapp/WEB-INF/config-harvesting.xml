@@ -7,7 +7,7 @@
 		<!-- Harvesting services -->
 
 		<service name="harvesting">
-			<class name="org.fao.geonet.services.harvesting.notifier.GetNotificationSettings" />
+			<class name=".services.harvesting.notifier.GetNotificationSettings" />
 			<output sheet="harvesting/harvesting.xsl">
 				<xml name="harvesting" file="xml/harvesting.xml" />
 			</output>

@@ -27,6 +27,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.mail.EmailException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.MailUtil;
@@ -75,23 +76,33 @@ public class SendNotification {
 			return;
 		}
 
-
+		String receiver = settings.getValue("system/harvesting/mail/recipient");
 		List<String> toAddress = new ArrayList<String>();
-		toAddress.add(settings.getValue("system/harvesting/mail/recipient"));
-		
+
+		// If no email to send, take the email of the owner of the harvester
+		if (receiver == null || receiver.trim().isEmpty()) {
+			try {
+				receiver = ah.getOwnerEmail();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		toAddress.add(receiver);
+
 		String subject = settings.getValue("system/harvesting/mail/subject");
 
 		String htmlMessage = settings
 				.getValue("system/harvesting/mail/template");
 
 		Element lastHarvest = (Element) element.getChildren().get(0);
-		
+
 		@SuppressWarnings("unchecked")
 		List<Element> tmp = lastHarvest.getChildren();
 		Element info = null;
-		
-		for(Element e : tmp) {
-			if(e.getName().equalsIgnoreCase("info")) {
+
+		for (Element e : tmp) {
+			if (e.getName().equalsIgnoreCase("info")) {
 				info = e;
 				break;
 			}
@@ -99,7 +110,7 @@ public class SendNotification {
 
 		// Success, but with warnings or clean?
 		Element result = (Element) info.getChildren().get(0);
-		
+
 		// switch between normal and error template
 		if (info == null || info.getChildren("error").size() > 0) {
 			// Error, Level 3, let's check it:
@@ -116,10 +127,9 @@ public class SendNotification {
 			errorMsg += extractWarningsTrace(info);
 
 			htmlMessage = htmlMessage.replace("$$errorMsg$$", errorMsg);
-			
+
 			String[] values = new String[] { "total", "added", "updated",
-					"removed", "unchanged", "unretrievable",
-					"doesNotValidate" };
+					"removed", "unchanged", "unretrievable", "doesNotValidate" };
 
 			for (String value : values) {
 				htmlMessage = replace(result, htmlMessage, value);

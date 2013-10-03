@@ -1003,7 +1003,28 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     public static Set<String> getHarvesterTypes() {
         return hsHarvesters.keySet();
     }
-    
+
+	/**
+	 * 
+	 * Who should we notify by default?
+	 * 
+	 * @return
+	 * @throws Exception 
+	 */
+	public String getOwnerEmail() throws Exception {
+		String ownerId = getParams().ownerIdGroup;
+
+		Dbms dbms = (Dbms) context.getResourceManager()
+				.open(Geonet.Res.MAIN_DB);
+
+		Element e = dbms.select("SELECT email FROM Groups WHERE id = " + ownerId);
+
+		e = e.getChild("record");
+		e = e.getChild("email");
+		
+		return e.getTextTrim();
+	}
+
     //--------------------------------------------------------------------------
 	//---
 	//--- Variables

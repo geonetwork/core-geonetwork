@@ -38,7 +38,7 @@
 		</button>
 		&#160;			
 		
-		<button class="content" onclick="harvesting.refreshNotif();harvesting.show(SHOW.NOTIFICATIONS)">
+		<button class="content" onclick="harvesting.show(SHOW.NOTIFICATIONS)">
 			<xsl:value-of select="/root/gui/harvesting/notification"/>
 		</button>
 
