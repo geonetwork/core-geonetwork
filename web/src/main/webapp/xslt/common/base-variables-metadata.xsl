@@ -24,7 +24,7 @@
   <xsl:variable name="codelists" select="$schemaInfo/codelist"/>
   <xsl:variable name="profileStrings" select="$schemaInfo/strings"/>
   
-  <xsl:variable name="isEditing" select="$service = 'md.edit'"/>
+  <xsl:variable name="isEditing" select="$service = 'md.edit' or $service = 'md.element.add'"/>
   
   <xsl:variable name="withInlineEditing" select="false()"/>
   

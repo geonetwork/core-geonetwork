@@ -25,6 +25,45 @@
 			<section match="gmd:dataQualityInfo"/>
 			<section match="gmd:MD_Metadata"/>
 		</tab>
+	    <tab id="inspire">
+	        <section name="resource">
+	            <field xpath="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title"/>
+	            <field xpath="gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title"/>
+	            <field xpath="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"/>
+	            <field xpath="gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract"/>
+	            <field xpath="gmd:hierarchyLevel"/>
+	            <field xpath="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword"
+	                    eval=""/>
+	            <fieldset xpath="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords"
+	                eval="contains(gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString, 'GEMET - INSPIRE')">
+	                <!-- The default XML snippet to insert if empty -->
+	                <template>
+	                    
+	                </template>
+	            </fieldset>
+	            <field xpath="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date"
+	                eval="gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision'">
+	                <template>
+	                    <gmd:date>
+	                        <gmd:CI_Date>
+	                            <gmd:date>
+	                                <gco:DateTime>${date}</gco:DateTime>
+	                            </gmd:date>
+	                            <gmd:dateType>
+	                                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="revision"/>
+	                            </gmd:dateType>
+	                        </gmd:CI_Date>
+	                    </gmd:date>
+	                </template>
+	            </field>
+	            <fieldset xpath="quality/spec">
+	                
+	            </fieldset>
+	        </section>
+	        <section name="metadata">
+	            <field xpath="gmd:dateStamp"/>
+	        </section>
+	    </tab>
 	</xsl:variable>
 	
 	
@@ -38,6 +77,8 @@
 			<xsl:when test="$theTabConfiguration">
 				<xsl:for-each select="$theTabConfiguration">
 					<xsl:variable name="matchingElement" select="@match"/>
+				    
+				    <!-- Apply tab mode first and if empty, fallback to default. -->
 					<xsl:apply-templates mode="mode-iso19139" select="$base/*[name() = $matchingElement]"/>
 				</xsl:for-each>
 			</xsl:when>

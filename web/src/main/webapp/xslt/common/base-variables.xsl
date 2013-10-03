@@ -18,6 +18,7 @@
   <xsl:variable name="angularApp" select="
     if ($service = 'admin.console') then 'gn_admin'
     else if ($service = 'catalog.login') then 'gn_login'
+    else if ($service = 'catalog.edit') then 'gn_editor'
     else 'gn'"/>
   
   <!-- Catalog settings -->

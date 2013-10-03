@@ -23,7 +23,8 @@
     <article class="gn-metadata-view">
       <xsl:call-template name="scroll-spy-nav-bar"/>
       
-      <form name="gn-editor" accept-charset="UTF-8" method="POST" action="metadata.update">
+      <form id="gn-editor-{$metadataId}" name="gn-editor" accept-charset="UTF-8" method="POST"
+          class="form-horizontal" role="form">
         <input type="hidden" id="schema" value="{$schema}"/>
         <input type="hidden" id="template" name="template" value="{$isTemplate}"/>
         <input type="hidden" id="uuid" value="{$metadataUuid}"/>
