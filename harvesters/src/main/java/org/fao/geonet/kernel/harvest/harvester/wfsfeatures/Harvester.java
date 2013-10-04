@@ -32,12 +32,16 @@ import jeeves.utils.Xml;
 import jeeves.utils.XmlElementReader;
 import jeeves.utils.XmlRequest;
 import jeeves.xlink.Processor;
+
 import org.apache.commons.httpclient.HttpException;
+import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.FragmentParams;
@@ -50,14 +54,17 @@ import org.jdom.Namespace;
 
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -116,7 +123,7 @@ import java.util.Set;
  * @author sppigot
  *   
  */
-class Harvester
+class Harvester implements IHarvester<HarvestResult>
 {
 	
 	
@@ -189,8 +196,9 @@ class Harvester
 		*
 		*
     */
-	public HarvestResult harvest() throws Exception {
+	public HarvestResult harvest(Logger log) throws Exception {
 
+	    this.log = log;
 		log.info("Retrieving metadata fragments for : " + params.name);
         
 		//--- collect all existing metadata uuids before we update
@@ -204,7 +212,7 @@ class Harvester
 		try {
 			wfsQuery = Xml.loadString(params.query, false); 
 		} catch (JDOMException e) {
-			e.printStackTrace();
+            errors.add(new HarvestError(e, log));
 			throw new BadParameterEx("GetFeature Query failed to parse\n", params.query);
 		}
 
@@ -310,7 +318,8 @@ class Harvester
 	    result.recordsUpdated += fragmentResult.recordsUpdated;
 	    result.subtemplatesUpdated += fragmentResult.fragmentsUpdated;
 
-	    result.totalMetadata = result.subtemplatesAdded + result.recordsBuilt;
+	    result.totalMetadata = result.subtemplatesAdded + result.addedMetadata;
+	    result.originalMetadata = result.fragmentsReturned;
     }
 
 	/** 
@@ -322,25 +331,38 @@ class Harvester
         if(log.isDebugEnabled()) log.debug("  - Removing orphaned metadata records and fragments after update");
 		
 		for (String uuid : localUuids.getUUIDs()) {
-			String isTemplate = localUuids.getTemplate(uuid);
-			if (isTemplate.equals("s")) {
-					Processor.uncacheXLinkUri(metadataGetService+"?uuid=" + uuid);
-			}
-
-			if (!updatedMetadata.contains(uuid)) {	
-				String id = localUuids.getID(uuid);
-				dataMan.deleteMetadata(context, dbms, id);
-			
-				if (isTemplate.equals("s")) {
-					result.subtemplatesRemoved ++;
-				} else {
-					result.recordsRemoved ++;
-				}
-			}
+		    try {
+    			String isTemplate = localUuids.getTemplate(uuid);
+    			if (isTemplate.equals("s")) {
+    					Processor.uncacheXLinkUri(metadataGetService+"?uuid=" + uuid);
+    			}
+    
+    			if (!updatedMetadata.contains(uuid)) {	
+    				String id = localUuids.getID(uuid);
+    				dataMan.deleteMetadata(context, dbms, id);
+    			
+    				if (isTemplate.equals("s")) {
+    					result.subtemplatesRemoved ++;
+    				} else {
+    					result.locallyRemoved ++;
+    				}
+    			}
+		    } catch(CacheException e) {
+                HarvestError error = new HarvestError(e, log);
+                this.errors.add(error);
+		    } catch (Exception e) {
+                HarvestError error = new HarvestError(e, log);
+                this.errors.add(error);
+            }
 		}
 		
-		if (result.subtemplatesRemoved + result.recordsRemoved > 0)  {
-			dbms.commit();
+		if (result.subtemplatesRemoved + result.locallyRemoved > 0)  {
+			try {
+                dbms.commit();
+            } catch (SQLException e) {
+                HarvestError error = new HarvestError(e, log);
+                this.errors.add(error);
+            }
 		}
     }
 
@@ -362,6 +384,11 @@ class Harvester
 		return fragmentParams;
     }
 
+    public List<HarvestError> getErrors() {
+        return errors;
+    }
+    
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Variables
@@ -379,4 +406,8 @@ class Harvester
 	private String	 		metadataGetService;
 	private String	 		 stylesheetDirectory;
 	private Map<String,String> ssParams = new HashMap<String,String>();
+    /**
+     * Contains a list of accumulated errors during the executing of this harvest.
+     */
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
 }

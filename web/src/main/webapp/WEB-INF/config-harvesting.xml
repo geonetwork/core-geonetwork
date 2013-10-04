@@ -7,6 +7,7 @@
 		<!-- Harvesting services -->
 
 		<service name="harvesting">
+			<class name=".services.harvesting.notifier.GetNotificationSettings" />
 			<output sheet="harvesting/harvesting.xsl">
 				<xml name="harvesting" file="xml/harvesting.xml" />
 			</output>
@@ -44,6 +45,13 @@
 		<service name="xml.harvesting.remove">
 			<class name=".services.harvesting.Remove" />
 		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.harvesting.clear">
+			<class name=".services.harvesting.Clear" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -72,6 +80,13 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="harvesting.log">
+			<class name=".services.harvesting.Log" />
+		    <output sheet="plain-file.xsl" file="true" contentType="text/plain"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="harvesting.history">
 			<class name=".services.harvesting.History" />
 			<output sheet="harvesting/harvesting-history.xsl">
@@ -95,6 +110,18 @@
 			<output sheet="harvesting/harvesting-history-delete.xsl">
 				<xml name="harvesting" file="xml/harvesting.xml" />
 			</output>
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+		
+		<service name="harvesting.notifier.save">
+			<class name=".services.harvesting.notifier.SaveNotificationSettings" />
+		</service>
+
+		
+		<service name="harvesting.notifier.get">
+			<class name=".services.harvesting.notifier.GetNotificationSettings" />
 		</service>
 
 	</services>

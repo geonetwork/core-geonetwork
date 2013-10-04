@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
@@ -117,7 +118,7 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public HarvestResult align(Set<RecordInfo> records) throws Exception
+	public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception
 	{
 		log.info("Start of alignment for : "+ params.name);
 

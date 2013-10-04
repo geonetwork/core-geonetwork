@@ -924,6 +924,22 @@ public class SearchManager {
 		_indexWriter.deleteDocuments(new Term(fld, txt));
 		_spatial.writer().delete(txt);
 	}
+	
+    /**
+     *  deletes a list of documents.
+     *
+     * @param fld
+     * @param txt
+     * @throws Exception
+     */
+    public void delete(String fld, List<String> txts) throws Exception {
+        // possibly remove old document
+        for(String txt : txts) {
+            _indexWriter.deleteDocuments(new Term(fld, txt));
+        }
+        _spatial.writer().delete(txts);
+    }
+
 
     /**
      * TODO javadoc.
