@@ -3,10 +3,11 @@ package org.fao.geonet.repository;
 import com.google.common.base.Optional;
 import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 
+import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -69,4 +70,30 @@ public class OperationAllowedRepositoryImpl implements OperationAllowedRepositor
         query.distinct(true);
         return _entityManager.createQuery(query).getResultList();
     }
+
+    @Override
+    public int deleteAllByMetadataIdExceptGroupId(int metadataId, int groupId) {
+        final String opAllowedEntityName = OperationAllowed.class.getSimpleName();
+        final String metadataIdPath = SortUtils.createPath(OperationAllowed_.id, OperationAllowedId_.metadataId);
+        final String groupIdPath = SortUtils.createPath(OperationAllowed_.id, OperationAllowedId_.groupId);
+        final Query query = _entityManager.createQuery("DELETE FROM " + opAllowedEntityName + " where " + metadataIdPath + " = "
+                                                       + metadataId + "and " + groupIdPath + " != " + groupId);
+
+        final int affected = query.executeUpdate();
+        _entityManager.clear();
+        return affected;
+
+    }
+
+    @Override
+    public int deleteAllByIdAttribute(SingularAttribute<OperationAllowedId, Integer> idAttribute, int id) {
+        final String opAllowedEntityName = OperationAllowed.class.getSimpleName();
+        final String idPath = SortUtils.createPath(OperationAllowed_.id, idAttribute);
+        final Query query = _entityManager.createQuery("DELETE FROM " + opAllowedEntityName + " where " + idPath + " = " + id);
+
+        final int affected = query.executeUpdate();
+        _entityManager.clear();
+        return affected;
+    }
+
 }

@@ -1,12 +1,14 @@
 package org.fao.geonet.repository;
 
 
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
@@ -17,7 +19,14 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     MetadataCategoryRepository _repo;
 
+    @Autowired
+    MetadataRepository _metadataRepo;
+
+    @PersistenceContext
+    EntityManager _entityManager;
+
     AtomicInteger _inc = new AtomicInteger();
+
     @Test
     public void testFindOne() {
         MetadataCategory category1 = newMetadataCategory();
@@ -55,6 +64,34 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
 
         metadataCategory = _repo.findOneByName(category2.getName());
         assertEquals(category2.getName(), metadataCategory.getName());
+    }
+
+
+    @Test
+    public void testDeleteDeletesFromMetadata() throws Exception {
+
+        MetadataCategory cat1 = _repo.save(newMetadataCategory(_inc));
+        MetadataCategory cat2 = _repo.save(newMetadataCategory(_inc));
+
+        Metadata metadata1 = MetadataRepositoryTest.newMetadata(_inc);
+        metadata1.getCategories().add(cat1);
+        metadata1.getCategories().add(cat2);
+        metadata1 = _metadataRepo.save(metadata1);
+
+        Metadata metadata2 = MetadataRepositoryTest.newMetadata(_inc);
+        metadata2.getCategories().add(cat1);
+        metadata2 = _metadataRepo.save(metadata2);
+
+        _repo.delete(cat1.getId());
+
+        _entityManager.clear();
+
+        // org.fao.geonet.services.category.Remove assumes that this test passes.  If this test can't pass
+        // then there needs to be a way to fix Remove as well.
+        assertEquals(1, _metadataRepo.findOne(metadata1.getId()).getCategories().size());
+        assertEquals(cat2.getId(), _metadataRepo.findOne(metadata1.getId()).getCategories().iterator().next().getId());
+
+        assertEquals(0, _metadataRepo.findOne(metadata2.getId()).getCategories().size());
     }
 
     private MetadataCategory newMetadataCategory() {

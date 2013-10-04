@@ -41,21 +41,21 @@ public class UserGroupRepositoryImpl implements UserGroupRepositoryCustom {
     }
 
     @Override
-    public int deleteAllWithUserIdsIn(Collection<Integer> userIds) {
+    public int deleteAllByIdAttribute(SingularAttribute<UserGroupId, Integer> idAttribute, Collection<Integer> ids) {
+        String userIdPath = SortUtils.createPath(UserGroup_.id, idAttribute);
 
-        String userIdPath = UserGroup_.id.getName() + "." + UserGroupId_.userId.getName();
+        StringBuilder idString = new StringBuilder();
 
-        StringBuilder userIdsString = new StringBuilder();
-
-        for (Integer userId : userIds) {
-            if (userIdsString.length() > 0) {
-                userIdsString.append(",");
+        for (Integer id : ids) {
+            if (idString.length() > 0) {
+                idString.append(",");
             }
-            userIdsString.append(userId);
+            idString.append(id);
         }
-        final String qlString = "DELETE FROM " + UserGroup.class.getSimpleName() + " WHERE " + userIdPath + " IN (" + userIdsString + ")";
+        final String qlString = "DELETE FROM " + UserGroup.class.getSimpleName() + " WHERE " + userIdPath + " IN (" + idString + ")";
         final int deleted = _entityManager.createQuery(qlString).executeUpdate();
         _entityManager.clear();
+
         return deleted;
     }
 

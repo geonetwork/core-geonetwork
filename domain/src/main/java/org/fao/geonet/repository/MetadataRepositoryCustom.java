@@ -72,10 +72,7 @@ public interface MetadataRepositoryCustom {
      *
      * @return the metadata with the oldest change date
      */
-    @Modifying
-    @Transactional
+    @Nullable
     Metadata findOneOldestByChangeDate();
-
-
 
 }

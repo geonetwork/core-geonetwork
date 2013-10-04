@@ -24,12 +24,8 @@
 package org.fao.geonet.guiservices.isolanguages;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IsoLanguage;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.jdom.Element;
 

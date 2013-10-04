@@ -25,12 +25,10 @@ package org.fao.geonet.services.status;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
@@ -60,8 +58,6 @@ public class Get implements Service
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getBean(DataManager.class);
-
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id = Utils.getIdentifierFromParameters(params, context);
 

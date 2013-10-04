@@ -24,6 +24,7 @@ package org.fao.geonet.kernel.security.ldap;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
+import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
@@ -205,7 +206,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                 return input.getId();
             }
         });
-        userGroupRepository.deleteAllWithUserIdsIn(userIds);
+        userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId, userIds);
         userRepository.deleteInBatch(usersFound);
     }
     

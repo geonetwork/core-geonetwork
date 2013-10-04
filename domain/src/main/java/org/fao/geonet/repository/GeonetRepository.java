@@ -1,5 +1,6 @@
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.Pair;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -7,9 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.persistence.criteria.Path;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Methods common to all Geonetwork repositories.
@@ -39,6 +43,33 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
     @Transactional
     @Nonnull
     T update(ID id, @Nonnull Updater<T> updater);
+
+    /**
+     * Update all entities in the table with the new values.  This method delegates to
+     * {@link #batchUpdateAttributes(List<Pair<Path<V>, V>>, Specification<T)}
+     * @param attributeUpdates  the list of Pairs (the path to the attribute to change, the new value)
+     *
+     * @return The number of entities affected.
+     */
+    @Transactional
+    @Nonnegative
+    <V> int batchUpdateAttributes(@Nonnull List<Pair<Path<V>, V>> attributeUpdates);
+
+    /**
+     * Update all entities metched by spec in the table with the new values.  An SQL statement is constructed of the form:
+     * <p>
+     *     <pre><code>
+     *         UPDATE [Entity] SET {path}=[value] where [spec]
+     *     </code></pre>
+     * </p>
+     * @param attributeUpdates  the list of Pairs (the path to the attribute to change, the new value)
+     * @param spec a specification for selecting which entities are affected
+     *
+     * @return The number of entities affected.
+     */
+    @Transactional
+    @Nonnegative
+    <V> int batchUpdateAttributes(@Nonnull List<Pair<Path<V>, V>> attributeUpdates, @Nullable Specification<T> spec);
 
     /**
      * Load all entities and convert each to XML of the form:

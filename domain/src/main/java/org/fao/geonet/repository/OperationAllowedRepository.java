@@ -2,13 +2,7 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
-import org.fao.geonet.domain.OperationAllowedNamedQueries;
-import org.fao.geonet.domain.OperationAllowedNamedQueries.DeleteAllByMetadataIdExceptGroupId;
-import org.fao.geonet.domain.OperationAllowedNamedQueries.DeleteByMetadataId;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,24 +54,4 @@ public interface OperationAllowedRepository extends GeonetRepository<OperationAl
      */
     @Nullable
     OperationAllowed findOneById_GroupIdAndId_MetadataIdAndId_OperationId(int groupId, int metadataId, int operationId);
-
-    /**
-     * Delete all OperationsAllowed entities with the give metadata and group ids.
-     *
-     * @param metadataId the metadata id
-     * @param groupId    the group id
-     */
-    @Modifying
-    @Query(name = OperationAllowedNamedQueries.DeleteAllByMetadataIdExceptGroupId.NAME)
-    void deleteAllByMetadataIdExceptGroupId(@Param(DeleteAllByMetadataIdExceptGroupId.PARAM_METADATA_ID) int metadataId,
-                                            @Param(DeleteAllByMetadataIdExceptGroupId.PARAM_GROUP_ID) int groupId);
-
-    /**
-     * Deleta all OperationsAllowed entities with the given metadata id.
-     *
-     * @param metadataId the metadata id.
-     */
-    @Modifying
-    @Query(name = OperationAllowedNamedQueries.DeleteByMetadataId.NAME)
-    void deleteAllByMetadataId(@Param(DeleteByMetadataId.PARAM_METADATA_ID) int metadataId);
 }

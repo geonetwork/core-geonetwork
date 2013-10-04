@@ -29,9 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
@@ -40,7 +38,6 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -260,7 +257,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
                 false);
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-        repository.deleteAllByMetadataId(Integer.parseInt(id));
+        repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         metadata.getCategories().clear();

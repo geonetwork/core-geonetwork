@@ -2017,7 +2017,7 @@ public class DataManager {
         if (skipAllIntranet) {
             operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.valueOf(metadataId), ReservedGroup.intranet.getId());
         } else {
-            operationAllowedRepository.deleteAllByMetadataId(Integer.valueOf(metadataId));
+            operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.valueOf(metadataId));
         }
     }
 

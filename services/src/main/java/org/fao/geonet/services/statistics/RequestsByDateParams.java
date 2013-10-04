@@ -4,9 +4,6 @@ import org.fao.geonet.repository.statistic.DateInterval;
 import org.jdom.Element;
 import org.jfree.data.time.RegularTimePeriod;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Jesse
@@ -16,6 +13,10 @@ import java.util.Map;
  */
 public class RequestsByDateParams {
 
+    static final String BY_YEAR = "YEAR";
+    static final String BY_MONTH = "MONTH";
+    static final String BY_DAY = "DAY";
+    static final String BY_HOUR = "HOUR";
     /**
      * the date to search for from (format MUST be: )
      */
@@ -73,12 +74,14 @@ public class RequestsByDateParams {
     }
 
     public void setGraphicType(String graphicType) {
-        if (graphicType.equals(RequestsByDate.BY_MONTH)) {
+        if (graphicType.equals(BY_MONTH)) {
             this.graphicType = new DateInterval.Month();
-        } else if (graphicType.equals(RequestsByDate.BY_DAY)) {
+        } else if (graphicType.equals(BY_DAY)) {
             this.graphicType = new DateInterval.Day();
-        } else if (graphicType.equals(RequestsByDate.BY_YEAR)) {
+        } else if (graphicType.equals(BY_YEAR)) {
             this.graphicType = new DateInterval.Year();
+        } else if (graphicType.equals(BY_HOUR)) {
+            this.graphicType = new DateInterval.Hour();
         }
     }
 

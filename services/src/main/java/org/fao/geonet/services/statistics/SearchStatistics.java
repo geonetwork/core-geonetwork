@@ -130,7 +130,7 @@ public class SearchStatistics extends NotInReadOnlyModeService {
      * @param queryFieldName
      * @throws SQLException
      */
-    protected static void addSingleDBValueToElement(Element response, long value,
+    protected static void addSingleDBValueToElement(Element response, Object value,
                                                     String elementName, String queryFieldName)
             throws SQLException {
         response.addContent(new Element(elementName).setText("" + value));

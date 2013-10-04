@@ -26,7 +26,7 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.repository.ThesaurusRepository;
+import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
@@ -72,7 +72,7 @@ public class Delete extends NotInReadOnlyModeService {
 			IO.delete(item, true, Geonet.THESAURUS);
 
             // Delete thesaurus record in the database
-            context.getBean(ThesaurusRepository.class).delete(thesaurus.getFname());
+            context.getBean(ThesaurusActivationRepository.class).delete(thesaurus.getFname());
             String query = "DELETE FROM Thesaurus WHERE id =?";
         } else {
             throw new IllegalArgumentException("Thesaurus not found --> " + name);

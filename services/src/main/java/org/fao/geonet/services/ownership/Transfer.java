@@ -26,20 +26,24 @@ package org.fao.geonet.services.ownership;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.*;
 import static org.springframework.data.jpa.domain.Specifications.*;
 
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Optional;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
 
+import javax.transaction.TransactionManager;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -71,8 +75,6 @@ public class Transfer extends NotInReadOnlyModeService {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getBean(DataManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		//--- transfer privileges (if case)
 
 		Set<String> sourcePriv = retrievePrivileges(context, sourceUsr, sourceGrp);
@@ -80,7 +82,7 @@ public class Transfer extends NotInReadOnlyModeService {
 
 		//--- a commit just to release some resources
 
-		dbms.commit();
+        context.getBean(TransactionManager.class).commit();
 
 		int privCount = 0;
 
@@ -93,7 +95,7 @@ public class Transfer extends NotInReadOnlyModeService {
 			int opId = Integer.parseInt(st.nextToken());
 			int mdId = Integer.parseInt(st.nextToken());
 
-			dm.unsetOperation(context, dbms, mdId, sourceGrp, opId);
+			dm.unsetOperation(context, mdId, sourceGrp, opId);
 
 			if (!targetPriv.contains(priv)) {
 			    OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
@@ -105,13 +107,16 @@ public class Transfer extends NotInReadOnlyModeService {
                 repository.save(operationAllowed);
 			}
 
-			dbms.execute("UPDATE Metadata SET owner=?, groupOwner=? WHERE id=?", targetUsr, targetGrp, mdId);
+            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+            final Metadata metadata1 = metadataRepository.findOne(mdId);
+            metadata1.getSourceInfo().setGroupOwner(targetGrp).setOwner(targetUsr);
+            metadataRepository.save(metadata1);
 
-			metadata.add(mdId);
+            metadata.add(mdId);
 			privCount++;
 		}
 
-		dbms.commit();
+        context.getBean(TransactionManager.class).commit();
 
 		//--- reindex metadata
         List<String> list = new ArrayList<String>();
@@ -119,7 +124,7 @@ public class Transfer extends NotInReadOnlyModeService {
             list.add(Integer.toString(mdId));
         }
         
-        dm.indexInThreadPool(context,list, dbms);
+        dm.indexInThreadPool(context,list);
 
 		//--- return summary
 		return new Element("response")
@@ -141,8 +146,7 @@ public class Transfer extends NotInReadOnlyModeService {
         if (userId == null) {
             opsAllowed = opAllowedRepo.findAllById_GroupId(groupId);
         } else {
-            Specifications<OperationAllowed> spec = where(hasGroupId(groupId)).and(metadataHasOwnerId(userId));
-            opsAllowed = opAllowedRepo.findAll(spec);
+            opsAllowed = opAllowedRepo.findAllWithOwner(userId, Optional.of(hasGroupId(groupId)));
         }
 
         Set<String> result = new HashSet<String>();

@@ -25,7 +25,6 @@ package org.fao.geonet.services.metadata;
 
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
@@ -71,12 +70,11 @@ public class UpdateStatus extends NotInReadOnlyModeService {
 
 		DataManager dataMan = gc.getBean(DataManager.class);
 		AccessManager am = gc.getBean(AccessManager.class);
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		String id = Utils.getIdentifierFromParameters(params, context);
 
 		//--- check access
 		int iLocalId = Integer.parseInt(id);
-		if (!dataMan.existsMetadata(dbms, iLocalId))
+		if (!dataMan.existsMetadata(iLocalId))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		//--- only allow the owner of the record to set its status
@@ -92,7 +90,7 @@ public class UpdateStatus extends NotInReadOnlyModeService {
 		//--- change status and carry out behaviours for status changes
 		StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
 
-		StatusActions sa = saf.createStatusActions(context, dbms);
+		StatusActions sa = saf.createStatusActions(context);
 
 		Set<Integer> metadataIds = new HashSet<Integer>();
 		metadataIds.add(iLocalId);
@@ -100,7 +98,7 @@ public class UpdateStatus extends NotInReadOnlyModeService {
 		saf.statusChange(sa, status, metadataIds, changeDate, changeMessage);
 
 		//--- reindex metadata
-		dataMan.indexMetadata(dbms, id);
+		dataMan.indexMetadata(id);
 
 		//--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));

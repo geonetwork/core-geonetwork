@@ -1,5 +1,6 @@
 package org.fao.geonet.repository;
 
+import static org.fao.geonet.repository.MetadataCategoryRepositoryTest.newMetadataCategory;
 import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
 import static org.junit.Assert.*;
 
@@ -26,6 +27,9 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     MetadataRepository _repo;
+
+    @Autowired
+    MetadataCategoryRepository _categoryRepo;
 
     @PersistenceContext
     EntityManager _entityManager;

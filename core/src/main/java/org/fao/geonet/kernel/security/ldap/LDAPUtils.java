@@ -31,17 +31,15 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 
+import org.fao.geonet.domain.*;
 import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.UserGroupId;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
+
+import static java.util.Collections.singleton;
 
 public class LDAPUtils {
 	/**
@@ -73,7 +71,7 @@ public class LDAPUtils {
 
             // Delete user groups
             if (importPrivilegesFromLdap) {
-                userGroupRepo.deleteAllWithUserIdsIn(Collections.singleton(toSave.getId()));
+                userGroupRepo.deleteAllByIdAttribute(UserGroupId_.userId, singleton(toSave.getId()));
             }
         } else {
             if (Log.isDebugEnabled(Geonet.LDAP)) {
@@ -84,7 +82,7 @@ public class LDAPUtils {
 
 		// Add user groups
 		if (importPrivilegesFromLdap && !Profile.Administrator.equals(user.getUser().getProfile())) {
-            userGroupRepo.deleteAllWithUserIdsIn(Collections.singleton(user.getUser().getId()));
+            userGroupRepo.deleteAllByIdAttribute(UserGroupId_.userId, singleton(user.getUser().getId()));
 			for(Map.Entry<String, Profile> privilege : user.getPrivileges().entries()) {
 				// Add group privileges for each groups
 				

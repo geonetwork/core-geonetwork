@@ -7,9 +7,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.statistic.SearchRequestParam;
 import org.fao.geonet.repository.statistic.DateInterval;
-import org.fao.geonet.repository.statistic.SearchRequestParamRepository;
 import org.fao.geonet.repository.statistic.SearchRequestRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -21,7 +19,6 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.time.*;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -35,27 +32,24 @@ import java.util.List;
  *
  */
 public class RequestsByDate extends NotInReadOnlyModeService {
-	public static final String BY_YEAR = "YEAR";
-	public static final String BY_MONTH = "MONTH";
-	public static final String BY_DAY = "DAY";
 
-	/** the custom part of the date query; according to user choice for graphic */
+    /** the custom part of the date query; according to user choice for graphic */
 	private Hashtable<String, String> queryFragments;
 
 	/** should we generate and send tooltips to client (caution, can slow down the process if
 	 * dataset is big)
 	 */
-    boolean createTooltips;
+    private boolean createTooltips;
 	/** should we generate and send legend to client (caution, can slow down the process if
 	 * dataset is big)
 	 */
-    boolean createLegend;
+    private boolean createLegend;
 
 	/** chart width, service parameter, can be overloaded by request */
-    int chartWidth;
+    private int chartWidth;
 
 	/** chart width, can be overloaded by request */
-    int chartHeight;
+    private int chartHeight;
 
     /** the Element doc containing I18N strings, got from the current app language */
     private Cache<String, Element> i18nStringsCache;
@@ -89,9 +83,9 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 
         queryFragments = new Hashtable<String, String>(3);
 
-        queryFragments.put(RequestsByDate.BY_DAY,   "substring(requestDate, 1, 10)");
-        queryFragments.put(RequestsByDate.BY_MONTH, "substring(requestDate, 1, 7)");
-        queryFragments.put(RequestsByDate.BY_YEAR,  "substring(requestDate, 1, 4)");
+        queryFragments.put(RequestsByDateParams.BY_DAY,   "substring(requestDate, 1, 10)");
+        queryFragments.put(RequestsByDateParams.BY_MONTH, "substring(requestDate, 1, 7)");
+        queryFragments.put(RequestsByDateParams.BY_YEAR,  "substring(requestDate, 1, 4)");
 
 	}
 
@@ -112,8 +106,8 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 
             if (strings == null) {
                 // user changed the language, must reload strings file to get translated values
-                this.i18nStringsCache.put(language, loadStrings(appDir + "loc" + SEP +
-                                                                  language + SEP + "xml" + SEP + "strings.xml"));
+                this.i18nStringsCache.put(language, loadStrings(appDir + "loc" + SEP
+                                                                  + language + SEP + "xml" + SEP + "strings.xml"));
             }
 
             dateParams.setStringElementHashMap18nStrings(strings);

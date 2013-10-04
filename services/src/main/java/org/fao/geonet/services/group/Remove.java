@@ -23,8 +23,10 @@
 
 package org.fao.geonet.services.group;
 
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
+import com.google.common.collect.Lists;
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
@@ -32,13 +34,19 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.fao.geonet.services.util.ServiceMetadataReindexer;
 import org.jdom.Element;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -59,30 +67,24 @@ public class Remove extends NotInReadOnlyModeService {
 	{
 		String id = Util.getParam(params, Params.ID);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
-        OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-                
-        List<Element> reindex = new ArrayList<Element>();
+        OperationAllowedRepository operationAllowedRepo = context.getBean(OperationAllowedRepository.class);
+        UserGroupRepository userGroupRepo = context.getBean(UserGroupRepository.class);
+        GroupRepository groupRepo = context.getBean(GroupRepository.class);
+
 		Integer iId = Integer.valueOf(id);
-		List<OperationAllowed> operationsAllowed = repository.findAllById_GroupId(iId);
-		for (OperationAllowed operationAllowed : operationsAllowed) {
-		    Element record = new Element("record");
-		    record.addContent(new Element("metadataid").setText(Integer.toString(operationAllowed.getId().getMetadataId())));
-		    reindex.add(record);
-            repository.delete(operationAllowed);
-            dbms.execute("DELETE FROM UserGroups       WHERE groupId=?",iId);
-            dbms.execute("DELETE FROM GroupsDes        WHERE idDes=?"  ,iId);
-            dbms.execute("DELETE FROM Groups           WHERE id=?"     ,iId);
-        }
+        List<Integer> reindex = operationAllowedRepo.findAllIds(OperationAllowedSpecs.hasGroupId(iId), OperationAllowedId_.metadataId);
 
+        operationAllowedRepo.deleteAllByIdAttribute(OperationAllowedId_.groupId, iId);
+        userGroupRepo.deleteAllByIdAttribute(UserGroupId_.groupId, Arrays.asList(iId));
+        groupRepo.delete(iId);
 		//--- reindex affected metadata
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getBean(DataManager.class);
 
-		ServiceMetadataReindexer s = new ServiceMetadataReindexer(dm, dbms, reindex);
-		s.process();
+
+        dm.indexInThreadPool(context, Lists.transform(reindex, Functions.toStringFunction()));
 
 		return new Element(Jeeves.Elem.RESPONSE)
 							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));

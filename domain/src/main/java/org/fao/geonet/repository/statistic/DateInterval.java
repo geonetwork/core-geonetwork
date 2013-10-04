@@ -33,7 +33,11 @@ public abstract class DateInterval {
      */
     DateInterval(final String date, final int substringEnd) {
         this.substringEnd = substringEnd;
-        this.dateString = date.substring(0, substringEnd);
+        if (date.length() < substringEnd) {
+            this.dateString = date;
+        } else {
+            this.dateString = date.substring(0, substringEnd);
+        }
     }
 
     /**
@@ -50,6 +54,11 @@ public abstract class DateInterval {
      * Get the date string for this type.
      */
     public final String getDateString() {
+        return dateString;
+    }
+
+    @Override
+    public String toString() {
         return dateString;
     }
 
@@ -125,6 +134,54 @@ public abstract class DateInterval {
         @Override
         public DateInterval createFromString(String dateInterval) {
             return new Day(dateInterval);
+        }
+    }
+
+    public static class Hour extends DateInterval {
+        public Hour() {
+            super(new ISODate(), 13);
+        }
+        public Hour(ISODate date) {
+            super(date, 13);
+        }
+        public Hour(String date) {
+            super(date, 13);
+        }
+        @Override
+        public DateInterval createFromString(String dateInterval) {
+            return new Hour(dateInterval);
+        }
+    }
+
+    public static class Minute extends DateInterval {
+        public Minute() {
+            super(new ISODate(), 16);
+        }
+        public Minute(ISODate date) {
+            super(date, 16);
+        }
+        public Minute(String date) {
+            super(date, 16);
+        }
+        @Override
+        public DateInterval createFromString(String dateInterval) {
+            return new Minute(dateInterval);
+        }
+    }
+
+    public static class Second extends DateInterval {
+        public Second() {
+            super(new ISODate(), 19);
+        }
+        public Second(ISODate date) {
+            super(date, 19);
+        }
+        public Second(String date) {
+            super(date, 19);
+        }
+        @Override
+        public DateInterval createFromString(String dateInterval) {
+            return new Second(dateInterval);
         }
     }
 }

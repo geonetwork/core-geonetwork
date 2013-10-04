@@ -25,9 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataRatingByIp;
-import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
@@ -37,7 +35,6 @@ import org.fao.geonet.utils.XmlRequest;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -652,7 +649,7 @@ public class Aligner extends BaseAligner
         }
 		
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-        repository.deleteAllByMetadataId(Integer.parseInt(id));
+        repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
 		addPrivileges(id, info.getChild("privileges"));
 
         context.getBean(TransactionManager.class).commit();

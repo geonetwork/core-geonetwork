@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
 
+import javax.transaction.TransactionManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,8 +70,6 @@ public class Add implements Service {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		SchemaManager schemaMan = gc.getBean(SchemaManager.class);
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
 
 		String schemas[] = schemaList.split(",");
 
@@ -94,12 +93,14 @@ public class Add implements Service {
 						sampleDataFilesList.add(file);
 			}
 
-			for (File file : sampleDataFilesList) {
-				try {
-                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            final TransactionManager transactionManager = context.getBean(TransactionManager.class);
+            for (File file : sampleDataFilesList) {
+                try {
+                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                         Log.debug(Geonet.DATA_MANAGER, "Loading sample data: " + file);
-					MEFLib.doImport(params, context, file, "");
-					dbms.commit();
+                    }
+                    MEFLib.doImport(params, context, file, "");
+                    transactionManager.commit();
 				}
                 catch (Exception e) {
                     e.printStackTrace();

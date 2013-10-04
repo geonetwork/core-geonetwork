@@ -4,7 +4,11 @@ import com.google.common.base.Optional;
 import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
@@ -43,4 +47,24 @@ public interface OperationAllowedRepositoryCustom {
      */
     @Nonnull
     List<Integer> findAllIds(@Nonnull Specification<OperationAllowed> spec, @Nonnull SingularAttribute<OperationAllowedId, Integer> idAttribute);
+
+    /**
+     * Delete all OperationsAllowed entities with the give metadata and group ids.
+     *
+     * @param metadataId the metadata id
+     * @param groupId    the group id
+     */
+    @Nonnegative
+    int deleteAllByMetadataIdExceptGroupId(int metadataId, int groupId);
+
+    /**
+     * Delete all the {@link OperationAllowed} with the given id in the id component selected by the idAttribute.
+     *
+     * @param idAttribute The attribute of {@link OperationAllowedId} to match against the provided id.
+     * @param id the id to use as the key for selecting which entities to delete.
+     *
+     * @return the number of entities deleted.
+     */
+    @Nonnegative
+    int  deleteAllByIdAttribute(@Nonnull SingularAttribute<OperationAllowedId, Integer> idAttribute, int id);
 }

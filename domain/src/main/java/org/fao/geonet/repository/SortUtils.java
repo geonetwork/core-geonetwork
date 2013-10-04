@@ -1,22 +1,25 @@
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
 import org.springframework.data.domain.Sort;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Utilities for converting Spring sort objects to and from JPA Order objects.
+ * Utilities for converting Spring sort objects to and from JPA Order objects and for creating sort objects
  * <p/>
  * User: Jesse
  * Date: 9/4/13
  * Time: 7:58 AM
  */
-class SortUtils {
+public class SortUtils {
     /**
      * Get the property from the order and create a JPA path from it.
      *
@@ -65,5 +68,38 @@ class SortUtils {
             }
         }
         return orders;
+    }
+
+    /**
+     * Construct a path string from the id attributes.  The path string is '.' separated and is used in sorting and JPA Query Language
+     * queries.
+     *
+     * @param attributes the attributes that make up the path from root to end attribute.
+     * @return a '.' separated path.
+     */
+    public static String createPath(SingularAttribute<?,?>... attributes) {
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 0; i < attributes.length; i++) {
+            if (builder.length() > 0) {
+                builder.append('.');
+            }
+            builder.append(attributes[i].getName());
+        }
+        return builder.toString();
+    }
+
+    /**
+     * Create a sort object from the path objects.  This only creates a sort with a single path.  For multiple paths do:
+     *
+     * <p>
+     *     new Sort(createPath(attributes1...), createPath(attributes2...),...)
+     * </p>
+     * @param attributes the attributes to use for building a sort.
+     *
+     * @return a sort object from the path objects
+     */
+    public static Sort createSort(SingularAttribute<?,?>... attributes) {
+        return new Sort(createPath(attributes));
     }
 }

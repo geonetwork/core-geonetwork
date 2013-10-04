@@ -23,19 +23,27 @@
 
 package org.fao.geonet.services.category;
 
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
+import com.google.common.collect.Lists;
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.fao.geonet.services.util.ServiceMetadataReindexer;
 import org.jdom.Element;
 
+import javax.annotation.Nullable;
+import javax.persistence.EntityManager;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -55,25 +63,21 @@ public class Remove extends NotInReadOnlyModeService {
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 		String id = Util.getParam(params, Params.ID);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
 		int iId = Integer.valueOf(id);
-		String query = "SELECT metadataId FROM MetadataCateg WHERE categoryId=?";
 
-		@SuppressWarnings("unchecked")
-        List<Element> reindex = dbms.select(query, iId).getChildren();
+        final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
+        final MetadataCategory category = categoryRepository.findOne(iId);
+        final List<Integer> affectedMd = context.getBean(MetadataRepository.class).findAllIdsBy(MetadataSpecs.hasCategory(category));
 
-		dbms.execute ("DELETE FROM MetadataCateg WHERE categoryId=?",iId);
-		dbms.execute ("DELETE FROM CategoriesDes WHERE idDes=?",iId);
-		dbms.execute ("DELETE FROM Categories    WHERE id=?",iId);
+        categoryRepository.delete(iId);
+        context.getBean(EntityManager.class).clear();
 
 		//--- reindex affected metadata
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getBean(DataManager.class);
 
-		ServiceMetadataReindexer s = new ServiceMetadataReindexer(dm, dbms, reindex);
-		s.process();
+        dm.indexInThreadPool(context, Lists.transform(affectedMd, Functions.toStringFunction()));
 
 		return new Element(Jeeves.Elem.RESPONSE)
 							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));

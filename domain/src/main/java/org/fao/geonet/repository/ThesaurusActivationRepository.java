@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  *
  * @author Jesse
  */
-public interface ThesaurusRepository extends GeonetRepository<ThesaurusActivation, String>,
+public interface ThesaurusActivationRepository extends GeonetRepository<ThesaurusActivation, String>,
         JpaSpecificationExecutor<ThesaurusActivation> {
 }

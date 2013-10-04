@@ -5,6 +5,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.statistic.SearchRequest;
 import org.fao.geonet.domain.statistic.SearchRequest_;
 import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.specification.SearchRequestSpecs;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -49,6 +50,33 @@ public class SearchRequestRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(searchRequest2, _requestRepo.findOne(searchRequest2.getId()));
         assertEquals(searchRequest1, _requestRepo.findOne(searchRequest1.getId()));
+    }
+
+    @Test
+    public void testSelectAllDistinctAttributes() {
+        SearchRequest searchRequest1 = newSearchRequest();
+        searchRequest1.setRequestDate(new ISODate("1980-10-10T00:00:00"));
+        searchRequest1 = _requestRepo.save(searchRequest1);
+
+        SearchRequest searchRequest2 = newSearchRequest();
+        searchRequest2.setRequestDate(new ISODate("1980-10-10T01:11:00"));
+        _requestRepo.save(searchRequest2);
+
+        SearchRequest searchRequest3 = newSearchRequest();
+        searchRequest3.setRequestDate(new ISODate("1980-10-13T01:11:00"));
+        _requestRepo.save(searchRequest3);
+
+        SearchRequest searchRequest4 = newSearchRequest();
+        searchRequest4.setRequestDate(new ISODate("1980-10-10T01:11:00"));
+        _requestRepo.save(searchRequest4);
+
+        final List<ISODate> isoDates = _requestRepo.selectAllDistinctAttributes(SearchRequest_.requestDate);
+
+        assertEquals(3, isoDates.size());
+        assertTrue(isoDates.contains(searchRequest1.getRequestDate()));
+        assertTrue(isoDates.contains(searchRequest2.getRequestDate()));
+        assertTrue(isoDates.contains(searchRequest3.getRequestDate()));
+
     }
 
     @Test
@@ -98,6 +126,31 @@ public class SearchRequestRepositoryTest extends AbstractSpringDataTest {
                 assertEquals(expectedFalse, summary.two().intValue());
             }
         }
+    }
+
+    @Test
+    public void testGetRequestDateToRequestCountBetweenByDayWithSpec() {
+        SearchRequest searchRequest1 = newSearchRequest();
+        searchRequest1.setRequestDate(new ISODate("1980-10-10"));
+        searchRequest1 = _requestRepo.save(searchRequest1);
+
+        SearchRequest searchRequest2 = newSearchRequest();
+        searchRequest2.setRequestDate(new ISODate("1980-10-10T01:11:00"));
+        _requestRepo.save(searchRequest2);
+
+        SearchRequest searchRequest3 = newSearchRequest();
+        searchRequest3.setRequestDate(new ISODate("1980-11-13T01:11:00"));
+        searchRequest3 = _requestRepo.save(searchRequest3);
+
+        SearchRequest searchRequest4 = newSearchRequest();
+        searchRequest4.setRequestDate(new ISODate("1980-11-16T01:11:00"));
+        searchRequest4 = _requestRepo.save(searchRequest4);
+
+        final List<Pair<DateInterval.Day, Integer>> fullInterval = _requestRepo.getRequestDateToRequestCountBetween
+                (new DateInterval.Day(), searchRequest1.getRequestDate(), searchRequest4.getRequestDate(),
+                        SearchRequestSpecs.hasService(searchRequest1.getService()));
+        assertEquals(1, fullInterval.size());
+        assertTrue(fullInterval.contains(Pair.read(new DateInterval.Day(searchRequest1.getRequestDate()), 1)));
     }
 
     @Test

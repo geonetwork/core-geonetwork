@@ -28,9 +28,9 @@ import java.util.Map;
 
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
@@ -39,7 +39,11 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.statistic.PathSpec;
 import org.jdom.Element;
+
+import javax.transaction.TransactionManager;
 
 //=============================================================================
 
@@ -68,7 +72,6 @@ public class Set implements Service {
     public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         Map<String, String> values = new HashMap<String, String>();
         for (Object obj : params.getChildren()) {
@@ -80,12 +83,12 @@ public class Set implements Service {
 
         String currentUuid = sm.getValue("system/site/siteId");
 
-        if (!sm.setValues(dbms, values))
+        if (!sm.setValues(values))
             throw new OperationAbortedEx("Cannot set all values");
         
         // Save parameters
-        dbms.commit();
-        
+        context.getBean(TransactionManager.class).commit();
+
         
         // And reload services
         // Update inspire property in SearchManager
@@ -93,6 +96,8 @@ public class Set implements Service {
         String newUuid = (String) values.get("system/site/siteId");
 
         if (newUuid != null && !currentUuid.equals(newUuid)) {
+            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+            metadataRepository.updateAll(List<Pair<PathSpec<>, )
             dbms.execute("UPDATE Metadata SET source=? WHERE isHarvested='n'", newUuid);
             dbms.execute("UPDATE Sources  SET uuid=? WHERE uuid=?", newUuid, currentUuid);
         }

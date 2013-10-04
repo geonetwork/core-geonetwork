@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -63,19 +62,17 @@ public class Validate extends NotInReadOnlyModeService {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan = gc.getBean(DataManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		UserSession session = context.getUserSession();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
 
 		//--- validate metadata from session
-		Element errorReport = new AjaxEditUtils(context).validateMetadataEmbedded(session, dbms, id, context.getLanguage());
+		Element errorReport = new AjaxEditUtils(context).validateMetadataEmbedded(session, id, context.getLanguage());
 
 		//--- update element and return status
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-		elResp.addContent(new Element("schema").setText(dataMan.getMetadataSchema(dbms, id)));
+		elResp.addContent(new Element("schema").setText(dataMan.getMetadataSchema(id)));
 		elResp.addContent(errorReport);
 
 		return elResp;

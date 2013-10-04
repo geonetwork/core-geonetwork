@@ -10,9 +10,13 @@ import org.fao.geonet.domain.statistic.SearchRequest_;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Tuple;
 import javax.persistence.criteria.*;
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
 
 /**
@@ -37,22 +41,35 @@ public class SearchRequestRepositoryImpl implements SearchRequestRepositoryCusto
     }
 
     @PersistenceContext
-    EntityManager _EntityManager;
+    private EntityManager _EntityManager;
 
     @Override
     public <T extends DateInterval> List<Pair<T, Integer>> getRequestDateToRequestCountBetween(final T dateInterval, ISODate from,
                                                                                                ISODate to) {
+        return getRequestDateToRequestCountBetween(dateInterval, from, to, null);
+    }
+
+    @Override
+    public <T extends DateInterval>
+    List<Pair<T, Integer>> getRequestDateToRequestCountBetween(@Nonnull final T dateInterval,
+                                                               @Nonnull final ISODate from,
+                                                               @Nonnull final ISODate to,
+                                                               @Nonnull final Specification<SearchRequest> spec) {
         final CriteriaBuilder cb = _EntityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
 
-        final Root<SearchRequest> paramRoot = cbQuery.from(SearchRequest.class);
+        final Root<SearchRequest> requestRoot = cbQuery.from(SearchRequest.class);
 
-        final Path<ISODate> requestDate = paramRoot.get(SearchRequest_.requestDate);
+        final Path<ISODate> requestDate = requestRoot.get(SearchRequest_.requestDate);
         final Expression<String> requestDateByType = cb.substring(requestDate.as(String.class), 1, dateInterval.getSubstringEnd());
 
-        final CompoundSelection<Tuple> selection = cb.tuple(requestDateByType, cb.count(paramRoot));
+        Predicate whereClause = cb.and(cb.lessThanOrEqualTo(requestDate, to), cb.greaterThanOrEqualTo(requestDate, from));
+        if (spec != null) {
+            whereClause = cb.and(whereClause, spec.toPredicate(requestRoot, cbQuery, cb));
+        }
+        final CompoundSelection<Tuple> selection = cb.tuple(requestDateByType, cb.count(requestRoot));
         cbQuery.select(selection)
-                .where(cb.and(cb.lessThanOrEqualTo(requestDate, to), cb.greaterThanOrEqualTo(requestDate, from)))
+                .where(whereClause)
                 .groupBy(requestDateByType)
                 .orderBy(cb.desc(requestDateByType));
 
@@ -61,7 +78,7 @@ public class SearchRequestRepositoryImpl implements SearchRequestRepositoryCusto
         return Lists.transform(stats, new Function<Tuple, Pair<T, Integer>>() {
             @Nullable
             @Override
-            public Pair<T, Integer> apply(@Nullable Tuple stat) {
+            public Pair<T, Integer> apply(@Nonnull Tuple stat) {
                 final String dateString = stat.get(0, String.class);
                 final Long count = stat.get(1, Long.class);
 
@@ -90,7 +107,7 @@ public class SearchRequestRepositoryImpl implements SearchRequestRepositoryCusto
                 order = cb.asc(path);
                 break;
             default:
-                throw new IllegalArgumentException("Not a valid value: "+direction);
+                throw new IllegalArgumentException("Not a valid value: " + direction);
         }
 
         query.select(cb.tuple(path, cb.count(root)))
@@ -128,6 +145,16 @@ public class SearchRequestRepositoryImpl implements SearchRequestRepositoryCusto
         query.select(cb.greatest(requestRoot.get(SearchRequest_.requestDate)));
 
         return _EntityManager.createQuery(query).getSingleResult();
+    }
+
+    @Override
+    public <T> List<T> selectAllDistinctAttributes(final SingularAttribute<SearchRequest, T> attribute) {
+        final CriteriaBuilder cb = _EntityManager.getCriteriaBuilder();
+        final CriteriaQuery<Object> query = cb.createQuery();
+        final Root<SearchRequest> requestRoot = query.from(SearchRequest.class);
+        query.select(requestRoot.get(attribute)).distinct(true);
+
+        return (List<T>) _EntityManager.createQuery(query).getResultList();
     }
 
 }

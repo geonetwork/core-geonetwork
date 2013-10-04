@@ -30,6 +30,7 @@ import java.util.Set;
 
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
@@ -258,7 +259,7 @@ public class Aligner extends BaseAligner
                 final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-				repository.deleteAllByMetadataId(Integer.parseInt(id));
+				repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
                 metadata.getCategories().clear();

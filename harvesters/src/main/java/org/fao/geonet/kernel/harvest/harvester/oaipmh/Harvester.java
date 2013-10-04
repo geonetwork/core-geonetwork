@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
@@ -415,7 +416,7 @@ class Harvester extends BaseAligner
 			//--- web interface so we have to re-set both
 
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-            repository.deleteAllByMetadataId(Integer.parseInt(id));
+            repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
             addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
             metadata.getCategories().clear();

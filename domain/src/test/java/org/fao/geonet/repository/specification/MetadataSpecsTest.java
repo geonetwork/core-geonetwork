@@ -5,9 +5,12 @@ import static org.fao.geonet.repository.specification.MetadataSpecs.*;
 import static org.fao.geonet.repository.MetadataRepositoryTest.*;
 
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataCategoryRepositoryTest;
 import org.fao.geonet.repository.MetadataRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +33,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Transactional
 public class MetadataSpecsTest extends AbstractSpringDataTest {
     @Autowired
-    private MetadataRepository _repository;
+    MetadataRepository _repository;
+    @Autowired
+    MetadataCategoryRepository _categoryRepo;
 
     private AtomicInteger _inc = new AtomicInteger();
 
@@ -61,6 +66,47 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         assertEquals(md1.getId(), _repository.findOne(hasType(MetadataType.METADATA)).getId());
         assertEquals(md2.getId(), _repository.findOne(hasType(MetadataType.SUB_TEMPLATE)).getId());
         assertEquals(md3.getId(), _repository.findOne(hasType(MetadataType.TEMPLATE)).getId());
+    }
+
+    @Test
+    public void testHasCategory() throws Exception {
+        final MetadataCategory cat1 = _categoryRepo.save(MetadataCategoryRepositoryTest.newMetadataCategory(_inc));
+        final MetadataCategory cat2 = _categoryRepo.save(MetadataCategoryRepositoryTest.newMetadataCategory(_inc));
+        final MetadataCategory cat3 = _categoryRepo.save(MetadataCategoryRepositoryTest.newMetadataCategory(_inc));
+        final MetadataCategory cat4 = _categoryRepo.save(MetadataCategoryRepositoryTest.newMetadataCategory(_inc));
+
+        final Metadata metadata = newMetadata(_inc);
+        metadata.getCategories().add(cat1);
+        metadata.getCategories().add(cat2);
+        Metadata md1 = _repository.save(metadata);
+
+        final Metadata metadata2 = newMetadata(_inc);
+        metadata2.getCategories().add(cat1);
+        metadata2.getCategories().add(cat3);
+        Metadata md2 = _repository.save(metadata2);
+
+        final Metadata metadata3 = newMetadata(_inc);
+        metadata3.getCategories().add(cat2);
+        Metadata md3 = _repository.save(metadata3);
+
+        List<Metadata> found = _repository.findAll(hasCategory(cat1), new Sort(Metadata_.id.getName()));
+
+        assertEquals(2, found.size());
+        assertEquals(md1.getId(), found.get(0).getId());
+        assertEquals(md2.getId(), found.get(1).getId());
+
+        found = _repository.findAll(hasCategory(cat2), new Sort(Metadata_.id.getName()));
+        assertEquals(2, found.size());
+        assertEquals(md1.getId(), found.get(0).getId());
+        assertEquals(md3.getId(), found.get(1).getId());
+
+        found = _repository.findAll(hasCategory(cat3), new Sort(Metadata_.id.getName()));
+        assertEquals(1, found.size());
+        assertEquals(md2.getId(), found.get(0).getId());
+
+        found = _repository.findAll(hasCategory(cat4), new Sort(Metadata_.id.getName()));
+        assertEquals(0, found.size());
+
     }
 
     @Test

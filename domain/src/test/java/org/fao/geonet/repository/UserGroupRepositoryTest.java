@@ -97,7 +97,7 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(4, _repo.count());
 
-        int deleted = _repo.deleteAllWithUserIdsIn(Arrays.asList(ug1.getId().getUserId(), ug2.getId().getUserId()));
+        int deleted = _repo.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(ug1.getId().getUserId(), ug2.getId().getUserId()));
         assertEquals(2, deleted);
         assertEquals(2, _repo.count());
 

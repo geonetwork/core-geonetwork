@@ -23,8 +23,6 @@
 
 package org.fao.geonet.kernel;
 
-import static org.fao.geonet.domain.OperationAllowedNamedQueries.PATH_OPERATION_ID;
-
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceListener;
@@ -743,7 +741,7 @@ public class SvnManager {
      * @throws Exception if something goes wrong
      */
     private void commitMetadataPrivileges(ISVNEditor editor, String id, Transaction transaction) throws Exception {
-        Sort sort = new Sort(PATH_OPERATION_ID);
+        Sort sort = SortUtils.createSort(OperationAllowed_.id, OperationAllowedId_.operationId);
         Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasMetadataId(Integer.valueOf(id));
         List<OperationAllowed> opsAllowed = _operationAllowedRepository.findAll(hasMetadataId, sort);
         Element privs = new Element("response");

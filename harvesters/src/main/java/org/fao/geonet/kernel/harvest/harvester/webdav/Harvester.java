@@ -27,6 +27,7 @@ import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -331,7 +332,7 @@ class Harvester extends BaseAligner {
             //--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-            repository.deleteAllByMetadataId(Integer.parseInt(record.id));
+            repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(record.id));
             addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context, log);
 
             metadata.getCategories().clear();

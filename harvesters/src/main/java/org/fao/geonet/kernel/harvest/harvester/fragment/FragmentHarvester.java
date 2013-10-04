@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.fragment;
 import com.google.common.base.Optional;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
@@ -568,7 +569,7 @@ public class FragmentHarvester extends BaseAligner {
          final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
          Metadata metadata = metadataRepository.findOne(iId);
          OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-         repository.deleteAllByMetadataId(iId);
+         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, iId);
          addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
 
          metadata.getCategories().clear();

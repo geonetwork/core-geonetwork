@@ -24,7 +24,7 @@ public class RequestsByDateTest {
         RequestsByDateParams params = new RequestsByDateParams();
         params.setDateFrom("2009-04-03T12:00:00");
         params.setDateTo("2009-04-04T12:00:00");
-        params.setGraphicType(RequestsByDate.BY_DAY);
+        params.setGraphicType(RequestsByDateParams.BY_DAY);
         //rdb.graphicType = RequestsByDate.BY_MONTH;
         //rdb.graphicType = RequestsByDate.BY_YEAR;
         //rdb.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

@@ -22,9 +22,7 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
@@ -34,7 +32,6 @@ import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.arcgis.ArcSDEMetadataAdapter;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -240,7 +237,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
                 false);
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        operationAllowedRepository.deleteAllByMetadataId(Integer.parseInt(id));
+        operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         metadata.getCategories().clear();

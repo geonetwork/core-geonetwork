@@ -22,7 +22,6 @@
 package org.fao.geonet.services.schema;
 
 import org.fao.geonet.exceptions.OperationAbortedEx;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.XmlRequest;
@@ -69,8 +68,7 @@ public class SchemaUtils {
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			DataManager dm = gc.getBean(DataManager.class);
 
-            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-			String id = dm.getMetadataId(dbms, uuid.toLowerCase());
+			String id = dm.getMetadataId(uuid.toLowerCase());
 			if (id == null) {
      		    throw new OperationAbortedEx("Metadata record with uuid "+uuid+" doesn't exist");
 			}
