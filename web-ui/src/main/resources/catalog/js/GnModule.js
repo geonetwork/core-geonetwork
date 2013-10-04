@@ -10,8 +10,6 @@
   goog.require('gn_search_controller');
   goog.require('gn_search_manager');
   goog.require('gn_search_results');
-  goog.require('gn_translation');
-  goog.require('gn_translation_controller');
   goog.require('gn_utility_service');
 
   var module = angular.module('gn', [
@@ -23,7 +21,6 @@
     'gn_metadata_manager',
     'gn_search_results',
     'gn_pagination',
-    'gn_translation_controller',
     'gn_cat_controller',
     'gn_search_controller'
   ]);

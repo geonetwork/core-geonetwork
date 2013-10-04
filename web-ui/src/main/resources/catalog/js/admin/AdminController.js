@@ -11,8 +11,6 @@
   goog.require('gn_harvest_controller');
   goog.require('gn_settings_controller');
   goog.require('gn_standards_controller');
-  goog.require('gn_translation');
-  goog.require('gn_translation_controller');
   goog.require('gn_usergroup_controller');
 
 

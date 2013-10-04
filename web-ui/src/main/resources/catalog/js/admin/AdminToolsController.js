@@ -110,7 +110,7 @@
       $scope.batchSearchCategories = {};
 
       function loadProcessConfig() {
-        $http.get($scope.base + 'js/batch-process-cfg.json')
+        $http.get($scope.base + 'config/batch-process-cfg.json')
         .success(function(data) {
               $scope.batchProcesses = data.config;
             });

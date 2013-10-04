@@ -621,7 +621,7 @@
     "standardLoadHelp": "In order to update an existing standard use its identifier.",
     "namespace": "Espace de nommage",
     "saveOrder": "Enregistrer l'ordre",
-    "thumbnails-host-url-relocator": "Mise à jour des URL",
+    "url-host-relocator": "Mise à jour des URL",
     "contact-updater": "Mise à jour de contact (utilisant une recherche par email)",
     "keywords-mapper": "Rechercher/Remplacer des mots clés",
     "urlPrefix": "Préfix de l'URL à rechercher",

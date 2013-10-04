@@ -1,5 +1,5 @@
 {"config": [{
-        "key": "thumbnails-host-url-relocator",
+        "key": "url-host-relocator",
         "params": [
              {"name": "urlPrefix", "value": "http://oldurl"},
              {"name": "newUrlPrefix", "value": "http://newurl"}

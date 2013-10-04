@@ -675,7 +675,7 @@
     
     "saveOrder": "Save order",
     
-    "thumbnails-host-url-relocator": "URL replacer",
+    "url-host-relocator": "URL replacer",
     "contact-updater": "Contact updater (searching using contact email)",
     "keywords-mapper": "Keyword mapper",
     "urlPrefix": "URL prefix to search",
