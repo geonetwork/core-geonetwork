@@ -50,6 +50,8 @@
     "_cat": "Catégorie",
     "keyword": "Mot-clé",
     "filter": "Filtre",
+    "_groupOwner": "Groupe",
+    "owner": "Owner",
     
     
     "profile": "Profil utilisateur",

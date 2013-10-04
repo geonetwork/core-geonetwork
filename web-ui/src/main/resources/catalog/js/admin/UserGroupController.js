@@ -107,7 +107,7 @@
 
       function loadGroups() {
         $http.get('admin.group.list@json').success(function(data) {
-          $scope.groups = data;
+          $scope.groups = data !== 'null' ? data : null;
         }).error(function(data) {
           // TODO
         }).then(function() {

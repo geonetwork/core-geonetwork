@@ -22,9 +22,7 @@
       });
 
 
-      var pathArray = window.location.pathname.split('/');
-      var lang = pathArray[3][0] + pathArray[3][1];
-
+      var lang = location.href.split('/')[5].substring(0, 2) || 'en';
       $translateProvider.preferredLanguage(lang);
       moment.lang(lang);
     }]);

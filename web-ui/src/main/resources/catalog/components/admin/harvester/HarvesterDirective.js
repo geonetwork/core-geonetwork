@@ -28,7 +28,7 @@
                });
 //               $http.get('admin.usergroups.list@json?id=' + 1).success(function(data) {
                $http.get('admin.group.list@json').success(function(data) {
-                   scope.groups = data;
+                   scope.groups = data !== 'null' ? data : null;
                });
                scope.setIcon = function(i) {
                    scope.harvester.site.icon = i;

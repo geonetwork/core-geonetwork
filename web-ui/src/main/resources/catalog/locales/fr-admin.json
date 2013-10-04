@@ -354,7 +354,7 @@
     "geonetwork-host": "URL du catalogue",
     "geonetwork-hostHelp": "L'URL doit contenir le nom du catalogue eg. http://www.fao.org/geonetwork.",
     "geonetwork-mefFormatFull": "Utiliser le format MEF complet",
-    "geonetwork-mefFormatFullHelp": "Recommandé pour récupérer les fichiers associés (eg. aperçus).",
+    "geonetwork-mefFormatFullHelp": "Recommandé pour copier les fichiers associés (eg. aperçus) dans ce catalogue.",
     "geonetwork-createRemoteCategory": "Reprendre les catégories si elles existent localement",
     "geonetwork-createRemoteCategoryHelp": "",
     "geonetwork-xslfilter": "Filter XSL à appliquer",

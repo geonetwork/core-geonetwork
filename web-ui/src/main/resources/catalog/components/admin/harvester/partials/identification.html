@@ -32,8 +32,7 @@
         </div>
         <p class="help-block" data-translate="">harvesterNameHelp</p>
     </div>
-
-    <div data-ng-class="harvester.site.ownerGroup == '' ? 'has-error' : ''">
+    <div data-ng-show="groups.length" data-ng-class="harvester.site.ownerGroup == '' ? 'has-error' : ''">
         <label class="control-label" data-translate="">harvesterGroup</label>
         <select class="form-control" data-ng-model="harvester.ownerGroup">
             <option data-ng-repeat="g in groups" value="{{g['id']}}" 

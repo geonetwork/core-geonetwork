@@ -19,7 +19,9 @@
             gnSearchManagerService) {
       $scope.version = '0.0.1';
       // TODO : add language
-      $scope.lang = 'eng';
+      $scope.lang = location.href.split('/')[5];
+      // TODO : get list from server side
+      $scope.langs = {'fre': 'fr', 'eng': 'en', 'spa': 'sp'};
       $scope.url = '';
       $scope.base = '../../catalog/';
       $scope.proxyUrl = '../../proxy?url=';

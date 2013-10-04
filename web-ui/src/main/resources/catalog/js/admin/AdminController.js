@@ -91,7 +91,16 @@
       /**
        * Define admin console menu for each type of user
        */
+      var userAdminMenu = [
+        {name: 'harvesters', route: '#harvest',
+          classes: 'btn-primary', icon: 'icon-cloud-download'},
+        {name: 'statisticsAndStatus', route: '#dashboard',
+          classes: 'btn-success', icon: 'icon-dashboard'},
+        {name: 'usersAndGroups', route: '#organization',
+          classes: 'btn-default', icon: 'icon-group'}
+      ];
       $scope.menu = {
+        UserAdmin: userAdminMenu,
         Administrator: [
           // TODO : create gn classes
           {name: 'metadatasAndTemplates', route: '#metadata',

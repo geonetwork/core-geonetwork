@@ -17,7 +17,8 @@
             transclude: true,
             scope: {
                 element: '=gnCategory',
-                lang: '@lang'
+                lang: '@lang',
+                label: '@label'
             },
             templateUrl: '../../catalog/components/category/partials/' +
               'category.html',
