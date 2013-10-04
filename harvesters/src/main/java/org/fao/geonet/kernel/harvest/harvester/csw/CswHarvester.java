@@ -157,7 +157,9 @@ public class CswHarvester extends AbstractHarvester {
 		
 		settingMan.add("id:"+siteId, "capabUrl", params.capabUrl);
 		settingMan.add("id:"+siteId, "icon",     params.icon);
-                settingMan.add("id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
+        settingMan.add("id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
+        settingMan.add("id:"+siteId, "queryScope", params.queryScope);
+        settingMan.add("id:"+siteId, "hopCount",     params.hopCount);
 		
 		//--- store dynamic search nodes
 		String  searchID = settingMan.add(path, "search", "");	

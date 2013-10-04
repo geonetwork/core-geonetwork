@@ -65,6 +65,37 @@
 				</td>
 			</tr>
 			
+
+			<tr>
+				<td class="padded">
+					<xsl:value-of select="/root/gui/harvesting/distributedSearch" />
+				</td>
+				<td class="padded">
+					<input id="csw.queryScope" type="checkbox" value=""/>
+				</td>
+			</tr>
+
+            <tr>
+                <td class="padded">
+
+                </td>
+                <td class="padded">
+                    <table id="csw.queryScopeContainer">
+                        <tr>
+                            <td class="padded">
+                            </td>
+                            <td class="padded">
+                                <xsl:value-of select="/root/gui/harvesting/hopCount" />
+                                <input id="csw.hopCount" class="content" type="text" value="2"
+                                       size="3" title="{/root/gui/harvesting/defaultvalue}2" />
+                            </td>
+                        </tr>
+                    </table>
+                   
+                </td>
+            </tr>
+
+			
 			<xsl:call-template name="useAccount">
 				<xsl:with-param name="type" select="'csw'"/>
 			</xsl:call-template>

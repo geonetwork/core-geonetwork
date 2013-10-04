@@ -450,7 +450,7 @@
 				</label>
 
 				<div>
-					<input type="number" id="{$id}" name="{translate(@name, '/', '.')}" value="{.}"/>
+					<input type="number" id="{$id}" name="{translate($name, '/', '.')}" value="{.}"/>
 					<span>
 						<xsl:variable name="nrProcs" select="threadUtils:getNumberOfProcessors()"/>
 						<xsl:choose>

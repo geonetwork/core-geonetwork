@@ -14,7 +14,11 @@
     <xsl:template match="text()"/>
 
 		<xsl:template match="gmd:EX_BoundingPolygon[string(gmd:extentTypeCode/gco:Boolean) != 'false' and string(gmd:extentTypeCode/gco:Boolean) != '0']" priority="2">
-			<xsl:for-each select="gmd:polygon/gml:*[name() != 'gml:MultiCurve']">
+			<!-- Index geometries which are not multicurve and not empty. 
+			Empty geometry cause issue with shapefile index 
+			(https://github.com/geonetwork/core-geonetwork/issues/259)
+			-->
+			<xsl:for-each select="gmd:polygon/gml:*[name() != 'gml:MultiCurve' and count(*) > 0]">
 				<xsl:copy-of select="."/>
 			</xsl:for-each>
 		</xsl:template>

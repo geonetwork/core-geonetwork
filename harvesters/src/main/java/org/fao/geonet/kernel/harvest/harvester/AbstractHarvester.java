@@ -23,13 +23,22 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.exceptions.BadInputEx;
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.JeevesException;
-import org.fao.geonet.exceptions.OperationAbortedEx;
-import org.fao.geonet.Logger;
+import static org.quartz.JobKey.jobKey;
+
+import java.io.File;
+import java.lang.reflect.Method;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import jeeves.exceptions.BadInputEx;
+import jeeves.exceptions.BadParameterEx;
+import jeeves.exceptions.JeevesException;
+import jeeves.exceptions.OperationAbortedEx;
+import jeeves.guiservices.session.JeevesUser;
+import jeeves.interfaces.Logger;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Log;
@@ -824,12 +833,20 @@ public abstract class AbstractHarvester extends BaseAligner {
         }
         return res;
     }
+    
+    /**
+     * Get the list of registered harvester
+     * @return
+     */
+    public static Set<String> getHarvesterTypes() {
+        return hsHarvesters.keySet();
+    }
+    
     //--------------------------------------------------------------------------
 	//---
 	//--- Variables
 	//---
 	//--------------------------------------------------------------------------
-
 	private String id;
 	private volatile Status status;
 

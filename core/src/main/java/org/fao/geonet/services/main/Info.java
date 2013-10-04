@@ -136,7 +136,16 @@ public class Info implements Service {
 				                         }));
             } else if (type.equals("harvester")) {
 			    result.addContent(gc.getBean(SettingManager.class).getValues(
-                        new String[]{ "system/harvester/enableEditing" }));
+                        new String[]{
+                                "system/harvester/enableEditing"
+                                }));
+			
+			} else if (type.equals("userGroupOnly")) {
+                result.addContent(gc.getBean(SettingManager.class).getValues(
+                        new String[]{
+                                "system/metadataprivs/usergrouponly"
+                                }));
+            }
 
             } else if (type.equals("categories")) {
 				result.addContent(context.getBean(MetadataCategoryRepository.class).findAllAsXml());

@@ -96,6 +96,7 @@ function radioModalUpdate(div, service, modalbox, title) {
         Ext.getDom(div).innerHTML = response.responseText;
         if (service === 'metadata.status') {
             Ext.getCmp('modalWindow').close();
+            catalogue.onAfterStatus();
         }
     }, null);
 }

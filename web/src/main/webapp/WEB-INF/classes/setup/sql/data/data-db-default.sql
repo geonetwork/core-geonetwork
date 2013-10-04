@@ -6,6 +6,7 @@ DELETE FROM MetadataCateg;
 DELETE FROM MetadataRating;
 DELETE FROM MetadataStatus;
 DELETE FROM OperationAllowed;
+DELETE FROM Validation;
 DELETE FROM Metadata;
 DELETE FROM CategoriesDes;
 DELETE FROM Categories;

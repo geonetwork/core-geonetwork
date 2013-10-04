@@ -41,7 +41,7 @@
     
   </element>
   <element name="codeSpace" id="208.1">
-    <label>Nom de l'identifiant</label>
+    <label>Espace de nommage</label>
     <description>Nom ou identification de la personne ou de l'organisation responsable pour le domaine de valeurs</description>
     <help>Informations sur la personne ou l'organisation en charge de l'espace nominal ou de l'identifiant.</help>
     <condition/>

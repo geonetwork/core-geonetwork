@@ -122,7 +122,9 @@
 	<useAccount>Use account</useAccount>
 	<username>Username</username>
 	<password>Password</password>
-
+	<hopCount>Hop Count</hopCount>
+	<distributedSearch>Distributed Search</distributedSearch>
+	<defaultvalue>Default value: </defaultvalue>
 	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
 	<mefFormatFull>Use full MEF format</mefFormatFull>
 	<xslfilter>XSL filter name</xslfilter>
