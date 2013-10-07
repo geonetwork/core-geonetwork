@@ -242,7 +242,7 @@ GeoNetwork.Lang.fr = {
     'printSel': 'Export (PDF)',
     'export': 'Export',
     'printTT': 'Imprimer. Ouvre une nouvelle page adaptée à l\'impression.',
-    'newOwner': 'Associer un autre auteur',
+    'newOwner': 'Associer un autre propriétaire',
     'updateCategories': 'Mettre à jour les catégories',
     'updatePrivileges': 'Mettre à jour les privilèges',
     'noneSelected': 'Sélection vide',
