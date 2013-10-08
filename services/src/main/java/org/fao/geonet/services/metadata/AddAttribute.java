@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
@@ -54,7 +53,6 @@ public class AddAttribute extends NotInReadOnlyModeService {
 
         ajaxEditUtils.preprocessUpdate(params, context);
 
-		Dbms dbms   = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id      = Util.getParam(params, Params.ID);
 		String ref     = Util.getParam(params, Params.REF);
@@ -66,7 +64,7 @@ public class AddAttribute extends NotInReadOnlyModeService {
 		ajaxEditUtils.updateContent(params);
 
 		// version already checked in updateContent
-		if (! ajaxEditUtils.addAttribute(dbms, id, ref, name, null))
+		if (! ajaxEditUtils.addAttribute(id, ref, name, null))
 			throw new ConcurrentUpdateEx(id);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);

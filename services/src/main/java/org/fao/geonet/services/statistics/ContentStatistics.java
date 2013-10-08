@@ -22,13 +22,25 @@
 //==============================================================================
 package org.fao.geonet.services.statistics;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.fao.geonet.repository.statistic.MetadataStatisticSpec;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specifications;
+
+import static org.fao.geonet.repository.specification.MetadataSpecs.isType;
+import static org.springframework.data.jpa.domain.Specifications.not;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Service to get main statistics about the content of the catalog
@@ -38,39 +50,33 @@ import org.jdom.Element;
  * 
  */
 public class ContentStatistics extends NotInReadOnlyModeService {
-    
-    private static final String NUMBER_OF_METADATA_QUERY = 
-            "SELECT COUNT(*) AS total " +
-            "FROM metadata WHERE isTemplate = ?";
-    
-    private static final String NUMBER_OF_HARVESTED_METADATA_QUERY = 
-            "SELECT COUNT(*) AS total " +
-            "FROM metadata WHERE isTemplate = ? AND isHarvested = 'y'";
-    
-    private static final String NUMBER_OF_PUBLIC_METADATA_RECORD = 
-            "SELECT COUNT(*) as total FROM metadata m, operationallowed o " +
-            "WHERE m.id = o.metadataid AND groupid = 0 AND operationid = 0 " +
-            "AND isTemplate = ?";
-            
+
     public void init(String appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
     
     @Override
     public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         Element response = new Element("response");
         
         // Add parameter by source catalog
         // Add parameter by group and owner
-        
-        
+
+        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        final Specifications<Metadata> isMetadataType = where(isType(MetadataType.METADATA));
+        final long totalNonTemplateMetadata = metadataRepository.count(isMetadataType);
+        final long totalTemplateMetadata = metadataRepository.count(isType(MetadataType.TEMPLATE));
+        final long totalSubTemplateMetadata = metadataRepository.count(isType(MetadataType.SUB_TEMPLATE));
+        final long totalHarvestedNonTemplateMetadata = metadataRepository.count(isMetadataType.and(MetadataSpecs.isHarvested(true)));
+        final long totalPublicMetadata = metadataRepository.getMetadataStatistics().getStatBasedOnOperationAllowed
+                (MetadataStatisticSpec.StandardSpecs.metadataCount(), OperationAllowedSpecs.isPublic(ReservedOperation.view));
+
         // Total number of metadata by type
-        SearchStatistics.addSingleDBValueToElement(dbms, response, NUMBER_OF_METADATA_QUERY, "nb_metadata", "total", "n");
-        SearchStatistics.addSingleDBValueToElement(dbms, response, NUMBER_OF_HARVESTED_METADATA_QUERY, "nb_harvested", "total", "n");
-        SearchStatistics.addSingleDBValueToElement(dbms, response, NUMBER_OF_METADATA_QUERY, "nb_template", "total", "y");
-        SearchStatistics.addSingleDBValueToElement(dbms, response, NUMBER_OF_METADATA_QUERY, "nb_subtemplate", "total", "s");
-        SearchStatistics.addSingleDBValueToElement(dbms, response, NUMBER_OF_PUBLIC_METADATA_RECORD, "nb_metadata_public", "total", "n");
+        SearchStatistics.addSingleDBValueToElement(response, totalNonTemplateMetadata, "nb_metadata", "total");
+        SearchStatistics.addSingleDBValueToElement(response, totalHarvestedNonTemplateMetadata, "nb_harvested", "total");
+        SearchStatistics.addSingleDBValueToElement(response, totalTemplateMetadata, "nb_template", "total");
+        SearchStatistics.addSingleDBValueToElement(response, totalSubTemplateMetadata, "nb_subtemplate", "total");
+        SearchStatistics.addSingleDBValueToElement(response, totalPublicMetadata, "nb_metadata_public", "total");
 
         return response;
     }

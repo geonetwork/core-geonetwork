@@ -24,12 +24,14 @@
 package org.fao.geonet.services.password;
 
 import jeeves.constants.Jeeves;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -73,20 +75,18 @@ public class SendLink extends MailSendingService {
 
 		String username = Util.getParam(params, Params.USERNAME);
 		String template = Util.getParam(params, Params.TEMPLATE, CHANGE_EMAIL_XSLT);
-		
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
-		
-		// check valid user 
-		Element elUser = dbms.select(	"SELECT * FROM Users WHERE username=?",username);
-		if (elUser.getChildren().size() == 0)
+
+        final User user = context.getBean(UserRepository.class).findByUsername(username);
+		if (user == null) {
 			throw new UserNotFoundEx(username);
+        }
 
 		// only let registered users change their password  
-		if (!elUser.getChild("record").getChild("profile").getText().equals(Geonet.Profile.REGISTERED_USER)) 
+		if (user.getProfile() != Profile.RegisteredUser) {
 			// Don't throw OperationNotAllowedEx because it is not related to not having enough priviledges
 			throw new IllegalArgumentException("Only users with profile RegisteredUser can change their password using this option");
-		
+        }
+
 		// get mail settings		
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
@@ -105,7 +105,7 @@ public class SendLink extends MailSendingService {
 		}
 		
 		// construct change key - only valid today 
-		String scrambledPassword = elUser.getChild("record").getChildText(Params.PASSWORD);
+		String scrambledPassword = user.getPassword();
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		String todaysDate = sdf.format(cal.getTime());
@@ -115,7 +115,9 @@ public class SendLink extends MailSendingService {
 		// TODO: allow internationalised emails
 		Element root = new Element("root");
 		root.addContent(new Element("username").setText(username));
-		root.addContent(new Element("email").setText(elUser.getChild("record").getChildText("email")));
+        for (String email : user.getEmailAddresses()) {
+            root.addContent(new Element("email").setText(email));
+        }
 		root.addContent(new Element("site").setText(thisSite));
 		root.addContent(new Element("siteURL").setText(siteURL));
 		root.addContent(new Element("changeKey").setText(changeKey));

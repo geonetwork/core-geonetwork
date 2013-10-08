@@ -1,18 +1,20 @@
-package org.fao.geonet.repository;
+package org.fao.geonet.repository.specification;
 
+import static org.fao.geonet.repository.SpringDataTestSupport.setId;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
 import com.google.common.base.Optional;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId_;
-import org.fao.geonet.domain.OperationAllowed_;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.repository.AbstractOperationsAllowedTest;
+import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.junit.Test;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
 
 @Transactional
 public class OperationAllowedSpecsTest extends AbstractOperationsAllowedTest {
@@ -35,6 +37,25 @@ public class OperationAllowedSpecsTest extends AbstractOperationsAllowedTest {
         assertEquals(_md1.getId(), found.get(0).getId().getMetadataId());
         assertEquals(_md1.getId(), found.get(1).getId().getMetadataId());
         assertEquals(_md1.getId(), found.get(2).getId().getMetadataId());
+    }
+
+    @Test
+    public void testIsPublic() throws Exception {
+        int viewOpId = ReservedOperation.view.getId();
+        int allGroupId = ReservedGroup.all.getId();
+        try {
+            setId(ReservedOperation.view, _viewOp.getId());
+            setId(ReservedGroup.all, _allGroup.getId());
+            Specification<OperationAllowed> isPublic = OperationAllowedSpecs.isPublic(ReservedOperation.view);
+            List<OperationAllowed> found = _opAllowRepo.findAll(isPublic);
+
+            assertEquals(1, found.size());
+            assertEquals(_opAllowed1.getId(), found.get(0).getId());
+        } finally {
+            setId(ReservedOperation.view, viewOpId);
+            setId(ReservedGroup.all, allGroupId);
+
+        }
     }
 
     @Test

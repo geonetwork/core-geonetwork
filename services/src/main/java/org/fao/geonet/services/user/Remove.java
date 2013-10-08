@@ -32,6 +32,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -103,7 +104,7 @@ public class Remove extends NotInReadOnlyModeService {
 				throw new IllegalArgumentException("Cannot delete a user that has set a metadata status");
 			}
 
-            userGroupRepository.deleteAllWithUserIdsIn(Arrays.asList(iId));
+            userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(iId));
             context.getBean(UserRepository.class).delete(iId);
 		} else {
 			throw new IllegalArgumentException("You don't have rights to delete this user");

@@ -29,6 +29,9 @@ import java.util.Map;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataSourceInfo_;
+import org.fao.geonet.domain.Metadata_;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -40,9 +43,16 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.ServiceRepository;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.jdom.Element;
 
+import javax.annotation.Nonnull;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 import javax.transaction.TransactionManager;
 
 //=============================================================================
@@ -92,14 +102,25 @@ public class Set implements Service {
         
         // And reload services
         // Update inspire property in SearchManager
-        gc.getBean(SearchManager.class).setInspireEnabled(Boolean.valueOf((String) values.get("system/inspire/enable")));
-        String newUuid = (String) values.get("system/site/siteId");
+        gc.getBean(SearchManager.class).setInspireEnabled(Boolean.valueOf(values.get("system/inspire/enable")));
+        String newUuid = values.get("system/site/siteId");
 
         if (newUuid != null && !currentUuid.equals(newUuid)) {
             final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-            metadataRepository.updateAll(List<Pair<PathSpec<>, )
-            dbms.execute("UPDATE Metadata SET source=? WHERE isHarvested='n'", newUuid);
-            dbms.execute("UPDATE Sources  SET uuid=? WHERE uuid=?", newUuid, currentUuid);
+            final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
+            final Source source = sourceRepository.findOne(currentUuid);
+            Source newSource = new Source(newUuid, source.getName(), source.isLocal());
+            sourceRepository.save(newSource);
+
+            PathSpec<Metadata, String> servicesPath = new PathSpec<Metadata, String>() {
+                @Override
+                public Path<String> getPath(Root<Metadata> root) {
+                    return root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.sourceId);
+                }
+            };
+            metadataRepository.createBatchUpdateQuery(servicesPath, newUuid, MetadataSpecs.isHarvested(false));
+
+            sourceRepository.delete(source);
         }
 
         SettingInfo info = new SettingInfo(context);

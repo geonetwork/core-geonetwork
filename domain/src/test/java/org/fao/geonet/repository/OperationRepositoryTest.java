@@ -1,5 +1,6 @@
 package org.fao.geonet.repository;
 
+import static org.fao.geonet.repository.SpringDataTestSupport.setId;
 import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -62,12 +63,6 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
         } finally {
             setId(ReservedOperation.view, normalId);
         }
-    }
-
-    private void setId(ReservedOperation view, int normalId) throws Exception {
-        Field declaredField = view.getClass().getDeclaredField("_id");
-        declaredField.setAccessible(true);
-        declaredField.set(view, normalId);
     }
 
     @Test

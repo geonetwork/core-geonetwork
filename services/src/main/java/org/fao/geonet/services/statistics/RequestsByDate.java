@@ -39,17 +39,17 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 	/** should we generate and send tooltips to client (caution, can slow down the process if
 	 * dataset is big)
 	 */
-    private boolean createTooltips;
+    boolean createTooltips;
 	/** should we generate and send legend to client (caution, can slow down the process if
 	 * dataset is big)
 	 */
-    private boolean createLegend;
+    boolean createLegend;
 
 	/** chart width, service parameter, can be overloaded by request */
-    private int chartWidth;
+    int chartWidth;
 
 	/** chart width, can be overloaded by request */
-    private int chartHeight;
+    int chartHeight;
 
     /** the Element doc containing I18N strings, got from the current app language */
     private Cache<String, Element> i18nStringsCache;

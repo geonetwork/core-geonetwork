@@ -1,6 +1,6 @@
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.Pair;
+import org.fao.geonet.repository.statistic.PathSpec;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -8,12 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.persistence.criteria.Path;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Methods common to all Geonetwork repositories.
@@ -45,40 +42,38 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
     T update(ID id, @Nonnull Updater<T> updater);
 
     /**
-     * Update all entities in the table with the new values.  This method delegates to
-     * {@link #batchUpdateAttributes(List<Pair<Path<V>, V>>, Specification<T)}
-     * @param attributeUpdates  the list of Pairs (the path to the attribute to change, the new value)
+     * Create a {@link BatchUpdateQuery} object to allow for updating multiple objects in a single query.
      *
-     * @return The number of entities affected.
+     * @param pathToUpdate the path of the attribute to update with the new value.  More paths and values can be added to the {@link
+     *                     BatchUpdateQuery} object after it is created.
+     * @param newValue     the value to set on the attribute of all the affected entities
+     * @param <V>          The type of the attribute
+     * @return a {@link BatchUpdateQuery} object to allow for updating multiple objects in a single query.
      */
-    @Transactional
-    @Nonnegative
-    <V> int batchUpdateAttributes(@Nonnull List<Pair<Path<V>, V>> attributeUpdates);
+    <V> BatchUpdateQuery<T> createBatchUpdateQuery(PathSpec<T, V> pathToUpdate, V newValue);
 
     /**
-     * Update all entities metched by spec in the table with the new values.  An SQL statement is constructed of the form:
-     * <p>
-     *     <pre><code>
-     *         UPDATE [Entity] SET {path}=[value] where [spec]
-     *     </code></pre>
-     * </p>
-     * @param attributeUpdates  the list of Pairs (the path to the attribute to change, the new value)
-     * @param spec a specification for selecting which entities are affected
+     * Create a {@link BatchUpdateQuery} object to allow for updating multiple objects in a single query.
      *
-     * @return The number of entities affected.
+     * @param pathToUpdate the path of the attribute to update with the new value.  More paths and values can be added to the {@link
+     *                     BatchUpdateQuery} object after it is created.
+     * @param newValue     the value to set on the attribute of all the affected entities
+     * @param spec         a specification for controlling which entities will be affected by update.
+     * @param <V>          The type of the attribute
+     * @return a {@link BatchUpdateQuery} object to allow for updating multiple objects in a single query.
      */
-    @Transactional
-    @Nonnegative
-    <V> int batchUpdateAttributes(@Nonnull List<Pair<Path<V>, V>> attributeUpdates, @Nullable Specification<T> spec);
+    <V> BatchUpdateQuery<T> createBatchUpdateQuery(PathSpec<T, V> pathToUpdate, V newValue, Specification<T> spec);
+
 
     /**
      * Load all entities and convert each to XML of the form:
-     *     <pre>
+     * <pre>
      *  &lt;entityName&gt;
      *      &lt;property&gt;propertyValue&lt;/property&gt;
      *      ...
      *  &lt;/entityName&gt;
      *     </pre>
+     *
      * @return all entities in XML.
      */
     @Nonnull
@@ -86,7 +81,7 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
 
     /**
      * Load all entities that satisfy the criteria provided and convert each to XML of the form:
-     *     <pre>
+     * <pre>
      *  &lt;entityName&gt;
      *      &lt;property&gt;propertyValue&lt;/property&gt;
      *      ...
@@ -94,14 +89,14 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
      *     </pre>
      *
      * @param specification A specification of the criteria that must be satisfied for entity to be selected.
-     * @return  all entities in XML.
+     * @return all entities in XML.
      */
     @Nonnull
     Element findAllAsXml(@Nonnull Specification<T> specification);
 
     /**
      * Load all entities that satisfy the criteria provided and convert each to XML of the form:
-     *     <pre>
+     * <pre>
      *  &lt;entityName&gt;
      *      &lt;property&gt;propertyValue&lt;/property&gt;
      *      ...
@@ -109,16 +104,15 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
      *     </pre>
      *
      * @param specification A specification of the criteria that must be satisfied for entity to be selected.
-     * @param sort the order to sort the results by
-     *
-     * @return  all entities in XML.
+     * @param sort          the order to sort the results by
+     * @return all entities in XML.
      */
     @Nonnull
     Element findAllAsXml(@Nullable Specification<T> specification, @Nullable Sort sort);
 
     /**
      * Load all entities that satisfy the criteria provided and convert each to XML of the form:
-     *     <pre>
+     * <pre>
      *  &lt;entityName&gt;
      *      &lt;property&gt;propertyValue&lt;/property&gt;
      *      ...
@@ -126,7 +120,7 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
      *     </pre>
      *
      * @param sort the order to sort the results by
-     * @return  all entities in XML.
+     * @return all entities in XML.
      */
     @Nonnull
     Element findAllAsXml(@Nullable Sort sort);

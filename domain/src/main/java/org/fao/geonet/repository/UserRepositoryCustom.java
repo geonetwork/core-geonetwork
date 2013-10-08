@@ -3,7 +3,9 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,10 +45,21 @@ public interface UserRepositoryCustom {
      *
      * @return all the users that own at least one metadata element.
      */
-    @Nonnull List<User> findAllUsersThatOwnMetadata();
+    @Nonnull
+    List<User> findAllUsersThatOwnMetadata();
 
     /**
-     * Find a user by looking up their email address
+     * Find all the users are part of one of the {@link UserGroup}s selected by the specificatio.
+     *
+     * @param userGroupSpec a specification for selecting which {@link UserGroup}s the user has to be part of.
+     * @return all the users are part of one of the {@link UserGroup}s selected by the specification.
+     */
+    @Nonnull
+    List<User> findAllUsersInUserGroups(@Nonnull Specification<UserGroup> userGroupSpec);
+
+    /**
+     * Find a user by looking up their email address.
+     *
      * @param email the email address to search for
      * @return a user if found or null if not.
      */

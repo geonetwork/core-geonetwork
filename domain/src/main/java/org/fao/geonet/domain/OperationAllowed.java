@@ -13,9 +13,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import org.fao.geonet.domain.OperationAllowedNamedQueries.DeleteAllByMetadataIdExceptGroupId;
-import org.fao.geonet.domain.OperationAllowedNamedQueries.DeleteByMetadataId;
-
 /**
  * An entity that represents the relationship between a metadata, group and the operations that group is allowed to perform on the metadata.
  * 
@@ -24,8 +21,6 @@ import org.fao.geonet.domain.OperationAllowedNamedQueries.DeleteByMetadataId;
 @Entity
 @Table(name = OperationAllowed.TABLE_NAME)
 @Access(AccessType.PROPERTY)
-@NamedQueries({ @NamedQuery(name = DeleteByMetadataId.NAME, query = DeleteByMetadataId.QUERY),
-        @NamedQuery(name = DeleteAllByMetadataIdExceptGroupId.NAME, query = DeleteAllByMetadataIdExceptGroupId.QUERY) })
 public class OperationAllowed extends GeonetEntity {
     /**
      * Name of the operationallowed table.

@@ -3,6 +3,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.utils.Log;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,6 +80,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             List<Order> orders = SortUtils.sortToJpaOrders(cb, sort, userGroupRoot, metadataRoot, userRoot);
             query.orderBy(orders);
         }
+        query.distinct(true);
 
         List<Pair<Integer, User>> results = new ArrayList<Pair<Integer, User>>();
 
@@ -104,6 +106,26 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         final Path<Integer> ownerPath = metadataRoot.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.owner);
         Expression<Boolean> ownerExpression = cb.equal(ownerPath, userRoot.get(User_.id));
         query.where(ownerExpression);
+        query.distinct(true);
+
+        return _entityManager.createQuery(query).getResultList();
+    }
+
+    @Nonnull
+    @Override
+    public List<User> findAllUsersInUserGroups(@Nonnull Specification<UserGroup> userGroupSpec) {
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaQuery<User> query = cb.createQuery(User.class);
+
+        final Root<UserGroup> userGroupRoot = query.from(UserGroup.class);
+        final Root<User> userRoot = query.from(User.class);
+
+        query.select(userRoot);
+
+        final Path<Integer> ownerPath = userGroupRoot.get(UserGroup_.id).get(UserGroupId_.userId);
+        Expression<Boolean> ownerExpression = cb.equal(ownerPath, userRoot.get(User_.id));
+        query.where(cb.and(ownerExpression, userGroupSpec.toPredicate(userGroupRoot, query, cb)));
+        query.distinct(true);
 
         return _entityManager.createQuery(query).getResultList();
     }

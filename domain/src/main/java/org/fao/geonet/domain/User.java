@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
 
+import org.jdom.Element;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -132,7 +133,7 @@ public class User extends GeonetEntity implements UserDetails {
      */
     @Transient
     public String getEmail() {
-        if (_email != null) {
+        if (_email != null && !_email.isEmpty()) {
             return _email.iterator().next();
         }
         return null;
@@ -369,4 +370,41 @@ public class User extends GeonetEntity implements UserDetails {
     public String toString() {
         return getUsername()+"("+getId()+") - "+getProfile();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        if (_id != user._id) return false;
+        if (!_addresses.equals(user._addresses)) return false;
+        if (!_email.equals(user._email)) return false;
+        if (_kind != null ? !_kind.equals(user._kind) : user._kind != null) return false;
+        if (_name != null ? !_name.equals(user._name) : user._name != null) return false;
+        if (_organisation != null ? !_organisation.equals(user._organisation) : user._organisation != null) return false;
+        if (_profile != user._profile) return false;
+        if (!_security.equals(user._security)) return false;
+        if (_surname != null ? !_surname.equals(user._surname) : user._surname != null) return false;
+        if (_username != null ? !_username.equals(user._username) : user._username != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = _id;
+        result = 31 * result + (_username != null ? _username.hashCode() : 0);
+        result = 31 * result + (_surname != null ? _surname.hashCode() : 0);
+        result = 31 * result + (_name != null ? _name.hashCode() : 0);
+        result = 31 * result + _email.hashCode();
+        result = 31 * result + _addresses.hashCode();
+        result = 31 * result + (_organisation != null ? _organisation.hashCode() : 0);
+        result = 31 * result + (_kind != null ? _kind.hashCode() : 0);
+        result = 31 * result + (_profile != null ? _profile.hashCode() : 0);
+        result = 31 * result + _security.hashCode();
+        return result;
+    }
+
 }

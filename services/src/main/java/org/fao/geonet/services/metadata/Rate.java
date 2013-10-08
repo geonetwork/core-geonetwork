@@ -23,12 +23,13 @@
 
 package org.fao.geonet.services.metadata;
 
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.BadServerResponseEx;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -76,7 +77,6 @@ public class Rate extends NotInReadOnlyModeService {
 
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager    dm = gc.getBean(DataManager.class);
@@ -88,7 +88,7 @@ public class Rate extends NotInReadOnlyModeService {
 		String ip  = context.getIpAddress();
 
 		int iLocalId = Integer.parseInt(id);
-		if (!dm.existsMetadata(dbms, iLocalId))
+		if (!dm.existsMetadata(iLocalId))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		if (ip == null)
@@ -102,7 +102,7 @@ public class Rate extends NotInReadOnlyModeService {
 		if (rating < 1 || rating > 5)
 			throw new BadParameterEx(Params.RATING, rat);
 
-		String harvUuid = getHarvestingUuid(dbms, id);
+		String harvUuid = getHarvestingUuid(context, id);
 
 		// look up value of localrating/enable
 		SettingManager settingManager = gc.getBean(SettingManager.class);
@@ -110,7 +110,7 @@ public class Rate extends NotInReadOnlyModeService {
 		
 		if (localRating || harvUuid == null)
 			//--- metadata is local, just rate it
-			rating = dm.rateMetadata(dbms, Integer.valueOf(id), ip, rating);
+			rating = dm.rateMetadata(Integer.valueOf(id), ip, rating);
 		else
 		{
 			//--- the metadata is harvested, is type=geonetwork?
@@ -118,10 +118,11 @@ public class Rate extends NotInReadOnlyModeService {
 			AbstractHarvester ah = hm.getHarvester(harvUuid);
 
 			if (ah.getType().equals(GeonetHarvester.TYPE)) {
-				String uuid = dm.getMetadataUuid(dbms, id);
+				String uuid = dm.getMetadataUuid(id);
 				rating = setRemoteRating(context, (GeonetParams) ah.getParams(), uuid, rating);
-			} else
+			} else {
 				rating = -1;
+            }
 		}
 
 		return new Element(Params.RATING).setText(Integer.toString(rating));
@@ -129,25 +130,21 @@ public class Rate extends NotInReadOnlyModeService {
 
 	//--------------------------------------------------------------------------
 
-	private String getHarvestingUuid(Dbms dbms, String id) throws Exception
+	private String getHarvestingUuid(ServiceContext context, String id) throws Exception
 	{
-		String query = "SELECT harvestUuid FROM Metadata WHERE id=?";
-
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
+        final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
 
 		//--- if we don't have any metadata, just return
 
-		if (list.isEmpty())
+		if (metadata == null) {
 			throw new MetadataNotFoundEx("id:"+ id);
+        }
 
-		Element rec = list.get(0);
-
-		String harvUuid = rec.getChildText("harvestuuid");
+		String harvUuid = metadata.getHarvestInfo().getUuid();
 
 		//--- metadata not harvested
 
-		return (harvUuid.length() == 0) ? null : harvUuid;
+		return (harvUuid == null || harvUuid.length() == 0) ? null : harvUuid;
 	}
 
 	//--------------------------------------------------------------------------

@@ -31,8 +31,8 @@ import java.util.Set;
  
 import jeeves.constants.Jeeves;
 import org.fao.geonet.Util;
- 
-import org.fao.geonet.util.ISODate;
+
+import org.fao.geonet.domain.ISODate;
 import org.jdom.Element;
  
 /**

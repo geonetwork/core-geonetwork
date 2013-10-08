@@ -23,13 +23,16 @@
 
 package org.fao.geonet.services.resources;
 
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -37,11 +40,8 @@ import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -93,7 +93,6 @@ public class DownloadArchive implements Service
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm   = gc.getBean(DataManager.class);
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		UserSession session = context.getUserSession();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
@@ -145,17 +144,17 @@ public class DownloadArchive implements Service
 		//--- get logged in user details & record in 'userdetails'
 		Element userDetails = new Element("userdetails");
 		if (!username.equals("internet")) {
-			Element elUser = dbms.select ("SELECT username, surname, name, address, state, zip, country, email, organisation FROM Users WHERE id=?",Integer.valueOf(userId));
-			if (elUser.getChild("record") != null) {
-				userDetails.addContent(elUser.getChild("record").cloneContent());
+            final User user = context.getBean(UserRepository.class).findOne(userId);
+			if (user != null) {
+				userDetails.addContent(user.asXml());
 			}
 		}
 	
 		//--- get metadata info
-		MdInfo info = dm.getMetadataInfo(dbms, id);
+		Metadata info = context.getBean(MetadataRepository.class).findOne(id);
 
 		// set up zip output stream
-		File zFile = File.createTempFile(username+"_"+info.uuid,".zip");
+		File zFile = File.createTempFile(username+"_"+info.getUuid(),".zip");
 		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zFile));
 
 		//--- because often content has already been compressed
@@ -187,7 +186,7 @@ public class DownloadArchive implements Service
 				fileInfo.setAttribute("size","unknown");
 				fileInfo.setAttribute("datemodified","unknown");
 				fileInfo.setAttribute("name",remoteURL);
-				notifyAndLog(doNotify, id, info.uuid, access, username, remoteURL+" (local config: "+file.getAbsolutePath()+")", context);
+				notifyAndLog(doNotify, id, info.getUuid(), access, username, remoteURL+" (local config: "+file.getAbsolutePath()+")", context);
 				fname = details.getAttributeValue("remotefile");
 			} else {
                 if(context.isDebugEnabled())
@@ -196,7 +195,7 @@ public class DownloadArchive implements Service
 				fileInfo.setAttribute("name",fname);
 				Date date = new Date(file.lastModified());
 				fileInfo.setAttribute("datemodified",sdf.format(date));
-				notifyAndLog(doNotify, id, info.uuid, access, username, file.getAbsolutePath(), context);
+				notifyAndLog(doNotify, id, info.getUuid(), access, username, file.getAbsolutePath(), context);
 			}
 			addFile(out, file.getAbsolutePath(), details, fname);
 			downloaded.addContent(fileInfo);
@@ -216,7 +215,7 @@ public class DownloadArchive implements Service
 		//--- create root element for passing all the info we've gathered 
 		//--- to license annex xslt generator
 		Element root = new Element("root");
-		elBrief.setAttribute("changedate",info.changeDate);
+		elBrief.setAttribute("changedate",info.getDataInfo().getChangeDate().getDateAndTime());
 		elBrief.setAttribute("currdate",now());
 		root.addContent(elBrief);
 		root.addContent(downloaded);
@@ -228,7 +227,7 @@ public class DownloadArchive implements Service
 		//--- create the license annex html file using the info in root element and
 		//--- add it to the zip stream
 		String licenseAnnexXslt = stylePath + Geonet.File.LICENSE_ANNEX_XSL;
-		File licenseAnnex = File.createTempFile(username+"_"+info.uuid,".annex");
+		File licenseAnnex = File.createTempFile(username+"_"+info.getUuid(),".annex");
 		FileOutputStream las = new FileOutputStream(licenseAnnex);
 		Xml.transform(root, licenseAnnexXslt, las);
 		las.close();
@@ -247,7 +246,7 @@ public class DownloadArchive implements Service
 		//--- export the metadata as a partial mef/zip file and add that to the zip
 		//--- stream FIXME: some refactoring required here to avoid metadata 
 		//--- being read yet again(!) from the database by the MEF exporter
-		String outmef = MEFLib.doExport(context, info.uuid, MEFLib.Format.PARTIAL.toString(), false, true, true);
+		String outmef = MEFLib.doExport(context, info.getUuid(), MEFLib.Format.PARTIAL.toString(), false, true, true);
 		FileInputStream in2 = null;
 		try {
             in2 = new FileInputStream(outmef);
@@ -372,7 +371,9 @@ public class DownloadArchive implements Service
 		DataManager    dm = gc.getBean(DataManager.class);
 
 		//--- increase metadata popularity
-		if (access.equals(Params.Access.PRIVATE)) dm.increasePopularity(context, id);
+		if (access.equals(Params.Access.PRIVATE)) {
+            dm.increasePopularity(context, id);
+        }
 
 		//--- send email notification
 		if (doNotify) {
@@ -385,19 +386,26 @@ public class DownloadArchive implements Service
 			String fromDescr = "GeoNetwork administrator";
 
 			String dateTime = now();
-			context.info("DOWNLOADED:"+theFile+","+id+","+uuid+","+context.getIpAddress()+","+username);
+            context.info("DOWNLOADED:" + theFile + "," + id + "," + uuid + "," + context.getIpAddress() + "," + username);
 
 			if (host.trim().length() == 0 || from.trim().length() == 0) {
-                if(context.isDebugEnabled()) context.debug("Skipping email notification");
+                if(context.isDebugEnabled()) {
+                    context.debug("Skipping email notification");
+                }
 			} else {
-                if(context.isDebugEnabled()) context.debug("Sending email notification for file : "+ theFile);
+                if(context.isDebugEnabled()) {
+                    context.debug("Sending email notification for file : " + theFile);
+                }
 
                 OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);
                 List<OperationAllowed> opsAllowed = opAllowedRepo.findByMetadataId(id);
-                
+
+                final GroupRepository groupRepository = context.getBean(GroupRepository.class);
+
                 for (OperationAllowed opAllowed : opsAllowed) {
-					String  name  = opAllowed.getGroup().getName();
-					String  email = opAllowed.getGroup().getEmail();
+                    Group group = groupRepository.findOne(opAllowed.getId().getGroupId());
+                    String  name  = group.getName();
+					String  email = group.getEmail();
 
 					if (email.trim().length() != 0) {
 						String subject = "File " + theFile + " has been downloaded at "+dateTime;

@@ -1,10 +1,16 @@
 package org.fao.geonet.domain;
 
+import org.jdom.Content;
 import org.jdom.Element;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.util.ReflectionUtils;
 
 import javax.persistence.Transient;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,8 +31,7 @@ public class GeonetEntity {
 
         for (PropertyDescriptor desc : wrapper.getPropertyDescriptors()) {
             try {
-                if (desc.getReadMethod() != null && desc.getReadMethod().getDeclaringClass() == getClass()
-                    && desc.getReadMethod().getAnnotation(Transient.class) == null) {
+                if (desc.getReadMethod() != null && desc.getReadMethod().getDeclaringClass() == getClass()) {
                     final String descName = desc.getName();
                     if (descName.equalsIgnoreCase("labelTranslations")) {
                         Element labelEl = new Element(LABEL_EL_NAME);
@@ -42,9 +47,15 @@ public class GeonetEntity {
                     } else {
                         final Object rawData = desc.getReadMethod().invoke(this);
                         if (rawData != null) {
-                            final String value = rawData.toString();
-                            record.addContent(new Element(descName.toLowerCase()).setText(value)
-                            );
+                            final Element element = new Element(descName.toLowerCase());
+                            if (rawData instanceof GeonetEntity) {
+                                final Element element1 = ((GeonetEntity) rawData).asXml();
+                                final List list = element1.removeContent();
+                                element.addContent(list);
+                            } else {
+                                element.addContent(rawData.toString());
+                            }
+                            record.addContent(element);
                         }
                     }
                 }
@@ -55,5 +66,6 @@ public class GeonetEntity {
 
         return record;
     }
+
 
 }

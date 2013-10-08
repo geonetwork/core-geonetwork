@@ -35,7 +35,7 @@ public class RequestsByDateTest {
         rdb.chartWidth = 600;
         rdb.chartHeight = 500;
 
-        TimeSeries ts = new TimeSeries("By " + params.getGraphicType().toLowerCase(), params.getChartClass());
+        TimeSeries ts = new TimeSeries("By " + params.getGraphicType().getClass().getSimpleName(), params.getChartClass());
         TimeSeriesCollection dataset = new TimeSeriesCollection();
         String curDate = "2009-04-04T12:00:00";
 

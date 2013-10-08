@@ -26,11 +26,11 @@ import com.google.common.base.Optional;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.statistic.SearchRequestRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -83,8 +83,8 @@ public class SearchStatistics extends NotInReadOnlyModeService {
         String begin = requestRepository.getOldestRequestDate().getDateAndTime();
         String end = requestRepository.getMostRecentRequestDate().getDateAndTime();
 
-        DateTime beginDate = JODAISODate.parseBasicOrFullDateTime(begin);
-        DateTime endDate = JODAISODate.parseBasicOrFullDateTime(end);
+        DateTime beginDate = ISODate.parseBasicOrFullDateTime(begin);
+        DateTime endDate = ISODate.parseBasicOrFullDateTime(end);
         int days = Days.daysBetween(beginDate, endDate).getDays();
         int nonZeroDays = min(1, days);
         int months = Months.monthsBetween(beginDate, endDate).getMonths();

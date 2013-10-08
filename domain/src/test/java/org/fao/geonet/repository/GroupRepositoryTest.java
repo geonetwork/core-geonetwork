@@ -1,21 +1,21 @@
 package org.fao.geonet.repository;
 
-import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ReservedGroup;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
+import static org.fao.geonet.repository.SpringDataTestSupport.setId;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @Transactional
 public class GroupRepositoryTest extends AbstractSpringDataTest {
@@ -40,7 +40,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
         group.setId(savedGroup.getId());
         assertEquals(1, _repo.count());
         assertSameContents(group, _repo.findOne(group.getId()));
-        
+
         _repo.deleteAll();
 
         _repo.flush();
@@ -48,7 +48,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(0, _repo.count());
     }
-    
+
     @Test
     public void testUpdate() throws Exception {
         assertEquals(0, _repo.count());
@@ -71,7 +71,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
         _entityManager.clear();
 
         assertSameContents(savedGroup, savedGroup2);
-        
+
         assertEquals(1, _repo.count());
         assertSameContents(group, _repo.findOne(group.getId()));
     }
@@ -86,7 +86,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
         assertSameContents(savedGroup, _repo.findByName(savedGroup.getName()));
         assertNull(_repo.findByName("some wrong name"));
     }
-    
+
     @Test
     public void testFindByEmail() throws Exception {
         Group savedGroup = _repo.save(newGroup());
@@ -127,36 +127,31 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
             setId(ReservedGroup.all, normalId);
         }
     }
-    
+
     @Test
     public void testFindAllIds() throws Exception {
         Group g1 = _repo.save(newGroup());
         Group g2 = _repo.save(newGroup());
         Group g3 = _repo.save(newGroup());
-        
+
         List<Integer> ids = _repo.findIds();
-        
+
         assertEquals(3, ids.size());
         assertEquals(g1.getId(), ids.get(0).intValue());
         assertEquals(g2.getId(), ids.get(1).intValue());
         assertEquals(g3.getId(), ids.get(2).intValue());
     }
 
-    private void setId(ReservedGroup group, int normalId) throws Exception {
-        Field declaredField = group.getClass().getDeclaredField("_id");
-        declaredField.setAccessible(true);
-        declaredField.set(group, normalId);
-    }
-
     private Group newGroup() {
         return newGroup(_nextId);
     }
+
     public static Group newGroup(AtomicInteger nextId) {
         int id = nextId.incrementAndGet();
         return new Group()
-                .setDescription("Desc "+id)
-                .setEmail(id+"@geonet.org")
-                .setName("Name "+id);
+                .setDescription("Desc " + id)
+                .setEmail(id + "@geonet.org")
+                .setName("Name " + id);
     }
 
 }

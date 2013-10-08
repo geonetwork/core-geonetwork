@@ -1,9 +1,6 @@
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId_;
-import org.fao.geonet.domain.OperationAllowed_;
-import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
@@ -78,6 +75,27 @@ public final class OperationAllowedSpecs {
                 Path<Integer> opIdAttributePath = root.get(OperationAllowed_.id).get(OperationAllowedId_.operationId);
                 Predicate opIdEqualPredicate = cb.equal(opIdAttributePath, cb.literal(operationId));
                 return opIdEqualPredicate;
+            }
+        };
+    }
+
+    /**
+     * A specification that specifies that the all group has the provided operation.
+     *
+     * @param operation the operation. view is probably the most commonly needed one.
+     *
+     * @return A specification that specifies that the all group has the provided operation.
+     */
+    public static Specification<OperationAllowed> isPublic(final ReservedOperation operation) {
+        return new Specification<OperationAllowed>() {
+
+            @Override
+            public Predicate toPredicate(Root<OperationAllowed> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Integer> opIdAttributePath = root.get(OperationAllowed_.id).get(OperationAllowedId_.operationId);
+                Path<Integer> groupIdAttributePath = root.get(OperationAllowed_.id).get(OperationAllowedId_.groupId);
+                Predicate opIdEqualPredicate = cb.equal(opIdAttributePath, cb.literal(operation.getId()));
+                Predicate allGroup = cb.equal(groupIdAttributePath, cb.literal(ReservedGroup.all.getId()));
+                return cb.and(opIdEqualPredicate, allGroup);
             }
         };
     }

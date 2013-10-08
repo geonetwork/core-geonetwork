@@ -37,12 +37,4 @@
        <gauge class=".ResourceManagerMaxConnectionsGauge"/>
        <gauge class="jeeves.monitor.guage.FreeFileDescriptorsGuage"/>
     </monitors>
-    <services package="org.fao.geonet">
-        <service name="debug.openconnection.accessors">
-            <class name=".services.debug.OpenConnectionRequestors"/>
-        </service>
-        <service name="debug.filehandles">
-            <class name=".services.debug.ListOpenFileHandles"/>
-        </service>
-    </services>
 </config>

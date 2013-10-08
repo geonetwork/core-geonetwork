@@ -24,18 +24,20 @@ package org.fao.geonet.guiservices.csw;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.CswCapabilitiesInfoField;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.repository.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
 import org.fao.geonet.repository.LanguageRepository;
 import org.jdom.Element;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -45,51 +47,53 @@ public class Set implements Service {
 
 	public Element exec(Element params, ServiceContext context) throws Exception {
 	    GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
         // Save values in settings
-        saveCswServerConfig(params, gc.getBean(SettingManager.class), dbms);
+        saveCswServerConfig(params, gc.getBean(SettingManager.class));
 
         // Process parameters and save capabilities information in database
-        saveCswCapabilitiesInfo(params, gc, dbms);
+        saveCswCapabilitiesInfo(params, context);
 
         // Build response
         return new Element(Jeeves.Elem.RESPONSE).setText("ok");
 	}
 
-    private void saveCswServerConfig(Element params, SettingManager sm, Dbms dbms)
+    private void saveCswServerConfig(Element params, SettingManager settingManager)
             throws Exception {
 
         String cswEnableValue = Util.getParam(params, "csw.enable", "");
-        sm.setValue(dbms, "system/csw/enable", cswEnableValue.equals("on"));
+        settingManager.setValue("system/csw/enable", cswEnableValue.equals("on"));
 
 
         String cswMetadataPublicValue = Util.getParam(params, "csw.metadataPublic", "");
-        sm.setValue(dbms, "system/csw/metadataPublic", cswMetadataPublicValue.equals("on"));
+        settingManager.setValue("system/csw/metadataPublic", cswMetadataPublicValue.equals("on"));
 
         // Save contact
         String contactIdValue = Util.getParam(params, "csw.contactId", "-1");
-        sm.setValue(dbms, "system/csw/contactId", contactIdValue);
+        settingManager.setValue("system/csw/contactId", contactIdValue);
     }
 
-    private void saveCswCapabilitiesInfo(Element params, GeonetContext gc)
+    private void saveCswCapabilitiesInfo(Element params, ServiceContext serviceContext)
             throws Exception {
 
-        List<Language> languages = gc.getBean(LanguageRepository.class).findAll();
+        List<Language> languages = serviceContext.getBean(LanguageRepository.class).findAll();
 
+        List<CswCapabilitiesInfoField> toSave = new ArrayList<CswCapabilitiesInfoField>();
+
+        final CswCapabilitiesInfoFieldRepository capabilitiesInfoFieldRepository = serviceContext.getBean(CswCapabilitiesInfoFieldRepository.class);
         for (Language language : languages) {
-            CswCapabilitiesInfo cswCapInfo = new CswCapabilitiesInfo(allFieldsForLang);
+            CswCapabilitiesInfo cswCapInfo = capabilitiesInfoFieldRepository.findCswCapabilitiesInfo(language.getId());
 
             final String langId = language.getId();
-            cswCapInfo.setLangId(langId);
             cswCapInfo.setTitle(params.getChild("csw.title_" + langId).getValue());
             cswCapInfo.setAbstract(params.getChild("csw.abstract_" + langId).getValue());
             cswCapInfo.setFees(params.getChild("csw.fees_" + langId).getValue());
             cswCapInfo.setAccessConstraints(params.getChild("csw.accessConstraints_" + langId).getValue());
 
-            // Save item
-            CswCapabilitiesInfo.saveCswCapabilitiesInfo(gc, cswCapInfo);
+            toSave.addAll(cswCapInfo.getFields());
         }
+
+        capabilitiesInfoFieldRepository.save(toSave);
     }
 
 }

@@ -43,4 +43,15 @@ public class MetadataNotificationRepositoryImpl implements MetadataNotificationR
         cbQuery.where(fullClause);
         return _entityManager.createQuery(cbQuery).getResultList();
     }
+
+    @Override
+    public int deleteAllWithNotifierId(int notifierId) {
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaDelete<MetadataNotification> delete = cb.createCriteriaDelete(MetadataNotification.class);
+        final Root<MetadataNotification> notificationRoot = delete.from(MetadataNotification.class);
+
+        delete.where(cb.equal(notificationRoot.get(MetadataNotification_.id).get(MetadataNotificationId_.notifierId), notifierId));
+        return _entityManager.createQuery(delete).executeUpdate();
+    }
+
 }

@@ -9,11 +9,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import junit.framework.Assert;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Nullable;
 
 @Transactional
 public class UserRepositoryTest extends AbstractSpringDataTest {
@@ -60,8 +67,6 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         foundUser = _userRepo.findOneByEmail("xjkjk");
         assertNull(foundUser);
     }
-
-
 
     @Test
     public void testFindAllByGroupOwnerNameAndProfile() {
@@ -123,6 +128,50 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         }
         assertEquals(2, md1Found);
         assertEquals(2, md2Found);
+    }
+
+    @Test
+    public void testFindAllUsersInUserGroups() {
+        Group group1 = _groupRepo.save(GroupRepositoryTest.newGroup(_inc));
+        Group group2 = _groupRepo.save(GroupRepositoryTest.newGroup(_inc));
+
+        User editUser = _userRepo.save(newUser().setProfile(Profile.Editor));
+        User reviewerUser = _userRepo.save(newUser().setProfile(Profile.Reviewer));
+        User registeredUser = _userRepo.save(newUser().setProfile(Profile.RegisteredUser));
+        _userRepo.save(newUser().setProfile(Profile.Administrator));
+
+        _userGroupRepository.save(new UserGroup().setGroup(group1).setUser(editUser).setProfile(Profile.Editor));
+        _userGroupRepository.save(new UserGroup().setGroup(group2).setUser(registeredUser).setProfile(Profile.RegisteredUser));
+        _userGroupRepository.save(new UserGroup().setGroup(group2).setUser(reviewerUser).setProfile(Profile.Editor));
+        _userGroupRepository.save(new UserGroup().setGroup(group1).setUser(reviewerUser).setProfile(Profile.Reviewer));
+
+        List<Integer> found = Lists.transform(_userRepo.findAllUsersInUserGroups(UserGroupSpecs.hasGroupId(group1.getId())), new Function<User, Integer>() {
+
+            @Nullable
+            @Override
+            public Integer apply(@Nullable User input) {
+                return input.getId();
+            }
+        });
+
+        assertEquals(2, found.size());
+        assertTrue(found.contains(editUser.getId()));
+        assertTrue(found.contains(reviewerUser.getId()));
+
+        found = Lists.transform(_userRepo.findAllUsersInUserGroups(Specifications.not(UserGroupSpecs.hasProfile(Profile.RegisteredUser))), new Function<User, Integer>() {
+
+            @Nullable
+            @Override
+            public Integer apply(@Nullable User input) {
+                return input.getId();
+            }
+        });
+
+        assertEquals(2, found.size());
+        assertTrue(found.contains(editUser.getId()));
+        assertTrue(found.contains(reviewerUser.getId()));
+
+
     }
 
     @Test

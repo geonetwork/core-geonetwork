@@ -460,16 +460,6 @@ public final class Geonet {
 		}
 	}
 
-	public static final class Profile {
-		public static final String ADMINISTRATOR   = org.fao.geonet.domain.Profile.Administrator.name();
-		public static final String USER_ADMIN      = org.fao.geonet.domain.Profile.UserAdmin.name();
-		public static final String REVIEWER        = org.fao.geonet.domain.Profile.Reviewer.name();
-		public static final String EDITOR          = org.fao.geonet.domain.Profile.Editor.name();
-		public static final String REGISTERED_USER = org.fao.geonet.domain.Profile.RegisteredUser.name();
-		public static final String GUEST           = org.fao.geonet.domain.Profile.Guest.name();
-		public static final String MONITOR         = org.fao.geonet.domain.Profile.Monitor.name();
-	}
-
     /**
      * Container for config elements that are inside the configuration file.
      */

@@ -23,4 +23,12 @@ public interface MetadataNotificationRepositoryCustom {
      */
     List<MetadataNotification> findAllNotNotifiedForNotifier(int notifierId, MetadataNotificationAction... actions);
 
+    /**
+     * Delete all notifications with the provided notifierId.
+     *
+     * @param notifierId the notifier id
+     *
+     * @return the number of notifications deleted.
+     */
+    int deleteAllWithNotifierId(int notifierId);
 }

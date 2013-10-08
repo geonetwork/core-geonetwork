@@ -1,5 +1,8 @@
 package org.fao.geonet.domain;
 
+import org.jdom.Element;
+
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +17,7 @@ import javax.persistence.Transient;
  * @author Jesse
  */
 @Embeddable
-public class UserSecurity {
+public class UserSecurity extends GeonetEntity {
     private char[] _password;
     private Set<UserSecurityNotification> _securityNotifications = new HashSet<UserSecurityNotification>();
     private String _authType;
@@ -117,5 +120,37 @@ public class UserSecurity {
             setAuthType(otherSecurity.getAuthType());
         }
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserSecurity)) return false;
+
+        UserSecurity that = (UserSecurity) o;
+
+        if (_authType != null ? !_authType.equals(that._authType) : that._authType != null) return false;
+        if (!Arrays.equals(_password, that._password)) return false;
+        if (_securityNotifications != null ? !_securityNotifications.equals(that._securityNotifications) : that._securityNotifications
+                                                                                                           != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = _password != null ? Arrays.hashCode(_password) : 0;
+        result = 31 * result + (_securityNotifications != null ? _securityNotifications.hashCode() : 0);
+        result = 31 * result + (_authType != null ? _authType.hashCode() : 0);
+        return result;
+    }
+
+
+    @Override
+    public Element asXml() {
+        final Element element = super.asXml();
+        element.removeChild("password");
+        return element;
     }
 }

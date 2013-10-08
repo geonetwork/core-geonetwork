@@ -7,6 +7,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.statistic.SearchRequestParam;
 import org.fao.geonet.domain.statistic.SearchRequestParam_;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
@@ -40,6 +41,11 @@ public class SearchRequestParamRepositoryImpl implements SearchRequestParamRepos
 
     @Override
     public List<Pair<String, Integer>> getTermTextToRequestCount(int limit) {
+        return getTermTextToRequestCount(limit);
+    }
+
+    @Override
+    public List<Pair<String, Integer>> getTermTextToRequestCount(int limit, Specification<SearchRequestParam> spec) {
         final CriteriaBuilder cb = _EntityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
 
@@ -51,8 +57,15 @@ public class SearchRequestParamRepositoryImpl implements SearchRequestParamRepos
         final Expression<Long> countExpr = cb.count(paramRoot);
         final Predicate notEmptyTermText = cb.notEqual(cb.trim(termTextPath), "");
 
+        final Predicate baseWherePredicate = cb.and(notInExcludedTerms, notEmptyTermText);
+        Predicate finalPredicate = baseWherePredicate;
+
+        if (spec != null) {
+            finalPredicate = cb.and(finalPredicate, spec.toPredicate(paramRoot, cbQuery, cb));
+        }
+
         cbQuery.select(cb.tuple(termTextPath, countExpr))
-                .where(cb.and(notInExcludedTerms, notEmptyTermText))
+                .where(finalPredicate)
                 .groupBy(termTextPath)
                 .orderBy(cb.desc(countExpr));
 

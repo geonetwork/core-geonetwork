@@ -68,9 +68,6 @@
                 <call name="mdPopularity" class=".services.statistics.MdPopularity">
                     <!-- the max number of result to display in the UI -->
                     <param name="limit" value="10"/>
-                    <param name="query"
-                        value="select id, uuid, popularity from metadata where popularity >= 1 order by popularity desc"
-                    />
                 </call>
             </output>
         </service>

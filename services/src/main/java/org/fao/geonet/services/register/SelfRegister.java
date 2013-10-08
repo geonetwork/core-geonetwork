@@ -149,7 +149,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
 
     // Send email to admin requesting non-standard profile if required
 
-    if (!profile.equalsIgnoreCase(Geonet.Profile.REGISTERED_USER) && !sendProfileRequest(params, host, port, from, thisSite, siteURL)) {
+    if (!profile.equalsIgnoreCase(Profile.RegisteredUser.name()) && !sendProfileRequest(params, host, port, from, thisSite, siteURL)) {
         return element.addContent(new Element("result").setText("errorProfileRequestFailed"));
       }
 

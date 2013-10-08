@@ -5,10 +5,13 @@ import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -400,4 +403,38 @@ public class MetadataStatisticsQueries {
         return result.intValue();
     }
 
+    /**
+     * Calculate the statistic from the metadata linked to in the selected OperationAllowed.
+     *
+     * @param metadataStatisticSpec the statistic to calculate
+     * @param operationAllowedSpecification the specification to use to select the metadata.
+     *
+     * @return the calculated statistic from the metadata linked to in the selected OperationAllowed.
+     */
+    @Nonnegative
+    public int getStatBasedOnOperationAllowed(@Nonnull MetadataStatisticSpec metadataStatisticSpec, @Nonnull Specification<OperationAllowed> operationAllowedSpecification) {
+
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Number> query = cb.createQuery(Number.class);
+        final Root<Metadata> metadataRoot = query.from(Metadata.class);
+
+        Subquery<Integer> subquery = query.subquery(Integer.class);
+        final Root<OperationAllowed> opAllowedRoot = subquery.from(OperationAllowed.class);
+        final Predicate opAllowedPredicate = operationAllowedSpecification.toPredicate(opAllowedRoot, query, cb);
+        subquery.where(opAllowedPredicate);
+        final Path<Integer> opAllowedMetadataId = opAllowedRoot.get(OperationAllowed_.id).get(OperationAllowedId_.metadataId);
+        subquery.select(opAllowedMetadataId);
+
+        query.select(metadataStatisticSpec.getSelection(cb, metadataRoot))
+                .where(metadataRoot.get(Metadata_.id).in(subquery)) ;
+
+        final List<Number> resultList = _entityManager.createQuery(query).getResultList();
+        return resultList.get(0).intValue();
+//        Number result = _entityManager.createQuery(query).getSingleResult();
+//        if (result==null) {
+//            return 0;
+//        } else {
+//            return result.intValue();
+//        }
+    }
 }

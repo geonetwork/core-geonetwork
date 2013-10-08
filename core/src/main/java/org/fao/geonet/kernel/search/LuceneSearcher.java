@@ -29,6 +29,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
@@ -91,7 +92,6 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionsDAO;
-import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
 
 import java.io.IOException;
@@ -769,9 +769,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 				} else if (toTime.getTextTrim().equals("")) {
 					toTime.setText(defaultToTime);
 				}
-				String newFromTime = JODAISODate.parseISODateTime(fromTime.getText());
+				String newFromTime = ISODate.parseISODateTime(fromTime.getText());
 				fromTime.setText(newFromTime);	
-				String newToTime = JODAISODate.parseISODateTime(toTime.getText());
+				String newToTime = ISODate.parseISODateTime(toTime.getText());
 				toTime.setText(newToTime);	
 			}
 		}

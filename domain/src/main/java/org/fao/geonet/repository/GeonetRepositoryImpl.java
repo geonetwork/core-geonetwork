@@ -2,6 +2,7 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.GeonetEntity;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.repository.statistic.PathSpec;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.*;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -53,15 +55,16 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
     }
 
     @Override
-    public <V> int batchUpdateAttributes(@Nonnull List<Pair<Path<V>, V>> attributeUpdates) {
-        return batchUpdateAttributes(attributeUpdates, null);
+    public <V> BatchUpdateQuery<T> createBatchUpdateQuery(PathSpec<T, V> pathToUpdate, V newValue) {
+        return new BatchUpdateQuery<T>(_entityClass, _entityManager, pathToUpdate, newValue);
     }
 
     @Override
-    public <V> int batchUpdateAttributes(@Nonnull List<Pair<Path<V>, V>> attributeUpdates, @Nullable Specification<T> spec) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    public <V> BatchUpdateQuery<T> createBatchUpdateQuery(PathSpec<T, V> pathToUpdate, V newValue, Specification<T> spec) {
+        final BatchUpdateQuery<T> updateQuery = new BatchUpdateQuery<T>(_entityClass, _entityManager, pathToUpdate, newValue);
+        updateQuery.setSpecification(spec);
+        return updateQuery;
     }
-
 
     @Nonnull
     @Override

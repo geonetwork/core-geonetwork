@@ -24,20 +24,24 @@
 package org.fao.geonet.services.user;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 
-import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
 
 /**
  * Update the information of a user.
@@ -73,44 +77,45 @@ public class Update extends NotInReadOnlyModeService {
 		String country  = Util.getParam(params, Params.COUNTRY, "");
 		String email    = Util.getParam(params, Params.EMAIL,   "");
 		String organ    = Util.getParam(params, Params.ORG,     "");
-		String kind     = Util.getParam(params, Params.KIND,    "");
+        String kind     = Util.getParam(params, Params.KIND, "");
 
-		UserSession usrSess = context.getUserSession();
-		Profile myProfile = usrSess.getProfile();
-		String      myUserId  = usrSess.getUserId();
-		
-		@SuppressWarnings("unchecked")
+        UserSession usrSess = context.getUserSession();
+        Profile myProfile = usrSess.getProfile();
+        String      myUserId  = usrSess.getUserId();
+
+        @SuppressWarnings("unchecked")
         java.util.List<Element> userGroups = params.getChildren(Params.GROUPS);
 
-		if (!operation.equals(Params.Operation.RESETPW)) {
-			if (!context.getProfileManager().exists(profile))
-				throw new Exception("Unknown profile : "+ profile);
+        final UserGroupRepository groupRepository = context.getBean(UserGroupRepository.class);
+        final UserRepository userRepository = context.getBean(UserRepository.class);
 
-			if (profile.equals(Geonet.Profile.ADMINISTRATOR))
-				userGroups = new ArrayList<Element>();
-		}
+        if (!operation.equals(Params.Operation.RESETPW)) {
+            if (!context.getProfileManager().exists(profile)) {
+                throw new Exception("Unknown profile : "+ profile);
+            }
 
-		if (myProfile == Profile.Administrator ||
+            if (profile.equals(Profile.Administrator)) {
+                userGroups = new ArrayList<Element>();
+            }
+        }
+
+        if (myProfile == Profile.Administrator ||
 				myProfile == Profile.UserAdmin ||
 				myUserId.equals(id)) {
 
-			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
-			// Before we do anything check (for UserAdmin) that they are not trying
-			// to add a user to any group outside of their own - if they are then
-			// raise an exception - this shouldn't happen unless someone has
-			// constructed their own malicious URL!
-			//
-			if (operation.equals(Params.Operation.NEWUSER) || operation.equals(Params.Operation.EDITINFO)) {
-				if (!(myUserId.equals(id)) && myProfile.equals("UserAdmin")) {
-					Element grps = dbms.select("SELECT groupId from UserGroups WHERE userId=?", Integer.valueOf(myUserId));
-					@SuppressWarnings("unchecked")
-                    java.util.List<Element> myGroups = grps.getChildren();
+            // Before we do anything check (for UserAdmin) that they are not trying
+            // to add a user to any group outside of their own - if they are then
+            // raise an exception - this shouldn't happen unless someone has
+            // constructed their own malicious URL!
+            //
+            if (operation.equals(Params.Operation.NEWUSER) || operation.equals(Params.Operation.EDITINFO)) {
+                if (!(myUserId.equals(id)) && myProfile.equals("UserAdmin")) {
+                    final List<Integer> groupIds = groupRepository.findGroupIds(UserGroupSpecs.hasUserId(Integer.valueOf(myUserId)));
 					for(Element userGroup : userGroups) {
 						String group = userGroup.getText();
 						boolean found = false;
-						for (Element myGroup : myGroups) {
-							if (group.equals(myGroup.getChild("groupid").getText())) {
+						for (int myGroup : groupIds) {
+							if (Integer.valueOf(group) == myGroup) {
 								found = true;
 							}
 						}
@@ -121,54 +126,62 @@ public class Update extends NotInReadOnlyModeService {
 				}
 			}
 
-		// -- For adding new user
-			if (operation.equals(Params.Operation.NEWUSER)) {
+            User user = new User()
+                    .setUsername(username)
+                    .setName(name)
+                    .setSurname(surname)
+                    .setProfile(Profile.findProfileIgnoreCase(profile))
+                    .setKind(kind)
+                    .setOrganisation(organ);
+            user.getAddresses().add(new Address()
+                    .setAddress(address)
+                    .setCity(city)
+                    .setState(state)
+                    .setZip(zip)
+                    .setCountry(country));
+            user.getEmailAddresses().add(email);
 
-				// check if the new username already exists - if so then don't do this
-				String query= "SELECT * FROM Users WHERE username=?";
-				Element usersTest = dbms.select(query, username);
-				if (usersTest.getChildren().size() != 0) throw new IllegalArgumentException("User with username "+username+" already exists");
 
-				id = context.getSerialFactory().getSerial(dbms, "Users") +"";
+            // -- For adding new user
+            if (operation.equals(Params.Operation.NEWUSER)) {
+                user.getSecurity().setPassword(password);
+                final User userByUsername = userRepository.findByUsername(username);
+                // check if the new username already exists - if so then don't do this
+                if (userByUsername != null) {
+                    throw new IllegalArgumentException("User with username "+username+" already exists");
+                }
 
-				query = "INSERT INTO Users (id, username, password, surname, name, profile, "+
-							"address, city, state, zip, country, email, organisation, kind) "+
-							"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-				dbms.execute(query, Integer.valueOf(id), username, PasswordUtil.encode(context, password), surname, name, profile, address, city, state, zip, country, email, organ, kind);
+                user = userRepository.save(user);
 
-				setUserGroups(id, profile, params, dbms);
-			}
-
-			else {
+				setUserGroups(user, profile, params, context);
+			} else {
 
 			// -- full update
 				if (operation.equals(Params.Operation.FULLUPDATE)) {
-					String query = "UPDATE Users SET username=?, password=?, surname=?, name=?, profile=?, address=?, city=?, state=?, zip=?, country=?, email=?, organisation=?, kind=? WHERE id=?";
-
-					dbms.execute (query, username, PasswordUtil.encode(context,password), surname, name, profile, address, city, state, zip, country, email, organ, kind, Integer.valueOf(id));
+                    user.getSecurity().setPassword(password);
+                    user.setId(Integer.valueOf(id));
+                    user = userRepository.save(user);
 
 					//--- add groups
+                    groupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(user.getId()));
 
-					dbms.execute("DELETE FROM UserGroups WHERE userId=?", Integer.valueOf(id));
-
-					setUserGroups(id, profile, params, dbms);
-
-			// -- edit user info
+					setUserGroups(user, profile, params, context);
 				} else if (operation.equals(Params.Operation.EDITINFO)) {
-					String query = "UPDATE Users SET username=?, surname=?, name=?, profile=?, address=?, city=?, state=?, zip=?, country=?, email=?, organisation=?, kind=? WHERE id=?";
-					dbms.execute (query, username, surname, name, profile, address, city, state, zip, country, email, organ, kind, Integer.valueOf(id));
+
+                    user.setId(Integer.valueOf(id));
+                    user = userRepository.save(user);
 					//--- add groups
-				
-					dbms.execute ("DELETE FROM UserGroups WHERE userId=?", Integer.valueOf(id));
-					setUserGroups(id, profile, params, dbms);
+
+                    groupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(user.getId()));
+					setUserGroups(user, profile, params, context);
 
 			// -- reset password
 				} else if (operation.equals(Params.Operation.RESETPW)) {
 					ApplicationContext appContext = context.getApplicationContext();
 					PasswordUtil.updatePasswordWithNew(false, null, password, Integer.valueOf(id), appContext);
 				} else {
-					throw new IllegalArgumentException("unknown user update operation "+operation);
+					throw new IllegalArgumentException("unknown user update operation " + operation);
 				}
 			} 
 		} else {
@@ -178,43 +191,42 @@ public class Update extends NotInReadOnlyModeService {
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
 
-	private void setUserGroups(String id, String userProfile, Element params,
-			Dbms dbms) throws Exception {
-		String[] profiles = {Geonet.Profile.USER_ADMIN, Geonet.Profile.REVIEWER, Geonet.Profile.EDITOR, Geonet.Profile.REGISTERED_USER};
-		java.util.Set<Integer> editingGroups = new java.util.HashSet<Integer>();
-		int userId = Integer.valueOf(id);
-		for (String profile : profiles) {
+	private void setUserGroups(User user, String userProfile, Element params, ServiceContext context) throws Exception {
+		String[] profiles = {Profile.UserAdmin.name(), Profile.Reviewer.name(), Profile.Editor.name(), Profile.RegisteredUser.name()};
+        Collection<UserGroup> toAdd = new ArrayList<UserGroup>();
+
+        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
+        final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
+
+        for (String profile : profiles) {
 		    
 			@SuppressWarnings("unchecked")
             java.util.List<Element> userGroups = params.getChildren(Params.GROUPS + '_' + profile);
-			for(Element userGroup : userGroups) {
-				String group = userGroup.getText();
-				if (!group.equals("")) {
-					int groupId = Integer.valueOf(group);
-					
-					// Combine all groups editor and reviewer groups
-					if (profile.equals(Geonet.Profile.REVIEWER) || profile.equals(Geonet.Profile.EDITOR)) {
-						editingGroups.add(groupId);
+			for(Element element : userGroups) {
+				String groupEl = element.getText();
+				if (!groupEl.equals("")) {
+					int groupId = Integer.valueOf(groupEl);
+                    Group group = groupRepository.findOne(groupId);
+
+                    // Combine all groups editor and reviewer groups
+                    if (profile.equals(Profile.Reviewer.name())) {
+                        final UserGroup userGroup = new UserGroup()
+                                .setGroup(group)
+                                .setProfile(Profile.Editor)
+                                .setUser(user);
+                        toAdd.add(userGroup);
 					}
-					
-					if (!profile.equals(Geonet.Profile.EDITOR)) {
-						dbms.execute("INSERT INTO UserGroups(userId, groupId, profile) VALUES (?, ?, ?)",
-							 userId, groupId, profile);
-					}
+
+                    final UserGroup userGroup = new UserGroup()
+                            .setGroup(group)
+                            .setProfile(Profile.findProfileIgnoreCase(profile))
+                            .setUser(user);
+                    toAdd.add(userGroup);
 				}
 			}
 		}
-		
-		
-		// Save all editor groups
-		for (Integer groupId : editingGroups) {
-			dbms.execute("INSERT INTO UserGroups(userId, groupId, profile) VALUES (?, ?, ?)",
-					 userId, groupId, Geonet.Profile.EDITOR);
-		}
+
+        userGroupRepository.save(toAdd);
+
 	}
-	
-	public static void addGroup(Dbms dbms, int userId, int groupId, String profile) throws Exception {
-        dbms.execute("INSERT INTO UserGroups(userId, groupId, profile) VALUES (?, ?, ?)",
-                 userId, groupId, profile);
-    }
 }

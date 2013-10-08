@@ -23,29 +23,16 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import static org.quartz.JobKey.jobKey;
-
-import java.io.File;
-import java.lang.reflect.Method;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.JeevesException;
-import jeeves.exceptions.OperationAbortedEx;
-import jeeves.guiservices.session.JeevesUser;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.QuartzSchedulerUtils;
-
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.JeevesException;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.BaseAligner;
@@ -72,6 +59,9 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.QuartzSchedulerUtils;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -87,6 +77,7 @@ import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static org.quartz.JobKey.jobKey;
 
@@ -155,8 +146,6 @@ public abstract class AbstractHarvester extends BaseAligner {
      * @param sm
      * @param dm
      * @return
-     * @throws BadParameterEx
-     * @throws OperationAbortedEx
      */
 	public static AbstractHarvester create(String type, ServiceContext context, HarvesterSettingsManager sm, DataManager dm) throws BadParameterEx, OperationAbortedEx {
 		//--- raises an exception if type is null

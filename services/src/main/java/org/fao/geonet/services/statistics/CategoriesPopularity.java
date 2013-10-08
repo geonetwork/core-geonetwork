@@ -7,6 +7,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.statistic.MetadataStatisticSpec;
 import org.fao.geonet.repository.statistic.MetadataStatisticsQueries;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.constants.Geonet;
@@ -76,8 +77,8 @@ public class CategoriesPopularity extends NotInReadOnlyModeService {
 
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         final MetadataStatisticsQueries metadataStatistics = metadataRepository.getMetadataStatistics();
-        final int totalMetadataPopularity = metadataStatistics.getTotalStat(Optional.<Specification<Metadata>>absent());
-        final Map<MetadataCategory,Integer> metadataCategoryToPopularityMap = metadataStatistics.getMetadataCategoryToStatMap();
+        final int totalMetadataPopularity = metadataStatistics.getTotalStat(MetadataStatisticSpec.StandardSpecs.popularitySum(), Optional.<Specification<Metadata>>absent());
+        final Map<MetadataCategory,Integer> metadataCategoryToPopularityMap = metadataStatistics.getMetadataCategoryToStatMap(MetadataStatisticSpec.StandardSpecs.popularitySum());
 
         DefaultPieDataset dataset = new DefaultPieDataset();
 

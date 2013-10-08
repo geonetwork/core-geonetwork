@@ -25,7 +25,6 @@ package org.fao.geonet.guiservices.templates;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Log;
@@ -69,8 +68,6 @@ public class AddDefault implements Service {
 		Element result = new Element(Jeeves.Elem.RESPONSE);
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
 
 		DataManager dataMan = gc.getBean(DataManager.class);
 		SchemaManager schemaMan = gc.getBean(SchemaManager.class);

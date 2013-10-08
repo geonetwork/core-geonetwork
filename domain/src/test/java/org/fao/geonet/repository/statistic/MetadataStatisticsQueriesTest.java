@@ -5,9 +5,11 @@ import com.google.common.base.Optional;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
@@ -28,21 +30,23 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
     private static final int POPULARITY = 2;
     public static final int RATING = 3;
     @Autowired
-    private UserRepository _userRepository;
+    UserRepository _userRepository;
     @Autowired
-    private GroupRepository _groupRepository;
+    GroupRepository _groupRepository;
     @Autowired
-    private MetadataCategoryRepository _categoryRepository;
+    MetadataCategoryRepository _categoryRepository;
     @Autowired
-    private MetadataRepository _metadataRepository;
+    MetadataRepository _metadataRepository;
     @Autowired
-    private MetadataStatusRepository _metadataStatusRepository;
+    MetadataStatusRepository _metadataStatusRepository;
     @Autowired
-    private StatusValueRepository _statusValueRepository;
+    StatusValueRepository _statusValueRepository;
     @Autowired
-    private MetadataValidationRepository _metadataValidationRepository;
+    MetadataValidationRepository _metadataValidationRepository;
     @Autowired
-    private SourceRepository _sourceRepository;
+    SourceRepository _sourceRepository;
+    @Autowired
+    OperationAllowedRepository _operationAllowedRepository;
 
     private AtomicInteger _inc = new AtomicInteger();
 
@@ -578,6 +582,40 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
 
     }
     @Test
+    public void testGetStatBasedOnOperationAllowed() throws Exception {
+        final MetadataStatisticsQueries metadataStatistics = _metadataRepository.getMetadataStatistics();
+        final Metadata metadata = MetadataRepositoryTest.newMetadata(_inc);
+        setPopularityAndRating(metadata);
+        final Metadata md1 = _metadataRepository.save(metadata);
+
+        Metadata metadata1 = MetadataRepositoryTest.newMetadata(_inc);
+        setPopularityAndRating(metadata1);
+        final Metadata md2 = _metadataRepository.save(metadata1);
+
+        final Metadata metadata2 = MetadataRepositoryTest.newMetadata(_inc);
+        setPopularityAndRating(metadata2);
+        final Metadata md3 = _metadataRepository.save(metadata2);
+
+
+        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md1.getId(), ReservedGroup.all.getId(), ReservedOperation.download.getId())));
+        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md1.getId(), ReservedGroup.all.getId(), ReservedOperation.view.getId())));
+        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md1.getId(), ReservedGroup.intranet.getId(), ReservedOperation.view.getId())));
+
+        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md2.getId(), ReservedGroup.all.getId(), ReservedOperation.view.getId())));
+        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md2.getId(), ReservedGroup.intranet.getId(), ReservedOperation.view.getId())));
+
+        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md3.getId(), ReservedGroup.intranet.getId(), ReservedOperation.view.getId())));
+
+        Specification<OperationAllowed> operationAllowedSpec = Specifications.where(OperationAllowedSpecs.isPublic(ReservedOperation
+                .view)).or(OperationAllowedSpecs.isPublic(ReservedOperation.download));
+
+        assertEquals(2, metadataStatistics.getStatBasedOnOperationAllowed(metadataCount(), operationAllowedSpec));
+        assertEquals(2 * POPULARITY, metadataStatistics.getStatBasedOnOperationAllowed(popularitySum(), operationAllowedSpec));
+        assertEquals(2 * RATING, metadataStatistics.getStatBasedOnOperationAllowed(ratingSum(), operationAllowedSpec));
+
+
+    }
+    @Test
     public void testNoErrorsWhenNoMetadata() throws Exception {
         final MetadataStatisticsQueries metadataStatistics = _metadataRepository.getMetadataStatistics();
         final Optional<Specification<Metadata>> absent = Optional.absent();
@@ -588,6 +626,8 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         assertEquals(0, metadataStatistics.getGroupOwnerToStatMap(metadataCount()).size());
         assertEquals(0, metadataStatistics.getGroupOwnerToStatMap(ratingSum()).size());
         assertEquals(0, metadataStatistics.getGroupOwnerToStatMap(popularitySum()).size());
+        assertEquals(0, metadataStatistics.getStatBasedOnOperationAllowed(popularitySum(), OperationAllowedSpecs.hasOperation
+                (ReservedOperation.view)));
 
         final Map<Boolean, Integer> isHarvestedToStatMap = metadataStatistics.getIsHarvestedToStatMap(metadataCount());
         metadataStatistics.getIsHarvestedToStatMap(ratingSum());

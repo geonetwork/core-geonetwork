@@ -23,11 +23,13 @@
 
 package org.fao.geonet.services.resources;
 
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
@@ -124,11 +126,14 @@ public class Download implements Service
 				// send emails about downloaded file to groups with notify privilege
 
                 OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);
+                final GroupRepository groupRepository = context.getBean(GroupRepository.class);
+
                 List<OperationAllowed> opsAllowed = opAllowedRepo.findByMetadataId(id);
                 
 				for (OperationAllowed opAllowed : opsAllowed) {
-					String  name  = opAllowed.getGroup().getName();
-					String  email = opAllowed.getGroup().getEmail();
+                    Group group = groupRepository.findOne(opAllowed.getId().getGroupId());
+					String  name  = group.getName();
+					String  email = group.getEmail();
 
 					if (email.trim().length() != 0)
 					{

@@ -1160,7 +1160,6 @@ public class DataManager {
      * TODO javadoc.
      *
      * @param id
-     * @param type
      * @param title
      * @throws Exception
      */
@@ -1551,24 +1550,6 @@ public class DataManager {
      * @throws Exception
      */
     public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
-
-        return getMetadata(srvContext, dbms, id, forEditing, withEditorValidationErrors, keepXlinkAttributes);
-    }
-
-    /**
-     * Retrieves a metadata (in xml) given its id; adds editing information if requested and validation errors if
-     * requested.
-     *
-     * @param srvContext
-     * @param dbms
-     * @param id
-     * @param forEditing        Add extra element to build metadocument {@link EditLib#expandElements(String, Element)}
-     * @param withEditorValidationErrors
-     * @param keepXlinkAttributes When XLinks are resolved in non edit mode, do not remove XLink attributes.
-     * @return
-     * @throws Exception
-     */
-    public Element getMetadata(ServiceContext srvContext, Dbms dbms, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
         boolean doXLinks = xmlSerializer.resolveXLinks();
         Element metadataXml = xmlSerializer.selectNoXLinkResolver(id, false);
         if (metadataXml == null) return null;
@@ -1705,17 +1686,17 @@ public class DataManager {
             metadataXml = updateFixedInfo(schema, Optional.of(intId), null, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp.yes : UpdateDatestamp.no), context);
         }
 
+        // Notifies the metadata change to metatada notifier service
+        final Metadata metadata = _metadataRepository.findOne(metadataId);
+
         String uuid = null;
         if (schemaMan.getSchema(schema).isReadwriteUUID()
-                && !getMetadataTemplate(dbms, id).equals("s")) {
+                && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
             uuid = extractUUID(schema, metadataXml);
         }
 
         //--- write metadata to dbms
         xmlSerializer.update(metadataId, metadataXml, changeDate, updateDateStamp, uuid, context);
-
-        // Notifies the metadata change to metatada notifier service
-        final Metadata metadata = _metadataRepository.findOne(metadataId);
         if (metadata.getDataInfo().getType() == MetadataType.METADATA) {
             // Notifies the metadata change to metatada notifier service
             notifyMetadataChange(metadataXml, metadataId);
@@ -2124,7 +2105,7 @@ public class DataManager {
     private void manageThumbnail(ServiceContext context, String id, boolean small, Element env,
                                  String styleSheet, boolean indexAfterChange) throws Exception {
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
-        Element md = getMetadata(context, dbms, id, forEditing, withValidationErrors, keepXlinkAttributes);
+        Element md = getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
         if (md == null)
             return;
