@@ -311,6 +311,7 @@ public class SettingManager {
                 }
                 setting.setValue(value);
             } catch (Exception e) {
+            	e.printStackTrace();
                 Log.warning(Geonet.SETTINGS, "Failed to save setting with name: " + key + ", value: " + value + ". Error: " + e.getMessage());
                 throw e;
             }

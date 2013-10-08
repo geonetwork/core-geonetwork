@@ -26,6 +26,7 @@ public class HarvestResult {
     public int subtemplatesAdded;		// = subtemplates for collection datasets
     public int subtemplatesRemoved;	// = fragments generated
     public int subtemplatesUpdated;
+    public int originalMetadata = 0;    //How many metadata was returned on the call
     public int totalMetadata;			// = md for data and service (ie. data + 1)
     public int unchangedMetadata;
     public int unknownSchema;	        // = md with unknown schema (should be 0 if no layer loaded using md url)
@@ -35,5 +36,7 @@ public class HarvestResult {
     public int thumbnails;		        // = number of thumbnail generated
     public int thumbnailsFailed;        // = number of thumbnail creation which failed
 
-
+    public long startTime;
+    public long endTime;
+    public long executionTime;
 }

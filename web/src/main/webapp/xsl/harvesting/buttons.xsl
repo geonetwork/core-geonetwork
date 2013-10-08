@@ -36,6 +36,11 @@
 		<button class="content" onclick="harvesting.clone()">
 			<xsl:value-of select="/root/gui/harvesting/clone"/>
 		</button>
+		&#160;			
+		
+		<button class="content" onclick="harvesting.show(SHOW.NOTIFICATIONS)">
+			<xsl:value-of select="/root/gui/harvesting/notification"/>
+		</button>
 
 		<p/>
 
@@ -54,7 +59,11 @@
 		<button class="content" onclick="load('{/root/gui/locService}/harvesting.history.full?{$modalArg}')">
 			<xsl:value-of select="/root/gui/harvesting/history"/>
 		</button>
-
+		&#160;
+		<button class="content" onclick="javascript:harvesting.clear()" title="{/root/gui/harvesting/clearTooltip}">
+			<xsl:value-of select="/root/gui/harvesting/clear"/>
+		</button>
+		
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
@@ -67,6 +76,19 @@
 		&#160;
 		<button class="content" onclick="harvesting.newNode()">
 			<xsl:value-of select="/root/gui/harvesting/add"/>
+		</button>
+	</xsl:template>
+
+	<!-- ============================================================================================= -->
+	<!-- Notif panel - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<xsl:template name="notifButtons">
+		<button class="content" onclick="harvesting.show(SHOW.LIST)">
+			<xsl:value-of select="/root/gui/strings/back"/>
+		</button>
+		&#160;
+		<button class="content" onclick="harvesting.updateMail()">
+			<xsl:value-of select="/root/gui/harvesting/save"/>
 		</button>
 	</xsl:template>
 
