@@ -151,7 +151,10 @@ public class HarvesterHistoryDao {
 		    try{
     		    File f = new File(file.getTextTrim());
     		    if(f.exists() && f.canWrite()) {
-    		        f.delete();
+    		        if (!f.delete()) {
+    		            Log.warning(Geonet.HARVESTER, 
+    		                      "Removing history. Failed to delete file: " + f.getCanonicalPath());
+    		        }
     		    } 
     		}
 		    catch(Exception e){
