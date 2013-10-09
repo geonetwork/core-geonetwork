@@ -617,7 +617,10 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 				logger.warning(" (C) Exc : "+ ex);
 			}
 		} finally {
-			errors.addAll(getErrors());
+		    List<HarvestError> harvesterErrors = getErrors();
+		    if (harvesterErrors != null) {
+		        errors.addAll(harvesterErrors);
+		    }
 		}
         long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
 
