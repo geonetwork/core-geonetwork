@@ -622,7 +622,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		
 		
 		//--- using GetCapabilities document
-		if (!loaded){
+		if (!loaded && params.useLayer){
 			try {
 				//--- set XSL param to filter on layer and set uuid
 				Map<String, String> param = new HashMap<String, String>();
