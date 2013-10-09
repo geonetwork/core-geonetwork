@@ -26,6 +26,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.Stats;
+import org.apache.commons.dbcp.BasicDataSource;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
@@ -175,6 +176,23 @@ public class GetInfo implements Service {
         try {
             connection = context.getBean(DataSource.class).getConnection();
             dbURL = connection.getMetaData().getURL();
+            databaseProperties.put("db.openattempt", "Database Opened Successfully");
+
+
+            if (connection instanceof BasicDataSource) {
+                BasicDataSource basicDataSource = (BasicDataSource) connection;
+                try {
+                    databaseProperties.put("db.numactive", ""+basicDataSource.getNumActive());
+                    databaseProperties.put("db.numidle", ""+basicDataSource.getNumIdle());
+                    databaseProperties.put("db.maxactive", ""+basicDataSource.getMaxActive());
+                } catch (Exception e) {
+                    databaseProperties.put("db.statserror", "Failed to get stats on database connections. Error is: "+e.getMessage());
+                }
+            }
+
+        } catch (Exception e) {
+            databaseProperties.put("db.openattempt", "Failed to open database connection, Check config.xml db file configuration. Error" +
+                                                     " is: " + e.getMessage());
         } finally {
             if (connection != null) {
                 connection.close();
@@ -182,21 +200,6 @@ public class GetInfo implements Service {
         }
 		databaseProperties.put("db.url", dbURL);
 
-		try {
-			context.getResourceManager().open(Geonet.Res.MAIN_DB);
-			databaseProperties.put("db.openattempt", "Database Opened Successfully");
-		} catch (Exception e) {
-			databaseProperties.put("db.openattempt", "Failed to open database connection, Check config.xml db file configuration. Error is: " + e.getMessage());
-		}
-
-		try {
-			Stats dbStats = context.getResourceManager().getStats(Geonet.Res.MAIN_DB);
-			databaseProperties.put("db.numactive", Integer.toString(dbStats.numActive));
-			databaseProperties.put("db.numidle", Integer.toString(dbStats.numIdle));
-			databaseProperties.put("db.maxactive", Integer.toString(dbStats.maxActive));
-		} catch (Exception e) {
-			databaseProperties.put("db.statserror", "Failed to get stats on database connections. Error is: "+e.getMessage());
-		}
 	}
 	
 	

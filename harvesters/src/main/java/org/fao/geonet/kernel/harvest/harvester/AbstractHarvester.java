@@ -70,8 +70,9 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
-import javax.transaction.TransactionManager;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
@@ -268,7 +269,6 @@ public abstract class AbstractHarvester extends BaseAligner {
 			dataMan.deleteMetadata(context, "" + id);
 		}
 
-        context.getBean(TransactionManager.class).commit();
 		doDestroy();
 	}
 
@@ -499,42 +499,38 @@ public abstract class AbstractHarvester extends BaseAligner {
         long startTime = System.currentTimeMillis();
         try {
             error = null;
-            Logger logger = Log.createLogger(Geonet.HARVESTER);
-            String nodeName = getParams().name + " (" + getClass().getSimpleName() + ")";
-            String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
-            final TransactionManager transactionManager = context.getBean(TransactionManager.class);
-            transactionManager.begin();
-            try {
-                login();
+            final Logger logger = Log.createLogger(Geonet.HARVESTER);
+            final String nodeName = getParams().name + " (" + getClass().getSimpleName() + ")";
+            final String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
+            context.executeInTransaction(new TransactionCallbackWithoutResult() {
+                @Override
+                protected void doInTransactionWithoutResult(TransactionStatus status) {
+                    try {
+                        login();
 
-                //--- update lastRun
-                settingMan.setValue("harvesting/id:" + id + "/info/lastRun", lastRun);
+                        //--- update lastRun
+                        settingMan.setValue("harvesting/id:" + id + "/info/lastRun", lastRun);
 
-                //--- proper harvesting
-                logger.info("Started harvesting from node : " + nodeName);
-                HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger);
-                // todo check (was: processwithfastindexing)
-                h.process();
-                logger.info("Ended harvesting from node : " + nodeName);
+                        //--- proper harvesting
+                        logger.info("Started harvesting from node : " + nodeName);
+                        HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger);
+                        // todo check (was: processwithfastindexing)
+                        h.process();
+                        logger.info("Ended harvesting from node : " + nodeName);
 
-                if (getParams().oneRunOnly) {
-                    stop();
+                        if (getParams().oneRunOnly) {
+                            stop();
+                        }
+                    } catch (Throwable t) {
+                        logger.warning("Raised exception while harvesting from : " + nodeName);
+                        logger.warning(" (C) Class   : " + t.getClass().getSimpleName());
+                        logger.warning(" (C) Message : " + t.getMessage());
+                        error = t;
+                        t.printStackTrace();
+                    }
                 }
-            } catch (Throwable t) {
-                logger.warning("Raised exception while harvesting from : " + nodeName);
-                logger.warning(" (C) Class   : " + t.getClass().getSimpleName());
-                logger.warning(" (C) Message : " + t.getMessage());
-                error = t;
-                t.printStackTrace();
-                try {
-                    transactionManager.rollback();
-                } catch (Exception ex) {
-                    logger.warning("CANNOT ABORT EXCEPTION");
-                    logger.warning(" (C) Exc : " + ex);
-                }
-            } finally {
-                transactionManager.commit();
-            }
+            });
+
             long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
 
             // record the results/errors for this harvest in the database

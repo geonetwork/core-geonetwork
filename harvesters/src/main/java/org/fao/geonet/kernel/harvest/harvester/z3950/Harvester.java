@@ -48,8 +48,10 @@ import org.fao.geonet.services.main.Info;
 import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.TransactionManager;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -108,8 +110,11 @@ class Harvester extends BaseAligner {
 			serverResults.locallyRemoved++;
 		}
 
-		if (serverResults.locallyRemoved > 0) {
-            context.getBean(TransactionManager.class).commit();
+
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+
+        if (serverResults.locallyRemoved > 0) {
+            context.getBean(JpaTransactionManager.class).commit(transactionStatus);
         }
 
 		// --- Search remote node
@@ -350,8 +355,8 @@ class Harvester extends BaseAligner {
 				}
 			
 				dataMan.indexMetadata(id);
+                context.getBean(JpaTransactionManager.class).commit(transactionStatus);
 
-                context.getBean(TransactionManager.class).commit();
                 result.addedMetadata++;
             }
         }

@@ -28,228 +28,223 @@ import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 import java.util.Vector;
 
 //=============================================================================
 
-/** A container class for a service. It collect the method and the filter
-  */
+/**
+ * A container class for a service. It collect the method and the filter
+ */
 
-public class ServiceInfo
-{
-	private String  appPath;
-	private String  match;
-	private String  sheet;
-	private boolean cache = false;
+public class ServiceInfo {
+    private String appPath;
+    private String match;
+    private String sheet;
+    private boolean cache = false;
 
-	private Vector<Service> vServices= new Vector<Service>();
-	private Vector<OutputPage> vOutputs = new Vector<OutputPage>();
-	private Vector<ErrorPage> vErrors  = new Vector<ErrorPage>();
+    private Vector<Service> vServices = new Vector<Service>();
+    private Vector<OutputPage> vOutputs = new Vector<OutputPage>();
+    private Vector<ErrorPage> vErrors = new Vector<ErrorPage>();
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public ServiceInfo(String appPath)
-	{
-		this.appPath = appPath;
-	}
+    public ServiceInfo(String appPath) {
+        this.appPath = appPath;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
-	public void setMatch(String match)
-	{
-		if (match != null && match.trim().equals(""))
-			match = null;
+    public void setMatch(String match) {
+        if (match != null && match.trim().equals(""))
+            match = null;
 
-		this.match = match;
-	}
+        this.match = match;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public void setSheet(String sheet)
-	{
-		if (sheet != null && sheet.trim().equals(""))
-			sheet = null;
+    public void setSheet(String sheet) {
+        if (sheet != null && sheet.trim().equals(""))
+            sheet = null;
 
-		this.sheet = sheet;
-	}
+        this.sheet = sheet;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public void setCache(String cache)
-	{
-		this.cache = "yes".equals(cache);
-	}
+    public void setCache(String cache) {
+        this.cache = "yes".equals(cache);
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public boolean isCacheSet() { return cache; }
+    public boolean isCacheSet() {
+        return cache;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public void addService(Service s)
-	{
-		vServices.add(s);
-	}
+    public void addService(Service s) {
+        vServices.add(s);
+    }
 
-	//--------------------------------------------------------------------------
-	/** Adds to the engine the output page of a service
-	  */
+    //--------------------------------------------------------------------------
 
-	public void addOutputPage(OutputPage page)
-	{
-		vOutputs.add(page);
-	}
+    /**
+     * Adds to the engine the output page of a service
+     */
 
-	//--------------------------------------------------------------------------
+    public void addOutputPage(OutputPage page) {
+        vOutputs.add(page);
+    }
 
-	public void addErrorPage(ErrorPage page)
-	{
-		vErrors.add(page);
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public void addErrorPage(ErrorPage page) {
+        vErrors.add(page);
+    }
 
-	public Element execServices(Element params, ServiceContext context) throws Exception
-	{
-		if (params == null)
-			params = new Element(Jeeves.Elem.REQUEST);
+    //--------------------------------------------------------------------------
 
-		//--- transform input request using a given stylesheet
+    public Element execServices(Element params, ServiceContext context) throws Exception {
+        if (params == null)
+            params = new Element(Jeeves.Elem.REQUEST);
 
-		params = transformInput(params);
+        //--- transform input request using a given stylesheet
 
-		if (vServices.size() == 0)
-		{
-			params.setName(Jeeves.Elem.RESPONSE);
-			return params;
-		}
+        params = transformInput(params);
 
-		Element response = params;
+        if (vServices.size() == 0) {
+            params.setName(Jeeves.Elem.RESPONSE);
+            return params;
+        }
 
-		for(Service service : vServices) {
-			response = execService(service, response, context);
-		}
+        Element response = params;
 
-		//--- we must detach the element from its parent because the output dispatcher
-		//--- links it to the root element
-		//--- note that caching is not allowed in any case
+        for (Service service : vServices) {
+            response = execService(service, response, context);
+        }
 
-		response.detach();
+        //--- we must detach the element from its parent because the output dispatcher
+        //--- links it to the root element
+        //--- note that caching is not allowed in any case
 
-		return response;
-	}
+        response.detach();
 
-	//--------------------------------------------------------------------------
+        return response;
+    }
 
-	public OutputPage findOutputPage(Element response) throws Exception {
-		for (OutputPage page : vOutputs) {
-			if (page.matches(response))
-				return page;
-		}
+    //--------------------------------------------------------------------------
 
-		return null;
-	}
+    public OutputPage findOutputPage(Element response) throws Exception {
+        for (OutputPage page : vOutputs) {
+            if (page.matches(response))
+                return page;
+        }
 
-	//--------------------------------------------------------------------------
+        return null;
+    }
 
-	public ErrorPage findErrorPage(String id) {
-		for (ErrorPage page : vErrors) {
-			if (page.matches(id))
-				return page;
-		}
+    //--------------------------------------------------------------------------
 
-		return null;
-	}
+    public ErrorPage findErrorPage(String id) {
+        for (ErrorPage page : vErrors) {
+            if (page.matches(id))
+                return page;
+        }
 
-	//---------------------------------------------------------------------------
-	/** Returns true if the service input has elements that match this page
-	  */
+        return null;
+    }
 
-	public boolean matches(Element request) throws Exception
-	{
-		if (match == null)
-			return true;
-		else
-			return Xml.selectBoolean(request, match);
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    /**
+     * Returns true if the service input has elements that match this page
+     */
 
-	private Element transformInput(Element request) throws Exception
-	{
-		if (sheet == null)
-			return request;
+    public boolean matches(Element request) throws Exception {
+        if (match == null)
+            return true;
+        else
+            return Xml.selectBoolean(request, match);
+    }
 
-		String styleSheet = appPath + Jeeves.Path.XSL + sheet;
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-		ServiceManager.info("Transforming input with stylesheet : " +styleSheet);
+    private Element transformInput(Element request) throws Exception {
+        if (sheet == null)
+            return request;
 
-		try
-		{
-			Element result = Xml.transform(request, styleSheet);
-			ServiceManager.info("End of input transformation");
+        String styleSheet = appPath + Jeeves.Path.XSL + sheet;
 
-			return result;
-		}
-		catch(Exception e)
-		{
-			ServiceManager.error("Exception during transformation");
-			ServiceManager.error("  (C) message is : "+ e.getMessage());
+        ServiceManager.info("Transforming input with stylesheet : " + styleSheet);
 
-			Throwable t = e;
+        try {
+            Element result = Xml.transform(request, styleSheet);
+            ServiceManager.info("End of input transformation");
 
-			while(t.getCause() != null)
-			{
-				ServiceManager.error("  (C) message is : "+ t.getMessage());
-				t = t.getCause();
-			}
+            return result;
+        } catch (Exception e) {
+            ServiceManager.error("Exception during transformation");
+            ServiceManager.error("  (C) message is : " + e.getMessage());
 
-			throw e;
-		}
-	}
+            Throwable t = e;
 
-	//--------------------------------------------------------------------------
+            while (t.getCause() != null) {
+                ServiceManager.error("  (C) message is : " + t.getMessage());
+                t = t.getCause();
+            }
 
-	private Element execService(Service service, Element params, ServiceContext context) throws Exception
-	{
-		try
-		{
-			Element response = service.exec(params, context);
+            throw e;
+        }
+    }
 
-			if (response == null)
-				response = new Element(Jeeves.Elem.RESPONSE);
+    //--------------------------------------------------------------------------
 
-			//--- commit resources and return response
+    private Element execService(final Service service, final Element params, final ServiceContext context) throws Exception {
+        try {
+            return context.executeInTransaction(new TransactionCallback<Element>() {
+                @Override
+                public Element doInTransaction(final TransactionStatus status) {
+                    try {
+                        Element response = service.exec(params, context);
 
-			context.getResourceManager().close();
+                        if (response == null) {
+                            response = new Element(Jeeves.Elem.RESPONSE);
+                        }
 
-			return response;
-		}
-		catch(Exception e)
-		{
-			//--- in case of exception we have to abort all resources
+                        //--- commit resources and return response
+                        return response;
+                    } catch (Exception e) {
+                        //--- in case of exception we have to abort all resources
+                        ServiceManager.error("Exception when executing service");
+                        ServiceManager.error(" (C) Exc : " + e);
 
-			context.getResourceManager().abort();
-			ServiceManager.error("Exception when executing service");
-			ServiceManager.error(" (C) Exc : " + e);
-
-			throw e;
-		}
-	}
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof Exception) {
+                throw (Exception) e.getCause();
+            }
+            throw e;
+        }
+    }
 }
-
-//=============================================================================
 

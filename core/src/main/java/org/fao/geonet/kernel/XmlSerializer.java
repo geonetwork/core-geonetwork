@@ -102,14 +102,6 @@ public abstract class XmlSerializer {
 	public static void clearThreadLocal() {
 		configThreadLocal.set(null);
 	}
-	
-    /**
-     *
-     * @param sMan
-     */
-	public XmlSerializer(SettingManager sMan) {
-		_settingManager = sMan;
-	}
 
     /**
      *

@@ -4,8 +4,8 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
 import jeeves.monitor.MetricsFactory;
+import jeeves.server.JeevesEngine;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
 
 import com.sun.management.UnixOperatingSystemMXBean;
 import com.yammer.metrics.core.Gauge;
@@ -20,7 +20,7 @@ public class FreeFileDescriptorsGuage implements MetricsFactory<Gauge<Long>> {
 
     @Override
     public Gauge<Long> create(MetricsRegistry metricsRegistry, final ServiceContext context) {
-        return metricsRegistry.newGauge(ResourceManager.class, "Free files descriptors" ,new Gauge<Long>() {
+        return metricsRegistry.newGauge(JeevesEngine.class, "Free files descriptors" ,new Gauge<Long>() {
             @Override
             public Long value () {
                 try {

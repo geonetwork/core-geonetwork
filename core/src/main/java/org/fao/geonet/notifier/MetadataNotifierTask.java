@@ -24,8 +24,8 @@ package org.fao.geonet.notifier;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
-
-import javax.transaction.TransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 public class MetadataNotifierTask implements Runnable {
     private ServiceContext context;
@@ -37,20 +37,15 @@ public class MetadataNotifierTask implements Runnable {
     }
 
     public void run() {
-        try {
-            final TransactionManager manager = context.getBean(TransactionManager.class);
-            manager.begin();
-            try {
-                gc.getBean(MetadataNotifierManager.class).updateMetadataBatch(context, gc);
-                manager.commit();
-            } catch (Exception x) {
-                manager.rollback();
-                System.out.println(x.getMessage());
-                x.printStackTrace();
+        context.executeInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+                    gc.getBean(MetadataNotifierManager.class).updateMetadataBatch(context, gc);
+                } catch (MetadataNotifierManager.MetadataNotifierException e) {
+                    throw new RuntimeException(e);
+                }
             }
-        } catch (Exception x) {
-            System.out.println(x.getMessage());
-            x.printStackTrace();
-        }
+        });
     }
 }

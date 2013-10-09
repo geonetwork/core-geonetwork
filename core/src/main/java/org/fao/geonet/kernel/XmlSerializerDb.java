@@ -38,10 +38,6 @@ import org.jdom.Element;
  */
 public class XmlSerializerDb extends XmlSerializer {
 
-		public XmlSerializerDb(SettingManager sMan) {
-			super(sMan);
-		}
-
     /**
      *  Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read
      *  is converted into xml, XLinks are resolved when config'd on.

@@ -25,7 +25,6 @@ package org.fao.geonet.kernel;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import jeeves.server.resources.ResourceManager;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import jeeves.xlink.Processor;
@@ -64,9 +63,9 @@ import java.util.concurrent.Executors;
 
 public class ThesaurusManager implements ThesaurusFinder {
 
-	public synchronized static ThesaurusManager getInstance(ServiceContext context, String appPath, DataManager dm, ResourceManager rm, String thesauriRepository) throws Exception { 
+	public synchronized static ThesaurusManager getInstance(ServiceContext context, String appPath, DataManager dm, String thesauriRepository) throws Exception {
 	 	if (_instance == null){ 
-	 	    _instance = new ThesaurusManager(context, appPath, dm, rm, thesauriRepository); 
+	 	    _instance = new ThesaurusManager(context, appPath, dm, thesauriRepository);
 	 	} 
 	 	return _instance; 
 	}
@@ -77,7 +76,6 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 	private String thesauriDirectory = null;
 
-	private ResourceManager rm;
 
 	private DataManager dm;
 
@@ -87,12 +85,13 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 	/**
 	 * 
-	 * @param context ServiceContext used to check when servlet is up only
-	 * @param appPath to find conversion XSLTs etc
-	 * @param thesauriRepository
-	 * @throws Exception
+	 *
+     * @param context ServiceContext used to check when servlet is up only
+     * @param appPath to find conversion XSLTs etc
+     * @param thesauriRepository
+     * @throws Exception
 	 */
-	private ThesaurusManager(ServiceContext context, String appPath, DataManager dm, ResourceManager rm, String thesauriRepository)
+	private ThesaurusManager(ServiceContext context, String appPath, DataManager dm, String thesauriRepository)
 			throws Exception {
 		// Get Sesame interface
 		service = Sesame.getService();
@@ -105,7 +104,6 @@ public class ThesaurusManager implements ThesaurusFinder {
 		thesauriDirectory = thesauriDir.getAbsolutePath();
 
 		this.dm = dm;
-		this.rm = rm;
 
 		batchBuildTable(context, thesauriDir);
 	}

@@ -30,72 +30,77 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.jdom.Element;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+
 
 //=============================================================================
 
-public class Call implements GuiService
-{
-	private String  name;
-	private Service serviceObj;
+public class Call implements GuiService {
+    private String name;
+    private Service serviceObj;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
-   public Call(Element config, String pack, String appPath) throws Exception
-	{
-		name = Util.getAttrib(config, ConfigFile.Call.Attr.NAME);
+    @SuppressWarnings("unchecked")
+    public Call(Element config, String pack, String appPath) throws Exception {
+        name = Util.getAttrib(config, ConfigFile.Call.Attr.NAME);
 
-		//--- handle 'class' attrib
+        //--- handle 'class' attrib
 
-		String clas = Util.getAttrib(config, ConfigFile.Call.Attr.CLASS);
+        String clas = Util.getAttrib(config, ConfigFile.Call.Attr.CLASS);
 
-		if (clas.startsWith("."))
-			clas = pack + clas;
+        if (clas.startsWith("."))
+            clas = pack + clas;
 
-		//--- let everyone else know that this is a guiservice
-		Element guiService = new Element("param");
-		guiService.setAttribute(Jeeves.Attr.NAME, Jeeves.Text.GUI_SERVICE);
-		guiService.setAttribute(Jeeves.Attr.VALUE, "yes");
-		config.addContent(guiService);
+        //--- let everyone else know that this is a guiservice
+        Element guiService = new Element("param");
+        guiService.setAttribute(Jeeves.Attr.NAME, Jeeves.Text.GUI_SERVICE);
+        guiService.setAttribute(Jeeves.Attr.VALUE, "yes");
+        config.addContent(guiService);
 
-		serviceObj = (Service) Class.forName(clas).newInstance();
-		serviceObj.init(appPath, new ServiceConfig(config.getChildren()));
-	}
+        serviceObj = (Service) Class.forName(clas).newInstance();
+        serviceObj.init(appPath, new ServiceConfig(config.getChildren()));
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Exec
-	//---
-	//--------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Exec
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element response, ServiceContext context) throws Exception
-	{
-		try
-		{
-			//--- invoke the method and obtain a jdom result
+    public Element exec(final Element response, final ServiceContext context) throws Exception {
+        try {
+            return context.executeInTransaction(new TransactionCallback<Element>() {
+                @Override
+                public Element doInTransaction(final TransactionStatus status) {
+                    try {
+                        //--- invoke the method and obtain a jdom result
 
-			response = serviceObj.exec(response, context);
+                        Element finalResponse = serviceObj.exec(response, context);
 
-			context.getResourceManager().close();
+                        if (finalResponse != null) {
+                            finalResponse.setName(name);
+                        }
 
-			if (response != null)
-				response.setName(name);
-
-			return response;
-		}
-		catch(Exception e)
-		{
-			//--- in case of exception we have to abort all resources
-
-			context.getResourceManager().abort();
-
-			throw e;
-		}
-	}
+                        return finalResponse;
+                    } catch (Exception e) {
+                        //--- in case of exception we have to abort all resources
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof Exception) {
+                throw (Exception) e.getCause();
+            }
+            throw e;
+        }
+    }
 }
 
 //=============================================================================

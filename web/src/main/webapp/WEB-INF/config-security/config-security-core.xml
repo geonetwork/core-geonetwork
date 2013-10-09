@@ -52,10 +52,10 @@
 			</bean>
 		</constructor-arg>
 		<constructor-arg>
-			<ref bean="filter"/>
+			<ref bean="filterChainFilters"/>
 		</constructor-arg>
 	</bean>
-	<bean id="filter" class="java.util.ArrayList">
+	<bean id="filterChainFilters" class="java.util.ArrayList">
 		<constructor-arg>
 			<list>
 				<ref bean="securityContextPersistenceFilter" />

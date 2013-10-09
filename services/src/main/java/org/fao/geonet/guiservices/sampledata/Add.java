@@ -36,8 +36,9 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
-import javax.transaction.TransactionManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,12 +59,12 @@ public class Add implements Service {
 	 * @return A report on the sample import with information about the status
 	 *         of the insertion operation (failed|loaded).
 	 */
-	public Element exec(Element params, ServiceContext context)
+	public Element exec(final Element params, final ServiceContext context)
 			throws Exception {
 
 		String schemaList = Util.getParam(params, Params.SCHEMA);
-		String serviceStatus = "true";
-		String serviceError = "";
+		final String[] serviceStatus = {"true"};
+		final String[] serviceError = {""};
 
 		Element result = new Element(Jeeves.Elem.RESPONSE);
 
@@ -93,27 +94,29 @@ public class Add implements Service {
 						sampleDataFilesList.add(file);
 			}
 
-            final TransactionManager transactionManager = context.getBean(TransactionManager.class);
-            for (File file : sampleDataFilesList) {
-                try {
-                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                        Log.debug(Geonet.DATA_MANAGER, "Loading sample data: " + file);
+            for (final File file : sampleDataFilesList) {
+                context.executeInTransaction(new TransactionCallbackWithoutResult() {
+                    @Override
+                    protected void doInTransactionWithoutResult(TransactionStatus status) {
+                        try {
+                            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                                Log.debug(Geonet.DATA_MANAGER, "Loading sample data: " + file);
+                            }
+                            MEFLib.doImport(params, context, file, "");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            serviceStatus[0] = "false";
+                            serviceError[0] = e.getMessage() + " whilst loading " + file;
+                            Log.error(Geonet.DATA_MANAGER,
+                                    "Error loading sample data: " + e.getMessage());
+                        }
                     }
-                    MEFLib.doImport(params, context, file, "");
-                    transactionManager.commit();
-				}
-                catch (Exception e) {
-                    e.printStackTrace();
-					serviceStatus = "false";
-					serviceError = e.getMessage() + " whilst loading " + file;
-					Log.error(Geonet.DATA_MANAGER,
-							"Error loading sample data: " + e.getMessage());
-				}
+                });
 			}
 		}
 
-		result.setAttribute("status", serviceStatus);
-		result.setAttribute("error", serviceError);
+		result.setAttribute("status", serviceStatus[0]);
+		result.setAttribute("error", serviceError[0]);
 		return result;
 	}
 }

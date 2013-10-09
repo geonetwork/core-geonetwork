@@ -1,9 +1,14 @@
 package jeeves.server.resources;
 
-import java.util.Collections;
+import jeeves.server.context.ServiceContext;
+import org.apache.commons.dbcp.BasicDataSource;
+
+import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Encapsulate statistics of a connection.
  *
  * User: jeichar
  * Date: 4/5/12
@@ -15,16 +20,17 @@ public class Stats {
     public final Integer maxActive;
     public final Map<String, String> resourceSpecificStats;
 
-    public Stats(Integer numActive, Integer numIdle, Integer maxActive, Map<String, String> resourceSpecificStats) {
-        this.maxActive = maxActive;
-        this.numActive = numActive;
-        this.numIdle = numIdle;
-        this.resourceSpecificStats = Collections.synchronizedMap(resourceSpecificStats);
-    }
-    public Stats(Integer numActive, Integer numIdle, Integer maxActive) {
-        this.maxActive = maxActive;
-        this.numActive = numActive;
-        this.numIdle = numIdle;
-        this.resourceSpecificStats = Collections.emptyMap();
+
+    public Stats(final ServiceContext context) {
+        DataSource source = context.getBean(DataSource.class);
+        if (source instanceof BasicDataSource) {
+            BasicDataSource basicDataSource = (BasicDataSource) source;
+            numActive = basicDataSource.getNumActive();
+            numIdle = basicDataSource.getNumIdle();
+            maxActive = basicDataSource.getMaxActive();
+        } else {
+            maxActive = numActive = numIdle = -1;
+        }
+        resourceSpecificStats = new HashMap<String, String>();
     }
 }

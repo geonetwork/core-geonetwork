@@ -131,6 +131,7 @@
                     <param name="chartHeight" value="400"/>
                     <!--  default chart height. can be overloaded through UI -->
                     <param name="chartWidth" value="600"/>
+                </call>
             </output>
         </service>
         

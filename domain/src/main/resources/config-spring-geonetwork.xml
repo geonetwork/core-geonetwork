@@ -25,14 +25,15 @@
         </property>
     </bean>
 
-    <bean id="generateDdl" class="java.lang.String">
-        <constructor-arg value="false"/>
+    <bean id="generateDdl" class="java.lang.String" scope="singleton">
+        <constructor-arg value="true"/>
     </bean>
+
     <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
         <constructor-arg value="H2"/>
     </bean>
 
-    <bean id="jpaVendorAdapter"
+    <bean lazy-init="true" id="jpaVendorAdapter"
           class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
         <property name="generateDdl" ref="generateDdl"/>
         <property name="showSql" value="false"/>

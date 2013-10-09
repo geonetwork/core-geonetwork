@@ -54,8 +54,10 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.TransactionManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -224,16 +226,19 @@ class Harvester extends BaseAligner
 			
 			result.locallyRemoved ++;
 		}
-		
-		if (result.locallyRemoved > 0) {
-            context.getBean(TransactionManager.class).commit();
+
+
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+
+        if (result.locallyRemoved > 0) {
+            context.getBean(JpaTransactionManager.class).commit(transactionStatus);
         }
 		
         // Convert from GetCapabilities to ISO19119
         addMetadata (xml);
 
-        context.getBean(TransactionManager.class).commit();
-            
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
         result.totalMetadata = result.addedMetadata + result.layer;
     
 		return result;
@@ -346,8 +351,10 @@ class Harvester extends BaseAligner
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url));
 		dataMan.setTemplate(iId, MetadataType.METADATA, null);
 
-         context.getBean(TransactionManager.class).commit();
-		//dataMan.indexMetadata(dbms, id); setTemplate update the index
+         final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+         context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+         //dataMan.indexMetadata(dbms, id); setTemplate update the index
 		
 		result.addedMetadata++;
 		
@@ -659,9 +666,10 @@ class Harvester extends BaseAligner
             if(log.isDebugEnabled()) log.debug("    - Set Harvested.");
 			dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url)); // FIXME : harvestUuid should be a MD5 string
 
-            context.getBean(TransactionManager.class).commit();
-			
-			dataMan.indexMetadata(reg.id);
+            final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+            context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+            dataMan.indexMetadata(reg.id);
 			
 			try {
     			// Load bbox info for later use (eg. WMS thumbnails creation)
@@ -735,11 +743,14 @@ class Harvester extends BaseAligner
 				
 				// Call the services 
 				s.execOnHarvest(par, context, dataMan);
-                context.getBean(TransactionManager.class).commit();
 
-				result.thumbnails ++;
-			} else
+                final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+                context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+                result.thumbnails ++;
+			} else {
 				result.thumbnailsFailed ++;
+            }
 		} catch (Exception e) {
 			log.warning("  - Failed to set thumbnail for metadata: " + e.getMessage());
 			e.printStackTrace();

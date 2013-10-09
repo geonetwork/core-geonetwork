@@ -686,7 +686,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>13.0</version>
+        <version>15.0</version>
       </dependency>
 
       <!-- Monitoring libraries -->
@@ -790,6 +790,16 @@
         <artifactId>spring-context</artifactId>
         <version>${spring.version}</version>
       </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context-support</artifactId>
@@ -1006,7 +1016,7 @@
     <jetty.version>7.3.1.v20110307</jetty.version>
     <geotools.version>8.6</geotools.version>
     <lucene.version>4.1.0</lucene.version>
-    <spring.version>3.2.3.RELEASE</spring.version>
+    <spring.version>3.2.4.RELEASE</spring.version>
 	<spring.security.version>3.1.4.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>

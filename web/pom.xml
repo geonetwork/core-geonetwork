@@ -72,19 +72,20 @@
       <groupId>org.openrdf</groupId>
       <artifactId>rio</artifactId>
     </dependency>
-		<!-- may be required to register connection unwrappers with
-		     geotools
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-jdbc</artifactId>
-    </dependency>
-		-->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context-support</artifactId>
-    </dependency>
-    
-    <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-context</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-orm</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-tx</artifactId>
+      </dependency>
+
+      <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
       <artifactId>cql-java</artifactId>

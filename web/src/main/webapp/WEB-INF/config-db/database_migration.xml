@@ -7,7 +7,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 	" xmlns:util="http://www.springframework.org/schema/util">
     <bean id="database-migration-bean" class="org.fao.geonet.DatabaseMigration">
-        <property name="migrate" ref="migrationMap"/>
+        <property name="migration" ref="migrationMap"/>
     </bean>
 
     <util:map id="migrationMap"
@@ -22,8 +22,6 @@
         <entry key="260">
             <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v260/migrate-db-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v260/migrate-</value>
             </list>
         </entry>
@@ -45,8 +43,6 @@
         <entry key="264">
             <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v264/migrate-db-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v264/migrate-</value>
             </list>
         </entry>
@@ -58,72 +54,34 @@
         <entry key="280">
             <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/migrate-db-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/migrate-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-eng-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-fre-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-ger-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-spa-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-cat-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-rus-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-por-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-chi-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-dut-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-nor-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-fin-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-ara-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-ita-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-tur-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-vie-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-pol-</value>
             </list>
         </entry>
         <entry key="2100">
             <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v2100/migrate-db-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v2100/migrate-</value>
             </list>
         </entry>
         <entry key="2110">
             <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v2110/migrate-db-</value>
-            </list>
-            <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v2110/migrate-</value>
             </list>
         </entry>

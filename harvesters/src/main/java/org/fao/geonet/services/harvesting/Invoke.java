@@ -68,7 +68,7 @@ public class Invoke implements Service
 		String id = params.getChildText("id");
 
 		// Invoke: synchronous "run" of harvester
-		Common.OperResult result = hm.invoke(context.getResourceManager(), id);
+		Common.OperResult result = hm.invoke(id);
 
 		// Construct result
 		return new Element(Jeeves.Elem.RESPONSE)

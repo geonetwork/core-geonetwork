@@ -42,12 +42,14 @@ import org.fao.geonet.repository.SettingRepository;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 
 /**
  * A convenience class for updating and accessing settings.  One of the primary needs of this
  * class at the moment is to maintain backwards compatibility so not all code and xsl files
  * that make use of the settings need to be modified.
  */
+@Component
 public class SettingManager {
 
     @Autowired

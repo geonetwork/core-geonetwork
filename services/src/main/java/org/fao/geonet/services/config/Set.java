@@ -23,43 +23,39 @@
 
 package org.fao.geonet.services.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.OperationAbortedEx;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.ServiceRepository;
 import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.jdom.Element;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.annotation.Nonnull;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
-import javax.transaction.TransactionManager;
+import java.util.HashMap;
+import java.util.Map;
 
 //=============================================================================
 
 /**
  * TODO javadoc.
- * 
  */
 public class Set implements Service {
     /**
@@ -73,7 +69,7 @@ public class Set implements Service {
 
     /**
      * TODO javadoc.
-     * 
+     *
      * @param params
      * @param context
      * @return
@@ -95,11 +91,11 @@ public class Set implements Service {
 
         if (!sm.setValues(values))
             throw new OperationAbortedEx("Cannot set all values");
-        
-        // Save parameters
-        context.getBean(TransactionManager.class).commit();
 
-        
+        // Save parameters
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
         // And reload services
         // Update inspire property in SearchManager
         gc.getBean(SearchManager.class).setInspireEnabled(Boolean.valueOf(values.get("system/inspire/enable")));

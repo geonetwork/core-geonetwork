@@ -29,7 +29,6 @@ public class Language extends GeonetEntity {
      * @return the id of the language
      */
     @Id
-    @GeneratedValue
     @Column(length = 5)
     @Nonnull
     public String getId() {

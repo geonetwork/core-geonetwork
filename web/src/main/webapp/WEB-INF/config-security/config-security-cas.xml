@@ -14,7 +14,7 @@
 	<!-- override beans in config-security-core with the changes required for 
 		cas -->
 	<alias name="casEntryPoint" alias="authenticationEntryPoint" />
-	<bean id="filter" class="java.util.ArrayList">
+	<bean id="filterChainFilters" class="java.util.ArrayList">
 		<constructor-arg>
 			<list>
 				<ref bean="securityContextPersistenceFilter" />

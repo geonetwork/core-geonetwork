@@ -27,7 +27,6 @@ public class ScheduleJob implements Job {
         try {
             schedule.exec(scheduleContext);
 
-            scheduleContext.getResourceManager().close();
             return;
         } catch (JeevesException e) {
             error("Communication exception while executing schedule : " + scheduleContext.getScheduleName());
@@ -52,12 +51,7 @@ public class ScheduleJob implements Job {
     // --------------------------------------------------------------------------
 
     private void abort(ScheduleContext context) {
-        try {
-            context.getResourceManager().abort();
-        } catch (Exception ex) {
-            error("CANNOT ABORT PREVIOUS EXCEPTION");
-            error(" (C) Exc : " + ex);
-        }
+
     }
 
     private void error(String message) {

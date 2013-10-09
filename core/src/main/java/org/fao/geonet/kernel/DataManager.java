@@ -72,12 +72,15 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -339,15 +342,9 @@ public class DataManager {
     public void indexInThreadPool(ServiceContext context, List<String> ids) throws SQLException {
 
         try {
-            Transaction transaction = _applicationContext.getBean(TransactionManager.class).getTransaction();
-            transaction.commit();
-        } catch (SystemException e) {
-            throw new RuntimeException(e);
-        } catch (HeuristicRollbackException e) {
-            throw new RuntimeException(e);
-        } catch (RollbackException e) {
-            throw new RuntimeException(e);
-        } catch (HeuristicMixedException e) {
+            final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+            _applicationContext.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        } catch (TransactionalException e) {
             throw new RuntimeException(e);
         }
 
@@ -358,8 +355,7 @@ public class DataManager {
                 Runnable worker = new IndexMetadataTask(context, ids);
                 gc.getThreadPool().runTask(worker);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, e.getMessage());
             e.printStackTrace();
             // TODO why swallow
@@ -422,41 +418,39 @@ public class DataManager {
                 while (!context.isServletInitialized()) {
                     if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                         Log.debug(Geonet.DATA_MANAGER, "Waiting for servlet to finish initializing..");
-                    Thread.sleep(10000); // sleep 10 seconds
+                    try {
+                        Thread.sleep(10000); // sleep 10 seconds
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-                _applicationContext.getBean(TransactionManager.class).begin();
+                context.executeInTransaction(new TransactionCallbackWithoutResult() {
+                    @Override
+                    protected void doInTransactionWithoutResult(final TransactionStatus status) {
+                        try {
+                            if (ids.size() > 1) {
+                                // servlet up so safe to index all metadata that needs indexing
+                                for (int i = beginIndex; i < beginIndex + count; i++) {
+                                    try {
+                                        indexMetadata(ids.get(i).toString());
+                                    } catch (Exception e) {
+                                        Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '" + ids.get(i) + "': " + e.getMessage()
+                                                                       + "\n" + Util.getStackTrace(e));
+                                    }
+                                }
+                            } else {
+                                indexMetadata(ids.get(0));
+                            }
+                        } catch (Exception e) {
+                            Log.error(Geonet.DATA_MANAGER, "Reindexing thread threw exception");
+                            e.printStackTrace();
+                        }
+                    }
+                });
                 if (user != null && context.getUserSession().getUserId() == null) {
                     context.getUserSession().loginAs(user);
                 }
-                try {
-
-                    if (ids.size() > 1) {
-                        // servlet up so safe to index all metadata that needs indexing
-                        try {
-                            for (int i = beginIndex; i < beginIndex + count; i++) {
-                                try {
-                                    indexMetadata(ids.get(i).toString());
-                                } catch (Exception e) {
-                                    Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '" + ids.get(i) + "': " + e.getMessage() +
-                                                                   "\n" + Util.getStackTrace(e));
-                                }
-                            }
-                        } finally {
-                        }
-                    } else {
-                        indexMetadata(ids.get(0));
-                    }
-                } catch (Exception e) {
-                    _applicationContext.getBean(TransactionManager.class).rollback();
-                } finally {
-                    //-- commit Dbms resource (which makes it available to pool again)
-                    //-- to avoid exhausting Dbms pool
-                    _applicationContext.getBean(TransactionManager.class).commit();
-                }
-            } catch (Exception e) {
-                Log.error(Geonet.DATA_MANAGER, "Reindexing thread threw exception");
-                e.printStackTrace();
-            } finally {
+            }  finally {
                 synchronized (indexing) {
                     indexing.remove(this);
                 }
@@ -1302,7 +1296,7 @@ public class DataManager {
         // READONLYMODE
         GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
         if (!gc.isReadOnly()) {
-            gc.getThreadPool().runTask(new IncreasePopularityTask(this, _applicationContext, Integer.valueOf(id)));
+            gc.getThreadPool().runTask(new IncreasePopularityTask(this, srvContext, Integer.valueOf(id)));
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "GeoNetwork is operating in read-only mode. IncreasePopularity is skipped.");
@@ -1404,7 +1398,7 @@ public class DataManager {
                 });
         newMetadata.getCategories().addAll(copiedCategories);
 
-        int finalId = insertMetadata(context, newMetadata, xml, false, true, true, UpdateDatestamp.yes,
+        int finalId = insertMetadata(context, newMetadata, xml, false, true, true, UpdateDatestamp.YES,
                 fullRightsForGroup).getId();
 
         return String.valueOf(finalId);
@@ -1466,7 +1460,7 @@ public class DataManager {
 
         boolean fullRightsForGroup = false;
 
-        int finalId = insertMetadata(context, newMetadata, metadataXml, notifyChange, index, ufo, UpdateDatestamp.no,
+        int finalId = insertMetadata(context, newMetadata, metadataXml, notifyChange, index, ufo, UpdateDatestamp.NO,
                 fullRightsForGroup).getId();
 
         return String.valueOf(finalId);
@@ -1683,7 +1677,7 @@ public class DataManager {
         if(ufo) {
             String parentUuid = null;
             Integer intId = Integer.valueOf(metadataId);
-            metadataXml = updateFixedInfo(schema, Optional.of(intId), null, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp.yes : UpdateDatestamp.no), context);
+            metadataXml = updateFixedInfo(schema, Optional.of(intId), null, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
         }
 
         // Notifies the metadata change to metatada notifier service
@@ -2675,7 +2669,7 @@ public class DataManager {
             schemaLoc.setAttribute(schemaMan.getSchemaLocation(schema,context));
             env.addContent(schemaLoc);
 
-            if (updateDatestamp == UpdateDatestamp.yes) {
+            if (updateDatestamp == UpdateDatestamp.YES) {
                 env.addContent(new Element("changeDate").setText(new ISODate().toString()));
             }
             if(parentUuid != null) {
@@ -3115,59 +3109,46 @@ public class DataManager {
      */
     static class IncreasePopularityTask implements Runnable {
         private final DataManager dataManager;
-        private final ApplicationContext applicationContext;
+        private final ServiceContext context;
         private final int metadataId;
 
-        /**
-         *
-         * @param metadataId
-         */
-        public IncreasePopularityTask(final DataManager dataManager, final ApplicationContext applicationContext,
+        public IncreasePopularityTask(final DataManager dataManager, final ServiceContext context,
                                       final int metadataId) {
             this.dataManager = dataManager;
-            this.applicationContext = applicationContext;
+            this.context = context;
             this.metadataId = metadataId;
         }
 
         public void run() {
 
-            final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
-            final TransactionManager transactionManager = applicationContext.getBean(TransactionManager.class);
-            try {
-                transactionManager.begin();
-                metadataRepository.update(metadataId, new Updater<Metadata>() {
-                    @Override
-                    public void apply(@Nonnull Metadata entity) {
-                        //To change body of implemented methods use File | Settings | File Templates.
-                    }
-                });
-                dataManager.indexMetadata(String.valueOf(metadataId));
-            } catch (Exception e) {
-                try {
-                    if (transactionManager.getTransaction() != null) {
-                        transactionManager.rollback();
-                    }
-                } catch (SystemException e1) {
-                    Log.error(Geonet.DATA_MANAGER, "There may have been an error updating the popularity of the metadata " + metadataId
-                                                   + ". Error: " + e.getMessage(), e1);
-                }
-                Log.error(Geonet.DATA_MANAGER, "The following exception is ignored: " + e.getMessage());
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (transactionManager.getTransaction() != null) {
-                        transactionManager.commit();
-                    }
-                } catch (Exception e) {
-                    Log.error(Geonet.DATA_MANAGER, "There may have been an error updating the popularity of the metadata " + metadataId + ". Error: " + e.getMessage(), e);
-                }
-            }
+            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
+            context.executeInTransaction(new TransactionCallbackWithoutResult() {
+
+                @Override
+                protected void doInTransactionWithoutResult(final TransactionStatus status) {
+                    metadataRepository.update(metadataId, new Updater<Metadata>() {
+                        @Override
+                        public void apply(@Nonnull Metadata entity) {
+                            final MetadataDataInfo dataInfo = entity.getDataInfo();
+                            int rating = dataInfo.getRating();
+                            dataInfo.setRating(rating + 1);
+                        }
+                    });
+                    try {
+                        dataManager.indexMetadata(String.valueOf(metadataId));
+                    } catch (Exception e) {
+                        Log.error(Geonet.DATA_MANAGER, "There may have been an error updating the popularity of the metadata "
+                                                       + metadataId + ". Error: " + e.getMessage(), e);
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
         }
 
     }
 
     public enum UpdateDatestamp {
-        yes, no
+        YES, NO
     }
 }

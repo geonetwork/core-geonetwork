@@ -38,8 +38,10 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.jdom.Element;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.TransactionManager;
 import java.util.Collection;
 import java.util.List;
 
@@ -85,17 +87,20 @@ public class Aligner
 
 		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), siteId);
 
-		//-----------------------------------------------------------------------
-		//--- remove old metadata
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
 
-		for (String uuid : localUuids.getUUIDs())
+        //-----------------------------------------------------------------------
+        //--- remove old metadata
+
+        for (String uuid : localUuids.getUUIDs())
 			if (!exists(mdList, uuid))
 			{
-				String id = localUuids.getID(uuid);
+                String id = localUuids.getID(uuid);
 
                 if(log.isDebugEnabled()) log.debug("  - Removing old metadata with id="+ id);
-				dataMan.deleteMetadata(context, id);
-                context.getBean(TransactionManager.class).commit();
+                dataMan.deleteMetadata(context, id);
+
+                context.getBean(JpaTransactionManager.class).commit(transactionStatus);
 				this.result.locallyRemoved++;
 			}
 
@@ -117,18 +122,18 @@ public class Aligner
             if (!dataMan.existsSchema(schema)) {
                 if(log.isDebugEnabled()) log.debug("  - Skipping unsupported schema : " + schema);
                 this.result.schemaSkipped++;
-            }
-            else {
+            } else {
                 String id = dataMan.getMetadataId(remoteUuid);
 
                 if (id == null) {
                     id = addMetadata(info);
-                }
-                else {
+                } else {
                     updateMetadata(siteId, info, id);
                 }
 
-                context.getBean(TransactionManager.class).commit();
+                context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+
 
                 //--- maybe the metadata was unretrievable
 

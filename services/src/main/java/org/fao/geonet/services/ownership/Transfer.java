@@ -38,12 +38,12 @@ import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.TransactionManager;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -82,9 +82,10 @@ public class Transfer extends NotInReadOnlyModeService {
 
 		//--- a commit just to release some resources
 
-        context.getBean(TransactionManager.class).commit();
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
 
-		int privCount = 0;
+        int privCount = 0;
 
 		Set<Integer> metadata = new HashSet<Integer>();
 
@@ -116,9 +117,9 @@ public class Transfer extends NotInReadOnlyModeService {
 			privCount++;
 		}
 
-        context.getBean(TransactionManager.class).commit();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
 
-		//--- reindex metadata
+        //--- reindex metadata
         List<String> list = new ArrayList<String>();
 		for (int mdId : metadata) {
             list.add(Integer.toString(mdId));

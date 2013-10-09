@@ -1,9 +1,7 @@
 package org.fao.geonet.kernel.security;
 
-import jeeves.server.resources.ResourceManager;
 import junit.framework.TestCase;
 
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserSecurityNotification;
 import org.fao.geonet.util.PasswordUtil;

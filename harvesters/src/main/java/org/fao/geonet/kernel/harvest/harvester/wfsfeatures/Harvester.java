@@ -47,8 +47,10 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.TransactionManager;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -340,8 +342,9 @@ class Harvester
 		}
 		
 		if (result.subtemplatesRemoved + result.recordsRemoved > 0)  {
-			context.getBean(TransactionManager.class).commit();
-		}
+            final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+            context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        }
     }
 
 	/** 

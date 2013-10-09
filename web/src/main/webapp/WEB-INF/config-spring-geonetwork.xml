@@ -13,11 +13,11 @@
     <context:component-scan base-package="org.fao.geonet.kernel,org.fao.geonet.component, jeeves.component"/>
 
 	<import resource="config-security/config-security.xml"/>
-	<import resource="config-user-profiles.xml"/>
 	<import resource="classpath*:/config-spring-geonetwork.xml"/>
 	<import resource="classpath:JZkitApplicationContext.xml"/>
 
     <import resource="config-db/database_migration.xml"/>
+    <import resource="config-db/initial_data.xml"/>
 
     <!-- Uncomment the database configuration you need to use -->
     <import resource="config-db/h2.xml"/>
@@ -35,10 +35,10 @@
         If the XmlSerializer is the SvnSerializer then subversion versioning will be enabled
         otherwiser it will be disabled
     -->
-    <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerSvn" />
-    <!-- <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb" /> -->
+    <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerSvn" lazy-init="true" />
+    <!-- <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"  lazy-init="true" /> -->
 
-     <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager"/>
+     <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager" lazy-init="true"/>
 
     <bean id="scheduler"
           class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
@@ -67,7 +67,7 @@
 	</util:set>
 
 	<bean id="RegionsDAO" class="org.fao.geonet.services.region.ThesaurusBasedRegionsDAO">
-		<constructor-arg ref="languages"></constructor-arg>
+		<constructor-arg ref="languages" />
 		<property name="cacheAllRegionsInMemory" value="true"/>
 		<property name="thesaurusName" value="external.place.regions"/>
 	</bean>

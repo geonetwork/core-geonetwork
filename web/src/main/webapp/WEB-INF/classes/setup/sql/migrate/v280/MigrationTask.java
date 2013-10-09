@@ -1,18 +1,14 @@
 package v280;
 
+import org.fao.geonet.DatabaseMigrationTask;
+
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Iterator;
-
-import org.fao.geonet.DatabaseMigrationTask;
-import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.jdom.Element;
 
 public class MigrationTask implements DatabaseMigrationTask {
 
-	@Override
-	public void update(Connection connection) throws SQLException {
+    @Override
+    public void update(Connection connection) throws SQLException {
 //		// FIXME SETTING-SPLIT Settings are now in HarvesterSettings
 //	    Element harvesters = harvesterSettingsMan.get("harvesting", -1);
 //
@@ -29,7 +25,7 @@ public class MigrationTask implements DatabaseMigrationTask {
 //				}
 //			}
 //		}
-	}
+    }
 //
 //	private void handleSite(HarvesterSettingsManager settings, Dbms dbms, Element el) throws SQLException {
 //		if((parentValue(el, "geonetwork") || parentValue(el, "geonetwork20")) && child(el,"host") != null) {

@@ -59,6 +59,9 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import thredds.catalog.InvAccess;
 import thredds.catalog.InvCatalogFactory;
 import thredds.catalog.InvCatalogImpl;
@@ -77,7 +80,6 @@ import ucar.nc2.units.DateType;
 import ucar.unidata.util.StringUtil;
 
 import javax.net.ssl.SSLHandshakeException;
-import javax.transaction.TransactionManager;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -273,9 +275,10 @@ class Harvester extends BaseAligner
 			}
 		}
 
-        context.getBean(TransactionManager.class).commit();
-		
-	    result.totalMetadata = result.serviceRecords + result.collectionDatasetRecords + result.atomicDatasetRecords;
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+        result.totalMetadata = result.serviceRecords + result.collectionDatasetRecords + result.atomicDatasetRecords;
 		return result;
 	}
 
@@ -460,8 +463,9 @@ class Harvester extends BaseAligner
 
         dataMan.indexMetadata(id);
 
-        context.getBean(TransactionManager.class).commit();
-	}
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+    }
 
 	//---------------------------------------------------------------------------
 	/** 

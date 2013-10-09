@@ -26,8 +26,6 @@ import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.repository.SourceRepository;

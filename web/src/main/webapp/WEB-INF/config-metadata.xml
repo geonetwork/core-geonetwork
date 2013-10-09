@@ -417,7 +417,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<service name="metadata.batch.processing.report">
-			<documentation><![CDATA[<![CDATA[<![CDATA[<![CDATA[<![CDATA[
+			<documentation><![CDATA[
 Return the current or last batch process report in the user session.
 
 The service response contains:
@@ -457,7 +457,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 ...
 ```
 				]]>
-			]]>]]>]]>]]></documentation>
+			</documentation>
 			<class name=".services.metadata.XslProcessingReportGet"/>
 		</service>
 		

@@ -31,6 +31,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -561,7 +562,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             UserSession userSession = srvContext.getUserSession();
             // unless you are logged in as Administrator, check if you are allowed to query the groups in the query
             if (userSession == null || userSession.getProfile() == null ||
-                    ! (userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR) && userSession.isAuthenticated())) {
+                (userSession.getProfile() != Profile.Administrator && userSession.isAuthenticated())) {
             	if(!CollectionUtils.isEmpty(requestedGroups)) {
                     for(Element group : requestedGroups) {
                         if(! "".equals(group.getText()) 
@@ -593,12 +594,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 			    //--- in case of an admin show all results
                 if (userSession != null) {
                     if (userSession.isAuthenticated()) {
-                        if (userSession.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
+                        if (userSession.getProfile() != Profile.Administrator) {
                             request.addContent(new Element(SearchParameter.ISADMIN).addContent("true"));
-}
-                        else if (userSession.getProfile().equals(Geonet.Profile.REVIEWER)) {
+                        } else if (userSession.getProfile() != Profile.Reviewer) {
                             request.addContent(new Element(SearchParameter.ISREVIEWER).addContent("true"));
-}
+                        }
                     }
                 }
             }

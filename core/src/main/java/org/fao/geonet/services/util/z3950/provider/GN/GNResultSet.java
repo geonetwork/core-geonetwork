@@ -37,6 +37,9 @@ import org.jzkit.search.util.RecordModel.InformationFragment;
 import org.jzkit.search.util.RecordModel.InformationFragmentImpl;
 import org.jzkit.search.util.RecordModel.RecordFormatSpecification;
 import org.jzkit.search.util.ResultSet.*;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 import java.util.Observer;
@@ -105,16 +108,9 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                        setFragmentCount(metasearcher.getSize());
                        setTaskStatusCode(IRResultSetStatus.COMPLETE);
 
-                       this.srvxtx.getResourceManager().close();
                } catch (Throwable e) {
                        Log.error(Geonet.Z3950_SERVER, "error evaluating query.." + e);
                        e.printStackTrace();
-
-                       try {
-                               this.srvxtx.getResourceManager().abort();
-                       } catch (Exception e2) {
-                               e2.printStackTrace();
-                       }
                }
                return (getStatus());
        }
@@ -185,11 +181,14 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                                //System.err.println(fragment[i]);
 
                        }
-                       this.srvxtx.getResourceManager().close();
+
+                   final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+                   srvxtx.getBean(JpaTransactionManager.class).commit(transactionStatus);
                    if(Log.isDebugEnabled(Geonet.Z3950_SERVER)) Log.debug(Geonet.Z3950_SERVER, "Fragment returned");
                } catch (Throwable e) {
                        try {
-                               this.srvxtx.getResourceManager().abort();
+                           final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+                           srvxtx.getBean(JpaTransactionManager.class).rollback(transactionStatus);
                        } catch (Exception e2) {
                                e2.printStackTrace();
                        }

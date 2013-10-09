@@ -38,8 +38,12 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +51,6 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchResult;
-import javax.transaction.TransactionManager;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -63,7 +66,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
     private DefaultSpringSecurityContextSource contextSource;
     
     @Override
-    protected void executeInternal(JobExecutionContext jobExecContext)
+    protected void executeInternal(final JobExecutionContext jobExecContext)
             throws JobExecutionException {
         try {
             if (Log.isDebugEnabled(Geonet.LDAP)) {
@@ -82,81 +85,62 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
                         Geonet.LDAP,
                         "  Application context is null. Be sure to configure SchedulerFactoryBean job factory property with AutowiringSpringBeanJobFactory.");
             }
-            
-            // Get LDAP information defining which users to sync
-            final JobDataMap jdm = jobExecContext.getJobDetail()
-                    .getJobDataMap();
-            contextSource = (DefaultSpringSecurityContextSource) jdm
-                    .get("contextSource");
-            
-            String ldapUserSearchFilter = (String) jdm
-                    .get("ldapUserSearchFilter");
-            String ldapUserSearchBase = (String) jdm.get("ldapUserSearchBase");
-            String ldapUserSearchAttribute = (String) jdm
-                    .get("ldapUserSearchAttribute");
-            
-            DirContext dc = contextSource.getReadOnlyContext();
-            
-            // start transaction
-            final TransactionManager transactionManager = applicationContext.getBean(TransactionManager.class);
-            transactionManager.begin();
 
-            try {
-                // Users
-                synchronizeUser(applicationContext, ldapUserSearchFilter, ldapUserSearchBase,
-                        ldapUserSearchAttribute, dc);
-                
-                // And optionaly groups
-                String createNonExistingLdapGroup = (String) jdm
-                        .get("createNonExistingLdapGroup");
-                
-                if ("true".equals(createNonExistingLdapGroup)) {
-                    String ldapGroupSearchFilter = (String) jdm
-                            .get("ldapGroupSearchFilter");
-                    String ldapGroupSearchBase = (String) jdm
-                            .get("ldapGroupSearchBase");
-                    String ldapGroupSearchAttribute = (String) jdm
-                            .get("ldapGroupSearchAttribute");
-                    String ldapGroupSearchPattern = (String) jdm
-                            .get("ldapGroupSearchPattern");
-                    
-                    synchronizeGroup(applicationContext, ldapGroupSearchFilter,
-                            ldapGroupSearchBase, ldapGroupSearchAttribute,
-                            ldapGroupSearchPattern, dc);
-                }
-            } catch (NamingException e1) {
-                try {
-                    transactionManager.rollback();
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-                    Log.error(Geonet.LDAP, "Error rolling back transaction", e2);
-                }
-                e1.printStackTrace();
-            } catch (Exception e) {
-                try {
-                    transactionManager.rollback();
-                } catch (Exception e2) {
-                    e.printStackTrace();
-                    Log.error(Geonet.LDAP, "Error rolling back transaction", e2);
-                }
-                Log.error(
-                        Geonet.LDAP,
-                        "Unexpected error while synchronizing LDAP user in database",
-                        e);
-            } finally {
-                try {
-                    dc.close();
-                } catch (NamingException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                    try {
-                        transactionManager.commit();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.error(Geonet.LDAP, "Error committing transaction" , e);
+            // start transaction
+                new TransactionTemplate(applicationContext.getBean(JpaTransactionManager.class)).execute(new
+                                                                                                                 TransactionCallbackWithoutResult() {
+
+                    @Override
+                    protected void doInTransactionWithoutResult(TransactionStatus status) {
+
+                        // Get LDAP information defining which users to sync
+                        final JobDataMap jdm = jobExecContext.getJobDetail().getJobDataMap();
+                        contextSource = (DefaultSpringSecurityContextSource) jdm.get("contextSource");
+
+                        final String ldapUserSearchFilter = (String) jdm.get("ldapUserSearchFilter");
+                        final String ldapUserSearchBase = (String) jdm.get("ldapUserSearchBase");
+                        final String ldapUserSearchAttribute = (String) jdm.get("ldapUserSearchAttribute");
+
+                        final DirContext dc = contextSource.getReadOnlyContext();
+                        try {
+                        // Users
+                        synchronizeUser(applicationContext, ldapUserSearchFilter, ldapUserSearchBase,
+                                ldapUserSearchAttribute, dc);
+
+                        // And optionaly groups
+                        String createNonExistingLdapGroup = (String) jdm
+                                .get("createNonExistingLdapGroup");
+
+                        if ("true".equals(createNonExistingLdapGroup)) {
+                            String ldapGroupSearchFilter = (String) jdm
+                                    .get("ldapGroupSearchFilter");
+                            String ldapGroupSearchBase = (String) jdm
+                                    .get("ldapGroupSearchBase");
+                            String ldapGroupSearchAttribute = (String) jdm
+                                    .get("ldapGroupSearchAttribute");
+                            String ldapGroupSearchPattern = (String) jdm
+                                    .get("ldapGroupSearchPattern");
+
+                            synchronizeGroup(applicationContext, ldapGroupSearchFilter,
+                                    ldapGroupSearchBase, ldapGroupSearchAttribute,
+                                    ldapGroupSearchPattern, dc);
+                        }
+
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        } catch (NamingException e) {
+                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        } finally {
+                            try {
+                                dc.close();
+                            } catch (NamingException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                     }
-            }
+                });
+
+
         } catch (Exception e) {
             Log.error(
                     Geonet.LDAP,

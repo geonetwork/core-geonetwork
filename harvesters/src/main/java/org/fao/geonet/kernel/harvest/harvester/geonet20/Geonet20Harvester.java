@@ -28,7 +28,6 @@ import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.fao.geonet.constants.Geonet;
@@ -40,8 +39,10 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.TransactionManager;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -295,8 +296,9 @@ public class Geonet20Harvester extends AbstractHarvester
 			req.setAddress("/"+ params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_LOGOUT);
 		}
 
-        context.getBean(TransactionManager.class).commit();
-	}
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+    }
 
 	//---------------------------------------------------------------------------
 	//---

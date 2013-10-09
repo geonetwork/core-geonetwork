@@ -45,8 +45,10 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.TransactionManager;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -394,8 +396,10 @@ public class FragmentHarvester extends BaseAligner {
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
 		dataMan.indexMetadata(id);
 
-        context.getBean(TransactionManager.class).commit();
-		harvestSummary.fragmentsAdded ++;
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+        harvestSummary.fragmentsAdded ++;
     }
 
 	//---------------------------------------------------------------------------
@@ -584,8 +588,9 @@ public class FragmentHarvester extends BaseAligner {
 
          dataMan.indexMetadata(id);
 
-         context.getBean(TransactionManager.class).commit();
-    }
+         final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+         context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+     }
 
 	//---------------------------------------------------------------------------
 	/** 
@@ -625,8 +630,11 @@ public class FragmentHarvester extends BaseAligner {
         if(log.isDebugEnabled()) {
             log.debug("	- Commit "+id);
         }
-		context.getBean(TransactionManager.class).commit();
-		harvestSummary.recordsBuilt++;
+
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+        harvestSummary.recordsBuilt++;
 	}
 
 	private Logger log;

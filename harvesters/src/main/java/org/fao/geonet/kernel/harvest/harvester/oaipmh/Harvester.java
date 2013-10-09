@@ -53,8 +53,10 @@ import org.fao.oaipmh.responses.Header;
 import org.fao.oaipmh.responses.ListIdentifiersResponse;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.TransactionManager;
 import java.io.File;
 import java.net.URL;
 import java.util.HashSet;
@@ -192,9 +194,11 @@ class Harvester extends BaseAligner
 		localCateg = new CategoryMapper(context);
 		localGroups= new GroupMapper(context);
 		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
-        context.getBean(TransactionManager.class).commit();
 
-		//-----------------------------------------------------------------------
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+        //-----------------------------------------------------------------------
 		//--- remove old metadata
 
 		for (String uuid : localUuids.getUUIDs())
@@ -204,8 +208,10 @@ class Harvester extends BaseAligner
 
                 if(log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
 				dataMan.deleteMetadataGroup(context, id);
-                context.getBean(TransactionManager.class).commit();
-				result.locallyRemoved++;
+
+                context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+                result.locallyRemoved++;
 			}
 
 		//-----------------------------------------------------------------------
@@ -271,8 +277,10 @@ class Harvester extends BaseAligner
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-        context.getBean(TransactionManager.class).commit();
-		dataMan.indexMetadata(id);
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+        dataMan.indexMetadata(id);
 		result.addedMetadata++;
 	}
 
@@ -424,8 +432,10 @@ class Harvester extends BaseAligner
 
             addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-            context.getBean(TransactionManager.class).commit();
-			dataMan.indexMetadata(id);
+            final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+            context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+            dataMan.indexMetadata(id);
 			result.updatedMetadata++;
 		}
 	}

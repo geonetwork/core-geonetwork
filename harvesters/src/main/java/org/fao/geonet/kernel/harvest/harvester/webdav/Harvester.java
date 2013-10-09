@@ -46,8 +46,11 @@ import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
-import javax.transaction.TransactionManager;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -106,7 +109,7 @@ class Harvester extends BaseAligner {
 	//---
 	//---------------------------------------------------------------------------
 
-	private void align(List<RemoteFile> files) throws Exception {
+	private void align(final List<RemoteFile> files) throws Exception {
 		log.info("Start of alignment for : "+ params.name);
 		//-----------------------------------------------------------------------
 		//--- retrieve all local categories and groups
@@ -115,20 +118,25 @@ class Harvester extends BaseAligner {
 		localGroups= new GroupMapper(context);
 		localUris  = new UriMapper(context, params.uuid);
 
-        final TransactionManager transactionManager = context.getBean(TransactionManager.class);
-        transactionManager.commit();
-
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
-		for (String uri : localUris.getUris()) {
-			if (!exists(files, uri)) {
-				// only one metadata record created per uri by this harvester 
-				String id = localUris.getRecords(uri).get(0).id;
-                if(log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
-				dataMan.deleteMetadataGroup(context, id);
-                transactionManager.commit();
-				result.locallyRemoved++;
-			}
+		for (final String uri : localUris.getUris()) {
+            context.executeInTransaction(new TransactionCallbackWithoutResult() {
+                @Override
+                protected void doInTransactionWithoutResult(TransactionStatus status) {
+                    if (!exists(files, uri)) {
+                        // only one metadata record created per uri by this harvester
+                        String id = localUris.getRecords(uri).get(0).id;
+                        if (log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
+                        try {
+                            dataMan.deleteMetadataGroup(context, id);
+                        } catch (Exception e) {
+                            log.error("Error occurred while deleting metadata id");
+                        }
+                        result.locallyRemoved++;
+                    }
+                }
+            });
 		}
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata
@@ -237,8 +245,10 @@ class Harvester extends BaseAligner {
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-		context.getBean(TransactionManager.class).commit();;
-		dataMan.indexMetadata(id);
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+        dataMan.indexMetadata(id);
 		result.addedMetadata++;
 	}
 	
@@ -339,9 +349,10 @@ class Harvester extends BaseAligner {
             context.getBean(MetadataRepository.class).save(metadata);
             addCategories(record.id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-            context.getBean(TransactionManager.class).commit();
+            final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+            context.getBean(JpaTransactionManager.class).commit(transactionStatus);
 
-			dataMan.indexMetadata(record.id);
+            dataMan.indexMetadata(record.id);
 			result.updatedMetadata++;
 		}
 	}

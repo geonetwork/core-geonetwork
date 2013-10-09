@@ -33,6 +33,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This class is responsible for reading and writing metadata extras from the 
@@ -41,16 +42,8 @@ import org.jdom.Element;
  */
 public class XmlSerializerSvn extends XmlSerializer {
 
-	SvnManager svnMan = null;
-
-	/** Sets the repository URL - at present we really only expect that this
-	  * will be a local filesystem repository
-		*/
-	public XmlSerializerSvn(SettingManager sMan, SvnManager svnMan) throws Exception {
-		super(sMan);
-	
-		this.svnMan = svnMan;
-	}
+    @Autowired
+	private SvnManager svnMan;
 
     /**
      * Retrieves the xml element whose id matches the given one. The element is read from the database as subversion may be busy with commit changes.

@@ -54,7 +54,6 @@ import jeeves.server.dispatchers.guiservices.Call;
 import jeeves.server.dispatchers.guiservices.GuiService;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.dispatchers.guiservices.XmlFile;
-import jeeves.server.resources.ProviderManager;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
@@ -84,7 +83,6 @@ public class ServiceManager
 	private Vector<ErrorPage> vErrorPipe = new Vector<ErrorPage>();
 	private Vector<GuiService> vDefaultGui = new Vector<GuiService>();
 
-    private ProviderManager providMan;
     private ProfileManager  profilMan;
     private MonitorManager monitorManager;
     private XmlCacheManager xmlCacheManager;
@@ -114,7 +112,6 @@ public class ServiceManager
     public void setMaxUploadSize  (int  size)     { maxUploadSize  = size;  }
 	public void setDefaultLocal   (boolean yesno) { defaultLocal   = yesno; }
 
-	public void setProviderMan  (ProviderManager p) { providMan  = p; }
 	public void setMonitorMan  (MonitorManager mm) { monitorManager  = mm; }
 	public void setXmlCacheManager  (XmlCacheManager xcm) { xmlCacheManager  = xcm; }
     public void setApplicationContext(JeevesApplicationContext c) { this.jeevesApplicationContext = c;}
@@ -333,7 +330,7 @@ public class ServiceManager
 
 	public ServiceContext createServiceContext(String name, JeevesApplicationContext jeevesApplicationContext)
 	{
-		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, xmlCacheManager, monitorManager, providMan, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, xmlCacheManager, monitorManager, profilMan, htContexts);
 
 		context.setBaseUrl(baseUrl);
 		context.setLanguage("?");
@@ -348,7 +345,7 @@ public class ServiceManager
 	}
 
 	public void dispatch(ServiceRequest req, UserSession session) {
-		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext, xmlCacheManager, monitorManager, providMan, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext, xmlCacheManager, monitorManager, profilMan, htContexts);
 		dispatch(req, session, context);
 	}
 

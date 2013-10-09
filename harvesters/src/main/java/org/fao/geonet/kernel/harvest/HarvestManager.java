@@ -34,7 +34,6 @@ import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.MissingParameterEx;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 
@@ -52,6 +51,9 @@ import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.jdom.Element;
 import org.quartz.SchedulerException;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 /**
  * TODO Javadoc.
@@ -359,24 +361,33 @@ public class HarvestManager implements HarvestInfoProvider
      * @return
      * @throws Exception
      */
-	public synchronized OperResult remove(String id) throws Exception {
-        if(Log.isDebugEnabled(Geonet.HARVEST_MAN)){
-            Log.debug(Geonet.HARVEST_MAN, "Removing harvesting with id : "+ id);
-        }
-		AbstractHarvester ah = hmHarvesters.get(id);
+	public synchronized OperResult remove(final String id) throws Exception {
+        return context.executeInTransaction(new TransactionCallback<OperResult>() {
+            @Override
+            public OperResult doInTransaction(TransactionStatus status) {
+                try {
+                    if (Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
+                        Log.debug(Geonet.HARVEST_MAN, "Removing harvesting with id : " + id);
+                    }
+                    AbstractHarvester ah = hmHarvesters.get(id);
 
-		if (ah == null) {
-			return OperResult.NOT_FOUND;
-        }
-		hmHarvestLookup.remove(ah.getParams().uuid);
-		ah.destroy();
-		hmHarvesters.remove(id);
-		settingMan.remove("harvesting/id:"+id);
+                    if (ah == null) {
+                        return OperResult.NOT_FOUND;
+                    }
+                    hmHarvestLookup.remove(ah.getParams().uuid);
+                    ah.destroy();
+                    hmHarvesters.remove(id);
+                    settingMan.remove("harvesting/id:" + id);
 
-        final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
-        // set deleted status in harvest history table to 'y'
-        historyRepository.markAllAsDeleted(ah.getParams().uuid);
-		return OperResult.OK;
+                    final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
+                    // set deleted status in harvest history table to 'y'
+                    historyRepository.markAllAsDeleted(ah.getParams().uuid);
+                    return OperResult.OK;
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 	}
 
     /**
@@ -451,11 +462,11 @@ public class HarvestManager implements HarvestInfoProvider
     /**
      * TODO Javadoc.
      *
-     * @param resourceManager
+     *
      * @param id
      * @return
      */
-	public OperResult invoke(ResourceManager resourceManager, String id) {
+	public OperResult invoke(String id) {
         // READONLYMODE
         if(!this.readOnly) {
             if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
@@ -467,9 +478,8 @@ public class HarvestManager implements HarvestInfoProvider
                 return OperResult.NOT_FOUND;
             }
             return ah.invoke();
-        }
-        else {
-            if(Log.isDebugEnabled(Geonet.HARVEST_MAN)){
+        } else {
+            if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
                 Log.debug(Geonet.HARVEST_MAN, "GeoNetwork is running in read-only mode: skipping invocation of harvester with id: "+ id);
             }
             return null;

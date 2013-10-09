@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.fao.geonet.utils.Log;
 
@@ -49,7 +50,6 @@ import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sun.istack.internal.Nullable;
 
 /**
  * Map LDAP user information to GeoNetworkUser information.

@@ -27,10 +27,6 @@ public class XmlSerializerTest {
 	
 	public static class DummyXmlSerializer extends XmlSerializer {
 
-		public DummyXmlSerializer(SettingManager settingManager) {
-			super(settingManager);
-		}
-
 		@Override
 		public void delete(String id,
                            ServiceContext context) throws Exception {
@@ -118,7 +114,7 @@ public class XmlSerializerTest {
 		mockServiceContext(false);
 		
 		SettingManager settingManager = mockSettingManager(true, false);
-		XmlSerializer xmlSerializer = new DummyXmlSerializer(settingManager);
+		XmlSerializer xmlSerializer = new DummyXmlSerializer();
 
 		Element loadedMetadata = xmlSerializer.internalSelect("1", false);
 		List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
@@ -171,7 +167,7 @@ public class XmlSerializerTest {
 		}
 
 		SettingManager settingManager = mockSettingManager(isEnabled);
-		XmlSerializer xmlSerializer = new DummyXmlSerializer(settingManager);
+		XmlSerializer xmlSerializer = new DummyXmlSerializer();
 		
 		Element loadedMetadata = xmlSerializer.internalSelect("1", false);
 		List<?> resolutionElem = Xml.selectNodes(loadedMetadata, "*//gmd:MD_Resolution", Arrays.asList(Geonet.Namespaces.GMD));

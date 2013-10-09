@@ -35,8 +35,6 @@ import jeeves.monitor.MonitorManager;
 import jeeves.server.UserSession;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.local.LocalServiceRequest;
-import jeeves.server.resources.ProviderManager;
-import jeeves.server.resources.ResourceManager;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.JeevesServlet;
@@ -118,9 +116,9 @@ public class ServiceContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ServiceContext(String service, JeevesApplicationContext jeevesApplicationContext, XmlCacheManager cacheManager, MonitorManager mm, ProviderManager pm, ProfileManager p, Map<String, Object> contexts)
+	public ServiceContext(String service, JeevesApplicationContext jeevesApplicationContext, XmlCacheManager cacheManager, MonitorManager mm, ProfileManager p, Map<String, Object> contexts)
 	{
-		super(jeevesApplicationContext, mm, pm, contexts);
+		super(jeevesApplicationContext, mm, contexts);
 
 		this.xmlCacheManager = cacheManager;
 		profilMan    = p;
@@ -211,32 +209,7 @@ public class ServiceContext extends BasicContext
     }
 
 	public Element execute(LocalServiceRequest request) throws Exception {
-		ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), getXmlCacheManager(), getMonitorManager(), getProviderManager(), getProfileManager(), htContexts) {
-			public ResourceManager getResourceManager() {
-				return new ResourceManager(getMonitorManager(), getProviderManager()) {
-					@Override
-					public synchronized void abort() throws Exception {
-					}
-					@Override
-					public synchronized void close() throws Exception {
-					}
-					@Override
-					public synchronized void close(String name, Object resource)
-							throws Exception {
-					}
-					@Override
-					public synchronized void abort(String name, Object resource)
-							throws Exception {
-					}
-					@Override
-					protected void openMetrics(Object resource) {
-					}
-					@Override
-					protected void closeMetrics(Object resource) {
-					}
-				};
-			}
-		};
+		ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), getXmlCacheManager(), getMonitorManager(), getProfileManager(), htContexts);
 		
 		UserSession session = userSession;
 		if(userSession == null) {

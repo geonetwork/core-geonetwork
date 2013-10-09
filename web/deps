@@ -1,0 +1,262 @@
+Listening for transport dt_socket at address: 5005
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.geonetwork-opensource:web-app:war:2.11.0-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ org.geonetwork-opensource:geonetwork:2.11.0-SNAPSHOT, c:\GitHub\geonetwork\core_gn\pom.xml, line 171, column 15
+[WARNING] 'build.plugins.plugin.version' for org.codehaus.cargo:cargo-maven2-plugin is missing. @ org.geonetwork-opensource:geonetwork:2.11.0-SNAPSHOT, c:\GitHub\geonetwork\core_gn\pom.xml, line 193, column 15
+[WARNING] The expression ${version} is deprecated. Please use ${project.version} instead.
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building GeoNetwork Web module 2.11.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.1:tree (default-cli) @ web-app ---
+[INFO] org.geonetwork-opensource:web-app:war:2.11.0-SNAPSHOT
+[INFO] +- net.sf.ehcache:ehcache-core:jar:2.5.3:compile
+[INFO] |  \- org.slf4j:slf4j-api:jar:1.6.1:compile
+[INFO] +- org.tuckey:urlrewritefilter:jar:3.2.0:compile
+[INFO] +- xalan:xalan:jar:2.7.1:compile
+[INFO] |  \- xalan:serializer:jar:2.7.1:compile
+[INFO] +- net.sf.saxon:saxon-dom:jar:9.1.0.8b:compile
+[INFO] +- jfree:jfreechart:jar:1.0.0:compile
+[INFO] +- jfree:jcommon:jar:1.0.15:compile
+[INFO] +- org.openrdf:openrdf-model:jar:1.2.7:compile
+[INFO] +- org.openrdf:openrdf-util:jar:1.2.7:compile
+[INFO] +- org.openrdf:sesame:jar:1.2.7:compile
+[INFO] |  \- soap:soap:jar:2.3.1:compile
+[INFO] +- org.openrdf:rio:jar:1.0.9:compile
+[INFO] +- org.springframework:spring-context:jar:3.2.4.RELEASE:compile
+[INFO] |  +- org.springframework:spring-aop:jar:3.2.4.RELEASE:compile
+[INFO] |  +- org.springframework:spring-beans:jar:3.2.4.RELEASE:compile
+[INFO] |  +- org.springframework:spring-core:jar:3.2.4.RELEASE:compile
+[INFO] |  \- org.springframework:spring-expression:jar:3.2.4.RELEASE:compile
+[INFO] +- org.springframework:spring-orm:jar:3.2.4.RELEASE:compile
+[INFO] |  +- aopalliance:aopalliance:jar:1.0:compile
+[INFO] |  \- org.springframework:spring-jdbc:jar:3.2.4.RELEASE:compile
+[INFO] +- org.springframework:spring-tx:jar:3.2.4.RELEASE:compile
+[INFO] +- org.dspace:cql-java:jar:1.0:compile
+[INFO] +- org.jzkit:a2j:jar:2.0.4:compile
+[INFO] |  +- commons-logging:commons-logging:jar:1.1.1:compile
+[INFO] |  \- ant:ant:jar:1.6.5:compile
+[INFO] +- marc4j:marc4j:jar:2.3.1:compile
+[INFO] +- org.geotools:gt-api:jar:8.6:compile
+[INFO] |  \- javax.media:jai_core:jar:1.1.3:compile
+[INFO] +- org.geotools:gt-xml:jar:8.6:compile
+[INFO] |  +- org.geotools:gt-main:jar:8.6:compile
+[INFO] |  +- org.geotools.xsd:gt-xsd-wfs:jar:8.6:compile
+[INFO] |  |  +- org.geotools.xsd:gt-xsd-fes:jar:8.6:compile
+[INFO] |  |  \- org.geotools.xsd:gt-xsd-ows:jar:8.6:compile
+[INFO] |  |     \- org.geotools.ogc:net.opengis.ows:jar:8.6:compile
+[INFO] |  \- org.geotools.ogc:net.opengis.wfs:jar:8.6:compile
+[INFO] |     +- org.geotools.ogc:org.w3.xlink:jar:8.6:compile
+[INFO] |     +- org.geotools.ogc:net.opengis.fes:jar:8.6:compile
+[INFO] |     +- org.eclipse.emf:common:jar:2.6.0:compile
+[INFO] |     \- org.eclipse.emf:ecore:jar:2.6.1:compile
+[INFO] +- org.geotools.xsd:gt-xsd-gml3:jar:8.6:compile
+[INFO] |  +- org.geotools:gt-coverage:jar:8.6:compile
+[INFO] |  |  +- it.geosolutions.imageio-ext:imageio-ext-tiff:jar:1.1.6:compile
+[INFO] |  |  |  \- it.geosolutions.imageio-ext:imageio-ext-utilities:jar:1.1.6:compile
+[INFO] |  |  +- org.jaitools:jt-zonalstats:jar:1.3.0:compile
+[INFO] |  |  \- org.jaitools:jt-utils:jar:1.3.0:compile
+[INFO] |  +- org.geotools.xsd:gt-xsd-core:jar:8.6:compile
+[INFO] |  |  +- org.geotools:gt-graph:jar:8.6:compile
+[INFO] |  |  +- picocontainer:picocontainer:jar:1.2:compile
+[INFO] |  |  +- xml-apis:xml-apis-xerces:jar:2.7.1:compile
+[INFO] |  |  +- commons-jxpath:commons-jxpath:jar:1.3:compile
+[INFO] |  |  \- org.eclipse.xsd:xsd:jar:2.6.0:compile
+[INFO] |  \- org.geotools.xsd:gt-xsd-gml2:jar:8.6:compile
+[INFO] +- org.geotools:gt-cql:jar:8.6:compile
+[INFO] +- org.geotools:gt-shapefile:jar:8.6:compile
+[INFO] |  +- org.geotools:gt-data:jar:8.6:compile
+[INFO] |  \- jdom:jdom:jar:1.0:compile
+[INFO] +- org.geotools.xsd:gt-xsd-filter:jar:8.6:compile
+[INFO] +- org.geotools:gt-epsg-extension:jar:8.6:compile
+[INFO] +- org.geotools:gt-referencing:jar:8.6:compile
+[INFO] |  +- java3d:vecmath:jar:1.3.2:compile
+[INFO] |  +- commons-pool:commons-pool:jar:1.5.5:compile (version managed from 1.5.4)
+[INFO] |  +- org.geotools:gt-metadata:jar:8.6:compile
+[INFO] |  |  \- org.geotools:gt-opengis:jar:8.6:compile
+[INFO] |  |     \- net.java.dev.jsr-275:jsr-275:jar:1.0-beta-2:compile
+[INFO] |  \- jgridshift:jgridshift:jar:1.0:compile
+[INFO] +- org.geotools:gt-epsg-hsql:jar:8.6:compile
+[INFO] |  \- hsqldb:hsqldb:jar:1.8.0.7:compile
+[INFO] +- com.vividsolutions:jts:jar:1.13:compile
+[INFO] +- org.apache.lucene:lucene-core:jar:4.1.0:compile
+[INFO] +- org.apache.lucene:lucene-analyzers-common:jar:4.1.0:compile
+[INFO] +- org.apache.lucene:lucene-misc:jar:4.1.0:compile
+[INFO] +- org.apache.lucene:lucene-queries:jar:4.1.0:compile
+[INFO] +- org.apache.lucene:lucene-queryparser:jar:4.1.0:compile
+[INFO] |  \- org.apache.lucene:lucene-sandbox:jar:4.1.0:compile
+[INFO] |     \- jakarta-regexp:jakarta-regexp:jar:1.4:compile
+[INFO] +- org.apache.lucene:lucene-facet:jar:4.1.0:compile
+[INFO] +- pcj:pcj:jar:1.2:compile
+[INFO] +- batik:batik-ext:jar:1.6:compile
+[INFO] +- commons-httpclient:commons-httpclient:jar:3.0.1:compile
+[INFO] |  \- commons-codec:commons-codec:jar:1.2:compile
+[INFO] +- commons-net:commons-net:jar:3.0.1:compile
+[INFO] +- org.apache.commons:commons-email:jar:1.1:compile
+[INFO] |  +- javax.mail:mail:jar:1.4:compile
+[INFO] |  \- javax.activation:activation:jar:1.1:compile
+[INFO] +- avalon-framework:avalon-framework-api:jar:4.2.0:compile
+[INFO] +- org.apache.avalon.framework:avalon-framework-impl:jar:4.3.1:compile
+[INFO] |  \- org.apache.avalon.framework:avalon-framework-api:jar:4.3.1:compile
+[INFO] +- commons-digester:commons-digester:jar:1.6:compile
+[INFO] |  +- commons-beanutils:commons-beanutils:jar:1.6:compile
+[INFO] |  \- xml-apis:xml-apis:jar:1.0.b2:compile
+[INFO] +- commons-io:commons-io:jar:2.1:compile
+[INFO] +- org.apache.xmlgraphics:xmlgraphics-commons:jar:1.3.1:compile
+[INFO] +- commons-fileupload:commons-fileupload:jar:1.2.1:compile
+[INFO] +- commons-collections:commons-collections:jar:3.2.1:compile
+[INFO] +- com.h2database:h2:jar:1.3.152:compile
+[INFO] +- postgresql:postgresql:jar:9.1-901.jdbc3:compile
+[INFO] +- org.postgis:postgis-jdbc:jar:1.3.3:compile
+[INFO] |  \- org.postgis:postgis-stubs:jar:1.3.3:compile
+[INFO] +- mysql:mysql-connector-java:jar:5.1.12:compile
+[INFO] +- eu.medsea.mimeutil:mime-util:jar:2.1.2:compile
+[INFO] +- org.slf4j:slf4j-log4j12:jar:1.6.1:compile
+[INFO] +- joda-time:joda-time:jar:1.5.2:compile
+[INFO] +- jaxen:jaxen:jar:1.1.4:compile
+[INFO] +- com.google.guava:guava:jar:15.0:compile
+[INFO] +- junit:junit:jar:4.10:compile
+[INFO] |  \- org.hamcrest:hamcrest-core:jar:1.1:compile
+[INFO] +- xmlunit:xmlunit:jar:1.2:compile
+[INFO] +- org.mockito:mockito-all:jar:1.9.0:test
+[INFO] +- org.tmatesoft.svnkit:svnkit:jar:1.7.8:compile
+[INFO] |  +- org.tmatesoft.sqljet:sqljet:jar:1.1.6:compile
+[INFO] |  |  \- org.antlr:antlr-runtime:jar:3.4:compile
+[INFO] |  +- de.regnis.q.sequence:sequence-library:jar:1.0.2:compile
+[INFO] |  +- net.java.dev.jna:jna:jar:3.4.0:compile
+[INFO] |  \- com.trilead:trilead-ssh2:jar:1.0.0-build215:compile
+[INFO] +- org.mapfish.print:print-lib:jar:1.2.0:compile
+[INFO] |  +- org.jyaml:jyaml:jar:1.3:compile
+[INFO] |  +- org.mapfish.geo:mapfish-geo-lib:jar:1.2.0:compile
+[INFO] |  +- javax.media:jai_codec:jar:1.1.3:compile
+[INFO] |  +- org.apache.pdfbox:pdfbox:jar:1.6.0:compile
+[INFO] |  |  +- org.apache.pdfbox:fontbox:jar:1.6.0:compile
+[INFO] |  |  \- org.apache.pdfbox:jempbox:jar:1.6.0:compile
+[INFO] |  +- javax.media:jai_imageio:jar:1.1:compile
+[INFO] |  +- org.apache.xmlgraphics:batik-transcoder:jar:1.7:compile
+[INFO] |  |  +- org.apache.xmlgraphics:fop:jar:0.95:compile (version managed from 0.94)
+[INFO] |  |  +- org.apache.xmlgraphics:batik-awt-util:jar:1.7:compile
+[INFO] |  |  +- org.apache.xmlgraphics:batik-bridge:jar:1.7:compile
+[INFO] |  |  |  +- org.apache.xmlgraphics:batik-anim:jar:1.7:compile
+[INFO] |  |  |  +- org.apache.xmlgraphics:batik-css:jar:1.7:compile
+[INFO] |  |  |  +- org.apache.xmlgraphics:batik-ext:jar:1.7:compile
+[INFO] |  |  |  +- org.apache.xmlgraphics:batik-parser:jar:1.7:compile
+[INFO] |  |  |  \- org.apache.xmlgraphics:batik-script:jar:1.7:compile
+[INFO] |  |  +- org.apache.xmlgraphics:batik-dom:jar:1.7:compile
+[INFO] |  |  +- org.apache.xmlgraphics:batik-gvt:jar:1.7:compile
+[INFO] |  |  +- org.apache.xmlgraphics:batik-svg-dom:jar:1.7:compile
+[INFO] |  |  +- org.apache.xmlgraphics:batik-svggen:jar:1.7:compile
+[INFO] |  |  +- org.apache.xmlgraphics:batik-util:jar:1.7:compile
+[INFO] |  |  +- org.apache.xmlgraphics:batik-xml:jar:1.7:compile
+[INFO] |  |  \- xml-apis:xml-apis-ext:jar:1.3.04:compile
+[INFO] |  +- xerces:xercesImpl:jar:2.7.1:compile
+[INFO] |  +- com.lowagie:itext:jar:2.1.5:compile
+[INFO] |  |  +- bouncycastle:bcmail-jdk14:jar:138:compile
+[INFO] |  |  \- bouncycastle:bcprov-jdk14:jar:138:compile
+[INFO] |  \- org.json:json:jar:20080701:compile
+[INFO] +- org.geonetwork-opensource:jeeves:jar:2.11.0-SNAPSHOT:compile
+[INFO] |  +- org.geonetwork-opensource:domain:jar:2.11.0-SNAPSHOT:compile
+[INFO] |  |  +- org.geonetwork-opensource:common:jar:2.11.0-SNAPSHOT:compile
+[INFO] |  |  |  +- org.apache.jcs:jcs:jar:1.3:compile
+[INFO] |  |  |  |  \- concurrent:concurrent:jar:1.0:compile
+[INFO] |  |  |  +- globus:cog-jglobus:jar:1.2-060802:compile
+[INFO] |  |  |  +- xml-resolver:xml-resolver:jar:1.2:compile
+[INFO] |  |  |  +- jsch:jsch:jar:0.1.8:compile
+[INFO] |  |  |  +- org.quartz-scheduler:quartz:jar:2.1.4:compile
+[INFO] |  |  |  |  \- c3p0:c3p0:jar:0.9.1.1:compile
+[INFO] |  |  |  \- com.googlecode.juniversalchardet:juniversalchardet:jar:1.0.3:compile
+[INFO] |  |  +- org.hibernate:hibernate-jpamodelgen:jar:1.2.0.Final:compile
+[INFO] |  |  +- org.hibernate:hibernate-entitymanager:jar:4.3.0.Beta4:compile
+[INFO] |  |  |  +- org.jboss.logging:jboss-logging:jar:3.1.3.GA:compile
+[INFO] |  |  |  +- org.jboss.logging:jboss-logging-annotations:jar:1.2.0.Beta1:compile
+[INFO] |  |  |  +- org.hibernate:hibernate-core:jar:4.3.0.Beta4:compile
+[INFO] |  |  |  |  +- antlr:antlr:jar:2.7.7:compile
+[INFO] |  |  |  |  \- org.jboss:jandex:jar:1.1.0.Alpha1:compile
+[INFO] |  |  |  +- dom4j:dom4j:jar:1.6.1:compile
+[INFO] |  |  |  +- org.hibernate.common:hibernate-commons-annotations:jar:4.0.4.Final:compile
+[INFO] |  |  |  +- org.hibernate.javax.persistence:hibernate-jpa-2.1-api:jar:1.0.0.Final:compile
+[INFO] |  |  |  +- org.jboss.spec.javax.transaction:jboss-transaction-api_1.2_spec:jar:1.0.0.Alpha1:compile
+[INFO] |  |  |  \- org.javassist:javassist:jar:3.18.1-GA:compile
+[INFO] |  |  +- org.springframework.data:spring-data-jpa:jar:1.4.1.RELEASE:compile
+[INFO] |  |  |  +- org.springframework.data:spring-data-commons:jar:1.6.1.RELEASE:compile
+[INFO] |  |  |  +- org.aspectj:aspectjrt:jar:1.7.2:compile
+[INFO] |  |  |  \- org.slf4j:jcl-over-slf4j:jar:1.7.1:runtime
+[INFO] |  |  \- org.springframework.security:spring-security-core:jar:3.1.4.RELEASE:compile
+[INFO] |  +- commons-dbcp:commons-dbcp:jar:1.3:compile
+[INFO] |  +- org.eclipse.jetty:jetty-servlet:jar:7.3.1.v20110307:compile
+[INFO] |  |  \- org.eclipse.jetty:jetty-security:jar:7.3.1.v20110307:compile
+[INFO] |  |     \- org.eclipse.jetty:jetty-server:jar:7.3.1.v20110307:compile
+[INFO] |  |        +- javax.servlet:servlet-api:jar:2.5:compile
+[INFO] |  |        +- org.eclipse.jetty:jetty-continuation:jar:7.3.1.v20110307:compile
+[INFO] |  |        \- org.eclipse.jetty:jetty-http:jar:7.3.1.v20110307:compile
+[INFO] |  |           \- org.eclipse.jetty:jetty-io:jar:7.3.1.v20110307:compile
+[INFO] |  |              \- org.eclipse.jetty:jetty-util:jar:7.3.1.v20110307:compile
+[INFO] |  +- org.geotools.jdbc:gt-jdbc-postgis:jar:8.6:compile
+[INFO] |  |  \- org.geotools:gt-jdbc:jar:8.6:compile
+[INFO] |  +- org.geotools.jdbc:gt-jdbc-h2:jar:8.6:compile
+[INFO] |  |  \- org.opengeo:geodb:jar:0.7-RC2:compile
+[INFO] |  |     \- net.sourceforge.hatbox:hatbox:jar:1.0.b7:compile
+[INFO] |  +- org.geotools.jdbc:gt-jdbc-sqlserver:jar:8.6:compile
+[INFO] |  +- org.geotools.jdbc:gt-jdbc-mysql:jar:8.6:compile
+[INFO] |  +- org.geotools.jdbc:gt-jdbc-db2:jar:8.6:compile
+[INFO] |  +- org.geotools.jdbc:gt-jdbc-oracle:jar:8.6:compile
+[INFO] |  +- org.springframework.security:spring-security-cas:jar:3.1.4.RELEASE:compile
+[INFO] |  |  +- org.springframework:spring-web:jar:3.0.7.RELEASE:compile
+[INFO] |  |  \- org.jasig.cas.client:cas-client-core:jar:3.1.12:compile
+[INFO] |  +- org.springframework.security:spring-security-config:jar:3.1.4.RELEASE:compile
+[INFO] |  +- org.springframework.security:spring-security-ldap:jar:3.1.4.RELEASE:compile
+[INFO] |  |  \- org.springframework.ldap:spring-ldap-core:jar:1.3.1.RELEASE:compile
+[INFO] |  \- org.springframework.security:spring-security-web:jar:3.1.4.RELEASE:compile
+[INFO] +- org.geonetwork-opensource:cachingxslt:jar:2.11.0-SNAPSHOT:compile
+[INFO] |  \- net.sf.saxon:saxon:jar:9.1.0.8b-patch:compile
+[INFO] +- org.geonetwork-opensource:oaipmh:jar:2.11.0-SNAPSHOT:compile
+[INFO] +- org.geonetwork-opensource:dummy-api:jar:2.11.0-SNAPSHOT:compile
+[INFO] +- org.geonetwork-opensource:core:jar:2.11.0-SNAPSHOT:compile
+[INFO] |  \- org.springframework:spring-context-support:jar:3.2.4.RELEASE:compile
+[INFO] +- org.geonetwork-opensource:services:jar:2.11.0-SNAPSHOT:compile
+[INFO] |  \- org.geonetwork-opensource:csw-server:jar:2.11.0-SNAPSHOT:compile
+[INFO] +- org.geonetwork-opensource:harvesters:jar:2.11.0-SNAPSHOT:compile
+[INFO] +- org.geonetwork-opensource:health-monitor:jar:2.11.0-SNAPSHOT:compile
+[INFO] +- dlib:dlib:jar:1.0:compile
+[INFO] +- lizard:lizard-tiff:jar:1.0:compile
+[INFO] +- jzkit:jzkit-core:jar:3.r260.geonetwork.patch.1:compile
+[INFO] +- jzkit:jzkit-service:jar:3.r260.geonetwork.patch.1:compile
+[INFO] +- jzkit:jzkit-z3950-server:jar:3.r260.geonetwork.patch.1:compile
+[INFO] +- jzkit:jzkit-z3950-plugin:jar:3.r260.geonetwork.patch.1:compile
+[INFO] +- jakarta:jakarta-slide-webdavlib:jar:2.1:compile
+[INFO] +- edu.ucar:netcdf:jar:4.0.patch:compile
+[INFO] +- com.yammer.metrics:metrics-core:jar:2.1.1:compile
+[INFO] +- com.yammer.metrics:metrics-servlet:jar:2.1.1:compile
+[INFO] |  \- org.codehaus.jackson:jackson-mapper-asl:jar:1.9.5:compile
+[INFO] |     \- org.codehaus.jackson:jackson-core-asl:jar:1.9.5:compile
+[INFO] +- com.yammer.metrics:metrics-web:jar:2.1.1:compile
+[INFO] +- com.yammer.metrics:metrics-log4j:jar:2.1.1:compile
+[INFO] +- com.cybozu.labs:langdetect:jar:1.1-20120112:compile
+[INFO] |  \- net.arnx:jsonic:jar:1.2.7:compile
+[INFO] +- net.arnx.jsonic:jsonic:jar:1.2.0:compile
+[INFO] +- opendap:opendap:jar:2.1:compile
+[INFO] +- org.jsoup:jsoup:jar:0.2.2:compile
+[INFO] |  \- commons-lang:commons-lang:jar:2.6:compile (version managed from 2.4)
+[INFO] +- org.geonetwork-opensource:geonetwork-client:jar:2.11.0-SNAPSHOT:provided
+[INFO] +- org.xhtmlrenderer:flying-saucer-core:jar:9.0.1:compile
+[INFO] +- org.xhtmlrenderer:flying-saucer-pdf:jar:9.0.1:compile
+[INFO] +- org.xhtmlrenderer:flying-saucer-pdf-itext5:jar:9.0.1:compile
+[INFO] |  \- com.itextpdf:itextpdf:jar:5.3.0:compile
+[INFO] +- com.google.code.findbugs:jsr305:jar:2.0.1:compile
+[INFO] +- org.jdom:jdom:jar:1.1.2:compile
+[INFO] +- jdbm:jdbm:jar:1.0:compile
+[INFO] \- log4j:log4j:jar:1.2.13:compile
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 3.750s
+[INFO] Finished at: Tue Oct 08 20:21:24 CEST 2013
+[INFO] Final Memory: 21M/439M
+[INFO] ------------------------------------------------------------------------

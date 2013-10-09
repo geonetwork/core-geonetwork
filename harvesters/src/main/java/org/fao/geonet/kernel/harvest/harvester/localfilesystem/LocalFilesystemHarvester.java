@@ -33,7 +33,6 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 
@@ -50,8 +49,9 @@ import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.XMLExtensionFilenameFilter;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-
-import javax.transaction.TransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 /**
  * Harvester for local filesystem.
@@ -265,9 +265,11 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-        context.getBean(TransactionManager.class).commit();
 
-		dataMan.indexMetadata(id);
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+        dataMan.indexMetadata(id);
 	}
 
 	
@@ -301,8 +303,10 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-		context.getBean(TransactionManager.class).commit();
-		dataMan.indexMetadata(id);
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+        dataMan.indexMetadata(id);
 		return id;
     }
 

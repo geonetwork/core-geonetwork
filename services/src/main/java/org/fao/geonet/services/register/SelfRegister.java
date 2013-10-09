@@ -40,8 +40,10 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.TransactionManager;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Random;
@@ -107,11 +109,11 @@ public class SelfRegister extends NotInReadOnlyModeService {
 		if (thisSite == null || host == null || port == null || from == null || thisSite.equals("dummy") || host.equals("") || port.equals("") || from.equals("")) {
 			throw new IllegalArgumentException("Missing settings in System Configuration (see Administration menu) - cannot do self registration");
 		}
-		
-		Element element = new Element(Jeeves.Elem.RESPONSE);
-		element.setAttribute(Params.SURNAME,surname);
-		element.setAttribute(Params.NAME,name);
-		element.setAttribute(Params.EMAIL,email);
+
+        Element element = new Element(Jeeves.Elem.RESPONSE);
+        element.setAttribute(Params.SURNAME, surname);
+        element.setAttribute(Params.NAME, name);
+        element.setAttribute(Params.EMAIL, email);
 
         final UserRepository userRepository = context.getBean(UserRepository.class);
         if (userRepository.findOneByEmail(email) != null) {
@@ -143,8 +145,10 @@ public class SelfRegister extends NotInReadOnlyModeService {
     String siteURL = si.getSiteUrl() + context.getBaseUrl();
 
     if (!sendRegistrationEmail(params, password, host, port, from, thisSite, siteURL)) {
-      context.getBean(TransactionManager.class).rollback();
-      return element.addContent(new Element("result").setText("errorEmailToAddressFailed"));
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).rollback(transactionStatus);
+
+        return element.addContent(new Element("result").setText("errorEmailToAddressFailed"));
     }
 
     // Send email to admin requesting non-standard profile if required

@@ -46,7 +46,7 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
 
     @Override
     public final Object postProcessBeforeInitialization(final Object bean, final String beanName) {
-        return null;  // Do nothing
+        return bean;  // Do nothing
     }
 
     @Override
@@ -71,7 +71,7 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
             }
             return bean;
         }
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return bean;
     }
 
     public final void setMigration(final LinkedHashMap<Integer, List<String>> migration) {
@@ -122,7 +122,7 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
                 String dbType = DatabaseType.lookup(conn).toString();
                 _logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
 
-                _logger.info("      Loading SQL migration step configuration from config-db.xml ...");
+                _logger.info("      Loading SQL migration step configuration from <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n ...");
                 for (Map.Entry<Integer, List<String>> migrationEntry : _migration.entrySet()) {
                     int versionNumber = migrationEntry.getKey();
                     if (versionNumber > from && versionNumber <= to) {

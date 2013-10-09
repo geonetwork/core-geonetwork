@@ -31,6 +31,7 @@ public class GeonetworkDataDirectory {
 	private static final String GEONETWORK_DEFAULT_DATA_DIR = "WEB-INF" + File.separator + "data"  + File.separator;
 	public static final String KEY_SUFFIX = ".dir";
 	public static final String GEONETWORK_DIR_KEY = "geonetwork.dir";
+	public static final String GEONETWORK_BEAN_KEY = GEONETWORK_DIR_KEY+".spring.bean";
 
 	private String systemDataDir;
 
@@ -60,7 +61,7 @@ public class GeonetworkDataDirectory {
             Log.debug(Geonet.DATA_DIRECTORY,
 				"Check and create if needed GeoNetwork data directory");
 		setDataDirectory(jeevesServlet, appContext, webappName, path, handlerConfig);
-        appContext.getBeanFactory().registerSingleton(GeonetworkDataDirectory.GEONETWORK_DIR_KEY, this);
+        appContext.getBeanFactory().registerSingleton(GEONETWORK_BEAN_KEY, this);
 	}
 
 	/**

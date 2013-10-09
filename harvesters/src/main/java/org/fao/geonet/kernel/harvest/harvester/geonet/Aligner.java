@@ -52,8 +52,10 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.jdom.Element;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.TransactionManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -130,10 +132,11 @@ public class Aligner extends BaseAligner
 		localCateg = new CategoryMapper(context);
 		localGroups= new GroupMapper(context);
 		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
-        context.getBean(TransactionManager.class).commit();
 
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
 
-		parseXSLFilter();
+        parseXSLFilter();
 		
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
@@ -145,8 +148,10 @@ public class Aligner extends BaseAligner
 
                 if(log.isDebugEnabled()) log.debug("  - Removing old metadata with id:"+ id);
 				dataMan.deleteMetadata(context, id);
-                context.getBean(TransactionManager.class).commit();
-				result.locallyRemoved++;
+
+                context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+                result.locallyRemoved++;
 			}
 
 		//-----------------------------------------------------------------------
@@ -376,8 +381,10 @@ public class Aligner extends BaseAligner
 		}
 		addPrivileges(id, info.getChild("privileges"));
 
-        context.getBean(TransactionManager.class).commit();
-		dataMan.indexMetadata(id);
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+        dataMan.indexMetadata(id);
 		result.addedMetadata++;
 
 		return id;
@@ -652,8 +659,10 @@ public class Aligner extends BaseAligner
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
 		addPrivileges(id, info.getChild("privileges"));
 
-        context.getBean(TransactionManager.class).commit();
-		dataMan.indexMetadata(id);
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+        dataMan.indexMetadata(id);
 	}
 
 	/**

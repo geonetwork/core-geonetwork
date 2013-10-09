@@ -26,9 +26,11 @@ package jeeves.server.context;
 import jeeves.config.springutil.JeevesApplicationContext;
 import org.fao.geonet.Logger;
 import jeeves.monitor.MonitorManager;
-import jeeves.server.resources.ProviderManager;
-import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.utils.Log;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Collections;
 import java.util.Map;
@@ -40,8 +42,6 @@ import java.util.Map;
 
 public class BasicContext implements Logger
 {
-	private ResourceManager resMan;
-	private ProviderManager provMan;
 
 	protected Logger logger = Log.createLogger(Log.JEEVES);
 	private   String baseUrl;
@@ -57,13 +57,11 @@ public class BasicContext implements Logger
 	//---
 	//--------------------------------------------------------------------------
 
-	public BasicContext(JeevesApplicationContext jeevesApplicationContext, MonitorManager mm, ProviderManager pm, Map<String, Object> contexts)
+	public BasicContext(JeevesApplicationContext jeevesApplicationContext, MonitorManager mm, Map<String, Object> contexts)
 	{
-		resMan = new ResourceManager(mm, pm);
 
 		this.jeevesApplicationContext = jeevesApplicationContext;
         this.monitorManager = mm;
-		provMan    = pm;
 		htContexts = Collections.unmodifiableMap(contexts);
 	}
 
@@ -73,13 +71,10 @@ public class BasicContext implements Logger
 	//---
 	//--------------------------------------------------------------------------
 
-	//--- readonly objects
 
-	public ResourceManager getResourceManager() { return resMan;     }
+    public Logger getLogger()  { return logger;  }
 
 	//--- read/write objects
-
-	public Logger getLogger()  { return logger;  }
 	public String getBaseUrl() { return baseUrl; }
 	public String getAppPath() { return appPath; }
 
@@ -93,13 +88,6 @@ public class BasicContext implements Logger
 	public Object getHandlerContext(String contextName)
 	{
 		return htContexts.get(contextName);
-	}
-
-	//--------------------------------------------------------------------------
-
-	public ProviderManager getProviderManager()
-	{
-		return provMan;
 	}
 
     //--------------------------------------------------------------------------
@@ -135,6 +123,15 @@ public class BasicContext implements Logger
     public void fatal(final String message) { logger.fatal(message); }
     @Override
     public String getModule() { return logger.getModule(); }
+
+    public <T> T executeInTransaction(TransactionCallback<T> callback) {
+        final TransactionTemplate template = new TransactionTemplate(getBean(JpaTransactionManager.class));
+        return template.execute(callback);
+    }
+
+    public void executeInTransaction(TransactionCallbackWithoutResult callback) {
+        executeInTransaction((TransactionCallback)callback);
+    }
 }
 
 //=============================================================================

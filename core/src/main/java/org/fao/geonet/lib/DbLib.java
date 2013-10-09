@@ -134,60 +134,58 @@ public class DbLib {
 	}
 
 	/**
-	 * 
-	 * @param statement
-	 * @return
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	private List<String> loadSchemaFile(ServletContext servletContext, Statement statement, String appPath, String filePath, String filePrefix) // FIXME :
-																	// use
-																	// resource
-																	// dir
-																	// instead
-																	// of
-																	// appPath
-            throws FileNotFoundException, IOException, SQLException {
-		// --- find out which dbms schema to load
-		String file = checkFilePath(filePath, filePrefix, DatabaseType.lookup(statement.getConnection()).toString());
-
-        if(Log.isDebugEnabled(Geonet.DB))
-            Log.debug(Geonet.DB, "  Loading script:" + file);
-
-		// --- load the dbms schema
-		return Lib.text.load(servletContext, appPath, file);
-	}
-
-	/**
 	 * Check if db specific SQL script exist, if not return default SQL script path.
 	 * 
-	 * @param filePath
-	 * @param prefix
-	 * @param type
-	 * @return
+	 *
+     * @param servletContext
+     * @param appPath
+     *@param filePath
+     * @param prefix
+     * @param type    @return
 	 */
-	private String checkFilePath (String filePath, String prefix, String type) {
-		String dbFilePath = filePath + "/" +  prefix + type + SQL_EXTENSION;
-		File dbFile = new File(dbFilePath);
-		if (dbFile.exists())
-			return dbFilePath;
-		
-		String defaultFilePath = filePath + "/" +  prefix + "default" + SQL_EXTENSION;
-		File defaultFile = new File(defaultFilePath);
-		if (defaultFile.exists())
-			return defaultFilePath;
-		else
-        if(Log.isDebugEnabled(Geonet.DB))
-            Log.debug(Geonet.DB, "  No default SQL script found: " + defaultFilePath);
+	private String checkFilePath(ServletContext servletContext, String appPath, String filePath, String prefix, String type) {
+        String finalPath;
+        finalPath = testPath(filePath + "/" +  prefix + type + SQL_EXTENSION);
 
+        if (finalPath == null) {
+            finalPath = testPath(appPath + "/" + filePath + "/" +  prefix + type + SQL_EXTENSION);
+        }
+
+        if (finalPath == null) {
+            finalPath = servletContext.getRealPath(filePath + "/" + prefix + type + SQL_EXTENSION);
+        }
+        if (finalPath == null) {
+            finalPath = testPath(filePath + "/" +  prefix + "default" + SQL_EXTENSION);
+        }
+        if (finalPath == null) {
+            finalPath = testPath(appPath + "/" + filePath + "/" +  prefix + "default" + SQL_EXTENSION);
+        }
+
+        if (finalPath == null) {
+            finalPath = servletContext.getRealPath(filePath + "/" +  prefix + "default" + SQL_EXTENSION);
+        }
+
+		if (finalPath != null)
+			return finalPath;
+		else {
+            Log.debug(Geonet.DB, "  No default SQL script found: " + (filePath + "/" +  prefix + type + SQL_EXTENSION));
+        }
 		return "";
 	}
-	
-	private List<String> loadSqlDataFile(ServletContext servletContext, Statement statement, String appPath, String filePath, String filePrefix)
+
+    private String testPath(String dbFilePath) {
+        File dbFile = new File(dbFilePath);
+        if (dbFile.exists()) {
+            return dbFilePath;
+        }
+        return null;
+    }
+
+    private List<String> loadSqlDataFile(ServletContext servletContext, Statement statement, String appPath, String filePath, String filePrefix)
 
             throws FileNotFoundException, IOException, SQLException {
 		// --- find out which dbms data file to load
-		String file = checkFilePath(filePath, filePrefix, DatabaseType.lookup(statement.getConnection()).toString());
+		String file = checkFilePath(servletContext, appPath, filePath, filePrefix, DatabaseType.lookup(statement.getConnection()).toString());
 		
 		// --- load the sql data
 		return Lib.text.load(servletContext, appPath, file, Constants.ENCODING);

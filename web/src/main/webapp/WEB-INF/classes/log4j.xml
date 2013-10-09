@@ -144,6 +144,10 @@
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
+    <logger name="org.springframework.beans" additivity="false">
+        <level value="TRACE" />
+        <appender-ref ref="fileAppender" />
+    </logger>
     <logger name="org.springframework.security" additivity="false">
         <level value="WARN" />
     </logger>

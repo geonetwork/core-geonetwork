@@ -58,8 +58,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.overrides.ConfigurationOverrides;
-import jeeves.server.resources.ProviderManager;
-import jeeves.server.resources.ResourceManager;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import org.fao.geonet.utils.Log;
@@ -97,7 +95,6 @@ public class JeevesEngine
 	private boolean generalLoaded;
 
 	private ServiceManager  serviceMan  = new ServiceManager();
-	private ProviderManager providerMan = new ProviderManager();
 	private ScheduleManager scheduleMan = new ScheduleManager();
 
 	private Logger appHandLogger = Log.createLogger(Log.APPHAND);
@@ -168,7 +165,6 @@ public class JeevesEngine
             JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
             
 			serviceMan.setAppPath(appPath);
-			serviceMan.setProviderMan(providerMan);
 			serviceMan.setMonitorMan(monitorManager);
 			serviceMan.setXmlCacheManager(xmlCacheManager );
 			serviceMan.setApplicationContext(jeevesAppContext);
@@ -176,15 +172,11 @@ public class JeevesEngine
 			serviceMan.setServlet(servlet);
 
 			scheduleMan.setAppPath(appPath);
-			scheduleMan.setProviderMan(providerMan);
 			scheduleMan.setMonitorManager(monitorManager);
 			scheduleMan.setApplicationContext(jeevesAppContext);
 			scheduleMan.setBaseUrl(baseUrl);
 			
 			loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, serviceMan);
-
-            // Add ResourceManager as a bean to the spring application context so that GeonetworkAuthentication can access it
-            jeevesAppContext.getBeanFactory().registerSingleton("resourceManager", new ResourceManager(this.monitorManager, this.providerMan));
 
 			//--- handlers must be started here because they may need the context
 			//--- with the ProfileManager already loaded
@@ -479,7 +471,6 @@ public class JeevesEngine
 
 				Object context = h.start(handler, srvContext);
 
-				srvContext.getResourceManager().close();
 				vAppHandlers.add(h);
 				serviceMan .registerContext(h.getContextName(), context);
 				scheduleMan.registerContext(h.getContextName(), context);
@@ -504,7 +495,6 @@ public class JeevesEngine
 				error(errors.toString());
 				// only set the error if we don't already have one
 				if (!serviceMan.isStartupError()) serviceMan.setStartupErrors(errors);
-				srvContext.getResourceManager().abort();
 			}
 		}
 	}
@@ -644,7 +634,6 @@ public class JeevesEngine
 
 	private void stopResources()
 	{
-		providerMan.end();
 		for (Activator a : vActivators) {
 			info("   Stopping activator : " + a.getClass().getName());
 			a.shutdown();

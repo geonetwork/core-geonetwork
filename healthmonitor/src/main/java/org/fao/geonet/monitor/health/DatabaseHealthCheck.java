@@ -4,8 +4,8 @@ import com.yammer.metrics.core.HealthCheck;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.repository.SettingRepository;
-
-import javax.transaction.TransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 /**
  * Checks to ensure that the database is accessible and readable
@@ -19,18 +19,17 @@ public class DatabaseHealthCheck implements HealthCheckFactory {
         return new HealthCheck("Database Connection") {
             @Override
             protected Result check() throws Exception {
-                final TransactionManager transactionManager = context.getBean(TransactionManager.class);
-                transactionManager.begin();
-                try {
-                    context.getBean(SettingRepository.class).count();
-                    return Result.healthy();
-                } catch (Throwable e) {
-                    return Result.unhealthy(e);
-                } finally {
-                    if (transactionManager != null)
-                        transactionManager.rollback();
-                }
-
+                return context.executeInTransaction(new TransactionCallback<Result>() {
+                    @Override
+                    public Result doInTransaction(TransactionStatus status) {
+                        try {
+                            context.getBean(SettingRepository.class).count();
+                            return Result.healthy();
+                        } catch (Throwable e) {
+                            return Result.unhealthy(e);
+                        }
+                    }
+                });
             }
         };
     }

@@ -26,7 +26,6 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 
@@ -42,15 +41,16 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.TransactionManager;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-//import com.esri.sde.sdk.GeoToolsDummyAPI;
 /**
  * 
  * Harvester from ArcSDE. Requires the propietary ESRI libraries containing their API. Since those are not
@@ -158,8 +158,11 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		//--- retrieve harvested uuids for given harvesting node
 		CategoryMapper localCateg = new CategoryMapper(context);
 		GroupMapper localGroups = new GroupMapper(context);
-        context.getBean(TransactionManager.class).commit();
-		List<String> idsForHarvestingResult = new ArrayList<String>();
+
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+        List<String> idsForHarvestingResult = new ArrayList<String>();
 		//-----------------------------------------------------------------------
 		//--- insert/update metadata		
 		for(String metadata : metadataList) {
@@ -200,8 +203,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 					    Log.info(ARCSDE_LOG_MODULE_NAME, "adding new metadata");
 						id = addMetadata(iso19139, uuid, schema, localGroups, localCateg);
 						result.addedMetadata++;
-					}
-					else {
+					} else {
 					    Log.info(ARCSDE_LOG_MODULE_NAME, "updating existing metadata, id is: " + id);
 						updateMetadata(iso19139, id, localGroups, localCateg);
 						result.updatedMetadata++;
@@ -245,8 +247,10 @@ public class ArcSDEHarvester extends AbstractHarvester {
         context.getBean(MetadataRepository.class).save(metadata);
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-        context.getBean(TransactionManager.class).commit();
-		dataMan.indexMetadata(id);
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+        dataMan.indexMetadata(id);
 	}
 	/**
 	 * Inserts a metadata into the database. Lucene index is updated after insertion.
@@ -279,8 +283,10 @@ public class ArcSDEHarvester extends AbstractHarvester {
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-        context.getBean(TransactionManager.class).commit();
-		dataMan.indexMetadata(id);
+        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+        dataMan.indexMetadata(id);
 		return id;
 	}
 	
