@@ -214,8 +214,6 @@ public class Z3950Harvester extends AbstractHarvester<Z3950ServerResults> {
 class Z3950ServerResults extends HarvestResult {
 	private Map<String, HarvestResult> serverResults = new HashMap<String, HarvestResult>();
 
-	public int locallyRemoved;
-
 	public HarvestResult getServerResult(String serverName) {
         HarvestResult result = serverResults.get(serverName);
 		if (result == null) {
