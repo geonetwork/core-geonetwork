@@ -28,6 +28,9 @@ import jeeves.utils.SerialFactory;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
+
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -134,7 +137,7 @@ public class HarvesterHistoryDao {
 		* @throws SQLException
 		* @return number of history records deleted
 		*/
-	public static int deleteHistory(Dbms dbms, List<Element>ids) throws SQLException {
+	public static int deleteHistory(Dbms dbms, List<Element>ids, List<Element> files) throws SQLException {
 
 		int nrRecs = 0; 
 		for (Element id : ids) {
@@ -143,6 +146,22 @@ public class HarvesterHistoryDao {
 			nrRecs++;
 			dbms.commit();
 		}
+		
+		for(Element file : files) {
+		    try{
+    		    File f = new File(file.getTextTrim());
+    		    if(f.exists() && f.canWrite()) {
+    		        if (!f.delete()) {
+    		            Log.warning(Geonet.HARVESTER, 
+    		                      "Removing history. Failed to delete file: " + f.getCanonicalPath());
+    		        }
+    		    } 
+    		}
+		    catch(Exception e){
+		        e.printStackTrace();
+		    }
+		}
+		
 		return nrRecs;
 	}
 

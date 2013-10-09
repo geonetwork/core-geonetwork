@@ -36,19 +36,22 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
 //=============================================================================
 
-class Harvester extends BaseAligner {
+class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -73,8 +76,9 @@ class Harvester extends BaseAligner {
 	//--- API methods
 	//---
 	//---------------------------------------------------------------------------
-
-	public HarvestResult harvest() throws Exception {
+	@Override
+	public HarvestResult harvest(Logger log) throws Exception {
+		this.log = log;
         if(log.isDebugEnabled()) log.debug("Retrieving remote metadata information for : "+ params.name);
 		
 		RemoteRetriever rr = null;		
@@ -202,6 +206,7 @@ class Harvester extends BaseAligner {
                 } catch (Exception e) {
                         log.error("  - Failed to set uuid for metadata with remote path : "
                                         + rf.getPath());
+                        errors.add(new HarvestError(e, this.log));
                         return;
                 }
         }
@@ -334,6 +339,10 @@ class Harvester extends BaseAligner {
 		}
 	}
 
+	public List<HarvestError> getErrors() {
+		return errors;
+	}
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Variables
@@ -350,6 +359,7 @@ class Harvester extends BaseAligner {
 	private UriMapper localUris;
 	private HarvestResult result;
 	private SchemaManager  schemaMan;
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
 }
 
 //=============================================================================

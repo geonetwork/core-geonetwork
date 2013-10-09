@@ -44,7 +44,9 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester;
@@ -90,6 +92,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -170,7 +173,7 @@ import java.util.Map;
  * @author Simon Pigot
  *   
  */
-class Harvester extends BaseAligner
+class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 {
 	
 	
@@ -224,7 +227,8 @@ class Harvester extends BaseAligner
      * Start the harvesting of a thredds catalog 
      **/
 	
-	public HarvestResult harvest() throws Exception {
+	public HarvestResult harvest(Logger log) throws Exception {
+		this.log = log;
 		
 		Element xml = null;
 		log.info("Retrieving remote metadata information for : " + params.name);
@@ -1355,5 +1359,11 @@ class Harvester extends BaseAligner
 	static private final Namespace gmd 	= Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
 	static private final Namespace srv 	= Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
 	static private final Namespace xlink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
+	
+	private List<HarvestError> errors = new LinkedList<HarvestError>();
+	@Override
+	public List<HarvestError> getErrors() {
+		return errors;
+	}
 		
 }

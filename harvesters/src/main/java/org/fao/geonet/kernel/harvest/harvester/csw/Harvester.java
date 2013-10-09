@@ -23,13 +23,23 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import jeeves.exceptions.BadParameterEx;
+import jeeves.exceptions.BadXmlResponseEx;
 import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.ConstraintLanguage;
@@ -43,21 +53,16 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-
 //=============================================================================
 
-class Harvester
+class Harvester implements IHarvester<HarvestResult>
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -79,8 +84,9 @@ class Harvester
 	//---
 	//---------------------------------------------------------------------------
 
-	public HarvestResult harvest() throws Exception
-	{
+	public HarvestResult harvest(Logger log) throws Exception
+	{	    
+	    this.log = log;
 		log.info("Retrieving capabilities file for : "+ params.name);
 
 		CswServer server = retrieveCapabilities(log);
@@ -101,16 +107,34 @@ class Harvester
 			}
 		}
 			
-		records.addAll(search(server,s));
-		
-		/*
-		for(Search s : params.getSearches()){
-			records.addAll(search(server, s));
-		}*/
+        try {
+            records.addAll(search(server, s));
+        } catch (Exception t) {
+            log.error("Unknown error trying to harvest");
+            log.error(t.getMessage());
+            log.error(t);
+            errors.add(new HarvestError(t, log));
+        } catch (Throwable t) {
+            log.fatal("Something unknown and terrible happened while harvesting");
+            log.fatal(t.getMessage());
+            errors.add(new HarvestError(t, log));
+        }
 
-		if (params.isSearchEmpty()){
-			records.addAll(search(server, Search.createEmptySearch()));
-		}
+		if (params.isSearchEmpty()) {
+		    try {
+		        log.debug("Doing an empty search");
+		        records.addAll(search(server, Search.createEmptySearch()));
+            } catch(Exception t) {
+                log.error("Unknown error trying to harvest");
+                log.error(t.getMessage());
+                log.error(t);
+                errors.add(new HarvestError(t, log));
+		    } catch(Throwable t) {
+                log.fatal("Something unknown and terrible happened while harvesting");
+                log.fatal(t.getMessage());
+                errors.add(new HarvestError(t, log));
+            }
+	    }
 
 		log.info("Total records processed in all searches :"+ records.size());
 
@@ -118,7 +142,7 @@ class Harvester
 
 		Aligner aligner = new Aligner(log, context, dbms, server, params);
 
-		return aligner.align(records);
+		return aligner.align(records, errors);
 	}
 
 	//---------------------------------------------------------------------------
@@ -145,23 +169,29 @@ class Harvester
 
 		if (params.useAccount)
 			req.setCredentials(params.username, params.password);
-		
-		Element capabil = req.execute();
+		CswServer server = null;
+		try{
+    		Element capabil = req.execute();
+    
+            if(log.isDebugEnabled())
+                log.debug("Capabilities:\n"+Xml.getString(capabil));
+            
+    		if (capabil.getName().equals("ExceptionReport"))
+    			CatalogException.unmarshal(capabil);
+    
+    		server = new CswServer(capabil);
+    
+    		if (!checkOperation(log, server, "GetRecords"))
+    			throw new OperationAbortedEx("GetRecords operation not found");
+    
+    		if (!checkOperation(log, server, "GetRecordById"))
+    			throw new OperationAbortedEx("GetRecordById operation not found");
 
-        if(log.isDebugEnabled())
-            log.debug("Capabilities:\n"+Xml.getString(capabil));
+		} catch(BadXmlResponseEx e) {
+            errors.add(new HarvestError(e, log, params.capabUrl));
+            throw e;
+		} 
         
-		if (capabil.getName().equals("ExceptionReport"))
-			CatalogException.unmarshal(capabil);
-
-		CswServer server = new CswServer(capabil);
-
-		if (!checkOperation(log, server, "GetRecords"))
-			throw new OperationAbortedEx("GetRecords operation not found");
-
-		if (!checkOperation(log, server, "GetRecordById"))
-			throw new OperationAbortedEx("GetRecordById operation not found");
-
 		return server;
 	}
 
@@ -201,6 +231,8 @@ class Harvester
 		//request.setOutputSchema(OutputSchema.OGC_CORE);	// Use default value
 		request.setElementSetName(ElementSetName.SUMMARY);
 		request.setMaxRecords(GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE +"");
+        request.setDistribSearch(params.queryScope.equalsIgnoreCase("true"));
+        request.setHopCount(params.hopCount + "");
 
 		CswOperation oper = server.getOperation(CswServer.GET_RECORDS);
 
@@ -208,11 +240,13 @@ class Harvester
 
         configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD);
 
-        if (params.useAccount)
+        if (params.useAccount) {
+            log.debug("Logging into server (" + params.username + ")");
             request.setCredentials(params.username, params.password);
-
+        }
         // Simple fallback mechanism. Try search with PREFERRED_HTTP_METHOD method, if fails change it
         try {
+            log.info("Re-trying the search with another HTTP method.");
             request.setStartPosition(start +"");
 		    doSearch(request, start, 1);
         } catch(Exception ex) {
@@ -220,6 +254,7 @@ class Harvester
                 log.debug(ex.getMessage());
                 log.debug("Changing to CSW harvester to use " + (PREFERRED_HTTP_METHOD.equals("GET")?"POST":"GET"));
             }
+            errors.add(new HarvestError(ex, log));
 
             configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD.equals("GET")?"POST":"GET");
         }
@@ -250,15 +285,24 @@ class Harvester
             List<Element> list = results.getChildren();
 			int counter = 0;
 
-			for (Element record :list)
-			{
-				RecordInfo recInfo= getRecordInfo((Element)record.clone());
+			log.debug("Extracting all elements in the csw harvesting response");
+			for (Element record :list) {
+                try {
+    				RecordInfo recInfo= getRecordInfo((Element)record.clone());
 
-				if (recInfo != null)
-					records.add(recInfo);
+    				if (recInfo != null)
+    					records.add(recInfo);
 
-				counter++;
-			}
+    				counter++;
+
+                } catch (Exception ex) {
+                    errors.add(new HarvestError(ex, log));
+                    log.error("Unable to process record from csw (" + this.params.name + ")");
+                    log.error("   Record failed: " + counter); 
+                    log.debug("   Record: " +  ((Element)record).getName()); 
+                }
+
+            }
 
 			//--- check to see if we have to perform other searches
 
@@ -504,6 +548,7 @@ class Harvester
 		}
 		catch(Exception e)
 		{
+            errors.add(new HarvestError(e, log));
 			log.warning("Raised exception when searching : "+ e);
 			throw new OperationAbortedEx("Raised exception when searching: " + e.getMessage(), e);
 		}
@@ -564,6 +609,11 @@ class Harvester
 
 	}
 
+
+    public List<HarvestError> getErrors() {
+        return errors;
+    }
+    
 	//---------------------------------------------------------------------------
 	//---
 	//--- Variables
@@ -573,11 +623,18 @@ class Harvester
 	public static final String PREFERRED_HTTP_METHOD = CatalogRequest.Method.GET.toString();
 	private static int GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE = 20;
 	private static String CONSTRAINT_LANGUAGE_VERSION = "1.1.0";
+	
+	//FIXME version should be parametrized
 	private static String GETCAPABILITIES_PARAMETERS = "SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2";
 	private Logger         log;
 	private Dbms           dbms;
 	private CswParams      params;
 	private ServiceContext context;
+	
+	/**
+	 * Contains a list of accumulated errors during the executing of this harvest.
+	 */
+	private List<HarvestError> errors = new LinkedList<HarvestError>();
 }
 
 //=============================================================================

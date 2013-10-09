@@ -14,6 +14,7 @@ geonetwork*.db
 changes-*
 web/coverage.ec
 */target/
+*/.externalToolBuilders
 web/src/main/webapp/data/
 web/src/main/webapp/WEB-INF/lucene/
 web/src/main/webapp/WEB-INF/metadata_subversion/

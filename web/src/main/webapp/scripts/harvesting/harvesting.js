@@ -91,6 +91,11 @@ function Harvesting()
 	this.history = history;
 	this.clone   = clone;
 	this.cloneCB = cloneCB;
+	this.clear      = clear;
+    this.updateMail = updateMail;
+    this.addMail    = addMail;
+    this.removeMail = removeMail;
+    this.refreshNotif = refreshNotif;
 	
 //=====================================================================================
 //===
@@ -122,8 +127,15 @@ function init()
 
 function refresh()
 {
-	view.removeAll();
-	model.getNodes(ker.wrap(this, refresh_OK));
+    view.removeAll();
+    model.getNodes(ker.wrap(this, refresh_OK));
+}
+
+//=====================================================================================
+
+function refreshNotif()
+{
+    
 }
 
 //-------------------------------------------------------------------------------------
@@ -302,6 +314,49 @@ function history(url)
 
 //=====================================================================================
 
+function clear(id)
+{
+    var idList = view.getIdList();
+
+    if (idList.length == 0)
+        alert(loader.getText('pleaseSelect'));
+    else
+    {
+        if (confirm(loader.getText('confirmClear')) != false) {
+            var m = Ext.get("messages");
+            Ext.each(idList, function(id) {
+                var tmp = Ext.get("clear-" + id);
+                if(tmp) {
+                    tmp.remove();
+                }
+                
+                var message = "<div id='clear-" + id + 
+                        "' style='width=100%'>" + 
+                        loader.getText('clearRequest') + id + "<img src='" +Env.url + "/images/spin.gif'></div>";
+                Ext.DomHelper.insertFirst(m, message);
+                
+                Ext.Ajax.request({
+                    url: Env.url +'/srv/eng/xml.harvesting.clear',
+                    params: {id: id},
+                    success: function(a, b) {
+                        var m = Ext.get("clear-" + id);
+                        var message = loader.getText('clearResponse') + id;
+                        
+                        m.update(message);
+                        
+                        window.setTimeout(function() {
+                            Ext.get("clear-" + id).remove();
+                        }, 20000);
+                    }
+                });
+            });
+        }
+    }
+   
+}
+
+//=====================================================================================
+
 function update()
 {
 	var request = view.getUpdateRequest();
@@ -315,6 +370,69 @@ function update()
 		model.addNode(request, ker.wrap(this, update_OK));
 	else
 		model.updateNode(request, ker.wrap(this, update_OK));
+}
+
+//=====================================================================================
+
+function addMail()
+{
+    var emails = Ext.get("emails_").getValue().split(",");
+    var select = Ext.get("emails");
+    Ext.each(emails, function(email) {
+        email = email.trim();
+        if(email != '') {
+            select.dom.options.add(new Option(email, email));
+        }
+    });
+    Ext.get("emails_").dom.value = "";
+}
+
+//=====================================================================================
+
+function removeMail()
+{
+    var select = Ext.get("emails");
+    var toRemove = [];
+    Ext.each(select.dom.options, function(option) {
+        if(option.selected) {
+            toRemove.push(option);
+        }
+    });
+    
+    Ext.each(toRemove, function(a) {
+        a.remove();
+    });
+}
+
+//=====================================================================================
+
+function updateMail()
+{
+    
+  addMail();
+  var e = [];
+  Ext.each(Ext.get("emails").dom.options, function(opt) {
+      if(opt.value != '') {
+          e.push(opt.value);
+      }
+      });
+  Ext.Ajax.request({
+      url: Env.url +'/srv/eng/harvesting.notifier.save',
+      params: {
+              recipient: e,
+              template: Ext.get("template").getValue(),
+              templateError: Ext.get("templateError").getValue(),
+              templateWarning: Ext.get("templateWarning").getValue(),
+              enabled: Ext.get("enableMail").dom.checked,
+              level1: Ext.get("level1").dom.checked,
+              level2: Ext.get("level2").dom.checked,
+              level3: Ext.get("level3").dom.checked,
+              subject: Ext.get("subject").getValue()
+          },
+      success: function(a, b) {
+          view.show(SHOW.LIST);
+      }
+  });
 }
 
 //-------------------------------------------------------------------------------------

@@ -15,12 +15,12 @@
 
 	<info type="geonetwork">
 		<short>GeoNetwork</short>
-		<long>Noeud GeoNetwork distant (v2.1)</long>
+		<long>N&#339;ud GeoNetwork distant (v2.1)</long>
 	</info>
 
 	<info type="geonetwork20">
 		<short>GeoNetwork 2.0</short>
-		<long>Noeud GeoNetwork distant (v2.0)</long>
+		<long>N&#339;ud GeoNetwork distant (v2.0)</long>
 	</info>
 
 	<info type="geoPREST">
@@ -324,7 +324,7 @@
 	<cannotStart>Impossible de démarrer les élements sélectionnés</cannotStart>
 	<cannotStop>Impossible d'arrêter les élements sélectionnés</cannotStop>
 	<cannotRun>Impossible de lancer les élements sélectionnés</cannotRun>
-	<confirmRemove>Suppression des élements sélectionnés ? Le noeud et toutes les métadonnées associées seront supprimés.</confirmRemove>
+	<confirmRemove>Suppression des élements sélectionnés ? Le n&#339;ud et toutes les métadonnées associées seront supprimés.</confirmRemove>
 	<everyZero>La période du moissonnage ne peut être 0:0:0</everyZero>
 	<pleaseRetrieve>Récupérer quelques sites en premier lieu</pleaseRetrieve>
 	<cannotRetrieve>Impossible de récuper les informations</cannotRetrieve>
@@ -333,9 +333,9 @@
 	<supplyServlet>SVP, fournir le paramètre 'servlet'</supplyServlet>
 	<pleaseSpecifySiteId>Définir un identifiant de site non vide</pleaseSpecifySiteId>
 	<cannotQueryOai>Impossible de faire une requête sur le serveur OAI-PMH</cannotQueryOai>
-	<gn20Unsafe>Attention, noter que le moissonnage d'un ancien noeud GeoNetwork n'est pas sur. 
-				Les anciens noeuds n'ont pas un identifiant unique et ceci peut conduire
-				à des résultats inatendus (par exemple supprimer des noeuds d'autres moissonnages).</gn20Unsafe>
+	<gn20Unsafe>Attention, noter que le moissonnage d'un ancien n&#339;ud GeoNetwork n'est pas sur. 
+				Les anciens n&#339;uds n'ont pas un identifiant unique et ceci peut conduire
+				à des résultats inatendus (par exemple supprimer des n&#339;uds d'autres moissonnages).</gn20Unsafe>
 	<supplyUrl>SVP, fournir une url valide</supplyUrl>
 	<oper>
 		<op id="0">Voir</op>
@@ -352,6 +352,14 @@
 	<noHistory>Aucun historique</noHistory>
 	<dateDesc>Date (le plus récent d'abord)</dateDesc>
 	<date>Date</date>
+	<log>Fichier de journalisation</log>
+	<noLogAvailable>Aucun disponible</noLogAvailable>
+	<viewLog>Consulter</viewLog>
+	<notification>Notification</notification>
+	<clear>Supprimer les fiches</clear>
+	<clearTooltip>Supprimer toutes les fiches de ce n&#339;ud</clearTooltip>
+	<clearRequest>Supprimer les fiches du n&#339;ud : </clearRequest>
+	<clearResponse>Fiches supprimées pour le n&#339;ud : </clearResponse>
 	<elapsedTime>Temps</elapsedTime>
 	<detail>Détails</detail>
 	<grandTotal>Total</grandTotal>
@@ -378,6 +386,7 @@
 
 	<tipHeader>
 		<total>Total</total>
+		<originalMetadata>Total dans le n&#339;ud distant</originalMetadata>
 		<added>Ajouté</added>
 		<removed>Supprimé</removed>
 		<updated>Mis à jour</updated>
@@ -407,6 +416,9 @@
 		<subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
 		<recordsUpdated>Enregistrements mis à jour</recordsUpdated>
 		<duplicatedResource>Ressources en double</duplicatedResource>
+		<startTime>Début</startTime>
+		<endTime>Fin</endTime>
+		<executionTime>Temps d'éxecution</executionTime>
 	</tipHeader>
 
 	<notRun>En attente du premier lancement</notRun>
@@ -597,5 +609,46 @@
 			Choose the metadata format you want to harvest.
 		</tip>
 	</tips>
+	
+	<recipients>Destinataires</recipients>
+	<template>Modèle en cas de succès</template>
+	<templateError>Modèle en cas d'erreur</templateError>
+	<templateWarning>Modèle en cas d'alerte</templateWarning>
+	<enableMail>Envoyer un mail après moissonnage</enableMail>
+	<level>Envoyer sur :</level>
+	<level1>Succès</level1>
+	<level2>Alerte</level2>
+	<level3>Erreur</level3>
+	<defaultSubject>[$$harvesterType$$] $$harvesterName$$ a été moissonné</defaultSubject>
+	<defaultTemplate>
+		&lt;p>&lt;b>Importé:&lt;/b>$$total$$&lt;/p>
+		&lt;p>&lt;b>Ajouté:&lt;/b>$$added$$&lt;/p>
+		&lt;p>&lt;b>Mis à jour:&lt;/b>$$updated$$&lt;/p>
+		&lt;p>&lt;b>Supprimé:&lt;/b>$$removed$$&lt;/p>
+		</defaultTemplate>
+	<defaultTemplateWarning>
+		&lt;p>Erreur lors du moissonnage : $$errorMsg$$&lt;/p>
+		&lt;p>&lt;b>Importé:&lt;/b>$$total$$&lt;/p>
+		&lt;p>&lt;b>Ajouté:&lt;/b>$$added$$&lt;/p>
+		&lt;p>&lt;b>Mis à jour:&lt;/b>$$updated$$&lt;/p>
+		&lt;p>&lt;b>Supprimé:&lt;/b>$$removed$$&lt;/p>  
+		</defaultTemplateWarning>
+	<defaultTemplateError>Erreur lors du moissonnage : $$errorMsg$$</defaultTemplateError>
+	
+	<helpTemplateMail>
+		<help>Pour construire les modèles, il est possible d'utiliser
+			les indicateurs suivants dans l'objet ou le corp du message. 
+			Ils seront substitués par la valeur correspondante.</help>
+		<total>Nombre de fiches importées : </total>
+		<added>Nombre de fiches ajoutées : </added>
+		<updated>Nombre de fiches mises à jour : </updated>
+		<unchanged>Nombre de fiches inchangées : </unchanged>
+		<unretrievable>Nombre de fiches non récupérables : </unretrievable>
+		<removed>Nombre de fiches supprimées : </removed>
+		<doesNotValidate>Nombre de fiches non valides : </doesNotValidate>
+		<harvesterName>Nom du n&#339;ud : </harvesterName>
+		<harvesterType>Protocol : </harvesterType>
+		<errorMsg>Message d'erreur : </errorMsg>
+	</helpTemplateMail>
 </strings>
 

@@ -29,6 +29,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -228,6 +229,34 @@ public class SpatialIndexWriter implements FeatureListener
         }
     }
 
+    
+    public void delete(List<String> ids) throws IOException
+    {
+        _lock.lock();
+        try {
+            FilterFactory2 factory = CommonFactoryFinder
+                    .getFilterFactory2(GeoTools.getDefaultHints());
+            
+            List<Filter> filters = new LinkedList<Filter>();
+            
+            for(String id : ids) {
+                filters.add(factory.equals(
+                    factory.property(_idColumn), factory.literal(id)));
+            }
+            
+            _index = null;
+
+            _featureStore.removeFeatures(factory.or(filters));
+            try {
+                SpatialFilter.getJCSCache().clear();
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            _writes++;
+        } finally {
+            _lock.unlock();
+        }
+    }
     public void commit() throws IOException
     {
         _lock.lock();

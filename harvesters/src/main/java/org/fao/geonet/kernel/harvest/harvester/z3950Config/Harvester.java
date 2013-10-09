@@ -32,17 +32,21 @@ import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 //=============================================================================
 
-class Harvester
+class Harvester implements IHarvester<HarvestResult>
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -63,8 +67,9 @@ class Harvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public HarvestResult harvest() throws Exception
+	public HarvestResult harvest(Logger log) throws Exception
 	{
+	    this.log = log;
 
 		XmlRequest req = new XmlRequest(params.host, Integer.valueOf(params.port));
 
@@ -135,10 +140,17 @@ class Harvester
 		}
 		catch(Exception e)
 		{
-			log.warning("Raised exception when searching : "+ e);
+            HarvestError error = new HarvestError(e, log);
+            error.setDescription("Raised exception when searching : "+ e);
+            this.errors.add(error);
+            error.printLog(log);
 			throw new OperationAbortedEx("Raised exception when searching", e);
 		}
 	}
+
+    public List<HarvestError> getErrors() {
+        return errors;
+    }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -149,6 +161,10 @@ class Harvester
 	private Logger         log;
 	private Z3950ConfigParams   params;
 	private ServiceContext      context;
+   /**
+     * Contains a list of accumulated errors during the executing of this harvest.
+     */
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
 }
 
 //=============================================================================
