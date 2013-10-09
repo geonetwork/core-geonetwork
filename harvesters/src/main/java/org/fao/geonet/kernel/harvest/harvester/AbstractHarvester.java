@@ -636,7 +636,27 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             result.addContent(toElement(errors));
             
 			HarvesterHistoryDao.write(dbms, context.getSerialFactory(), getType(), getParams().name, getParams().uuid, elapsedTime, lastRun, getParams().node, result);
+
+            //Send notification email, if needed
+            try {
+                SendNotification.process(context, HarvesterHistoryDao.retrieve(dbms, getParams().uuid), this);
+            } catch (Exception e) {
+                logger.error("Raised exception while attempting to send email");
+                logger.error(" (C) Exc   : "+ e);
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (dbms != null)
+                        rm.close(Geonet.Res.MAIN_DB, dbms);
+
+                } catch (Exception dbe) {
+                    dbe.printStackTrace();
+                    logger.error("Raised exception while attempting to close dbms connection to harvest history table");
+                    logger.error(" (C) Exc   : " + dbe);
+                }
             }
+
+        }
             catch (Exception e) {
 			logger.warning("Raised exception while attempting to store harvest history from : "+ nodeName);
 			e.printStackTrace();
@@ -645,24 +665,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             finally {
 		}
 
-		//Send notification email, if needed
-			try {
-			    SendNotification.process(context, HarvesterHistoryDao.retrieve(dbms, getParams().uuid), this);
-	        } catch (Exception e) {
-	            logger.error("Raised exception while attempting to send email");
-	            logger.error(" (C) Exc   : "+ e);
-	            e.printStackTrace();
-			} finally {
-				try {
-					if (dbms != null)
-						rm.close(Geonet.Res.MAIN_DB, dbms);
 
-				} catch (Exception dbe) {
-					dbe.printStackTrace();
-					logger.error("Raised exception while attempting to close dbms connection to harvest history table");
-					logger.error(" (C) Exc   : " + dbe);
-				}
-			}
 	    }
         finally {
 	        running  = false;
@@ -807,14 +810,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 	 */
 	protected void doHarvest_(Logger log, ResourceManager rm) throws Exception
 	{
-        StopWatch watch = new StopWatch();
-        watch.start();
         doHarvest(log, rm);
-        watch.stop();
-
-        result.startTime = watch.getStartTime();
-        result.executionTime = watch.getTime();
-        result.endTime = result.startTime + result.executionTime;
 	}
 
 	//---------------------------------------------------------------------------

@@ -18,7 +18,6 @@ public class HarvestResult {
     public int layerUsingMdUrl;	        // = md for data using metadata URL document if ok
     public int locallyRemoved;	        // = md removed
     public int recordsBuilt;
-    public int recordsRemoved;
     public int recordsUpdated;
     public int schemaSkipped;
     public int serviceRecords;			// = md for services
@@ -35,8 +34,4 @@ public class HarvestResult {
     public int uuidSkipped;
     public int thumbnails;		        // = number of thumbnail generated
     public int thumbnailsFailed;        // = number of thumbnail creation which failed
-
-    public long startTime;
-    public long endTime;
-    public long executionTime;
 }
