@@ -107,73 +107,76 @@ public class SendNotification {
 				break;
 			}
 		}
-
-		// Success, but with warnings or clean?
-		Element result = (Element) info.getChildren().get(0);
-
-		// switch between normal and error template
-		if (info == null || info.getChildren("error").size() > 0) {
-			// Error, Level 3, let's check it:
-			if (!settings.getValueAsBool("system/harvesting/mail/level3")) {
-				return;
-			}
-			htmlMessage = settings
-					.getValue("system/harvesting/mail/templateError");
-			Element error = (Element) info.getChildren("error").get(0);
-			String errorMsg = error.getChildText("message");
-			// do not convert it to html, dangerous!
-			errorMsg = errorMsg.replace("<", " ");
-
-			errorMsg += extractWarningsTrace(info);
-
-			htmlMessage = htmlMessage.replace("$$errorMsg$$", errorMsg);
-
-			String[] values = new String[] { "total", "added", "updated",
-					"removed", "unchanged", "unretrievable", "doesNotValidate" };
-
-			for (String value : values) {
-				htmlMessage = replace(result, htmlMessage, value);
-				subject = replace(result, subject, value);
-			}
-
-		} else {
-
-			if (result.getChildren("errors").size() > 0) {
-				// Success with warnings, Level 2, let's check it:
-				if (!settings.getValueAsBool("system/harvesting/mail/level2")) {
-					return;
-				}
-
-				htmlMessage = settings
-						.getValue("system/harvesting/mail/templateWarning");
-
-				String errorMsg = extractWarningsTrace(result);
-
-				htmlMessage = htmlMessage.replace("$$errorMsg$$", errorMsg);
-
-				String[] values = new String[] { "total", "added", "updated",
-						"removed", "unchanged", "unretrievable",
-						"doesNotValidate" };
-
-				for (String value : values) {
-					htmlMessage = replace(result, htmlMessage, value);
-					subject = replace(result, subject, value);
-				}
-			} else {
-				// Success!! Level 1, let's check it:
-				if (!settings.getValueAsBool("system/harvesting/mail/level1")) {
-					return;
-				}
-
-				String[] values = new String[] { "total", "added", "updated",
-						"removed", "unchanged", "unretrievable",
-						"doesNotValidate" };
-
-				for (String value : values) {
-					htmlMessage = replace(result, htmlMessage, value);
-					subject = replace(result, subject, value);
-				}
-			}
+		
+		// We should always get a info report BTW
+		if (info != null) {
+    		// Success, but with warnings or clean?
+    		Element result = (Element) info.getChildren().get(0);
+    
+    		// switch between normal and error template
+    		if (info.getChildren("error").size() > 0) {
+    			// Error, Level 3, let's check it:
+    			if (!settings.getValueAsBool("system/harvesting/mail/level3")) {
+    				return;
+    			}
+    			htmlMessage = settings
+    					.getValue("system/harvesting/mail/templateError");
+    			Element error = (Element) info.getChildren("error").get(0);
+    			String errorMsg = error.getChildText("message");
+    			// do not convert it to html, dangerous!
+    			errorMsg = errorMsg.replace("<", " ");
+    
+    			errorMsg += extractWarningsTrace(info);
+    
+    			htmlMessage = htmlMessage.replace("$$errorMsg$$", errorMsg);
+    
+    			String[] values = new String[] { "total", "added", "updated",
+    					"removed", "unchanged", "unretrievable", "doesNotValidate" };
+    
+    			for (String value : values) {
+    				htmlMessage = replace(result, htmlMessage, value);
+    				subject = replace(result, subject, value);
+    			}
+    
+    		} else {
+    
+    			if (result.getChildren("errors").size() > 0) {
+    				// Success with warnings, Level 2, let's check it:
+    				if (!settings.getValueAsBool("system/harvesting/mail/level2")) {
+    					return;
+    				}
+    
+    				htmlMessage = settings
+    						.getValue("system/harvesting/mail/templateWarning");
+    
+    				String errorMsg = extractWarningsTrace(result);
+    
+    				htmlMessage = htmlMessage.replace("$$errorMsg$$", errorMsg);
+    
+    				String[] values = new String[] { "total", "added", "updated",
+    						"removed", "unchanged", "unretrievable",
+    						"doesNotValidate" };
+    
+    				for (String value : values) {
+    					htmlMessage = replace(result, htmlMessage, value);
+    					subject = replace(result, subject, value);
+    				}
+    			} else {
+    				// Success!! Level 1, let's check it:
+    				if (!settings.getValueAsBool("system/harvesting/mail/level1")) {
+    					return;
+    				}
+    
+    				String[] values = new String[] { "total", "added", "updated",
+    						"removed", "unchanged", "unretrievable",
+    						"doesNotValidate" };
+    
+    				for (String value : values) {
+    					htmlMessage = replace(result, htmlMessage, value);
+    					subject = replace(result, subject, value);
+    				}
+    			}
+    		}
 		}
 
 		htmlMessage = htmlMessage.replace("$$harvesterName$$",
