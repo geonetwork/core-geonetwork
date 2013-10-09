@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows 8
 Project("{262852C6-CD72-467D-83FE-5EEB1973A190}") = "app", "app.jsproj", "{81A8C7EE-FB69-4716-A7CF-0AB371529586}"
 EndProject
+Project("{262852C6-CD72-467D-83FE-5EEB1973A190}") = "test", "..\test\test.jsproj", "{87B0E4CF-7574-4943-8EFC-258565696D28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,30 @@ Global
 		{81A8C7EE-FB69-4716-A7CF-0AB371529586}.Release|x86.ActiveCfg = Release|x86
 		{81A8C7EE-FB69-4716-A7CF-0AB371529586}.Release|x86.Build.0 = Release|x86
 		{81A8C7EE-FB69-4716-A7CF-0AB371529586}.Release|x86.Deploy.0 = Release|x86
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Debug|ARM.ActiveCfg = Debug|ARM
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Debug|ARM.Build.0 = Debug|ARM
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Debug|ARM.Deploy.0 = Debug|ARM
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Debug|x64.ActiveCfg = Debug|x64
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Debug|x64.Build.0 = Debug|x64
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Debug|x64.Deploy.0 = Debug|x64
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Debug|x86.ActiveCfg = Debug|x86
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Debug|x86.Build.0 = Debug|x86
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Debug|x86.Deploy.0 = Debug|x86
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Release|ARM.ActiveCfg = Release|ARM
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Release|ARM.Build.0 = Release|ARM
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Release|ARM.Deploy.0 = Release|ARM
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Release|x64.ActiveCfg = Release|x64
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Release|x64.Build.0 = Release|x64
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Release|x64.Deploy.0 = Release|x64
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Release|x86.ActiveCfg = Release|x86
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Release|x86.Build.0 = Release|x86
+		{87B0E4CF-7574-4943-8EFC-258565696D28}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

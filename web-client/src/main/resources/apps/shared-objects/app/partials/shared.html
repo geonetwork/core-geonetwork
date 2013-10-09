@@ -13,7 +13,7 @@
         </tr>
         <tr data-ng-repeat="row in data | filter:search:strict" class="highlight-on-hover" data-ng-mouseover="select(row)" >
             <td style="width: 5%">
-                <div class="panel-group" id="Div1">
+                <div class="data-id panel-group" id="Div1">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <div class="panel-title">
@@ -24,7 +24,7 @@
                 </div>
             </td>
             <td style="width: 85%">
-                <div class="panel-group" id="accordion">
+                <div class="data-description panel-group" id="{{data.id}}-accordion">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <div class="panel-title">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </td>
-            <td style="width: 10%">
+            <td class="data-actions" style="width: 10%">
                 <button ng-show="isDeletePage" class="btn btn-default" data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</button>
                 <div ng-hide="isDeletePage" class="dropdown">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" >{{translate('actions')}} <span class="caret"></span></button>

@@ -89,7 +89,13 @@
             <exclude>src/main/resources/apps/geocatch/js/App-mini.js</exclude>
             <exclude>**/GeoExt/examples/*.js</exclude>
             <exclude>**/ext/**/*.js</exclude>
-            <exclude>**/ext-4.0-pr1/**/*.js</exclude>
+              <exclude>**/ext-4.0-pr1/**/*.js</exclude>
+<!-- GEOCAT ignores for new depedencies -->
+              <exclude>**/shared-objects/config/**</exclude>
+              <exclude>**/shared-objects/test/**</exclude>
+              <exclude>**/shared-objects/scripts/**</exclude>
+              <exclude>**/shared-objects/app/**</exclude>
+<!-- Done GEOCAT Change -->
 <!--            <exclude>**/*.css</exclude>
 -->          </excludes>
           <aggregations>

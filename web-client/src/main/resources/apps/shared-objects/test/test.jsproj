@@ -35,7 +35,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>81a8c7ee-fb69-4716-a7cf-0ab371529586</ProjectGuid>
+    <ProjectGuid>87b0e4cf-7574-4943-8efc-258565696d28</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition="'$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0'">
     <VisualStudioVersion>11.0</VisualStudioVersion>
@@ -47,60 +47,25 @@
     <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
     <TargetPlatformVersion>8.0</TargetPlatformVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <PackageCertificateKeyFile>app_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>test_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <Content Include="css\app.css" />
-    <Content Include="img\.gitkeep" />
-    <Content Include="index-test.html" />
-    <Content Include="index-test.html" />
-    <Content Include="index-eng.html" />
-    <Content Include="js\app.js" />
-    <Content Include="js\controllers.js" />
-    <Content Include="js\directives.js" />
-    <Content Include="js\filters.js" />
-    <Content Include="js\factories.js" />
-    <Content Include="lib\angular\angular-cookies.js" />
-    <Content Include="lib\angular\angular-cookies.min.js" />
-    <Content Include="lib\angular\angular-loader.js" />
-    <Content Include="lib\angular\angular-loader.min.js" />
-    <Content Include="lib\angular\angular-resource.js" />
-    <Content Include="lib\angular\angular-resource.min.js" />
-    <Content Include="lib\angular\angular-sanitize.js" />
-    <Content Include="lib\angular\angular-sanitize.min.js" />
-    <Content Include="lib\angular\angular.js" />
-    <Content Include="lib\angular\angular.min.js" />
-    <Content Include="lib\angular\version.txt" />
-    <Content Include="lib\bootstrap3\css\bootstrap-theme.css" />
-    <Content Include="lib\bootstrap3\css\bootstrap-theme.min.css" />
-    <Content Include="lib\bootstrap3\css\bootstrap.css" />
-    <Content Include="lib\bootstrap3\css\bootstrap.min.css" />
-    <Content Include="lib\bootstrap3\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="lib\bootstrap3\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="lib\bootstrap3\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="lib\bootstrap3\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="lib\bootstrap3\js\bootstrap.js" />
-    <Content Include="lib\bootstrap3\js\bootstrap.min.js" />
-    <Content Include="partials\.gitkeep" />
-    <Content Include="partials\modal-edit-common.html" />
-    <Content Include="partials\modal-edit-contacts.html" />
-    <Content Include="partials\modal-edit-extents.html" />
-    <Content Include="partials\modal-edit-keywords.html" />
-    <Content Include="partials\modal-edit-formats.html" />
-    <Content Include="partials\modal-executing-operation.html" />
-    <Content Include="partials\modal-confirm-validate.html" />
-    <Content Include="partials\modal-confirm-delete.html" />
-    <Content Include="partials\modal-reject.html" />
-    <Content Include="partials\shared.html" />
-    <Content Include="partials\createFormat.html" />
-    <Content Include="partials\menubar.html" />
-    <None Include="app_TemporaryKey.pfx" />
+    <None Include="test_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="Microsoft.WinJS.1.0, Version=1.0" />
+    <Content Include="e2e\common-functions.js" />
+    <Content Include="e2e\contacts.js" />
+    <Content Include="e2e\runner.html" />
+    <Content Include="lib\angular\angular-mocks.js" />
+    <Content Include="lib\angular\angular-scenario.js" />
+    <Content Include="lib\angular\version.txt" />
+    <Content Include="unit\controllersSpec.js" />
+    <Content Include="unit\directivesSpec.js" />
+    <Content Include="unit\filtersSpec.js" />
+    <Content Include="unit\servicesSpec.js" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).targets" />
   <!-- To modify your build process, add your task inside one of the targets below then uncomment

@@ -101,20 +101,20 @@
                     </td><td>
                         <xsl:choose>
                             <xsl:when test="/root/gui/reqService='geocat' or /root/gui/reqService='user.login' or /root/gui/reqService='user.logout'">
-                                <a class="banner-active" href="geocat"><xsl:value-of select="/root/gui/strings/nav/metasearch"/></a>
+                                <a id="discovery-service-link" class="banner-active" href="{/root/gui/locService}/geocat"><xsl:value-of select="/root/gui/strings/nav/metasearch"/></a>
                             </xsl:when>
                             <xsl:otherwise>
-                                <a class="banner" href="geocat"><xsl:value-of select="/root/gui/strings/nav/metasearch"/></a>
+                                <a id="discovery-service-link" class="banner" href="{/root/gui/locService}/geocat"><xsl:value-of select="/root/gui/strings/nav/metasearch"/></a>
                             </xsl:otherwise>
                         </xsl:choose>
                     </td><td>
                         <xsl:if test="string(/root/gui/session/userId)!=''">
                             <xsl:choose>
                                 <xsl:when test="/root/gui/reqService='admin'">
-                                    <a class="banner-active" href="admin"><xsl:value-of select="/root/gui/strings/nav/metainput"/></a>
+                                    <a class="banner-active" href="{/root/gui/locService}/admin"><xsl:value-of select="/root/gui/strings/nav/metainput"/></a>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                    <a class="banner" href="admin"><xsl:value-of select="/root/gui/strings/nav/metainput"/></a>
+                                    <a class="banner" href="{/root/gui/locService}/admin"><xsl:value-of select="/root/gui/strings/nav/metainput"/></a>
                                 </xsl:otherwise>
                             </xsl:choose>
                         </xsl:if>
