@@ -45,6 +45,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -358,7 +359,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 	private UriMapper localUris;
 	private HarvestResult result;
 	private SchemaManager  schemaMan;
-	private List<HarvestError> errors;
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
 }
 
 //=============================================================================

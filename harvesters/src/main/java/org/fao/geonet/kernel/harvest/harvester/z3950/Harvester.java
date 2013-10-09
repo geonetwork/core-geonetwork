@@ -105,7 +105,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 		// --- remove old metadata
 		for (String uuid : localUuids.getUUIDs()) {
 			String id = localUuids.getID(uuid);
-            if(log.isDebugEnabled()) log.debug("  - Removing old metadata before update with id: " + id);
+            if(this.log.isDebugEnabled()) log.debug("  - Removing old metadata before update with id: " + id);
 			dataMan.deleteMetadataGroup(context, dbms, id);
 			serverResults.locallyRemoved++;
 		}
