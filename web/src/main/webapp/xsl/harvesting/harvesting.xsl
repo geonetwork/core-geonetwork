@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	
 	<!-- ============================================================================================= -->
@@ -55,12 +54,15 @@
 				<div id="listPanel" style="display:none;"><xsl:call-template name="listPanel"/></div>
 				<div id="addPanel"  style="display:none;"><xsl:call-template name="addPanel"/> </div>
 				<div id="editPanel" style="display:none;"><xsl:call-template name="editPanel"/></div>
+				<div id="notifPanel" style="display:none;"><xsl:call-template name="notifPanel"/></div>
 			</xsl:with-param>
 
 			<xsl:with-param name="buttons">
 				<div id="listButtons" style="display:none;"><xsl:call-template name="listButtons"/></div>
 				<div id="addButtons"  style="display:none;"><xsl:call-template name="addButtons"/> </div>
 				<div id="editButtons" style="display:none;"><xsl:call-template name="editButtons"/></div>
+				<div id="notifButtons" style="display:none;"><xsl:call-template name="notifButtons"/></div>
+				<div id="messages"></div>
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
@@ -126,7 +128,157 @@
         </td>
     </tr>
     </table>
-    </xsl:template>
+    </xsl:template>	
+    
+	<!-- ============================================================================================= -->
+	<!-- === notifPanel -->
+	<!-- ============================================================================================= -->
+
+	<xsl:template name="notifPanel">
+	  <div style="max-height:600px;overflow:auto;">
+		<table id="notifTable">
+			<tr>
+				<td class="padded" style="width:250px;" colspan="2">
+					<b><xsl:value-of select="/root/gui/harvesting/enableMail"/>:&#160;&#160;&#160;</b>
+					<input id="enableMail"  class="content" type="checkbox">
+						<xsl:variable name="enabled" select="/root/gui/env/harvesting/mail/enabled"/>
+						<xsl:if test="normalize-space($enabled) = 'true'">
+							<xsl:attribute name="checked">true</xsl:attribute>
+						</xsl:if>
+					</input>
+				</td>
+			</tr>
+			<tr>
+				<td class="padded" style="width:80px;">
+					<b><xsl:value-of select="/root/gui/harvesting/level"/></b>
+					</td>
+				<td class="padded" style="width:480px;">
+					<label for="level1"><xsl:value-of select="/root/gui/harvesting/level1"/></label>
+					<input id="level1" name="level1" class="content" type="checkbox">
+						<xsl:variable name="enabled" select="/root/gui/env/harvesting/mail/level1"/>
+						<xsl:if test="normalize-space($enabled) = 'true'">
+							<xsl:attribute name="checked">true</xsl:attribute>
+						</xsl:if>
+					</input>&#160;&#160;&#160;&#160;&#160;&#160;
+					<label for="level2"><xsl:value-of select="/root/gui/harvesting/level2"/></label>
+					<input id="level2" name="level2" class="content" type="checkbox">
+						<xsl:variable name="enabled" select="/root/gui/env/harvesting/mail/level2"/>
+						<xsl:if test="normalize-space($enabled) = 'true'">
+							<xsl:attribute name="checked">true</xsl:attribute>
+						</xsl:if>
+					</input>&#160;&#160;&#160;&#160;&#160;&#160;
+					<label for="level3"><xsl:value-of select="/root/gui/harvesting/level3"/></label>
+					<input id="level3" name="level3" class="content" type="checkbox">
+						<xsl:variable name="enabled" select="/root/gui/env/harvesting/mail/level3"/>
+						<xsl:if test="normalize-space($enabled) = 'true'">
+							<xsl:attribute name="checked">true</xsl:attribute>
+						</xsl:if>
+					</input>
+				</td>
+			</tr>
+			<tr>
+				<td class="padded" style="width:80px;">
+					<b><xsl:value-of select="/root/gui/harvesting/recipients"/>:</b>
+				</td>
+				<td class="padded" style="width:480px;">
+					<input type="text"  class="content" id="emails_" style="width:600px;" required="true"/>
+					<div style="float:right;width:70px">
+						<button style="width:70px;" type="button" class="content" onclick="javascript:harvesting.addMail();">
+							<xsl:value-of select="/root/gui/harvesting/add"/>
+						</button>
+						<button style="width:70px;" type="button" class="content" onclick="javascript:harvesting.removeMail();">
+							<xsl:value-of select="/root/gui/harvesting/remove"/>
+						</button>
+					</div>
+				</td>
+				<td class="padded" style="width:250px">
+					<select id="emails" class="content" multiple="true" style="width:220px;height:45px;">
+						<xsl:for-each select="/root/gui/env/harvesting/mail/recipient">
+							<xsl:for-each select="tokenize(.,',')">
+								<xsl:variable name="valopt"><xsl:value-of select="."/></xsl:variable>
+								<xsl:if test="$valopt!= ''">
+									<option><xsl:attribute name="value"><xsl:value-of select="$valopt"/></xsl:attribute><xsl:value-of select="."/></option>
+								</xsl:if>
+							</xsl:for-each>
+						</xsl:for-each>
+					</select>
+				</td>
+			</tr><tr>
+				<td class="padded" style="width:80px;">
+					<b><xsl:value-of select="/root/gui/harvesting/subject"/>:</b>
+				</td>
+				<td class="padded" style="width:520px;">
+					<input type="text"  class="content" id="subject" size="100" required="true">
+						<xsl:attribute name="value">
+							<xsl:variable name="tmp"><xsl:value-of select="/root/gui/env/harvesting/mail/subject"/></xsl:variable>
+							<xsl:choose>
+								<xsl:when test="normalize-space($tmp) != ''"><xsl:value-of select="$tmp"/></xsl:when>
+								<xsl:otherwise><xsl:value-of select="/root/gui/harvesting/defaultSubject"/></xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute>
+					</input>
+				</td>
+				<td class="padded" style="width:250px;" rowspan="4">
+					<p><xsl:value-of select="/root/gui/harvesting/helpTemplateMail/help"/></p>
+					<ul style="list-style-type:circle; padding-left: 20px">
+					<li><xsl:value-of select="/root/gui/harvesting/helpTemplateMail/total"/>$$total$$</li>
+					<li><xsl:value-of select="/root/gui/harvesting/helpTemplateMail/added"/>$$added$$</li>
+					<li><xsl:value-of select="/root/gui/harvesting/helpTemplateMail/updated"/>$$updated$$</li>
+					<li><xsl:value-of select="/root/gui/harvesting/helpTemplateMail/unchanged"/>$$unchanged$$</li>
+					<li><xsl:value-of select="/root/gui/harvesting/helpTemplateMail/unretrievable"/>$$unretrievable$$</li>
+					<li><xsl:value-of select="/root/gui/harvesting/helpTemplateMail/removed"/>$$removed$$</li>
+					<li><xsl:value-of select="/root/gui/harvesting/helpTemplateMail/doesNotValidate"/>$$doesNotValidate$$</li>
+					<li><xsl:value-of select="/root/gui/harvesting/helpTemplateMail/harvesterName"/>$$harvesterName$$</li>
+					<li><xsl:value-of select="/root/gui/harvesting/helpTemplateMail/harvesterType"/>$$harvesterType$$</li>
+					<li><xsl:value-of select="/root/gui/harvesting/helpTemplateMail/errorMsg"/>$$errorMsg$$</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td class="padded" style="width:80px;">
+					<b><xsl:value-of select="/root/gui/harvesting/template"/>:</b>
+				</td>
+				<td class="padded" style="width:520px;">
+					<textarea id="template"  class="content" rows="5" cols="100" required="true">
+						<xsl:variable name="tmp"><xsl:value-of select="/root/gui/env/harvesting/mail/template"/></xsl:variable>
+						<xsl:choose>
+							<xsl:when test="normalize-space($tmp) != ''"><xsl:value-of select="$tmp"/></xsl:when>
+							<xsl:otherwise><xsl:value-of select="/root/gui/harvesting/defaultTemplate"/></xsl:otherwise>
+						</xsl:choose>
+					</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="padded" style="width:80px;">
+					<b><xsl:value-of select="/root/gui/harvesting/templateWarning"/>:</b>
+				</td>
+				<td class="padded" style="width:520px;">
+					<textarea id="templateWarning"  class="content" rows="5" cols="100" required="true">
+						<xsl:variable name="tmp"><xsl:value-of select="/root/gui/env/harvesting/mail/templateWarning"/></xsl:variable>
+						<xsl:choose>
+							<xsl:when test="normalize-space($tmp) != ''"><xsl:value-of select="$tmp"/></xsl:when>
+							<xsl:otherwise><xsl:value-of select="/root/gui/harvesting/defaultTemplateWarning"/></xsl:otherwise>
+						</xsl:choose>
+					</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="padded" style="width:80px;">
+					<b><xsl:value-of select="/root/gui/harvesting/templateError"/>:</b>
+				</td>
+				<td class="padded" style="width:520px;">
+					<textarea id="templateError"  class="content" rows="5" cols="100" required="true">
+						<xsl:variable name="tmp"><xsl:value-of select="/root/gui/env/harvesting/mail/templateError"/></xsl:variable>
+						<xsl:choose>
+							<xsl:when test="normalize-space($tmp) != ''"><xsl:value-of select="$tmp"/></xsl:when>
+							<xsl:otherwise><xsl:value-of select="/root/gui/harvesting/defaultTemplateError"/></xsl:otherwise>
+						</xsl:choose>
+					</textarea>
+				</td>
+			</tr>
+		</table>
+	  </div>
+	</xsl:template>
 
 	<xsl:template name="privileges">
 		<xsl:param name="type"/>

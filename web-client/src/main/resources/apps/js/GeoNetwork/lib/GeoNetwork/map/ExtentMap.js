@@ -578,7 +578,13 @@ GeoNetwork.map.ExtentMap = function(){
                         var control = new OpenLayers.Control.DrawFeature(vectorLayers[eltRef], OpenLayers.Handler.RegularPolygon, {
                             handlerOptions: {
                                 irregular: true,
-                                sides: 4
+                                sides: 4,
+                                // fix for misplaced drawn feature:
+                                down: function(evt) {
+                                      this.map.events.clearMouseCache();
+                                      evt.xy = this.map.events.getMousePosition(evt); 
+                                      return OpenLayers.Handler.RegularPolygon.prototype.down.call(this, evt);
+                                }
                             },
                             featureAdded: function(feature){
                                 // a box was drawn, update the input text and input
@@ -639,6 +645,14 @@ GeoNetwork.map.ExtentMap = function(){
                     // Polygon drawing control 
                     else if (mode === 'polygon') {
                         var polyControl = new OpenLayers.Control.DrawFeature(vectorLayers[eltRef], OpenLayers.Handler.Polygon, {
+                            handlerOptions: {
+                                // fix for misplaced drawn feature:
+                                down: function(evt) {
+                                      this.map.events.clearMouseCache();
+                                      evt.xy = this.map.events.getMousePosition(evt); 
+                                      return OpenLayers.Handler.Polygon.prototype.down.call(this, evt);
+                                }
+                            },
                             featureAdded: function(feature){
                                 // Update form input
                                 document.getElementById('_X' + this).value = convertToGml(feature, mainProjCode);
@@ -659,7 +673,13 @@ GeoNetwork.map.ExtentMap = function(){
                         control = new OpenLayers.Control.DrawFeature(vectorLayers[eltRef], OpenLayers.Handler.RegularPolygon, {
                             handlerOptions: {
                                 irregular: true,
-                                sides: 60
+                                sides: 60,
+                                // fix for misplaced drawn feature:
+                                down: function(evt) {
+                                      this.map.events.clearMouseCache();
+                                      evt.xy = this.map.events.getMousePosition(evt); 
+                                      return OpenLayers.Handler.RegularPolygon.prototype.down.call(this, evt);
+                                }
                             },
                             featureAdded: function(feature){
                                 // Update form input

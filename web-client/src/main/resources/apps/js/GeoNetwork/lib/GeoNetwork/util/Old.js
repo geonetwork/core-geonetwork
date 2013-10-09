@@ -95,7 +95,7 @@ function radioModalUpdate(div, service, modalbox, title) {
     catalogue.doAction(service + pars, null, null, title, function(response){
         Ext.getDom(div).innerHTML = response.responseText;
         if (service === 'metadata.status') {
-            Ext.getCmp('gn-modalWindow').close();
+            Ext.getCmp('modalWindow').close();
             catalogue.onAfterStatus();
         }
     }, null);

@@ -106,7 +106,7 @@
 	<wxsOutputSchema>Target schema</wxsOutputSchema>
 	<wxs119Only>By default GetCapabilities harvester will create<br/> only metadata for services in ISO19119.</wxs119Only>
 	<wxs139>Create metadata for layer elements using GetCapabilities information.</wxs139>
-	<wxs139Layer>Create metadata for layer elements using MetadataURL attributes (if existing, if not use GetCapabilities).</wxs139Layer>
+	<wxs139Layer>Create metadata for layer elements using MetadataURL attributes.</wxs139Layer>
 	<createThumbnails>Create thumbnails for WMS layers.</createThumbnails>
 
 	<serviceCategory>Category for service</serviceCategory>
@@ -122,7 +122,9 @@
 	<useAccount>Use account</useAccount>
 	<username>Username</username>
 	<password>Password</password>
-
+	<defaultvalue>Default value: </defaultvalue>
+	<hopCount>Hop Count</hopCount>
+	<distributedSearch>Distributed Search</distributedSearch>
 	<createRemoteCategory>Set categories if exist locally</createRemoteCategory>
 	<mefFormatFull>Use full MEF format</mefFormatFull>
 	<xslfilter>XSL filter name</xslfilter>
@@ -254,7 +256,12 @@
 	<refresh>Refresh</refresh>
 	<history>History</history>
 	<clone>Clone</clone>
-
+	<notification>Notification</notification>
+	<clear>Clear</clear>
+	<clearTooltip>Remove all data harvested from this server</clearTooltip>
+	<clearRequest>Removing data from harvest with id: </clearRequest>
+	<clearResponse>Data removed from harvest with id: </clearResponse>
+	
 	<days>days</days>
 	<hours>hours</hours>
 	<mins>minutes</mins>
@@ -326,6 +333,7 @@
 	<cannotStop>Cannot deactivate the selected entry/ies</cannotStop>
 	<cannotRun>Cannot run the selected entry/ies</cannotRun>
 	<confirmRemove>Remove the selected entries ? The nodes and all harvested metadata will be removed.</confirmRemove>
+	<confirmClear>Clear the selected entries ? All harvested metadata from this server will be removed.</confirmClear>
 	<everyZero>The harvesting period cannot be 0:0:0</everyZero>
 	<pleaseRetrieve>Please retrieve some sites first</pleaseRetrieve>
 	<cannotRetrieve>Unable to retrieve information</cannotRetrieve>
@@ -353,6 +361,9 @@
 	<noHistory>No History</noHistory>
 	<dateDesc>Date (most recent first)</dateDesc>
 	<date>Date</date>
+    <log>Logfile</log>
+    <noLogAvailable>No log available</noLogAvailable>
+    <viewLog>View log</viewLog>
 	<elapsedTime>Time</elapsedTime>
 	<detail>Detail</detail>
 	<grandTotal>Grand Total</grandTotal>
@@ -378,7 +389,8 @@
 	</statusTip>
 
 	<tipHeader>
-		<total>Total</total>
+		<total>Total Processed</total>
+		<originalMetadata>Total on Remote Server</originalMetadata>
 		<added>Added</added>
 		<removed>Removed</removed>
 		<updated>Updated</updated>
@@ -408,6 +420,9 @@
 		<subtemplatesUpdated>Subtemplates Updated</subtemplatesUpdated>
 		<recordsUpdated>Records Updated</recordsUpdated>
 		<duplicatedResource>Duplicated resource</duplicatedResource>
+        <startTime>Start time</startTime>
+        <endTime>End time</endTime>
+        <executionTime>Execution time</executionTime>
 	</tipHeader>
 
 	<notRun>Waiting for the first run</notRun>
@@ -599,5 +614,44 @@
 			Choose the metadata format you want to harvest.
 		</tip>
 	</tips>
+	
+	<recipients>Recipients</recipients>
+	<template>Success Template</template>
+	<templateError>Error Template</templateError>
+	<templateWarning>Warning Template</templateWarning>
+	<enableMail>Send email after harvest completes</enableMail>
+	<level>Send on:</level>
+	<level1>Success</level1>
+	<level2>Warning</level2>
+	<level3>Error</level3>
+	<defaultSubject>[$$harvesterType$$] $$harvesterName$$ finished harvesting</defaultSubject>
+	<defaultTemplate>
+&lt;p>&lt;b>Imported:&lt;/b>$$total$$&lt;/p>
+&lt;p>&lt;b>Added:&lt;/b>$$added$$&lt;/p>
+&lt;p>&lt;b>Updated:&lt;/b>$$updated$$&lt;/p>
+&lt;p>&lt;b>Removed:&lt;/b>$$removed$$&lt;/p>
+	</defaultTemplate>
+	<defaultTemplateWarning>
+&lt;p>There was an error on the harvesting: $$errorMsg$$&lt;/p>
+&lt;p>&lt;b>Imported:&lt;/b>$$total$$&lt;/p>
+&lt;p>&lt;b>Added:&lt;/b>$$added$$&lt;/p>
+&lt;p>&lt;b>Updated:&lt;/b>$$updated$$&lt;/p>
+&lt;p>&lt;b>Removed:&lt;/b>$$removed$$&lt;/p>	
+	</defaultTemplateWarning>
+	<defaultTemplateError>There was an error on the harvesting: $$errorMsg$$</defaultTemplateError>
+	
+	<helpTemplateMail>
+		<help>You can use the following strings on both template and subject. They will be replaced by the actual value.</help>
+		<total>Total number of metadata imported: </total>
+		<added>Number of metadata added: </added>
+		<updated>Number of metadata updated: </updated>
+		<unchanged>Number of metadata unchanged: </unchanged>
+		<unretrievable>Number of metadata unretrievable: </unretrievable>
+		<removed>Number of metadata removed: </removed>
+		<doesNotValidate>How many metadata does not validate: </doesNotValidate>
+		<harvesterName>Harvester Name: </harvesterName>
+		<harvesterType>Harvester Type: </harvesterType>
+		<errorMsg>Error Message: </errorMsg>
+	</helpTemplateMail>
 </strings>
 

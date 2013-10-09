@@ -47,7 +47,7 @@ import java.util.UUID;
  * @author fxprunayre
  * @author sppigot 
  */
-public class Z3950Harvester extends AbstractHarvester {
+public class Z3950Harvester extends AbstractHarvester<Z3950ServerResults> {
 
 	public static void init(ServiceContext context) throws Exception {
 	}
@@ -185,6 +185,7 @@ public class Z3950Harvester extends AbstractHarvester {
 			// --- put here harvesting information after it has been executed
 
 			add(res, "total", result.totalMetadata);
+            add(res, "originalMetadata", result.totalMetadata);
 			add(res, "added", result.addedMetadata);
 			add(res, "updated", result.updatedMetadata);
 			add(res, "unchanged", result.unchangedMetadata);
@@ -201,8 +202,8 @@ public class Z3950Harvester extends AbstractHarvester {
 	protected void doHarvest(Logger log, ResourceManager rm) throws Exception {
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
-		Harvester h = new Harvester(log, context, dbms, params);
-		serverResults = h.harvest();
+		h = new Harvester(log, context, dbms, params);
+		result = h.harvest(log);
 	}
 
 	private Z3950Params params;
@@ -210,10 +211,8 @@ public class Z3950Harvester extends AbstractHarvester {
 }
 
 
-class Z3950ServerResults {
+class Z3950ServerResults extends HarvestResult {
 	private Map<String, HarvestResult> serverResults = new HashMap<String, HarvestResult>();
-
-	public int locallyRemoved;
 
 	public HarvestResult getServerResult(String serverName) {
         HarvestResult result = serverResults.get(serverName);

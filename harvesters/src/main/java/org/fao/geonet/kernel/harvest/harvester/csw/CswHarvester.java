@@ -23,26 +23,28 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
+import java.io.File;
+import java.sql.SQLException;
+import java.util.UUID;
+
 import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
-import java.io.File;
-import java.sql.SQLException;
-import java.util.UUID;
-
 /**
  *
  */
-public class CswHarvester extends AbstractHarvester {
+public class CswHarvester extends AbstractHarvester<HarvestResult> {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Static init
@@ -158,7 +160,9 @@ public class CswHarvester extends AbstractHarvester {
 		
 		settingMan.add(dbms, "id:"+siteId, "capabUrl", params.capabUrl);
 		settingMan.add(dbms, "id:"+siteId, "icon",     params.icon);
-                settingMan.add(dbms, "id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
+        settingMan.add(dbms, "id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
+        settingMan.add(dbms, "id:"+siteId, "queryScope", params.queryScope);
+        settingMan.add(dbms, "id:"+siteId, "hopCount",     params.hopCount);
 		
 		//--- store dynamic search nodes
 		String  searchID = settingMan.add(dbms, path, "search", "");	
@@ -201,7 +205,7 @@ public class CswHarvester extends AbstractHarvester {
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
 		Harvester h = new Harvester(log, context, dbms, params);
-		this.result = h.harvest();
+		result = h.harvest(log);
 	}
 
 	//---------------------------------------------------------------------------

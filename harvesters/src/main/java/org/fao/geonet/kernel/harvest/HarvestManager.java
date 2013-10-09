@@ -50,7 +50,7 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarversterJobListener;
 import org.fao.geonet.kernel.harvest.harvester.HarvesterHistoryDao;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
-import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 import org.quartz.SchedulerException;
 
@@ -98,6 +98,7 @@ public class HarvestManager implements HarvestInfoProvider
 				ah.init(node);
 				hmHarvesters.put(ah.getID(), ah);
 				hmHarvestLookup.put(ah.getParams().uuid, ah);
+				ah.initializeLog();
 			}
 	}
 
@@ -512,6 +513,44 @@ public class HarvestManager implements HarvestInfoProvider
 	public AbstractHarvester getHarvester(String harvestUuid) {
 		return hmHarvestLookup.get(harvestUuid);
 	}
+
+	 /**
+    * Remove all metadata associated to one harvester
+    * @param dbms to connect
+    * @param id of the harvester
+    * @return
+    * @throws Exception
+    */
+    public synchronized OperResult clearBatch(Dbms dbms, String id) throws Exception
+    {
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+            Log.debug(Geonet.HARVEST_MAN, "Clearing harvesting with id : "+ id);
+
+        AbstractHarvester<?> ah = hmHarvesters.get(id);
+
+        if (ah == null)
+            return OperResult.NOT_FOUND;
+        
+        long elapsedTime = System.currentTimeMillis();
+        
+        String id_ = ah.getParams().uuid;
+      
+        dataMan.deleteBatchMetadata(context, dbms, id_);
+        
+        elapsedTime = (System.currentTimeMillis() - elapsedTime) / 1000;
+        System.out.println("Time: " + elapsedTime);
+        
+        Element history = new Element("result");
+        history.addContent(new Element("cleared"));
+        String lastRun = new ISODate(System.currentTimeMillis()).toString();
+        HarvesterHistoryDao.write(dbms, context.getSerialFactory(), 
+                ah.getType(), ah.getParams().name, ah.getParams().uuid,
+                elapsedTime,
+                lastRun, ah.getParams().node, history);
+
+
+        return OperResult.OK;
+    }
 
 	//---------------------------------------------------------------------------
 	//---

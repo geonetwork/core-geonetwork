@@ -293,7 +293,7 @@ GeoNetwork.util.SearchFormTools = {
             items.push(GeoNetwork.util.SearchFormTools.getRequestedLanguageCombo(services.getIsoLanguages));
         }
         
-        items.push(GeoNetwork.util.SearchFormTools.getSortByCombo());
+        items.push(GeoNetwork.util.SearchFormTools.getSortByCombo(config.sortBy));
         
         items.push(new Ext.form.ComboBox({
             id: 'E_hitsperpage',
@@ -389,7 +389,15 @@ GeoNetwork.util.SearchFormTools = {
             inputType: 'hidden',
             linkedCombo: combo
         });
+        
+        // Set default value
         combo.setValue(defaultValue || 'relevance#');
+        
+	if (defaultValue) {
+            var tokens = defaultValue.split('#');
+            sortByField.setValue(tokens[0]);
+            sortOrderField.setValue(tokens[1]);
+        }
         
         return [sortByField, sortOrderField, combo];
     },

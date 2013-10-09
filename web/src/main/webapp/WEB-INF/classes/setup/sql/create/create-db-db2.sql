@@ -230,7 +230,7 @@ CREATE TABLE Groups
     id           int            not null,
     name         varchar(32)    not null,
     description  varchar(255),
-    email        varchar(32),
+    email        varchar(128),
     referrer     int,
     primary key(id),
     unique(name)

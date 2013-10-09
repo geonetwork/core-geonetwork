@@ -33,10 +33,13 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -49,13 +52,14 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 //=============================================================================
 
-class Harvester
-{
+class Harvester implements IHarvester<HarvestResult> {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -76,8 +80,9 @@ class Harvester
 	//---
 	//--------------------------------------------------------------------------
 
-	public HarvestResult harvest() throws Exception
+	public HarvestResult harvest(Logger log) throws Exception
 	{
+        this.log = log;
 		XmlRequest req = new XmlRequest(new URL(params.host));
 
         Lib.net.setupProxy(context, req);
@@ -121,18 +126,45 @@ class Harvester
 
 		Set<RecordInfo> records = new HashSet<RecordInfo>();
 
-		for(Search s : params.getSearches())
-			records.addAll(search(req, s));
+        for (Search s : params.getSearches()) {
+            try {
+                records.addAll(search(req, s));
+            } catch (Exception t) {
+                log.error("Unknown error trying to harvest");
+                log.error(t.getMessage());
+                log.error(t);
+                errors.add(new HarvestError(t, log));
+            } catch (Throwable t) {
+                log.fatal("Something unknown and terrible happened while harvesting");
+                log.fatal(t.getMessage());
+                t.printStackTrace();
+                errors.add(new HarvestError(t, log));
+            }
+        }
 
-		if (params.isSearchEmpty())
-			records.addAll(search(req, Search.createEmptySearch()));
+        if (params.isSearchEmpty()) {
+            try {
+                log.debug("Doing an empty search");
+                records.addAll(search(req, Search.createEmptySearch()));
+            } catch (Exception t) {
+                log.error("Unknown error trying to harvest");
+                log.error(t.getMessage());
+                log.error(t);
+                errors.add(new HarvestError(t, log));
+            } catch (Throwable t) {
+                log.fatal("Something unknown and terrible happened while harvesting");
+                log.fatal(t.getMessage());
+                t.printStackTrace();
+                errors.add(new HarvestError(t, log));
+            }
+        }
 
 		log.info("Total records processed in all searches :"+ records.size());
 
 		//--- align local node
 
 		Aligner      aligner = new Aligner(log, context, dbms, req, params, remoteInfo);
-		HarvestResult result  = aligner.align(records);
+		HarvestResult result  = aligner.align(records, errors);
 
 		Map<String, String> sources = buildSources(remoteInfo);
 		updateSources(dbms, records, sources);
@@ -162,8 +194,9 @@ class Harvester
 
 		for (Object o : doSearch(request, s).getChildren("metadata"))
 		{
-			Element md   = (Element) o;
-			Element info = md.getChild("info", Edit.NAMESPACE);
+            try {
+                Element md = (Element) o;
+                Element info = md.getChild("info", Edit.NAMESPACE);
 
 			if (info == null)
 				log.warning("Missing 'geonet:info' element in 'metadata' element");
@@ -176,6 +209,14 @@ class Harvester
 
 				records.add(new RecordInfo(uuid, changeDate, schema, source));
 			}
+            } catch (Exception e) {
+                HarvestError harvestError = new HarvestError(e, log);
+                harvestError.setDescription("Malformed element '"
+                        + o.toString() + "'");
+                harvestError
+                        .setHint("It seems that there was some malformed element. Check with your administrator.");
+                this.errors.add(harvestError);
+            }
 		}
 
 		log.info("Records added to result list : "+ records.size());
@@ -196,6 +237,25 @@ class Harvester
             if(log.isDebugEnabled()) log.debug("Search results:\n"+ Xml.getString(response));
 
 			return response;
+        } catch (BadSoapResponseEx e) {
+            log.warning("Raised exception when searching : " + e.getMessage());
+            this.errors.add(new HarvestError(e, log));
+            throw new OperationAbortedEx("Raised exception when searching", e);
+        } catch (BadXmlResponseEx e) {
+            HarvestError harvestError = new HarvestError(e, log);
+            harvestError.setDescription("Error while searching on "
+                    + params.name + ". Excepted XML, returned: "
+                    + e.getMessage());
+            harvestError.setHint("Check with your administrator.");
+            this.errors.add(harvestError);
+            throw new OperationAbortedEx("Raised exception when searching", e);
+        } catch (IOException e) {
+            HarvestError harvestError = new HarvestError(e, log);
+            harvestError.setDescription("Error while searching on "
+                    + params.name + ". ");
+            harvestError.setHint("Check with your administrator.");
+            this.errors.add(harvestError);
+            throw new OperationAbortedEx("Raised exception when searching", e);
 		}
 		catch(Exception e)
 		{
@@ -251,9 +311,10 @@ class Harvester
 		String siteId = getSiteId();
 
 		for (String sourceUuid : sources)
-			if (!siteId.equals(sourceUuid))
-			{
-				String sourceName = remoteSources.get(sourceUuid);
+            try {
+    			if (!siteId.equals(sourceUuid))
+    			{
+    				String sourceName = remoteSources.get(sourceUuid);
 
 				if (sourceName != null)
 					Lib.sources.retrieveLogo(context, params.host, sourceUuid);
@@ -263,9 +324,25 @@ class Harvester
 					Resources.copyUnknownLogo(context, sourceUuid);
 				}
 
-				Lib.sources.update(dbms, sourceUuid, sourceName, false);
-			}
-	}
+    				Lib.sources.update(dbms, sourceUuid, sourceName, false);
+    			}
+            } catch (SQLException e) {
+                HarvestError harvestError = new HarvestError(e, log);
+                harvestError
+                        .setDescription("Error updating the source logos from "
+                                + params.name + ": \n" + e.getSQLState());
+                harvestError.setHint("Check the original resource ("
+                        + sourceUuid + ") is correctly defined.");
+                this.errors.add(harvestError);
+            } catch (MalformedURLException e) {
+                HarvestError harvestError = new HarvestError(e, log);
+                harvestError
+                        .setDescription("Error retrieving the logo from url");
+                harvestError.setHint("Check the original resource ("
+                        + sourceUuid + ") is correctly defined.");
+                this.errors.add(harvestError);
+            }
+    }
 
 	//---------------------------------------------------------------------------
 
@@ -282,11 +359,20 @@ class Harvester
 	//--- Variables
 	//---
 	//---------------------------------------------------------------------------
-
 	private Logger         log;
 	private Dbms           dbms;
 	private GeonetParams   params;
     private ServiceContext context;
+    public List<HarvestError> getErrors() {
+        return errors;
+    }
+
+
+    /**
+     * Contains a list of accumulated errors during the executing of this
+     * harvest.
+     */
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
 }
 
 //=============================================================================

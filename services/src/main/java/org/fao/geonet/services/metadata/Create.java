@@ -44,10 +44,10 @@ import org.jdom.Element;
 public class Create extends NotInReadOnlyModeService {
     boolean useEditTab = false;
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(String appPath, ServiceConfig params) throws Exception {
         useEditTab = params.getValue("editTab", "false").equals("true");
-	}
-
+    }
+    
 	//--------------------------------------------------------------------------
 	//---
 	//--- Service
@@ -115,7 +115,6 @@ public class Create extends NotInReadOnlyModeService {
         if (elCurrTab != null) {
             context.getUserSession().setProperty(sessionTabProperty, elCurrTab.getText());
         }
-        
         response.addContent(new Element(Geonet.Elem.ID).setText(newId));
 		return response;
 	}
