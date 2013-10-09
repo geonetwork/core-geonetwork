@@ -30,25 +30,38 @@
                 data-translate>numberOfSearchTimeline</div>
             
             <!-- TODO : Draw a time line ? -->
-            <label data-translate>from</label><input type="text" data-ng-model="dateFrom"/>
-            <label data-translate>to</label><input type="text" data-ng-model="dateTo"/>
-            <span data-translate>by</span>
-            <label>
-                <input data-ng-model="graphicType" name="graphicType" type="radio" value="HOUR"></input>
-                <span data-translate>hour</span>
-            </label>
-            <label>
-                <input data-ng-model="graphicType" name="graphicType" type="radio" value="DAY"></input>
-                <span data-translate>day</span>
-            </label>
-            <label>
-                <input data-ng-model="graphicType" name="graphicType" type="radio" value="MONTH"></input>
-                <span data-translate>month</span>
-            </label>
-            <label>
-                <input data-ng-model="graphicType" name="graphicType" type="radio" value="YEAR"></input>
-                <span data-translate>year</span>
-            </label>
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-lg-1" data-translate="">from</label>
+                    <div class="col-lg-3">
+                        <input type="date" class="form-control" data-ng-model="dateFrom"/>
+                    </div>
+                    <label class="col-lg-1" data-translate="">to</label>
+                    <div class="col-lg-3">
+                        <input type="date" class="form-control" data-ng-model="dateTo"/>
+                    </div>
+                    <div class="col-lg-4">
+                        <span data-translate>by</span>
+                        <label>
+                            <input data-ng-model="graphicType" name="graphicType" type="radio" value="HOUR"></input>
+                            <span data-translate="">hour</span>
+                        </label>
+                        <label>
+                            <input data-ng-model="graphicType" name="graphicType" type="radio" value="DAY"></input>
+                            <span data-translate="">day</span>
+                        </label>
+                        <label>
+                            <input data-ng-model="graphicType" name="graphicType" type="radio" value="MONTH"></input>
+                            <span data-translate="">month</span>
+                        </label>
+                        <label>
+                            <input data-ng-model="graphicType" name="graphicType" type="radio" value="YEAR"></input>
+                            <span data-translate="">year</span>
+                        </label>
+                    </div>
+            </form>
+            
+            
             <svg id="gn-stat-search-timeline" class="gn-chart"></svg>
             
             <button type="button" class="btn btn-small" data-ng-click="csvExport(statistics.search.temporal, $event)" 

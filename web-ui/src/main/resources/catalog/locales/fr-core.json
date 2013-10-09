@@ -17,6 +17,11 @@
     "south": "Sud",
     "selected": " selectionné(s)",
     
+    "hour": "Heure",
+    "day": "Jour",
+    "month": "Mois",
+    "year": "Année",
+    
     "add": "Ajouter",
     "save": "Enregistrer",
     "records": " fiche(s)",

@@ -16,6 +16,11 @@
     "north": "North",
     "south": "South",
     
+    "hour": "Hour",
+    "day": "Day",
+    "month": "Month",
+    "year": "Year",
+    
     "add": "Add",
     "save": "Save",
     

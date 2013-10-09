@@ -18,9 +18,9 @@
    */
   module.controller('GnHarvestController', [
     '$scope', '$http', '$translate', '$injector', '$rootScope',
-    'gnSearchManagerService',
+    'gnSearchManagerService', 'gnUtilityService',
     function($scope, $http, $translate, $injector, $rootScope,
-            gnSearchManagerService) {
+            gnSearchManagerService, gnUtilityService) {
 
       $scope.pageMenu = {
         folder: 'harvest/',
@@ -57,23 +57,12 @@
       $scope.$watch('harvesterRecordsPagination.currentPage', function() {
         $scope.harvesterRecordsSearch();
       });
-      function parseBoolean(object) {
-        angular.forEach(object, function(value, key) {
-          if (typeof value == 'string') {
-            if (value == 'true' || value == 'false') {
-              object[key] = (value == 'true');
-            }
-          } else {
-            parseBoolean(value);
-          }
-        });
-      }
 
       function loadHarvesters() {
         return $http.get('admin.harvester.list@json').success(function(data) {
           if (data != 'null') {
             $scope.harvesters = data;
-            parseBoolean($scope.harvesters);
+            gnUtilityService.parseBoolean($scope.harvesters);
           }
         }).error(function(data) {
           // TODO
@@ -224,6 +213,19 @@
       };
       $scope.deleteHarvester = function() {
         $http.get('admin.harvester.remove@json?id=' +
+                  $scope.harvesterSelected['@id'])
+              .success(function(data) {
+              $scope.harvesterSelected = {};
+              $scope.harvesterUpdated = false;
+              $scope.harvesterNew = false;
+              loadHarvesters();
+            }).error(function(data) {
+              console.log(data);
+            });
+      };
+
+      $scope.deleteHarvesterRecord = function() {
+        $http.get('admin.harvester.clear@json?id=' +
                   $scope.harvesterSelected['@id'])
               .success(function(data) {
               $scope.harvesterSelected = {};

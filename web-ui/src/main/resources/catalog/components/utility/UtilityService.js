@@ -27,10 +27,29 @@
           return form.serialize() + 
             (uc.length ? '&' + uc.join('&').replace(/%20/g, "+") : '');
       };
+
+      
+      /**
+       * Parse boolean value in object
+       */
+      var parseBoolean = function (object) {
+      angular.forEach(object, function(value, key) {
+        if (typeof value == 'string') {
+          if (value == 'true' || value == 'false') {
+            object[key] = (value == 'true');
+          } else if (value == 'on' || value == 'off') {
+            object[key] = (value == 'on');
+          } 
+        } else {
+          parseBoolean(value);
+        }
+      });
+    };
       
       return {
           scrollTo: scrollTo,
-          serialize: serialize
+          serialize: serialize,
+          parseBoolean: parseBoolean
       };
   };
 

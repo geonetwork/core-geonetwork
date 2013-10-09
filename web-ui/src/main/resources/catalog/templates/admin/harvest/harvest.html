@@ -74,7 +74,12 @@
                     <button type="button" class="btn btn-primary pull-right icon-save" 
                         data-ng-click="saveHarvester('#gn-harvester-edit')" 
                         data-translate="">saveHarvester</button>
-                    <button type="button" class="btn btn-danger pull-right btn-danger icon-remove" 
+                    <button type="button" class="btn btn-warning pull-right icon-remove" 
+                        data-ng-hide="harvesterSelected['@id'] == ''"
+                        data-ng-click="deleteHarvesterRecord(harvesterSelected['@id'])" 
+                        title="{{'deleteHarvesterRecordsHelp' | translate}}"
+                        data-translate="">deleteHarvesterRecords</button>
+                    <button type="button" class="btn btn-danger pull-right icon-remove" 
                         data-ng-hide="harvesterSelected['@id'] == ''"
                         data-ng-click="deleteHarvester(harvesterSelected['@id'])" 
                         title="{{'deleteHarvesterHelp' | translate}}"
@@ -122,10 +127,13 @@
                             <li data-ng-repeat="(key, value) in h.info[0]">{{key}}: 
                                 <span data-ng-switch="" data-on="key">
                                     <pre data-ng-switch-when="stack">{{value}}</pre>
+                                    <span data-ng-switch-when="logfile"/>
                                     <span data-ng-switch-default="">{{value}}</span>
                                 </span>
                             </li>
                         </ul>
+                        
+                        <a data-ng-show="h.info[0].logfile" href="admin.harvester.log?file={{h.info[0].logfile}}" target="_blank" data-translate="">logFile</a>
                     </td>
                 </tr>
             </table>

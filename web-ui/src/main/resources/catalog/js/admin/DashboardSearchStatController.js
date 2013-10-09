@@ -72,8 +72,8 @@
                   '&graphicType=' + $scope.graphicType +
                   '&byType=' + byType).success(function(data) {
           // Get min/max range
-          $scope.dateMin = data.dateMin;
-          $scope.dateMax = data.dateMax;
+          $scope.dateMin = data.dateMin.substring(0, 10);
+          $scope.dateMax = data.dateMax.substring(0, 10);
 
           // No date defined, get min and max of search range
           // and init dateFrom and dateTo to query full time range

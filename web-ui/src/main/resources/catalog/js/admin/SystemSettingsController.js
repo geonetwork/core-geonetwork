@@ -23,6 +23,7 @@
       var sectionsLevel2 = [];
       $scope.sectionsLevel1 = [];
       $scope.sectionsLevel2 = [];
+      $scope.systemUsers = null;
 
       /**
          * Load catalog settings as a flat list and
@@ -34,7 +35,10 @@
          */
       function loadSettings() {
         $http.get('xml.config.get@json?asTree=false').success(function(data) {
+
+          gnUtilityService.parseBoolean(data);
           $scope.settings = data;
+
           for (var i = 0; i < $scope.settings.length; i++) {
             var tokens = $scope.settings[i]['@name'].split('/');
             $scope.settings[i].formName =
@@ -61,6 +65,11 @@
         });
       }
 
+      function loadUsers() {
+        $http.get('admin.user.list@json').success(function(data) {
+          $scope.systemUsers = data;
+        });
+      }
       /**
          * Filter all settings for a section
          */
@@ -113,7 +122,7 @@
          */
       $scope.scrollTo = gnUtilityService.scrollTo;
 
-
+      loadUsers();
       loadSettings();
     }]);
 
