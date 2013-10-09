@@ -274,7 +274,6 @@ public class Aligner extends BaseAligner
 				e.printStackTrace();
 				log.error("Getting record from GeoPortal REST raised exception: "+e.getMessage());
 				log.error("Sent request "+request.getSentData());
-				if (response != null) log.error("Received:\n"+Xml.getString(response));
 				throw new Exception(e);
 			}
 
