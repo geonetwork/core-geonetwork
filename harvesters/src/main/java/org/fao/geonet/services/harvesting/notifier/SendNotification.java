@@ -191,7 +191,7 @@ public class SendNotification {
 	 * @return
 	 */
 	private static String extractWarningsTrace(Element result) {
-		String errorMsg = "";
+		StringBuffer errorMsg = new StringBuffer("");
 
 		for (Object o : result.getChildren("errors")) {
 			Element errores = ((Element) o);
@@ -202,12 +202,17 @@ public class SendNotification {
 				String trace = getErrorTrace(error);
 
 				// do not convert it to html, dangerous!
-				errorMsg = errorMsg + "<li><p><strong>'" + desc + "'</strong>:"
-						+ hint + "</p>" + "<p>" + trace + "</p></li>";
+				errorMsg = errorMsg.append("<li><p><strong>'")
+				        .append(desc)
+				        .append("'</strong>:")
+				        .append(hint)
+				        .append("</p><p>")
+				        .append(trace)
+				        .append("</p></li>");
 			}
 		}
-		errorMsg = "<ul>" + errorMsg + "</ul>";
-		return errorMsg;
+		errorMsg.append("<ul>").append(errorMsg).append("</ul>");
+		return errorMsg.toString();
 	}
 
 	/**
