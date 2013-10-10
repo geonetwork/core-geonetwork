@@ -36,6 +36,23 @@
     "notifications": "Notifications",
     "signout": "Sign out",
     
+    "name": "Name",
+    "surname": "Surname",
+    "requestedProfile": "Requested profile",
+    "contactDetailsSentTo": "An email has been sent to ",
+    "errorEmailAddressAlreadyRegistered": "Email address already registered.",
+    "newAccountInfo": "When you request an account an email will be sent to you with your user details. If an advanced user profile is requested, the catalog administrator will analyze your request and get back to you.",
+    "usernameHelp": "Name to use when sign in",
+    "email": "Email",
+    "organisation": "Organisation",
+    "address": "Address",
+    "zip": "ZIP",
+    "state": "State",
+    "city": "City",
+    "country": "Country",
+    "register": "Register",
+    
+    
     "from": "From",
     "to": "To",
     "until": "Until",

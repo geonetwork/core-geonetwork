@@ -1,13 +1,12 @@
 (function() {
   goog.provide('gn_login');
 
+  goog.require('gn');
+  goog.require('gn_login_controller');
 
-
-  var module = angular.module('gn', [
-    'pascalprecht.translate',
-    'gn_translation_controller',
-    'gn_login_controller',
-    'gn_cat_controller'
+  var module = angular.module('gn_login', [
+    'gn',
+    'gn_login_controller'
   ]);
 
   //Define the translation files to load

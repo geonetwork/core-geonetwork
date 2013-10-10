@@ -12,9 +12,9 @@
     <ul class="nav navbar-nav">
         <li data-ng-show="authenticated">
             <p class="navbar-text"><img src="http://gravatar.com/avatar/{{user.hash}}?s=18"/>
-                <a href="#userDetails"  title="{{'userDetails' | translate}}" class="navbar-link">
-                    {{user.name}} {{user.surname}} ({{user.profile | translate}})</a>
-                <a href="#/organization/users/{{user.username}}" title="{{'userPreferences' | translate}}"><i class="icon-user"></i></a>
+                <a href="admin.console#/organization/users/{{user.username}}"  
+                    title="{{'userDetails' | translate}}" class="navbar-link">
+                    {{user.name}} {{user.surname}} ({{user.profile | translate}})<i class="icon-user"></i></a>
                 <a href="../../j_spring_security_logout" title="{{'signout' | translate}}"><i class="icon-signout"></i></a>
             </p>
         </li>

@@ -3,6 +3,14 @@
     <services package="org.fao.geonet">
         <documentation>User and group services</documentation>
         
+        <service name="create.account">
+            <documentation><![CDATA[
+                Create a new user account.
+                ]]></documentation>
+            <class name=".services.register.SelfRegister" />
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+        
         <service name="admin.user.update">
             <documentation>The service can be used to create or update 
                 a user.</documentation>

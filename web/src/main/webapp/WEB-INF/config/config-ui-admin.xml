@@ -11,6 +11,13 @@
 			<documentation>The user authentication page.</documentation>
 			<output sheet="../xslt/ui-admin/signin.xsl"/>
 		</service>
-		
+	    
+	    <service name="new.account">
+	        <documentation><![CDATA[
+                User self-registration services
+                ]]></documentation>
+	        <output sheet="../xslt/ui-admin/new-account.xsl"/>
+	        
+	    </service>
 	</services>
 </geonet>
