@@ -376,6 +376,7 @@ public class MailUtil {
     public static Boolean sendMail(String email, String subject,
             String message, SettingManager sm) {
         List<String> to = new ArrayList<String>(1);
+        to.add(email);
         return sendMail(to, subject, message, sm);
     }
 
