@@ -27,6 +27,7 @@ import com.google.common.base.Optional;
 import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Xml;
@@ -457,7 +458,7 @@ class Harvester extends BaseAligner
 				Element op = new Element ("operatesOn", srv);
 				op.setAttribute("uuidref", layer.uuid);
 
-                String hRefLink =  dataMan.getSiteURL(context) + "/xml.metadata.get?uuid=" + layer.uuid;
+                String hRefLink =  context.getBean(SettingManager.class).getSiteURL(context) + "/xml.metadata.get?uuid=" + layer.uuid;
                 op.setAttribute("href", hRefLink, xlink);
 
 				

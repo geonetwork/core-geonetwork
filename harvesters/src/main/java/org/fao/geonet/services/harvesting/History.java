@@ -9,9 +9,11 @@ import org.fao.geonet.domain.HarvestHistory_;
 import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.repository.HarvestHistoryRepository;
+import org.fao.geonet.repository.SortUtils;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 
+import static org.fao.geonet.repository.SortUtils.createPath;
 import static org.fao.geonet.repository.specification.HarvestHistorySpecs.hasHarvesterUuid;
 
 
@@ -42,9 +44,9 @@ public class History  implements Service
 
         final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
 
-        final Sort.Order harvestDateOrder = new Sort.Order(Sort.Direction.DESC, HarvestHistory_.harvestDate.getName());
-        final Sort.Order harvesterUuidOrder = new Sort.Order(HarvestHistory_.harvesterUuid.getName());
-        final Sort.Order harvesterTypeSort = new Sort.Order(HarvestHistory_.harvesterType.getName());
+        final Sort.Order harvestDateOrder = new Sort.Order(Sort.Direction.DESC, createPath(HarvestHistory_.harvestDate));
+        final Sort.Order harvesterUuidOrder = new Sort.Order(createPath(HarvestHistory_.harvesterUuid));
+        final Sort.Order harvesterTypeSort = new Sort.Order(createPath(HarvestHistory_.harvesterType));
 
         Element result = null;
         if ((uuid == null) || (uuid.equals(""))) {

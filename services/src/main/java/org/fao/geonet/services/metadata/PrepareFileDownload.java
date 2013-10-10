@@ -26,6 +26,7 @@ package org.fao.geonet.services.metadata;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -75,7 +76,7 @@ public class PrepareFileDownload implements Service
 
 		//--- check access
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getBean(DataManager.class);
+		DataManager   dataManager = gc.getBean(DataManager.class);
 
 		boolean addEdit = false;
 		
@@ -91,10 +92,11 @@ public class PrepareFileDownload implements Service
 
 		//--- get metadata
         boolean withValidationErrors = false, keepXlinkAttributes = false;
-        Element elMd = gc.getBean(DataManager.class).getMetadata(context, id, addEdit, withValidationErrors, keepXlinkAttributes);
+        Element elMd = dataManager.getMetadata(context, id, addEdit, withValidationErrors, keepXlinkAttributes);
 
-		if (elMd == null)
+		if (elMd == null) {
 			throw new MetadataNotFoundEx("Metadata not found - deleted?");
+        }
 
 		response.addContent(new Element("id").setText(id));
 
@@ -109,7 +111,8 @@ public class PrepareFileDownload implements Service
 		xp = XPath.newInstance ("link[starts-with(@protocol,'WWW:DOWNLOAD') and @name!='']");
 		@SuppressWarnings("unchecked")
         List<Element> downloadLinks = xp.selectNodes(elBrief);
-		response = processDownloadLinks(context, id, dm.getSiteURL(context), downloadLinks, response);
+        final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
+        response = processDownloadLinks(context, id, siteURL, downloadLinks, response);
 
 		//--- now process web links so that they can be displayed as well
 		xp = XPath.newInstance ("link[starts-with(@protocol,'WWW:LINK')]");

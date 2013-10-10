@@ -36,31 +36,13 @@ import java.sql.SQLException;
 
 public class Z3950ConfigHarvester extends AbstractHarvester
 {
-	public static final String TYPE = "z3950Config";
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Static init
-	//---
-	//--------------------------------------------------------------------------
-
-	public static void init(ServiceContext context) throws Exception {}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Harvesting type
-	//---
-	//--------------------------------------------------------------------------
-
-	public String getType() { return TYPE; }
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	protected void doInit(Element node) throws BadInputEx
+	protected void doInit(Element node, ServiceContext context) throws BadInputEx
 	{
 		params = new Z3950ConfigParams(dataMan);
         super.setParams(params);

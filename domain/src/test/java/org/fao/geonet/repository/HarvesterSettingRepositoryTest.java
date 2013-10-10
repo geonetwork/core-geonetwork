@@ -172,13 +172,13 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
         _repo.save(newSetting().setName("3"));
         _repo.save(newSetting().setName("1"));
         
-        List<HarvesterSetting> list = _repo.findAll(new Sort(Setting_.name.getName()));
+        List<HarvesterSetting> list = _repo.findAll(SortUtils.createSort(Setting_.name));
         assertEquals("1", list.get(0).getName());
         assertEquals("2", list.get(1).getName());
         assertEquals("3", list.get(2).getName());
         assertEquals("4", list.get(3).getName());
         
-        List<HarvesterSetting> list2 = _repo.findAll(new Sort(Direction.DESC, Setting_.name.getName()));
+        List<HarvesterSetting> list2 = _repo.findAll(new Sort(Direction.DESC, SortUtils.createPath(Setting_.name)));
         assertEquals("4", list2.get(0).getName());
         assertEquals("3", list2.get(1).getName());
         assertEquals("2", list2.get(2).getName());

@@ -140,12 +140,12 @@
 
     <!--  Spring logging configuration -->
     <logger name="org.springframework" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="org.springframework.beans" additivity="false">
-        <level value="TRACE" />
+        <level value="WARN" />
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="org.springframework.security" additivity="false">
@@ -153,7 +153,7 @@
     </logger>
     <logger name="org.springframework.security.ldap" additivity="false">
         <level value="WARN" />
-    </logger>
+    </logger>                             n
 
 
     <!--  JZKIT logging configuration -->
@@ -172,6 +172,14 @@
         <level value="WARN" />
     </logger>
 
+    <category name="org.hibernate.SQL">
+        <priority value="INFO" />
+        <appender-ref ref="fileAppender" />
+    </category>
+    <category name="org.hibernate.type">
+        <priority value="WARN" />
+        <appender-ref ref="fileAppender" />
+    </category>
 
 
     <!-- Turn off logging except when explicitly declared below -->

@@ -175,7 +175,7 @@ public class ShibLogin extends NotInReadOnlyModeService {
         {
             username = username.substring(0, 256);
         }
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findOneByUsername(username);
 
         if (user == null) {
             user = new User().setUsername(username);

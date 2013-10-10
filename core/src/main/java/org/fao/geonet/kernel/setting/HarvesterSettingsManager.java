@@ -68,6 +68,8 @@ public class HarvesterSettingsManager {
 
     @Autowired
     private HarvesterSettingRepository _settingsRepo;
+    @Autowired
+    private SettingManager _settingManager;
 
     @PersistenceContext
     private EntityManager _entityManager;
@@ -278,18 +280,8 @@ public class HarvesterSettingsManager {
         return value.getValueAsBool();
     }
 
-    // ---------------------------------------------------------------------------
-
-    public Integer getValueAsInt(String path) {
-        HarvesterSetting value = _settingsRepo.findOneByPath(path);
-
-        if (value == null)
-            return null;
-
-        return value.getValueAsInt();
-    }
-    public String getSiteId()   { return getValue("system/site/siteId"); }
-    public String getSiteName() { return getValue("system/site/name");   }
+    public String getSiteId()   { return _settingManager.getSiteId(); }
+    public String getSiteName() { return _settingManager.getSiteName();   }
     
     // ---------------------------------------------------------------------------
     // ---

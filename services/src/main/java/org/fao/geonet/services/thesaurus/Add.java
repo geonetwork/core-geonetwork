@@ -34,6 +34,7 @@ import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
@@ -72,12 +73,12 @@ public class Add extends NotInReadOnlyModeService {
 		}
 		
 		ThesaurusManager tm = gc.getBean(ThesaurusManager.class);
-		DataManager dm = gc.getBean(DataManager.class);
 
 		String filePath = tm.buildThesaurusFilePath(fname, type, dname);
 		
-		File rdfFile = new File(filePath);		
-		Thesaurus thesaurus = new Thesaurus(null, fname, tname, tnamespace, type, dname, rdfFile, dm.getSiteURL(context), false);
+		File rdfFile = new File(filePath);
+        final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
+        Thesaurus thesaurus = new Thesaurus(null, fname, tname, tnamespace, type, dname, rdfFile, siteURL, false);
 		tm.addThesaurus(thesaurus, true);
 
 		// Save activated status in the database

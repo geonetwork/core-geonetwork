@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -119,7 +120,8 @@ public class GetRecord implements OaiPmhService {
         } else {
             String schemaDir = sm.getSchemaDir(schema);
             if (Lib.existsConverter(schemaDir, prefix)) {
-                Element env = Lib.prepareTransformEnv(uuid, changeDate, context.getBaseUrl(), dm.getSiteURL(context), gc.getSiteName());
+                final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
+                Element env = Lib.prepareTransformEnv(uuid, changeDate, context.getBaseUrl(), siteURL, gc.getSiteName());
                 md = Lib.transform(schemaDir, env, md, prefix + ".xsl");
             } else {
                 throw new CannotDisseminateFormatException("Unknown prefix : " + prefix);

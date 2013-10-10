@@ -24,7 +24,7 @@ public class Group extends Localized {
     private String _name;
     private String _description;
     private String _email;
-    private int _referrer;
+    private Integer _referrer;
 
     /**
      * Get the id of the group.
@@ -139,7 +139,7 @@ public class Group extends Localized {
      * @return the referrer
      */
     @Column(nullable = true)
-    public int getReferrer() {
+    public Integer getReferrer() {
         return _referrer;
     }
 
@@ -149,7 +149,7 @@ public class Group extends Localized {
      * 
      * @param referrer the referrer.
      */
-    public void setReferrer(int referrer) {
+    public void setReferrer(Integer referrer) {
         this._referrer = referrer;
     }
 

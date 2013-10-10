@@ -62,9 +62,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 public class LocalFilesystemHarvester extends AbstractHarvester {
 	
 	private LocalFilesystemParams params;
-	
-	public static void init(ServiceContext context) throws Exception {
-	}
+
 	
 	@Override
 	protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
@@ -320,7 +318,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 	}
 
 	@Override
-	protected void doInit(Element entry) throws BadInputEx {
+	protected void doInit(Element entry, ServiceContext context) throws BadInputEx {
 		params = new LocalFilesystemParams(dataMan);
         super.setParams(params);
         params.create(entry);
@@ -352,8 +350,4 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 
     }
 
-	@Override
-	public String getType() {
-		return "filesystem";
-	}
 }

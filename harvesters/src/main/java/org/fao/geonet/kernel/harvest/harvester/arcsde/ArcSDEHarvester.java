@@ -70,13 +70,8 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	private static final String ISO19115_TO_ISO19139_TRANSFORMER = "ISO19115-to-ISO19139.xsl";
 	private static String ARC_TO_ISO19115_TRANSFORMER_LOCATION;
 	private static String ISO19115_TO_ISO19139_TRANSFORMER_LOCATION;
-	
-	public static void init(ServiceContext context) throws Exception {
-		ARC_TO_ISO19115_TRANSFORMER_LOCATION = context.getAppPath() + Geonet.Path.STYLESHEETS + "/conversion/import/" + ARC_TO_ISO19115_TRANSFORMER;
-		ISO19115_TO_ISO19139_TRANSFORMER_LOCATION = context.getAppPath() + Geonet.Path.STYLESHEETS + "/conversion/import/" + ISO19115_TO_ISO19139_TRANSFORMER;
-	}
 
-	@Override
+    @Override
 	protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
 		ArcSDEParams as = (ArcSDEParams) params;
         super.setParams(as);
@@ -291,8 +286,14 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	}
 	
 	@Override
-	protected void doInit(Element entry) throws BadInputEx {
-		params = new ArcSDEParams(dataMan);
+	protected void doInit(Element entry, ServiceContext context) throws BadInputEx {
+        synchronized (ArcSDEHarvester.class) {
+            if (ARC_TO_ISO19115_TRANSFORMER_LOCATION == null) {
+                ARC_TO_ISO19115_TRANSFORMER_LOCATION = context.getAppPath() + Geonet.Path.STYLESHEETS + "/conversion/import/" + ARC_TO_ISO19115_TRANSFORMER;
+                ISO19115_TO_ISO19139_TRANSFORMER_LOCATION = context.getAppPath() + Geonet.Path.STYLESHEETS + "/conversion/import/" + ISO19115_TO_ISO19139_TRANSFORMER;
+            }
+        }
+        params = new ArcSDEParams(dataMan);
         super.setParams(params);
 		params.create(entry);
 	}
@@ -320,11 +321,6 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		
 		params = copy;
         super.setParams(params);
-	}
-
-	@Override
-	public String getType() {
-		return "arcsde";
 	}
 
 }

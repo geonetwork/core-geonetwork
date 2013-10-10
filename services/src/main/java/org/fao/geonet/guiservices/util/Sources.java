@@ -51,8 +51,8 @@ public class Sources implements Service
 
 		//--- create local node
 
-		String name   = sm.getValue("system/site/name");
-		String siteId = sm.getValue("system/site/siteId");
+		String name   = sm.getSiteName();
+		String siteId = sm.getSiteId();
 
 		Element local = new Element("record");
 

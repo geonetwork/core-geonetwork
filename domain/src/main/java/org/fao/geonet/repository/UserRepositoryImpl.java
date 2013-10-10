@@ -32,10 +32,6 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @Override
     public User findOneByEmail(String email) {
-
-        // The following code uses the JPA Criteria API to build a query
-        // that is essentially:
-        //      Select * from Users where email in (SELECT
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> root = query.from(User.class);
@@ -49,6 +45,25 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             Log.error(Constants.DOMAIN_LOG_MODULE, "The database is inconsistent.  There are multiple users with the email address: "+email);
         }
         return resultList.get(0);
+    }
+
+    @Override
+    public User findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(String username) {
+        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> query = cb.createQuery(User.class);
+        Root<User> root = query.from(User.class);
+
+        final Path<String> authTypePath = root.get(User_.security).get(UserSecurity_.authType);
+        final Path<String> usernamePath = root.get(User_.username);
+        query.where(cb.and(cb.equal(usernamePath, username), cb.or(cb.isNull(authTypePath), cb.equal(cb.trim(authTypePath),""))));
+        List<User> results = _entityManager.createQuery(query).getResultList();
+
+
+        if (results.isEmpty()) {
+            return null;
+        } else {
+            return results.get(0);
+        }
     }
 
     @Override

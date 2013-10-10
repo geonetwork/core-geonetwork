@@ -28,7 +28,6 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.GroupRepository;
@@ -145,7 +144,7 @@ public class Update extends NotInReadOnlyModeService {
             // -- For adding new user
             if (operation.equals(Params.Operation.NEWUSER)) {
                 user.getSecurity().setPassword(password);
-                final User userByUsername = userRepository.findByUsername(username);
+                final User userByUsername = userRepository.findOneByUsername(username);
                 // check if the new username already exists - if so then don't do this
                 if (userByUsername != null) {
                     throw new IllegalArgumentException("User with username "+username+" already exists");

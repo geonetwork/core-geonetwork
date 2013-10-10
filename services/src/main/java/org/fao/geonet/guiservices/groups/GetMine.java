@@ -33,6 +33,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -90,7 +91,7 @@ public class GetMine implements Service
             }
 
             List<Integer> ids = userGroupRepository.findGroupIds(spec);
-			Element groups = context.getBean(GroupRepository.class).findAllAsXml(new Sort(Group_.id.getName()));
+			Element groups = context.getBean(GroupRepository.class).findAllAsXml(SortUtils.createSort(Group_.id));
 
 			return Lib.element.pruneChildren(groups, new HashSet<Integer>(ids));
 		}

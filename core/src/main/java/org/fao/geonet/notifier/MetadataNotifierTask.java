@@ -23,29 +23,32 @@
 package org.fao.geonet.notifier;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
+
+
+/**
+ * A runnable for notifying remote listeners that metadata changes have occurred.
+ */
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class MetadataNotifierTask implements Runnable {
     private ServiceContext context;
-    private GeonetContext gc;
 
-    public MetadataNotifierTask(ServiceContext context, GeonetContext gc) {
+    public MetadataNotifierTask configure(ServiceContext context) {
         this.context = context;
-        this.gc = gc;
+        return this;
     }
 
+    @Transactional
     public void run() {
-        context.executeInTransaction(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
-                try {
-                    gc.getBean(MetadataNotifierManager.class).updateMetadataBatch(context, gc);
-                } catch (MetadataNotifierManager.MetadataNotifierException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
+        try {
+            context.getBean(MetadataNotifierManager.class).updateMetadataBatch(context);
+        } catch (MetadataNotifierManager.MetadataNotifierException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

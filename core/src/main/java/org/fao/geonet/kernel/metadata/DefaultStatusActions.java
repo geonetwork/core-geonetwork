@@ -36,12 +36,12 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.MailSender;
 import org.jdom.JDOMException;
-import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -87,7 +87,7 @@ public class DefaultStatusActions implements StatusActions {
         SettingManager sm = gc.getBean(SettingManager.class);
         am = gc.getBean(AccessManager.class);
 
-        siteName = sm.getValue("system/site/name");
+        siteName = sm.getSiteName();
         host = sm.getValue("system/feedback/mailServer/host");
         port = sm.getValue("system/feedback/mailServer/port");
         from = sm.getValue("system/feedback/email");
@@ -122,7 +122,7 @@ public class DefaultStatusActions implements StatusActions {
         }
 
         dm = gc.getBean(DataManager.class);
-        siteUrl = dm.getSiteURL(context);
+        siteUrl = context.getBean(SettingManager.class).getSiteURL(context);
     }
 
     /**
@@ -214,7 +214,7 @@ public class DefaultStatusActions implements StatusActions {
         // --- get content reviewers (sorted on content reviewer userid)
         UserRepository userRepository = context.getBean(UserRepository.class);
         List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(metadata,
-                Profile.Reviewer, new Sort(User_.name.getName()));
+                Profile.Reviewer, SortUtils.createSort(User_.name));
 
         List<User> users = Lists.transform(results, new Function<Pair<Integer, User>, User>() {
             @Nullable

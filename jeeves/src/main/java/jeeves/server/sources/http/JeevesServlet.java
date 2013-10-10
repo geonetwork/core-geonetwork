@@ -53,10 +53,10 @@ public class JeevesServlet extends HttpServlet
 {
     private static final long serialVersionUID = 1L;
 	public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
-	private transient JeevesEngine jeeves = new JeevesEngine();
 	private boolean initialized = false;
+    private JeevesApplicationContext jeevesAppContext;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
@@ -69,7 +69,7 @@ public class JeevesServlet extends HttpServlet
         if (!appPath.endsWith(File.separator))
             appPath += File.separator;
 
-        JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
+        this.jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
 
         jeevesAppContext.setAppPath(appPath);
 
@@ -95,7 +95,7 @@ public class JeevesServlet extends HttpServlet
             configPath = new File(configPath).getParent() + File.separator;
         }
 
-        jeeves.init(appPath, configPath, baseUrl, this);
+        jeevesAppContext.getBean(JeevesEngine.class).init(appPath, configPath, baseUrl, this);
         initialized = true;
     }
 
@@ -107,8 +107,8 @@ public class JeevesServlet extends HttpServlet
 
 	public void destroy()
 	{
-		jeeves.destroy();
-		super .destroy();
+        jeevesAppContext.getBean(JeevesEngine.class).destroy();
+		super.destroy();
 	}
 
 	//---------------------------------------------------------------------------
@@ -190,6 +190,7 @@ public class JeevesServlet extends HttpServlet
 
 		//--- create request
 
+        JeevesEngine jeeves = jeevesAppContext.getBean(JeevesEngine.class);
 		try {
 			srvReq = ServiceRequestFactory.create(req, res, jeeves.getUploadDir(), jeeves.getMaxUploadSize());
 		} catch (FileUploadTooBigEx e) {
@@ -224,11 +225,6 @@ public class JeevesServlet extends HttpServlet
 	}
 
 	public boolean isInitialized() { return initialized; }
-
-	public JeevesEngine getEngine() {
-		return jeeves;
-		
-	}
 }
 
 //=============================================================================

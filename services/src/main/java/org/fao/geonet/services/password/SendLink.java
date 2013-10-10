@@ -76,7 +76,7 @@ public class SendLink extends MailSendingService {
 		String username = Util.getParam(params, Params.USERNAME);
 		String template = Util.getParam(params, Params.TEMPLATE, CHANGE_EMAIL_XSLT);
 
-        final User user = context.getBean(UserRepository.class).findByUsername(username);
+        final User user = context.getBean(UserRepository.class).findOneByUsername(username);
 		if (user == null) {
 			throw new UserNotFoundEx(username);
         }
@@ -94,7 +94,7 @@ public class SendLink extends MailSendingService {
 		String host = sm.getValue("system/feedback/mailServer/host");
 		String port = sm.getValue("system/feedback/mailServer/port");
 		String adminEmail = sm.getValue("system/feedback/email");
-		String thisSite = sm.getValue("system/site/name");
+		String thisSite = sm.getSiteName();
 
 		SettingInfo si = new SettingInfo(context);
 		String siteURL = si.getSiteUrl() + context.getBaseUrl();

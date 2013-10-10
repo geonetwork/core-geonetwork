@@ -21,11 +21,13 @@
 //==============================================================================
 package org.fao.geonet.languages;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.repository.IsoLanguageRepository;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import org.fao.geonet.utils.Log;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -80,10 +82,21 @@ public class IsoLanguagesMapper {
     public void init(ApplicationContext applicationContext) {
         this._langRepo = applicationContext.getBean(IsoLanguageRepository.class);
         for (IsoLanguage record : _langRepo.findAll()) {
-            final String shortCode = record.getShortCode().toLowerCase();
-            final String code = record.getCode().toLowerCase();
-            _isoLanguagesMap639.forcePut(shortCode, code);
+            final String shortCode = toLowerCase(record.getShortCode());
+            final String code = toLowerCase(record.getCode());
+            if (shortCode != null && code != null) {
+                _isoLanguagesMap639.forcePut(shortCode, code);
+            } else {
+                Log.warning(Geonet.GEONETWORK, "Unable to add IsoLanguage mapping for "+record);
+            }
         }
+    }
+
+    private String toLowerCase(String code) {
+        if (code == null) {
+            return null;
+        }
+        return code.toLowerCase();
     }
 
 

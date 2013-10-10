@@ -68,8 +68,7 @@ public class MetadataStatusRepositoryTest extends AbstractSpringDataTest {
         status1 = _repo.save(status1);
 
 
-        final Sort sort = new Sort(MetadataStatus_.id.getName() + "." + MetadataStatusId_
-                .metadataId.getName());
+        final Sort sort = SortUtils.createSort(MetadataStatus_.id, MetadataStatusId_.metadataId);
         assertEquals(2, _repo.findAllById_MetadataId(status.getId().getMetadataId(), sort).size());
         assertEquals(1, _repo.findAllById_MetadataId(status1.getId().getMetadataId(), sort).size());
     }

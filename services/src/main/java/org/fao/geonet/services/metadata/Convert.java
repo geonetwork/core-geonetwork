@@ -36,6 +36,7 @@ import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.oaipmh.Lib;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
@@ -64,7 +65,6 @@ public class Convert implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getBean(DataManager.class);
 		SchemaManager sm = gc.getBean(SchemaManager.class);
 
 		String id = Utils.getIdentifierFromParameters(params, context);
@@ -82,7 +82,7 @@ public class Convert implements Service
         final String baseUrl = context.getBaseUrl();
         final ISODate changeDate = metadata.getDataInfo().getChangeDate();
         final String uuid = metadata.getUuid();
-        final String siteURL = dm.getSiteURL(context);
+        final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
         final String siteName = gc.getSiteName();
         Element env = Lib.prepareTransformEnv(uuid, changeDate.getDateAndTime(), baseUrl, siteURL, siteName);
 

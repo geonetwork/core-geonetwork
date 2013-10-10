@@ -3,11 +3,11 @@ package org.fao.geonet.services.metadata;
 import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.domain.Pair;
@@ -584,7 +584,7 @@ public class AjaxEditUtils extends EditUtils {
 		editLib.removeEditingInfo(md);
 		editLib.contractElements(md);
         String parentUuid = null;
-        md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, DataManager.UpdateDatestamp.NO, context);
+        md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
 
 		//--- do the validation on the metadata
 		return dataManager.doValidate(session, schema, id, md, lang, false).one();
@@ -636,7 +636,7 @@ public class AjaxEditUtils extends EditUtils {
 
         editLib.contractElements(md);
         String parentUuid = null;
-		md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, DataManager.UpdateDatestamp.NO, context);
+		md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
         String changeDate = null;
         xmlSerializer.update(id, md, changeDate, false, null, context);
 
@@ -691,7 +691,7 @@ public class AjaxEditUtils extends EditUtils {
 
 		editLib.contractElements(md);
         String parentUuid = null;
-        md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, DataManager.UpdateDatestamp.NO, context);
+        md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
 
         String changeDate = null;
 				xmlSerializer.update(id, md, changeDate, false, null, context);

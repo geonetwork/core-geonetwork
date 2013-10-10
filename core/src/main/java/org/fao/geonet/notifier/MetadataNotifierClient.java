@@ -24,6 +24,7 @@ package org.fao.geonet.notifier;
 
 import java.io.IOException;
 
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -49,12 +50,14 @@ public class MetadataNotifierClient {
     /**
      * Uses the notifier update service to handle insertion and updates of metadata.
      *
+     *
      * @param metadata
      * @param metadataUuid
+     * @param context
      * @throws MetadataNotifierClientException
      */
 	public void webUpdate(String serviceUrl, String username, String password, String metadata,
-                          String metadataUuid, GeonetContext gc) throws MetadataNotifierClientException {
+                          String metadataUuid, ServiceContext context) throws MetadataNotifierClientException {
         HttpClient client;
 
         Protocol.registerProtocol("https",
@@ -91,8 +94,8 @@ public class MetadataNotifierClient {
                 method.setDoAuthentication( true );
             }         
 
-            System.out.println("settingMan: " + (gc.getBean(SettingManager.class) != null));
-            if (gc.getBean(SettingManager.class) != null) Lib.net.setupProxy(gc.getBean(SettingManager.class), client);
+            System.out.println("settingMan: " + (context.getBean(SettingManager.class) != null));
+            if (context.getBean(SettingManager.class) != null) Lib.net.setupProxy(context.getBean(SettingManager.class), client);
 
 
 			// Execute the method.
@@ -127,7 +130,7 @@ public class MetadataNotifierClient {
      * @throws MetadataNotifierClientException
      */
 	public void webDelete(String serviceUrl, String username, String password,
-                          String metadataUuid, GeonetContext gc) throws MetadataNotifierClientException {
+                          String metadataUuid, ServiceContext context) throws MetadataNotifierClientException {
         HttpClient client;
 
         Protocol.registerProtocol("https",
@@ -150,8 +153,9 @@ public class MetadataNotifierClient {
                                );
                 method.setDoAuthentication( true ); 
             }
-            
-            if (gc.getBean(SettingManager.class) != null) Lib.net.setupProxy(gc.getBean(SettingManager.class), client);
+
+            final SettingManager settingManager = context.getBean(SettingManager.class);
+            if (settingManager != null) Lib.net.setupProxy(settingManager, client);
 
             NameValuePair[] data = {
               new NameValuePair("action", "delete"),

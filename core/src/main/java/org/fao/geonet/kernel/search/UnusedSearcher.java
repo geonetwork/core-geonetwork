@@ -71,7 +71,7 @@ class UnusedSearcher extends MetaSearcher
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
 
-		String siteId = sm.getValue("system/site/siteId");
+		String siteId = sm.getSiteId();
 
 		alResult = new ArrayList<String>();
 

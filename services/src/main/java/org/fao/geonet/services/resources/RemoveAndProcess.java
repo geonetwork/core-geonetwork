@@ -33,6 +33,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
@@ -87,17 +88,14 @@ public class RemoveAndProcess extends NotInReadOnlyModeService {
         params.addContent(new Element("protocol")
                 .setText("WWW:DOWNLOAD-1.0-http--download"));
 
-        GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dataMan = gc.getBean(DataManager.class);
-
         String process = "onlinesrc-remove";
         XslProcessingReport report = new XslProcessingReport(process);
 
         Element processedMetadata;
         try {
+            final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
             processedMetadata = XslProcessing.process(id, process,
-                    true, context.getAppPath(), params, context, report, true, dataMan.getSiteURL(context));
+                    true, context.getAppPath(), params, context, report, true, siteURL);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                         + report.getNotFoundMetadataCount() + ", Not owner:" + report.getNotEditableMetadataCount()

@@ -307,7 +307,7 @@ public class AccessManager {
      */
     public Element getContentReviewers(final Set<Integer> metadataIds) throws Exception {
         List<Pair<Integer, User>> results = _userRepository.findAllByGroupOwnerNameAndProfile(metadataIds,
-                Profile.Reviewer, new Sort(User_.name.getName()));
+                Profile.Reviewer, SortUtils.createSort(User_.name));
 
         Element resultEl = new Element("results");
         for (Pair<Integer, User> integerUserPair : results) {

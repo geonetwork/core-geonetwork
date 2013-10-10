@@ -102,4 +102,13 @@ public class IsoLanguage extends Localized {
     public Map<String, String> getLabelTranslations() {
         return super.getLabelTranslations();
     }
+
+    @Override
+    public String toString() {
+        return "IsoLanguage{" +
+               "id=" + id +
+               ", code='" + code + '\'' +
+               ", shortCode='" + shortCode + '\'' +
+               '}';
+    }
 }

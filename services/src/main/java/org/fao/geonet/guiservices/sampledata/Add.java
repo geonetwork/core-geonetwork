@@ -36,7 +36,9 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import java.io.File;
@@ -95,9 +97,6 @@ public class Add implements Service {
 			}
 
             for (final File file : sampleDataFilesList) {
-                context.executeInTransaction(new TransactionCallbackWithoutResult() {
-                    @Override
-                    protected void doInTransactionWithoutResult(TransactionStatus status) {
                         try {
                             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                                 Log.debug(Geonet.DATA_MANAGER, "Loading sample data: " + file);
@@ -111,8 +110,7 @@ public class Add implements Service {
                                     "Error loading sample data: " + e.getMessage());
                         }
                     }
-                });
-			}
+            context.getBean(JpaTransactionManager.class).commit(TransactionAspectSupport.currentTransactionStatus());
 		}
 
 		result.setAttribute("status", serviceStatus[0]);

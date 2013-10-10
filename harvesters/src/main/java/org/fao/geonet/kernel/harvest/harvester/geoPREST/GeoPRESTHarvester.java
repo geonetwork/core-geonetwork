@@ -41,21 +41,6 @@ import java.util.UUID;
 
 public class GeoPRESTHarvester extends AbstractHarvester
 {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Static init
-	//---
-	//--------------------------------------------------------------------------
-
-	public static void init(ServiceContext context) throws Exception {}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Harvesting type
-	//---
-	//--------------------------------------------------------------------------
-
-	public String getType() { return "geoPREST"; }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -63,7 +48,7 @@ public class GeoPRESTHarvester extends AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	protected void doInit(Element node) throws BadInputEx
+	protected void doInit(Element node, ServiceContext context) throws BadInputEx
 	{
 		params = new GeoPRESTParams(dataMan);
         super.setParams(params);

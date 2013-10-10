@@ -65,4 +65,14 @@ public interface UserRepositoryCustom {
      */
     @Nullable
     User findOneByEmail(@Nonnull String email);
+
+    /**
+     * Find the user identified by the username but also has a null authtype (if user exists but has a nonnull authtype null is returned)
+     *
+     * @param username the username to use in the query.
+     * @return the user identified by the username but also has a null authtype (if user exists but has a nonnull authtype null is
+     * returned)
+     */
+    @Nullable
+    public User findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(@Nonnull String username);
 }

@@ -29,6 +29,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 
@@ -100,10 +101,6 @@ public class XslProcessing extends NotInReadOnlyModeService {
      */
     public Element serviceSpecificExec(Element params, ServiceContext context)
             throws Exception {
-
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager   dataMan = gc.getBean(DataManager.class);
-
         String process = Util.getParam(params, Params.PROCESS);
         boolean save = "1".equals(Util.getParam(params, Params.SAVE, "1"));
         
@@ -112,8 +109,9 @@ public class XslProcessing extends NotInReadOnlyModeService {
         String id = Utils.getIdentifierFromParameters(params, context);
         Element processedMetadata;
         try {
+            final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
             processedMetadata = process(id, process, save, _appPath, params,
-                    context, xslProcessingReport, false, dataMan.getSiteURL(context));
+                    context, xslProcessingReport, false, siteURL);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                         + xslProcessingReport.getNotFoundMetadataCount() + 

@@ -41,21 +41,6 @@ import java.util.UUID;
 
 public class ThreddsHarvester extends AbstractHarvester
 {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Static init
-	//---
-	//--------------------------------------------------------------------------
-
-	public static void init(ServiceContext context) throws Exception {}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Harvesting type
-	//---
-	//--------------------------------------------------------------------------
-
-	public String getType() { return "thredds"; }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -63,7 +48,7 @@ public class ThreddsHarvester extends AbstractHarvester
 	//---
 	//--------------------------------------------------------------------------
 
-	protected void doInit(Element node) throws BadInputEx
+	protected void doInit(Element node, ServiceContext context) throws BadInputEx
 	{
 		params = new ThreddsParams(dataMan);
         super.setParams(params);

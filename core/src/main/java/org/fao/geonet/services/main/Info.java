@@ -122,9 +122,9 @@ public class Info implements Service {
 			if (type.equals("site")) {
 				result.addContent(gc.getBean(SettingManager.class).getValues(
                         new String[]{
-                                "system/site/name", 
+                                SettingManager.SYSTEM_SITE_NAME_PATH,
                                 "system/site/organization", 
-                                "system/site/siteId", 
+                                SettingManager.SYSTEM_SITE_SITE_ID_PATH,
                                 "system/platform/version", 
                                 "system/platform/subVersion"
                                 }));
@@ -313,7 +313,7 @@ public class Info implements Service {
     private Element getGroups(ServiceContext context, Profile profile, boolean includingSystemGroups) throws SQLException {
         final GroupRepository groupRepository = context.getBean(GroupRepository.class);
         final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
-        final Sort sort = new Sort(Group_.id.getName());
+        final Sort sort = SortUtils.createSort(Group_.id);
 
         UserSession session = context.getUserSession();
         if (!session.isAuthenticated()) {
@@ -362,7 +362,7 @@ public class Info implements Service {
 	private Element getSources(ServiceContext context, SettingManager sm) throws SQLException
 	{
         Element element = new Element("results");
-        final List<Source> sourceList = context.getBean(SourceRepository.class).findAll(new Sort(Source_.name.getName()));
+        final List<Source> sourceList = context.getBean(SourceRepository.class).findAll(SortUtils.createSort(Source_.name));
 
 		String siteId   = sm.getSiteId();
         String siteName = sm.getSiteName();
@@ -552,7 +552,7 @@ public class Info implements Service {
 
 		//--- retrieve all users
 
-		Element elUsers = userRepository.findAllAsXml(null, new Sort(User_.name.getName()));
+		Element elUsers = userRepository.findAllAsXml(null, SortUtils.createSort(User_.name));
 
 		//--- now filter them
 

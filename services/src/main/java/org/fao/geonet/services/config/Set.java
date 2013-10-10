@@ -87,7 +87,7 @@ public class Set implements Service {
             }
         }
 
-        String currentUuid = sm.getValue("system/site/siteId");
+        String currentUuid = sm.getSiteId();
 
         if (!sm.setValues(values))
             throw new OperationAbortedEx("Cannot set all values");
@@ -99,7 +99,7 @@ public class Set implements Service {
         // And reload services
         // Update inspire property in SearchManager
         gc.getBean(SearchManager.class).setInspireEnabled(Boolean.valueOf(values.get("system/inspire/enable")));
-        String newUuid = values.get("system/site/siteId");
+        String newUuid = values.get(SettingManager.SYSTEM_SITE_SITE_ID_PATH);
 
         if (newUuid != null && !currentUuid.equals(newUuid)) {
             final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);

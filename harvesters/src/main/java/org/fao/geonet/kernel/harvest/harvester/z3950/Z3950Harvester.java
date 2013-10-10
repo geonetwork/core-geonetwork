@@ -47,14 +47,8 @@ import java.util.UUID;
  */
 public class Z3950Harvester extends AbstractHarvester {
 
-	public static void init(ServiceContext context) throws Exception {
-	}
 
-	public String getType() {
-		return "z3950";
-	}
-
-	protected void doInit(Element node) throws BadInputEx {
+	protected void doInit(Element node, ServiceContext context) throws BadInputEx {
 		params = new Z3950Params(dataMan);
         super.setParams(params);
 		params.create(node);

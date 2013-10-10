@@ -35,7 +35,6 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Xml;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -79,7 +78,7 @@ public class Change extends NotInReadOnlyModeService {
 		
 		// check valid user 
         final UserRepository userRepository = context.getBean(UserRepository.class);
-        User elUser = userRepository.findByUsername(username);
+        User elUser = userRepository.findOneByUsername(username);
 		if (elUser == null) {
 			throw new UserNotFoundEx(username);
         }
@@ -106,7 +105,7 @@ public class Change extends NotInReadOnlyModeService {
 		String host = sm.getValue("system/feedback/mailServer/host");
 		String port = sm.getValue("system/feedback/mailServer/port");
 		String adminEmail = sm.getValue("system/feedback/email");
-		String thisSite = sm.getValue("system/site/name");
+		String thisSite = sm.getSiteName();
 
 		// get site URL
 		SettingInfo si = new SettingInfo(context);

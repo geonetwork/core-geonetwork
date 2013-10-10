@@ -25,6 +25,9 @@ package org.fao.geonet.kernel;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.UserSession;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Before;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 
@@ -39,10 +42,13 @@ import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.io.ISVNEditor;
@@ -59,12 +65,14 @@ import org.tmatesoft.svn.core.SVNURL;
 import org.jdom.Element;
 
 import javax.sql.DataSource;
+import javax.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.sql.Connection;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
+@Component
+@Lazy
 public class SvnManager {
 
     @Autowired
@@ -208,15 +216,54 @@ public class SvnManager {
                         + " or specify a different subversion repository");
             }
         }
+    }
 
-        // now add the listener to the DbmsPool resource provider
-        throw new UnsupportedOperationException("Need to add listeners to metadata entities");
-//        ProviderManager provMan = context.getProviderManager();
-//        for (ResourceProvider rp : provMan.getProviders()) {
-//            if (rp.getName().equals(dbUrl)) {
-//                rp.addListener(resList);
-//            }
-//        }
+    /**
+     * Spring Aspect Oriented programming for intercepting transaction commits.
+     */
+    @After("execution(* org.springframework.transaction.commit(org.springframework.transaction.TransactionStatus)")
+    public void commitJoinPointHandler(JoinPoint joinPoint) {
+        TransactionStatus status = (TransactionStatus) joinPoint.getArgs()[0];
+        SvnTask task = tasks.get(status);
+
+        ISVNEditor editor = null;
+
+        if (task != null) {
+            try {
+                editor = getEditor(task.sessionLogMessage + " (committing transaction " + status + ")");
+                editor.openRoot(-1); // open the root directory.
+                for (Iterator<String> it = task.ids.iterator(); it.hasNext();) {
+                    String id = it.next();
+                    commitMetadata(id, editor);
+                    it.remove();
+                }
+                editor.closeDir(); // close the root directory.
+                if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
+                    Log.debug(Geonet.SVN_MANAGER, "Committed changes to subversion repository for metadata ids " + task.ids);
+            } catch (Exception e) {
+                Log.error(Geonet.SVN_MANAGER, "Failed to commit changes to subversion repository for metadata ids " + task.ids);
+                e.printStackTrace();
+                if (editor != null) {
+                    try {
+                        editor.abortEdit();
+                    } catch (Exception ex) {
+                        Log.error(Geonet.SVN_MANAGER, "Failed to abort subversion editor");
+                        ex.printStackTrace();
+                    }
+                }
+            } finally {
+                tasks.remove(status);
+            }
+        }
+    }
+
+    /**
+     * Spring Aspect Oriented programming for intercepting transaction rollbacks.
+     */
+    @Before("execution(* org.springframework.transaction.rollback(org.springframework.transaction.TransactionStatus)")
+    public void rollbackJoinPointHandler(JoinPoint joinPoint) {
+        TransactionStatus status = (TransactionStatus) joinPoint.getArgs()[0];
+        tasks.remove(status);
     }
 
     public void setSubversionPath(String subversionPath) {
@@ -281,6 +328,7 @@ public class SvnManager {
      * @param context Describing the servicer and user carrying out operation
      * @throws Exception when something goes wrong
      */
+    @Transactional
     public void setHistory(final String id, final ServiceContext context) throws Exception {
 
         if (!exists(id))
@@ -291,20 +339,16 @@ public class SvnManager {
 
         final Map<String, String> props = sessionToProps(context, new HashMap<String, String>());
 
-        context.executeInTransaction(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
-                try {
-                    checkSvnTask(status, id, sessionToLogMessage(context), props);
-                    if (Log.isDebugEnabled(Geonet.SVN_MANAGER)) {
-                        Log.debug(Geonet.SVN_MANAGER, "Changes to metadata " + id + " will be committed/aborted with the database "
-                                                      + "channel " + status);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        try {
+            final TransactionStatus status = TransactionAspectSupport.currentTransactionStatus();
+            checkSvnTask(status, id, sessionToLogMessage(context), props);
+            if (Log.isDebugEnabled(Geonet.SVN_MANAGER)) {
+                Log.debug(Geonet.SVN_MANAGER, "Changes to metadata " + id + " will be committed/aborted with the database "
+                                              + "channel " + status);
             }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -367,16 +411,8 @@ public class SvnManager {
             editor = getEditor(logMessage);
             editor.openRoot(-1);
             final ISVNEditor finalEditor = editor;
-            context.executeInTransaction(new TransactionCallbackWithoutResult() {
-                @Override
-                protected void doInTransactionWithoutResult(TransactionStatus status) {
-                    try {
-                        commitMetadata(id, finalEditor);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
+
+            commitMetadata(id, finalEditor);
 
             if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
                 Log.debug(Geonet.SVN_MANAGER, "Metadata " + id + " was added");
@@ -418,57 +454,6 @@ public class SvnManager {
             editor.abortEdit(); // abort the update on the XML in the repository
             svne.printStackTrace();
             throw svne;
-        }
-    }
-
-    /**
-     * Abort changes to the subversion repository. Actually just remove any task assigned to this dbms resource.
-     * 
-     * @param transaction The resource being aborted that we're listening too
-     */
-    private void rollback(TransactionStatus transaction) {
-
-        SvnTask task = tasks.get(transaction);
-        if (task != null)
-            tasks.remove(transaction);
-    }
-
-    /**
-     * Commit changes to the subversion repository.
-     * 
-     * @param transaction The resource being committed that we're listening too
-     */
-    private void commit(TransactionStatus transaction) {
-        SvnTask task = tasks.get(transaction);
-
-        ISVNEditor editor = null;
-
-        if (task != null) {
-            try {
-                editor = getEditor(task.sessionLogMessage + " (committing transaction " + transaction + ")");
-                editor.openRoot(-1); // open the root directory.
-                for (Iterator<String> it = task.ids.iterator(); it.hasNext();) {
-                    String id = it.next();
-                    commitMetadata(id, editor);
-                    it.remove();
-                }
-                editor.closeDir(); // close the root directory.
-                if (Log.isDebugEnabled(Geonet.SVN_MANAGER))
-                    Log.debug(Geonet.SVN_MANAGER, "Committed changes to subversion repository for metadata ids " + task.ids);
-            } catch (Exception e) {
-                Log.error(Geonet.SVN_MANAGER, "Failed to commit changes to subversion repository for metadata ids " + task.ids);
-                e.printStackTrace();
-                if (editor != null) {
-                    try {
-                        editor.abortEdit();
-                    } catch (Exception ex) {
-                        Log.error(Geonet.SVN_MANAGER, "Failed to abort subversion editor");
-                        ex.printStackTrace();
-                    }
-                }
-            } finally {
-                tasks.remove(transaction);
-            }
         }
     }
 
@@ -545,10 +530,10 @@ public class SvnManager {
      * @param editor ISVNEditor for commits to subversion repo
      * @throws SVNException if something goes wrong
      */
+    @Transactional
     public void commitMetadata(String id, ISVNEditor editor) throws Exception {
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dataMan = gc.getBean(DataManager.class);
+        DataManager dataMan = context.getBean(DataManager.class);
 
         try {
             // get the metadata record and if different commit changes

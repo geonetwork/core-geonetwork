@@ -33,10 +33,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.User_;
-import org.fao.geonet.repository.GeonetRepositoryImpl;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.*;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
@@ -78,7 +75,7 @@ public class List implements Service
         Set<String> profileSet = session.getProfile().getAllNames();
 
 		//--- retrieve all users
-        final java.util.List<User> all = context.getBean(UserRepository.class).findAll(new Sort(User_.username.getName()));
+        final java.util.List<User> all = context.getBean(UserRepository.class).findAll(SortUtils.createSort(User_.username));
 
 		//--- now filter them
 

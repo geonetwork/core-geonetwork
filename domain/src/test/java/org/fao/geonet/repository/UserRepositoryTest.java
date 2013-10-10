@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import junit.framework.Assert;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.junit.Test;
@@ -69,6 +68,48 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
     }
 
     @Test
+    public void testFindByUsernameAndAuthTypeIsNullOrEmpty() {
+        User user1 = newUser();
+        user1.getSecurity().setAuthType("");
+        user1 = _userRepo.save(user1);
+
+        User user2 = newUser();
+        user2.getSecurity().setAuthType(null);
+        user2 = _userRepo.save(user2);
+
+        User user3 = newUser();
+        user3.getSecurity().setAuthType("nonull");
+        _userRepo.save(user3);
+
+        User foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user1.getUsername());
+        assertNotNull(foundUser);
+        assertEquals(user1.getId(), foundUser.getId());
+
+        foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user2.getUsername());
+        assertNotNull(foundUser);
+        assertEquals(user2.getId(), foundUser.getId());
+
+         foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user3.getUsername());
+        assertNull(foundUser);
+
+        foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty("blarg");
+        assertNull(foundUser);
+    }
+
+    @Test
+    public void testFindByUsername() {
+        User user1 = newUser();
+        user1 = _userRepo.save(user1);
+
+        User foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user1.getUsername());
+        assertNotNull(foundUser);
+        assertEquals(user1.getId(), foundUser.getId());
+
+        foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty("blarg");
+        assertNull(foundUser);
+    }
+
+    @Test
     public void testFindAllByGroupOwnerNameAndProfile() {
         Group group1 = _groupRepo.save(GroupRepositoryTest.newGroup(_inc));
         Group group2 = _groupRepo.save(GroupRepositoryTest.newGroup(_inc));
@@ -96,7 +137,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         _userGroupRepository.save(new UserGroup().setGroup(group1).setUser(reviewerUser).setProfile(Profile.Reviewer));
 
         List<Pair<Integer, User>> found = _userRepo.findAllByGroupOwnerNameAndProfile(Arrays.asList(md1.getId()), null,
-                new Sort(User_.name.getName()));
+                SortUtils.createSort(User_.name));
 
         assertEquals(2, found.size());
         assertEquals(md1.getId(), found.get(0).one().intValue());

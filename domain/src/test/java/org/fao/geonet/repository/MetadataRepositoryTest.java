@@ -154,7 +154,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         assertEquals(metadata2.getDataInfo().getChangeDate(), firstPage.getContent().get(1).two());
         assertEquals(metadata.getDataInfo().getChangeDate(), secondPage.getContent().get(0).two());
 
-        final Sort sortByChangeDate = new Sort(Metadata_.dataInfo.getName()+"."+ MetadataDataInfo_.changeDate.getName());
+        final Sort sortByChangeDate = SortUtils.createSort(Metadata_.dataInfo, MetadataDataInfo_.changeDate);
         page1 = new PageRequest(0,1, sortByChangeDate);
         page2 = new PageRequest(0,3, sortByChangeDate);
         firstPage = _repo.findAllIdsAndChangeDates(page1);

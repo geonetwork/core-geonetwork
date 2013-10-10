@@ -74,7 +74,7 @@ public class ISODate implements Cloneable, Comparable<ISODate> {
 
     // ---------------------------------------------------------------------------
 
-    public ISODate(final String isoDate) {
+    public ISODate(@Nonnull final String isoDate) {
         setDateAndTime(isoDate);
     }
 

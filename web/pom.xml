@@ -84,6 +84,10 @@
           <groupId>org.springframework</groupId>
           <artifactId>spring-tx</artifactId>
       </dependency>
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-web</artifactId>
+      </dependency>
 
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>

@@ -45,7 +45,6 @@ import org.fao.geonet.*;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
@@ -148,7 +147,7 @@ public class Info implements Service
 
 	private Element getHarvesterTypes(ServiceContext context) {
 	    Element types = new Element("types");
-	    for (String type : AbstractHarvester.getHarvesterTypes()) {
+	    for (String type : AbstractHarvester.getHarvesterTypes(context)) {
             types.addContent(new Element("type").setText(type));
         }
         return types;

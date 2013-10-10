@@ -23,6 +23,7 @@
 package org.fao.geonet.guiservices.csw.virtual;
 
 import jeeves.constants.Jeeves;
+import jeeves.server.JeevesEngine;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
@@ -108,7 +109,7 @@ public class Update implements jeeves.interfaces.Service {
         }
 
         // launching the service on the fly
-        context.getServlet().getEngine().loadConfigDB(context.getApplicationContext(), Integer.valueOf(serviceId));
+        context.getBean(JeevesEngine.class).loadConfigDB(context.getApplicationContext(), Integer.valueOf(serviceId));
 
         return new Element(Jeeves.Elem.RESPONSE);
     }

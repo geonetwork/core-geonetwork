@@ -29,9 +29,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
@@ -52,6 +57,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SettingManager {
 
+    public static final String SYSTEM_SITE_SITE_ID_PATH = "system/site/siteId";
+    public static final String SYSTEM_SITE_NAME_PATH = "system/site/name";
     @Autowired
     private SettingRepository _repo;
 
@@ -67,7 +74,7 @@ public class SettingManager {
      */
     public Element getAllAsXML(boolean asTree) {
         Element env = new Element("settings");
-        List<Setting> settings = _repo.findAll(new Sort(Setting_.name.getName()));
+        List<Setting> settings = _repo.findAll(SortUtils.createSort(Setting_.name));
 
         Map<String, Element> pathElements = new HashMap<String, Element>();
 
@@ -260,10 +267,28 @@ public class SettingManager {
     }
 
     public final String getSiteId() {
-        return getValue("system/site/siteId");
+        return getValue(SYSTEM_SITE_SITE_ID_PATH);
     }
 
     public final String getSiteName() {
-        return getValue("system/site/name");
+        return getValue(SYSTEM_SITE_NAME_PATH);
+    }
+
+    public void setSiteUuid(String siteUuid) {
+       setValue(SYSTEM_SITE_SITE_ID_PATH, siteUuid);
+    }
+
+    public @Nonnull String getSiteURL(@Nonnull ServiceContext context) {
+        String lang = context.getLanguage();
+        if(lang != null) {
+            lang = context.getBean(LanguageRepository.class).findOneByDefaultLanguage().getId();
+        }
+        String baseURL = context.getBaseUrl();
+        String protocol = getValue(Geonet.Settings.SERVER_PROTOCOL);
+        String host    = getValue(Geonet.Settings.SERVER_HOST);
+        String port    = getValue(Geonet.Settings.SERVER_PORT);
+        String locServ = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/" + lang;
+
+        return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
     }
 }

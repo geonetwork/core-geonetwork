@@ -36,6 +36,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -133,16 +134,14 @@ public class BatchXslProcessing extends NotInReadOnlyModeService {
 
         @Override
         public void process() throws Exception {
-            GeonetContext gc = (GeonetContext) context
-                               .getHandlerContext(Geonet.CONTEXT_NAME);
-            DataManager dataMan = gc.getBean(DataManager.class);
 
             while (iter.hasNext()) {
-                String uuid = (String) iter.next();
+                String uuid = iter.next();
                 String id = getDataManager().getMetadataId(uuid);
                 context.info("Processing metadata with id:" + id);
-                
-                XslProcessing.process(id, process, true, appPath, params, context, xslProcessingReport, true, dataMan.getSiteURL(context));
+
+                final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
+                XslProcessing.process(id, process, true, appPath, params, context, xslProcessingReport, true, siteURL);
                 
                 UserSession  session = context.getUserSession();
                 session.setProperty("BATCH_PROCESSING_REPORT", xslProcessingReport);

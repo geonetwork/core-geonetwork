@@ -111,12 +111,12 @@ public class LanguageDetector {
     /**
      * Creates mapping to ISO 639-2 for all languages supported by this language detector.
      *
+     *
+     *
      * @param path path to profiles directory
-     * @param context everywhere !
-     * @param dataManager Der DatenGeschäftsführer
      * @throws Exception hmm
      */
-    public static void init(String path, ServiceContext context, DataManager dataManager) throws Exception {
+    public static void init(String path) throws Exception {
         if(!LanguageDetector.languageLevelSupported) {
             throw new Exception(LanguageDetector.upgradeMessage);
         }

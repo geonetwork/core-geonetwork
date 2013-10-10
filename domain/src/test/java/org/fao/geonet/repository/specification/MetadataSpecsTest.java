@@ -8,10 +8,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.repository.AbstractSpringDataTest;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataCategoryRepositoryTest;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -89,22 +86,22 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         metadata3.getCategories().add(cat2);
         Metadata md3 = _repository.save(metadata3);
 
-        List<Metadata> found = _repository.findAll(hasCategory(cat1), new Sort(Metadata_.id.getName()));
+        List<Metadata> found = _repository.findAll(hasCategory(cat1), SortUtils.createSort(Metadata_.id));
 
         assertEquals(2, found.size());
         assertEquals(md1.getId(), found.get(0).getId());
         assertEquals(md2.getId(), found.get(1).getId());
 
-        found = _repository.findAll(hasCategory(cat2), new Sort(Metadata_.id.getName()));
+        found = _repository.findAll(hasCategory(cat2), SortUtils.createSort(Metadata_.id));
         assertEquals(2, found.size());
         assertEquals(md1.getId(), found.get(0).getId());
         assertEquals(md3.getId(), found.get(1).getId());
 
-        found = _repository.findAll(hasCategory(cat3), new Sort(Metadata_.id.getName()));
+        found = _repository.findAll(hasCategory(cat3), SortUtils.createSort(Metadata_.id));
         assertEquals(1, found.size());
         assertEquals(md2.getId(), found.get(0).getId());
 
-        found = _repository.findAll(hasCategory(cat4), new Sort(Metadata_.id.getName()));
+        found = _repository.findAll(hasCategory(cat4), SortUtils.createSort(Metadata_.id));
         assertEquals(0, found.size());
 
     }
@@ -130,7 +127,7 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         assertEquals(1, found.size());
         assertEquals(md1.getId(), found.get(0).getId());
 
-        found = _repository.findAll(isOwnedByOneOfFollowingGroups(Arrays.asList(1,3)), new Sort(Metadata_.id.getName()));
+        found = _repository.findAll(isOwnedByOneOfFollowingGroups(Arrays.asList(1,3)), SortUtils.createSort(Metadata_.id));
         assertEquals(2, found.size());
         assertEquals(md1.getId(), found.get(0).getId());
         assertEquals(md3.getId(), found.get(1).getId());

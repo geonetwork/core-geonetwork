@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.thesaurus;
 
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
@@ -238,7 +239,6 @@ public class Upload implements Service {
 			GeonetContext gc = (GeonetContext) context
 					.getHandlerContext(Geonet.CONTEXT_NAME);
 			ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
-			DataManager dm = gc.getBean(DataManager.class);
 
 			// copy to directory according to type
 			String path = thesaurusMan.buildThesaurusFilePath(fname, type, dir);
@@ -246,7 +246,8 @@ public class Upload implements Service {
 			Xml.writeResponse(new Document(TS_xml), new FileOutputStream(
 					newFile));
 
-			Thesaurus gst = new Thesaurus(fname, type, dir, newFile, dm.getSiteURL(context));
+            final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
+            Thesaurus gst = new Thesaurus(fname, type, dir, newFile, siteURL);
 			thesaurusMan.addThesaurus(gst, false);
 		} else {
 			IO.delete(rdfFile, false, Geonet.THESAURUS);

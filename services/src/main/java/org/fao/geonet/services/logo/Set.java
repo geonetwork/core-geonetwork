@@ -83,7 +83,7 @@ public class Set implements Service {
         GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager settingMan = gc.getBean(SettingManager.class);
-        String nodeUuid = settingMan.getValue("system/site/siteId");
+        String nodeUuid = settingMan.getSiteId();
 
         try {
         	String logoFilePath = harvestingLogoDirectory + File.separator + file;

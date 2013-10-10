@@ -121,22 +121,19 @@ class Harvester extends BaseAligner {
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
 		for (final String uri : localUris.getUris()) {
-            context.executeInTransaction(new TransactionCallbackWithoutResult() {
-                @Override
-                protected void doInTransactionWithoutResult(TransactionStatus status) {
-                    if (!exists(files, uri)) {
-                        // only one metadata record created per uri by this harvester
-                        String id = localUris.getRecords(uri).get(0).id;
-                        if (log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
-                        try {
-                            dataMan.deleteMetadataGroup(context, id);
-                        } catch (Exception e) {
-                            log.error("Error occurred while deleting metadata id");
-                        }
-                        result.locallyRemoved++;
-                    }
+            if (!exists(files, uri)) {
+                // only one metadata record created per uri by this harvester
+                String id = localUris.getRecords(uri).get(0).id;
+                if (log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
+                try {
+                    dataMan.deleteMetadataGroup(context, id);
+                } catch (Exception e) {
+                    log.error("Error occurred while deleting metadata id");
                 }
-            });
+                context.getBean(JpaTransactionManager.class).commit(TransactionAspectSupport.currentTransactionStatus());
+                result.locallyRemoved++;
+
+            }
 		}
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata

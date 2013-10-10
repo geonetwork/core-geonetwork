@@ -107,7 +107,7 @@ public class QueryRequest {
         for (SearchRequestParam qi : queryInfos) {
             Assert.isTrue(qi != null);
             LuceneQueryParamType t = qi.getQueryType();
-            if (t == null) {
+            if (t != null) {
                 this.mdType = t;
                 // type is unique into a Lucene query ?
                 break;

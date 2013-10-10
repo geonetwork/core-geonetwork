@@ -28,8 +28,6 @@ import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallback;
 
 import java.util.Vector;
 
@@ -218,31 +216,19 @@ public class ServiceInfo {
 
     private Element execService(final Service service, final Element params, final ServiceContext context) throws Exception {
         try {
-            return context.executeInTransaction(new TransactionCallback<Element>() {
-                @Override
-                public Element doInTransaction(final TransactionStatus status) {
-                    try {
-                        Element response = service.exec(params, context);
+            Element response = service.exec(params, context);
 
-                        if (response == null) {
-                            response = new Element(Jeeves.Elem.RESPONSE);
-                        }
-
-                        //--- commit resources and return response
-                        return response;
-                    } catch (Exception e) {
-                        //--- in case of exception we have to abort all resources
-                        ServiceManager.error("Exception when executing service");
-                        ServiceManager.error(" (C) Exc : " + e);
-
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-        } catch (RuntimeException e) {
-            if (e.getCause() instanceof Exception) {
-                throw (Exception) e.getCause();
+            if (response == null) {
+                response = new Element(Jeeves.Elem.RESPONSE);
             }
+
+            //--- commit resources and return response
+            return response;
+        } catch (Exception e) {
+            //--- in case of exception we have to abort all resources
+            ServiceManager.error("Exception when executing service");
+            ServiceManager.error(" (C) Exc : " + e);
+
             throw e;
         }
     }

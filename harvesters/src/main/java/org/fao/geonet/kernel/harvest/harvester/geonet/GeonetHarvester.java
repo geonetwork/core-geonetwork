@@ -41,29 +41,13 @@ public class GeonetHarvester extends AbstractHarvester
 {
 	public static final String TYPE = "geonetwork";
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Static init
-	//---
-	//--------------------------------------------------------------------------
-
-	public static void init(ServiceContext context) throws Exception {}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Harvesting type
-	//---
-	//--------------------------------------------------------------------------
-
-	public String getType() { return TYPE; }
-
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	protected void doInit(Element node) throws BadInputEx
+	protected void doInit(Element node, ServiceContext context) throws BadInputEx
 	{
 		params = new GeonetParams(dataMan);
         super.setParams(params);

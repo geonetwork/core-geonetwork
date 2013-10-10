@@ -103,7 +103,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
 		String host = sm.getValue("system/feedback/mailServer/host");
 		String port = sm.getValue("system/feedback/mailServer/port");
 		String from = sm.getValue("system/feedback/email");
-		String thisSite = sm.getValue("system/site/name");
+		String thisSite = sm.getSiteName();
 
 		// Do not allow an unconfigured site to send out self-registration emails
 		if (thisSite == null || host == null || port == null || from == null || thisSite.equals("dummy") || host.equals("") || port.equals("") || from.equals("")) {

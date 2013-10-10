@@ -42,7 +42,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider 
 	implements UserDetailsService {
 
-	private PasswordEncoder encoder;
+    @Autowired
+    private PasswordEncoder encoder;
 
 	@Autowired
 	UserRepository _userRepository;
@@ -70,7 +71,7 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 			throws AuthenticationException {
 	    try {
 			// Only check user with local db user (ie. authtype is '')
-	        User user = _userRepository.findByUsernameAndSecurityAuthTypeIsNull(username);
+	        User user = _userRepository.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(username);
 			if (user != null) {
 				if (authentication != null && authentication.getCredentials() != null) {
 					if(PasswordUtil.hasOldHash(user)) {

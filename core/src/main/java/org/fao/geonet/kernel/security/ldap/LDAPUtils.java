@@ -23,7 +23,6 @@
 package org.fao.geonet.kernel.security.ldap;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +56,7 @@ public class LDAPUtils {
         if (Log.isDebugEnabled(Geonet.LDAP)) {
             Log.debug(Geonet.LDAP, "LDAP user sync for " + userName + " ...");
         }
-        User loadedUser = userRepo.findByUsername(userName);
+        User loadedUser = userRepo.findOneByUsername(userName);
         User toSave;
         if (loadedUser != null) {
             if (importPrivilegesFromLdap) {

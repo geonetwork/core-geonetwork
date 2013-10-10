@@ -74,32 +74,15 @@ public class Call implements GuiService {
     //--------------------------------------------------------------------------
 
     public Element exec(final Element response, final ServiceContext context) throws Exception {
-        try {
-            return context.executeInTransaction(new TransactionCallback<Element>() {
-                @Override
-                public Element doInTransaction(final TransactionStatus status) {
-                    try {
-                        //--- invoke the method and obtain a jdom result
+        //--- invoke the method and obtain a jdom result
 
-                        Element finalResponse = serviceObj.exec(response, context);
+        Element finalResponse = serviceObj.exec(response, context);
 
-                        if (finalResponse != null) {
-                            finalResponse.setName(name);
-                        }
-
-                        return finalResponse;
-                    } catch (Exception e) {
-                        //--- in case of exception we have to abort all resources
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-        } catch (RuntimeException e) {
-            if (e.getCause() instanceof Exception) {
-                throw (Exception) e.getCause();
-            }
-            throw e;
+        if (finalResponse != null) {
+            finalResponse.setName(name);
         }
+
+        return finalResponse;
     }
 }
 

@@ -51,16 +51,37 @@ import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.jdom.Element;
 import org.quartz.SchedulerException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+
+import javax.transaction.Transactional;
 
 /**
  * TODO Javadoc.
  *
  */
-public class HarvestManager implements HarvestInfoProvider
-{
+@Component
+public class HarvestManager implements HarvestInfoProvider {
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Vars
+    //---
+    //---------------------------------------------------------------------------
+    @Autowired
+    private HarvesterSettingsManager settingMan;
+    @Autowired
+    private DataManager    dataMan;
+    private String         xslPath;
+    private ServiceContext context;
+    private boolean readOnly;
+
+    private Map<String, AbstractHarvester> hmHarvesters   = new HashMap<String, AbstractHarvester>();
+    private Map<String, AbstractHarvester> hmHarvestLookup= new HashMap<String, AbstractHarvester>();
+
 	//---------------------------------------------------------------------------
 	//---              searchProfiles
 	//--- Constructor
@@ -68,39 +89,39 @@ public class HarvestManager implements HarvestInfoProvider
 	//---------------------------------------------------------------------------
 
     /**
-     * TODO Javadoc.
+     * initialize the manager.
+     *
+     *
      *
      * @param context service context
-     * @param gc geonet context
-     * @param sm settingmanager
-     * @param dm datamanager
      * @throws Exception hmm
      */
-	public HarvestManager(ServiceContext context, GeonetContext gc, HarvesterSettingsManager sm, DataManager dm) throws Exception {
+	public void init(ServiceContext context, GeonetContext gc) throws Exception {
 		this.context = context;
         this.readOnly = gc.isReadOnly();
         Log.debug(Geonet.HARVEST_MAN, "HarvesterManager initializing, READONLYMODE is " + this.readOnly);
 		xslPath    = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml/harvesting/";
-		settingMan = sm;
-		dataMan    = dm;
 
-		AbstractHarvester.staticInit(context);
 		AbstractHarvester.getScheduler().getListenerManager().addJobListener(new HarversterJobListener(this), jobGroupEquals(AbstractHarvester.HARVESTER_GROUP_NAME));
-		
-		Element entries = settingMan.get("harvesting", -1).getChild("children");
 
-		if (entries != null)
-			for (Object o : entries.getChildren())
-			{
-				Element node = transform((Element) o);
-				String  type = node.getAttributeValue("type");
 
-				AbstractHarvester ah = AbstractHarvester.create(type, context, sm, dm);
-				ah.init(node);
-				hmHarvesters.put(ah.getID(), ah);
-				hmHarvestLookup.put(ah.getParams().uuid, ah);
-			}
-	}
+        final Element harvesting = settingMan.get("harvesting", -1);
+        if (harvesting != null) {
+            Element entries = harvesting.getChild("children");
+
+            if (entries != null) {
+                for (Object o : entries.getChildren()) {
+                    Element node = transform((Element) o);
+                    String type = node.getAttributeValue("type");
+
+                    AbstractHarvester ah = AbstractHarvester.create(type, context, settingMan, dataMan);
+                    ah.init(node);
+                    hmHarvesters.put(ah.getID(), ah);
+                    hmHarvestLookup.put(ah.getParams().uuid, ah);
+                }
+            }
+        }
+    }
 
     /**
      * TODO Javadoc.
@@ -361,33 +382,29 @@ public class HarvestManager implements HarvestInfoProvider
      * @return
      * @throws Exception
      */
+    @Transactional
 	public synchronized OperResult remove(final String id) throws Exception {
-        return context.executeInTransaction(new TransactionCallback<OperResult>() {
-            @Override
-            public OperResult doInTransaction(TransactionStatus status) {
-                try {
-                    if (Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
-                        Log.debug(Geonet.HARVEST_MAN, "Removing harvesting with id : " + id);
-                    }
-                    AbstractHarvester ah = hmHarvesters.get(id);
-
-                    if (ah == null) {
-                        return OperResult.NOT_FOUND;
-                    }
-                    hmHarvestLookup.remove(ah.getParams().uuid);
-                    ah.destroy();
-                    hmHarvesters.remove(id);
-                    settingMan.remove("harvesting/id:" + id);
-
-                    final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
-                    // set deleted status in harvest history table to 'y'
-                    historyRepository.markAllAsDeleted(ah.getParams().uuid);
-                    return OperResult.OK;
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+        try {
+            if (Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
+                Log.debug(Geonet.HARVEST_MAN, "Removing harvesting with id : " + id);
             }
-        });
+            AbstractHarvester ah = hmHarvesters.get(id);
+
+            if (ah == null) {
+                return OperResult.NOT_FOUND;
+            }
+            hmHarvestLookup.remove(ah.getParams().uuid);
+            ah.destroy();
+            hmHarvesters.remove(id);
+            settingMan.remove("harvesting/id:" + id);
+
+            final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
+            // set deleted status in harvest history table to 'y'
+            historyRepository.markAllAsDeleted(ah.getParams().uuid);
+            return OperResult.OK;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 	}
 
     /**
@@ -543,18 +560,4 @@ public class HarvestManager implements HarvestInfoProvider
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
     }
-    //---------------------------------------------------------------------------
-	//---
-	//--- Vars
-	//---
-	//---------------------------------------------------------------------------
-
-	private String         xslPath;
-	private HarvesterSettingsManager settingMan;
-	private DataManager    dataMan;
-	private ServiceContext context;
-    private boolean readOnly;
-
-	private Map<String, AbstractHarvester> hmHarvesters   = new HashMap<String, AbstractHarvester>();
-	private Map<String, AbstractHarvester> hmHarvestLookup= new HashMap<String, AbstractHarvester>();
 }

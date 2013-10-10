@@ -67,13 +67,14 @@ import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
 
 import org.jdom.Element;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yammer.metrics.core.TimerContext;
 
 //=============================================================================
-
+@Component
 public class ServiceManager
 {
 	private Hashtable<String, ArrayList<ServiceInfo>> htServices = 

@@ -123,15 +123,6 @@ public class BasicContext implements Logger
     public void fatal(final String message) { logger.fatal(message); }
     @Override
     public String getModule() { return logger.getModule(); }
-
-    public <T> T executeInTransaction(TransactionCallback<T> callback) {
-        final TransactionTemplate template = new TransactionTemplate(getBean(JpaTransactionManager.class));
-        return template.execute(callback);
-    }
-
-    public void executeInTransaction(TransactionCallbackWithoutResult callback) {
-        executeInTransaction((TransactionCallback)callback);
-    }
 }
 
 //=============================================================================

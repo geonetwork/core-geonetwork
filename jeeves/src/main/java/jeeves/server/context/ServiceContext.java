@@ -30,6 +30,7 @@ import javax.annotation.CheckForNull;
 
 import jeeves.component.ProfileManager;
 import jeeves.config.springutil.JeevesApplicationContext;
+import jeeves.server.JeevesEngine;
 import org.fao.geonet.Logger;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.UserSession;
@@ -217,7 +218,7 @@ public class ServiceContext extends BasicContext
 		} 
 		
 		try {
-		servlet.getEngine().getServiceManager().dispatch(request,session,context);
+            context.getBean(JeevesEngine.class).getServiceManager().dispatch(request,session,context);
 		} catch (Exception e) {
 			Log.error(Log.XLINK_PROCESSOR,"Failed to parse result xml"+ request.getService());
 			throw new ServiceExecutionFailedException(request.getService(),e);

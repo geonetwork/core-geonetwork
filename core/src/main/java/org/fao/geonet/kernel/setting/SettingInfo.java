@@ -60,7 +60,7 @@ public class SettingInfo
 
 	public String getSiteName()
 	{
-		return sm.getValue("system/site/name");
+		return sm.getSiteName();
 	}
 
 	//---------------------------------------------------------------------------

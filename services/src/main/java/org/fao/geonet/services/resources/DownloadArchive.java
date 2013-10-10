@@ -378,7 +378,7 @@ public class DownloadArchive implements Service
 		//--- send email notification
 		if (doNotify) {
 			
-			String site = sm.getValue("system/site/siteId");
+			String site = sm.getSiteId();
 			String host = sm.getValue("system/feedback/mailServer/host");
 			String port = sm.getValue("system/feedback/mailServer/port");
 			String from = sm.getValue("system/feedback/email");

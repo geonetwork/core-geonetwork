@@ -30,6 +30,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import jeeves.xlink.XLink;
@@ -291,7 +292,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 				int iIndex = parent.indexOf(elem);
 				Element newElem = new Element(elem.getName(), elem.getNamespace());
 				newElem.setAttribute("uuidref", uuid);
-				newElem.setAttribute("href", dataMan.getSiteURL(context)+"/xml.metadata.get?uuid="+uuid, XLink.NAMESPACE_XLINK);
+                newElem.setAttribute("href", context.getBean(SettingManager.class).getSiteURL(context) +"/xml.metadata.get?uuid="+uuid, XLink.NAMESPACE_XLINK);
 				newElem.setAttribute("show", "replace", XLink.NAMESPACE_XLINK);
 				parent.removeContent(iIndex);
 				parent.addContent(iIndex,newElem);

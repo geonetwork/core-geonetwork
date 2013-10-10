@@ -32,14 +32,13 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.Collections2;
 import jeeves.config.springutil.JeevesApplicationContext;
-import jeeves.constants.Jeeves;
+import org.fao.geonet.GeonetworkDataDirectory;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
@@ -72,15 +71,17 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -108,13 +109,44 @@ import java.util.concurrent.Executors;
  * Handles all operations on metadata (select,insert,update,delete etc...).
  *
  */
+@Component
+@Lazy
+@Transactional
 public class DataManager {
 
-
+    private static final String FS = File.separator;
     private static final int METADATA_BATCH_PAGE_SIZE = 100000;
+
+    @Autowired
     private JeevesApplicationContext _applicationContext;
+    @Autowired
     private MetadataRepository _metadataRepository;
-    private final MetadataValidationRepository _metadataValidationRepository;
+    @Autowired
+    private MetadataValidationRepository _metadataValidationRepository;
+    @Autowired
+    private AccessManager  accessMan;
+    @Autowired
+    private SearchManager  searchMan;
+    @Autowired
+    private SettingManager settingMan;
+    @Autowired
+    private SchemaManager  schemaMan;
+    @Autowired
+    private XmlSerializer xmlSerializer;
+    @Autowired
+    private SvnManager svnManager;
+
+    // initialize in init method
+    private ServiceContext servContext;
+    private EditLib editLib;
+
+    private String dataDir;
+    private String thesaurusDir;
+    private String appPath;
+    private String stylePath;
+
+
+    private String baseURL;
 
     //--------------------------------------------------------------------------
     //---
@@ -131,39 +163,6 @@ public class DataManager {
     }
 
     /**
-     * Initializes the search manager and index not-indexed metadata.
-     *
-     * @throws Exception
-     */
-    public DataManager(DataManagerParameter parameterObject) throws Exception {
-        searchMan = parameterObject.searchManager;
-        accessMan = parameterObject.accessManager;
-        settingMan = parameterObject.settingsManager;
-        schemaMan = parameterObject.schemaManager;
-        editLib = new EditLib(schemaMan);
-        servContext=parameterObject.context;
-
-        this.baseURL = parameterObject.baseURL;
-        this.dataDir = parameterObject.dataDir;
-        this.thesaurusDir = parameterObject.thesaurusDir;
-        this.appPath = parameterObject.appPath;
-
-        stylePath = parameterObject.context.getAppPath() + FS + Geonet.Path.STYLESHEETS + FS;
-
-        this.xmlSerializer = parameterObject.xmlSerializer;
-        this.svnManager    = parameterObject.svnManager;
-
-        UserSession session = new UserSession();
-        session.loginAs(new User().setUsername("admin").setId(-1).setProfile(Profile.Administrator));
-
-        servContext.setUserSession(session);
-        this._applicationContext = servContext.getApplicationContext();
-        _metadataRepository = _applicationContext.getBean(MetadataRepository.class);
-        _metadataValidationRepository = _applicationContext.getBean(MetadataValidationRepository.class);
-        init(parameterObject.context, false);
-    }
-
-    /**
      * Init Data manager and refresh index if needed.
      * Can also be called after GeoNetwork startup in order to rebuild the lucene
      * index
@@ -173,7 +172,18 @@ public class DataManager {
      *
      **/
     public synchronized void init(ServiceContext context, Boolean force) throws Exception {
+        this.servContext = context;
+        appPath = context.getAppPath();
+        stylePath = context.getAppPath() + FS + Geonet.Path.STYLESHEETS + FS;
+        editLib = new EditLib(schemaMan);
+        dataDir = _applicationContext.getBean(GeonetworkDataDirectory.GEONETWORK_BEAN_KEY, GeonetworkDataDirectory.class).getSystemDataDir();
+        thesaurusDir = _applicationContext.getBean(ThesaurusManager.class).getThesauriDirectory();
 
+        if (context.getUserSession() == null) {
+            UserSession session = new UserSession();
+            servContext.setUserSession(session);
+            session.loginAs(new User().setUsername("admin").setId(-1).setProfile(Profile.Administrator));
+        }
         // get lastchangedate of all metadata in index
         Map<String,String> docs = searchMan.getDocsChangeDate();
 
@@ -184,7 +194,7 @@ public class DataManager {
             Log.debug(Geonet.DATA_MANAGER, "INDEX CONTENT:");
 
 
-        Sort sortByMetadataChangeDate = new Sort(Metadata_.dataInfo + "." + MetadataDataInfo_.changeDate);
+        Sort sortByMetadataChangeDate = SortUtils.createSort(Metadata_.dataInfo, MetadataDataInfo_.changeDate);
         int currentPage=0;
         Page<Pair<Integer, ISODate>> results = _metadataRepository.findAllIdsAndChangeDates(new PageRequest(currentPage,
                 METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
@@ -301,7 +311,7 @@ public class DataManager {
             int start = index;
             int count = Math.min(perThread,ids.size()-start);
             // create threads to process this chunk of ids
-            Runnable worker = new IndexMetadataTask(context, ids, start, count);
+            Runnable worker = new IndexMetadataTask(this, context, ids, start, count);
             executor.execute(worker);
             index += count;
         }
@@ -352,7 +362,7 @@ public class DataManager {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
             if (ids.size() > 0) {
-                Runnable worker = new IndexMetadataTask(context, ids);
+                Runnable worker = new IndexMetadataTask(this, context, ids);
                 gc.getThreadPool().runTask(worker);
             }
         } catch (Exception e) {
@@ -367,94 +377,6 @@ public class DataManager {
     public boolean isIndexing() {
         synchronized (indexing) {
             return !indexing.isEmpty();
-        }
-    }
-    
-    /**
-     * TODO javadoc.
-     */
-    final class IndexMetadataTask implements Runnable {
-
-        private final ServiceContext context;
-        private final List<String> ids;
-        private int beginIndex;
-        private int count;
-        private User user;
-
-        IndexMetadataTask(ServiceContext context, List<String> ids) {
-            synchronized (indexing) {
-                indexing.add(this);
-            }
-            
-            this.context = context;
-            this.ids = ids;
-            this.beginIndex = 0;
-            this.count = ids.size();
-            if(context.getUserSession() != null) {
-                this.user = context.getUserSession().getPrincipal();
-            }
-        }
-        IndexMetadataTask(ServiceContext context, List<String> ids, int beginIndex, int count) {
-            synchronized (indexing) {
-                indexing.add(this);
-            }
-            
-            this.context = context;
-            this.ids = ids;
-            this.beginIndex = beginIndex;
-            this.count = count;
-            if(context.getUserSession() != null) {
-                this.user = context.getUserSession().getPrincipal();
-            }
-        }
-
-        /**
-         * TODO javadoc.
-         */
-        public void run() {
-            context.setAsThreadLocal();
-            try {
-                // poll context to see whether servlet is up yet
-                while (!context.isServletInitialized()) {
-                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                        Log.debug(Geonet.DATA_MANAGER, "Waiting for servlet to finish initializing..");
-                    try {
-                        Thread.sleep(10000); // sleep 10 seconds
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                context.executeInTransaction(new TransactionCallbackWithoutResult() {
-                    @Override
-                    protected void doInTransactionWithoutResult(final TransactionStatus status) {
-                        try {
-                            if (ids.size() > 1) {
-                                // servlet up so safe to index all metadata that needs indexing
-                                for (int i = beginIndex; i < beginIndex + count; i++) {
-                                    try {
-                                        indexMetadata(ids.get(i).toString());
-                                    } catch (Exception e) {
-                                        Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '" + ids.get(i) + "': " + e.getMessage()
-                                                                       + "\n" + Util.getStackTrace(e));
-                                    }
-                                }
-                            } else {
-                                indexMetadata(ids.get(0));
-                            }
-                        } catch (Exception e) {
-                            Log.error(Geonet.DATA_MANAGER, "Reindexing thread threw exception");
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                if (user != null && context.getUserSession().getUserId() == null) {
-                    context.getUserSession().loginAs(user);
-                }
-            }  finally {
-                synchronized (indexing) {
-                    indexing.remove(this);
-                }
-            }
         }
     }
 
@@ -1217,25 +1139,6 @@ public class DataManager {
     }
 
     /**
-     * TODO javadoc.
-     * @param context TODO
-     *
-     * @return
-     */
-    public String getSiteURL(ServiceContext context) {
-    	String lang = "eng";
-    	if(context != null) {
-    		lang = context.getLanguage();
-    	}
-        String protocol = settingMan.getValue(Geonet.Settings.SERVER_PROTOCOL);
-        String host    = settingMan.getValue(Geonet.Settings.SERVER_HOST);
-        String port    = settingMan.getValue(Geonet.Settings.SERVER_PORT);
-        String locServ = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/" + lang;
-
-        return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
-    }
-
-    /**
      * Checks autodetect elements in installed schemas to determine whether the metadata record belongs to that schema.
      * Use this method when you want the default schema from the geonetwork config to be returned when no other match
      * can be found.
@@ -1296,7 +1199,9 @@ public class DataManager {
         // READONLYMODE
         GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
         if (!gc.isReadOnly()) {
-            gc.getThreadPool().runTask(new IncreasePopularityTask(this, srvContext, Integer.valueOf(id)));
+            final IncreasePopularityTask task = srvContext.getBean(IncreasePopularityTask.class);
+            task.configure(this, srvContext, Integer.valueOf(id));
+            gc.getThreadPool().runTask(task);
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "GeoNetwork is operating in read-only mode. IncreasePopularity is skipped.");
@@ -1439,9 +1344,11 @@ public class DataManager {
             isTemplate = "n";
         }
         final Metadata newMetadata = new Metadata().setUuid(uuid);
+        final ISODate isoChangeDate = changeDate != null ? new ISODate(changeDate) : new ISODate();
+        final ISODate isoCreateDate = createDate != null ? new ISODate(createDate) : new ISODate();
         newMetadata.getDataInfo()
-                .setChangeDate(new ISODate(changeDate))
-                .setCreateDate(new ISODate(createDate))
+                .setChangeDate(isoChangeDate)
+                .setCreateDate(isoCreateDate)
                 .setSchemaId(schema)
                 .setDoctype(docType)
                 .setTitle(title)
@@ -1979,8 +1886,7 @@ public class DataManager {
 
         // Notifies the metadata change to metatada notifier service
         if (isMetadata) {
-            GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
-            gc.getBean(MetadataNotifierManager.class).deleteMetadata(metadataId, uuid, gc);
+            context.getBean(MetadataNotifierManager.class).deleteMetadata(metadataId, uuid, context);
         }
 
         //--- update search criteria
@@ -2684,7 +2590,7 @@ public class DataManager {
             Element result = new Element("root");
             result.addContent(md);
             // add 'environment' to result
-            env.addContent(new Element("siteURL")   .setText(getSiteURL(context)));
+            env.addContent(new Element("siteURL")   .setText(settingMan.getSiteURL(context)));
 
             // Settings were defined as an XML starting with root named config
             // Only second level elements are defined (under system).
@@ -2735,7 +2641,7 @@ public class DataManager {
 
         Element env = new Element("update");
         env.addContent(new Element("parentUuid").setText(parentUuid));
-        env.addContent(new Element("siteURL").setText(getSiteURL(srvContext)));
+        env.addContent(new Element("siteURL").setText(settingMan.getSiteURL(srvContext)));
         env.addContent(new Element("parent").addContent(parent));
 
         // Set of untreated children (out of privileges, different schemas)
@@ -3052,103 +2958,15 @@ public class DataManager {
      * @param metadataId
      * @throws Exception
      */
+
     public void notifyMetadataChange (Element md, String metadataId) throws Exception {
 
         if (_metadataRepository.findOne(metadataId).getDataInfo().getType() == MetadataType.METADATA) {
-            GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
 
-            XmlSerializer.removeWithheldElements(md, gc.getBean(SettingManager.class));
+            XmlSerializer.removeWithheldElements(md, servContext.getBean(SettingManager.class));
             String uuid = getMetadataUuid( metadataId);
-            gc.getBean(MetadataNotifierManager.class).updateMetadata(md, metadataId, uuid, gc);
+            servContext.getBean(MetadataNotifierManager.class).updateMetadata(md, metadataId, uuid, servContext);
         }
     }
 
-    /**
-     * Update group owner when handling privileges during import.
-     * Does not update the index.
-     *
-     * @param mdId
-     * @param grpId
-     * @throws Exception
-     */
-    public void setGroupOwner(final int mdId, final int grpId)
-            throws Exception {
-        _metadataRepository.update(mdId, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                entity.getSourceInfo().setGroupOwner(grpId);
-            }
-        });
-    }
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //--------------------------------------------------------------------------
-
-    private String baseURL;
-
-    private EditLib editLib;
-
-    private AccessManager  accessMan;
-    private SearchManager  searchMan;
-    private SettingManager settingMan;
-    private SchemaManager  schemaMan;
-    private String dataDir;
-    private String thesaurusDir;
-    private ServiceContext servContext;
-    private String appPath;
-    private String stylePath;
-    private static String FS = File.separator;
-    private XmlSerializer xmlSerializer;
-    private SvnManager svnManager;
-
-    /**
-     * TODO javadoc.
-     */
-    static class IncreasePopularityTask implements Runnable {
-        private final DataManager dataManager;
-        private final ServiceContext context;
-        private final int metadataId;
-
-        public IncreasePopularityTask(final DataManager dataManager, final ServiceContext context,
-                                      final int metadataId) {
-            this.dataManager = dataManager;
-            this.context = context;
-            this.metadataId = metadataId;
-        }
-
-        public void run() {
-
-            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-
-            context.executeInTransaction(new TransactionCallbackWithoutResult() {
-
-                @Override
-                protected void doInTransactionWithoutResult(final TransactionStatus status) {
-                    metadataRepository.update(metadataId, new Updater<Metadata>() {
-                        @Override
-                        public void apply(@Nonnull Metadata entity) {
-                            final MetadataDataInfo dataInfo = entity.getDataInfo();
-                            int rating = dataInfo.getRating();
-                            dataInfo.setRating(rating + 1);
-                        }
-                    });
-                    try {
-                        dataManager.indexMetadata(String.valueOf(metadataId));
-                    } catch (Exception e) {
-                        Log.error(Geonet.DATA_MANAGER, "There may have been an error updating the popularity of the metadata "
-                                                       + metadataId + ". Error: " + e.getMessage(), e);
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-        }
-
-    }
-
-    public enum UpdateDatestamp {
-        YES, NO
-    }
 }

@@ -27,6 +27,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
+import org.fao.geonet.component.csw.Transaction;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
@@ -38,19 +39,6 @@ import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
-import org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEHarvester;
-import org.fao.geonet.kernel.harvest.harvester.csw.CswHarvester;
-import org.fao.geonet.kernel.harvest.harvester.geoPREST.GeoPRESTHarvester;
-import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
-import org.fao.geonet.kernel.harvest.harvester.geonet20.Geonet20Harvester;
-import org.fao.geonet.kernel.harvest.harvester.localfilesystem.LocalFilesystemHarvester;
-import org.fao.geonet.kernel.harvest.harvester.oaipmh.OaiPmhHarvester;
-import org.fao.geonet.kernel.harvest.harvester.ogcwxs.OgcWxSHarvester;
-import org.fao.geonet.kernel.harvest.harvester.thredds.ThreddsHarvester;
-import org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester;
-import org.fao.geonet.kernel.harvest.harvester.wfsfeatures.WfsFeaturesHarvester;
-import org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester;
-import org.fao.geonet.kernel.harvest.harvester.z3950Config.Z3950ConfigHarvester;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.monitor.harvest.AbstractHarvesterErrorCounter;
 import org.fao.geonet.repository.HarvestHistoryRepository;
@@ -71,12 +59,11 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -97,47 +84,6 @@ public abstract class AbstractHarvester extends BaseAligner {
 	//---
 	//---------------------------------------------------------------------------
 
-    /**
-     * TODO Javadoc.
-     *
-     * @param context
-     * @throws Exception
-     */
-	public static void staticInit(ServiceContext context) throws Exception {
-		register(context, GeonetHarvester  .class);
-		register(context, Geonet20Harvester.class);
-		register(context, GeoPRESTHarvester.class);
-		register(context, WebDavHarvester  .class);
-		register(context, CswHarvester     .class);
-		register(context, Z3950Harvester   .class);
-		register(context, Z3950ConfigHarvester   .class);
-		register(context, OaiPmhHarvester  .class);
-		register(context, OgcWxSHarvester  .class);
-		register(context, ThreddsHarvester .class);
-		register(context, ArcSDEHarvester  .class);
-		register(context, LocalFilesystemHarvester	.class);
-		register(context, WfsFeaturesHarvester  .class);
-		register(context, LocalFilesystemHarvester      .class);
-	}
-
-    /**
-     * TODO Javadoc.
-     *
-     * @param context
-     * @param harvester
-     * @throws Exception
-     */
-    private static void register(ServiceContext context, Class<?> harvester) throws Exception {
-        try {
-            Method initMethod = harvester.getMethod("init", context.getClass());
-            initMethod.invoke(null, context);
-            AbstractHarvester ah = (AbstractHarvester) harvester.newInstance();
-            ah.setContext(context);
-            hsHarvesters.put(ah.getType(), harvester);
-        } catch (Exception e) {
-            throw new Exception("Cannot register harvester : " + harvester, e);
-        }
-    }
 
     /**
      * TODO javadoc.
@@ -154,14 +100,8 @@ public abstract class AbstractHarvester extends BaseAligner {
 			throw new BadParameterEx("type", null);
         }
 
-		Class<?> c = hsHarvesters.get(type);
-
-		if (c == null) {
-			throw new BadParameterEx("type", type);
-        }
-
 		try {
-			AbstractHarvester ah = (AbstractHarvester) c.newInstance();
+            AbstractHarvester ah = context.getApplicationContext().getBean(type, AbstractHarvester.class);
 
 			ah.context    = context;
 			ah.settingMan = sm;
@@ -199,7 +139,7 @@ public abstract class AbstractHarvester extends BaseAligner {
 		error    = null;
 
 		//--- init harvester
-		doInit(node);
+		doInit(node, context);
 
 		if (status == Status.ACTIVE) {
 		    doSchedule();
@@ -494,6 +434,7 @@ public abstract class AbstractHarvester extends BaseAligner {
     /**
      *
      */
+    @Transactional
     void harvest() {
         running = true;
         long startTime = System.currentTimeMillis();
@@ -502,34 +443,29 @@ public abstract class AbstractHarvester extends BaseAligner {
             final Logger logger = Log.createLogger(Geonet.HARVESTER);
             final String nodeName = getParams().name + " (" + getClass().getSimpleName() + ")";
             final String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
-            context.executeInTransaction(new TransactionCallbackWithoutResult() {
-                @Override
-                protected void doInTransactionWithoutResult(TransactionStatus status) {
-                    try {
-                        login();
+            try {
+                login();
 
-                        //--- update lastRun
-                        settingMan.setValue("harvesting/id:" + id + "/info/lastRun", lastRun);
+                //--- update lastRun
+                settingMan.setValue("harvesting/id:" + id + "/info/lastRun", lastRun);
 
-                        //--- proper harvesting
-                        logger.info("Started harvesting from node : " + nodeName);
-                        HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger);
-                        // todo check (was: processwithfastindexing)
-                        h.process();
-                        logger.info("Ended harvesting from node : " + nodeName);
+                //--- proper harvesting
+                logger.info("Started harvesting from node : " + nodeName);
+                HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger);
+                // todo check (was: processwithfastindexing)
+                h.process();
+                logger.info("Ended harvesting from node : " + nodeName);
 
-                        if (getParams().oneRunOnly) {
-                            stop();
-                        }
-                    } catch (Throwable t) {
-                        logger.warning("Raised exception while harvesting from : " + nodeName);
-                        logger.warning(" (C) Class   : " + t.getClass().getSimpleName());
-                        logger.warning(" (C) Message : " + t.getMessage());
-                        error = t;
-                        t.printStackTrace();
-                    }
+                if (getParams().oneRunOnly) {
+                    stop();
                 }
-            });
+            } catch (Throwable t) {
+                logger.warning("Raised exception while harvesting from : " + nodeName);
+                logger.warning(" (C) Class   : " + t.getClass().getSimpleName());
+                logger.warning(" (C) Message : " + t.getMessage());
+                error = t;
+                t.printStackTrace();
+            }
 
             long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
 
@@ -569,7 +505,10 @@ public abstract class AbstractHarvester extends BaseAligner {
      *
      * @return
      */
-	public abstract String getType();
+	public final String getType() {
+        final String[] types = context.getApplicationContext().getBeanNamesForType(getClass());
+        return types[0];
+    }
 
     /**
      *
@@ -581,10 +520,12 @@ public abstract class AbstractHarvester extends BaseAligner {
 
     /**
      *
+     *
      * @param entry
+     * @param context
      * @throws BadInputEx
      */
-	protected abstract void doInit(Element entry) throws BadInputEx;
+	protected abstract void doInit(Element entry, ServiceContext context) throws BadInputEx;
 
     /**
      *
@@ -822,9 +763,10 @@ public abstract class AbstractHarvester extends BaseAligner {
     /**
      * Get the list of registered harvester
      * @return
+     * @param context
      */
-    public static Set<String> getHarvesterTypes() {
-        return hsHarvesters.keySet();
+    public static String[] getHarvesterTypes(ServiceContext context) {
+        return context.getApplicationContext().getBeanNamesForType(AbstractHarvester.class);
     }
     
     //--------------------------------------------------------------------------
@@ -846,7 +788,5 @@ public abstract class AbstractHarvester extends BaseAligner {
     protected HarvestResult result;
 
     protected Logger log = Log.createLogger(Geonet.HARVESTER);
-
-	private static Map<String, Class<?>> hsHarvesters = new HashMap<String, Class<?>>();
 
 }

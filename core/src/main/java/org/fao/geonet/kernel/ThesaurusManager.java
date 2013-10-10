@@ -22,6 +22,7 @@
 
 package org.fao.geonet.kernel;
 
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -46,6 +47,7 @@ import org.openrdf.sesame.config.SailConfig;
 import org.openrdf.sesame.constants.RDFFormat;
 import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.repository.local.LocalService;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -60,50 +62,40 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 //=============================================================================
-
+@Component
 public class ThesaurusManager implements ThesaurusFinder {
 
-	public synchronized static ThesaurusManager getInstance(ServiceContext context, String appPath, DataManager dm, String thesauriRepository) throws Exception {
-	 	if (_instance == null){ 
-	 	    _instance = new ThesaurusManager(context, appPath, dm, thesauriRepository);
-	 	} 
-	 	return _instance; 
-	}
-	
-	private ConcurrentHashMap<String, Thesaurus> thesauriMap = null;
+	private ConcurrentHashMap<String, Thesaurus> thesauriMap = new ConcurrentHashMap<String, Thesaurus>();
 
 	private LocalService service = null;
 
 	private String thesauriDirectory = null;
 
 
-	private DataManager dm;
+	private SettingManager settingManager;
 
-	// Single instance 
- 	private static ThesaurusManager _instance = null; 
- 	
 
 	/**
-	 * 
+	 * Initialize ThesaurusManager.
 	 *
      * @param context ServiceContext used to check when servlet is up only
      * @param appPath to find conversion XSLTs etc
      * @param thesauriRepository
      * @throws Exception
 	 */
-	private ThesaurusManager(ServiceContext context, String appPath, DataManager dm, String thesauriRepository)
+	public void init(ServiceContext context, String appPath, String thesauriRepository)
 			throws Exception {
 		// Get Sesame interface
 		service = Sesame.getService();
 
 		File thesauriDir = new File(thesauriRepository);
 
-		if (!thesauriDir.isAbsolute())
+		if (!thesauriDir.exists()) {
 			thesauriDir = new File(appPath + thesauriDir);
+        }
 
+        thesauriDir = thesauriDir.getAbsoluteFile();
 		thesauriDirectory = thesauriDir.getAbsolutePath();
-
-		this.dm = dm;
 
 		batchBuildTable(context, thesauriDir);
 	}
@@ -223,41 +215,42 @@ public class ThesaurusManager implements ThesaurusFinder {
 		};
 
 		String[] rdfDataFile = thesauriDirectory.list(filter);
+        final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
 
         for (String aRdfDataFile : rdfDataFile) {
 
-						Thesaurus gst = null;
-						if (root.equals(Geonet.CodeList.REGISTER)) {
-                            if(Log.isDebugEnabled(Geonet.THESAURUS_MAN))
-                                Log.debug(Geonet.THESAURUS_MAN, "Creating thesaurus : "+ aRdfDataFile);
+            Thesaurus gst = null;
+            if (root.equals(Geonet.CodeList.REGISTER)) {
+                if (Log.isDebugEnabled(Geonet.THESAURUS_MAN))
+                    Log.debug(Geonet.THESAURUS_MAN, "Creating thesaurus : " + aRdfDataFile);
 
-							File outputRdf = new File(thesauriDirectory, aRdfDataFile);
-							String uuid = StringUtils.substringBefore(aRdfDataFile,".rdf");
-							try {
-								FileOutputStream outputRdfStream = new FileOutputStream(outputRdf);
-								getRegisterMetadataAsRdf(uuid, outputRdfStream, context);
-								outputRdfStream.close();
-							} catch (Exception e) {
-								Log.error(Geonet.THESAURUS_MAN, "Register thesaurus "+aRdfDataFile+" could not be read/converted from ISO19135 record in catalog - skipping");
-								e.printStackTrace();
-								continue;
-							}
+                File outputRdf = new File(thesauriDirectory, aRdfDataFile);
+                String uuid = StringUtils.substringBefore(aRdfDataFile, ".rdf");
+                try {
+                    FileOutputStream outputRdfStream = new FileOutputStream(outputRdf);
+                    getRegisterMetadataAsRdf(uuid, outputRdfStream, context);
+                    outputRdfStream.close();
+                } catch (Exception e) {
+                    Log.error(Geonet.THESAURUS_MAN, "Register thesaurus " + aRdfDataFile + " could not be read/converted from ISO19135 "
+                                                    + "record in catalog - skipping");
+                    e.printStackTrace();
+                    continue;
+                }
 
-            	gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), outputRdf, dm.getSiteURL(context));
+                gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), outputRdf, siteURL);
 
-						} else {
-            	gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), new File(thesauriDirectory, aRdfDataFile), dm.getSiteURL(context));
-						}
+            } else {
+                gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), new File(thesauriDirectory, aRdfDataFile), siteURL);
+            }
 
             try {
                 addThesaurus(gst, false);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 // continue loading
             }
         }
-	}
+    }
 
 	/**	
 	 * Get ISO19135 Register Metadata from catalog and convert to rdf.   
@@ -268,17 +261,19 @@ public class ThesaurusManager implements ThesaurusFinder {
 	private void getRegisterMetadataAsRdf(String uuid, OutputStream os, ServiceContext context) throws Exception {
         Metadata mdInfo = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
         Integer id = mdInfo.getId();
-        Element md = dm.getMetadata("" + id);
+        final DataManager dataManager = context.getBean(DataManager.class);
+        Element md = dataManager.getMetadata("" + id);
         Processor.detachXLink(md);
+        final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
         Element env = Lib.prepareTransformEnv(mdInfo.getUuid(), mdInfo.getDataInfo().getChangeDate().getDateAndTime(),
-                "", dm.getSiteURL(context), "");
+                "", siteURL, "");
 
         //--- transform the metadata with the created env and specified stylesheet
         Element root = new Element("root");
         root.addContent(md);
         root.addContent(env);
 
-        String styleSheet = dm.getSchemaDir("iso19135") + "convert/" + Geonet.File.EXTRACT_SKOS_FROM_ISO19135;
+        String styleSheet = dataManager.getSchemaDir("iso19135") + "convert/" + Geonet.File.EXTRACT_SKOS_FROM_ISO19135;
         Xml.transform(root, styleSheet, os);
 	}
 
@@ -400,9 +395,10 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 	  // check whether we have created a thesaurus for this register already
 		aRdfDataFile = uuid+".rdf";
-		String thesaurusFile = buildThesaurusFilePath(aRdfDataFile, root, type);
-		File outputRdf = new File(thesaurusFile);
-		Thesaurus gst = new Thesaurus(aRdfDataFile, root, type, outputRdf, dm.getSiteURL(context));
+        String thesaurusFile = buildThesaurusFilePath(aRdfDataFile, root, type);
+        File outputRdf = new File(thesaurusFile);
+        final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
+        Thesaurus gst = new Thesaurus(aRdfDataFile, root, type, outputRdf, siteURL);
 
 		FileOutputStream outputRdfStream = null;
 		try {
