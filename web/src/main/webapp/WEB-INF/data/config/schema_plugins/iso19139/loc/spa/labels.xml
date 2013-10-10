@@ -138,8 +138,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:has">
-		<label>Has</label>
-		<description>Has</description>
+		<label>Tiene</label>
+		<description>Tiene</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:initiativeType">
@@ -153,8 +153,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:locale">
-		<label>Locale</label>
-		<description>Locale</description>
+		<label>Localización</label>
+		<description>Localización</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LocalisedCharacterString">
@@ -178,23 +178,23 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:onlineResource">
-		<label>Online resource</label>
-		<description>Online resource</description>
+		<label>Recurso en línea</label>
+		<description>Recurso en línea</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:partOf">
-		<label>Part of</label>
-		<description>Part of</description>
+		<label>Parte de</label>
+		<description>Parte de</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:propertyType">
-		<label>Property type</label>
-		<description>Property type</description>
+		<label>Tipo de propiedad</label>
+		<description>Tipo de propiedad</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:PT_Locale">
-		<label>Locale</label>
-		<description>Locale</description>
+		<label>Localización</label>
+		<description>Localización</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:PT_LocaleContainer">
@@ -203,8 +203,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:responsibleParty">
-		<label>Responsible party</label>
-		<description>Responsible party</description>
+		<label>Parte responsable</label>
+		<description>Parte responsable</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:seriesMetadata">
@@ -213,18 +213,18 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:subset">
-		<label>Subset</label>
-		<description>Subset</description>
+		<label>Subconjunto</label>
+		<description>Subconjunto</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:superset">
-		<label>Superset</label>
-		<description>Superset</description>
+		<label>Supraconjunto</label>
+		<description>Supraconjunto</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:textGroup">
-		<label>Text group</label>
-		<description>Text group</description>
+		<label>Grupo de texto</label>
+		<description>Grupo de texto</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:URL">
@@ -233,8 +233,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:verticalCRS">
-		<label>Vertical CRS</label>
-		<description>Vertical CRS</description>
+		<label>CRS Vertical</label>
+		<description>CRS Vertical</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:abstract">
@@ -268,40 +268,36 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:amendmentNumber">
-		<label>Amendment number</label>
-		<description>Amendment number of the format version</description>
+		<label>Número de revisión</label>
+		<description>Número de revisión de la versión del formato</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:applicationProfile">
-		<label>Application profile</label>
-		<description>Name of an application profile that can be used with the
-			online
-			resource</description>
+		<label>Perfil de aplicación</label>
+		<description>Nombre de un perfil de aplicación que puede ser usado con el recurso en línea</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:applicationSchemaInfo">
-		<label>Application schema info</label>
-		<description>Provides information about the conceptual schema of a
-			dataset</description>
+		<label>Información del esquema de aplicación</label>
+		<description>Proporciona información acerca del esquema conceptual de un conjunto de datos</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:attributeDescription">
-		<label>Attribute description</label>
-		<description>Description of the attribute described by the measurement
-			value</description>
-		<condition>mandatory</condition>
+		<label>Descripción del </label>
+		<description>Descripción del atributo descrito por el valor medido</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:attributeInstances">
-		<label>Attribute instances</label>
-		<description>Attribute instances to which the information applies</description>
-		<condition>conditional</condition>
+		<label>Instancias del atributo</label>
+		<description>Instancias del atributo a las que se aplica la información</description>
+		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:attributes">
-		<label>Attributes</label>
-		<description>Attributes to which the information applies</description>
-		<condition>conditional</condition>
+		<label>Atributos</label>
+		<description>Atributos a los que se aplica la información</description>
+		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:authority">
@@ -311,32 +307,24 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:bitsPerValue">
-		<label>Bits per value</label>
-		<description>Maximum number of significant bits in the uncompressed
-			representation for the
-			value in each band of each pixel</description>
+		<label>Bits por valor</label>
+		<description>Número máximo de bits significativos en la representación sin comprimir para el valor en cada banda de cada píxel</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:cameraCalibrationInformationAvailability">
-		<label>Camera calibration information availability</label>
-		<description>Indication of whether or not constants are available
-			which allow for camera
-			calibration corrections</description>
+		<label>Disponibilidad de la información de calibración de la cámara</label>
+		<description>Indica sí hay constantes disponibles que permitan la corección de la calibración de la cámara o no</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:cellGeometry">
-		<label>Cell geometry</label>
-		<description>Identification of grid data as point or cell</description>
-		<condition>mandatory</condition>
+		<label>Geometría en celda</label>
+		<description>Identificación de los datos de la cuadrícula como puntos o celdas</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:centerPoint">
-		<label>Center point</label>
-		<description>Earth location in the coordinate system defined by the
-			Spatial Reference System
-			and the grid coordinate of the cell halfway
-			between opposite ends of the grid in the
-			spatial dimensions</description>
+		<label>Punto central</label>
+		<description>Localización terrestre en el sistema de coordenadas definido por el Sistema de Referencia Espacial (SRS) y la posición en la cuadrícula de la celda a medio camino entre los extremos opuestos de la cuadrícula en las dimensiones espaciales</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:characterSet">
@@ -355,11 +343,9 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:checkPointDescription">
-		<label>Check point description</label>
-		<description>Description of geographic position points used to test
-			the accuracy of the
-			georeferenced grid data</description>
-		<condition>conditional</condition>
+		<label>Descripción del punto de comprobaciónCheck point description</label>
+		<description>Descripción de la posición geográfica usada para comprobar la precisión los datos georreferenciados en la cuadrícula</description>
+		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Address">
@@ -385,56 +371,48 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_DateTypeCode">
-		<label>Date type code</label>
+		<label>Código del tipo de fecha</label>
 		<description />
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_OnLineFunctionCode">
-		<label>OnLine function code</label>
+		<label>Código de la función en línea</label>
 		<description />
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_PresentationFormCode">
-		<label>Presentation form code</label>
+		<label>Código del formulario de presentación</label>
 		<description />
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_ResponsibleParty">
-		<label>Responsible party</label>
-		<description>Identification of, and means of communication with,
-			person(s) and organizations
-			associated with the dataset</description>
+		<label>Parte responsable</label>
+		<description>Identificación de, y forma de comunicar con, la(s) persona(s) y organizacion(es) asociadas con el conjunto de datos</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_RoleCode">
-		<label>Role code</label>
+		<label>Código de rol</label>
 		<description />
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Series">
 		<label>Series</label>
-		<description>Information about the series, or aggregate dataset, to
-			which a dataset
-			belongs</description>
+		<description>Información sobre las series, o conjunto de datos agregados, al que pertenece un conjunto de datos</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:CI_Telephone">
-		<label>Telephone</label>
-		<description>Telephone numbers for contacting the responsible
-			individual or
-			organization</description>
+		<label>Teléfono</label>
+		<description>Números de teléfono de contacto con el responsable individual o la organización</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:citation">
-		<label>Citation</label>
-		<description>Citation data for the resource(s)</description>
+		<label>Cita</label>
+		<description>Datos de cita para el o los recursos</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:citedResponsibleParty">
-		<label>Cited responsible party</label>
-		<description>Name and position information for an individual or
-			organization that is
-			responsible for the resource</description>
+		<label>Parte responsable citadaCited responsible party</label>
+		<description>Nombre y posición de un individuo u organización responsable del recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:city">
@@ -443,21 +421,19 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:classification">
-		<label>Class</label>
-		<description>Name of the handling restrictions on the resource</description>
-		<condition>mandatory</condition>
+		<label>Clase</label>
+		<description>Nombre de las restricciones de manipulación aplicadas al recurso</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:classificationSystem">
-		<label>Classification system</label>
-		<description>Name of the classification system</description>
+		<label>Sistema de clasificación</label>
+		<description>Nombre del sistema de clasificación</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:cloudCoverPercentage">
-		<label>Cloud cover percentage</label>
-		<description>Area of the dataset obscured by clouds, expressed as a
-			percentage of the spatial
-			extent</description>
+		<label>Porcentaje de cobertura de nubes</label>
+		<description>Área del conjuto de datos oscurecida por nubes, expresada como un porcentaje de la extensión espacial</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:code">
@@ -467,37 +443,29 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:collectiveTitle">
-		<label>Collective title</label>
-		<description>Common title with holdings note. NOTE title identifies
-			elements of a series
-			collectively, combined with information about
-			what volumes are available at the source
-			cited</description>
+		<label>Título común</label>
+		<description>Título común con notas de participación. NOTA: el título identifica los elementos de una serie de forma colectiva, combinado con información sobre qué volúmenes están disponibles en la fuente citada</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:complianceCode">
-		<label>Compliance code</label>
-		<description>Indication of whether or not the cited feature catalogue
-			complies with ISO
-			19110</description>
+		<label>Código de conformidad</label>
+		<description>Indicación sobre si catálogo de elementos citado cumple o no con la norma ISO 19110</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:compressionGenerationQuantity">
-		<label>Compression generation quantity</label>
-		<description>Count of the number the number of lossy compression
-			cycles performed on the
-			image</description>
+		<label>Cantidad de generación de la compresión</label>
+		<description>Número de cliclos de compresión con pérdida aplicados a la imagen</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:condition">
-		<label>Condition</label>
-		<description>Condition under which the extended element is mandatory</description>
+		<label>Condición</label>
+		<description>Condición bajo la cual el elemento ampliado es obligatorio</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:constraintLanguage">
-		<label>Constraint language</label>
-		<description>Formal language used in Application Schema</description>
-		<condition>mandatory</condition>
+		<label>Lenguaje de restriccionesConstraint language</label>
+		<description>Lenguaje formal usado en el esquema de la aplicacación</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:contact">
@@ -512,41 +480,31 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:contactInstructions">
-		<label>Contact instructions</label>
-		<description>Supplemental instructions on how or when to contact the
-			individual or
-			organization</description>
+		<label>Instrucciones de contacto</label>
+		<description>Instrucciones adicionales sobre cómo o cuándo contactar con la persona u organización</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:contentInfo">
-		<label>Content info</label>
-		<description>Provides information about the feature catalogue and
-			describes the coverage and
-			image data characteristics</description>
+		<label>Información del Contenido</label>
+		<description>Proporciona información sobre el catálogo de elementos y describe la cobertura y características de la imagen</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:contentType">
-		<label>Content type</label>
-		<description>Type of information represented by the cell value</description>
-		<condition>mandatory</condition>
+		<label>Tipo de contenido</label>
+		<description>Tipo de información representada por el valor de la celda</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:controlPointAvailability">
-		<label>Control point availability</label>
-		<description>Indication of whether or not control point(s) exists</description>
-		<condition>mandatory</condition>
+		<label>Disponibilidad del punto de control</label>
+		<description>Indicación sobre si el punto de control existe o no</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:cornerPoints">
-		<label>Corner points</label>
-		<description>Earth location in the coordinate system defined by the
-			Spatial Reference System
-			and the grid coordinate of the cells at
-			opposite ends of grid coverage along two diagonals
-			in the grid spatial
-			dimensions. There are four corner points in a georectified grid; at
-			least two corner points along one diagonal are required</description>
-		<condition>mandatory</condition>
+		<label>Puntos de esquina</label>
+		<description>Localización terrestre en el sistema de coordenadas definido por el Sistema de Referencia Espacial y la posición en la cuadrícula de las celdas en extremos opuestos de la cobertura de la cuadrícula por dos diagonales del las dimensiones espaciales de la cuadrículas. Hay cuatro puntos de esquina en una cuadrícula geo-rectificada; al menos dos puntos de esquina para una diagonal son necesarios</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:country">
@@ -555,8 +513,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:credit">
-		<label>Credit</label>
-		<description>Recognition of those who contributed to the resource(s)</description>
+		<label>Créditos</label>
+		<description>Reconocimiento de aquellos que contribuyeron al/los recurso(s9</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dataQualityInfo">
@@ -565,16 +523,15 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dataset">
-		<label>Dataset</label>
-		<description>Dataset to which the information applies</description>
-		<condition>conditional</condition>
+		<label>Conjunto de datos</label>
+		<description>Conjunto de datos al que se aplica la información</description>
+		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dataType">
-		<label>Data type</label>
-		<description>Code which identifies the kind of valueprovidedeprovided
-			in the extended element</description>
-		<condition>mandatory</condition>
+		<label>Tipo de dato</label>
+		<description>Código que identifica el tipo de valor proporcionado por el elemento ampliado</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:date">
@@ -584,21 +541,19 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateOfNextUpdate">
-		<label>Date of next update</label>
-		<description>Scheduled revision date for resource (YYYY-MM-DD)</description>
+		<label>Fecha de la próxima actualización</label>
+		<description>Fecha de revisión planificada para el recurso (YYYY-MM-DD)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateStamp">
 		<label>Fecha de creación</label>
 		<description>Fecha en que se crearon los metadatos (YYYY-MM-DDThh:mm:ss)</description>
-		<condition>mandatory</condition>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateTime">
-		<label>Date and Time</label>
-		<description>Date and time or range of date and time on or over which
-			the process step
-			occurred (YYYY-MM-DDThh:mm:ss)</description>
+		<label>Fecha y hora</label>
+		<description>Fecha y hora o rango de fechas y horas en las que el ocurrió el procesado (YYYY-MM-DDThh:mm:ss)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dateType">
@@ -608,14 +563,14 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:definition">
-		<label>Definition</label>
-		<description>Definition of the extended element</description>
-		<condition>mandatory</condition>
+		<label>Definición</label>
+		<description>Definición del elemento ampliado</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:deliveryPoint">
 		<label>Lugar de entrega</label>
-		<description>Dirección para la localización(como describe la norma ISO 11180, anexo A)</description>
+		<description>Dirección para la localización (como describe la norma ISO 11180, anexo A)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:denominator">
@@ -630,13 +585,13 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:densityUnits">
-		<label>Density units</label>
-		<description>Units of measure for the recording density</description>
-		<condition>conditional</condition>
+		<label>Unidades de densidad</label>
+		<description>Unidades de medición para representar la densidad de registro</description>
+		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:description">
-		<label>DescripciónDescription of the event, including related parameters or tolerances </label>
+		<label>Descripción</label>
 		<description>Descripción del evento, incluyendo los parámetros relacionados o tolerancias</description>
 		<condition>obligatorio</condition>
 	</element>
@@ -648,37 +603,36 @@
 	<!-- ==================================================== -->
 	<element name="gmd:descriptor">
 		<label>Descriptor</label>
-		<description>Description of the range of a cell measurement value</description>
+		<description>Descripción del rango del valor de medida de una celda</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dimension">
-		<label>Dimension</label>
-		<description>Information on the dimensions of the cell measurement
-			value</description>
+		<label>Dimensión</label>
+		<description>Información sobre las dimensiones del valor de medida de una celda</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dimensionName">
-		<label>Dimension name</label>
-		<description>Name of the axis</description>
-		<condition>mandatory</condition>
+		<label>Nombre de dimensión</label>
+		<description>Nombre del eje</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:dimensionSize">
-		<label>Dimension size</label>
-		<description>Number of elements along the axis</description>
-		<condition>mandatory</condition>
+		<label>Tamaño de dimensión</label>
+		<description>Número de elementos a lo largo del eje</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distance">
-		<label>Distance</label>
-		<description>Ground sample distance</description>
-		<condition>conditional</condition>
+		<label>Distancia</label>
+		<description>Distancia de medida en el suelo</description>
+		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributionFormat">
-		<label>Distribution format</label>
+		<label>Formato de distribución</label>
 		<description />
-		<condition>mandatory</condition>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributionInfo">
@@ -688,22 +642,20 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributor">
-		<label>Distributor</label>
-		<description>Provides information about the distributor</description>
+		<label>Distribuidor</label>
+		<description>Proporciona información sobre el distribuidor</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributorContact">
-		<label>Distributor contact</label>
-		<description>Party from whom the resource may be obtained. This list
-			need not be exhaustive</description>
-		<condition>mandatory</condition>
+		<label>Contacto distribuidor</label>
+		<description>Lista no exhaustiva de fuentes a partir de las cuales puede obtenerse el recurso</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributorFormat">
-		<label>Distributor format</label>
-		<description>Provides information about the format used by the
-			distributor</description>
-		<condition>conditional</condition>
+		<label>Formato del distribuidor</label>
+		<description>Información sobre el formato usado por el distribuidor</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:distributorTransferOptions">
@@ -872,8 +824,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:edition">
-		<label>Edition</label>
-		<description>Version of the cited resource</description>
+		<label>Edición</label>
+		<description>Versión del recurso citado</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:editionDate">
@@ -992,10 +944,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:facsimile">
-		<label>Facsimile</label>
-		<description>Telephone number of a facsimile machine for the
-			responsible organization or
-			individual</description>
+		<label>Telefax</label>
+		<description>Número de teléfono de la máquina de telefax para el individuo u organización responsable</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:featureCatalogueCitation">
@@ -1025,10 +975,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fees">
-		<label>Fees</label>
-		<description>Fees and terms for retrieving the resource. Include
-			monetary units (as specified
-			in ISO 4217)</description>
+		<label>Importes</label>
+		<description>Importes y términos por recuperar el recurso. Incluye unidades monetarias (como se especifica en ISO 4217)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileDecompressionTechnique">
@@ -1040,8 +988,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileDescription">
-		<label>File description</label>
-		<description>Text description of the illustration</description>
+		<label>Descripción del archivo</label>
+		<description>Descripción textual de la ilustración</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileIdentifier">
@@ -1050,11 +998,9 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileName">
-		<label>File name</label>
-		<description>Name of the file that contains a graphic that provides an
-			illustration of the
-			dataset</description>
-		<condition>mandatory</condition>
+		<label>Nombre del archivo</label>
+		<description>Nombre del fichero que contiene el gráfico que proporciona una ilustración del conjunto de datos</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:fileType">
@@ -1075,8 +1021,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:function">
-		<label>Function</label>
-		<description>Code for function performed by the online resource</description>
+		<label>Función</label>
+		<description>Código de la función realizada por el recurso en línea</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:geographicElement">
@@ -1113,10 +1059,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:graphicOverview">
-		<label>Graphic overview</label>
-		<description>Provides a graphic that illustrates the resource(s)
-			(should include a legend for
-			the graphic)</description>
+		<label>Resumen gráfico</label>
+		<description>Proporciona un gráfico que ilustra el/los recurso(s) (debería incluir una leyenda)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:graphicsFile">
@@ -1132,10 +1076,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:hierarchyLevel">
-		<label>Hierarchy level</label>
-		<description>Scope to which the metadata applies (see annex H for more
-			information about
-			metadata hierarchy levels)</description>
+		<label>Nivel de jerarquía</label>
+		<description>Entorno sobre el que se aplica el metadato (ver anexo H para más información sobre los niveles de jerarquía de metadatos)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:hierarchyLevelName">
@@ -1152,15 +1094,14 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:identificationInfo">
-		<label>Identification info</label>
-		<description>Basic information about the resource(s) to which the
-			metadata applies</description>
+		<label>Información de Identificación</label>
+		<description>Información básica sobre el recurso al que se aplica el metadato</description>
 		<condition>mandatory</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:identifier">
-		<label>Identifier</label>
-		<description>Unique identifier for the resource. EXAMPLE: Universal
+		<label>Identificador</label>
+		<description>Identificador único para el recurso. Ejemplo: Universal
 			Product Code (UPC),
 			National Stock Number (NSN)</description>
 	</element>
@@ -1261,11 +1202,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LI_Lineage">
-		<label>Lineage</label>
-		<description>Information about the events or source data used in
-			constructing the data
-			specified by the scope or lack of knowledge
-			about lineage</description>
+		<label>Linaje</label>
+		<description>Información sobre los eventos o datos originales usados para construir los datos especificados por el entorno o falta de conocimiento sobre el linaje</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LI_ProcessStep">
@@ -1276,18 +1214,14 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:LI_Source">
-		<label>Source</label>
-		<description>Information about the source data used in creating the
-			data specified by the
-			scope</description>
+		<label>Fuente</label>
+		<description>Información sobre los datos originales usados para crear los datos definidos por el entorno</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:lineage">
-		<label>Lineage</label>
-		<description>Non-quantitative quality information about the lineage of
-			the data specified by
-			the scope</description>
-		<condition>conditional</condition>
+		<label>Linaje</label>
+		<description>Información no cuantititativa sobre la calidad del linaje de los datos especificados por el entorno</description>
+		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:linkage">
@@ -1509,10 +1443,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_LegalConstraints">
-		<label>Legal constraints</label>
-		<description>Restrictions and legal prerequisites for accessing and
-			using the
-			resource</description>
+		<label>Restricciones legales</label>
+		<description>Restricciones y prerrequisitos legales para acceder y usar el recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_MaintenanceFrequencyCode">
@@ -1596,9 +1528,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_Resolution">
-		<label>Resolution</label>
-		<description>Level of detail expressed as a scale factor or a ground
-			distance</description>
+		<label>Resolución</label>
+		<description>Nivel de detalle expresado como un factor de escala o una distancia al suelo</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:MD_RestrictionCode">
@@ -1739,16 +1670,16 @@
 	<!-- ==================================================== -->
 	<element name="gmd:name">
 		<label>Nombre</label>
-		<description>Nombre del formato o formatos de transferencia de datos.</description>
+		<description>Nombre del formato o formatos de transferencia de datos</description>
 		<condition>obligatorio</condition>
 	</element>
 	<element name="gmd:name" context="gmd:MD_Format" id="285.0">
-		<label>Name</label>
-		<description>Name of the data transfer format(s)</description>
-		<help>name of the data transfer format(s)</help>
-		<condition>mandatory</condition>
+		<label>Nombre</label>
+		<description>Nombre del formato de transferencia de datos</description>
+		<help>Nombre del formato de transferencia de datos</help>
+		<condition>obligatorio</condition>
 		<helper rel="gmd:version">
-			<option value="Text">Text</option>
+			<option value="Text">Texto</option>
 			<option value="ESRI Shapefile" title="1.0">ESRI Shapefile</option>
 			<option value="Mapinfo MIF/MID" title="4.5">Mapinfo MIF/MID</option>
 			<option value="Mapinfo TAB">Mapinfo TAB</option>
@@ -1763,7 +1694,7 @@
 			<option value="PNG">PNG</option>
 			<option value="JPEG">JPEG</option>
 			<option value="OGC:WMC">OGC:WMC</option>
-			<option value="OGC:OWS Context">OGC:OWS Context</option>
+			<option value="OGC:OWS Context">Contexto OGC:OWS</option>
 		</helper>
 	</element>
 	
@@ -1835,11 +1766,9 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:other">
-		<label>Other</label>
-		<description>Class of information that does not fall into the other
-			categories to which the
-			information applies</description>
-		<condition>conditional</condition>
+		<label>Otro</label>
+		<description>Tipos de información que no encuadran en los otros tipos de categorías a los que la información se aplica</description>
+		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:otherCitationDetails">
@@ -1877,10 +1806,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:parentIdentifier">
-		<label>Parent identifier</label>
-		<description>File identifier of the metadata to which this metadata is
-			a subset
-			(child)</description>
+		<label>Identificador del padreParent identifier</label>
+		<description>Indentificador de archivo de los metadatos tales que estos metadatos son un subconjunto (un hijo)</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:pass">
@@ -1940,9 +1867,9 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:positionName">
-		<label>Position name</label>
-		<description>Role or position of the responsible person</description>
-		<condition>conditional</condition>
+		<label>Nombre de posición</label>
+		<description>Rol o posición de la persona responsable</description>
+		<condition>condicional</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:postalCode">
@@ -1981,7 +1908,8 @@
 		<label>Protocolo</label>
 		<description>Protocolo de conexión utilizado</description>
 		<helper>
-			<option show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File (*.AXL)</option>
+			<option show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File
+				(*.AXL)</option>
 			<option show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</option>
 			<option show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</option>
 			<option show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</option>
@@ -1997,19 +1925,24 @@
 			<option show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</option>
 			<option show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</option>
 			<option show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</option>
-			<option show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</option>
-			<option show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</option>
+			<option show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver
+				1.1.0)</option>
+			<option show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation
+				Service</option>
 			<option show="-" value="OGC:WFS">OGC-WFS Web Feature Service</option>
 			<option show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</option>
 			<option show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
 			<option show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</option>
 			<option show="-" value="OGC:WMS">Sevicio de Mapas OGC-WMS</option>
-			<option show="-" value="OGC:WMS-1.1.1-http-get-capabilities">Servicio Capabilities OGC-WMS (ver 1.1.1)</option>
-			<option show="-" value="OGC:WMS-1.3.0-http-get-capabilities">Servicio Capabilities OGC-WMS (ver 1.3.0)</option>
+			<option show="-" value="OGC:WMS-1.1.1-http-get-capabilities">Servicio Capabilities OGC-WMS (ver
+				1.1.1)</option>
+			<option show="-" value="OGC:WMS-1.3.0-http-get-capabilities">Servicio Capabilities OGC-WMS (ver
+				1.3.0)</option>
 			<option show="-" value="OGC:WMS-1.1.1-http-get-map">Sevicio de Mapas OGC-WMS (ver 1.1.1)</option>
 			<option show="-" value="OGC:WMS-1.3.0-http-get-map">Sevicio de Mapas OGC-WMS (ver 1.3.0)</option>
 			<option show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</option>
-			<option show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</option>
+			<option show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver
+				1.0.0)</option>
 			<option show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Fichero para la descarga (FTP)</option>
 			<option show="-" value="WWW:DOWNLOAD-1.0-http--download">Fichero para la descarga</option>
 			<option show="-" value="FILE:GEO">GIS file</option>
@@ -2073,8 +2006,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:resolution">
-		<label>Resolution</label>
-		<description>Degree of detail in the grid dataset</description>
+		<label>Resolución</label>
+		<description>Nivel de datalle en la cuadrícula del conjunto de datos</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:resourceConstraints">
@@ -2196,11 +2129,9 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:source">
-		<label>Source</label>
-		<description>Information about the source data used in creating the
-			data specified by the
-			scope</description>
-		<condition>mandatory</condition>
+		<label>Fuente</label>
+		<description>Información sobre los datos originales usados para crear los datos especificados por el entorno</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:sourceCitation">
@@ -2253,10 +2184,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:spatialResolution">
-		<label>Spatial resolution</label>
-		<description>Factor which provides a general understanding of the
-			density of spatial data in
-			the dataset</description>
+		<label>Resolución espacial</label>
+		<description>Factor que proporciona una comprensión general de la densidad de datos espaciales en el conjunto de datos</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:specification">
@@ -2354,10 +2283,9 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:transformationParameterAvailability">
-		<label>Transformation parameter availability</label>
-		<description>Indication of whether or not parameters for
-			transformation exists</description>
-		<condition>mandatory</condition>
+		<label>Disponibilidad del parámetro de transformación</label>
+		<description>Indicación sobre si existen parámetros de transformación o no</description>
+		<condition>obligatorio</condition>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:triangulationIndicator">
@@ -2407,11 +2335,8 @@
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:useConstraints">
-		<label>Use constraints</label>
-		<description>Constraints applied to assure the protection of privacy
-			or intellectual property,
-			and any special restrictions or limitations
-			or warnings on using the resource</description>
+		<label>Restricciones de uso</label>
+		<description>Restricciones aplicadas para asegurar la protección de la privacidad o la propiedad intelectual, y cualquier otra restricción, limitación o avisos sobre el uso del recurso</description>
 	</element>
 	<!-- ==================================================== -->
 	<element name="gmd:useLimitation">
@@ -2635,12 +2560,8 @@
 			GeneralName may be 'OGC' and 'catalogue'</description>
 	</element>
 	<element name="srv:serviceTypeVersion">
-		<label>Service Version</label>
-		<description>Provides for searching based on the version of
-			serviceType. For example, we may only be interested in OGC Catalogue
-			V1.1 services. If version is maintained as a separate attribute,
-			users can easily search for all services of a type regardless of the
-			version</description>
+		<label>Versión del servicio</label>
+		<description>Permite buscar basándose en la versión del tipo de servicio. Por ejemplo, podemos estar interesados únicamente en servicios de catálogo OGC V1.1. Si la versión se mantiene como un atributo aparte, los usuarios pueden buscar fácilmente por todos los servicios de un tipo sin importar la versión</description>
 	</element>
 	<element name="srv:accessProperties">
 		<label>Access Properties</label>
@@ -2653,9 +2574,8 @@
 			and distributing data generated by the service</description>
 	</element>
 	<element name="srv:containsOperations">
-		<label>Contains Operations</label>
-		<description>Provides information about the operations that comprise
-			the service</description>
+		<label>Operaciones contenidas</label>
+		<description>Proporciona información sobre las operaciones que forman el servicio</description>
 	</element>
 	<element name="srv:operatesOn">
 		<label>Operates On</label>
@@ -2663,17 +2583,16 @@
 			operates on</description>
 	</element>
 	<element name="srv:operationName">
-		<label>Operation Name</label>
-		<description>A unique identifier for this interface</description>
+		<label>Nombre de operación</label>
+		<description>Identificador único para este interfaz</description>
 	</element>
 	<element name="srv:SV_OperationMetadata">
 		<label>Operation</label>
 		<description>Operation Metadata</description>
 	</element>
 	<element name="srv:DCP">
-		<label>Distributed Computing Platforms</label>
-		<description>Distributed computing platforms on which the operation
-			has been implemented</description>
+		<label>Plataformas de computación distribuida</label>
+		<description>Plataformas de computación distribuida en las que se ha implementado la operación</description>
 	</element>
 	<element name="srv:DCPList">
 		<label>Distributed Computing Platforms List</label>
@@ -2744,12 +2663,12 @@
 		<description>Identifier of resource to which the operation applies</description>
 	</element>
 	<element name="srv:couplingType">
-		<label>Coupling Type</label>
-		<description>Type of Coupling</description>
+		<label>Tipo de acoplamiento</label>
+		<description>Tipo de acoplamiento</description>
 	</element>
 	<element name="srv:SV_CouplingType">
 		<label>Coupling Type</label>
-		<description>Type of Coupling</description>
+		<description>Tipo de acoplamiento</description>
 	</element>
 	<element name="srv:extent">
 		<label>Extent</label>
