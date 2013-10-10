@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -107,19 +108,26 @@ public class Groups implements Service
 				record.setName("targetGroup");
 				response.addContent(record);
 				// List all group users or administrator
-				String query = "SELECT id, surname, name FROM Users LEFT JOIN UserGroups ON (id = userId) "+
+				String query = "SELECT id, surname, name, username FROM Users LEFT JOIN UserGroups ON (id = userId) "+
 									" WHERE (groupId=? AND usergroups.profile != 'RegisteredUser') OR users.profile = 'Administrator'";
 
 				Element editors = dbms.select(query, Integer.valueOf(groupId));
 
-				for (Object o : editors.getChildren())
+                // Avoid duplicated users: if a user is a Reviewer in a group, in the database exists a row as Editor also
+                List<String> editorsId = new ArrayList<String>();
+
+                for (Object o : editors.getChildren())
 				{
 					Element editor = (Element) o;
+                    if (editorsId.contains(editor.getChildText("id"))) continue;
+
 					editor = (Element) editor.clone();
 					editor.removeChild("password");
 					editor.setName("editor");
 
 					record.addContent(editor);
+
+                    editorsId.add(editor.getChildText("id"));
 				}
 			}
 		}
