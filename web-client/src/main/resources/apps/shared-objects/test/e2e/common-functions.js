@@ -16,60 +16,76 @@ var hasResultsDescription = function (resultDesc) {
     })
 };
 
-var hasEditAction = function (isNot) {
-   var desc = isNot ? ' not' : '';
+var hasEditAction = function (is) {
+   var desc = is ? '' : ' not';
 
    hasActionFullPathImpl(
        'should'+desc+' have an edit action',
-       '.data-actions a.edit',
+       'a.action-edit',
        'Edit',
-       isNot);
+       is,true);
 };
-var hasValidateAction = function (isNot) {
-   var desc = isNot ? ' not' : '';
+var hasValidateAction = function (is) {
+   var desc = is ? '' : ' not';
 
    hasActionFullPathImpl(
        'should'+desc+' have a validate action',
-       '.data-actions a.validate',
+       'a.action-validate',
        'Validate',
-       isNot);
+       is,true);
 };
-var hasRejectNonValidAction = function (isNot) {
-   var desc = isNot ? ' not' : '';
+var hasRejectNonValidAction = function (is) {
+   var desc = is ? '' : ' not';
 
    hasActionFullPathImpl(
        'should'+desc+' have a reject non valid action',
-       '.data-actions a.non-valid-reject',
+       'a.action-non-valid-reject',
        'Reject',
-       isNot);
+       is,true);
 };
-var hasRejectValidAction = function (isNot) {
-   var desc = isNot ? ' not' : '';
+var hasRejectValidAction = function (is) {
+   var desc = is ? '' : ' not';
 
    hasActionFullPathImpl(
        'should'+desc+' have a reject valid action',
-       '.data-actions a.valid-reject',
+       'a.action-valid-reject',
        'Delete',
-       isNot);
+       is,true);
 };
-var hasDeleteAction = function (isNot) {
-   var desc = isNot ? ' not' : '';
+var hasDeleteAction = function (is) {
+   var desc = is ? '' : ' not';
 
    hasActionFullPathImpl(
        'should'+desc+' have a delete action',
-       '.data-actions button.delete',
+       'button.action-delete',
        'Delete',
-       isNot);
+       is,true);
 };
 
-var hasActionFullPathImpl = function (desc, path, text, isNot) {
+var actionButtonPath = '.data-actions button[data-toggle=dropdown]';
+
+var hasActionsButton = function (is) {
+   var desc = is ? '' : ' not';
+
+   hasActionFullPathImpl(
+       'should'+desc+' have an action button',
+       actionButtonPath,
+       'Actions',
+       is,true);
+};
+
+var hasActionFullPathImpl = function (desc, path, text, is) {
     it(desc, function () {
+        element(actionButtonPath).click();
         var result = element(path).text();
-        if (isNot) {
-            expect(result).toEqual(text);
+        var regex = new RegExp('\\s*'+text+'\\s*');
+
+        if (is) {
+            expect(result).toMatch(regex);
         } else {
-            expect(result).not().toEqual(text);
+            expect(result).not().toMatch(regex);
         }
     });
 };
+
 

@@ -76,20 +76,34 @@ public class ValidateTransformationTest
 		Multimap<String, Requirement> rules = ArrayListMultimap.create();
 	    file = testFile(file, Control.GM03_2_ISO, rules, true);
     }
+
     @Test
     public void exportThesaurusTitle() throws Throwable
     {
-    	File file = new File(data, "non_validating/iso19139che/exportThesaurusTitleToGM03Bug.xml");
-    	Multimap<String, Requirement> rules = ArrayListMultimap.create();
-    	rules.put("GM03_2_1Core.Core.MD_Keywords", new Count(1, new Finder("thesaurus")));
-    	rules.put("GM03_2_1Core.Core.MD_Keywords", new Exists(new Attribute("thesaurus", "REF", null)));
-    	rules.put("TRANSFER/DATASECTION/GM03_2_1Comprehensive.Comprehensive", new Count(1, new Finder("GM03_2_1Core.Core.MD_Thesaurus/citation")));
-    	file = testFile(file, Control.ISO_GM03, rules, true);
-    	
-    	rules.clear();
-    	rules.put("CHE_MD_Metadata/identificationInfo/CHE_MD_DataIdentification", new Count(1, new Finder("descriptiveKeywords/MD_Keywords/keyword")));
-    	rules.put("CHE_MD_Metadata/identificationInfo/CHE_MD_DataIdentification", new Count(1, new Finder("descriptiveKeywords/MD_Keywords/thesaurusName/CI_Citation/title")));
-    	file = testFile(file, Control.GM03_2_ISO, rules, true);
+        File file = new File(data, "non_validating/iso19139che/exportThesaurusTitleToGM03Bug.xml");
+        Multimap<String, Requirement> rules = ArrayListMultimap.create();
+        rules.put("GM03_2_1Core.Core.MD_Keywords", new Count(1, new Finder("thesaurus")));
+        rules.put("GM03_2_1Core.Core.MD_Keywords", new Exists(new Attribute("thesaurus", "REF", null)));
+        rules.put("TRANSFER/DATASECTION/GM03_2_1Comprehensive.Comprehensive", new Count(1, new Finder("GM03_2_1Core.Core.MD_Thesaurus/citation")));
+        file = testFile(file, Control.ISO_GM03, rules, true);
+
+        rules.clear();
+        rules.put("CHE_MD_Metadata/identificationInfo/CHE_MD_DataIdentification", new Count(1, new Finder("descriptiveKeywords/MD_Keywords/keyword")));
+        rules.put("CHE_MD_Metadata/identificationInfo/CHE_MD_DataIdentification", new Count(1, new Finder("descriptiveKeywords/MD_Keywords/thesaurusName/CI_Citation/title")));
+        file = testFile(file, Control.GM03_2_ISO, rules, true);
+        System.out.println(file);
+    }
+
+    @Test
+    public void keywordGmdTitleInCorrectPlace() throws Throwable
+    {
+        File file = new File(data, "non_validating/iso19139che/exportThesaurusTitleToGM03Bug.xml");
+        Multimap<String, Requirement> rules = ArrayListMultimap.create();
+        file = testFile(file, Control.ISO_GM03, rules, true);
+
+        // ensure file validates
+        file = testFile(file, Control.GM03_2_ISO, rules, true);
+        System.out.println(file);
     }
 
     @Test

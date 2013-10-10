@@ -306,7 +306,10 @@
               </gmd:textGroup>
             </gmd:PT_FreeText>
           </gmd:keyword>
-          <gmd:thesaurusName>
+            <gmd:type>
+                <gmd:MD_KeywordTypeCode codeList="./resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
+            </gmd:type>
+            <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
                 <gco:CharacterString>GEMET Thesaurus</gco:CharacterString>

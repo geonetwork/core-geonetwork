@@ -21,25 +21,28 @@ describe('contacts', function () {
 
         checkBreadCrumbs('Non-validated', 'Contacts');
         hasResultsDescription('Non-Validated Contact');
+
+        hasActionsButton(true);
         hasEditAction(true);
-        hasValidateAction(true);
-        hasRejectNonValidAction(true);
-        hasRejectValidAction(false);
-        hasDeleteAction(false);
+//        hasValidateAction(true);
+//        hasRejectNonValidAction(true);
+//        hasRejectValidAction(false);
+//        hasDeleteAction(false);
     });
-
-    describe('/validated/contacts', function () {
-        beforeEach(function () {
-            browser().navigateTo('#/validated/contacts');
-        });
-
-        checkBreadCrumbs('Validated', 'Contacts');
-        hasResultsDescription('Validated Contact')
-
-        hasEditAction(true);
-        hasValidateAction(false);
-        hasRejectNonValidAction(false);
-        hasRejectValidAction(true);
-        hasDeleteAction(false);
-    });
+//
+//    describe('/validated/contacts', function () {
+//        beforeEach(function () {
+//            browser().navigateTo('#/validated/contacts');
+//        });
+//
+//        checkBreadCrumbs('Validated', 'Contacts');
+//        hasResultsDescription('Validated Contact')
+//
+//        hasActionsButton(true);
+//        hasEditAction(true);
+//        hasValidateAction(false);
+//        hasRejectNonValidAction(false);
+//        hasRejectValidAction(true);
+//        hasDeleteAction(false);
+//    });
 });

@@ -50,17 +50,19 @@
                 </div>
             </td>
             <td class="data-actions" style="width: 10%">
-                <button ng-show="isDeletePage" class="btn btn-default" data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</button>
+                <button ng-show="isDeletePage" class="action-delete btn btn-default" data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</button>
                 <div ng-hide="isDeletePage" class="dropdown">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" >{{translate('actions')}} <span class="caret"></span></button>
+
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <!--<li><a data-ng-click="open('geocat', {s_search:'', customFilter: luceneIndexField + '=' + row.xlink}, '_sharedObject')">{{translate('search')}}</a></li>-->
-                        <li><a data-ng-click="edit(row)">{{translate('edit')}}</a></li>
-                        <li ng-show="!isValidated"><a data-toggle="modal" href="#confirmValidateModal" >{{translate('validate')}}</a></li>
-                        <li ng-show="!isValidated"><a data-toggle="modal" href="#rejectModal" >{{translate('reject')}}</a></li>
-                        <li ng-show="isValidated"><a data-toggle="modal" href="#rejectModal" >{{translate('delete')}}</a></li>
-                        <li ng-show="isDeletePage"><a data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</a></li>
+                        <li><a class="action-edit" data-ng-click="edit(row)">{{translate('edit')}}</a></li>
+                        <li ng-show="!isValidated"><a class="action-validate" data-toggle="modal" href="#confirmValidateModal" >{{translate('validate')}}</a></li>
+                        <li ng-show="!isValidated"><a class="action-non-valid-reject" data-toggle="modal" href="#rejectModal" >{{translate('reject')}}</a></li>
+                        <li ng-show="isValidated"><a class="action-valid-reject" data-toggle="modal" href="#rejectModal" >{{translate('delete')}}</a></li>
+                        <li ng-show="isDeletePage"><a class="action-delete" data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</a></li>
                     </ul>
+
                 </div>
             </td>
         </tr>
