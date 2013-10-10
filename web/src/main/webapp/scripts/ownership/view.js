@@ -106,9 +106,10 @@ function setTargetUsers(groupId, ctrl)
 				var edId = xml.evalXPath(editors[j], 'id');
 				var name = xml.evalXPath(editors[j], 'name');
 				var surn = xml.evalXPath(editors[j], 'surname');
+                var username = xml.evalXPath(editors[j], 'username');
 				
 				if (edId != srcId)
-					gui.addToSelect(ctrl, edId, surn +' '+ name);
+					gui.addToSelect(ctrl, edId, surn +' '+ name +' ('+ username +') ');
 			}
 		}		
 	}
