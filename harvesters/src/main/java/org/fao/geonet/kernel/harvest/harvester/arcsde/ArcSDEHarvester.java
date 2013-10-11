@@ -22,28 +22,20 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
-import org.fao.geonet.domain.*;
-import org.fao.geonet.exceptions.BadInputEx;
-import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-
+import org.fao.geonet.Logger;
 import org.fao.geonet.arcgis.ArcSDEMetadataAdapter;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
-import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
-import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -154,8 +146,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		CategoryMapper localCateg = new CategoryMapper(context);
 		GroupMapper localGroups = new GroupMapper(context);
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        dataMan.commit(true);
 
         List<String> idsForHarvestingResult = new ArrayList<String>();
 		//-----------------------------------------------------------------------
@@ -242,8 +233,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
         context.getBean(MetadataRepository.class).save(metadata);
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        dataMan.commit(true);
 
         dataMan.indexMetadata(id);
 	}
@@ -278,8 +268,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        dataMan.commit(true);
 
         dataMan.indexMetadata(id);
 		return id;

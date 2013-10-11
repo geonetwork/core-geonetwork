@@ -66,7 +66,7 @@ public class ResourceLib {
 	 * {@link #getDir(jeeves.server.context.ServiceContext, String, int)}.
 	 */
 	public String getDir(ServiceContext context, String access, String id) {
-		return getDir(context, access, id);
+		return getDir(context, access, Integer.valueOf(id));
 	}
 
 	/**

@@ -23,28 +23,22 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.OperationAbortedEx;
-import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.ConstraintLanguage;
-import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.CswOperation;
-import org.fao.geonet.csw.common.CswServer;
-import org.fao.geonet.csw.common.ElementSetName;
-import org.fao.geonet.csw.common.ResultType;
-import org.fao.geonet.csw.common.TypeName;
+import org.fao.geonet.csw.common.*;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
 import java.net.URL;

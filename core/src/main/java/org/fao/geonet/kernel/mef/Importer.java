@@ -419,16 +419,12 @@ public class Importer {
                 IO.mkdirs(new File(pubDir), "MEF Importer public resources directory for metadata "+metadataIdMap);
                 IO.mkdirs(new File(priDir), "MEF Importer private resources directory for metadata "+metadataIdMap);
 
-				if (indexGroup) {
-					dm.indexMetadata(metadataIdMap.get(index));
-				} else {
-                    dm.indexInThreadPool(context, metadataIdMap.get(index));
-				}
+                dm.indexMetadata(metadataIdMap.get(index));
 			}
 
 			// --------------------------------------------------------------------
 
-			public void handlePublicFile(String file, String changeDate,
+        public void handlePublicFile(String file, String changeDate,
 					InputStream is, int index) throws IOException {
                 if(Log.isDebugEnabled(Geonet.MEF)) {
                     Log.debug(Geonet.MEF, "Adding public file with name=" + file);

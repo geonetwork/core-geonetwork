@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.CheckForNull;
+import javax.persistence.EntityManager;
 
 import jeeves.component.ProfileManager;
 import jeeves.config.springutil.JeevesApplicationContext;
@@ -88,6 +89,7 @@ public class ServiceContext extends BasicContext
 	private boolean startupError = false;
 	Map<String,String> startupErrors;
     private XmlCacheManager xmlCacheManager;
+    private EntityManager entityManager;
     /**
      * Property to be able to add custom response headers depending on the code
      * (and not the xml of Jeeves)
@@ -117,10 +119,11 @@ public class ServiceContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ServiceContext(String service, JeevesApplicationContext jeevesApplicationContext, XmlCacheManager cacheManager, MonitorManager mm, ProfileManager p, Map<String, Object> contexts)
+	public ServiceContext(String service, JeevesApplicationContext jeevesApplicationContext, XmlCacheManager cacheManager, MonitorManager mm, ProfileManager p, Map<String, Object> contexts, EntityManager entityManager)
 	{
 		super(jeevesApplicationContext, mm, contexts);
 
+        this.entityManager = entityManager;
 		this.xmlCacheManager = cacheManager;
 		profilMan    = p;
 		setService(service);
@@ -210,7 +213,7 @@ public class ServiceContext extends BasicContext
     }
 
 	public Element execute(LocalServiceRequest request) throws Exception {
-		ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), getXmlCacheManager(), getMonitorManager(), getProfileManager(), htContexts);
+		ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), getXmlCacheManager(), getMonitorManager(), getProfileManager(), htContexts, getEntityManager());
 		
 		UserSession session = userSession;
 		if(userSession == null) {
@@ -253,7 +256,9 @@ public class ServiceContext extends BasicContext
         return statusCode;
     }
 
-
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
 }
 
 //=============================================================================

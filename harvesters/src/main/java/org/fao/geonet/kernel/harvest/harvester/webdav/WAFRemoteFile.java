@@ -23,12 +23,13 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import org.fao.geonet.utils.Xml;
 import org.apache.commons.httpclient.HttpException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.util.Sha1Encoder;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;

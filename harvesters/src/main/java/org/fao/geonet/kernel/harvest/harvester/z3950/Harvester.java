@@ -22,18 +22,15 @@
 package org.fao.geonet.kernel.harvest.harvester.z3950;
 
 import com.google.common.base.Optional;
-import org.fao.geonet.Logger;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -44,19 +41,15 @@ import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.main.Info;
+import org.fao.geonet.utils.Xml;
 import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 //=============================================================================
 
@@ -111,10 +104,8 @@ class Harvester extends BaseAligner {
 		}
 
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-
         if (serverResults.locallyRemoved > 0) {
-            context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+            dataMan.commit(true);
         }
 
 		// --- Search remote node
@@ -353,9 +344,10 @@ class Harvester extends BaseAligner {
 						result.doesNotValidate++;
 					} 
 				}
-			
-				dataMan.indexMetadata(id);
-                context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+
+                dataMan.commit(true);
+
+                dataMan.indexMetadata(id);
 
                 result.addedMetadata++;
             }

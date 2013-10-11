@@ -27,7 +27,6 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
-import org.fao.geonet.component.csw.Transaction;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
@@ -58,14 +57,11 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.Set;
 
 import static org.quartz.JobKey.jobKey;
 
@@ -200,6 +196,7 @@ public abstract class AbstractHarvester extends BaseAligner {
      *
      * @throws Exception
 	  */
+    @Transactional
 	public synchronized void destroy() throws Exception {
 	    doUnschedule();
 

@@ -9,7 +9,6 @@ import org.fao.geonet.domain.HarvestHistory_;
 import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.repository.HarvestHistoryRepository;
-import org.fao.geonet.repository.SortUtils;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 

@@ -24,7 +24,6 @@
 package org.fao.geonet.services.ownership;
 
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.*;
-import static org.springframework.data.jpa.domain.Specifications.*;
 
 import com.google.common.base.Optional;
 import jeeves.server.ServiceConfig;
@@ -41,8 +40,6 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -82,8 +79,7 @@ public class Transfer extends NotInReadOnlyModeService {
 
 		//--- a commit just to release some resources
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        dm.commit(true);
 
         int privCount = 0;
 
@@ -117,17 +113,17 @@ public class Transfer extends NotInReadOnlyModeService {
 			privCount++;
 		}
 
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        dm.commit(true);
 
         //--- reindex metadata
         List<String> list = new ArrayList<String>();
 		for (int mdId : metadata) {
             list.add(Integer.toString(mdId));
         }
-        
-        dm.indexInThreadPool(context,list);
 
-		//--- return summary
+        dm.indexMetadata(list);
+
+        //--- return summary
 		return new Element("response")
 			.addContent(new Element("privileges").setText(privCount      +""))
 			.addContent(new Element("metadata")  .setText(metadata.size()+""));

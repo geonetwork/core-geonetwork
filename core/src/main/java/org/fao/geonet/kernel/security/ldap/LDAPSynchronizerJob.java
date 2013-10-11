@@ -38,12 +38,9 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -87,58 +84,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
             }
 
             // start transaction
-                new TransactionTemplate(applicationContext.getBean(JpaTransactionManager.class)).execute(new
-                                                                                                                 TransactionCallbackWithoutResult() {
-
-                    @Override
-                    protected void doInTransactionWithoutResult(TransactionStatus status) {
-
-                        // Get LDAP information defining which users to sync
-                        final JobDataMap jdm = jobExecContext.getJobDetail().getJobDataMap();
-                        contextSource = (DefaultSpringSecurityContextSource) jdm.get("contextSource");
-
-                        final String ldapUserSearchFilter = (String) jdm.get("ldapUserSearchFilter");
-                        final String ldapUserSearchBase = (String) jdm.get("ldapUserSearchBase");
-                        final String ldapUserSearchAttribute = (String) jdm.get("ldapUserSearchAttribute");
-
-                        final DirContext dc = contextSource.getReadOnlyContext();
-                        try {
-                        // Users
-                        synchronizeUser(applicationContext, ldapUserSearchFilter, ldapUserSearchBase,
-                                ldapUserSearchAttribute, dc);
-
-                        // And optionaly groups
-                        String createNonExistingLdapGroup = (String) jdm
-                                .get("createNonExistingLdapGroup");
-
-                        if ("true".equals(createNonExistingLdapGroup)) {
-                            String ldapGroupSearchFilter = (String) jdm
-                                    .get("ldapGroupSearchFilter");
-                            String ldapGroupSearchBase = (String) jdm
-                                    .get("ldapGroupSearchBase");
-                            String ldapGroupSearchAttribute = (String) jdm
-                                    .get("ldapGroupSearchAttribute");
-                            String ldapGroupSearchPattern = (String) jdm
-                                    .get("ldapGroupSearchPattern");
-
-                            synchronizeGroup(applicationContext, ldapGroupSearchFilter,
-                                    ldapGroupSearchBase, ldapGroupSearchAttribute,
-                                    ldapGroupSearchPattern, dc);
-                        }
-
-                        } catch (SQLException e) {
-                            throw new RuntimeException(e);
-                        } catch (NamingException e) {
-                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                        } finally {
-                            try {
-                                dc.close();
-                            } catch (NamingException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    }
-                });
+            runInTransaction(jobExecContext);
 
 
         } catch (Exception e) {
@@ -153,8 +99,56 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
             Log.debug(Geonet.LDAP, "LDAPSynchronizerJob done.");
         }
     }
-    
-    
+
+    @Transactional
+    private void runInTransaction(JobExecutionContext jobExecContext) {
+        // Get LDAP information defining which users to sync
+        final JobDataMap jdm = jobExecContext.getJobDetail().getJobDataMap();
+        contextSource = (DefaultSpringSecurityContextSource) jdm.get("contextSource");
+
+        final String ldapUserSearchFilter = (String) jdm.get("ldapUserSearchFilter");
+        final String ldapUserSearchBase = (String) jdm.get("ldapUserSearchBase");
+        final String ldapUserSearchAttribute = (String) jdm.get("ldapUserSearchAttribute");
+
+        final DirContext dc = contextSource.getReadOnlyContext();
+        try {
+        // Users
+        synchronizeUser(applicationContext, ldapUserSearchFilter, ldapUserSearchBase,
+                ldapUserSearchAttribute, dc);
+
+        // And optionaly groups
+        String createNonExistingLdapGroup = (String) jdm
+                .get("createNonExistingLdapGroup");
+
+        if ("true".equals(createNonExistingLdapGroup)) {
+            String ldapGroupSearchFilter = (String) jdm
+                    .get("ldapGroupSearchFilter");
+            String ldapGroupSearchBase = (String) jdm
+                    .get("ldapGroupSearchBase");
+            String ldapGroupSearchAttribute = (String) jdm
+                    .get("ldapGroupSearchAttribute");
+            String ldapGroupSearchPattern = (String) jdm
+                    .get("ldapGroupSearchPattern");
+
+            synchronizeGroup(applicationContext, ldapGroupSearchFilter,
+                    ldapGroupSearchBase, ldapGroupSearchAttribute,
+                    ldapGroupSearchPattern, dc);
+        }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (NamingException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } finally {
+            try {
+                dc.close();
+            } catch (NamingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
     private void synchronizeUser(ApplicationContext applicationContext, String ldapUserSearchFilter,
                                  String ldapUserSearchBase, String ldapUserSearchAttribute,
                                  DirContext dc) throws NamingException, SQLException {

@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.group;
 
-import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
 import jeeves.constants.Jeeves;
@@ -33,7 +32,6 @@ import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.kernel.DataManager;
@@ -44,8 +42,6 @@ import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -84,9 +80,9 @@ public class Remove extends NotInReadOnlyModeService {
 		DataManager   dm = gc.getBean(DataManager.class);
 
 
-        dm.indexInThreadPool(context, Lists.transform(reindex, Functions.toStringFunction()));
+        dm.indexMetadata(Lists.transform(reindex, Functions.toStringFunction()));
 
-		return new Element(Jeeves.Elem.RESPONSE)
+        return new Element(Jeeves.Elem.RESPONSE)
 							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));
 	}
 }

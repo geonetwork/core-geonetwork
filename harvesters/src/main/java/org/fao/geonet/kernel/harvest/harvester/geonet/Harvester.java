@@ -23,25 +23,21 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.exceptions.BadServerResponseEx;
-import org.fao.geonet.exceptions.BadSoapResponseEx;
-import org.fao.geonet.exceptions.BadXmlResponseEx;
-import org.fao.geonet.exceptions.OperationAbortedEx;
-import org.fao.geonet.exceptions.UserNotFoundEx;
-import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.XmlRequest;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.exceptions.*;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
 import java.io.File;

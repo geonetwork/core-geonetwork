@@ -23,7 +23,7 @@
 
 package org.fao.geonet.services.config;
 
-import jeeves.JeevesProxyInfo;
+import jeeves.server.JeevesProxyInfo;
 import jeeves.constants.Jeeves;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;

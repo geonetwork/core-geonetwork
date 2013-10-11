@@ -32,6 +32,7 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.persistence.EntityManager;
 import java.util.Collections;
 import java.util.Map;
 
@@ -123,6 +124,7 @@ public class BasicContext implements Logger
     public void fatal(final String message) { logger.fatal(message); }
     @Override
     public String getModule() { return logger.getModule(); }
+
 }
 
 //=============================================================================

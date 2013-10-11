@@ -34,8 +34,7 @@ public class ScheduleListener implements JobListener {
 
             ScheduleInfo info = scheduleManager.getScheduleInfo(scheduleJob.getScheduleName());
             ScheduleContext scheduleContext = new ScheduleContext(info.name, scheduleManager.getApplicationContext(), scheduleManager.getMonitorManager(),
-
-                    scheduleManager.getHtContexts());
+                scheduleManager.getHtContexts());
             scheduleContext.setBaseUrl(scheduleManager.getBaseUrl());
             scheduleContext.setAppPath(scheduleManager.getAppPath());
 

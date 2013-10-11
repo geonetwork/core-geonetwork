@@ -23,17 +23,17 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.MissingParameterEx;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.QuartzSchedulerUtils;
-import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.QuartzSchedulerUtils;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;

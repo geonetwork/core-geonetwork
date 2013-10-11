@@ -6,7 +6,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,7 +36,6 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
      * @param updater the function that updates the domain object before saving.
      * @return the saved domain object.
      */
-    @Transactional
     @Nonnull
     T update(ID id, @Nonnull Updater<T> updater);
 

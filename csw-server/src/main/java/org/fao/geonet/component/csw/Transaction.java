@@ -161,18 +161,16 @@ private SearchController _searchController;
                 }
             }
 		}
-		catch( Exception e )
-		{
+		catch( Exception e ) {
 			Log.error(Geonet.CSW, "Cannot process transaction");
 			Log.error(Geonet.CSW, " (C) StackTrace\n"+ Util.getStackTrace(e));
 
 			throw new NoApplicableCodeEx("Cannot process transaction: " + e.getMessage());
 		}
-		finally
-		{
+		finally {
             try {
-                dataMan.indexInThreadPool(context, new ArrayList<String>(toIndex));
-            } catch (SQLException e) {
+                dataMan.indexMetadata(new ArrayList<String>(toIndex));
+            } catch (Exception e) {
                 Log.error(Geonet.CSW, "cannot index");
                 Log.error(Geonet.CSW, " (C) StackTrace\n" + Util.getStackTrace(e));
             }
@@ -184,9 +182,7 @@ private SearchController _searchController;
 
 	//---------------------------------------------------------------------------
 
-	public Element adaptGetRequest(Map<String, String> params)
-	{
-
+	public Element adaptGetRequest(Map<String, String> params) {
         return new Element(getName(), Csw.NAMESPACE_CSW);
 	}
 	

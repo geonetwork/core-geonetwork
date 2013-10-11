@@ -98,27 +98,30 @@ public class AddDefault implements Service {
 						templateFilesList.add(file);
 			}
 
-			for (File temp : templateFilesList) {
-				String status = "failed";
-				String templateName = temp.getName();
+            final String prefix = "sub-";
+            final int prefixLength = prefix.length();
+            for (File temp : templateFilesList) {
+                String status = "failed";
+                String templateName = temp.getName();
 
-				Element template = new Element("template");
-				template.setAttribute("name", templateName);
+                Element template = new Element("template");
+                template.setAttribute("name", templateName);
 
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER,
-						" - Adding template file (for schema " + schemaName + "): " + templateName);
+                            " - Adding template file (for schema " + schemaName + "): " + templateName);
+                }
 
-				try {
-					Element xml = Xml.loadFile(temp);
-					String uuid = UUID.randomUUID().toString();
-					String isTemplate = "y";
-					String title = null;
+                try {
+                    Element xml = Xml.loadFile(temp);
+                    String uuid = UUID.randomUUID().toString();
+                    String isTemplate = "y";
+                    String title = null;
 
-					if (templateName.startsWith("sub-")) {
+                    if (templateName.startsWith(prefix)) {
 						isTemplate = "s";
-						title = templateName.substring(4,
-								templateName.length() - 4);
+						title = templateName.substring(prefixLength,
+								templateName.length() - prefixLength);
 					}
                     //
                     // insert metadata

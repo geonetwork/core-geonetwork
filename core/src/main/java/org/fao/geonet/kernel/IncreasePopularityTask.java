@@ -10,9 +10,9 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
-import javax.transaction.Transactional;
 
 /**
  * TODO javadoc.

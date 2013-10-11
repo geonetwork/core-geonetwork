@@ -23,13 +23,13 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.httpclient.HttpsURL;
 import org.apache.webdav.lib.WebdavResource;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;

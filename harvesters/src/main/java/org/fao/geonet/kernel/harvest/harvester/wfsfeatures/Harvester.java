@@ -23,17 +23,14 @@
 
 package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.BadXmlResponseEx;
-import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.XmlElementReader;
-import org.fao.geonet.utils.XmlRequest;
 import jeeves.xlink.Processor;
 import org.apache.commons.httpclient.HttpException;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
@@ -44,12 +41,12 @@ import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.Harves
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlElementReader;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
@@ -59,11 +56,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 //=============================================================================
 /** 
@@ -342,8 +335,7 @@ class Harvester
 		}
 		
 		if (result.subtemplatesRemoved + result.recordsRemoved > 0)  {
-            final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-            context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+            dataMan.commit(true);
         }
     }
 

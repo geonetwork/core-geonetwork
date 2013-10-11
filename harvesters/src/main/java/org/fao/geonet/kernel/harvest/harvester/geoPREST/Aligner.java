@@ -23,28 +23,21 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
-import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.XmlRequest;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
-import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.net.URL;
 import java.util.Set;
@@ -91,8 +84,7 @@ public class Aligner extends BaseAligner
 		localGroups= new GroupMapper(context);
 		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        dataMan.commit(true);
 
         //-----------------------------------------------------------------------
 		//--- remove old metadata
@@ -105,7 +97,7 @@ public class Aligner extends BaseAligner
 					log.debug("  - Removing old metadata with local id:"+ id);
 				dataMan.deleteMetadata(context, id);
 
-                context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+                dataMan.commit(true);
 
                 result.locallyRemoved++;
 			}
@@ -168,8 +160,7 @@ public class Aligner extends BaseAligner
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        dataMan.commit(true);
 
         dataMan.indexMetadata(id);
 		result.addedMetadata++;
@@ -223,8 +214,7 @@ public class Aligner extends BaseAligner
                 context.getBean(MetadataRepository.class).save(metadata);
                 addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-                final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-                context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+                dataMan.commit(true);
 
                 dataMan.indexMetadata(id);
 				result.updatedMetadata++;

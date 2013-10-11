@@ -51,11 +51,13 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PreDestroy;
+import javax.persistence.EntityManager;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.xml.transform.TransformerConfigurationException;
@@ -82,17 +84,17 @@ public class JeevesEngine {
 	/** true if the 'general' part has been loaded */
 	private boolean _generalLoaded;
 
-	private ServiceManager _serviceMan = new ServiceManager();
-	private ScheduleManager _scheduleMan = new ScheduleManager();
+    @Autowired
+	private ServiceManager _serviceMan;
 
-	private Logger _appHandLogger = Log.createLogger(Log.APPHAND);
-	private List<Element> _appHandList = new ArrayList<Element>();
-	private Vector<ApplicationHandler> _appHandlers = new Vector<ApplicationHandler>();
-	private XmlCacheManager _xmlCacheManager = new XmlCacheManager();
+	private ScheduleManager _scheduleMan = new ScheduleManager();
+    private Logger _appHandLogger = Log.createLogger(Log.APPHAND);
+    private List<Element> _appHandList = new ArrayList<Element>();
+    private Vector<ApplicationHandler> _appHandlers = new Vector<ApplicationHandler>();
+    private XmlCacheManager _xmlCacheManager = new XmlCacheManager();
+
     private MonitorManager _monitorManager;
-    
     private List<Element> _dbServices = new ArrayList<Element>();
-    
 
 
     //---------------------------------------------------------------------------
@@ -103,8 +105,7 @@ public class JeevesEngine {
 
 	/** Inits the engine, loading all needed data
 	  */
-    @Transactional
-	public void init(final String appPath, final String configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException
+    @Transactional	public void init(final String appPath, final String configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException
 	{
         ServletContext servletContext = null;
         if (servlet != null) {
@@ -155,7 +156,6 @@ public class JeevesEngine {
             _serviceMan.setAppPath(appPath);
             _serviceMan.setMonitorMan(_monitorManager);
             _serviceMan.setXmlCacheManager(_xmlCacheManager);
-            _serviceMan.setApplicationContext(jeevesAppContext);
             _serviceMan.setBaseUrl(baseUrl);
             _serviceMan.setServlet(servlet);
 

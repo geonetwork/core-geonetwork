@@ -24,7 +24,7 @@
 package org.fao.geonet;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
-import jeeves.JeevesProxyInfo;
+import jeeves.server.JeevesProxyInfo;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.interfaces.ApplicationHandler;
@@ -44,7 +44,6 @@ import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
-import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -156,7 +155,6 @@ public class Geonetwork implements ApplicationHandler {
         String systemDataDir = handlerConfig.getMandatoryValue(Geonet.Config.SYSTEM_DATA_DIR);
         String thesauriDir = handlerConfig.getMandatoryValue(Geonet.Config.CODELIST_DIR);
         String luceneDir = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_DIR);
-        String dataDir = handlerConfig.getMandatoryValue(Geonet.Config.DATA_DIR);
         String luceneConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
         String summaryConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.SUMMARY_CONFIG);
 
@@ -294,8 +292,8 @@ public class Geonetwork implements ApplicationHandler {
         try {
             maxWritesInTransaction = Integer.parseInt(maxWritesInTransactionStr);
         } catch (NumberFormatException nfe) {
-            logger.error("Invalid config parameter: maximum number of writes to spatial index in a transaction (maxWritesInTransaction)" +
-                         ", Using " + maxWritesInTransaction + " instead.");
+            logger.error("Invalid config parameter: maximum number of writes to spatial index in a transaction (maxWritesInTransaction)"
+                         + ", Using " + maxWritesInTransaction + " instead.");
             nfe.printStackTrace();
         }
 
@@ -387,7 +385,7 @@ public class Geonetwork implements ApplicationHandler {
 
 
         _applicationContext.getBean(DataManager.class).init(context, false);
-        _applicationContext.getBean(HarvestManager.class).init(context, gnContext);
+        _applicationContext.getBean(HarvestManager.class).init(context, gnContext.isReadOnly());
 
         logger.info("Site ID is : " + settingMan.getSiteId());
 

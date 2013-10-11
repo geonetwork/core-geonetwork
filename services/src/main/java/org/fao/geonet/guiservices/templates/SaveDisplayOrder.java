@@ -61,7 +61,7 @@ public class SaveDisplayOrder implements Service {
                 ids.add(id);
             }
         }
-        dm.indexInThreadPool(context, ids);
+        dm.indexMetadata(ids);
         return null;
     }
 }

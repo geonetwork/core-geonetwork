@@ -26,10 +26,8 @@ package org.fao.geonet.kernel.harvest.harvester;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.jdom.Element;
 
 import java.util.HashMap;
-import java.util.List;
 
 //=============================================================================
 

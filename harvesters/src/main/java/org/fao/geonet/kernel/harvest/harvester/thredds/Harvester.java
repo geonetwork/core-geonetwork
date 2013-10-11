@@ -27,50 +27,33 @@
 package org.fao.geonet.kernel.harvest.harvester.thredds;
 
 import com.google.common.base.Optional;
+import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.Constants;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.BadServerCertificateEx;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
-import org.fao.geonet.Logger;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.XmlRequest;
-import jeeves.xlink.Processor;
-
-import org.apache.commons.io.IOUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
-import org.fao.geonet.kernel.harvest.harvester.UriMapper;
+import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.FragmentParams;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.Sha1Encoder;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
-
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import thredds.catalog.InvAccess;
-import thredds.catalog.InvCatalogFactory;
-import thredds.catalog.InvCatalogImpl;
-import thredds.catalog.InvCatalogRef;
-import thredds.catalog.InvDataset;
-import thredds.catalog.InvMetadata;
-import thredds.catalog.InvService;
-import thredds.catalog.ServiceType;
-import thredds.catalog.ThreddsMetadata;
+import thredds.catalog.*;
 import thredds.catalog.dl.DIFWriter;
 import ucar.nc2.Attribute;
 import ucar.nc2.dataset.NetcdfDataset;
@@ -80,7 +63,6 @@ import ucar.nc2.units.DateType;
 import ucar.unidata.util.StringUtil;
 
 import javax.net.ssl.SSLHandshakeException;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -91,12 +73,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //=============================================================================
 /** 
@@ -275,8 +252,7 @@ class Harvester extends BaseAligner
 			}
 		}
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        dataMan.commit(true);
 
         result.totalMetadata = result.serviceRecords + result.collectionDatasetRecords + result.atomicDatasetRecords;
 		return result;
@@ -463,8 +439,7 @@ class Harvester extends BaseAligner
 
         dataMan.indexMetadata(id);
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        dataMan.commit(true);
     }
 
 	//---------------------------------------------------------------------------

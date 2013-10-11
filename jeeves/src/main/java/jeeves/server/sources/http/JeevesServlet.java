@@ -25,6 +25,7 @@ package jeeves.server.sources.http;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -42,6 +43,7 @@ import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 //=============================================================================
@@ -94,6 +96,15 @@ public class JeevesServlet extends HttpServlet
         } else {
             configPath = new File(configPath).getParent() + File.separator;
         }
+
+        // initialize all JPA Repositories.  This should be done outside of the init
+        // because spring-data-jpa first looks up named queries (based on method names) and
+        // if the query is not found an exception is thrown.  This exception will set rollback
+        // on the transaction if a transaction is active.
+        //
+        // We want to initialize all repositories here so they are not lazily initialized
+        // at random places through out the code where it may be in a transaction.
+        jeevesAppContext.getBeansOfType(JpaRepository.class, false, true);
 
         jeevesAppContext.getBean(JeevesEngine.class).init(appPath, configPath, baseUrl, this);
         initialized = true;

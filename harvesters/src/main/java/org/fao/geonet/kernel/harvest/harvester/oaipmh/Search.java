@@ -23,11 +23,10 @@
 
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.Util;
-
-import org.fao.geonet.domain.ISODate;
 import org.jdom.Element;
 
 //=============================================================================

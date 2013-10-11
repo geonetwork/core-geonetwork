@@ -23,8 +23,8 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.Util;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 

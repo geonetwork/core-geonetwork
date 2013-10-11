@@ -24,9 +24,6 @@
 package org.fao.geonet.component.harvester.csw;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -58,6 +55,8 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.harvesting.Util;
 import org.fao.geonet.util.ISOPeriod;
 import org.fao.geonet.util.MailSender;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.stereotype.Component;
 
@@ -71,11 +70,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.RunnableFuture;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 /**
  * CSW Harvest operation.

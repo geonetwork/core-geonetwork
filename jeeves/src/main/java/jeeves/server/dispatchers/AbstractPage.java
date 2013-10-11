@@ -111,12 +111,13 @@ public abstract class AbstractPage
 
 	private void invokeGuiService(ServiceContext context,  Element response, Element root, List<GuiService> guiServices)
 	{
-		for(GuiService guiSrv : guiServices){
+		for (GuiService guiSrv : guiServices) {
 			try {
 				Element elGui = guiSrv.exec(response, context);
 
-				if (elGui != null)
-					root.addContent(elGui);
+				if (elGui != null) {
+                    root.addContent(elGui);
+                }
 			} catch (Exception e) {
 				ServiceManager.error("Exception executing gui service : "
 						+ e.toString());

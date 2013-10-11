@@ -24,21 +24,16 @@
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
 import com.google.common.base.Optional;
-import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.XmlRequest;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
@@ -46,33 +41,26 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.util.Sha1Encoder;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 //=============================================================================
@@ -229,16 +217,13 @@ class Harvester extends BaseAligner
 		}
 
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-
         if (result.locallyRemoved > 0) {
-            context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+            dataMan.commit(true);
         }
 		
         // Convert from GetCapabilities to ISO19119
         addMetadata (xml);
-
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        dataMan.commit(true);
 
         result.totalMetadata = result.addedMetadata + result.layer;
     
@@ -352,8 +337,7 @@ class Harvester extends BaseAligner
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url));
 		dataMan.setTemplate(iId, MetadataType.METADATA, null);
 
-         final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-         context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+         dataMan.commit(true);
 
          //dataMan.indexMetadata(dbms, id); setTemplate update the index
 		
@@ -667,8 +651,7 @@ class Harvester extends BaseAligner
             if(log.isDebugEnabled()) log.debug("    - Set Harvested.");
 			dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url)); // FIXME : harvestUuid should be a MD5 string
 
-            final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-            context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+            dataMan.commit(true);
 
             dataMan.indexMetadata(reg.id);
 			
@@ -745,8 +728,7 @@ class Harvester extends BaseAligner
 				// Call the services 
 				s.execOnHarvest(par, context, dataMan);
 
-                final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-                context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+                dataMan.commit(true);
 
                 result.thumbnails ++;
 			} else {

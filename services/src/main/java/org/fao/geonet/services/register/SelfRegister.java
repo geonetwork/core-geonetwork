@@ -40,9 +40,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -145,9 +142,6 @@ public class SelfRegister extends NotInReadOnlyModeService {
     String siteURL = si.getSiteUrl() + context.getBaseUrl();
 
     if (!sendRegistrationEmail(params, password, host, port, from, thisSite, siteURL)) {
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).rollback(transactionStatus);
-
         return element.addContent(new Element("result").setText("errorEmailToAddressFailed"));
     }
 

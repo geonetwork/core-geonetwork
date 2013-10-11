@@ -25,9 +25,6 @@ package org.fao.geonet.kernel.harvest.harvester;
 
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.specification.MetadataSpecs;
-import org.jdom.Element;
-import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.HashMap;
 import java.util.List;

@@ -23,17 +23,16 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
-import org.fao.geonet.Constants;
-import org.fao.geonet.exceptions.OperationAbortedEx;
-import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.XmlRequest;
-
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.Constants;
+import org.fao.geonet.Logger;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
 import java.net.URL;

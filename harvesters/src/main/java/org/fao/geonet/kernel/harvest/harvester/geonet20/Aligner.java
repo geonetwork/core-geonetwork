@@ -23,24 +23,21 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
-import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.XmlRequest;
-
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.Collection;
 import java.util.List;
@@ -87,8 +84,6 @@ public class Aligner
 
 		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), siteId);
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-
         //-----------------------------------------------------------------------
         //--- remove old metadata
 
@@ -100,7 +95,7 @@ public class Aligner
                 if(log.isDebugEnabled()) log.debug("  - Removing old metadata with id="+ id);
                 dataMan.deleteMetadata(context, id);
 
-                context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+                dataMan.commit(true);
 				this.result.locallyRemoved++;
 			}
 
@@ -131,7 +126,7 @@ public class Aligner
                     updateMetadata(siteId, info, id);
                 }
 
-                context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+                dataMan.commit(true);
 
 
 

@@ -644,9 +644,9 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(md, id);
 
 		//--- update search criteria
-        dataManager.indexInThreadPoolIfPossible(id);
+        dataManager.indexMetadata(id);
 
-		return true;
+        return true;
 	}
 
     /**
@@ -700,8 +700,8 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(md, id);
 
 		//--- update search criteria
-        dataManager.indexInThreadPoolIfPossible(id);
+        dataManager.indexMetadata(id);
 
-		return true;
+        return true;
 	}
 }

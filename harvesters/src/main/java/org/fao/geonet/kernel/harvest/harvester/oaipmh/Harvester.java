@@ -23,18 +23,16 @@
 
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.OperationAbortedEx;
-import org.fao.geonet.Logger;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -42,7 +40,9 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.utils.Xml;
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.NoRecordsMatchException;
 import org.fao.oaipmh.requests.GetRecordRequest;
@@ -53,9 +53,6 @@ import org.fao.oaipmh.responses.Header;
 import org.fao.oaipmh.responses.ListIdentifiersResponse;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.io.File;
 import java.net.URL;
@@ -195,8 +192,7 @@ class Harvester extends BaseAligner
 		localGroups= new GroupMapper(context);
 		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        dataMan.commit(true);
 
         //-----------------------------------------------------------------------
 		//--- remove old metadata
@@ -209,7 +205,7 @@ class Harvester extends BaseAligner
                 if(log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
 				dataMan.deleteMetadataGroup(context, id);
 
-                context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+                dataMan.commit(true);
 
                 result.locallyRemoved++;
 			}
@@ -277,8 +273,7 @@ class Harvester extends BaseAligner
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        dataMan.commit(true);
 
         dataMan.indexMetadata(id);
 		result.addedMetadata++;
@@ -432,9 +427,7 @@ class Harvester extends BaseAligner
 
             addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-            final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-            context.getBean(JpaTransactionManager.class).commit(transactionStatus);
-
+            dataMan.commit(true);
             dataMan.indexMetadata(id);
 			result.updatedMetadata++;
 		}

@@ -237,8 +237,8 @@ public class XslProcessing extends NotInReadOnlyModeService {
 	                    dataMan.indexMetadata(id);
 	                }
 	                else {
-	                    dataMan.indexInThreadPool(context, id);
-	                }
+                        dataMan.indexMetadata(id);
+                    }
 	            }
 	
 	            report.addMetadataId(iId);

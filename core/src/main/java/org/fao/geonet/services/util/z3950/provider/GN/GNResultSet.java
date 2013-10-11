@@ -37,9 +37,6 @@ import org.jzkit.search.util.RecordModel.InformationFragment;
 import org.jzkit.search.util.RecordModel.InformationFragmentImpl;
 import org.jzkit.search.util.RecordModel.RecordFormatSpecification;
 import org.jzkit.search.util.ResultSet.*;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 import java.util.Observer;
@@ -182,20 +179,10 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
 
                        }
 
-                   final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-                   srvxtx.getBean(JpaTransactionManager.class).commit(transactionStatus);
                    if(Log.isDebugEnabled(Geonet.Z3950_SERVER)) Log.debug(Geonet.Z3950_SERVER, "Fragment returned");
                } catch (Throwable e) {
-                       try {
-                           final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-                           srvxtx.getBean(JpaTransactionManager.class).rollback(transactionStatus);
-                       } catch (Exception e2) {
-                               e2.printStackTrace();
-                       }
-
                    if(Log.isDebugEnabled(Geonet.Z3950_SERVER))
                        Log.debug(Geonet.Z3950_SERVER, "Exception: "+e.getClass().getName()+" "+e);
-                       //e.printStackTrace();
                }
 
                return fragment;

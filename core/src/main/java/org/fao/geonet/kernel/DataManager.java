@@ -32,6 +32,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.Collections2;
 import jeeves.config.springutil.JeevesApplicationContext;
+import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.GeonetworkDataDirectory;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
@@ -78,22 +79,22 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.transaction.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -104,6 +105,8 @@ import java.util.UUID;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
@@ -117,6 +120,8 @@ public class DataManager {
     private static final String FS = File.separator;
     private static final int METADATA_BATCH_PAGE_SIZE = 100000;
 
+    @PersistenceContext
+    private EntityManager _entityManager;
     @Autowired
     private JeevesApplicationContext _applicationContext;
     @Autowired
@@ -199,8 +204,9 @@ public class DataManager {
         Page<Pair<Integer, ISODate>> results = _metadataRepository.findAllIdsAndChangeDates(new PageRequest(currentPage,
                 METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
 
+
         // index all metadata in DBMS if needed
-        while (!results.isLastPage()) {
+        while (results.getNumberOfElements() > 0) {
             for (Pair<Integer, ISODate> result : results) {
 
                 // get metadata
@@ -245,7 +251,7 @@ public class DataManager {
         // if anything to index then schedule it to be done after servlet is
         // up so that any links to local fragments are resolvable
         if (toIndex.size() > 0) {
-            batchRebuild(context, toIndex);
+            batchIndexInThreadPool(context, toIndex);
         }
 
         if (docs.size() > 0) { // anything left?
@@ -286,32 +292,39 @@ public class DataManager {
                 stringIds.add(id.toString());
             }
             // execute indexing operation
-            batchRebuild(context,stringIds);
+            batchIndexInThreadPool(context, stringIds);
         }
     }
 
     /**
-     * TODO javadoc.
+     * Index multiple metadata in a separate thread.  Wait until the current transaction commits before
+     * starting threads (to make sure that all metadata are committed).
      *
-     * @param context
-     * @param ids
+     * @param context context object
+     * @param metadataIds the metadata ids to index
      */
-    private void batchRebuild(ServiceContext context, List<String> ids) {
+    public void batchIndexInThreadPool(ServiceContext context, List<String> metadataIds) {
 
+        TransactionStatus transactionStatus = null;
+        try {
+            transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        } catch (NoTransactionException e) {
+            // not in a transaction so we can go ahead.
+        }
         // split reindexing task according to number of processors we can assign
         int threadCount = ThreadUtils.getNumberOfThreads();
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
         int perThread;
-        if (ids.size() < threadCount) perThread = ids.size();
-        else perThread = ids.size() / threadCount;
+        if (metadataIds.size() < threadCount) perThread = metadataIds.size();
+        else perThread = metadataIds.size() / threadCount;
         int index = 0;
 
-        while(index < ids.size()) {
+        while(index < metadataIds.size()) {
             int start = index;
-            int count = Math.min(perThread,ids.size()-start);
+            int count = Math.min(perThread,metadataIds.size()-start);
             // create threads to process this chunk of ids
-            Runnable worker = new IndexMetadataTask(this, context, ids, start, count);
+            Runnable worker = new IndexMetadataTask(context, metadataIds.subList(start, count), batchIndex, transactionStatus);
             executor.execute(worker);
             index += count;
         }
@@ -319,80 +332,58 @@ public class DataManager {
         executor.shutdown();
     }
 
-    /**
-     * TODO javadoc.
-     * @param id metadata id
-     * @throws Exception hmm
-     */
-    public void indexInThreadPoolIfPossible(String id) throws Exception {
-        if(ServiceContext.get() == null ) {
-            indexMetadata(id);
-        } else {
-            indexInThreadPool(ServiceContext.get(), id);
-        }
-    }
+    Lock indexLock = new ReentrantLock();
+    Set<String> waitForIndexing = new HashSet<String>();
+    Set<String> indexing = new HashSet<String>();
+    Set<IndexMetadataTask> batchIndex = new ConcurrentHashSet<IndexMetadataTask>();
 
-    /**
-     * Adds metadata ids to the thread pool for indexing.
-     *
-     * @param context
-     * @param id
-     * @throws SQLException
-     */
-    public void indexInThreadPool(ServiceContext context, String id) throws SQLException {
-        indexInThreadPool(context, Collections.singletonList(id));
-    }
-    /**
-     * Adds metadata ids to the thread pool for indexing.
-     *
-     * @param context
-     * @param ids
-     * @throws SQLException
-     */
-    public void indexInThreadPool(ServiceContext context, List<String> ids) throws SQLException {
-
-        try {
-            final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-            _applicationContext.getBean(JpaTransactionManager.class).commit(transactionStatus);
-        } catch (TransactionalException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-            if (ids.size() > 0) {
-                Runnable worker = new IndexMetadataTask(this, context, ids);
-                gc.getThreadPool().runTask(worker);
-            }
-        } catch (Exception e) {
-            Log.error(Geonet.DATA_MANAGER, e.getMessage());
-            e.printStackTrace();
-            // TODO why swallow
-        }
-    }
-    
-    Set<IndexMetadataTask> indexing = Collections.synchronizedSet(new HashSet<IndexMetadataTask>());
-    
     public boolean isIndexing() {
-        synchronized (indexing) {
-            return !indexing.isEmpty();
+        indexLock.lock();
+        try {
+            return !indexing.isEmpty() || !batchIndex.isEmpty();
+        } finally {
+            indexLock.unlock();
         }
     }
 
+    public void indexMetadata(final List<String> metadataIds) throws Exception {
+        for (String metadataId : metadataIds) {
+            indexMetadata(metadataId);
+        }
+    }
     /**
      * TODO javadoc.
      *
-     * @param id
+     * @param metadataId
      * @throws Exception
      */
-    public void indexMetadata(final String id) throws Exception {
+    public void indexMetadata(final String metadataId) throws Exception {
+        indexLock.lock();
+        try {
+            if (waitForIndexing.contains(metadataId)) {
+                return;
+            }
+            while (indexing.contains(metadataId)) {
+                try {
+                    waitForIndexing.add(metadataId);
+                    // don't index the same metadata 2x
+                    wait(200);
+                } catch (InterruptedException e) {
+                    return;
+                } finally {
+                    waitForIndexing.remove(metadataId);
+                }
+            }
+            indexing.add(metadataId);
+        } finally {
+            indexLock.unlock();
+        }
         try {
             Vector<Element> moreFields = new Vector<Element>();
-            int id$ = Integer.valueOf(id);
+            int id$ = Integer.valueOf(metadataId);
 
             // get metadata, extracting and indexing any xlinks
-            Element md   = xmlSerializer.selectNoXLinkResolver(id, true);
+            Element md   = xmlSerializer.selectNoXLinkResolver(metadataId, true);
             if (xmlSerializer.resolveXLinks()) {
                 List<Attribute> xlinks = Processor.getXLinks(md);
                 if (xlinks.size() > 0) {
@@ -511,10 +502,16 @@ public class DataManager {
                 }
                 moreFields.add(SearchManager.makeField("_valid", isValid, true, true));
             }
-            searchMan.index(schemaMan.getSchemaDir(schema), md, id, moreFields, isTemplate, title);
+            searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, isTemplate, title);
         } catch (Exception x) {
-            Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + id + " is corrupt/invalid - ignoring it. Error: " + x.getMessage());
-            x.printStackTrace();
+            Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
+        } finally {
+            indexLock.lock();
+            try {
+                indexing.remove(metadataId);
+            } finally {
+                indexLock.unlock();
+            }
         }
     }
 
@@ -1069,7 +1066,7 @@ public class DataManager {
      */
     public void setTemplate(final int id, final MetadataType type, final String title) throws Exception {
         setTemplateExt(id, type, title);
-        indexInThreadPoolIfPossible(Integer.toString(id));
+        indexMetadata(Integer.toString(id));
     }
 
     /**
@@ -1242,7 +1239,7 @@ public class DataManager {
             }
         });
 
-        indexInThreadPoolIfPossible(Integer.toString(metadataId));
+        indexMetadata(Integer.toString(metadataId));
 
         return rating;
     }
@@ -1352,11 +1349,14 @@ public class DataManager {
                 .setSchemaId(schema)
                 .setDoctype(docType)
                 .setTitle(title)
+                .setRoot(metadataXml.getQualifiedName())
                 .setType(MetadataType.lookup(isTemplate.charAt(0)));
         newMetadata.getSourceInfo()
-                .setGroupOwner(Integer.valueOf(groupOwner))
                 .setOwner(owner)
                 .setSourceId(source);
+        if (groupOwner != null) {
+            newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner));
+        }
         if (category != null) {
             MetadataCategory metadataCategory = _applicationContext.getBean(MetadataCategoryRepository.class).findOneByName(category);
             if (metadataCategory == null) {
@@ -1395,14 +1395,14 @@ public class DataManager {
         copyDefaultPrivForGroup(context, stringId, groupId, fullRightsForGroup);
 
         if (index) {
-            indexInThreadPoolIfPossible(stringId);
+            indexMetadata(stringId);
         }
 
         if (notifyChange) {
             // Notifies the metadata change to metatada notifier service
             notifyMetadataChange(metadataXml, stringId);
         }
-        return null;  //To change body of created methods use File | Settings | File Templates.
+        return savedMetadata;
     }
 
     //--------------------------------------------------------------------------
@@ -2063,7 +2063,7 @@ public class DataManager {
             notifyMetadataChange(md, metadataId);
 
             //--- update search criteria
-            indexInThreadPoolIfPossible(metadataId);
+            indexMetadata(metadataId);
         }
     }
 
@@ -2969,4 +2969,8 @@ public class DataManager {
         }
     }
 
+    public void commit(boolean commitTransaction) {
+        _entityManager.flush();
+        _entityManager.getTransaction().commit();
+    }
 }

@@ -23,16 +23,13 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.server.context.ServiceContext;
 import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.*;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -40,39 +37,34 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.tmatesoft.svn.core.*;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.io.ISVNEditor;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
-import org.tmatesoft.svn.core.SVNCommitInfo;
-import org.tmatesoft.svn.core.SVNDirEntry;
-import org.tmatesoft.svn.core.SVNException;
-import org.tmatesoft.svn.core.SVNNodeKind;
-import org.tmatesoft.svn.core.SVNProperties;
-import org.tmatesoft.svn.core.SVNURL;
-
-import org.jdom.Element;
 
 import javax.sql.DataSource;
-import javax.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.sql.Connection;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
 @Component
 @Lazy
+@Aspect
 public class SvnManager {
 
     @Autowired
@@ -85,8 +77,6 @@ public class SvnManager {
     private SettingManager _settingManager;
     @Autowired
     private DataSource _dataSource;
-    @Autowired
-    private JpaTransactionManager _transactionManager;
 
     // configure via setter in Geonetwork app
     private ServiceContext context;
@@ -108,7 +98,8 @@ public class SvnManager {
     }
 
     /**
-     * Constructor. Creates the subversion repository if it doesn't exist or just open the subversion repository if it does. Stores the URL
+     * Constructor. Creates the subversion repository if it doesn't exist or just open the subversion repository if it does. Stores the
+     * URL
      * of the repository in repoUrl. Adds the commit/abort listeners to the DbmsPool resource provider.
      */
     public void init() throws Exception {
@@ -162,14 +153,14 @@ public class SvnManager {
                 // check that repository uuid matches the repo uuid in database
                 if (!uuid.equals(repoUuid)) {
                     throw new IllegalArgumentException("Subversion repository at " + subversionPath + " has uuid " + repoUuid
-                            + " which does not match repository uuid held in database " + uuid);
+                                                       + " which does not match repository uuid held in database " + uuid);
                 }
             } else {
                 // if nothing in repo and it doesn't have the uuid we expect then
                 // recreate it and reopen it
                 if (!uuid.equals(repoUuid)) {
                     Log.warning(Geonet.SVN_MANAGER, "Recreating subversion repository at " + subversionPath
-                            + " as previous repository was empty");
+                                                    + " as previous repository was empty");
                     boolean enableRevisionProperties = true;
                     boolean force = true;
                     repoUrl = SVNRepositoryFactory.createLocalRepository(subFile, uuid, enableRevisionProperties, force);
@@ -211,9 +202,10 @@ public class SvnManager {
             String repoDbUrl = rootProps.getStringValue(Params.Svn.DBURLPROP).trim();
             if (repoDbUrl == null || (!dbUrl.trim().equals(repoDbUrl))) {
                 throw new IllegalArgumentException("Repository uses database URL of '" + repoDbUrl
-                        + "' which does not match current database URL '" + dbUrl + "'. Modify the svn property " + Params.Svn.DBURLPROP
-                        + " on the root of the subversion repository at " + subversionPath
-                        + " or specify a different subversion repository");
+                                                   + "' which does not match current database URL '" + dbUrl + "'. Modify the svn " +
+                                                   "property " + Params.Svn.DBURLPROP
+                                                   + " on the root of the subversion repository at " + subversionPath
+                                                   + " or specify a different subversion repository");
             }
         }
     }
@@ -221,7 +213,7 @@ public class SvnManager {
     /**
      * Spring Aspect Oriented programming for intercepting transaction commits.
      */
-    @After("execution(* org.springframework.transaction.commit(org.springframework.transaction.TransactionStatus)")
+    @After("execution(* commit(org.springframework.transaction.TransactionStatus))")
     public void commitJoinPointHandler(JoinPoint joinPoint) {
         TransactionStatus status = (TransactionStatus) joinPoint.getArgs()[0];
         SvnTask task = tasks.get(status);
@@ -232,7 +224,7 @@ public class SvnManager {
             try {
                 editor = getEditor(task.sessionLogMessage + " (committing transaction " + status + ")");
                 editor.openRoot(-1); // open the root directory.
-                for (Iterator<String> it = task.ids.iterator(); it.hasNext();) {
+                for (Iterator<String> it = task.ids.iterator(); it.hasNext(); ) {
                     String id = it.next();
                     commitMetadata(id, editor);
                     it.remove();
@@ -260,7 +252,7 @@ public class SvnManager {
     /**
      * Spring Aspect Oriented programming for intercepting transaction rollbacks.
      */
-    @Before("execution(* org.springframework.transaction.rollback(org.springframework.transaction.TransactionStatus)")
+    @Before("execution(* rollback(org.springframework.transaction.TransactionStatus))")
     public void rollbackJoinPointHandler(JoinPoint joinPoint) {
         TransactionStatus status = (TransactionStatus) joinPoint.getArgs()[0];
         tasks.remove(status);
@@ -276,7 +268,7 @@ public class SvnManager {
 
     /**
      * Create a string from the user information in the UserSession session.
-     * 
+     *
      * @param context Context describing the user and service
      * @return The string representing the user information in the session
      */
@@ -285,16 +277,17 @@ public class SvnManager {
         if (session == null)
             session = getDefaultSession();
         String result = "GeoNetwork service: " + context.getService() + " GeoNetwork User " + session.getUserIdAsInt() + " (Username: "
-                + session.getUsername() + " Name: " + session.getName() + " " + session.getSurname() + ") Executed from IP address "
-                + context.getIpAddress();
+                        + session.getUsername() + " Name: " + session.getName() + " " + session.getSurname() + ") Executed from IP " +
+                        "address "
+                        + context.getIpAddress();
         return result;
     }
 
     /**
      * Create a map of the user information in the UserSession session.
-     * 
+     *
      * @param context Context describing the user and service
-     * @param props The map of properties to add the session props too
+     * @param props   The map of properties to add the session props too
      * @return The map of properties with the session props added
      */
     private Map<String, String> sessionToProps(ServiceContext context, Map<String, String> props) {
@@ -312,7 +305,7 @@ public class SvnManager {
 
     /**
      * Create a blank user session object in cases where the context doesn't have one.
-     * 
+     *
      * @return The blank user session object
      */
     private UserSession getDefaultSession() {
@@ -323,8 +316,8 @@ public class SvnManager {
     /**
      * Creates a history request for this metadata id that will cause metadata and metadata properties to be committed/aborted when the
      * database is committed/aborted.
-     * 
-     * @param id The metadata id that will be tracked
+     *
+     * @param id      The metadata id that will be tracked
      * @param context Describing the servicer and user carrying out operation
      * @throws Exception when something goes wrong
      */
@@ -353,10 +346,11 @@ public class SvnManager {
 
     /**
      * Get the latest file from the directory of the subversion repository corresponding to this metadata id.
-     * 
-     * @param id Id of the metadata record in the subversion repo
-     * @param file File to retrieve from the subversion repo - could be metadata.xml, owner.xml, privileges.xml, status.xml, categories.xml,
-     *            ...
+     *
+     * @param id   Id of the metadata record in the subversion repo
+     * @param file File to retrieve from the subversion repo - could be metadata.xml, owner.xml, privileges.xml, status.xml,
+     *             categories.xml,
+     *             ...
      * @return Element XML metadata
      */
     private Element getFile(String id, String file) throws Exception {
@@ -375,10 +369,10 @@ public class SvnManager {
 
     /**
      * Creates a directory to hold metadata and property histories and add the metadata specified as the first version.
-     * 
-     * @param id The metadata id that will be tracked
+     *
+     * @param id      The metadata id that will be tracked
      * @param context Service context describing user and operation
-     * @param md Metadata record - initial version
+     * @param md      Metadata record - initial version
      * @throws Exception
      */
     public void createMetadataDir(final String id, ServiceContext context, Element md) throws Exception {
@@ -429,8 +423,8 @@ public class SvnManager {
 
     /**
      * Deletes a metadata directory from the subversion repository immediately.
-     * 
-     * @param id The metadata id that will be removed
+     *
+     * @param id      The metadata id that will be removed
      * @param context Service context describing the user and operation
      * @throws Exception when something goes wrong
      */
@@ -460,15 +454,15 @@ public class SvnManager {
     /**
      * Check (and create if not present) a subversion commit task for a metadata id. If a commit task exists then the metadata and
      * properties will be read at the end of the database commit and committed to the subversion repo.
-     * 
      *
-     * @param transaction The resource we will listen to for commits/aborts
-     * @param id The metadata id we want to track
+     * @param transaction       The resource we will listen to for commits/aborts
+     * @param id                The metadata id we want to track
      * @param sessionLogMessage The log message used to record changes
-     * @param props The properties we want to record on the metadata in repo
+     * @param props             The properties we want to record on the metadata in repo
      * @throws Exception when something goes wrong with the commit
      */
-    private void checkSvnTask(TransactionStatus transaction, String id, String sessionLogMessage, Map<String, String> props) throws Exception {
+    private void checkSvnTask(TransactionStatus transaction, String id, String sessionLogMessage, Map<String,
+            String> props) throws Exception {
         SvnTask task = tasks.get(transaction);
         if (task == null) {
             task = new SvnTask();
@@ -486,7 +480,7 @@ public class SvnManager {
 
     /**
      * Get an SVNRepository object for use by this class.
-     * 
+     *
      * @return SVNRepository object
      */
     private SVNRepository getNewRepository() throws SVNException {
@@ -501,7 +495,7 @@ public class SvnManager {
 
     /**
      * Returns an ISVNEditor that allows commits to occur on the repository.
-     * 
+     *
      * @param logMessage The Log message that will be used on commit success
      * @return ISVNEditor object for operations on the repository
      * @throws SVNException if something goes wrong
@@ -515,7 +509,7 @@ public class SvnManager {
 
     /**
      * Returns an SVNRepository.
-     * 
+     *
      * @throws SVNException if something goes wrong
      */
     public SVNRepository getRepository() throws SVNException {
@@ -524,9 +518,8 @@ public class SvnManager {
 
     /**
      * Commits an ISVNEditor with changes to the repository.
-     * 
      *
-     * @param id Id number of metadata record being tracked for changes
+     * @param id     Id number of metadata record being tracked for changes
      * @param editor ISVNEditor for commits to subversion repo
      * @throws SVNException if something goes wrong
      */
@@ -559,10 +552,9 @@ public class SvnManager {
 
     /**
      * Commits changes to metadata categories.
-     * 
      *
-     * @param editor ISVNEditor for commits to subversion repo
-     * @param id Id number of metadata record being tracked for changes
+     * @param editor  ISVNEditor for commits to subversion repo
+     * @param id      Id number of metadata record being tracked for changes
      * @param dataMan DataManager object with extract methods
      * @throws Exception if something goes wrong
      */
@@ -573,9 +565,9 @@ public class SvnManager {
         Element catXml = new Element("results");
         for (MetadataCategory categ : categs) {
             catXml.addContent(
-                new Element("record")
-                    .addContent(new Element("id").setText(""+categ.getId()))
-                    .addContent(new Element("name").setText(categ.getName()))
+                    new Element("record")
+                            .addContent(new Element("id").setText("" + categ.getId()))
+                            .addContent(new Element("name").setText(categ.getName()))
             );
         }
         String now = Xml.getString(catXml);
@@ -600,10 +592,9 @@ public class SvnManager {
 
     /**
      * Commits changes to metadata status.
-     * 
      *
-     * @param editor ISVNEditor for commits to subversion repo
-     * @param id Id number of metadata record being tracked for changes
+     * @param editor  ISVNEditor for commits to subversion repo
+     * @param id      Id number of metadata record being tracked for changes
      * @param dataMan DataManager object with extract methods
      * @throws Exception if something goes wrong
      */
@@ -637,10 +628,9 @@ public class SvnManager {
 
     /**
      * Commits changes to metadata record.
-     * 
      *
-     * @param editor ISVNEditor for commits to subversion repo
-     * @param id Id number of metadata record being tracked for changes
+     * @param editor  ISVNEditor for commits to subversion repo
+     * @param id      Id number of metadata record being tracked for changes
      * @param dataMan DataManager object with extract methods
      * @throws Exception if something goes wrong
      */
@@ -667,10 +657,9 @@ public class SvnManager {
 
     /**
      * Commits changes to metadata owners.
-     * 
      *
      * @param editor ISVNEditor for commits to subversion repo
-     * @param id Id number of metadata record being tracked for changes
+     * @param id     Id number of metadata record being tracked for changes
      * @throws Exception if something goes wrong
      */
     private void commitMetadataOwner(ISVNEditor editor, String id) throws Exception {
@@ -714,10 +703,9 @@ public class SvnManager {
 
     /**
      * Commits changes to metadata privileges.
-     * 
      *
      * @param editor ISVNEditor for commits to subversion repo
-     * @param id Id number of metadata record being tracked for changes
+     * @param id     Id number of metadata record being tracked for changes
      * @throws Exception if something goes wrong
      */
     private void commitMetadataPrivileges(ISVNEditor editor, String id) throws Exception {
@@ -760,7 +748,7 @@ public class SvnManager {
 
     /**
      * Check if the directory/file exists in the subversion repository.
-     * 
+     *
      * @param filePath The file path from root. eg. 10/metadata.xml.
      * @return true if exists, false otherwise
      */

@@ -858,7 +858,7 @@ public class SearchManager {
 	public static Element makeField(String name, String value, boolean store, boolean index) {
 		Element field = new Element("Field");
 		field.setAttribute(LuceneFieldAttribute.NAME.toString(), name);
-		field.setAttribute(LuceneFieldAttribute.STRING.toString(), value);
+		field.setAttribute(LuceneFieldAttribute.STRING.toString(), value == null ? "" : value);
 		field.setAttribute(LuceneFieldAttribute.STORE.toString(), Boolean.toString(store));
 		field.setAttribute(LuceneFieldAttribute.INDEX.toString(), Boolean.toString(index));
 		return field;

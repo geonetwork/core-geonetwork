@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 
@@ -36,10 +37,6 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.jdom.Element;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -97,20 +94,20 @@ public class Add implements Service {
 			}
 
             for (final File file : sampleDataFilesList) {
-                        try {
-                            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                                Log.debug(Geonet.DATA_MANAGER, "Loading sample data: " + file);
-                            }
-                            MEFLib.doImport(params, context, file, "");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            serviceStatus[0] = "false";
-                            serviceError[0] = e.getMessage() + " whilst loading " + file;
-                            Log.error(Geonet.DATA_MANAGER,
-                                    "Error loading sample data: " + e.getMessage());
-                        }
+                try {
+                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                        Log.debug(Geonet.DATA_MANAGER, "Loading sample data: " + file);
                     }
-            context.getBean(JpaTransactionManager.class).commit(TransactionAspectSupport.currentTransactionStatus());
+                    MEFLib.doImport(params, context, file, "");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    serviceStatus[0] = "false";
+                    serviceError[0] = e.getMessage() + " whilst loading " + file;
+                    Log.error(Geonet.DATA_MANAGER,
+                            "Error loading sample data: " + e.getMessage());
+                }
+                context.getBean(DataManager.class).commit(true);
+            }
 		}
 
 		result.setAttribute("status", serviceStatus[0]);

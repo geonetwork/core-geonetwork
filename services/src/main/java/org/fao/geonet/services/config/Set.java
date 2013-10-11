@@ -43,9 +43,6 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.jdom.Element;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
@@ -91,10 +88,6 @@ public class Set implements Service {
 
         if (!sm.setValues(values))
             throw new OperationAbortedEx("Cannot set all values");
-
-        // Save parameters
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
 
         // And reload services
         // Update inspire property in SearchManager

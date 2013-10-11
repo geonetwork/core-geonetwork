@@ -38,9 +38,6 @@ import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -126,8 +123,7 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 		}
 		}
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        context.getBean(DataManager.class).commit(true);
 
         //--- reindex metadata
 		context.info("Re-indexing metadata");

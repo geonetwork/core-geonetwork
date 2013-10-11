@@ -45,9 +45,6 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.*;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.io.File;
 import java.util.*;
@@ -125,9 +122,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 			processRecord(context, uuid, category, xpath, getTit, xpathTit, doChanges, metadata, notFound, notOwner, subtemplates, response);
 		}
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
-
+        dataMan.commit(true);
 
         // -- reindex metadata
 		context.info("Re-indexing metadata");

@@ -24,16 +24,14 @@
 package org.fao.geonet.kernel.harvest.harvester.fragment;
 
 import com.google.common.base.Optional;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
-import org.fao.geonet.Logger;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Xml;
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -42,23 +40,15 @@ import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 //=============================================================================
 /** 
@@ -396,8 +386,7 @@ public class FragmentHarvester extends BaseAligner {
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
 		dataMan.indexMetadata(id);
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        dataMan.commit(true);
 
         harvestSummary.fragmentsAdded ++;
     }
@@ -588,8 +577,7 @@ public class FragmentHarvester extends BaseAligner {
 
          dataMan.indexMetadata(id);
 
-         final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-         context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+         dataMan.commit(true);
      }
 
 	//---------------------------------------------------------------------------
@@ -631,8 +619,7 @@ public class FragmentHarvester extends BaseAligner {
             log.debug("	- Commit "+id);
         }
 
-        final TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        context.getBean(JpaTransactionManager.class).commit(transactionStatus);
+        dataMan.commit(true);
 
         harvestSummary.recordsBuilt++;
 	}

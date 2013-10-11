@@ -25,13 +25,11 @@ package jeeves.server.dispatchers;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import java.util.Map.Entry;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletResponse;
 
 import jeeves.component.ProfileManager;
@@ -67,6 +65,10 @@ import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
 
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,14 +77,15 @@ import com.yammer.metrics.core.TimerContext;
 
 //=============================================================================
 @Component
-public class ServiceManager
-{
-	private Hashtable<String, ArrayList<ServiceInfo>> htServices = 
-		new Hashtable<String, ArrayList<ServiceInfo>>(100);
-	private Hashtable<String, Object> htContexts = 
-		new Hashtable<String, Object>();
-	private Vector<ErrorPage> vErrorPipe = new Vector<ErrorPage>();
-	private Vector<GuiService> vDefaultGui = new Vector<GuiService>();
+@Lazy
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Transactional
+public class ServiceManager {
+	private Map<String, ArrayList<ServiceInfo>> htServices = new HashMap<String, ArrayList<ServiceInfo>>(100);
+	private Map<String, Object> htContexts = new HashMap<String, Object>();
+	private List<ErrorPage> vErrorPipe = new ArrayList<ErrorPage>();
+	private List<GuiService> vDefaultGui = new ArrayList<GuiService>();
+
 
     private ProfileManager  profilMan;
     private MonitorManager monitorManager;
@@ -98,7 +101,10 @@ public class ServiceManager
     private JeevesServlet servlet;
     private boolean startupError = false;
     private Map<String,String> startupErrors;
+    @Autowired
     private JeevesApplicationContext jeevesApplicationContext;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     //---------------------------------------------------------------------------
 	//---
@@ -115,9 +121,8 @@ public class ServiceManager
 
 	public void setMonitorMan  (MonitorManager mm) { monitorManager  = mm; }
 	public void setXmlCacheManager  (XmlCacheManager xcm) { xmlCacheManager  = xcm; }
-    public void setApplicationContext(JeevesApplicationContext c) { this.jeevesApplicationContext = c;}
 
-	public void setServlet(JeevesServlet serv) { servlet = serv; }
+    public void setServlet(JeevesServlet serv) { servlet = serv; }
     public void setStartupErrors(Map<String,String> errors)   { startupErrors = errors; startupError = true; }
 	public boolean isStartupError() { return startupError; }
 
@@ -158,8 +163,8 @@ public class ServiceManager
 		String sheet = srv.getAttributeValue(ConfigFile.Service.Attr.SHEET);
 		String cache = srv.getAttributeValue(ConfigFile.Service.Attr.CACHE);
 
-		ServiceInfo si = new ServiceInfo(appPath);
-
+		ServiceInfo si = this.jeevesApplicationContext.getBean(ServiceInfo.class);
+        si.setAppPath(appPath);
 		si.setMatch(match);
 		si.setSheet(sheet);
 		si.setCache(cache);
@@ -331,7 +336,8 @@ public class ServiceManager
 
 	public ServiceContext createServiceContext(String name, JeevesApplicationContext jeevesApplicationContext)
 	{
-		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, xmlCacheManager, monitorManager, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, xmlCacheManager, monitorManager, profilMan, htContexts,
+                entityManager);
 
 		context.setBaseUrl(baseUrl);
 		context.setLanguage("?");
@@ -346,7 +352,8 @@ public class ServiceManager
 	}
 
 	public void dispatch(ServiceRequest req, UserSession session) {
-		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext, xmlCacheManager, monitorManager, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext, xmlCacheManager, monitorManager, profilMan,
+                htContexts, entityManager);
 		dispatch(req, session, context);
 	}
 
@@ -355,7 +362,6 @@ public class ServiceManager
 	//--- Dispatching methods
 	//---
 	//---------------------------------------------------------------------------
-	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
 	public void dispatch(ServiceRequest req, UserSession session, ServiceContext context)
 	{
 		context.setBaseUrl(baseUrl);
@@ -412,7 +418,7 @@ public class ServiceManager
 				//--- check access
 
                 TimerContext timerContext = monitorManager.getTimer(ServiceManagerServicesTimer.class).time();
-                try{
+                try {
 				    response = srvInfo.execServices(req.getParams(), context);
                 } finally {
                     timerContext.stop();
@@ -426,8 +432,7 @@ public class ServiceManager
                 }
 
                 if (context.getStatusCode() != null) {
-                    ((ServiceRequest) req).setStatusCode(context
-                            .getStatusCode());
+                    req.setStatusCode(context.getStatusCode());
                 }
 				//---------------------------------------------------------------------
 				//--- handle forward

@@ -23,14 +23,14 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
-import org.jdom.Element;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 //=============================================================================
 

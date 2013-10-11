@@ -309,7 +309,10 @@ public class Metadata extends GeonetEntity {
         dataInfo.setChangeDate(new ISODate(doc.get("_changeDate")));
         dataInfo.setTitle(doc.get("_title"));
         dataInfo.setRoot(doc.get("_root"));
-        dataInfo.setDisplayOrder(Integer.valueOf(doc.get("_displayOrder")));
+        final String displayOrder = doc.get("_displayOrder");
+        if (displayOrder != null) {
+            dataInfo.setDisplayOrder(Integer.valueOf(displayOrder));
+        }
 
         String tmpIsHarvest  = doc.get("_isHarvested");
         if (tmpIsHarvest != null) {
@@ -318,8 +321,15 @@ public class Metadata extends GeonetEntity {
         }
         final MetadataSourceInfo sourceInfo = metadata.getSourceInfo();
         sourceInfo.setSourceId(doc.get("_source"));
-        sourceInfo.setOwner(Integer.valueOf(doc.get("_owner")));
-        sourceInfo.setGroupOwner(Integer.valueOf(doc.get("_groupOwner")));
+        final String owner = doc.get("_owner");
+        if (owner != null) {
+            sourceInfo.setOwner(Integer.valueOf(owner));
+        }
+
+        final String groupOwner = doc.get("_groupOwner");
+        if (groupOwner != null) {
+            sourceInfo.setGroupOwner(Integer.valueOf(groupOwner));
+        }
         return metadata;
     }
 }

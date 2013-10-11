@@ -140,9 +140,9 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 		}
 
 		//--- index metadata
-		dm.indexInThreadPool(context,id);
+        dm.indexMetadata(id);
 
-		//--- return id for showing
+        //--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
 	}
 }
