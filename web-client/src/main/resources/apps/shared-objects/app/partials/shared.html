@@ -8,7 +8,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr data-ng-show="data.length == 0" >
+        <tr data-ng-if="data.length == 0" >
             <td></td><td colspan="2"><div class="alert alert-info">{{translate('noRecords')}}</div></td>
         </tr>
         <tr data-ng-repeat="row in data | filter:search:strict" class="highlight-on-hover" data-ng-mouseover="select(row)" >
@@ -35,12 +35,12 @@
                     </div>
                     <div id="collapse-{{row.id}}" class="panel-collapse collapse">
                         <table class="table table-condensed">
-                            <tr data-ng-repeat="md in metadata[row.id]" >
-                                <td style="width: 5%">{{md.id}}</td>
-                                <td style="width: 60%">{{md.title}}</td>
-                                <td style="width: 10%">{{md.name}}</td>
-                                <td style="width: 20%">{{md.email}}</td>
-                                <td style="width: 5%"><button type="button" class="btn btn-primary" data-ng-click="open('metadata.show?id=' + md.id)">Show</button></td>
+                            <tr class="metadata-list" data-ng-repeat="md in metadata[row.id]" >
+                                <td class="id" style="width: 5%">{{md.id}}</td>
+                                <td class="title" style="width: 60%">{{md.title}}</td>
+                                <td class="name" style="width: 10%">{{md.name}}</td>
+                                <td class="email" style="width: 20%">{{md.email}}</td>
+                                <td style="width: 5%"><button class="show-md" type="button" class="btn btn-primary" data-ng-click="open('metadata.show?id=' + md.id)">Show</button></td>
                             </tr>
                         </table>
                    <!--     <div class="panel-title">
@@ -50,17 +50,17 @@
                 </div>
             </td>
             <td class="data-actions" style="width: 10%">
-                <button ng-show="isDeletePage" class="action-delete btn btn-default" data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</button>
-                <div ng-hide="isDeletePage" class="dropdown">
+                <button ng-if="isDeletePage" class="action-delete btn btn-default" data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</button>
+                <div ng-if="!isDeletePage" class="dropdown">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" >{{translate('actions')}} <span class="caret"></span></button>
 
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <!--<li><a data-ng-click="open('geocat', {s_search:'', customFilter: luceneIndexField + '=' + row.xlink}, '_sharedObject')">{{translate('search')}}</a></li>-->
                         <li><a class="action-edit" data-ng-click="edit(row)">{{translate('edit')}}</a></li>
-                        <li ng-show="!isValidated"><a class="action-validate" data-toggle="modal" href="#confirmValidateModal" >{{translate('validate')}}</a></li>
-                        <li ng-show="!isValidated"><a class="action-non-valid-reject" data-toggle="modal" href="#rejectModal" >{{translate('reject')}}</a></li>
-                        <li ng-show="isValidated"><a class="action-valid-reject" data-toggle="modal" href="#rejectModal" >{{translate('delete')}}</a></li>
-                        <li ng-show="isDeletePage"><a class="action-delete" data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</a></li>
+                        <li ng-if="!isValidated"><a class="action-validate" data-toggle="modal" href="#confirmValidateModal" >{{translate('validate')}}</a></li>
+                        <li ng-if="!isValidated"><a class="action-non-valid-reject" data-toggle="modal" href="#rejectModal" >{{translate('reject')}}</a></li>
+                        <li ng-if="isValidated"><a class="action-valid-reject" data-toggle="modal" href="#rejectModal" >{{translate('delete')}}</a></li>
+                        <li ng-if="isDeletePage"><a class="action-delete" data-toggle="modal" href="#confirmDeleteModal" >{{translate('delete')}}</a></li>
                     </ul>
 
                 </div>

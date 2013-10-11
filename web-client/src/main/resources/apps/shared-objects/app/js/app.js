@@ -1,6 +1,6 @@
 'use strict';
 // Declare app level module which depends on filters, and services
-angular.module('SharedObjects', ['SharedObjects.filters', 'SharedObjects.factories', 'SharedObjects.directives', 'SharedObjects.controllers']).
+angular.module('SharedObjects', ['SharedObjects.filters', 'SharedObjects.factories', 'SharedObjects.directives', 'SharedObjects.controllers', 'ngRoute']).
   config(['$routeProvider', function($routeProvider) {
       $routeProvider.when('/:validated/contacts', { templateUrl: 'partials/shared.html', controller: 'ContactControl' });
       $routeProvider.when('/:validated/formats', { templateUrl: 'partials/shared.html', controller: 'FormatControl' });

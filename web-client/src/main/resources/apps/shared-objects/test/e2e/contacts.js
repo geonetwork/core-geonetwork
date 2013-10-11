@@ -2,7 +2,7 @@
 
 /* http://docs.angularjs.org/guide/dev_guide.e2e-testing */
 
-describe('contacts', function () {
+describe('Contacts', function () {
 
 
     describe('Default Route', function () {
@@ -14,7 +14,7 @@ describe('contacts', function () {
         });
     });
 
-    describe('/nonvalidated/contacts', function () {
+    describe('#/nonvalidated/contacts', function () {
         beforeEach(function () {
             browser().navigateTo('#/nonvalidated/contacts');
         });
@@ -24,25 +24,28 @@ describe('contacts', function () {
 
         hasActionsButton(true);
         hasEditAction(true);
-//        hasValidateAction(true);
-//        hasRejectNonValidAction(true);
-//        hasRejectValidAction(false);
-//        hasDeleteAction(false);
+        hasValidateAction(true);
+        hasRejectNonValidAction(true);
+        hasRejectValidAction(false);
+        hasDeleteAction(false);
+        listsRelatedMetadata("886", "Non-validated Metadata", "nvowner", "nvemail");
+        clickEditActionOpensNewTab()
     });
-//
-//    describe('/validated/contacts', function () {
-//        beforeEach(function () {
-//            browser().navigateTo('#/validated/contacts');
-//        });
-//
-//        checkBreadCrumbs('Validated', 'Contacts');
-//        hasResultsDescription('Validated Contact')
-//
-//        hasActionsButton(true);
-//        hasEditAction(true);
-//        hasValidateAction(false);
-//        hasRejectNonValidAction(false);
-//        hasRejectValidAction(true);
-//        hasDeleteAction(false);
-//    });
+
+    describe('#/validated/contacts', function () {
+        beforeEach(function () {
+            browser().navigateTo('#/validated/contacts');
+        });
+
+        checkBreadCrumbs('Validated', 'Contacts');
+        hasResultsDescription('Validated Contact')
+
+        hasActionsButton(true);
+        hasEditAction(true);
+        hasValidateAction(false);
+        hasRejectNonValidAction(false);
+        hasRejectValidAction(true);
+        hasDeleteAction(false);
+        listsRelatedMetadata("887", "Validated Metadata", "owner", "email");
+    });
 });

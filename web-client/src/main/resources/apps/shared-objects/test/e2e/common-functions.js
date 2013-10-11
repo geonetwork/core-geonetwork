@@ -22,7 +22,6 @@ var hasEditAction = function (is) {
    hasActionFullPathImpl(
        'should'+desc+' have an edit action',
        'a.action-edit',
-       'Edit',
        is,true);
 };
 var hasValidateAction = function (is) {
@@ -31,7 +30,6 @@ var hasValidateAction = function (is) {
    hasActionFullPathImpl(
        'should'+desc+' have a validate action',
        'a.action-validate',
-       'Validate',
        is,true);
 };
 var hasRejectNonValidAction = function (is) {
@@ -40,7 +38,6 @@ var hasRejectNonValidAction = function (is) {
    hasActionFullPathImpl(
        'should'+desc+' have a reject non valid action',
        'a.action-non-valid-reject',
-       'Reject',
        is,true);
 };
 var hasRejectValidAction = function (is) {
@@ -49,7 +46,6 @@ var hasRejectValidAction = function (is) {
    hasActionFullPathImpl(
        'should'+desc+' have a reject valid action',
        'a.action-valid-reject',
-       'Delete',
        is,true);
 };
 var hasDeleteAction = function (is) {
@@ -58,7 +54,6 @@ var hasDeleteAction = function (is) {
    hasActionFullPathImpl(
        'should'+desc+' have a delete action',
        'button.action-delete',
-       'Delete',
        is,true);
 };
 
@@ -70,22 +65,30 @@ var hasActionsButton = function (is) {
    hasActionFullPathImpl(
        'should'+desc+' have an action button',
        actionButtonPath,
-       'Actions',
        is,true);
 };
 
-var hasActionFullPathImpl = function (desc, path, text, is) {
+var hasActionFullPathImpl = function (desc, path, is) {
     it(desc, function () {
         element(actionButtonPath).click();
-        var result = element(path).text();
-        var regex = new RegExp('\\s*'+text+'\\s*');
-
+//        expect(element('div.dropdown.open').count()).toBe(1);
+        var result = element(path).count();
         if (is) {
-            expect(result).toMatch(regex);
+            expect(result).toBe(1)
         } else {
-            expect(result).not().toMatch(regex);
+            expect(result).toBe(0)
         }
     });
 };
 
-
+var listsRelatedMetadata = function (id, title, name, email) {
+it ('clicking label should show referenced metadata', function() {
+            element('.data-description a.accordion-toggle').click();
+            expect(repeater('.metadata-list').count()).toBe(1)
+            expect(element('.metadata-list td.id').text()).toEqual(id)
+            expect(element('.metadata-list td.title').text()).toEqual(title)
+            expect(element('.metadata-list td.name').text()).toEqual(name)
+            expect(element('.metadata-list td.email').text()).toEqual(email)
+            expect(element('.metadata-list button.show-md').text()).toEqual("Show")
+        });
+}
