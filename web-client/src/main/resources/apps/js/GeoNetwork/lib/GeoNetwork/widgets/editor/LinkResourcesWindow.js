@@ -925,7 +925,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             xtype: 'spacer',
             height: 20
         });
-        cmp.push(this.getFormFieldForService());
+        var serviceField = this.getFormFieldForService();
+        serviceField && cmp.push(serviceField);
         
         this.formPanel = new Ext.form.FormPanel({
             items: cmp,
