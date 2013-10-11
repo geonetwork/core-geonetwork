@@ -17,7 +17,9 @@
   <!-- Define which JS module to load using Closure -->
   <xsl:variable name="angularApp" select="
     if ($service = 'admin.console') then 'gn_admin'
-    else if ($service = 'catalog.login' or $service = 'new.account') then 'gn_login'
+    else if ($service = 'catalog.signin' or 
+              $service = 'new.account' or 
+              $service = 'new.password') then 'gn_login'
     else if ($service = 'catalog.edit') then 'gn_editor'
     else 'gn'"/>
   

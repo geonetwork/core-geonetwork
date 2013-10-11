@@ -193,6 +193,8 @@ python $CLOSURE_LIB/closure/bin/build/closurebuilder.py \
           <includes>
             <include>gn.less</include>
             <include>gn_admin.less</include>
+            <include>gn_login.less</include>
+            <include>gn_editor.less</include>
           </includes>
         </configuration>
         <executions>

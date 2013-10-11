@@ -6,23 +6,51 @@
   module.constant('$LOCALES', ['core']);
 
   /**
-   *
+   *    Take care of login action, reset and update password.
    */
   module.controller('GnLoginController',
-      ['$scope', '$http', '$rootScope', '$translate',
-       function($scope, $http,$rootScope, $translate) {
+      ['$scope', '$http', '$rootScope', '$translate', '$location', '$window',
+       function($scope, $http, $rootScope, $translate, $location, $window) {
+          $scope.registrationStatus = null;
+          $scope.passwordReminderStatus = null;
+          $scope.sendPassword = false;
+          $scope.password = null;
+          $scope.passwordCheck = null;
+          $scope.userToRemind = null;
+          $scope.changeKey = null;
+          $scope.passwordUpdated = false;
 
+          function initForm() {
+           if ($window.location.pathname.indexOf('new.password') !== -1) {
+             // Retrieve username from URL parameter
+             // Could probably be more elegant.
+             angular.forEach($window.location
+                     .search.replace('?', '').split('&'),
+                 function(value) {
+                   if (value.indexOf('username') === 0) {
+                 $scope.userToRemind = value.split('=')[1];
+                   } else if (value.indexOf('changeKey') === 0) {
+                 $scope.changeKey = value.split('=')[1];
+                   }
+             });
+           }
+          }
+
+          $scope.setSendPassword = function(value) {
+           $scope.sendPassword = value;
+           $('#username').focus();
+          };
          /**
-               * Register user
-               */
+          * Register user. An email will be sent to the new
+          * user and another to the catalog admin if a profile
+          * higher than registered user is requested.
+          */
          $scope.register = function(formId) {
            $http.get('create.account@json?' + $(formId).serialize())
           .success(function(data) {
              $scope.registrationStatus = data;
-
            })
           .error(function(data) {
-
              $rootScope.$broadcast('StatusUpdated', {
                title: $translate('registrationError'),
                error: data,
@@ -30,6 +58,46 @@
                type: 'danger'});
            });
          };
+         /**
+          * Remind user password.
+          */
+         $scope.remindMyPassword = function(formId) {
+           $http.get('password.reminder@json?' + $(formId).serialize())
+            .success(function(data) {
+             $scope.passwordReminderStatus = data;
+             $scope.sendPassword = false;
+           })
+            .error(function(data) {
+             $rootScope.$broadcast('StatusUpdated', {
+               title: $translate('passwordReminderError'),
+               error: data,
+               timeout: 0,
+               type: 'danger'});
+           });
+         };
+
+         /**
+          * Change user password.
+          */
+         $scope.updatePassword = function(formId) {
+           $http.get('password.change@json?' + $(formId).serialize())
+            .success(function(data) {
+             if (data == 'null') {
+               $scope.passwordUpdated = true;
+             }
+           })
+            .error(function(data) {
+
+             $rootScope.$broadcast('StatusUpdated', {
+               title: $translate('passwordUpdateError'),
+               error: data,
+               timeout: 0,
+               type: 'danger'});
+           });
+         };
+
+         initForm();
+
        }]);
 
 })();

@@ -518,6 +518,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/new.account!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/create.account!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/new.password!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/password.reminder!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/password.change!?.*" access="permitAll"/>
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.edit!?.*" access="hasRole('Editor')"/>
                 

@@ -53,6 +53,11 @@
     "city": "Ville",
     "country": "Pays",
     "register": "Créer un compte",
+    "passwordRepeat": "Resaisir le mot de passe",
+    "passwordNotMatching": "Les mots de passe ne correspondent pas !",
+    "passwordMinlength": "Le mot de passe doit contenir au moins 6 caractères !",
+    "updatePassword": "Mettre à jour",
+    "passwordUpdated": "Mot de passe mis à jour avec succès.",
     
     "from": "De",
     "to": " à ",
@@ -87,5 +92,8 @@
     "somethingWrong": "Quelque chose s'est mal déroulé!",
     "msgUserAuthenticated": "L'utilisateur {{username}} est authentifié.",
     "msgNoCatalogInfo": "Ne peut retrouver les informations catalogue",
-    "msgNoUserInfo": "Ne peut retrouver les informations utilisateurs"
+    "msgNoUserInfo": "Ne peut retrouver les informations utilisateurs",
+    
+    "passwordUpdateError": "Erreur lors de la mise à jour du mot de passe",
+    "BadParameterEx": "Paramètre incorrect"
 }

@@ -11,6 +11,23 @@
             <error sheet="../xslt/error/error-json.xsl"/>
         </service>
         
+        <service name="password.reminder">
+            <documentation><![CDATA[
+                In case you forgot your password, send an email with a page to change user password.
+                
+                Parameters:
+                * username
+                ]]></documentation>
+            <class name=".services.password.SendLink" />
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+        
+        <service name="password.change">
+            <class name=".services.password.Change" />
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+        
+        
         <service name="admin.user.update">
             <documentation>The service can be used to create or update 
                 a user.</documentation>

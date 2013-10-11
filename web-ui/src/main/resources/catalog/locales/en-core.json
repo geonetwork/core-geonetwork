@@ -51,7 +51,11 @@
     "city": "City",
     "country": "Country",
     "register": "Register",
-    
+    "passwordRepeat": "Repeat password",
+    "passwordNotMatching": "The password does not match!",
+    "passwordMinlength": "Password must contain at least 6 characters!",
+    "updatePassword": "Update",
+    "passwordUpdated": "Password successfully updated.",
     
     "from": "From",
     "to": "To",
@@ -99,5 +103,8 @@
     "somethingWrong": "Something went wrong!",
     "msgUserAuthenticated": "User {{username}} authenticated.",
     "msgNoCatalogInfo": "Could not retrieved catalog information.",
-    "msgNoUserInfo": "Could not retrieve user details."
+    "msgNoUserInfo": "Could not retrieve user details.",
+    
+    "passwordUpdateError": "Error when updating password",
+    "BadParameterEx": "Wrong parameter"
 }

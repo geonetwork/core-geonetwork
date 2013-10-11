@@ -6,7 +6,7 @@
     <p data-ng-hide="!status.msg">{{status.msg}}</p>
     
     <div data-ng-hide="!status.error">
-        {{'errorIs' | translate}} {{status.error['class']}}
+        {{status.error['class'] | translate}}
         <blockquote><p>{{status.error.message}}</p></blockquote>
         <code class="gn-stack">{{status.error.stack}}</code>
     </div>
