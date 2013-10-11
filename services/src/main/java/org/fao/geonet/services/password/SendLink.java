@@ -23,27 +23,28 @@
 
 package org.fao.geonet.services.password;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.OperationAbortedEx;
-import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.exceptions.UserNotFoundEx;
+import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.PasswordUtil;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.services.MailSendingService;
+import org.fao.geonet.util.MailUtil;
 import org.jdom.Element;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 //=============================================================================
 
@@ -51,7 +52,7 @@ import java.util.Calendar;
  * Send change password link email
  */
 
-public class SendLink extends MailSendingService {
+public class SendLink implements Service {
 
 	// --------------------------------------------------------------------------
 	// ---
@@ -92,19 +93,12 @@ public class SendLink extends MailSendingService {
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
 
-		String host = sm.getValue("system/feedback/mailServer/host");
-		String port = sm.getValue("system/feedback/mailServer/port");
 		String adminEmail = sm.getValue("system/feedback/email");
 		String thisSite = sm.getValue("system/site/name");
 
 		SettingInfo si = new SettingInfo(context);
 		String siteURL = si.getSiteUrl() + context.getBaseUrl();
 
-		// Do not allow an unconfigured site to send out change password emails
-		if (thisSite == null || host == null || port == null || adminEmail == null || thisSite.equals("dummy") || host.equals("") || port.equals("") || adminEmail.equals("")) {
-			throw new IllegalArgumentException("Missing settings in System Configuration (see Administration menu) - cannot change passwords");
-		}
-		
 		// construct change key - only valid today 
 		String scrambledPassword = elUser.getChild("record").getChildText(Params.PASSWORD);
 		Calendar cal = Calendar.getInstance();
@@ -129,9 +123,9 @@ public class SendLink extends MailSendingService {
 		String content = elEmail.getChildText("content");
 		
 		// send change link via email
-        if (!sendMail(host, Integer.parseInt(port), subject, adminEmail, to, content, PROTOCOL)) {
+		if (!MailUtil.sendMail(to, subject, content, sm, adminEmail, "")) {
             throw new OperationAbortedEx("Could not send email");
-		}
+        }
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
