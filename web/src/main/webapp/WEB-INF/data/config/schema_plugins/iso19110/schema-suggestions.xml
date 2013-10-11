@@ -25,6 +25,11 @@
         <suggest name="gmd:contactInfo"/>
     </field>
     
+    <field name="gmd:contactInstructions">
+        <suggest name="gco:CharacterString"/>
+        <suggest name="gmx:FileName"/>
+    </field>
+    
 	<field name="gfc:FC_FeatureType">
 		<suggest name="gfc:typeName"/>
 	</field>
