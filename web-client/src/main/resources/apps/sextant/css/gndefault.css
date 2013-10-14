@@ -579,13 +579,14 @@ table.gn .x-form-field-wrap img.x-form-trigger {
 .linkPanel * .x-btn-noicon .x-btn-small .x-btn-text {
     border-bottom: 1px black solid;
 }
-.linkPanel * ul li a{
+.linkPanel * ul li a, .linkPanel * h2{
   display:block;
   clear:left;
 }
 .linkPanel * ul li div{
   float:left;
 }
+
 .relation-type {
     text-transform: uppercase;
     margin-left: 3px;
