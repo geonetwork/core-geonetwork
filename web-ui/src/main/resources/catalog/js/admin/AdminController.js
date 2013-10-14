@@ -85,7 +85,9 @@
    */
   module.controller('GnAdminController', [
     '$scope', '$http', '$q', '$rootScope', '$route', '$routeParams',
-    function($scope, $http, $q, $rootScope, $route, $routeParams) {
+    'gnUtilityService',
+    function($scope, $http, $q, $rootScope, $route, $routeParams,
+              gnUtilityService) {
       /**
        * Define admin console menu for each type of user
        */
@@ -141,31 +143,10 @@
         return tplFolder + pageMenu.folder + $scope.type + '.html';
       };
 
-
-      $scope.convertToCSV = function(objArray) {
-        if (objArray === undefined) return;
-
-        var array = (typeof objArray != 'object' ?
-            JSON.parse(objArray) : objArray);
-        // TODO : improve CSV conversion when nested objects
-        var str = '';
-        for (var i = 0; i < array.length; i++) {
-          var line = '';
-          for (var index in array[i]) {
-            if (line != '') {
-              line += ',';
-            }
-            line += array[i][index];
-          }
-          str += line + '\r\n';
-        }
-        return str;
-      };
-
       $scope.csvExport = function(json, e) {
         $(e.target).next('pre.gn-csv-export').remove();
         $(e.target).after("<pre class='gn-csv-export'>" +
-                $scope.convertToCSV(json) + '</pre>');
+                gnUtilityService.toCsv(json) + '</pre>');
       };
 
       /**

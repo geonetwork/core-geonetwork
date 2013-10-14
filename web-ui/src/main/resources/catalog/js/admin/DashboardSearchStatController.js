@@ -10,8 +10,8 @@
    *
    */
   module.controller('GnDashboardSearchStatController', [
-    '$scope', '$routeParams', '$http', '$translate',
-    function($scope, $routeParams, $http, $translate) {
+    '$scope', '$routeParams', '$http', '$translate', '$sce',
+    function($scope, $routeParams, $http, $translate, $sce) {
 
       $scope.statistics = {md: {}, search: {
         mainSearchStatistics: {},
@@ -246,13 +246,13 @@
       $scope.searchStatisticExport = function() {
         $http.get('stat.tableExport?tableToExport=requests')
         .success(function(data) {
-              $scope.requestsExport = data;
+              $scope.requestsExport = $sce.trustAsHtml(data);
             }).error(function(data) {
               // TODO
             });
         $http.get('stat.tableExport?tableToExport=params')
         .success(function(data) {
-              $scope.paramsExport = data;
+              $scope.paramsExport = $sce.trustAsHtml(data);
             }).error(function(data) {
               // TODO
             });

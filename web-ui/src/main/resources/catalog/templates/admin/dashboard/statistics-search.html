@@ -20,7 +20,8 @@
             </table>
             
             <button type="button" class="btn btn-small" 
-                data-ng-click="csvExport(statistics.search.mainSearchStatistics, $event)" 
+                data-ng-click="csvExport([statistics.search.mainSearchStatistics.q,
+                statistics.search.mainSearchStatistics.csw], $event)" 
                 data-translate>csvExport</button>
         </div>
     </div> 
@@ -103,7 +104,7 @@
                 data-translate>searchFieldsAndTerms</div>
             <h2 data-translate>searchFieldsStatistics</h2>
             <label data-translate>chooseAServiceType</label>
-            <select data-ng-model="termsForSearchService">
+            <select data-ng-model="termsForSearchService" class="form-control">
                 <option data-ng-repeat="(key, value) in statistics.search.services track by $index" 
                     value="{{value}}">{{value | translate}}</option>
             </select>
@@ -148,8 +149,8 @@
                 data-ng-click="searchStatisticExport()" 
                 data-ng-hide="paramsExport && requestsExport"
                 data-translate>searchStatisticExport</button>
-            <div data-ng-bind-html-unsafe="requestsExport"></div>
-            <div data-ng-bind-html-unsafe="paramsExport"></div>
+            <div data-ng-bind-html="requestsExport"></div>
+            <div data-ng-bind-html="paramsExport"></div>
         </div>
    </div>
    
