@@ -400,7 +400,17 @@ GeoNetwork.map.ExtentMap = function(){
             feature = feature[0];
         }
         
-        vectorLayer.addFeatures(feature);
+        // Draw a point if north=south and west=east
+        var bounds = feature.geometry.getBounds();
+        if (bounds.left === bounds.right && bounds.top === bounds.bottom) {
+            var pointfeature = new OpenLayers.Feature.Vector(
+                    new OpenLayers.Geometry.Point(bounds.left, bounds.top));
+            vectorLayer.addFeatures(pointfeature);
+        } else {
+            vectorLayer.addFeatures(feature);
+        }
+        
+        
         // optionally, zoom on the layer features extent
         if (options.zoomToFeatures) {
             zoomToFeatures(map, vectorLayer);

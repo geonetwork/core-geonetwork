@@ -155,6 +155,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
             strokeOpacity: 1,
             strokeWidth: 1,
             fillOpacity: 0,
+            pointRadius: 2,
             strokeColor: '${featurecolor}',
             fillColor: '${featurecolor}'
         }),
@@ -166,6 +167,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
             strokeOpacity: 1,
             strokeWidth: 3,
             fillOpacity: 0.3,
+            pointRadius: 2,
             strokeColor: '${featurecolor}',
             fillColor: '${featurecolor}'
         })
@@ -749,32 +751,49 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                 
             var bboxes = r.get('bbox');
             if (bboxes) {
-                var polygons = [];
-                for (j = 0; j < bboxes.length; j++) {
-                    var bbox = bboxes[j].value;
-                    var p1 = new OpenLayers.Geometry.Point(bbox[2], bbox[1]);
-                    var p2 = new OpenLayers.Geometry.Point(bbox[2], bbox[3]);
-                    var p3 = new OpenLayers.Geometry.Point(bbox[0], bbox[3]);
-                    var p4 = new OpenLayers.Geometry.Point(bbox[0], bbox[1]);
-                    
+                // If only one geometry which is a point
+                // draw a point instead of a bounding box which will not be visible
+                if (bboxes.length === 1 && 
+                        bboxes[0].value[0] === bboxes[0].value[2] &&
+                        bboxes[0].value[1] === bboxes[0].value[3]) {
+                    var p1 = new OpenLayers.Geometry.Point(bboxes[0].value[0], bboxes[0].value[1]);
                     if (this.mapsProjection !== 'EPSG:4326') {
                         p1.transform(this.projectionFrom, this.projectionTo);
-                        p2.transform(this.projectionFrom, this.projectionTo);
-                        p3.transform(this.projectionFrom, this.projectionTo);
-                        p4.transform(this.projectionFrom, this.projectionTo);
                     }
-                    
-                    var pointList = [p1, p2, p3, p4, p1];
-                    var linearRing = new OpenLayers.Geometry.LinearRing(pointList);
-                    var polygon = new OpenLayers.Geometry.Polygon([linearRing]);
-                    
-                    polygons.push(polygon.clone());
+                    var feature = new OpenLayers.Feature.Vector(p1, {
+                        id: r.get('uuid'),
+                        featurecolor: featurecolor
+                    });
+                    this.features.push(feature.clone());
+                } else {
+                    // Handles bounding boxes
+                    var polygons = [];
+                    for (j = 0; j < bboxes.length; j++) {
+                        var bbox = bboxes[j].value;
+                        var p1 = new OpenLayers.Geometry.Point(bbox[2], bbox[1]);
+                        var p2 = new OpenLayers.Geometry.Point(bbox[2], bbox[3]);
+                        var p3 = new OpenLayers.Geometry.Point(bbox[0], bbox[3]);
+                        var p4 = new OpenLayers.Geometry.Point(bbox[0], bbox[1]);
+                        
+                        if (this.mapsProjection !== 'EPSG:4326') {
+                            p1.transform(this.projectionFrom, this.projectionTo);
+                            p2.transform(this.projectionFrom, this.projectionTo);
+                            p3.transform(this.projectionFrom, this.projectionTo);
+                            p4.transform(this.projectionFrom, this.projectionTo);
+                        }
+                        
+                        var pointList = [p1, p2, p3, p4, p1];
+                        var linearRing = new OpenLayers.Geometry.LinearRing(pointList);
+                        var polygon = new OpenLayers.Geometry.Polygon([linearRing]);
+                        
+                        polygons.push(polygon.clone());
+                    }
+                    var multipolygon = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.MultiPolygon(polygons), {
+                        id: r.get('uuid'),
+                        featurecolor: featurecolor
+                    });
+                    this.features.push(multipolygon.clone());
                 }
-                var multipolygon = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.MultiPolygon(polygons), {
-                    id: r.get('uuid'),
-                    featurecolor: featurecolor
-                });
-                this.features.push(multipolygon.clone());
             }
         }, this);
         
