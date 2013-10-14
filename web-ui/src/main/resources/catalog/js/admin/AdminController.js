@@ -87,7 +87,7 @@
     '$scope', '$http', '$q', '$rootScope', '$route', '$routeParams',
     'gnUtilityService',
     function($scope, $http, $q, $rootScope, $route, $routeParams,
-              gnUtilityService) {
+        gnUtilityService) {
       /**
        * Define admin console menu for each type of user
        */
