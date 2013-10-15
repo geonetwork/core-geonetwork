@@ -71,8 +71,6 @@ GeoNetwork.loginApp = function() {
                                 show(Ext.getCmp("formatCombo").el.parent()
                                         .parent().parent().parent().parent()
                                         .parent(), true);
-                                show(Ext.getCmp("basicgeodataid").el.parent()
-                                        .parent(), true);
                                 show(Ext.getCmp("isTemplate").el.parent()
                                         .parent().parent(), true);
                                 show(Ext.getCmp("isValid").el.parent().parent()
@@ -102,7 +100,6 @@ GeoNetwork.loginApp = function() {
                 // Hide some advanced search options
                 hide(Ext.getCmp("formatCombo").el.parent().parent().parent()
                         .parent().parent().parent());
-                hide(Ext.getCmp("basicgeodataid").el.parent().parent());
                 hide(Ext.getCmp("isTemplate").el.parent().parent().parent());
                 hide(Ext.getCmp("isValid").el.parent().parent().parent());
                 hide(Ext.getCmp("toEdit").el.parent().parent().parent());

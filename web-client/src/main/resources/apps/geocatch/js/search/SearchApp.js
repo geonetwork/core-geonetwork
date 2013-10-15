@@ -393,7 +393,7 @@ GeoNetwork.searchApp = function() {
                                 }
                             }
                         },
-                        hidden : !catalogue.isIdentified()
+                        hidden : false//!catalogue.isIdentified()
                     }, new Ext.ux.form.SuperBoxSelect({
                         id : "formatCombo",
                         fieldLabel : OpenLayers.i18n("formatTxt"),
