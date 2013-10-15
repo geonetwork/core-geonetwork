@@ -86,6 +86,11 @@ public class GetValidationStatus implements Service
             elRes.addContent((Content) validationEl.clone());
         }
 
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        boolean published = gc.getAccessManager().isVisibleToAll(dbms, metadataId);
+
+        elRes.addContent(new Element("published").setText(Boolean.toString(published)));
+
 		return elRes;
 	}
 }
