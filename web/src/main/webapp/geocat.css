@@ -1127,3 +1127,9 @@ li.blue-content a {
 select.lang_selector {
 	max-width: 100px;
 }
+
+/** For Metadata Editor, hide parent **/
+fieldset.metadata-block table tbody tr[id^="gmd:parentIdentifier_"],
+fieldset.metadata-block table tbody tr[id^="child_gmd:parentIdentifier_"] {
+	display: none;
+}

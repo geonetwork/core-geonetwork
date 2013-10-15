@@ -251,7 +251,7 @@
 		        				<xsl:text> </xsl:text>
 		        				<a alt="{/root/gui/strings/linkedParentMetadataHelp}"
 		        					title="{/root/gui/strings/linkedParentMetadataHelp}"
-		        					href="javascript:doTabAction('metadata.update', 'metadata');"><xsl:value-of select="/root/gui/strings/addParent"/></a>
+		        					href="javascript:javascript:showLinkedMetadataSelectionPanel(null, null, true);"><xsl:value-of select="/root/gui/strings/addParent"/></a>
 		        			</xsl:when>
 		        			<xsl:otherwise>
 		        				<!-- update child option only for iso19139 schema based metadata and admin user -->

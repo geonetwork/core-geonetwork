@@ -106,6 +106,12 @@ app.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
     createIfNotExistURL: null,
     
     /**
+     * Defines if the window should show full relationships combobox
+     * to select what kind of relationship it will be.
+     */
+    fullRelationships: false,
+    
+    /**
      * An array of hidden parameter for the form.
      * Default value is set to dataset.
      */
@@ -187,10 +193,40 @@ app.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
             header: '',
             listeners: {
         		selectionchange: function() {
-        			Ext.getCmp('linkedMetadataValidateButton').setDisabled(this.getSelections().length < 1);
+        			if(!this.fullRelationships) {
+        				Ext.getCmp('linkedMetadataValidateButton').setDisabled(this.getSelections().length < 1);
+        			}
         		}
         	}
         });
+        var relationSM = {
+                header   : translate('relationships'),
+                title	 : translate('relationships'),
+                width    : 220,
+                fixed    : true,
+                hideable : false,
+                renderer: function(value, metaData, record, rowIndex, colIndex, store) {
+                    return ((value)? value : translate('selectRelation') );
+                 },
+                dataIndex: 'relationship',
+                editor   : new Ext.form.ComboBox({
+                            store: new Ext.data.SimpleStore({
+                                   fields: ['label', 'rel'],
+                                   data : [                                         
+                                           [translate('parent'), 'parent'],
+                                           [translate('crossReference'),  'crossReference'],
+                                           [translate('partOfSeamlessDatabase'), 'partOfSeamlessDatabase'],
+                                           [translate('source'), 'source'],
+                                           [translate('stereoMate'), 'stereoMate']                                           
+                                          ]
+                                    }),
+                                  displayField:'label',
+                                  valueField: 'rel',
+                                  mode: 'local',
+                                  typeAhead: false,
+                                  triggerAction: 'all'
+                            })
+        };
 
         var tbarItems = [this.getSearchInput(),
                          '->',
@@ -198,7 +234,21 @@ app.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
                          this.getLimitInput()];
         this.addHiddenFormInput(tbarItems);
         
-        var grid = new Ext.grid.GridPanel({
+        var columns = [];
+        if(!this.fullRelationships) {
+        	columns.push(checkboxSM);
+        }
+        
+        columns.push({id: 'title', header: translate('mdTitle'), dataIndex: 'title'});
+        columns.push({id: 'subject', header: translate('keywords'), dataIndex: 'subject'});
+        
+        if(!this.fullRelationships){
+        	columns.push({id: 'uri', header: translate('uri'), dataIndex: 'uri'});	// TODO : only for services
+        } else {
+        	columns.push(relationSM);
+        }
+        
+        var grid = new Ext.grid.EditorGridPanel({
             id: 'linkedMetadataGrid',
         	xtype: 'grid',
             layout: 'fit',
@@ -209,12 +259,7 @@ app.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
             loadMask: true,
             tbar: tbarItems,
             store: app.linkedMetadata.linkedMetadataStore,
-            columns: [
-                checkboxSM,
-                {id: 'title', header: translate('mdTitle'), dataIndex: 'title'},
-                {id: 'subject', header: translate('keywords'), dataIndex: 'subject'},
-                {id: 'uri', header: translate('uri'), dataIndex: 'uri'}	// TODO : only for services
-            ],
+            columns: columns,
             sm: checkboxSM,
             autoExpandColumn: 'title',
             listeners: {
@@ -243,7 +288,7 @@ app.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
 	            id: 'linkedMetadataValidateButton',
 	            iconCls: 'linkIcon',
 	            text: translate('createRelation'),
-	            disabled: true,
+	            disabled: !this.fullRelationships,
 	            handler: function() {
 	                var selected = grid.getSelectionModel().getSelections();
 	                this.fireEvent('linkedmetadataselected', this, selected);
@@ -381,7 +426,7 @@ app.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
     				{msg: translate('searching')});
 		}
     	this.loadingMask.show();
-    	
+
         var url = Env.locService + "/csw";
         app.nbResultPerPage = 20;
         if (Ext.getCmp('nbResultPerPage')) {

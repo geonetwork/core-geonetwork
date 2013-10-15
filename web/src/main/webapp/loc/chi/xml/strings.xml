@@ -262,13 +262,13 @@
 	<associateDataset js="true">Link dataset metadata</associateDataset>
 	<associateServiceHelp>To add a relation to a service metadata, search for service and define layer name.</associateServiceHelp>
 	<associateDatasetHelp>To add a relation to a dataset, go to ISO view > Identification section, and defined operates on elements.</associateDatasetHelp>
-	<addParent> Add or update parent metadata section</addParent>
+	<addParent> Add new related metadata</addParent>
 	<createAssoService>Create relation</createAssoService>
 	<updateMdd>Update dataset metadata</updateMdd>
 	<datasetCreate>Create dataset metadata</datasetCreate>
 	<linkedServices> Related service metadata:</linkedServices>
 	<linkedServiceMetadataHelp>To add a relation to a service, go to ISO view &gt; Distribution tab.</linkedServiceMetadataHelp>
-	<linkedParentMetadata> Parent/child metadata:</linkedParentMetadata>
+	<linkedParentMetadata> Related Metadata:</linkedParentMetadata>
 	<linkedParentMetadataHelp>To add a relation to a parent, go to ISO view &gt; Metadata tab.</linkedParentMetadataHelp>
 	<linkedChildrenMetadata> Children metadata:</linkedChildrenMetadata>
 	<linkedChildrenMetadataHelp>List of children linked to current metadata record.</linkedChildrenMetadataHelp>
@@ -278,6 +278,13 @@
 	<linkedMetadataSelectionWindowTitle js="true">Related metadata selection</linkedMetadataSelectionWindowTitle>
 	<searchText js="true">Text search</searchText>
 	<mdTitle js="true">Metadata title</mdTitle>
+	<createRelation js="true">Create relation</createRelation>
+	<parent js="true">Parent</parent>
+	<source js="true">Source</source>
+	<crossReference js="true">Cross Reference</crossReference>
+	<partOfSeamlessDatabase js="true">Part of Seamless Database</partOfSeamlessDatabase>
+	<stereoMate js="true">Stereo Mate</stereoMate>
+	<relationships js="true">Relationships</relationships>
 	<createRelation js="true">Create relation</createRelation>
 	<export>Export</export>
 	<exportText>Export (TXT)</exportText>	

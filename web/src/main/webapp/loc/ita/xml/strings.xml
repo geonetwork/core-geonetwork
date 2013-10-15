@@ -603,6 +603,13 @@
 	<linkedMetadataSelectionWindowTitle js="true">Selezione dei metadati collegati</linkedMetadataSelectionWindowTitle>
 	<searchText js="true">Ricerca testuale</searchText>
 	<mdTitle js="true">Titolo dei Metadati</mdTitle>
+	<createRelation js="true">Create relation</createRelation>
+	<parent js="true">Parent</parent>
+	<source js="true">Source</source>
+	<crossReference js="true">Cross Reference</crossReference>
+	<partOfSeamlessDatabase js="true">Part of Seamless Database</partOfSeamlessDatabase>
+	<stereoMate js="true">Stereo Mate</stereoMate>
+	<relationships js="true">Relationships</relationships>
 	<createRelation js="true">Crea una relazione</createRelation>
 	<export>Esporta (ZIP)</export>
 	<exportText>Esporta (TXT)</exportText>	

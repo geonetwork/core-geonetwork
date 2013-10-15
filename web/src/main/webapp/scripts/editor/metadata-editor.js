@@ -278,16 +278,12 @@ function swapControls(el1,el2)
     var el1Descs = getControlsFromElement(el1);
 	var el2Descs = getControlsFromElement(el2);
 	for (var index = 0; index < el1Descs.length; ++index) {
-	 var visible1 = el1Descs[index] && el1Descs[index].visible();
-	 var visible2 = el2Descs[index] && el2Descs[index].visible();
-	 if(el2Descs[index]) {
-	   if (visible1) el2Descs[index].show();
-  	 else el2Descs[index].hide();
-   }
-	 if(el1Descs[index]) {
-	   if (visible2) el1Descs[index].show();
-  	 else el1Descs[index].hide();
-   }
+	 var visible1 = el1Descs[index].visible();
+	 var visible2 = el2Descs[index].visible();
+	 if (visible1) el2Descs[index].show();
+	 else el2Descs[index].hide();
+	 if (visible2) el1Descs[index].show();
+	 else el1Descs[index].hide();
 	}
 }
 
@@ -388,7 +384,7 @@ function setAddControls(el, orElement)
 	}
 }
 
-function doNewElementAjax(action, ref, name, child, id, what, max, orElement, extraParams)
+function doNewElementAjax(action, ref, name, child, id, what, max, orElement, extraParams, success)
 {
 	var metadataId = document.mainForm.id.value;
 	var pars = "&id="+metadataId+"&ref="+ref+"&name="+name;
@@ -438,8 +434,16 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement, ex
 				validateMetadataFields();
 				var eBusy = $('editorBusy');
                 if (eBusy) eBusy.hide();
-                $('editorOverlay').setStyle({display: "none"});
+                
+                var editorOverlay = $('editorOverlay');
+                if(editorOverlay) {
+                	editorOverlay.setStyle({display: "none"});
+                }
 				setBunload(true); // reset warning for window destroy
+				
+				if(success) {
+					success(thisElement, html);
+				}
 			},
 			onFailure: function(req) { 
 				alert(translate("errorAddElement") + name + translate("errorFromDoc") 
@@ -460,7 +464,7 @@ function disableEditForm()
 	$('editorOverlay').setStyle({opacity: "0.65"});
 }
 
-function doSaveAction(action,validateAction)
+function doSaveAction(action,validateAction, onSuccess)
 {
 	disableEditForm();
 
@@ -541,6 +545,10 @@ function doSaveAction(action,validateAction)
 					} else {
 						alert("Status returned was "+req.status+" this could be a problem");
 					}
+					
+					if(onSuccess) {
+						onSuccess();
+					}
 				},
 				onFailure: function(req) { 
 					alert(translate("errorSaveFailed") + "/ status " + req.status+" text: " + req.statusText + " - " + translate("tryAgain"));
@@ -587,29 +595,20 @@ function doEditorAlert(divId, imgId)
 
 
 // called when protocol select field changes in metadata form
-function checkForFileUpload(fref, pref) {
-	//protocol object
+function checkForFileUpload(fref, pref)
+{
+	var fileName = $('_'+fref);     // the file name input field
 	var protoSelect = $('s_'+pref); // the protocol <select>
 	var protoIn = $('_'+pref);        // the protocol input field to be submitted
-	//protocol value
-	var protocolSelect = protoSelect.value;
-	var protocolIn = protoIn.value;
-	//Can protocol be a file
-	var regex = new RegExp( '^WWW:DOWNLOAD-.*-http--download.*');
-	var protocolDownloadSelect = (regex.test(protocolSelect));
-	var protocolDownloadIn = (regex.test(protocolIn));
 
-	// This is just the input field that may contain the filename - it is not a guaranteed filename
-	// The input field is assumed to be one of 2 fields. 
-	//    If the gmd:name is used then it will be this input field
-	//    If the gmx:filename is used then it will be a hidden input field 
-	var possibleFileNameObj = $('_'+fref);     // the file name input field
-	var possibleFileUploaded = (possibleFileNameObj != null && possibleFileNameObj.value.length > 0);
+	var fileUploaded = (fileName != null && fileName.value.length > 0);
+    var protocol = protoSelect.value;
+	var protocolDownload = (protocol.startsWith('WWW:DOWNLOAD') && protocol.indexOf('http')>0);
 
 	// don't let anyone change the protocol if a file has already been uploaded 
-	// unless the old and the new are downloadable.
-	if (possibleFileUploaded) {
-		if (protocolDownloadIn && !protocolDownloadSelect) {
+	// unless its between downloaddata and downloadother
+	if (fileUploaded) {
+		if (!protocolDownload ) {
 			alert(translate("errorChangeProtocol"));
 			// protocol change is not ok so reset the protocol value
 			protoSelect.value = protoIn.value; 
@@ -625,7 +624,7 @@ function checkForFileUpload(fref, pref) {
 	finput = $('di_'+fref);
 	fbuttn = $('db_'+fref);
     
-	if (protocolDownloadSelect) {
+	if (protocolDownload) {
 		if (finput != null) finput.hide();
 		if (fbuttn != null) fbuttn.show();
 	} else {
@@ -652,17 +651,16 @@ function doFileUploadSubmit(form)
 	var fref = fid['f_'+$F(ref)];
 	var fileName = $F(fref);
 	if (fileName == '') {
-		alert(translate("selectOneFileUpload"));
+		alert(translate("selectOneFile"));
 		return false;
 	}
 
 	AIM.submit(form, 
-		{
-			// not needed
-			//'onStart': function() {
-			//	return true;
-			//},
+		{ 'onStart': function() {
+				Modalbox.deactivate();
+			},
 			'onComplete': function(doc) {
+				Modalbox.activate();
 				if (doc.body == null) { // error - upload failed for some reason
 					alert(translate("uploadFailed") + doc);
 				} else {
@@ -677,16 +675,9 @@ function doFileUploadSubmit(form)
 						name.value = fname.getAttribute('title');
 						$('di_'+$F(ref)).show();
 						$('db_'+$F(ref)).hide();
-					
-						// show file upload results - save form when dialog closes
-						Modalbox.show(doc.body.innerHTML,
-							{	
-								width:600,
-								afterHide: function() {
-									doSaveAction('metadata.update');
-								}
-							}
-						);
+						Modalbox.show(doc.body.innerHTML,{width:600});
+						
+						doSaveAction('metadata.update');
 					} else {
 						alert(translate("uploadSetFileNameFailed"));
 					}
@@ -915,11 +906,10 @@ function validateMetadataFields() {
 				// matched with GUI language in order to edit by default
 				// element
 				// in GUI language. If none, default language is selected.
-				for (i = 0; i < input.options.length; i++) {
-					if (input.options[i].getAttribute("code").toLowerCase() == Env.lang) {
+				for (i = 0; i < input.options.length; i++)
+					if (input.options[i].getAttribute("code")
+							.toLowerCase() == Env.lang)
 						input.options[i].selected = true;
-					}
-				}
 				
 				enableLocalInput(input, false);
 			});
@@ -951,7 +941,7 @@ function initCalendar() {
     	var id = cal.id;	// Give render div id to calendar input and change its id.
     	cal.id = id + 'Id';	// In order to get the input if a get by id is made later (eg. gn_search.js).
 
-    	if (cal.id.indexOf("Id", cal.id.length - 2) == -1 || cal.firstChild==null || cal.childElements().length === 0) {	// Check if already initialized or not
+    	if (cal.firstChild==null || cal.childNodes.length==1) {	// Check if already initialized or not
 	    	var format = 'Y-m-d';
 	    	var formatEl = Ext.getDom(id + '_format');
 	    	if (formatEl) {
@@ -973,8 +963,6 @@ function initCalendar() {
 				    value : value,
 		            dateFormat : 'Y-m-d',
 		            timeFormat : 'H:i',
-		            dateAltFormats:null,
-		            timeAltFormats:null,
 		            hiddenFormat : 'Y-m-d\\TH:i:s',
 		            dtSeparator : 'T'
 				});
@@ -985,18 +973,7 @@ function initCalendar() {
 				    id : id,
 				    width : 160, 
 				    value : value,
-				    format : 'Y-m-d',
-				    altFormats:null,
-				    beforeBlur: function(){}, // don't perform check on blur which may changes the value.
-				    // override the setValue so that we allow freeform text in the input box during the initialload.
-				    setValue : function(date){
-				          // If the parsed date not equal to the date supplied then we will assume that it does not follow
-				          // the date format and it is in freeform. In which case, we set the superclass to the date supplied.
-				          if (!(date instanceof Date) && this.formatDate(this.parseDate(date))!==date)
-				               Ext.form.DateField.superclass.setValue.call(this, date);
-				          else // All other occurences are from when the user selects the date picker.
-				               Ext.form.DateField.superclass.setValue.call(this, this.formatDate(this.parseDate(date)));
-				    }
+				    format : 'Y-m-d'
 				});
 			}
 			
@@ -1200,12 +1177,19 @@ function doSaveThen(locationAfterSave) {
  * 	define if multiple selection is allowed and if hidden parameters need
  *  to be added to CSW query.
  */
-function showLinkedMetadataSelectionPanel(ref, name) {
+function showLinkedMetadataSelectionPanel(ref, name, fullRelationships) {
     var single = ((name=='uuidref' || name=='iso19110' || name=='')?true:false);
     // Add extra parameters according to selection panel
     
+    if(fullRelationships) {
+    	single = false;
+    	name = 'coupledResource';
+    	ref = '';
+    }
+    
 	var linkedMetadataSelectionPanel = new app.LinkedMetadataSelectionPanel({
         ref: ref,
+        fullRelationships: fullRelationships,
         singleSelect: single,
         mode: name,
         listeners: {
@@ -1251,11 +1235,43 @@ function showLinkedMetadataSelectionPanel(ref, name) {
     			} else {
     				var inputs = [];
     				var multi = metadata.length > 1? true : false;
-    				Ext.each(metadata, function(md, index) {
-    					if (multi) name = name+'_'+index;
-    					// Add related metadata uuid into main form.
-    					inputs.push({tag: 'input', type: 'hidden', id: name, name: name, value: md.data.uuid});
-    				});
+    				if(!fullRelationships) {
+	    				Ext.each(metadata, function(md, index) {
+	    					if (multi) name = name+'_'+index;
+	    					// Add related metadata uuid into main form.
+	    					inputs.push({tag: 'input', type: 'hidden', id: name, name: name, value: md.data.uuid});
+	    				});
+    				} else {
+
+    					var index = 0;
+    					var items = Ext.getCmp("linkedMetadataGrid").store.data.items;
+    					var parent_array = Ext.query("*[id^=gmd:aggregationInfo_]");
+    					if(parent_array.length == 0) {
+    						parent_array =  Ext.query("*[id^=child_gmd:aggregationInfo_]");
+    					}
+    					if(parent_array.length == 0) {
+    						parent_array =  Ext.query("*[id^=gmd:resourceConstraints_]");
+    					}
+    					if(parent_array.length == 0) {
+    						parent_array =  Ext.query("*[id^=gmd:language_]");
+    					}
+    					var parent = parent_array[parent_array.length - 1];
+    					
+    					var hasParent = false;
+    					
+    					//Check if we have more than one parent defined
+    					Ext.each(items, function(item) {
+    						if(item.data.relationship == 'parent') {
+    							if(hasParent) {//FIXME translate
+    								alert("Choose only one parent relationship");
+    								return;
+    							}
+    							hasParent = true;
+    						}
+    					});
+    					
+						processItem(items, 0, parent);
+    				}
     				var dh = Ext.DomHelper;
 					dh.append(Ext.get("hiddenFormElements"), inputs);
     			}
@@ -1276,6 +1292,158 @@ function showLinkedMetadataSelectionPanel(ref, name) {
     });
 
     linkedMetadataSelectionWindow.show();
+}
+
+/**
+ * Helping procedure for adding new relationships to metadata.
+ * Recursive, it will process all items
+ */
+function processItem(items, index, parent) {
+	
+	if(index >= items.length) {
+		return;
+	}
+	
+	var item = items[index];
+	
+	if(item.data.relationship == 'parent') {
+		var gmdparent = Ext.query("*[id^=gmd:parentIdentifier_]");
+		if(gmdparent.length <= 0) { //no parent input, let's create one:
+			gmdparent = Ext.query("*[id^=child_gmd:parentIdentifier_]");
+			if(gmdparent.length > 0) {
+				gmdparent = gmdparent[0];
+				var ref = Ext.query("a[id^=add_child]", gmdparent)[0];
+				ref = ref.getAttribute("onclick");
+				ref = ref.substring(ref.indexOf("metadata.elem.add") + 19);
+				ref = ref.substring(0, ref.indexOf(","));
+				
+				doNewElementAjax('/metadata.elem.add',
+						ref,'gmd:parentIdentifier',
+						null, gmdparent.id, 'replace',1, false, null, 
+						function() {
+							processItem(items, index, parent);
+						});
+
+			} else {
+				//we are on a different view
+				document.mainForm.currTab.value = "simple";
+				doSaveAction('metadata.update');
+			}
+		} else { //let's fill the parent input			
+			gmdparent = gmdparent[0];
+			var placeholder = Ext.query("input[type=text]", gmdparent)[0];
+			placeholder.value = item.data.uuid;
+			
+			index++;
+			processItem(items, index, parent);
+		}
+	} //Now, if no parent relationship
+	else if(item.data.relationship
+			&& item.data.relationship != '') {
+		
+		//Function to process the xml sent by the server
+		var success = function(elem, html) {
+			
+			//look for the element we just inserted
+			var id = html.substring(html.indexOf('id="') + 4);
+			id = id.substring(0, id.indexOf('"'));
+			//next loop parent can be our current element
+			parent = Ext.get(id).dom;
+			
+			//add type of relationship
+			var relType = Ext.query("select", parent)[0];
+			var option = Ext.query("option[value=" + 
+					item.data.relationship + "]", relType);
+			if(option.length > 0) {
+				option[0].selected = true;
+			}
+			
+			//add uuid on identifier
+			
+			//Function to process the xml sent by the server
+			var success2 = function(elem, html) {
+				//now, add the uuid:
+				var id = html.substring(html.indexOf('id="') + 4);
+				id = id.substring(0, id.indexOf('"'));
+				var codeparent = Ext.query("*[id^=gmd:code_]", Ext.get(id).dom)[0];
+				var uuid_placeholders = Ext.query("input[type=text]", codeparent); //internacionalization
+				Ext.each(uuid_placeholders, function(placeholder) {
+					placeholder.value = item.data.uuid;
+				});
+				
+				//Call the next item
+				var onSuccess = function() {
+					index++;
+					processItem(items, index, parent);
+				};
+				
+				//Save the uuids
+				removeJustCreated();
+				doSaveAction('metadata.update', undefined, onSuccess);
+			};
+			
+
+			//Save so the next ajax call gets the id for the inputs right
+			removeJustCreated();
+			doSaveAction('metadata.update', undefined, function(){
+				//first, add the identifier/code input:
+				var button = Ext.query(
+						"a[id^=add_child_gmd:aggregateDataSetIdentifier_]");
+				
+				button = button[button.length - 1];
+				
+				//look for ref
+				var ref = button.getAttribute("onclick");
+				ref = ref.substring(ref.indexOf("metadata.elem.add") + 19);
+				ref = ref.substring(0, ref.indexOf(","));
+				//add uuid elem
+				doNewElementAjax('/metadata.elem.add',
+									ref,'gmd:aggregateDataSetIdentifier',
+						null, button.id.substring(4), 'replace',1, false, null, success2);
+			});
+		};
+
+		//look for ref
+		//If it is the second iteration, we need to refresh our parent
+		var parent_array = Ext.query("*[id^=gmd:aggregationInfo_]");
+		if(parent_array.length == 0) {
+			parent_array =  Ext.query("*[id^=child_gmd:aggregationInfo_]");
+		}
+		if(parent_array.length == 0) { //fallback 1
+			parent_array =  Ext.query("*[id^=gmd:resourceConstraints_]");
+		}
+		if(parent_array.length == 0) {//fallback 2
+			parent_array =  Ext.query("*[id^=gmd:language_]");
+		}
+		parent = parent_array[parent_array.length - 1];
+		var ref = Ext.query("a[id^=add_gmd]", parent);
+		if(ref.length == 0) {
+			ref = Ext.query("a[id^=add_child_gmd]", parent);
+		}
+		
+		if(ref) {
+			ref = ref[0];
+			ref = ref.getAttribute("onclick");
+			ref = ref.substring(ref.indexOf("metadata.elem.add") + 19);
+			ref = ref.substring(0, ref.indexOf(","));
+		} else {
+			ref = 63; //fallback
+		}
+		
+		if(parent == null) {
+			//we are on a different view
+			document.mainForm.currTab.value = "simple";
+			doSaveAction('metadata.update');
+		}
+		
+		//add new gmd:aggregationInfo
+		doNewElementAjax('/metadata.elem.add', ref, 'gmd:aggregationInfo', null, 
+				parent.id, 'add', 10000, false, null, success);    							
+		
+	} else {
+		index++;
+		processItem(items, index, parent);
+	}
 }
 
 /**
@@ -1646,10 +1814,8 @@ function show(nodes, ref, focus) {
 		var input = nodes[index];
 		if (input.name == ref) {
 			input.style.display = "block";
-			if (focus) {
+			if (focus)
 				input.focus();
-			}
-			return;
 		}
 	}
 }

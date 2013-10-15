@@ -596,13 +596,13 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<associateServiceHelp>Pour associer une métadonnée de service, rechercher un service et choisir la couche associée.</associateServiceHelp>
 	<associateDatasetHelp>Pour associer une métadonnée de données, aller dans la vue ISO &gt; onglet Identification,
 		et définir l'élément "operates on".</associateDatasetHelp>
-	<addParent> Ajouter ou mettre à jour l'information sur le parent</addParent>
+	<addParent> Ajouter une nouvelle relation de métadonnées</addParent>
 	<createAssoService>Créer la relation</createAssoService>
 	<updateMdd>Mettre à jour la métadonnée de données</updateMdd>
 	<datasetCreate>Créer une métadonnée de données</datasetCreate>
 	<linkedServices> Services associés:</linkedServices>
 	<linkedServiceMetadataHelp>Pour associer une métadonnée de service, aller dans la vue ISO &gt; onglet Distribution.</linkedServiceMetadataHelp>
-	<linkedParentMetadata> Parent/enfant :</linkedParentMetadata>
+	<linkedParentMetadata> Métadonnées Connexes :</linkedParentMetadata>
 	<linkedParentMetadataHelp>Pour associer un parent, aller dans la vue ISO &gt; onglet Metadonnées.</linkedParentMetadataHelp>
 	<linkedChildrenMetadata> Enfants:</linkedChildrenMetadata>
 	<linkedChildrenMetadataHelp>Liste des enfants pour la métadonnée en cours.</linkedChildrenMetadataHelp>
@@ -612,6 +612,13 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<linkedMetadataSelectionWindowTitle js="true">Sélection des métadonnées associées</linkedMetadataSelectionWindowTitle>
 	<searchText js="true">Recherche libre</searchText>
 	<mdTitle js="true">Titre de la métadonnée</mdTitle>
+	<selectRelation js="true">Double-cliquez pour sélectionner relation</selectRelation>
+	<parent js="true">Père</parent>
+	<source js="true">Source</source>
+	<crossReference js="true">Cross Reference</crossReference>
+	<partOfSeamlessDatabase js="true">Part of Seamless Database</partOfSeamlessDatabase>
+	<stereoMate js="true">Stereo Mate</stereoMate>
+	<relationships js="true">Relations</relationships>
 	<createRelation js="true">Créer la relation</createRelation>
 	<export js="true">Exporter</export>
 	<exportText>Export (TXT)</exportText>

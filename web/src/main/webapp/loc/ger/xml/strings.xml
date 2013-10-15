@@ -573,13 +573,13 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<associateDataset js="true"> Daten-Metadaten verlinken</associateDataset>
 	<associateServiceHelp>Um Dienst-Metadaten zu verlinken: nach Dienst-Metadaten suchen und Layername angeben.</associateServiceHelp>
 	<associateDatasetHelp>Um eine Beziehung zu einem Datensatz herzustellen, gehen Sie zu "ISO-Ansicht" &gt; Basisinformation und definieren Sie die "bezieht sich auf"-Elemente (Operates on).</associateDatasetHelp>
-	<addParent> Hinzufügen oder Aktualisieren eines Eltern-Metadatensatzes</addParent>
+	<addParent> Neue Metadaten Beziehung</addParent>
 	<createAssoService>Eine Verbindung erstellen</createAssoService>
 	<updateMdd>Daten-Metadaten aktualisieren</updateMdd>
 	<datasetCreate>Einen Daten-Metadatensatz erstellen</datasetCreate>
 	<linkedServices> Dienst-Metadatensatz:</linkedServices>
 	<linkedServiceMetadataHelp>Um eine Verbindung zu einem Dienst herzustellen, gehen Sie zu "ISO-Ansicht" &gt; Vertrieb.</linkedServiceMetadataHelp>
-	<linkedParentMetadata> Eltern-/Kind-Metadaten: </linkedParentMetadata>
+	<linkedParentMetadata> Zugehörigen Metadaten: </linkedParentMetadata>
 	<linkedParentMetadataHelp>Um eine Beziehung zu einem Eltern-Metadatensatz herzustellen, gehen Sie zu "ISO-Ansicht" &gt; Metadaten.</linkedParentMetadataHelp>
 	<linkedChildrenMetadata> Untergeordnete Metadaten:</linkedChildrenMetadata>
 	<linkedChildrenMetadataHelp>Liste der "Kinder" dieses Metadatensatzes</linkedChildrenMetadataHelp>
@@ -589,6 +589,13 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<linkedMetadataSelectionWindowTitle js="true">Metadaten verlinken</linkedMetadataSelectionWindowTitle>
 	<searchText js="true">Alle Felder</searchText>
 	<mdTitle js="true">Titel der Metadaten</mdTitle>
+	<selectRelation js="true">Doppelklicken Sie auf Beziehung wählen</selectRelation>
+	<parent js="true">Eltern</parent>
+	<source js="true">Source</source>
+	<crossReference js="true">Cross Reference</crossReference>
+	<partOfSeamlessDatabase js="true">Part of Seamless Database</partOfSeamlessDatabase>
+	<stereoMate js="true">Stereo Mate</stereoMate>
+	<relationships js="true">Beziehungen</relationships>
 	<createRelation js="true">Verbindung erstellen</createRelation>
 	<export js="true">Export</export>
 	<exportText>Export (TXT)</exportText>	

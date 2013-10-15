@@ -237,6 +237,13 @@
 	<linkedMetadataSelectionWindowTitle js="true">Valitse linkitettävä metatietodokumentti</linkedMetadataSelectionWindowTitle>
 	<searchText js="true">Tekstihaku</searchText>
 	<mdTitle js="true">Metatietodokumentin otsikko</mdTitle>
+	<createRelation js="true">Create relation</createRelation>
+	<parent js="true">Parent</parent>
+	<source js="true">Source</source>
+	<crossReference js="true">Cross Reference</crossReference>
+	<partOfSeamlessDatabase js="true">Part of Seamless Database</partOfSeamlessDatabase>
+	<stereoMate js="true">Stereo Mate</stereoMate>
+	<relationships js="true">Relationships</relationships>
 	<createRelation js="true">Luo linkki</createRelation>
 	<export>Tallenna metatiedot ZIP-tiedostoon</export>
 	<exportText>Tallenna metatiedot TXT-tiedostoon</exportText>
