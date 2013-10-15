@@ -170,7 +170,7 @@
 			<xsl:when test="$edit = 'true'">
         <xsl:variable name="isXLinked"><xsl:call-template name="validatedXlink"/></xsl:variable>
 		<xsl:variable name="isDisabled" select="count(ancestor-or-self::*/geonet:element/@disabled) > 0"/>
-		<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected')]) > 0"/>
+		<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected') or contains(@xlink:href, 'deleted')]) > 0"/>
 
         <xsl:variable name="finalEdit">
 	        <xsl:choose>

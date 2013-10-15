@@ -132,7 +132,7 @@
 			<xsl:when test="$edit=true()">
 				<xsl:variable name="isXLinked"><xsl:call-template name="validatedXlink"/></xsl:variable>
 				<xsl:variable name="isDisabled" select="count(ancestor-or-self::*/geonet:element/@disabled) > 0"/>
-				<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected')]) > 0"/>
+				<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected') or contains(@xlink:href, 'deleted')]) > 0"/>
 			
 				<xsl:variable name="text">
 					<xsl:variable name="ref" select="gco:Distance/geonet:element/@ref"/>
@@ -3055,7 +3055,7 @@
 -->
 						<xsl:variable name="isXLinked"><xsl:call-template name="validatedXlink"/></xsl:variable>
 						<xsl:variable name="isDisabled" select="count(ancestor-or-self::*/geonet:element/@disabled) > 0"/>
-						<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected')]) > 0"/>
+						<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected') or contains(@xlink:href, 'deleted')]) > 0"/>
 						<xsl:variable name="hideInput">
 							<xsl:choose>
 								<xsl:when test="/root/gui/strings/protocolChoice[@value = $value and string-length($value) &gt; 0]">true</xsl:when>
@@ -3135,7 +3135,7 @@
 				<xsl:variable name="button" select="matches($protocol,'^WWW:DOWNLOAD-.*-http--download.*') and normalize-space($value)=''"/>
 				<xsl:variable name="isXLinked"><xsl:call-template name="validatedXlink"/></xsl:variable>
 				<xsl:variable name="isDisabled" select="count(ancestor-or-self::*/geonet:element/@disabled) > 0"/>
-				<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected')]) > 0"/>
+				<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected') or contains(@xlink:href, 'deleted')]) > 0"/>
 				<xsl:call-template name="simpleElementGui">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit" select="$edit"/>
@@ -3815,7 +3815,7 @@
 		<xsl:variable name="qname" select="name(.)"/>
 		<xsl:variable name="value" select="gco:CharacterString"/>
 		<xsl:variable name="isXLinked"><xsl:call-template name="validatedXlink"/></xsl:variable>
-		<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected')]) > 0"/>
+		<xsl:variable name="rejected" select="count(ancestor-or-self::*[contains(@xlink:title,'rejected') or contains(@xlink:href, 'deleted')]) > 0"/>
 		<xsl:variable name="isDisabled" select="count(ancestor-or-self::*/geonet:element/@disabled) > 0"/>
 		
 		<xsl:apply-templates mode="simpleElement" select=".">

@@ -185,6 +185,20 @@
 
                                     <xsl:choose>
 	                                    <xsl:when test="$edit = 'true'">
+                                            <xsl:variable name="link">
+                                                <xsl:value-of select="/root/gui/locService" />
+                                                <xsl:text>/user.edit?id=</xsl:text>
+                                                <xsl:value-of select="substring(../@xlink:href, string-length(substring-before(../@xlink:href, 'id'))+4)"/>
+                                            </xsl:variable>
+                                            <xsl:choose>
+                                                <xsl:when test="not(contains(../@xlink:href, 'deleted'))">
+                                                    <a style="cursor:pointer;font-weight: bold;" href="{$link}" target="_userEditTab">Edit Contact</a>
+                                                </xsl:when>
+                                                <xsl:otherwise>
+                                                    <xsl:text>Contact is deleted: </xsl:text><xsl:value-of select="../@xlink:href"/>
+                                                </xsl:otherwise>
+                                            </xsl:choose>
+
 		                                    <xsl:apply-templates mode="elementEP" select="che:individualFirstName|geonet:child[string(@name)='individualFirstName']">
 		                                        <xsl:with-param name="schema" select="$schema"/>
 		                                        <xsl:with-param name="edit"   select="$edit"/>
