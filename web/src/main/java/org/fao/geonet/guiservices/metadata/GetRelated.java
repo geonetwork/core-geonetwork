@@ -47,6 +47,8 @@ import org.fao.geonet.services.relations.Get;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -235,6 +237,35 @@ public class GetRelated implements Service {
             // Or feature catalogue define in feature catalogue citation
             relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from,
                     to, fast));
+            
+            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+            //Now, add the aggregationInfo elements
+            if(md != null) {
+	            for(String e : Get.getAggregationInfos(md)) {
+	            	String[] tmp = e.split(" ");
+	            	String type_ = tmp[0];
+	            	String uuid_ = tmp[1];
+	            	
+
+                    if(dbms == null) dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+                    String id1 = dm.getMetadataId(dbms, uuid_);
+
+                    try {
+                        Lib.resource.checkPrivilege(context, id1,
+                                AccessManager.OPER_VIEW);
+                        Element content = dm.getMetadata(context, id1,
+                                forEditing, withValidationErrors,
+                                keepXlinkAttributes);
+                        relatedRecords.addContent(new Element(type_)
+                                .addContent(new Element("response")
+                                        .addContent(content)));
+                    } catch (Exception ex) {
+                        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                            Log.debug(Geonet.SEARCH_ENGINE, "Parent metadata "
+                                + id1 + " record is not visible for user.");
+                    }
+	            }
+            }
 
         }
 
