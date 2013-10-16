@@ -33,7 +33,7 @@ GeoNetwork.editor.Filter = {
     DATASET: [{
         name: 'E_type',
         value: 'dataset'
-    }    // If dataset search should be restricted to ISO19139 or profil add criteria on schema. 
+    }    // If dataset search should be restricted to ISO19139 or profil add criteria on schema.
     //, {name: 'S__schema', value: 'iso19139'}
     ],
     FEATURE_CATALOGUE: [{
