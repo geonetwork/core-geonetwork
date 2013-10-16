@@ -70,6 +70,7 @@ attached it to the metadata for data.
                 					<xsl:when test="$protocol != 'OGC:WMS'">
                                     <gmd:distributor>
                                         <gmd:MD_Distributor>
+                                        	<gmd:distributorContact/>
                                             <gmd:distributorFormat/>
                                             <gmd:distributorTransferOptions>
                                                 <gmd:MD_DigitalTransferOptions>
@@ -113,6 +114,7 @@ attached it to the metadata for data.
                                 <xsl:otherwise>
                                     <gmd:distributor>
                                         <gmd:MD_Distributor>
+                                        	<gmd:distributorContact/>
                                             <gmd:distributorFormat />
                                             <gmd:distributorTransferOptions>
                                                 <gmd:MD_DigitalTransferOptions>
