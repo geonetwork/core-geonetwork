@@ -1,25 +1,13 @@
 package org.fao.geonet.domain;
 
-import java.util.HashMap;
+import javax.persistence.*;
 import java.util.Map;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.Table;
-
 /**
- * An entity representing the bi-directional mapping between the different iso language codes (de -> ger) and translations of the languages.
+ * An entity representing the bi-directional mapping between the different iso language codes (de -> ger) and translations of the
+ * languages.
  * (German, Deutsch, etc...)
- * 
+ *
  * @author Jesse
  */
 @Entity
@@ -31,9 +19,10 @@ public class IsoLanguage extends Localized {
     private String shortCode;
 
     /**
-     * Get the id for the lang code mapping. This is a generated value and as such new instances should not have this set as it will simply
+     * Get the id for the lang code mapping. This is a generated value and as such new instances should not have this set as it will
+     * simply
      * be ignored and could result in reduced performance.
-     * 
+     *
      * @return the id
      */
     @Id
@@ -43,9 +32,10 @@ public class IsoLanguage extends Localized {
     }
 
     /**
-     * Set the id for the lang code mapping. This is a generated value and as such new instances should not have this set as it will simply
+     * Set the id for the lang code mapping. This is a generated value and as such new instances should not have this set as it will
+     * simply
      * be ignored and could result in reduced performance.
-     * 
+     *
      * @param id the id
      * @return this entity object
      */
@@ -56,7 +46,7 @@ public class IsoLanguage extends Localized {
 
     /**
      * Get the 3 letter code of the mapping.
-     * 
+     *
      * @return the 3 letter code of the mapping.
      */
     @Column(length = 3, nullable = false)
@@ -66,7 +56,7 @@ public class IsoLanguage extends Localized {
 
     /**
      * Set the 3 letter language code for this mapping
-     * 
+     *
      * @param code the 3 letter code.
      */
     public void setCode(String code) {
@@ -75,7 +65,7 @@ public class IsoLanguage extends Localized {
 
     /**
      * Get the 2 letter language code for this mapping
-     * 
+     *
      * @return the 2 letter language code for this mapping
      */
     @Column(name = "shortcode", length = 2)
@@ -85,7 +75,7 @@ public class IsoLanguage extends Localized {
 
     /**
      * Set the 2 letter language code for this mapping
-     * 
+     *
      * @param shortCode the 2 letter language code
      */
     public void setShortCode(String shortCode) {

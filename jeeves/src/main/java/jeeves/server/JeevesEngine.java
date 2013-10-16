@@ -57,7 +57,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PreDestroy;
-import javax.persistence.EntityManager;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.xml.transform.TransformerConfigurationException;
@@ -86,14 +85,15 @@ public class JeevesEngine {
 
     @Autowired
 	private ServiceManager _serviceMan;
-
-	private ScheduleManager _scheduleMan = new ScheduleManager();
+    @Autowired
+    private XmlCacheManager _xmlCacheManager;
+    @Autowired
+    private MonitorManager _monitorManager;
+    @Autowired
+	private ScheduleManager _scheduleMan;
     private Logger _appHandLogger = Log.createLogger(Log.APPHAND);
     private List<Element> _appHandList = new ArrayList<Element>();
     private Vector<ApplicationHandler> _appHandlers = new Vector<ApplicationHandler>();
-    private XmlCacheManager _xmlCacheManager = new XmlCacheManager();
-
-    private MonitorManager _monitorManager;
     private List<Element> _dbServices = new ArrayList<Element>();
 
 
@@ -105,7 +105,8 @@ public class JeevesEngine {
 
 	/** Inits the engine, loading all needed data
 	  */
-    @Transactional	public void init(final String appPath, final String configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException
+    @Transactional
+    public void init(final String appPath, final String configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException
 	{
         ServletContext servletContext = null;
         if (servlet != null) {
@@ -123,7 +124,8 @@ public class JeevesEngine {
 
             ConfigurationOverrides.DEFAULT.updateLoggingAsAccordingToOverrides(servletContext, appPath);
 
-            _monitorManager = new MonitorManager(servletContext, baseUrl);
+
+            _monitorManager.init(servletContext, baseUrl);
             JeevesEngine.this._appPath = appPath;
 
             long start = System.currentTimeMillis();
@@ -154,8 +156,6 @@ public class JeevesEngine {
             info("BaseURL : " + baseUrl);
 
             _serviceMan.setAppPath(appPath);
-            _serviceMan.setMonitorMan(_monitorManager);
-            _serviceMan.setXmlCacheManager(_xmlCacheManager);
             _serviceMan.setBaseUrl(baseUrl);
             _serviceMan.setServlet(servlet);
 

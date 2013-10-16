@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -186,7 +185,8 @@ public class MetadataStatisticsQueries {
 
     /**
      * Calculate a value (determined by spec) of each metadata with the given owner and return the results as a map from a metadatatype to
-     * the statistic value. If a metadatatype is not in the map then there are no metadata in that metadatatype (and thus the statistic is 0
+     * the statistic value. If a metadatatype is not in the map then there are no metadata in that metadatatype (and thus the statistic
+     * is 0
      * for that metadatatype).
      *
      * @param spec the spec that calculates the value associated with each metadatatype
@@ -216,8 +216,10 @@ public class MetadataStatisticsQueries {
     }
 
     /**
-     * Calculate a value (determined by spec) of each metadata with the given owner and return the results as a map from a IsHarvested value to
-     * the statistic value. If a IsHarvested value is not in the map then there are no metadata in that IsHarvested value (and thus the statistic is 0
+     * Calculate a value (determined by spec) of each metadata with the given owner and return the results as a map from a IsHarvested
+     * value to
+     * the statistic value. If a IsHarvested value is not in the map then there are no metadata in that IsHarvested value (and thus the
+     * statistic is 0
      * for that IsHarvested value).
      *
      * @param spec the spec that calculates the value associated with each IsHarvested value
@@ -278,13 +280,17 @@ public class MetadataStatisticsQueries {
     }
 
     /**
-     * Calculate a value (determined by spec) of each metadata with the given owner and return the results as a map from a MetadataValidationStatus to
-     * the statistic value. If a MetadataValidationStatus is not in the map then there are no metadata in that MetadataValidationStatus (and thus the statistic is 0
+     * Calculate a value (determined by spec) of each metadata with the given owner and return the results as a map from a
+     * MetadataValidationStatus to
+     * the statistic value. If a MetadataValidationStatus is not in the map then there are no metadata in that MetadataValidationStatus
+     * (and thus the statistic is 0
      * for that MetadataValidationStatus).
      *
      * @param spec the spec that calculates the value associated with each MetadataValidationStatus
-     * @return A mapping from a MetadataValidationStatus to the statistic of all metadata in that category. If a MetadataValidationStatus is not in
-     *         the map then there are no metadata in that MetadataValidationStatus (and thus the statistic is 0 for that MetadataValidationStatus).
+     * @return A mapping from a MetadataValidationStatus to the statistic of all metadata in that category. If a
+     * MetadataValidationStatus is not in
+     *         the map then there are no metadata in that MetadataValidationStatus (and thus the statistic is 0 for that
+     *         MetadataValidationStatus).
      */
     public Map<MetadataValidationStatus, Integer> getMetadataValidationStatusToStatMap(MetadataStatisticSpec spec) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
@@ -327,7 +333,8 @@ public class MetadataStatisticsQueries {
 
 
         final Path<Integer> metadataIdPath = metadataRoot.get(Metadata_.id);
-        notValidatedQuery.select(spec.getSelection(cb, metadataRoot)).where(cb.not(metadataIdPath.in(selectMetadataValidationMetadataIds)));
+        notValidatedQuery.select(spec.getSelection(cb, metadataRoot)).where(cb.not(metadataIdPath.in
+                (selectMetadataValidationMetadataIds)));
 
         final Number singleResult = _entityManager.createQuery(notValidatedQuery).getSingleResult();
         if (singleResult == null) {
@@ -406,13 +413,13 @@ public class MetadataStatisticsQueries {
     /**
      * Calculate the statistic from the metadata linked to in the selected OperationAllowed.
      *
-     * @param metadataStatisticSpec the statistic to calculate
+     * @param metadataStatisticSpec         the statistic to calculate
      * @param operationAllowedSpecification the specification to use to select the metadata.
-     *
      * @return the calculated statistic from the metadata linked to in the selected OperationAllowed.
      */
     @Nonnegative
-    public int getStatBasedOnOperationAllowed(@Nonnull MetadataStatisticSpec metadataStatisticSpec, @Nonnull Specification<OperationAllowed> operationAllowedSpecification) {
+    public int getStatBasedOnOperationAllowed(@Nonnull MetadataStatisticSpec metadataStatisticSpec,
+                                              @Nonnull Specification<OperationAllowed> operationAllowedSpecification) {
 
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Number> query = cb.createQuery(Number.class);
@@ -426,15 +433,13 @@ public class MetadataStatisticsQueries {
         subquery.select(opAllowedMetadataId);
 
         query.select(metadataStatisticSpec.getSelection(cb, metadataRoot))
-                .where(metadataRoot.get(Metadata_.id).in(subquery)) ;
+                .where(metadataRoot.get(Metadata_.id).in(subquery));
 
-        final List<Number> resultList = _entityManager.createQuery(query).getResultList();
-        return resultList.get(0).intValue();
-//        Number result = _entityManager.createQuery(query).getSingleResult();
-//        if (result==null) {
-//            return 0;
-//        } else {
-//            return result.intValue();
-//        }
+        Number result = _entityManager.createQuery(query).getSingleResult();
+        if (result == null) {
+            return 0;
+        } else {
+            return result.intValue();
+        }
     }
 }

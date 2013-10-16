@@ -23,12 +23,11 @@
 
 package jeeves.guiservices.profiles;
 
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Profile;
-import org.jdom.*;
-
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
+import org.jdom.Element;
 
 //=============================================================================
 

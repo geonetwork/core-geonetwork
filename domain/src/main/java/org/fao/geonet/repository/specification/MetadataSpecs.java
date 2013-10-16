@@ -1,7 +1,6 @@
 package org.fao.geonet.repository.specification;
 
 import org.fao.geonet.domain.*;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
@@ -127,6 +126,7 @@ public final class MetadataSpecs {
 
     /**
      * Creates a specification for finding all metadata containing a {@link MetadataCategory} with the provided category
+     *
      * @param category the category to use in the search
      * @return a specification for finding all metadata containing a {@link MetadataCategory} with the provided category
      */

@@ -2,7 +2,7 @@ package org.fao.geonet.domain;
 
 /**
  * Just a container of 2 elements. Good for returning 2 values.
- * 
+ *
  * @author jesse
  */
 public class Pair<R, L> {
@@ -17,7 +17,9 @@ public class Pair<R, L> {
     private R one;
     private L two;
 
-    protected Pair() {}
+    protected Pair() {
+    }
+
     private Pair(R one, L two) {
         super();
         this.one = one;
@@ -49,14 +51,12 @@ public class Pair<R, L> {
     }
 
     @Override
-    public String toString()
-    {
-        return "["+one+","+two+"]";
+    public String toString() {
+        return "[" + one + "," + two + "]";
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((one == null) ? 0 : one.hashCode());
@@ -65,8 +65,7 @@ public class Pair<R, L> {
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (obj == null)
@@ -86,6 +85,6 @@ public class Pair<R, L> {
             return false;
         return true;
     }
-    
-    
+
+
 }

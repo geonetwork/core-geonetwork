@@ -39,7 +39,6 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
-import org.springframework.orm.jpa.JpaTransactionManager;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -79,7 +78,7 @@ public class Transfer extends NotInReadOnlyModeService {
 
 		//--- a commit just to release some resources
 
-        dm.commit(true);
+        dm.flush();
 
         int privCount = 0;
 
@@ -113,7 +112,7 @@ public class Transfer extends NotInReadOnlyModeService {
 			privCount++;
 		}
 
-        dm.commit(true);
+        dm.flush();
 
         //--- reindex metadata
         List<String> list = new ArrayList<String>();

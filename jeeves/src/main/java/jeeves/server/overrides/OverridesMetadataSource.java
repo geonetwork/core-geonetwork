@@ -1,15 +1,5 @@
 package jeeves.server.overrides;
 
-import static java.lang.Math.max;
-
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -20,6 +10,15 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.security.web.util.RegexRequestMatcher;
 import org.springframework.security.web.util.RequestMatcher;
 import org.springframework.util.ReflectionUtils;
+
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
+import static java.lang.Math.max;
 
 public class OverridesMetadataSource implements FilterInvocationSecurityMetadataSource {
     private LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> _requestMap;

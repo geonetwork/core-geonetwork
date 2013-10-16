@@ -1,18 +1,19 @@
 package org.fao.geonet.domain;
 
+import org.jdom.Element;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jdom.Element;
-
 /**
  * The enumeration of profiles available in geonetwork.
- * 
+ *
  * @author Jesse
  */
 public enum Profile {
-    Administrator, UserAdmin(Administrator), Reviewer(UserAdmin), Editor(Reviewer), RegisteredUser(Editor), Guest(RegisteredUser), Monitor;
+    Administrator, UserAdmin(Administrator), Reviewer(UserAdmin), Editor(Reviewer), RegisteredUser(Editor), Guest(RegisteredUser),
+    Monitor;
 
     public static final String PROFILES_ELEM_NAME = "profiles";
     private final Set<Profile> children;
@@ -44,15 +45,21 @@ public enum Profile {
 
     /**
      * A case-sensitive search for profile
+     *
      * @param profile the name of the profile to check.
      */
     public static boolean exists(String profile) {
-        return Profile.valueOf(profile) != null;
+        try {
+            Profile.valueOf(profile);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
     /**
      * Find the profile by name but ignore case errors.
-     * 
+     *
      * @param profileName The profile name.
      */
     public static Profile findProfileIgnoreCase(String profileName) {

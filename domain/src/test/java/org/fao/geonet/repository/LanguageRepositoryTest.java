@@ -18,6 +18,7 @@ public class LanguageRepositoryTest extends AbstractSpringDataTest {
     LanguageRepository _repo;
 
     AtomicInteger _inc = new AtomicInteger();
+
     @Test
     public void testFindOne() {
         Language language = newLanguage();
@@ -30,6 +31,7 @@ public class LanguageRepositoryTest extends AbstractSpringDataTest {
         assertEquals(language1, _repo.findOne(language1.getId()));
         assertEquals(language, _repo.findOne(language.getId()));
     }
+
     @Test
     public void testFindOneByDefaultLanguage() {
         Language language = newLanguage();
@@ -62,9 +64,10 @@ public class LanguageRepositoryTest extends AbstractSpringDataTest {
     private Language newLanguage() {
         int val = _inc.incrementAndGet();
         Language lang = new Language();
+        lang.setId("l-" + val);
         lang.setDefaultLanguage(val % 2 == 0);
         lang.setInspire(val % 2 == 1);
-        lang.setName("name"+val);
+        lang.setName("name" + val);
         return lang;
     }
 

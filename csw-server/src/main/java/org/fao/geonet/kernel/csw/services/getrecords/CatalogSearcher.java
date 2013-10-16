@@ -191,7 +191,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
                 if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
                     Log.debug(Geonet.CSW_SEARCH, "after convertphrases:\n" + Xml.getString(luceneExpr));
             }
-            _lang = LuceneSearcher.determineLanguage(context, luceneExpr, sm.get_settingInfo());
+            _lang = LuceneSearcher.determineLanguage(context, luceneExpr, sm.getSettingInfo());
             indexAndTaxonomy = sm.getIndexReader(_lang, _searchToken);
             Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
             if (_searchToken != -1L && indexAndTaxonomy.version != _searchToken) {
@@ -456,8 +456,8 @@ public class CatalogSearcher implements MetadataRecordSelector {
                 Log.debug(Geonet.CSW_SEARCH, "## Search criteria: null");
         }
 
-                _lang = LuceneSearcher.determineLanguage(context, luceneExpr, sm.get_settingInfo());
-		boolean requestedLanguageOnTop = sm.get_settingInfo().getRequestedLanguageOnTop();
+                _lang = LuceneSearcher.determineLanguage(context, luceneExpr, sm.getSettingInfo());
+		boolean requestedLanguageOnTop = sm.getSettingInfo().getRequestedLanguageOnTop();
 		
         Query data;
         LuceneConfig luceneConfig = getLuceneConfig();
@@ -466,7 +466,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
             Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made null query");
         } else {
             PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(_lang, true);
-            String requestedLanguageOnly = sm.get_settingInfo().getRequestedLanguageOnly();
+            String requestedLanguageOnly = sm.getSettingInfo().getRequestedLanguageOnly();
             data = LuceneSearcher.makeLocalisedQuery(luceneExpr,
                 analyzer, luceneConfig,
                 _lang, requestedLanguageOnly);

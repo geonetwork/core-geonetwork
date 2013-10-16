@@ -1,12 +1,12 @@
 package org.fao.geonet.domain;
 
-import static java.util.Calendar.YEAR;
-import static org.junit.Assert.assertEquals;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.Calendar;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import static java.util.Calendar.YEAR;
+import static org.junit.Assert.assertEquals;
 
 public class ISODateTest {
 
@@ -61,11 +61,11 @@ public class ISODateTest {
         assertEquals(0, date.getHours());
         assertEquals(0, date.getMinutes());
         assertEquals(0, date.getSeconds());
-        
+
         date = new ISODate();
         int expectedYear = Calendar.getInstance().get(YEAR);
         String shortYear = String.valueOf(expectedYear).substring(2);
-        date.setDateAndTime(shortYear+"-6-3");
+        date.setDateAndTime(shortYear + "-6-3");
         assertEquals(expectedYear, date.getYears());
         assertEquals(0, date.getSeconds());
     }
@@ -180,14 +180,14 @@ public class ISODateTest {
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 2);
         cal.set(Calendar.SECOND, 3);
-        
+
         ISODate date = new ISODate(cal.getTimeInMillis(), false);
-        
+
         assertEquals("1990-12-05T23:02:03", date.getDateAndTime());
         assertEquals("1990-12-05", date.getDate());
 
         date = new ISODate(cal.getTimeInMillis(), true);
-        
+
         assertEquals("1990-12-05", date.getDateAndTime());
         assertEquals("1990-12-05", date.getDate());
     }

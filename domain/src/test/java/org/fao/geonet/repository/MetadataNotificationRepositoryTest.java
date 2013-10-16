@@ -1,7 +1,10 @@
 package org.fao.geonet.repository;
 
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.MetadataNotification;
+import org.fao.geonet.domain.MetadataNotificationAction;
+import org.fao.geonet.domain.MetadataNotificationId;
+import org.fao.geonet.domain.MetadataNotifier;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,12 +42,14 @@ public class MetadataNotificationRepositoryTest extends AbstractSpringDataTest {
         notification1.setNotified(false);
         notification1 = _repo.save(notification1);
 
-        assertEquals(1, _repo.findAllNotNotifiedForNotifier(notification1.getId().getNotifierId(), MetadataNotificationAction.UPDATE).size());
+        assertEquals(1, _repo.findAllNotNotifiedForNotifier(notification1.getId().getNotifierId(),
+                MetadataNotificationAction.UPDATE).size());
 
         notification1.setAction(MetadataNotificationAction.DELETE);
         notification1 = _repo.save(notification1);
 
-        assertEquals(0, _repo.findAllNotNotifiedForNotifier(notification1.getId().getNotifierId(), MetadataNotificationAction.UPDATE).size());
+        assertEquals(0, _repo.findAllNotNotifiedForNotifier(notification1.getId().getNotifierId(),
+                MetadataNotificationAction.UPDATE).size());
     }
 
     @Test

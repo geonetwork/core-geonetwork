@@ -23,16 +23,9 @@
 
 package jeeves.component;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletContext;
-
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Log;
-
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -44,6 +37,11 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import javax.servlet.ServletContext;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 //=============================================================================
 

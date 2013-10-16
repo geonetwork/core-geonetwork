@@ -6,9 +6,10 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
- * Information about the source and owner of the metadata document. This is a JPA Embeddable object that is embedded into a {@link Metadata}
+ * Information about the source and owner of the metadata document. This is a JPA Embeddable object that is embedded into a {@link
+ * Metadata}
  * Entity
- * 
+ *
  * @author Jesse
  */
 @Embeddable
@@ -20,9 +21,10 @@ public class MetadataSourceInfo {
 
     /**
      * Get the source of the metadata. The source identifies where the metadata came from. It is usually a uuid but can be any identifier.
-     * Normally if the metadata is harvested this will be harvester uuid and if it is locally created it will typically be the siteid of the
+     * Normally if the metadata is harvested this will be harvester uuid and if it is locally created it will typically be the siteid
+     * of the
      * geonetwork instance.
-     * 
+     *
      * @return the source of the metadata.
      */
     @Column(name = "source", nullable = false)
@@ -32,7 +34,8 @@ public class MetadataSourceInfo {
 
     /**
      * Set the source of the metadata. The source identifies where the metadata came from. It is usually a uuid but can be any identifier.
-     * Normally if the metadata is harvested this will be harvester uuid and if it is locally created it will typically be the siteid of the
+     * Normally if the metadata is harvested this will be harvester uuid and if it is locally created it will typically be the siteid
+     * of the
      * geonetwork instance.
      *
      * @param sourceId the source of the metadata.
@@ -45,7 +48,7 @@ public class MetadataSourceInfo {
     /**
      * Get the group id that owns this metadata. A user can be part of several groups thus the group owner determines which one of those
      * groups the metadata belongs to.
-     * 
+     *
      * @return the group that owns this metadata.
      */
     @Column(name = "groupowner")
@@ -66,7 +69,7 @@ public class MetadataSourceInfo {
 
     /**
      * Get the id of the user that owns this metadata.
-     * 
+     *
      * @return the id of the user that owns this metadata.
      */
     @Column(nullable = false)

@@ -11,9 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.fao.geonet.repository.specification.HarvestHistorySpecs.*;
+import static org.fao.geonet.repository.specification.HarvestHistorySpecs.hasHarvesterUuid;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Test HarvestHistory specs

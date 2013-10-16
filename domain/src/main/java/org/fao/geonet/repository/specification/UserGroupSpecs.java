@@ -49,7 +49,6 @@ public final class UserGroupSpecs {
      * Specification for testing if the UserGroup is (or is not) a reserved group.
      *
      * @param isReservedGroup true if the groups should be a reserved group.
-     *
      * @return Specification for testing if the UserGroup is (or is not) a reserved group.
      */
     public static Specification<UserGroup> isReservedGroup(final boolean isReservedGroup) {

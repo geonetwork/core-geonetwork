@@ -1,18 +1,13 @@
 package org.fao.geonet.domain;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Transient;
-
 /**
- * Encapsulates the metadata about a metadata document. (title, rating, schema etc...) This is a JPA Embeddable object that is embedded into
+ * Encapsulates the metadata about a metadata document. (title, rating, schema etc...) This is a JPA Embeddable object that is embedded
+ * into
  * a {@link Metadata} Entity
- * 
+ *
  * @author Jesse
  */
 @Embeddable
@@ -39,9 +34,10 @@ public class MetadataDataInfo implements Serializable {
     }
 
     /**
-     * Set title of metadata. This only updates the database not the actual XML document. It is important that this value is retrieved from
+     * Set title of metadata. This only updates the database not the actual XML document. It is important that this value is retrieved
+     * from
      * metadata document.
-     * 
+     *
      * @param title new value.
      * @return this data info object
      */
@@ -60,7 +56,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Set ID of the schema the metadata belongs to.
-     * 
+     *
      * @param schemaId the ID of the schema the metadata belongs to.
      * @return this data info object
      */
@@ -80,7 +76,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Set the code representing true or false for istemplate column.
-     * 
+     *
      * @param template Constants.YN_ENABLED or Constants.YN_DISABLED
      */
     protected void setType_JPAWorkaround(char template) {
@@ -89,7 +85,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Get true if the metadata is a template.
-     * 
+     *
      * @return true if the metadata is a template.
      */
     @Transient
@@ -99,7 +95,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Set true if the metadata is a template.
-     * 
+     *
      * @param template true if the metadata is a template
      * @return this data info object
      */
@@ -110,7 +106,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Get the name of the root element of the data related to the metadata entity.
-     * 
+     *
      * @return the name of the root element of the data related to the metadata entity.
      */
     @Column
@@ -120,9 +116,9 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Set the name of the root element of the data related to the metadata entity.
-     * 
+     * <p/>
      * TODO explain what is it for.
-     * 
+     *
      * @param root the name of the root element of the data related to the metadata entity.
      * @return this data info object
      */
@@ -133,7 +129,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Get the doctype to use for validation of the metadata. This will be a reference to a dtd typically.
-     * 
+     *
      * @return the doctype to use for validation of the metadata
      */
     @Column
@@ -143,7 +139,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Set the doctype to use for validation of the metadata. This will be a reference to a dtd typically.
-     * 
+     *
      * @param doctype the doctype to use for validation of the metadata
      * @return this data info object
      */
@@ -157,7 +153,7 @@ public class MetadataDataInfo implements Serializable {
      * <p>
      * Should be non-negative and lower number indicates higher/earlier in the list.
      * </p>
-     * 
+     *
      * @return the display order
      */
     @Column(name = "displayorder")
@@ -170,7 +166,7 @@ public class MetadataDataInfo implements Serializable {
      * <p>
      * Should be non-negative and lower number indicates higher/earlier in the list.
      * </p>
-     * 
+     *
      * @param displayOrder the display orderthe display order
      * @return this data info object
      */
@@ -181,7 +177,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Get the current rating of the metadata.
-     * 
+     *
      * @return the rating of the metadata.
      */
     @Column(nullable = false)
@@ -191,7 +187,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Set the current rating of the metadata.
-     * 
+     *
      * @param rating set the metadata rating.
      * @return this data info object
      */
@@ -202,7 +198,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Get the popularity of the metadata. (Number of views).
-     * 
+     *
      * @return the popularity of the metadata. (Number of views).
      */
     @Column(nullable = false)
@@ -212,7 +208,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Set the popularity of the metadata. (Number of views).
-     * 
+     *
      * @param popularity the popularity of the metadata. (Number of views).
      * @return this data info object
      */
@@ -223,7 +219,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Get the date of the last change made to the metadata.
-     * 
+     *
      * @return the date of the last change made to the metadata.
      */
 
@@ -234,7 +230,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Set the date of the last change made to the metadata.
-     * 
+     *
      * @param changeDate the date of the last change made to the metadata.
      * @return this data info object
      */
@@ -245,17 +241,17 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Get the date that the metadata was created.
-     * 
+     *
      * @return the creation date.
      */
-    @AttributeOverride(name="dateAndTime", column = @Column(name = "createdate", nullable = false, length = 30) )
+    @AttributeOverride(name = "dateAndTime", column = @Column(name = "createdate", nullable = false, length = 30))
     public ISODate getCreateDate() {
         return _createDate;
     }
 
     /**
      * Set the date that the metadata was created.
-     * 
+     *
      * @param createDate the creation date.
      * @return this data info object
      */

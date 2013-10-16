@@ -18,6 +18,7 @@ public class MetadataNotifierRepositoryTest extends AbstractSpringDataTest {
     MetadataNotifierRepository _repo;
 
     AtomicInteger _inc = new AtomicInteger();
+
     @Test
     public void testFindOne() {
         MetadataNotifier notifier1 = newMetadataNotifier();
@@ -53,10 +54,10 @@ public class MetadataNotifierRepositoryTest extends AbstractSpringDataTest {
     public static MetadataNotifier newMetadataNotifier(AtomicInteger inc) {
         int val = inc.incrementAndGet();
         MetadataNotifier metadataCategory = new MetadataNotifier();
-        metadataCategory.setName("name"+val);
+        metadataCategory.setName("name" + val);
         metadataCategory.setPassword("password" + val);
         metadataCategory.setUrl("url" + val);
-        metadataCategory.setUsername("username"+val);
+        metadataCategory.setUsername("username" + val);
         metadataCategory.setEnabled(val % 2 == 0);
 
         return metadataCategory;

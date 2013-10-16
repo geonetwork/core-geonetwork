@@ -1,14 +1,13 @@
 package org.fao.geonet.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * Id of a MetadataNotification object.
- * 
+ *
  * @author Jesse
  */
 @Embeddable
@@ -20,7 +19,7 @@ public class MetadataNotificationId implements Serializable {
 
     /**
      * Get the id of the metadata the notification is related to.
-     * 
+     *
      * @return the id of the metadata the notification is related to.
      */
     public int getMetadataId() {
@@ -29,7 +28,7 @@ public class MetadataNotificationId implements Serializable {
 
     /**
      * Set the id of the metadata the notification is related to.
-     * 
+     *
      * @param metadataId the id of the metadata the notification is related to.
      * @return this id object
      */
@@ -40,9 +39,8 @@ public class MetadataNotificationId implements Serializable {
 
     /**
      * Get the id of the notifier (notification listener).
-     * 
+     *
      * @return the id of the notifier (notification listener)
-     * 
      * @see MetadataNotifier
      */
     public int getNotifierId() {
@@ -51,10 +49,9 @@ public class MetadataNotificationId implements Serializable {
 
     /**
      * Set the id of the notifier (notification listener).
-     * 
+     *
      * @param notifierId the id of the notifier (notification listener)
      * @return the id of the notifier (notification listener)
-     * 
      * @see MetadataNotifier
      */
     public MetadataNotificationId setNotifierId(int notifierId) {

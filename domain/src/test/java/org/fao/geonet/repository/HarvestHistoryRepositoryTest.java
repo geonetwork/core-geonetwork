@@ -21,6 +21,7 @@ public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
     HarvestHistoryRepository _repo;
 
     AtomicInteger _inc = new AtomicInteger();
+
     @Test
     public void testFindOne() {
         HarvestHistory history1 = newHarvestHistory();
@@ -33,13 +34,14 @@ public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
         assertEquals(history2, _repo.findOne(history2.getId()));
         assertEquals(history1, _repo.findOne(history1.getId()));
     }
+
     @Test
     public void testFindCustomFindAllAsXml() {
         HarvestHistory history1 = newHarvestHistory();
         String infoText = "this is the info string";
         String paramText = "this is the param string";
-        history1.setInfo("<infodata>"+infoText+"</infodata>");
-        history1.setParams("<params><param1>"+paramText+"</param1></params>");
+        history1.setInfo("<infodata>" + infoText + "</infodata>");
+        history1.setParams("<params><param1>" + paramText + "</param1></params>");
         _repo.save(history1);
 
         Element xml = _repo.findAllAsXml();

@@ -61,31 +61,31 @@
 				</tr>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/address"/></th>
-					<td class="padded"><input class="content" type="text" name="address" value="{/root/response/record/address}"/></td>
+					<td class="padded"><input class="content" type="text" name="address" value="{/root/response/record/primaryaddress/address}"/></td>
 				</tr>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/city"/></th>
-					<td class="padded"><input class="content" type="text" name="city" value="{/root/response/record/city}"/></td>
+					<td class="padded"><input class="content" type="text" name="city" value="{/root/response/record/primaryaddress/city}"/></td>
 				</tr>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/state"/></th>
-					<td class="padded"><input class="content" type="text" name="state" value="{/root/response/record/state}" size="8"/></td>
+					<td class="padded"><input class="content" type="text" name="state" value="{/root/response/record/primaryaddress/state}" size="8"/></td>
 				</tr>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/zip"/></th>
-					<td class="padded"><input class="content" type="text" name="zip" value="{/root/response/record/zip}"/></td>
+					<td class="padded"><input class="content" type="text" name="zip" value="{/root/response/record/primaryaddress/zip}"/></td>
 				</tr>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/country"/></th>
 					<td class="padded">
 						<select class="content" size="1" name="country">
-							<xsl:if test="string(/root/response/record/country)=''">
+							<xsl:if test="string(/root/response/record/primaryaddress/country)=''">
 								<option value=""/>
 							</xsl:if>
 							<xsl:for-each select="/root/gui/countries/country">
 								<xsl:sort select="."/>
 								<option value="{@iso2}">
-									<xsl:if test="string(/root/response/record/country)=@iso2">
+									<xsl:if test="string(/root/response/record/primaryaddress/country)=@iso2">
 										<xsl:attribute name="selected"/>
 									</xsl:if>
 									<xsl:value-of select="."/>

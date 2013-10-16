@@ -1,16 +1,12 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
- * An entity that tracks which users have rated a metadata. It currently tracks by Ip address so that each IP address can only rate a given
+ * An entity that tracks which users have rated a metadata. It currently tracks by Ip address so that each IP address can only rate a
+ * given
  * metadata once.
- * 
+ *
  * @author Jesse
  */
 @Entity
@@ -22,7 +18,7 @@ public class MetadataRatingByIp extends GeonetEntity {
 
     /**
      * Get the id object of the metadata rating entity.
-     * 
+     *
      * @return the id object of the metadata rating entity.
      */
     @EmbeddedId
@@ -32,7 +28,7 @@ public class MetadataRatingByIp extends GeonetEntity {
 
     /**
      * Set the id object of the metadata rating entity.
-     * 
+     *
      * @param id the id object of the metadata rating entity.
      */
     public void setId(MetadataRatingByIpId id) {
@@ -41,7 +37,7 @@ public class MetadataRatingByIp extends GeonetEntity {
 
     /**
      * Get the rating for this IP address.
-     * 
+     *
      * @return the rating for this IP address.
      */
     @Column(nullable = false)
@@ -51,7 +47,7 @@ public class MetadataRatingByIp extends GeonetEntity {
 
     /**
      * Set the rating for this IP address.
-     * 
+     *
      * @param rating the rating for this IP address.
      */
     public void setRating(int rating) {

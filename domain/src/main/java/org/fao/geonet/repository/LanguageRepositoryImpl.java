@@ -20,6 +20,7 @@ import java.util.List;
 public class LanguageRepositoryImpl implements LanguageRepositoryCustom {
     @PersistenceContext
     EntityManager _entityManager;
+
     @Override
     public List<Language> findAllByInspireFlag(boolean inspire) {
         char isInspireChar = Constants.toYN_EnabledChar(inspire);

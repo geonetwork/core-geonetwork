@@ -1,16 +1,5 @@
 package org.fao.geonet.repository;
 
-import static org.fao.geonet.repository.MetadataCategoryRepositoryTest.newMetadataCategory;
-import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
-import static org.junit.Assert.*;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import com.google.common.base.Optional;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.junit.Test;
@@ -19,8 +8,15 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
+import static org.junit.Assert.*;
 
 @Transactional
 public class MetadataRepositoryTest extends AbstractSpringDataTest {
@@ -41,6 +37,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         Metadata metadata = _repo.save(newMetadata());
 
         _repo.flush();
+        _entityManager.flush();
         _entityManager.clear();
 
         assertEquals(1, _repo.count());
@@ -68,6 +65,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         Metadata metadata = _repo.save(newMetadata());
 
         _repo.flush();
+        _entityManager.flush();
         _entityManager.clear();
 
         assertEquals(1, _repo.count());
@@ -125,8 +123,8 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         Metadata metadata3 = _repo.save(updateChangeDate(newMetadata(), "1995-12-13"));
 
         final Sort sortByIdAsc = new Sort(Sort.Direction.DESC, Metadata_.id.getName());
-        PageRequest page1 = new PageRequest(0,2, sortByIdAsc);
-        PageRequest page2 = new PageRequest(1,2, sortByIdAsc);
+        PageRequest page1 = new PageRequest(0, 2, sortByIdAsc);
+        PageRequest page2 = new PageRequest(1, 2, sortByIdAsc);
         Page<Pair<Integer, ISODate>> firstPage = _repo.findAllIdsAndChangeDates(page1);
         Page<Pair<Integer, ISODate>> secondPage = _repo.findAllIdsAndChangeDates(page2);
 
@@ -155,8 +153,8 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         assertEquals(metadata.getDataInfo().getChangeDate(), secondPage.getContent().get(0).two());
 
         final Sort sortByChangeDate = SortUtils.createSort(Metadata_.dataInfo, MetadataDataInfo_.changeDate);
-        page1 = new PageRequest(0,1, sortByChangeDate);
-        page2 = new PageRequest(0,3, sortByChangeDate);
+        page1 = new PageRequest(0, 1, sortByChangeDate);
+        page2 = new PageRequest(0, 3, sortByChangeDate);
         firstPage = _repo.findAllIdsAndChangeDates(page1);
         secondPage = _repo.findAllIdsAndChangeDates(page2);
 

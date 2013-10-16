@@ -96,7 +96,7 @@ public class SendLink extends MailSendingService {
 		String adminEmail = sm.getValue("system/feedback/email");
 		String thisSite = sm.getSiteName();
 
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 		String siteURL = si.getSiteUrl() + context.getBaseUrl();
 
 		// Do not allow an unconfigured site to send out change password emails

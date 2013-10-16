@@ -1,11 +1,10 @@
 package jeeves.server;
 
-import org.fao.geonet.exceptions.JeevesException;
 import jeeves.interfaces.Schedule;
 import jeeves.server.context.ScheduleContext;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
-
+import org.fao.geonet.exceptions.JeevesException;
+import org.fao.geonet.utils.Log;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

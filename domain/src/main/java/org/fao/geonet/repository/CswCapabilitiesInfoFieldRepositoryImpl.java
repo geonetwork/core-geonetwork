@@ -14,16 +14,17 @@ import java.util.List;
 
 /**
  * Implementation of the custom repository methods.
- *
+ * <p/>
  * User: Jesse
  * Date: 9/20/13
  * Time: 10:36 AM
  */
 public class CswCapabilitiesInfoFieldRepositoryImpl implements CswCapabilitiesInfoFieldRepositoryCustom {
     @PersistenceContext
-    EntityManager _EntityManager;
+    private EntityManager _EntityManager;
+
     @Override
-    public CswCapabilitiesInfo findCswCapabilitiesInfo(String languageCode) {
+    public CswCapabilitiesInfo findCswCapabilitiesInfo(final String languageCode) {
         final CriteriaBuilder cb = _EntityManager.getCriteriaBuilder();
         final CriteriaQuery<CswCapabilitiesInfoField> query = cb.createQuery(CswCapabilitiesInfoField.class);
         final Root<CswCapabilitiesInfoField> root = query.from(CswCapabilitiesInfoField.class);
@@ -33,11 +34,11 @@ public class CswCapabilitiesInfoFieldRepositoryImpl implements CswCapabilitiesIn
     }
 
     @Override
-    public void save(@Nonnull CswCapabilitiesInfo info) {
+    public void save(@Nonnull final CswCapabilitiesInfo info) {
         Collection<CswCapabilitiesInfoField> fields = info.getFields();
 
         for (CswCapabilitiesInfoField field : fields) {
-            if (field.getId() == -1 ) {
+            if (field.getId() == -1) {
                 _EntityManager.persist(field);
             } else {
                 _EntityManager.merge(field);

@@ -1,21 +1,13 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.Table;
+import org.jdom.Element;
+
+import javax.persistence.*;
 
 /**
  * The mapping between user, the groups a user is a part of and the profiles the user has for each group.
- * 
+ *
  * @author Jesse
- * 
  */
 @Entity
 @Access(AccessType.PROPERTY)
@@ -28,7 +20,7 @@ public class UserGroup extends GeonetEntity {
 
     /**
      * Get the id object.
-     * 
+     *
      * @return the id object.
      */
     @EmbeddedId
@@ -38,7 +30,7 @@ public class UserGroup extends GeonetEntity {
 
     /**
      * Set the id object.
-     * 
+     *
      * @param id the id object.
      * @return this usergroup entity
      */
@@ -49,7 +41,7 @@ public class UserGroup extends GeonetEntity {
 
     /**
      * Get the group in the relation. The group is lazily loaded.
-     * 
+     *
      * @return the group in the relation.
      */
     @MapsId("groupId")
@@ -61,18 +53,19 @@ public class UserGroup extends GeonetEntity {
 
     /**
      * Set the group in the relation.
-     * 
+     *
      * @param group the group in the relation.
      * @return this entity object
      */
     public UserGroup setGroup(Group group) {
         this._group = group;
+        getId().setGroupId(group.getId());
         return this;
     }
 
     /**
      * Return the user in the relation. The user is lazily loaded.
-     * 
+     *
      * @return the user in the relation.
      */
     @MapsId("userId")
@@ -84,18 +77,19 @@ public class UserGroup extends GeonetEntity {
 
     /**
      * Set the user in the relation.
-     * 
+     *
      * @param user the user in the relation.
      * @return this enity object
      */
     public UserGroup setUser(User user) {
         this._user = user;
+        getId().setUserId(_user.getId());
         return this;
     }
 
     /**
      * Return the profile for this relation.
-     * 
+     *
      * @return the profile for this relation.
      */
     @Column(nullable = false)
@@ -105,7 +99,7 @@ public class UserGroup extends GeonetEntity {
 
     /**
      * Set the profile for this relation.
-     * 
+     *
      * @param profile the profile for this relation.
      * @return this entity object
      */
@@ -114,4 +108,11 @@ public class UserGroup extends GeonetEntity {
         return this;
     }
 
+    @Override
+    public Element asXml() {
+        return new Element("record")
+                .addContent(new Element("group").setText(""+getId().getGroupId()))
+                .addContent(new Element("user").setText(""+getId().getUserId()))
+                .addContent(new Element("profile").setText(getProfile().name()));
+    }
 }

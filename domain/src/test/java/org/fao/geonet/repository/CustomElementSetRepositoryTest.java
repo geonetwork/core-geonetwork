@@ -37,7 +37,7 @@ public class CustomElementSetRepositoryTest extends AbstractSpringDataTest {
 
     private CustomElementSet newCustomElementSet() {
         int val = _inc.incrementAndGet();
-        CustomElementSet customElementSet = new CustomElementSet().setXpath("xpath"+val);
+        CustomElementSet customElementSet = new CustomElementSet().setXpath("xpath" + val);
         return customElementSet;
     }
 

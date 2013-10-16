@@ -23,28 +23,27 @@
 
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.CswCapabilitiesInfoField;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.fao.geonet.domain.CswCapabilitiesInfoField;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
  * Represents all the fields required for Csw Capabilities Info in a given language.
  * <p>
- *     The data for Csw Capabilities info is stored in the database as one row per field.  This allows the database to be
- *     flexible in the face of future requirements.  However this class makes it simpler (and type safe) to access the fields.
+ * The data for Csw Capabilities info is stored in the database as one row per field.  This allows the database to be
+ * flexible in the face of future requirements.  However this class makes it simpler (and type safe) to access the fields.
  * </p>
  * <p>
- *     When loaded by the CswCapabilitiesInfoFieldRepository, all the required fields are loaded and this class provides easy access
- *     to the fields.
+ * When loaded by the CswCapabilitiesInfoFieldRepository, all the required fields are loaded and this class provides easy access
+ * to the fields.
  * </p>
  * <p>
- *     It also provides a simple way to modify and save the fields.
+ * It also provides a simple way to modify and save the fields.
  * </p>
  */
 public class CswCapabilitiesInfo {
@@ -55,7 +54,7 @@ public class CswCapabilitiesInfo {
     private final Map<String, CswCapabilitiesInfoField> _fields = new HashMap<String, CswCapabilitiesInfoField>();
     private String _langId;
 
-    CswCapabilitiesInfo(List<CswCapabilitiesInfoField> allFieldsForLang) {
+    CswCapabilitiesInfo(final List<CswCapabilitiesInfoField> allFieldsForLang) {
         for (CswCapabilitiesInfoField cswCapabilitiesInfoField : allFieldsForLang) {
             _fields.put(cswCapabilitiesInfoField.getFieldName(), cswCapabilitiesInfoField);
         }
@@ -64,38 +63,43 @@ public class CswCapabilitiesInfo {
     /**
      * Get the value of the title field.
      */
-    public @Nullable String getTitle() {
+    @Nullable
+    public String getTitle() {
         final String key = FIELD_TITLE;
         return getValue(key);
     }
 
     /**
      * Set the value of the title field.
+     *
      * @param title the new value
      */
-    public void setTitle(@Nonnull String title) {
+    public void setTitle(@Nonnull final String title) {
         setValue(FIELD_TITLE, title);
     }
 
     /**
      * Get the value of the abstract field.
      */
-    public @Nullable String getAbstract() {
+    @Nullable
+    public String getAbstract() {
         return getValue(FIELD_ABSTRACT);
     }
 
     /**
      * Set the value of the abstract field.
+     *
      * @param newAbstract the new abstract value
      */
-    public void setAbstract(@Nonnull String newAbstract) {
+    public void setAbstract(@Nonnull final String newAbstract) {
         setValue(FIELD_ABSTRACT, newAbstract);
     }
 
     /**
      * Get the value of the fees field.
      */
-    public @Nullable String getFees() {
+    @Nullable
+    public String getFees() {
         return getValue(FIELD_FEES);
     }
 
@@ -104,41 +108,45 @@ public class CswCapabilitiesInfo {
      *
      * @param fees the new fees value.
      */
-    public void setFees(@Nonnull String fees) {
+    public void setFees(@Nonnull final String fees) {
         setValue(FIELD_FEES, fees);
     }
 
     /**
      * Get the value of the AccessConstraints field.
      */
-    public @Nullable String getAccessConstraints() {
+    @Nullable
+    public String getAccessConstraints() {
         return getValue(FIELD_ACCESS_CONSTRAINTS);
     }
 
     /**
      * Set the value of the AccessConstraints field.
+     *
      * @param accessConstraints the new constraints value
      */
-    public void setAccessConstraints(@Nonnull String accessConstraints) {
+    public void setAccessConstraints(@Nonnull final String accessConstraints) {
         setValue(FIELD_ACCESS_CONSTRAINTS, accessConstraints);
     }
 
     /**
      * Get the 3 letter language code id.
      */
-    public @Nonnull String getLangId() {
+    @Nonnull
+    public String getLangId() {
         return _langId;
     }
 
     /**
      * Set the lang code for this info object.
+     *
      * @param langId the language code.
      */
-    void setLangId(@Nonnull String langId) {
+    void setLangId(@Nonnull final String langId) {
         this._langId = langId;
     }
 
-    private void setValue(@Nonnull String fieldTitle, @Nonnull String newValue) {
+    private void setValue(@Nonnull final String fieldTitle, @Nonnull final String newValue) {
         CswCapabilitiesInfoField field = _fields.get(fieldTitle);
 
         if (field == null) {
@@ -148,7 +156,8 @@ public class CswCapabilitiesInfo {
         field.setValue(newValue);
     }
 
-    private @Nullable String getValue(@Nonnull String key) {
+    @Nullable
+    private String getValue(@Nonnull final String key) {
         final CswCapabilitiesInfoField field = _fields.get(key);
         if (field == null) {
             return null;
@@ -156,6 +165,10 @@ public class CswCapabilitiesInfo {
         return field.getValue();
     }
 
+    /**
+     * Get all the fields that this info object encapsulates.
+     * @return all the fields that this info object encapsulates.
+     */
     public Collection<CswCapabilitiesInfoField> getFields() {
         return _fields.values();
     }

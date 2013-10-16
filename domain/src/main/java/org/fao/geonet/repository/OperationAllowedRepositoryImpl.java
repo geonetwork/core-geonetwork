@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -80,6 +79,7 @@ public class OperationAllowedRepositoryImpl implements OperationAllowedRepositor
                                                        + metadataId + "and " + groupIdPath + " != " + groupId);
 
         final int affected = query.executeUpdate();
+        _entityManager.flush();
         _entityManager.clear();
         return affected;
 
@@ -92,6 +92,7 @@ public class OperationAllowedRepositoryImpl implements OperationAllowedRepositor
         final Query query = _entityManager.createQuery("DELETE FROM " + opAllowedEntityName + " where " + idPath + " = " + id);
 
         final int affected = query.executeUpdate();
+        _entityManager.flush();
         _entityManager.clear();
         return affected;
     }

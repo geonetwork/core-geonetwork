@@ -1,17 +1,12 @@
 package org.fao.geonet.repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Operation;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.*;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 @Transactional
 public abstract class AbstractOperationsAllowedTest extends AbstractSpringDataTest {
@@ -37,13 +32,13 @@ public abstract class AbstractOperationsAllowedTest extends AbstractSpringDataTe
     protected OperationAllowed _opAllowed2;
     protected OperationAllowed _opAllowed3;
     protected OperationAllowed _opAllowed4;
-    
+
     @Before
     public void createEntities() {
-        
+
         this._viewOp = _opRepo.save(ReservedOperation.view.getOperationEntity().setId(-1));
         this._downloadOp = _opRepo.save(ReservedOperation.download.getOperationEntity().setId(-1));
-        
+
         this._allGroup = _groupRepo.save(ReservedGroup.all.getGroupEntityTemplate());
         this._intranetGroup = _groupRepo.save(ReservedGroup.intranet.getGroupEntityTemplate());
 
@@ -52,18 +47,18 @@ public abstract class AbstractOperationsAllowedTest extends AbstractSpringDataTe
 
         newMd = newMetadata(2);
         this._md2 = _mdRepo.save(newMd);
-    
+
         this._opAllowed1 = _opAllowRepo.save(new OperationAllowed().setId(_md1, _allGroup, _viewOp));
         this._opAllowed2 = _opAllowRepo.save(new OperationAllowed().setId(_md2, _intranetGroup, _downloadOp));
         this._opAllowed3 = _opAllowRepo.save(new OperationAllowed().setId(_md1, _intranetGroup, _downloadOp));
         this._opAllowed4 = _opAllowRepo.save(new OperationAllowed().setId(_md1, _intranetGroup, _viewOp));
-    
+
         flushAndClear();
     }
 
     private Metadata newMetadata(int id) {
-        Metadata newMd = new Metadata().setUuid("uuid"+id).setData("data"+id);
-        newMd.getDataInfo().setSchemaId("schemaId"+id);
+        Metadata newMd = new Metadata().setUuid("uuid" + id).setData("data" + id);
+        newMd.getDataInfo().setSchemaId("schemaId" + id);
         newMd.getSourceInfo().setOwner(id).setSourceId("source" + id);
         return newMd;
     }

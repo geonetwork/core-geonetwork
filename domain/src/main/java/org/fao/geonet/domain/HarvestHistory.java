@@ -1,19 +1,10 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  * An entity representing a harvesting task that may have been completed or possibly ending in error.
- * 
+ *
  * @author Jesse
  */
 @Entity
@@ -33,7 +24,7 @@ public class HarvestHistory extends GeonetEntity {
     /**
      * Get the id of the harvest history record. This is a generated value and as such new instances should not have this set as it will
      * simply be ignored and could result in reduced performance.
-     * 
+     *
      * @return the id
      */
     @Id
@@ -45,7 +36,7 @@ public class HarvestHistory extends GeonetEntity {
     /**
      * Set the id of the harvest history record. This is a generated value and as such new instances should not have this set as it will
      * simply be ignored and could result in reduced performance.
-     * 
+     *
      * @param id the new id
      * @return this entity object
      */
@@ -56,18 +47,18 @@ public class HarvestHistory extends GeonetEntity {
 
     /**
      * Get the date of the harvest. This is a string in order to maintain backwards compatibility.
-     * 
+     *
      * @return the harvest date
      */
 
-    @AttributeOverride(name="dateAndTime", column = @Column(name = "harvestdate", length = 30) )
+    @AttributeOverride(name = "dateAndTime", column = @Column(name = "harvestdate", length = 30))
     public ISODate getHarvestDate() {
         return _harvestDate;
     }
 
     /**
      * Set the date of the harvest. This is a string in order to maintain backwards compatibility.
-     * 
+     *
      * @param harvestDate the new harvest date
      * @return this entity object
      */
@@ -78,7 +69,7 @@ public class HarvestHistory extends GeonetEntity {
 
     /**
      * Get the time taken (in milliseconds) to complete the harvest.
-     * 
+     *
      * @return the time taken for the harvest.
      */
     @Column(name = "elapsedtime")
@@ -88,7 +79,7 @@ public class HarvestHistory extends GeonetEntity {
 
     /**
      * Get the time taken (in milliseconds) to complete the harvest.
-     * 
+     *
      * @param elapsedTime the elapsed time
      * @return this entity object
      */
@@ -99,7 +90,7 @@ public class HarvestHistory extends GeonetEntity {
 
     /**
      * Get the uuid of the harvester that performed the harvesting related to this record.
-     * 
+     *
      * @return the uuid
      */
     @Column(name = "harvesteruuid")
@@ -109,7 +100,7 @@ public class HarvestHistory extends GeonetEntity {
 
     /**
      * Set the uuid of the harvester that performed the harvesting related to this record.
-     * 
+     *
      * @param harvesterUuid The uuid of the harvester
      * @return this entity object
      */
@@ -119,9 +110,10 @@ public class HarvestHistory extends GeonetEntity {
     }
 
     /**
-     * Get the name of the harvester. This is a non-translated string and is used for UI purposes as a human readable identifier (as opposed
+     * Get the name of the harvester. This is a non-translated string and is used for UI purposes as a human readable identifier (as
+     * opposed
      * to the harvester uuid)
-     * 
+     *
      * @return the name
      */
     @Column(name = "harvestername")
@@ -130,9 +122,10 @@ public class HarvestHistory extends GeonetEntity {
     }
 
     /**
-     * Set the name of the harvester. This is a non-translated string and is used for UI purposes as a human readable identifier (as opposed
+     * Set the name of the harvester. This is a non-translated string and is used for UI purposes as a human readable identifier (as
+     * opposed
      * to the harvester uuid)
-     * 
+     *
      * @param harvesterName the name of the harvester
      * @return this entity object
      */
@@ -143,7 +136,7 @@ public class HarvestHistory extends GeonetEntity {
 
     /**
      * Get the harvester type (for example CSW, WFS, WMS, Webdav etc...)
-     * 
+     *
      * @return the harvester type
      */
     @Column(name = "harvestertype")
@@ -153,7 +146,7 @@ public class HarvestHistory extends GeonetEntity {
 
     /**
      * Set the harvester type (for example CSW, WFS, WMS, Webdav etc...)
-     * 
+     *
      * @param harvesterType the type of the harvester
      * @return this entity object
      */
@@ -177,7 +170,7 @@ public class HarvestHistory extends GeonetEntity {
 
     /**
      * Return true is the record has been deleted.
-     * 
+     *
      * @return true is the record has been deleted.
      */
     @Transient
@@ -187,9 +180,8 @@ public class HarvestHistory extends GeonetEntity {
 
     /**
      * Set true if is the record has been deleted.
-     * 
+     *
      * @param deleted if true then this indicates the record is deleted.
-     * 
      * @return this entity object
      */
     public HarvestHistory setDeleted(boolean deleted) {
@@ -199,7 +191,7 @@ public class HarvestHistory extends GeonetEntity {
 
     /**
      * Get arbitrary harvester specific information about the harvesting.
-     * 
+     *
      * @return the harvester info.
      */
     @Lob
@@ -209,7 +201,7 @@ public class HarvestHistory extends GeonetEntity {
 
     /**
      * Set the arbitrary harvester specific data about the harvesting. Can be error information or other related information.
-     * 
+     *
      * @param info the information to store.
      * @return this entity object
      */
@@ -221,7 +213,7 @@ public class HarvestHistory extends GeonetEntity {
     /**
      * Get the parameters used for performing the harvesting. As of 2.10 this is XML from the setting table. Future versions will likely
      * change this.
-     * 
+     *
      * @return the parameters used for performing the harvesting.
      */
     @Lob
@@ -231,7 +223,7 @@ public class HarvestHistory extends GeonetEntity {
 
     /**
      * Set the parameters used for performing the harvesting.
-     * 
+     *
      * @param params The parameters
      * @return this entity object
      */

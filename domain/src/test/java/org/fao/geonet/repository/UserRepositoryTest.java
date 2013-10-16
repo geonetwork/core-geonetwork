@@ -1,14 +1,5 @@
 package org.fao.geonet.repository;
 
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.fao.geonet.domain.*;
@@ -20,6 +11,12 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.*;
 
 @Transactional
 public class UserRepositoryTest extends AbstractSpringDataTest {
@@ -89,7 +86,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         assertNotNull(foundUser);
         assertEquals(user2.getId(), foundUser.getId());
 
-         foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user3.getUsername());
+        foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(user3.getUsername());
         assertNull(foundUser);
 
         foundUser = _userRepo.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty("blarg");
@@ -186,7 +183,8 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         _userGroupRepository.save(new UserGroup().setGroup(group2).setUser(reviewerUser).setProfile(Profile.Editor));
         _userGroupRepository.save(new UserGroup().setGroup(group1).setUser(reviewerUser).setProfile(Profile.Reviewer));
 
-        List<Integer> found = Lists.transform(_userRepo.findAllUsersInUserGroups(UserGroupSpecs.hasGroupId(group1.getId())), new Function<User, Integer>() {
+        List<Integer> found = Lists.transform(_userRepo.findAllUsersInUserGroups(UserGroupSpecs.hasGroupId(group1.getId())),
+                new Function<User, Integer>() {
 
             @Nullable
             @Override
@@ -199,7 +197,8 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
         assertTrue(found.contains(editUser.getId()));
         assertTrue(found.contains(reviewerUser.getId()));
 
-        found = Lists.transform(_userRepo.findAllUsersInUserGroups(Specifications.not(UserGroupSpecs.hasProfile(Profile.RegisteredUser))), new Function<User, Integer>() {
+        found = Lists.transform(_userRepo.findAllUsersInUserGroups(Specifications.not(UserGroupSpecs.hasProfile(Profile.RegisteredUser)
+        )), new Function<User, Integer>() {
 
             @Nullable
             @Override

@@ -108,7 +108,7 @@ public class OaiPmhDispatcher
 
 		Map<String, String> params = null;
 
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 
 		try
 		{

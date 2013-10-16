@@ -179,7 +179,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         
         String sBuildSummary = request.getChildText(Geonet.SearchResult.BUILD_SUMMARY);
 		boolean buildSummary = sBuildSummary == null || sBuildSummary.equals("true");
-		_language = determineLanguage(srvContext, request, _sm.get_settingInfo());
+		_language = determineLanguage(srvContext, request, _sm.getSettingInfo());
 
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "LuceneSearcher initializing search range");
@@ -199,16 +199,18 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
     public static void logSearch(ServiceContext srvContext, ServiceConfig config, Query query, int numHits, Sort sort, String geomWKT,
             SearchManager sm) {
-        SettingInfo si = new SettingInfo(srvContext);
+        SettingInfo si = srvContext.getBean(SettingInfo.class);
         if (si.isSearchStatsEnabled()) {
             if (sm.getLogAsynch()) {
                 // Run asynch
                 if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                     Log.debug(Geonet.SEARCH_ENGINE,"Log search in asynch mode - start.");
                 GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-                gc.getThreadPool().runTask(new SearchLoggerTask(srvContext, sm.getLogSpatialObject(), 
-                        sm.getLuceneTermsToExclude(), query, numHits, sort, geomWKT, 
-                        config.getValue(Jeeves.Text.GUI_SERVICE,"n")));
+                SearchLoggerTask logTask = srvContext.getBean(SearchLoggerTask.class);
+                logTask.configure(srvContext, sm.getLogSpatialObject(), sm.getLuceneTermsToExclude(), query, numHits, sort, geomWKT,
+                        config.getValue(Jeeves.Text.GUI_SERVICE,"n"));
+
+                gc.getThreadPool().runTask(logTask);
                 if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                     Log.debug(Geonet.SEARCH_ENGINE,"Log search in asynch mode - end.");
             } else {
@@ -551,7 +553,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      */
 	private void computeQuery(ServiceContext srvContext, int endHits, Element request, ServiceConfig config) throws Exception {
 
-        _language = determineLanguage(srvContext, request, _sm.get_settingInfo());
+        _language = determineLanguage(srvContext, request, _sm.getSettingInfo());
         
 		if (srvContext != null) {
 			GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -616,7 +618,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             if(Log.isDebugEnabled(Geonet.LUCENE))
                 Log.debug(Geonet.LUCENE, "CRITERIA:\n"+ Xml.getString(request));
 
-            SettingInfo settingInfo = _sm.get_settingInfo();
+            SettingInfo settingInfo = _sm.getSettingInfo();
             String requestedLanguageOnly = settingInfo.getRequestedLanguageOnly();
             if(Log.isDebugEnabled(Geonet.LUCENE))
                 Log.debug(Geonet.LUCENE, "requestedLanguageOnly: " + requestedLanguageOnly);
@@ -731,7 +733,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Sorting by : " + sortBy);
 
-        SettingInfo settingInfo = _sm.get_settingInfo();
+        SettingInfo settingInfo = _sm.getSettingInfo();
         boolean sortRequestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
         if(Log.isDebugEnabled(Geonet.LUCENE))
             Log.debug(Geonet.LUCENE, "sortRequestedLanguageOnTop: " + sortRequestedLanguageOnTop);
@@ -1581,7 +1583,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         try {
             IndexSearcher searcher = new IndexSearcher(reader);
             TermQuery query = new TermQuery(new Term(field, value));
-            SettingInfo settingInfo = _sm.get_settingInfo();
+            SettingInfo settingInfo = _sm.getSettingInfo();
             boolean sortRequestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
             if(Log.isDebugEnabled(Geonet.LUCENE))
                 Log.debug(Geonet.LUCENE, "sortRequestedLanguageOnTop: " + sortRequestedLanguageOnTop);
@@ -1739,46 +1741,4 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             Log.debug(Geonet.SEARCH_ENGINE, "Escaped: "+result.toString());
      return result.toString();
   }
-    /**
-     * Task to launch a new thread for search logging.
-     * 
-     * Other idea: Another approach could be to use JMS, to send an 
-		 * asynchronous message with search info in order to log them.
-     * 
-     * @author francois
-     */
-    static class SearchLoggerTask implements Runnable {
-        private ServiceContext srvContext;
-        boolean logSpatialObject;
-        String luceneTermsToExclude;
-		Query query; 
-		int numHits; 
-		Sort sort;
-		String geomWKT;
-		String value;
-
-
-        public SearchLoggerTask(ServiceContext srvContext,
-				boolean logSpatialObject, String luceneTermsToExclude,
-				Query query, int numHits, Sort sort, String geomWKT,
-				String value) {
-        			this.srvContext = srvContext;
-        			this.logSpatialObject = logSpatialObject;
-        			this.luceneTermsToExclude = luceneTermsToExclude;
-        			this.query = query;
-        			this.numHits = numHits;
-        			this.sort = sort;
-        			this.geomWKT = geomWKT;
-        			this.value = value;
-    	}
-
-		public void run() {
-            try {
-            	SearcherLogger searchLogger = new SearcherLogger(srvContext, logSpatialObject, luceneTermsToExclude);
-        		searchLogger.logSearch(query, numHits, sort, geomWKT, value);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

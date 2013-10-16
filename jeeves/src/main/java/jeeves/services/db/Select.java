@@ -23,23 +23,20 @@
 
 package jeeves.services.db;
 
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+
+import javax.sql.DataSource;
 import java.io.StringReader;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
-
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.springframework.context.ApplicationContext;
-
-import javax.sql.DataSource;
 
 //=============================================================================
 

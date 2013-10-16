@@ -123,7 +123,7 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 		}
 		}
 
-        context.getBean(DataManager.class).commit(true);
+        context.getBean(DataManager.class).flush();
 
         //--- reindex metadata
 		context.info("Re-indexing metadata");

@@ -1,10 +1,15 @@
 package jeeves.server.overrides;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import jeeves.config.springutil.JeevesApplicationContext;
+import org.apache.log4j.Level;
+import org.fao.geonet.Constants;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.junit.Test;
+import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,16 +20,7 @@ import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.List;
 
-import jeeves.config.springutil.JeevesApplicationContext;
-import org.fao.geonet.utils.Xml;
-
-import org.apache.log4j.Level;
-import org.fao.geonet.Constants;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.junit.Test;
-import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import static org.junit.Assert.*;
 
 public class ConfigurationOveridesTest {
 	private static final ClassLoader classLoader;

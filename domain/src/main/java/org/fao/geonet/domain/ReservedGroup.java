@@ -2,7 +2,7 @@ package org.fao.geonet.domain;
 
 /**
  * The list of reserved groups. Ids and names are hardcoded and have special meaning in Geonetwork.
- * 
+ *
  * @author Jesse
  */
 public enum ReservedGroup {
@@ -28,7 +28,7 @@ public enum ReservedGroup {
 
     /**
      * Get the id of the reserved group.
-     * 
+     *
      * @return the id of the reserved group.
      */
     public int getId() {

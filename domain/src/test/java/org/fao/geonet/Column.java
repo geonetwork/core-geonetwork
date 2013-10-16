@@ -1,12 +1,16 @@
 package org.fao.geonet;
 
-public class Column implements Comparable<Column>{
+public class Column implements Comparable<Column> {
     String tableName, columnName, defaultVal, isNullable, dataType, charLength;
     private boolean ignoreDefVal;
-    public static Column column(String tableName, String columnName, String defaultVal, String isNullable, String dataType, String charLength) {
+
+    public static Column column(String tableName, String columnName, String defaultVal, String isNullable, String dataType,
+                                String charLength) {
         return column(tableName, columnName, defaultVal, isNullable, dataType, charLength, false);
     }
-    public static Column column(String tableName, String columnName, String defaultVal, String isNullable, String dataType, String charLength, boolean ignoreDefVal) {
+
+    public static Column column(String tableName, String columnName, String defaultVal, String isNullable, String dataType,
+                                String charLength, boolean ignoreDefVal) {
         Column column = new Column();
         column.tableName = regularize(tableName, true);
         column.columnName = regularize(columnName, true);
@@ -15,9 +19,10 @@ public class Column implements Comparable<Column>{
         column.dataType = regularize(dataType, true);
         column.charLength = regularize(charLength, true);
         column.ignoreDefVal = ignoreDefVal;
-        
+
         return column;
     }
+
     private static String regularize(String columnName, boolean toUpperCase) {
         if (columnName == null) {
             return "<null>";
@@ -26,9 +31,10 @@ public class Column implements Comparable<Column>{
         if (toUpperCase) {
             columnName = columnName.toUpperCase();
         }
-        
+
         return columnName;
     }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -36,13 +42,14 @@ public class Column implements Comparable<Column>{
         result = prime * result + ((charLength == null) ? 0 : charLength.hashCode());
         result = prime * result + ((columnName == null) ? 0 : columnName.hashCode());
         result = prime * result + ((dataType == null) ? 0 : dataType.hashCode());
-        if(!ignoreDefVal) {
+        if (!ignoreDefVal) {
             result = prime * result + ((defaultVal == null) ? 0 : defaultVal.hashCode());
         }
         result = prime * result + ((isNullable == null) ? 0 : isNullable.hashCode());
         result = prime * result + ((tableName == null) ? 0 : tableName.hashCode());
         return result;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -86,14 +93,16 @@ public class Column implements Comparable<Column>{
             return false;
         return true;
     }
+
     @Override
     public String toString() {
         String ldefaultVal = ignoreDefVal ? "<ignored>" : defaultVal;
-        return "Column [tableName=" + tableName + ", columnName=" + columnName + ", defaultVal=" + ldefaultVal  + ", isNullable="
-                + isNullable + ", dataType=" + dataType + ", charLength=" + charLength + "]";
+        return "Column [tableName=" + tableName + ", columnName=" + columnName + ", defaultVal=" + ldefaultVal + ", isNullable="
+               + isNullable + ", dataType=" + dataType + ", charLength=" + charLength + "]";
     }
+
     @Override
     public int compareTo(Column o) {
-        return (tableName+"."+columnName).compareTo(o.tableName+"."+o.columnName);
+        return (tableName + "." + columnName).compareTo(o.tableName + "." + o.columnName);
     }
 }

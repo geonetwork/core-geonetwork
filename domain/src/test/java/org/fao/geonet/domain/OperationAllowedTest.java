@@ -1,16 +1,11 @@
 package org.fao.geonet.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
 import org.fao.geonet.repository.AbstractOperationsAllowedTest;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @Transactional
 public class OperationAllowedTest extends AbstractOperationsAllowedTest {
@@ -27,7 +22,7 @@ public class OperationAllowedTest extends AbstractOperationsAllowedTest {
         int opId = 20;
         int grpId = 300;
         assertEquals(new OperationAllowedId().setMetadataId(mdId).setGroupId(grpId).setOperationId(opId),
-                new OperationAllowedId(mdId,grpId, opId));
+                new OperationAllowedId(mdId, grpId, opId));
     }
 
 }

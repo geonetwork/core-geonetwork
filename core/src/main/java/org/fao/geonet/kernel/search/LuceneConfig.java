@@ -47,6 +47,7 @@ import org.apache.lucene.util.Version;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.springframework.stereotype.Component;
 
 /**
  * Lucene configuration class load Lucene XML configuration file.
@@ -54,8 +55,10 @@ import org.jdom.JDOMException;
  * @author fxprunayre
  * 
  */
+@Component(value = LuceneConfig.LUCENE_CONFIG_BEAN_NAME)
 public class LuceneConfig {
-	public static final String USE_NRT_MANAGER_REOPEN_THREAD = "useNRTManagerReopenThread";
+    public static final String LUCENE_CONFIG_BEAN_NAME = "luceneConfig";
+    public static final String USE_NRT_MANAGER_REOPEN_THREAD = "useNRTManagerReopenThread";
     private static final int ANALYZER_CLASS = 1;
 	private static final int BOOST_CLASS = 2;
 	private static final int DOC_BOOST_CLASS = 3;
@@ -318,7 +321,6 @@ public class LuceneConfig {
 	
 	private Version LUCENE_VERSION = Geonet.LUCENE_VERSION;
 	private Set<String> multilingualSortFields = new HashSet<String>();
-    public static final String LUCENE_CONFIG_BEAN_NAME = "luceneConfig";
 
 	
     /**
@@ -328,7 +330,7 @@ public class LuceneConfig {
 	 * @param servletContext
 	 * @param luceneConfigXmlFile
 	 */
-	public LuceneConfig(String appPath, ServletContext servletContext, String luceneConfigXmlFile) {
+	public void configure(String appPath, ServletContext servletContext, String luceneConfigXmlFile) {
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
 		this.appPath = appPath;
@@ -619,8 +621,6 @@ public class LuceneConfig {
 
     /**
      *
-     * @param summaryConfig
-     * @param resultType
      * @return
      * @throws Exception
      */

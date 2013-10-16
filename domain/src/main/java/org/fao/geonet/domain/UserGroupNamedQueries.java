@@ -2,7 +2,7 @@ package org.fao.geonet.domain;
 
 /**
  * Contains all named queries for UserGroup entity.
- * 
+ *
  * @author Jesse
  */
 public interface UserGroupNamedQueries {

@@ -46,7 +46,7 @@ public class SearchRequestRepositoryImpl implements SearchRequestRepositoryCusto
     @Override
     public <T extends DateInterval> List<Pair<T, Integer>> getRequestDateToRequestCountBetween(final T dateInterval, ISODate from,
                                                                                                ISODate to) {
-        return getRequestDateToRequestCountBetween(dateInterval, from, to, null);
+        return internalGetRequestDateToRequestCountBetween(dateInterval, from, to, null);
     }
 
     @Override
@@ -55,6 +55,12 @@ public class SearchRequestRepositoryImpl implements SearchRequestRepositoryCusto
                                                                @Nonnull final ISODate from,
                                                                @Nonnull final ISODate to,
                                                                @Nonnull final Specification<SearchRequest> spec) {
+        return internalGetRequestDateToRequestCountBetween(dateInterval, from, to, spec);
+    }
+
+    private <T extends DateInterval> List<Pair<T, Integer>>
+    internalGetRequestDateToRequestCountBetween(@Nonnull final T dateInterval, @Nonnull ISODate from, @Nonnull ISODate to,
+                                                @Nullable Specification<SearchRequest> spec) {
         final CriteriaBuilder cb = _EntityManager.getCriteriaBuilder();
         final CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
 
@@ -118,7 +124,7 @@ public class SearchRequestRepositoryImpl implements SearchRequestRepositoryCusto
         return Lists.transform(_EntityManager.createQuery(query).getResultList(), new Function<Tuple, Pair<T, Integer>>() {
             @Nullable
             @Override
-            public Pair<T, Integer> apply(@Nullable Tuple input) {
+            public Pair<T, Integer> apply(@Nonnull Tuple input) {
                 T value = (T) input.get(0);
                 Integer count = input.get(1, Long.class).intValue();
                 return Pair.read(value, count);

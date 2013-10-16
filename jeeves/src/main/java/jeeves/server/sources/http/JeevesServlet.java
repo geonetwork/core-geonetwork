@@ -23,9 +23,17 @@
 
 package jeeves.server.sources.http;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
+import jeeves.config.springutil.JeevesApplicationContext;
+import jeeves.constants.Jeeves;
+import jeeves.server.JeevesEngine;
+import jeeves.server.UserSession;
+import jeeves.server.sources.ServiceRequest;
+import jeeves.server.sources.ServiceRequestFactory;
+import org.fao.geonet.Util;
+import org.fao.geonet.exceptions.FileUploadTooBigEx;
+import org.fao.geonet.utils.Log;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -33,18 +41,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import jeeves.config.springutil.JeevesApplicationContext;
-import jeeves.constants.Jeeves;
-import org.fao.geonet.exceptions.FileUploadTooBigEx;
-import jeeves.server.JeevesEngine;
-import jeeves.server.UserSession;
-import jeeves.server.sources.ServiceRequest;
-import jeeves.server.sources.ServiceRequestFactory;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import java.io.File;
+import java.io.IOException;
 
 //=============================================================================
 

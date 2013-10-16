@@ -178,7 +178,7 @@ class Harvester extends BaseAligner
 		dataMan = gc.getBean(DataManager.class);
 		schemaMan = gc.getBean(SchemaManager.class);
 
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 		String siteUrl = si.getSiteUrl() + context.getBaseUrl();
 		metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
 
@@ -252,7 +252,7 @@ class Harvester extends BaseAligner
 			}
 		}
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         result.totalMetadata = result.serviceRecords + result.collectionDatasetRecords + result.atomicDatasetRecords;
 		return result;
@@ -439,7 +439,7 @@ class Harvester extends BaseAligner
 
         dataMan.indexMetadata(id);
 
-        dataMan.commit(true);
+        dataMan.flush();
     }
 
 	//---------------------------------------------------------------------------

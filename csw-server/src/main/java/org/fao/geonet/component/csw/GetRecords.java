@@ -759,7 +759,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager sm = gc.getBean(SearchManager.class);
-        boolean requestedLanguageOnTop = sm.get_settingInfo().getRequestedLanguageOnTop();
+        boolean requestedLanguageOnTop = sm.getSettingInfo().getRequestedLanguageOnTop();
 		// we always want to keep the relevancy as part of the sorting mechanism
 		return LuceneSearcher.makeSort(sortFields, context.getLanguage(), requestedLanguageOnTop);
 	}

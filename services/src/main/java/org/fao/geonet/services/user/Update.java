@@ -68,7 +68,7 @@ public class Update extends NotInReadOnlyModeService {
 		String password = Util.getParam(params, Params.PASSWORD);
 		String surname  = Util.getParam(params, Params.SURNAME, "");
 		String name     = Util.getParam(params, Params.NAME,    "");
-		String profile  = Util.getParam(params, Params.PROFILE);
+		Profile profile  = Profile.findProfileIgnoreCase(Util.getParam(params, Params.PROFILE, Profile.Guest.name()));
 		String address  = Util.getParam(params, Params.ADDRESS, "");
 		String city     = Util.getParam(params, Params.CITY,    "");
 		String state    = Util.getParam(params, Params.STATE,   "");
@@ -89,11 +89,11 @@ public class Update extends NotInReadOnlyModeService {
         final UserRepository userRepository = context.getBean(UserRepository.class);
 
         if (!operation.equals(Params.Operation.RESETPW)) {
-            if (!context.getProfileManager().exists(profile)) {
-                throw new Exception("Unknown profile : "+ profile);
+            if (profile == null) {
+                throw new Exception("Unknown profile : "+ Util.getParam(params, Params.PROFILE));
             }
 
-            if (profile.equals(Profile.Administrator)) {
+            if (profile == Profile.Administrator) {
                 userGroups = new ArrayList<Element>();
             }
         }
@@ -108,7 +108,7 @@ public class Update extends NotInReadOnlyModeService {
             // constructed their own malicious URL!
             //
             if (operation.equals(Params.Operation.NEWUSER) || operation.equals(Params.Operation.EDITINFO)) {
-                if (!(myUserId.equals(id)) && myProfile.equals("UserAdmin")) {
+                if (!(myUserId.equals(id)) && myProfile == Profile.UserAdmin) {
                     final List<Integer> groupIds = groupRepository.findGroupIds(UserGroupSpecs.hasUserId(Integer.valueOf(myUserId)));
 					for(Element userGroup : userGroups) {
 						String group = userGroup.getText();
@@ -129,7 +129,7 @@ public class Update extends NotInReadOnlyModeService {
                     .setUsername(username)
                     .setName(name)
                     .setSurname(surname)
-                    .setProfile(Profile.findProfileIgnoreCase(profile))
+                    .setProfile(profile)
                     .setKind(kind)
                     .setOrganisation(organ);
             user.getAddresses().add(new Address()
@@ -153,7 +153,7 @@ public class Update extends NotInReadOnlyModeService {
 
                 user = userRepository.save(user);
 
-				setUserGroups(user, profile, params, context);
+				setUserGroups(user, params, context);
 			} else {
 
 			// -- full update
@@ -165,7 +165,7 @@ public class Update extends NotInReadOnlyModeService {
 					//--- add groups
                     groupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(user.getId()));
 
-					setUserGroups(user, profile, params, context);
+					setUserGroups(user, params, context);
 				} else if (operation.equals(Params.Operation.EDITINFO)) {
 
                     user.setId(Integer.valueOf(id));
@@ -173,7 +173,7 @@ public class Update extends NotInReadOnlyModeService {
 					//--- add groups
 
                     groupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(user.getId()));
-					setUserGroups(user, profile, params, context);
+					setUserGroups(user, params, context);
 
 			// -- reset password
 				} else if (operation.equals(Params.Operation.RESETPW)) {
@@ -190,7 +190,7 @@ public class Update extends NotInReadOnlyModeService {
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
 
-	private void setUserGroups(User user, String userProfile, Element params, ServiceContext context) throws Exception {
+	private void setUserGroups(User user, Element params, ServiceContext context) throws Exception {
 		String[] profiles = {Profile.UserAdmin.name(), Profile.Reviewer.name(), Profile.Editor.name(), Profile.RegisteredUser.name()};
         Collection<UserGroup> toAdd = new ArrayList<UserGroup>();
 

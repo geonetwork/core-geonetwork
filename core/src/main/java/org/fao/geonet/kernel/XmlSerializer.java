@@ -146,7 +146,7 @@ public abstract class XmlSerializer {
 		logEmptyWithheld(id, metadataXml, "XmlSerializer.internalSelect");
 		
 		if (!isIndexingTask) { 
-			boolean hideWithheldElements = _settingManager.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
+			boolean hideWithheldElements = _settingManager.getHideWitheldElements();
 			ServiceContext context = ServiceContext.get();
     		if(context != null) {
     			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

@@ -44,30 +44,36 @@ public class DbDescTranslator extends Translator {
     private static final long serialVersionUID = 1L;
     private final ApplicationContext _applicationContext;
     private final String _langCode;
-    private final Class<? extends JpaRepository> _repositoryClass;
+    private Class<? extends JpaRepository> _repositoryClass;
     private final String _propertyName;
+    private String _beanName;
 
 
     public DbDescTranslator(ApplicationContext applicationContext, String langCode, String param)
             throws IOException, JDOMException, ClassNotFoundException {
         String[] parts = param.split(":", 2);
-        this._repositoryClass = (Class<? extends JpaRepository>) Class.forName(parts[0]);
+        try {
+            this._repositoryClass = (Class<? extends JpaRepository>) Class.forName(parts[0]);
+        } catch (Exception e) {
+            this._beanName = parts[0];
+        }
+
         this._propertyName = parts[1];
         _applicationContext = applicationContext;
         _langCode = langCode;
     }
 
-    public String translate(String key) {
+    public String translate(final String key) {
         try {
-            JpaRepository repository = _applicationContext.getBean(_repositoryClass);
-            Localized entity = null;
-            Method[] methods = repository.getClass().getMethods();
-            for (Method method : methods) {
-                if (method.getName().equals("findOne") && method.getParameterTypes().length == 1) {
-                    Object convertedKey = convertKeyToType(key, method.getParameterTypes()[0]);
-                    entity = (Localized) method.invoke(repository, convertedKey);
-                }
+            JpaRepository repository;
+            if (_repositoryClass != null) {
+                repository = _applicationContext.getBean(_repositoryClass);
+            } else {
+                repository = _applicationContext.getBean(_beanName, JpaRepository.class);
             }
+            final Class<?> repositoryClass = repository.getClass();
+
+            Localized entity = findEntity(key, repository, repositoryClass);
 
 
             if (entity == null) {
@@ -89,17 +95,55 @@ public class DbDescTranslator extends Translator {
         }
     }
 
-    private Object convertKeyToType(String key, Class<?> aClass) throws NoSuchMethodException, InvocationTargetException,
-            IllegalAccessException {
+    private Localized findEntity(final String key, final JpaRepository repository, final Class<?> repositoryClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
-        if (aClass == String.class) {
-            return key;
-        } else if (aClass.getMethod("valueOf", String.class) != null) {
-            Method converterMethod = aClass.getMethod("valueOf", String.class);
-            return converterMethod.invoke(null, key);
+        Method[] methods = repositoryClass.getMethods();
+
+        Localized entity = null;
+        for (Method method : methods) {
+            if (method.getName().equals("findOne") && method.getParameterTypes().length == 1) {
+                entity = (Localized) method.invoke(repository, key);
+                if (entity == null) {
+                    entity = (Localized) method.invoke(repository, Integer.valueOf(key));
+                }
+                if (entity == null) {
+                    entity = (Localized) method.invoke(repository, Long.valueOf(key));
+                }
+                if (entity == null) {
+                    entity = (Localized) method.invoke(repository, Double.valueOf(key));
+                }
+                if (entity == null) {
+                    entity = (Localized) method.invoke(repository, Float.valueOf(key));
+                }
+                if (entity == null) {
+                    entity = (Localized) method.invoke(repository, Boolean.valueOf(key));
+                }
+                if (entity == null) {
+                    entity = (Localized) method.invoke(repository, key.charAt(0));
+                }
+                if (entity == null) {
+                    entity = (Localized) method.invoke(repository, Short.valueOf(key));
+                }
+            }
         }
 
-        return key;
+        if (entity != null) {
+            return entity;
+        } else {
+            if (repositoryClass.getSuperclass() != null) {
+                entity = findEntity(key, repository, repositoryClass.getSuperclass());
+            }
+            if (entity == null) {
+                final Class<?>[] interfaces = repositoryClass.getInterfaces();
+                for (Class<?> anInterface : interfaces) {
+                    entity = findEntity(key, repository, anInterface);
+                    if (entity != null) {
+                        return entity;
+                    }
+                }
+            }
+            return null;
+        }
     }
 
 }

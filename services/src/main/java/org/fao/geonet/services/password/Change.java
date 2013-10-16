@@ -108,7 +108,7 @@ public class Change extends NotInReadOnlyModeService {
 		String thisSite = sm.getSiteName();
 
 		// get site URL
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 		String siteURL = si.getSiteUrl() + context.getBaseUrl();
 
 		// Do not allow an unconfigured site to send out change password emails

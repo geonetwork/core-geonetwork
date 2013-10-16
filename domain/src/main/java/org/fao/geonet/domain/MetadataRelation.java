@@ -1,29 +1,22 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Tables that links related metadata.
  * <p>
- *     Object is its own entity so that it is easier to add relations without having to load the related metadata.
+ * Object is its own entity so that it is easier to add relations without having to load the related metadata.
  * </p>
  * <p>
- *     Note: It is important that both Metadata are managed (have been saved or loaded from the MetadataRepository.)
- *     For example:
- *     <pre><code>
+ * Note: It is important that both Metadata are managed (have been saved or loaded from the MetadataRepository.)
+ * For example:
+ * <pre><code>
  *      Metadata metadata1 = _metadataRepo.findOne(id);
  *      Metadata metadata2 = _metadataRepo.findOne(id2);
  *      new MetadataRelation(metadata1, metadata2);
  *     </code></pre>
  * </p>
+ *
  * @author Jesse
  */
 @Entity
@@ -41,7 +34,7 @@ public class MetadataRelation extends GeonetEntity {
 
     /**
      * Get the metadata relation id object.
-     * 
+     *
      * @return the metadata relation id object.
      */
     @EmbeddedId

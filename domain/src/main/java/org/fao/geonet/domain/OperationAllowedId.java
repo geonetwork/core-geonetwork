@@ -1,12 +1,11 @@
 package org.fao.geonet.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * The id object of {@link OperationAllowed}
- * 
+ *
  * @author Jesse
  */
 @Embeddable
@@ -26,9 +25,9 @@ public class OperationAllowedId implements Serializable {
 
     /**
      * Create a new instance from the required id objects.
-     * 
-     * @param metadataId the metadata id
-     * @param groupId the group id
+     *
+     * @param metadataId  the metadata id
+     * @param groupId     the group id
      * @param operationId the operation id
      */
     public OperationAllowedId(int metadataId, int groupId, int operationId) {
@@ -39,7 +38,7 @@ public class OperationAllowedId implements Serializable {
 
     /**
      * Get the id of the metadata this OperationAllowed is references to.
-     * 
+     *
      * @return the id of the metadata this OperationAllowed is references to.
      */
     public int getMetadataId() {
@@ -48,7 +47,7 @@ public class OperationAllowedId implements Serializable {
 
     /**
      * Set the id of the metadata this OperationAllowed is references to.
-     * 
+     *
      * @param newMetadataId the id of the metadata this OperationAllowed is references to.
      * @return this id object
      */
@@ -59,7 +58,7 @@ public class OperationAllowedId implements Serializable {
 
     /**
      * Get the id of the group this OperationAllowed is references to.
-     * 
+     *
      * @return the id of the group this OperationAllowed is references to.
      */
     public int getGroupId() {
@@ -68,7 +67,7 @@ public class OperationAllowedId implements Serializable {
 
     /**
      * Get the id of the group this OperationAllowed is references to.
-     * 
+     *
      * @param newGroupId the id of the group this OperationAllowed is references to.
      * @return this id object
      */
@@ -79,7 +78,7 @@ public class OperationAllowedId implements Serializable {
 
     /**
      * Get the id of the operation this OperationAllowed is references to.
-     * 
+     *
      * @return the id of the operation this OperationAllowed is references to.
      */
     public int getOperationId() {
@@ -88,7 +87,7 @@ public class OperationAllowedId implements Serializable {
 
     /**
      * Set the id of the operation this OperationAllowed is references to.
-     * 
+     *
      * @param newOperationId the id of the operation this OperationAllowed is references to.
      * @return this id object
      */
@@ -132,6 +131,7 @@ public class OperationAllowedId implements Serializable {
 
     /**
      * Make a copy of this id object.
+     *
      * @return a copy of this id object.
      */
     public OperationAllowedId copy() {

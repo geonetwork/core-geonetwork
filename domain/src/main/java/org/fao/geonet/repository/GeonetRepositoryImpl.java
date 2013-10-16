@@ -1,7 +1,6 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.GeonetEntity;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
@@ -9,12 +8,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.*;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -27,7 +24,8 @@ import java.util.List;
  *             Date: 9/5/13
  *             Time: 11:26 AM
  */
-public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements GeonetRepository<T, ID> {
+public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializable> extends SimpleJpaRepository<T,
+        ID> implements GeonetRepository<T, ID> {
 
     protected EntityManager _entityManager;
     private final Class<T> _entityClass;

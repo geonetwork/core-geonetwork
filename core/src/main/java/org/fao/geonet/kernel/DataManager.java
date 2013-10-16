@@ -31,7 +31,6 @@ import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataU
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.Collections2;
-import jeeves.config.springutil.JeevesApplicationContext;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.GeonetworkDataDirectory;
 import org.fao.geonet.exceptions.JeevesException;
@@ -73,6 +72,7 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -123,7 +123,7 @@ public class DataManager {
     @PersistenceContext
     private EntityManager _entityManager;
     @Autowired
-    private JeevesApplicationContext _applicationContext;
+    private ApplicationContext _applicationContext;
     @Autowired
     private MetadataRepository _metadataRepository;
     @Autowired
@@ -1020,7 +1020,7 @@ public class DataManager {
         if (idList.isEmpty()) {
             return null;
         }
-        return String.valueOf(idList.get(1));
+        return String.valueOf(idList.get(0));
     }
 
     /**
@@ -2853,7 +2853,7 @@ public class DataManager {
         addElement(info, Edit.Info.Elem.FEATURED, String.valueOf(hsOper.contains(ReservedOperation.featured.name())));
 
         if (!hsOper.contains(ReservedOperation.download.name())) {
-            JeevesApplicationContext appContext = context.getApplicationContext();
+            ApplicationContext appContext = context.getApplicationContext();
             int groupId = ReservedGroup.guest.getId();
             int metadataId = Integer.parseInt(id);
             int operationId = ReservedOperation.download.getId();
@@ -2969,8 +2969,7 @@ public class DataManager {
         }
     }
 
-    public void commit(boolean commitTransaction) {
+    public void flush() {
         _entityManager.flush();
-        _entityManager.getTransaction().commit();
     }
 }

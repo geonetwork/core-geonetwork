@@ -38,6 +38,7 @@ import org.joda.time.format.PeriodFormatter;
 import javax.annotation.Nonnull;
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -50,7 +51,7 @@ import static java.util.Calendar.*;
  * </p>
  */
 @Embeddable
-public class ISODate implements Cloneable, Comparable<ISODate> {
+public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
     private static final String DEFAULT_DATE_TIME = "3000-01-01T00:00:00.000Z"; // JUNK Value
     private boolean _shortDate; // --- 'true' if the format is yyyy-mm-dd
 
@@ -368,7 +369,7 @@ public class ISODate implements Cloneable, Comparable<ISODate> {
 
             _calendar.set(year, month - 1, day, hour, minute, second);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid ISO date : " + isoDate);
+            throw new IllegalArgumentException("Invalid ISO date : " + isoDate, e);
         }
     }
 
@@ -397,7 +398,7 @@ public class ISODate implements Cloneable, Comparable<ISODate> {
 
             _shortDate = false;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid ISO date : " + isoDate);
+            throw new IllegalArgumentException("Invalid ISO date : " + isoDate, e);
         }
     }
 

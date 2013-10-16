@@ -1,6 +1,5 @@
 package org.fao.geonet.repository;
 
-import static org.junit.Assert.*;
 import org.fao.geonet.domain.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Test the MetadataValidationRepository class
@@ -31,16 +33,16 @@ public class MetadataValidationRepositoryTest extends AbstractSpringDataTest {
         MetadataValidation val3 = _metadataValidationRepository.save(newValidation());
 
         List<MetadataValidation> found = _metadataValidationRepository.findAllById_MetadataId(val1.getId().getMetadataId());
-        assertEquals (1, found.size());
-        assertEquals (val1.getId(), found.get(0).getId());
+        assertEquals(1, found.size());
+        assertEquals(val1.getId(), found.get(0).getId());
 
         found = _metadataValidationRepository.findAllById_MetadataId(val2.getId().getMetadataId());
-        assertEquals (1, found.size());
-        assertEquals (val2.getId(), found.get(0).getId());
+        assertEquals(1, found.size());
+        assertEquals(val2.getId(), found.get(0).getId());
 
         found = _metadataValidationRepository.findAllById_MetadataId(val3.getId().getMetadataId());
-        assertEquals (1, found.size());
-        assertEquals (val3.getId(), found.get(0).getId());
+        assertEquals(1, found.size());
+        assertEquals(val3.getId(), found.get(0).getId());
     }
 
     @Test
@@ -63,6 +65,7 @@ public class MetadataValidationRepositoryTest extends AbstractSpringDataTest {
     private MetadataValidation newValidation() {
         return newValidation(_inc, _metadataRepository);
     }
+
     public static MetadataValidation newValidation(AtomicInteger inc, MetadataRepository metadataRepository) {
         int val = inc.incrementAndGet();
 
@@ -71,11 +74,11 @@ public class MetadataValidationRepositoryTest extends AbstractSpringDataTest {
         MetadataValidation validation = new MetadataValidation();
         MetadataValidationId id = new MetadataValidationId();
         id.setMetadataId(metadata.getId());
-        id.setValidationType("valType"+val);
+        id.setValidationType("valType" + val);
         validation.setId(id);
         validation.setFailed(val);
-        validation.setStatus(val % 2 == 0 ? MetadataValidationStatus.INVALID : MetadataValidationStatus.VALID );
-        validation.setTested(val*2);
+        validation.setStatus(val % 2 == 0 ? MetadataValidationStatus.INVALID : MetadataValidationStatus.VALID);
+        validation.setTested(val * 2);
         validation.setValidationDate(new ISODate());
         validation.setValid(val % 2 == 1);
 

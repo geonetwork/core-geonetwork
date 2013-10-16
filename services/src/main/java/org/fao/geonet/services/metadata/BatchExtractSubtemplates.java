@@ -122,7 +122,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 			processRecord(context, uuid, category, xpath, getTit, xpathTit, doChanges, metadata, notFound, notOwner, subtemplates, response);
 		}
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         // -- reindex metadata
 		context.info("Re-indexing metadata");

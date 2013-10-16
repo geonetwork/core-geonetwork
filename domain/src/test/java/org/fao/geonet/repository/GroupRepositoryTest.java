@@ -35,6 +35,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
         Group savedGroup = _repo.save(group);
 
         _repo.flush();
+        _entityManager.flush();
         _entityManager.clear();
 
         group.setId(savedGroup.getId());
@@ -44,6 +45,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
         _repo.deleteAll();
 
         _repo.flush();
+        _entityManager.flush();
         _entityManager.clear();
 
         assertEquals(0, _repo.count());
@@ -57,6 +59,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
         Group savedGroup = _repo.save(group);
 
         _repo.flush();
+        _entityManager.flush();
         _entityManager.clear();
 
         group.setId(savedGroup.getId());
@@ -68,6 +71,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
         Group savedGroup2 = _repo.save(group);
 
         _repo.flush();
+        _entityManager.flush();
         _entityManager.clear();
 
         assertSameContents(savedGroup, savedGroup2);
@@ -81,6 +85,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
         Group savedGroup = _repo.save(newGroup());
 
         _repo.flush();
+        _entityManager.flush();
         _entityManager.clear();
 
         assertSameContents(savedGroup, _repo.findByName(savedGroup.getName()));
@@ -92,6 +97,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
         Group savedGroup = _repo.save(newGroup());
 
         _repo.flush();
+        _entityManager.flush();
         _entityManager.clear();
 
         assertSameContents(savedGroup, _repo.findByEmail(savedGroup.getEmail()));
@@ -119,6 +125,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
             _repo.save(ReservedGroup.all.getGroupEntityTemplate());
 
             _repo.flush();
+            _entityManager.flush();
             _entityManager.clear();
 
             assertSameContents(ReservedGroup.all.getGroupEntityTemplate(), _repo.findReservedGroup(ReservedGroup.all));

@@ -1,7 +1,5 @@
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.statistic.SearchRequest;
 import org.fao.geonet.domain.statistic.SearchRequestParam;
 import org.fao.geonet.domain.statistic.SearchRequestParam_;
 import org.fao.geonet.domain.statistic.SearchRequest_;
@@ -9,11 +7,10 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Specifications for making queries on {@link org.fao.geonet.domain.statistic.SearchRequest} Entities.
- *
+ * <p/>
  * User: Jesse
  * Date: 10/2/13
  * Time: 7:37 AM
@@ -39,6 +36,7 @@ public final class SearchRequestParamSpecs {
             }
         };
     }
+
     /**
      * Create a specification for querying by serviceId.
      *

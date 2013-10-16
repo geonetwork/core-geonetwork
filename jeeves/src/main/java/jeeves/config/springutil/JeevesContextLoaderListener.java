@@ -1,15 +1,14 @@
 package jeeves.config.springutil;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-
 import org.fao.geonet.utils.Log;
-
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.context.Lifecycle;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
 
 public class JeevesContextLoaderListener extends ContextLoaderListener {
 

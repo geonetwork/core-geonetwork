@@ -138,7 +138,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
         context.getBean(UserGroupRepository.class).save(userGroup);
 		// Send email to user confirming registration
 
-    SettingInfo si = new SettingInfo(context);
+    SettingInfo si = context.getBean(SettingInfo.class);
     String siteURL = si.getSiteUrl() + context.getBaseUrl();
 
     if (!sendRegistrationEmail(params, password, host, port, from, thisSite, siteURL)) {

@@ -1,16 +1,15 @@
 package jeeves.config.springutil;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import javax.servlet.ServletContext;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.ServletContext;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * A Spring Bean that will update a tag in a String property of the provided

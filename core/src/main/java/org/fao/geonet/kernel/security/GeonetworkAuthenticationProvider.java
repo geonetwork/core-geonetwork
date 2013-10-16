@@ -46,7 +46,7 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
     private PasswordEncoder encoder;
 
 	@Autowired
-	UserRepository _userRepository;
+	private UserRepository _userRepository;
 
 	@Override
 	protected void additionalAuthenticationChecks(UserDetails userDetails,

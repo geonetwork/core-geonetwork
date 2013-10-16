@@ -3,20 +3,25 @@ package org.fao.geonet.repository.statistic;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.statistic.SearchRequest;
+import org.fao.geonet.domain.statistic.SearchRequestParam;
 import org.fao.geonet.domain.statistic.SearchRequest_;
 import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.SpringDataTestSupport;
+import org.fao.geonet.repository.specification.SearchRequestParamSpecs;
 import org.fao.geonet.repository.specification.SearchRequestSpecs;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.fao.geonet.repository.specification.SearchRequestSpecs.*;
+import static org.fao.geonet.repository.specification.SearchRequestSpecs.isMoreRecentThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -32,24 +37,32 @@ public class SearchRequestRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     SearchRequestRepository _requestRepo;
-
-
     @Autowired
     SearchRequestParamRepository _paramRepo;
+
+    @PersistenceContext
+    EntityManager _entityManager;
 
     AtomicInteger _inc = new AtomicInteger();
 
     @Test
-    public void testFindOne() {
+    public void testFindOne() throws Exception {
         SearchRequest searchRequest1 = newSearchRequest();
-        searchRequest1.persistParams(_paramRepo);
+        assertTrue(searchRequest1.getParams().size() > 0);
         searchRequest1 = _requestRepo.save(searchRequest1);
 
         SearchRequest searchRequest2 = newSearchRequest();
+        assertTrue(searchRequest2.getParams().size() > 0);
         searchRequest2 = _requestRepo.save(searchRequest2);
 
-        assertEquals(searchRequest2, _requestRepo.findOne(searchRequest2.getId()));
-        assertEquals(searchRequest1, _requestRepo.findOne(searchRequest1.getId()));
+        _entityManager.flush();
+        _entityManager.clear();
+
+        SearchRequest found = _requestRepo.findOne(searchRequest2.getId());
+        SpringDataTestSupport.assertSameContents(searchRequest2, found);
+        assertEquals(searchRequest2.getParams().size(), found.getParams().size());
+        List<SearchRequestParam> params = _paramRepo.findAll(SearchRequestParamSpecs.hasService(searchRequest2.getService()));
+        assertEquals(searchRequest2.getParams().size(), params.size());
     }
 
     @Test
@@ -88,20 +101,17 @@ public class SearchRequestRepositoryTest extends AbstractSpringDataTest {
 
         SearchRequest searchRequest2 = newSearchRequest();
         searchRequest2.setRequestDate(new ISODate("1980-10-10T01:11:00"));
-        searchRequest2.setHits(3);
-        searchRequest1.setSimple(false);
+        searchRequest2.setSimple(false);
         _requestRepo.save(searchRequest2);
 
         SearchRequest searchRequest3 = newSearchRequest();
         searchRequest3.setRequestDate(new ISODate("1980-10-13T01:11:00"));
-        searchRequest3.setHits(0);
-        searchRequest1.setSimple(true);
+        searchRequest3.setSimple(true);
         _requestRepo.save(searchRequest3);
 
         SearchRequest searchRequest4 = newSearchRequest();
         searchRequest4.setRequestDate(new ISODate("1980-11-16T01:11:00"));
-        searchRequest4.setHits(1);
-        searchRequest1.setSimple(true);
+        searchRequest4.setSimple(true);
         _requestRepo.save(searchRequest4);
 
         PathSpec<SearchRequest, Boolean> path = new PathSpec<SearchRequest, Boolean>() {
@@ -112,7 +122,7 @@ public class SearchRequestRepositoryTest extends AbstractSpringDataTest {
         };
 
         assertSummary(isMoreRecentThanOrEqualTo(searchRequest1.getRequestDate()), path, 3, 1);
-        assertSummary(isMoreRecentThanOrEqualTo(new ISODate("1980-10-12T00:00:00")), path, 2, 0);
+        assertSummary(isMoreRecentThanOrEqualTo(searchRequest3.getRequestDate()), path, 2, 0);
     }
 
     private void assertSummary(Specification<SearchRequest> spec, PathSpec<SearchRequest, Boolean> path, int expectedTrue,
@@ -325,8 +335,8 @@ public class SearchRequestRepositoryTest extends AbstractSpringDataTest {
         searchRequest.setLuceneQuery("query" + val);
         searchRequest.setMetadataType("mdtype" + val);
         searchRequest.setRequestDate(new ISODate());
-        searchRequest.getParams().add(SearchRequestParamRepositoryTest.newRequestParam(inc));
-        searchRequest.getParams().add(SearchRequestParamRepositoryTest.newRequestParam(inc));
+        searchRequest.addParam(SearchRequestParamRepositoryTest.newRequestParam(inc));
+        searchRequest.addParam(SearchRequestParamRepositoryTest.newRequestParam(inc));
 
         return searchRequest;
     }

@@ -14,16 +14,16 @@ public interface CswCapabilitiesInfoFieldRepositoryCustom {
      * the fields.
      *
      * @param languageCode the language of the info object to load.
-     *
      * @return all fields in the given language and construct a CswCapabilitiesInfo object from
-     * the fields.
+     *         the fields.
      */
-    @Nonnull CswCapabilitiesInfo findCswCapabilitiesInfo(@Nonnull String languageCode);
+    @Nonnull
+    CswCapabilitiesInfo findCswCapabilitiesInfo(@Nonnull String languageCode);
 
     /**
      * Save the info object as individual fields.
      *
-     * @param info
+     * @param info the info object to persist.
      */
     void save(@Nonnull CswCapabilitiesInfo info);
 }

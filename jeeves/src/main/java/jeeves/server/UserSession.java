@@ -23,11 +23,6 @@
 
 package jeeves.server;
 
-import java.util.Hashtable;
-
-import javax.servlet.http.HttpSession;
-
-
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -36,6 +31,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+
+import javax.servlet.http.HttpSession;
+import java.util.Hashtable;
 
 //=============================================================================
 

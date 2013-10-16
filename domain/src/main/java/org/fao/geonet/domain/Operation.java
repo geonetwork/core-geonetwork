@@ -1,28 +1,13 @@
 package org.fao.geonet.domain;
 
-import java.util.Map;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import java.util.Map;
 
 /**
  * An entity representing an operation that can be performed on a metadata.
- * 
+ *
  * @author Jesse
  */
 @Entity
@@ -36,7 +21,7 @@ public class Operation extends Localized {
     /**
      * Get the Id of the operation. This is a generated value and as such new instances should not have this set as it will simply be
      * ignored and could result in reduced performance.
-     * 
+     *
      * @return the Id of the operation.
      */
     @Id
@@ -49,7 +34,7 @@ public class Operation extends Localized {
     /**
      * Set the Id of the operation. This is a generated value and as such new instances should not have this set as it will simply be
      * ignored and could result in reduced performance.
-     * 
+     *
      * @param id the Id of the operation
      * @return this entity object.
      */
@@ -59,7 +44,8 @@ public class Operation extends Localized {
     }
 
     /**
-     * Return true if the operation is one of the reserved operations. If this returns true then getReservedOperation method should return a
+     * Return true if the operation is one of the reserved operations. If this returns true then getReservedOperation method should
+     * return a
      * value
      */
     @Transient
@@ -78,7 +64,7 @@ public class Operation extends Localized {
 
     /**
      * Set the name (untranslated) of the operation.
-     * 
+     *
      * @param name the name (untranslated) of the operation.
      * @return this entity object
      */
@@ -100,7 +86,8 @@ public class Operation extends Localized {
      * Return a ReservedOperation if this operation is one of the reserved operation or null otherwise.
      */
     @Transient
-    public @Nullable
+    public
+    @Nullable
     ReservedOperation getReservedOperation() {
         return ReservedOperation.lookup(_id);
     }

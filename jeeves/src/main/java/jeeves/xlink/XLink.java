@@ -1,8 +1,8 @@
 package jeeves.xlink;
 
-import java.net.URL;
-
 import org.jdom.Namespace;
+
+import java.net.URL;
 
 /**
  * XLink allows elements to be inserted into XML documents 

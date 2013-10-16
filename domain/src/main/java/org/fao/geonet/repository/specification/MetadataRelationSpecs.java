@@ -1,10 +1,11 @@
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.MetadataRelation;
+import org.fao.geonet.domain.MetadataRelationId_;
+import org.fao.geonet.domain.MetadataRelation_;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
-import java.util.Collection;
 
 /**
  * Specifications for querying {@link org.fao.geonet.repository.UserRepository}.
@@ -15,6 +16,7 @@ public final class MetadataRelationSpecs {
     private MetadataRelationSpecs() {
         // no instantiation
     }
+
     public static Specification<MetadataRelation> hasMetadataId(final Integer metadataId) {
         return new Specification<MetadataRelation>() {
             @Override
@@ -24,6 +26,7 @@ public final class MetadataRelationSpecs {
             }
         };
     }
+
     public static Specification<MetadataRelation> hasRelatedId(final Integer relatedId) {
         return new Specification<MetadataRelation>() {
             @Override

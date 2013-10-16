@@ -85,7 +85,7 @@ public class Format extends AbstractFormatService {
         Element root = new Element("root");
         
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        String url = new SettingInfo(gc.getBean(SettingManager.class)).getSiteUrl() + context.getBaseUrl();
+        String url = gc.getBean(SettingManager.class).getSiteURL(context);
 
         root.addContent (new Element("url").setText(url));
         String locUrl = url+"/srv/"+context.getLanguage()+"/";

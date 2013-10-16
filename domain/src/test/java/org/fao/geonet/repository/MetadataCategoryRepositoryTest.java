@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
@@ -82,14 +83,16 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
         metadata2.getCategories().add(cat1);
         metadata2 = _metadataRepo.save(metadata2);
 
-        _repo.delete(cat1.getId());
+        _repo.deleteCategoryAndMetadataReferences(cat1.getId());
 
+        _entityManager.flush();
         _entityManager.clear();
 
         // org.fao.geonet.services.category.Remove assumes that this test passes.  If this test can't pass
         // then there needs to be a way to fix Remove as well.
-        assertEquals(1, _metadataRepo.findOne(metadata1.getId()).getCategories().size());
-        assertEquals(cat2.getId(), _metadataRepo.findOne(metadata1.getId()).getCategories().iterator().next().getId());
+        final Set<MetadataCategory> foundCategories = _metadataRepo.findOne(metadata1.getId()).getCategories();
+        assertEquals(1, foundCategories.size());
+        assertEquals(cat2.getId(), foundCategories.iterator().next().getId());
 
         assertEquals(0, _metadataRepo.findOne(metadata2.getId()).getCategories().size());
     }
@@ -97,13 +100,14 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
     private MetadataCategory newMetadataCategory() {
         return newMetadataCategory(_inc);
     }
+
     public static MetadataCategory newMetadataCategory(AtomicInteger inc) {
         int val = inc.incrementAndGet();
         MetadataCategory metadataCategory = new MetadataCategory();
-        metadataCategory.setName("name"+val);
-        metadataCategory.getLabelTranslations().put("eng", "engLab"+val);
-        metadataCategory.getLabelTranslations().put("fra", "fraLab"+val);
-        metadataCategory.getLabelTranslations().put("ger", "gerLab"+val);
+        metadataCategory.setName("name" + val);
+        metadataCategory.getLabelTranslations().put("eng", "engLab" + val);
+        metadataCategory.getLabelTranslations().put("fra", "fraLab" + val);
+        metadataCategory.getLabelTranslations().put("ger", "gerLab" + val);
 
         return metadataCategory;
     }

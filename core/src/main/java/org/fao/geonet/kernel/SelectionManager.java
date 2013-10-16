@@ -208,7 +208,7 @@ public class SelectionManager {
 	 */
 	public void selectAll(String type, ServiceContext context) {
 		Set<String> selection = selections.get(type);
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 		int maxhits = DEFAULT_MAXHITS;
 
 		try {

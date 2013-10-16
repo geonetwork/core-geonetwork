@@ -1,7 +1,5 @@
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId;
 import org.springframework.data.domain.Sort;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -77,7 +75,7 @@ public class SortUtils {
      * @param attributes the attributes that make up the path from root to end attribute.
      * @return a '.' separated path.
      */
-    public static String createPath(SingularAttribute<?,?>... attributes) {
+    public static String createPath(SingularAttribute<?, ?>... attributes) {
         StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < attributes.length; i++) {
@@ -91,15 +89,15 @@ public class SortUtils {
 
     /**
      * Create a sort object from the path objects.  This only creates a sort with a single path.  For multiple paths do:
-     *
+     * <p/>
      * <p>
-     *     new Sort(createPath(attributes1...), createPath(attributes2...),...)
+     * new Sort(createPath(attributes1...), createPath(attributes2...),...)
      * </p>
-     * @param attributes the attributes to use for building a sort.
      *
+     * @param attributes the attributes to use for building a sort.
      * @return a sort object from the path objects
      */
-    public static Sort createSort(SingularAttribute<?,?>... attributes) {
+    public static Sort createSort(SingularAttribute<?, ?>... attributes) {
         return new Sort(createPath(attributes));
     }
 }

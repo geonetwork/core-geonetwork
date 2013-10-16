@@ -22,9 +22,7 @@
 //==============================================================================
 package org.fao.geonet.notifier;
 
-import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.MetadataNotificationRepository;
@@ -66,7 +64,7 @@ public class MetadataNotifierManager {
     public void updateMetadataBatch(ServiceContext context) throws MetadataNotifierException {
         if (Log.isDebugEnabled("MetadataNotifierManager"))
             Log.debug("MetadataNotifierManager", "updateMetadata unregistered");
-        final JeevesApplicationContext applicationContext = context.getApplicationContext();
+        final ApplicationContext applicationContext = context.getApplicationContext();
 
         loadNotifiers(context);
 

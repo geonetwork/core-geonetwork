@@ -1,15 +1,14 @@
 package org.fao.geonet.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * An Id object for {@link MetadataRatingByIp}
- * 
+ *
  * @author Jesse
  */
 @Embeddable
@@ -40,7 +39,7 @@ public class MetadataRatingByIpId implements Serializable {
 
     /**
      * Get the id of the associated metadata.
-     * 
+     *
      * @return the id of the associated metadata.
      */
     @Column(name = "metadataid", nullable = false)
@@ -50,7 +49,7 @@ public class MetadataRatingByIpId implements Serializable {
 
     /**
      * Set the id of the associated metadata.
-     * 
+     *
      * @param metadataId the id of the associated metadata.
      */
     public void setMetadataId(int metadataId) {
@@ -59,7 +58,7 @@ public class MetadataRatingByIpId implements Serializable {
 
     /**
      * Get the IP Address of the user the rating is related to.
-     * 
+     *
      * @return the IP Address of the user the rating is related to.
      */
     @Column(name = "ipaddress", nullable = false, length = Constants.IP_ADDRESS_COLUMN_LENGTH)
@@ -69,7 +68,7 @@ public class MetadataRatingByIpId implements Serializable {
 
     /**
      * Set the IP Address of the user the rating is related to.
-     * 
+     *
      * @param ipAddress the IP Address of the user the rating is related to.
      */
     public void setIpAddress(String ipAddress) {

@@ -2,52 +2,54 @@ package org.fao.geonet.domain;
 
 import org.jdom.Element;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.annotation.Nonnull;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Encapsulates security information about the user. This is a JPA Embeddable object that is embedded into a {@link User} Entity
- * 
+ *
  * @author Jesse
  */
 @Embeddable
-public class UserSecurity extends GeonetEntity {
+public class UserSecurity extends GeonetEntity implements Serializable {
     private char[] _password;
     private Set<UserSecurityNotification> _securityNotifications = new HashSet<UserSecurityNotification>();
     private String _authType;
 
     /**
      * Get the hashed password. This is a required property.
-     * 
+     *
      * @return the hashed password
      */
     @Column(nullable = false, length = 120)
-    public @Nonnull
+    public
+    @Nonnull
     char[] getPassword() {
-        return _password;
+        return _password.clone();
     }
 
     /**
      * Set the hashed password. This is a required property.
-     * 
+     *
      * @param password the hashed password.
      * @return this UserSecurity object
      */
-    public @Nonnull
+    public
+    @Nonnull
     UserSecurity setPassword(@Nonnull char[] password) {
-        this._password = password;
+        this._password = password.clone();
         return this;
     }
 
     /**
      * Set the hashed password. This is a required property.
-     * 
+     *
      * @param password the hashed password.
      * @return this UserSecurity object
      */
@@ -58,7 +60,7 @@ public class UserSecurity extends GeonetEntity {
 
     /**
      * Get the security notifications. This property used to store arbitrary security related notifications.
-     * 
+     *
      * @return
      */
     @Column(name = "security", length = 128)
@@ -73,19 +75,21 @@ public class UserSecurity extends GeonetEntity {
         return builder.toString();
     }
 
-    protected UserSecurity setSecurityNotificationsString(String securityNotifications) {
+    protected UserSecurity setSecurityNotificationsString(final String securityNotifications) {
         _securityNotifications.clear();
-        String[] parts = getSecurityNotificationsString().split(",");
+        String[] parts = securityNotifications.split(",");
 
         for (String string : parts) {
-            _securityNotifications.add(UserSecurityNotification.find(string));
+            if (!string.trim().isEmpty()) {
+                _securityNotifications.add(UserSecurityNotification.find(string));
+            }
         }
         return this;
     }
 
     /**
      * Get the mutable set if security notifications.
-     * 
+     *
      * @return the mutable set if security notifications.
      */
     @Transient
@@ -105,7 +109,7 @@ public class UserSecurity extends GeonetEntity {
 
     /**
      * Merge all data from other security into this security.
-     * 
+     *
      * @param otherSecurity other user to merge data from.
      * @param mergeNullData if true then also set null values from other security. If false then only merge non-null data
      */

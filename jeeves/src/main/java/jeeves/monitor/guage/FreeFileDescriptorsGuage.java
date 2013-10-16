@@ -1,15 +1,14 @@
 package jeeves.monitor.guage;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
-
+import com.sun.management.UnixOperatingSystemMXBean;
+import com.yammer.metrics.core.Gauge;
+import com.yammer.metrics.core.MetricsRegistry;
 import jeeves.monitor.MetricsFactory;
 import jeeves.server.JeevesEngine;
 import jeeves.server.context.ServiceContext;
 
-import com.sun.management.UnixOperatingSystemMXBean;
-import com.yammer.metrics.core.Gauge;
-import com.yammer.metrics.core.MetricsRegistry;
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
 
 /**
  * Returns the number of free file descriptors or -1 if unable to calculate.  (only works on unix based OSs).

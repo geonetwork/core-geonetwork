@@ -278,7 +278,7 @@ public class Geonet20Harvester extends AbstractHarvester
 			req.setAddress("/"+ params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_LOGOUT);
 		}
 
-        dataMan.commit(true);
+        dataMan.flush();
     }
 
 	//---------------------------------------------------------------------------

@@ -1,12 +1,11 @@
 package org.fao.geonet.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * The id object for {@link UserGroup}
- * 
+ *
  * @author Jesse
  */
 @Embeddable
@@ -19,6 +18,7 @@ public class UserGroupId implements Serializable {
     public UserGroupId() {
         // Default constructor.
     }
+
     /**
      * Convenenience constructor.
      */
@@ -38,7 +38,7 @@ public class UserGroupId implements Serializable {
 
     /**
      * Set the id of the user.
-     * 
+     *
      * @param userId the id of the user.
      * @return this id object
      */
@@ -58,7 +58,7 @@ public class UserGroupId implements Serializable {
 
     /**
      * Set the group id
-     * 
+     *
      * @param groupId the group id
      * @return this id object
      */

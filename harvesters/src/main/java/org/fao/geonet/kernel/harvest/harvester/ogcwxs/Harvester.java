@@ -218,12 +218,12 @@ class Harvester extends BaseAligner
 
 
         if (result.locallyRemoved > 0) {
-            dataMan.commit(true);
+            dataMan.flush();
         }
 		
         // Convert from GetCapabilities to ISO19119
         addMetadata (xml);
-        dataMan.commit(true);
+        dataMan.flush();
 
         result.totalMetadata = result.addedMetadata + result.layer;
     
@@ -337,7 +337,7 @@ class Harvester extends BaseAligner
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url));
 		dataMan.setTemplate(iId, MetadataType.METADATA, null);
 
-         dataMan.commit(true);
+         dataMan.flush();
 
          //dataMan.indexMetadata(dbms, id); setTemplate update the index
 		
@@ -651,7 +651,7 @@ class Harvester extends BaseAligner
             if(log.isDebugEnabled()) log.debug("    - Set Harvested.");
 			dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url)); // FIXME : harvestUuid should be a MD5 string
 
-            dataMan.commit(true);
+            dataMan.flush();
 
             dataMan.indexMetadata(reg.id);
 			
@@ -728,7 +728,7 @@ class Harvester extends BaseAligner
 				// Call the services 
 				s.execOnHarvest(par, context, dataMan);
 
-                dataMan.commit(true);
+                dataMan.flush();
 
                 result.thumbnails ++;
 			} else {

@@ -1,7 +1,5 @@
 package com.yammer.metrics.core;
 
-import com.yammer.metrics.core.Counter;
-
 /**
  * A Counter that ignores input
  * User: jeichar

@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,7 +38,7 @@ public interface HarvestHistoryRepository extends GeonetRepository<HarvestHistor
      *
      * @param harvesterUuid the harvester uuid.
      */
-    @Modifying(clearAutomatically=true)
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE HarvestHistory SET deleted='y' WHERE harvesterUuid=:uuid")
     void markAllAsDeleted(@Param("uuid") @Nonnull String harvesterUuid);
 }

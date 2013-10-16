@@ -1,5 +1,6 @@
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataCategory_;
 
@@ -7,6 +8,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -19,7 +21,7 @@ import javax.persistence.criteria.Root;
  * Date: 9/9/13
  * Time: 8:00 PM
  */
-public class MetadataCategoryRepositoryImpl implements  MetadataCategoryRepositoryCustom {
+public class MetadataCategoryRepositoryImpl implements MetadataCategoryRepositoryCustom {
 
     @PersistenceContext
     private EntityManager _entityManager;
@@ -35,5 +37,37 @@ public class MetadataCategoryRepositoryImpl implements  MetadataCategoryReposito
         final Expression<String> lowerRequiredName = cb.lower(cb.literal(name));
         cbQuery.where(cb.equal(lowerName, lowerRequiredName));
         return _entityManager.createQuery(cbQuery).getSingleResult();
+    }
+
+    @Override
+    public void deleteCategoryAndMetadataReferences(int id) {
+        /*
+         * Start of HACK.
+          *
+          * The following select seems to be needed so that the delete from below will actually delete elements...
+          * At least in the unit tests.
+         */
+        final Query nativeQuery2 = _entityManager.createNativeQuery("Select * from " + Metadata.METADATA_CATEG_JOIN_TABLE_NAME + " WHERE "
+                                                                    + Metadata.METADATA_CATEG_JOIN_TABLE_CATEGORY_ID + "=" + id);
+
+        nativeQuery2.setMaxResults(1);
+        nativeQuery2.getResultList();
+        // END HACK
+
+        final Query nativeQuery = _entityManager.createNativeQuery("DELETE FROM " + Metadata.METADATA_CATEG_JOIN_TABLE_NAME + " WHERE "
+                                                                   + Metadata.METADATA_CATEG_JOIN_TABLE_CATEGORY_ID + "=?");
+        nativeQuery.setParameter(1, id);
+        nativeQuery.executeUpdate();
+
+
+        _entityManager.flush();
+        _entityManager.clear();
+
+        final MetadataCategory reference = _entityManager.getReference(MetadataCategory.class, id);
+        _entityManager.remove(reference);
+
+
+        _entityManager.flush();
+        _entityManager.clear();
     }
 }

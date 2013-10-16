@@ -1,7 +1,6 @@
 package org.fao.geonet.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -42,9 +41,6 @@ public class GeonetRepositoryFactoryBean<R extends JpaRepository<T, I>, T, I ext
         protected Object getTargetRepository(RepositoryMetadata metadata) {
 
             Class<?> repositoryInterface = metadata.getRepositoryInterface();
-
-            JpaEntityInformation<?, Serializable> entityInformation =
-                    getEntityInformation(metadata.getDomainType());
 
             if (isQueryDslExecutor(repositoryInterface)) {
                 return super.getTargetRepository(metadata);

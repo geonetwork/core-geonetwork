@@ -1,7 +1,6 @@
 package jeeves.server;
 
 import jeeves.server.context.ScheduleContext;
-
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobListener;

@@ -56,7 +56,7 @@ public class Identify implements OaiPmhService
 	public AbstractResponse execute(AbstractRequest request, ServiceContext context) throws Exception
 	{
 		IdentifyResponse res = new IdentifyResponse();
-		SettingInfo      si  = new SettingInfo(context);
+		SettingInfo      si  = context.getBean(SettingInfo.class);
 
 		String baseUrl = si.getSiteUrl() + context.getBaseUrl() +"/"+ Jeeves.Prefix.SERVICE +"/en/"+ context.getService();
 

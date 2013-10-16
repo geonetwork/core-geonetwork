@@ -256,7 +256,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         dataMan.indexMetadata(id);
 	}
@@ -292,7 +292,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         dataMan.indexMetadata(id);
 		return id;

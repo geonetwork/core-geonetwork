@@ -26,12 +26,12 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     private EntityManager _entityManager;
 
     @Override
-    public User findOne(String userId) {
+    public User findOne(final String userId) {
         return _entityManager.find(User.class, Integer.valueOf(userId));
     }
 
     @Override
-    public User findOneByEmail(String email) {
+    public User findOneByEmail(final String email) {
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> root = query.from(User.class);
@@ -42,20 +42,21 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             return null;
         }
         if (resultList.size() > 1) {
-            Log.error(Constants.DOMAIN_LOG_MODULE, "The database is inconsistent.  There are multiple users with the email address: "+email);
+            Log.error(Constants.DOMAIN_LOG_MODULE, "The database is inconsistent.  There are multiple users with the email address: " +
+                                                   email);
         }
         return resultList.get(0);
     }
 
     @Override
-    public User findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(String username) {
+    public User findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(final String username) {
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> root = query.from(User.class);
 
         final Path<String> authTypePath = root.get(User_.security).get(UserSecurity_.authType);
         final Path<String> usernamePath = root.get(User_.username);
-        query.where(cb.and(cb.equal(usernamePath, username), cb.or(cb.isNull(authTypePath), cb.equal(cb.trim(authTypePath),""))));
+        query.where(cb.and(cb.equal(usernamePath, username), cb.or(cb.isNull(authTypePath), cb.equal(cb.trim(authTypePath), ""))));
         List<User> results = _entityManager.createQuery(query).getResultList();
 
 
@@ -68,8 +69,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @Override
     @Nonnull
-    public List<Pair<Integer, User>> findAllByGroupOwnerNameAndProfile(@Nonnull Collection<Integer> metadataIds,
-                                                                       @Nullable Profile profile, @Nullable Sort sort) {
+    public List<Pair<Integer, User>> findAllByGroupOwnerNameAndProfile(@Nonnull final Collection<Integer> metadataIds,
+                                                                       @Nullable final Profile profile, @Nullable final Sort sort) {
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> query = cb.createQuery(Tuple.class);
 
@@ -128,7 +129,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @Nonnull
     @Override
-    public List<User> findAllUsersInUserGroups(@Nonnull Specification<UserGroup> userGroupSpec) {
+    public List<User> findAllUsersInUserGroups(@Nonnull final Specification<UserGroup> userGroupSpec) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<User> query = cb.createQuery(User.class);
 

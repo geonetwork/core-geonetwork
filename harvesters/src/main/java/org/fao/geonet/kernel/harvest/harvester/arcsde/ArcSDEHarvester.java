@@ -146,7 +146,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		CategoryMapper localCateg = new CategoryMapper(context);
 		GroupMapper localGroups = new GroupMapper(context);
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         List<String> idsForHarvestingResult = new ArrayList<String>();
 		//-----------------------------------------------------------------------
@@ -233,7 +233,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
         context.getBean(MetadataRepository.class).save(metadata);
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         dataMan.indexMetadata(id);
 	}
@@ -268,7 +268,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         dataMan.indexMetadata(id);
 		return id;

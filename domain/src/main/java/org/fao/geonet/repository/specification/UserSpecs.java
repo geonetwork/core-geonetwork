@@ -9,7 +9,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * Specifications for querying {@link UserRepository}.

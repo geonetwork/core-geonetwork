@@ -1,18 +1,16 @@
 package jeeves.server.overrides;
 
-import java.util.Map;
-import java.util.Properties;
-
-import javax.annotation.Nullable;
-
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.RegexRequestMatcher;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
+import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.Properties;
 
 abstract class AbstractInterceptUrlUpdater implements Updater {
 

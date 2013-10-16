@@ -91,9 +91,10 @@ import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.capability.FilterCapabilities;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -119,6 +120,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Indexes metadata using Lucene.
  */
+@Component
 public class SearchManager {
 	private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
 	private static final String INDEXING_ERROR_FIELD = "_indexingError";
@@ -136,13 +138,12 @@ public class SearchManager {
     private static final Configuration FILTER_1_1_0 = new org.geotools.filter.v1_1.OGCConfiguration();
     private static final Configuration FILTER_2_0_0 = new org.geotools.filter.v2_0.FESConfiguration();
 
-	private final File _stylesheetsDir;
+	private File _stylesheetsDir;
     private static File _stopwordsDir;
 	Map<String, FacetConfig> _summaryConfigValues = null;
 
 	private File _luceneDir;
 	private File _luceneTaxonomyDir;
-    private SettingInfo _settingInfo;
     /**
      * Used when adding documents to the Lucene index.
      */
@@ -161,28 +162,27 @@ public class SearchManager {
 	private static DocumentBoosting _documentBoostClass;
 	private String _luceneTermsToExclude;
 	private boolean _logSpatialObject;
-	private SchemaManager _scm;
+	private SchemaManager _schemaManager;
 	private static PerFieldAnalyzerWrapper _defaultAnalyzer;
 	private String _htmlCacheDir;
     private Spatial _spatial;
 	private LuceneIndexReaderFactory _indexReader;
 	private LuceneIndexWriterFactory _indexWriter;
 
-    private boolean _inspireEnabled = false;
     private String _thesauriDir;
 	private boolean _logAsynch;
-	private final LuceneOptimizerManager _luceneOptimizerManager;
+	private LuceneOptimizerManager _luceneOptimizerManager;
     private LuceneIndexLanguageTracker _tracker;
+    @Autowired
     private ApplicationContext _applicationContext;
+    @Autowired
+    private SettingInfo _settingInfo;
 
 
-    public SettingInfo get_settingInfo() {
+    public SettingInfo getSettingInfo() {
         return _settingInfo;
     }
 
-    public void setInspireEnabled(boolean inspireEnabled) {
-        this._inspireEnabled = inspireEnabled;
-    }
 
     /**
      * Creates GeoNetworkAnalyzer, using Admin-defined stopwords if there are any.
@@ -473,35 +473,29 @@ public class SearchManager {
     /**
      * TODO javadoc.
      *
+     *
      * @param appPath
      * @param luceneDir
      * @param htmlCacheDir
      * @param thesauriDir
-     * @param summaryConfigXmlFile
      * @param logAsynch
      * @param logSpatialObject
      * @param luceneTermsToExclude
      * @param dataStore
      * @param maxWritesInTransaction
-     * @param si
-     * @param scm
-     * @param servletContext
+     * @param schemaManager
      * @throws Exception
      */
-	public SearchManager(String appPath, String luceneDir, String htmlCacheDir, String thesauriDir,
-                         String summaryConfigXmlFile, boolean logAsynch,  boolean logSpatialObject, String luceneTermsToExclude,
-                         DataStore dataStore, int maxWritesInTransaction, SettingInfo si, SchemaManager scm,
-                         ServletContext servletContext, ApplicationContext applicationContext) throws Exception {
-	    this._applicationContext = applicationContext;
-		_scm = scm;
+	public void configure(String appPath, String luceneDir, String htmlCacheDir, String thesauriDir,
+                          boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
+                          DataStore dataStore, int maxWritesInTransaction, SchemaManager schemaManager) throws Exception {
+		_schemaManager = schemaManager;
 		_thesauriDir = thesauriDir;
 		_summaryConfigValues = getLuceneConfig().getTaxonomy().get("hits");
-        _settingInfo = si;
 
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
         _stopwordsDir = new File(appPath + STOPWORDS_DIR_PATH);
 
-        _inspireEnabled = si.getInspireEnabled();
         createAnalyzer();
         createDocumentBoost();
         
@@ -533,7 +527,7 @@ public class SearchManager {
 		initLucene();
 		initZ3950();
 		
-		_luceneOptimizerManager = new LuceneOptimizerManager(this, si);
+		_luceneOptimizerManager = new LuceneOptimizerManager(this, _settingInfo);
 	}
 
     /**
@@ -623,7 +617,7 @@ public class SearchManager {
 	public MetaSearcher newSearcher(int type, String stylesheetName) throws Exception {
 		switch (type) {
 			case LUCENE: return new LuceneSearcher(this, stylesheetName, getLuceneConfig());
-			case Z3950: return new Z3950Searcher(this, _scm, stylesheetName);
+			case Z3950: return new Z3950Searcher(this, _schemaManager, stylesheetName);
 			case UNUSED: return new UnusedSearcher();
 			default: throw new Exception("unknown MetaSearcher type: " + type);
 		}
@@ -1154,7 +1148,7 @@ public class SearchManager {
             String defaultStyleSheet = new File(schemaDir, "index-fields.xsl").getAbsolutePath();
             String otherLocalesStyleSheet = new File(schemaDir, "language-index-fields.xsl").getAbsolutePath();
             Map<String, String> params = new HashMap<String, String>();
-            params.put("inspire", Boolean.toString(_inspireEnabled));
+            params.put("inspire", Boolean.toString(isInspireEnabled()));
             params.put("thesauriDir", _thesauriDir);
             Element defaultLang = Xml.transform(xml, defaultStyleSheet, params);
             if (new File(otherLocalesStyleSheet).exists()) {
@@ -1178,7 +1172,11 @@ public class SearchManager {
         return documents;
     }
 
-	// utilities
+    private boolean isInspireEnabled() {
+        return _settingInfo.getInspireEnabled();
+    }
+
+    // utilities
 
     /**
      * If otherLanguages has a document that is the same locale as the default then remove it from otherlanguages and

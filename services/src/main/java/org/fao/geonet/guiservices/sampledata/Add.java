@@ -106,7 +106,7 @@ public class Add implements Service {
                     Log.error(Geonet.DATA_MANAGER,
                             "Error loading sample data: " + e.getMessage());
                 }
-                context.getBean(DataManager.class).commit(true);
+                context.getBean(DataManager.class).flush();
             }
 		}
 

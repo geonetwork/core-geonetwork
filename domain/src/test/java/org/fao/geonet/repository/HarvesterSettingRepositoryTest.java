@@ -1,15 +1,5 @@
 package org.fao.geonet.repository;
 
-import static org.fao.geonet.repository.HarvesterSettingRepository.ID_PREFIX;
-import static org.fao.geonet.repository.HarvesterSettingRepository.SEPARATOR;
-import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting_;
 import org.junit.Test;
@@ -17,6 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.fao.geonet.repository.HarvesterSettingRepository.ID_PREFIX;
+import static org.fao.geonet.repository.HarvesterSettingRepository.SEPARATOR;
+import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
+import static org.junit.Assert.*;
 
 @Transactional
 public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
@@ -29,7 +27,7 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
 
     private AtomicInteger _nextId = new AtomicInteger(20);
 
-    private String[] _skipProps = new String[] { "getValueAsInt", "getValueAsBool" };
+    private String[] _skipProps = new String[]{"getValueAsInt", "getValueAsBool"};
 
     @Test
     public void testFindByName() throws Exception {
@@ -133,58 +131,58 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
         List<HarvesterSetting> found = _repo.findByPath(path);
         assertEquals(2, found.size());
     }
-    
+
     @Test
     public void testFindByPathUsingIdAndChildNamePath() throws Exception {
         HarvesterSetting parent = _repo.save(newSetting().setName("2"));
         HarvesterSetting child2 = _repo.save(newSetting().setParent(parent).setName("2"));
         HarvesterSetting child3 = _repo.save(newSetting().setParent(parent).setName("3"));
         HarvesterSetting child4 = _repo.save(newSetting().setParent(child3).setName("4"));
-        
+
         String path = ID_PREFIX + child3.getId() + SEPARATOR + child4.getName();
         List<HarvesterSetting> found = _repo.findByPath(path);
         assertEquals(1, found.size());
         assertSameContents(child4, found.get(0), _skipProps);
-        
+
         String path2 = SEPARATOR + child2.getName() + SEPARATOR + child4.getName();
         List<HarvesterSetting> found2 = _repo.findByPath(path2);
         assertEquals(0, found2.size());
     }
 
-    
+
     @Test
     public void testFindOneByPath() throws Exception {
         HarvesterSetting parent = _repo.save(newSetting().setName("2"));
         HarvesterSetting child2 = _repo.save(newSetting().setParent(parent).setName("2"));
         HarvesterSetting child3 = _repo.save(newSetting().setParent(parent).setName("2"));
         HarvesterSetting child4 = _repo.save(newSetting().setParent(child3).setName("4"));
-        
+
         String path = child2.getName();
         HarvesterSetting found = _repo.findOneByPath(path);
         assertNotNull(found);
         assertSameContents(child4, found, _skipProps);
     }
-    
+
     @Test
     public void testFindAllAndSort() throws Exception {
         _repo.save(newSetting().setName("4"));
         _repo.save(newSetting().setName("2"));
         _repo.save(newSetting().setName("3"));
         _repo.save(newSetting().setName("1"));
-        
+
         List<HarvesterSetting> list = _repo.findAll(SortUtils.createSort(Setting_.name));
         assertEquals("1", list.get(0).getName());
         assertEquals("2", list.get(1).getName());
         assertEquals("3", list.get(2).getName());
         assertEquals("4", list.get(3).getName());
-        
+
         List<HarvesterSetting> list2 = _repo.findAll(new Sort(Direction.DESC, SortUtils.createPath(Setting_.name)));
         assertEquals("4", list2.get(0).getName());
         assertEquals("3", list2.get(1).getName());
         assertEquals("2", list2.get(2).getName());
         assertEquals("1", list2.get(3).getName());
     }
-    
+
     private HarvesterSetting newSetting() {
         int id = _nextId.incrementAndGet();
         return new HarvesterSetting().setName("name " + id).setValue("value " + id);

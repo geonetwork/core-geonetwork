@@ -47,7 +47,6 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.springframework.orm.jpa.JpaTransactionManager;
 
 import java.util.*;
 
@@ -105,7 +104,7 @@ class Harvester extends BaseAligner {
 
 
         if (serverResults.locallyRemoved > 0) {
-            dataMan.commit(true);
+            dataMan.flush();
         }
 
 		// --- Search remote node
@@ -345,7 +344,7 @@ class Harvester extends BaseAligner {
 					} 
 				}
 
-                dataMan.commit(true);
+                dataMan.flush();
 
                 dataMan.indexMetadata(id);
 

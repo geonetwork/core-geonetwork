@@ -54,6 +54,8 @@ public class UserGroupRepositoryImpl implements UserGroupRepositoryCustom {
         }
         final String qlString = "DELETE FROM " + UserGroup.class.getSimpleName() + " WHERE " + userIdPath + " IN (" + idString + ")";
         final int deleted = _entityManager.createQuery(qlString).executeUpdate();
+
+        _entityManager.flush();
         _entityManager.clear();
 
         return deleted;

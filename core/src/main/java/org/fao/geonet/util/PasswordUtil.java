@@ -177,7 +177,7 @@ public class PasswordUtil {
 	public static User updatePasswordWithNew(boolean matchOldPassword, String oldPassword,
 			String newPassword, Integer iUserId, PasswordEncoder encoder, UserRepository repository) throws SQLException, UserNotFoundEx {
 		User user = repository.findOne(iUserId);
-		if (user != null) {
+		if (user == null) {
 			throw new UserNotFoundEx(""+iUserId);
 		}
 		String hash = user.getPassword();

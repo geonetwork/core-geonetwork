@@ -53,6 +53,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -80,8 +81,20 @@ import java.util.zip.ZipInputStream;
  * The SchemaManager holds a map of Schema objects known to GeoNetwork. 
  *
  */
+@Component
 public class SchemaManager {
-	private Map<String, Schema> hmSchemas = new HashMap<String, Schema>();
+
+    private static final int MODE_NEEDLE = 0;
+    private static final int MODE_ROOT = 1;
+    private static final int MODE_NEEDLEWITHVALUE = 2;
+    private static final int MODE_ATTRIBUTEWITHVALUE = 3;
+    private static final int MODE_NAMESPACE = 4;
+
+    private static final String GEONET_SCHEMA_URI = "http://geonetwork-opensource.org/schemas/schema-ident";
+    private static final Namespace GEONET_SCHEMA_PREFIX_NS = Namespace.getNamespace("gns", GEONET_SCHEMA_URI);
+    private static final Namespace GEONET_SCHEMA_NS = Namespace.getNamespace(GEONET_SCHEMA_URI);
+
+    private Map<String, Schema> hmSchemas = new HashMap<String, Schema>();
 	private String[] fnames = { "labels.xml", "codelists.xml", "strings.xml" };
     private String   schemaPluginsDir;
 	private String   schemaPluginsCat;
@@ -92,23 +105,11 @@ public class SchemaManager {
 	private	String	 basePath;
 	private String resourcePath;
 	private int numberOfCoreSchemasAdded = 0;
-	
-	private static final int MODE_NEEDLE = 0;
-	private static final int MODE_ROOT = 1;
-	private static final int MODE_NEEDLEWITHVALUE = 2;
-	private static final int MODE_ATTRIBUTEWITHVALUE = 3;
-	private static final int MODE_NAMESPACE = 4;
-
-	private static final String GEONET_SCHEMA_URI = "http://geonetwork-opensource.org/schemas/schema-ident";
-	private static final Namespace GEONET_SCHEMA_PREFIX_NS = Namespace.getNamespace("gns", GEONET_SCHEMA_URI);
-	private static final Namespace GEONET_SCHEMA_NS = Namespace.getNamespace(GEONET_SCHEMA_URI);
 
 	/** Active readers count */
 	private static int activeReaders = 0;
 	/** Active writers count */
 	private static int activeWriters = 0;
-
-    private static SchemaManager schemaManager = null; 
 
 	//--------------------------------------------------------------------------
 	//---
@@ -116,7 +117,8 @@ public class SchemaManager {
 	//---
 	//--------------------------------------------------------------------------
 
-	/**	Constructor
+	/**
+     * initialize and configure schema manager. should only be on startup.
 		*
 		* @param basePath the web app base path
 		* @param schemaPluginsCat the schema catalogue file
@@ -124,7 +126,8 @@ public class SchemaManager {
 		* @param defaultLang the default language (taken from context)
 		* @param defaultSchema the default schema (taken from config.xml)
 	  */
-	private SchemaManager(String basePath, String resourcePath, String schemaPluginsCat, String sPDir, String defaultLang, String defaultSchema, boolean createOrUpdateSchemaCatalog) throws Exception {
+    public void configure(String basePath, String resourcePath, String schemaPluginsCat, String sPDir, String defaultLang,
+                          String defaultSchema, boolean createOrUpdateSchemaCatalog) throws Exception {
 
 		hmSchemas .clear();
 
@@ -157,24 +160,6 @@ public class SchemaManager {
 
 		writeSchemaPluginCatalog(schemaPluginCatRoot);
 
-	}
-
-
-    /**
-     * Returns singleton instance.
-     *
-     * @param basePath
-     * @param sPDir
-     * @param defaultLang
-     * @param defaultSchema
-     * @return
-     * @throws Exception
-     */
-	public synchronized static SchemaManager getInstance(String basePath, String resourcePath, String schemaPluginsCat, String sPDir, String defaultLang, String defaultSchema, boolean createOrUpdateSchemaCatalog) throws Exception {
-		if (schemaManager == null) {
-			schemaManager = new SchemaManager(basePath, resourcePath, schemaPluginsCat, sPDir, defaultLang, defaultSchema, createOrUpdateSchemaCatalog);
-		}
-		return schemaManager;
 	}
 
     /**
@@ -1731,7 +1716,7 @@ public class SchemaManager {
      * @return
 	 */
 	private String getSchemaUrl(ServiceContext context, String schemaName) {
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 
 		String relativePath = Geonet.Path.SCHEMAS + schemaName + "/schema.xsd"; 
 		return si.getSiteUrl() + context.getBaseUrl() + "/" + relativePath;

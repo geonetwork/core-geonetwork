@@ -1,23 +1,17 @@
 package org.fao.geonet.domain;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.persistence.*;
-
-import org.jdom.Element;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.persistence.*;
+import java.util.*;
+
 /**
  * A user entity. A user is used in spring security, controlling access to metadata as well as in the {@link jeeves.server.UserSession}.
- * 
+ *
  * @author Jesse
  */
 @Entity
@@ -41,7 +35,7 @@ public class User extends GeonetEntity implements UserDetails {
     /**
      * Get the userid.   This is a generated value and as such new instances should not have this set as it will simply be ignored
      * and could result in reduced performance.
-     * 
+     *
      * @return the user id
      */
     @Id
@@ -53,33 +47,42 @@ public class User extends GeonetEntity implements UserDetails {
     /**
      * Set the userid.   This is a generated value and as such new instances should not have this set as it will simply be ignored
      * and could result in reduced performance.
+     *
      * @param id the userid
      * @return this user object
      */
-    public @Nonnull User setId(int id) {
+    public
+    @Nonnull
+    User setId(int id) {
         this._id = id;
         return this;
     }
 
     /**
      * Get the username.  This is both required and must be unique
-     * 
+     *
      * @return the username
      */
-    @Column(nullable = false, unique=true)
-    public @Nonnull String getUsername() {
+    @Column(nullable = false, unique = true)
+    public
+    @Nonnull
+    String getUsername() {
         return _username;
     }
 
     /**
      * Set the username.  This is both required and must be unique
+     *
      * @param username the username.  This is both required and must be unique
      * @return this user object
      */
-    public @Nonnull User setUsername(@Nonnull String username) {
+    public
+    @Nonnull
+    User setUsername(@Nonnull String username) {
         this._username = username;
         return this;
     }
+
     /**
      * Get the user's hashed password.  Actual passwords are not stored only hashes of the passwords.
      */
@@ -91,37 +94,48 @@ public class User extends GeonetEntity implements UserDetails {
 
     /**
      * Get the Surname/lastname of the user.  May be null
-     * 
+     *
      * @return the Surname/lastname of the user.  May be null
      */
-    public @Nullable String getSurname() {
+    public
+    @Nullable
+    String getSurname() {
         return _surname;
     }
 
     /**
      * Set the Surname/lastname of the user.  May be null
+     *
      * @param surname the Surname/lastname of the user.  May be null
      * @return this user object
      */
-    public @Nonnull User setSurname(@Nullable String surname) {
+    public
+    @Nonnull
+    User setSurname(@Nullable String surname) {
         this._surname = surname;
         return this;
     }
 
     /**
      * Get the user's actual first name.  May be null.
+     *
      * @return the user's actual first name.  May be null.
      */
-    public @Nullable String getName() {
+    public
+    @Nullable
+    String getName() {
         return _name;
     }
 
     /**
      * Set the user's actual first name.  May be null.
+     *
      * @param name the user's actual first name.  May be null.
      * @return this user object
      */
-    public @Nonnull User setName(@Nullable String name) {
+    public
+    @Nonnull
+    User setName(@Nullable String name) {
         this._name = name;
         return this;
     }
@@ -162,17 +176,19 @@ public class User extends GeonetEntity implements UserDetails {
 
     /**
      * Get all the user's addresses.
-     * 
+     *
      * @return all the user's addresses.
-     */ 
+     */
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(name = "USER_ADDRESS", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = { @JoinColumn(name = "addressid", referencedColumnName = "ID", unique = true) })
+    @JoinTable(name = "USER_ADDRESS", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = {@JoinColumn(name = "addressid",
+            referencedColumnName = "ID", unique = true)})
     public Set<Address> getAddresses() {
         return _addresses;
     }
 
     /**
      * Set all the user's addresses.
+     *
      * @param addresses all the user's addresses.
      * @return this user object
      */
@@ -180,20 +196,22 @@ public class User extends GeonetEntity implements UserDetails {
         this._addresses = addresses;
         return this;
     }
-    
+
     /**
      * Get the first address in the list of the addresses.
-     * 
+     *
      * @return the first address in the list of the addresses.
      */
     @Transient
-    public @Nonnull Address getPrimaryAddress() {
+    public
+    @Nonnull
+    Address getPrimaryAddress() {
         Set<Address> addresses = getAddresses();
-        
+
         if (addresses.isEmpty()) {
             addresses.add(new Address());
         }
-        
+
         return addresses.iterator().next();
     }
 
@@ -225,22 +243,25 @@ public class User extends GeonetEntity implements UserDetails {
      * application. An example is GOV or CONTRACTOR.
      *
      * @param kind the 'kind' of user. Just a sting representing the type or category of the user. It can be customized for a particular
-     * application. An example is GOV or CONTRACTOR.
-     *
+     *             application. An example is GOV or CONTRACTOR.
      * @return this user object
      */
-    public @Nonnull User setKind(String kind) {
+    public
+    @Nonnull
+    User setKind(String kind) {
         this._kind = kind;
         return this;
     }
 
     /**
      * Get the user's profile. This is a required property.
-     * 
+     *
      * @return the user's profile.
      */
     @Column(nullable = false)
-    public @Nonnull Profile getProfile() {
+    public
+    @Nonnull
+    Profile getProfile() {
         return _profile;
     }
 
@@ -248,10 +269,11 @@ public class User extends GeonetEntity implements UserDetails {
      * Set the user's profile. This is a required property.
      *
      * @param profile the user's profile.
-     *
      * @return this user object
      */
-    public @Nonnull User setProfile(@Nonnull Profile profile) {
+    public
+    @Nonnull
+    User setProfile(@Nonnull Profile profile) {
         this._profile = profile;
         return this;
     }
@@ -261,7 +283,9 @@ public class User extends GeonetEntity implements UserDetails {
      *
      * @return the object containing the information regarding security.
      */
-    public @Nonnull UserSecurity getSecurity() {
+    public
+    @Nonnull
+    UserSecurity getSecurity() {
         return _security;
     }
 
@@ -271,7 +295,9 @@ public class User extends GeonetEntity implements UserDetails {
      * @param security the security object
      * @return this user object
      */
-    protected @Nonnull User setSecurity(@Nonnull UserSecurity security) {
+    protected
+    @Nonnull
+    User setSecurity(@Nonnull UserSecurity security) {
         this._security = security;
         return this;
     }
@@ -314,8 +340,8 @@ public class User extends GeonetEntity implements UserDetails {
 
     /**
      * Merge all data from other user into this user.
-     * 
-     * @param otherUser other user to merge data from.
+     *
+     * @param otherUser     other user to merge data from.
      * @param mergeNullData if true then also set null values from other user. If false then only merge non-null data
      */
     public void mergeUser(User otherUser, boolean mergeNullData) {
@@ -343,11 +369,11 @@ public class User extends GeonetEntity implements UserDetails {
 
         ArrayList<Address> otherAddresses = new ArrayList<Address>(otherUser.getAddresses());
 
-        for (Iterator<Address> iterator = _addresses.iterator(); iterator.hasNext();) {
+        for (Iterator<Address> iterator = _addresses.iterator(); iterator.hasNext(); ) {
             Address address = (Address) iterator.next();
             boolean found = false;
 
-            for (Iterator<Address> iterator2 = otherAddresses.iterator(); iterator.hasNext();) {
+            for (Iterator<Address> iterator2 = otherAddresses.iterator(); iterator.hasNext(); ) {
                 Address otherAddress = iterator2.next();
                 if (otherAddress.getId() == address.getId()) {
                     address.mergeAddress(otherAddress, mergeNullData);
@@ -368,7 +394,7 @@ public class User extends GeonetEntity implements UserDetails {
 
     @Override
     public String toString() {
-        return getUsername()+"("+getId()+") - "+getProfile();
+        return getUsername() + "(" + getId() + ") - " + getProfile();
     }
 
     @Override

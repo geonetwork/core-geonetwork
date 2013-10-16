@@ -1,21 +1,15 @@
 package org.fao.geonet.domain;
 
-import org.jdom.Content;
 import org.jdom.Element;
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.util.ReflectionUtils;
 
-import javax.persistence.Transient;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Contains common methods of all entities in Geonetwork.
- *
+ * <p/>
  * User: Jesse
  * Date: 9/10/13
  * Time: 4:33 PM
@@ -47,14 +41,7 @@ public class GeonetEntity {
                     } else {
                         final Object rawData = desc.getReadMethod().invoke(this);
                         if (rawData != null) {
-                            final Element element = new Element(descName.toLowerCase());
-                            if (rawData instanceof GeonetEntity) {
-                                final Element element1 = ((GeonetEntity) rawData).asXml();
-                                final List list = element1.removeContent();
-                                element.addContent(list);
-                            } else {
-                                element.addContent(rawData.toString());
-                            }
+                            final Element element = propertyToElement(descName, rawData);
                             record.addContent(element);
                         }
                     }
@@ -65,6 +52,32 @@ public class GeonetEntity {
         }
 
         return record;
+    }
+
+    private Element propertyToElement(String descName, Object rawData) {
+        final Element element = new Element(descName.toLowerCase());
+        if (rawData instanceof GeonetEntity) {
+            final Element element1 = ((GeonetEntity) rawData).asXml();
+            final List list = element1.removeContent();
+            element.addContent(list);
+        } else if (rawData instanceof Iterable) {
+            String childName = pluralToSingular(descName);
+            for (Object o : (Iterable <?>) rawData) {
+                element.addContent(propertyToElement(childName, o));
+            }
+        } else {
+            element.addContent(rawData.toString());
+        }
+        return element;
+    }
+
+    private String pluralToSingular(String descName) {
+        if (descName.endsWith("es")) {
+            return descName.substring(0, descName.length() - 2);
+        } else if (descName.endsWith("s")) {
+            return descName.substring(0, descName.length() - 1);
+        }
+        return descName;
     }
 
 

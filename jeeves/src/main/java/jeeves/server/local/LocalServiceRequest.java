@@ -1,9 +1,9 @@
 package jeeves.server.local;
 
 import jeeves.server.sources.ServiceRequest;
+import org.fao.geonet.Constants;
 import org.fao.geonet.utils.StringBufferOutputStream;
 import org.fao.geonet.utils.Xml;
-import org.fao.geonet.Constants;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 

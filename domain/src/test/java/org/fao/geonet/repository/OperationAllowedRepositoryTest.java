@@ -4,9 +4,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.OperationAllowedId_;
-import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 

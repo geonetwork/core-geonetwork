@@ -15,13 +15,11 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Test the UserGroupSpecs.
- *
+ * <p/>
  * User: Jesse
  * Date: 9/10/13
  * Time: 2:37 PM
@@ -98,16 +96,16 @@ public class UserGroupSpecsTest extends AbstractSpringDataTest {
             setReservedGroupId(groupId, group);
 
             List<Integer> found = _repo.findGroupIds(isReservedGroup(true));
-            assertFalse (found.contains(ug1.getId().getGroupId()));
-            assertFalse (found.contains(ug2.getId().getGroupId()));
-            assertTrue (found.contains(groupId));
-            assertFalse (found.contains(ug4.getId().getGroupId()));
+            assertFalse(found.contains(ug1.getId().getGroupId()));
+            assertFalse(found.contains(ug2.getId().getGroupId()));
+            assertTrue(found.contains(groupId));
+            assertFalse(found.contains(ug4.getId().getGroupId()));
 
             found = _repo.findGroupIds(isReservedGroup(false));
-            assertTrue (found.contains(ug1.getId().getGroupId()));
-            assertTrue (found.contains(ug2.getId().getGroupId()));
+            assertTrue(found.contains(ug1.getId().getGroupId()));
+            assertTrue(found.contains(ug2.getId().getGroupId()));
             assertFalse(found.contains(groupId));
-            assertTrue (found.contains(ug4.getId().getGroupId()));
+            assertTrue(found.contains(ug4.getId().getGroupId()));
         } finally {
             for (ReservedGroup reservedGroup : ReservedGroup.values()) {
                 setReservedGroupId(normalIds.get(reservedGroup), reservedGroup);

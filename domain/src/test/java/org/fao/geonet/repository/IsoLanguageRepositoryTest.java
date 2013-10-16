@@ -18,6 +18,7 @@ public class IsoLanguageRepositoryTest extends AbstractSpringDataTest {
     IsoLanguageRepository _repo;
 
     AtomicInteger _inc = new AtomicInteger();
+
     @Test
     public void testFindOne() {
         IsoLanguage isolang1 = newIsoLanguage();
@@ -73,7 +74,7 @@ public class IsoLanguageRepositoryTest extends AbstractSpringDataTest {
     public static IsoLanguage createIsoLanguage(AtomicInteger inc) {
         int val = inc.incrementAndGet();
         IsoLanguage lang = new IsoLanguage();
-        lang.setCode("cd"+val);
+        lang.setCode("cd" + val);
         lang.setShortCode("c" + val);
         return lang;
     }

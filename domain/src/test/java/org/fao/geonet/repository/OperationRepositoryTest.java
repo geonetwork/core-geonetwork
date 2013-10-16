@@ -1,23 +1,19 @@
 package org.fao.geonet.repository;
 
-import static org.fao.geonet.repository.SpringDataTestSupport.setId;
-import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.ReservedOperation;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
+import static org.fao.geonet.repository.SpringDataTestSupport.setId;
+import static org.junit.Assert.*;
 
 @Transactional
 public class OperationRepositoryTest extends AbstractSpringDataTest {
@@ -36,6 +32,7 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
         Operation savedOp = _repo.save(newOperation());
 
         _repo.flush();
+        _entityManager.flush();
         _entityManager.clear();
 
         assertEquals(1, _repo.count());
@@ -52,6 +49,7 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
         setId(ReservedOperation.view, id);
         try {
             _repo.flush();
+            _entityManager.flush();
             _entityManager.clear();
             assertEquals(1, _repo.count());
             List<Operation> all = _repo.findAll();
@@ -72,6 +70,7 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
         Operation operation = _repo.save(newOperation());
 
         _repo.flush();
+        _entityManager.flush();
         _entityManager.clear();
 
         assertEquals(1, _repo.count());
@@ -81,6 +80,7 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
         Operation updatedOperation = _repo.save(operation);
 
         _repo.flush();
+        _entityManager.flush();
         _entityManager.clear();
 
         assertEquals(1, _repo.count());
@@ -94,6 +94,7 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
         Operation savedOp = _repo.save(newOperation());
 
         _repo.flush();
+        _entityManager.flush();
         _entityManager.clear();
 
         assertSameContents(savedOp, _repo.findByName(savedOp.getName()));
@@ -109,6 +110,7 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
             _repo.save(ReservedOperation.view.getOperationEntity());
 
             _repo.flush();
+            _entityManager.flush();
             _entityManager.clear();
 
             assertSameContents(ReservedOperation.view.getOperationEntity(), _repo.findReservedOperation(ReservedOperation.view));

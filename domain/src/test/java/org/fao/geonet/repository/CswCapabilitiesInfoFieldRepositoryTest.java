@@ -20,6 +20,7 @@ public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTe
     CswCapabilitiesInfoFieldRepository _repo;
 
     AtomicInteger _inc = new AtomicInteger();
+
     @Test
     public void testFindOne() {
         CswCapabilitiesInfoField info1 = newCswServerCapabilitiesInfo();
@@ -110,7 +111,9 @@ public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTe
 
     private CswCapabilitiesInfoField newCswServerCapabilitiesInfo() {
         int val = _inc.incrementAndGet();
-        CswCapabilitiesInfoField CswCapabilitiesInfoField = new CswCapabilitiesInfoField().setFieldName("field" + val).setValue("lang" + val).setLangId("l_" + val);
+        CswCapabilitiesInfoField CswCapabilitiesInfoField = new CswCapabilitiesInfoField().setFieldName("field" + val).setValue("lang"
+                                                                                                                                + val)
+                .setLangId("l_" + val);
         return CswCapabilitiesInfoField;
     }
 

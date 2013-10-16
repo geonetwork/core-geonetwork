@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 /**
  * Entity representing the search parameters of a request. Related to {@link SearchRequest}.
- * 
+ *
  * @author Jesse
  */
 @Entity
@@ -24,9 +24,10 @@ public class SearchRequestParam {
     private SearchRequest _request;
 
     /**
-     * Get the id of the request parameters this entity represents. This is a generated value and as such new instances should not have this
+     * Get the id of the request parameters this entity represents. This is a generated value and as such new instances should not have
+     * this
      * set as it will simply be ignored and could result in reduced performance.
-     * 
+     *
      * @return the id of the request parameters this entity represents.
      */
     @Id
@@ -36,9 +37,10 @@ public class SearchRequestParam {
     }
 
     /**
-     * Set the id of the request parameters this entity represents. This is a generated value and as such new instances should not have this
+     * Set the id of the request parameters this entity represents. This is a generated value and as such new instances should not have
+     * this
      * set as it will simply be ignored and could result in reduced performance.
-     * 
+     *
      * @param id the id of the request parameters this entity represents.
      */
     public void setId(int id) {
@@ -67,7 +69,7 @@ public class SearchRequestParam {
 
     /**
      * Get the type of query parameter.
-     * 
+     *
      * @return the type of query parameter.
      */
     @Column(name = "querytype")
@@ -77,7 +79,6 @@ public class SearchRequestParam {
 
     /**
      * Set the type of query parameter
-     * 
      *
      * @param queryType the type of query parameter
      * @return this entity
@@ -89,7 +90,7 @@ public class SearchRequestParam {
 
     /**
      * Return the name of the term used in the search parameter.
-     * 
+     *
      * @return the name of the term used in the search parameter.
      */
     @Column(name = "termfield")
@@ -110,7 +111,7 @@ public class SearchRequestParam {
 
     /**
      * Get the value searched for in the current search parameter.
-     * 
+     *
      * @return the value searched for in the current search parameter.
      */
     @Column(name = "termtext")
@@ -120,7 +121,6 @@ public class SearchRequestParam {
 
     /**
      * Set the value searched for in the current search parameter.
-     * 
      *
      * @param termText the value searched for in the current search parameter.
      * @return this entity
@@ -132,7 +132,7 @@ public class SearchRequestParam {
 
     /**
      * Set the similarity level.
-     * 
+     *
      * @return the similarity level.
      */
     public double getSimilarity() {
@@ -141,7 +141,6 @@ public class SearchRequestParam {
 
     /**
      * Set the similarity level.
-     * 
      *
      * @param similarity the similarity level.
      * @return this entity
@@ -153,7 +152,7 @@ public class SearchRequestParam {
 
     /**
      * Get the lower level if the search parameter is a range query.
-     * 
+     *
      * @return the lower level if the search parameter is a range query.
      */
     @Column(name = "lowertext")
@@ -163,7 +162,6 @@ public class SearchRequestParam {
 
     /**
      * Set the lower level if the search parameter is a range query.
-     * 
      *
      * @param lowerText the lower level if the search parameter is a range query.
      * @return this entity
@@ -175,7 +173,7 @@ public class SearchRequestParam {
 
     /**
      * Get the upper level if the search parameter is a range query.
-     * 
+     *
      * @return the upper level if the search parameter is a range query.
      */
     @Column(name = "uppertext")
@@ -185,7 +183,6 @@ public class SearchRequestParam {
 
     /**
      * Set the upper level if the search parameter is a range query.
-     * 
      *
      * @param upperText the upper level if the search parameter is a range query.
      * @return this entity
@@ -217,6 +214,7 @@ public class SearchRequestParam {
 
     /**
      * Return true if the query is a range query and is inclusive.
+     *
      * @return true if the query is a range query and is inclusive.
      */
     @Transient

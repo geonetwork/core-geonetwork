@@ -67,6 +67,7 @@ public class Remove extends NotInReadOnlyModeService {
         final List<Integer> affectedMd = context.getBean(MetadataRepository.class).findAllIdsBy(MetadataSpecs.hasCategory(category));
 
         categoryRepository.delete(iId);
+        context.getBean(EntityManager.class).flush();
         context.getBean(EntityManager.class).clear();
 
 		//--- reindex affected metadata

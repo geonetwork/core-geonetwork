@@ -1,15 +1,24 @@
 package org.fao.geonet.kernel.search;
 
 import org.fao.geonet.domain.Localized;
+import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.jdom.JDOMException;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.junit.Assert.fail;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Test DbDescTranslator
@@ -17,22 +26,49 @@ import static org.junit.Assert.fail;
  * Date: 9/9/13
  * Time: 9:07 AM
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:org/fao/geonet/kernel/search/translator-test-application-context.xml" })
-public class DbDescTranslatorTest {
+public class DbDescTranslatorTest extends AbstractSpringDataTest {
     @Autowired
     ApplicationContext _appContext;
 
     @Test
     public void testTranslateStringKey() throws Exception {
-
-       fail("needs implementation");
+        testTranslation("key");
     }
+
     @Test
     public void testTranslateIntKey() throws Exception {
-       fail("needs implementation");
+        testTranslation(1);
     }
 
-    private static interface TestRepositoryInt extends JpaRepository<Localized, Integer> {}
-    private static interface TestRepositoryString extends JpaRepository<Localized, String> {}
+    private<T extends Serializable> void testTranslation(T key) throws IOException, JDOMException, ClassNotFoundException {
+        JpaRepository<Object, T> repo = mock(JpaRepository.class);
+        ValueObject value = new ValueObject();
+
+        when(repo.findOne(key)).thenReturn(value);
+        final String beanName = "testRepo";
+        StaticApplicationContext appContext = new StaticApplicationContext(_appContext);
+        appContext.getBeanFactory().registerSingleton(beanName, repo);
+
+        DbDescTranslator translator = new DbDescTranslator(appContext, "eng", repo.getClass().getName() + ":value");
+        final String translation = translator.translate("" + key);
+        assertEquals(value.getLabel("eng"), translation);
+
+        DbDescTranslator translator2 = new DbDescTranslator(appContext, "eng", beanName + ":value");
+        final String translation2 = translator2.translate("" + key);
+        assertEquals(value.getLabel("eng"), translation2);
+    }
+
+    static class ValueObject extends Localized {
+        String value = UUID.randomUUID().toString();
+
+        {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("eng", "engValue");
+
+            setLabelTranslations(map);
+        }
+        String getValue() {
+            return value;
+        }
+    }
 }

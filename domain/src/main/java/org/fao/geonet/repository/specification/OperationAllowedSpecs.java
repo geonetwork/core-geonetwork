@@ -83,7 +83,6 @@ public final class OperationAllowedSpecs {
      * A specification that specifies that the all group has the provided operation.
      *
      * @param operation the operation. view is probably the most commonly needed one.
-     *
      * @return A specification that specifies that the all group has the provided operation.
      */
     public static Specification<OperationAllowed> isPublic(final ReservedOperation operation) {

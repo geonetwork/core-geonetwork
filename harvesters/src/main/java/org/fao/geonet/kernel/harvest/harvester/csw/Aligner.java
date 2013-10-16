@@ -45,8 +45,6 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.Collections;
 import java.util.List;
@@ -131,7 +129,7 @@ public class Aligner extends BaseAligner
 		localGroups= new GroupMapper(context);
 		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         //-----------------------------------------------------------------------
 		//--- remove old metadata
@@ -145,7 +143,7 @@ public class Aligner extends BaseAligner
                     log.debug("  - Removing old metadata with local id:"+ id);
 				dataMan.deleteMetadata(context, id);
 
-                dataMan.commit(true);
+                dataMan.flush();
 
                 result.locallyRemoved++;
 			}
@@ -213,7 +211,7 @@ public class Aligner extends BaseAligner
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         dataMan.indexMetadata(id);
 		result.addedMetadata++;
@@ -266,7 +264,7 @@ public class Aligner extends BaseAligner
                 context.getBean(MetadataRepository.class).save(metadata);
                 addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-                dataMan.commit(true);
+                dataMan.flush();
 
                 dataMan.indexMetadata(id);
 				result.updatedMetadata++;

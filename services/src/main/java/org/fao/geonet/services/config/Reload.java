@@ -23,17 +23,17 @@
 
 package org.fao.geonet.services.config;
 
-import jeeves.config.springutil.JeevesApplicationContext;
-import org.fao.geonet.Logger;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.jdom.Element;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.web.context.ConfigurableWebApplicationContext;
 
 import javax.servlet.ServletContext;
 
@@ -57,13 +57,8 @@ public class Reload implements Service {
             servletContext = context.getServlet().getServletContext();
         }
 
-		LuceneConfig lc = new LuceneConfig(path, servletContext, luceneConfigXmlFile);
-
-        // Reregister Lucene config singleton
-        JeevesApplicationContext applicationContext = context.getApplicationContext();
-        ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
-        ((DefaultListableBeanFactory) beanFactory).destroySingleton(LuceneConfig.LUCENE_CONFIG_BEAN_NAME);
-        beanFactory.registerSingleton(LuceneConfig.LUCENE_CONFIG_BEAN_NAME, lc);
+		LuceneConfig lc = context.getBean(LuceneConfig.class);
+        lc.configure(path, servletContext, luceneConfigXmlFile);
 
 		Logger logger = context.getLogger();
 		logger.info("  - Lucene configuration is:");

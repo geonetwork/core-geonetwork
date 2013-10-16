@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
 import org.fao.geonet.utils.BinaryFile;
@@ -15,6 +14,7 @@ import org.fao.geonet.utils.Log;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * The GeoNetwork data directory is the location on the file system where
@@ -56,7 +56,7 @@ public class GeonetworkDataDirectory {
 	 * 
 	 */
 	public GeonetworkDataDirectory(String webappName, String path,
-			ServiceConfig handlerConfig, JeevesServlet jeevesServlet, JeevesApplicationContext appContext) {
+			ServiceConfig handlerConfig, JeevesServlet jeevesServlet, ConfigurableApplicationContext appContext) {
         if (Log.isDebugEnabled(Geonet.DATA_DIRECTORY))
             Log.debug(Geonet.DATA_DIRECTORY,
 				"Check and create if needed GeoNetwork data directory");
@@ -132,7 +132,7 @@ public class GeonetworkDataDirectory {
 	/**
 	 * 
 	 */
-	private String setDataDirectory(JeevesServlet jeevesServlet, JeevesApplicationContext appContext, String webappName, String path,
+	private String setDataDirectory(JeevesServlet jeevesServlet, ConfigurableApplicationContext appContext, String webappName, String path,
                                     ServiceConfig handlerConfig) {
 
 		// System property defined according to webapp name
@@ -311,7 +311,7 @@ public class GeonetworkDataDirectory {
      * @param folder
      * @param handlerKey       @return
 	 */
-	private File setResourceDir(JeevesApplicationContext appContext, JeevesServlet jeevesServlet, String webappName, ServiceConfig handlerConfig,
+	private File setResourceDir(ConfigurableApplicationContext appContext, JeevesServlet jeevesServlet, String webappName, ServiceConfig handlerConfig,
                                 String systemDataDir, String key, String folder, String handlerKey) {
 		String envKey = webappName + key;
 		String dir = GeonetworkDataDirectory.lookupProperty(

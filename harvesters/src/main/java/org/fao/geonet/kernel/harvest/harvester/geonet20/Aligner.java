@@ -37,7 +37,6 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
-import org.springframework.orm.jpa.JpaTransactionManager;
 
 import java.util.Collection;
 import java.util.List;
@@ -95,7 +94,7 @@ public class Aligner
                 if(log.isDebugEnabled()) log.debug("  - Removing old metadata with id="+ id);
                 dataMan.deleteMetadata(context, id);
 
-                dataMan.commit(true);
+                dataMan.flush();
 				this.result.locallyRemoved++;
 			}
 
@@ -126,7 +125,7 @@ public class Aligner
                     updateMetadata(siteId, info, id);
                 }
 
-                dataMan.commit(true);
+                dataMan.flush();
 
 
 

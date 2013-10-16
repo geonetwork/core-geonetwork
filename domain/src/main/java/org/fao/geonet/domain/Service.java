@@ -1,16 +1,13 @@
 package org.fao.geonet.domain;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * One of the entities responsible for dynamic service configuration. Entity representing a {@link jeeves.interfaces.Service}. Originally
  * they were for CSW virtual services but are generic and could in theory be any arbitrary service.
- * 
+ *
  * @author Jesse
  */
 @Entity
@@ -26,7 +23,7 @@ public class Service extends GeonetEntity {
     /**
      * Get the id of the service entity. This is a generated value and as such new instances should not have this set as it will simply be
      * ignored and could result in reduced performance.
-     * 
+     *
      * @return the id of the service.
      */
     @Id
@@ -38,7 +35,7 @@ public class Service extends GeonetEntity {
     /**
      * Set the id of the service entity. This is a generated value and as such new instances should not have this set as it will simply be
      * ignored and could result in reduced performance.
-     * 
+     *
      * @param id the id of the service entity.
      */
     public void setId(int id) {
@@ -47,7 +44,7 @@ public class Service extends GeonetEntity {
 
     /**
      * Get the name of the service.
-     * 
+     *
      * @return the name of the service.
      */
     @Column(nullable = false, unique = true)
@@ -57,7 +54,7 @@ public class Service extends GeonetEntity {
 
     /**
      * Set the name of the service.
-     * 
+     *
      * @param name the name of the service.
      */
     public void setName(String name) {
@@ -66,7 +63,7 @@ public class Service extends GeonetEntity {
 
     /**
      * Get the service class name.
-     * 
+     *
      * @return the service class name.
      */
     @Column(name = "class", length = 1024, nullable = false)
@@ -76,7 +73,7 @@ public class Service extends GeonetEntity {
 
     /**
      * Set the service class name.
-     * 
+     *
      * @param className the service class name.
      */
     public void setClassName(String className) {
@@ -85,7 +82,7 @@ public class Service extends GeonetEntity {
 
     /**
      * Get the description of the service. Maximum length is 1024 characters.
-     * 
+     *
      * @return the description of the service. Maximum length is 1024 characters.
      */
     @Column(length = 1024)
@@ -95,7 +92,7 @@ public class Service extends GeonetEntity {
 
     /**
      * Set the description of the service. Maximum length is 1024 characters.
-     * 
+     *
      * @param description the description of the service. Maximum length is 1024 characters.
      */
     public void setDescription(String description) {
@@ -104,11 +101,12 @@ public class Service extends GeonetEntity {
 
     /**
      * Get the init parameters to pass to the service.  The Key is the parameter name the value is the parameter value.
-     * 
+     *
      * @return the init parameters to pass to the service.  The Key is the parameter name the value is the parameter value.
      */
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(joinColumns = @JoinColumn(name = "service", insertable = true, updatable = true, unique = false, nullable = false), name = "serviceparameters")
+    @CollectionTable(joinColumns = @JoinColumn(name = "service", insertable = true, updatable = true, unique = false,
+            nullable = false), name = "serviceparameters")
     @MapKeyColumn(name = "name")
     @Column(name = "value", nullable = false, length = 1024)
     public Map<String, String> getParameters() {
@@ -117,7 +115,7 @@ public class Service extends GeonetEntity {
 
     /**
      * Set the init parameters to pass to the service. The Key is the parameter name the value is the parameter value.
-     * 
+     *
      * @param parameters the init parameters to pass to the service.  The Key is the parameter name the value is the parameter value.
      */
     public void setParameters(final Map<String, String> parameters) {

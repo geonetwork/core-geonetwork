@@ -22,7 +22,6 @@ public interface CswCapabilitiesInfoFieldRepository extends GeonetRepository<Csw
      * Find all the info for the given language.
      *
      * @param langId the 3 letter language identifier
-     *
      * @return all the info for the given language.
      */
     List<CswCapabilitiesInfoField> findAllByLangId(String langId);

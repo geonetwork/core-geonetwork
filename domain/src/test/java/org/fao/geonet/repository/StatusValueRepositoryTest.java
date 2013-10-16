@@ -1,7 +1,7 @@
 package org.fao.geonet.repository;
 
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.StatusValue;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +29,7 @@ public class StatusValueRepositoryTest extends AbstractSpringDataTest {
         assertEquals(status1, _repo.findOne(status1.getId()));
         assertEquals(status, _repo.findOne(status.getId()));
     }
+
     @Test
     public void testFindOneByName() {
         StatusValue status = newStatusValue();
@@ -40,6 +41,7 @@ public class StatusValueRepositoryTest extends AbstractSpringDataTest {
         assertEquals(status1, _repo.findOneByName(status1.getName()));
         assertEquals(status, _repo.findOneByName(status.getName()));
     }
+
     private StatusValue newStatusValue() {
 
         return newStatusValue(_inc);
@@ -49,7 +51,7 @@ public class StatusValueRepositoryTest extends AbstractSpringDataTest {
         int val = inc.incrementAndGet();
 
         StatusValue statusValue = new StatusValue();
-        statusValue.setName("name"+val);
+        statusValue.setName("name" + val);
         statusValue.setDisplayOrder(val);
         statusValue.setReserved(val % 2 == 0);
 

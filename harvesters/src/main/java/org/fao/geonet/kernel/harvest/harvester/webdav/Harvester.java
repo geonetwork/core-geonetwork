@@ -121,7 +121,7 @@ class Harvester extends BaseAligner {
                 } catch (Exception e) {
                     log.error("Error occurred while deleting metadata id");
                 }
-                dataMan.commit(true);
+                dataMan.flush();
                 result.locallyRemoved++;
 
             }
@@ -233,7 +233,7 @@ class Harvester extends BaseAligner {
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         dataMan.indexMetadata(id);
 		result.addedMetadata++;
@@ -336,7 +336,7 @@ class Harvester extends BaseAligner {
             context.getBean(MetadataRepository.class).save(metadata);
             addCategories(record.id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-            dataMan.commit(true);
+            dataMan.flush();
 
             dataMan.indexMetadata(record.id);
 			result.updatedMetadata++;

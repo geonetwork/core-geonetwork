@@ -3,8 +3,6 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Nullable;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataId;
@@ -27,7 +22,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Test class for GeonetRepository.
- *
+ * <p/>
  * User: jeichar
  * Date: 9/5/13
  * Time: 11:44 AM
@@ -50,6 +45,7 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
             }
         });
     }
+
     @Test
     public void testUpdateMetadataReturnSameMd() throws Exception {
         Metadata md = _repo.save(MetadataRepositoryTest.newMetadata(_inc));
@@ -66,6 +62,7 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
         assertEquals(updatedUUID1, md.getUuid());
         assertEquals(updatedUUID1, _repo.findOne(md.getId()).getUuid());
     }
+
     @Test
     public void testBatchUpdateAttributes() throws Exception {
         Metadata md = _repo.save(MetadataRepositoryTest.newMetadata(_inc));

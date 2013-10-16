@@ -1,8 +1,8 @@
 package jeeves.server.overrides;
 
-import java.util.Properties;
-
 import org.springframework.context.ApplicationContext;
+
+import java.util.Properties;
 
 class ValueValueLoader implements ValueLoader {
 

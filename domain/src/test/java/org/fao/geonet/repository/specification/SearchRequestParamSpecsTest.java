@@ -11,6 +11,7 @@ import org.fao.geonet.repository.statistic.SearchRequestRepository;
 import org.fao.geonet.repository.statistic.SearchRequestRepositoryTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ import static org.junit.Assert.assertTrue;
  * Date: 10/8/13
  * Time: 11:26 AM
  */
+@Transactional
 public class SearchRequestParamSpecsTest extends AbstractSpringDataTest {
     @Autowired
     SearchRequestParamRepository _paramRepo;
@@ -33,6 +35,7 @@ public class SearchRequestParamSpecsTest extends AbstractSpringDataTest {
     SearchRequestRepository _requestRepo;
 
     AtomicInteger _inc = new AtomicInteger();
+
     @Test
     public void testHasTermField() throws Exception {
         final SearchRequestParam param = _paramRepo.save(SearchRequestParamRepositoryTest.newRequestParam(_inc));
@@ -44,6 +47,7 @@ public class SearchRequestParamSpecsTest extends AbstractSpringDataTest {
 
         assertEquals(param.getId(), all.get(0).getId());
     }
+
     @Test
     public void testHasTermFieldIn() throws Exception {
         final SearchRequestParam param = _paramRepo.save(SearchRequestParamRepositoryTest.newRequestParam(_inc));
@@ -68,26 +72,21 @@ public class SearchRequestParamSpecsTest extends AbstractSpringDataTest {
 
     @Test
     public void testHasService() throws Exception {
-        final SearchRequestParam param = _paramRepo.save(SearchRequestParamRepositoryTest.newRequestParam(_inc));
-        _paramRepo.save(SearchRequestParamRepositoryTest.newRequestParam(_inc));
-
-        System.out.println();
-        System.out.println();
+        _requestRepo.save(SearchRequestRepositoryTest.newSearchRequest(_inc));
 
         SearchRequest request1 = SearchRequestRepositoryTest.newSearchRequest(_inc);
         final String expectedService = "ExpectedService";
         request1.setService(expectedService);
+        while (request1.getParams().size() > 1) {
+            request1.getParams().remove(0);
+        }
+        assertEquals(1, request1.getParams().size());
         request1 = _requestRepo.save(request1);
-
-        param.setRequest(request1);
-
-        _paramRepo.save(param);
-
 
         final List<SearchRequestParam> all = _paramRepo.findAll(SearchRequestParamSpecs.hasService(expectedService));
 
         assertEquals(1, all.size());
 
-        assertEquals(param.getId(), all.get(0).getId());
+        assertEquals(request1.getParams().get(0).getId(), all.get(0).getId());
     }
 }

@@ -23,16 +23,14 @@
 
 package jeeves;
 
+import jeeves.server.overrides.ConfigurationOverrides;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
-
-import jeeves.server.overrides.ConfigurationOverrides;
-
-import javax.servlet.ServletContext;
 
 //=============================================================================
 

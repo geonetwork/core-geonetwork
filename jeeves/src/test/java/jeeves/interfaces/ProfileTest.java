@@ -1,12 +1,13 @@
 package jeeves.interfaces;
 
-import static org.fao.geonet.domain.Profile.*;
-import static org.junit.Assert.*;
+import org.fao.geonet.domain.Profile;
+import org.junit.Test;
 
 import java.util.Set;
 
-import org.fao.geonet.domain.Profile;
-import org.junit.Test;
+import static org.fao.geonet.domain.Profile.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ProfileTest {
 

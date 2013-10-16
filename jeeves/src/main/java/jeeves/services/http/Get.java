@@ -2,19 +2,18 @@
 
 package jeeves.services.http;
 
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Constants;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
-
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Xml;
-
-import org.fao.geonet.Constants;
-import org.jdom.Element;
 
 //=============================================================================
 

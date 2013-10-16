@@ -6,12 +6,11 @@ import javax.persistence.*;
 
 /**
  * An entity that represents a status change of a metadata.
- * 
+ * <p/>
  * Note: I am not the author of metadata status, but it appears that this tracks the history as well since the Id consists of the User,
  * date, metadata and statusvalue of the metadata status change.
- * 
+ *
  * @author Jesse
- * 
  */
 @Entity
 @Access(AccessType.PROPERTY)
@@ -48,7 +47,7 @@ public class MetadataStatus extends GeonetEntity {
 
     /**
      * Get the id object of this metadata status object.
-     * 
+     *
      * @return the id object of this metadata status object.
      */
     @EmbeddedId
@@ -58,7 +57,7 @@ public class MetadataStatus extends GeonetEntity {
 
     /**
      * Set the id object of this metadata status object.
-     * 
+     *
      * @param id the id object of this metadata status object.
      */
     public void setId(MetadataStatusId id) {
@@ -67,7 +66,7 @@ public class MetadataStatus extends GeonetEntity {
 
     /**
      * Get the change message, the message that describes the change in status. It is application specific.
-     * 
+     *
      * @return the change message
      */
     @Column(length = 2048, nullable = false)
@@ -77,7 +76,7 @@ public class MetadataStatus extends GeonetEntity {
 
     /**
      * Set the change message, the message that describes the change in status. It is application specific.
-     * 
+     *
      * @param changeMessage the change message
      */
     public void setChangeMessage(String changeMessage) {
@@ -85,7 +84,7 @@ public class MetadataStatus extends GeonetEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name="statusid",nullable=false, insertable=false, updatable=false)
+    @JoinColumn(name = "statusid", nullable = false, insertable = false, updatable = false)
     @MapsId("statusId")
     public StatusValue getStatusValue() {
         return statusValue;

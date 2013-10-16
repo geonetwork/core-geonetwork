@@ -1,16 +1,10 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  * Entity representing a metadata source.
- * 
+ *
  * @author Jesse
  */
 @Entity
@@ -30,8 +24,8 @@ public class Source extends GeonetEntity {
     /**
      * Convenience constructor for quickly making a Source object.
      *
-     * @param uuid the uuid of the source (also the ID)
-     * @param name the name
+     * @param uuid  the uuid of the source (also the ID)
+     * @param name  the name
      * @param local if the source is the local system
      */
     public Source(String uuid, String name, boolean local) {
@@ -42,7 +36,7 @@ public class Source extends GeonetEntity {
 
     /**
      * Get the uuid of the source.
-     * 
+     *
      * @return the uuid of the source.
      */
     @Id
@@ -52,7 +46,7 @@ public class Source extends GeonetEntity {
 
     /**
      * Set the uuid of the source.
-     * 
+     *
      * @param uuid the uuid of the source.
      */
     public void setUuid(String uuid) {
@@ -61,7 +55,7 @@ public class Source extends GeonetEntity {
 
     /**
      * Get the name of the source.
-     * 
+     *
      * @return the name of the source.
      */
     public String getName() {
@@ -70,7 +64,7 @@ public class Source extends GeonetEntity {
 
     /**
      * Set the name of the source.
-     * 
+     *
      * @param name the name of the source.
      */
     public void setName(String name) {
@@ -88,6 +82,7 @@ public class Source extends GeonetEntity {
 
     /**
      * Set the column values.
+     *
      * @param local Constants.YN_ENABLED or Constants.YN_DISABLED
      */
     protected void setIsLocal_JpaWorkaround(char local) {
@@ -106,6 +101,7 @@ public class Source extends GeonetEntity {
 
     /**
      * Set true is the source refers to the local geonetwork.
+     *
      * @param local true is the source refers to the local geonetwork.
      */
     public void setLocal(boolean local) {

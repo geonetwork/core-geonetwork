@@ -1,21 +1,12 @@
 package org.fao.geonet.domain;
 
 import javax.annotation.Nonnull;
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
- * An entity that represents the relationship between a metadata, group and the operations that group is allowed to perform on the metadata.
- * 
+ * An entity that represents the relationship between a metadata, group and the operations that group is allowed to perform on the
+ * metadata.
+ *
  * @author Jesse
  */
 @Entity
@@ -52,7 +43,7 @@ public class OperationAllowed extends GeonetEntity {
 
     /**
      * Set the Id object.
-     * 
+     *
      * @param id new id
      */
     public void setId(OperationAllowedId id) {

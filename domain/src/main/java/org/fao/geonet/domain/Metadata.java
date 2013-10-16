@@ -1,14 +1,5 @@
 package org.fao.geonet.domain;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.persistence.*;
-
 import com.vividsolutions.jts.util.Assert;
 import org.apache.lucene.document.Document;
 import org.fao.geonet.utils.Xml;
@@ -16,6 +7,13 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+
+import javax.annotation.Nonnull;
+import javax.persistence.*;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * An entity representing a metadata object in the database. The xml, groups and operations are lazily loaded so accessing then will
@@ -31,6 +29,8 @@ import org.jdom.output.XMLOutputter;
 @Access(AccessType.PROPERTY)
 public class Metadata extends GeonetEntity {
 
+    public static final String METADATA_CATEG_JOIN_TABLE_NAME = "metadatacateg";
+    public static final String METADATA_CATEG_JOIN_TABLE_CATEGORY_ID = "categoryid";
     private int _id;
     private String _uuid;
     private String _data;
@@ -121,7 +121,6 @@ public class Metadata extends GeonetEntity {
      * Set the data and convert all the end of line characters to be only a \n character.
      *
      * @param xml the data as XML.
-     *
      * @return this entity.
      */
     public Metadata setDataAndFixCR(Element xml) {
@@ -148,16 +147,15 @@ public class Metadata extends GeonetEntity {
 
     /**
      * Parse the data as xml and return the data.
+     *
      * @param validate if true validate the XML while parsing.
-     *
      * @return the parsed metadata.
-     *
      * @throws IOException
      * @throws JDOMException
      */
     @Transient
     public Element getXmlData(boolean validate) throws IOException, JDOMException {
-            return Xml.loadString(getData(), validate);
+        return Xml.loadString(getData(), validate);
     }
 
     private static String replaceString(final String initialString, final String pattern, final String replacement) {
@@ -277,9 +275,10 @@ public class Metadata extends GeonetEntity {
      *
      * @return the metadata categories
      */
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "metadatacateg", joinColumns = @JoinColumn(name = "categoryid"), inverseJoinColumns = @JoinColumn(name =
-            "metadataid"))
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @JoinTable(name = METADATA_CATEG_JOIN_TABLE_NAME, joinColumns = @JoinColumn(name = "metadataid"),
+            inverseJoinColumns = @JoinColumn(name =
+            METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
     @Nonnull
     public Set<MetadataCategory> getCategories() {
         return _metadataCategories;
@@ -314,7 +313,7 @@ public class Metadata extends GeonetEntity {
             dataInfo.setDisplayOrder(Integer.valueOf(displayOrder));
         }
 
-        String tmpIsHarvest  = doc.get("_isHarvested");
+        String tmpIsHarvest = doc.get("_isHarvested");
         if (tmpIsHarvest != null) {
             metadata.getHarvestInfo().setHarvested(doc.get("_isHarvested").equals("y"));
 

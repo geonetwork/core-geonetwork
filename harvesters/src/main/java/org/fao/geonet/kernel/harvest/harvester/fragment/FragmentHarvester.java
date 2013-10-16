@@ -77,7 +77,7 @@ public class FragmentHarvester extends BaseAligner {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getBean(DataManager.class);
 
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 		String siteUrl = si.getSiteUrl() + context.getBaseUrl();
 		metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
 
@@ -386,7 +386,7 @@ public class FragmentHarvester extends BaseAligner {
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
 		dataMan.indexMetadata(id);
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         harvestSummary.fragmentsAdded ++;
     }
@@ -577,7 +577,7 @@ public class FragmentHarvester extends BaseAligner {
 
          dataMan.indexMetadata(id);
 
-         dataMan.commit(true);
+         dataMan.flush();
      }
 
 	//---------------------------------------------------------------------------
@@ -619,7 +619,7 @@ public class FragmentHarvester extends BaseAligner {
             log.debug("	- Commit "+id);
         }
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         harvestSummary.recordsBuilt++;
 	}

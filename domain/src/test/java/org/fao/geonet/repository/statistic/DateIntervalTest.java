@@ -3,9 +3,7 @@ package org.fao.geonet.repository.statistic;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Test DateInterval class
@@ -13,7 +11,7 @@ import static org.junit.Assert.assertTrue;
  * Date: 10/1/13
  * Time: 8:04 PM
  */
-public class DateIntervalTest extends AbstractSpringDataTest {
+public class DateIntervalTest {
     final String date = "1980-10-12T06:45:23";
     final DateInterval.Day day = new DateInterval.Day(date);
     final DateInterval.Month month = new DateInterval.Month(date);

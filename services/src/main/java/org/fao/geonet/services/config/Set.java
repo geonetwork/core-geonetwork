@@ -90,8 +90,6 @@ public class Set implements Service {
             throw new OperationAbortedEx("Cannot set all values");
 
         // And reload services
-        // Update inspire property in SearchManager
-        gc.getBean(SearchManager.class).setInspireEnabled(Boolean.valueOf(values.get("system/inspire/enable")));
         String newUuid = values.get(SettingManager.SYSTEM_SITE_SITE_ID_PATH);
 
         if (newUuid != null && !currentUuid.equals(newUuid)) {
@@ -112,7 +110,7 @@ public class Set implements Service {
             sourceRepository.delete(source);
         }
 
-        SettingInfo info = new SettingInfo(context);
+        SettingInfo info = context.getBean(SettingInfo.class);
         ServerBeanPropertyUpdater.updateURL(info.getSiteUrl(true) + context.getBaseUrl(), context.getServlet().getServletContext());
 
         // Reload services affected by updated settings

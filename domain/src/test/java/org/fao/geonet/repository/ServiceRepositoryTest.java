@@ -1,24 +1,18 @@
 package org.fao.geonet.repository;
 
 
-import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Service;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaUpdate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @Transactional
 public class ServiceRepositoryTest extends AbstractSpringDataTest {
@@ -39,6 +33,7 @@ public class ServiceRepositoryTest extends AbstractSpringDataTest {
         Service service1 = newService();
         service1 = _repo.save(service1);
 
+        _EntityManager.flush();
         _EntityManager.clear();
 
         final Service found1 = _repo.findOne(service1.getId());

@@ -1,15 +1,12 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
- * Encapsulates the harvest data related to a metadata document. Like whether the metadata was harvested, the uuid of the harvester, etc...
+ * Encapsulates the harvest data related to a metadata document. Like whether the metadata was harvested, the uuid of the harvester,
+ * etc...
  * This is a JPA Embeddable object that is embedded into a {@link Metadata} Entity
- * 
+ *
  * @author Jesse
  */
 @Embeddable
@@ -30,7 +27,7 @@ public class MetadataHarvestInfo {
 
     /**
      * Set the code for the harvested column.
-     * 
+     *
      * @param harvested Constants.YN_ENABLED or Constants.YN_DISABLED
      */
     protected void setHarvested_JPAWorkaround(char harvested) {
@@ -39,7 +36,7 @@ public class MetadataHarvestInfo {
 
     /**
      * Return true if the metadata was harvested.
-     * 
+     *
      * @return true if the metadata was harvested.
      */
     @Transient
@@ -49,7 +46,7 @@ public class MetadataHarvestInfo {
 
     /**
      * true if the metadata was harvested, false otherwise.
-     * 
+     *
      * @param harvested true if the metadata was harvested.
      * @return this data info object
      */
@@ -60,7 +57,7 @@ public class MetadataHarvestInfo {
 
     /**
      * Get the uuid of the harvester that harvested this metadata (if the metadata is harvested metadata)
-     * 
+     *
      * @return the uuid of the harvester that harvested this metadata (if the metadata is harvested metadata)
      * @see #isHarvested()
      */
@@ -71,7 +68,7 @@ public class MetadataHarvestInfo {
 
     /**
      * Set the uuid of the harvester that harvested this metadata (if the metadata is harvested metadata)
-     * 
+     *
      * @param uuid the uuid of the harvester that harvested this metadata (if the metadata is harvested metadata)
      * @see #isHarvested()
      */
@@ -81,7 +78,7 @@ public class MetadataHarvestInfo {
 
     /**
      * Get the optional uri indicating what was harvested to get this metadata.
-     * 
+     *
      * @return the optional uri indicating what was harvested to get this metadata.
      */
     @Column(name = "harvesturi", length = 512)
@@ -91,7 +88,7 @@ public class MetadataHarvestInfo {
 
     /**
      * Set the optional uri indicating what was harvested to get this metadata.
-     * 
+     *
      * @param uri the optional uri indicating what was harvested to get this metadata.
      * @return this data info object
      */

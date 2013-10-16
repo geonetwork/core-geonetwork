@@ -24,6 +24,8 @@
 package org.fao.geonet.services.user;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.*;
+
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -47,8 +49,7 @@ import java.util.Set;
 /** Retrieves all users in the system
   */
 
-public class List implements Service
-{
+public class List implements Service {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -87,6 +88,10 @@ public class List implements Service
 				int userId = user.getId();
 				Profile profile= user.getProfile();
 
+                if (user.getId() == session.getUserIdAsInt()) {
+                    // user is permitted to access his/her own user information
+                    continue;
+                }
 				Set<Integer> userGroups = getGroups(context, userId, profile);
 				// Is user belong to one of the current user admin group?
 				boolean isInCurrentUserAdminGroups = false;
@@ -101,13 +106,13 @@ public class List implements Service
 					usersToRemove.add(user.getId());
                 }
 
-				if (!profileSet.contains(profile)) {
+				if (!profileSet.contains(profile.name())) {
 					usersToRemove.add(user.getId());
                 }
 			}
 		}
 
-        Element rootEl = new Element(User.class.getSimpleName().toLowerCase());
+        Element rootEl = new Element(Jeeves.Elem.RESPONSE);
 
         for (User user : all) {
             if (!usersToRemove.contains(user.getId())) {

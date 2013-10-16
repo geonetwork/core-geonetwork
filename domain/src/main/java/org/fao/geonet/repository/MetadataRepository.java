@@ -12,7 +12,8 @@ import java.util.List;
  *
  * @author Jesse
  */
-public interface MetadataRepository extends GeonetRepository<Metadata, Integer>, MetadataRepositoryCustom, JpaSpecificationExecutor<Metadata> {
+public interface MetadataRepository extends GeonetRepository<Metadata, Integer>, MetadataRepositoryCustom,
+        JpaSpecificationExecutor<Metadata> {
     /**
      * Find one metadata by the metadata's uuid.
      *

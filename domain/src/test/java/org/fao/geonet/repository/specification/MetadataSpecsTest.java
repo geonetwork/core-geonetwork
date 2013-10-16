@@ -1,9 +1,5 @@
 package org.fao.geonet.repository.specification;
 
-import static junit.framework.Assert.*;
-import static org.fao.geonet.repository.specification.MetadataSpecs.*;
-import static org.fao.geonet.repository.MetadataRepositoryTest.*;
-
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
@@ -11,7 +7,6 @@ import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.repository.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +15,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static org.fao.geonet.repository.MetadataRepositoryTest.newMetadata;
+import static org.fao.geonet.repository.specification.MetadataSpecs.*;
+
 /**
  * Test for MetadataSpecs.
- *
+ * <p/>
  * User: Jesse
  * Date: 9/4/13
  * Time: 10:08 PM
@@ -127,7 +127,7 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         assertEquals(1, found.size());
         assertEquals(md1.getId(), found.get(0).getId());
 
-        found = _repository.findAll(isOwnedByOneOfFollowingGroups(Arrays.asList(1,3)), SortUtils.createSort(Metadata_.id));
+        found = _repository.findAll(isOwnedByOneOfFollowingGroups(Arrays.asList(1, 3)), SortUtils.createSort(Metadata_.id));
         assertEquals(2, found.size());
         assertEquals(md1.getId(), found.get(0).getId());
         assertEquals(md3.getId(), found.get(1).getId());
@@ -146,7 +146,7 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
     public void testHasHarvesterUuid() throws Exception {
         Metadata md1 = _repository.save(newMetadata(_inc));
         Specification<Metadata> spec = hasHarvesterUuid(md1.getHarvestInfo().getUuid());
-        assertFindsCorrectMd(md1,spec, true);
+        assertFindsCorrectMd(md1, spec, true);
     }
 
     @Test
@@ -199,7 +199,7 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
     public void testHasSource() throws Exception {
         Metadata md1 = _repository.save(newMetadata(_inc));
         Specification<Metadata> spec = hasSource(md1.getSourceInfo().getSourceId());
-        assertFindsCorrectMd(md1,spec, true);
+        assertFindsCorrectMd(md1, spec, true);
     }
 
     private void assertFindsCorrectMd(Metadata md1, Specification<Metadata> spec, boolean addNewMetadata) {

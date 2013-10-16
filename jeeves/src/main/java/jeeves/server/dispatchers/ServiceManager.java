@@ -23,23 +23,11 @@
 
 package jeeves.server.dispatchers;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.util.*;
-import java.util.Map.Entry;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletResponse;
-
+import com.yammer.metrics.core.TimerContext;
 import jeeves.component.ProfileManager;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
-import org.fao.geonet.exceptions.JeevesException;
-import org.fao.geonet.exceptions.NotAllowedEx;
-import org.fao.geonet.exceptions.ServiceNotFoundEx;
-import org.fao.geonet.exceptions.ServiceNotMatchedEx;
 import jeeves.interfaces.Service;
 import jeeves.monitor.MonitorManager;
 import jeeves.monitor.timer.ServiceManagerGuiServicesTimer;
@@ -50,30 +38,37 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.Call;
 import jeeves.server.dispatchers.guiservices.GuiService;
-import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
-import org.fao.geonet.utils.BLOB;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.SOAPUtil;
 import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
-
+import org.fao.geonet.exceptions.JeevesException;
+import org.fao.geonet.exceptions.NotAllowedEx;
+import org.fao.geonet.exceptions.ServiceNotFoundEx;
+import org.fao.geonet.exceptions.ServiceNotMatchedEx;
+import org.fao.geonet.utils.*;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yammer.metrics.core.TimerContext;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 //=============================================================================
 @Component
@@ -87,10 +82,6 @@ public class ServiceManager {
 	private List<GuiService> vDefaultGui = new ArrayList<GuiService>();
 
 
-    private ProfileManager  profilMan;
-    private MonitorManager monitorManager;
-    private XmlCacheManager xmlCacheManager;
-
     private String  appPath;
     private String  baseUrl;
     private String  uploadDir;
@@ -102,7 +93,7 @@ public class ServiceManager {
     private boolean startupError = false;
     private Map<String,String> startupErrors;
     @Autowired
-    private JeevesApplicationContext jeevesApplicationContext;
+    private ConfigurableApplicationContext jeevesApplicationContext;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -118,9 +109,6 @@ public class ServiceManager {
 	public void setUploadDir      (String  dir)   { uploadDir      = dir;   }
     public void setMaxUploadSize  (int  size)     { maxUploadSize  = size;  }
 	public void setDefaultLocal   (boolean yesno) { defaultLocal   = yesno; }
-
-	public void setMonitorMan  (MonitorManager mm) { monitorManager  = mm; }
-	public void setXmlCacheManager  (XmlCacheManager xcm) { xmlCacheManager  = xcm; }
 
     public void setServlet(JeevesServlet serv) { servlet = serv; }
     public void setStartupErrors(Map<String,String> errors)   { startupErrors = errors; startupError = true; }
@@ -336,7 +324,7 @@ public class ServiceManager {
 
 	public ServiceContext createServiceContext(String name, JeevesApplicationContext jeevesApplicationContext)
 	{
-		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, xmlCacheManager, monitorManager, profilMan, htContexts,
+		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, htContexts,
                 entityManager);
 
 		context.setBaseUrl(baseUrl);
@@ -352,7 +340,7 @@ public class ServiceManager {
 	}
 
 	public void dispatch(ServiceRequest req, UserSession session) {
-		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext, xmlCacheManager, monitorManager, profilMan,
+		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext,
                 htContexts, entityManager);
 		dispatch(req, session, context);
 	}
@@ -417,7 +405,7 @@ public class ServiceManager {
 				//---------------------------------------------------------------------
 				//--- check access
 
-                TimerContext timerContext = monitorManager.getTimer(ServiceManagerServicesTimer.class).time();
+                TimerContext timerContext = getMonitorManager().getTimer(ServiceManagerServicesTimer.class).time();
                 try {
 				    response = srvInfo.execServices(req.getParams(), context);
                 } finally {
@@ -484,7 +472,11 @@ public class ServiceManager {
 		}
 	}
 
-	//---------------------------------------------------------------------------
+    private MonitorManager getMonitorManager() {
+        return this.jeevesApplicationContext.getBean(MonitorManager.class);
+    }
+
+    //---------------------------------------------------------------------------
 	//--- Handle error
 	//---------------------------------------------------------------------------
 
@@ -734,7 +726,7 @@ public class ServiceManager {
 
 			String  styleSheet = outPage.getStyleSheet();
 			Element guiElem;
-            TimerContext guiServicesTimerContext = monitorManager.getTimer(ServiceManagerGuiServicesTimer.class).time();
+            TimerContext guiServicesTimerContext = getMonitorManager().getTimer(ServiceManagerGuiServicesTimer.class).time();
             try {
                 guiElem = outPage.invokeGuiServices(context, response, vDefaultGui);
             } finally {
@@ -949,7 +941,7 @@ public class ServiceManager {
 	static  void info   (String message) { Log.info   (Log.SERVICE, message); }
 	private void warning(String message) { Log.warning(Log.SERVICE, message); }
 	static  void error  (String message) { Log.error  (Log.SERVICE, message); }
-	public ProfileManager getProfileManager() { return profilMan; }
+	public ProfileManager getProfileManager() { return jeevesApplicationContext.getBean(ProfileManager.class); }
 }
 
 //=============================================================================

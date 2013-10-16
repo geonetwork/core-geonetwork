@@ -1,16 +1,11 @@
 package org.fao.geonet.domain;
 
+import javax.persistence.*;
 import java.io.Serializable;
-
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 
 /**
  * The id object of {@link MetadataStatus}.
- * 
+ *
  * @author Jesse
  */
 @Embeddable
@@ -24,18 +19,18 @@ public class MetadataStatusId implements Serializable {
 
     /**
      * Get the date of the status change in string form.
-     * 
+     *
      * @return the date of the status change in string form.
      */
-    @AttributeOverride(name="dateAndTime", column = @Column(name = "changedate", nullable = false, length = 30) )
+    @AttributeOverride(name = "dateAndTime", column = @Column(name = "changedate", nullable = false, length = 30))
     public ISODate getChangeDate() {
         return _changedate;
     }
 
     /**
-     * Set the date of the status change in string form. 
-     * 
-     * @param changedate the date of the status change in string form. 
+     * Set the date of the status change in string form.
+     *
+     * @param changedate the date of the status change in string form.
      */
     public void setChangeDate(ISODate changedate) {
         this._changedate = changedate;
@@ -43,7 +38,7 @@ public class MetadataStatusId implements Serializable {
 
     /**
      * Get the id of the metadata the status is related to.
-     * 
+     *
      * @return the id of the metadata the status is related to.
      */
     public int getMetadataId() {
@@ -54,7 +49,6 @@ public class MetadataStatusId implements Serializable {
      * Set the id of the metadata the status is related to.
      *
      * @param metadataId the id of the metadata the status is related to.
-     *
      * @return this id object
      */
     public MetadataStatusId setMetadataId(int metadataId) {
@@ -64,7 +58,7 @@ public class MetadataStatusId implements Serializable {
 
     /**
      * Get the id of the new status.
-     * 
+     *
      * @return the id of the new status.
      */
     public int getStatusId() {
@@ -75,7 +69,6 @@ public class MetadataStatusId implements Serializable {
      * Set the id of the new status.
      *
      * @param statusId the id of the new status.
-     *
      * @return this id object
      */
     public MetadataStatusId setStatusId(int statusId) {
@@ -85,7 +78,7 @@ public class MetadataStatusId implements Serializable {
 
     /**
      * Get the user who is responsible for changing the status.
-     * 
+     *
      * @return the user who is responsible for changing the status.
      */
     public int getUserId() {
@@ -96,7 +89,6 @@ public class MetadataStatusId implements Serializable {
      * Set the user who is responsible for changing the status.
      *
      * @param userId the user who is responsible for changing the status.
-     *
      * @return this id object
      */
     public MetadataStatusId setUserId(int userId) {

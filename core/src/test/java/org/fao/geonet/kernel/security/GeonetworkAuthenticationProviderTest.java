@@ -4,24 +4,24 @@ import junit.framework.TestCase;
 
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserSecurityNotification;
+import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.UserRepositoryTest;
 import org.fao.geonet.util.PasswordUtil;
-import org.jdom.Element;
-import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Random;
+import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 /**
@@ -29,10 +29,12 @@ import static org.mockito.Mockito.when;
  *
  * @author heikki doeleman
  */
-public class GeonetworkAuthenticationProviderTest {
+public class GeonetworkAuthenticationProviderTest extends AbstractSpringDataTest {
+    public static final String PASSWORD = "password";
     /**
      * The class under test.
      */
+    @Autowired
     private GeonetworkAuthenticationProvider geonetworkAuthenticationProvider;
 
     //
@@ -40,48 +42,16 @@ public class GeonetworkAuthenticationProviderTest {
     //
 
     private UsernamePasswordAuthenticationToken authentication;
-    private ApplicationContext applicationContext;
-
-    /**
-     * Creates a GeonetworkAuthenticationProvider using a mock ApplicationContext that uses a mock ResourceManager to
-     * provide a mock Dbms. This method is invoked before each @Test method.
-     *
-     * @throws Exception
-     */
-    @Before
-    public void setUp() throws Exception{
-        geonetworkAuthenticationProvider = new GeonetworkAuthenticationProvider();
-    }
-
-    /**
-     * Makes dbms not find a user.
-     *
-     * @throws Exception
-     */
-    private void userNotFoundSetup() throws Exception{
-        Element response = new Element("response");
-        fail("not implemented");
-//        when(dbms.select(anyString(), anyString())).thenReturn(response);
-    }
-
+    @Autowired
+    private ApplicationContext _appContext;
+    @Autowired
+    private UserRepository _userRepo;
+    private AtomicInteger _inc = new AtomicInteger();
     @Test(expected = UsernameNotFoundException.class)
     public void testUserNotFound() throws Exception{
-        userNotFoundSetup();
+        final User user = userFoundSetup(false);
 
-        geonetworkAuthenticationProvider.retrieveUser("username", authentication);
-    }
-
-    /**
-     * Minimalist representation of a user retrieved from the DB.
-     *
-     * @return user in XML
-     */
-    private Element userXML() {
-        Element record = new Element("record");
-        Element id = new Element("id");
-        id.setText(Integer.toString(new Random().nextInt()));
-        record.addContent(id);
-        return record;
+        geonetworkAuthenticationProvider.retrieveUser(user.getUsername()+"not", authentication);
     }
 
     /**
@@ -89,131 +59,110 @@ public class GeonetworkAuthenticationProviderTest {
      *
      * @throws Exception
      */
-    private void userFoundSetup() throws Exception{
-        Element response = new Element("response");
-        Element record = userXML();
-        Element security = new Element(UserSecurityNotification.HASH_UPDATE_REQUIRED.name());
-        record.addContent(security);
-        response.addContent(record);
-//        when(dbms.select(anyString(), anyString())).thenReturn(response);
-        fail("Not updated");
+    private User userFoundSetup(boolean oldPassword) throws Exception {
+        final User entity = UserRepositoryTest.newUser(_inc);
+        if (oldPassword) {
+            entity.getSecurity().getSecurityNotifications().add(UserSecurityNotification.HASH_UPDATE_REQUIRED);
+        }
+        entity.getSecurity().setPassword(PASSWORD);
+        return _userRepo.save(entity);
     }
 
     @Test
     public void testUserFound() throws Exception{
-        userFoundSetup();
+        final User user = userFoundSetup(false);
 
-        geonetworkAuthenticationProvider.retrieveUser("username", authentication);
+        geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
         TestCase.assertNotNull("User should be found",
-                geonetworkAuthenticationProvider.retrieveUser("username", authentication));
+                geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication));
     }
 
     @Test
-    public void testFindUserWithAuthenticationToken() throws Exception{
-        userFoundSetup();
-        authentication = mock(UsernamePasswordAuthenticationToken.class);
-        when(authentication.getCredentials()).thenReturn("password");
+    public void testFindUserWithAuthenticationTokenUnsalted() throws Exception{
+        final User user = userFoundSetup(true);
+        final Method method = PasswordUtil.class.getDeclaredMethod("unsaltedScramble", String.class);
+        method.setAccessible(true);
+        final Object unsaltedScramble = method.invoke(null, user.getPassword());
+        char[] hashPassword = unsaltedScramble.toString().toCharArray();
+        user.getSecurity().setPassword(hashPassword);
+        _userRepo.save(user);
 
-        TestCase.assertNotNull("User with authentication token should be found",
-                geonetworkAuthenticationProvider.retrieveUser("username", authentication));
+        mockAuthenticationSetup(user);
+
+        final UserDetails userDetails = geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
+        TestCase.assertNotNull("User with authentication token should be found", userDetails);
+    }
+
+    @Test
+    public void testFindUserWithAuthenticationTokenOldPasswordHash() throws Exception{
+        final User user = userFoundSetup(true);
+        final Method method = PasswordUtil.class.getDeclaredMethod("oldScramble", String.class);
+        method.setAccessible(true);
+        final Object unsaltedScramble = method.invoke(null, user.getPassword());
+        char[] hashPassword = unsaltedScramble.toString().toCharArray();
+        user.getSecurity().setPassword(hashPassword);
+        _userRepo.save(user);
+
+        mockAuthenticationSetup(user);
+
+        final UserDetails userDetails = geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
+        TestCase.assertNotNull("User with authentication token should be found", userDetails);
+    }
+    @Test
+    public void testFindUserWithAuthenticationToken() throws Exception{
+        final User user = userFoundSetup(false);
+        mockAuthenticationSetup(user);
+
+        final UserDetails userDetails = geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
+        TestCase.assertNotNull("User with authentication token should be found", userDetails);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testAuthenticateWithoutToken() throws Exception {
-        userFoundSetup();
+        userFoundSetup(false);
 
         geonetworkAuthenticationProvider.authenticate(authentication);
     }
 
     @Test(expected = BadCredentialsException.class)
     public void testAuthenticateWithTokenWithoutCredentials() throws Exception {
-        userFoundSetup();
+        userFoundSetup(false);
         authentication = mock(UsernamePasswordAuthenticationToken.class);
 
         geonetworkAuthenticationProvider.authenticate(authentication);
     }
 
     /**
-     * Makes applicationContext use a mock encoder. The mock encoder either approves or rejects any password.
-     *
-     * @param match whether a password matches
-     */
-    private void mockEncoderSetup(boolean match) {
-        PasswordEncoder encoder = mock(PasswordEncoder.class);
-        when(encoder.matches(anyString(), anyString())).thenReturn(match);
-        when(applicationContext.getBean(PasswordUtil.ENCODER_ID)).thenReturn(encoder);
-    }
-
-    /**
      * Sets up a mock authentication that can return a password.
+     * @param user
      */
-    private void mockAuthenticationSetup() {
+    private void mockAuthenticationSetup(User user) {
         authentication = mock(UsernamePasswordAuthenticationToken.class);
-        when(authentication.getCredentials()).thenReturn("password");
+        if (user != null) {
+            when(authentication.getName()).thenReturn(user.getUsername());
+            when(authentication.getPrincipal()).thenReturn(user);
+        }
+        when(authentication.getCredentials()).thenReturn(PASSWORD);
     }
 
-    /**
-     * Creates mock GeonetworkUser. The mock user can return a password and has all Spring's UserDetails flags set to be
-     * a valid user (not locked, not disabled, not expired, credentials not expired).
-     *
-     * @return mock user
-     */
-    private User mockUserSetup() {
-        User user = mock(User.class);
-        when(user.isAccountNonLocked()).thenReturn(true);
-        when(user.isEnabled()).thenReturn(true);
-        when(user.isAccountNonExpired()).thenReturn(true);
-        when(user.isCredentialsNonExpired()).thenReturn(true);
-        when(user.getPassword()).thenReturn("password");
-        return user;
-    }
-
-    /**
-     * Makes GAP use a mock user on authenticate. Uses a spy because we need to stub only one method (retrieveUser) of
-     * the class under test while using the real thing for its other methods.
-     *
-     * @param userFound whether the user is found
-     * @return GeonetworkAuthenticationProvider spy
-     */
-    private GeonetworkAuthenticationProvider spyOnAuthenticateSetup(boolean userFound) {
-        GeonetworkAuthenticationProvider spy = spy(geonetworkAuthenticationProvider);
-        User user = userFound ? mockUserSetup() : null ;
-
-        doReturn(user).when(spy).retrieveUser(anyString(), any(UsernamePasswordAuthenticationToken.class));
-
-        return spy;
-    }
-
-    /**
-     * Sets up a GeonetworkAuthenticationProvider for authentication tests.
-     *
-     * @param userFound whether the user is found
-     * @param OK whether the authentication succeeds
-     * @return Spy on GeonetworkAuthenticationProvider
-     * @throws Exception
-     */
-    private GeonetworkAuthenticationProvider authenticationSetup(boolean userFound, boolean OK) throws Exception{
-        mockEncoderSetup(OK);
-        mockAuthenticationSetup();
-        return spyOnAuthenticateSetup(userFound);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = BadCredentialsException.class)
     public void testAuthenticateWithUserNotFound() throws Exception {
-        geonetworkAuthenticationProvider = authenticationSetup(false, true);
+        userFoundSetup(false);
+        mockAuthenticationSetup(null);
         geonetworkAuthenticationProvider.authenticate(authentication);
     }
 
     @Test
     public void testAuthenticateWithTokenWithCorrectCredentials() throws Exception {
-        geonetworkAuthenticationProvider = authenticationSetup(true, true);
+        final User user = userFoundSetup(false);
+        mockAuthenticationSetup(user);
         TestCase.assertNotNull("Authentication with correct credentials should succeed",
                 geonetworkAuthenticationProvider.authenticate(authentication));
     }
 
     @Test(expected = BadCredentialsException.class)
     public void testAuthenticateWithTokenWithWrongCredentials() throws Exception {
-        geonetworkAuthenticationProvider = authenticationSetup(true, false);
+        mockAuthenticationSetup(null);
         geonetworkAuthenticationProvider.authenticate(authentication);
     }
 

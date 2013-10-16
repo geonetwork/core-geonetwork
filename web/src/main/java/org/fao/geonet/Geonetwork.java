@@ -25,7 +25,6 @@ package org.fao.geonet;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
 import jeeves.server.JeevesProxyInfo;
-import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.server.ServiceConfig;
@@ -73,6 +72,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
@@ -100,7 +100,7 @@ public class Geonetwork implements ApplicationHandler {
     private ThreadPool threadPool;
     private String FS = File.separator;
     private Element dbConfiguration;
-    private JeevesApplicationContext _applicationContext;
+    private ConfigurableApplicationContext _applicationContext;
     private static final String SPATIAL_INDEX_FILENAME = "spatialindex";
     private static final String IDS_ATTRIBUTE_NAME = "id";
 
@@ -220,7 +220,7 @@ public class Geonetwork implements ApplicationHandler {
             logger.info("     Repositories file built from template.");
 
             try {
-                JeevesApplicationContext appContext = context.getApplicationContext();
+                ConfigurableApplicationContext appContext = context.getApplicationContext();
 
                 // to have access to the GN context in spring-managed objects
                 ContextContainer cc = (ContextContainer) appContext.getBean("ContextGateway");
@@ -254,7 +254,8 @@ public class Geonetwork implements ApplicationHandler {
         boolean createOrUpdateSchemaCatalog = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMA_PLUGINS_CATALOG_UPDATE).equals("true");
         logger.info("			- Schema plugins directory: " + schemaPluginsDir);
         logger.info("			- Schema Catalog File     : " + schemaCatalogueFile);
-        SchemaManager schemaMan = SchemaManager.getInstance(path, Resources.locateResourcesDir(context), schemaCatalogueFile,
+        SchemaManager schemaMan = _applicationContext.getBean(SchemaManager.class);
+        schemaMan.configure(path, Resources.locateResourcesDir(context), schemaCatalogueFile,
                 schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA),
                 createOrUpdateSchemaCatalog);
 
@@ -271,10 +272,10 @@ public class Geonetwork implements ApplicationHandler {
         String luceneTermsToExclude = "";
         luceneTermsToExclude = handlerConfig.getMandatoryValue(Geonet.Config.STAT_LUCENE_TERMS_EXCLUDE);
 
-        LuceneConfig lc = new LuceneConfig(path, servletContext, luceneConfigXmlFile);
+        LuceneConfig lc = _applicationContext.getBean(LuceneConfig.class);
+        lc.configure(path, servletContext, luceneConfigXmlFile);
         logger.info("  - Lucene configuration is:");
         logger.info(lc.toString());
-        beanFactory.registerSingleton(LuceneConfig.LUCENE_CONFIG_BEAN_NAME, lc);
 
         DataStore dataStore;
         try {
@@ -300,11 +301,11 @@ public class Geonetwork implements ApplicationHandler {
         String htmlCacheDir = handlerConfig
                 .getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
 
-        SettingInfo settingInfo = new SettingInfo(settingMan);
-        searchMan = new SearchManager(path, luceneDir, htmlCacheDir, thesauriDir, summaryConfigXmlFile, logAsynch,
+        SettingInfo settingInfo = context.getBean(SettingInfo.class);
+        searchMan = _applicationContext.getBean(SearchManager.class);
+        searchMan.configure(path, luceneDir, htmlCacheDir, thesauriDir, logAsynch,
                 logSpatialObject, luceneTermsToExclude, dataStore,
-                maxWritesInTransaction, settingInfo,
-                schemaMan, servletContext, _applicationContext);
+                maxWritesInTransaction, schemaMan);
 
 
         // if the validator exists the proxyCallbackURL needs to have the external host and
@@ -363,11 +364,6 @@ public class Geonetwork implements ApplicationHandler {
         OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(settingMan, schemaMan);
 
 
-        //------------------------------------------------------------------------
-        //--- initialize metadata notifier subsystem
-        logger.info("  - Metadata notifier ...");
-        MetadataNotifierManager metadataNotifierMan = new MetadataNotifierManager();
-
         GeonetContext gnContext = new GeonetContext();
 
         gnContext.springAppContext = context.getApplicationContext();
@@ -377,11 +373,8 @@ public class Geonetwork implements ApplicationHandler {
         //------------------------------------------------------------------------
         //--- return application context
 
-        beanFactory.registerSingleton("searchManager", searchMan);
-        beanFactory.registerSingleton("schemaManager", schemaMan);
         beanFactory.registerSingleton("serviceHandlerConfig", handlerConfig);
         beanFactory.registerSingleton("oaipmhDisatcher", oaipmhDis);
-        beanFactory.registerSingleton("metadataNotifierManager", metadataNotifierMan);
 
 
         _applicationContext.getBean(DataManager.class).init(context, false);

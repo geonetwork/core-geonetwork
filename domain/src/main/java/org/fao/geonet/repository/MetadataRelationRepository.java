@@ -17,7 +17,6 @@ public interface MetadataRelationRepository extends GeonetRepository<MetadataRel
      * Find all metadata that are related to the provided metadata.
      *
      * @param metadataId the start of the relation.
-     *
      * @return all relation entities
      */
     List<MetadataRelation> findAllById_MetadataId(int metadataId);

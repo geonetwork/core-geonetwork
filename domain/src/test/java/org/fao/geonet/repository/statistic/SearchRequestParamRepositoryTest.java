@@ -61,7 +61,7 @@ public class SearchRequestParamRepositoryTest extends AbstractSpringDataTest {
                 return stringIntegerPair.two();
             }
         }
-        fail("Unable to find "+termText);
+        fail("Unable to find " + termText);
         return -1;
     }
 

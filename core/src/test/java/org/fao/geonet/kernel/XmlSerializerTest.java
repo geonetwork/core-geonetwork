@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.io.IOUtils;
@@ -21,73 +23,59 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public class XmlSerializerTest {
-	
-	public static class DummyXmlSerializer extends XmlSerializer {
+public class XmlSerializerTest extends AbstractSpringDataTest {
+    @Autowired
+    XmlSerializer _xmlSerializer;
+    @Autowired
+    MetadataRepository _metadataRepo;
+    @Autowired
+    SettingManager _settingManager;
 
-		@Override
-		public void delete(String id,
-                           ServiceContext context) throws Exception {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public void update(String id, Element xml,
-                           String changeDate, boolean updateDateStamp,
-                           String uuid, ServiceContext context) throws Exception {
-			throw new UnsupportedOperationException();
-		}
-
-
-		@Override
-		public Metadata insert(Metadata metadata, Element dataXml, ServiceContext context)
-				throws Exception {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Element select(String id)
-				throws Exception {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Element selectNoXLinkResolver(String id, boolean isIndexingTask)
-				throws Exception {
-			throw new UnsupportedOperationException();
-		}
-		
-		@Override
-		public Element internalSelect(String id, boolean isIndexingTask)
-				throws Exception {
-			return super.internalSelect(id, isIndexingTask);
-		}
-
-	}
 	private static final String OWNER_ID = "1234";
-	final String metadata;
+	final Metadata metadata = new Metadata();
 	{
 		InputStream in = XmlSerializerTest.class.getResourceAsStream("valid-metadata.iso19139.xml");
 		try {
-			metadata = IOUtils.toString(in);
-		} catch (Exception e) {
+            String data = IOUtils.toString(in);
+            metadata.setData(data)
+                    .setUuid("uuid");
+
+            metadata.getDataInfo()
+                    .setTitle("title")
+                    .setSchemaId("iso19139");
+
+            metadata.getSourceInfo()
+                    .setSourceId("sourceid");
+
+        } catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
 			IOUtils.closeQuietly(in);
 		}
 	}
 
+    private int _mdId;
+
+    @Before
+    public void addMetadata() {
+        _settingManager.setHideWitheldElements(true);
+        this._mdId = _metadataRepo.save(metadata).getId();
+
+    }
 	@Test
 	public void testInternalSelectHidingWithheldSettingsDisabled() throws Exception {
+        _settingManager.setHideWitheldElements(false);
 		assertHiddenElements(false, false);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testInternalSelectHidingWithheldNullServiceContext() throws Exception {
-
+        _settingManager.setHideWitheldElements(true);
 		Field field = ServiceContext.class.getDeclaredField("threadLocalInstance");
 		field.setAccessible(true);
 		InheritableThreadLocal<ServiceContext> threadLocalInstance = (InheritableThreadLocal<ServiceContext>) field.get(null);
@@ -112,15 +100,11 @@ public class XmlSerializerTest {
 	@Test
 	public void testInternalCompleteHidingHiddenElement() throws Exception {
 		mockServiceContext(false);
-		
-		SettingManager settingManager = mockSettingManager(true, false);
-		XmlSerializer xmlSerializer = new DummyXmlSerializer();
 
-		Element loadedMetadata = xmlSerializer.internalSelect("1", false);
+		Element loadedMetadata = _xmlSerializer.internalSelect("1", false);
 		List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
 
 		assertEquals(0, withheld.size());
-        fail("Not updated");
 	}
 
 	@Test
@@ -166,10 +150,7 @@ public class XmlSerializerTest {
 			numberAttributes = 2;
 		}
 
-		SettingManager settingManager = mockSettingManager(isEnabled);
-		XmlSerializer xmlSerializer = new DummyXmlSerializer();
-		
-		Element loadedMetadata = xmlSerializer.internalSelect("1", false);
+		Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false);
 		List<?> resolutionElem = Xml.selectNodes(loadedMetadata, "*//gmd:MD_Resolution", Arrays.asList(Geonet.Namespaces.GMD));
 		assertEquals(numberMdResolution, resolutionElem.size());
 		

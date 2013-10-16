@@ -1,13 +1,12 @@
 package org.fao.geonet.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * Id class for Metadata relation.
- * 
+ *
  * @author Jesse
  */
 @Embeddable
@@ -27,7 +26,7 @@ public class MetadataRelationId implements Serializable {
      * Convenience constructor.
      *
      * @param metadataId one side of the relation.
-     * @param relatedId the other side of relation.
+     * @param relatedId  the other side of relation.
      */
     public MetadataRelationId(Integer metadataId, Integer relatedId) {
         this._metadataId = metadataId;
@@ -36,7 +35,7 @@ public class MetadataRelationId implements Serializable {
 
     /**
      * Get the id of the first metadata.
-     * 
+     *
      * @return the id of the first metadata.
      */
     @Column(name = "id")
@@ -65,7 +64,7 @@ public class MetadataRelationId implements Serializable {
 
     /**
      * Set the id of the second metadata.
-     * 
+     *
      * @param relatedId the id of the second metadata.
      */
     public void setRelatedId(int relatedId) {

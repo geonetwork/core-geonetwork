@@ -1,17 +1,10 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  * An entity representing a metadata related notification that has been made or is pending.
- * 
+ *
  * @author Jesse
  */
 @Entity
@@ -26,7 +19,7 @@ public class MetadataNotification extends GeonetEntity {
 
     /**
      * Get the id object for this Notification entity.
-     * 
+     *
      * @return the id object for this Notification entity.
      */
     @EmbeddedId
@@ -36,7 +29,7 @@ public class MetadataNotification extends GeonetEntity {
 
     /**
      * Set the id object for this Notification entity.
-     * 
+     *
      * @param id the id object for this Notification entity.
      * @return this notification entity object
      */
@@ -56,7 +49,7 @@ public class MetadataNotification extends GeonetEntity {
 
     /**
      * Return the value of the notified column.
-     * 
+     *
      * @param notified y or n
      */
     protected void setNotified_JPAWorkaround(char notified) {
@@ -65,7 +58,7 @@ public class MetadataNotification extends GeonetEntity {
 
     /**
      * Return true if the notification has been made.
-     * 
+     *
      * @return true if the notification has been made.
      */
     @Transient
@@ -75,7 +68,7 @@ public class MetadataNotification extends GeonetEntity {
 
     /**
      * Set true if the notification has been made.
-     * 
+     *
      * @param notified true if the notification has been made.
      * @return this notification entity object
      */
@@ -86,7 +79,7 @@ public class MetadataNotification extends GeonetEntity {
 
     /**
      * Get the metadata uuid of the metadata that the notification is for.
-     * 
+     *
      * @return the metadata uuid of the metadata that the notification is for.
      */
     @Column(name = "metadatauuid", nullable = false)
@@ -96,7 +89,7 @@ public class MetadataNotification extends GeonetEntity {
 
     /**
      * Set the metadata uuid of the metadata that the notification is for.
-     * 
+     *
      * @param metadataUuid the metadata uuid of the metadata that the notification is for.
      * @return this notification entity object
      */
@@ -107,7 +100,7 @@ public class MetadataNotification extends GeonetEntity {
 
     /**
      * Get the action performed on the metadata.
-     * 
+     *
      * @return the action performed on the metadata.
      */
     @Column(length = 1, nullable = false)
@@ -117,7 +110,7 @@ public class MetadataNotification extends GeonetEntity {
 
     /**
      * set the action performed on the metadata.
-     * 
+     *
      * @param action the action performed on the metadata.
      * @return this notification entity object
      */
@@ -128,7 +121,7 @@ public class MetadataNotification extends GeonetEntity {
 
     /**
      * Get the error message if any related to the notification.
-     * 
+     *
      * @return the error message if any related to the notification.
      */
     @Lob
@@ -139,7 +132,7 @@ public class MetadataNotification extends GeonetEntity {
 
     /**
      * Set the error message if any related to the notification.
-     * 
+     *
      * @param errorMessage the error message if any related to the notification.
      * @return this notification entity object
      */

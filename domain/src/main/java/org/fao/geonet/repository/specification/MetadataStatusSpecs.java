@@ -1,6 +1,8 @@
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId_;
+import org.fao.geonet.domain.MetadataStatus_;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;

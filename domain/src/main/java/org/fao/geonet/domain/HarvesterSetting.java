@@ -1,19 +1,18 @@
 package org.fao.geonet.domain;
 
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
 
+import static javax.persistence.CascadeType.*;
+
 /**
  * An entity representing a harvester configuration setting.
- * 
- * Harvester settings are represented by a tree. One should use the {@link org.fao.geonet.repository.HarvesterSettingRepository} to traverse
+ * <p/>
+ * Harvester settings are represented by a tree. One should use the {@link org.fao.geonet.repository.HarvesterSettingRepository} to
+ * traverse
  * the hierarchy.
- * 
+ *
  * @author Jesse
  */
 @Entity
@@ -30,7 +29,7 @@ public class HarvesterSetting extends GeonetEntity {
     /**
      * Get the setting id. This is a generated value and as such new instances should not have this set as it will simply be ignored and
      * could result in reduced performance.
-     * 
+     *
      * @return the setting id
      */
     @Id
@@ -43,7 +42,7 @@ public class HarvesterSetting extends GeonetEntity {
     /**
      * Set the setting id. This is a generated value and as such new instances should not have this set as it will simply be ignored and
      * could result in reduced performance.
-     * 
+     *
      * @param id the setting id
      * @return this setting object
      */
@@ -55,20 +54,22 @@ public class HarvesterSetting extends GeonetEntity {
     /**
      * Get the parent setting object. This is a nullable property.
      */
-    @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = { PERSIST, MERGE, DETACH })
+    @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = {PERSIST, MERGE, DETACH})
     @JoinColumn(name = "parentid")
-    public @Nullable
+    public
+    @Nullable
     HarvesterSetting getParent() {
         return _parent;
     }
 
     /**
      * Set the parent setting object for this setting. The may be null.
-     * 
+     *
      * @param parent the parent setting object
      * @return this setting object
      */
-    public @Nonnull
+    public
+    @Nonnull
     HarvesterSetting setParent(@Nullable HarvesterSetting parent) {
         this._parent = parent;
         return this;
@@ -76,22 +77,24 @@ public class HarvesterSetting extends GeonetEntity {
 
     /**
      * Get the setting name. This is a required property.
-     * 
+     *
      * @return the setting name.
      */
     @Column(name = "name", nullable = false)
-    public @Nonnull
+    public
+    @Nonnull
     String getName() {
         return _name;
     }
 
     /**
      * Set the setting name. This is a required property.
-     * 
+     *
      * @param name the setting name. This is a required property.
      * @return this setting object
      */
-    public @Nonnull
+    public
+    @Nonnull
     HarvesterSetting setName(@Nonnull String name) {
         this._name = name;
         return this;
@@ -99,12 +102,13 @@ public class HarvesterSetting extends GeonetEntity {
 
     /**
      * Get the setting value. This is a nullable property.
-     * 
+     *
      * @return
      */
     @Lob
     @Column(name = "value", nullable = true)
-    public @Nullable
+    public
+    @Nullable
     String getValue() {
         return _value;
     }
@@ -115,9 +119,10 @@ public class HarvesterSetting extends GeonetEntity {
     }
 
     /**
-     * Get the value as an integer. This may throw {@link NullPointerException} if the value is null or {@link NumberFormatException} if the
+     * Get the value as an integer. This may throw {@link NullPointerException} if the value is null or {@link NumberFormatException}
+     * if the
      * value is not a valid number.
-     * 
+     *
      * @return the value as an integer
      */
     @Transient
@@ -130,7 +135,7 @@ public class HarvesterSetting extends GeonetEntity {
 
     /**
      * Set the value of setting with an integer.
-     * 
+     *
      * @param value the new value
      * @return this setting object
      */
@@ -140,7 +145,7 @@ public class HarvesterSetting extends GeonetEntity {
 
     /**
      * Get the values as a boolean. Returns false if the values is not a boolean.
-     * 
+     *
      * @return the values as a boolean
      * @throws NullPointerException if the value is null.
      */
@@ -154,7 +159,7 @@ public class HarvesterSetting extends GeonetEntity {
 
     /**
      * Set the value of setting with a boolean.
-     * 
+     *
      * @param value the new value
      * @return this setting object
      */

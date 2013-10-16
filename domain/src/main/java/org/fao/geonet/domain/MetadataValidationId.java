@@ -1,15 +1,14 @@
 package org.fao.geonet.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * Id object for the {@link MetadataValidation} entity.
- * 
+ *
  * @author Jesse
  */
 @Embeddable
@@ -27,7 +26,8 @@ public class MetadataValidationId implements Serializable {
 
     /**
      * Convenience constructor.
-     * @param metadataId the metadata id
+     *
+     * @param metadataId     the metadata id
      * @param validationType the validation type
      */
     public MetadataValidationId(final int metadataId, final String validationType) {
@@ -44,6 +44,7 @@ public class MetadataValidationId implements Serializable {
 
     /**
      * Set the metadata id.
+     *
      * @param metadataid the metadata id
      */
     public void setMetadataId(final int metadataid) {
@@ -52,6 +53,7 @@ public class MetadataValidationId implements Serializable {
 
     /**
      * Get a string representing the type of validation of this validation entity. (example: iso19139)
+     *
      * @return a string representing the type of validation of this validation entity (example: iso19139)
      */
     @Column(name = "valtype", length = 40)
@@ -61,6 +63,7 @@ public class MetadataValidationId implements Serializable {
 
     /**
      * Set a string representing the type of validation of this validation entity. (example: iso19139)
+     *
      * @param validationType a string representing the type of validation of this validation entity (example: iso19139)
      */
     public void setValidationType(final String validationType) {

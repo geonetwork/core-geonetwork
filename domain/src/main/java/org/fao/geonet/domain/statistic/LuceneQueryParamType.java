@@ -38,7 +38,7 @@ public enum LuceneQueryParamType {
                         .setTermField(fuzzyQuery.getTerm().field())
                         .setTermText(fuzzyQuery.getTerm().text())
                         .setQueryType(this)
-                        .setSimilarity((fuzzyQuery.getMaxEdits() - 1) / 10);
+                        .setSimilarity(((double) fuzzyQuery.getMaxEdits() - 1) / 10);
 
                 return Optional.of(param);
             } else {
@@ -49,7 +49,7 @@ public enum LuceneQueryParamType {
         @Override
         protected Optional<SearchRequestParam> createTypeFrom(Query query) {
             if (query instanceof PrefixQuery) {
-                PrefixQuery prefixQuery = (PrefixQuery)query;
+                PrefixQuery prefixQuery = (PrefixQuery) query;
                 String field = prefixQuery.getPrefix().field();
                 String text = prefixQuery.getPrefix().text();
                 SearchRequestParam param = new SearchRequestParam()
@@ -86,7 +86,7 @@ public enum LuceneQueryParamType {
         @Override
         protected Optional<SearchRequestParam> createTypeFrom(Query query) {
             if (query instanceof WildcardQuery) {
-                WildcardQuery wildcardQuery = (WildcardQuery)query;
+                WildcardQuery wildcardQuery = (WildcardQuery) query;
                 String field = wildcardQuery.getTerm().field();
                 String text = wildcardQuery.getTerm().text();
                 SearchRequestParam param = new SearchRequestParam()
@@ -104,7 +104,7 @@ public enum LuceneQueryParamType {
         protected Optional<SearchRequestParam> createTypeFrom(Query query) {
             if (query instanceof PhraseQuery) {
                 // extract all terms for this query (text and field)
-                Term[] terms = ((PhraseQuery)query).getTerms();
+                Term[] terms = ((PhraseQuery) query).getTerms();
                 String fields = concatTermsField(terms, null);
                 String texts = concatTermsText(terms, null);
                 SearchRequestParam param = new SearchRequestParam()
@@ -122,7 +122,7 @@ public enum LuceneQueryParamType {
         @Override
         protected Optional<SearchRequestParam> createTypeFrom(Query query) {
             if (query instanceof TermRangeQuery) {
-                TermRangeQuery rangeQuery = (TermRangeQuery)query;
+                TermRangeQuery rangeQuery = (TermRangeQuery) query;
                 SearchRequestParam param = new SearchRequestParam()
                         .setLowerText(rangeQuery.getLowerTerm().utf8ToString())
                         .setUpperText(rangeQuery.getUpperTerm().utf8ToString())
@@ -139,12 +139,12 @@ public enum LuceneQueryParamType {
         @Override
         protected Optional<SearchRequestParam> createTypeFrom(Query query) {
             if (query instanceof NumericRangeQuery) {
-                NumericRangeQuery<?> numericRangeQuery = (NumericRangeQuery<?>)query;
+                NumericRangeQuery<?> numericRangeQuery = (NumericRangeQuery<?>) query;
 
                 SearchRequestParam param = new SearchRequestParam()
-                    .setLowerText(numericRangeQuery.getMin().toString())
-                    .setUpperText(numericRangeQuery.getMax().toString())
-                    .setTermField(numericRangeQuery.getField());
+                        .setLowerText(numericRangeQuery.getMin().toString())
+                        .setUpperText(numericRangeQuery.getMax().toString())
+                        .setTermField(numericRangeQuery.getField());
 
                 return Optional.of(param);
             } else {
@@ -173,7 +173,7 @@ public enum LuceneQueryParamType {
     /**
      * Concatenates the given terms' fields into a single String, with the given separator.
      *
-     * @param terms the set of terms to concatenate
+     * @param terms     the set of terms to concatenate
      * @param separator the separator to use to separate text elements  (use ',' if sep is null)
      * @return a string containing all this terms' fields concatenated
      */
@@ -185,7 +185,7 @@ public enum LuceneQueryParamType {
             sb.append(t.field()).append(separator);
         }
         if (sb.length() > 0) {
-            sb.deleteCharAt(sb.length()-1);
+            sb.deleteCharAt(sb.length() - 1);
         }
         return sb.toString();
     }
@@ -193,9 +193,9 @@ public enum LuceneQueryParamType {
     /**
      * Concatenates the given terms' text into a single String, with the given separator.
      *
-     * @param terms the set of terms to concatenate
+     * @param terms     the set of terms to concatenate
      * @param separator the separator to use to separate text elements (use ',' if sep is null)
-     * @return  a string containing all this terms' texts concatenated
+     * @return a string containing all this terms' texts concatenated
      */
     private static String concatTermsText(Term[] terms, String separator) {
         if (terms == null || separator == null) return null;
@@ -205,7 +205,7 @@ public enum LuceneQueryParamType {
             sb.append(t.text()).append(separator);
         }
         if (sb.length() > 0) {
-            sb.deleteCharAt(sb.length()-1);
+            sb.deleteCharAt(sb.length() - 1);
         }
         return sb.toString();
     }

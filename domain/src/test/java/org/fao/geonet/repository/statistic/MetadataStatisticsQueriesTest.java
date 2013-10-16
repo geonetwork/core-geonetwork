@@ -1,6 +1,5 @@
 package org.fao.geonet.repository.statistic;
 
-import static org.fao.geonet.repository.statistic.MetadataStatisticSpec.StandardSpecs.*;
 import com.google.common.base.Optional;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.*;
@@ -16,6 +15,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static junit.framework.Assert.assertNull;
+import static org.fao.geonet.repository.statistic.MetadataStatisticSpec.StandardSpecs.*;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -525,10 +525,14 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
 
         assertEquals(6, map.size());
         assertEquals(POPULARITY, map.get(Pair.read(validation.getId().getValidationType(), MetadataValidationStatus.VALID)).intValue());
-        assertEquals(2 * POPULARITY, map.get(Pair.read(validation.getId().getValidationType(), MetadataValidationStatus.INVALID)).intValue());
-        assertEquals(POPULARITY, map.get(Pair.read(validation4.getId().getValidationType(), MetadataValidationStatus.INVALID)).intValue());
-        assertEquals(POPULARITY, map.get(Pair.read(validation5.getId().getValidationType(), MetadataValidationStatus.INVALID)).intValue());
-        assertEquals(POPULARITY, map.get(Pair.read(validation6.getId().getValidationType(), MetadataValidationStatus.INVALID)).intValue());
+        assertEquals(2 * POPULARITY, map.get(Pair.read(validation.getId().getValidationType(),
+                MetadataValidationStatus.INVALID)).intValue());
+        assertEquals(POPULARITY, map.get(Pair.read(validation4.getId().getValidationType(), MetadataValidationStatus.INVALID)).intValue
+                ());
+        assertEquals(POPULARITY, map.get(Pair.read(validation5.getId().getValidationType(), MetadataValidationStatus.INVALID)).intValue
+                ());
+        assertEquals(POPULARITY, map.get(Pair.read(validation6.getId().getValidationType(), MetadataValidationStatus.INVALID)).intValue
+                ());
         assertNull(map.get(Pair.read(validation4.getId().getValidationType(), MetadataValidationStatus.VALID)));
         assertNull(map.get(Pair.read(validation5.getId().getValidationType(), MetadataValidationStatus.VALID)));
         assertNull(map.get(Pair.read(validation6.getId().getValidationType(), MetadataValidationStatus.VALID)));
@@ -581,6 +585,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
 
 
     }
+
     @Test
     public void testGetStatBasedOnOperationAllowed() throws Exception {
         final MetadataStatisticsQueries metadataStatistics = _metadataRepository.getMetadataStatistics();
@@ -597,14 +602,20 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         final Metadata md3 = _metadataRepository.save(metadata2);
 
 
-        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md1.getId(), ReservedGroup.all.getId(), ReservedOperation.download.getId())));
-        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md1.getId(), ReservedGroup.all.getId(), ReservedOperation.view.getId())));
-        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md1.getId(), ReservedGroup.intranet.getId(), ReservedOperation.view.getId())));
+        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md1.getId(), ReservedGroup.all.getId(),
+                ReservedOperation.download.getId())));
+        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md1.getId(), ReservedGroup.all.getId(),
+                ReservedOperation.view.getId())));
+        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md1.getId(), ReservedGroup.intranet.getId(),
+                ReservedOperation.view.getId())));
 
-        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md2.getId(), ReservedGroup.all.getId(), ReservedOperation.view.getId())));
-        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md2.getId(), ReservedGroup.intranet.getId(), ReservedOperation.view.getId())));
+        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md2.getId(), ReservedGroup.all.getId(),
+                ReservedOperation.view.getId())));
+        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md2.getId(), ReservedGroup.intranet.getId(),
+                ReservedOperation.view.getId())));
 
-        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md3.getId(), ReservedGroup.intranet.getId(), ReservedOperation.view.getId())));
+        _operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId(md3.getId(), ReservedGroup.intranet.getId(),
+                ReservedOperation.view.getId())));
 
         Specification<OperationAllowed> operationAllowedSpec = Specifications.where(OperationAllowedSpecs.isPublic(ReservedOperation
                 .view)).or(OperationAllowedSpecs.isPublic(ReservedOperation.download));
@@ -615,6 +626,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
 
 
     }
+
     @Test
     public void testNoErrorsWhenNoMetadata() throws Exception {
         final MetadataStatisticsQueries metadataStatistics = _metadataRepository.getMetadataStatistics();
@@ -659,7 +671,8 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         metadataStatistics.getMetadataValidationTypeAndStatusToStatMap(popularitySum());
         metadataStatistics.getMetadataValidationTypeAndStatusToStatMap(ratingSum());
         assertEquals(1, metadataValidationTypeAndStatusToStatMap.size());
-        assertEquals(0, metadataValidationTypeAndStatusToStatMap.get(Pair.read(null, MetadataValidationStatus.NEVER_CALCULATED)).intValue());
+        assertEquals(0, metadataValidationTypeAndStatusToStatMap.get(Pair.read(null, MetadataValidationStatus.NEVER_CALCULATED))
+                .intValue());
 
         assertEquals(0, metadataStatistics.getMetadataCategoryToStatMap(metadataCount()).size());
         assertEquals(0, metadataStatistics.getMetadataCategoryToStatMap(ratingSum()).size());

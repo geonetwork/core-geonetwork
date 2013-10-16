@@ -23,107 +23,130 @@
 
 package jeeves.server.context;
 
-import jeeves.config.springutil.JeevesApplicationContext;
-import org.fao.geonet.Logger;
 import jeeves.monitor.MonitorManager;
+import org.fao.geonet.Logger;
 import org.fao.geonet.utils.Log;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.persistence.EntityManager;
 import java.util.Collections;
 import java.util.Map;
 
 //=============================================================================
 
-/** Contains a minimun context for a job execution (schedule, service etc...)
-  */
+/**
+ * Contains a minimun context for a job execution (schedule, service etc...)
+ */
 
-public class BasicContext implements Logger
-{
+public class BasicContext implements Logger {
 
-	protected Logger logger = Log.createLogger(Log.JEEVES);
-	private   String baseUrl;
-	private   String appPath;
+    protected Logger logger = Log.createLogger(Log.JEEVES);
+    private String baseUrl;
+    private String appPath;
 
-	protected Map<String, Object> htContexts;
-    private MonitorManager monitorManager;
-    private final JeevesApplicationContext jeevesApplicationContext;
+    protected Map<String, Object> htContexts;
+    private final ConfigurableApplicationContext jeevesApplicationContext;
 
     //--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public BasicContext(JeevesApplicationContext jeevesApplicationContext, MonitorManager mm, Map<String, Object> contexts)
-	{
+    public BasicContext(ConfigurableApplicationContext jeevesApplicationContext, Map<String, Object> contexts) {
 
-		this.jeevesApplicationContext = jeevesApplicationContext;
-        this.monitorManager = mm;
-		htContexts = Collections.unmodifiableMap(contexts);
-	}
+        this.jeevesApplicationContext = jeevesApplicationContext;
+        htContexts = Collections.unmodifiableMap(contexts);
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
 
-    public Logger getLogger()  { return logger;  }
+    public Logger getLogger() {
+        return logger;
+    }
 
-	//--- read/write objects
-	public String getBaseUrl() { return baseUrl; }
-	public String getAppPath() { return appPath; }
+    //--- read/write objects
+    public String getBaseUrl() {
+        return baseUrl;
+    }
 
-	//--------------------------------------------------------------------------
+    public String getAppPath() {
+        return appPath;
+    }
 
-	public void setBaseUrl(String name) { baseUrl = name; }
-	public void setAppPath(String path) { appPath = path; }
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public void setBaseUrl(String name) {
+        baseUrl = name;
+    }
 
-	public Object getHandlerContext(String contextName)
-	{
-		return htContexts.get(contextName);
-	}
+    public void setAppPath(String path) {
+        appPath = path;
+    }
+
+    //--------------------------------------------------------------------------
+
+    public Object getHandlerContext(String contextName) {
+        return htContexts.get(contextName);
+    }
 
     //--------------------------------------------------------------------------
 
     public MonitorManager getMonitorManager() {
-        return monitorManager;
+        return getBean(MonitorManager.class);
     }
 
     //--------------------------------------------------------------------------
 
-    public JeevesApplicationContext getApplicationContext() {
+    public ConfigurableApplicationContext getApplicationContext() {
         return jeevesApplicationContext;
     }
     //--------------------------------------------------------------------------
-    
-    public <T> T getBean(Class<T> beanType) {
+
+    public final <T> T getBean(Class<T> beanType) {
         return jeevesApplicationContext.getBean(beanType);
     }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
     @Override
-    public boolean isDebugEnabled() { return logger.isDebugEnabled(); }
+    public boolean isDebugEnabled() {
+        return logger.isDebugEnabled();
+    }
+
     @Override
-	public void debug(final String message) { logger.debug(message); }
+    public void debug(final String message) {
+        logger.debug(message);
+    }
+
     @Override
-	public void info(final String message) { logger.info(message); }
+    public void info(final String message) {
+        logger.info(message);
+    }
+
     @Override
-	public void warning(final String message) { logger.warning(message); }
+    public void warning(final String message) {
+        logger.warning(message);
+    }
+
     @Override
-	public void error(final String message) { logger.error(message); }
+    public void error(final String message) {
+        logger.error(message);
+    }
+
     @Override
-    public void fatal(final String message) { logger.fatal(message); }
+    public void fatal(final String message) {
+        logger.fatal(message);
+    }
+
     @Override
-    public String getModule() { return logger.getModule(); }
+    public String getModule() {
+        return logger.getModule();
+    }
 
 }
 

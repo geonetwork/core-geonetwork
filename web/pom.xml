@@ -72,10 +72,6 @@
       <groupId>org.openrdf</groupId>
       <artifactId>rio</artifactId>
     </dependency>
-    <dependency>
-      <groupId>aspectj</groupId>
-      <artifactId>aspectjweaver</artifactId>
-    </dependency>
       <dependency>
           <groupId>org.springframework</groupId>
           <artifactId>spring-context</artifactId>
@@ -268,19 +264,6 @@
       <artifactId>guava</artifactId>
     </dependency>
     
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>xmlunit</groupId>
-      <artifactId>xmlunit</artifactId>
-    </dependency>
-	<dependency>
-		<groupId>org.mockito</groupId>
-		<artifactId>mockito-all</artifactId>
-		<scope>test</scope>
-	</dependency>
 	            
     <dependency>
       <groupId>org.tmatesoft.svnkit</groupId>

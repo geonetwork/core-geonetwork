@@ -76,7 +76,7 @@ public class DoActions implements Service
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager		dataMan = gc.getBean(DataManager.class);
 		SettingManager settingMan = gc.getBean(SettingManager.class);
-		SettingInfo si = new SettingInfo(settingMan);
+		SettingInfo si = context.getBean(SettingInfo.class);
 
 		try {
 			if (si.getLuceneIndexOptimizerSchedulerEnabled()) {

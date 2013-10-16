@@ -1,9 +1,6 @@
 package jeeves.config.springutil;
 
-import java.io.IOException;
-
 import jeeves.server.overrides.ConfigurationOverrides;
-
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
@@ -11,6 +8,8 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.web.context.support.XmlWebApplicationContext;
+
+import java.io.IOException;
 
 public class JeevesApplicationContext extends XmlWebApplicationContext {
     

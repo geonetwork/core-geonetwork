@@ -23,15 +23,17 @@
 
 package jeeves.guiservices.session;
 
-import java.util.*;
-
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Profile;
-import org.jdom.*;
+import org.jdom.Element;
 
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.constants.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 //=============================================================================
 

@@ -1,24 +1,11 @@
 package org.fao.geonet.domain;
 
+import javax.persistence.*;
 import java.util.Map;
-
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * One of the enumerated status options that a metadata can be.
- * 
+ *
  * @author Jesse
  */
 @Entity
@@ -31,9 +18,10 @@ public class StatusValue extends Localized {
     private int displayOrder;
 
     /**
-     * Get the id of the StatusValue object. This is a generated value and as such new instances should not have this set as it will simply
+     * Get the id of the StatusValue object. This is a generated value and as such new instances should not have this set as it will
+     * simply
      * be ignored and could result in reduced performance.
-     * 
+     *
      * @return the id of the StatusValue object
      */
     @Id
@@ -43,9 +31,10 @@ public class StatusValue extends Localized {
     }
 
     /**
-     * Set the id of the StatusValue object. This is a generated value and as such new instances should not have this set as it will simply
+     * Set the id of the StatusValue object. This is a generated value and as such new instances should not have this set as it will
+     * simply
      * be ignored and could result in reduced performance.
-     * 
+     *
      * @param id the id of the StatusValue object
      */
     public void setId(final int id) {
@@ -54,7 +43,7 @@ public class StatusValue extends Localized {
 
     /**
      * Get the name of the StatusValue object. This is a required property.
-     * 
+     *
      * @return the name of the StatusValue object.
      */
     @Column(nullable = false)
@@ -64,7 +53,7 @@ public class StatusValue extends Localized {
 
     /**
      * Set the name of the StatusValue object. This is a required property.
-     * 
+     *
      * @param name the name of the StatusValue object.
      */
     public void setName(final String name) {
@@ -82,7 +71,7 @@ public class StatusValue extends Localized {
 
     /**
      * Set the column value.
-     * 
+     *
      * @param reserved Constants.YN_ENABLED for true or Constants.YN_DISABLED for false.
      * @return
      */
@@ -92,7 +81,7 @@ public class StatusValue extends Localized {
 
     /**
      * Return true if this is a reserved StatusValue.
-     * 
+     *
      * @return true if this is a reserved StatusValue.
      */
     @Transient
@@ -102,7 +91,7 @@ public class StatusValue extends Localized {
 
     /**
      * Set true if this is a reserved StatusValue.
-     * 
+     *
      * @param reserved true if this is a reserved StatusValue.
      */
     public void setReserved(final boolean reserved) {
@@ -119,20 +108,22 @@ public class StatusValue extends Localized {
     }
 
     /**
-     * Get the order to display this value in the UI. This is just a hint to the ui that provides an priority/importance of the status value
+     * Get the order to display this value in the UI. This is just a hint to the ui that provides an priority/importance of the status
+     * value
      * compared to the others.
-     * 
+     *
      * @return the order to display this value in the UI.
      */
-    @Column(name="displayorder")
+    @Column(name = "displayorder")
     public int getDisplayOrder() {
         return displayOrder;
     }
 
     /**
-     * Set the order to display this value in the UI. This is just a hint to the ui that provides an priority/importance of the status value
+     * Set the order to display this value in the UI. This is just a hint to the ui that provides an priority/importance of the status
+     * value
      * compared to the others.
-     * 
+     *
      * @param displayOrder the order to display this value in the UI
      */
     public void setDisplayOrder(int displayOrder) {

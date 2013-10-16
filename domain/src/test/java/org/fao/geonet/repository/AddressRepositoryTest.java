@@ -30,6 +30,7 @@ public class AddressRepositoryTest extends AbstractSpringDataTest {
         assertEquals(address2, _repo.findOne(address2.getId()));
         assertEquals(address1, _repo.findOne(address1.getId()));
     }
+
     @Test
     public void testFindAllByZip() {
         Address address1 = newAddress();
@@ -51,7 +52,9 @@ public class AddressRepositoryTest extends AbstractSpringDataTest {
 
     private Address newAddress() {
         int val = _inc.incrementAndGet();
-        Address Address = new Address().setAddress("address" + val).setCity("city"+val).setCountry("country"+val).setState("state"+val).setZip("zip"+val);
+        Address Address = new Address().setAddress("address" + val).setCity("city" + val).setCountry("country" + val).setState("state"
+                                                                                                                               + val)
+                .setZip("zip" + val);
         return Address;
     }
 

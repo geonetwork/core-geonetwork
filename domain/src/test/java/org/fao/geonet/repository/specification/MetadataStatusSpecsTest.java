@@ -1,17 +1,21 @@
 package org.fao.geonet.repository.specification;
 
 
-import static org.fao.geonet.repository.specification.MetadataStatusSpecs.*;
-import static org.junit.Assert.assertEquals;
-
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.repository.MetadataStatusRepositoryTest;
+import org.fao.geonet.repository.StatusValueRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.fao.geonet.repository.specification.MetadataStatusSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.MetadataStatusSpecs.hasUserId;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases for MetadataStatusSpec

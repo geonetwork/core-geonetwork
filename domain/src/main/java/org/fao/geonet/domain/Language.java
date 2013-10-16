@@ -5,13 +5,12 @@ import javax.persistence.*;
 
 /**
  * The enumeration of all languages available in the system.
- * 
+ * <p/>
  * Note: The difference between IsoLanguages and Languages seems to be IsoLanguages lists all possible mappings between language codes and
  * Languages are the translations that can be used in the system. For example the languages the UI is translated into, the languages
  * metadata can be written in, the languages the groups, etc... should be translated into.
- * 
+ *
  * @author Jesse
- * 
  */
 @Entity
 @Access(AccessType.PROPERTY)
@@ -23,9 +22,10 @@ public class Language extends GeonetEntity {
     char _defaultLanguage = Constants.YN_FALSE;
 
     /**
-     * Get the id of the language. This is a generated value and as such new instances should not have this set as it will simply be ignored
+     * Get the id of the language. This is a generated value and as such new instances should not have this set as it will simply be
+     * ignored
      * and could result in reduced performance.
-     * 
+     *
      * @return the id of the language
      */
     @Id
@@ -36,9 +36,10 @@ public class Language extends GeonetEntity {
     }
 
     /**
-     * The id of the language. This is a generated value and as such new instances should not have this set as it will simply be ignored and
+     * The id of the language. This is a generated value and as such new instances should not have this set as it will simply be
+     * ignored and
      * could result in reduced performance.
-     * 
+     *
      * @param id the id of the language
      */
     public void setId(@Nonnull final String id) {
@@ -47,7 +48,7 @@ public class Language extends GeonetEntity {
 
     /**
      * Get the name/descriptor of the language. This is not a translated value is primarily for the admin user interface.
-     * 
+     *
      * @return the language name
      */
     @Column(nullable = false)
@@ -57,7 +58,7 @@ public class Language extends GeonetEntity {
 
     /**
      * Set the name/descriptor of the language. This is not a translated value is primarily for the admin user interface.
-     * 
+     *
      * @param name This is not a translated value is primarily for the admin user interface.
      */
     public void setName(String name) {
@@ -75,7 +76,7 @@ public class Language extends GeonetEntity {
 
     /**
      * Setter for the value actual value that will be in the database. This should not be set by end programmer.
-     * 
+     *
      * @param isinspire y or n
      */
     protected void setInspire_JPAWorkaround(char isinspire) {
@@ -84,7 +85,7 @@ public class Language extends GeonetEntity {
 
     /**
      * Return true if this is a language required byt the inspire standards.
-     * 
+     *
      * @return return true if required by inspire.
      */
     @Transient
@@ -94,7 +95,7 @@ public class Language extends GeonetEntity {
 
     /**
      * Set true if this is a language required byt the inspire standards.
-     * 
+     *
      * @param inspire true if required by inspire
      */
     public void setInspire(boolean inspire) {
@@ -116,7 +117,7 @@ public class Language extends GeonetEntity {
 
     /**
      * Get whether or not this language is the default system language.
-     * 
+     *
      * @return true is default language.
      */
     @Transient
@@ -126,7 +127,7 @@ public class Language extends GeonetEntity {
 
     /**
      * set true if this is the default language.
-     * 
+     *
      * @param newDefault true if this language is the new default.
      */
     public void setDefaultLanguage(boolean newDefault) {

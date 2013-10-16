@@ -8,13 +8,12 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
  * Implementation for custom methods for the HarvestHistoryRepository class.
- *
+ * <p/>
  * User: Jesse
  * Date: 9/20/13
  * Time: 4:03 PM
@@ -43,8 +42,8 @@ public class HarvestHistoryRepositoryImpl implements HarvestHistoryRepositoryCus
      * This method is intended to override the findAllAsXml methods in GeonetRepositoryImpl because Harvest history needs special handling
      * of these methods.
      * <p>
-     *     The major change is that this method takes the data of the "info" and "params" properties and parses then as XML and
-     *     replaces the corresponding elements with the parsed XML.
+     * The major change is that this method takes the data of the "info" and "params" properties and parses then as XML and
+     * replaces the corresponding elements with the parsed XML.
      * </p>
      */
     @Nonnull
@@ -58,7 +57,7 @@ public class HarvestHistoryRepositoryImpl implements HarvestHistoryRepositoryCus
             try {
                 xml = Xml.loadString(info.getValue(), false);
             } catch (Exception e) {
-                xml = new Element("error").setText("Invalid XML harvester result: "+e.getMessage());
+                xml = new Element("error").setText("Invalid XML harvester result: " + e.getMessage());
                 e.printStackTrace();
             }
             info.removeContent();
@@ -68,7 +67,7 @@ public class HarvestHistoryRepositoryImpl implements HarvestHistoryRepositoryCus
             try {
                 xml = Xml.loadString(params.getValue(), false);
             } catch (Exception e) {
-                xml = new Element("error").setText("Invalid XML harvester params: "+e.getMessage());
+                xml = new Element("error").setText("Invalid XML harvester params: " + e.getMessage());
                 e.printStackTrace();
             }
             params.removeContent();
@@ -92,6 +91,7 @@ public class HarvestHistoryRepositoryImpl implements HarvestHistoryRepositoryCus
                                                        idString + ")");
 
         final int deleted = query.executeUpdate();
+        _entityManager.flush();
         _entityManager.clear();
 
         return deleted;

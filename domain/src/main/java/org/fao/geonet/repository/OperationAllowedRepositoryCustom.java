@@ -1,12 +1,9 @@
 package org.fao.geonet.repository;
 
 import com.google.common.base.Optional;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -40,13 +37,14 @@ public interface OperationAllowedRepositoryCustom {
 
     /**
      * Find all the ids identified by the idAttribute of the values returned by the spec.
-     * @param spec the specification for selecting which elements to load
-     * @param idAttribute the attribute of the OperationAllowedId to return in the list
      *
+     * @param spec        the specification for selecting which elements to load
+     * @param idAttribute the attribute of the OperationAllowedId to return in the list
      * @return the list of ids returned.
      */
     @Nonnull
-    List<Integer> findAllIds(@Nonnull Specification<OperationAllowed> spec, @Nonnull SingularAttribute<OperationAllowedId, Integer> idAttribute);
+    List<Integer> findAllIds(@Nonnull Specification<OperationAllowed> spec, @Nonnull SingularAttribute<OperationAllowedId,
+            Integer> idAttribute);
 
     /**
      * Delete all OperationsAllowed entities with the give metadata and group ids.
@@ -61,10 +59,9 @@ public interface OperationAllowedRepositoryCustom {
      * Delete all the {@link OperationAllowed} with the given id in the id component selected by the idAttribute.
      *
      * @param idAttribute The attribute of {@link OperationAllowedId} to match against the provided id.
-     * @param id the id to use as the key for selecting which entities to delete.
-     *
+     * @param id          the id to use as the key for selecting which entities to delete.
      * @return the number of entities deleted.
      */
     @Nonnegative
-    int  deleteAllByIdAttribute(@Nonnull SingularAttribute<OperationAllowedId, Integer> idAttribute, int id);
+    int deleteAllByIdAttribute(@Nonnull SingularAttribute<OperationAllowedId, Integer> idAttribute, int id);
 }

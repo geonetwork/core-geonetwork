@@ -1,9 +1,5 @@
 package org.fao.geonet.repository.specification;
 
-import static org.fao.geonet.repository.UserRepositoryTest.*;
-import static org.fao.geonet.repository.specification.UserSpecs.*;
-import static org.junit.Assert.assertEquals;
-
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.AbstractSpringDataTest;
@@ -16,6 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.fao.geonet.repository.UserRepositoryTest.newUser;
+import static org.fao.geonet.repository.specification.UserSpecs.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test UserSpecs class
@@ -107,8 +107,10 @@ public class UserSpecsTest extends AbstractSpringDataTest {
         assertEquals(user1.getId(), found.get(0).getId());
 
         assertEquals(0, _userRepo.findAll(userIsNameNotOneOf(Arrays.asList(new String[]{"1", "2"}))).size());
-        assertEquals(2, _userRepo.findAll(userIsNameNotOneOf(Arrays.asList(new String[]{user1.getUsername(), user2.getUsername()}))).size());
-        assertEquals(1, _userRepo.findAll(userIsNameNotOneOf(Arrays.asList(new String[]{user1.getUsername(), user1.getUsername()}))).size());
+        assertEquals(2, _userRepo.findAll(userIsNameNotOneOf(Arrays.asList(new String[]{user1.getUsername(),
+                user2.getUsername()}))).size());
+        assertEquals(1, _userRepo.findAll(userIsNameNotOneOf(Arrays.asList(new String[]{user1.getUsername(),
+                user1.getUsername()}))).size());
 
     }
 }

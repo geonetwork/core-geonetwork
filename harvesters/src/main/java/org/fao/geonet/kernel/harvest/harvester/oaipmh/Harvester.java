@@ -192,7 +192,7 @@ class Harvester extends BaseAligner
 		localGroups= new GroupMapper(context);
 		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         //-----------------------------------------------------------------------
 		//--- remove old metadata
@@ -205,7 +205,7 @@ class Harvester extends BaseAligner
                 if(log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
 				dataMan.deleteMetadataGroup(context, id);
 
-                dataMan.commit(true);
+                dataMan.flush();
 
                 result.locallyRemoved++;
 			}
@@ -273,7 +273,7 @@ class Harvester extends BaseAligner
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         dataMan.indexMetadata(id);
 		result.addedMetadata++;
@@ -427,7 +427,7 @@ class Harvester extends BaseAligner
 
             addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-            dataMan.commit(true);
+            dataMan.flush();
             dataMan.indexMetadata(id);
 			result.updatedMetadata++;
 		}

@@ -2,11 +2,12 @@ package org.fao.geonet.domain;
 
 /**
  * Constants used internally in for defining the domain objects.
- * 
+ *
  * @author Jesse
  */
 public final class Constants {
-    private Constants(){}
+    private Constants() {
+    }
 
     /**
      * The length to use for IP address columns.
@@ -28,8 +29,10 @@ public final class Constants {
      *
      * @param enabled the value to convert
      * @return the corresponding char
+     *
+     * CSOFF: MethodName
      */
-    public static char toYN_EnabledChar(boolean enabled) {
+    public static char toYN_EnabledChar(final boolean enabled) {
         char enabledChar;
         if (enabled) {
             enabledChar = YN_TRUE;
@@ -38,6 +41,7 @@ public final class Constants {
         }
         return enabledChar;
     }
+
     /**
      * Convert a character from one of the JPAWorkaround columns to the corresponding boolean value.
      * Do a search for JPAWorkaround in domain package.
@@ -45,9 +49,10 @@ public final class Constants {
      * @param enabled the value to convert
      * @return the corresponding boolean value
      */
-    public static boolean toBoolean_fromYNChar(char enabled) {
+    public static boolean toBoolean_fromYNChar(final char enabled) {
         return enabled == Constants.YN_TRUE;
     }
+    // CSON: MethodName
 
     /**
      * The module name for logging domain information.

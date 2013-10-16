@@ -17,5 +17,5 @@ public interface AddressRepository extends GeonetRepository<Address, Integer>, J
      * @param zip the zip code
      * @return all the addresses in the given zip code
      */
-    public List<Address> findAllByZip(String zip);
+    List<Address> findAllByZip(String zip);
 }

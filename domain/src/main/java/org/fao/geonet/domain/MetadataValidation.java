@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 /**
  * Entity representing metadata validation reports.
- * 
+ *
  * @author Jesse
  */
 @Entity
@@ -18,8 +18,8 @@ public class MetadataValidation extends GeonetEntity {
     private ISODate _validationDate;
 
     /**
-     * Return the id object of this entity. 
-     * 
+     * Return the id object of this entity.
+     *
      * @return the id object of this entity
      */
     @EmbeddedId
@@ -28,8 +28,7 @@ public class MetadataValidation extends GeonetEntity {
     }
 
     /**
-     * Set the id object of this entity. 
-     * 
+     * Set the id object of this entity.
      *
      * @param id the id object of this entity.
      * @return this entity object
@@ -44,13 +43,14 @@ public class MetadataValidation extends GeonetEntity {
      *
      * @return the validation status for this entity.
      */
-    @Column(nullable=false)
+    @Column(nullable = false)
     public MetadataValidationStatus getStatus() {
         return _status;
     }
 
     /**
      * Set the validation status for this entity.
+     *
      * @param status the validation status for this entity.
      * @return this entity object
      */
@@ -61,17 +61,18 @@ public class MetadataValidation extends GeonetEntity {
 
     /**
      * Returns true if {@link #getStatus() == {@link MetadataValidationStatus#VALID)
-     * 
+     *
      * @return true if {@link #getStatus() == {@link MetadataValidationStatus#VALID)
      */
     @Transient
     public boolean isValid() {
         return getStatus() == MetadataValidationStatus.VALID;
     }
-    
+
     /**
      * Set the status as either {@link MetadataValidationStatus#VALID) or
      * {@link MetadataValidationStatus#INVALID)
+     *
      * @param isValid
      * @return this entity object
      */
@@ -79,10 +80,11 @@ public class MetadataValidation extends GeonetEntity {
         setStatus(isValid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID);
         return this;
     }
+
     /**
      * TODO DOC: The purpose for this is unknown as it is always 0 at the this class is created.
-     * 
-     * @return 
+     *
+     * @return
      */
     public int getTested() {
         return _tested;
@@ -101,7 +103,7 @@ public class MetadataValidation extends GeonetEntity {
 
     /**
      * TODO DOC: The purpose for this is unknown as it is always 0 at the this class is created.
-     * 
+     *
      * @return
      */
     public int getFailed() {
@@ -110,7 +112,6 @@ public class MetadataValidation extends GeonetEntity {
 
     /**
      * TODO DOC: The purpose for this is unknown as it is always 0 at the this class is created.
-     *
      *
      * @param failed
      * @return this entity object
@@ -125,14 +126,12 @@ public class MetadataValidation extends GeonetEntity {
      *
      * @return The moment that the validation completed.
      */
-    @AttributeOverride(name="dateAndTime", column = @Column(name = "valdate", length = 30) )
+    @AttributeOverride(name = "dateAndTime", column = @Column(name = "valdate", length = 30))
     public ISODate getValidationDate() {
         return _validationDate;
     }
 
     /**
-     * 
-     *
      * @param validationDate
      * @return this entity object
      */

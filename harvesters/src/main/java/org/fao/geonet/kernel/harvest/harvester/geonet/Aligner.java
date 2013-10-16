@@ -124,7 +124,7 @@ public class Aligner extends BaseAligner
 		localGroups= new GroupMapper(context);
 		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         parseXSLFilter();
 		
@@ -139,7 +139,7 @@ public class Aligner extends BaseAligner
                 if(log.isDebugEnabled()) log.debug("  - Removing old metadata with id:"+ id);
 				dataMan.deleteMetadata(context, id);
 
-                dataMan.commit(true);
+                dataMan.flush();
 
                 result.locallyRemoved++;
 			}
@@ -371,7 +371,7 @@ public class Aligner extends BaseAligner
 		}
 		addPrivileges(id, info.getChild("privileges"));
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         dataMan.indexMetadata(id);
 		result.addedMetadata++;
@@ -648,7 +648,7 @@ public class Aligner extends BaseAligner
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
 		addPrivileges(id, info.getChild("privileges"));
 
-        dataMan.commit(true);
+        dataMan.flush();
 
         dataMan.indexMetadata(id);
 	}

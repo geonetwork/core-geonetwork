@@ -136,7 +136,7 @@ class Harvester
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getBean(DataManager.class);
 		schemaMan = gc.getBean(SchemaManager.class);
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 		String siteUrl = si.getSiteUrl() + context.getBaseUrl();
 		metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
 		ssParams.put("siteUrl", siteUrl);
@@ -335,7 +335,7 @@ class Harvester
 		}
 		
 		if (result.subtemplatesRemoved + result.recordsRemoved > 0)  {
-            dataMan.commit(true);
+            dataMan.flush();
         }
     }
 
