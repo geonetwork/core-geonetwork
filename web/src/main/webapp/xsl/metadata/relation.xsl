@@ -10,7 +10,7 @@
   xmlns:exslt="http://exslt.org/common"
   exclude-result-prefixes="geonet exslt">
 
-  <xsl:include href="common.xsl"/>
+  <xsl:include href="common-noedit.xsl"/>
 
   <xsl:template match="/">
     <relations>
