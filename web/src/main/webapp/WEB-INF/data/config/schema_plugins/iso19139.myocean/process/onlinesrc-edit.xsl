@@ -70,8 +70,9 @@ attached it to the metadata for data.
                 					<xsl:when test="$protocol != 'OGC:WMS'">
                                     <gmd:distributor>
                                         <gmd:MD_Distributor>
-                                        	<gmd:distributorContact/>
-                                            <gmd:distributorFormat/>
+                                        	<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact[..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $url]"/>
+                                        	<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat[..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $url]"/>
+                                        	
                                             <gmd:distributorTransferOptions>
                                                 <gmd:MD_DigitalTransferOptions>
                                                     <gmd:onLine>
@@ -114,8 +115,8 @@ attached it to the metadata for data.
                                 <xsl:otherwise>
                                     <gmd:distributor>
                                         <gmd:MD_Distributor>
-                                        	<gmd:distributorContact/>
-                                            <gmd:distributorFormat />
+                                        	<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact[..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $url]"/>
+                                        	<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat[..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $url]"/>
                                             <gmd:distributorTransferOptions>
                                                 <gmd:MD_DigitalTransferOptions>
                                                     <gmd:onLine>

@@ -497,6 +497,12 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                             mds.add(rec);
                         }
                     });
+                    mds.sort('ASC', function(a,b,c) {
+                        if (a.get('title') === b.get('title')) {
+                            return 0;
+                        }
+                        return a.get('title') < b.get('title') ? -1 : 1;
+                    });
                 }
                 
                 mds.items.type = type;

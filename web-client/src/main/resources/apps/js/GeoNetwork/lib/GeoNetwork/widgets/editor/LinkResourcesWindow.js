@@ -365,6 +365,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             
             var checkboxSM = new Ext.grid.CheckboxSelectionModel({
                 singleSelect: false,
+                checkOnly: true,
                 header: '<div class="x-grid3-hd-checker">&#160;</div>',
                 listeners: {
                     rowselect: {
@@ -393,14 +394,14 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         dataIndex: 'name'
                     }, {
                         id: 'title', 
-                        width: 180, 
-                        header: OpenLayers.i18n('title'), 
+                        width: 350, 
+                        header: OpenLayers.i18n('layerInfoPanel.descriptionField'), 
                         dataIndex: 'title',
                         editor: new Ext.form.TextField({
                             allowBlank: false
                         })
                     },
-                    {id: 'abstract', width: 180, header: OpenLayers.i18n('abstract'), dataIndex: 'abstract'}
+                    {id: 'abstract', width: 180, hidden: true, header: OpenLayers.i18n('abstract'), dataIndex: 'abstract'}
                 ]
             });
             
@@ -1344,9 +1345,9 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         "&desc=" + desc + 
                         "&protocol=" + this.selectedLink.protocol + 
                         "&name=" + name;
-                    if(serviceName && serviceDescr) {
+                    if(serviceName) {
                         parameters += '&serviceName=' + serviceName +
-                                      '&serviceDescr=' + serviceDescr;
+                                      '&serviceDescr=' + (serviceDescr ? serviceDescr : '');
                     }
                 }
             }
