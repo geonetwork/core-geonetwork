@@ -45,3 +45,4 @@ web/.springBeans
 web/images/
 *.launch
 idea/
+web/src/main/webapp/WEB-INF/data/0*
