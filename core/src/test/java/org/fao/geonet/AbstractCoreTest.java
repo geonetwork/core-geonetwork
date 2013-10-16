@@ -87,22 +87,22 @@ public abstract class AbstractCoreTest extends AbstractSpringDataTest {
 
             _applicationContext.getBeanFactory().registerSingleton("serviceConfig", serviceConfig);
 
-            final File webappDir = getWebappDir();
+            final String webappDir = getWebappDir();
             final File dataDir = new File(webappDir, "WEB-INF/data");
             final File configDir = new File(dataDir, "config");
             final String schemaPluginsCatalogFile = new File(getClassFile(), "../schemaplugin-uri-catalog.xml").getPath();
             final String schemaPluginsDir = new File(configDir, "schema_plugins").getPath();
             final String resourcePath = new File(dataDir, "data/resources").getPath();
 
-            _applicationContext.getBean(GeonetworkDataDirectory.class).init("geonetwork", webappDir.getPath(), serviceConfig, null);
+            _applicationContext.getBean(GeonetworkDataDirectory.class).init("geonetwork", webappDir, serviceConfig, null);
             _applicationContext.getBean(LuceneConfig.class).configure("luceneConfig.xml");
 
-            SchemaManager.registerXmlCatalogFiles(webappDir.getPath() + "/", schemaPluginsCatalogFile);
+            SchemaManager.registerXmlCatalogFiles(webappDir + "/", schemaPluginsCatalogFile);
 
             TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
 
             final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
-            schemaManager.configure(webappDir.getPath(), resourcePath,
+            schemaManager.configure(webappDir, resourcePath,
                     schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
             _applicationContext.getBeanFactory().registerSingleton(initializedString, initializedString);
 
@@ -152,18 +152,18 @@ public abstract class AbstractCoreTest extends AbstractSpringDataTest {
     }
 
     protected String getStyleSheets() {
-        final File file = getWebappDir();
+        final String file = getWebappDir();
 
         return new File(file, "xsl/conversion").getPath();
     }
 
-    private File getWebappDir() {
+    private String getWebappDir() {
         File here = getClassFile();
         while (!new File(here, "pom.xml").exists()) {
             here = here.getParentFile();
         }
 
-        return new File(here.getParentFile(), "web/src/main/webapp/").getAbsoluteFile();
+        return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath()+"/";
     }
 
     private File getClassFile() {
