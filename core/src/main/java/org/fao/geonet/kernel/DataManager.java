@@ -32,7 +32,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.Collections2;
 import org.eclipse.jetty.util.ConcurrentHashSet;
-import org.fao.geonet.GeonetworkDataDirectory;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
@@ -181,12 +180,12 @@ public class DataManager {
         appPath = context.getAppPath();
         stylePath = context.getAppPath() + FS + Geonet.Path.STYLESHEETS + FS;
         editLib = new EditLib(schemaMan);
-        dataDir = _applicationContext.getBean(GeonetworkDataDirectory.GEONETWORK_BEAN_KEY, GeonetworkDataDirectory.class).getSystemDataDir();
+        dataDir = _applicationContext.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
         thesaurusDir = _applicationContext.getBean(ThesaurusManager.class).getThesauriDirectory();
 
         if (context.getUserSession() == null) {
             UserSession session = new UserSession();
-            servContext.setUserSession(session);
+            context.setUserSession(session);
             session.loginAs(new User().setUsername("admin").setId(-1).setProfile(Profile.Administrator));
         }
         // get lastchangedate of all metadata in index
@@ -2183,9 +2182,7 @@ public class DataManager {
         // Set operation
         if (opAllowed.isPresent()) {
             opAllowedRepo.save(opAllowed.get());
-            if (svnManager != null) {
-                svnManager.setHistory(mdId + "", context);
-            }
+            svnManager.setHistory(mdId + "", context);
         }
     }
 

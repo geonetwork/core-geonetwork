@@ -50,7 +50,6 @@ import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.lib.DbLib;
 import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
-import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.util.z3950.Repositories;
@@ -136,6 +135,7 @@ public class Geonetwork implements ApplicationHandler {
         ServletContext servletContext = null;
         if (context.getServlet() != null) {
             servletContext = context.getServlet().getServletContext();
+            servletContext = context.getServlet().getServletContext();
         }
         ServerLib sl = new ServerLib(servletContext, path);
         String version = sl.getVersion();
@@ -149,7 +149,7 @@ public class Geonetwork implements ApplicationHandler {
         ServiceConfig handlerConfig = new ServiceConfig(serviceConfigElems);
 
         // Init configuration directory
-        new GeonetworkDataDirectory(webappName, path, handlerConfig, context.getServlet(), _applicationContext);
+        _applicationContext.getBean(GeonetworkDataDirectory.class).init(webappName, path, handlerConfig, context.getServlet());
 
         // Get config handler properties
         String systemDataDir = handlerConfig.getMandatoryValue(Geonet.Config.SYSTEM_DATA_DIR);
@@ -273,19 +273,19 @@ public class Geonetwork implements ApplicationHandler {
         luceneTermsToExclude = handlerConfig.getMandatoryValue(Geonet.Config.STAT_LUCENE_TERMS_EXCLUDE);
 
         LuceneConfig lc = _applicationContext.getBean(LuceneConfig.class);
-        lc.configure(path, servletContext, luceneConfigXmlFile);
+        lc.configure(luceneConfigXmlFile);
         logger.info("  - Lucene configuration is:");
         logger.info(lc.toString());
 
-        DataStore dataStore;
         try {
-            dataStore = _applicationContext.getBean(DataStore.class);
+            _applicationContext.getBean(DataStore.class);
         } catch (NoSuchBeanDefinitionException e) {
-            dataStore = createShapefileDatastore(luceneDir);
-        }
-        //--- no datastore for spatial indexing means that we can't continue
-        if (dataStore == null) {
-            throw new IllegalArgumentException("GeoTools datastore creation failed - check logs for more info/exceptions");
+            DataStore dataStore = createShapefileDatastore(luceneDir);
+            _applicationContext.getBeanFactory().registerSingleton("dataStore", dataStore);
+            //--- no datastore for spatial indexing means that we can't continue
+            if (dataStore == null) {
+                throw new IllegalArgumentException("GeoTools datastore creation failed - check logs for more info/exceptions");
+            }
         }
 
         String maxWritesInTransactionStr = handlerConfig.getMandatoryValue(Geonet.Config.MAX_WRITES_IN_TRANSACTION);
@@ -303,9 +303,9 @@ public class Geonetwork implements ApplicationHandler {
 
         SettingInfo settingInfo = context.getBean(SettingInfo.class);
         searchMan = _applicationContext.getBean(SearchManager.class);
-        searchMan.configure(path, luceneDir, htmlCacheDir, thesauriDir, logAsynch,
-                logSpatialObject, luceneTermsToExclude, dataStore,
-                maxWritesInTransaction, schemaMan);
+        searchMan.init(logAsynch,
+                logSpatialObject, luceneTermsToExclude,
+                maxWritesInTransaction);
 
 
         // if the validator exists the proxyCallbackURL needs to have the external host and
@@ -364,11 +364,7 @@ public class Geonetwork implements ApplicationHandler {
         OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(settingMan, schemaMan);
 
 
-        GeonetContext gnContext = new GeonetContext();
-
-        gnContext.springAppContext = context.getApplicationContext();
-        gnContext.threadPool = threadPool;
-        gnContext.statusActionsClass = statusActionsClass;
+        GeonetContext gnContext = new GeonetContext(_applicationContext, false, statusActionsClass, threadPool);
 
         //------------------------------------------------------------------------
         //--- return application context
@@ -385,7 +381,7 @@ public class Geonetwork implements ApplicationHandler {
         // Creates a default site logo, only if the logo image doesn't exists
         // This can happen if the application has been updated with a new version preserving the database and
         // images/logos folder is not copied from old application
-        createSiteLogo(settingMan.getSiteId(), servletContext, context.getAppPath());
+        createSiteLogo(settingMan.getSiteId(), context, context.getAppPath());
 
 
         // Notify unregistered metadata at startup. Needed, for example, when the user enables the notifier config
@@ -519,17 +515,17 @@ public class Geonetwork implements ApplicationHandler {
      * Creates a default site logo, only if the logo image doesn't exists
      *
      * @param nodeUuid
-     * @param servletContext
+     * @param context
      * @param appPath
      */
-    private void createSiteLogo(String nodeUuid, ServletContext servletContext, String appPath) {
+    private void createSiteLogo(String nodeUuid, ServiceContext context, String appPath) {
         try {
-            String logosDir = Resources.locateLogosDir(servletContext, appPath);
+            String logosDir = Resources.locateLogosDir(context);
             File logo = new File(logosDir, nodeUuid + ".gif");
             if (!logo.exists()) {
                 FileOutputStream os = new FileOutputStream(logo);
                 try {
-                    os.write(Resources.loadImage(servletContext, appPath, "images/logos/dummy.gif", new byte[0]).one());
+                    os.write(Resources.loadImage(context.getServlet().getServletContext(), appPath, "images/logos/dummy.gif", new byte[0]).one());
                     logger.info("      Setting catalogue logo for current node identified by: " + nodeUuid);
                 } finally {
                     os.close();
@@ -547,23 +543,8 @@ public class Geonetwork implements ApplicationHandler {
      */
     private void setProps(String path, ServiceConfig handlerConfig) {
 
-        String webapp = path + "WEB-INF" + FS;
-
-        //--- Set jeeves.xml.catalog.files property
-        //--- this is critical to schema support so must be set correctly
-        String catalogProp = System.getProperty(Constants.XML_CATALOG_FILES);
-        if (catalogProp == null) catalogProp = "";
-        if (!catalogProp.equals("")) {
-            logger.info("Overriding " + Constants.XML_CATALOG_FILES + " property (was set to " + catalogProp + ")");
-        }
-        catalogProp = webapp + "oasis-catalog.xml;" + handlerConfig.getValue(Geonet.Config.CONFIG_DIR) + FS
-                      + "schemaplugin-uri-catalog.xml";
-        System.setProperty(Constants.XML_CATALOG_FILES, catalogProp);
-        logger.info(Constants.XML_CATALOG_FILES + " property set to " + catalogProp);
-
-        String blankXSLFile = path + "xsl" + FS + "blanks.xsl";
-        System.setProperty(Constants.XML_CATALOG_BLANKXSLFILE, blankXSLFile);
-        logger.info(Constants.XML_CATALOG_BLANKXSLFILE + " property set to " + blankXSLFile);
+        final String schemapluginUriCatalog = handlerConfig.getValue(Geonet.Config.CONFIG_DIR) + FS + "schemaplugin-uri-catalog.xml";
+        String webapp = SchemaManager.registerXmlCatalogFiles(path, schemapluginUriCatalog);
 
         //--- Set mime-mappings
         String mimeProp = System.getProperty("mime-mappings");

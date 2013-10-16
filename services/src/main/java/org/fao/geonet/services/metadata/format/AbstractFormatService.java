@@ -7,7 +7,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.services.Utils;
@@ -46,18 +46,17 @@ abstract class AbstractFormatService implements Service {
         if (!initializedDir) {
             synchronized (this) {
                 if (!initializedDir) {
-                    if(!new File(userXslDir).isAbsolute()) {
-                        String baseURL = context.getBaseUrl();
-                        String webappName = baseURL.substring(1);
-                        String systemDataDir = System.getProperty(webappName +GeonetworkDataDirectory.KEY_SUFFIX);
-                        if (!systemDataDir.endsWith(File.separator)){
-                            systemDataDir = systemDataDir+File.separator;
+                    if (!new File(userXslDir).isAbsolute()) {
+                        String systemDataDir = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
+
+                        if (!systemDataDir.endsWith(File.separator)) {
+                            systemDataDir = systemDataDir + File.separator;
                         }
-                        userXslDir = systemDataDir+"data"+File.separator+userXslDir;
+                        userXslDir = systemDataDir + "data" + File.separator + userXslDir;
                     }
                     IO.mkdirs(new File(userXslDir), "Formatter directory");
-                    
-                    Log.info(Geonet.DATA_DIRECTORY, "Final Custom Metadata format XSL directory set to: "+userXslDir);
+
+                    Log.info(Geonet.DATA_DIRECTORY, "Final Custom Metadata format XSL directory set to: " + userXslDir);
 
                     initializedDir = true;
                 }

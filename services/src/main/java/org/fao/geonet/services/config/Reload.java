@@ -31,9 +31,6 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.jdom.Element;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.web.context.ConfigurableWebApplicationContext;
 
 import javax.servlet.ServletContext;
 
@@ -58,7 +55,7 @@ public class Reload implements Service {
         }
 
 		LuceneConfig lc = context.getBean(LuceneConfig.class);
-        lc.configure(path, servletContext, luceneConfigXmlFile);
+        lc.configure(luceneConfigXmlFile);
 
 		Logger logger = context.getLogger();
 		logger.info("  - Lucene configuration is:");

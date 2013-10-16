@@ -121,7 +121,8 @@ public class GetRecord implements OaiPmhService {
             String schemaDir = sm.getSchemaDir(schema);
             if (Lib.existsConverter(schemaDir, prefix)) {
                 final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-                Element env = Lib.prepareTransformEnv(uuid, changeDate, context.getBaseUrl(), siteURL, gc.getSiteName());
+                Element env = Lib.prepareTransformEnv(uuid, changeDate, context.getBaseUrl(), siteURL, gc.getBean(SettingManager.class)
+                        .getSiteName());
                 md = Lib.transform(schemaDir, env, md, prefix + ".xsl");
             } else {
                 throw new CannotDisseminateFormatException("Unknown prefix : " + prefix);

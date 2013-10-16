@@ -9,6 +9,7 @@
     <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"/>
     <bean id="geonetworkAuthenticationProvider" class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider"/>
     <bean id="geonetworkEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
+    <bean id="dataStore" class="org.geotools.data.memory.MemoryDataStore"/>
 
     <jdbc:initialize-database data-source="jdbcDataSource">
         <jdbc:script location="file:..\web\src\main\webapp\WEB-INF\classes\setup\sql\data\data-db-default.sql" />

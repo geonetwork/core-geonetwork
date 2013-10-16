@@ -38,7 +38,7 @@ public final class UserGroupSpecs {
         return new Specification<UserGroup>() {
             @Override
             public Predicate toPredicate(Root<UserGroup> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Profile> userIdAttributePath = root.get(UserGroup_.profile);
+                Path<Profile> userIdAttributePath = root.get(UserGroup_.id).get(UserGroupId_.profile);
                 Predicate userIdEqualPredicate = cb.equal(userIdAttributePath, cb.literal(profile));
                 return userIdEqualPredicate;
             }

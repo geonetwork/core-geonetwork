@@ -73,12 +73,14 @@ public class Add implements Service {
 
 		String schemas[] = schemaList.split(",");
 
+        int count = 0;
 		for (String schemaName : schemas) {
 			Log.info(Geonet.DATA_MANAGER, "Loading sample data for schema "
 					+ schemaName);
 			String schemaDir = schemaMan.getSchemaSampleDataDir(schemaName);
 			if (schemaDir == null) {
 				Log.error(Geonet.DATA_MANAGER, "Skipping - No sample data?");
+                result.addContent(new Element(schemaName).setText("0"));
 				continue;
 			}
 
@@ -92,26 +94,30 @@ public class Add implements Service {
 					if (file.getName().endsWith(".mef"))
 						sampleDataFilesList.add(file);
 			}
-
+            int schemaCount = 0;
             for (final File file : sampleDataFilesList) {
                 try {
                     if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                         Log.debug(Geonet.DATA_MANAGER, "Loading sample data: " + file);
                     }
-                    MEFLib.doImport(params, context, file, "");
+                    schemaCount += MEFLib.doImport(params, context, file, "").size();
                 } catch (Exception e) {
                     e.printStackTrace();
                     serviceStatus[0] = "false";
                     serviceError[0] = e.getMessage() + " whilst loading " + file;
                     Log.error(Geonet.DATA_MANAGER,
-                            "Error loading sample data: " + e.getMessage());
+                            "Error loading sample data: " + e.getMessage(), e);
                 }
                 context.getBean(DataManager.class).flush();
             }
-		}
+            count += schemaCount;
+            result.addContent(new Element(schemaName).setText(""+schemaCount));
+        }
 
 		result.setAttribute("status", serviceStatus[0]);
 		result.setAttribute("error", serviceError[0]);
+		result.setAttribute("total", ""+count);
+
 		return result;
 	}
 }

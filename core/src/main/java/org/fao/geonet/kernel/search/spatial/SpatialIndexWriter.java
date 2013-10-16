@@ -110,7 +110,6 @@ public class SpatialIndexWriter implements FeatureListener
     /**
 			* TODO: javadoc.
 			* 
-			* @param dataStore
 			* @param parser
 			* @param transaction
 			* @param maxWrites Maximum number of writes in a transaction. If set to

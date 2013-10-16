@@ -28,6 +28,7 @@ import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.Util;
@@ -228,8 +229,8 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 			
 			for(int i=beginIndex; i<beginIndex+count; i++) {
 				try {
-					MEFLib.doImportIndexGroup(params, context, files[i], stylePath);
-				} catch (Exception e) {
+                    MEFLib.doImport(params, context, files[i], stylePath);
+                } catch (Exception e) {
 					if (failOnError)
 						throw e;
 					
@@ -423,7 +424,8 @@ public class ImportFromDir extends NotInReadOnlyModeService {
         String docType = null, title = null, createDate = null, changeDate = null;
         boolean ufo = true, indexImmediate = true;
         String isTemplate = "n";
-        dm.insertMetadata(context, schema, xml, uuid, context.getUserSession().getUserIdAsInt(), group, gc.getSiteId(),
+        dm.insertMetadata(context, schema, xml, uuid, context.getUserSession().getUserIdAsInt(), group, gc.getBean(SettingManager
+                .class).getSiteId(),
                          isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
 
 	}

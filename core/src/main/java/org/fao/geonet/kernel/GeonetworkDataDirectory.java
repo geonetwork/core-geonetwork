@@ -1,10 +1,9 @@
-package org.fao.geonet;
+package org.fao.geonet.kernel;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
@@ -13,8 +12,8 @@ import org.fao.geonet.utils.Log;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.stereotype.Component;
 
 /**
  * The GeoNetwork data directory is the location on the file system where
@@ -24,6 +23,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  * used by GeoNetwork for various purposes (eg. Lucene index, spatial index,
  * logos).
  */
+@Component(GeonetworkDataDirectory.GEONETWORK_BEAN_KEY)
 public class GeonetworkDataDirectory {
 	/**
 	 * The default GeoNetwork data directory location.
@@ -33,9 +33,19 @@ public class GeonetworkDataDirectory {
 	public static final String GEONETWORK_DIR_KEY = "geonetwork.dir";
 	public static final String GEONETWORK_BEAN_KEY = GEONETWORK_DIR_KEY+".spring.bean";
 
-	private String systemDataDir;
+    private String webappDir;
+    private String systemDataDir;
+    private File luceneDir;
+    private File spatialIndexPath;
+    private File configDir;
+    private File thesauriDir;
+    private File schemaPluginsDir;
+    private File metadataDataDir;
+    private File metadataRevisionDir;
+    private File resourcesDir;
+    private File htmlCacheDir;
 
-	/**
+    /**
 	 * Check and create if needed GeoNetwork data directory.
 	 * 
 	 * The data directory is the only mandatory value. If not set, the default location is
@@ -55,13 +65,13 @@ public class GeonetworkDataDirectory {
 	 * </ul>
 	 * 
 	 */
-	public GeonetworkDataDirectory(String webappName, String path,
-			ServiceConfig handlerConfig, JeevesServlet jeevesServlet, ConfigurableApplicationContext appContext) {
+	public void init(final String webappName, final String path,
+                     final ServiceConfig handlerConfig, final JeevesServlet jeevesServlet) {
         if (Log.isDebugEnabled(Geonet.DATA_DIRECTORY))
             Log.debug(Geonet.DATA_DIRECTORY,
 				"Check and create if needed GeoNetwork data directory");
-		setDataDirectory(jeevesServlet, appContext, webappName, path, handlerConfig);
-        appContext.getBeanFactory().registerSingleton(GEONETWORK_BEAN_KEY, this);
+        this.webappDir = path;
+		setDataDirectory(jeevesServlet, webappName, path, handlerConfig);
 	}
 
 	/**
@@ -129,10 +139,7 @@ public class GeonetworkDataDirectory {
 		return dataDirStr;
 	}
 
-	/**
-	 * 
-	 */
-	private String setDataDirectory(JeevesServlet jeevesServlet, ConfigurableApplicationContext appContext, String webappName, String path,
+	private String setDataDirectory(JeevesServlet jeevesServlet, String webappName, String path,
                                     ServiceConfig handlerConfig) {
 
 		// System property defined according to webapp name
@@ -198,42 +205,32 @@ public class GeonetworkDataDirectory {
 				+ systemDataDir);
 		System.setProperty(webappName + KEY_SUFFIX + "", systemDataDir);
 
-		ConfigurableListableBeanFactory beanFactory = appContext.getBeanFactory();
-        beanFactory.registerSingleton(webappName + KEY_SUFFIX + "", systemDataDir);
-
 		// Set subfolder data directory
-		setResourceDir(appContext, jeevesServlet, webappName, handlerConfig, systemDataDir, ".lucene" + KEY_SUFFIX,
-				"index", Geonet.Config.LUCENE_DIR);
-		File spatialIndexPath = setResourceDir(appContext, jeevesServlet, "", handlerConfig, systemDataDir, "spatial" + KEY_SUFFIX,
-		        "spatialindex", null);
-		try {
-		    // this is added for the shapefile-datastore.xml config file or other file based
-		    // spatial index options
-            beanFactory.registerSingleton("spatialIndexDir", spatialIndexPath.toURI().toURL());
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-		setResourceDir(appContext, jeevesServlet, webappName, handlerConfig, systemDataDir, ".config" + KEY_SUFFIX,
-				"config", Geonet.Config.CONFIG_DIR);
-		setResourceDir(appContext, jeevesServlet, webappName, handlerConfig, systemDataDir,
-				".codeList" + KEY_SUFFIX, "config" + File.separator + "codelist",
-				Geonet.Config.CODELIST_DIR);
-		setResourceDir(appContext, jeevesServlet, webappName, handlerConfig, systemDataDir, ".schema" + KEY_SUFFIX,
-				"config" + File.separator + "schema_plugins",
-				Geonet.Config.SCHEMAPLUGINS_DIR);
-		setResourceDir(appContext, jeevesServlet, webappName, handlerConfig, systemDataDir, ".data" + KEY_SUFFIX,
-				"data" + File.separator + "metadata_data",
-				Geonet.Config.DATA_DIR);
-		setResourceDir(appContext, jeevesServlet, webappName, handlerConfig, systemDataDir, ".svn" + KEY_SUFFIX,
-				"data" + File.separator + "metadata_subversion",
-				Geonet.Config.SUBVERSION_PATH);
-		setResourceDir(appContext, jeevesServlet, webappName, handlerConfig, systemDataDir,
-				".resources" + KEY_SUFFIX, "data" + File.separator + "resources",
-				Geonet.Config.RESOURCES_DIR);
+		luceneDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir, ".lucene" + KEY_SUFFIX,
+                "index", Geonet.Config.LUCENE_DIR);
+		spatialIndexPath = setDir(jeevesServlet, "", handlerConfig, systemDataDir, "spatial" + KEY_SUFFIX,
+                "spatialindex", null);
 
-		handlerConfig.setValue(Geonet.Config.HTMLCACHE_DIR,
-				handlerConfig.getValue(Geonet.Config.RESOURCES_DIR)
-						+ File.separator + "htmlcache");
+		configDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir, ".config" + KEY_SUFFIX,
+                "config", Geonet.Config.CONFIG_DIR);
+		thesauriDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir,
+                ".codeList" + KEY_SUFFIX, "config" + File.separator + "codelist",
+                Geonet.Config.CODELIST_DIR);
+		schemaPluginsDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir, ".schema" + KEY_SUFFIX,
+                "config" + File.separator + "schema_plugins",
+                Geonet.Config.SCHEMAPLUGINS_DIR);
+		metadataDataDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir, ".data" + KEY_SUFFIX,
+                "data" + File.separator + "metadata_data",
+                Geonet.Config.DATA_DIR);
+		metadataRevisionDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir, ".svn" + KEY_SUFFIX,
+                "data" + File.separator + "metadata_subversion",
+                Geonet.Config.SUBVERSION_PATH);
+		resourcesDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir,
+                ".resources" + KEY_SUFFIX, "data" + File.separator + "resources",
+                Geonet.Config.RESOURCES_DIR);
+
+        htmlCacheDir = new File(handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache");
+        handlerConfig.setValue(Geonet.Config.HTMLCACHE_DIR, htmlCacheDir.getAbsolutePath());
 
 		handlerConfig.setValue(Geonet.Config.SYSTEM_DATA_DIR, systemDataDir);
 
@@ -302,17 +299,16 @@ public class GeonetworkDataDirectory {
 	 * folder if does not exist.
 	 * 
 	 *
-     * @param appContext
      * @param jeevesServlet
-     *@param webappName
+     * @param webappName
      * @param handlerConfig
      * @param systemDataDir
      * @param key
      * @param folder
      * @param handlerKey       @return
-	 */
-	private File setResourceDir(ConfigurableApplicationContext appContext, JeevesServlet jeevesServlet, String webappName, ServiceConfig handlerConfig,
-                                String systemDataDir, String key, String folder, String handlerKey) {
+     * */
+	private File setDir(JeevesServlet jeevesServlet, String webappName,
+                        ServiceConfig handlerConfig, String systemDataDir, String key, String folder, String handlerKey) {
 		String envKey = webappName + key;
 		String dir = GeonetworkDataDirectory.lookupProperty(
 				jeevesServlet, handlerConfig, envKey);
@@ -333,16 +329,109 @@ public class GeonetworkDataDirectory {
 		// Create directory if it does not exist
 		File file = new File(dir);
 		if (!file.exists() && !file.mkdirs()) {
-			throw new RuntimeException("Unable to create directory: "+file);
+			throw new RuntimeException("Unable to create directory: " + file);
 		}
 
         System.setProperty(envKey, dir);
-        appContext.getBeanFactory().registerSingleton(envKey, dir);
 		Log.info(Geonet.DATA_DIRECTORY, "    - " + envKey + " is " + dir);
 		return file;
 	}
 
+    /**
+     * Get the root data dir for Geonetwork.  Typically other "data" directories are subdirectories to this.
+     *
+     * @return the root data dir for Geonetwork
+     */
     public String getSystemDataDir() {
         return systemDataDir;
+    }
+
+    /**
+     * Get the directory to store the lucene indices in.
+     * @return The directory to store the lucene indices in.
+     */
+    public File getLuceneDir() {
+        return luceneDir;
+    }
+
+    /**
+     * Get the directory to store the metadata spatial index. If the spatial index is to be stored locally this is the directory to use.
+     *
+     * @return the directory to store the metadata spatial index
+     */
+    public File getSpatialIndexPath() {
+        return spatialIndexPath;
+    }
+
+    /**
+     * Return the directory containing the configuration file.
+     *
+     * @return the directory containing the configuration file.
+     */
+    public File getConfigDir() {
+        return configDir;
+    }
+
+    /**
+     * Get the directory containing the thesauri.
+     *
+     * @return the directory containing the thesauri.
+     */
+    public File getThesauriDir() {
+        return thesauriDir;
+    }
+
+    /**
+     * Get the schema plugins directory.
+     *
+     * @return the schema plugins directory.
+     */
+    public File getSchemaPluginsDir() {
+        return schemaPluginsDir;
+    }
+
+    /**
+     * Get the directory that contain all the resources related to metadata (thumbnails, attachments, etc...).
+     *
+     * @return the directory that contain all the resources related to metadata (thumbnails, attachments, etc...).
+     */
+    public File getMetadataDataDir() {
+        return metadataDataDir;
+    }
+
+    /**
+     * Get the directory containing the metadata revision history if it is to be stored locally.
+     * @return the directory containing the metadata revision history.
+     */
+    public File getMetadataRevisionDir() {
+        return metadataRevisionDir;
+    }
+
+    /**
+     * Get the directory that will contain the resources for the system.
+     *
+     * @see org.fao.geonet.resources.ResourceFilter
+     * @return the directory that will contain the resources for the system.
+     */
+    public File getResourcesDir() {
+        return resourcesDir;
+    }
+
+    /**
+     * Get the directory containing the webapplication.
+     *
+     * @return the directory containing the webapplication.
+     */
+    public String getWebappDir() {
+        return webappDir;
+    }
+
+    /**
+     * Get directory for caching html data.
+     *
+     * @return directory for caching html data.
+     */
+    public File getHtmlCacheDir() {
+        return htmlCacheDir;
     }
 }

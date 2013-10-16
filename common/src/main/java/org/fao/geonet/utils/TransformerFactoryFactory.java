@@ -23,38 +23,8 @@ public class TransformerFactoryFactory {
     public static void init(String implementationName) {
     	debug("Implementation name: " + implementationName);
         if(implementationName != null && implementationName.length() > 0) {
-            /*
-             * code for JDK 1.5 -- might break other applications using the same System property at the same moment
-             *
-             * replace this by the 1.6 snipped in comments below as soon as we drop 1.5 support
-             */
-            Properties props = System.getProperties();
-            // remember current system property
-            String currentSystemProperty = null;
-            if(props.containsKey(SYSTEM_PROPERTY_NAME)) {
-                currentSystemProperty = props.getProperty(SYSTEM_PROPERTY_NAME);
-                debug("Current system property: " + currentSystemProperty);
-            }
-            // set system property to what GeoNetwork needs
-            props.setProperty(SYSTEM_PROPERTY_NAME, implementationName);
-            // use the system property
-            factory = TransformerFactory.newInstance();
-            // reset the system property to what it was before
-            if(currentSystemProperty != null) {
-                props.setProperty(SYSTEM_PROPERTY_NAME, currentSystemProperty);
-            }
-            else {
-                props.remove(SYSTEM_PROPERTY_NAME);
-            }
-            /*
-             * JDK 1.6 code :
-             *
-             * this is much preferred and as soon as we drop support for 1.5, this snippet should replace the non-commented code below.
-             *
-             *   factory = TransformerFactory.newInstance(implementationName, null);
-             */
-        }
-        else {
+            factory = TransformerFactory.newInstance(implementationName, null);
+        } else {
             factory = TransformerFactory.newInstance();
         }
     }

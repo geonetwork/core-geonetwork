@@ -89,6 +89,7 @@ public class SvnManager {
     private static String password = "geonetwork";
 
     private Map<TransactionStatus, SvnTask> tasks = new ConcurrentHashMap<TransactionStatus, SvnTask>();
+    private boolean _enabled = false;
 
     // SvnTask holds information used to commit changes to a metadata record
     private static class SvnTask {
@@ -103,7 +104,7 @@ public class SvnManager {
      * of the repository in repoUrl. Adds the commit/abort listeners to the DbmsPool resource provider.
      */
     public void init() throws Exception {
-
+        this._enabled = true;
         String uuid = _settingManager.getValue("system/site/svnUuid");
 
         boolean dbCreated = false;
@@ -215,6 +216,9 @@ public class SvnManager {
      */
     @After("execution(* commit(org.springframework.transaction.TransactionStatus))")
     public void commitJoinPointHandler(JoinPoint joinPoint) {
+        if (!_enabled) {
+            return;
+        }
         TransactionStatus status = (TransactionStatus) joinPoint.getArgs()[0];
         SvnTask task = tasks.get(status);
 
@@ -254,6 +258,10 @@ public class SvnManager {
      */
     @Before("execution(* rollback(org.springframework.transaction.TransactionStatus))")
     public void rollbackJoinPointHandler(JoinPoint joinPoint) {
+        if (!_enabled) {
+            return;
+        }
+
         TransactionStatus status = (TransactionStatus) joinPoint.getArgs()[0];
         tasks.remove(status);
     }
@@ -324,6 +332,9 @@ public class SvnManager {
     @Transactional
     public void setHistory(final String id, final ServiceContext context) throws Exception {
 
+        if (!_enabled) {
+            return ;
+        }
         if (!exists(id))
             return; // not in repo so exit
 
@@ -376,6 +387,10 @@ public class SvnManager {
      * @throws Exception
      */
     public void createMetadataDir(final String id, ServiceContext context, Element md) throws Exception {
+        if (!_enabled) {
+            return;
+        }
+
         if (exists(id))
             return; // already in repo so exit
 
@@ -429,6 +444,9 @@ public class SvnManager {
      * @throws Exception when something goes wrong
      */
     public void deleteDir(String id, ServiceContext context) throws Exception {
+        if (!_enabled) {
+            return;
+        }
 
         if (!exists(id))
             return; // not in repo so exit
@@ -500,8 +518,7 @@ public class SvnManager {
      * @return ISVNEditor object for operations on the repository
      * @throws SVNException if something goes wrong
      */
-    public ISVNEditor getEditor(String logMessage) throws SVNException {
-
+    private ISVNEditor getEditor(String logMessage) throws SVNException {
         SVNRepository repository = getNewRepository();
         ISVNEditor editor = repository.getCommitEditor(logMessage, null /* locks */, false /* keepLocks */, null /* mediator */);
         return editor;
@@ -512,7 +529,7 @@ public class SvnManager {
      *
      * @throws SVNException if something goes wrong
      */
-    public SVNRepository getRepository() throws SVNException {
+    private SVNRepository getRepository() throws SVNException {
         return getNewRepository();
     }
 
@@ -525,6 +542,9 @@ public class SvnManager {
      */
     @Transactional
     public void commitMetadata(String id, ISVNEditor editor) throws Exception {
+        if (!_enabled) {
+            return;
+        }
 
         DataManager dataMan = context.getBean(DataManager.class);
 

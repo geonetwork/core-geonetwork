@@ -36,6 +36,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
@@ -109,8 +110,8 @@ public class Create extends NotInReadOnlyModeService {
 		
 		//--- query the data manager
 
-		String newId = dm.createMetadata(context, id, groupOwner,
-												  gc.getSiteId(), context.getUserSession().getUserIdAsInt(), 
+        String newId = dm.createMetadata(context, id, groupOwner,
+                gc.getBean(SettingManager.class).getSiteId(), context.getUserSession().getUserIdAsInt(),
 												  (child.equals("n")?null:uuid), isTemplate, haveAllRights);
 
         Element response = new Element(Jeeves.Elem.RESPONSE);

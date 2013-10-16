@@ -47,6 +47,27 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
     }
 
     @Test
+    public void testPrimaryKey() throws Exception {
+        Group group = _groupRepo.save(GroupRepositoryTest.newGroup(_inc));
+        User user =_userRepo.save(UserRepositoryTest.newUser(_inc));
+
+        UserGroup userGroup = new UserGroup().setGroup(group).setUser(user).setProfile(Profile.Editor);
+        userGroup = _repo.save(userGroup);
+
+        UserGroup userGroup2 = new UserGroup().setGroup(group).setUser(user).setProfile(Profile.RegisteredUser);
+        userGroup2 = _repo.save(userGroup2);
+
+        UserGroup userGroup3 = new UserGroup().setGroup(group).setUser(user).setProfile(Profile.RegisteredUser);
+        _repo.save(userGroup3);
+
+        assertEquals(2, _repo.count());
+
+        assertNotNull(_repo.findOne(userGroup.getId()));
+        assertNotNull(_repo.findOne(userGroup2.getId()));
+
+    }
+
+    @Test
     public void testFindGroupIds() {
         UserGroup ug1 = _repo.save(newUserGroup());
         UserGroup ug2 = _repo.save(newUserGroup());

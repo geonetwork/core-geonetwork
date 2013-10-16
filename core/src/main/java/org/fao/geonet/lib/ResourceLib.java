@@ -23,7 +23,7 @@
 
 package org.fao.geonet.lib;
 
-import org.fao.geonet.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -34,7 +34,6 @@ import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.resources.Resources;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.io.File;

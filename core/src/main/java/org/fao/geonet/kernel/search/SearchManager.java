@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.search;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.exceptions.JeevesException;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.IO;
@@ -128,8 +129,8 @@ public class SearchManager {
 	public static final int Z3950 = 2;
 	public static final int UNUSED = 3;
 
-    public static final String NON_SPATIAL_DIR = "/index";
-    public static final String TAXONOMY_DIR = "/taxonomy";
+    public static final String NON_SPATIAL_DIR = "index";
+    public static final String TAXONOMY_DIR = "taxonomy";
     
 	private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
     private static final String STOPWORDS_DIR_PATH = "resources/stopwords";
@@ -162,14 +163,12 @@ public class SearchManager {
 	private static DocumentBoosting _documentBoostClass;
 	private String _luceneTermsToExclude;
 	private boolean _logSpatialObject;
-	private SchemaManager _schemaManager;
 	private static PerFieldAnalyzerWrapper _defaultAnalyzer;
 	private String _htmlCacheDir;
     private Spatial _spatial;
 	private LuceneIndexReaderFactory _indexReader;
 	private LuceneIndexWriterFactory _indexWriter;
 
-    private String _thesauriDir;
 	private boolean _logAsynch;
 	private LuceneOptimizerManager _luceneOptimizerManager;
     private LuceneIndexLanguageTracker _tracker;
@@ -177,6 +176,12 @@ public class SearchManager {
     private ApplicationContext _applicationContext;
     @Autowired
     private SettingInfo _settingInfo;
+    @Autowired
+    private SchemaManager _schemaManager;
+    @Autowired
+    private GeonetworkDataDirectory _geonetworkDataDirectory;
+    @Autowired
+    private LuceneConfig _luceneConfig;
 
 
     public SettingInfo getSettingInfo() {
@@ -215,10 +220,7 @@ public class SearchManager {
         return pfaw;
 	}
 
-	private LuceneConfig getLuceneConfig() {
-	    return _applicationContext.getBean(LuceneConfig.class);
-	}
-	/**
+    /**
 	 *
 	 * @return	The current analyzer used by the search manager.
 	 */
@@ -314,8 +316,8 @@ public class SearchManager {
                 try {
                     @SuppressWarnings("unchecked")
 					Class<? extends Analyzer> analyzerClass = (Class<? extends Analyzer>) Class.forName(analyzerClassName);
-                    Class<?>[] clTypesArray = getLuceneConfig().getAnalyzerParameterClass((field==null?"":field) + analyzerClassName);
-                    Object[] inParamsArray = getLuceneConfig().getAnalyzerParameter((field==null?"":field) + analyzerClassName);
+                    Class<?>[] clTypesArray = _luceneConfig.getAnalyzerParameterClass((field == null ? "" : field) + analyzerClassName);
+                    Object[] inParamsArray = _luceneConfig.getAnalyzerParameter((field == null ? "" : field) + analyzerClassName);
                     try {
                         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                             Log.debug(Geonet.SEARCH_ENGINE, " Creating analyzer with parameter");
@@ -363,7 +365,7 @@ public class SearchManager {
 	public void createAnalyzer() {
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "createAnalyzer start");
-		String defaultAnalyzerClass = getLuceneConfig().getDefaultAnalyzerClass();
+        String defaultAnalyzerClass = _luceneConfig.getDefaultAnalyzerClass();
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "defaultAnalyzer defined in Lucene config: " + defaultAnalyzerClass);
         // there is no default analyzer defined in lucene config
@@ -398,11 +400,11 @@ public class SearchManager {
 
                         // Configure per field analyzer and register them to language map of pfa
                         // ... for indexing
-                        configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, getLuceneConfig().getFieldSpecificAnalyzers(),
+                        configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificAnalyzers(),
                                 analyzerMap, language, stopwordsForLanguage);
                         
                         // ... for searching
-                        configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, getLuceneConfig().getFieldSpecificSearchAnalyzers(),
+                        configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificSearchAnalyzers(),
                                 searchAnalyzerMap, language, stopwordsForLanguage);
 
                     }
@@ -414,10 +416,10 @@ public class SearchManager {
             }
             
             // Configure default per field analyzer
-            _analyzer = configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, getLuceneConfig().getFieldSpecificAnalyzers(),
+            _analyzer = configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificAnalyzers(),
                 null, null, null);
-            
-            _searchAnalyzer = configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, getLuceneConfig().getFieldSpecificSearchAnalyzers(),
+
+            _searchAnalyzer = configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificSearchAnalyzers(),
                 null, null, null);
         }
     }
@@ -474,25 +476,23 @@ public class SearchManager {
      * TODO javadoc.
      *
      *
-     * @param appPath
-     * @param luceneDir
-     * @param htmlCacheDir
-     * @param thesauriDir
+     *
+     *
+     *
+     *
+     *
+     *
      * @param logAsynch
      * @param logSpatialObject
      * @param luceneTermsToExclude
-     * @param dataStore
      * @param maxWritesInTransaction
-     * @param schemaManager
      * @throws Exception
      */
-	public void configure(String appPath, String luceneDir, String htmlCacheDir, String thesauriDir,
-                          boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
-                          DataStore dataStore, int maxWritesInTransaction, SchemaManager schemaManager) throws Exception {
-		_schemaManager = schemaManager;
-		_thesauriDir = thesauriDir;
-		_summaryConfigValues = getLuceneConfig().getTaxonomy().get("hits");
+	public void init(boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
+                     int maxWritesInTransaction) throws Exception {
+        _summaryConfigValues = _luceneConfig.getTaxonomy().get("hits");
 
+        String appPath = _geonetworkDataDirectory.getWebappDir();
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
         _stopwordsDir = new File(appPath + STOPWORDS_DIR_PATH);
 
@@ -503,21 +503,19 @@ public class SearchManager {
             throw new Exception("directory " + _stylesheetsDir + " not found");
         }
 
-		File htmlCacheDirTest   = new File(htmlCacheDir);
+		File htmlCacheDirTest   = _geonetworkDataDirectory.getHtmlCacheDir();
 		IO.mkdirs(htmlCacheDirTest, "Html cache directory");
-		_htmlCacheDir = htmlCacheDir;
+		_htmlCacheDir = htmlCacheDirTest.getAbsolutePath();
 
 
-		_luceneDir = new File(luceneDir + NON_SPATIAL_DIR);
-		if (!_luceneDir.isAbsolute()) {
-            _luceneDir = new File(luceneDir+ NON_SPATIAL_DIR);
-        }
+        final File luceneDir = _geonetworkDataDirectory.getLuceneDir();
+        _luceneDir = new File(luceneDir, NON_SPATIAL_DIR).getAbsoluteFile();
+
         IO.mkdirs(_luceneDir.getParentFile(), "Lucene Index container directory");
 
-        _spatial = new Spatial(dataStore, maxWritesInTransaction);
+        _spatial = new Spatial(_applicationContext.getBean(DataStore.class), maxWritesInTransaction);
 
-		_luceneTaxonomyDir = new File(luceneDir + TAXONOMY_DIR);
-		if (!_luceneTaxonomyDir.isAbsolute()) _luceneTaxonomyDir = new File(luceneDir+ TAXONOMY_DIR);
+		_luceneTaxonomyDir = new File(luceneDir, TAXONOMY_DIR).getAbsoluteFile();
 		IO.mkdirs(_luceneTaxonomyDir.getParentFile(), "Unable to make luceneTaxony parent dir: {dir} because: {cause}");
 
      	 _logAsynch = logAsynch;
@@ -534,13 +532,13 @@ public class SearchManager {
      * TODO javadoc.
      */
 	private void createDocumentBoost() {
-	    String className = getLuceneConfig().getDocumentBoostClass();
+        String className = _luceneConfig.getDocumentBoostClass();
 	    if (className != null) {
     	    try {
                 @SuppressWarnings(value = "unchecked")
     	        Class<? extends DocumentBoosting> clazz = (Class<? extends DocumentBoosting>) Class.forName(className);
-                Class<?>[] clTypesArray = getLuceneConfig().getDocumentBoostParameterClass();
-                Object[] inParamsArray = getLuceneConfig().getDocumentBoostParameter();
+                Class<?>[] clTypesArray = _luceneConfig.getDocumentBoostParameterClass();
+                Object[] inParamsArray = _luceneConfig.getDocumentBoostParameter();
                 try {
                     if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                         Log.debug(Geonet.SEARCH_ENGINE, " Creating document boost object with parameter");
@@ -570,8 +568,8 @@ public class SearchManager {
 	}
 
 	public LuceneConfig getCurrentLuceneConfiguration () {
-		return getLuceneConfig();
-	}
+        return _luceneConfig;
+    }
 
     /**
      * TODO javadoc.
@@ -616,7 +614,8 @@ public class SearchManager {
      */
 	public MetaSearcher newSearcher(int type, String stylesheetName) throws Exception {
 		switch (type) {
-			case LUCENE: return new LuceneSearcher(this, stylesheetName, getLuceneConfig());
+			case LUCENE:
+                return new LuceneSearcher(this, stylesheetName, _luceneConfig);
 			case Z3950: return new Z3950Searcher(this, _schemaManager, stylesheetName);
 			case UNUSED: return new UnusedSearcher();
 			default: throw new Exception("unknown MetaSearcher type: " + type);
@@ -796,7 +795,7 @@ public class SearchManager {
             String locale = getLocaleFromIndexDoc(doc);
 
             List<?> fields = doc.getChildren("Field");
-            Set<String> configuredMultilingualSortFields = getLuceneConfig().getMultilingualSortFields();
+            Set<String> configuredMultilingualSortFields = _luceneConfig.getMultilingualSortFields();
             for (Object object : fields) {
                 Element field = (Element) object;
                 String fieldName = field.getAttributeValue("name");
@@ -1149,7 +1148,7 @@ public class SearchManager {
             String otherLocalesStyleSheet = new File(schemaDir, "language-index-fields.xsl").getAbsolutePath();
             Map<String, String> params = new HashMap<String, String>();
             params.put("inspire", Boolean.toString(isInspireEnabled()));
-            params.put("thesauriDir", _thesauriDir);
+            params.put("thesauriDir", _geonetworkDataDirectory.getThesauriDir().getAbsolutePath());
             Element defaultLang = Xml.transform(xml, defaultStyleSheet, params);
             if (new File(otherLocalesStyleSheet).exists()) {
                 @SuppressWarnings(value = "unchecked")
@@ -1302,7 +1301,7 @@ public class SearchManager {
 
 	    if (_tracker == null) {
             try {
-                _tracker = new LuceneIndexLanguageTracker(_luceneDir, _luceneTaxonomyDir, getLuceneConfig());
+                _tracker = new LuceneIndexLanguageTracker(_luceneDir, _luceneTaxonomyDir, _luceneConfig);
                 _indexReader = new LuceneIndexReaderFactory(_tracker);
                 _indexWriter = new LuceneIndexWriterFactory(_tracker);
                 IndexAndTaxonomy reader = _indexReader.acquire(null, -1);
@@ -1325,7 +1324,7 @@ public class SearchManager {
 			    	Log.warning(Geonet.INDEX_ENGINE, "Unable to delete all files in the lucene index files during rebuild.  This might not be an problem but if there are odd bugs then shutdown server.  Delete index directory and restart server", e);
 			    }
 
-			    _tracker = new LuceneIndexLanguageTracker(_luceneDir, _luceneTaxonomyDir, getLuceneConfig());
+                _tracker = new LuceneIndexLanguageTracker(_luceneDir, _luceneTaxonomyDir, _luceneConfig);
 	            _indexReader = new LuceneIndexReaderFactory(_tracker);
 	            _indexWriter = new LuceneIndexWriterFactory(_tracker);
 			}
@@ -1428,8 +1427,8 @@ public class SearchManager {
 
                 boolean bStore = sStore != null && sStore.equals("true");
                 boolean bIndex = sIndex != null && sIndex.equals("true");
-                boolean token = getLuceneConfig().isTokenizedField(name);
-                boolean isNumeric = getLuceneConfig().isNumericField(name);
+                boolean token = _luceneConfig.isTokenizedField(name);
+                boolean isNumeric = _luceneConfig.isNumericField(name);
                 
                 FieldType fieldType = new FieldType();
                 fieldType.setStored(bStore);
@@ -1463,7 +1462,7 @@ public class SearchManager {
                     
                     // You cannot set an index-time boost on an unindexed field, or one that omits norms
                     if (bIndex && !f.fieldType().omitNorms()) {
-                        Float boost = getLuceneConfig().getFieldBoost(name);
+                        Float boost = _luceneConfig.getFieldBoost(name);
                         if (boost != null) {
                             if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
                                 Log.debug(Geonet.INDEX_ENGINE, "Boosting field: " + name + " with boost factor: " + boost + " x " + documentBoost);
@@ -1476,7 +1475,7 @@ public class SearchManager {
                     
                     // Add value to the taxonomy
                     // TODO : Add all facets whatever the types
-                    if(getLuceneConfig().getTaxonomy().get("hits").get(name) != null) {
+                if(_luceneConfig.getTaxonomy().get("hits").get(name) != null) {
                         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                             Log.debug(Geonet.INDEX_ENGINE, "Add category path: " + name + " with " + string);
                         }
@@ -1504,7 +1503,7 @@ public class SearchManager {
 	 * @throws Exception 
 	 */
 	private Field addNumericField(String name, String string, FieldType fieldType) throws Exception {
-		LuceneConfigNumericField fieldConfig = getLuceneConfig().getNumericField(name);
+        LuceneConfigNumericField fieldConfig = _luceneConfig.getNumericField(name);
 		
 		Field field;
 		// TODO : reuse the numeric field for better performance

@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -72,7 +73,7 @@ public class AddDefault implements Service {
 		DataManager dataMan = gc.getBean(DataManager.class);
 		SchemaManager schemaMan = gc.getBean(SchemaManager.class);
 
-		String siteId = gc.getSiteId();
+        String siteId = gc.getBean(SettingManager.class).getSiteId();
 		int owner = context.getUserSession().getUserIdAsInt();
 
 		Log.info(Geonet.DATA_MANAGER, "Loading templates for schemas "

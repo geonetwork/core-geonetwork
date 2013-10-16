@@ -87,7 +87,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
         Predicate basePredicate = cb.and(metadataPredicate, ownerPredicate, userToGroupPredicate);
         if (profile != null) {
-            Expression<Boolean> profilePredicate = cb.equal(userGroupRoot.get(UserGroup_.profile), profile);
+            Expression<Boolean> profilePredicate = cb.equal(userGroupRoot.get(UserGroup_.id).get(UserGroupId_.profile), profile);
             query.where(cb.and(basePredicate, profilePredicate));
         } else {
             query.where(basePredicate);

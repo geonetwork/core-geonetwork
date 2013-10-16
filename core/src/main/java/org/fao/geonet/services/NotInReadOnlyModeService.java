@@ -21,10 +21,9 @@ public abstract class NotInReadOnlyModeService extends MailSendingService {
     public Element exec(Element params, ServiceContext context) throws Exception {
         // READONLYMODE
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        if(!gc.isReadOnly()) {
+        if (!gc.isReadOnly()) {
             return serviceSpecificExec(params, context);
-        }
-        else {
+        } else {
             log.debug("GeoNetwork is operating in read-only mode. Service execution skipped.");
             return null;
         }

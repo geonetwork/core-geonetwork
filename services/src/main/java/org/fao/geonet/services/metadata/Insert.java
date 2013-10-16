@@ -30,6 +30,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 
@@ -126,8 +127,8 @@ public class Insert extends NotInReadOnlyModeService {
         DataManager dm = gc.getBean(DataManager.class);
 
 		// Import record
-		Importer.importRecord(uuid, localId , uuidAction, md, schema, 0,
-				gc.getSiteId(), gc.getSiteName(), context, id, date,
+        Importer.importRecord(uuid, localId , uuidAction, md, schema, 0,
+                gc.getBean(SettingManager.class).getSiteId(), gc.getBean(SettingManager.class).getSiteName(), context, id, date,
 				date, group, isTemplate);
 		
 		int iId = Integer.parseInt(id.get(0));

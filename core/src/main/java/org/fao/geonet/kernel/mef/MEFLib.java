@@ -27,6 +27,7 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Xml;
 
@@ -156,12 +157,8 @@ public class MEFLib {
 		 */
 		V2
 	}
-	
-	public static List<String> doImportIndexGroup(Element params, ServiceContext context, File mefFile, String stylePath) throws Exception {
-		return Importer.doImport(params, context, mefFile, stylePath, true);
-	}
 
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
 	
 	public static List<String> doImport(Element params, ServiceContext context,
 			File mefFile, String stylePath) throws Exception {
@@ -393,8 +390,8 @@ public class MEFLib {
 
 			general.addContent(new Element("uuid").setText(uuid));
 			general.addContent(new Element("siteId").setText(siteId));
-			general.addContent(new Element("siteName")
-					.setText(gc.getSiteName()));
+            general.addContent(new Element("siteName")
+					.setText(gc.getBean(SettingManager.class).getSiteName()));
 		}
 
 		return general;

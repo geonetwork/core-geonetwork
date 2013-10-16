@@ -18,6 +18,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -25,6 +26,8 @@ import org.fao.geonet.utils.Log;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * Utility methods for managing resources that are site dependent. In other words
@@ -68,7 +71,7 @@ public class Resources {
 		if (context.getServlet() != null) {
 			servletContext = context.getServlet().getServletContext();
 		}
-		return locateLogosDir(servletContext, context.getAppPath());
+		return locateLogosDir(servletContext, context.getApplicationContext(), context.getAppPath());
 	}
 
 	/**
@@ -80,8 +83,8 @@ public class Resources {
 	 * 
 	 * @return locateResourcesDir(...) + FS + "images" + FS + "logos"
 	 */
-	public static String locateLogosDir(ServletContext context, String appDir) {
-		String path = (context == null ? appDir : locateResourcesDir(context)) + File.separator
+	public static String locateLogosDir(ServletContext context, ConfigurableApplicationContext applicationContext, String appDir) {
+		String path = (context == null ? appDir : locateResourcesDir(context, applicationContext)) + File.separator
 				+ "images" + File.separator + "logos";
 		File file = new File(path);
 		if (!file.exists() && !file.mkdirs()) {
@@ -106,7 +109,7 @@ public class Resources {
 		if (context.getServlet() != null) {
 			servletContext = context.getServlet().getServletContext();
 		}
-		return locateHarvesterLogosDir(servletContext, context.getAppPath());
+		return locateHarvesterLogosDir(servletContext, context.getApplicationContext(), context.getAppPath());
 	}
 
 	/**
@@ -119,8 +122,9 @@ public class Resources {
 	 * @return locateResourcesDir(...) + FS + "images" + FS + "harvesting"
 	 */
 	public static String locateHarvesterLogosDir(ServletContext context,
-			String appDir) {
-		String path = (context == null ? appDir : locateResourcesDir(context)) + File.separator
+                                                 ConfigurableApplicationContext applicationContext,
+                                                 String appDir) {
+		String path = (context == null ? appDir : locateResourcesDir(context, applicationContext)) + File.separator
 				+ "images" + File.separator + "harvesting";
 		File file = new File(path);
 		if (!file.exists() && !file.mkdirs()) {
@@ -145,14 +149,11 @@ public class Resources {
 	 */
 	public static String locateResourcesDir(ServiceContext context) {
 		if (context.getServlet() != null) {
-			return locateResourcesDir(context.getServlet().getServletContext());
+			return locateResourcesDir(context.getServlet().getServletContext(), context.getApplicationContext());
 		}
-		String webappName = context.getBaseUrl().substring(1);
 
-		String dir = System.getProperty(webappName + ".resources.dir");
-		if (dir == null) {
-			dir = System.getProperty("geonetwork.resources.dir");
-		}
+		String dir = context.getBean(GeonetworkDataDirectory.class).getResourcesDir().getAbsolutePath();
+
 		if (dir == null) {
 			return "resources";
 		} else {
@@ -172,19 +173,9 @@ public class Resources {
 	 * @return the root of data images. Subdirectories such as logos and
 	 *         harvesting likely contain the actual images
 	 */
-	public static String locateResourcesDir(ServletContext context) {
-		String property = null;
-		String path = context.getContextPath();
-		if (path != null) {
-			property = System.getProperty(path.substring(1) + ".resources.dir");
-		}
-		if (property == null) {
-			property = System.getProperty(context.getServletContextName()
-					+ ".resources.dir");
-		}
-		if (property == null) {
-			property = System.getProperty("geonetwork.resources.dir");
-		}
+	public static String locateResourcesDir(ServletContext context, ApplicationContext applicationContext) {
+		String property = applicationContext.getBean(GeonetworkDataDirectory.class).getResourcesDir().getPath();
+
 		if (property == null) {
 			property = context.getRealPath("/WEB-INF/data/resources");
 		}
@@ -263,7 +254,7 @@ public class Resources {
 
 	/**
 	 * Load a data image. The "imagesDir" (
-	 * {@link #locateResourcesDir(ServletContext, String)} will first be
+	 * {@link #locateResourcesDir(javax.servlet.ServletContext, org.springframework.context.ApplicationContext)} will first be
 	 * searched for the logo, then the context then finally the
 	 * appPath+FS+filename. if the image is not in imagesDir but is found in one
 	 * of the other locations it will be copied to imagesDir for future use.
@@ -292,17 +283,26 @@ public class Resources {
 			String filename, byte[] defaultValue) throws IOException {
 		return loadResource(null, context, appPath, filename, defaultValue, -1 );
 	}
+    public static Pair<byte[],Long> loadImage(ApplicationContext context,
+                                              String filename, byte[] defaultValue) throws IOException {
+        final GeonetworkDataDirectory gnDataDir = context.getBean(GeonetworkDataDirectory.class);
+        String resourceDir = gnDataDir.getResourcesDir().getAbsolutePath();
+        String appPath = gnDataDir.getWebappDir();
+        return loadResource(resourceDir, null, appPath, filename, defaultValue, -1 );
+    }
 
-	private static File locateResource(String resourcesDir,
+    private static File locateResource(String resourcesDir,
 			ServletContext context, String appPath, String filename)
 			throws IOException {
 		File file = new File(resourcesDir, filename);
 
 		if (!file.exists()) {
-			File webappCopy;
+			File webappCopy = null;
 			if (context != null) {
 				webappCopy = new File(context.getRealPath(filename));
-			} else {
+			}
+
+            if (webappCopy == null) {
 				webappCopy = new File(appPath, filename);
 			}
 			if (webappCopy.exists()) {
@@ -420,9 +420,9 @@ public class Resources {
 	/**
 	 * List all the files in the provided logosDir (eg. "logos", "harvesting").
 	 * 
-	 * Searches {@linkplain #locateDataImagesDir(ServiceContext)/logosDir} and
+	 * Searches {@linkplain #locateResourcesDir(jeeves.server.context.ServiceContext)}/logosDir and
 	 * appPath/images/logosDir and adds all the files that are found. However
-	 * logos found in {@linkplain #locateDataImagesDir(ServiceContext)/logosDir}
+	 * logos found in {@linkplain #locateResourcesDir(jeeves.server.context.ServiceContext)}/logosDir
 	 * have precedence over logos found in appPath/images/logosDir. A logo will
 	 * only be listed once based on its name.
 	 * 

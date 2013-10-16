@@ -16,7 +16,6 @@ public class UserGroup extends GeonetEntity {
     private UserGroupId _id = new UserGroupId();
     private Group _group;
     private User _user;
-    private Profile _profile;
 
     /**
      * Get the id object.
@@ -92,9 +91,9 @@ public class UserGroup extends GeonetEntity {
      *
      * @return the profile for this relation.
      */
-    @Column(nullable = false)
+    @Transient
     public Profile getProfile() {
-        return _profile;
+        return getId().getProfile();
     }
 
     /**
@@ -104,7 +103,7 @@ public class UserGroup extends GeonetEntity {
      * @return this entity object
      */
     public UserGroup setProfile(Profile profile) {
-        this._profile = profile;
+        getId().setProfile(profile);
         return this;
     }
 

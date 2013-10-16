@@ -211,7 +211,7 @@ public class JeevesEngine {
      * @throws TransformerConfigurationException
      */
     private void setupXSLTTransformerFactory(JeevesServlet servlet) throws IOException, TransformerConfigurationException {
-    	
+
     	InputStream in = null;
     	BufferedReader br = null;
     	// In debug mode, Jeeves may load a different file
@@ -222,9 +222,9 @@ public class JeevesEngine {
     	if(in == null){
     		File f = new File(_appPath + TRANSFORMER_PATH);
     		in = new FileInputStream(f);
-    	}        
+    	}
         try {
-            
+
             if(in != null) {
                 br = new BufferedReader(new InputStreamReader(in, Constants.ENCODING));
                 String line;

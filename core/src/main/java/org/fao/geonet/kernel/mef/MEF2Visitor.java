@@ -94,8 +94,7 @@ public class MEF2Visitor implements IVisitor {
                     File fcFile = getFeatureCalalogFile(file);
                     if (fcFile != null) {
                         fc = Xml.loadFile(fcFile);
-                    }
-                    else {
+                    } else {
                         fc = null;
                     }
 

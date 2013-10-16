@@ -40,7 +40,7 @@ public class LuceneQueryTest extends TestCase {
         final String configFile = "/WEB-INF/config-lucene.xml";
         final String appDir = new File(LuceneQueryTest.class.getResource(configFile).getFile()).getParentFile().getParent();
         LuceneConfig lc = new LuceneConfig();
-        lc.configure(appDir + "/", null, configFile);
+        lc.configure(configFile);
 
         _tokenizedFieldSet = lc.getTokenizedField();
         _numericFieldSet = lc.getNumericFields();

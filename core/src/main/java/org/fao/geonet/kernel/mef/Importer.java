@@ -28,6 +28,7 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadFormatEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -54,25 +55,17 @@ import java.io.InputStream;
 import java.util.*;
 
 public class Importer {
-	public static List<String> doImport(final Element params,
-			final ServiceContext context, File mefFile, final String stylePath)
-			throws Exception {
-			return doImport(params, context, mefFile, stylePath, false);
-	}
-
-	public static List<String> doImport(final Element params,
-			final ServiceContext context, File mefFile, final String stylePath,
-			final boolean indexGroup) throws Exception {
-		final GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		final DataManager dm = gc.getBean(DataManager.class);
+	public static List<String> doImport(final Element params, final ServiceContext context,
+                                        final File mefFile, final String stylePath) throws Exception {
+		final DataManager dm = context.getBean(DataManager.class);
 
 		// Load preferred schema and set to iso19139 by default
-		final String preferredSchema = (gc.getBean(ServiceConfig.class)
-				.getMandatoryValue("preferredSchema") != null ? gc.getBean(ServiceConfig.class).getMandatoryValue("preferredSchema")
-				: "iso19139");
+        String preferredSchema = context.getBean(ServiceConfig.class).getMandatoryValue("preferredSchema");
+        if (preferredSchema == null) {
+            preferredSchema = "iso19139";
+        }
 
-		final List<String> metadataIdMap = new ArrayList<String>();
+        final List<String> metadataIdMap = new ArrayList<String>();
 		final List<Element> md = new ArrayList<Element>();
 		final List<Element> fc = new ArrayList<Element>();
 
@@ -80,8 +73,9 @@ public class Importer {
 		String fileType = Util.getParam(params, "file_type", "mef");
 		if (fileType.equals("mef")) {
 			MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
-			if (version.equals(MEFLib.Version.V2))
-				fileType = "mef2";
+			if (version.equals(MEFLib.Version.V2)) {
+                fileType = "mef2";
+            }
 		}
 
 		IVisitor visitor;
@@ -96,7 +90,8 @@ public class Importer {
 			throw new BadArgumentException("Bad file type parameter.");
 
 		// --- import metadata from MEF, Xml, ZIP files
-		MEFLib.visit(mefFile, visitor, new IMEFVisitor() {
+        final String finalPreferredSchema = preferredSchema;
+        MEFLib.visit(mefFile, visitor, new IMEFVisitor() {
 
 			public void handleMetadata(Element metadata, int index)
 					throws Exception {
@@ -170,11 +165,11 @@ public class Importer {
 								}
 
 								// 2nd: Select metadata with preferredSchema
-								mdInform = mdFiles.get(preferredSchema);
+								mdInform = mdFiles.get(finalPreferredSchema);
                 if (mdInform != null) {
 									if (Log.isDebugEnabled(Geonet.MEF)) {
 										Log.debug(Geonet.MEF, mdInform.one()
-											+ " with preferred schema (" + preferredSchema + ").");
+											+ " with preferred schema (" + finalPreferredSchema + ").");
 									}
 									metadataValidForImport = mdInform.two();
 									handleMetadata(metadataValidForImport, index);
@@ -256,8 +251,7 @@ public class Importer {
 
 				// Handle non MEF files insertion
 				if (info.getChildren().size() == 0) {
-					source = Util.getParam(params, Params.SITE_ID, gc
-							.getSiteId());
+                    source = Util.getParam(params, Params.SITE_ID, context.getBean(SettingManager.class).getSiteId());
 					isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 
 					String category = Util
@@ -311,11 +305,10 @@ public class Importer {
 					if (assign) {
                         if(Log.isDebugEnabled(Geonet.MEF))
                             Log.debug(Geonet.MEF, "Assign to local catalog");
-						source = gc.getSiteId();
+                        source = context.getBean(SettingManager.class).getSiteId();
 					} else {	
 						// --- If siteId is not set, set to current node
-						source = Util.getParam(general, Params.SITE_ID, gc
-								.getSiteId());
+                        source = Util.getParam(general, Params.SITE_ID, context.getBean(SettingManager.class).getSiteId());
 						sourceName = general.getChildText("siteName");
 						localId = general.getChildText("localId");
 
@@ -501,7 +494,7 @@ public class Importer {
 						"Missing siteId parameter from info.xml file");
 
 			// --- only update sources table if source is not current site 
-			if (!source.equals(gc.getSiteId())) {
+            if (!source.equals(gc.getBean(SettingManager.class).getSiteId())) {
                 Source source1 = new Source(source, sourceName, true);
                 context.getBean(SourceRepository.class).save(source1);
             }

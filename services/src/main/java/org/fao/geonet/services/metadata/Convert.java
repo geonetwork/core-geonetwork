@@ -33,7 +33,6 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -83,7 +82,7 @@ public class Convert implements Service
         final ISODate changeDate = metadata.getDataInfo().getChangeDate();
         final String uuid = metadata.getUuid();
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-        final String siteName = gc.getSiteName();
+        final String siteName = gc.getBean(SettingManager.class).getSiteName();
         Element env = Lib.prepareTransformEnv(uuid, changeDate.getDateAndTime(), baseUrl, siteURL, siteName);
 
 		//--- transform the metadata with the created env and specified stylesheet

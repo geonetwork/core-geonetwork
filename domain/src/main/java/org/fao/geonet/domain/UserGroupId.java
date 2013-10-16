@@ -1,6 +1,7 @@
 package org.fao.geonet.domain;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
@@ -14,6 +15,7 @@ public class UserGroupId implements Serializable {
 
     private int _userId;
     private int _groupId;
+    private Profile _profile;
 
     public UserGroupId() {
         // Default constructor.
@@ -57,13 +59,33 @@ public class UserGroupId implements Serializable {
     }
 
     /**
-     * Set the group id
+     * Set the group id.
      *
      * @param groupId the group id
      * @return this id object
      */
     public UserGroupId setGroupId(int groupId) {
         this._groupId = groupId;
+        return this;
+    }
+
+    /**
+     * Return the profile for this relation.
+     *
+     * @return the profile for this relation.
+     */
+    public Profile getProfile() {
+        return _profile;
+    }
+
+    /**
+     * Set the profile for this relation.
+     *
+     * @param profile the profile for this relation.
+     * @return this entity object
+     */
+    public UserGroupId setProfile(Profile profile) {
+        this._profile = profile;
         return this;
     }
 
@@ -91,4 +113,6 @@ public class UserGroupId implements Serializable {
             return false;
         return true;
     }
+
+
 }
