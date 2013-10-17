@@ -155,8 +155,8 @@ public class AjaxEditUtils extends EditUtils {
             final String topicCategoryCode = "MD_TopicCategoryCode";
             if (el.getName().equals(topicCategoryCode) && el.getNamespaceURI().equals(Geonet.Namespaces.GMD.getURI())
                     && el.getTextTrim().contains("_")) {
-                final List<Element> topicCategories = el.getParentElement().getParentElement().getChildren("topicCategory",
-                        Geonet.Namespaces.GMD);
+                final List<Element> topicCategories =
+                        el.getParentElement().getParentElement().getChildren("topicCategory", Geonet.Namespaces.GMD);
 
                 for (Element topicCategory : topicCategories) {
                     if (topicCategory.getParentElement() != el) {
@@ -610,8 +610,6 @@ public class AjaxEditUtils extends EditUtils {
 	 * @param session
 	 * @param id
 	 * @param ref	Attribute identifier (eg. _169_uom).
-	 * @return
-	 * @throws Exception
 	 */
 	public synchronized Element deleteAttributeEmbedded(Dbms dbms, UserSession session, String id, String ref) throws Exception {
 		String[] token = ref.split("_");
@@ -702,7 +700,6 @@ public class AjaxEditUtils extends EditUtils {
     /**
      * For Ajax Editing : retrieves metadata from session and validates it.
      *
-     * @param session
      * @param dbms
      * @param id
      * @param lang

@@ -196,12 +196,10 @@ public final class FormatsStrategy extends ReplacementStrategy
 
     private void xlinkIt(Element originalElem, String id, boolean validated)
     {
-        originalElem.setAttribute(XLink.HREF, XLink.LOCAL_PROTOCOL+"xml.format.get?id=" + id,
-                XLink.NAMESPACE_XLINK);
+        originalElem.setAttribute(XLink.HREF, XLink.LOCAL_PROTOCOL+"xml.format.get?id=" + id, XLink.NAMESPACE_XLINK);
 
         if (!validated) {
-            originalElem
-                    .setAttribute(XLink.ROLE, ReusableObjManager.NON_VALID_ROLE, XLink.NAMESPACE_XLINK);
+            originalElem.setAttribute(XLink.ROLE, ReusableObjManager.NON_VALID_ROLE, XLink.NAMESPACE_XLINK);
         }
         originalElem.setAttribute(XLink.SHOW, XLink.SHOW_EMBED, XLink.NAMESPACE_XLINK);
 

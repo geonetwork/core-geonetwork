@@ -25,9 +25,9 @@
 			<item name="orgName" plural="orgNames" indexKey="_orgName" max="15" sortBy="label" sortOrder="asc" />
 			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC" max="15"/>
 			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"/>
-			<item name="type" plural="types" indexKey="type" translator="codelist:gmd:MD_ScopeCode"/>			
+			<item name="type" plural="types" indexKey="type" translator="codelist:gmd:MD_ScopeCode"/>
 			<item name="group" plural="groups"
-            	indexKey="_groupOwnerName" sortBy="count" type="string" max="15" translator="db:Groups"/>	
+            	indexKey="_groupOwnerName" sortBy="count" type="string" max="15" translator="db:Groups"/>
 		</hits>
 		<titles>
 			<item name="title" plural="titles" indexKey="title" sortBy="freq" sortOrder="desc" max="100"
@@ -50,7 +50,7 @@
 			<item name="createDateYear" plural="createDateYears" indexKey="_createDate"
 				sortOrder="asc" max="40"/>
 			<item name="group" plural="groups"
-            	indexKey="_groupOwnerName" sortBy="count" type="string" max="15" translator="db:Groups"/>	
+            	indexKey="_groupOwnerName" sortBy="count" type="string" max="15" translator="db:Groups"/>
 		</results_with_summary>
 	</def>
 </summary>

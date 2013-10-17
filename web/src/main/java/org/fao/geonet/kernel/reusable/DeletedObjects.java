@@ -31,6 +31,7 @@ import java.util.List;
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.SerialFactory;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -65,7 +66,10 @@ public final class DeletedObjects
 
         Element records = dbms.select("SELECT xml FROM DeletedObjects where id = ?", new Integer(id).intValue());
 
-        return Xml.loadString(records.getChild("record").getChildText("xml"), false);
+        final Element obj = Xml.loadString(records.getChild("record").getChildText("xml"), false);
+        obj.removeAttribute("title", Geonet.Namespaces.XLINK);
+        obj.removeNamespaceDeclaration(Geonet.Namespaces.XLINK);
+        return obj;
     }
 
     public static Element list(Dbms dbms) throws SQLException

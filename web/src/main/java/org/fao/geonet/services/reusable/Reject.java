@@ -167,7 +167,6 @@ public class Reject implements Service
                     String newHref;
                     if (!updatedHrefs.containsKey(oldHRef)) {
                         Element fragment = Processor.resolveXLink(oldHRef,context);
-                        fragment.setAttribute(XLink.TITLE, "rejected", XLink.NAMESPACE_XLINK);
                         
                         Iterator iter = fragment.getDescendants();
                         while(iter.hasNext()) {
@@ -177,7 +176,6 @@ public class Reject implements Service
 								e.removeAttribute("href", XLink.NAMESPACE_XLINK);
 								e.removeAttribute("show", XLink.NAMESPACE_XLINK);
 								e.removeAttribute("role", XLink.NAMESPACE_XLINK);
-								
 							}
                         }
                         // update xlink service
@@ -187,12 +185,13 @@ public class Reject implements Service
                         updatedHrefs.put(oldHRef, newHref);
                     } else {
                         newHref = updatedHrefs.get(oldHRef);
-
                     }
+
                     // Remove non_validated role value (if necessary) so that
                     // xlink is not editable
                     xlink.removeAttribute(XLink.ROLE, XLink.NAMESPACE_XLINK);
                     xlink.setAttribute(XLink.HREF, newHref, XLink.NAMESPACE_XLINK);
+                    xlink.setAttribute(XLink.TITLE, "rejected", XLink.NAMESPACE_XLINK);
                 }
             }
 
