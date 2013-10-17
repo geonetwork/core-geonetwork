@@ -5,7 +5,8 @@ Ext.namespace("app");
  */
 app.Filter = {
 		SERVICE: [{name: 'E_type', value: 'service'}],
-	    DATASET: [{name: '[E_type', value: 'dataset,series'}
+	    DATASET: [
+	    //{name: '[E_type', value: 'dataset,series'}
 	    	// If dataset search should be restricted to ISO19139 or profil add criteria on schema. 
 	    	//, {name: 'S__schema', value: 'iso19139'}
 	    ],
