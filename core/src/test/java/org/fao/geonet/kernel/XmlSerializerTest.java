@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.AbstractCoreTest;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
@@ -27,7 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class XmlSerializerTest extends AbstractSpringDataTest {
+public class XmlSerializerTest extends AbstractCoreTest {
     @Autowired
     XmlSerializer _xmlSerializer;
     @Autowired

@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.user;
 
+import com.vividsolutions.jts.util.Assert;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -63,126 +64,122 @@ public class Update extends NotInReadOnlyModeService {
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String operation = Util.getParam(params, Params.OPERATION);
-		String id       = params.getChildText(Params.ID);
-		String username = Util.getParam(params, Params.USERNAME);
-		String password = Util.getParam(params, Params.PASSWORD);
-		String surname  = Util.getParam(params, Params.SURNAME, "");
-		String name     = Util.getParam(params, Params.NAME,    "");
-		Profile profile  = Profile.findProfileIgnoreCase(Util.getParam(params, Params.PROFILE, Profile.Guest.name()));
-		String address  = Util.getParam(params, Params.ADDRESS, "");
-		String city     = Util.getParam(params, Params.CITY,    "");
-		String state    = Util.getParam(params, Params.STATE,   "");
-		String zip      = Util.getParam(params, Params.ZIP,     "");
-		String country  = Util.getParam(params, Params.COUNTRY, "");
-		String email    = Util.getParam(params, Params.EMAIL,   "");
-		String organ    = Util.getParam(params, Params.ORG,     "");
-        String kind     = Util.getParam(params, Params.KIND, "");
+		String id;
+        if (operation.equalsIgnoreCase(Params.Operation.NEWUSER)) {
+            id = Util.getParam(params, Params.ID, "");
+        } else {
+            id = Util.getParam(params, Params.ID);
+        }
+        String username = Util.getParam(params, Params.USERNAME, null);
+        String password = Util.getParam(params, Params.PASSWORD, null);
+
+        String surname  = Util.getParam(params, Params.SURNAME, null);
+		String name     = Util.getParam(params, Params.NAME,    null);
+		Profile profile = Profile.findProfileIgnoreCase(Util.getParam(params, Params.PROFILE, null));
+		String address  = Util.getParam(params, Params.ADDRESS, null);
+		String city     = Util.getParam(params, Params.CITY,    null);
+		String state    = Util.getParam(params, Params.STATE,   null);
+		String zip      = Util.getParam(params, Params.ZIP,     null);
+		String country  = Util.getParam(params, Params.COUNTRY, null);
+		String email    = Util.getParam(params, Params.EMAIL,   null);
+		String organ    = Util.getParam(params, Params.ORG,     null);
+        String kind     = Util.getParam(params, Params.KIND, null);
 
         UserSession usrSess = context.getUserSession();
         Profile myProfile = usrSess.getProfile();
         String      myUserId  = usrSess.getUserId();
 
+        final UserGroupRepository groupRepository = context.getBean(UserGroupRepository.class);
+        final UserRepository userRepository = context.getBean(UserRepository.class);
         @SuppressWarnings("unchecked")
         java.util.List<Element> userGroups = params.getChildren(Params.GROUPS);
 
-        final UserGroupRepository groupRepository = context.getBean(UserGroupRepository.class);
-        final UserRepository userRepository = context.getBean(UserRepository.class);
-
-        if (!operation.equals(Params.Operation.RESETPW)) {
-            if (profile == null) {
-                throw new Exception("Unknown profile : "+ Util.getParam(params, Params.PROFILE));
-            }
-
-            if (profile == Profile.Administrator) {
-                userGroups = new ArrayList<Element>();
-            }
+        if (profile == Profile.Administrator) {
+            userGroups = new ArrayList<Element>();
         }
 
         if (myProfile == Profile.Administrator ||
 				myProfile == Profile.UserAdmin ||
 				myUserId.equals(id)) {
+            checkAccessRights(operation, id, username, myProfile, myUserId, userGroups, groupRepository);
 
-            // Before we do anything check (for UserAdmin) that they are not trying
-            // to add a user to any group outside of their own - if they are then
-            // raise an exception - this shouldn't happen unless someone has
-            // constructed their own malicious URL!
-            //
-            if (operation.equals(Params.Operation.NEWUSER) || operation.equals(Params.Operation.EDITINFO)) {
-                if (!(myUserId.equals(id)) && myProfile == Profile.UserAdmin) {
-                    final List<Integer> groupIds = groupRepository.findGroupIds(UserGroupSpecs.hasUserId(Integer.valueOf(myUserId)));
-					for(Element userGroup : userGroups) {
-						String group = userGroup.getText();
-						boolean found = false;
-						for (int myGroup : groupIds) {
-							if (Integer.valueOf(group) == myGroup) {
-								found = true;
-							}
-						}
-						if (!found) {
-							throw new IllegalArgumentException("Tried to add group id "+group+" to user "+username+" - not allowed because you are not a member of that group!");	
-						}
-					}
-				}
-			}
 
-            User user = new User()
-                    .setUsername(username)
-                    .setName(name)
-                    .setSurname(surname)
-                    .setProfile(profile)
-                    .setKind(kind)
-                    .setOrganisation(organ);
-            user.getAddresses().add(new Address()
-                    .setAddress(address)
-                    .setCity(city)
-                    .setState(state)
-                    .setZip(zip)
-                    .setCountry(country));
-            user.getEmailAddresses().add(email);
+            User user = getUser(userRepository, operation, id, username);
+            if (username != null) {
+                user.setUsername(username);
+            }
 
+            if (name != null) {
+                user.setName(name);
+            }
+            if (surname != null) {
+                user.setSurname(surname);
+            }
+
+            if (profile != null) {
+                if (!myProfile.getAll().contains(profile)) {
+                    throw new IllegalArgumentException("Trying to set profile to "+profile+" max profile permitted is: "+myProfile);
+                }
+                user.setProfile(profile);
+            }
+            if (kind != null) {
+                user.setKind(kind);
+            }
+            if (organ != null) {
+                user.setOrganisation(organ);
+            }
+
+            Address addressEntity;
+            if (user.getAddresses().isEmpty()) {
+                addressEntity = new Address();
+            } else {
+                addressEntity = user.getPrimaryAddress();
+
+            }
+            if (address != null) {
+                addressEntity.setAddress(address);
+            }
+            if (city != null) {
+                addressEntity.setCity(city);
+            }
+            if (state != null) {
+                addressEntity.setState(state);
+            }
+            if (zip != null) {
+                addressEntity.setZip(zip);
+            }
+            if (country != null) {
+                addressEntity.setCountry(country);
+            }
+
+            user.getAddresses().add(addressEntity);
+            if (email != null) {
+                user.getEmailAddresses().add(email);
+            }
+
+
+            if (password != null) {
+                user.getSecurity().setPassword(PasswordUtil.encode(context, password));
+            } else if (operation.equals(Params.Operation.RESETPW)) {
+                throw new IllegalArgumentException("password is a required parameter for operation: " + Params.Operation.RESETPW);
+            }
 
             // -- For adding new user
             if (operation.equals(Params.Operation.NEWUSER)) {
-                user.getSecurity().setPassword(password);
-                final User userByUsername = userRepository.findOneByUsername(username);
-                // check if the new username already exists - if so then don't do this
-                if (userByUsername != null) {
-                    throw new IllegalArgumentException("User with username "+username+" already exists");
-                }
-
-
                 user = userRepository.save(user);
 
 				setUserGroups(user, params, context);
+			} else if (operation.equals(Params.Operation.FULLUPDATE) || operation.equals(Params.Operation.EDITINFO) ||
+                       operation.equals(Params.Operation.RESETPW)) {
+                user = userRepository.save(user);
+
+                //--- add groups
+                groupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(user.getId()));
+
+                setUserGroups(user, params, context);
 			} else {
-
-			// -- full update
-				if (operation.equals(Params.Operation.FULLUPDATE)) {
-                    user.getSecurity().setPassword(password);
-                    user.setId(Integer.valueOf(id));
-                    user = userRepository.save(user);
-
-					//--- add groups
-                    groupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(user.getId()));
-
-					setUserGroups(user, params, context);
-				} else if (operation.equals(Params.Operation.EDITINFO)) {
-
-                    user.setId(Integer.valueOf(id));
-                    user = userRepository.save(user);
-					//--- add groups
-
-                    groupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(user.getId()));
-					setUserGroups(user, params, context);
-
-			// -- reset password
-				} else if (operation.equals(Params.Operation.RESETPW)) {
-					ApplicationContext appContext = context.getApplicationContext();
-					PasswordUtil.updatePasswordWithNew(false, null, password, Integer.valueOf(id), appContext);
-				} else {
-					throw new IllegalArgumentException("unknown user update operation " + operation);
-				}
-			} 
+                throw new IllegalArgumentException("unknown user update operation " + operation);
+            }
 		} else {
 			throw new IllegalArgumentException("You don't have rights to do this");
 		}
@@ -190,7 +187,56 @@ public class Update extends NotInReadOnlyModeService {
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
 
-	private void setUserGroups(User user, Element params, ServiceContext context) throws Exception {
+    private User getUser(final UserRepository repo, final String operation, final String id, final String username) {
+        if (Params.Operation.NEWUSER.equalsIgnoreCase(operation)) {
+            if (username == null) {
+                throw new IllegalArgumentException(Params.USERNAME + " is a required parameter for " + Params.Operation.NEWUSER + " " +
+                                                   "operation");
+            }
+            User user = repo.findOneByUsername(username);
+
+            if (user != null) {
+                throw new IllegalArgumentException("User with username " + username + " already exists");
+            }
+            return new User();
+        } else {
+            User user = repo.findOne(id);
+            if (user == null) {
+                throw new IllegalArgumentException("No user found with id: " + id);
+            }
+            return user;
+        }
+    }
+
+    private void checkAccessRights(final String operation, final String id, final String username, final Profile myProfile,
+                                   final String myUserId, final List<Element> userGroups, final UserGroupRepository groupRepository) {
+        // Before we do anything check (for UserAdmin) that they are not trying
+        // to add a user to any group outside of their own - if they are then
+        // raise an exception - this shouldn't happen unless someone has
+        // constructed their own malicious URL!
+        //
+        if (operation.equals(Params.Operation.NEWUSER) || operation.equals(Params.Operation.EDITINFO) ||
+            operation.equals(Params.Operation.FULLUPDATE)) {
+            if (!(myUserId.equals(id)) && myProfile == Profile.UserAdmin) {
+                final List<Integer> groupIds = groupRepository.findGroupIds(UserGroupSpecs.hasUserId(Integer.valueOf(myUserId)));
+                for (Element userGroup : userGroups) {
+                    String group = userGroup.getText();
+                    boolean found = false;
+                    for (int myGroup : groupIds) {
+                        if (Integer.valueOf(group) == myGroup) {
+                            found = true;
+                        }
+                    }
+                    if (!found) {
+                        throw new IllegalArgumentException("Tried to add group id " + group + " to user " + username + " - not allowed " +
+                                                           "because you are not a member of that group!");
+                    }
+                }
+            }
+        }
+    }
+
+    private void setUserGroups(final User user, final Element params, final ServiceContext context) throws Exception {
 		String[] profiles = {Profile.UserAdmin.name(), Profile.Reviewer.name(), Profile.Editor.name(), Profile.RegisteredUser.name()};
         Collection<UserGroup> toAdd = new ArrayList<UserGroup>();
 
@@ -201,7 +247,7 @@ public class Update extends NotInReadOnlyModeService {
 		    
 			@SuppressWarnings("unchecked")
             java.util.List<Element> userGroups = params.getChildren(Params.GROUPS + '_' + profile);
-			for(Element element : userGroups) {
+			for (Element element : userGroups) {
 				String groupEl = element.getText();
 				if (!groupEl.equals("")) {
 					int groupId = Integer.valueOf(groupEl);

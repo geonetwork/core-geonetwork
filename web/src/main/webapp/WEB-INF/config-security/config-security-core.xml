@@ -188,7 +188,6 @@
 	
 	    <!-- Note: the id is critical since other components of the system will look up the encoder by its id -->
     <bean class="org.springframework.security.crypto.password.StandardPasswordEncoder" id="geonetworkEncoder">
-        <constructor-arg value="SHA-256"/>
         <constructor-arg value="${passwordSalt}"/>
     </bean>
 

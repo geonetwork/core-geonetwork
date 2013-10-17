@@ -24,7 +24,7 @@ public interface UserRepositoryCustom {
      * @param userId the userid.
      * @return the use with the given userid
      */
-    @Nonnull
+    @Nullable
     User findOne(@Nonnull String userId);
 
     /**

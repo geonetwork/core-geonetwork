@@ -2,12 +2,14 @@ package org.fao.geonet.kernel.security;
 
 import junit.framework.TestCase;
 
+import org.fao.geonet.AbstractCoreTest;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserSecurityNotification;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.UserRepositoryTest;
 import org.fao.geonet.util.PasswordUtil;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -15,6 +17,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,13 +33,17 @@ import static org.mockito.Mockito.when;
  *
  * @author heikki doeleman
  */
-public class GeonetworkAuthenticationProviderTest extends AbstractSpringDataTest {
+@ContextConfiguration(inheritLocations = true, locations = "classpath:encoder-bean.xml")
+public class GeonetworkAuthenticationProviderTest extends AbstractCoreTest {
+
     public static final String PASSWORD = "password";
     /**
      * The class under test.
      */
     @Autowired
-    private GeonetworkAuthenticationProvider geonetworkAuthenticationProvider;
+    private GeonetworkAuthenticationProvider _geonetworkAuthenticationProvider;
+    @Autowired
+    private PasswordEncoder _encoder;
 
     //
     // Test doubles
@@ -47,11 +55,18 @@ public class GeonetworkAuthenticationProviderTest extends AbstractSpringDataTest
     @Autowired
     private UserRepository _userRepo;
     private AtomicInteger _inc = new AtomicInteger();
+
+    @Before
+    public void setUp() throws Exception {
+        System.out.println(_appContext.getId());
+
+    }
+
     @Test(expected = UsernameNotFoundException.class)
     public void testUserNotFound() throws Exception{
         final User user = userFoundSetup(false);
 
-        geonetworkAuthenticationProvider.retrieveUser(user.getUsername()+"not", authentication);
+        _geonetworkAuthenticationProvider.retrieveUser(user.getUsername() + "not", authentication);
     }
 
     /**
@@ -64,7 +79,7 @@ public class GeonetworkAuthenticationProviderTest extends AbstractSpringDataTest
         if (oldPassword) {
             entity.getSecurity().getSecurityNotifications().add(UserSecurityNotification.HASH_UPDATE_REQUIRED);
         }
-        entity.getSecurity().setPassword(PASSWORD);
+        entity.getSecurity().setPassword(_encoder.encode(PASSWORD));
         return _userRepo.save(entity);
     }
 
@@ -72,9 +87,9 @@ public class GeonetworkAuthenticationProviderTest extends AbstractSpringDataTest
     public void testUserFound() throws Exception{
         final User user = userFoundSetup(false);
 
-        geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
+        _geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
         TestCase.assertNotNull("User should be found",
-                geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication));
+                _geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication));
     }
 
     @Test
@@ -89,7 +104,7 @@ public class GeonetworkAuthenticationProviderTest extends AbstractSpringDataTest
 
         mockAuthenticationSetup(user);
 
-        final UserDetails userDetails = geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
+        final UserDetails userDetails = _geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
         TestCase.assertNotNull("User with authentication token should be found", userDetails);
     }
 
@@ -105,7 +120,7 @@ public class GeonetworkAuthenticationProviderTest extends AbstractSpringDataTest
 
         mockAuthenticationSetup(user);
 
-        final UserDetails userDetails = geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
+        final UserDetails userDetails = _geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
         TestCase.assertNotNull("User with authentication token should be found", userDetails);
     }
     @Test
@@ -113,7 +128,7 @@ public class GeonetworkAuthenticationProviderTest extends AbstractSpringDataTest
         final User user = userFoundSetup(false);
         mockAuthenticationSetup(user);
 
-        final UserDetails userDetails = geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
+        final UserDetails userDetails = _geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
         TestCase.assertNotNull("User with authentication token should be found", userDetails);
     }
 
@@ -121,7 +136,7 @@ public class GeonetworkAuthenticationProviderTest extends AbstractSpringDataTest
     public void testAuthenticateWithoutToken() throws Exception {
         userFoundSetup(false);
 
-        geonetworkAuthenticationProvider.authenticate(authentication);
+        _geonetworkAuthenticationProvider.authenticate(authentication);
     }
 
     @Test(expected = BadCredentialsException.class)
@@ -129,7 +144,7 @@ public class GeonetworkAuthenticationProviderTest extends AbstractSpringDataTest
         userFoundSetup(false);
         authentication = mock(UsernamePasswordAuthenticationToken.class);
 
-        geonetworkAuthenticationProvider.authenticate(authentication);
+        _geonetworkAuthenticationProvider.authenticate(authentication);
     }
 
     /**
@@ -149,7 +164,7 @@ public class GeonetworkAuthenticationProviderTest extends AbstractSpringDataTest
     public void testAuthenticateWithUserNotFound() throws Exception {
         userFoundSetup(false);
         mockAuthenticationSetup(null);
-        geonetworkAuthenticationProvider.authenticate(authentication);
+        _geonetworkAuthenticationProvider.authenticate(authentication);
     }
 
     @Test
@@ -157,13 +172,13 @@ public class GeonetworkAuthenticationProviderTest extends AbstractSpringDataTest
         final User user = userFoundSetup(false);
         mockAuthenticationSetup(user);
         TestCase.assertNotNull("Authentication with correct credentials should succeed",
-                geonetworkAuthenticationProvider.authenticate(authentication));
+                _geonetworkAuthenticationProvider.authenticate(authentication));
     }
 
     @Test(expected = BadCredentialsException.class)
     public void testAuthenticateWithTokenWithWrongCredentials() throws Exception {
         mockAuthenticationSetup(null);
-        geonetworkAuthenticationProvider.authenticate(authentication);
+        _geonetworkAuthenticationProvider.authenticate(authentication);
     }
 
 }

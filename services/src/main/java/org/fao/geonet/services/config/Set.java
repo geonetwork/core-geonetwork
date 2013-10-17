@@ -111,7 +111,7 @@ public class Set implements Service {
         }
 
         SettingInfo info = context.getBean(SettingInfo.class);
-        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl(true) + context.getBaseUrl(), context.getServlet().getServletContext());
+        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl(true) + context.getBaseUrl(), context.getApplicationContext());
 
         // Reload services affected by updated settings
         if (reloadServices) {

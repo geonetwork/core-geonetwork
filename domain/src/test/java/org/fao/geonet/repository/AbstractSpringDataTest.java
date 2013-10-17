@@ -12,5 +12,5 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class AbstractSpringDataTest {
 
     public static final String CLASSPATH_CONFIG_SPRING_GEONETWORK_XML = "classpath*:config-spring-geonetwork.xml";
-    public static final String CLASSPATH_REPOSITORY_TEST_CONTEXT_XML = "classpath*:repository-test-context.xml";
+    public static final String CLASSPATH_REPOSITORY_TEST_CONTEXT_XML = "classpath:domain-repository-test-context.xml";
 }

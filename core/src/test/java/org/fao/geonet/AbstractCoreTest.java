@@ -34,6 +34,7 @@ import org.opengis.filter.Filter;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -53,15 +54,16 @@ import static org.junit.Assert.assertNotNull;
  * Date: 10/12/13
  * Time: 8:31 PM
  */
+@ContextConfiguration(inheritLocations = true, locations = "classpath:core-repository-test-context.xml")
 public abstract class AbstractCoreTest extends AbstractSpringDataTest {
     @Autowired
-    ConfigurableApplicationContext _applicationContext;
+    protected ConfigurableApplicationContext _applicationContext;
     @PersistenceContext
-    EntityManager _entityManager;
+    protected EntityManager _entityManager;
     @Autowired
-    DataStore _datastore;
+    protected DataStore _datastore;
     @Autowired
-    UserRepository _userRepo;
+    protected UserRepository _userRepo;
 
     @Before
     public void configureAppContext() throws Exception {

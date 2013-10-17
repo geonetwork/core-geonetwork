@@ -5,6 +5,7 @@ import org.fao.geonet.AbstractCoreTest;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.services.AbstractServiceTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertTrue;
  * Date: 10/16/13
  * Time: 12:47 PM
  */
-public class AddTest extends AbstractCoreTest {
+public class AddTest extends AbstractServiceTest {
     @Test
     public void testExec() throws Exception {
         final Add add = new Add();

@@ -1,5 +1,6 @@
 package org.fao.geonet.kernel.search;
 
+import org.fao.geonet.AbstractCoreTest;
 import org.fao.geonet.domain.Localized;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.jdom.JDOMException;
@@ -26,7 +27,7 @@ import static org.mockito.Mockito.when;
  * Date: 9/9/13
  * Time: 9:07 AM
  */
-public class DbDescTranslatorTest extends AbstractSpringDataTest {
+public class DbDescTranslatorTest extends AbstractCoreTest {
     @Autowired
     ApplicationContext _appContext;
 

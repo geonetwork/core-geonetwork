@@ -1,6 +1,7 @@
 package jeeves.config.springutil;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -112,9 +113,7 @@ public class ServerBeanPropertyUpdater {
 		lookUpField(bean.getClass(), propertyName).set(bean, newValue);
 	}
 
-	public static void updateURL(String newURL, ServletContext servletContext) throws Exception {
-		WebApplicationContext context = WebApplicationContextUtils
-				.getWebApplicationContext(servletContext);
+	public static void updateURL(String newURL, ApplicationContext context) throws Exception {
 		Map<String, ServerBeanPropertyUpdater> updaters = context
 				.getBeansOfType(ServerBeanPropertyUpdater.class);
 		for (ServerBeanPropertyUpdater updater : updaters.values()) {
