@@ -1203,7 +1203,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             
             Ext.each(this.layerNames, function(rec) {
                 this.layerName += rec.get('name') + ',';
-                layerTitle += rec.get('title') + ',';
+                layerTitle += encodeURIComponent(rec.get('title')) + ',';
             }, this);
             
             this.layerName = this.layerName.substring(this.layerName, this.layerName.length-1);
