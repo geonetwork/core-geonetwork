@@ -194,22 +194,8 @@ attached it to the metadata for data.
                                 </xsl:otherwise>
                                 </xsl:choose>
                             </xsl:if>
-                                    
-                            <gmd:transferOptions>
-                                <gmd:MD_DigitalTransferOptions>
-                                    <xsl:copy-of
-                                        select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:unitsOfDistribution"/>
-                                    <xsl:copy-of
-                                        select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:transferSize"/>
-                                    <xsl:copy-of
-                                        select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:onLine"/>
-                                    <xsl:copy-of
-                                        select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:offLine"
-                                    />
-                                </gmd:MD_DigitalTransferOptions>
-                            </gmd:transferOptions>
                             <xsl:copy-of
-                                select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[position() > 1]"
+                                select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions"
                             />
                         </gmd:MD_Distribution>
                         
