@@ -94,6 +94,43 @@ a.no-help:hover {
 
 }
 
+/** Siblings **/
+.arrow.sibling {
+	padding: 0 0 5px 14px;
+	background-size: 14px 14px;
+}
+
+.arrow.crossReference {
+	background-image: url('images/chain_child_crossReference.png');
+}
+
+.arrow.source {
+	background-image: url('images/chain_child_source.png');
+}
+
+.arrow.stereoMate {
+	background-image: url('images/chain_child_stereoMate.png');
+}
+
+.arrow.partOfSeamlessDatabase {
+	background-image: url('images/chain_child_partOfSeamlessDatabase.png');
+}
+.arrow.crossReference.parent {
+	background-image: url('images/chain_parent_crossReference.png');
+}
+
+.arrow.source.parent {
+	background-image: url('images/chain_parent_source.png');
+}
+
+.arrow.stereoMate.parent {
+	background-image: url('images/chain_parent_stereoMate.png');
+}
+
+.arrow.partOfSeamlessDatabase.parent {
+	background-image: url('images/chain_parent_partOfSeamlessDatabase.png');
+}
+
 .resultsHeader {
     padding-bottom: 2em;
     margin-bottom: 2em;

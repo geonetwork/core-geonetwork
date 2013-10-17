@@ -252,7 +252,7 @@
 								<br/>
 								<br/>
 	        					<ul>
-		        					<li><h3><img src="{/root/gui/url}/images/dataset.gif"
+		        					<li><h3><img src="{/root/gui/url}/images/chain.png"
 		        							alt="{/root/gui/strings/linkedSiblingMetadataHelp}" title="{/root/gui/strings/linkedSiblingMetadataHelp}" align="absmiddle"/>
 		        							<xsl:value-of select="/root/gui/strings/linkedSiblingMetadata"/></h3></li>
 		        					<xsl:for-each select="$siblings">
@@ -264,7 +264,7 @@
 	        							</xsl:variable>
 		        						<xsl:for-each select="geonet:info">
 		        						<xsl:variable name="helpText" select="/root/gui/strings/$type" />
-			        						<li><a class="arrow {$type} {$isParent}" title="{$helpText}" href="metadata.show?uuid={uuid}">
+			        						<li><a class="arrow sibling {$type} {$isParent}" title="{$helpText}" href="metadata.show?uuid={uuid}">
 	    											<xsl:call-template name="getMetadataTitle">
 	    												<xsl:with-param name="uuid" select="uuid"/>
 	    											</xsl:call-template>
