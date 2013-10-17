@@ -1355,7 +1355,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         var action = this.catalogue.services.mdProcessing + 
             "?id=" + this.metadataId + 
             "&process=" + this.type + (this.editUrl ? "-edit" : "-add") +
-            parameters + '&oldName=' + this.editName;
+            parameters + '&oldUrl=' + this.editUrl;
         
         this.editor.process(action);
         
