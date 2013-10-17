@@ -573,16 +573,18 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<associateDataset js="true"> Daten-Metadaten verlinken</associateDataset>
 	<associateServiceHelp>Um Dienst-Metadaten zu verlinken: nach Dienst-Metadaten suchen und Layername angeben.</associateServiceHelp>
 	<associateDatasetHelp>Um eine Beziehung zu einem Datensatz herzustellen, gehen Sie zu "ISO-Ansicht" &gt; Basisinformation und definieren Sie die "bezieht sich auf"-Elemente (Operates on).</associateDatasetHelp>
-	<addParent> Neue Metadaten Beziehung</addParent>
+	<addParent> Hinzufügen oder Aktualisieren eines Geschwister-Metadatensatzes</addParent>
 	<createAssoService>Eine Verbindung erstellen</createAssoService>
 	<updateMdd>Daten-Metadaten aktualisieren</updateMdd>
 	<datasetCreate>Einen Daten-Metadatensatz erstellen</datasetCreate>
 	<linkedServices> Dienst-Metadatensatz:</linkedServices>
 	<linkedServiceMetadataHelp>Um eine Verbindung zu einem Dienst herzustellen, gehen Sie zu "ISO-Ansicht" &gt; Vertrieb.</linkedServiceMetadataHelp>
-	<linkedParentMetadata> Zugehörigen Metadaten: </linkedParentMetadata>
+	<linkedParentMetadata> Eltern-/Kind-Metadaten: </linkedParentMetadata>
 	<linkedParentMetadataHelp>Um eine Beziehung zu einem Eltern-Metadatensatz herzustellen, gehen Sie zu "ISO-Ansicht" &gt; Metadaten.</linkedParentMetadataHelp>
 	<linkedChildrenMetadata> Untergeordnete Metadaten:</linkedChildrenMetadata>
 	<linkedChildrenMetadataHelp>Liste der "Kinder" dieses Metadatensatzes</linkedChildrenMetadataHelp>
+	<linkedSiblingMetadata> Geschwister:</linkedSiblingMetadata>
+	<linkedSiblingMetadataHelp>Liste der Geschwister im Zusammenhang mit aktuellen Metadatensatz.</linkedSiblingMetadataHelp>
 	<linkedDatasetMetadata> Verlinkte Metadaten:</linkedDatasetMetadata>
 	<serviceCreate>Einen neuen Dienst-Metadatensatz erstellen</serviceCreate>
 	<parentSearch js="true">Nach Eltern-Datensatz suchen</parentSearch>

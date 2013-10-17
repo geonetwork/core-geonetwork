@@ -266,6 +266,16 @@ public class GetRelated implements Service {
                     }
 	            }
             }
+            
+            //And lucene ones:
+            relatedRecords.addContent(search(uuid, "crossReference", context, from,
+                    to, fast));
+            relatedRecords.addContent(search(uuid, "partOfSeamlessDatabase", context, 
+            		from, to, fast));
+            relatedRecords.addContent(search(uuid, "source", context, from,
+                    to, fast));
+            relatedRecords.addContent(search(uuid, "stereoMate", context, from,
+                    to, fast));
 
         }
 
@@ -312,6 +322,9 @@ public class GetRelated implements Service {
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
             else if ("datasets".equals(type) || "fcats".equals(type) || "sources".equals(type) || "siblings".equals(type))
                 parameters.addContent(new Element("uuid").setText(uuid));
+            else if ("crossReference".equals(type) || "partOfSeamlessDatabase".equals(type) 
+            			|| "source".equals(type) || "stereoMate".equals(type))
+            	parameters.addContent(new Element(type).setText(uuid));
             parameters.addContent(new Element("fast").addContent("index"));
             parameters.addContent(new Element("sortBy").addContent("title"));
             parameters.addContent(new Element("sortOrder").addContent("reverse"));

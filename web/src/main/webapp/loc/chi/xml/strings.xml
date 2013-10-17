@@ -262,13 +262,13 @@
 	<associateDataset js="true">Link dataset metadata</associateDataset>
 	<associateServiceHelp>To add a relation to a service metadata, search for service and define layer name.</associateServiceHelp>
 	<associateDatasetHelp>To add a relation to a dataset, go to ISO view > Identification section, and defined operates on elements.</associateDatasetHelp>
-	<addParent> Add new related metadata</addParent>
+	<addParent> Add or update parent metadata section</addParent>
 	<createAssoService>Create relation</createAssoService>
 	<updateMdd>Update dataset metadata</updateMdd>
 	<datasetCreate>Create dataset metadata</datasetCreate>
 	<linkedServices> Related service metadata:</linkedServices>
 	<linkedServiceMetadataHelp>To add a relation to a service, go to ISO view &gt; Distribution tab.</linkedServiceMetadataHelp>
-	<linkedParentMetadata> Related Metadata:</linkedParentMetadata>
+	<linkedParentMetadata> Parent/child metadata:</linkedParentMetadata>
 	<linkedParentMetadataHelp>To add a relation to a parent, go to ISO view &gt; Metadata tab.</linkedParentMetadataHelp>
 	<linkedChildrenMetadata> Children metadata:</linkedChildrenMetadata>
 	<linkedChildrenMetadataHelp>List of children linked to current metadata record.</linkedChildrenMetadataHelp>

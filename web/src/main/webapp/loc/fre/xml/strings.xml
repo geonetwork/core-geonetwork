@@ -596,13 +596,13 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<associateServiceHelp>Pour associer une métadonnée de service, rechercher un service et choisir la couche associée.</associateServiceHelp>
 	<associateDatasetHelp>Pour associer une métadonnée de données, aller dans la vue ISO &gt; onglet Identification,
 		et définir l'élément "operates on".</associateDatasetHelp>
-	<addParent> Ajouter une nouvelle relation de métadonnées</addParent>
+	<addParent> Ajouter ou mettre à jour l'information sur le parent</addParent>
 	<createAssoService>Créer la relation</createAssoService>
 	<updateMdd>Mettre à jour la métadonnée de données</updateMdd>
 	<datasetCreate>Créer une métadonnée de données</datasetCreate>
 	<linkedServices> Services associés:</linkedServices>
 	<linkedServiceMetadataHelp>Pour associer une métadonnée de service, aller dans la vue ISO &gt; onglet Distribution.</linkedServiceMetadataHelp>
-	<linkedParentMetadata> Métadonnées Connexes :</linkedParentMetadata>
+	<linkedParentMetadata> Parent/enfant :</linkedParentMetadata>
 	<linkedParentMetadataHelp>Pour associer un parent, aller dans la vue ISO &gt; onglet Metadonnées.</linkedParentMetadataHelp>
 	<linkedChildrenMetadata> Enfants:</linkedChildrenMetadata>
 	<linkedChildrenMetadataHelp>Liste des enfants pour la métadonnée en cours.</linkedChildrenMetadataHelp>

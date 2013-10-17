@@ -330,6 +330,12 @@
 				<Field  name="couplingType" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 			
+			<!-- Sibling relationships -->
+			<xsl:for-each select="*/gmd:MD_AggregateInformation">
+				<Field name="{gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue}" 
+					string="{gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gmd:PT_FreeText/gmd:textGroup[1]/gmd:LocalisedCharacterString}" 
+					store="true" index="true" token="false"/>					 
+			</xsl:for-each>
 			
 		</xsl:for-each>
 
