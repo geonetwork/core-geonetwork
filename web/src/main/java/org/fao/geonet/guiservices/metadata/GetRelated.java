@@ -256,9 +256,11 @@ public class GetRelated implements Service {
                         Element content = dm.getMetadata(context, id1,
                                 forEditing, withValidationErrors,
                                 keepXlinkAttributes);
-                        relatedRecords.addContent(new Element(type_)
-                                .addContent(new Element("response")
-                                        .addContent(content)));
+                        Element element = new Element(type_)
+	                        .addContent(new Element("response")
+	                        .addContent(content));
+                        element.setAttribute("parent", "true");
+                        relatedRecords.addContent(element);
                     } catch (Exception ex) {
                         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                             Log.debug(Geonet.SEARCH_ENGINE, "Parent metadata "

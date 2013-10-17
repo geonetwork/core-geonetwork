@@ -257,9 +257,14 @@
 		        							<xsl:value-of select="/root/gui/strings/linkedSiblingMetadata"/></h3></li>
 		        					<xsl:for-each select="$siblings">
 		        						<xsl:variable name="type" select="string(name(../..))"/>
+		        						<xsl:variable name="isParent">
+		        							<xsl:if test="string(../../@parent) = 'true'">
+		        								parent
+		        							</xsl:if>
+	        							</xsl:variable>
 		        						<xsl:for-each select="geonet:info">
 		        						<xsl:variable name="helpText" select="/root/gui/strings/$type" />
-			        						<li><a class="arrow {$type}" title="{$helpText}" href="metadata.show?uuid={uuid}">
+			        						<li><a class="arrow {$type} {$isParent}" title="{$helpText}" href="metadata.show?uuid={uuid}">
 	    											<xsl:call-template name="getMetadataTitle">
 	    												<xsl:with-param name="uuid" select="uuid"/>
 	    											</xsl:call-template>
