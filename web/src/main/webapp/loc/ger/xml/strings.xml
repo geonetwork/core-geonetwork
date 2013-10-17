@@ -594,6 +594,7 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<selectRelation js="true">Doppelklicken Sie auf Beziehung wählen</selectRelation>
 	<parent js="true">Eltern</parent>
 	<source js="true">Source</source>
+	<sourceLabel js="true">Source</sourceLabel>
 	<crossReference js="true">Cross Reference</crossReference>
 	<partOfSeamlessDatabase js="true">Part of Seamless Database</partOfSeamlessDatabase>
 	<stereoMate js="true">Stereo Mate</stereoMate>

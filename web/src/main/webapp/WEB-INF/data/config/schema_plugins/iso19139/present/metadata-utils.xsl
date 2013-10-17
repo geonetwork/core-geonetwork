@@ -253,7 +253,8 @@
 								<br/>
 	        					<ul>
 		        					<li><h3><img src="{/root/gui/url}/images/chain.png"
-		        							alt="{/root/gui/strings/linkedSiblingMetadataHelp}" title="{/root/gui/strings/linkedSiblingMetadataHelp}" align="absmiddle"/>
+		        							alt="{/root/gui/strings/linkedSiblingMetadataHelp}" 
+		        							title="{/root/gui/strings/linkedSiblingMetadataHelp}" align="absmiddle"/>
 		        							<xsl:value-of select="/root/gui/strings/linkedSiblingMetadata"/></h3></li>
 		        					<xsl:for-each select="$siblings">
 		        						<xsl:variable name="type" select="string(name(../..))"/>
@@ -263,12 +264,25 @@
 		        							</xsl:if>
 	        							</xsl:variable>
 		        						<xsl:for-each select="geonet:info">
-		        						<xsl:variable name="helpText" select="/root/gui/strings/$type" />
-			        						<li><a class="arrow sibling {$type} {$isParent}" title="{$helpText}" href="metadata.show?uuid={uuid}">
-	    											<xsl:call-template name="getMetadataTitle">
-	    												<xsl:with-param name="uuid" select="uuid"/>
-	    											</xsl:call-template>
-	   										</a></li>
+		        						<xsl:variable name="helpText">
+		        							<xsl:if test="$type = 'partOfSeamlessDatabase'">
+		        								<xsl:value-of select="/root/gui/strings/partOfSeamlessDatabase" />
+		        							</xsl:if>
+		        							<xsl:if test="$type = 'source'">
+		        								<xsl:value-of select="/root/gui/strings/sourceLabel" />
+		        							</xsl:if>
+		        							<xsl:if test="$type = 'stereoMate'">
+		        								<xsl:value-of select="/root/gui/strings/stereoMate" />
+		        							</xsl:if>
+		        							<xsl:if test="$type = 'crossReference'">
+		        								<xsl:value-of select="/root/gui/strings/crossReference" />
+		        							</xsl:if>
+		        						</xsl:variable>
+		        						<li><a class="arrow sibling {$type} {$isParent}" title="{$helpText}" href="metadata.show?uuid={uuid}">
+    											<xsl:call-template name="getMetadataTitle">
+    												<xsl:with-param name="uuid" select="uuid"/>
+    											</xsl:call-template>
+   										</a></li>
    										</xsl:for-each>
 		        					</xsl:for-each>
 	        					</ul>

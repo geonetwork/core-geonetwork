@@ -615,6 +615,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<selectRelation js="true">Double-cliquez pour sélectionner relation</selectRelation>
 	<parent js="true">Père</parent>
 	<source js="true">Source</source>
+	<sourceLabel js="true">Source</sourceLabel>
 	<crossReference js="true">Cross Reference</crossReference>
 	<partOfSeamlessDatabase js="true">Part of Seamless Database</partOfSeamlessDatabase>
 	<stereoMate js="true">Stereo Mate</stereoMate>
