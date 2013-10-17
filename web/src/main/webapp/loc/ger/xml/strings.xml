@@ -589,6 +589,7 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<serviceCreate>Einen neuen Dienst-Metadatensatz erstellen</serviceCreate>
 	<parentSearch js="true">Nach Eltern-Datensatz suchen</parentSearch>
 	<linkedMetadataSelectionWindowTitle js="true">Metadaten verlinken</linkedMetadataSelectionWindowTitle>
+	<relatedMetadataTitle js="true">Metadaten verlinken</relatedMetadataTitle>
 	<searchText js="true">Alle Felder</searchText>
 	<mdTitle js="true">Titel der Metadaten</mdTitle>
 	<selectRelation js="true">Doppelklicken Sie auf Beziehung wählen</selectRelation>

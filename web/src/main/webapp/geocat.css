@@ -105,10 +105,10 @@ a.no-help:hover {
 	border: 1px solid rgba(160, 180, 0, 1);
 	padding: 3px;
 	margin: 4px;
-}
+	display: none;
 }
 
-.relatedMetadataResults li.arrow.sibling {
+.relatedMetadataResults li.arrow {
 	width: 16%;
 	display: inline-block;
 	vertical-align: top;

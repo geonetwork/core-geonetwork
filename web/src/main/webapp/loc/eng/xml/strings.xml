@@ -614,6 +614,7 @@
 	<serviceCreate>Create new service metadata</serviceCreate>
 	<parentSearch js="true">Search for a metadata record to set as parent of current record.</parentSearch>
 	<linkedMetadataSelectionWindowTitle js="true">Related metadata selection</linkedMetadataSelectionWindowTitle>
+	<relatedMetadataTitle js="true">Related metadata</relatedMetadataTitle>
 	<searchText js="true">Text search</searchText>
 	<mdTitle js="true">Metadata title</mdTitle>
 	<selectRelation js="true">Double click to select relationship</selectRelation>

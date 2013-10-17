@@ -610,6 +610,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<serviceCreate>Créer une métadonnée de service</serviceCreate>
 	<parentSearch js="true">Chercher un parent pour la métadonnée en cours.</parentSearch>
 	<linkedMetadataSelectionWindowTitle js="true">Sélection des métadonnées associées</linkedMetadataSelectionWindowTitle>
+	<relatedMetadataTitle js="true">Métadonnées associées</relatedMetadataTitle>
 	<searchText js="true">Recherche libre</searchText>
 	<mdTitle js="true">Titre de la métadonnée</mdTitle>
 	<selectRelation js="true">Double-cliquez pour sélectionner relation</selectRelation>

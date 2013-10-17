@@ -605,8 +605,12 @@ var geocat = {
         						title = (title.innerText || title.textContent);
         					}
         					var parent = (relation.getAttribute("parent") == "true");
+        					var sibling = (type == "source" || type == "stereoMate" 
+        									|| type == "partOfSeamlessDatabase" 
+        										|| type == "crossReference");
         					
-        					var div = "<li class='relation arrow sibling " + type + " " + ((parent)? "parent" : "") +
+        					var div = "<li class='relation arrow " + ((sibling)? "sibling" : "") + " " 
+        							+ type + " " + ((parent)? "parent" : "") +
         							"'><a href='" + geocat.baseUrl + "srv/" + geocat.language + 
         	        				"/metadata.show?uuid=" + uuid + "'>" + (title || uuid) + "</a></li>";
         					
@@ -618,6 +622,9 @@ var geocat = {
         						heuristic_array2.push(div);
         					}
         			});
+        			
+
+    	    		Ext.get(ul).insertHtml("beforeEnd", "<li><h3>" + translate("relatedMetadataTitle") + "</h3></li>");
         			
         	    	var i = 0;
         	    	//number of relations to show
@@ -634,6 +641,11 @@ var geocat = {
             	    		i++;
         	    		}
         	    	});
+        	    	
+        	    	//If we have relations to show
+        	    	if(i > 0) {
+        	    		Ext.get(ul).show();
+        	    	}
         		}
         	});
     	});
