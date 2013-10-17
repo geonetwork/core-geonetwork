@@ -238,34 +238,22 @@ public class GetRelated implements Service {
             relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from,
                     to, fast));
             
-            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
             //Now, add the aggregationInfo elements
             if(md != null) {
 	            for(String e : Get.getAggregationInfos(md)) {
 	            	String[] tmp = e.split(" ");
 	            	String type_ = tmp[0];
 	            	String uuid_ = tmp[1];
-	            	
 
-                    if(dbms == null) dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-                    String id1 = dm.getMetadataId(dbms, uuid_);
-
-                    try {
-                        Lib.resource.checkPrivilege(context, id1,
-                                AccessManager.OPER_VIEW);
-                        Element content = dm.getMetadata(context, id1,
-                                forEditing, withValidationErrors,
-                                keepXlinkAttributes);
-                        Element element = new Element(type_)
-	                        .addContent(new Element("response")
-	                        .addContent(content));
-                        element.setAttribute("parent", "true");
-                        relatedRecords.addContent(element);
-                    } catch (Exception ex) {
-                        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                            Log.debug(Geonet.SEARCH_ENGINE, "Parent metadata "
-                                + id1 + " record is not visible for user.");
-                    }
+                    Element element = new Element(type_);
+                    Element metadata = search(uuid_, "sources", context, from,
+                            to, fast);
+                    Element response = metadata.getChild("response");
+                    response.detach();
+                    element.addContent(response);
+                    
+                    element.setAttribute("parent", "true");
+                   relatedRecords.addContent(element);
 	            }
             }
             
@@ -280,6 +268,9 @@ public class GetRelated implements Service {
                     to, fast));
 
         }
+        
+        XMLOutputter xmlout = new XMLOutputter();
+        xmlout.output(relatedRecords,  System.out);
 
         return relatedRecords;
 
