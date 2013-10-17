@@ -13,27 +13,27 @@
     <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
             <li class="dropdown">
-                <a id="breadCrumb1" href="#" class="dropdown-toggle capitalized" data-toggle="dropdown">{{validatedTitle}} <b class="caret"></b></a>
+                <a id="breadCrumb1" class="dropdown-toggle capitalized" data-toggle="dropdown">{{validatedTitle}} <b class="caret"></b></a>
                 <ul class="dropdown-menu capitalized">
-                    <li><a ng-href="#/validated/{{type}}">{{translate('reusable_validated')}}</a></li>
-                    <li><a ng-href="#/nonvalidated/{{type}}">{{translate('reusable_nonValidated')}}</a></li>
-                    <li><a ng-href="#/deleted">{{translate('deleted')}}</a></li>
+                    <li><a id="nav-validated" ng-href="#/validated/{{type}}">{{translate('reusable_validated')}}</a></li>
+                    <li><a id="nav-nonvalidated" ng-href="#/nonvalidated/{{type}}">{{translate('reusable_nonValidated')}}</a></li>
+                    <li><a id="nav-deleted" ng-href="#/deleted">{{translate('deleted')}}</a></li>
                 </ul>
             </li>
-            <li id="breadCrumb2" class="dropdown" data-ng-hide="isDeletePage">
-                <a href="#" class="dropdown-toggle capitalized" data-toggle="dropdown">{{translate(type)}}<b class="caret"></b></a>
+            <li class="dropdown" data-ng-hide="isDeletePage">
+                <a id="breadCrumb2" class="dropdown-toggle capitalized" data-toggle="dropdown">{{translate(type)}}<b class="caret"></b></a>
                 <ul class="dropdown-menu capitalized">
-                    <li><a ng-href="#/{{validated}}/contacts">{{translate('contacts')}}</a></li>
-                    <li><a ng-href="#/{{validated}}/formats">{{translate('formats')}}</a></li>
-                    <li><a ng-href="#/{{validated}}/extents">{{translate('extents')}}</a></li>
-                    <li><a ng-href="#/{{validated}}/keywords">{{translate('keywords')}}</a></li>
+                    <li><a id="nav-contacts" ng-href="#/{{validated}}/contacts">{{translate('contacts')}}</a></li>
+                    <li><a id="nav-formats" ng-href="#/{{validated}}/formats">{{translate('formats')}}</a></li>
+                    <li><a id="nav-extents" ng-href="#/{{validated}}/extents">{{translate('extents')}}</a></li>
+                    <li><a id="nav-keywords" ng-href="#/{{validated}}/keywords">{{translate('keywords')}}</a></li>
                 </ul>
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li data-ng-hide="!isValidated || isDeletePage">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{translate('actions')}} <b class="caret"></b></a>
+                    <a id="menu-bar-action" class="dropdown-toggle" data-toggle="dropdown">{{translate('actions')}} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a data-ng-click="reloadData()">{{translate('reload')}}</a></li>
                         <li><a data-ng-click="startCreateNew()">{{translate('create')}}</a></li>

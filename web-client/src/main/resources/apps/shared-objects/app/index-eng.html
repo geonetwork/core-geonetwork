@@ -15,11 +15,24 @@
     <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
   -->
-    <script src="../../../srv/eng/strings.js"></script>
-    <script type="text/javascript">
-        Geonet.language = 'eng';
-    </script>
+
     <script src="lib/jquery.js"></script>
+    <script id="load-language-script" type="text/javascript">
+        var languageHolder='eng';
+        var init = function () {
+            var matches = window.location.search.match(/lang=(\w\w\w)/);
+            if (matches.length == 2) {
+                languageHolder = matches[1];
+            }
+
+            jQuery.ajax('../../../srv/'+languageHolder+'/strings.js', {async:false, cache:true, dataType:'script'});
+
+            Geonet.language = languageHolder
+        };
+
+        init();
+    </script>
+
     <script src="lib/bootstrap3/js/bootstrap.min.js"></script>
     <script src="lib/angular/angular.js"></script>
     <script src="lib/angular/angular-route.js"></script>

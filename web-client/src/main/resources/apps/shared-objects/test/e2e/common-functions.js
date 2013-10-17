@@ -74,16 +74,22 @@ var hasActionFullPathImpl = function (desc, path, is) {
 //        expect(element('div.dropdown.open').count()).toBe(1);
         var result = element(path).count();
         if (is) {
-            expect(result).toBe(1)
+            expect(result).toBeGreaterThan(0);
         } else {
-            expect(result).toBe(0)
+            expect(result).toBe(0);
         }
     });
 };
 
 var listsRelatedMetadata = function (id, title, name, email) {
-it ('clicking label should show referenced metadata', function() {
-            element('.data-description a.accordion-toggle').click();
+    it ('before clicking on result no metadata should be loaded', function(){
+            expect(repeater('.metadata-list').count()).toBe(0)
+    })
+    it ('clicking label should show referenced metadata', function() {
+            element('.data-description a.accordion-toggle').query(function(selected, done){
+                selected.first().click();
+                done();
+            });
             expect(repeater('.metadata-list').count()).toBe(1)
             expect(element('.metadata-list td.id').text()).toEqual(id)
             expect(element('.metadata-list td.title').text()).toEqual(title)
@@ -91,4 +97,14 @@ it ('clicking label should show referenced metadata', function() {
             expect(element('.metadata-list td.email').text()).toEqual(email)
             expect(element('.metadata-list button.show-md').text()).toEqual("Show")
         });
+};
+var menuBecomesVisible = function(selector) {
+    it ('before click \''+selector+'\' should not have a visible menu', function() {
+        expect(element(selector+' + ul').css('display')).toBe('none')
+    });
+
+    it ('clicking on \''+selector+'\' should show menu', function () {
+        element(selector).click();
+        expect(element(selector+' + ul').css('display')).not().toBe('none')
+    });
 }
