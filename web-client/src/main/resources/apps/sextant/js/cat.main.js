@@ -684,7 +684,7 @@ cat.app = function() {
             }
             
             win = new Ext.Window({
-            	id: 'gn-modalWindow',
+            	id: 'modalWindow',
                 layout: 'fit',
                 closeAction: 'destroy',
                 maximized: false,
