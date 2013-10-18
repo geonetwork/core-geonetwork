@@ -8,6 +8,7 @@ SharedObjectsDev.run(function ($httpBackend) {
     $httpBackend.whenGET('partials/modal-edit-extents.html').passThrough();
     $httpBackend.whenGET('partials/modal-edit-formats.html').passThrough();
     $httpBackend.whenGET('partials/modal-edit-keywords.html').passThrough();
+    $httpBackend.whenGET('partials/modal-edit-deleted.html').passThrough();
     $httpBackend.whenGET('partials/modal-executing-operation.html').passThrough();
     $httpBackend.whenGET('partials/modal-reject.html').passThrough();
     $httpBackend.whenGET('../../../srv/eng/header-template.xml').passThrough();
