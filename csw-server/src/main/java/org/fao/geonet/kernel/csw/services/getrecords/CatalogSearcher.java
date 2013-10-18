@@ -201,8 +201,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
             GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
             return performSearch(context, luceneExpr, filterExpr, filterVersion, sort, resultType, startPosition, maxRecords,
                     maxHitsInSummary, cswServiceSpecificContraint, reader, indexAndTaxonomy.taxonomyReader);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 			Log.error(Geonet.CSW_SEARCH, "Error while searching metadata ");
 			Log.error(Geonet.CSW_SEARCH, "  (C) StackTrace:\n" + Util.getStackTrace(e));
 			throw new NoApplicableCodeEx("Raised exception while searching metadata : " + e);
@@ -388,16 +387,18 @@ public class CatalogSearcher implements MetadataRecordSelector {
 		String field = elem.getAttributeValue("fld");
 
 		if (field != null) {
-			if (field.equals(""))
-				field = "any";
+			if (field.equals("")) {
+                field = "any";
+            }
 
-			String mapped = FieldMapper.map(field);
+			String mapped = getFieldMapper().map(field);
 
-			if (mapped != null)
-				elem.setAttribute("fld", mapped);
-			else
-				Log.info(Geonet.CSW_SEARCH, "Unknown queryable field : "
-						+ field); // FIXME log doesn't work
+			if (mapped != null) {
+                elem.setAttribute("fld", mapped);
+            } else {
+                Log.info(Geonet.CSW_SEARCH, "Unknown queryable field : "
+                                            + field); // FIXME log doesn't work
+            }
 		}
 
 		@SuppressWarnings("unchecked")
@@ -408,7 +409,11 @@ public class CatalogSearcher implements MetadataRecordSelector {
         }
 	}
 
-	// ---------------------------------------------------------------------------
+    private FieldMapper getFieldMapper() {
+        return _applicationContext.getBean(FieldMapper.class);
+    }
+
+    // ---------------------------------------------------------------------------
 
     /**
      * Executes a CSW search using a filter query.
@@ -555,7 +560,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 			String id = doc.get("_id");
 			ResultItem ri = new ResultItem(id);
 			results.add(ri);
-			for (String field : FieldMapper.getMappedFields()) {
+			for (String field : getFieldMapper().getMappedFields()) {
 				String value = doc.get(field);
 				if (value != null) {
 					ri.add(field, value);

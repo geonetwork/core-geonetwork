@@ -48,6 +48,7 @@ import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.HttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
@@ -186,9 +187,11 @@ class Harvester extends BaseAligner
         		"&REQUEST=" + GETCAPABILITIES
         		;
 
-        if(log.isDebugEnabled()) log.debug("GetCapabilities document: " + this.capabilitiesUrl);
+        if(log.isDebugEnabled()) {
+            log.debug("GetCapabilities document: " + this.capabilitiesUrl);
+        }
 		
-        XmlRequest req = new XmlRequest();
+        XmlRequest req = context.getBean(HttpRequestFactory.class).createXmlRequest();
         req.setUrl(new URL(this.capabilitiesUrl));
         req.setMethod(XmlRequest.Method.GET);
         Lib.net.setupProxy(context, req);

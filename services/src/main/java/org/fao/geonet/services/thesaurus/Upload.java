@@ -128,7 +128,7 @@ public class Upload implements Service {
 				URI uri = new URI(url);
 				rdfFile = File.createTempFile("thesaurus", ".rdf");
 
-				XmlRequest httpReq = new XmlRequest(uri.getHost(),
+				XmlRequest httpReq = context.getBean(HttpRequestFactory.class).createXmlRequest(uri.getHost(),
 						uri.getPort());
 				httpReq.setAddress(uri.getPath());
 

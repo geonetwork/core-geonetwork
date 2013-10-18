@@ -75,7 +75,7 @@ public class RecordInfo
     {
         id         = "" + record.getId();
         uuid       = record.getUuid();
-        isTemplate = record.getDataInfo().getType().code + "";
+        isTemplate = record.getDataInfo().getType().codeString;
         changeDate = record.getDataInfo().getChangeDate().getDateAndTime();
     }
 

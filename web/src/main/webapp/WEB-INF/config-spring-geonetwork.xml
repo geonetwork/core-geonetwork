@@ -40,6 +40,8 @@
           class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
     </bean>
+    <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>
+    <bean id="httpRequestFactor" class="org.fao.geonet.utils.HttpRequestFactory" />
 
     <!-- Define the languages in the UI.  Seems like these should come from database at some point but at the moment they
          are needed here.

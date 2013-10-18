@@ -135,7 +135,7 @@ public class Insert extends NotInReadOnlyModeService {
 		
 		
 		// Set template
-		dm.setTemplate(iId, MetadataType.lookup(isTemplate.charAt(0)), null);
+		dm.setTemplate(iId, MetadataType.lookup(isTemplate), null);
 
 		
 		// Import category

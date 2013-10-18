@@ -85,7 +85,7 @@ public class Update extends NotInReadOnlyModeService {
 
 		if (!forget) {
 			int iLocalId = Integer.parseInt(id);
-			dataMan.setTemplateExt(iLocalId, MetadataType.lookup(isTemplate.charAt(0)), title);
+			dataMan.setTemplateExt(iLocalId, MetadataType.lookup(isTemplate), title);
 
 			//--- use StatusActionsFactory and StatusActions class to possibly
 			//--- change status as a result of this edit (use onEdit method)

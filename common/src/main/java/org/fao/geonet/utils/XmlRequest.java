@@ -74,20 +74,7 @@ public class XmlRequest
 	//---
 	//---------------------------------------------------------------------------
 
-	public XmlRequest() { this(null, 80); }
-
-	//---------------------------------------------------------------------------
-
-	public XmlRequest(String host) { this(host, 80); }
-
-	//---------------------------------------------------------------------------
-
-    public XmlRequest(String host, int port)
-    {
-        this(host, port, "http");
-    }
-    
-	public XmlRequest(String host, int port, String protocol)
+    XmlRequest(String host, int port, String protocol)
 	{
 		this.host = host;
 		this.port = port;

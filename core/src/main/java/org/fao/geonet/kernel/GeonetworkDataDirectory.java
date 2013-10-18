@@ -7,13 +7,21 @@ import java.io.IOException;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
+import jeeves.server.sources.http.ServletPathFinder;
 import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 
 /**
  * The GeoNetwork data directory is the location on the file system where
@@ -45,6 +53,9 @@ public class GeonetworkDataDirectory {
     private File resourcesDir;
     private File htmlCacheDir;
 
+    @Autowired
+    private ConfigurableApplicationContext _applicationContext;
+
     /**
 	 * Check and create if needed GeoNetwork data directory.
 	 * 
@@ -72,6 +83,11 @@ public class GeonetworkDataDirectory {
 				"Check and create if needed GeoNetwork data directory");
         this.webappDir = path;
 		setDataDirectory(jeevesServlet, webappName, path, handlerConfig);
+	}
+	public void init(final String webappName, final String path,  String systemDataDir,
+                     final ServiceConfig handlerConfig, final JeevesServlet jeevesServlet) {
+        this.systemDataDir = systemDataDir;
+        this.init(webappName, path, handlerConfig, jeevesServlet);
 	}
 
 	/**
@@ -142,10 +158,11 @@ public class GeonetworkDataDirectory {
 	private String setDataDirectory(JeevesServlet jeevesServlet, String webappName, String path,
                                     ServiceConfig handlerConfig) {
 
-		// System property defined according to webapp name
-		systemDataDir = GeonetworkDataDirectory.lookupProperty(jeevesServlet,
-				handlerConfig, webappName + KEY_SUFFIX);
-
+        if (systemDataDir == null) {
+            // System property defined according to webapp name
+            systemDataDir = GeonetworkDataDirectory.lookupProperty(jeevesServlet,
+                    handlerConfig, webappName + KEY_SUFFIX);
+        }
 		// GEONETWORK.dir is default
 		if (systemDataDir == null) {
 			systemDataDir = GeonetworkDataDirectory.lookupProperty(
@@ -231,8 +248,13 @@ public class GeonetworkDataDirectory {
 
         htmlCacheDir = new File(handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache");
         handlerConfig.setValue(Geonet.Config.HTMLCACHE_DIR, htmlCacheDir.getAbsolutePath());
+        try {
+            IO.mkdirs(htmlCacheDir, "HTML Cache Directory");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-		handlerConfig.setValue(Geonet.Config.SYSTEM_DATA_DIR, systemDataDir);
+        handlerConfig.setValue(Geonet.Config.SYSTEM_DATA_DIR, systemDataDir);
 
 		initDataDirectory(path, handlerConfig);
 
@@ -345,13 +367,24 @@ public class GeonetworkDataDirectory {
     public String getSystemDataDir() {
         return systemDataDir;
     }
-
+    /**
+     * Set the root data dir for Geonetwork.  Typically other "data" directories are subdirectories to this.
+     */
+    public void setSystemDataDir(String systemDataDir) {
+        this.systemDataDir = systemDataDir;
+    }
     /**
      * Get the directory to store the lucene indices in.
      * @return The directory to store the lucene indices in.
      */
     public File getLuceneDir() {
         return luceneDir;
+    }
+    /**
+     * Set the directory to store the lucene indices in.
+     */
+    public void setLuceneDir(File luceneDir) {
+        this.luceneDir = luceneDir;
     }
 
     /**
@@ -362,6 +395,12 @@ public class GeonetworkDataDirectory {
     public File getSpatialIndexPath() {
         return spatialIndexPath;
     }
+    /**
+     * Set the directory to store the metadata spatial index. If the spatial index is to be stored locally this is the directory to use.
+     */
+    public void setSpatialIndexPath(File spatialIndexPath) {
+        this.spatialIndexPath = spatialIndexPath;
+    }
 
     /**
      * Return the directory containing the configuration file.
@@ -371,7 +410,12 @@ public class GeonetworkDataDirectory {
     public File getConfigDir() {
         return configDir;
     }
-
+    /**
+     * Set the directory containing the configuration file.
+     */
+    public void setConfigDir(File configDir) {
+        this.configDir = configDir;
+    }
     /**
      * Get the directory containing the thesauri.
      *
@@ -379,6 +423,12 @@ public class GeonetworkDataDirectory {
      */
     public File getThesauriDir() {
         return thesauriDir;
+    }
+    /**
+     * Set the directory containing the thesauri.
+     */
+    public void setThesauriDir(File thesauriDir) {
+        this.thesauriDir = thesauriDir;
     }
 
     /**
@@ -389,7 +439,12 @@ public class GeonetworkDataDirectory {
     public File getSchemaPluginsDir() {
         return schemaPluginsDir;
     }
-
+    /**
+     * Set the schema plugins directory.
+     */
+    public void setSchemaPluginsDir(File schemaPluginsDir) {
+        this.schemaPluginsDir = schemaPluginsDir;
+    }
     /**
      * Get the directory that contain all the resources related to metadata (thumbnails, attachments, etc...).
      *
@@ -398,7 +453,12 @@ public class GeonetworkDataDirectory {
     public File getMetadataDataDir() {
         return metadataDataDir;
     }
-
+    /**
+     * Set the directory that contain all the resources related to metadata (thumbnails, attachments, etc...).
+     */
+    public void setMetadataDataDir(File metadataDataDir) {
+        this.metadataDataDir = metadataDataDir;
+    }
     /**
      * Get the directory containing the metadata revision history if it is to be stored locally.
      * @return the directory containing the metadata revision history.
@@ -406,7 +466,12 @@ public class GeonetworkDataDirectory {
     public File getMetadataRevisionDir() {
         return metadataRevisionDir;
     }
-
+    /**
+     * Set the directory containing the metadata revision history if it is to be stored locally.
+     */
+    public void setMetadataRevisionDir(File metadataRevisionDir) {
+        this.metadataRevisionDir = metadataRevisionDir;
+    }
     /**
      * Get the directory that will contain the resources for the system.
      *
@@ -415,6 +480,12 @@ public class GeonetworkDataDirectory {
      */
     public File getResourcesDir() {
         return resourcesDir;
+    }
+    /**
+     * Set the directory that will contain the resources for the system.
+     */
+    public void setResourcesDir(File resourcesDir) {
+        this.resourcesDir = resourcesDir;
     }
 
     /**
@@ -434,4 +505,13 @@ public class GeonetworkDataDirectory {
     public File getHtmlCacheDir() {
         return htmlCacheDir;
     }
+    /**
+     * Set directory for caching html data.
+     */
+    public void setHtmlCacheDir(File htmlCacheDir) {
+        this.htmlCacheDir = htmlCacheDir;
+    }
+
+
+
 }

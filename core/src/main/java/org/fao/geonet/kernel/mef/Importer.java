@@ -381,7 +381,7 @@ public class Importer {
                         if (finalRating != null) {
                             dataInfo.setRating(Integer.valueOf(finalRating));
                         }
-                        dataInfo.setType(MetadataType.lookup(isTemplate.charAt(0)));
+                        dataInfo.setType(MetadataType.lookup(isTemplate));
                         metadata.getHarvestInfo().setHarvested(false);
 
                         addCategoriesToMetadata(metadata, finalCategs, context);

@@ -91,8 +91,10 @@ public class GetDomain extends AbstractOperation implements CatalogService
 
     @Autowired
     private ApplicationContext springAppContext;
-    
-	//---------------------------------------------------------------------------
+    @Autowired
+    private CatalogConfiguration _catalogConfig;
+
+    //---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---
@@ -119,8 +121,10 @@ public class GetDomain extends AbstractOperation implements CatalogService
 		if (propertyNames != null) {
 			List<Element> domainValues;
 			try {
-				domainValues = handlePropertyName(propertyNames, context, false, CatalogConfiguration.getMaxNumberOfRecordsForPropertyNames(), cswServiceSpecificConstraint, _luceneConfig);
-			} catch (Exception e) {
+                final int maxNumberOfRecordsForPropertyNames = _catalogConfig.getMaxNumberOfRecordsForPropertyNames();
+                domainValues = handlePropertyName(_catalogConfig, propertyNames, context, false, maxNumberOfRecordsForPropertyNames,
+                        cswServiceSpecificConstraint, _luceneConfig);
+            } catch (Exception e) {
 	            Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
 	            throw new NoApplicableCodeEx(
 	                    "Raised exception while getting domain value for specified PropertyName  : " + e);
@@ -172,8 +176,8 @@ public class GetDomain extends AbstractOperation implements CatalogService
 
 	//---------------------------------------------------------------------------
 	
-	public static List<Element> handlePropertyName(String[] propertyNames,
-			ServiceContext context, boolean freq, int maxRecords, String cswServiceSpecificConstraint, LuceneConfig luceneConfig) throws Exception {
+	public static List<Element> handlePropertyName(CatalogConfiguration catalogConfig, String[] propertyNames,
+                                                   ServiceContext context, boolean freq, int maxRecords, String cswServiceSpecificConstraint, LuceneConfig luceneConfig) throws Exception {
 
 		List<Element> domainValuesList = new ArrayList<Element>();
 
@@ -238,7 +242,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			
 				try {
 					// Get mapped lucene field in CSW configuration
-					String indexField = CatalogConfiguration.getFieldMapping().get(
+					String indexField = catalogConfig.getFieldMapping().get(
 							property.toLowerCase());
 					if (indexField != null)
 						property = indexField;
@@ -250,7 +254,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 						continue;
 					
 					boolean isRange = false;
-					if (CatalogConfiguration.getGetRecordsRangeFields().contains(
+					if (catalogConfig.getGetRecordsRangeFields().contains(
 							property))
 						isRange = true;
 					

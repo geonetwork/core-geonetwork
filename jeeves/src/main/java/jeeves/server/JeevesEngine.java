@@ -258,7 +258,7 @@ public class JeevesEngine {
 	//---------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
-	private void loadConfigFile(ServletContext servletContext, String path, String file, ServiceManager serviceMan) throws Exception
+    private void loadConfigFile(ServletContext servletContext, String path, String file, ServiceManager serviceMan) throws Exception
 	{
 		file = path + file;
 

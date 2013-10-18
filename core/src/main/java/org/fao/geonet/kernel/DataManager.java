@@ -406,7 +406,7 @@ public class DataManager {
             final String  createDate = fullMd.getDataInfo().getCreateDate().getDateAndTime();
             final String  changeDate = fullMd.getDataInfo().getChangeDate().getDateAndTime();
             final String  source     = fullMd.getSourceInfo().getSourceId();
-            final String  isTemplate = fullMd.getDataInfo().getType().code + "";
+            final MetadataType metadataType = fullMd.getDataInfo().getType();
             final String  root       = fullMd.getDataInfo().getRoot();
             final String  title      = fullMd.getDataInfo().getTitle();
             final String  uuid       = fullMd.getUuid();
@@ -427,7 +427,7 @@ public class DataManager {
             moreFields.add(SearchManager.makeField("_createDate",  createDate,  true, true));
             moreFields.add(SearchManager.makeField("_changeDate",  changeDate,  true, true));
             moreFields.add(SearchManager.makeField("_source",      source,      true, true));
-            moreFields.add(SearchManager.makeField("_isTemplate",  isTemplate,  true, true));
+            moreFields.add(SearchManager.makeField("_isTemplate",  metadataType.codeString,  true, true));
             moreFields.add(SearchManager.makeField("_title",       title,       true, true));
             moreFields.add(SearchManager.makeField("_uuid",        uuid,        true, true));
             moreFields.add(SearchManager.makeField("_isHarvested", isHarvested, true, true));
@@ -501,7 +501,7 @@ public class DataManager {
                 }
                 moreFields.add(SearchManager.makeField("_valid", isValid, true, true));
             }
-            searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, isTemplate, title);
+            searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, metadataType, title);
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
         } finally {
@@ -1281,7 +1281,7 @@ public class DataManager {
                 .setChangeDate(new ISODate())
                 .setCreateDate(new ISODate())
                 .setSchemaId(schema)
-                .setType(MetadataType.lookup(isTemplate.charAt(0)));
+                .setType(MetadataType.lookup(isTemplate));
         newMetadata.getSourceInfo()
                 .setGroupOwner(Integer.valueOf(groupOwner))
                 .setOwner(owner)
@@ -1337,7 +1337,7 @@ public class DataManager {
         }
 
         if(StringUtils.isBlank(isTemplate)) {
-            isTemplate = "n";
+            isTemplate = MetadataType.METADATA.codeString;
         }
         final Metadata newMetadata = new Metadata().setUuid(uuid);
         final ISODate isoChangeDate = changeDate != null ? new ISODate(changeDate) : new ISODate();
@@ -1349,7 +1349,7 @@ public class DataManager {
                 .setDoctype(docType)
                 .setTitle(title)
                 .setRoot(metadataXml.getQualifiedName())
-                .setType(MetadataType.lookup(isTemplate.charAt(0)));
+                .setType(MetadataType.lookup(isTemplate));
         newMetadata.getSourceInfo()
                 .setOwner(owner)
                 .setSourceId(source);
@@ -2286,9 +2286,12 @@ public class DataManager {
      */
     public void unsetOperation(ServiceContext context, int mdId, int groupId, int operId) throws Exception {
         OperationAllowedId id = new OperationAllowedId().setGroupId(groupId).setMetadataId(mdId).setOperationId(operId);
-        context.getBean(OperationAllowedRepository.class).delete(id);
-        if (svnManager != null) {
-            svnManager.setHistory(mdId+"", context);
+        final OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+        if (repository.exists(id)) {
+            repository.delete(id);
+            if (svnManager != null) {
+                svnManager.setHistory(mdId+"", context);
+            }
         }
     }
 
@@ -2717,7 +2720,7 @@ public class DataManager {
         String createDate = dataInfo.getCreateDate().getDateAndTime();
         String changeDate = dataInfo.getChangeDate().getDateAndTime();
         String source = metadata.getSourceInfo().getSourceId();
-        String isTemplate = "" + dataInfo.getType().code;
+        String isTemplate = dataInfo.getType().codeString;
         String title = dataInfo.getTitle();
         String uuid = metadata.getUuid();
         String isHarvested = "" + Constants.toYN_EnabledChar(metadata.getHarvestInfo().isHarvested());

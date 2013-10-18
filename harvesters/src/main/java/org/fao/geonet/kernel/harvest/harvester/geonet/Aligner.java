@@ -340,7 +340,7 @@ public class Aligner extends BaseAligner
         MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         Metadata metadata = metadataRepository.findOne(iId);
 
-		dataMan.setTemplateExt(iId, MetadataType.lookup(isTemplate.charAt(0)), null);
+		dataMan.setTemplateExt(iId, MetadataType.lookup(isTemplate), null);
 		dataMan.setHarvestedExt(iId, params.uuid);
 		
 		if(!localRating) {

@@ -280,7 +280,7 @@ public class SettingManager {
 
     public @Nonnull String getSiteURL(@Nonnull ServiceContext context) {
         String lang = context.getLanguage();
-        if(lang != null) {
+        if(lang == null) {
             lang = context.getBean(LanguageRepository.class).findOneByDefaultLanguage().getId();
         }
         String baseURL = context.getBaseUrl();

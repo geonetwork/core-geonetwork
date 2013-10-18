@@ -250,7 +250,6 @@ public class QueryRequest {
         request.setSortBy(this.sortBy);
         request.setSpatialFilter(this.spatialFilter);
 
-        SearchRequestParamRepository paramRepo = context.getBean(SearchRequestParamRepository.class);
         // stores each QueryInfo object into the database
         if (this.queryInfos != null && !this.autoGenQuery) {
             request.addAll(this.queryInfos);

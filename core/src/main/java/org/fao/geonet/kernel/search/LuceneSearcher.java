@@ -119,7 +119,7 @@ import java.util.Set;
  * search metadata locally using lucene.
  */
 public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelector{
-	private static SearchManager _sm;
+	private SearchManager _sm;
 	private String        _styleSheetName;
 
 	private Query         _query;
@@ -1138,12 +1138,13 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 			Query query, Filter cFilter, Sort sort, TaxonomyReader taxonomyReader, boolean buildSummary, boolean trackDocScores,
 			boolean trackMaxScore, boolean docsScoredInOrder) throws Exception
 	{
-		Log.debug(Geonet.SEARCH_ENGINE, "Build summary: " + buildSummary);
-        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-            Log.debug(Geonet.SEARCH_ENGINE, "Setting up the TFC with numHits "+numHits);
+        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
+            Log.debug(Geonet.SEARCH_ENGINE, "Build summary: " + buildSummary);
+            Log.debug(Geonet.SEARCH_ENGINE, "Setting up the TFC with numHits " + numHits);
+        }
 		TopFieldCollector tfc = TopFieldCollector.create(sort, numHits, true, trackDocScores, trackMaxScore, docsScoredInOrder);
 
-        if(query != null && reader != null ){
+        if(query != null && reader != null ) {
             // too dangerous to do this only for logging, as it may throw NPE if Query was not constructed correctly
             // However if you need to see what Lucene queries are really used, print the rewritten query instead
             // Query rw = query.rewrite(reader);
@@ -1583,7 +1584,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         try {
             IndexSearcher searcher = new IndexSearcher(reader);
             TermQuery query = new TermQuery(new Term(field, value));
-            SettingInfo settingInfo = _sm.getSettingInfo();
+            SettingInfo settingInfo = searchmanager.getSettingInfo();
             boolean sortRequestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
             if(Log.isDebugEnabled(Geonet.LUCENE))
                 Log.debug(Geonet.LUCENE, "sortRequestedLanguageOnTop: " + sortRequestedLanguageOnTop);

@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.search;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.exceptions.JeevesException;
 import jeeves.server.context.ServiceContext;
@@ -64,8 +65,6 @@ import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.function.DocumentBoosting;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker;
-import org.fao.geonet.kernel.search.index.LuceneIndexReaderFactory;
-import org.fao.geonet.kernel.search.index.LuceneIndexWriterFactory;
 import org.fao.geonet.kernel.search.spatial.ContainsFilter;
 import org.fao.geonet.kernel.search.spatial.CrossesFilter;
 import org.fao.geonet.kernel.search.spatial.EqualsFilter;
@@ -94,6 +93,7 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.capability.FilterCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -122,6 +122,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Indexes metadata using Lucene.
  */
 @Component
+@Lazy
 public class SearchManager {
 	private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
 	private static final String INDEXING_ERROR_FIELD = "_indexingError";
@@ -129,9 +130,6 @@ public class SearchManager {
 	public static final int Z3950 = 2;
 	public static final int UNUSED = 3;
 
-    public static final String NON_SPATIAL_DIR = "index";
-    public static final String TAXONOMY_DIR = "taxonomy";
-    
 	private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
     private static final String STOPWORDS_DIR_PATH = "resources/stopwords";
 
@@ -143,8 +141,6 @@ public class SearchManager {
     private static File _stopwordsDir;
 	Map<String, FacetConfig> _summaryConfigValues = null;
 
-	private File _luceneDir;
-	private File _luceneTaxonomyDir;
     /**
      * Used when adding documents to the Lucene index.
      */
@@ -166,11 +162,11 @@ public class SearchManager {
 	private static PerFieldAnalyzerWrapper _defaultAnalyzer;
 	private String _htmlCacheDir;
     private Spatial _spatial;
-	private LuceneIndexReaderFactory _indexReader;
-	private LuceneIndexWriterFactory _indexWriter;
 
 	private boolean _logAsynch;
 	private LuceneOptimizerManager _luceneOptimizerManager;
+
+    @Autowired
     private LuceneIndexLanguageTracker _tracker;
     @Autowired
     private ApplicationContext _applicationContext;
@@ -509,14 +505,7 @@ public class SearchManager {
 
 
         final File luceneDir = _geonetworkDataDirectory.getLuceneDir();
-        _luceneDir = new File(luceneDir, NON_SPATIAL_DIR).getAbsoluteFile();
-
-        IO.mkdirs(_luceneDir.getParentFile(), "Lucene Index container directory");
-
         _spatial = new Spatial(_applicationContext.getBean(DataStore.class), maxWritesInTransaction);
-
-		_luceneTaxonomyDir = new File(luceneDir, TAXONOMY_DIR).getAbsoluteFile();
-		IO.mkdirs(_luceneTaxonomyDir.getParentFile(), "Unable to make luceneTaxony parent dir: {dir} because: {cause}");
 
      	 _logAsynch = logAsynch;
 		 _logSpatialObject = logSpatialObject;
@@ -566,10 +555,6 @@ public class SearchManager {
 		createAnalyzer();
 		createDocumentBoost();
 	}
-
-	public LuceneConfig getCurrentLuceneConfiguration () {
-        return _luceneConfig;
-    }
 
     /**
      * TODO javadoc.
@@ -667,20 +652,19 @@ public class SearchManager {
 	 * @param metadata
 	 * @param id
 	 * @param moreFields
-	 * @param isTemplate
 	 * @param title
 	 * @throws Exception
 	 */
-	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields, String isTemplate, String title)
+	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields, MetadataType metadataType, String title)
             throws Exception {
         // Update spatial index first and if error occurs, record it to Lucene index
         indexGeometry(schemaDir, metadata, id, moreFields);
         
         // Update Lucene index
-        List<Pair<String, Pair<Document, List<CategoryPath>>>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, isTemplate, title, false);
-        _indexWriter.deleteDocuments(new Term("_id", id));
+        List<Pair<String, Pair<Document, List<CategoryPath>>>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, metadataType, title, false);
+        _tracker.deleteDocuments(new Term("_id", id));
         for( Pair<String, Pair<Document, List<CategoryPath>>> document : docs ) {
-            _indexWriter.addDocument(document.one(), document.two().one(), document.two().two());
+            _tracker.addDocument(document.one(), document.two().one(), document.two().two());
             if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "adding document in locale " + document.one());
             }
@@ -717,7 +701,7 @@ public class SearchManager {
 		// possibly remove old document
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
             Log.debug(Geonet.INDEX_ENGINE,"Deleting document ");
-		_indexWriter.deleteDocuments(new Term(fld, txt));
+        _tracker.deleteDocuments(new Term(fld, txt));
 		
 		_spatial.writer().delete(txt);
 	}
@@ -729,21 +713,20 @@ public class SearchManager {
      * @param metadata
      * @param id
      * @param moreFields
-     * @param isTemplate
      * @param title
      * @param group
      * @return
      * @throws Exception
      */
      private List<Pair<String,Pair<Document, List<CategoryPath>>>> buildIndexDocument(String schemaDir, Element metadata, String id, 
-                                   List<Element> moreFields, String isTemplate, String title, 
+                                   List<Element> moreFields, MetadataType metadataType, String title,
                                    boolean group) throws Exception
      {
         
 		Element xmlDoc;
 
 		// check for subtemplates
-		if (isTemplate.equals("s")) {
+		if (metadataType == MetadataType.SUB_TEMPLATE) {
 			// create empty document with only title and "any" fields
 			xmlDoc = new Element("Document");
 
@@ -755,15 +738,16 @@ public class SearchManager {
 			allText(metadata, sb);
 			SearchManager.addField(defaultDoc, LuceneIndexField.TITLE, title, true, true);
 			SearchManager.addField(defaultDoc, LuceneIndexField.ANY, sb.toString(), true, true);
-		}
-        else {
-            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+		} else {
+            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n" + Xml.getString(metadata));
+            }
 
             xmlDoc = getIndexFields(schemaDir, metadata);
 
-            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n" + Xml.getString(xmlDoc));
+            }
 		}
 
         @SuppressWarnings(value = "unchecked")
@@ -913,7 +897,7 @@ public class SearchManager {
      */
 	public void delete(String fld, String txt) throws Exception {
 		// possibly remove old document
-		_indexWriter.deleteDocuments(new Term(fld, txt));
+		_tracker.deleteDocuments(new Term(fld, txt));
 		_spatial.writer().delete(txt);
 	}
 
@@ -1272,22 +1256,21 @@ public class SearchManager {
 		try {
 			String styleSheetPath = new File(_stylesheetsDir, styleSheetName).getAbsolutePath();
 			return Xml.transform(xml, styleSheetPath);
-		}
-        catch (Exception e) {
+		} catch (Exception e) {
 			Log.error(Geonet.INDEX_ENGINE, "Search stylesheet contains errors : " + e.getMessage());
 			throw e;
 		}
 	}
 
     public IndexAndTaxonomy getIndexReader(String preferedLang, long versionToken) throws IOException {
-        return _indexReader.acquire(preferedLang, versionToken);
+        return _tracker.acquire(preferedLang, versionToken);
     }
     public IndexAndTaxonomy getNewIndexReader(String preferedLang) throws IOException, InterruptedException {
        Log.debug(Geonet.INDEX_ENGINE,"Ask for new reader");
        return getIndexReader(preferedLang, -1L);
     }
 	public void releaseIndexReader(IndexAndTaxonomy reader) throws InterruptedException, IOException {
-	    _indexReader.release(reader.indexReader);
+	    reader.indexReader.releaseToNRTManager();
 	}
 
     /**
@@ -1299,35 +1282,19 @@ public class SearchManager {
 	private void setupIndex(boolean rebuild) throws Exception {
 	    boolean badIndex = false;
 
-	    if (_tracker == null) {
-            try {
-                _tracker = new LuceneIndexLanguageTracker(_luceneDir, _luceneTaxonomyDir, _luceneConfig);
-                _indexReader = new LuceneIndexReaderFactory(_tracker);
-                _indexWriter = new LuceneIndexWriterFactory(_tracker);
-                IndexAndTaxonomy reader = _indexReader.acquire(null, -1);
-                _indexReader.release(reader.indexReader);
+	        try {
+                IndexAndTaxonomy reader = _tracker.acquire(null, -1);
+                reader.indexReader.releaseToNRTManager();
             } catch (Throwable e) {
                 badIndex = true;
                 Log.error(Geonet.INDEX_ENGINE,
                         "Exception while opening lucene index, going to rebuild it: " , e);
             }
-	    }
 
 	    // if rebuild forced or bad index then rebuild index
 		if (rebuild || badIndex) {
 			Log.error(Geonet.INDEX_ENGINE, "Rebuilding lucene index");
-			if (_tracker==null) {
-				try {
-					FileUtils.deleteDirectory(_luceneDir);
-					FileUtils.deleteDirectory(_luceneTaxonomyDir);
-				} catch (IOException e) {
-			    	Log.warning(Geonet.INDEX_ENGINE, "Unable to delete all files in the lucene index files during rebuild.  This might not be an problem but if there are odd bugs then shutdown server.  Delete index directory and restart server", e);
-			    }
 
-                _tracker = new LuceneIndexLanguageTracker(_luceneDir, _luceneTaxonomyDir, _luceneConfig);
-	            _indexReader = new LuceneIndexReaderFactory(_tracker);
-	            _indexWriter = new LuceneIndexWriterFactory(_tracker);
-			}
 			_tracker.reset();
 			if (_spatial != null){
 				try {
@@ -1336,7 +1303,7 @@ public class SearchManager {
 					Log.error(Geonet.INDEX_ENGINE, "Failure resetting spatial index.", e);
 				}
 			}
-			_indexWriter.createDefaultLocale();
+			_tracker.open(Geonet.DEFAULT_LANGUAGE);
 		}
 	}
 

@@ -83,6 +83,10 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
     static final String NAME = "GetCapabilities";
     @Autowired
 	private LuceneConfig _luceneConfig;
+    @Autowired
+    private CatalogConfiguration _catalogConfig;
+    @Autowired
+    private FieldMapper _fieldMapper;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -514,7 +518,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		List<Element> values;
 		String[] properties = {"keyword"};
 		try {
-            values = GetDomain.handlePropertyName(properties, context, true, CatalogConfiguration.getMaxNumberOfRecordsForKeywords(),
+            values = GetDomain.handlePropertyName(_catalogConfig, properties, context, true, _catalogConfig.getMaxNumberOfRecordsForKeywords(),
                     cswServiceSpecificContraint, _luceneConfig);
 		} catch (Exception e) {
             Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
@@ -530,7 +534,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                 keyword.setText(v.getText());
                 k.addContent(keyword);
                 cpt++;
-                if (cpt == CatalogConfiguration.getNumberOfKeywords()) {
+                if (cpt == _catalogConfig.getNumberOfKeywords()) {
                     break;
                 }
             }
@@ -572,7 +576,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		Element parameter = new Element("Parameter", Csw.NAMESPACE_OWS)
 			.setAttribute("name", "typeName");
 		
-		Set<String> typenames = CatalogConfiguration.getDescribeRecordTypename().keySet();
+		Set<String> typenames = _catalogConfig.getDescribeRecordTypename().keySet();
 		for (String typename : typenames) {
 			parameter.addContent(new Element("Value", Csw.NAMESPACE_OWS)
 				.setText(typename));
@@ -592,7 +596,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
      * @param op
      */
 	private void fillGetRecordsParams(Element op) {
-		Set<String> isoQueryableMap = FieldMapper
+		Set<String> isoQueryableMap = _fieldMapper
 				.getPropertiesByType(Csw.ISO_QUERYABLES);
 		Element isoConstraint = new Element("Constraint", Csw.NAMESPACE_OWS)
 				.setAttribute("name", Csw.ISO_QUERYABLES);
@@ -602,7 +606,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 					.setText(params));
 		}
 
-		Set<String> additionalQueryableMap = FieldMapper
+		Set<String> additionalQueryableMap = _fieldMapper
 				.getPropertiesByType(Csw.ADDITIONAL_QUERYABLES);
 		Element additionalConstraint = new Element("Constraint",
 				Csw.NAMESPACE_OWS).setAttribute("name",

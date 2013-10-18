@@ -64,36 +64,10 @@ public class JeevesServlet extends HttpServlet
 
     public void init() throws ServletException {
         final ServletContext servletContext = getServletContext();
-        String appPath = new File(servletContext.getRealPath("/xsl")).getParent() + File.separator;
-
-        if (!appPath.endsWith(File.separator))
-            appPath += File.separator;
-
+        final ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
         this.jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
 
-        jeevesAppContext.setAppPath(appPath);
-
-        String baseUrl = "";
-
-        try {
-            // 2.5 servlet spec or later (eg. tomcat 6 and later)
-            baseUrl = servletContext.getContextPath();
-        } catch (java.lang.NoSuchMethodError ex) {
-            // 2.4 or earlier servlet spec (eg. tomcat 5.5)
-            try {
-                String resource = servletContext.getResource("/").getPath();
-                baseUrl = resource.substring(resource.indexOf('/', 1), resource.length() - 1);
-            } catch (java.net.MalformedURLException e) { // unlikely
-                baseUrl = servletContext.getServletContextName();
-            }
-        }
-
-        String configPath = getServletConfig().getServletContext().getRealPath("/WEB-INF/config.xml");
-        if (configPath == null) {
-            configPath = appPath + "WEB-INF" + File.separator;
-        } else {
-            configPath = new File(configPath).getParent() + File.separator;
-        }
+        jeevesAppContext.setAppPath(pathFinder.getAppPath());
 
         // initialize all JPA Repositories.  This should be done outside of the init
         // because spring-data-jpa first looks up named queries (based on method names) and
@@ -104,7 +78,7 @@ public class JeevesServlet extends HttpServlet
         // at random places through out the code where it may be in a transaction.
         jeevesAppContext.getBeansOfType(JpaRepository.class, false, true);
 
-        jeevesAppContext.getBean(JeevesEngine.class).init(appPath, configPath, baseUrl, this);
+        jeevesAppContext.getBean(JeevesEngine.class).init(pathFinder.getAppPath(), pathFinder.getConfigPath(), pathFinder.getBaseUrl(), this);
         initialized = true;
     }
 

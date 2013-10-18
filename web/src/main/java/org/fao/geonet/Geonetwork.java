@@ -93,7 +93,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Geonetwork implements ApplicationHandler {
     private Logger logger;
-    private String path;
+    private String appPath;
     private SearchManager searchMan;
     private MetadataNotifierControl metadataNotifierControl;
     private ThreadPool threadPool;
@@ -127,7 +127,7 @@ public class Geonetwork implements ApplicationHandler {
         this._applicationContext = context.getApplicationContext();
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
 
-        path = context.getAppPath();
+        appPath = context.getAppPath();
         String baseURL = context.getBaseUrl();
         String webappName = baseURL.substring(1);
         // TODO : if webappName is "". ie no context
@@ -137,7 +137,7 @@ public class Geonetwork implements ApplicationHandler {
             servletContext = context.getServlet().getServletContext();
             servletContext = context.getServlet().getServletContext();
         }
-        ServerLib sl = new ServerLib(servletContext, path);
+        ServerLib sl = new ServerLib(servletContext, appPath);
         String version = sl.getVersion();
         String subVersion = sl.getSubVersion();
 
@@ -149,7 +149,7 @@ public class Geonetwork implements ApplicationHandler {
         ServiceConfig handlerConfig = new ServiceConfig(serviceConfigElems);
 
         // Init configuration directory
-        _applicationContext.getBean(GeonetworkDataDirectory.class).init(webappName, path, handlerConfig, context.getServlet());
+        _applicationContext.getBean(GeonetworkDataDirectory.class).init(webappName, appPath, handlerConfig, context.getServlet());
 
         // Get config handler properties
         String systemDataDir = handlerConfig.getMandatoryValue(Geonet.Config.SYSTEM_DATA_DIR);
@@ -160,7 +160,7 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("Data directory: " + systemDataDir);
 
-        setProps(path, handlerConfig);
+        setProps(appPath, handlerConfig);
 
         importDatabaseData(context);
 
@@ -172,7 +172,7 @@ public class Geonetwork implements ApplicationHandler {
         String languageProfilesDir = handlerConfig
                 .getMandatoryValue(Geonet.Config.LANGUAGE_PROFILES_DIR);
 
-        JeevesJCS.setConfigFilename(path + "WEB-INF/classes/cache.ccf");
+        JeevesJCS.setConfigFilename(appPath + "WEB-INF/classes/cache.ccf");
 
         // force caches to be config'd so shutdown hook works correctly
         JeevesJCS.getInstance(Processor.XLINK_JCS);
@@ -255,7 +255,7 @@ public class Geonetwork implements ApplicationHandler {
         logger.info("			- Schema plugins directory: " + schemaPluginsDir);
         logger.info("			- Schema Catalog File     : " + schemaCatalogueFile);
         SchemaManager schemaMan = _applicationContext.getBean(SchemaManager.class);
-        schemaMan.configure(path, Resources.locateResourcesDir(context), schemaCatalogueFile,
+        schemaMan.configure(appPath, Resources.locateResourcesDir(context), schemaCatalogueFile,
                 schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA),
                 createOrUpdateSchemaCatalog);
 
@@ -340,21 +340,15 @@ public class Geonetwork implements ApplicationHandler {
         /**
          * Initialize language detector
          */
-        LanguageDetector.init(path + languageProfilesDir);
+        LanguageDetector.init(appPath + languageProfilesDir);
 
         //------------------------------------------------------------------------
         //--- Initialize thesaurus
 
         logger.info("  - Thesaurus...");
 
-        _applicationContext.getBean(ThesaurusManager.class).init(context, path, thesauriDir);
+        _applicationContext.getBean(ThesaurusManager.class).init(context, appPath, thesauriDir);
 
-        //------------------------------------------------------------------------
-        //--- initialize catalogue services for the web
-
-        logger.info("  - Catalogue services for the web...");
-
-        CatalogConfiguration.loadCatalogConfig(path, Csw.CONFIG_FILE);
 
         //------------------------------------------------------------------------
         //--- initialize catalogue services for the web

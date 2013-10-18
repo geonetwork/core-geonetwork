@@ -302,7 +302,7 @@ public class Metadata extends GeonetEntity {
         dataInfo.setSchemaId(doc.get("_schema"));
         String metadataType = doc.get("_isTemplate");
         if (metadataType != null) {
-            dataInfo.setType(MetadataType.lookup(metadataType.charAt(0)));
+            dataInfo.setType(MetadataType.lookup(metadataType));
         }
         dataInfo.setCreateDate(new ISODate(doc.get("_createDate")));
         dataInfo.setChangeDate(new ISODate(doc.get("_changeDate")));

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.lucene.store.Directory;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 
@@ -35,26 +36,18 @@ class TaxonomyIndexTracker {
     private DirectoryTaxonomyWriter taxonomyWriter;
     private TaxonomyReader taxonomyReader;
     private LinkedList<TaxonomyReader> expiredReaders = new LinkedList<TaxonomyReader>();
-    private final File taxonomyDir;
+    private final DirectoryFactory taxonomyDir;
     private final LuceneConfig luceneConfig;
-    private NRTCachingDirectory cachedFSDir;
+    private Directory cachedFSDir;
     
-    public TaxonomyIndexTracker(File taxonomyDir, LuceneConfig luceneConfig) throws Exception {
+    public TaxonomyIndexTracker(DirectoryFactory taxonomyDir, LuceneConfig luceneConfig) throws Exception {
         this.taxonomyDir = taxonomyDir;
         this.luceneConfig = luceneConfig;
         init();
     }
     private void init() throws Exception {
 		try {
-			IO.mkdirs(taxonomyDir, "Lucene Taxonomy directory");
-
-			FSDirectory fsDir = FSDirectory.open(taxonomyDir);
-
-			double maxMergeSizeMD = luceneConfig.getMergeFactor();
-			double maxCachedMB = luceneConfig.getRAMBufferSize();
-			this.cachedFSDir = new NRTCachingDirectory(fsDir, maxMergeSizeMD,
-					maxCachedMB);
-
+            cachedFSDir = taxonomyDir.createTaxonomyDirectory(luceneConfig);
 			this.taxonomyWriter = new DirectoryTaxonomyWriter(cachedFSDir);
 			taxonomyWriter.commit(); // create index if not existing yet
 
@@ -143,7 +136,7 @@ class TaxonomyIndexTracker {
         List<Throwable> errors = new ArrayList<Throwable>(5);
         close(errors);
 
-        FileUtils.deleteDirectory(taxonomyDir);
+        taxonomyDir.resetTaxonomy();
         init();
 
         if(!errors.isEmpty()) {

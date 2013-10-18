@@ -58,7 +58,7 @@ public class UUIDMapper
             String id = record.getId() + "";
             String uuid = record.getUuid();
             String date = record.getDataInfo().getChangeDate().getDateAndTime();
-            String isTemplate = record.getDataInfo().getType().code + "";
+            String isTemplate = record.getDataInfo().getType().codeString;
 
             hmUuidDate.put(uuid, date);
             hmUuidId.put(uuid, id);

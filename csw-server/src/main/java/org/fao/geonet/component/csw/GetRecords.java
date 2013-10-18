@@ -89,8 +89,12 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     //---------------------------------------------------------------------------
 
 	private SearchController _searchController;
+    @Autowired
+    private CatalogConfiguration _catalogConfig;
+    @Autowired
+    private FieldMapper _fieldMapper;
 
-	@Autowired
+    @Autowired
 	public GetRecords(ApplicationContext context) {
     	_searchController = new SearchController(context);
     }
@@ -417,7 +421,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     	
     	// Handle outputFormat parameter
 		if (parameterName.equalsIgnoreCase("outputformat")) {
-			Set<String> formats = CatalogConfiguration
+			Set<String> formats = _catalogConfig
 					.getGetRecordsOutputFormat();
 			List<Element> values = createValuesElement(formats);
             if (listOfValues != null) {
@@ -427,7 +431,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     	
 		// Handle outputSchema parameter
 		if (parameterName.equalsIgnoreCase("outputSchema")) {
-			Set<String> namespacesUri = CatalogConfiguration
+			Set<String> namespacesUri = _catalogConfig
 					.getGetRecordsOutputSchema();
 			List<Element> values = createValuesElement(namespacesUri);
             if (listOfValues != null) {
@@ -437,7 +441,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
 		// Handle typenames parameter
 		if (parameterName.equalsIgnoreCase("typenames")) {
-			Set<String> typenames = CatalogConfiguration
+			Set<String> typenames = _catalogConfig
 					.getGetRecordsTypenames();
 			List<Element> values = createValuesElement(typenames);
             if (listOfValues != null) {
@@ -748,7 +752,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
 
             // Map CSW search field to Lucene for sorting. And if not mapped assumes the field is a Lucene field.
-            String luceneField = FieldMapper.map(field);
+            String luceneField = _fieldMapper.map(field);
             if (luceneField != null) {
                 sortFields.add(Pair.read(luceneField, "DESC".equals(order)));
             }

@@ -367,7 +367,7 @@ public class MEFLib {
 		String id = String.valueOf(md.getId());
 		String uuid = md.getUuid();
 		String schema = md.getDataInfo().getSchemaId();
-		String isTemplate = "" + md.getDataInfo().getType().code;
+		String isTemplate = md.getDataInfo().getType().codeString;
 		String createDate = md.getDataInfo().getCreateDate().getDateAndTime();
 		String changeDate = md.getDataInfo().getChangeDate().getDateAndTime();
 		String siteId = md.getSourceInfo().getSourceId();

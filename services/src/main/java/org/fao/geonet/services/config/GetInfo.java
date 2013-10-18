@@ -27,6 +27,8 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.Stats;
 import org.apache.commons.dbcp.BasicDataSource;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
@@ -58,7 +60,6 @@ public class GetInfo implements Service {
 	private HashMap<String, String> indexProperties = new HashMap<String, String>();
 	private HashMap<String, String> systemProperties = new HashMap<String, String>();
 	private HashMap<String, String> databaseProperties = new HashMap<String, String>();
-	private SearchManager sm;
 
 	final Properties properties = System.getProperties();
 
@@ -69,13 +70,10 @@ public class GetInfo implements Service {
 			throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
-		sm = gc.getBean(SearchManager.class);
 
-		String luceneDir = gc.getBean(ServiceConfig.class).getMandatoryValue(
-				Geonet.Config.LUCENE_DIR);
 		loadSystemInfo();
 		loadCatalogueInfo(gc);
-		loadIndexInfo(luceneDir);
+		loadIndexInfo(context);
 		loadDatabaseInfo(context);
 
 		Element system = gc.getBean(SettingManager.class).getAllAsXML(true);
@@ -103,9 +101,9 @@ public class GetInfo implements Service {
 	}
 
     /**
-     * Load catalogue properties
+     * Load catalogue properties.
      */
-    private void loadCatalogueInfo(GeonetContext gc) {
+    private void loadCatalogueInfo(final GeonetContext gc) {
     	ServiceConfig sc = gc.getBean(ServiceConfig.class);
     	String[] props = {Geonet.Config.DATA_DIR, Geonet.Config.CODELIST_DIR, Geonet.Config.CONFIG_DIR, 
     			Geonet.Config.SCHEMAPLUGINS_DIR, Geonet.Config.SUBVERSION_PATH, Geonet.Config.RESOURCES_DIR};
@@ -145,23 +143,25 @@ public class GetInfo implements Service {
 
 	/**
 	 * Compute information about Lucene index.
-	 * 
-	 * @param luceneDir
-	 */
-	private void loadIndexInfo(String luceneDir) {
-		indexProperties.put("index.path", luceneDir);
-		File dir = new File(luceneDir);
-		File lDir = new File(luceneDir + SearchManager.NON_SPATIAL_DIR);
-		if (dir.exists()) {
-			long size = FileUtils.sizeOfDirectory(dir) / 1024;
+	 *
+     * @param context
+     */
+	private void loadIndexInfo(ServiceContext context) {
+        final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
+        File luceneDir = dataDirectory.getLuceneDir();
+		indexProperties.put("index.path", luceneDir.getAbsolutePath());
+		File lDir = dataDirectory.getSpatialIndexPath();
+		if (luceneDir.exists()) {
+			long size = FileUtils.sizeOfDirectory(luceneDir) / 1024;
 			indexProperties.put("index.size", "" + size); // lucene + Shapefile
 															// if exist
-			if (lDir.exists()) {
-				size = FileUtils.sizeOfDirectory(lDir) / 1024;
-				indexProperties.put("index.size.lucene", "" + size);
-			}
-		}
-		indexProperties.put("index.lucene.config", sm.getCurrentLuceneConfiguration().toString());
+        }
+
+        if (lDir.exists()) {
+            long size = FileUtils.sizeOfDirectory(lDir) / 1024;
+            indexProperties.put("index.size.lucene", "" + size);
+        }
+		indexProperties.put("index.lucene.config", context.getBean(LuceneConfig.class).toString());
 	}
 	
 	/**

@@ -32,6 +32,7 @@ import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.HttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
@@ -65,7 +66,7 @@ class Harvester
 	public HarvestResult harvest() throws Exception
 	{
 
-		XmlRequest req = new XmlRequest(params.host, Integer.valueOf(params.port));
+        XmlRequest req = context.getBean(HttpRequestFactory.class).createXmlRequest(params.host, Integer.valueOf(params.port));
 
 		Lib.net.setupProxy(context, req);
 

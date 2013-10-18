@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.HttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
@@ -220,7 +221,7 @@ public class Geonet20Harvester extends AbstractHarvester
 	{
 		CategoryMapper localCateg = new CategoryMapper(context);
 
-        XmlRequest req = new XmlRequest(params.host);
+        XmlRequest req = context.getBean(HttpRequestFactory.class).createXmlRequest(params.host);
 
         servletName = req.getAddress();
 

@@ -115,7 +115,7 @@ class MEF2Exporter {
 		Metadata record = MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
 
 		String id = "" + record.getId();
-		String isTemp = "" + record.getDataInfo().getType().code;
+		String isTemp = record.getDataInfo().getType().codeString;
 		String schema = record.getDataInfo().getSchemaId();
 
 		if (!"y".equals(isTemp) && !"n".equals(isTemp))

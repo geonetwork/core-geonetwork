@@ -6,6 +6,8 @@ import jeeves.constants.ConfigFile;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.sources.ServiceRequest;
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
@@ -17,17 +19,19 @@ import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.geotools.data.DataStore;
 import org.geotools.data.FeatureStore;
-import org.geotools.data.memory.MemoryDataStore;
 import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.Filter;
@@ -39,10 +43,13 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static org.apache.commons.io.FileUtils.cleanDirectory;
+import static org.apache.commons.io.FileUtils.copyDirectory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -65,13 +72,26 @@ public abstract class AbstractCoreTest extends AbstractSpringDataTest {
     @Autowired
     protected UserRepository _userRepo;
 
+    @Rule
+    public TemporaryFolder _testTemporaryFolder = new TemporaryFolder();
+
     @Before
     public void configureAppContext() throws Exception {
+        System.setProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD, Boolean.toString(true));
         // clear out datastore
         for (Name name : _datastore.getNames()) {
             ((FeatureStore<?,?>) _datastore.getFeatureSource(name)).removeFeatures(Filter.INCLUDE);
         }
         final String initializedString = "initialized";
+        final String webappDir = getWebappDir();
+        final File templateDataDir = new File(webappDir, "WEB-INF/data");
+        final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
+
+        final ArrayList<Element> params = Lists.newArrayList(new Element("param")
+                .setAttribute(ConfigFile.Param.Attr.NAME, "preferredSchema")
+                .setAttribute(ConfigFile.Param.Attr.VALUE, "iso19139"));
+        final ServiceConfig serviceConfig = new ServiceConfig(params);
+
         try {
             _applicationContext.getBean(initializedString);
         } catch (NoSuchBeanDefinitionException e) {
@@ -82,35 +102,44 @@ public abstract class AbstractCoreTest extends AbstractSpringDataTest {
             builder.add("id", String.class);
             _datastore.createSchema(builder.buildFeatureType());
 
-            final ArrayList<Element> params = Lists.newArrayList(new Element("param")
-                    .setAttribute(ConfigFile.Param.Attr.NAME, "preferredSchema")
-                    .setAttribute(ConfigFile.Param.Attr.VALUE, "iso19139"));
-            final ServiceConfig serviceConfig = new ServiceConfig(params);
-
             _applicationContext.getBeanFactory().registerSingleton("serviceConfig", serviceConfig);
 
-            final String webappDir = getWebappDir();
-            final File dataDir = new File(webappDir, "WEB-INF/data");
-            final File configDir = new File(dataDir, "config");
-            final String schemaPluginsCatalogFile = new File(getClassFile(), "../schemaplugin-uri-catalog.xml").getPath();
-            final String schemaPluginsDir = new File(configDir, "schema_plugins").getPath();
-            final String resourcePath = new File(dataDir, "data/resources").getPath();
-
-            _applicationContext.getBean(GeonetworkDataDirectory.class).init("geonetwork", webappDir, serviceConfig, null);
-            _applicationContext.getBean(LuceneConfig.class).configure("luceneConfig.xml");
-
-            SchemaManager.registerXmlCatalogFiles(webappDir + "/", schemaPluginsCatalogFile);
-
-            TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
-
-            final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
-            schemaManager.configure(webappDir, resourcePath,
-                    schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
             _applicationContext.getBeanFactory().registerSingleton(initializedString, initializedString);
 
-            _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);
-            _applicationContext.getBean(DataManager.class).init(createServiceContext(), false);
         }
+
+
+        final File dataDir = _testTemporaryFolder.getRoot();
+        copyDirectory(templateDataDir, dataDir);
+
+        final File configDir = new File(dataDir, "config");
+        final String schemaPluginsCatalogFile = new File(getClassFile(), "../schemaplugin-uri-catalog.xml").getPath();
+        final String schemaPluginsDir = new File(configDir, "schema_plugins").getPath();
+        final String resourcePath = new File(dataDir, "data/resources").getPath();
+
+        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
+
+        geonetworkDataDirectory.init("geonetwork", webappDir, dataDir.getAbsolutePath(),
+                serviceConfig, null);
+
+        _applicationContext.getBean(LuceneConfig.class).configure("luceneConfig.xml");
+        SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
+
+        final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
+        schemaManager.configure(webappDir, resourcePath,
+                schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
+
+        _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);
+        _applicationContext.getBean(DataManager.class).init(createServiceContext(), false);
+
+    }
+
+    private void clean(File file) throws IOException {
+        if (file.exists()) {
+            cleanDirectory(file);
+        }
+
+        FileUtils.forceMkdir(file);
     }
 
     /**
@@ -124,7 +153,18 @@ public abstract class AbstractCoreTest extends AbstractSpringDataTest {
 
 
         contexts.put(Geonet.CONTEXT_NAME, gc);
-        return new ServiceContext("mockService", _applicationContext, contexts, _entityManager);
+        final ServiceContext context = new ServiceContext("mockService", _applicationContext, contexts, _entityManager);
+        context.setAsThreadLocal();
+        context.setInputMethod(ServiceRequest.InputMethod.GET);
+        context.setIpAddress("127.0.1");
+        context.setLanguage("eng");
+        context.setLogger(Log.createLogger("Test"));
+        context.setMaxUploadSize(100);
+        context.setOutputMethod(ServiceRequest.OutputMethod.DEFAULT);
+        context.setAppPath(getWebappDir());
+        context.setBaseUrl("geonetwork");
+
+        return context;
     }
 
     /**

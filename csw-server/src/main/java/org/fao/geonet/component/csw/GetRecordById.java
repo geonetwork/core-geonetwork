@@ -76,6 +76,8 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
     static final String NAME = "GetRecordById";
     private SearchController _searchController;
+    @Autowired
+    private CatalogConfiguration _catalogConfig;
 
     @Autowired
     public GetRecordById(ApplicationContext applicationContext) {
@@ -159,7 +161,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 				if (md != null)
 					response.addContent(md);
 				
-				if (CatalogConfiguration.is_increasePopularity()) {
+				if (_catalogConfig.isIncreasePopularity()) {
 				    gc.getBean(DataManager.class).increasePopularity(context, id);
 				}
 			}
