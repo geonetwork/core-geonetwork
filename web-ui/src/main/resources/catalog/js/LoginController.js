@@ -10,7 +10,9 @@
    */
   module.controller('GnLoginController',
       ['$scope', '$http', '$rootScope', '$translate', '$location', '$window',
-       function($scope, $http, $rootScope, $translate, $location, $window) {
+       'gnUtilityService',
+       function($scope, $http, $rootScope, $translate, $location, $window,
+               gnUtilityService) {
           $scope.registrationStatus = null;
           $scope.passwordReminderStatus = null;
           $scope.sendPassword = false;
@@ -23,16 +25,8 @@
           function initForm() {
            if ($window.location.pathname.indexOf('new.password') !== -1) {
              // Retrieve username from URL parameter
-             // Could probably be more elegant.
-             angular.forEach($window.location
-                     .search.replace('?', '').split('&'),
-                 function(value) {
-                   if (value.indexOf('username') === 0) {
-                 $scope.userToRemind = value.split('=')[1];
-                   } else if (value.indexOf('changeKey') === 0) {
-                 $scope.changeKey = value.split('=')[1];
-                   }
-             });
+             $scope.userToRemind = gnUtilityService.getUrlParameter('username');
+             $scope.changeKey = gnUtilityService.getUrlParameter('changeKey');
            }
           }
 

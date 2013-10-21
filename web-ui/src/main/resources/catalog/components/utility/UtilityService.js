@@ -117,12 +117,27 @@
        
           return output;
       }
-      
+      /**
+       * Get a URL parameter 
+       */
+      var getUrlParameter = function (parameterName) {
+          var parameterValue = null;
+          angular.forEach(window.location
+                  .search.replace('?', '').split('&'),
+              function(value) {
+                if (value.indexOf(parameterName) === 0) {
+                    parameterValue = value.split('=')[1];
+                }
+                // TODO; stop loop when found
+          });
+          return parameterValue;
+      };
       return {
           scrollTo: scrollTo,
           serialize: serialize,
           parseBoolean: parseBoolean,
-          toCsv: toCsv
+          toCsv: toCsv,
+          getUrlParameter: getUrlParameter
       };
   };
 

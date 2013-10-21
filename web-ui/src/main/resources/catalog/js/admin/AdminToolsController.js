@@ -40,10 +40,6 @@
               type: 'transfert-privs',
               label: 'transfertPrivs',
               href: 'transfer.ownership'
-            },{
-              type: 'formatter',
-              label: 'manageFormatter',
-              href: 'metadata.formatter.admin'
             }]
       };
 

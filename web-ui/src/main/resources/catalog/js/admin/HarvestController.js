@@ -292,7 +292,7 @@
       // TODO
       $scope.geonetworkGetSources = function(url) {
         $http.get($scope.proxyUrl +
-            encodeURIComponent(url + '/srv/eng/xml.info?type=sources'))
+            encodeURIComponent(url + '/srv/eng/info?type=sources'))
          .success(function(data) {
               $scope.geonetworkSources = [];
               var i = 0;
