@@ -1257,20 +1257,25 @@ function showLinkedMetadataSelectionPanel(ref, name, fullRelationships) {
     					}
     					var parent = parent_array[parent_array.length - 1];
     					
-    					var hasParent = false;
+    					var someSelected = false;
     					
     					//Check if we have more than one parent defined
     					Ext.each(items, function(item) {
-    						if(item.data.relationship == 'parent') {
-    							if(hasParent) {//FIXME translate
-    								alert("Choose only one parent relationship");
-    								return;
-    							}
-    							hasParent = true;
+    						if(item.data.relationship) {
+    							someSelected = true;
     						}
     					});
     					
-						processItem(items, 0, parent);
+    					if(!someSelected) {
+    						Ext.MessageBox.alert(
+    								translate("error"), 
+    								translate("errorNotSelected"),
+    								function(){
+    									showLinkedMetadataSelectionPanel(null, null, true);
+    								});
+       					} else {
+    						processItem(items, 0, parent);
+    					}
     				}
     				var dh = Ext.DomHelper;
 					dh.append(Ext.get("hiddenFormElements"), inputs);
@@ -1280,7 +1285,7 @@ function showLinkedMetadataSelectionPanel(ref, name, fullRelationships) {
     });
 
     var linkedMetadataSelectionWindow = new Ext.Window({
-        title: translate('linkedMetadataSelectionWindowTitle'),
+        title: translate('associateSibling'),
         width: 620,
         height: 300,
         layout: 'fit',
@@ -1668,9 +1673,16 @@ function showLinkedServiceMetadataSelectionPanel(name, serviceUrl, uuid) {
             scope: this
         }
     });
-	
+    
+    var title = translate('associateDataset'); 
+	if(name=='attachService') {
+		title = translate('associateService');
+	} else if(name== '') {
+		title = translate('associateSibling');
+	}
+		
     var linkedMetadataSelectionWindow = new Ext.Window({
-        title: (name=='attachService'?translate('associateService'):translate('associateDataset')),
+        title: title,
         layout: 'fit',
         width: 620,
         height: 400,

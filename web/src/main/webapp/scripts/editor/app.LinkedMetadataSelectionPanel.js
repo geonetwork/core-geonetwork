@@ -300,7 +300,9 @@ app.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
 	        this.getCreateIfNotExistButton()
         ];
         
-        
+        if(this.fullRelationships) {
+        	this.tbar = [new Ext.form.Label({html: translate('associateSiblingText')})];
+        }
         
         app.linkedMetadata.linkedMetadataStore.on({
             'load': function () {
