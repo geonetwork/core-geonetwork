@@ -49,5 +49,5 @@ goog.addDependency('../../js/admin/StandardsController.js', ['gn_standards_contr
 goog.addDependency('../../js/admin/SystemSettingsController.js', ['gn_system_settings_controller'], []);
 goog.addDependency('../../js/admin/ThesaurusController.js', ['gn_thesaurus_controller'], ['gn_thesaurus_type']);
 goog.addDependency('../../js/admin/UserGroupController.js', ['gn_usergroup_controller'], ['gn_dbtranslation']);
-goog.addDependency('../../js/editor/EditorController.js', ['gn_editor_controller'], []);
+goog.addDependency('../../js/edit/EditorController.js', ['gn_editor_controller'], []);
 goog.addDependency('../../js/search/SearchController.js', ['gn_search_controller'], []);

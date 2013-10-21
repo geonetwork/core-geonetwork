@@ -30,8 +30,11 @@
   
   
   <xsl:function name="gn-fn-iso19139:getFieldType" as="xs:string">
-    <xsl:param name="name" as="xs:string"/>
-    
+      <!-- The container element -->
+      <xsl:param name="name" as="xs:string"/>
+      <!-- The element containing the value eg. gco:Date -->
+      <xsl:param name="childName" as="xs:string"/>
+    <xsl:message>FieldType:<xsl:value-of select="$name"/>/<xsl:value-of select="$childName"/></xsl:message>
     <xsl:value-of select="if ($name = 'gmd:abstract' or $name = 'gmd:statement') 
                           then 'textarea' 
                           else if ($name = 'gmd:denominator') 
@@ -40,8 +43,10 @@
                           then 'email' 
                           else if ($name = 'time') 
                           then 'time'
-                          else if ($name = 'gmd:dateStamp') 
+                          else if ($childName = 'gco:Date') 
                           then 'date' 
+                          else if ($childName = 'gco:DateTime') 
+                          then 'datetime' 
                           else 'text'"/>
   </xsl:function>
   
@@ -51,6 +56,7 @@
     <xsl:text>select</xsl:text>
     <!-- TODO: Could be multiple select ? -->
   </xsl:function>
+  
   
   
   <xsl:function name="gn-fn-iso19139:getTextareaCSS" as="xs:string">

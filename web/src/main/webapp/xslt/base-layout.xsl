@@ -12,7 +12,7 @@ from XSLT.
   <xsl:include href="base-layout-cssjs-loader.xsl"/>
   
   <xsl:template match="/">
-    <html ng-app="{$angularApp}" lang="{$lang}">
+    <html ng-app="{$angularApp}" lang="{$lang}" id="ng-app">
       <head>
         <title><xsl:value-of
           select="concat($env/system/site/name, ' - ', $env/system/site/organization)"/></title>

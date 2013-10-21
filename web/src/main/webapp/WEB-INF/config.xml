@@ -746,13 +746,13 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="password.forgotten.form">
+	    <service name="password.forgotten.form" deprecated="true">
 			<output sheet="password-forgotten.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="password.forgotten.submit">
+	    <service name="password.forgotten.submit" deprecated="true">
 			<class name=".services.password.SendLink" />
 
 			<error id="user-not-found" sheet="error-modal.xsl">
@@ -772,13 +772,13 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="password.change.form">
+	    <service name="password.change.form" deprecated="true">
 			<output sheet="password-change.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="password.change.submit">
+	    <service name="password.change.submit" deprecated="true">
 			<class name=".services.password.Change" />
 
 			<output sheet="info.xsl">
@@ -788,14 +788,14 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.password.emaillink">
+	    <service name="xml.password.emaillink" deprecated="true">
 			<class name=".services.password.SendLink" />
 			<error sheet="error-xml.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.password.change">
+	    <service name="xml.password.change" deprecated="true">
 			<class name=".services.password.Change" />
 			<error sheet="error-xml.xsl"/>
 		</service>
@@ -804,7 +804,7 @@
 		<!-- User services                                                 -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="user.list">
+	    <service name="user.list" deprecated="true">
 			<class name=".services.user.List" />
 
 			<output sheet="user-list.xsl">
@@ -814,7 +814,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="user.get">
+	    <service name="user.get" deprecated="true">
 			<class name=".services.user.Get" />
 
 			<output sheet="user-new.xsl">
@@ -825,7 +825,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="user.edit">
+	    <service name="user.edit" deprecated="true">
 			<class name=".services.user.Get" />
 
 			<output sheet="user-update.xsl">
@@ -837,7 +837,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="user.resetpw">
+	    <service name="user.resetpw" deprecated="true">
 			<class name=".services.user.Get" />
 
 			<output sheet="user-resetpw.xsl">
@@ -848,14 +848,14 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="user.update">
+	    <service name="user.update" deprecated="true">
 			<class name=".services.user.Update" />
 			<output forward="user.list" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="user.remove">
+	    <service name="user.remove" deprecated="true">
 			<class name=".services.user.Remove" />
 			<output forward="user.list" />
 		</service>
@@ -880,7 +880,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="user.infoedit">
+	    <service name="user.infoedit" deprecated="true">
 			<class name=".services.user.Get" />
 
 			<output sheet="user-infoupdate.xsl">
@@ -891,7 +891,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="user.infoupdate">
+	    <service name="user.infoupdate" deprecated="true">
 			<class name=".services.user.InfoUpdate" />
 
 			<output sheet="info.xsl">
@@ -903,18 +903,18 @@
 		<!-- User self-registration services                               -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="user.register.get">
+	    <service name="user.register.get" deprecated="true">
 			<output sheet="user-selfregistration.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="user.register.submit">
+	    <service name="user.register.submit" deprecated="true">
 			<class name=".services.register.SelfRegister" />
 			<output sheet="registration-info.xsl">
 				<xml name="info" file="xml/registration-sent.xml" />
 			</output>
-			<error sheet="registration-error.xsl">
+	        <error sheet="registration-error.xsl" deprecated="true">
 				<xml name="error" file="xml/registration-error.xml" />
 			</error>
 		</service>
@@ -923,7 +923,7 @@
 		<!-- Group services                                                -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="group.list">
+	    <service name="group.list" deprecated="true">
 			<class name=".services.group.List" />
 
 			<output sheet="group-list.xsl" />
@@ -931,7 +931,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="group.get">
+	    <service name="group.get" deprecated="true">
 			<class name=".services.group.Get" />
 
 			<output sheet="group-update.xsl" />
@@ -939,21 +939,21 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="group.update">
+	    <service name="group.update" deprecated="true">
 			<class name=".services.group.Update" />
 			<output forward="group.list" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="group.remove">
+	    <service name="group.remove" deprecated="true">
 			<class name=".services.group.Remove" />
 			<output forward="group.list" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.group.update">
+	    <service name="xml.group.update" deprecated="true">
 			<class name=".services.group.XmlUpdate" />
 		</service>
 
@@ -961,7 +961,7 @@
 		<!-- Category services                                             -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="category.list">
+	    <service name="category.list" deprecated="true">
 			<class name=".services.category.List" />
 
 			<output sheet="category-list.xsl" >
@@ -970,7 +970,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="category.get">
+	    <service name="category.get" deprecated="true">
 			<class name=".services.category.Get" />
 
 			<output sheet="category-update.xsl" />
@@ -978,14 +978,14 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="category.update">
+	    <service name="category.update" deprecated="true">
 			<class name=".services.category.Update" />
 			<output forward="category.list" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="category.remove">
+	    <service name="category.remove" deprecated="true">
 			<class name=".services.category.Remove" />
 			<output forward="category.list" />
 		</service>
@@ -999,12 +999,12 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Notifications services                                        -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<service name="notifications.list">
+	    <service name="notifications.list" deprecated="true">
 			<class name=".services.notifications.List" />
 			<output sheet="notifications-list.xsl" />
 		</service>
 
-		<service name="notifications.save">
+	    <service name="notifications.save" deprecated="true">
 			<class name=".services.notifications.Save" />
 			<output forward="admin" />
 		</service>
@@ -1013,7 +1013,7 @@
 		<!--                   Login services                              -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="login.form">
+	    <service name="login.form" deprecated="true">
 			<output sheet="login-form.xsl" />
 		</service>
 
@@ -1033,7 +1033,7 @@
 		<!-- Administration services                                       -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="admin">
+	    <service name="admin" deprecated="true">
 			<output sheet="admin.xsl">
 			</output>
 		</service>
@@ -1042,7 +1042,7 @@
 		<!-- System configuration                                          -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="config">
+	    <service name="config" deprecated="true">
 			<class name=".services.config.Get" />
 			<output sheet="config/config.xsl">
 				<xml name="config" file="xml/config.xml" />
@@ -1058,7 +1058,7 @@
 			</output>
 		</service>
 		
-		<service name="config.set">
+	    <service name="config.set" deprecated="true">
 			<class name=".services.config.Set">
 				<param name="reloadServices" value="y"/>
 			</class>
@@ -1067,7 +1067,7 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.config.get">
+	    <service name="xml.config.get" deprecated="true">
 			<class name=".services.config.Get" />
 		</service>
 
@@ -1079,26 +1079,26 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.config.set">
+	    <service name="xml.config.set" deprecated="true">
 			<class name=".services.config.Set" />
 			<output forward="xml.config.doActions" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.config.doActions">
+	    <service name="xml.config.doActions" deprecated="true">
 			<class name=".services.config.DoActions" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.config.info">
+	    <service name="xml.config.info" deprecated="true">
 			<class name=".services.config.GetInfo" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="config.info">
+	    <service name="config.info" deprecated="true">
 			<class name=".services.config.GetInfo" />
 			<output sheet="config/info.xsl">
 				<xml name="config" file="xml/config.xml" />
@@ -1109,7 +1109,7 @@
 		<!-- Localization                                                  -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="localization">
+	    <service name="localization" deprecated="true">
 			<output sheet="localization/localization.xsl">
 				<call name="languages" class=".guiservices.languages.Get" />
 				<xml name="localiz" file="xml/localization.xml" />

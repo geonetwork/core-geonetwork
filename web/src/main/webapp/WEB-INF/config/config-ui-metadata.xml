@@ -31,7 +31,6 @@
             <documentation>Edit and save a metadata record. gn-edit should be used
                 first.</documentation>
             <class name=".services.metadata.Update"/>
-            <output forward="gn-edit"/>
             <error sheet="../xslt/common/error.xsl"/>
         </service>
 

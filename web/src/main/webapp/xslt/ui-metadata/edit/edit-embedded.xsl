@@ -25,7 +25,6 @@
         <xsl:for-each
             select="/root/*[name(.)!='gui' and name(.)!='request']//*[@gn:addedObj = 'true']">
             <!-- Dispatch to profile mode -->
-            <xsl:message>##<xsl:copy-of select="."/></xsl:message>
             <xsl:variable name="profileTemplate" select="concat('render-',$schema)"/>
             <saxon:call-template name="{$profileTemplate}">
                 <xsl:with-param name="base" select="."/>

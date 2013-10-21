@@ -8,7 +8,7 @@
 	exclude-result-prefixes="#all">
 	
 	<xsl:include href="utility-fn.xsl"/>
-	
+    
 	<!-- Dispatching to the profile mode according to the tab -->
 	<xsl:template name="render-dublin-core">
 		<xsl:param name="base" as="node()"/>
