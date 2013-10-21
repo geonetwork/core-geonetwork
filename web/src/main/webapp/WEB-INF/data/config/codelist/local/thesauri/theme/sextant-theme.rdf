@@ -275,7 +275,7 @@
         <skos:definition xml:lang="fr"/>
     </skos:Concept>
     <skos:Concept rdf:about="http://www.ifremer.fr/thesaurus/category#38">
-        <skos:prefLabel xml:lang="en">/Physical Environment/Sedimentology Geology/Mineral Resources</skos:prefLabel>
+        <skos:prefLabel xml:lang="en">/Physical Environment/Sedimentology Geology/Floor nature</skos:prefLabel>
         <skos:definition xml:lang="en"/>
         <skos:prefLabel xml:lang="fr">/Milieu physique/Géologie sédimentologie/Nature des fonds</skos:prefLabel>
         <skos:definition xml:lang="fr"/>
@@ -475,7 +475,7 @@
     <skos:Concept rdf:about="http://www.ifremer.fr/thesaurus/category#92">
         <skos:prefLabel xml:lang="en">/Imagery/Satellite Imagery</skos:prefLabel>
         <skos:definition xml:lang="en"/>
-        <skos:prefLabel xml:lang="fr">/Imagerie/Imagerie satellitale/</skos:prefLabel>
+        <skos:prefLabel xml:lang="fr">/Imagerie/Imagerie satellitale</skos:prefLabel>
         <skos:definition xml:lang="fr"/>
     </skos:Concept>
     <skos:Concept rdf:about="http://www.ifremer.fr/thesaurus/category#99">
