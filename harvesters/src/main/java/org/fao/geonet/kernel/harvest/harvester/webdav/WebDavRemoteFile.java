@@ -23,8 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import org.apache.commons.httpclient.HttpException;
-import org.apache.webdav.lib.WebdavResource;
+import com.github.sardine.DavResource;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.utils.Xml;
@@ -40,10 +39,10 @@ class WebDavRemoteFile implements RemoteFile {
 	//---
 	//---------------------------------------------------------------------------
 
-	public WebDavRemoteFile(WebdavResource wr) {
+	public WebDavRemoteFile(DavResource wr) {
 		this.wr = wr;
 		path       = wr.getPath();
-		changeDate = new ISODate(wr.getGetLastModified(), false).toString();
+		changeDate = new ISODate(wr.getModified().getTime(), false).toString();
 	}
 
 	//---------------------------------------------------------------------------
@@ -58,13 +57,8 @@ class WebDavRemoteFile implements RemoteFile {
 	//---------------------------------------------------------------------------
 
 	public Element getMetadata(SchemaManager  schemaMan) throws Exception {
-		try {
-			wr.setPath(path);
-            return Xml.loadStream(wr.getMethodData());
-		}
-		catch (HttpException x) {
-			throw new Exception("HTTPException : " + x.getMessage());
-		}
+//        return Xml.loadStream(wr.getMethodData());
+        return null; //TODO Webdav
 	}
 
 	//---------------------------------------------------------------------------
@@ -85,7 +79,7 @@ class WebDavRemoteFile implements RemoteFile {
 	private String path;
 	private String changeDate;
 
-	private WebdavResource wr;
+	private DavResource wr;
 }
 
 //=============================================================================

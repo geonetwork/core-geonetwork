@@ -23,6 +23,7 @@ package org.fao.geonet.services.schema;
 
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
@@ -109,7 +110,7 @@ public class SchemaUtils {
 
 		// -- get the schema zip archive from the net
 		if (url != null) { 
-			XmlRequest strReq = new XmlRequest(url);
+			XmlRequest strReq = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(url);
 			zipArchive = File.createTempFile("schema",".zip");
 			deleteTempZip = true;
 

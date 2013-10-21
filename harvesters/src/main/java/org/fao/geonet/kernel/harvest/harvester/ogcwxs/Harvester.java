@@ -23,12 +23,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -48,7 +48,7 @@ import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.HttpRequestFactory;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
@@ -56,7 +56,10 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpResponse;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.net.URL;
 import java.text.DateFormat;
@@ -191,7 +194,7 @@ class Harvester extends BaseAligner
             log.debug("GetCapabilities document: " + this.capabilitiesUrl);
         }
 		
-        XmlRequest req = context.getBean(HttpRequestFactory.class).createXmlRequest();
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest();
         req.setUrl(new URL(this.capabilitiesUrl));
         req.setMethod(XmlRequest.Method.GET);
         Lib.net.setupProxy(context, req);
@@ -803,20 +806,29 @@ class Harvester extends BaseAligner
         		;
 		// All is in Lat/Long epsg:4326
 		
-		HttpClient httpclient = new HttpClient ();
-        GetMethod req = new GetMethod (url);
+        HttpGet req = new HttpGet(url);
 
         if(log.isDebugEnabled()) log.debug ("Retrieving remote document: " + url);
 
-		// set proxy from settings manager
-		Lib.net.setupProxy(context, httpclient);
-		
+
 		try {
 		    // Connect
-			int result = httpclient.executeMethod (req);
-            if(log.isDebugEnabled()) log.debug("   Get " + result);
+            final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
+            final ClientHttpResponse httpResponse = requestFactory.execute(req, new Function<HttpClientBuilder, Void>() {
+                @Nullable
+                @Override
+                public Void apply(@Nullable HttpClientBuilder input) {
+                    // set proxy from settings manager
+                    Lib.net.setupProxy(context, input);
+                    return null;  //To change body of implemented methods use File | Settings | File Templates.
+                }
+            });
 
-			if (result == 200) {
+            if(log.isDebugEnabled()) {
+                log.debug("   Get " + httpResponse.getStatusCode());
+            }
+
+			if (httpResponse.getStatusCode() == HttpStatus.OK) {
 			    // Save image document to temp directory
 				// TODO: Check OGC exception
                 OutputStream fo = null;
@@ -824,7 +836,7 @@ class Harvester extends BaseAligner
                 
                 try {
                     fo = new FileOutputStream (dir + filename);
-                    in = req.getResponseBodyAsStream();
+                    in = httpResponse.getBody();
                     BinaryFile.copy (in,fo);
                 } finally {
                     IOUtils.closeQuietly(in);
@@ -834,12 +846,8 @@ class Harvester extends BaseAligner
 				log.info (" Http error connecting");
 				return null;
 			}
-		} catch (HttpException he) {
-			log.info (" Http error connecting to '" + httpclient.toString() + "'");
-			log.info (he.getMessage());
-			return null;
 		} catch (IOException ioe){
-			log.info (" Unable to connect to '" + httpclient.toString() + "'");
+			log.info (" Unable to connect to '" + req.toString() + "'");
 			log.info (ioe.getMessage());
 			return null;
 		} finally {

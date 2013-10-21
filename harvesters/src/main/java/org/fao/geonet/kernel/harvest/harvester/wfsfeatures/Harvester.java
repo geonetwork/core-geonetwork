@@ -25,7 +25,6 @@ package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-import org.apache.commons.httpclient.HttpException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -41,6 +40,7 @@ import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.Harves
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlElementReader;
 import org.fao.geonet.utils.XmlRequest;
@@ -249,10 +249,9 @@ class Harvester
      */
 	
 	private void harvestFeatures(Element xmlQuery, FragmentHarvester fragmentHarvester)
-            throws UnsupportedEncodingException, IOException, HttpException,
-            XMLStreamException, FactoryConfigurationError, Exception {
+            throws FactoryConfigurationError, Exception {
 		
-		XmlRequest req = new XmlRequest(new URL(params.url));
+		XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(params.url);
 		req.setRequest(xmlQuery);
 		Lib.net.setupProxy(context, req);
 		

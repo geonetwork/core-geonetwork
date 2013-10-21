@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
@@ -63,7 +64,7 @@ public class Aligner extends BaseAligner
 
 		//--- setup REST operation rest/document?id={uuid}
 
-		request = new XmlRequest(new URL(params.baseUrl+"/rest/document"));
+		request = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.baseUrl+"/rest/document"));
 
 	}
 
@@ -262,8 +263,9 @@ public class Aligner extends BaseAligner
 
 		try
 		{
-			if (log.isDebugEnabled())
-                log.debug("Getting record from : "+ request.getHost() +" (uuid:"+ uuid +")");
+			if (log.isDebugEnabled()) {
+                log.debug("Getting record from : " + request.getHost() + " (uuid:" + uuid + ")");
+            }
 			Element response = null;
 			try {
 				response = request.execute();
@@ -274,7 +276,9 @@ public class Aligner extends BaseAligner
 				throw new Exception(e);
 			}
 
-			if(log.isDebugEnabled()) log.debug("Record got:\n"+Xml.getString(response));
+			if(log.isDebugEnabled()) {
+                log.debug("Record got:\n" + Xml.getString(response));
+            }
 
 			// validate it here if requested
 			if (params.validate) {

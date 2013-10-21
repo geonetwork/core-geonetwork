@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -75,7 +76,7 @@ class Harvester
 
 	public HarvestResult harvest() throws Exception
 	{
-		XmlRequest req = new XmlRequest(new URL(params.host));
+		XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.host));
 
         Lib.net.setupProxy(context, req);
 
@@ -270,7 +271,7 @@ class Harvester
     private void retrieveLogo(ServiceContext context, String url, String uuid) throws MalformedURLException {
         String logo = uuid + ".gif";
 
-        XmlRequest req = new XmlRequest(new URL(url));
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(url));
         Lib.net.setupProxy(context, req);
         req.setAddress(req.getAddress() + "/images/logos/" + logo);
 

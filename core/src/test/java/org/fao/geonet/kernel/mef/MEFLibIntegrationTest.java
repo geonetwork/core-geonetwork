@@ -1,13 +1,10 @@
 package org.fao.geonet.kernel.mef;
 
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.AbstractCoreTest;
+import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.UserRepository;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +23,14 @@ import static org.junit.Assert.fail;
  * Date: 10/15/13
  * Time: 8:53 PM
  */
-public class MEFLibTest extends AbstractCoreTest {
+public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
     MetadataRepository _metadataRepo;
 
     @Test
     public void testDoImportMefVersion1() throws Exception {
         ServiceContext context = createServiceContext();
-        final File resource = new File(MEFLibTest.class.getResource("mef1-example.mef").getFile());
+        final File resource = new File(MEFLibIntegrationTest.class.getResource("mef1-example.mef").getFile());
         final User admin = loginAsAdmin(context);
 
         Element params = new Element("request");
@@ -51,7 +48,7 @@ public class MEFLibTest extends AbstractCoreTest {
     public void testDoImportMefVersion2() throws Exception {
         ServiceContext context = createServiceContext();
 
-        final File resource = new File(MEFLibTest.class.getResource("mef2-example-2md.zip").getFile());
+        final File resource = new File(MEFLibIntegrationTest.class.getResource("mef2-example-2md.zip").getFile());
 
         final User admin = loginAsAdmin(context);
 

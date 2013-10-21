@@ -42,6 +42,7 @@ import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.utils.AbstractHttpRequest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
@@ -50,6 +51,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static org.fao.geonet.utils.AbstractHttpRequest.Method.GET;
+import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
 
 //=============================================================================
 
@@ -81,17 +85,17 @@ public class Aligner extends BaseAligner
 		// Use the preferred HTTP method and check one exist.
 		if (oper.getGetUrl() != null && Harvester.PREFERRED_HTTP_METHOD.equals("GET")) {
 			request.setUrl(oper.getGetUrl());
-			request.setMethod(CatalogRequest.Method.GET);
+			request.setMethod(GET);
 		} else if (oper.getPostUrl() != null && Harvester.PREFERRED_HTTP_METHOD.equals("POST")) {
 			request.setUrl(oper.getPostUrl());
-			request.setMethod(CatalogRequest.Method.POST);
+			request.setMethod(POST);
 		} else {
 			if (oper.getGetUrl() != null) {
 				request.setUrl(oper.getGetUrl());
-				request.setMethod(CatalogRequest.Method.GET);
+				request.setMethod(GET);
 			} else if (oper.getPostUrl() != null) {
 				request.setUrl(oper.getPostUrl());
-				request.setMethod(CatalogRequest.Method.POST);
+				request.setMethod(POST);
 			} else {
 				throw new OperationAbortedEx("No GET or POST DCP available in this service.");
 			}

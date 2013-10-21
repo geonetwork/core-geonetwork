@@ -1,9 +1,8 @@
 package org.fao.geonet.services.config;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.AbstractCoreTest;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.services.AbstractServiceTest;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static junit.framework.Assert.assertEquals;
 
 /**
- * Test updating geonetwork settings via the Set service.
+ * Test updating geonetwork settings via the Config Set service.
  *
  * User: Jesse
  * Date: 10/17/13
  * Time: 7:55 AM
  */
-public class SetTest extends AbstractServiceTest {
+public class ConfigSetIntegrationTest extends AbstractServiceIntegrationTest {
     @Autowired
     SettingManager _settingManager;
     @Test

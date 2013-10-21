@@ -115,7 +115,7 @@ public class OaiPmhDispatcher
 			url    = si.getSiteUrl() + context.getBaseUrl() +"/"+ Jeeves.Prefix.SERVICE +"/en/"+ context.getService();
 			params = OaiPmhFactory.extractParams(request);
 
-			AbstractRequest  req = OaiPmhFactory.parse(params);
+			AbstractRequest  req = OaiPmhFactory.parse(context.getApplicationContext(), params);
 			OaiPmhService    srv = hmServices.get(req.getVerb());
 			AbstractResponse res = srv.execute(req, context);
 

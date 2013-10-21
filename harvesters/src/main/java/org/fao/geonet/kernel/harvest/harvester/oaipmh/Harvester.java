@@ -42,12 +42,13 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.NoRecordsMatchException;
 import org.fao.oaipmh.requests.GetRecordRequest;
 import org.fao.oaipmh.requests.ListIdentifiersRequest;
-import org.fao.oaipmh.requests.Transport;
 import org.fao.oaipmh.responses.GetRecordResponse;
 import org.fao.oaipmh.responses.Header;
 import org.fao.oaipmh.responses.ListIdentifiersResponse;
@@ -87,12 +88,12 @@ class Harvester extends BaseAligner
 	//---
 	//---------------------------------------------------------------------------
 
-	public HarvestResult harvest() throws Exception
-	{
-		ListIdentifiersRequest req = new ListIdentifiersRequest();
+	public HarvestResult harvest() throws Exception {
+
+		ListIdentifiersRequest req = new ListIdentifiersRequest(context.getBean(GeonetHttpRequestFactory.class));
 		req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
 
-		Transport t = req.getTransport();
+        XmlRequest t = req.getTransport();
 		t.setUrl(new URL(params.url));
 
 		if (params.useAccount)
@@ -180,7 +181,7 @@ class Harvester extends BaseAligner
 
 	//---------------------------------------------------------------------------
 
-	private void align(Transport t, Set<RecordInfo> records) throws Exception
+	private void align(XmlRequest t, Set<RecordInfo> records) throws Exception
 	{
 		log.info("Start of alignment for : "+ params.name);
 
@@ -244,7 +245,7 @@ class Harvester extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	private void addMetadata(Transport t, RecordInfo ri) throws Exception
+	private void addMetadata(XmlRequest t, RecordInfo ri) throws Exception
 	{
 		Element md = retrieveMetadata(t, ri);
 
@@ -281,15 +282,14 @@ class Harvester extends BaseAligner
 
 	//--------------------------------------------------------------------------
 
-	private Element retrieveMetadata(Transport t, RecordInfo ri)
+	private Element retrieveMetadata(XmlRequest transport, RecordInfo ri)
 	{
 		try
 		{
             if(log.isDebugEnabled()) log.debug("  - Getting remote metadata with id : "+ ri.id);
 
-			GetRecordRequest req = new GetRecordRequest();
+			GetRecordRequest req = new GetRecordRequest(transport);
 			req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
-			req.setTransport(t);
 			req.setIdentifier(ri.id);
 			req.setMetadataPrefix(ri.prefix);
 
@@ -387,7 +387,7 @@ class Harvester extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	private void updateMetadata(Transport t, RecordInfo ri, String id) throws Exception
+	private void updateMetadata(XmlRequest t, RecordInfo ri, String id) throws Exception
 	{
 		String date = localUuids.getChangeDate(ri.id);
 

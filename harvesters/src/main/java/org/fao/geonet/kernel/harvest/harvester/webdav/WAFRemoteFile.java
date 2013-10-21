@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import org.apache.commons.httpclient.HttpException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.util.Sha1Encoder;
@@ -62,18 +61,13 @@ class WAFRemoteFile implements RemoteFile {
 	//---------------------------------------------------------------------------
 
 	public Element getMetadata(SchemaManager  schemaMan) throws Exception {
-		try {	
-			String type = WAFRetriever.getFileType(this.path);
-			if(type.equals(WAFRetriever.type_GetCapabilities))
-				return getMdFromService(path, schemaMan);
-			else if(type.equals(WAFRetriever.type_xml))
-				return Xml.loadFile(new URL(path));		
-			else 
-				return null;
-		}
-		catch (HttpException x) {
-			throw new Exception("HTTPException : " + x.getMessage());
-		}
+        String type = WAFRetriever.getFileType(this.path);
+        if(type.equals(WAFRetriever.type_GetCapabilities))
+            return getMdFromService(path, schemaMan);
+        else if(type.equals(WAFRetriever.type_xml))
+            return Xml.loadFile(new URL(path));
+        else
+            return null;
 	}
 
 
@@ -88,22 +82,18 @@ class WAFRemoteFile implements RemoteFile {
 	{
 		Element el = null;
 		String styleSheet = getStyleSheet(url, schemaMan);
-		if(styleSheet == null)
-			return null;
-        try {
-			Element xml = Xml.loadFile(new URL(url));
-			
-			// md5 the full capabilities URL
-			String uuid = Sha1Encoder.encodeString (url); // is the service identifier
-			
-			Map<String, String> param = new HashMap<String, String>();
-			param.put("uuid", uuid);
-			
-			el = Xml.transform (xml, styleSheet, param);		
-		} catch (HttpException x) {
-			// TODO Auto-generated catch block
-			throw new Exception("HTTPException : " + x.getMessage());
-		} 
+		if(styleSheet == null) {
+            return null;
+        }
+        Element xml = Xml.loadFile(new URL(url));
+
+        // md5 the full capabilities URL
+        String uuid = Sha1Encoder.encodeString (url); // is the service identifier
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("uuid", uuid);
+
+        el = Xml.transform (xml, styleSheet, param);
 		return el;
 	}
 	

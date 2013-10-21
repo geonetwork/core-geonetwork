@@ -150,8 +150,8 @@
             <artifactId>batik-ext</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-net</groupId>
@@ -258,6 +258,12 @@
             <groupId>org.mapfish.print</groupId>
             <artifactId>print-lib</artifactId>
             <version>1.2.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-httpclient</groupId>
+                    <artifactId>commons-httpclient</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- ====================== -->
@@ -316,11 +322,6 @@
             <groupId>jzkit</groupId>
             <artifactId>jzkit-z3950-plugin</artifactId>
             <version>3.r260.geonetwork.patch.1</version>
-        </dependency>
-        <dependency>
-            <groupId>jakarta</groupId>
-            <artifactId>jakarta-slide-webdavlib</artifactId>
-            <version>2.1</version>
         </dependency>
         <dependency>
             <groupId>edu.ucar</groupId>

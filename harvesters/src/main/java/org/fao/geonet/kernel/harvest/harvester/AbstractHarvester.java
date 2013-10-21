@@ -56,6 +56,7 @@ import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,11 +87,9 @@ public abstract class AbstractHarvester extends BaseAligner {
      *
      * @param type
      * @param context
-     * @param sm
-     * @param dm
      * @return
      */
-	public static AbstractHarvester create(String type, ServiceContext context, HarvesterSettingsManager sm, DataManager dm) throws BadParameterEx, OperationAbortedEx {
+	public static AbstractHarvester create(String type, ServiceContext context) throws BadParameterEx, OperationAbortedEx {
 		//--- raises an exception if type is null
 		if (type == null) {
 			throw new BadParameterEx("type", null);
@@ -99,9 +98,7 @@ public abstract class AbstractHarvester extends BaseAligner {
 		try {
             AbstractHarvester ah = context.getApplicationContext().getBean(type, AbstractHarvester.class);
 
-			ah.context    = context;
-			ah.settingMan = sm;
-			ah.dataMan    = dm;
+			ah.setContext(context);
 			return ah;
 		}
 		catch(Exception e) {
@@ -355,7 +352,7 @@ public abstract class AbstractHarvester extends BaseAligner {
 		info.addContent(new Element("type").setText(getType()));
 	}
 
-    private void setContext(ServiceContext context) {
+    public void setContext(ServiceContext context) {
         this.context = context;
     }
 
@@ -580,7 +577,7 @@ public abstract class AbstractHarvester extends BaseAligner {
      * @param l
      * @throws Exception
      */
-	protected abstract void doHarvest(Logger l) throws Exception;
+	public abstract void doHarvest(Logger l) throws Exception;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -777,9 +774,12 @@ public abstract class AbstractHarvester extends BaseAligner {
 	private Throwable error;
     private boolean running = false;
 
+
 	protected ServiceContext context;
+    @Autowired
 	protected HarvesterSettingsManager settingMan;
-	protected DataManager    dataMan;
+    @Autowired
+    protected DataManager    dataMan;
 
     protected AbstractParams params;
     protected HarvestResult result;

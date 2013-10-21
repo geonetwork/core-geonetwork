@@ -6,8 +6,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.*;
-import org.fao.geonet.AbstractCoreTest;
-import org.fao.geonet.services.AbstractServiceTest;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
@@ -24,7 +23,7 @@ import static org.junit.Assert.assertEquals;
  * Date: 10/12/13
  * Time: 8:30 PM
  */
-public class ListTest extends AbstractServiceTest {
+public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
     private AtomicInteger inc = new AtomicInteger();
     @Autowired
     UserRepository _userRepo;

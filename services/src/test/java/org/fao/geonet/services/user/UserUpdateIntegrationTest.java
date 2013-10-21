@@ -7,7 +7,7 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.GroupRepositoryTest;
 import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.services.AbstractServiceTest;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
@@ -29,7 +29,7 @@ import static junit.framework.Assert.*;
  * Time: 3:20 PM
  */
 @ContextConfiguration(inheritLocations = true, locations = "classpath:encoder-bean.xml")
-public class UpdateTest extends AbstractServiceTest {
+public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
     private static final String COMPAT_UPDATE_PARAMS = "<request>\n" +
                                                        "  <zip>zip1</zip>\n" +
                                                        "  <groups_RegisteredUser>2</groups_RegisteredUser>\n" +

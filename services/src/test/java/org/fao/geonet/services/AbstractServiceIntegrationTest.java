@@ -1,6 +1,6 @@
 package org.fao.geonet.services;
 
-import org.fao.geonet.AbstractCoreTest;
+import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
@@ -11,5 +11,5 @@ import org.springframework.test.context.ContextConfiguration;
  * Time: 9:53 AM
  */
 @ContextConfiguration(inheritLocations = true, locations = "classpath:services-repository-test-context.xml")
-public abstract class AbstractServiceTest extends AbstractCoreTest {
+public abstract class AbstractServiceIntegrationTest extends AbstractCoreIntegrationTest {
 }

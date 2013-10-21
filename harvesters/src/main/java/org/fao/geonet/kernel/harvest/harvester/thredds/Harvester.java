@@ -47,7 +47,7 @@ import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.Fragme
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.utils.HttpRequestFactory;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -217,7 +217,7 @@ class Harvester extends BaseAligner
 		//--- Try to load thredds catalog document
 		String url = params.url;
 		try {
-			XmlRequest req = context.getBean(HttpRequestFactory.class).createXmlRequest();
+			XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest();
 			req.setUrl(new URL(url));
 			req.setMethod(XmlRequest.Method.GET);
 			Lib.net.setupProxy(context, req);

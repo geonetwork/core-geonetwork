@@ -36,7 +36,7 @@ public class BadParameterEx extends BadInputEx
 
 	public BadParameterEx(String name, Object value)
 	{
-		super(name, value);
+		super(value+" is not a valid value for: "+name, value);
 
 		id = "bad-parameter";
 	}

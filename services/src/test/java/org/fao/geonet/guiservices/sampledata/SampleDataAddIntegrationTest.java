@@ -1,18 +1,15 @@
 package org.fao.geonet.guiservices.sampledata;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.AbstractCoreTest;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.services.AbstractServiceTest;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -24,7 +21,7 @@ import static org.junit.Assert.assertTrue;
  * Date: 10/16/13
  * Time: 12:47 PM
  */
-public class AddTest extends AbstractServiceTest {
+public class SampleDataAddIntegrationTest extends AbstractServiceIntegrationTest {
     @Test
     public void testExec() throws Exception {
         final Add add = new Add();

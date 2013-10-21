@@ -38,7 +38,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- *  Havest metadata from other catalogues using the CSW protocol
+ *  Harvest metadata from other catalogues using the CSW protocol
  */
 public class CswHarvester extends AbstractHarvester {
 	//--------------------------------------------------------------------------
@@ -179,7 +179,7 @@ public class CswHarvester extends AbstractHarvester {
      * @param log
      * @throws Exception
      */
-	protected void doHarvest(Logger log) throws Exception {
+    public void doHarvest(Logger log) throws Exception {
 		Harvester h = new Harvester(log, context, params);
 		this.result = h.harvest();
 	}

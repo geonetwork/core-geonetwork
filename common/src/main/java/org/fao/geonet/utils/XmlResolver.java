@@ -101,7 +101,7 @@ public class XmlResolver extends XMLCatalogResolver {
 			}
 
 			if (elResult == null) { // use XMLRequest to get the XML
-				XmlRequest xml = new XmlRequest(externalRef);
+				XmlRequest xml = new GeonetHttpRequestFactory().createXmlRequest(externalRef);
 				Log.error(Log.XML_RESOLVER, "proxyParams are "+proxyParams.useProxy);
 				if (proxyParams.useProxy) { 
 					xml.setUseProxy(true);

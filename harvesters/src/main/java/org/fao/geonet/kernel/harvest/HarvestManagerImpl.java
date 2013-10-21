@@ -109,7 +109,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
                     Element node = transform((Element) o);
                     String type = node.getAttributeValue("type");
 
-                    AbstractHarvester ah = AbstractHarvester.create(type, context, settingMan, dataMan);
+                    AbstractHarvester ah = AbstractHarvester.create(type, context);
                     ah.init(node);
                     hmHarvesters.put(ah.getID(), ah);
                     hmHarvestLookup.put(ah.getParams().uuid, ah);
@@ -263,7 +263,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
             Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
         }
 		String type = node.getAttributeValue("type");
-		AbstractHarvester ah = AbstractHarvester.create(type, context, settingMan, dataMan);
+		AbstractHarvester ah = AbstractHarvester.create(type, context);
 
         Element ownerIdE = new Element("ownerId");
         ownerIdE.setText(ownerId);
@@ -293,7 +293,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
             Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
         }
 		String type = node.getAttributeValue("type");
-		AbstractHarvester ah = AbstractHarvester.create(type, context, settingMan, dataMan);
+		AbstractHarvester ah = AbstractHarvester.create(type, context);
 
 		ah.add(node);
 		hmHarvesters.put(ah.getID(), ah);

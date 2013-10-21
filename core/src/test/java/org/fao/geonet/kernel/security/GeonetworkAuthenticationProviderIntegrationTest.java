@@ -2,10 +2,9 @@ package org.fao.geonet.kernel.security;
 
 import junit.framework.TestCase;
 
-import org.fao.geonet.AbstractCoreTest;
+import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserSecurityNotification;
-import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.UserRepositoryTest;
 import org.fao.geonet.util.PasswordUtil;
@@ -34,7 +33,7 @@ import static org.mockito.Mockito.when;
  * @author heikki doeleman
  */
 @ContextConfiguration(inheritLocations = true, locations = "classpath:encoder-bean.xml")
-public class GeonetworkAuthenticationProviderTest extends AbstractCoreTest {
+public class GeonetworkAuthenticationProviderIntegrationTest extends AbstractCoreIntegrationTest {
 
     public static final String PASSWORD = "password";
     /**

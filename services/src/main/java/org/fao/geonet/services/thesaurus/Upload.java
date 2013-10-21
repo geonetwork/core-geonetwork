@@ -35,7 +35,6 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.lib.Lib;
@@ -128,7 +127,7 @@ public class Upload implements Service {
 				URI uri = new URI(url);
 				rdfFile = File.createTempFile("thesaurus", ".rdf");
 
-				XmlRequest httpReq = context.getBean(HttpRequestFactory.class).createXmlRequest(uri.getHost(),
+				XmlRequest httpReq = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(uri.getHost(),
 						uri.getPort());
 				httpReq.setAddress(uri.getPath());
 

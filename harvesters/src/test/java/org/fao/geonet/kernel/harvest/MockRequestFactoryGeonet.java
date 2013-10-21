@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel.harvest;
 
-import org.fao.geonet.utils.HttpRequestFactory;
+import com.vividsolutions.jts.util.Assert;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.XmlRequest;
 
 import java.util.HashMap;
@@ -13,13 +14,13 @@ import java.util.Map;
  * Date: 10/18/13
  * Time: 4:30 PM
  */
-public class MockRequestFactory extends HttpRequestFactory {
+public class MockRequestFactoryGeonet extends GeonetHttpRequestFactory {
 
-    private Map<Object, Object> requests = new HashMap<Object, Object>();
+    private Map<Object, Object> _requests = new HashMap<Object, Object>();
 
     @Override
     public XmlRequest createXmlRequest(String host, int port, String protocol) {
-        final Object request = requests.get(new Request(host, port, protocol));
+        final Object request = _requests.get(new Request(host, port, protocol));
         if (request == null) {
             throw new IllegalArgumentException("Unexpected request: "+protocol+"://"+host+":"+port);
         }
@@ -27,8 +28,14 @@ public class MockRequestFactory extends HttpRequestFactory {
     }
 
     public void registerRequest(String host, int port, String protocol, XmlRequest request) {
-        requests.put(new Request(host, port, protocol), request);
+        Assert.isTrue(request != null);
+        _requests.put(new Request(host, port, protocol), request);
     }
+
+    public void clear() {
+        _requests.clear();
+    }
+
 
     private static class Request {
         final String protocol;

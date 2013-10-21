@@ -140,7 +140,7 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doHarvest(Logger log) throws Exception
+	public void doHarvest(Logger log) throws Exception
 	{
 
 		Harvester h = new Harvester(log, context, params);

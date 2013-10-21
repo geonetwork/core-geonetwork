@@ -62,7 +62,7 @@ import static org.junit.Assert.assertNotNull;
  * Time: 8:31 PM
  */
 @ContextConfiguration(inheritLocations = true, locations = "classpath:core-repository-test-context.xml")
-public abstract class AbstractCoreTest extends AbstractSpringDataTest {
+public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest {
     @Autowired
     protected ConfigurableApplicationContext _applicationContext;
     @PersistenceContext
@@ -209,8 +209,8 @@ public abstract class AbstractCoreTest extends AbstractSpringDataTest {
     }
 
     private File getClassFile() {
-        final String testClassName = AbstractCoreTest.class.getSimpleName();
-        return new File(AbstractCoreTest.class.getResource(testClassName + ".class").getFile());
+        final String testClassName = AbstractCoreIntegrationTest.class.getSimpleName();
+        return new File(AbstractCoreIntegrationTest.class.getResource(testClassName + ".class").getFile());
     }
 
     protected User loginAsAdmin(ServiceContext context) {

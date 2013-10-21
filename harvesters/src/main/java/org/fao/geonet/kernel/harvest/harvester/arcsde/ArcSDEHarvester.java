@@ -129,7 +129,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	}
 
 	@Override
-	protected void doHarvest(Logger l) throws Exception {
+    public void doHarvest(Logger l) throws Exception {
 	    Log.info(ARCSDE_LOG_MODULE_NAME, "ArcSDE harvest starting");
 		ArcSDEMetadataAdapter adapter = new ArcSDEMetadataAdapter(params.server, params.port, params.database, params.username, params.password);
 		List<String> metadataList = adapter.retrieveMetadata();

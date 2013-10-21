@@ -1,7 +1,7 @@
 package org.fao.geonet.component.csw;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.AbstractCoreTest;
+import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Profile;
@@ -14,16 +14,10 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Repeat;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
@@ -39,7 +33,7 @@ import static org.junit.Assert.*;
  * Date: 10/17/13
  * Time: 7:56 PM
  */
-public class TransactionTest extends AbstractCoreTest {
+public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     public static final String PHOTOGRAPHIC_UUID = "46E7F9B1-99F6-3241-9039-EAE7201534F4";
     public static final String IDENTIFICATION_XPATH = "gmd:identificationInfo/gmd:MD_DataIdentification";
     public static final String TITLE_XPATH = IDENTIFICATION_XPATH + "/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString";
@@ -73,7 +67,7 @@ public class TransactionTest extends AbstractCoreTest {
     public void testIllegalAccessInsert() throws Exception {
         final ServiceContext serviceContext = createServiceContext();
 
-        Element metadata = Xml.loadStream(TransactionTest.class.getResourceAsStream("metadata-photographic.xml"));
+        Element metadata = Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml"));
         Element params = createInsertTransactionRequest(metadata);
 
         final Element result = _transaction.execute(params, serviceContext);
@@ -100,7 +94,7 @@ public class TransactionTest extends AbstractCoreTest {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 
-        Element metadata = Xml.loadStream(TransactionTest.class.getResourceAsStream("metadata-photographic.xml"));
+        Element metadata = Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml"));
         Element params = createInsertTransactionRequest(metadata);
         Element response = _transaction.execute(params, serviceContext);
 
@@ -116,8 +110,8 @@ public class TransactionTest extends AbstractCoreTest {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 
-        Element metadata = Xml.loadStream(TransactionTest.class.getResourceAsStream("metadata-photographic.xml"));
-        Element metadata2 = Xml.loadStream(TransactionTest.class.getResourceAsStream("metadata-photographic.xml"));
+        Element metadata = Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml"));
+        Element metadata2 = Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml"));
         final String uuid2 = "newUUID";
         metadata2.getChild("fileIdentifier", GMD).getChild("CharacterString", GCO).setText(uuid2);
 
@@ -155,7 +149,7 @@ public class TransactionTest extends AbstractCoreTest {
     public void testFullUpdate() throws Exception {
         addPhotographicMetadataToRepository(adminUserId());
 
-        final Element metadata = Xml.loadStream(TransactionTest.class.getResourceAsStream("metadata-photographic.xml"));
+        final Element metadata = Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml"));
         final String xpath = "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints";
         Xml.selectElement(metadata, xpath, Arrays.asList(GMD)).detach();
 
@@ -258,7 +252,7 @@ public class TransactionTest extends AbstractCoreTest {
         metadata.getSourceInfo().setOwner(ownerId);
         metadata.getDataInfo().setSchemaId("iso19139");
         metadata.setUuid(PHOTOGRAPHIC_UUID);
-        metadata.setDataAndFixCR(Xml.loadStream(TransactionTest.class.getResourceAsStream("metadata-photographic.xml")));
+        metadata.setDataAndFixCR(Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml")));
         metadata = _metadataRepository.save(metadata);
         final String schemaDir = _schemaManager.getSchemaDir("iso19139");
         List<Element> extras = Arrays.asList(

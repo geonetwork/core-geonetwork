@@ -31,6 +31,7 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
@@ -73,7 +74,7 @@ class Harvester
 
 		//--- perform all searches
 
-		XmlRequest request = new XmlRequest(new URL(params.baseUrl+"/rest/find/document"));
+		XmlRequest request = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.baseUrl+"/rest/find/document"));
 
 		Set<RecordInfo> records = new HashSet<RecordInfo>();
 

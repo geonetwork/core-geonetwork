@@ -35,11 +35,12 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.XmlRequest;
 import org.fao.oaipmh.exceptions.NoSetHierarchyException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.requests.ListMetadataFormatsRequest;
 import org.fao.oaipmh.requests.ListSetsRequest;
-import org.fao.oaipmh.requests.Transport;
 import org.fao.oaipmh.responses.ListMetadataFormatsResponse;
 import org.fao.oaipmh.responses.ListSetsResponse;
 import org.fao.oaipmh.responses.MetadataFormat;
@@ -318,9 +319,10 @@ public class Info implements Service
 
 	private Element getMdFormats(String url, ServiceContext context) throws Exception
 	{
-		ListMetadataFormatsRequest req = new ListMetadataFormatsRequest();
+		ListMetadataFormatsRequest req = new ListMetadataFormatsRequest(context.getBean(GeonetHttpRequestFactory.class));
 		req.setSchemaPath(oaiSchema);
-		Transport t = req.getTransport();
+
+        XmlRequest t = req.getTransport();
 		t.setUrl(new URL(url));
 		Lib.net.setupProxy(context, t);
 		ListMetadataFormatsResponse res = req.execute();
@@ -343,9 +345,9 @@ public class Info implements Service
 
 		try
 		{
-			ListSetsRequest req = new ListSetsRequest();
+			ListSetsRequest req = new ListSetsRequest(context.getBean(GeonetHttpRequestFactory.class));
 			req.setSchemaPath(oaiSchema);
-			Transport t = req.getTransport();
+            XmlRequest t = req.getTransport();
 			t.setUrl(new URL(url));
 			Lib.net.setupProxy(context, t);
 			ListSetsResponse res = req.execute();

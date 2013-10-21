@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.ListIdentifiersResponse;
 import org.jdom.JDOMException;
@@ -38,8 +39,12 @@ public class ListIdentifiersRequest extends TokenListRequest
 {
 	public static final String VERB = "ListIdentifiers";
 
+    public ListIdentifiersRequest(GeonetHttpRequestFactory transport) {
+        super(transport);
+    }
 
-	//---------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------
 
 	public ListIdentifiersResponse execute() throws IOException, OaiPmhException,
 																	JDOMException, SAXException, Exception

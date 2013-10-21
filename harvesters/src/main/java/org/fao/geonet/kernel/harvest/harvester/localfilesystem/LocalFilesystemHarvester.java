@@ -299,7 +299,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
     }
 
 	@Override
-	protected void doHarvest(Logger l) throws Exception {
+    public void doHarvest(Logger l) throws Exception {
 		log.debug("LocalFilesystem doHarvest: top directory is " + params.directoryname + ", recurse is " + params.recurse);
 		File directory = new File(params.directoryname);
 		List<File> results = IO.getFilesInDirectory(directory, params.recurse, new XMLExtensionFilenameFilter(XMLExtensionFilenameFilter.ACCEPT_DIRECTORIES));

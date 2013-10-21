@@ -30,6 +30,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -47,7 +48,6 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.net.URL;
-import java.util.List;
 
 /**
  * User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and
@@ -153,7 +153,7 @@ public class Rate extends NotInReadOnlyModeService {
 	{
         if(context.isDebugEnabled()) context.debug("Rating remote metadata with uuid:"+ uuid);
 
-		XmlRequest req = new XmlRequest(new URL(params.host));
+		XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.host));
 
 		Lib.net.setupProxy(context, req);
 

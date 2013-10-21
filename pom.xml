@@ -291,7 +291,11 @@
         <artifactId>jts</artifactId>
         <version>1.13</version>
       </dependency>
-
+        <dependency>
+            <groupId>com.github.lookfirst</groupId>
+            <artifactId>sardine</artifactId>
+            <version>5.0.1</version>
+        </dependency>
       <!-- universal character set detector -->
       <dependency>
         <groupId>com.googlecode.juniversalchardet</groupId>
@@ -429,9 +433,9 @@
         <!-- Same as the dependency in commons-logging -->
       </dependency>
       <dependency>
-        <groupId>commons-httpclient</groupId>
-        <artifactId>commons-httpclient</artifactId>
-        <version>3.0.1</version>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>4.3.1</version>
       </dependency>
       <dependency>
         <groupId>xerces</groupId>

@@ -13,8 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.AbstractCoreTest;
-import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 
@@ -28,7 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class XmlSerializerTest extends AbstractCoreTest {
+public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
     XmlSerializer _xmlSerializer;
     @Autowired
@@ -39,7 +38,7 @@ public class XmlSerializerTest extends AbstractCoreTest {
 	private static final String OWNER_ID = "1234";
 	final Metadata metadata = new Metadata();
 	{
-		InputStream in = XmlSerializerTest.class.getResourceAsStream("valid-metadata.iso19139.xml");
+		InputStream in = XmlSerializerIntegrationTest.class.getResourceAsStream("valid-metadata.iso19139.xml");
 		try {
             String data = IOUtils.toString(in);
             metadata.setData(data)

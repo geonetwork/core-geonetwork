@@ -181,8 +181,8 @@
       <artifactId>batik-ext</artifactId>
     </dependency>
     <dependency>
-      <groupId>commons-httpclient</groupId>
-      <artifactId>commons-httpclient</artifactId>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
     </dependency>
     <dependency>
         <groupId>commons-net</groupId>
@@ -427,8 +427,8 @@
 		<artifactId>flying-saucer-pdf-itext5</artifactId>
 		<version>9.0.1</version>
 	</dependency>
-	
-	
+
+
 	</dependencies>
 
   
