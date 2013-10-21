@@ -34,14 +34,11 @@
           return _select(null, false, 'remove-all');
       };
       var view = function(md) {
-          console.log('View:');
-          console.log(md);
-          // TODO: Open metadata view mode according to GUI
-          window.open('../../apps/search?uuid=' + md['geonet:info'].uuid, 'gn-view');
+          window.open('../../?uuid=' + md['geonet:info'].uuid, 'gn-view');
       };
       var edit = function(md) {
-        console.log('Edit:');
-        console.log(md);
+        window.open('../../?edit=' + md['geonet:info'].uuid, 'gn-view');
+//        location.href = 'catalog.edit?id=' + md['geonet:info'].id;
       };
       return {
           select: select,
