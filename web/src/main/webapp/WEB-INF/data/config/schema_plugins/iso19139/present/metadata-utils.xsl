@@ -235,7 +235,7 @@
 	        								<li>
 		        								<ul>
 		        									<xsl:for-each select="$children">
-		        										<li><a class="arrow" href="metadata.show?uuid={geonet:info/uuid}">
+		        										<li><a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}">
 		        											<xsl:call-template name="getMetadataTitle">
 		        												<xsl:with-param name="uuid" select="geonet:info/uuid"/>
 		        											</xsl:call-template>
@@ -278,7 +278,7 @@
 		        								<xsl:value-of select="/root/gui/strings/crossReference" />
 		        							</xsl:if>
 		        						</xsl:variable>
-		        						<li><a class="arrow sibling {$type} {$isParent}" title="{$helpText}" href="metadata.show?uuid={uuid}">
+		        						<li><a class="arrow sibling {$type} {$isParent}" title="{$helpText}" href="javascript:geocat.openMetadataWindow('{uuid}');">
     											<xsl:call-template name="getMetadataTitle">
     												<xsl:with-param name="uuid" select="uuid"/>
     											</xsl:call-template>
@@ -333,7 +333,7 @@
 								alt="{/root/gui/strings/associateService}" title="{/root/gui/strings/associateService}" align="absmiddle"/><xsl:value-of select="/root/gui/strings/linkedServices"/></h3>
 							<ul>
 								<xsl:for-each select="$services">
-									<li><a class="arrow" href="metadata.show?uuid={geonet:info/uuid}">
+									<li><a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}');">
 										<xsl:call-template name="getMetadataTitle">
 											<xsl:with-param name="uuid" select="geonet:info/uuid"/>
 										</xsl:call-template>
@@ -365,7 +365,7 @@
 							<xsl:value-of select="/root/gui/strings/linkedDatasetMetadata"/></h3>
 						<ul>
 							<xsl:for-each select="$metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[@gco:isoType='srv:SV_ServiceIdentification'])/srv:operatesOn[@uuidref!='']">
-								<li><a class="arrow" href="metadata.show?uuid={@uuidref}">
+								<li><a class="arrow" href="javascript:geocat.openMetadataWindow('{@uuidref}');">
 									<xsl:call-template name="getMetadataTitle">
 										<xsl:with-param name="uuid" select="@uuidref"/>
 									</xsl:call-template>
@@ -408,7 +408,7 @@
 		        				<xsl:value-of select="/root/gui/strings/linkedDataset"/></h3>
 		        			<ul>
 		        				<xsl:for-each select="$relatedRecords">
-		        					<li><a class="arrow" href="metadata.show?uuid={geonet:info/uuid}">
+		        					<li><a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}');">
 		        						<xsl:call-template name="getMetadataTitle">
 		        							<xsl:with-param name="uuid" select="geonet:info/uuid"/>
 		        						</xsl:call-template>
@@ -425,7 +425,7 @@
 			        				<xsl:value-of select="/root/gui/strings/linkedFeatureCatalogue"/></h3>
 			        			<ul>
 			        				<xsl:for-each select="$relatedRecords">
-			        					<li><a class="arrow" href="metadata.show?uuid={geonet:info/uuid}">
+			        					<li><a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}');">
 			        						<xsl:call-template name="getMetadataTitle">
 			        							<xsl:with-param name="uuid" select="geonet:info/uuid"/>
 			        						</xsl:call-template>
