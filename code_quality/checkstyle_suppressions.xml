@@ -17,6 +17,7 @@
     <suppress files="oaipmh/.*" checks="[a-zA-Z0-9]*"/>
     <suppress files="services/.*" checks="[a-zA-Z0-9]*"/>
     <suppress files="web-app/.*" checks="[a-zA-Z0-9]*"/>
+    <suppress files="common/.*" checks="[a-zA-Z0-9]*"/>
     <suppress files="domain/.*_.java" checks="[a-zA-Z0-9]*"/>
     <suppress files="domain/.*" checks="DesignForExtension"/>
 </suppressions>

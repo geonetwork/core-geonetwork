@@ -25,6 +25,7 @@ import org.jdom.Namespace;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.ClientHttpResponse;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URI;
@@ -35,11 +36,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
+ * Super class for classes that encapsulate requests.
+ *
  * User: Jesse
  * Date: 10/21/13
  * Time: 12:03 PM
- * To change this template use File | Settings | File Templates.
  */
 public class AbstractHttpRequest {
     protected final GeonetHttpRequestFactory requestFactory;
@@ -199,7 +200,7 @@ public class AbstractHttpRequest {
         return requestFactory.execute(httpMethod, new Function<HttpClientBuilder, Void>() {
             @Nullable
             @Override
-            public Void apply(@Nullable HttpClientBuilder input) {
+            public Void apply(@Nonnull HttpClientBuilder input) {
                 final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                 if (credentials != null) {
                     final URI uri = httpMethod.getURI();
@@ -301,35 +302,6 @@ public class AbstractHttpRequest {
         }
 
         return sentData.toString();
-    }
-
-    private String getReceivedData(ClientHttpResponse response, byte[] data) {
-        StringBuilder receivedData = new StringBuilder();
-
-        try {
-            //--- if there is a connection error (the server is unreachable) this
-            //--- call causes a NullPointerEx
-
-            receivedData.append(response.getStatusText()).append("\r\r");
-
-            final HttpHeaders headers = response.getHeaders();
-            for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-                receivedData.append(entry.getKey());
-                receivedData.append('=');
-                receivedData.append(entry.getValue());
-                receivedData.append('&');
-            }
-
-            receivedData.append("\r\n");
-
-            if (response != null) {
-                receivedData.append(new String(data, "UTF8"));
-            }
-        } catch (Exception e) {
-            receivedData.setLength(0);
-        }
-
-        return receivedData.toString();
     }
 
     private Element soapEmbed(Element elem) {

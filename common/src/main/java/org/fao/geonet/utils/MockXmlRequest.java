@@ -121,6 +121,9 @@ public class MockXmlRequest extends XmlRequest {
 
         @Override
         public boolean apply(@Nullable HttpRequestBase input) {
+            if (input == null) {
+                return false;
+            }
             final URI uri = input.getURI();
             final boolean equalPath = uri.toString().equalsIgnoreCase(_path);
 

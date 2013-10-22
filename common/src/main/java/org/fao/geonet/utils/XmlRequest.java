@@ -42,8 +42,6 @@ public class XmlRequest extends AbstractHttpRequest {
         super(protocol, host, port, requestFactory);
 
         setMethod(Method.GET);
-
-        List<String> authPrefs = new ArrayList<String>(2);
 	}
 
 	/** Sends an xml request and obtains an xml response */

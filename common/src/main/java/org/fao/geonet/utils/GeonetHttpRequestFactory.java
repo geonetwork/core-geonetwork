@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.client.AbstractClientHttpResponse;
 import org.springframework.http.client.ClientHttpResponse;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -94,7 +95,7 @@ public class GeonetHttpRequestFactory {
         final Function<HttpClientBuilder, Void> setCredentials = new Function<HttpClientBuilder, Void>() {
             @Nullable
             @Override
-            public Void apply(@Nullable HttpClientBuilder input) {
+            public Void apply(@Nonnull HttpClientBuilder input) {
 
                 final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                 credentialsProvider.setCredentials(authScope, credentials);
