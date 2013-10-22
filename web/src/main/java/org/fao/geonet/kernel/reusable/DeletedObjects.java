@@ -56,7 +56,7 @@ public final class DeletedObjects
         return id;
     }
 
-    public static String href(int id, String baseURL)
+    public static String href(int id)
     {
         return "local://xml.reusable.deleted?id=" + id;
     }
@@ -86,12 +86,15 @@ public final class DeletedObjects
             addChild(delete, ReplacementStrategy.REPORT_ID, id);
             if (desc != null) {
                 addChild(delete, ReplacementStrategy.REPORT_DESC, desc);
-                delete.setAttribute("desc", desc);
+                delete.setAttribute("desc", desc+" - "+date);
             }
             if (date != null) {
                 addChild(delete, "date", date);
             }
 
+            delete.addContent(new Element("xlink").setText(href(Integer.parseInt(id))));
+            delete.addContent(new Element("search").setText(id+desc+date));
+            delete.addContent(new Element("type").setText("deleted"));
             deleted.addContent(delete);
         }
 

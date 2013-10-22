@@ -69,7 +69,10 @@ SharedObjectsDev.run(function ($httpBackend) {
        return {
             "date": "2013-09-16T10:32:45",
             "desc": "local://xml.user.get?id="+id+"&schema=iso19139.che&role=pointOfContact",
-            "id": id
+            "id": id,
+            "xlink" : 'local://xml.reusable.deleted?id='+id,
+            "search" : id+'local://xml.user.get?id="+id+"&schema=iso19139.che&role=pointOfContact2013-09-16T10:32:45',
+            "type" : "deleted"
        }
     }
     var id = 1;

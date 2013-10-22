@@ -2,7 +2,7 @@
 
 /* http://docs.angularjs.org/guide/dev_guide.e2e-testing */
 
-xdescribe('Contacts', function () {
+describe('Contacts', function () {
 
 
     describe('Default Route', function () {

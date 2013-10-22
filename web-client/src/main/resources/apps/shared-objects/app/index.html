@@ -20,14 +20,22 @@
     <script id="load-language-script" type="text/javascript">
         var languageHolder='eng';
         var init = function () {
-            var matches = window.location.search.match(/lang=(\w\w\w)/);
-            if (matches.length == 2) {
-                languageHolder = matches[1];
+            try {
+                var matches = window.location.search.match(/lang=(\w\w\w)/);
+                if (matches.length == 2) {
+                    languageHolder = matches[1];
+                }
+
+                jQuery.ajax('../../../srv/'+languageHolder+'/strings.js', {async:false, cache:true, dataType:'script'});
+
+                Geonet.language = languageHolder;
+            } catch (e) {
+                if (window.location.href.indexOf('?') === -1) {
+                    window.location.search = '?lang=eng';
+                } else {
+                    window.location.search = '?lang=eng';
+                }
             }
-
-            jQuery.ajax('../../../srv/'+languageHolder+'/strings.js', {async:false, cache:true, dataType:'script'});
-
-            Geonet.language = languageHolder
         };
 
         init();
