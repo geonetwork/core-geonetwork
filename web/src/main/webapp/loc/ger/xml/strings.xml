@@ -2,13 +2,13 @@
 <strings>
 	<!-- GEOCAT Strings -->
     <createNewSharedObject js="true">Edit %objtype%</createNewSharedObject>
-    <noRecords js='true'>No Records found</noRecords>
-    <edit js='true'>Edit</edit>
-    <searchView js='true'>Search</searchView>
-    <actions js='true'>Actions</actions>
-    <contacts js='true'>Contacts</contacts>
-    <SharedObjects js='true'>Shared Objects</SharedObjects>
-    <actions js='true'>Actions</actions>
+    <noRecords js='true'>Keine Metadaten gefunden</noRecords>
+    <edit js='true'>Bearbeiten</edit>
+    <searchView js='true'>Suche</searchView>
+    <actions js='true'>Aktionen</actions>
+    <contacts js='true'>Kontakte</contacts>
+    <SharedObjects js='true'>Wiederverwendbare Objekte</SharedObjects>
+    <actions js='true'>Aktionen</actions>
     <reusable_confirmValidate js="true">Confirm Validate Action</reusable_confirmValidate>
     <reusable_confirmDelete js="true">Confirm Delete Action</reusable_confirmDelete>
     <reusable_confirmDeleteMsg js="true">Are you sure you wish to delete the selected object?</reusable_confirmDeleteMsg>
