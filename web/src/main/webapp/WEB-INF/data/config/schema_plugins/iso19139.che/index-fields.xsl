@@ -333,7 +333,7 @@
 			<!-- Sibling relationships -->
 			<xsl:for-each select="*/gmd:MD_AggregateInformation">
 				<Field name="{gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue}" 
-					string="{gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gmd:PT_FreeText/gmd:textGroup[1]/gmd:LocalisedCharacterString}" 
+					string="{string(gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString)}" 
 					store="true" index="true" token="false"/>					 
 			</xsl:for-each>
 			
