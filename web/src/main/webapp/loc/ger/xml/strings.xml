@@ -15,7 +15,7 @@
     <reusable_confirmValidateMsg js="true">Are you sure you wish to validate the selected object?</reusable_confirmValidateMsg>
     <reusable_validated js="true">Bestätigt</reusable_validated>
     <reusable_nonValidated js="true">Unbestätigt</reusable_nonValidated>
-    <reusable_nonValidTitle js="true">Unbestätigte wiederverwendbare Objekte</reusable_nonValidTitle>
+    <reusable_nonValidTitle js="true">Wiederverwendbare Objekte</reusable_nonValidTitle>
     <reusable_nonValidDesc js="true">Wiederverwendbare Objekte bestätigen/ablehnen</reusable_nonValidDesc>
     <reusable_rejectTitle js="true">Nachricht zur Ablehnung von wiederverwendbaren Objekten</reusable_rejectTitle>
     <reusable_rejectDefaultMsg js="true">Wählen Sie ein anderes wiederverwendbares Objekt...</reusable_rejectDefaultMsg>

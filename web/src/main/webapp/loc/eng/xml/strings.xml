@@ -17,8 +17,8 @@
     <reusable_confirmValidateMsg js="true">Are you sure you wish to validate the selected object?</reusable_confirmValidateMsg>
     <reusable_validated js="true">Validated</reusable_validated>
     <reusable_nonValidated js="true">Non-validated</reusable_nonValidated>
-    <reusable_nonValidTitle js="true">Non-validated shared objects</reusable_nonValidTitle>
-    <reusable_nonValidDesc js="true">Validate/Reject shared objects that have not yet been validated</reusable_nonValidDesc>
+    <reusable_nonValidTitle js="true">hared objects</reusable_nonValidTitle>
+    <reusable_nonValidDesc js="true">Validate/Reject shared objects</reusable_nonValidDesc>
     <reusable_rejectTitle js="true">Rejection Message</reusable_rejectTitle>
     <reusable_rejectDefaultMsg js="true">Choose another shared object...</reusable_rejectDefaultMsg>
     <archived>Archived</archived>

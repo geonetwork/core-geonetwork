@@ -15,7 +15,8 @@
 		<xsl:param name="displayLink" select="true()"/>
 		<xsl:param name="title"/>
 		<xsl:param name="desc"/>
-		<xsl:param name="icon"/>
+        <xsl:param name="icon"/>
+        <xsl:param name="visible"/>
 		<xsl:param name="content"/>
 
 		<xsl:variable name="modalArg">
@@ -29,7 +30,7 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<xsl:if test="java:isAccessibleService($service)">
+		<xsl:if test="$visible or java:isAccessibleService($service)">
 			<xsl:variable name="url">
 				<xsl:choose>
 					<xsl:when test="normalize-space($link)!=''">
@@ -576,38 +577,12 @@
                     <xsl:variable name="reusableObjects">
                         
                         <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'reusable.non_validated.admin'"/>
+                            <xsl:with-param name="link" select="concat(/root/gui/url,'/apps/shared-objects/app/index.html?lang=',/root/gui/language)"/>
+                            <xsl:with-param name="visible" select="/root/gui/session/profile = 'Administrator'"/>
                             <xsl:with-param name="title" select="/root/gui/strings/reusable_nonValidTitle"/>
                             <xsl:with-param name="desc" select="/root/gui/strings/reusable_nonValidDesc"/>
                         </xsl:call-template>
-                        
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'extent.admin'"/>
-                            <xsl:with-param name="title" select="/root/gui/strings/extents/management"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/extents/manDes"/>
-                        </xsl:call-template>
 
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'format.admin'"/>
-                            <xsl:with-param name="title" select="/root/gui/strings/format/management"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/format/manDes"/>
-                        </xsl:call-template>
-
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'validated.shared.user.admin'"/>
-                            <xsl:with-param name="title">
-                                 <xsl:value-of select="/root/gui/strings/userManagement"/> - <xsl:value-of select="/root/gui/strings/reusable/validated"/>
-                            </xsl:with-param>
-                            <xsl:with-param name="desc" select="/root/gui/strings/userManagementDes"/>
-                        </xsl:call-template>
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'nonvalidated.shared.user.admin'"/>
-                            <xsl:with-param name="title">
-                                 <xsl:value-of select="/root/gui/strings/userManagement"/> - <xsl:value-of select="/root/gui/strings/reusable/nonValidated"/>
-                            </xsl:with-param>
-                            <xsl:with-param name="desc" select="/root/gui/strings/userManagementDes"/>
-                        </xsl:call-template>
-                        
 	                    <xsl:call-template name="addrow">
 	                        <xsl:with-param name="service" select="'thesaurus.admin'"/>
 	                        <xsl:with-param name="title" select="/root/gui/strings/thesaurus/management"/>
