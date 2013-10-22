@@ -101,6 +101,7 @@ public class SettingManager {
             Element currentElement = pathElements.get(segment);
             if (currentElement == null) {
                 currentElement = new Element(segment);
+                currentElement.setAttribute("name", setting.getName());
                 currentElement.setAttribute("position", String.valueOf(setting.getPosition()));
                 if (i == segments.length - 1) {
                     currentElement.setAttribute("datatype", String.valueOf(setting.getDataType().ordinal()));

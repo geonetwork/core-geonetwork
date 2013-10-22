@@ -146,7 +146,8 @@ public class Info implements Service {
 				result.addContent(context.getBean(MetadataCategoryRepository.class).findAllAsXml());
 
             } else if (type.equals("groups"))   {
-                Element r = getGroups(context, Profile.valueOf(params.getChildText("profile")), false);
+                String profile = params.getChildText("profile");
+                Element r = getGroups(context, Profile.findProfileIgnoreCase(profile), false);
 				result.addContent(r);
 
             } else if (type.equals("groupsIncludingSystemGroups")) {

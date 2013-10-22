@@ -62,11 +62,11 @@
 			<table class="text-aligned-left">
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/virtualcswServiceName"/> (*)</th>
-					<td class="padded"><input class="content" type="text" name="servicename" value="{if (/root/gui/services/record/name != '') then /root/gui/services/record/name else 'csw-'}"/></td>
+					<td class="padded"><input class="content" type="text" name="servicename" value="{if (/root/gui/services/name != '') then /root/gui/services/name else 'csw-'}"/></td>
 				</tr>
 				<tr>
 					<th class="padded"><xsl:value-of select="/root/gui/strings/virtualcswServiceDescription"/></th>
-					<td class="padded"><input class="content" size="40" type="text" name="servicedescription" value="{/root/gui/services/record/description}"/></td>
+					<td class="padded"><input class="content" size="40" type="text" name="servicedescription" value="{/root/gui/services/description}"/></td>
 				</tr>
 				
 				<tr><td colspan="2"><br/><hr style="border:1px solid; color:#eee"/><br/></td></tr>

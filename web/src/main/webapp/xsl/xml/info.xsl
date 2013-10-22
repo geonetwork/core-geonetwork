@@ -28,7 +28,7 @@
 	
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="categories">
+	<xsl:template match="metadatacategory">
 		<xsl:copy>
 			<xsl:for-each select="record">
 				<xsl:sort select="name" order="ascending"/>
@@ -58,7 +58,7 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="groups">
+	<xsl:template match="group">
 		<xsl:copy>
 			<xsl:for-each select="record">
 				<xsl:sort select="name" order="ascending"/>
@@ -75,7 +75,7 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="operations">
+	<xsl:template match="operation">
 		<xsl:copy>
 			<xsl:for-each select="record">
 				<operation id="{id}">

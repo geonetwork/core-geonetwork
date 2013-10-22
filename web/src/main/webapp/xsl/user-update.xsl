@@ -26,14 +26,14 @@
 	-->
 	<xsl:template name="form">
 		<form name="userupdateform" accept-charset="UTF-8" action="{/root/gui/locService}/user.update?operation=editinfo" method="post">
-			<input type="hidden" name="id" value="{/root/response/record/id}"/>
-			<input type="hidden" name="username" value="{/root/response/record/username}"/>
+			<input type="hidden" name="id" value="{/root/record/id}"/>
+			<input type="hidden" name="username" value="{/root/record/username}"/>
 			<input type="hidden" name="password" value="password"/>
 			<input type="submit" style="display: none;" />
 			<table class="text-aligned-left">
 				<tr>
           <th class="padded"><xsl:value-of select="/root/gui/strings/username"/></th>
-          <td class="padded"><xsl:value-of select="/root/response/record/username"/></td>
+          <td class="padded"><xsl:value-of select="/root/record/username"/></td>
         </tr>
 				<xsl:call-template name="userinfofields"/>
 			</table>

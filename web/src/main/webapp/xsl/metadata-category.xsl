@@ -8,7 +8,7 @@
 	-->
 	<xsl:template name="content">
 		<xsl:call-template name="formLayout">
-			<xsl:with-param name="title" select="/root/gui/strings/categories"/>
+			<xsl:with-param name="title" select="/root/response/metadatacategory"/>
 			<xsl:with-param name="content">
 
 				<xsl:variable name="disabled" select="(/root/response/owner='false')"/>
@@ -20,7 +20,7 @@
 							<input name="metadataid" id="metadataid" type="hidden" value="{/root/response/id}"/>
 							<table>
 								<tr>
-									<th class="padded"><xsl:value-of select="/root/gui/strings/categories"/></th>
+									<th class="padded"><xsl:value-of select="/root/response/metadatacategory"/></th>
 									<th class="padded"><xsl:value-of select="/root/gui/strings/assigned"/></th>
 								</tr>
 		

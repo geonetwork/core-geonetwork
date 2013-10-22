@@ -173,12 +173,12 @@
           <script>
 		    <xsl:variable name="apos">'</xsl:variable>
 			<xsl:variable name="escapedApos">\\'</xsl:variable>
-            <xsl:for-each select="/root/response/record">
-                $('csw.<xsl:value-of select="field"/>_<xsl:value-of select="langid"/>').value = '<xsl:value-of select="replace(translate(label, '&#xD;&#xA;', '\n'), $apos, $escapedApos)"/>';
+            <xsl:for-each select="/root/cswcapabilitiesinfofield/record">
+               $('csw.<xsl:value-of select="fieldname"/>_<xsl:value-of select="langid"/>').value = '<xsl:value-of select="replace(translate(value, '&#xD;&#xA;', '\n'), $apos, $escapedApos)"/>';
             </xsl:for-each>
 
-            	$("csw.enable").checked = <xsl:value-of select="/root/response/cswEnable"/>;
-            	$("csw.metadataPublic").checked = <xsl:value-of select="/root/response/cswMetadataPublic"/>;
+                 $("csw.enable").checked = <xsl:value-of select="/root/descendant::node()[@name='system/csw/enable']"/>;
+                 $("csw.metadataPublic").checked = <xsl:value-of select="/root/descendant::node()[@name='system/csw/metadataPublic']"/>;
 	             actualCswLang = $("csw.lang").value;
 
                // Update textboxes
@@ -187,7 +187,7 @@
                 $('csw.fees').value       = $('csw.fees_' + actualCswLang).value;
                 $('csw.accessConstraints').value       = $('csw.accessConstraints_' + actualCswLang).value;
 
-                $('csw.contactId').value = '<xsl:value-of select="/root/response/cswContactId"/>';
+                $('csw.contactId').value = '<xsl:value-of select="/root/descendant::node()[@name='system/csw/contactId']"/>';
         </script>
 	</xsl:template>
 

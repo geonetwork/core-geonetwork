@@ -776,7 +776,7 @@ public abstract class AbstractHarvester extends BaseAligner {
     private boolean running = false;
 
 
-	protected ServiceContext context;
+    protected ServiceContext context;
     @Autowired
 	protected HarvesterSettingsManager settingMan;
     @Autowired

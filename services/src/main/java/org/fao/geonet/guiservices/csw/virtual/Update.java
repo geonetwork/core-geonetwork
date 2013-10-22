@@ -95,6 +95,7 @@ public class Update implements jeeves.interfaces.Service {
                 }
             }
             serviceRepository.save(service);
+            serviceId = String.valueOf(service.getId());
         } else if (operation.equals(Params.Operation.UPDATESERVICE)) {
             final Service service = serviceRepository.findOne(Integer.valueOf(serviceId));
             service.setClassName(className);

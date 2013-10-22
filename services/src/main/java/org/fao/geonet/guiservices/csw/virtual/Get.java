@@ -54,6 +54,9 @@ public class Get implements Service {
             elParameters.addContent(new Element(parameter.getKey())
                     .setText(parameter.getValue()));
         }
-        return new Element("service").addContent(elParameters);
+        return new Element("service")
+               .addContent(new Element("name").setText(service.getName()))
+               .addContent(new Element("description").setText(service.getDescription()))
+               .addContent(elParameters);
     }
 }

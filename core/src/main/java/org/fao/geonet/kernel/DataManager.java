@@ -2794,17 +2794,16 @@ public class DataManager {
         } else {
             String isValid = "1";
             for (Object elem : validationInfo) {
-                Element vi = (Element) elem;
-                String type = vi.getChildText("valtype");
-                String status = vi.getChildText("status");
-                if ("0".equals(status)) {
+                MetadataValidation vi = (MetadataValidation) elem;
+                String type = vi.getId().getValidationType();
+                if (!vi.isValid()) {
                     isValid = "0";
                 }
-                String ratio = "xsd".equals(type) ? "" : vi.getChildText("failed") + "/" + vi.getChildText("tested");
+                String ratio = "xsd".equals(type) ? "" : vi.getFailed() + "/" + vi.getTested();
 
                 info.addContent(new Element(Edit.Info.Elem.VALID + "_details").
                         addContent(new Element("type").setText(type)).
-                        addContent(new Element("status").setText(status)).
+                        addContent(new Element("status").setText(vi.isValid() ? "1" : "0")).
                         addContent(new Element("ratio").setText(ratio))
                 );
             }
