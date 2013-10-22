@@ -1,8 +1,41 @@
 ================================================================================
 ===
-=== GeoNetwork 2.10.1: List of changes
+=== GeoNetwork 2.10.2: List of changes
 ===
 ================================================================================
+- Update version to 2.10.2-0
+- Update version to 2.10.2-0
+- #267 HTML5 UI: Use WMC context in map and allow OSM layers
+- #271 Transfer ownership displays target users repeated
+- #266 HTML5 UI: Hide special groups from New Metadata panel
+- Merge pull request #265 from Delawen/origin/2.10.x
+- Fixing a really weird bug on IE I don't even know how to report.
+- Merge pull request #263 from Delawen/136
+- Check if we passed an override parameter for layers #136
+- Merge pull request #227 from kristjanr/PressingEnterKeyWhenSearching
+- Merge pull request #227 from kristjanr/PressingEnterKeyWhenSearching
+- #257 WMS harvester thumbnail issue (classic UI)
+- Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
+- Editor / XML view / Do not escape &#10; (#254).
+- #247 HTML5 UI: Context menu in search results displaying admin options when unlogged
+- Fix email size for group - live fix from GeoNetwork workshop in FOSS4G2013.
+- Fix email size for group - live fix from GeoNetwork workshop in FOSS4G2013.
+- #246 HTML5 UI: Click on search result metadata title doesn't open the metadata detail page
+- #241 Fix MySql create sql script
+- Bug fix: Pressing <Enter> key instead [Search] button sends only Simple Search request. http://trac.osgeo.org/geonetwork/ticket/1041
+- Merge pull request #220 from ianwallen/Branch_a6a1b2af565d7e159c4a644e8c82475063912773
+- Merge pull request #221 from ianwallen/Fix_Issue_174
+- Fixed issue when the referer was null
+- Merge pull request #173 from ianwallen/Jetty-7.6.8
+- Fix issue 213 Fixed issues related to last commit (dcd363f2cb8cbb08a0113a370c0fcc506061aa8b)    - characterset issue with ita    - commited conflict info from nor
+- Fix bug edit linkresource service selection
+- Widgets / Editor / User defined frequency is not properly saved.
+- Update version to 2.10.1.
+- Fix for #206
+- Adding a temporal element in editor would produce an invalid record because suggestion checking for nested OR types was not coping with duplicate element names in the 19115/19139 element hierarchy (in this case gmd:extent).
+- Update version to 2.10.1-SNAPSHOT
+- Update version to 2.10.1-SNAPSHOT
+- Update version to 2.10.1-SNAPSHOT
 - Update version to 2.10.1-0
 - Update version to 2.10.1-0
 - Merge branch '2.10.x' of github.com:geonetwork/core-geonetwork into 2.10.x
@@ -23,6 +56,7 @@
 - Fix for issue when searching for "?" which was returning the following error. StringIndexOutOfBoundsException : String index out of range: -1
 - Added another fix where if we cannot get the language from the spring security then we can use the referer.
 - Fix for Issue #174 Retreived savedRequest from spring security and parse language out of the url.
+- Upgrade from Jetty 7.3.1 to Jetty 7.6.8 It seems to have fixes the issue with jsp pages not being compiled properly.
 - Re-Fix Issue #153 Apparently there may still be links which use the 2 char language code -i.e. "fr" which get redirected to "fre". In order for these links to work we need to allow for 2 to 3 chars for the language.
 - Merge pull request #161 from ianwallen/2.10.x
 - Merge pull request #163 from ianwallen/fix-Issue-158
