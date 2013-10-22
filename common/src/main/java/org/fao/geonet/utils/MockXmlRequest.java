@@ -1,6 +1,7 @@
 package org.fao.geonet.utils;
 
 import com.google.common.base.Predicate;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.jdom.Element;
 import org.springframework.http.HttpStatus;
@@ -10,8 +11,8 @@ import org.springframework.mock.http.client.MockClientHttpResponse;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.Callable;
 
 /**
  * An XmlRequest implementation for tests.
@@ -22,7 +23,9 @@ import java.util.Map;
  */
 public class MockXmlRequest extends XmlRequest {
 
-    private Map<Predicate<HttpRequestBase>, ClientHttpResponse> _mapping = new HashMap<Predicate<HttpRequestBase>, ClientHttpResponse>();
+    private Set<Predicate<HttpRequestBase>> _unaccessed = new HashSet<Predicate<HttpRequestBase>>();
+    private Map<Predicate<HttpRequestBase>, Callable<ClientHttpResponse>> _mapping = new LinkedHashMap<Predicate<HttpRequestBase>,
+            Callable<ClientHttpResponse>>();
 
     public MockXmlRequest(String host, int port, String protocol) {
         super(host, port, protocol, null);
@@ -31,9 +34,14 @@ public class MockXmlRequest extends XmlRequest {
     @Override
     protected ClientHttpResponse doExecute(HttpRequestBase httpMethod) throws IOException {
 
-        for (Map.Entry<Predicate<HttpRequestBase>, ClientHttpResponse> entry : _mapping.entrySet()) {
+        for (Map.Entry<Predicate<HttpRequestBase>, Callable<ClientHttpResponse>> entry : _mapping.entrySet()) {
             if (entry.getKey().apply(httpMethod)) {
-                return entry.getValue();
+                try {
+                    _unaccessed.remove(entry.getKey());
+                    return entry.getValue().call();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
@@ -58,6 +66,14 @@ public class MockXmlRequest extends XmlRequest {
         return new MockXmlRequestWithWhen(predicate);
     }
 
+    public List<String> getUnaccessedRequests() {
+        List<String> missed = new ArrayList<String>();
+        for (Predicate<HttpRequestBase> predicate : _unaccessed) {
+            missed.add(predicate.toString());
+        }
+        return missed;
+    }
+
     /**
      * The in-between object that provides the methods for completing a {@link MockXmlRequest} request mapping.
      */
@@ -80,15 +96,17 @@ public class MockXmlRequest extends XmlRequest {
             }
         }
 
-        public MockXmlRequest thenReturn(Element response) {
-            try {
-                return thenReturn(new MockClientHttpResponse(Xml.getString(response).getBytes("UTF-8"), HttpStatus.OK));
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
+        public MockXmlRequest thenReturn(final Element response) {
+                return thenReturn(new Callable<ClientHttpResponse>() {
+                    @Override
+                    public ClientHttpResponse call() throws Exception {
+                        return new MockClientHttpResponse(Xml.getString(response).getBytes("UTF-8"), HttpStatus.OK);
+                    }
+                });
         }
-        public MockXmlRequest thenReturn(ClientHttpResponse response) {
+        public MockXmlRequest thenReturn(Callable<ClientHttpResponse> response) {
             MockXmlRequest.this._mapping.put(_predicate, response);
+            MockXmlRequest.this._unaccessed.add(_predicate);
             return MockXmlRequest.this;
         }
 
@@ -97,31 +115,16 @@ public class MockXmlRequest extends XmlRequest {
     private static class PathMatchingPredicate implements Predicate<HttpRequestBase> {
 
         private final String _path;
-        private final String _query;
-
         public PathMatchingPredicate(String path) {
-            String[] parts = path.split("\\?");
-            this._path = parts[0];
-            if (parts.length == 2) {
-                this._query = parts[1];
-            } else {
-                this._query = "";
-            }
+          this._path = path;
         }
 
         @Override
         public boolean apply(@Nullable HttpRequestBase input) {
             final URI uri = input.getURI();
-            final boolean equalPath = uri.getPath().equalsIgnoreCase(_path);
-            final boolean equalQuery;
+            final boolean equalPath = uri.toString().equalsIgnoreCase(_path);
 
-            if (uri.getQuery() == null) {
-                equalQuery = "".equals(_query);
-            } else {
-                equalQuery = uri.getQuery().equalsIgnoreCase(_query);
-            }
-
-            return equalPath && equalQuery;
+            return input instanceof HttpGet && equalPath ;
         }
 
         @Override
@@ -132,16 +135,13 @@ public class MockXmlRequest extends XmlRequest {
             PathMatchingPredicate that = (PathMatchingPredicate) o;
 
             if (_path != null ? !_path.equals(that._path) : that._path != null) return false;
-            if (_query != null ? !_query.equals(that._query) : that._query != null) return false;
 
             return true;
         }
 
         @Override
         public int hashCode() {
-            int result = _path != null ? _path.hashCode() : 0;
-            result = 31 * result + (_query != null ? _query.hashCode() : 0);
-            return result;
+            return _path != null ? _path.hashCode() : 0;
         }
     }
 }

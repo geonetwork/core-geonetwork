@@ -205,11 +205,13 @@ public class ServiceManager {
 
 		String name = clas.getAttributeValue(ConfigFile.Class.Attr.NAME);
 
-		if (name == null)
-			throw new IllegalArgumentException("Missing 'name' attrib in 'class' element");
+		if (name == null) {
+            throw new IllegalArgumentException("Missing 'name' attrib in 'class' element");
+        }
 
-		if (name.startsWith("."))
-			name = pack + name;
+		if (name.startsWith(".")) {
+            name = pack + name;
+        }
 
 		//--- create instance
 
@@ -374,11 +376,10 @@ public class ServiceManager {
 
 		try
 		{
-			while(true)
-			{
+			while (true) {
 				String srvName = req.getService();
 
-				info("Dispatching : " +srvName);
+				info("Dispatching : " + srvName);
 				logParameters(req.getParams());
 
 				ArrayList<ServiceInfo> al = htServices.get(srvName);
@@ -396,8 +397,7 @@ public class ServiceManager {
 					}
 				}
 
-				if (srvInfo == null)
-				{
+				if (srvInfo == null) {
 					error("Service not matched in list : " +srvName);
 					throw new ServiceNotMatchedEx(srvName);
 				}
@@ -428,14 +428,11 @@ public class ServiceManager {
 				OutputPage outPage = srvInfo.findOutputPage(response);
 				String forward = dispatchOutput(req, context, response, outPage, srvInfo.isCacheSet());
 
-				if (forward == null)
-				{
-					info(" -> dispatch ended for : " +srvName);
+				if (forward == null) {
+					info(" -> dispatch ended for : " + srvName);
 					return;
-				}
-				else
-				{
-					info(" -> forwarding to : " +forward);
+				} else {
+					info(" -> forwarding to : " + forward);
 
                     // Use servlet redirect for user.login and user.logout services.
                     // TODO: Make redirect configurable for services in jeeves

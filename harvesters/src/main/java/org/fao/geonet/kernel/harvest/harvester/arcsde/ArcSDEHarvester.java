@@ -110,7 +110,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	}
 
 	@Override
-	protected Element getResult() {
+	public Element getResult() {
 		Element res  = new Element("result");
 
 		if (result != null) {

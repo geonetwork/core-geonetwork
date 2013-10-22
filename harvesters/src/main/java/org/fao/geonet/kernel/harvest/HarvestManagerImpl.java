@@ -155,8 +155,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 		for (AbstractHarvester ah : hmHarvesters.values()) {
 	        try {
                 ah.shutdown();
-            }
-            catch (SchedulerException e) {
+            } catch (SchedulerException e) {
                Log.error(Geonet.HARVEST_MAN, "Error shutting down"+ah.getID(), e);
             }
 		}

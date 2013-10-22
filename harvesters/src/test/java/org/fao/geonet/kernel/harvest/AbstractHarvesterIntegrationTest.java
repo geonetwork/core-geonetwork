@@ -21,7 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
  * Time: 4:02 PM
  */
 @ContextConfiguration(inheritLocations = true, locations = "classpath:harvesters-repository-test-context.xml")
-public abstract class AbstractHarvesterIntegrationTest extends AbstractCoreIntegrationTest {
+public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvesterServiceIntegrationTest {
     @Autowired
     MockRequestFactoryGeonet _requestFactory;
 
@@ -44,39 +44,17 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractCoreInteg
 
         Logger log = Log.createLogger(Geonet.CSW_HARVEST);
         _harvester.doHarvest(log);
+        assertExpectedResult(_harvester.getResult());
+
+        _requestFactory.assertAllRequestsCalled();
+
+
     }
+
+    protected abstract void assertExpectedResult(Element result);
     protected abstract void mockHttpRequests(MockRequestFactoryGeonet bean);
     protected abstract void customizeParams(Element params);
 
     protected abstract AbstractHarvester getHarvesterUnderTest();
 
-    /**
-     * Create a harvester configuration that contains the common elements of a configuration.  After calling this method the
-     * harvester specific elements need to be added.
-     *
-     * @param type the type of the harvester (for the type attributes and elements).
-     *
-     * @return a basic configuration.
-     */
-    protected Element createHarvesterParams(String type) {
-        return new Element("node")
-                .setAttribute("id", "1")
-                .setAttribute("type", type)
-                .setAttribute("owner", "1")
-                .addContent(new Element("site")
-                        .addContent(new Element("name").setText("testHarvester"))
-                        .addContent(new Element("uuid").setText("testHarvesetUuid"))
-                        .addContent(new Element("icon").setText("icon.png")))
-                .addContent(new Element("content")
-                        .addContent(new Element("validate").setText("true"))
-                        .addContent(new Element("importxsl").setText("none")))
-                .addContent(new Element("options")
-                        .addContent(new Element("every").setText("0 0 5 ? * MON"))
-                        .addContent(new Element("oneRunOnly").setText("false"))
-                        .addContent(new Element("status").setText("inactive")))
-                .addContent(new Element("privileges")
-                        .addContent(new Element("group")
-                                .setAttribute("id", "" + ReservedGroup.all.getId())
-                                .addContent(new Element("operation").setAttribute("name", ReservedOperation.view.name()))));
-    }
 }

@@ -42,7 +42,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class AbstractHttpRequest {
-    protected final GeonetHttpRequestFactory client;
+    protected final GeonetHttpRequestFactory requestFactory;
     protected String host;
     protected int port;
     protected String protocol;
@@ -63,7 +63,7 @@ public class AbstractHttpRequest {
     public AbstractHttpRequest(String protocol, String host, int port, GeonetHttpRequestFactory requestFactory) {
         this.port = port;
         this.protocol = protocol;
-        client = requestFactory;
+        this.requestFactory = requestFactory;
         this.host = host;
     }
 
@@ -144,8 +144,9 @@ public class AbstractHttpRequest {
     }
 
     public void addParam(String name, Object value) {
-        if (value != null)
+        if (value != null) {
             alSimpleParams.add(new BasicNameValuePair(name, value.toString()));
+        }
 
         method = Method.GET;
     }
@@ -195,7 +196,7 @@ public class AbstractHttpRequest {
     }
 
     protected ClientHttpResponse doExecute(final HttpRequestBase httpMethod) throws IOException {
-        return client.execute(httpMethod, new Function<HttpClientBuilder, Void>() {
+        return requestFactory.execute(httpMethod, new Function<HttpClientBuilder, Void>() {
             @Nullable
             @Override
             public Void apply(@Nullable HttpClientBuilder input) {
@@ -255,7 +256,9 @@ public class AbstractHttpRequest {
                 }
                 b.append(alSimpleParam.getName()).append('=').append(alSimpleParam.getValue());
             }
-            query = b.toString();
+            if (b.length() > 0) {
+                queryString = b.toString();
+            }
         }
 
         try {

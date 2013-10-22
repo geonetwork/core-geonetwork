@@ -206,7 +206,7 @@ public class Geonet20Harvester extends AbstractHarvester
 	//---
 	//---------------------------------------------------------------------------
 
-	protected Element getResult() {
+    public Element getResult() {
 		return new Element("result"); // HarvestHistory not supported for this 
 		                              // old harvester
 	}

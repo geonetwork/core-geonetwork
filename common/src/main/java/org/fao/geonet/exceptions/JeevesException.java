@@ -39,7 +39,7 @@ public abstract class JeevesException extends RuntimeException
 
 	public JeevesException(String message, Object object)
 	{
-		super(message);
+		super(message, object instanceof Throwable ? (Throwable) object : null);
 
 		this.object = object;
 		this.code   = -1;

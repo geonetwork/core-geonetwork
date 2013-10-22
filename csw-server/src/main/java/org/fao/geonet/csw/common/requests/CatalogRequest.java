@@ -53,8 +53,7 @@ import java.util.List;
 
 //=============================================================================
 
-public abstract class CatalogRequest
-{
+public abstract class CatalogRequest {
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -148,10 +147,16 @@ public abstract class CatalogRequest
 
     //---------------------------------------------------------------------------
 
-    public Element execute() throws Exception
-	{
+    public Element execute() throws Exception {
+        if (getMethod() == Method.GET) {
+            client.clearParams();
+            setupGetParams();
+        } else {
+            final Element postParams = getPostParams();
+            client.setRequest(postParams);
+        }
         Element response = client.execute();
-		//--- raises an exception if the case
+        //--- raises an exception if the case
 		CatalogException.unmarshal(response);
 
 		return response;
@@ -351,14 +356,8 @@ public abstract class CatalogRequest
 
 	private final XmlRequest client;
 
-    private ArrayList<NameValuePair> alGetParams;
-
     // Parameters to not take into account in GetRequest
 	private static final List<String> excludedParameters = Arrays.asList("", "request", "version", "service");
-	
-	//--- transient vars
-
-	private String postData;
 }
 
 //=============================================================================

@@ -18,9 +18,6 @@ import static org.junit.Assert.*;
 
 @Transactional
 public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
-    interface Runnable {
-        void run() throws Exception;
-    }
 
     @Autowired
     HarvesterSettingRepository _repo;
@@ -84,13 +81,29 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
         HarvesterSetting child2 = _repo.save(newSetting().setParent(parent));
         _repo.save(newSetting().setParent(parent));
 
-        List<HarvesterSetting> found = _repo.findByPath("id:" + child2.getId());
+        List<HarvesterSetting> found = _repo.findAllByPath("id:" + child2.getId());
         assertEquals(1, found.size());
         assertSameContents(child2, found.get(0), _skipProps);
 
-        found = _repo.findByPath("id:" + parent.getId());
+        found = _repo.findAllByPath("id:" + parent.getId());
         assertEquals(1, found.size());
         assertSameContents(parent, found.get(0), _skipProps);
+    }
+
+    @Test
+    public void testFindByRootByPath() throws Exception {
+
+        HarvesterSetting parent = _repo.save(newSetting());
+        final HarvesterSetting parent2 = _repo.save(newSetting());
+        _repo.save(newSetting().setParent(parent));
+
+        List<HarvesterSetting> found = _repo.findAllByPath(parent.getName());
+        assertEquals(1, found.size());
+        assertSameContents(parent, found.get(0), _skipProps);
+
+        found = _repo.findAllByPath(parent2.getName());
+        assertEquals(1, found.size());
+        assertSameContents(parent2, found.get(0), _skipProps);
     }
 
     @Test
@@ -99,7 +112,7 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
         HarvesterSetting child2 = _repo.save(newSetting().setParent(parent));
         _repo.save(newSetting().setParent(parent));
 
-        List<HarvesterSetting> found = _repo.findByPath("id:" + Integer.MAX_VALUE + "/id:" + child2.getId());
+        List<HarvesterSetting> found = _repo.findAllByPath("id:" + Integer.MAX_VALUE + "/id:" + child2.getId());
         assertEquals(1, found.size());
         assertSameContents(child2, found.get(0), _skipProps);
     }
@@ -112,12 +125,12 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
         HarvesterSetting child4 = _repo.save(newSetting().setParent(child3).setName("4"));
 
         String path = SEPARATOR + child3.getName() + SEPARATOR + child4.getName();
-        List<HarvesterSetting> found = _repo.findByPath(path);
+        List<HarvesterSetting> found = _repo.findAllByPath(path);
         assertEquals(1, found.size());
         assertSameContents(child4, found.get(0), _skipProps);
 
         String path2 = SEPARATOR + child2.getName() + SEPARATOR + child4.getName();
-        List<HarvesterSetting> found2 = _repo.findByPath(path2);
+        List<HarvesterSetting> found2 = _repo.findAllByPath(path2);
         assertEquals(0, found2.size());
     }
 
@@ -128,7 +141,7 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
         HarvesterSetting child3 = _repo.save(newSetting().setParent(parent).setName("2"));
 
         String path = child3.getName();
-        List<HarvesterSetting> found = _repo.findByPath(path);
+        List<HarvesterSetting> found = _repo.findAllByPath(path);
         assertEquals(2, found.size());
     }
 
@@ -140,12 +153,12 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
         HarvesterSetting child4 = _repo.save(newSetting().setParent(child3).setName("4"));
 
         String path = ID_PREFIX + child3.getId() + SEPARATOR + child4.getName();
-        List<HarvesterSetting> found = _repo.findByPath(path);
+        List<HarvesterSetting> found = _repo.findAllByPath(path);
         assertEquals(1, found.size());
         assertSameContents(child4, found.get(0), _skipProps);
 
         String path2 = SEPARATOR + child2.getName() + SEPARATOR + child4.getName();
-        List<HarvesterSetting> found2 = _repo.findByPath(path2);
+        List<HarvesterSetting> found2 = _repo.findAllByPath(path2);
         assertEquals(0, found2.size());
     }
 

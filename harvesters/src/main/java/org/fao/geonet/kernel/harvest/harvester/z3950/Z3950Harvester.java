@@ -134,7 +134,7 @@ public class Z3950Harvester extends AbstractHarvester {
 
 	}
 
-	protected Element getResult() {
+    public Element getResult() {
 		Element res = new Element("result");
 		if (serverResults.getNumberOfResults() != 0) {
             HarvestResult result = new HarvestResult();

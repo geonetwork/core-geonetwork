@@ -66,8 +66,9 @@ public class XmlRequest extends AbstractHttpRequest {
 
 		Element response = executeAndReadResponse(httpMethod);
 
-		if (useSOAP)
-			response = soapUnembed(response);
+		if (useSOAP) {
+            response = soapUnembed(response);
+        }
 
 		return response;
 	}

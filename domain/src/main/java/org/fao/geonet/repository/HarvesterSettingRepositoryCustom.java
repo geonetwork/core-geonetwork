@@ -41,7 +41,7 @@ public interface HarvesterSettingRepositoryCustom {
      * @param pathToSetting the path to search for.
      * @return all settings on the given path.
      */
-    List<HarvesterSetting> findByPath(String pathToSetting);
+    List<HarvesterSetting> findAllByPath(String pathToSetting);
 
     /**
      * Get the first setting with the given path.

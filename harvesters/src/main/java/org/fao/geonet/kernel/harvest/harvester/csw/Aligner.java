@@ -35,6 +35,7 @@ import org.fao.geonet.csw.common.requests.GetRecordByIdRequest;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
@@ -180,30 +181,42 @@ public class Aligner extends BaseAligner
 	{
 		Element md = retrieveMetadata(ri.uuid);
 
-		if (md == null)
-			return;
+		if (md == null) {
+            return;
+        }
 
 		String schema = dataMan.autodetectSchema(md, null);
 
-		if (schema == null)
-		{
-            if(log.isDebugEnabled())
-                log.debug("  - Metadata skipped due to unknown schema. uuid:"+ ri.uuid);
+		if (schema == null) {
+            if(log.isDebugEnabled()) {
+                log.debug("  - Metadata skipped due to unknown schema. uuid:" + ri.uuid);
+            }
 			result.unknownSchema++;
 
 			return;
 		}
 
-        if(log.isDebugEnabled())
-            log.debug("  - Adding metadata with remote uuid:"+ ri.uuid + " schema:" + schema);
+        if (log.isDebugEnabled()) {
+            log.debug("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);
+        }
 
         //
         // insert metadata
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
+        final int ownerId;
+        if (params.ownerId == null) {
+            if (context.getUserSession() != null) {
+                ownerId = context.getUserSession().getUserIdAsInt();
+            } else {
+                ownerId = 1;
+            }
+        } else {
+            ownerId = Integer.parseInt(params.ownerId);
+        }
         String id = dataMan.insertMetadata(context, schema, md, ri.uuid,
-                Integer.parseInt(params.ownerId), group, params.uuid,
+                ownerId, group, params.uuid,
                          isTemplate, docType, title, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -314,19 +327,22 @@ public class Aligner extends BaseAligner
 
 		try
 		{
-            if(log.isDebugEnabled())
-                log.debug("Getting record from : "+ request.getHost() +" (uuid:"+ uuid +")");
+            if(log.isDebugEnabled()) {
+                log.debug("Getting record from : " + request.getHost() + " (uuid:" + uuid + ")");
+            }
 			Element response = request.execute();
-            if(log.isDebugEnabled())
-                log.debug("Record got:\n"+Xml.getString(response));
+            if(log.isDebugEnabled()) {
+                log.debug("Record got:\n" + Xml.getString(response));
+            }
 
 			@SuppressWarnings("unchecked")
             List<Element> list = response.getChildren();
 
 			//--- maybe the metadata has been removed
 
-			if (list.size() == 0)
-				return null;
+			if (list.size() == 0) {
+                return null;
+            }
 
 			response = list.get(0);
 			response = (Element) response.detach();

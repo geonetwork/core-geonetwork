@@ -247,12 +247,12 @@ class Harvester
             List<Element> list = results.getChildren();
 			int counter = 0;
 
-			for (Element record :list)
-			{
+			for (Element record :list) {
 				RecordInfo recInfo= getRecordInfo((Element)record.clone());
 
-				if (recInfo != null)
-					records.add(recInfo);
+				if (recInfo != null) {
+                    records.add(recInfo);
+                }
 
 				counter++;
 			}

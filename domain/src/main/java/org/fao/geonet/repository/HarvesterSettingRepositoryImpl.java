@@ -25,7 +25,7 @@ public class HarvesterSettingRepositoryImpl implements HarvesterSettingRepositor
     private EntityManager _entityManager;
 
     @Override
-    public List<HarvesterSetting> findByPath(String pathToSetting) {
+    public List<HarvesterSetting> findAllByPath(String pathToSetting) {
         StringTokenizer stringTokenizer = new StringTokenizer(pathToSetting, SEPARATOR);
 
         int countTokens = stringTokenizer.countTokens();
@@ -55,6 +55,13 @@ public class HarvesterSettingRepositoryImpl implements HarvesterSettingRepositor
             }
         } else {
             currentSettings = findRoots();
+            for (HarvesterSetting currentSetting : currentSettings) {
+                if (currentSetting.getName().equals(firstSegment)) {
+                    pathSegments.remove(0);
+                    currentSettings = Arrays.asList(currentSetting);
+                    break;
+                }
+            }
         }
 
         for (String childName : pathSegments) {
@@ -70,7 +77,7 @@ public class HarvesterSettingRepositoryImpl implements HarvesterSettingRepositor
 
     @Override
     public HarvesterSetting findOneByPath(String pathToSetting) {
-        List<HarvesterSetting> settings = findByPath(pathToSetting);
+        List<HarvesterSetting> settings = findAllByPath(pathToSetting);
         if (settings.isEmpty()) {
             return null;
         } else {

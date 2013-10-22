@@ -719,10 +719,11 @@ public abstract class AbstractHarvester extends BaseAligner {
     }
 
     /**
+     * Get the results of the last harvest.
      *
      * @return
      */
-    protected Element getResult() {
+    public Element getResult() {
         Element res  = new Element("result");
         if (result != null) {
             add(res, "added", result.addedMetadata);
