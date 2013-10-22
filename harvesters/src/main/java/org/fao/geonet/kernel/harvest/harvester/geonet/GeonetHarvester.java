@@ -32,12 +32,9 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.repository.SourceRepository;
 import org.jdom.Element;
 
-import java.sql.SQLException;
-import java.util.UUID;
-
 //=============================================================================
 
-public class GeonetHarvester extends AbstractHarvester
+public class GeonetHarvester extends AbstractHarvester<HarvestResult>
 {
 	public static final String TYPE = "geonetwork";
 
@@ -183,7 +180,7 @@ public class GeonetHarvester extends AbstractHarvester
 	public void doHarvest(Logger log) throws Exception
 	{
 		Harvester h = new Harvester(log, context, params);
-		result = h.harvest();
+		result = h.harvest(log);
 	}
 
 	//---------------------------------------------------------------------------

@@ -23,31 +23,36 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
+import java.net.URL;
+import java.net.URLDecoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.net.URL;
-import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 
 //=============================================================================
 
-class Harvester
+class Harvester implements IHarvester<HarvestResult>
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -69,20 +74,49 @@ class Harvester
 	//---
 	//---------------------------------------------------------------------------
 
-	public HarvestResult harvest() throws Exception
+	public HarvestResult harvest(Logger log) throws Exception
 	{
 
+	    this.log = log;
 		//--- perform all searches
 
 		XmlRequest request = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.baseUrl+"/rest/find/document"));
 
 		Set<RecordInfo> records = new HashSet<RecordInfo>();
 
-		for(Search s : params.getSearches())
-			records.addAll(search(request, s));
 
-		if (params.isSearchEmpty())
-			records.addAll(search(request, Search.createEmptySearch()));
+        for (Search s : params.getSearches()) {
+            try {
+                records.addAll(search(request, s));
+            } catch (Exception t) {
+                log.error("Unknown error trying to harvest");
+                log.error(t.getMessage());
+                t.printStackTrace();
+                errors.add(new HarvestError(t, log));
+            } catch (Throwable t) {
+                log.fatal("Something unknown and terrible happened while harvesting");
+                log.fatal(t.getMessage());
+                t.printStackTrace();
+                errors.add(new HarvestError(t, log));
+            }
+        }
+
+        if (params.isSearchEmpty()) {
+            try {
+                log.debug("Doing an empty search");
+                records.addAll(search(request, Search.createEmptySearch()));
+            } catch(Exception t) {
+                log.error("Unknown error trying to harvest");
+                log.error(t.getMessage());
+                t.printStackTrace();
+                errors.add(new HarvestError(t, log));
+            } catch(Throwable t) {
+                log.fatal("Something unknown and terrible happened while harvesting");
+                log.fatal(t.getMessage());
+                t.printStackTrace();
+                errors.add(new HarvestError(t, log));
+            }
+        }
 
 		log.info("Total records processed in all searches :"+ records.size());
 
@@ -90,7 +124,7 @@ class Harvester
 
 		Aligner aligner = new Aligner(log, context, params);
 
-		return aligner.align(records);
+		return aligner.align(records, errors);
 	}
 
 	//---------------------------------------------------------------------------
@@ -137,22 +171,29 @@ class Harvester
 
 	//---------------------------------------------------------------------------
 
-	private Element doSearch(XmlRequest request) throws Exception
-	{
-		try {
-			log.info("Searching on : "+ params.name);
-			Element response = request.execute();
-      if (log.isDebugEnabled()) {
-      	log.debug("Sent request "+request.getSentData());
-				log.debug("Search results:\n"+Xml.getString(response));
-			}
-			return response;
-		} catch(Exception e) {
-			log.warning("Raised exception when searching : "+ e);
-			e.printStackTrace();
-			throw new OperationAbortedEx("Raised exception when searching: " + e.getMessage(), e);
-		}
-	}
+    private Element doSearch(XmlRequest request) throws OperationAbortedEx {
+        try {
+            log.info("Searching on : " + params.name);
+            Element response = request.execute();
+            if (log.isDebugEnabled()) {
+                log.debug("Sent request " + request.getSentData());
+                log.debug("Search results:\n" + Xml.getString(response));
+            }
+            return response;
+        } catch (BadSoapResponseEx e) {
+            errors.add(new HarvestError(e, log));
+            throw new OperationAbortedEx("Raised exception when searching: "
+                    + e.getMessage(), e);
+        } catch (BadXmlResponseEx e) {
+            errors.add(new HarvestError(e, log));
+            throw new OperationAbortedEx("Raised exception when searching: "
+                    + e.getMessage(), e);
+        } catch (IOException e) {
+            errors.add(new HarvestError(e, log));
+            throw new OperationAbortedEx("Raised exception when searching: "
+                    + e.getMessage(), e);
+        }
+    }
 
 	//---------------------------------------------------------------------------
 
@@ -186,15 +227,24 @@ class Harvester
 			if (log.isDebugEnabled())
 				log.debug("getRecordInfo: adding "+identif+" with modification date "+modified);
       return new RecordInfo(identif, modified);
-		} catch (Exception e) {
-      log.warning("Skipped record not in supported format : "+ Xml.getString(record));
-			e.printStackTrace();
-    }
+        } catch (UnsupportedEncodingException e) {
+            HarvestError harvestError = new HarvestError(e, log);
+            harvestError.setDescription(harvestError.getDescription() + "\n record: " + Xml.getString(record));
+            errors.add(harvestError);
+        } catch (ParseException e) {
+            HarvestError harvestError = new HarvestError(e, log);
+            harvestError.setDescription(harvestError.getDescription() + "\n record: " + Xml.getString(record));
+            errors.add(new HarvestError(e, log));
+        }
 
 		// we get here if we couldn't get the UUID or date modified
 		return null;
 
 	}
+	
+    public List<HarvestError> getErrors() {
+        return errors;
+    }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -205,8 +255,11 @@ class Harvester
 	private GeoPRESTParams params;
 	private ServiceContext context;
 	private SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+    /**
+     * Contains a list of accumulated errors during the executing of this harvest.
+     */
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
 }
 
-//=============================================================================
-
+// =============================================================================
 

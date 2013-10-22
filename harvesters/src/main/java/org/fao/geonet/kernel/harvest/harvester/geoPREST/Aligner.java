@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -41,6 +42,7 @@ import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Set;
 
 //=============================================================================
@@ -74,8 +76,8 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public HarvestResult align(Set<RecordInfo> records) throws Exception {
-		log.info("Start of alignment for : "+ params.name);
+
+	public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception {		log.info("Start of alignment for : "+ params.name);
 
 		//-----------------------------------------------------------------------
 		//--- retrieve all local categories and groups
@@ -108,12 +110,18 @@ public class Aligner extends BaseAligner
 		//--- insert/update new metadata
 
 		for (RecordInfo ri : records) {
-			result.totalMetadata++;
-
-			String id = dataMan.getMetadataId(ri.uuid);
-
-			if (id == null)	addMetadata(ri);
-			else				updateMetadata(ri, id);
+		    try {
+    			String id = dataMan.getMetadataId(ri.uuid);
+    
+    			if (id == null)	addMetadata(ri);
+    			else				updateMetadata(ri, id);
+                result.totalMetadata++;
+                
+		    }catch (Throwable t) {
+                errors.add(new HarvestError(t, log));
+                log.error("Unable to process record from csw (" + this.params.name + ")");
+                log.error("   Record failed: " + ri.uuid); 
+		    }
 		}
 
 		log.info("End of alignment for : "+ params.name);

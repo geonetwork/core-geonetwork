@@ -24,9 +24,6 @@
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Logger;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.repository.SourceRepository;
@@ -39,7 +36,7 @@ import java.util.UUID;
 
 //=============================================================================
 
-public class OaiPmhHarvester extends AbstractHarvester
+public class OaiPmhHarvester extends AbstractHarvester<HarvestResult>
 {
 
 	//--------------------------------------------------------------------------
@@ -151,7 +148,7 @@ public class OaiPmhHarvester extends AbstractHarvester
 	public void doHarvest(Logger log) throws Exception
 	{
 		Harvester h = new Harvester(log, context, params);
-		result = h.harvest();
+		result = h.harvest(log);
 	}
 
 	//---------------------------------------------------------------------------

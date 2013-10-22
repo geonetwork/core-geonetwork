@@ -51,8 +51,10 @@ import java.util.UUID;
  * @author heikki doeleman
  *
  */
-public class LocalFilesystemHarvester extends AbstractHarvester {
+public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 	
+	//FIXME Put on a different file?
+	private BaseAligner aligner = new BaseAligner() {};
 	private LocalFilesystemParams params;
 
 	

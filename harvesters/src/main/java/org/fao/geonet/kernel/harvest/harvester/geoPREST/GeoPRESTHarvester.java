@@ -39,7 +39,7 @@ import java.util.UUID;
 
 //=============================================================================
 
-public class GeoPRESTHarvester extends AbstractHarvester
+public class GeoPRESTHarvester extends AbstractHarvester<HarvestResult>
 {
 
 	//--------------------------------------------------------------------------
@@ -143,7 +143,7 @@ public class GeoPRESTHarvester extends AbstractHarvester
 	public void doHarvest(Logger log) throws Exception
 	{
 		Harvester h = new Harvester(log, context, params);
-		result = h.harvest();
+		result = h.harvest(log);
 	}
 
 	//---------------------------------------------------------------------------

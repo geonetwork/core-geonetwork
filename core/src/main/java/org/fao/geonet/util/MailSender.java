@@ -30,9 +30,14 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
 import javax.mail.internet.InternetAddress;
+
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * see {@link MailUtil}
+ *  *
+ */
+@Deprecated 
 public class MailSender extends Thread
 {
 	Logger      _logger;
@@ -73,8 +78,9 @@ public class MailSender extends Thread
     }
 
     /**
-     * TODO Javadoc.
-     *
+     * Better use through MailUtil, as it takes the settings directly from the
+     * BBDD.
+     * 
      * @param server
      * @param port
      * @param username TODO
@@ -100,8 +106,9 @@ public class MailSender extends Thread
 	}
 
     /**
-     * TODO Javadoc.
-     *
+     * Better use through MailUtil, as it takes the settings directly from the
+     * BBDD.
+     * 
      * @param server
      * @param port
      * @param from
@@ -146,10 +153,12 @@ public class MailSender extends Thread
 
 	private void logEx(Exception e)
 	{
+		if(_logger != null) {
 		_logger.error("Unable to mail feedback");
 		_logger.error("  Exception : " + e);
 		_logger.error("  Message   : " + e.getMessage());
 		_logger.error("  Stack     : " + Util.getStackTrace(e));
+		}
 	}
 };
 

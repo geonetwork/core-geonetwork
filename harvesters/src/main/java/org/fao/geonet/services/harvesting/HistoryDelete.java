@@ -31,7 +31,6 @@ public class HistoryDelete implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		@SuppressWarnings("unchecked")
         Collection<Integer> ids = Collections2.transform(params.getChildren("id"), new Function<Object, Integer>() {
             @Nullable
             @Override
@@ -39,6 +38,8 @@ public class HistoryDelete implements Service
                 return Integer.valueOf(((Element)input).getText());
             }
         });
+
+        List<Element> files = params.getChildren("file");
 
         int nrRecs = context.getBean(HarvestHistoryRepository.class).deleteAllById(ids);
 

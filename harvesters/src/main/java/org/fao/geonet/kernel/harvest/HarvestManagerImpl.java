@@ -116,6 +116,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
                 }
             }
         }
+
+        ah.initializeLog();
     }
 
     /**

@@ -28,13 +28,14 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.jdom.Element;
 
 import java.sql.SQLException;
 
 //=============================================================================
 
-public class Z3950ConfigHarvester extends AbstractHarvester
+public class Z3950ConfigHarvester extends AbstractHarvester<HarvestResult>
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -145,7 +146,7 @@ public class Z3950ConfigHarvester extends AbstractHarvester
 	public void doHarvest(Logger log) throws Exception
 	{
 		Harvester h = new Harvester(log, context, params);
-		result = h.harvest();
+		result = h.harvest(log);
 	}
 
 	//---------------------------------------------------------------------------

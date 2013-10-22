@@ -45,7 +45,8 @@ import java.util.UUID;
 import static org.quartz.JobBuilder.newJob;
 
 /**
- * TODO javadoc.
+ * Params to configure a harvester. It contains things like 
+ * url, username, password,...
  *
  */
 public abstract class AbstractParams {

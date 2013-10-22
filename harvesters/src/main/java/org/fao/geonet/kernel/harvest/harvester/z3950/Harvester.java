@@ -23,7 +23,9 @@ package org.fao.geonet.kernel.harvest.harvester.z3950;
 
 import com.google.common.base.Optional;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
@@ -35,7 +37,10 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
+import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -52,8 +57,7 @@ import java.util.*;
 
 //=============================================================================
 
-class Harvester extends BaseAligner {
-
+class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 	private UUIDMapper localUuids;
 	private final DataManager dataMan;
 	private final SearchManager searchMan;
@@ -82,11 +86,12 @@ class Harvester extends BaseAligner {
 	// ---
 	// ---------------------------------------------------------------------------
 
-	public Z3950ServerResults harvest() throws Exception {
+	public Z3950ServerResults harvest(Logger log) throws Exception {
 		Set<String> newUuids = new HashSet<String>();
 
 		int groupSize = 10;
 
+		this.log = log;
 		log.info("Retrieving remote metadata information:" + params.uuid);
 
 		Z3950ServerResults serverResults = new Z3950ServerResults();
@@ -97,7 +102,7 @@ class Harvester extends BaseAligner {
 		// --- remove old metadata
 		for (String uuid : localUuids.getUUIDs()) {
 			String id = localUuids.getID(uuid);
-            if(log.isDebugEnabled()) log.debug("  - Removing old metadata before update with id: " + id);
+            if(this.log.isDebugEnabled()) log.debug("  - Removing old metadata before update with id: " + id);
 			dataMan.deleteMetadataGroup(context, id);
 			serverResults.locallyRemoved++;
 		}
@@ -255,7 +260,10 @@ class Harvester extends BaseAligner {
 						md = Xml.transform(md, thisXslt);
                         if(log.isDebugEnabled()) log.debug("After transform: "+Xml.getString(md));
 					} catch (Exception e) {
-						System.out.println("Cannot transform XML, ignoring. Error was: "+e.getMessage());
+					    HarvestError error = new HarvestError(e, log);
+					    error.setDescription("Cannot transform XML, ignoring. Error was: "+e.getMessage());
+						this.errors.add(error);
+						error.printLog(log);
 						result.badFormat++;
 						continue; // skip this one
 					}
@@ -273,8 +281,10 @@ class Harvester extends BaseAligner {
 				try {
 					uuid = dataMan.extractUUID(schema, md);
 				} catch (Exception e) {
-					log.error("Unable to extract UUID: "+e.getMessage());
-					e.printStackTrace();
+                    HarvestError error = new HarvestError(e, log);
+                    error.setDescription("Unable to extract UUID. " + e.getMessage());
+                    this.errors.add(error);
+                    error.printLog(log);
 				}
 
 				if (uuid == null || uuid.equals("")) {
@@ -316,8 +326,10 @@ class Harvester extends BaseAligner {
 
                 }
                 catch (Exception e) {
-					log.error("Unable to insert metadata "+e.getMessage());
-					e.printStackTrace();
+                    HarvestError error = new HarvestError(e, log);
+                    error.setDescription("Unable to insert metadata. "+e.getMessage());
+                    this.errors.add(error);
+                    error.printLog(log);
 					result.couldNotInsert++;
 					continue;
 				}
@@ -366,4 +378,12 @@ class Harvester extends BaseAligner {
 	private ServiceContext context;
 	private CategoryMapper localCateg;
 	private GroupMapper localGroups;
+    /**
+     * Contains a list of accumulated errors during the executing of this harvest.
+     */
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
+	@Override
+	public List<HarvestError> getErrors() {
+		return errors;
+	}
 }

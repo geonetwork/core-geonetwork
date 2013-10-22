@@ -87,7 +87,7 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template match="gmx:FileName">
+	<xsl:template match="gmx:FileName[name(..)!='gmd:contactInstructions']">
 		<xsl:copy>
 			<xsl:attribute name="src">
 				<xsl:choose>

@@ -54,7 +54,7 @@ function init_OK(data)
 		alert(loader.getText('noEditors'));
 	else
 		for (var i=0; i<data.length; i++)
-			view.addSourceUser(data[i].id, data[i].surname +' '+ data[i].name);				
+			view.addSourceUser(data[i].id, data[i].surname +' '+ data[i].name +' ('+ data[i].username +')');
 }
 
 //=====================================================================================

@@ -379,7 +379,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.versioningAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         this.categoryAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         this.deleteAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
-        this.duplicateAction.setDisabled(!isEditable || isReadOnly);
+        this.duplicateAction.setDisabled(isReadOnly);
         this.createChildAction.setDisabled(!isEditable || isReadOnly);
 
         if (this.ratingWidget) {

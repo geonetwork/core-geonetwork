@@ -39,7 +39,7 @@ import java.util.UUID;
 
 //=============================================================================
 
-public class WfsFeaturesHarvester extends AbstractHarvester
+public class WfsFeaturesHarvester extends AbstractHarvester<HarvestResult>
 {
 
 	//--------------------------------------------------------------------------
@@ -144,7 +144,7 @@ public class WfsFeaturesHarvester extends AbstractHarvester
 	{
 
 		Harvester h = new Harvester(log, context, params);
-		result = h.harvest();
+		result = h.harvest(log);
 	}
 
 	//---------------------------------------------------------------------------

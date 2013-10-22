@@ -38,7 +38,7 @@ import java.util.UUID;
 
 //=============================================================================
 
-public class WebDavHarvester extends AbstractHarvester {
+public class WebDavHarvester extends AbstractHarvester<HarvestResult> {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -114,7 +114,7 @@ public class WebDavHarvester extends AbstractHarvester {
     public void doHarvest(Logger log) throws Exception {
 		log.info("WebDav doHarvest start");
 		Harvester h = new Harvester(log, context, params);
-		result = h.harvest();
+		result = h.harvest(log);
 		log.info("WebDav doHarvest end");
 	}
 

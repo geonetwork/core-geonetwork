@@ -23,6 +23,13 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
+import java.io.File;
+import java.sql.SQLException;
+import java.util.UUID;
+
+import jeeves.exceptions.BadInputEx;
+import jeeves.interfaces.Logger;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Source;
@@ -33,14 +40,10 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
-import java.io.File;
-import java.sql.SQLException;
-import java.util.UUID;
-
 /**
  *  Harvest metadata from other catalogues using the CSW protocol
  */
-public class CswHarvester extends AbstractHarvester {
+public class CswHarvester extends AbstractHarvester<HarvestResult> {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -181,7 +184,7 @@ public class CswHarvester extends AbstractHarvester {
      */
     public void doHarvest(Logger log) throws Exception {
 		Harvester h = new Harvester(log, context, params);
-		this.result = h.harvest();
+		result = h.harvest(log);
 	}
 
 	//---------------------------------------------------------------------------

@@ -112,7 +112,7 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public HarvestResult align(Set<RecordInfo> records) throws Exception
+	public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception
 	{
 		log.info("Start of alignment for : "+ params.name);
 

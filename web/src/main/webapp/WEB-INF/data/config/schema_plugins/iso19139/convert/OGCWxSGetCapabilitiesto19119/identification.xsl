@@ -243,6 +243,17 @@
 					</xsl:choose>
 				</MD_LegalConstraints>
 			</resourceConstraints>
+			
+			<xsl:if test="lower-case(.) = 'none'">
+				<resourceConstraints>
+					<MD_Constraints>
+						<useLimitation>
+							<gco:CharacterString>no conditions apply</gco:CharacterString>
+						</useLimitation>
+					</MD_Constraints>
+				</resourceConstraints>
+			</xsl:if>
+			
 		</xsl:for-each>
 		
 		<srv:serviceType>

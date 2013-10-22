@@ -485,11 +485,11 @@
                                         <xsl:if test="gfc:listedValue">
                                             <xsl:call-template name="complexElementGui">
                                                 <xsl:with-param name="title">
-                                                    <xsl:value-of select="/root/gui/iso19110/element[@name='gfc:listedValue']/label"/>
+                                                    <xsl:value-of select="/root/gui/schemas/iso19110/labels/element[@name='gfc:listedValue']/label"/>
                                                     <xsl:text> </xsl:text>
-                                                    (<xsl:value-of select="/root/gui/iso19110/element[@name='gfc:label']/label"/>
-                                                    [<xsl:value-of select="/root/gui/iso19110/element[@name='gfc:code']/label"/>] :
-                                                    <xsl:value-of select="/root/gui/iso19110/element[@name='gfc:definition']/label"/>)
+                                                    (<xsl:value-of select="/root/gui/schemas/iso19110/labels/element[@name='gfc:label']/label"/>
+                                                    [<xsl:value-of select="/root/gui/schemas/iso19110/labels/element[@name='gfc:code']/label"/>] :
+                                                    <xsl:value-of select="/root/gui/schemas/iso19110/labels/element[@name='gfc:definition']/label"/>)
                                                 </xsl:with-param>
                                                 <xsl:with-param name="content">
                                                 

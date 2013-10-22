@@ -42,6 +42,7 @@ import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -114,9 +115,15 @@ public class Groups implements Service {
                 final Specification<UserGroup> userGroupSpec = not(UserGroupSpecs.hasProfile(Profile.RegisteredUser)).and(UserGroupSpecs.hasGroupId(groupId));
 
                 final List<User> nonRegisteredUsersInGroups = context.getBean(UserRepository.class).findAllUsersInUserGroups(userGroupSpec);
+                // Avoid duplicated users: if a user is a Reviewer in a group, in the database exists a row as Editor also
+                Set<Integer> editorsId = new HashSet<Integer>();
 
                 for (User editor : Iterables.concat(administrators, nonRegisteredUsersInGroups)) {
+                    if (editorsId.contains(editor.getId()) {
+                        continue;
+                    }
                     record.addContent(editor.asXml().setName("editor"));
+                    editorsId.add(editor.getId());
                 }
             }
         }

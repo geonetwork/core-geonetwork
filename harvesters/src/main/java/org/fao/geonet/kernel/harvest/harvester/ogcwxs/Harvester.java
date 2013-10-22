@@ -37,9 +37,12 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
+import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -62,6 +65,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.net.URL;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -136,7 +140,7 @@ import java.util.*;
  * @author fxprunayre
  *   
  */
-class Harvester extends BaseAligner
+class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 {
 	
 	
@@ -156,7 +160,7 @@ class Harvester extends BaseAligner
 		this.context= context;
 		this.params = params;
 
-		result = new HarvestResult ();
+		result = new HarvestResult();
 		
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getBean(DataManager.class);
@@ -171,8 +175,10 @@ class Harvester extends BaseAligner
 	/** 
      * Start the harvesting of a WMS, WFS or WCS node.
      */
-	public HarvestResult harvest() throws Exception {
+	public HarvestResult harvest(Logger log) throws Exception {
         Element xml;
+        
+        this.log = log;
 
         log.info("Retrieving remote metadata information for : " + params.name);
         
@@ -612,7 +618,7 @@ class Harvester extends BaseAligner
 		
 		
 		//--- using GetCapabilities document
-		if (!loaded){
+		if (!loaded && params.useLayer){
 			try {
 				//--- set XSL param to filter on layer and set uuid
 				Map<String, String> param = new HashMap<String, String>();
@@ -912,6 +918,15 @@ class Harvester extends BaseAligner
 		public Double miny = -90.0;
 		public Double maxx = 180.0;
 		public Double maxy = 90.0;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.fao.geonet.kernel.harvest.harvester.IHarvester#getErrors()
+	 */
+	@Override
+	public List<HarvestError> getErrors() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

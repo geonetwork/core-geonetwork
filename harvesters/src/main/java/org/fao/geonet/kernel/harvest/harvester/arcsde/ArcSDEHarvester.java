@@ -23,15 +23,8 @@
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Logger;
 import org.fao.geonet.arcgis.ArcSDEMetadataAdapter;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.exceptions.BadInputEx;
-import org.fao.geonet.kernel.harvest.harvester.*;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -52,10 +45,11 @@ import java.util.UUID;
  * @author heikki doeleman
  *
  */
-public class ArcSDEHarvester extends AbstractHarvester {
+public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
 	private ArcSDEParams params;
-    private HarvestResult result;
+    //FIXME use custom class?
+    private BaseAligner aligner = new BaseAligner() {};
 	
 	static final String ARCSDE_LOG_MODULE_NAME = Geonet.HARVESTER + ".arcsde";
 	private static final String ARC_TO_ISO19115_TRANSFORMER = "ArcCatalog8_to_ISO19115.xsl";

@@ -153,7 +153,7 @@ import java.util.*;
  * @author Simon Pigot
  *   
  */
-class Harvester extends BaseAligner
+class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 {
 	
 	
@@ -205,7 +205,8 @@ class Harvester extends BaseAligner
      * Start the harvesting of a thredds catalog 
      **/
 	
-	public HarvestResult harvest() throws Exception {
+	public HarvestResult harvest(Logger log) throws Exception {
+		this.log = log;
 		
 		Element xml = null;
 		log.info("Retrieving remote metadata information for : " + params.name);
@@ -1335,5 +1336,11 @@ class Harvester extends BaseAligner
 	static private final Namespace gmd 	= Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
 	static private final Namespace srv 	= Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
 	static private final Namespace xlink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
+	
+	private List<HarvestError> errors = new LinkedList<HarvestError>();
+	@Override
+	public List<HarvestError> getErrors() {
+		return errors;
+	}
 		
 }

@@ -39,7 +39,7 @@ import java.util.UUID;
 
 //=============================================================================
 
-public class OgcWxSHarvester extends AbstractHarvester
+public class OgcWxSHarvester extends AbstractHarvester<HarvestResult>
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -143,7 +143,7 @@ public class OgcWxSHarvester extends AbstractHarvester
 	public void doHarvest(Logger log) throws Exception
 	{
 		Harvester h = new Harvester(log, context, params);
-		result = h.harvest();
+		result = h.harvest(log);
 	}
 
 	//---------------------------------------------------------------------------
@@ -154,3 +154,4 @@ public class OgcWxSHarvester extends AbstractHarvester
 
 	private OgcWxSParams params;
 }
+
