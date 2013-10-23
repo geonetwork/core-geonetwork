@@ -23,6 +23,10 @@ package org.fao.geonet.services.format;
 
 import static org.fao.geonet.services.extent.ExtentHelper.ID;
 
+import com.google.common.base.Functions;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.reusable.*;
 import org.jdom.*;
 
 import jeeves.constants.*;
@@ -37,7 +41,6 @@ import jeeves.xlink.XLink;
 import org.fao.geonet.constants.*;
 import org.fao.geonet.services.reusable.Reject;
 import org.fao.geonet.util.LangUtils;
-import org.fao.geonet.kernel.reusable.ReusableTypes;
 
 import java.util.*;
 
@@ -109,8 +112,21 @@ public class Manager implements Service {
 						.setText(Jeeves.Text.UPDATED));
 
 				Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL+"xml.format.get?id=" + id);
+                final FormatsStrategy strategy = new FormatsStrategy(dbms, context.getAppPath(), context.getBaseUrl(),
+                        context.getLanguage(), null);
+                ArrayList<String> fields = new ArrayList<String>();
 
-			}
+                fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
+                fields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
+                final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, id, false,
+                        Functions.<String>identity());
+
+                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+                DataManager dm = gc.getDataManager();
+                for (MetadataRecord metadataRecord : referencingMetadata) {
+                    dm.indexMetadata(dbms, metadataRecord.id, true, context, true, false);
+                }
+            }
 		}
 
 		return elRes;

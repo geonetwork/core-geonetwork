@@ -23,6 +23,8 @@
 
 package org.fao.geonet.services.user;
 
+import com.google.common.base.Functions;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
@@ -36,9 +38,16 @@ import jeeves.xlink.Processor;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.reusable.ContactsStrategy;
+import org.fao.geonet.kernel.reusable.MetadataRecord;
+import org.fao.geonet.kernel.reusable.Utils;
 import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
 
 //=============================================================================
 
@@ -218,8 +227,24 @@ public class SharedUpdate implements Service
 				} else {
 					throw new IllegalArgumentException("unknown user update operation "+operation);
 				}
-			} 
-		return new Element(Jeeves.Elem.RESPONSE);
+			}
+
+        final ContactsStrategy strategy = new ContactsStrategy(dbms, context.getAppPath(), context.getBaseUrl(),
+                context.getLanguage(), null);
+        ArrayList<String> fields = new ArrayList<String>();
+
+        fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
+        fields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
+        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, id, false,
+                Functions.<String>identity());
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getDataManager();
+        for (MetadataRecord metadataRecord : referencingMetadata) {
+            dm.indexMetadata(dbms, metadataRecord.id, true, context, true, false);
+        }
+
+        return new Element(Jeeves.Elem.RESPONSE);
 	}
 
 	//--------------------------------------------------------------------------

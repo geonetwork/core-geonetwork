@@ -634,6 +634,7 @@ public class DataManager {
             }
             else {
                 String isValid = "1";
+
                 for (Object elem : validationInfo) {
                     Element vi = (Element) elem;
                     String type = vi.getChildText("valtype");

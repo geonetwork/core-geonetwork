@@ -32,9 +32,13 @@ import static org.fao.geonet.services.extent.ExtentHelper.TYPENAME;
 import static org.fao.geonet.services.extent.ExtentHelper.SOURCE;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
 import java.util.logging.Level;
 
+import com.google.common.base.Functions;
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
@@ -42,7 +46,10 @@ import jeeves.xlink.Processor;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.reusable.ExtentsStrategy;
+import org.fao.geonet.kernel.reusable.MetadataRecord;
+import org.fao.geonet.kernel.reusable.Utils;
 import org.fao.geonet.services.extent.Add.Format;
 import org.fao.geonet.services.extent.Source.FeatureType;
 import org.fao.geonet.util.LangUtils;
@@ -169,6 +176,24 @@ public class Update implements Service
         final Element responseElem = new Element("success");
         responseElem.setText("Updated features with id= " + id);
         responseElem.addContent(changes);
+
+        final ExtentsStrategy strategy = new ExtentsStrategy (context.getBaseUrl(), context.getAppPath(),
+                ExtentManager.getInstance(), context.getLanguage());
+        ArrayList<String> fields = new ArrayList<String>();
+
+        fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
+        fields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
+        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, id, false,
+                Functions.<String>identity());
+
+        DataManager dm = gc.getDataManager();
+
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        for (MetadataRecord metadataRecord : referencingMetadata) {
+            dm.indexMetadata(dbms, metadataRecord.id, true, context, true, false);
+        }
+
+
         return responseElem;
     }
 

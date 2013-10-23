@@ -25,11 +25,15 @@ package org.fao.geonet.services.thesaurus;
 
 import static org.fao.geonet.services.thesaurus.AddElement.*;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.base.Functions;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
@@ -39,9 +43,13 @@ import jeeves.xlink.XLink;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.reusable.KeywordsStrategy;
+import org.fao.geonet.kernel.reusable.MetadataRecord;
+import org.fao.geonet.kernel.reusable.Utils;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Element;
 
@@ -130,7 +138,23 @@ public class UpdateElement implements Service {
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element("selected").setText(ref));
 		elResp.addContent(new Element("mode").setText("edit"));
-		return elResp;
+
+        final KeywordsStrategy strategy = new KeywordsStrategy(manager, context.getAppPath(), context.getBaseUrl(), context.getLanguage());
+        ArrayList<String> fields = new ArrayList<String>();
+
+        fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
+        fields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
+        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, newid, false,
+                Functions.<String>identity());
+
+
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        DataManager dm = gc.getDataManager();
+        for (MetadataRecord metadataRecord : referencingMetadata) {
+            dm.indexMetadata(dbms, metadataRecord.id, true, context, true, false);
+        }
+
+        return elResp;
 	}
 }
 
