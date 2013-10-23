@@ -15,9 +15,11 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static junit.framework.Assert.assertNull;
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataId;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
@@ -108,4 +110,24 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
         assertEquals(newGroupId, reloadedMd3.getSourceInfo().getGroupOwner());
     }
 
+    @Test
+    public void testDeleteAllSpec() throws Exception {
+        Metadata md = _repo.save(MetadataRepositoryTest.newMetadata(_inc));
+        Metadata md2 = _repo.save(MetadataRepositoryTest.newMetadata(_inc));
+        Metadata md3 = _repo.save(MetadataRepositoryTest.newMetadata(_inc));
+
+
+        final Specifications<Metadata> spec = where(hasMetadataId(md2.getId())).or(hasMetadataId(md3.getId()));
+
+        final int deleted = _repo.deleteAll(spec);
+
+        assertEquals(2, deleted);
+        assertEquals(1, _repo.count());
+
+        assertNotNull(_repo.findOne(md.getId()));
+        assertNull(_repo.findOne(md2.getId()));
+        assertNull(_repo.findOne(md3.getId()));
+
+        assertEquals(md.getId(), _repo.findAll().get(0).getId());
+    }
 }

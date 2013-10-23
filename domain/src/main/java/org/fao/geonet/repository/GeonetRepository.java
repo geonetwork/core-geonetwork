@@ -1,5 +1,6 @@
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
@@ -122,4 +123,13 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
      */
     @Nonnull
     Element findAllAsXml(@Nullable Sort sort);
+
+    /**
+     * Delete all the metadata selected by the specification.
+     *
+     * @param specification the specification of the metadata to delete.
+     *
+     * @return the number of elements deleted
+     */
+    int deleteAll(@Nonnull Specification<T> specification);
 }

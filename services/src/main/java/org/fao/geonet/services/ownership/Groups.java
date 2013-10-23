@@ -43,6 +43,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -119,7 +120,7 @@ public class Groups implements Service {
                 Set<Integer> editorsId = new HashSet<Integer>();
 
                 for (User editor : Iterables.concat(administrators, nonRegisteredUsersInGroups)) {
-                    if (editorsId.contains(editor.getId()) {
+                    if (editorsId.contains(editor.getId())) {
                         continue;
                     }
                     record.addContent(editor.asXml().setName("editor"));

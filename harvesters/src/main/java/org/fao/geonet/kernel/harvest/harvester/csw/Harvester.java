@@ -33,6 +33,7 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
@@ -45,6 +46,9 @@ import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
+
+import java.net.URL;
+import java.util.*;
 
 //=============================================================================
 
@@ -388,7 +392,7 @@ class Harvester implements IHarvester<HarvestResult>
         ArrayList<Element> queriables = new ArrayList<Element>();
 
         if (!s.attributesMap.isEmpty()) {
-            for (Entry<String, String> entry : s.attributesMap.entrySet()) {
+            for (Map.Entry<String, String> entry : s.attributesMap.entrySet()) {
                 if (entry.getValue() != null) {
                     buildFilterQueryable(queriables, "csw:" + entry.getKey(), entry.getValue());
                 }
@@ -467,7 +471,7 @@ class Harvester implements IHarvester<HarvestResult>
 		ArrayList<String> queryables = new ArrayList<String>();
 		
 		if (!s.attributesMap.isEmpty()){
-			for(Entry<String, String> entry : s.attributesMap.entrySet()) {
+			for(Map.Entry<String, String> entry : s.attributesMap.entrySet()) {
 			    if (entry.getValue()!=null){
 			    	buildCqlQueryable(queryables, "csw:"+entry.getKey(), entry.getValue());
 		    	}
@@ -509,16 +513,18 @@ class Harvester implements IHarvester<HarvestResult>
 	private void buildCqlQueryable(List<String> queryables, String name, String value)
 	{
 		if (value.length() != 0) {
-			if (value.contains("%"))
-				buildCqlQueryable(queryables, name, value, "like");
-			else
-				buildCqlQueryable(queryables, name, value, "=");
+			if (value.contains("%")) {
+                buildCqlQueryable(queryables, name, value, "like");
+            } else {
+                buildCqlQueryable(queryables, name, value, "=");
+            }
 		}
 	}
 	private void buildCqlQueryable(List<String> queryables, String name, String value, String operator)
 	{
-		if (value.length() != 0)
-			queryables.add(name +" " + operator + " '"+ value +"'");
+		if (value.length() != 0) {
+            queryables.add(name + " " + operator + " '" + value + "'");
+        }
 	}
 	//---------------------------------------------------------------------------
 

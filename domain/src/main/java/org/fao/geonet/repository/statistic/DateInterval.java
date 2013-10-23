@@ -20,7 +20,7 @@ public abstract class DateInterval {
      * @param substringEnd how much of the date string that is of interest.
      */
     DateInterval(final ISODate date, final int substringEnd) {
-        this(date.getDate(), substringEnd);
+        this(date.getDateAsString(), substringEnd);
     }
 
     /**

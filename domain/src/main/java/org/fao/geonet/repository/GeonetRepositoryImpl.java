@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.Query;
 import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.util.List;
@@ -80,6 +81,21 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
     @Override
     public Element findAllAsXml(final Sort sort) {
         return findAllAsXml(null, sort);
+    }
+
+    @Override
+    public int deleteAll(@Nonnull Specification<T> specification) {
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaDelete<T> criteriaDelete = cb.createCriteriaDelete(_entityClass);
+        final Root<T> from = criteriaDelete.from(_entityClass);
+        final Predicate predicate = specification.toPredicate(from, null, cb);// TODO pass in delete when spring-JPA is updated
+        criteriaDelete.where(predicate);
+
+        final Query query = _entityManager.createQuery(criteriaDelete);
+        final int deleted = query.executeUpdate();
+
+        _entityManager.clear();
+        return deleted;
     }
 
     @Nonnull

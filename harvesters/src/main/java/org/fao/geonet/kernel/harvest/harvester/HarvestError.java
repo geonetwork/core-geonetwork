@@ -5,17 +5,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
 
-import jeeves.exceptions.BadServerResponseEx;
-import jeeves.exceptions.BadSoapResponseEx;
-import jeeves.exceptions.BadXmlResponseEx;
-import jeeves.exceptions.UserNotFoundEx;
-import jeeves.interfaces.Logger;
-
-import org.apache.commons.httpclient.HttpException;
+import org.apache.http.HttpException;
 import org.apache.jcs.access.exception.CacheException;
+import org.fao.geonet.Logger;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
-import org.fao.geonet.exceptions.NoSchemaMatchesException;
-import org.fao.geonet.exceptions.SchemaMatchConflictException;
+import org.fao.geonet.exceptions.*;
 import org.jdom.JDOMException;
 
 /**

@@ -27,6 +27,7 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -250,12 +251,12 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         metadata.getCategories().clear();
         context.getBean(MetadataRepository.class).save(metadata);
 
-        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+        aligner.addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
 
         dataMan.flush();
@@ -291,8 +292,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
 		dataMan.setHarvestedExt(iId, source);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
         dataMan.flush();
 

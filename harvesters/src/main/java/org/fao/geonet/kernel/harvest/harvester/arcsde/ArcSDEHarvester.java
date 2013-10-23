@@ -23,8 +23,16 @@
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.arcgis.ArcSDEMetadataAdapter;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.kernel.harvest.BaseAligner;
+import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -220,12 +228,12 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
         operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         metadata.getCategories().clear();
 
         context.getBean(MetadataRepository.class).save(metadata);
-        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+        aligner.addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
         dataMan.flush();
 
@@ -259,8 +267,8 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
 		dataMan.setHarvestedExt(iId, source);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
         dataMan.flush();
 

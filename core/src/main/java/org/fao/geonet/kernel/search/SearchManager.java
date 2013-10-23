@@ -905,13 +905,13 @@ public class SearchManager {
      *  deletes a list of documents.
      *
      * @param fld
-     * @param txt
+     * @param txts
      * @throws Exception
      */
     public void delete(String fld, List<String> txts) throws Exception {
         // possibly remove old document
         for(String txt : txts) {
-            _indexWriter.deleteDocuments(new Term(fld, txt));
+            _tracker.deleteDocuments(new Term(fld, txt));
         }
         _spatial.writer().delete(txts);
     }

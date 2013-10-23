@@ -81,6 +81,13 @@ public interface HarvestManager {
      * @throws SchedulerException
      */
     boolean update(Element node, String ownerId) throws BadInputEx, SQLException, SchedulerException;
+    /**
+     * Remove all metadata associated to one harvester
+     * @param id of the harvester
+     * @return
+     * @throws Exception
+     */
+    Common.OperResult clearBatch(String id) throws Exception;
 
     Common.OperResult remove(String id) throws Exception;
 

@@ -373,7 +373,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 	// ---
 	// ---------------------------------------------------------------------------
 
-	private final Logger log;
+	private Logger log;
 	private final Z3950Params params;
 	private ServiceContext context;
 	private CategoryMapper localCateg;

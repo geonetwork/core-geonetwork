@@ -5,10 +5,10 @@ import java.io.File;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
 
 import opendap.servlet.BadURLException;
 
+import org.fao.geonet.utils.BinaryFile;
 import org.jdom.Element;
 
 /**

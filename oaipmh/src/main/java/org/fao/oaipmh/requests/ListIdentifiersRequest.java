@@ -58,10 +58,10 @@ public class ListIdentifiersRequest extends TokenListRequest
 			params.put("metadataPrefix", mdPrefix);
 
 			if (from != null)
-				params.put("from", (from.isDateOnly()) ? from.getDate() : from.toString() +"Z");
+				params.put("from", (from.isDateOnly()) ? from.getDateAsString() : from.toString() +"Z");
 
 			if (until != null)
-				params.put("until", (until.isDateOnly()) ? until.getDate() : until.toString() +"Z");
+				params.put("until", (until.isDateOnly()) ? until.getDateAsString() : until.toString() +"Z");
 
 			if (set != null)
 				params.put("set", set);

@@ -41,6 +41,9 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.Calendar.*;
 
@@ -53,6 +56,13 @@ import static java.util.Calendar.*;
 @Embeddable
 public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
     private static final String DEFAULT_DATE_TIME = "3000-01-01T00:00:00.000Z"; // JUNK Value
+
+    // Pattern to check dates
+    private static Pattern gsYear = Pattern
+            .compile("([0-9]{4})(-([0-2][0-9]):([0-5][0-9])([A-Z]))?");
+    private static Pattern gsYearMonth = Pattern
+            .compile("([0-9]{4})-([0-1][0-9])(-([0-2][0-9]):([0-5][0-9])([A-Z]))?");
+
     private boolean _shortDate; // --- 'true' if the format is yyyy-mm-dd
 
     private Calendar _calendar = Calendar.getInstance();
@@ -71,6 +81,11 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
     public ISODate(final long time, final boolean shortDate) {
         _calendar.setTimeInMillis(time);
         _shortDate = shortDate;
+    }
+
+    public ISODate(final long time) {
+        _calendar.setTimeInMillis(time);
+        _shortDate = false;
     }
 
     // ---------------------------------------------------------------------------
@@ -94,17 +109,13 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
         }
     }
 
-    /**
-     * Converts two ISO date times into standard form used to index in Lucene.
+    /*
+     * Converts two ISO date times into standard form used to index in Lucene
      * Always returns something because it is used during the indexing of the
      * metadata record in Lucene - if exception during parsing then it is
      * something ridiculous like JUNK value above
-     *
-     * @param dateToParse an iso formatted date string
-     * @param period      the period of the string.
-     * @return A iso formatted string with a period: yyyy-mm-ddThh:mm:ss|period
      */
-    public static String parseISODateTimes(final String dateToParse, final String period) {
+    public static String parseISODateTimes(String input1, String input2) {
         DateTimeFormatter dto = ISODateTimeFormat.dateTime();
         PeriodFormatter p = ISOPeriodFormat.standard();
         DateTime odt1;
@@ -115,8 +126,9 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
         // convert everything to UTC so that we remove any timezone
         // problems
         try {
-            DateTime idt = parseBasicOrFullDateTime(dateToParse);
-            odt1 = dto.parseDateTime(idt.toString()).withZone(DateTimeZone.forID("UTC"));
+            DateTime idt = parseBasicOrFullDateTime(input1);
+            odt1 = dto.parseDateTime(idt.toString()).withZone(
+                    DateTimeZone.forID("UTC"));
             odt = odt1.toString();
 
         } catch (Exception e) {
@@ -124,9 +136,8 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
             return DEFAULT_DATE_TIME;
         }
 
-        if (period == null || period.equals("")) return odt;
-
-        String input2 = period;
+        if (input2 == null || input2.equals(""))
+            return odt;
 
         // input2 can be an ISO time as for input1 but also an ISO time period
         // eg. -P3D or P3D - if an ISO time period then it must be added to the
@@ -143,12 +154,15 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
             if (input2.startsWith("P")) {
                 Period ip = p.parsePeriod(input2);
                 DateTime odt2;
-                if (!minus) odt2 = odt1.plus(ip.toStandardDuration().getMillis());
-                else odt2 = odt1.minus(ip.toStandardDuration().getMillis());
+                if (!minus)
+                    odt2 = odt1.plus(ip.toStandardDuration().getMillis());
+                else
+                    odt2 = odt1.minus(ip.toStandardDuration().getMillis());
                 odt = odt + "|" + odt2.toString();
             } else {
                 DateTime idt = parseBasicOrFullDateTime(input2);
-                DateTime odt2 = dto.parseDateTime(idt.toString()).withZone(DateTimeZone.forID("UTC"));
+                DateTime odt2 = dto.parseDateTime(idt.toString()).withZone(
+                        DateTimeZone.forID("UTC"));
                 odt = odt + "|" + odt2.toString();
             }
         } catch (Exception e) {
@@ -159,24 +173,78 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
         return odt;
     }
 
-    public static DateTime parseBasicOrFullDateTime(String dateToParse) throws Exception {
+    public static DateTime parseBasicOrFullDateTime(String input1)
+            throws Exception {
         DateTimeFormatter bd = ISODateTimeFormat.basicDate();
         DateTimeFormatter bt = ISODateTimeFormat.basicTime();
         DateTimeFormatter bdt = ISODateTimeFormat.basicDateTime();
         DateTimeFormatter dtp = ISODateTimeFormat.dateTimeParser();
         DateTime idt;
-        if (dateToParse.length() == 8 && !dateToParse.startsWith("T")) {
-            idt = bd.parseDateTime(dateToParse);
-        } else if (dateToParse.startsWith("T") && !dateToParse.contains(":")) {
-            idt = bt.parseDateTime(dateToParse);
-        } else if (dateToParse.contains("T") && !dateToParse.contains(":") && !dateToParse.contains("-")) {
-            idt = bdt.parseDateTime(dateToParse);
+        Matcher matcher;
+        if (input1.length() == 8 && !input1.startsWith("T")) {
+            idt = bd.parseDateTime(input1);
+        } else if (input1.startsWith("T") && !input1.contains(":")) {
+            idt = bt.parseDateTime(input1);
+        } else if (input1.contains("T") && !input1.contains(":")
+                   && !input1.contains("-")) {
+            idt = bdt.parseDateTime(input1);
+        } else if ((matcher = gsYearMonth.matcher(input1)).matches()) {
+            String year = matcher.group(1);
+            String month = matcher.group(2);
+            String minute = "00";
+            String hour = "00";
+            String timezone = "Z";
+            if (matcher.group(4) != null) {
+                minute = matcher.group(5);
+                hour = matcher.group(4);
+                timezone = matcher.group(6);
+            }
+
+            idt = generateDate(year, month, minute, hour, timezone);
+        } else if ((matcher = gsYear.matcher(input1)).matches()) {
+            String year = matcher.group(1);
+            String month = "01";
+            String minute = "00";
+            String hour = "00";
+            String timezone = "Z";
+            if (matcher.group(3) != null) {
+                minute = matcher.group(4);
+                hour = matcher.group(3);
+                timezone = matcher.group(5);
+            }
+
+            idt = generateDate(year, month, minute, hour, timezone);
         } else {
-            idt = dtp.parseDateTime(dateToParse);
+            idt = dtp.parseDateTime(input1);
         }
         return idt;
     }
 
+    /**
+     * @param year
+     * @param month
+     * @param minute
+     * @param hour
+     * @return
+     */
+    private static DateTime generateDate(String year, String month,
+                                         String minute, String hour, String timezone) {
+
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, Integer.valueOf(year));
+        c.set(Calendar.MONTH, Integer.valueOf(month) - 1);
+        c.set(Calendar.DAY_OF_MONTH, 1);
+
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        c.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
+        c.set(Calendar.MINUTE, Integer.valueOf(minute));
+
+        TimeZone zone = TimeZone.getTimeZone(timezone);
+        c.setTimeZone(zone );
+
+        return new DateTime(c.getTimeInMillis());
+    }
     // ---------------------------------------------------------------------------
     // ---
     // --- API methods
@@ -204,12 +272,12 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
      * </p>
      */
     public long timeDifferenceInSeconds(ISODate date) {
-        return Math.abs(getTimeInSeconds() - date.getTimeInSeconds());
+        return getTimeInSeconds() - date.getTimeInSeconds();
     }
 
     // --------------------------------------------------------------------------
     @Transient
-    public String getDate() {
+    public String getDateAsString() {
         return getYears() + "-" + pad(getMonths()) + "-" + pad(getDays());
     }
 
@@ -238,10 +306,30 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
      * Get the Time and Date encoded as a String.
      */
     public String getDateAndTime() {
-        return getDate() + "T" + timeAsString();
+        if (_shortDate) {
+            return getDateAsString();
+        }
+        return getDateAsString() + "T" + getTimeAsString();
     }
 
-    public void setDateAndTime(String timeAndDate) {
+    public void setDateAndTime(String isoDate) {
+
+        String timeAndDate = isoDate;
+        if (timeAndDate == null) {
+            throw new IllegalArgumentException("date string is null");
+        }
+
+        int indexOfT = timeAndDate.indexOf('T');
+        if (indexOfT > -1) {
+            // Check if iso date contains time info and if using non UTC time zone to parse the date with
+            // JODAISODate. This class converts to UTC format to avoid timezones issues.
+            String afterT = timeAndDate.substring(indexOfT + 1);
+            boolean timeZoneInfo = afterT.contains("+") || afterT.contains("-");
+
+            if (timeZoneInfo) {
+                timeAndDate = parseISODateTime(timeAndDate);
+            }
+        }
         String[] parts = timeAndDate.toUpperCase().split("T", 2);
 
         if (parts.length == 1) {
@@ -322,7 +410,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
 
     @Override
     public int hashCode() {
-        return timeAsString().hashCode();
+        return getTimeAsString().hashCode();
     }
 
     @Override
@@ -334,7 +422,7 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
         if (getClass() != obj.getClass())
             return false;
         ISODate other = (ISODate) obj;
-        return timeAsString().equals(other.timeAsString());
+        return getTimeAsString().equals(other.getTimeAsString());
     }
 
     private void parseDate(@Nonnull String isoDate) {
@@ -359,7 +447,12 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
                 year = Integer.parseInt(parts[0]);
             }
             int month = Integer.parseInt(parts[1]);
-            int day = Integer.parseInt(parts[2]);
+            int day;
+            if (parts[2].toLowerCase().endsWith("z")) {
+                day = Integer.parseInt(parts[2].substring(0, parts[2].length() - 1));
+            } else {
+                day = Integer.parseInt(parts[2]);
+            }
 
             _shortDate = true;
 
@@ -384,12 +477,13 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
             int minute = Integer.parseInt(parts[1]);
             int second = 0;
             if (parts.length == 3) {
-                if (parts[2].toUpperCase().contains("Z")) {
-                    String[] secondParts = parts[2].toUpperCase().split("Z");
-                    second = Integer.parseInt(secondParts[0]);
-                } else {
-                    second = Integer.parseInt(parts[2]);
+                String secondsToParse = parts[2];
+                int indexOfZ = secondsToParse.toUpperCase().indexOf('Z');
+                if (indexOfZ > -1) {
+                    secondsToParse = secondsToParse.substring(0, indexOfZ);
                 }
+
+                second = (int) Float.parseFloat(secondsToParse);
             }
 
             _calendar.set(HOUR_OF_DAY, hour);
@@ -402,7 +496,8 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
         }
     }
 
-    private String timeAsString() {
+    @Transient
+    public String getTimeAsString() {
         return pad(getHours()) + ":" + pad(getMinutes()) + ":" + pad(getSeconds());
     }
 

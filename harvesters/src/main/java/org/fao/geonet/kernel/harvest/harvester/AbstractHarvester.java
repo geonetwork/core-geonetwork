@@ -26,20 +26,26 @@ package org.fao.geonet.kernel.harvest.harvester;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.DailyRollingFileAppender;
+import org.apache.log4j.PatternLayout;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.JeevesException;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.monitor.harvest.AbstractHarvesterErrorCounter;
-import org.fao.geonet.repository.HarvestHistoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.services.harvesting.notifier.SendNotification;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.QuartzSchedulerUtils;
 import org.fao.geonet.utils.Xml;
@@ -56,6 +62,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import static org.quartz.JobKey.jobKey;
@@ -90,7 +100,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
 
 		try {
-			AbstractHarvester<?> ah = (AbstractHarvester<?>) c.newInstance();
+            AbstractHarvester ah = context.getApplicationContext().getBean(type, AbstractHarvester.class);
 
 			ah.setContext(context);
 			return ah;
@@ -468,12 +478,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
         String logfile = initializeLog();
         this.log.info("Starting harvesting of " + this.getParams().name);
-        try {
-            error = null;
-             errors.clear();
-			 final Logger logger = Log.createLogger(Geonet.HARVESTER);
-            final String nodeName = getParams().name + " (" + getClass().getSimpleName() + ")";
-            final String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
+        error = null;
+        errors.clear();
+        final Logger logger = Log.createLogger(Geonet.HARVESTER);
+        final String nodeName = getParams().name + " (" + getClass().getSimpleName() + ")";
+        final String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
             try {
                 login();
 
@@ -509,24 +518,22 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 		    if (harvesterErrors != null) {
 		        errors.addAll(harvesterErrors);
 		    }
-            }
+        }
 
             long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
 
-            // record the results/errors for this harvest in the database
-            Element result = getResult();
-            if (error != null) {
-                result = JeevesException.toElement(error);
-            }
-            Element logfile_ = new Element("logfile");
-            logfile_.setText(logfile);
-            result.addContent(logfile_);
 
-            result.addContent(toElement(errors));
-            
             try {
+                // record the results/errors for this harvest in the database
                 Element result = getResult();
-                if (error != null) result = JeevesException.toElement(error);
+                if (error != null) {
+                    result = JeevesException.toElement(error);
+                }
+                Element logfile_ = new Element("logfile");
+                logfile_.setText(logfile);
+                result.addContent(logfile_);
+
+                result.addContent(toElement(errors));
                 final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
                 final HarvestHistory history = new HarvestHistory()
                         .setHarvesterType(getType())
@@ -536,28 +543,30 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                         .setHarvestDate(new ISODate(lastRun))
                         .setParams(Xml.getString(getParams().node));
                 historyRepository.save(history);
+
+
+                //Send notification email, if needed
+                try {
+                    SendNotification.process(context, history.asXml(), this);
+                } catch (Exception e2) {
+                    logger.error("Raised exception while attempting to send email");
+                    logger.error(" (C) Exc   : "+ e2);
+                    e2.printStackTrace();
+                }
+
             } catch (Exception e) {
                 logger.warning("Raised exception while attempting to store harvest history from : " + nodeName);
                 e.printStackTrace();
                 logger.warning(" (C) Exc   : " + e);
-
-            //Send notification email, if needed
-            try {
-                SendNotification.process(context, HarvesterHistoryDao.retrieve(dbms, getParams().uuid), this);
-            } catch (Exception e) {
-                logger.error("Raised exception while attempting to send email");
-                logger.error(" (C) Exc   : "+ e);
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-           Log.error(Geonet.HARVESTER, "Error occurred opening transaction manager", e);
         } finally {
             running = false;
+        }
+    }
 
 
-	  /**
+	/**
      * Convert {@link HarvestError} to an element that can be saved on the
-     * database
+     * database.
      * 
      * @param errors
      * @return
@@ -890,15 +899,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 	public String getOwnerEmail() throws Exception {
 		String ownerId = getParams().ownerIdGroup;
 
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
-
-		Element e = dbms.select("SELECT email FROM Groups WHERE id = " + ownerId);
-
-		e = e.getChild("record");
-		e = e.getChild("email");
-		
-		return e.getTextTrim();
+        final Group group = context.getBean(GroupRepository.class).findOne(Integer.parseInt(ownerId));
+		return group.getEmail();
 	}
 
     //--------------------------------------------------------------------------

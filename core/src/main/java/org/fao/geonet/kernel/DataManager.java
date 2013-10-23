@@ -2971,4 +2971,8 @@ public class DataManager {
     public void flush() {
         _entityManager.flush();
     }
+
+    public void deleteBatchMetadata(String harvesterUUID) {
+        _metadataRepository.deleteAll(MetadataSpecs.hasHarvesterUuid(harvesterUUID));
+    }
 }

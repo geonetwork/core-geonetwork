@@ -96,9 +96,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	//---
 	//---------------------------------------------------------------------------
 
-	public HarvestResult harvest() throws Exception {
+	public HarvestResult harvest(Logger log) throws Exception {
 
-	    this.log = log
+	    this.log = log;
 
 		ListIdentifiersRequest req = new ListIdentifiersRequest(context.getBean(GeonetHttpRequestFactory.class));
 		req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
@@ -113,8 +113,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             throw new AbortExecutionException(e1);
         }
 
-		if (params.useAccount)
-			t.setCredentials(params.username, params.password);
+		if (params.useAccount) {
+            t.setCredentials(params.username, params.password);
+        }
 
 		//--- set the proxy info if necessary
 		Lib.net.setupProxy(context, t);

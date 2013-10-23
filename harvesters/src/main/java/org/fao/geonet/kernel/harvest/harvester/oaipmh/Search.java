@@ -61,7 +61,7 @@ class Search
 			if (!from.equals(""))
 			{
 				fromDate = new ISODate(from);
-				from     = fromDate.getDate();
+				from     = fromDate.getDateAsString();
 			}
 
 		}
@@ -77,7 +77,7 @@ class Search
 			if (!until.equals(""))
 			{
 				untilDate = new ISODate(until);
-				until     = untilDate.getDate();
+				until     = untilDate.getDateAsString();
 			}
 		}
 		catch(Exception e)

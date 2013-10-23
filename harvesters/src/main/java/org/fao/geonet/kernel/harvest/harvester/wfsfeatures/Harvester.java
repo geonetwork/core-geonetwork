@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
+import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -346,7 +347,7 @@ class Harvester implements IHarvester<HarvestResult>
             }
 		}
 		
-		if (result.subtemplatesRemoved + result.recordsRemoved > 0)  {
+		if (result.subtemplatesRemoved + result.locallyRemoved > 0)  {
             dataMan.flush();
         }
     }

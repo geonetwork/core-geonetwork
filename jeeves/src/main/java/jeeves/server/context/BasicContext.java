@@ -24,6 +24,8 @@
 package jeeves.server.context;
 
 import jeeves.monitor.MonitorManager;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
 import org.fao.geonet.Logger;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -139,6 +141,11 @@ public class BasicContext implements Logger {
     }
 
     @Override
+    public void error(Throwable ex) {
+        logger.error(ex);
+    }
+
+    @Override
     public void fatal(final String message) {
         logger.fatal(message);
     }
@@ -146,6 +153,21 @@ public class BasicContext implements Logger {
     @Override
     public String getModule() {
         return logger.getModule();
+    }
+
+    @Override
+    public void setAppender(FileAppender fa) {
+        logger.setAppender(fa);
+    }
+
+    @Override
+    public String getFileAppender() {
+        return logger.getFileAppender();
+    }
+
+    @Override
+    public Level getThreshold() {
+        return logger.getThreshold();
     }
 
 }

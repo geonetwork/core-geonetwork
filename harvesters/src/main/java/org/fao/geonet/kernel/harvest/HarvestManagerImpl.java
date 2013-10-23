@@ -27,6 +27,8 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.HarvestHistory;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.JeevesException;
@@ -111,13 +113,13 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
                     AbstractHarvester ah = AbstractHarvester.create(type, context);
                     ah.init(node);
+
+                    ah.initializeLog();
                     hmHarvesters.put(ah.getID(), ah);
                     hmHarvestLookup.put(ah.getParams().uuid, ah);
                 }
             }
         }
-
-        ah.initializeLog();
     }
 
     /**
@@ -569,4 +571,42 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
     }
-}
+
+    public synchronized OperResult clearBatch(String id) throws Exception {
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN))
+            Log.debug(Geonet.HARVEST_MAN, "Clearing harvesting with id : "+ id);
+
+        AbstractHarvester<?> ah = hmHarvesters.get(id);
+
+        if (ah == null) {
+            return OperResult.NOT_FOUND;
+        }
+
+        long elapsedTime = System.currentTimeMillis();
+
+        String harvesterUUID = ah.getParams().uuid;
+
+        dataMan.deleteBatchMetadata(harvesterUUID);
+
+        elapsedTime = (System.currentTimeMillis() - elapsedTime) / 1000;
+        System.out.println("Time: " + elapsedTime);
+
+        Element historyEl = new Element("result");
+        historyEl.addContent(new Element("cleared"));
+        ISODate lastRun = new ISODate(System.currentTimeMillis());
+
+        HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
+        HarvestHistory history = new HarvestHistory();
+        history.setDeleted(true);
+        history.setElapsedTime((int) elapsedTime);
+        history.setHarvestDate(lastRun);
+        history.setHarvesterName(ah.getParams().name);
+        history.setHarvesterType(ah.getType());
+        history.setHarvesterUuid(ah.getParams().uuid);
+        history.setInfo(Xml.getString(historyEl));
+        history.setParams(Xml.getString(ah.getParams().node));
+
+        historyRepository.save(history);
+
+        return OperResult.OK;
+    }}
