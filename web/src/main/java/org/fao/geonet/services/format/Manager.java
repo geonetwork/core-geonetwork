@@ -65,8 +65,7 @@ public class Manager implements Service {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see jeeves.interfaces.Service#exec(org.jdom.Element,
-	 * jeeves.server.context.ServiceContext)
+	 * @see jeeves.interfaces.Service#exec(org.jdom.Element, jeeves.server.context.ServiceContext)
 	 */
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
@@ -74,7 +73,7 @@ public class Manager implements Service {
 		String id = params.getChildText(Params.ID);
 		String name = params.getChildText(Params.NAME);
 		String version = params.getChildText(Params.VERSION);
-		char validated = Util.getParam(params, "validated", "n").charAt(0);
+		char validated = Util.getParam(params, "validated", "y").charAt(0);
 		boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
 		
 		Dbms dbms = (Dbms) context.getResourceManager()
