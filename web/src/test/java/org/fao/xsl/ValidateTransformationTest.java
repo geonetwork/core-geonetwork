@@ -68,6 +68,15 @@ public class ValidateTransformationTest
     	rules.put("CHE_MD_Metadata/locale", new Exists(new Attribute("LanguageCode", "codeListValue", "roh")));
     	file = testFile(file, Control.GM03_2_ISO, rules, true);
     }
+    @Test
+    public void exportServiceMetadata() throws Throwable
+    {
+    	File file = new File(data, "iso19139/servicemetadata.xml");
+    	Multimap<String, Requirement> rules = ArrayListMultimap.create();
+    	rules.put("DATASECTION", new Not(new ContainsText("ERROR")));
+    	file = testFile(file, Control.ISO_GM03, rules, true);
+
+    }
 
     @Test
     public void smallGeom() throws Throwable

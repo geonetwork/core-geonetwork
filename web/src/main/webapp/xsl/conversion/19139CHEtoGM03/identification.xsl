@@ -80,7 +80,7 @@
             <BACK_REF name="MD_Identification"/>
         </GM03_2_1Comprehensive.Comprehensive.aggregationInfo_MD_Identification>
     </xsl:template>
-    
+
     <xsl:template mode="DataIdentification" match="gmd:MD_AggregateInformation">
         <aggregationInfo REF="?">
             <GM03_2_1Comprehensive.Comprehensive.MD_AggregateInformation TID="x{util:randomId()}">
@@ -390,7 +390,7 @@
     </xsl:template>
 
 
-    <xsl:template mode="DataIdentification" match="che:CHE_SV_ServiceIdentification">
+    <xsl:template mode="DataIdentification" match="che:CHE_SV_ServiceIdentification | srv:SV_ServiceIdentification">
         <GM03_2_1Comprehensive.Comprehensive.SV_ServiceIdentification TID="x{util:randomId()}">
             <xsl:call-template name="dataIdentification" />
             <xsl:apply-templates mode="DataIdentification" select="srv:credit"/>
