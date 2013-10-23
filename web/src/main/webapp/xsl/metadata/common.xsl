@@ -3,6 +3,7 @@
   xmlns:geonet="http://www.fao.org/geonetwork">
 
   <xsl:include href="../schema-xsl-edit-loader.xsl"/>
+  <xsl:include href="../schema-xsl-relations-loader.xsl"/>
   <xsl:include href="layout.xsl"/>
   <xsl:include href="tab-utils.xsl"/>
 
