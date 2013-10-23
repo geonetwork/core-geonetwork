@@ -17,17 +17,17 @@
 	<def>
 		<hits>
 			<item name="topicCat" plural="topicCats" indexKey="topicCat"
-				sortBy="label" sortOrder="asc" type="string" max="15"  translator="codelist:gmd:MD_TopicCategoryCode"/>
-			<item name="keyword" plural="keywords" indexKey="keyword" max="15"/>
-			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc" max="35"/>
+				sortBy="label" sortOrder="asc" type="string" max="100"  translator="codelist:gmd:MD_TopicCategoryCode"/>
+			<item name="keyword" plural="keywords" indexKey="keyword" max="100"/>
+			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc" max="100"/>
 			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="numValue" sortOrder="desc"/>
 			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
-			<item name="orgName" plural="orgNames" indexKey="_orgName" max="15" sortBy="label" sortOrder="asc" />
-			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC" max="15"/>
+			<item name="orgName" plural="orgNames" indexKey="_orgName" max="100" sortBy="label" sortOrder="asc" />
+			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC" max="100"/>
 			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"/>
 			<item name="type" plural="types" indexKey="type" translator="codelist:gmd:MD_ScopeCode"/>
 			<item name="group" plural="groups"
-            	indexKey="_groupOwnerName" sortBy="count" type="string" max="15" translator="db:Groups"/>
+            	indexKey="_groupOwnerName" sortBy="count" type="string" max="100" translator="db:Groups"/>
 		</hits>
 		<titles>
 			<item name="title" plural="titles" indexKey="title" sortBy="freq" sortOrder="desc" max="100"
@@ -38,19 +38,19 @@
 		</results>
 		<results_with_summary>
 			<item name="category" plural="categories" indexKey="topicCat"
-				sortBy="label" sortOrder="asc" type="string" max="15"  translator="codelist:gmd:MD_TopicCategoryCode"/>
-			<item name="keyword" plural="keywords" indexKey="keyword" max="15"/>
-			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc" max="35"/>
-			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="value" sortOrder="asc" max="20"/>
+				sortBy="label" sortOrder="asc" type="string" max="100"  translator="codelist:gmd:MD_TopicCategoryCode"/>
+			<item name="keyword" plural="keywords" indexKey="keyword" max="100"/>
+			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc" max="100"/>
+			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="value" sortOrder="asc" max="100"/>
 			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
-			<item name="orgName" plural="orgNames" indexKey="_orgName" max="15" sortBy="label" sortOrder="asc" />
-			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC" max="15"/>
+			<item name="orgName" plural="orgNames" indexKey="_orgName" max="100" sortBy="label" sortOrder="asc" />
+			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC" max="100"/>
 			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"/>
 			<item name="type" plural="types" indexKey="type" translator="codelist:gmd:MD_ScopeCode"/>
 			<item name="createDateYear" plural="createDateYears" indexKey="_createDate"
-				sortOrder="asc" max="40"/>
+				sortOrder="asc" max="100"/>
 			<item name="group" plural="groups"
-            	indexKey="_groupOwnerName" sortBy="count" type="string" max="15" translator="db:Groups"/>
+            	indexKey="_groupOwnerName" sortBy="count" type="string" max="100" translator="db:Groups"/>
 		</results_with_summary>
 	</def>
 </summary>
