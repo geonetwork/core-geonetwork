@@ -311,7 +311,11 @@
 		    	normalize-space(.) = 'planningCadastre' or
 		    	normalize-space(.) = 'geoscientificInformation' or
 		    	normalize-space(.) = 'utilitiesCommunication' or
-		    	normalize-space(.) = 'environment'"></xsl:when>
+		    	normalize-space(.) = 'environment'">
+
+                    <!-- We don't want these in GM03 -->
+
+		    	</xsl:when>
     		<xsl:otherwise>
 		        <GM03_2_1Core.Core.MD_TopicCategoryCode_>
 		          <value><xsl:value-of select="concat(substring-before(normalize-space(gmd:MD_TopicCategoryCode), '_'),'.',normalize-space(gmd:MD_TopicCategoryCode))"/></value>
