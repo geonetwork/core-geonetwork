@@ -314,7 +314,7 @@
 		    	normalize-space(.) = 'environment'"></xsl:when>
     		<xsl:otherwise>
 		        <GM03_2_1Core.Core.MD_TopicCategoryCode_>
-		          <value><xsl:value-of select="normalize-space(gmd:MD_TopicCategoryCode)"/></value>
+		          <value><xsl:value-of select="concat(substring-before(normalize-space(gmd:MD_TopicCategoryCode), '_'),'.',normalize-space(gmd:MD_TopicCategoryCode))"/></value>
 		        </GM03_2_1Core.Core.MD_TopicCategoryCode_>
     		</xsl:otherwise>
 		</xsl:choose>

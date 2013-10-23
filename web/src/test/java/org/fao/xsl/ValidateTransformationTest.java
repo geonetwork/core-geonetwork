@@ -134,6 +134,12 @@ public class ValidateTransformationTest
         rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new DoesNotExist(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("geoscientificInformation"))));
         rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new DoesNotExist(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("environment"))));
         rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new DoesNotExist(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("utilitiesCommunication"))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Exists(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("planningCadastre.planningCadastre_Planning"))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Exists(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("imageryBaseMapsEarthCover.imageryBaseMapsEarthCover_BaseMaps"))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Exists(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("planningCadastre.planningCadastre_Planning"))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Exists(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("geoscientificInformation.geoscientificInformation_Geology"))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Exists(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("environment.environment_EnvironmentalProtection"))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Exists(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("utilitiesCommunication.utilitiesCommunication_Energy"))));
         rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Count(7, new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value")));
         file = testFile(file, Control.ISO_GM03, rules, false);
         
