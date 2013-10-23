@@ -691,6 +691,22 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 fieldLabel: OpenLayers.i18n('URL'),
                 value: this.editUrl,
                 name: 'href'
+                value: '',
+                validator: function(value){
+                    if(value && value.indexOf('http') == 0) {
+                        var request = OpenLayers.Request.HEAD({
+                            url: value,
+                            async: false
+                        });
+                        var success = (request.status == '200');
+                        if(success) {
+                            this.el.addClass('x-form-valid');
+                        } else if(this.el.hasClass('x-form-valid')) {
+                            this.el.removeClass('x-form-valid');
+                        }
+                        return request.status == '200';
+                    }
+                }
             }],
             listeners: {
                 collapse: {

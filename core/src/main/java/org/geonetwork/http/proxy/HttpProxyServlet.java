@@ -20,6 +20,7 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
@@ -173,6 +174,10 @@ public class HttpProxyServlet extends HttpServlet {
                 //throw new ServletException("only HTTP(S) protocol supported");
                 returnExceptionMessage(response, "only HTTP(S) protocol supported");
             }
+        } 
+        catch (UnknownHostException e) {
+            e.printStackTrace();
+            response.sendError(404, "url can't be found");
         } catch (Exception e) {
             e.printStackTrace();
             //throw new ServletException("Some unexpected error occurred. Error text was: " + e.getMessage());
@@ -182,6 +187,94 @@ public class HttpProxyServlet extends HttpServlet {
         }
 
     }
+    
+    @Override
+    protected void doHead(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HeadMethod httpHead = null;
+
+        try {
+            String url = RequestUtil.getParameter(request, PARAM_URL, defaultProxyUrl);
+            String host = url.split("/")[2];
+
+            // Get the proxy parameters
+            //TODO: Add dependency injection to set proxy config from GeoNetwork settings, using also the credentials configured
+            String proxyHost = System.getProperty("http.proxyHost");
+            String proxyPort = System.getProperty("http.proxyPort");
+
+            // Get rest of parameters to pass to proxied url
+            HttpMethodParams urlParams = new HttpMethodParams();
+
+            @SuppressWarnings("unchecked")
+            Enumeration<String> paramNames = request.getParameterNames();
+            while (paramNames.hasMoreElements()) {
+                String paramName = paramNames.nextElement();
+                if (!paramName.equalsIgnoreCase(PARAM_URL)) {
+                    urlParams.setParameter(paramName, request.getParameter(paramName));
+                }
+            }
+
+            // Checks if allowed host
+            if (!isAllowedHost(host)) {
+                //throw new ServletException("This proxy does not allow you to access that location.");
+                returnExceptionMessage(response, "This proxy does not allow you to access that location.");
+                return;
+            }
+
+            if (url.startsWith("http://") || url.startsWith("https://")) {
+                HttpClient client = new HttpClient();
+
+                // Added support for proxy
+                if (proxyHost != null && proxyPort != null) {
+                    client.getHostConfiguration().setProxy(proxyHost, Integer.valueOf(proxyPort));
+                }
+
+                httpHead = new HeadMethod(url);
+                httpHead.setParams(urlParams);
+                client.executeMethod(httpHead);
+
+                if (httpHead.getStatusCode() == HttpStatus.SC_OK) {
+                    Header contentType = httpHead.getResponseHeader(HEADER_CONTENT_TYPE);
+                    String[] contentTypesReturned = contentType.getValue().split(";");
+                    if (!isValidContentType(contentTypesReturned[0])) {
+                        contentTypesReturned = contentType.getValue().split(" ");
+                        if (!isValidContentType(contentTypesReturned[0])) {
+                            throw new ServletException("Status: 415 Unsupported media type");
+                        }
+                    }
+
+                    // Sets response contentType
+                    response.setContentType(getResponseContentType(contentTypesReturned));
+
+                    String responseBody = httpHead.getResponseBodyAsString().trim();
+
+                    PrintWriter out = response.getWriter();
+                    out.print(responseBody);
+
+                    out.flush();
+                    out.close();
+
+                } else {
+                    returnExceptionMessage(response, "Unexpected failure: " + httpHead.getStatusLine().toString());
+                }
+
+                httpHead.releaseConnection();
+
+            } else {
+                //throw new ServletException("only HTTP(S) protocol supported");
+                returnExceptionMessage(response, "only HTTP(S) protocol supported");
+            }
+        } 
+        catch (UnknownHostException e) {
+            response.sendError(404, "url can't be found");
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnExceptionMessage(response, "Some unexpected error occurred. Error text was: " + e.getMessage());
+        } finally {
+            if (httpHead != null) httpHead.releaseConnection();
+        }
+
+    }
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -272,7 +365,7 @@ public class HttpProxyServlet extends HttpServlet {
             if (httpPost != null) httpPost.releaseConnection();
         }
     }
-
+    
     /**
      * Gets the contentType for response
      *

@@ -191,7 +191,7 @@ GeoNetwork.HTML5UI.Templates.SHOW_ON_MAP =
     </tpl>';
 
 GeoNetwork.HTML5UI.Templates.LINKCONTAINER = 
-    '<div class="md-links" id="md-links-{id}">\
+    '<div class="md-links md-links-{id}">\
     </div>';
 /**
  * Button to download metadata
@@ -210,7 +210,7 @@ GeoNetwork.HTML5UI.Templates.DOWNLOAD =
      onclick="catalogue.metadataMEF(\'{uuid}\');">\
                 <img src="{[catalogue.URL]}/apps/html5ui/images/default/page_white_zip.png"/>\
             </button>\
-            <div class="md-links" id="md-links-{id}"/>\
+            <div class="md-links md-links-{id}"/>\
         </div>';
 
 
