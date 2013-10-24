@@ -21,6 +21,7 @@ attached it to the metadata for data.
     <xsl:param name="serviceDescr"/>
     <xsl:param name="serviceName"/>
     <xsl:param name="oldUrl"/>
+    <xsl:param name="oldName"/>
     
     <!-- ============================================================================= -->
 
@@ -60,7 +61,7 @@ attached it to the metadata for data.
                                 select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"/>
                             
                             <!-- Copy only resource with a URL different from one sent (to replace the value) -->
-                            <xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor[gmd:MD_Distributor//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage/gmd:URL != $oldUrl]"/>
+                            <xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor[gmd:MD_Distributor//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage/gmd:URL != $oldUrl and gmd:MD_Distributor//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:name/gco:CharacterString != $oldName]"/>
                             <!-- Copy non existing ressource attached to one responsible party  -->
                             <xsl:for-each select="//extra/gmd:MD_Metadata">
                                 <xsl:call-template name="onlinecopy"/>
@@ -71,8 +72,8 @@ attached it to the metadata for data.
                 					<xsl:when test="$protocol != 'OGC:WMS'">
                                     <gmd:distributor>
                                         <gmd:MD_Distributor>
-                                        	<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact[..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $oldUrl]"/>
-                                        	<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat[..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $oldUrl]"/>
+                                        	<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact[..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $oldUrl and ..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:name/gco:CharacterString != $oldName]"/>
+                                        	<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat[..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $oldUrl and ..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:name/gco:CharacterString != $oldName]"/>
                                         	
                                             <gmd:distributorTransferOptions>
                                                 <gmd:MD_DigitalTransferOptions>
@@ -116,8 +117,8 @@ attached it to the metadata for data.
                                 <xsl:otherwise>
                                     <gmd:distributor>
                                         <gmd:MD_Distributor>
-                                        	<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact[..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $oldUrl]"/>
-                                        	<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat[..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $oldUrl]"/>
+                                        	<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorContact[..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $oldUrl and ..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:name/gco:CharacterString != $oldName]"/>
+                                        	<xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat[..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $oldUrl and ..//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:name/gco:CharacterString != $oldName]"/>
                                             <gmd:distributorTransferOptions>
                                                 <gmd:MD_DigitalTransferOptions>
                                                     <gmd:onLine>

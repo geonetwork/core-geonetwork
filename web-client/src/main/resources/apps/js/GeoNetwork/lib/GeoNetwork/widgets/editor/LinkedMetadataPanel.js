@@ -475,24 +475,36 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 
                 // Specific MyOcean
                 if(type == 'onlinesrc') {
-                    var urls = [];
+                    var datasets = [];
+                    
+                    // get a list of unique pair name + url
                     mds.each(function(md) {
-                        if(urls.indexOf(md.get('id')) < 0) {
-                            urls.push(md.get('id'));
+                        var dsInStore = false;
+                        for(var i=0;i<datasets.length;i++) {
+                            if(datasets[i].url == md.get('id') && datasets[i].parentName == md.get('parentName')) {
+                                dsInStore = true;
+                                break;
+                            }
+                        }
+                        if(!dsInStore) {
+                            datasets.push({url:md.get('id'),parentName:md.get('parentName')});
                         }
                     });
                     
-                    Ext.each(urls, function(url) {
-                        var mdsPerUrl = store.query('id', url);
-                        if(mdsPerUrl.getCount() > 1) {
+                    Ext.each(datasets, function(ds) {
+                        // get all relations that belong to the same dataset
+                        var mdsPerDataset = store.queryBy(function(rec,id) {
+                            return (rec.get('id') == ds.url && rec.get('parentName') == ds.parentName);
+                        });
+                        if(mdsPerDataset.getCount() > 1) {
                             var rec = new store.recordType();
-                            mdsPerUrl.each(function(mdPerUrl) {
+                            mdsPerDataset.each(function(mdPerUrl) {
                                 store.fields.each(function(f) {
                                     rec.set(f.name, (rec.get(f.name) ? rec.get(f.name) + '||' : '') + mdPerUrl.get(f.name)); 
                                 });
                                 mds.remove(mdPerUrl);
                             });
-                            rec.set('id', url);
+                            rec.set('id', ds.url);
                             rec.set('type', type);
                             mds.add(rec);
                         }

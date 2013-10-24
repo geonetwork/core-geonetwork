@@ -690,8 +690,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 anchor: '90%',
                 fieldLabel: OpenLayers.i18n('URL'),
                 value: this.editUrl,
-                name: 'href'
-                value: '',
+                name: 'href',
                 validator: function(value){
                     if(value && value.indexOf('http') == 0) {
                         var request = OpenLayers.Request.HEAD({
@@ -1371,7 +1370,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         var action = this.catalogue.services.mdProcessing + 
             "?id=" + this.metadataId + 
             "&process=" + this.type + (this.editUrl ? "-edit" : "-add") +
-            parameters + '&oldUrl=' + this.editUrl;
+            parameters + '&oldUrl=' + this.editUrl + '&oldName=' + this.editName;
         
         this.editor.process(action);
         

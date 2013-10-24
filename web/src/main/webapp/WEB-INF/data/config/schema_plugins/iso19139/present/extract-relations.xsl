@@ -25,29 +25,63 @@
       </relation>
     </xsl:for-each>
     
-    <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']/*[gmd:linkage/gmd:URL!='']">
-      <relation type="onlinesrc">
-        
-        <!-- Compute title based on online source info-->
-        <xsl:variable name="title">
-          <xsl:variable name="title" select="if (../@uuidref) then util:getIndexField(string(/root/gui/app/path), string(../@uuidref), '_title', string(/root/gui/language)) else ''"/>
-          <xsl:value-of select="if ($title = '' and ../@uuidref) then ../@uuidref else $title"/><xsl:text> </xsl:text>
-          <xsl:value-of select="if (gmd:name/gco:CharacterString != '') 
-            then gmd:name/gco:CharacterString 
-            else if (gmd:name/gmx:MimeFileType != '')
-            then gmd:name/gmx:MimeFileType
-            else if (gmd:description/gco:CharacterString != '')
-            then gmd:description/gco:CharacterString
-            else gmd:linkage/gmd:URL"/>
-          <xsl:value-of select="if (gmd:protocol/*) then concat(' (', gmd:protocol/*, ')') else ''"/>
-        </xsl:variable>
-        
-        <id><xsl:value-of select="gmd:linkage/gmd:URL"/></id>
-        <title>
-          <xsl:value-of select="if ($title != '') then $title else gmd:linkage/gmd:URL"/>
-        </title>
-        <abstract><xsl:value-of select="gmd:description/gco:CharacterString"/></abstract>
-      </relation>
+    <xsl:for-each select="*/descendant::*[name(.) = 'gmd:distributor']">
+    <xsl:choose>
+    	<xsl:when test="normalize-space(gmd:MD_Distributor//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString) != 'OGC:WMS:getCapabilities'">
+		    <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']/*[gmd:linkage/gmd:URL!='']">
+		      <relation type="onlinesrc">
+		        
+		        <!-- Compute title based on online source info-->
+		        <xsl:variable name="title">
+		          <xsl:variable name="title" select="if (../@uuidref) then util:getIndexField(string(/root/gui/app/path), string(../@uuidref), '_title', string(/root/gui/language)) else ''"/>
+		          <xsl:value-of select="if ($title = '' and ../@uuidref) then ../@uuidref else $title"/><xsl:text> </xsl:text>
+		          <xsl:value-of select="if (gmd:name/gco:CharacterString != '') 
+		            then gmd:name/gco:CharacterString 
+		            else if (gmd:name/gmx:MimeFileType != '')
+		            then gmd:name/gmx:MimeFileType
+		            else if (gmd:description/gco:CharacterString != '')
+		            then gmd:description/gco:CharacterString
+		            else gmd:linkage/gmd:URL"/>
+		          <xsl:value-of select="if (gmd:protocol/*) then concat(' (', gmd:protocol/*, ')') else ''"/>
+		        </xsl:variable>
+		        
+		        <id><xsl:value-of select="gmd:linkage/gmd:URL"/></id>
+		        <title>
+		          <xsl:value-of select="if ($title != '') then $title else gmd:linkage/gmd:URL"/>
+		        </title>
+		        <abstract><xsl:value-of select="gmd:description/gco:CharacterString"/></abstract>
+		      </relation>
+		    </xsl:for-each>
+    	</xsl:when>
+    	<xsl:otherwise>
+		    <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']/*[gmd:linkage/gmd:URL!='']">
+		      <relation type="onlinesrc">
+		        
+		        <!-- Compute title based on online source info-->
+		        <xsl:variable name="title">
+		          <xsl:variable name="title" select="if (../@uuidref) then util:getIndexField(string(/root/gui/app/path), string(../@uuidref), '_title', string(/root/gui/language)) else ''"/>
+		          <xsl:value-of select="if ($title = '' and ../@uuidref) then ../@uuidref else $title"/><xsl:text> </xsl:text>
+		          <xsl:value-of select="if (gmd:name/gco:CharacterString != '') 
+		            then gmd:name/gco:CharacterString 
+		            else if (gmd:name/gmx:MimeFileType != '')
+		            then gmd:name/gmx:MimeFileType
+		            else if (gmd:description/gco:CharacterString != '')
+		            then gmd:description/gco:CharacterString
+		            else gmd:linkage/gmd:URL"/>
+		          <xsl:value-of select="if (gmd:protocol/*) then concat(' (', gmd:protocol/*, ')') else ''"/>
+		        </xsl:variable>
+		        
+		        <id><xsl:value-of select="gmd:linkage/gmd:URL"/></id>
+		        <title>
+		          <xsl:value-of select="if ($title != '') then $title else gmd:linkage/gmd:URL"/>
+		        </title>
+		        <abstract><xsl:value-of select="gmd:description/gco:CharacterString"/></abstract>
+		        <parentName><xsl:value-of select="../../gmd:onLine[1]/gmd:CI_OnlineResource/gmd:name/gco:CharacterString"/></parentName>
+		      </relation>
+		    </xsl:for-each>
+    	</xsl:otherwise>
+    	
+    </xsl:choose>
     </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>
