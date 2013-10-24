@@ -38,6 +38,7 @@ import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
+import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
@@ -67,6 +68,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.quartz.JobKey.jobKey;
 
@@ -74,6 +76,7 @@ import static org.quartz.JobKey.jobKey;
  * Represents a harvester job. Used to launch harvester workers.
  *
  */
+@Transactional
 public abstract class AbstractHarvester<T extends HarvestResult> {
 	
     private static final String SCHEDULER_ID = "abstractHarvester";
@@ -236,7 +239,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      *
      * @throws Exception
 	  */
-    @Transactional
 	public synchronized void destroy() throws Exception {
 	    doUnschedule();
 
@@ -250,9 +252,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 	}
 
     /**
-     * TODO Javadoc.
+     * Set harvester status to {@link Status#ACTIVE} and schedule the harvester to be ran
+     * at the next time according to the harvesters schedule.
      *
-     * @return
+     * @return return {@link OperResult#ALREADY_ACTIVE} if the harvester is already active or {@link OperResult#OK}
+     *
      * @throws SQLException
      * @throws SchedulerException
      */
@@ -271,9 +275,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 	}
 
     /**
-     * TODO Javadoc.
+     * Set the harvester status to {@link Status#ACTIVE} and unschedule any scheduled jobs.
      *
-     * @return
+     * @return {@link OperResult#ALREADY_INACTIVE} if the not currently enabled or {@link OperResult#OK}
      * @throws SQLException
      * @throws SchedulerException
      */
@@ -288,11 +292,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 	}
 
     /**
-     * TODO Javadoc.
+     * Call {@link #start()} if status is currently {@link Status#INACTIVE}.  Trigger a harvester job to run immediately.
      *
-     * @return
-     * @throws SQLException
-     * @throws SchedulerException
+     * @return {@link OperResult#OK} or {@link OperResult#ALREADY_RUNNING} if harvester is currently running.
      */
     public synchronized OperResult run() throws SQLException, SchedulerException {
 		if (status == Status.INACTIVE) {
@@ -306,35 +308,19 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 	}
 
     /**
-     * TODO Javadoc.
+     * Run the harvester in the synchronously (in the current thread) and return whether the harvest correctly completed.
      *
-     * @return
+     * @return {@link OperResult#OK} or {@link OperResult#ERROR}
      */
 	public synchronized OperResult invoke() {
-		// Cannot do invoke if this harvester was started (iei active)
-		if (status != Status.INACTIVE){
-			return OperResult.ALREADY_ACTIVE;
-        }
-		String nodeName = getParams().name +" ("+ getClass().getSimpleName() +")";
-		OperResult result = OperResult.OK;
+        Status oldStatus = status;
 
-		try {
-			status = Status.ACTIVE;
-			log.info("Started harvesting from node : " + nodeName);
-			doHarvest(log);
-			log.info("Ended harvesting from node : " + nodeName);
-		} catch(Throwable t) {
-            context.getMonitorManager().getCounter(AbstractHarvesterErrorCounter.class).inc();
-			result = OperResult.ERROR;
-			log.warning("Raised exception while harvesting from : " + nodeName);
-			log.warning(" (C) Class   : " + t.getClass().getSimpleName());
-			log.warning(" (C) Message : " + t.getMessage());
-			error = t;
-			t.printStackTrace();
+        try {
+            status = Status.ACTIVE;
+            return harvest();
 		} finally {
-			status = Status.INACTIVE;
+			status = oldStatus;
 		}
-		return result;
 	}
 
     /**
@@ -472,17 +458,19 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      *
      */
     @Transactional
-    void harvest() {
+    synchronized OperResult harvest() {
+        OperResult operResult = OperResult.OK;
         running = true;
-        long startTime = System.currentTimeMillis();
+        try {
+            long startTime = System.currentTimeMillis();
 
-        String logfile = initializeLog();
-        this.log.info("Starting harvesting of " + this.getParams().name);
-        error = null;
-        errors.clear();
-        final Logger logger = Log.createLogger(Geonet.HARVESTER);
-        final String nodeName = getParams().name + " (" + getClass().getSimpleName() + ")";
-        final String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
+            String logfile = initializeLog();
+            this.log.info("Starting harvesting of " + this.getParams().name);
+            error = null;
+            errors.clear();
+            final Logger logger = Log.createLogger(Geonet.HARVESTER);
+            final String nodeName = getParams().name + " (" + getClass().getSimpleName() + ")";
+            final String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
             try {
                 login();
 
@@ -499,72 +487,80 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 if (getParams().oneRunOnly) {
                     stop();
                 }
-			} catch (InvalidParameterValueEx e) {
-				logger.error("The harvester " + this.getParams().name + "["
-						+ this.getType()
-						+ "] didn't accept some of the parameters sent.");
+            } catch (InvalidParameterValueEx e) {
+                logger.error("The harvester " + this.getParams().name + "["
+                             + this.getType()
+                             + "] didn't accept some of the parameters sent.");
 
-				errors.add(new HarvestError(e, logger));
-				error = e;
+                errors.add(new HarvestError(e, logger));
+                error = e;
+                operResult = OperResult.ERROR;
             } catch (Throwable t) {
+                operResult = OperResult.ERROR;
                 logger.warning("Raised exception while harvesting from : " + nodeName);
                 logger.warning(" (C) Class   : " + t.getClass().getSimpleName());
                 logger.warning(" (C) Message : " + t.getMessage());
                 error = t;
                 t.printStackTrace();
-			errors.add(new HarvestError(t, logger));
-		} finally {
-		    List<HarvestError> harvesterErrors = getErrors();
-		    if (harvesterErrors != null) {
-		        errors.addAll(harvesterErrors);
-		    }
-        }
-
-            long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
-
-
-            try {
-                // record the results/errors for this harvest in the database
-                Element result = getResult();
-                if (error != null) {
-                    result = JeevesException.toElement(error);
+                errors.add(new HarvestError(t, logger));
+            } finally {
+                List<HarvestError> harvesterErrors = getErrors();
+                if (harvesterErrors != null) {
+                    errors.addAll(harvesterErrors);
                 }
-                Element logfile_ = new Element("logfile");
-                logfile_.setText(logfile);
-                result.addContent(logfile_);
+            }
 
-                result.addContent(toElement(errors));
-                final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
-                final HarvestHistory history = new HarvestHistory()
-                        .setHarvesterType(getType())
-                        .setHarvesterName(getParams().name)
-                        .setHarvesterUuid(getParams().uuid)
-                        .setElapsedTime((int) elapsedTime)
-                        .setHarvestDate(new ISODate(lastRun))
-                        .setParams(Xml.getString(getParams().node));
-                historyRepository.save(history);
+            long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
 
-
-                //Send notification email, if needed
-                try {
-                    SendNotification.process(context, history.asXml(), this);
-                } catch (Exception e2) {
-                    logger.error("Raised exception while attempting to send email");
-                    logger.error(" (C) Exc   : "+ e2);
-                    e2.printStackTrace();
-                }
-
-            } catch (Exception e) {
-                logger.warning("Raised exception while attempting to store harvest history from : " + nodeName);
-                e.printStackTrace();
-                logger.warning(" (C) Exc   : " + e);
+            logHarvest(logfile, logger, nodeName, lastRun, elapsedTime);
         } finally {
             running = false;
+        }
+
+        return operResult;
+    }
+
+    private void logHarvest(String logfile, Logger logger, String nodeName, String lastRun, long elapsedTime) {
+        try {
+            // record the results/errors for this harvest in the database
+            Element result = getResult();
+            if (error != null) {
+                result = JeevesException.toElement(error);
+            }
+            Element logfile_ = new Element("logfile");
+            logfile_.setText(logfile);
+            result.addContent(logfile_);
+
+            result.addContent(toElement(errors));
+            final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
+            final HarvestHistory history = new HarvestHistory()
+                    .setHarvesterType(getType())
+                    .setHarvesterName(getParams().name)
+                    .setHarvesterUuid(getParams().uuid)
+                    .setElapsedTime((int) elapsedTime)
+                    .setHarvestDate(new ISODate(lastRun))
+                    .setParams(getParams().node);
+            historyRepository.save(history);
+
+
+            //Send notification email, if needed
+            try {
+                SendNotification.process(context, history.asXml(), this);
+            } catch (Exception e2) {
+                logger.error("Raised exception while attempting to send email");
+                logger.error(" (C) Exc   : " + e2);
+                e2.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            logger.warning("Raised exception while attempting to store harvest history from : " + nodeName);
+            e.printStackTrace();
+            logger.warning(" (C) Exc   : " + e);
         }
     }
 
 
-	/**
+    /**
      * Convert {@link HarvestError} to an element that can be saved on the
      * database.
      * 
@@ -694,16 +690,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws Exception
      */
 	public abstract void doHarvest(Logger l) throws Exception;
-	
-	/**
-	 * Outer function to get the execution time and common code.
-	 * @param log
-	 * @throws Exception
-	 */
-	protected void doHarvest_(Logger log) throws Exception
-	{
-        doHarvest(log);
-	}
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Protected storage methods

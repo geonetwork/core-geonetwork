@@ -492,7 +492,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         HarvestManager hm = gc.getBean(HarvestManager.class);
-        String uuid = hm.add2(node);
+        String uuid = hm.addHarvesterReturnUUID(node);
         node.setAttribute("uuid", uuid);
         node.addContent(new Element("info"));
         AbstractHarvester harvester = hm.getHarvester(uuid);

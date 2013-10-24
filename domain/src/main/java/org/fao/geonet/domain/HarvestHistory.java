@@ -1,6 +1,15 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Content;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.persistence.*;
+import java.io.IOException;
 
 /**
  * An entity representing a harvesting task that may have been completed or possibly ending in error.
@@ -200,13 +209,44 @@ public class HarvestHistory extends GeonetEntity {
     }
 
     /**
+     * Get arbitrary harvester specific information about the harvesting.
+     *
+     * @return the harvester info.
+     */
+    @Transient
+    @Nullable
+    public Element getInfoAsXml() throws IOException, JDOMException {
+        final String info = getInfo();
+        if (info == null) {
+            return null;
+        }
+        return Xml.loadString(info, false);
+    }
+
+    /**
      * Set the arbitrary harvester specific data about the harvesting. Can be error information or other related information.
      *
      * @param info the information to store.
      * @return this entity object
      */
-    public HarvestHistory setInfo(String info) {
+    protected HarvestHistory setInfo(String info) {
         this._info = info;
+        return this;
+    }
+    /**
+     * Set the arbitrary harvester specific data about the harvesting. Can be error information or other related information.
+     *
+     *
+     * @param info the information to store.
+     * @return this entity object.
+     */
+    @Nonnull
+    public HarvestHistory setInfo(@Nullable Element info) {
+        if (info == null) {
+            setInfo((String)null);
+        } else {
+            setInfo(Xml.getString(info));
+        }
         return this;
     }
 
@@ -222,14 +262,81 @@ public class HarvestHistory extends GeonetEntity {
     }
 
     /**
+     * Get the parameters used for performing the harvesting. As of 2.10 this is XML from the setting table. Future versions will likely
+     * change this.
+     *
+     * @return the parameters used for performing the harvesting.
+     */
+    @Transient
+    @Nullable
+    public Element getParamsAsXml() throws IOException, JDOMException {
+        final String params = getParams();
+        if (params == null) {
+            return null;
+        }
+        return Xml.loadString(params, false);
+    }
+
+    /**
      * Set the parameters used for performing the harvesting.
      *
      * @param params The parameters
      * @return this entity object
      */
-    public HarvestHistory setParams(String params) {
+    protected HarvestHistory setParams(final String params) {
         this._params = params;
         return this;
     }
+    /**
+     * Set the parameters used for performing the harvesting.
+     *
+     * @param params The parameters
+     * @return this entity object
+     */
+    public HarvestHistory setParams(final Element params) {
+        if (params == null) {
+            setParams((String) null);
+        } else {
+            setParams(Xml.getString(params));
+        }
+        return this;
+    }
 
+    @Override
+    public Element asXml() {
+        final Element element = super.asXml();
+
+
+        Element infoAsXml = null;
+        try {
+            infoAsXml = getInfoAsXml();
+        } catch (IOException e) {
+            Log.warning(Constants.DOMAIN_LOG_MODULE, "error parsing harvest history info element", e);
+        } catch (JDOMException e) {
+            Log.warning(Constants.DOMAIN_LOG_MODULE, "error parsing harvest history info element", e);
+        }
+        Element paramsAsXml = null;
+        try {
+            paramsAsXml = getParamsAsXml();
+        } catch (IOException e) {
+            Log.warning(Constants.DOMAIN_LOG_MODULE, "error parsing harvest history params element", e);
+        } catch (JDOMException e) {
+            Log.warning(Constants.DOMAIN_LOG_MODULE, "error parsing harvest history params element", e);
+        }
+        replaceWithXml(element, infoAsXml, "info");
+        replaceWithXml(element, paramsAsXml, "params");
+        return element;
+    }
+
+    private void replaceWithXml(Element element, Content asXml, String tagName) {
+        final Element info = element.getChild(tagName);
+        if (info != null) {
+            if (asXml != null) {
+                info.removeContent();
+                info.addContent(asXml);
+            } else {
+                info.detach();
+            }
+        }
+    }
 }

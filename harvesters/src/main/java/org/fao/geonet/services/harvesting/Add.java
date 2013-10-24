@@ -55,7 +55,7 @@ public class Add implements Service {
 		HarvestManager hm = gc.getBean(HarvestManager.class);
 
 		// Add current user as harvester owner
-        String id = hm.add(params, context.getUserSession().getUserId());
+        String id = hm.addHarvesterReturnId(params, context.getUserSession().getUserId());
 
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element("id").setText(id));
 	}

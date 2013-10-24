@@ -16,8 +16,7 @@ import static org.fao.geonet.repository.SortUtils.createPath;
 import static org.fao.geonet.repository.specification.HarvestHistorySpecs.hasHarvesterUuid;
 
 
-public class History  implements Service
-{
+public class History  implements Service {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -39,7 +38,10 @@ public class History  implements Service
 		String uuid = params.getChildText("uuid");
 		String sort = params.getChildText("sort");
 		String sortCriteria = "date";
-		if ((sort != null) && (sort.equals("type"))) sortCriteria = "type";
+
+		if ((sort != null) && (sort.equals("type"))) {
+            sortCriteria = "type";
+        }
 
         final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
 
@@ -47,40 +49,35 @@ public class History  implements Service
         final Sort.Order harvesterUuidOrder = new Sort.Order(createPath(HarvestHistory_.harvesterUuid));
         final Sort.Order harvesterTypeSort = new Sort.Order(createPath(HarvestHistory_.harvesterType));
 
-        Element result = null;
+        Sort springSort;
+        if (sortCriteria.equals("date")) {
+            springSort = new Sort(harvestDateOrder, harvesterUuidOrder);
+        } else {
+            springSort = new Sort(harvesterTypeSort, harvestDateOrder);
+        }
+
+        Element result;
         if ((uuid == null) || (uuid.equals(""))) {
-            Sort springSort;
-            if (sortCriteria.equals("date")) {
-                springSort = new Sort(harvestDateOrder, harvesterUuidOrder);
-            } else {
-                springSort = new Sort(harvesterTypeSort, harvestDateOrder);
-            }
             result = historyRepository.findAllAsXml(springSort);
 		} else {
-            result = historyRepository.findAllAsXml(hasHarvesterUuid(uuid), new Sort(harvestDateOrder, harvesterUuidOrder));
+            result = historyRepository.findAllAsXml(hasHarvesterUuid(uuid), springSort);
         }
 
 
+        String id = params.getChildText("id");
 
-		if (!result.getChildren().isEmpty()) {
-			String id = params.getChildText("id");
+        Element harvesterInfo = context.getBean(HarvestManager.class).get(id, context, null);
+        Element response = new Element(Jeeves.Elem.RESPONSE);
 
-			Element harvesterInfo = context.getBean(HarvestManager.class).get(id, context, null);
-			Element response = new Element(Jeeves.Elem.RESPONSE);
+        if (harvesterInfo != null) {
+            response.addContent(result.detach());
+            response.addContent(harvesterInfo.detach());
 
-			response.addContent(result.detach());
-			response.addContent(harvesterInfo.detach());
-
-			Element sortEl = new Element("sort");
-			sortEl.addContent(sortCriteria);
-			response.addContent(sortEl);
-
-			return response;
-		}
-
-		//--- we get here only if the 'uuid' is present and the node was not found
-
-		throw new ObjectNotFoundEx(uuid);
+            Element sortEl = new Element("sort");
+            sortEl.addContent(sortCriteria);
+            response.addContent(sortEl);
+        }
+        return response;
 	}
 
 }

@@ -40,8 +40,8 @@ public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
         HarvestHistory history1 = newHarvestHistory();
         String infoText = "this is the info string";
         String paramText = "this is the param string";
-        history1.setInfo("<infodata>" + infoText + "</infodata>");
-        history1.setParams("<params><param1>" + paramText + "</param1></params>");
+        history1.setInfo(new Element("infodata").setText(infoText));
+        history1.setParams(new Element("params").addContent(new Element("param1").setText(paramText)));
         _repo.save(history1);
 
         Element xml = _repo.findAllAsXml();

@@ -1,18 +1,18 @@
 package org.fao.geonet.kernel.harvest;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
+import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * test base class for testing harvesters.
@@ -24,7 +24,8 @@ import org.springframework.test.context.ContextConfiguration;
 public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvesterServiceIntegrationTest {
     @Autowired
     MockRequestFactoryGeonet _requestFactory;
-
+    @Autowired
+    HarvestHistoryRepository _harvestHistoryRepository;
     @Before
     public void clearRequestFactory() {
         _requestFactory.clear();
@@ -32,6 +33,7 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
 
     @Test
     public void testHarvest() throws Exception {
+        assertEquals(0, _harvestHistoryRepository.count());
         final ServiceContext context = createServiceContext();
         loginAsAdmin(context);
         mockHttpRequests(_requestFactory);
@@ -42,13 +44,12 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
         _harvester.setContext(context);
         _harvester.init(params);
 
-        Logger log = Log.createLogger(Geonet.CSW_HARVEST);
-        _harvester.doHarvest(log);
+        _harvester.invoke();
         assertExpectedResult(_harvester.getResult());
 
         _requestFactory.assertAllRequestsCalled();
 
-
+        assertEquals(1, _harvestHistoryRepository.count());
     }
 
     protected abstract void assertExpectedResult(Element result);

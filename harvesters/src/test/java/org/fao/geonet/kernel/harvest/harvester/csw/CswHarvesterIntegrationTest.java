@@ -80,6 +80,10 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
     }
 
     protected void customizeParams(Element params) {
+        addCswSpecificParams(params);
+    }
+
+    public static void addCswSpecificParams(Element params) {
         params.getChild("site")
                 .addContent(new Element("capabilitiesUrl").setText(CAPABILITIES_URL))
                 .addContent(new Element("outputSchema").setText(OUTPUT_SCHEMA));

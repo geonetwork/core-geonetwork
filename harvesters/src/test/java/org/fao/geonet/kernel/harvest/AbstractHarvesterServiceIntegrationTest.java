@@ -41,6 +41,7 @@ public class AbstractHarvesterServiceIntegrationTest extends AbstractCoreIntegra
                 .setAttribute("id", "1")
                 .setAttribute("type", type)
                 .setAttribute("owner", "1")
+                .addContent(new Element("ownerId").setText("1"))
                 .addContent(new Element("site")
                         .addContent(new Element("name").setText("testHarvester"))
                         .addContent(new Element("uuid").setText("testHarvesetUuid"))

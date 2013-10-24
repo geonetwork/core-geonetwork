@@ -33,7 +33,7 @@
 
 			<xsl:with-param name="content">
 
-			<xsl:variable name="totalCount" select="count(/root/response/response/record)" />
+			<xsl:variable name="totalCount" select="count(/root/response/harvesthistory/record)" />
 			<script>
 				function viewAllHarvestingHistory() {
 					$('harvesterHistoryCounter').toggle();
@@ -154,7 +154,7 @@
 							<th class="padded" style="width:32px"><b><xsl:value-of select="/root/gui/harvesting/deleted"/></b></th>
 						</xsl:if>
 					</tr>
-					<xsl:for-each select="/root/response/response/record">
+					<xsl:for-each select="/root/response/harvesthistory/record">
 
 						<xsl:variable name="uuid" select="harvesteruuid"/>
 						<xsl:variable name="id" select="id"/>
@@ -303,13 +303,13 @@
 					<xsl:value-of select="/root/gui/harvesting/backToHarvestManager"/>
 				</button>
 				&#160;
-				<xsl:if test="count(/root/response/response/record) gt $pageHistorySize">
+				<xsl:if test="count(/root/response/harvesthistory/record) gt $pageHistorySize">
 					<button class="content" onclick="viewAllHarvestingHistory()">
 						<xsl:value-of select="/root/gui/harvesting/viewAll"/>
 					</button>
 				</xsl:if>
 				&#160;
-				<xsl:if test="count(/root/response/response/record) gt 0">
+				<xsl:if test="count(/root/response/harvesthistory/record) gt 0">
 					<button class="content" onclick="deleteHarvestingHistory();">
 						<xsl:value-of select="/root/gui/harvesting/deleteHistory"/>
 					</button>

@@ -261,7 +261,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
      * @throws SQLException hmm
      */
 	@Override
-    public String add(Element node, String ownerId) throws JeevesException, SQLException {
+    public String addHarvesterReturnId(Element node, String ownerId) throws JeevesException, SQLException {
         if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
         }
@@ -291,9 +291,9 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
      * @throws SQLException
      */
 	@Override
-    public String add2(Element node) throws JeevesException, SQLException {
-        if(Log.isDebugEnabled(Geonet.HARVEST_MAN)){
-            Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
+    public String addHarvesterReturnUUID(Element node) throws JeevesException, SQLException {
+        if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
+            Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n" + Xml.getString(node));
         }
 		String type = node.getAttributeValue("type");
 		AbstractHarvester ah = AbstractHarvester.create(type, context);
@@ -342,7 +342,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         node.addContent(ownerIdE);
 
 		// now add a new harvester based on the settings in the old
-		return add(node, ownerId);
+		return addHarvesterReturnId(node, ownerId);
 	}
 
     /**
@@ -529,11 +529,6 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 		return info;
 	}
 
-    /**
-     *
-     * @param harvestUuid
-     * @return
-     */
 	@Override
     public AbstractHarvester getHarvester(String harvestUuid) {
 		return hmHarvestLookup.get(harvestUuid);
@@ -603,8 +598,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         history.setHarvesterName(ah.getParams().name);
         history.setHarvesterType(ah.getType());
         history.setHarvesterUuid(ah.getParams().uuid);
-        history.setInfo(Xml.getString(historyEl));
-        history.setParams(Xml.getString(ah.getParams().node));
+        history.setInfo(historyEl);
+        history.setParams(ah.getParams().node);
 
         historyRepository.save(history);
 

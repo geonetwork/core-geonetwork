@@ -35,12 +35,12 @@ import org.jdom.JDOMException;
 public class HarvestError {
 
     /**
-     * Exception that caused the harvest error
+     * Exception that caused the harvest error.
      */
     private Throwable origin = null;
 
     /**
-     * Description of the error
+     * Description of the error.
      */
     private String description = null;
 
@@ -69,7 +69,7 @@ public class HarvestError {
 
         this.origin = ex;
         this.description = ex.getMessage();
-        if(this.description.isEmpty()) {
+        if(this.description == null || this.description.isEmpty()) {
             this.description = ex.getClass().toString();
         }
         // Do not print log, as it is a very generic exception

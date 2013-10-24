@@ -50,7 +50,7 @@ public interface HarvestManager {
      * @param ownerId the id of the user doing this
      * @return id of new harvester
      */
-    String add(Element node, String ownerId) throws JeevesException, SQLException;
+    String addHarvesterReturnId(Element node, String ownerId) throws JeevesException, SQLException;
 
 
     /**
@@ -58,7 +58,7 @@ public interface HarvestManager {
      * @param node harvester config
      * @return id of new harvester
      */
-    String add2(Element node) throws JeevesException, SQLException;
+    String addHarvesterReturnUUID(Element node) throws JeevesException, SQLException;
 
     /**
      * Create a new harvester by cloning the identified harvester.
@@ -90,15 +90,46 @@ public interface HarvestManager {
     Common.OperResult clearBatch(String id) throws Exception;
 
     Common.OperResult remove(String id) throws Exception;
-
+    /**
+     * Set harvester status to {@link org.fao.geonet.kernel.harvest.Common.Status#ACTIVE} and schedule the harvester to be ran
+     * at the next time according to the harvesters schedule.
+     *
+     * @return return {@link org.fao.geonet.kernel.harvest.Common.OperResult#ALREADY_ACTIVE} if the harvester is already active or {@link org.fao.geonet.kernel.harvest.Common.OperResult#OK}
+     *
+     * @throws SQLException
+     * @throws SchedulerException
+     */
     Common.OperResult start(String id) throws SQLException, SchedulerException;
 
+    /**
+     * Set the harvester status to {@link org.fao.geonet.kernel.harvest.Common.Status#ACTIVE} and unschedule any scheduled jobs.
+     *
+     * @return {@link org.fao.geonet.kernel.harvest.Common.OperResult#ALREADY_INACTIVE} if the not currently enabled or {@link org.fao.geonet.kernel.harvest.Common.OperResult#OK}
+     * @throws SQLException
+     * @throws SchedulerException
+     */
     Common.OperResult stop(String id) throws SQLException, SchedulerException;
 
+    /**
+     * Call {@link AbstractHarvester#start()} if status is currently {@link org.fao.geonet.kernel.harvest.Common.Status#INACTIVE}.  Trigger a harvester job to run immediately.
+     *
+     * @return {@link org.fao.geonet.kernel.harvest.Common.OperResult#OK} or {@link org.fao.geonet.kernel.harvest.Common.OperResult#ALREADY_RUNNING} if harvester is currently running.
+     */
     Common.OperResult run(String id) throws SQLException, SchedulerException;
-
+    /**
+     * Run the harvester in the synchronously (in the current thread) and return whether the harvest correctly completed.
+     *
+     * @return {@link org.fao.geonet.kernel.harvest.Common.OperResult#OK} or {@link org.fao.geonet.kernel.harvest.Common.OperResult#ERROR}
+     */
     Common.OperResult invoke(String id);
 
+    /**
+     * Get the harvester instance for the given harvester uuid.
+     *
+     * @param harvestUuid uuid of the harvester to look up.
+     *
+     * @return the harvester instance for the given harvester uuid.
+     */
     AbstractHarvester getHarvester(String harvestUuid);
 
     boolean isReadOnly();

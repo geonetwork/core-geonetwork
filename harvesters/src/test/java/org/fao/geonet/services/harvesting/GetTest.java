@@ -46,8 +46,9 @@ public class GetTest extends AbstractHarvesterServiceIntegrationTest {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
 
-        final String added = _harvestManager.add(createHarvesterParams("csw"), context.getUserSession().getUserId());
-        final String added2 = _harvestManager.add(createHarvesterParams("geonetwork20"), context.getUserSession().getUserId());
+        final String added = _harvestManager.addHarvesterReturnId(createHarvesterParams("csw"), context.getUserSession().getUserId());
+        final String added2 = _harvestManager.addHarvesterReturnId(createHarvesterParams("geonetwork20"), context.getUserSession()
+                .getUserId());
         Element params = createParams();
         final Element result = get.exec(params, context);
 
@@ -68,7 +69,7 @@ public class GetTest extends AbstractHarvesterServiceIntegrationTest {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
 
-        final String added = _harvestManager.add(createHarvesterParams("csw"), context.getUserSession().getUserId());
+        final String added = _harvestManager.addHarvesterReturnId(createHarvesterParams("csw"), context.getUserSession().getUserId());
 
         final Get get = new Get();
 
