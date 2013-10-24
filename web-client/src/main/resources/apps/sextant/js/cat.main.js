@@ -504,8 +504,10 @@ cat.app = function() {
 			buttonAlign : 'left',
 			resetCb : function() {
 				this.getForm().reset();
-				var elt = this.findByType('gn_categorytree', true);
-				elt[0].reset();
+				var trees = this.findByType('gn_categorytree', true);
+				Ext.each(trees, function (tree) {
+				    tree.reset();
+				});
 				this.find('id', 'E__groupPublished')[0].getStore().load();
 				catalogue.metadataStore.removeAll();
 				resetResultPanels();
@@ -684,7 +686,7 @@ cat.app = function() {
             }
             
             win = new Ext.Window({
-            	id: 'gn-modalWindow',
+            	id: 'modalWindow',
                 layout: 'fit',
                 closeAction: 'destroy',
                 maximized: false,
