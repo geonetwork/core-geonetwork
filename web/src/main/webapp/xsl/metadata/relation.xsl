@@ -14,6 +14,7 @@
   exclude-result-prefixes="geonet exslt">
 
   <xsl:include href="common.xsl"/>
+  <xsl:include href="../schema-xsl-relations-loader.xsl"/>
 
   <xsl:template match="/">
     <relations>
