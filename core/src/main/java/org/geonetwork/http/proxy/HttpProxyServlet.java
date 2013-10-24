@@ -177,7 +177,7 @@ public class HttpProxyServlet extends HttpServlet {
         } 
         catch (UnknownHostException e) {
             e.printStackTrace();
-            response.sendError(404, "url can't be found");
+            response.sendError(HttpStatus.SC_NOT_FOUND, "url can't be found");
         } catch (Exception e) {
             e.printStackTrace();
             //throw new ServletException("Some unexpected error occurred. Error text was: " + e.getMessage());
@@ -254,18 +254,20 @@ public class HttpProxyServlet extends HttpServlet {
                     out.close();
 
                 } else {
-                    returnExceptionMessage(response, "Unexpected failure: " + httpHead.getStatusLine().toString());
+                	response.sendError(httpHead != null ? httpHead.getStatusCode() : HttpStatus.SC_BAD_REQUEST, "Can't access url : " + url);
                 }
 
                 httpHead.releaseConnection();
 
             } else {
                 //throw new ServletException("only HTTP(S) protocol supported");
+            	response.setStatus(HttpStatus.SC_BAD_REQUEST);
                 returnExceptionMessage(response, "only HTTP(S) protocol supported");
             }
         } 
         catch (UnknownHostException e) {
-            response.sendError(404, "url can't be found");
+        	response.setStatus(HttpStatus.SC_NOT_FOUND);
+        	returnExceptionMessage(response, "Some unexpected error occurred. Error text was: " + e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             returnExceptionMessage(response, "Some unexpected error occurred. Error text was: " + e.getMessage());
