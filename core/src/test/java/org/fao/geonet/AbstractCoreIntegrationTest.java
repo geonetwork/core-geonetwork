@@ -103,9 +103,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             _datastore.createSchema(builder.buildFeatureType());
 
             _applicationContext.getBeanFactory().registerSingleton("serviceConfig", serviceConfig);
-
             _applicationContext.getBeanFactory().registerSingleton(initializedString, initializedString);
-
         }
 
 
@@ -132,14 +130,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);
         _applicationContext.getBean(DataManager.class).init(createServiceContext(), false);
 
-    }
-
-    private void clean(File file) throws IOException {
-        if (file.exists()) {
-            cleanDirectory(file);
-        }
-
-        FileUtils.forceMkdir(file);
     }
 
     /**

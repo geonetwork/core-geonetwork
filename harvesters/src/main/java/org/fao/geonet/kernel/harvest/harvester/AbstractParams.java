@@ -85,7 +85,7 @@ public abstract class AbstractParams {
 		name       = Util.getParam(site, "name", "");
 		uuid       = Util.getParam(site, "uuid", UUID.randomUUID().toString());
 		
-        Element ownerIdE = node.getChild("ownerId");
+        Element ownerIdE = site.getChild("ownerId");
         if(ownerIdE != null) {
             ownerId = ownerIdE.getText();
         }
@@ -94,7 +94,7 @@ public abstract class AbstractParams {
             Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
         }
 
-        Element ownerIdGroupE = node.getChild("ownerGroup");
+        Element ownerIdGroupE = site.getChild("ownerGroup");
         if(ownerIdGroupE != null) {
             Element idE = ownerIdGroupE.getChild("id");
             if(idE != null) {

@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -23,9 +25,9 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(inheritLocations = true, locations = "classpath:harvesters-repository-test-context.xml")
 public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvesterServiceIntegrationTest {
     @Autowired
-    MockRequestFactoryGeonet _requestFactory;
+    protected MockRequestFactoryGeonet _requestFactory;
     @Autowired
-    HarvestHistoryRepository _harvestHistoryRepository;
+    protected HarvestHistoryRepository _harvestHistoryRepository;
     @Before
     public void clearRequestFactory() {
         _requestFactory.clear();
@@ -41,15 +43,19 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
         Element params = createHarvesterParams("csw");
         customizeParams(params);
         AbstractHarvester _harvester = getHarvesterUnderTest();
-        _harvester.setContext(context);
-        _harvester.init(params);
+        _harvester.init(params, context);
 
         _harvester.invoke();
         assertExpectedResult(_harvester.getResult());
+        assertExpectedErrors(_harvester.getErrors());
 
         _requestFactory.assertAllRequestsCalled();
 
         assertEquals(1, _harvestHistoryRepository.count());
+    }
+
+    protected void assertExpectedErrors(List errors) {
+        assertEquals (0, errors.size());
     }
 
     protected abstract void assertExpectedResult(Element result);

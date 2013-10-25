@@ -464,23 +464,25 @@ public class JeevesEngine {
 
 				info("--- Handler started ---------------------------------------");
 			} catch (Exception e) {
-				Map<String,String> errors = new HashMap<String,String>();
-				String eS = "Raised exception while starting appl handler. Skipped.";
-				error(eS);
-				errors.put("Error", eS);
-				error("   Handler   : " +className);
-				errors.put("Handler", className);
-				error("   Exception : " +e);
-				errors.put("Exception",e.toString());
-				error("   Message   : " +e.getMessage());
-				errors.put("Message",e.getMessage());
+                Map<String, String> errors = new HashMap<String, String>();
+                String eS = "Raised exception while starting appl handler. Skipped.";
+                error(eS);
+                errors.put("Error", eS);
+                error("   Handler   : " + className);
+                errors.put("Handler", className);
+                error("   Exception : " + e);
+                errors.put("Exception", e.toString());
+                error("   Message   : " + e.getMessage());
+                errors.put("Message", e.getMessage());
                 final String stackTrace = Util.getStackTrace(e);
                 error("   Stack     : " + stackTrace);
-				errors.put("Stack", stackTrace);
-				error(errors.toString());
-				// only set the error if we don't already have one
-				if (!_serviceMan.isStartupError()) _serviceMan.setStartupErrors(errors);
-			}
+                errors.put("Stack", stackTrace);
+                error(errors.toString());
+                // only set the error if we don't already have one
+                if (!_serviceMan.isStartupError()) {
+                    _serviceMan.setStartupErrors(errors);
+                }
+            }
 		}
 	}
 

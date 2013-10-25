@@ -2,16 +2,20 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.harvest.AbstractHarvesterIntegrationTest;
+import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.MockRequestFactoryGeonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.utils.*;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.junit.Assert;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
@@ -98,5 +102,4 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
     protected AbstractHarvester getHarvesterUnderTest() {
         return _harvester;
     }
-
 }

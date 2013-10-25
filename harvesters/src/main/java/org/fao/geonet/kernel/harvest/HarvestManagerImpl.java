@@ -112,9 +112,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
                     String type = node.getAttributeValue("type");
 
                     AbstractHarvester ah = AbstractHarvester.create(type, context);
-                    ah.init(node);
+                    ah.init(node, context);
 
-                    ah.initializeLog();
                     hmHarvesters.put(ah.getID(), ah);
                     hmHarvestLookup.put(ah.getParams().uuid, ah);
                 }
@@ -262,8 +261,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
      */
 	@Override
     public String addHarvesterReturnId(Element node, String ownerId) throws JeevesException, SQLException {
-        if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
-            Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n"+ Xml.getString(node));
+        if (Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
+            Log.debug(Geonet.HARVEST_MAN, "Adding harvesting node : \n" + Xml.getString(node));
         }
 		String type = node.getAttributeValue("type");
 		AbstractHarvester ah = AbstractHarvester.create(type, context);
@@ -276,8 +275,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 		hmHarvesters.put(ah.getID(), ah);
 		hmHarvestLookup.put(ah.getParams().uuid, ah);
 
-        if(Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
-            Log.debug(Geonet.HARVEST_MAN, "Added node with id : \n"+ ah.getID());
+        if (Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
+            Log.debug(Geonet.HARVEST_MAN, "Added node with id : \n" + ah.getID());
         }
 		return ah.getID();
 	}
