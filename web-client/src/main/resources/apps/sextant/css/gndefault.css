@@ -722,3 +722,8 @@ div.facets * .facet-less-bt a {
 .privileges-grid-disable .x-grid3-check-col-on {
     opacity:0.4;
 }
+.x-form-valid, textarea.x-form-valid {
+background-color: #DDF8DD;
+border-color: #59B854;
+background-image: none;
+}
