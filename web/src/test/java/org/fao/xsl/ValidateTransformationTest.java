@@ -145,7 +145,7 @@ public class ValidateTransformationTest
         
         rules.clear();
         
-        file = testFile(file, Control.GM03_2_ISO, rules, false);
+        testFile(file, Control.GM03_2_ISO, rules, false);
         
     }
 
