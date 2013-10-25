@@ -2364,7 +2364,7 @@ public class DataManager {
      *
      */
     public MetadataStatus getStatus(int metadataId) throws Exception {
-        String sortField = MetadataStatus_.id + "." + MetadataStatusId_.changeDate.getName();
+        String sortField = SortUtils.createPath(MetadataStatus_.id,MetadataStatusId_.changeDate);
         final MetadataStatusRepository statusRepository = _applicationContext.getBean(MetadataStatusRepository.class);
         List<MetadataStatus> status = statusRepository.findAllById_MetadataId(metadataId, new Sort(Sort.Direction.DESC, sortField));
         if (status.isEmpty()) {

@@ -226,9 +226,8 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
                         addInfo(node);
                         result.addContent(node);
                     }
-                }
-                // you're not an Adminstrator: only return nodes in groups visible to you
-                else {
+                } else {
+                    // you're not an Adminstrator: only return nodes in groups visible to you
                     GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
                     AccessManager am = gc.getBean(AccessManager.class);
                     Set<Integer> groups = am.getVisibleGroups(context.getUserSession().getUserIdAsInt());

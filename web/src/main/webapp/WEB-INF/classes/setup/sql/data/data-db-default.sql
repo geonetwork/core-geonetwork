@@ -571,7 +571,7 @@ INSERT INTO settings (name, value, datatype, position) VALUES ('system/proxy/por
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/proxy/username', NULL, 0, 540);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/proxy/password', NULL, 0, 550);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/email', NULL, 0, 610);
-INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/host', NULL, 0, 630);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/host', '', 0, 630);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/port', '25', 1, 640);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/username', '', 0, 642);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/password', '', 0, 643);

@@ -95,17 +95,17 @@ public class DefaultStatusActions implements StatusActions {
         password = sm.getValue("system/feedback/mailServer/password");
         useSSL = sm.getValueAsBool("system/feedback/mailServer/ssl");
         
-        if (host.length() == 0) {
+        if (host == null || host.length() == 0) {
             context.error("Mail server host not configure");
             emailNotes = false;
         }
 
-        if (port.length() == 0) {
+        if (port == null || port.length() == 0) {
             context.error("Mail server port not configured, email notifications won't be sent.");
             emailNotes = false;
         }
 
-        if (from.length() == 0) {
+        if (from == null || from.length() == 0) {
             context.error("Mail feedback address not configured, email notifications won't be sent.");
             emailNotes = false;
         }

@@ -95,7 +95,7 @@ public class UpdateStatus extends NotInReadOnlyModeService {
 		Set<Integer> metadataIds = new HashSet<Integer>();
 		metadataIds.add(iLocalId);
 
-		saf.statusChange(sa, status, metadataIds, changeDate, changeMessage);
+		sa.statusChange(status, metadataIds, changeDate, changeMessage);
 
 		//--- reindex metadata
 		dataMan.indexMetadata(id);

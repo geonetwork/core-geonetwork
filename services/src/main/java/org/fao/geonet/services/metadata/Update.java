@@ -91,7 +91,7 @@ public class Update extends NotInReadOnlyModeService {
 			//--- change status as a result of this edit (use onEdit method)
 			StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
 			StatusActions sa = saf.createStatusActions(context);
-			saf.onEdit(sa, iLocalId, minor.equals("true"));
+            sa.onEdit(iLocalId, minor.equals("true"));
 
 			if (data != null) {
 				Element md = Xml.loadString(data, false);

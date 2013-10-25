@@ -108,7 +108,7 @@ public class BatchUpdateStatus extends NotInReadOnlyModeService {
 
     StatusActions sa = saf.createStatusActions(context);
 
-    Set<Integer> noChange = saf.statusChange(sa, status, metadata, changeDate, changeMessage);
+    Set<Integer> noChange = sa.statusChange(status, metadata, changeDate, changeMessage);
 
 		//--- reindex metadata
 		context.info("Re-indexing metadata");
