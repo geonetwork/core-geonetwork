@@ -860,7 +860,7 @@
     <dependency>
 	  <groupId>org.hibernate</groupId>
 	  <artifactId>hibernate-entitymanager</artifactId>
-	  <version>4.3.0.Beta4</version>
+	  <version>4.3.0.Beta5</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.data</groupId>

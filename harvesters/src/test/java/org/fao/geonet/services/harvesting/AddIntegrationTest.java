@@ -26,7 +26,7 @@ import static org.junit.Assert.assertNotNull;
  * Date: 10/23/13
  * Time: 11:41 AM
  */
-public class AddTest extends AbstractHarvesterServiceIntegrationTest {
+public class AddIntegrationTest extends AbstractHarvesterServiceIntegrationTest {
     @Autowired
     private HarvesterSettingsManager _settingsManager;
     @Autowired

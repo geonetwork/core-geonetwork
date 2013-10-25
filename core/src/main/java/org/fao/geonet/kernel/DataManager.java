@@ -1890,6 +1890,8 @@ public class DataManager {
 
         //--- update search criteria
         searchMan.delete("_id", metadataId + "");
+//        _entityManager.flush();
+//        _entityManager.clear();
     }
 
     /**

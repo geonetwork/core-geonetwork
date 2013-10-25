@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * Date: 10/23/13
  * Time: 8:11 PM
  */
-public class HistoryTest extends AbstractHarvesterServiceIntegrationTest {
+public class HistoryIntegrationTest extends AbstractHarvesterServiceIntegrationTest {
     @Autowired
     private HarvestHistoryRepository _repo;
 

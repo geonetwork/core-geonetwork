@@ -33,12 +33,4 @@ public interface HarvestHistoryRepository extends GeonetRepository<HarvestHistor
     @Nonnull
     List<HarvestHistory> findAllByHarvesterUuid(@Nonnull String uuid);
 
-    /**
-     * Set the deleted flag to true in all history entities for the given uuid.
-     *
-     * @param harvesterUuid the harvester uuid.
-     */
-    @Modifying(clearAutomatically = true)
-    @Query("UPDATE HarvestHistory SET deleted='y' WHERE harvesterUuid=:uuid")
-    void markAllAsDeleted(@Param("uuid") @Nonnull String harvesterUuid);
 }

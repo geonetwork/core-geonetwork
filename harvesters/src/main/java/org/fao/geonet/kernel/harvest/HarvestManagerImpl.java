@@ -214,10 +214,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
                     return null;
                 }
             }
-		}
-        // id is null: return all (visible) nodes
-		else {
-			Element nodes = result.getChild("children");
+		} else {
+
+            // id is null: return all (visible) nodes
+            Element nodes = result.getChild("children");
 			result = new Element("nodes");
 			if (nodes != null) {
                 // you're Administrator: all nodes are visible
@@ -397,14 +397,13 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
             if (ah == null) {
                 return OperResult.NOT_FOUND;
             }
-            hmHarvestLookup.remove(ah.getParams().uuid);
             ah.destroy();
-            hmHarvesters.remove(id);
             settingMan.remove("harvesting/id:" + id);
 
             final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
             // set deleted status in harvest history table to 'y'
             historyRepository.markAllAsDeleted(ah.getParams().uuid);
+            hmHarvesters.remove(id);
             return OperResult.OK;
         } catch (Exception e) {
             throw new RuntimeException(e);

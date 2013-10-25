@@ -61,6 +61,20 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
     }
 
     @Test
+    public void testFindChildIds() throws Exception {
+        HarvesterSetting parent = _repo.save(newSetting());
+        HarvesterSetting child = newSetting().setParent(parent);
+        _repo.save(child);
+
+        assertEquals(2, _repo.count());
+
+        List<Integer> children = _repo.findAllChildIds(parent.getId());
+        assertEquals(1, children.size());
+        assertEquals(child.getId(), children.get(0).intValue());
+
+    }
+
+    @Test
     public void testFindChildByName() throws Exception {
         HarvesterSetting parent = _repo.save(newSetting());
         _repo.save(newSetting().setParent(parent));
@@ -174,6 +188,29 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
         HarvesterSetting found = _repo.findOneByPath(path);
         assertNotNull(found);
         assertSameContents(child4, found, _skipProps);
+    }
+
+    @Test
+    public void testDeleteById() throws Exception {
+        HarvesterSetting parent = _repo.save(newSetting().setName("2"));
+        _repo.save(newSetting().setParent(parent).setName("2"));
+        HarvesterSetting child3 = _repo.save(newSetting().setParent(parent).setName("2"));
+        _repo.save(newSetting().setParent(child3).setName("4"));
+
+        _repo.delete(parent.getId());
+
+        assertEquals(0, _repo.count());
+    }
+    @Test
+    public void testDeleteByEntity() throws Exception {
+        HarvesterSetting parent = _repo.save(newSetting().setName("2"));
+        _repo.save(newSetting().setParent(parent).setName("2"));
+        HarvesterSetting child3 = _repo.save(newSetting().setParent(parent).setName("2"));
+        _repo.save(newSetting().setParent(child3).setName("4"));
+
+        _repo.delete(parent);
+
+        assertEquals(0, _repo.count());
     }
 
     @Test

@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import com.vividsolutions.jts.util.Assert;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Log;
@@ -314,6 +315,9 @@ public abstract class XmlSerializer {
 		// that aren't already in use from the xlink cache. For now we
 		// rely on the admin clearing cache and reindexing regularly
         _metadataRepository.delete(Integer.valueOf(id));
+
+//        Assert.isTrue(!_metadataRepository.exists(Integer.valueOf(id)), "Metadata should have been deleted");
+
 	}
 
 	/* API to be overridden by extensions */

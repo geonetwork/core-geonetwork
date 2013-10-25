@@ -643,7 +643,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
 
         context.getBean(SourceRepository.class).delete(params.uuid);
-
         // FIXME: Should also delete the categories we have created for servers
     }
 

@@ -19,7 +19,7 @@ import java.util.List;
  * Date: 10/22/13
  * Time: 4:04 PM
  */
-public class GetTest extends AbstractHarvesterServiceIntegrationTest {
+public class GetIntegrationTest extends AbstractHarvesterServiceIntegrationTest {
     @Test(expected = ObjectNotFoundEx.class)
     public void testExecNoSuchHarvester() throws Exception {
         final Get get = new Get();

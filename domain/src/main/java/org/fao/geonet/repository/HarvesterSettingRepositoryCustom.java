@@ -27,6 +27,15 @@ public interface HarvesterSettingRepositoryCustom {
     List<HarvesterSetting> findAllChildren(int parentid);
 
     /**
+     * Find the ids of all the all settings with the parent id
+     *
+     * @param parentid an id of the parent setting
+     * @return the ids of all the all settings with the parent id
+     */
+    @Nonnull
+    List<Integer> findAllChildIds(int parentid);
+
+    /**
      * Find all settings with the parent id and name.
      *
      * @param parentid the parentid parameter
