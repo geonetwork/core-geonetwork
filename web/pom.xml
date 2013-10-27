@@ -885,7 +885,7 @@
             <contextPath>/geonetwork</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-	      <resourcesAsCSV>${basedir}/src/main/webapp,${build.webapp.resources}${widgets.webapp.resources}${ui.webapp.resources}</resourcesAsCSV>
+            <resourcesAsCSV>${basedir}/src/main/webapp,../web-ui/src/main/resources/,${build.webapp.resources}${widgets.webapp.resources}</resourcesAsCSV>
             </baseResource>
           </webApp>
           <stopKey>JETTY_TOP</stopKey>
@@ -962,13 +962,6 @@
       </activation>
       <properties>
         <env>inspire</env>
-      </properties>
-    </profile>
-    <profile>
-      <id>ui</id>
-      <properties>
-          <web.xml.widget.config.overrides></web.xml.widget.config.overrides>
-          <ui.webapp.resources>,../web-ui/src/main/resources/</ui.webapp.resources>
       </properties>
     </profile>
     <profile>
