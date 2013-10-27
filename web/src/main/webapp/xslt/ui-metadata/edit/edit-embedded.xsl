@@ -18,7 +18,7 @@
 
     <xsl:include href="../../common/profiles-loader.xsl"/>
 
-    <xsl:include href="../../layout-core.xsl"/>
+    <xsl:include href="../form-builder.xsl"/>
 
 
     <xsl:template match="/">

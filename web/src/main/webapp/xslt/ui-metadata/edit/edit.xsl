@@ -44,11 +44,10 @@
 
   <xsl:include href="../../common/profiles-loader.xsl"/>
 
-  <xsl:include href="../../layout-core.xsl"/>
+  <xsl:include href="../form-builder.xsl"/>
 
   <xsl:template match="/">
     <article class="gn-metadata-view">
-      <xsl:call-template name="scroll-spy-nav-bar"/>
       
       <!-- 
           The main editor form.
@@ -66,10 +65,9 @@
         <input type="hidden" id="currTab" name="currTab" value="{$tab}"/>
         <input type="hidden" id="minor" name="minor" value="{$isMinorEdit}"/>
         <input type="hidden" name="showvalidationerrors" value="{$showValidationErrors}"/>
-        
+       
         <!-- Dispatch to profile mode -->
-        <xsl:variable name="profileTemplate" select="concat('render-',$schema)"/>
-        <saxon:call-template name="{$profileTemplate}">
+        <saxon:call-template name="{concat('render-',$schema)}">
           <xsl:with-param name="base" select="$metadata"/>
         </saxon:call-template>
       </form>

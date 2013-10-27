@@ -34,8 +34,8 @@
       <xsl:param name="name" as="xs:string"/>
       <!-- The element containing the value eg. gco:Date -->
       <xsl:param name="childName" as="xs:string"/>
-    <xsl:message>FieldType:<xsl:value-of select="$name"/>/<xsl:value-of select="$childName"/></xsl:message>
-    <xsl:value-of select="if ($name = 'gmd:abstract' or $name = 'gmd:statement') 
+<!--    <xsl:message>FieldType:<xsl:value-of select="$name"/>/<xsl:value-of select="$childName"/></xsl:message>
+-->    <xsl:value-of select="if ($name = 'gmd:abstract' or $name = 'gmd:statement') 
                           then 'textarea' 
                           else if ($name = 'gmd:denominator') 
                           then 'number' 

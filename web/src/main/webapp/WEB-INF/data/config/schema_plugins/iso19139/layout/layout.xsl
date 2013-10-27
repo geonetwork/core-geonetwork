@@ -12,11 +12,12 @@
   <xsl:include href="utility-fn.xsl"/>
   <xsl:include href="utility-tpl.xsl"/>
 
+  <!-- Ignore all gn element -->
   <xsl:template mode="mode-iso19139" match="gn:*|@gn:*" priority="1000"/>
 
   <!-- Template to display non existing element ie. geonet:child element
 	of the metadocument. -->
-  <xsl:template mode="mode-iso19139" match="gn:child">
+  <xsl:template mode="mode-iso19139" match="gn:child" priority="2000">
     <!-- TODO: this should be common to all schemas -->
     <xsl:if test="$isEditing and not($isFlatMode)">
       <xsl:call-template name="render-element-to-add">
@@ -117,8 +118,8 @@
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
     <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
-    
-    <xsl:call-template name="render-element">
+
+      <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelConfig/label"/>
       <xsl:with-param name="value" select="*"/>
       <xsl:with-param name="cls" select="local-name()"/>
@@ -165,6 +166,7 @@
       <xsl:with-param name="xpath" select="$xpath"/>
       <!--<xsl:with-param name="attributesSnippet" as="node()"/>-->
       <xsl:with-param name="type" select="gn-fn-iso19139:getCodeListType(name())"/>
+      <xsl:with-param name="name" select="if ($isEditing) then concat(*/gn:element/@ref, '_codeListValue') else ''"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>
       <xsl:with-param name="listOfValues" select="gn-fn-metadata:getCodeListValues($schema, name(*[@codeListValue]), $codelists)"/>
     </xsl:call-template>

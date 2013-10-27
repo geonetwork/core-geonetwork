@@ -6,7 +6,9 @@
   var module = angular.module('gn_cat_controller', ['gn_search_manager']);
 
   /**
-   * The catalogue controller.
+   * The catalogue controller takes care of
+   * loading site information, check user login state
+   * and a facet search to get main site information.
    *
    * A body-level scope makes sense for example:
    *

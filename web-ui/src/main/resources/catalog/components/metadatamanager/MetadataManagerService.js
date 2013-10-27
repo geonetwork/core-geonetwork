@@ -37,8 +37,8 @@
           window.open('../../?uuid=' + md['geonet:info'].uuid, 'gn-view');
       };
       var edit = function(md) {
-        window.open('../../?edit=' + md['geonet:info'].uuid, 'gn-view');
-//        location.href = 'catalog.edit?id=' + md['geonet:info'].id;
+//        window.open('../../?edit=' + md['geonet:info'].uuid, 'gn-view');
+        location.href = 'catalog.edit?id=' + md['geonet:info'].id;
       };
       return {
           select: select,

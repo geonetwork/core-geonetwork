@@ -14,7 +14,7 @@
   
   <xsl:import href="../../common/profiles-loader.xsl"/>
 
-  <xsl:import href="../../layout-core.xsl"/>
+  <xsl:import href="../form-builder.xsl"/>
   
   <xsl:output omit-xml-declaration="yes" method="html" doctype-public="html" indent="yes"
     encoding="UTF-8"/>

@@ -35,9 +35,19 @@
       $scope.getEditorForm = function() {
         // TODO: init by UUID or resourceId
         // TODO: Check requested metadata exist - return message if it happens
+        // Would you like to create a new one ?
         return 'md.edit?id=' + $scope.metadataId +
             ($scope.tab ? '&currTab=' + $scope.tab : '');
       };
+
+      $scope.switchToTab = function(tabIdentifier) {
+        //          $scope.tab = tabIdentifier;
+        //          FIXME: this trigger an edit
+        //          better to use ng-model in the form ?
+        $('#currTab')[0].value = tabIdentifier;
+        $scope.save(true);
+      };
+
 
       $scope.remove = function(ref, parent) {
         // md.element.remove?id=<metadata_id>&ref=50&parent=41
@@ -46,8 +56,6 @@
                 '&ref=' + ref + '&parent=' + parent).success(function(data) {
           // Remove element from the DOM
           var target = $('#gn-el-' + ref);
-          console.log(ref);
-          console.log(target);
           target.slideUp(duration, function() { $(this).remove();});
 
           // TODO: Take care of moving the + sign
@@ -110,16 +118,25 @@
 
 
       /**
-       * Save the metadata record
+       * Save the metadata record currently in editing session.
+       *
+       * If refreshForm is true, then will also update the current form.
+       * This is required while switching tab for example. Update the tab
+       * value in the form and trigger save to update the view.
        */
-      $scope.save = function() {
-        $http.post('md.edit.save',
+      $scope.save = function(refreshForm) {
+        $http.post(
+            refreshForm ? 'md.edit.save' : 'md.edit.saveonly',
             $('#gn-editor-' + $scope.metadataId).serialize(),
             {
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).success(function(data) {
           console.log(data);
-
+          if (refreshForm) {
+            var snippet = $(data);
+            $('#gn-editor-' + $scope.metadataId).replaceWith(snippet);
+            $compile(snippet)($scope);
+          }
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate('saveMetadataSuccess')
           });

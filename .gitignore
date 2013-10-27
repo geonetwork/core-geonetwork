@@ -42,5 +42,5 @@ web-itest/jcs_caching
 datadir/
 web/src/main/webapp/WEB-INF/data/removed/
 web-ui/src/main/resources/catalog/lib/gn*.min.js
+web-ui/src/main/resources/catalog/style/gn*.css
 web-ui/src/main/resources/catalog/style/gn.css
-web-ui/src/main/resources/catalog/style/gn_admin.css
