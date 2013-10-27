@@ -60,35 +60,6 @@
 
 	</default>
 
-	<resources>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- JNDI through container -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<resource enabled="false">
-			<name>main-db</name>
-			<provider>jeeves.resources.dbms.JNDIPool</provider>
-			<config>
-				<context>java:/comp/env</context>
-				<resourceName>jdbc/geonetwork</resourceName>
-				<url>jdbc:postgresql_postGIS://localhost:5432/gndb4</url>
-				<!--	if the database has a spatialindex table with fid, id and
-						multipolygon geometry fields (eg. see postgis) then specify true
-						here and GeoNetwork will use the database for its spatial index
-						otherwise specify false or leave the parameter out and a
-						shapefile will be used for the spatial index -->
-				<provideDataStore>true</provideDataStore>
-				<!-- set this value to -1 if you don't want prepared statements to
-				be cached when querying/maintaining the spatial index
-				(note this is only applicable when
-				provideDataStore is set to true) -->
-				<maxOpenPreparedStatements>300</maxOpenPreparedStatements>
-				<!-- NOTE any other parameter specified here is ignored as this
-				should be handled in the container -->
-			</config>
-		</resource>
-
-	</resources>
-
 	<!-- ====================================================================== -->
 
 	<appHandler class="org.fao.geonet.Geonetwork">
