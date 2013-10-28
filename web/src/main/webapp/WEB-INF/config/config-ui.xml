@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    <service name="error">
+      <documentation><![CDATA[
+        Display an error page.
+        ]]></documentation>
+      <output sheet="../xslt/ui/error.xsl">
+        <xml name="i18n" file="xml/i18n.xml"/>
+        <call name="startupError" class=".guiservices.util.GetStartupError"/>
+      </output>
+    </service>
+  </services>
+</geonet>

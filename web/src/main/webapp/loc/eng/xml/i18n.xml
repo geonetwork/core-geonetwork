@@ -2,7 +2,10 @@
 <i18n>
   <viewInGE>View in Google Earth</viewInGE>
   <warning>Warning!</warning>
-  <nojs>Javascript is not enabled. Enable it or click <a
-    href="catalog.search.nojs">here to search</a> in a degraded mode.</nojs>
+  <nojs>Javascript is not enabled. Enable it or click <a href="catalog.search.nojs">here to
+      search</a> in a degraded mode.</nojs>
   <selectView>Choose view</selectView>
+  <initializationFailure>There was an error starting the catalog. Contact the
+    administrator.</initializationFailure>
+  <initializationSuccess>The catalog started successfully.</initializationSuccess>
 </i18n>

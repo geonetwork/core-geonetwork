@@ -18,7 +18,7 @@
 			during the initialization of resources or
 			the appHandler org.fao.geonet.Geonetwork
 		-->
-		<startupErrorService>main.error</startupErrorService>
+		<startupErrorService>error</startupErrorService>
 		<language>eng</language>
 		<localized>true</localized>
 		<contentType>text/html; charset=UTF-8</contentType>
@@ -431,7 +431,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="main.error">
+		<service name="main.error" deprecated="true">
 			<output sheet="main-error.xsl">
 				<call name="startupError" class=".guiservices.util.GetStartupError" />
 			</output>
@@ -1526,6 +1526,8 @@
   <include>config/config-ui-search.xml</include>
   <include>config/config-ui-metadata.xml</include>
   <include>config/config-ui-admin.xml</include>
+  
+  <include>config/config-ui.xml</include>
   
   <include>config/config-service-monitoring.xml</include>
 </geonet>

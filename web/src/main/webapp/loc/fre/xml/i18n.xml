@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i18n>
+  <viewInGE>Visualiser dans Google Earth</viewInGE>
+  <warning>Attention!</warning>
+  <nojs>Javascript n'est pas activé dans votre navigateur. Activez le ou bien cliquez <a
+      href="catalog.search.nojs">ici pour accèder au catalogue</a> (interface simplifiée).</nojs>
+  <selectView>Affichage</selectView>
+  <initializationFailure>Une erreur est survenue au démarrage du catalogue. Contactez
+    l'administrateur.</initializationFailure>
+  <initializationSuccess>Le démarrage du catalogue s'est effectué sans
+    accroc.</initializationSuccess>
+</i18n>
