@@ -164,13 +164,13 @@
                                 </xsl:choose>
                             </a>
                             <label id="username_label">
-                                <xsl:value-of select="/root/request/user/username" />
+                            	<xsl:value-of select="/root/gui/session/username" />
                             </label>
                             <label id="name_label">
                                 <xsl:choose>
                                     <xsl:when test="starts-with($authenticated, 'true')">
 		                                -
-		                                <xsl:value-of select="/root/request/user/name" />
+                                    	<xsl:value-of select="/root/gui/session/name" />
                                     </xsl:when>
                                 </xsl:choose>
                             </label>
@@ -178,7 +178,7 @@
                                 <xsl:choose>
                                     <xsl:when test="starts-with($authenticated, 'true')">
 		                                (           
-		                                <xsl:value-of select="/root/request/user/profile" />
+                                    	<xsl:value-of select="/root/gui/session/profile" />
 		                                )
                                     </xsl:when>
                                 </xsl:choose>
