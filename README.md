@@ -1,5 +1,4 @@
-Features
---------
+# Features
 
 * Immediate search access to local and distributed geospatial catalogues
 * Up- and downloading of data, graphics, documents, pdf files and any other content type
@@ -10,8 +9,7 @@ Features
 * Fine-grained access control with group and user management
 * Multi-lingual user interface
 
-Documentation
--------------
+# Documentation
 
 User documentation is in the docs submodule in the current repository and is compiled into html pages during a release for publishing on
 a website.
@@ -20,20 +18,16 @@ Developer documentation is also in the docs submodule but is being migrated out 
 in the project.  General documentation for the project as a whole is in this Readme and module specific documentation can be found in
 each module (assuming there is module specific documentation required).
 
-.. _development:
+# Software development
 
-Software development
-====================
-
-System Requirements
--------------------
+## System Requirements
 
 GeoNetwork is a Java application that runs as a servlet so the Java Runtime
 Environment (JRE) must be installed in order to run it. You can get the JRE from http://www.oracle.com/technetwork/java/javase/downloads and you have to download the Java 6 Standard Edition (SE). GeoNetwork won’t run with Java 1.4. It will run with:
 
-- Java 5 - but few people should be using that now as it is unsupported.
-- Java 6 - most testing has taken place under Java 6, so we recommend Java 6.
-- OpenJDK 7 - note: problems have been reported with OpenJDK 6.
+* Java 5 - but few people should be using that now as it is unsupported.
+* Java 6 - most testing has taken place under Java 6, so we recommend Java 6.
+* OpenJDK 7 - note: problems have been reported with OpenJDK 6.
 
 Being written in Java, GeoNetwork can run on any
 platform that supports Java, so it can run on Windows, Linux and Mac OSX. For
@@ -64,26 +58,20 @@ for the search index which is located in ``GEONETWORK_DATA_DIR/index`` (by defau
 The software is run in different ways depending on the servlet container you are
 using:
 
-- **Tomcat** - GeoNetwork is available as a WAR file which you can put into the Tomcat webapps directory. Tomcat will deploy the WAR file when it is started. You can then use the Tomcat manager web application to stop/start GeoNetwork. You can also use the startup.* and shutdown.* scripts located in the Tomcat bin directory (.* means .sh or .bat depending on your OS) but if you have other web applications in the tomcat container, then they will also be affected.
-- **Jetty** - If you use the provided container you can use the scripts in GeoNetwork’s bin directory. The scripts are start-geonetwork.* and stop-geonetwork.* and you must be inside the bin directory to run them. You can use these scripts just after installation.
+* *Tomcat* - GeoNetwork is available as a WAR file which you can put into the Tomcat webapps directory. Tomcat will deploy the WAR file when it is started. You can then use the Tomcat manager web application to stop/start GeoNetwork. You can also use the startup.* and shutdown.* scripts located in the Tomcat bin directory (.* means .sh or .bat depending on your OS) but if you have other web applications in the tomcat container, then they will also be affected.
+* *Jetty* - If you use the provided container you can use the scripts in GeoNetwork’s bin directory. The scripts are start-geonetwork.* and stop-geonetwork.* and you must be inside the bin directory to run them. You can use these scripts just after installation.
 
-Tools
------
+## Tools
 
 The following tools are required to be installed to setup a development environment for GeoNetwork:
 
-- **Java** - Developing with GeoNetwork requires `Java Development Kit (JDK) <http://www.oracle.com/technetwork/java/javase/downloads/>`_ 1.6 or greater (scroll down to find 1.6) OR the `OpenJDK (version 7 or higher only) <http://openjdk.java.net/install/>`_ for Linux users.
+* **Java** - Developing with GeoNetwork requires `Java Development Kit (JDK) <http://www.oracle.com/technetwork/java/javase/downloads/>`_ 1.6 or greater (scroll down to find 1.6) OR the `OpenJDK (version 7 or higher only) <http://openjdk.java.net/install/>`_ for Linux users.
+* **Maven** - GeoNetwork uses `Maven <http://maven.apache.org/>`_ to manage the build process and the dependencies. Once is installed, you should have the mvn command in your path (on Windows systems, you have to open a shell to check).
+* **Git** - GeoNetwork source code is stored and versioned in a Git repository on Github. Depending on your operating system a variety of git clients are avalaible. Check in http://git-scm.com/downloads/guis for some alternatives.  Good documentation can be found on the git website: http://git-scm.com/documentation and on the Github website https://help.github.com/.
+* **Ant** - GeoNetwork uses `Ant <http://ant.apache.org/>`_ to build the installer.  Version 1.6.5 works but any other recent version should be OK. Once installed, you should have the ant command in your path (on Windows systems, you have to open a shell to check).
+* **Sphinx** - To create the GeoNetwork documentation in a nice format `Sphinx <http://sphinx.pocoo.org/>`_  is used.
 
-- **Maven** - GeoNetwork uses `Maven <http://maven.apache.org/>`_ to manage the build process and the dependencies. Once is installed, you should have the mvn command in your path (on Windows systems, you have to open a shell to check).
-
-- **Git** - GeoNetwork source code is stored and versioned in a Git repository on Github. Depending on your operating system a variety of git clients are avalaible. Check in http://git-scm.com/downloads/guis for some alternatives.  Good documentation can be found on the git website: http://git-scm.com/documentation and on the Github website https://help.github.com/.
-
-- **Ant** - GeoNetwork uses `Ant <http://ant.apache.org/>`_ to build the installer.  Version 1.6.5 works but any other recent version should be OK. Once installed, you should have the ant command in your path (on Windows systems, you have to open a shell to check).
-
-- **Sphinx** - To create the GeoNetwork documentation in a nice format `Sphinx <http://sphinx.pocoo.org/>`_  is used.
-
-Check out source code
----------------------
+# Check out source code
 
 If you just want to quickly get the code the fastest way is to download the zip bundle: https://github.com/geonetwork/core-geonetwork/zipball/master
 
@@ -104,8 +92,6 @@ Just look at last section (ignoring remotes/origin/).  To checkout a branch just
      $ git checkout 2.8.x
 
 Typically work is done on branches and merged back so when developing normally you will go change to the branch you want to work on, create a branch from there, work and then merge the changes back (or make a Pull Request on Github).  There are many great guides (See the links above) but here is a quick sequence illustrating how to make a change and commit the change.
-
-::
 
      $ git checkout master
         # master is the 'trunk' and main development branch
@@ -131,9 +117,7 @@ Geonetwork uses git submodules in order to keep track of externals dependencies.
 
      $ git submodule update --init
 
-
-Build GeoNetwork
-----------------
+## Build GeoNetwork
 
 Once you checked out the code from Github repository, go inside the GeoNetwork’s root folder and execute the maven build command::
 
@@ -165,9 +149,9 @@ If the build is succesful you'll get an output like::
 
 and your local maven repository should contain the GeoNetwork artifacts created (``$HOME/.m2/repository/org/geonetwork-opensource``).
 
-.. note :: Many Maven build options are available. Please refer to the maven documentation for any other options, `Maven: The Complete Reference <http://www.sonatype.com/books/mvnref-book/reference/public-book.html>`_
+*Note:* Many Maven build options are available. Please refer to the maven documentation for any other options, `Maven: The Complete Reference <http://www.sonatype.com/books/mvnref-book/reference/public-book.html>`_
 
-For instance, you might like to use following options : ::
+For instance, you might like to use following options :
 
     -- Skip test
     $ mvn install -Dmaven.test.skip=true
@@ -177,8 +161,7 @@ For instance, you might like to use following options : ::
 
 Please refer to the maven documentation for any other options, `Maven: The Complete Reference <http://www.sonatype.com/books/mvnref-book/reference/public-book.html>`_
 
-Run embedded jetty server
-`````````````````````````
+### Run embedded jetty server
 
 Maven comes with built-in support for Jetty via a `plug-in <http://docs.codehaus.org/display/JETTY/Maven+Jetty+Plugin>`_.
 
@@ -189,27 +172,23 @@ and then execute the following maven command::
 
 After a moment, GeoNetwork should be accessible at: http://localhost:8080/geonetwork
 
-Source code documentation
-`````````````````````````
+### Source code documentation
 
 The GeoNetwork Java source code is based on Javadoc. Javadoc is a tool for
 generating API documentation in HTML format from doc comments in source code. To
 see documentation generated by the Javadoc tool, go to:
 
-- `GeoNetwork opensource
-  Javadoc <../../../javadoc/geonetwork/index.html>`_
+* `GeoNetwork opensource
+  Javadoc <../../../javadoc/geonetwork/index.html>`
 
 
-User, developer and widget API documentation
-````````````````````````````````````````````
+### User, developer and widget API documentation
 
-.. note:: Building the GeoNetwork documentation requires the following be installed:
+*Note:* Building the GeoNetwork documentation requires the following be installed:
 
         * `Sphinx <http://sphinx.pocoo.org/>`_, version 0.6 or greater (sphinx-doc on ubuntu/debian)
         * `TeX Live <http://www.tug.org/texlive>`_ (texlive-full on ubuntu/debian)
         * make utility
-
-  ::
 
     apt-get install texlive-full
     easy_install Sphinx
@@ -222,8 +201,7 @@ In order to build the documentation::
 
 
 
-Creating the installer
-----------------------
+## Creating the installer
 
 To run the build script that creates the installer you need the Ant tool. You can generate an installer by running the ant command inside the **installer** directory::
 
@@ -251,23 +229,19 @@ level. Refer to the installer-config-win-jre.xml file for
 exact configuration.
 
 
-Running tests
--------------
+## Running tests
 
 Build the application and run the integration tests in ``web-itests``
-
-::
 
   $ mvn clean install -Pitests
 
 
-Packaging GeoNetwork using Maven
-````````````````````````````````
+### Packaging GeoNetwork using Maven
 
 Using Maven, you have the ability to package GeoNetwork in two different ways :
 
-- WAR files (geonetwork.war, geoserver.war)
-- Binary ZIP package (with Jetty embedded)
+* WAR files (geonetwork.war, geoserver.war)
+* Binary ZIP package (with Jetty embedded)
 
 The `Assembly Plugin <http://maven.apache.org/plugins/maven-assembly-plugin/>`_
 is used to create the packages using ::
@@ -277,35 +251,32 @@ is used to create the packages using ::
 The Assembly Plugin configuration is in the release module (See bin.xml and zip-war.xml).
 
 
-Eclipse setup
--------------
+## Eclipse setup
 
 The easiest way to develop geoNetwork within eclipse is with the `m2e plugin <http://eclipse.org/m2e/>`_,
 which comes by default on many eclipse installations.
 
-Import source code
-``````````````````
+### Import source code
+
 In order to import the source code, follow instructions below :
 
-- Press **File**> **Import** Menu item
-- In new dialog Select **Maven**> **Existing Maven Projects**
-- Press Next
+* Press **File**> **Import** Menu item
+* In new dialog Select **Maven**> **Existing Maven Projects**
+* Press Next
 
-.. figure:: eclipse-import-existing-projects.png
+![Import existing projects into Eclipse](eclipse-import-existing-projects.png)
 
-- In **Select root directory** field enter where your code is:
-
- - example: C:\dev\geonetwork\trunk
-
-- Select All projects and Press **Finish** button. If there appears another window, just continue without changing any option.
+* In **Select root directory** field enter where your code is:
+ * example: C:\dev\geonetwork\trunk
+* Select All projects and Press **Finish** button. If there appears another window, just continue without changing any option.
 
 It will take some minutes while the m2e plugin downloads all the maven dependencies.
 
-Debugging into eclipse
-``````````````````````
-- JRebel Plugin :
+### Debugging into eclipse
 
-Using the `JRebel plugin <http://zeroturnaround.com/software/jrebel/>`_ is very useful for debugging on eclipse.
+* JRebel Plugin :
+
+Using the `JRebel plugin <http://zeroturnaround.com/software/jrebel/>` is very useful for debugging on eclipse.
 
 An example of the configuration file for JRebel may be the following::
 
@@ -338,60 +309,58 @@ An example of the configuration file for JRebel may be the following::
      </application>
 
 
-- Tomcat Server :
+* Tomcat Server :
 
 Create a new Tomcat Server (6) on eclipse and add the geonetwork-main project as a web project.
 
-- Remote debuging :
+* Remote Debugging :
 
- - `How do I configure Tomcat to support remote debugging? <http://wiki.apache.org/tomcat/FAQ/Developing#Q1>`_
- - `How do I remotely debug Tomcat using Eclipse? <http://wiki.apache.org/tomcat/FAQ/Developing#Q2>`_
+ * `How do I configure Tomcat to support remote debugging? <http://wiki.apache.org/tomcat/FAQ/Developing#Q1>`
+ * `How do I remotely debug Tomcat using Eclipse? <http://wiki.apache.org/tomcat/FAQ/Developing#Q2>`
 
-Code Quality Tools in Eclipse
-`````````````````````````````
+### Code Quality Tools in Eclipse
 
 In order to see the same code quality warnings in eclipse as maven will detect, Find Bugs and Checkstyle need to be installed
 in your eclipse install and configured as follows::
 
- - Start Eclipse
- - Go to **Help > Eclipse Marketplace**
-  - Install **findbugs**
-   - Don't Restart
-  - Install **checkstyle**
-   - Now Restart
- - Open preferences **Window > Preferences**
-  -  Select *Java > Code Style > Code Templates*
-   -  Select both Comments and Code elements
-   -  Click **Import** and import **code_quality/codetemplates.xml**
-  -  Select **Java > Code Style > Formatter**
-   -  Click **Import** and import **code_quality/formatter.xml**
-  -  Select **Java > Code Style > Clean Up**
-   -  Click **Import** and import **code_quality/cleanup.xml**
-  -  Select **Checkstyle**
-   - Click **New**
-   - Select **External Configuration**
-   - Enter any name (IE Geonetwork)
-   - For **location** choose **code_quality/checkstyle_checks.xml**
-   - Press *OK*
-   - Select New configuration
-   - Press *Set as Default*
-  - Select **Java > FindBugs**
-   - Set **analysis effort** to **Maximum**
-   - Set **Minimum rank to report** to **2**
-   - Set **Minimum confidence to report** to **Medium**
-   - Check(enable) all bug categories
-   - Set all **Mark bugs with ... rank as** to **Warning**
-   - Change to _Filter files_ tab
-    - Add **code_quality/findbugs-excludes.xml** file to the **Exclude filter files**
-  - Close Prefences
-  - Right click on project in **Projects View** select **Checkstyle > Activate Checkstyle**
-  - Rebuild full project ( **Project > Clean...** )
-   - Checkstyle violations will show up as warnings
-  - Right click on project in **Projects View** select **Find Bugs > Find Bugs**
-   - FindBugs violations will show up as warnings
+* Start Eclipse
+* Go to **Help > Eclipse Marketplace**
+ * Install **findbugs**
+  * Don't Restart
+ * Install **checkstyle**
+  * Now Restart
+* Open preferences **Window > Preferences**
+ *  Select *Java > Code Style > Code Templates*
+  *  Select both Comments and Code elements
+  *  Click **Import** and import **code_quality/codetemplates.xml**
+ *  Select **Java > Code Style > Formatter**
+  *  Click **Import** and import **code_quality/formatter.xml**
+ *  Select **Java > Code Style > Clean Up**
+  *  Click **Import** and import **code_quality/cleanup.xml**
+ *  Select **Checkstyle**
+  * Click **New**
+  * Select **External Configuration**
+  * Enter any name (IE Geonetwork)
+  * For **location** choose **code_quality/checkstyle_checks.xml**
+  * Press *OK*
+  * Select New configuration
+  * Press *Set as Default*
+ * Select **Java > FindBugs**
+  * Set **analysis effort** to **Maximum**
+  * Set **Minimum rank to report** to **2**
+  * Set **Minimum confidence to report** to **Medium**
+  * Check(enable) all bug categories
+  * Set all **Mark bugs with ... rank as** to **Warning**
+  * Change to _Filter files_ tab
+   * Add **code_quality/findbugs-excludes.xml** file to the **Exclude filter files**
+ * Close Preferences
+ * Right click on project in **Projects View** select **Checkstyle > Activate Checkstyle**
+ * Rebuild full project ( **Project > Clean...** )
+  * Checkstyle violations will show up as warnings
+ * Right click on project in **Projects View** select **Find Bugs > Find Bugs**
+   * FindBugs violations will show up as warnings
 
-Code Quality Tools and Maven
-````````````````````````````
+### Code Quality Tools and Maven
 
 During the build process FindBugs and Checkstyle are ran.  If a violation is found then the build will fail.  Usually the easiest
 way of resolving violations are to use eclipse and run check style or find bugs on the class or project with the failure.  Usually
@@ -410,8 +379,8 @@ Or if you want to run the tests but skip static analysis:
 
 That disables the profile that executes the static analysis tasks.
 
-FindBugs
-````````
+### FindBugs
+
 FindBugs is a tool that statically analyzes Java class files and searches for potential bugs.  It excels at finding
 issues like unclosed reasources, inconsistent locking of resources, refering null known null-values.  It also checks for
 bad practices like using default platform charset instead of a explicit charset.
@@ -426,8 +395,8 @@ and look at the existing examples in the file.
 The Maven build will fail if any violations are detected so it is important to run FindBugs on each project and fix or exclude
 each violation that is reported.
 
-FindBugs Annotations (JSR 305)
-``````````````````````````````
+### FindBugs Annotations (JSR 305)
+
 In order to get the maximum benefit from the Findbugs (and eclipse) analysis the javax.annotation annotations can be used
 to add metadata to methods, fields and parameters.  The most commonly used annotations are @CheckForNull and @Nonnull.  These
 can be used on a parameter or return value to indicate the parameter or return value must not be null or may be null.  The
@@ -436,9 +405,9 @@ case of return values) or passed to a method (in the case of parameters).
 
 Some resources for these annotations are:
 
- - http://vard-lokkur.blogspot.ch/2012/03/findbugs-and-jsr-305.html
- - http://www.infoq.com/news/2008/06/jsr-305-update
- - http://www.klocwork.com/blog/static-analysis/jsr-305-a-silver-bullet-or-not-a-bullet-at-all/
- - http://minds.coremedia.com/2012/10/31/jsr-305-nonnull-and-guava-preconditions/
- - http://findbugs.sourceforge.net/manual/annotations.html (the package names are outof date
+* http://vard-lokkur.blogspot.ch/2012/03/findbugs-and-jsr-305.html
+* http://www.infoq.com/news/2008/06/jsr-305-update
+* http://www.klocwork.com/blog/static-analysis/jsr-305-a-silver-bullet-or-not-a-bullet-at-all/
+* http://minds.coremedia.com/2012/10/31/jsr-305-nonnull-and-guava-preconditions/
+* http://findbugs.sourceforge.net/manual/annotations.html (the package names are outof date
    and should be java.annotation instead of edu.umd.cs.findbugs.annotation but the descriptions are accurate)
