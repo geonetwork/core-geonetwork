@@ -16,7 +16,7 @@
             </xsl:with-param>
             <xsl:with-param name="exportButton"/>
             <xsl:with-param name="logo">
-                <img src="../../images/logos/{//geonet:info/source}.gif" alt="logo"/>
+                <img src="../../images/logos/{//geonet:info/source}.gif" alt="logo" class="logo"/>
             </xsl:with-param>
             <xsl:with-param name="relatedResources">
                 <table class="related">

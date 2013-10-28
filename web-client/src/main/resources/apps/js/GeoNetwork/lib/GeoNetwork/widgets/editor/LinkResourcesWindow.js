@@ -389,14 +389,22 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 if (this.uploadForm.getForm().isValid()) {
                     var panel = this;
                     if (this.uploadThumbnail) {
-                        this.uploadForm.getForm().submit({
-                            url: this.setThumbnail,
-                            waitMsg: OpenLayers.i18n('uploading'),
-                            success: function (fp, o) {
-                                self.editor.init(self.metadataId);
-                                self.hide();
-                            }
+                        // Save current edits
+                        this.editor.loadUrl('metadata.update.new', undefined, function () {
+                            // Update version
+                            panel.versionField.setValue(document.mainForm.version.value);
+                            // and upload thumbnails
+                            panel.uploadForm.getForm().submit({
+                                url: panel.setThumbnail,
+                                waitMsg: OpenLayers.i18n('uploading'),
+                                success: function (fp, o) {
+                                    self.editor.init(self.metadataId);
+                                    self.hide();
+                                }
+                            });
+                            
                         });
+                        
                     } else {
                         this.runProcess();
                     }
@@ -925,7 +933,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             xtype: 'spacer',
             height: 20
         });
-        cmp.push(this.getFormFieldForService());
+        var serviceField = this.getFormFieldForService();
+        serviceField && cmp.push(serviceField);
         
         this.formPanel = new Ext.form.FormPanel({
             items: cmp,

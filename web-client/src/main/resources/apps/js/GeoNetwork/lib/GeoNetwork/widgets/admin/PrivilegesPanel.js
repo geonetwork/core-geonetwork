@@ -4,6 +4,7 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
     
     defaultConfig: {
         autoScroll: true,
+        stateful: false,
         cls: 'privileges-panel',
         onlyUserGroup: false,
         batch: false
@@ -164,6 +165,9 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
             record: 'group',
             idPath: 'id',
             totalRecords: '@TotalResults',
+            sortInfo: {
+                field: 'label'
+            },
             fields: [
                  'name',
                  'description',  {
@@ -173,7 +177,17 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
                      name: 'label',
                      convert: function(v,n) {
                          var label = Ext.DomQuery.selectNode('label/' + catalogue.lang,n);
-                         return label ? catalogue.getNodeText(label) : catalogue.getNodeText(n.getElementsByTagName('name')[0]);
+                         var prefix = "";
+                         var id = Ext.DomQuery.selectNode('id', n);
+                         if (catalogue.getNodeText(id) <= 1) {
+                             prefix = " - ";
+                         }
+                         var trueLabel = 
+                           label ? 
+                               catalogue.getNodeText(label) : 
+                               catalogue.getNodeText(n.getElementsByTagName('name')[0]);
+                         
+                         return prefix + trueLabel + prefix;
                      }
                  },
                  this.getOperField(0),
@@ -239,7 +253,7 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
                 
                 var cm = new Ext.grid.ColumnModel({
                     defaults: {
-                        sortable: false,
+                        sortable: true,
                         hideable: false,
                         menuDisabled: true
                     },

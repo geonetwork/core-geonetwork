@@ -59,6 +59,8 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     
     itemSelector: 'li.md',
     
+    records: null,
+    
     emptyText: '',
     
     autoWidth: true,
@@ -155,6 +157,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
             strokeOpacity: 1,
             strokeWidth: 1,
             fillOpacity: 0,
+            pointRadius: 2,
             strokeColor: '${featurecolor}',
             fillColor: '${featurecolor}'
         }),
@@ -166,6 +169,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
             strokeOpacity: 1,
             strokeWidth: 3,
             fillOpacity: 0.3,
+            pointRadius: 2,
             strokeColor: '${featurecolor}',
             fillColor: '${featurecolor}'
         })
@@ -526,12 +530,16 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
      *  After a search, initialize data view.
      */
     resultsLoaded: function(view, records, options){
+        this.records = records;
         this.drawMetadataBbox(view, records, options);
         this.contextMenu = undefined;
         this.initRatingWidget();
         this.dislayLinks(records);
         this.dislayRelations(records);
         //this.initMenu();
+    },
+    refreshLinks: function () {
+        this.dislayLinks(this.records);
     },
     /** private: method[dislayLinks]
      *  Create link menu in the div for each records
@@ -545,113 +553,120 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                 uuid = r.get('uuid');
             
             if (links.length > 0) {
-                var div = Ext.query('#md-links-' + id, view.el.dom.body),
-                    el = Ext.get(div[0]);
-                
-                // The template may not defined a md-links placeholder
-                if (el) {
-                    var store = new Ext.data.ArrayStore({
-                        autoDestroy: true,
-                        idIndex: 0,  
-                        fields: [
-                            {name: 'href', mapping: 'href'}, 
-                            {name: 'name', mapping: 'name'}, 
-                            {name: 'protocol', mapping: 'protocol'}, 
-                            {name: 'title', mapping: 'title'}, 
-                            {name: 'type', mapping: 'type'}
-                        ],
-                        data: links
-                    });
-                    store.sort('type');
-                    
-                    
-                    var linkButton = [], label = null, currentType = null, bt,
-                         allowDynamic = r.get('dynamic'), allowDownload = r.get('download'),
-                         hasDownloadAction = false;
-                    
-                    store.each(function (record) {
+                var div = Ext.query('.md-links-' + id, view.el.dom.body);
+                Ext.each (div, function (e) {
+                    var el = Ext.get(e);
+                    var filter = el.getAttribute('data-filter');
+    
+                    // The template may not defined a md-links placeholder
+                    if (el) {
+                        var store = new Ext.data.ArrayStore({
+                            autoDestroy: true,
+                            idIndex: 0,  
+                            fields: [
+                                {name: 'href', mapping: 'href'}, 
+                                {name: 'name', mapping: 'name'}, 
+                                {name: 'protocol', mapping: 'protocol'}, 
+                                {name: 'title', mapping: 'title'}, 
+                                {name: 'type', mapping: 'type'}
+                            ],
+                            data: links
+                        });
+                        store.sort('type');
                         
-                        // Avoid empty URL
-                        if (record.get('href') !== '') {
-                            // Check that current record type is the same as the previous record
-                            // In such case, add the previous button if exist
-                            // or create a new button to be added later
-                            if (currentType === null || currentType !== record.get('type')) {
-                                if (linkButton.length !== 0) {
-                                    view.addLinkMenu(linkButton, label, currentType, el);
-                                }
-                                linkButton = [];
-                                currentType = record.get('type');
-                                var labelKey = 'linklabel-' + currentType;
-                                label = OpenLayers.i18n(labelKey);
-                                if (label === labelKey) { // Default label if not found in translation
-                                    label = OpenLayers.i18n('linklabel-');
-                                }
-                                if (currentType === 'application/x-compressed') {
-                                    hasDownloadAction = true;
-                                }
+                        
+                        var linkButton = [], label = null, currentType = null, bt,
+                             allowDynamic = r.get('dynamic'), allowDownload = r.get('download'),
+                             hasDownloadAction = false;
+                        
+                        store.each(function (record) {
+                            // Filter on type
+                            if (filter !== '' && filter.indexOf(record.get('type')) === -1) {
+                                return;
                             }
                             
-                            var text = null, handler = null;
-                            
-                            // Only display WMS link if dynamic property set to true for current user & record
-                            if ((currentType === 'application/vnd.ogc.wms_xml' || currentType === 'OGC:WMS')) {
-                                if (allowDynamic) {
+                            // Avoid empty URL
+                            if (record.get('href') !== '') {
+                                // Check that current record type is the same as the previous record
+                                // In such case, add the previous button if exist
+                                // or create a new button to be added later
+                                if (currentType === null || currentType !== record.get('type')) {
+                                    if (linkButton.length !== 0) {
+                                        view.addLinkMenu(linkButton, label, currentType, el);
+                                    }
+                                    linkButton = [];
+                                    currentType = record.get('type');
+                                    var labelKey = 'linklabel-' + currentType;
+                                    label = OpenLayers.i18n(labelKey);
+                                    if (label === labelKey) { // Default label if not found in translation
+                                        label = OpenLayers.i18n('linklabel-');
+                                    }
+                                    if (currentType === 'application/x-compressed') {
+                                        hasDownloadAction = true;
+                                    }
+                                }
+                                
+                                var text = null, handler = null;
+                                
+                                // Only display WMS link if dynamic property set to true for current user & record
+                                if ((currentType === 'application/vnd.ogc.wms_xml' || currentType === 'OGC:WMS')) {
+                                    if (allowDynamic) {
+                                        linkButton.push({
+                                            text: record.get('title') || record.get('name'),
+                                            handler: function (b, e) {
+                                                // FIXME : ref to app
+                                                app.switchMode('1', true);
+                                                app.getIMap().addWMSLayer([[record.get('title'), record.get('href'), record.get('name'), uuid]]);
+                                            }
+                                        });
+                                    }
+                                } else if (currentType === 'application/vnd.ogc.wmc') {
                                     linkButton.push({
                                         text: record.get('title') || record.get('name'),
                                         handler: function (b, e) {
                                             // FIXME : ref to app
                                             app.switchMode('1', true);
-                                            app.getIMap().addWMSLayer([[record.get('title'), record.get('href'), record.get('name'), uuid]]);
+                                            app.getIMap().addWMC(record.get('href'));
                                         }
                                     });
-                                }
-                            } else if (currentType === 'application/vnd.ogc.wmc') {
-                                linkButton.push({
-                                    text: record.get('title') || record.get('name'),
-                                    handler: function (b, e) {
-                                        // FIXME : ref to app
-                                        app.switchMode('1', true);
-                                        app.getIMap().addWMC(record.get('href'));
+                                } else {
+                                    // If link is uploaded to GeoNetwork the resources.get service is used
+                                    // Check if allowDownload 
+                                    var displayLink = true;
+                                    if (record.get('href').indexOf('resources.get') !== -1) {
+                                        displayLink = allowDownload;
+                                    } else if (currentType === 'application/vnd.google-earth.kml+xml') {
+                                        // Google earth link is provided when a WMS is provided
+                                        displayLink = allowDynamic;
                                     }
-                                });
-                            } else {
-                                // If link is uploaded to GeoNetwork the resources.get service is used
-                                // Check if allowDownload 
-                                var displayLink = true;
-                                if (record.get('href').indexOf('resources.get') !== -1) {
-                                    displayLink = allowDownload;
-                                } else if (currentType === 'application/vnd.google-earth.kml+xml') {
-                                    // Google earth link is provided when a WMS is provided
-                                    displayLink = allowDynamic;
+                                    if (displayLink) {
+                                        linkButton.push({
+                                            text: (record.get('title') || record.get('name')),
+                                            href: record.get('href')
+                                        });
+                                    }
                                 }
-                                if (displayLink) {
-                                    linkButton.push({
-                                        text: (record.get('title') || record.get('name')),
-                                        href: record.get('href')
-                                    });
-                                }
+                                
                             }
                             
+                        });
+                        // Add the latest button
+                        if (linkButton !== null && linkButton.length !== 0) {
+                            view.addLinkMenu(linkButton, label, currentType, el);
                         }
                         
-                    });
-                    // Add the latest button
-                    if (linkButton !== null && linkButton.length !== 0) {
-                        view.addLinkMenu(linkButton, label, currentType, el);
+                        // Add the download all button
+                        if (hasDownloadAction) {
+                            view.addLinkMenu([{
+                                text: 'download',
+                                handler: function () {
+                                    // FIXME : this call require the catalogue to be named catalogue
+                                    catalogue.metadataPrepareDownload(id);
+                                }
+                            }], OpenLayers.i18n('prepareDownload'), 'downloadAllIcon', el);
+                        }
                     }
-                    
-                    // Add the download all button
-                    if (hasDownloadAction) {
-                        view.addLinkMenu([{
-                            text: 'download',
-                            handler: function () {
-                                // FIXME : this call require the catalogue to be named catalogue
-                                catalogue.metadataPrepareDownload(id);
-                            }
-                        }], OpenLayers.i18n('prepareDownload'), 'downloadAllIcon', el);
-                    }
-                }
+                });
             }
         }, this);
     },
@@ -749,32 +764,49 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                 
             var bboxes = r.get('bbox');
             if (bboxes) {
-                var polygons = [];
-                for (j = 0; j < bboxes.length; j++) {
-                    var bbox = bboxes[j].value;
-                    var p1 = new OpenLayers.Geometry.Point(bbox[2], bbox[1]);
-                    var p2 = new OpenLayers.Geometry.Point(bbox[2], bbox[3]);
-                    var p3 = new OpenLayers.Geometry.Point(bbox[0], bbox[3]);
-                    var p4 = new OpenLayers.Geometry.Point(bbox[0], bbox[1]);
-                    
+                // If only one geometry which is a point
+                // draw a point instead of a bounding box which will not be visible
+                if (bboxes.length === 1 && 
+                        bboxes[0].value[0] === bboxes[0].value[2] &&
+                        bboxes[0].value[1] === bboxes[0].value[3]) {
+                    var p1 = new OpenLayers.Geometry.Point(bboxes[0].value[0], bboxes[0].value[1]);
                     if (this.mapsProjection !== 'EPSG:4326') {
                         p1.transform(this.projectionFrom, this.projectionTo);
-                        p2.transform(this.projectionFrom, this.projectionTo);
-                        p3.transform(this.projectionFrom, this.projectionTo);
-                        p4.transform(this.projectionFrom, this.projectionTo);
                     }
-                    
-                    var pointList = [p1, p2, p3, p4, p1];
-                    var linearRing = new OpenLayers.Geometry.LinearRing(pointList);
-                    var polygon = new OpenLayers.Geometry.Polygon([linearRing]);
-                    
-                    polygons.push(polygon.clone());
+                    var feature = new OpenLayers.Feature.Vector(p1, {
+                        id: r.get('uuid'),
+                        featurecolor: featurecolor
+                    });
+                    this.features.push(feature.clone());
+                } else {
+                    // Handles bounding boxes
+                    var polygons = [];
+                    for (j = 0; j < bboxes.length; j++) {
+                        var bbox = bboxes[j].value;
+                        var p1 = new OpenLayers.Geometry.Point(bbox[2], bbox[1]);
+                        var p2 = new OpenLayers.Geometry.Point(bbox[2], bbox[3]);
+                        var p3 = new OpenLayers.Geometry.Point(bbox[0], bbox[3]);
+                        var p4 = new OpenLayers.Geometry.Point(bbox[0], bbox[1]);
+                        
+                        if (this.mapsProjection !== 'EPSG:4326') {
+                            p1.transform(this.projectionFrom, this.projectionTo);
+                            p2.transform(this.projectionFrom, this.projectionTo);
+                            p3.transform(this.projectionFrom, this.projectionTo);
+                            p4.transform(this.projectionFrom, this.projectionTo);
+                        }
+                        
+                        var pointList = [p1, p2, p3, p4, p1];
+                        var linearRing = new OpenLayers.Geometry.LinearRing(pointList);
+                        var polygon = new OpenLayers.Geometry.Polygon([linearRing]);
+                        
+                        polygons.push(polygon.clone());
+                    }
+                    var multipolygon = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.MultiPolygon(polygons), {
+                        id: r.get('uuid'),
+                        featurecolor: featurecolor
+                    });
+                    this.features.push(multipolygon.clone());
                 }
-                var multipolygon = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.MultiPolygon(polygons), {
-                    id: r.get('uuid'),
-                    featurecolor: featurecolor
-                });
-                this.features.push(multipolygon.clone());
             }
         }, this);
         
