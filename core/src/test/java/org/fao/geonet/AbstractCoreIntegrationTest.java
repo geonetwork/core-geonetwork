@@ -192,7 +192,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     private String getWebappDir() {
         File here = getClassFile();
         while (!new File(here, "pom.xml").exists() && !new File(here.getParentFile(), "web/src/main/webapp/").exists()) {
-            System.out.println("Did not find pom file in: "+here);
+//            System.out.println("Did not find pom file in: "+here);
             here = here.getParentFile();
         }
 
