@@ -2,17 +2,17 @@
 <strings>
 	<!-- GEOCAT Strings -->
     <createNewSharedObject js="true">Edit %objtype%</createNewSharedObject>
-    <noRecords js='true'>No Records found</noRecords>
-    <edit js='true'>Edit</edit>
-    <searchView js='true'>Search</searchView>
+    <noRecords js='true'>Aucun enregistrement trouvé</noRecords>
+    <edit js='true'>Edition</edit>
+    <searchView js='true'>Recherche</searchView>
     <actions js='true'>Actions</actions>
     <contacts js='true'>Contacts</contacts>
-    <SharedObjects js='true'>Shared Objects</SharedObjects>
+    <SharedObjects js='true'>Objets réutilisables</SharedObjects>
     <actions js='true'>Actions</actions>
-    <reusable_confirmValidate js="true">Confirm Validate Action</reusable_confirmValidate>
-    <reusable_confirmDelete js="true">Confirm Delete Action</reusable_confirmDelete>
-    <reusable_confirmDeleteMsg js="true">Are you sure you wish to delete the selected object?</reusable_confirmDeleteMsg>
-    <reusable_confirmValidateMsg js="true">Are you sure you wish to validate the selected object?</reusable_confirmValidateMsg>
+    <reusable_confirmValidate js="true">Confirmer la validation</reusable_confirmValidate>
+    <reusable_confirmDelete js="true">Confirmer la suppression</reusable_confirmDelete>
+    <reusable_confirmDeleteMsg js="true">Etes-vous sûr de vouloir supprimer les objets sélectionnés?</reusable_confirmDeleteMsg>
+    <reusable_confirmValidateMsg js="true">Etes-vous sûr de vouloir valider les objets sélectionnés?</reusable_confirmValidateMsg>
     <reusable_validated js="true">validé</reusable_validated>
     <reusable_nonValidated js="true">non validé</reusable_nonValidated>
     <reusable_nonValidTitle js="true">Gérer les objets réutilisables</reusable_nonValidTitle>

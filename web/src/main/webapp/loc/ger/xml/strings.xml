@@ -9,18 +9,18 @@
     <contacts js='true'>Kontakte</contacts>
     <SharedObjects js='true'>Wiederverwendbare Objekte</SharedObjects>
     <actions js='true'>Aktionen</actions>
-    <reusable_confirmValidate js="true">Confirm Validate Action</reusable_confirmValidate>
-    <reusable_confirmDelete js="true">Confirm Delete Action</reusable_confirmDelete>
-    <reusable_confirmDeleteMsg js="true">Are you sure you wish to delete the selected object?</reusable_confirmDeleteMsg>
-    <reusable_confirmValidateMsg js="true">Are you sure you wish to validate the selected object?</reusable_confirmValidateMsg>
+    <reusable_confirmValidate js="true">Bestätigen Sie die Validierung</reusable_confirmValidate>
+    <reusable_confirmDelete js="true">Bestätigen Sie das Löschen</reusable_confirmDelete>
+    <reusable_confirmDeleteMsg js="true">Sind Sie sicher, dass Sie das ausgewählte Objekt löschen möchten?</reusable_confirmDeleteMsg>
+    <reusable_confirmValidateMsg js="true">Sind Sie sicher, dass Sie das ausgewählte Objekt validieren möchten?</reusable_confirmValidateMsg>
     <reusable_validated js="true">Bestätigt</reusable_validated>
     <reusable_nonValidated js="true">Unbestätigt</reusable_nonValidated>
     <reusable_nonValidTitle js="true">Wiederverwendbare Objekte</reusable_nonValidTitle>
     <reusable_nonValidDesc js="true">Wiederverwendbare Objekte bestätigen/ablehnen</reusable_nonValidDesc>
     <reusable_rejectTitle js="true">Nachricht zur Ablehnung von wiederverwendbaren Objekten</reusable_rejectTitle>
     <reusable_rejectDefaultMsg js="true">Wählen Sie ein anderes wiederverwendbares Objekt...</reusable_rejectDefaultMsg>
-    <archived>Archived</archived>
-    <performingOperation js="true">Performing Operation.  Please wait...</performingOperation>
+    <archived>Archiviert</archived>
+    <performingOperation js="true">Die Operation wird ausgeführt. Bitte warten...</performingOperation>
 
 
 	<local._none_.non_validated>geocat.ch Thesaurus (nicht validiert)</local._none_.non_validated>
