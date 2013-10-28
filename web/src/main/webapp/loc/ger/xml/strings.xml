@@ -19,7 +19,7 @@
     <reusable_nonValidDesc js="true">Wiederverwendbare Objekte bestätigen/ablehnen</reusable_nonValidDesc>
     <reusable_rejectTitle js="true">Nachricht zur Ablehnung von wiederverwendbaren Objekten</reusable_rejectTitle>
     <reusable_rejectDefaultMsg js="true">Wählen Sie ein anderes wiederverwendbares Objekt...</reusable_rejectDefaultMsg>
-    <archived>Archived</archived>
+    <archived>Archiviert</archived>
     <performingOperation js="true">Die Operation wird ausgeführt. Bitte warten...</performingOperation>
 
 
