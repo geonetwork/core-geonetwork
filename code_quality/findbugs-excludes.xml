@@ -96,9 +96,12 @@
 		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
 		<Method name="serviceSpecificExec"/>
 	</Match>
-	<Match>
-		<Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
-	</Match>
+    <Match>
+        <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
+    </Match>
+    <Match>
+        <Class name="org.fao.geonet.services.ownership.OwnershipUtils$1" />
+    </Match>
 
 	
 <!-- The following bugs are hard to fix should be fixed because they can cause problems in servers with multiple geonetworks running -->	

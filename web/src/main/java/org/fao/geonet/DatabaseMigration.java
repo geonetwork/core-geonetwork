@@ -2,12 +2,12 @@ package org.fao.geonet;
 
 import com.vividsolutions.jts.util.Assert;
 import jeeves.config.springutil.JeevesApplicationContext;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.lib.DatabaseType;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.lib.ServerLib;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
@@ -165,7 +165,7 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
                                     + "\n"
                                     + "      ). Try to run the migration task manually on the current database\n"
                                     + "      before starting the application or start with a new empty database.\n"
-                                   + "      Sample SQL scripts for migration could be found in WEB-INF/sql/migrate folder.\n"
+                                    + "      Sample SQL scripts for migration could be found in WEB-INF/sql/migrate folder.\n"
                     );
 
                 }
@@ -198,7 +198,7 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
             DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
             task.update(conn);
             return false;
-        } catch (Exception e) {
+        } catch (Throwable e) {
             _logger.info("          Errors occurs during Java migration file: " + e.getMessage());
             e.printStackTrace();
             return true;
@@ -219,12 +219,12 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
         try {
             results = statement.executeQuery("SELECT value FROM settings WHERE id = " + VERSION_NUMBER_ID_BEFORE_2_11);
             if (results.next()) {
-                version = results.getString(0);
+                version = results.getString(1);
             }
             results.close();
             results = statement.executeQuery("SELECT value FROM settings WHERE id = " + SUBVERSION_NUMBER_ID_BEFORE_2_11);
             if (results.next()) {
-                subversion = results.getString(0);
+                subversion = results.getString(1);
             }
         } catch (SQLException e) {
             _logger.info("     Error getting database version: " + e.getMessage() +
@@ -238,14 +238,25 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
         // Now settings is KVP
         if (version == null) {
             try {
-                results = statement.executeQuery("SELECT value FROM settings WHERE name = " + VERSION_NUMBER_KEY);
-                if (results.next()) {
-                    version = results.getString(0);
+                try {
+                    results = statement.executeQuery("SELECT value FROM settings WHERE name = " + VERSION_NUMBER_KEY);
+                    if (results.next()) {
+                        version = results.getString(1);
+                    }
+                } finally {
+                    if (results != null) {
+                        results.close();
+                    }
                 }
-                results.close();
-                results = statement.executeQuery("SELECT value FROM settings WHERE name = " + SUBVERSION_NUMBER_KEY);
-                if (results.next()) {
-                    subversion = results.getString(0);
+                try {
+                    results = statement.executeQuery("SELECT value FROM settings WHERE name = " + SUBVERSION_NUMBER_KEY);
+                    if (results.next()) {
+                        subversion = results.getString(1);
+                    }
+                } finally {
+                    if (results != null) {
+                        results.close();
+                    }
                 }
             } catch (SQLException e) {
                 _logger.info("     Error getting database version: " + e.getMessage() + ".");

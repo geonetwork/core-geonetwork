@@ -98,7 +98,6 @@ public class Geonetwork implements ApplicationHandler {
     private MetadataNotifierControl metadataNotifierControl;
     private ThreadPool threadPool;
     private String FS = File.separator;
-    private Element dbConfiguration;
     private ConfigurableApplicationContext _applicationContext;
     private static final String SPATIAL_INDEX_FILENAME = "spatialindex";
     private static final String IDS_ATTRIBUTE_NAME = "id";
@@ -135,7 +134,6 @@ public class Geonetwork implements ApplicationHandler {
         ServletContext servletContext = null;
         if (context.getServlet() != null) {
             servletContext = context.getServlet().getServletContext();
-            servletContext = context.getServlet().getServletContext();
         }
         ServerLib sl = new ServerLib(servletContext, appPath);
         String version = sl.getVersion();
@@ -156,7 +154,6 @@ public class Geonetwork implements ApplicationHandler {
         String thesauriDir = handlerConfig.getMandatoryValue(Geonet.Config.CODELIST_DIR);
         String luceneDir = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_DIR);
         String luceneConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
-        String summaryConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.SUMMARY_CONFIG);
 
         logger.info("Data directory: " + systemDataDir);
 
@@ -531,7 +528,7 @@ public class Geonetwork implements ApplicationHandler {
                     os.close();
                 }
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             logger.error("      Error when setting the logo: " + e.getMessage());
         }
     }

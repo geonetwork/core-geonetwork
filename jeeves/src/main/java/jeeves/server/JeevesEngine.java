@@ -81,7 +81,7 @@ public class JeevesEngine {
 	private String _appPath;
     private boolean _debugFlag;
 	
-	/** true if the 'general' part has been loaded */
+	/* true if the 'general' part has been loaded */
 	private boolean _generalLoaded;
 
     @Autowired
@@ -104,9 +104,9 @@ public class JeevesEngine {
 	//---
 	//---------------------------------------------------------------------------
 
-	/** Inits the engine, loading all needed data
+	/** Inits the engine, loading all needed data.
 	  */
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    @Transactional()
     public void init(final String appPath, final String configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException
 	{
         ServletContext servletContext = null;
