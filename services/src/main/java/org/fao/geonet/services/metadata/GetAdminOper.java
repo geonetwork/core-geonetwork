@@ -43,6 +43,7 @@ import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.List;
@@ -72,9 +73,7 @@ public class GetAdminOper implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getBean(DataManager.class);
-		AccessManager am = gc.getBean(AccessManager.class);
+		AccessManager am = context.getBean(AccessManager.class);
 
 		String metadataId = Utils.getIdentifierFromParameters(params, context);
 
@@ -130,11 +129,11 @@ public class GetAdminOper implements Service
 
 			//--- get all group informations (user member and user profile)
 			
-			el.setAttribute("userGroup", userGroups.contains(sGrpId) ? "true" : "false");
+			el.setAttribute("userGroup", userGroups.contains(grpId) ? "true" : "false");
 
-            final Specifications<UserGroup> hasUserIdAndGroupId = where(UserGroupSpecs.hasGroupId(grpId)).and(UserGroupSpecs.hasUserId
-                    (context
-                    .getUserSession().getUserIdAsInt()));
+            final Specification<UserGroup> hasGroupId = UserGroupSpecs.hasGroupId(grpId);
+            final Specification<UserGroup> hasUserId = UserGroupSpecs.hasUserId(context.getUserSession().getUserIdAsInt());
+            final Specifications<UserGroup> hasUserIdAndGroupId = where(hasGroupId).and(hasUserId);
             List<UserGroup> userGroupEntities = userGroupRepository.findAll(hasUserIdAndGroupId);
 			for (UserGroup ug : userGroupEntities) {
 				el.addContent(new Element("userProfile").setText(ug.getProfile().toString()));

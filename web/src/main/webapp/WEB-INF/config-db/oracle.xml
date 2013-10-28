@@ -18,7 +18,7 @@
         </property>
     </bean>
 
-    <bean id="hibernateJpaVendorAdapterDatabaseType" class="java.lang.String">
+    <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
         <constructor-arg value="ORACLE"/>
     </bean>
 
@@ -27,7 +27,7 @@
     </bean>
 
     <bean id="jdbcURL" class="java.lang.String">
-        <constructor-arg value="jdbc:oracle:thin:@localhost:1521:geonetwork"/>
+        <constructor-arg value="jdbc:oracle:thin:@${jdbc.host}:1521:${jdbc.database}"/>
     </bean>
 
 </beans>

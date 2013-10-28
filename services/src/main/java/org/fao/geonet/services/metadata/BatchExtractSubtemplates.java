@@ -163,8 +163,6 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 		if (metadataEntity != null) {
             String id   = "" + metadataEntity.getId();
 
-            MetadataDataInfo info = metadataEntity.getDataInfo();
-
 			if (!accessMan.isOwner(context, id)) {
 				notOwner.add(metadataEntity.getId());
 			} else {

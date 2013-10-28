@@ -54,6 +54,7 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PreDestroy;
@@ -105,7 +106,7 @@ public class JeevesEngine {
 
 	/** Inits the engine, loading all needed data
 	  */
-    @Transactional
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void init(final String appPath, final String configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException
 	{
         ServletContext servletContext = null;

@@ -109,21 +109,6 @@ public class Unset extends NotInReadOnlyModeService {
 		return response;
 	}
 	
-	private void remove (Element result, String type, String id, ServiceContext context) throws Exception {
-		
-		result = result.getChild(type);
-		
-		if (result == null)
-			throw new OperationAbortedEx("Metadata has no thumbnail", id);
-
-		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + getFileName(result.getText());
-		
-		if (!new File(file).delete())
-			context.error("Error while deleting thumbnail : "+file);
-		
-		
-	} 
-	
 	//--------------------------------------------------------------------------
 	
 	/**

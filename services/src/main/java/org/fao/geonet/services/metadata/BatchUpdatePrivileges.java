@@ -40,6 +40,8 @@ import org.jdom.Element;
 
 import java.util.*;
 
+import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
+
 /**
  * Stores all operations allowed for a metadata.
  */
@@ -60,7 +62,7 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getBean(DataManager.class);
@@ -74,8 +76,8 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 		Set<String> notFound = new HashSet<String>();
 		Set<Integer> notOwner = new HashSet<Integer>();
 
-		synchronized(sm.getSelection("metadata")) {
-		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
+		synchronized(sm.getSelection(SELECTION_METADATA)) {
+		for (Iterator<String> iter = sm.getSelection(SELECTION_METADATA).iterator(); iter.hasNext();) {
 			String uuid = iter.next();
 
 			//--- check access
@@ -95,8 +97,9 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 				boolean isAdmin = Profile.Administrator == us.getProfile();
 				boolean isReviewer= Profile.Reviewer == us.getProfile();
 
-				if (us.getUserId().equals(info.getSourceInfo().getOwner()) && !isAdmin && !isReviewer)
-					skip = true;
+				if (us.getUserIdAsInt() == info.getSourceInfo().getOwner() && !isAdmin && !isReviewer) {
+                    skip = true;
+                }
 
 				dm.deleteMetadataOper(context, "" + info.getId(), skip);
 

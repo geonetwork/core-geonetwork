@@ -6,7 +6,7 @@
 	">
     <import resource="defaultJdbcDataSource.xml" />
 
-    <bean id="hibernateJpaVendorAdapterDatabaseType" class="java.lang.String">
+    <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
         <constructor-arg value="MYSQL"/>
     </bean>
 
@@ -15,7 +15,7 @@
     </bean>
 
     <bean id="jdbcURL" class="java.lang.String">
-        <constructor-arg value="jdbc:mysql://localhost:3306/geonetwork"/>
+        <constructor-arg value="jdbc:mysql://${jdbc.host}:3306/${jdbc.database}"/>
     </bean>
 
 </beans>

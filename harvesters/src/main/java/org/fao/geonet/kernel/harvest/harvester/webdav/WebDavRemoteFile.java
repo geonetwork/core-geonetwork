@@ -57,6 +57,7 @@ class WebDavRemoteFile implements RemoteFile {
 	//---------------------------------------------------------------------------
 
 	public Element getMetadata(SchemaManager  schemaMan) throws Exception {
+        System.out.println(wr);
 //        return Xml.loadStream(wr.getMethodData());
         return null; //TODO Webdav
 	}

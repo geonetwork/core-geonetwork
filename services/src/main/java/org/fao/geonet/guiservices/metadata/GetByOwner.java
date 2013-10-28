@@ -18,6 +18,7 @@ import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -60,28 +61,24 @@ public class GetByOwner implements Service {
     public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        Specifications<Metadata> spec = null;
 
         int ownerId = context.getUserSession().getUserIdAsInt();
         Profile userProfile = context.getUserSession().getProfile();
 
         if (userProfile == null) {
-           throw new OperationNotAllowedEx("Unauthorized user attempted to list editable metadata ");
+            throw new OperationNotAllowedEx("Unauthorized user attempted to list editable metadata ");
         }
 
-		boolean useOwnerId = true;
-
+        Specifications<Metadata> spec;
         // if the user is an admin, return all metadata
         if(userProfile == Profile.Administrator) {
             spec = where(MetadataSpecs.isHarvested(false));
-            useOwnerId = false;
         } else if(userProfile == Profile.Reviewer || userProfile == Profile.UserAdmin) {
             final List<UserGroup> groups = context.getBean(UserGroupRepository.class).findAll(UserGroupSpecs.hasUserId(ownerId));
             List<Integer> groupIds = Lists.transform(groups, new Function<UserGroup, Integer>() {
                 @Nullable
                 @Override
-                public Integer apply(@Nullable UserGroup input) {
+                public Integer apply(@Nonnull UserGroup input) {
                     return input.getId().getGroupId();
                 }
             });

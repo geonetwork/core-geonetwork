@@ -30,7 +30,6 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -38,7 +37,7 @@ import org.fao.geonet.repository.specification.UserSpecs;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -75,28 +74,28 @@ public class OwnershipUtils
 		int id = us.getUserIdAsInt();
 
 		if (us.getProfile() == Profile.Administrator){
-			return Lists.transform(users, new Function<User, Element>() {
-                @Nullable
+            final List<Element> userXml = Lists.transform(users, new Function<User, Element>() {
                 @Override
-                public Element apply(@Nullable User input) {
-                   return input.asXml();
+                @Nonnull
+                public Element apply(@Nonnull User input) {
+                    return input.asXml();
 
                 }
             });
+            return userXml;
         }
 
 		//--- we have a user admin
 
 		Set<String> hsMyGroups = getUserGroups(context, id);
 
-        Set<String> profileSet = us.getProfile().getAllNames();
+        Set<Profile> profileSet = us.getProfile().getAll();
 
 		//--- now filter them
 
 		List<Element> newList = new ArrayList<Element>();
 
-		for (User elRec : users)
-		{
+		for (User elRec : users) {
             int userId = elRec.getId();
             Profile profile = elRec.getProfile();
 

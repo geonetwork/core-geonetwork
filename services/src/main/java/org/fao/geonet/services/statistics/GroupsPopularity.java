@@ -35,8 +35,6 @@ import static org.fao.geonet.repository.statistic.MetadataStatisticSpec.Standard
  *
  */
 public class GroupsPopularity extends NotInReadOnlyModeService {
-	/** the SQL query to get results */
-	private String query;
 	/** should we generate and send tooltips to client (caution, can slow down the process if
 	 * dataset is big)
 	 */
@@ -67,7 +65,6 @@ public class GroupsPopularity extends NotInReadOnlyModeService {
 		this.createTooltips = Boolean.parseBoolean(params.getValue("createTooltips"));
 		this.chartWidth = Integer.parseInt(params.getValue("chartWidth"));
 		this.chartHeight = Integer.parseInt(params.getValue("chartHeight"));
-		this.query = params.getValue("query");
 	}
 
 	//--------------------------------------------------------------------------

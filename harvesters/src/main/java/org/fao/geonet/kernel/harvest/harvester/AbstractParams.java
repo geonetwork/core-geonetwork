@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
+import com.vividsolutions.jts.util.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -76,15 +77,16 @@ public abstract class AbstractParams {
             Log.debug(Geonet.HARVEST_MAN, "AbstractParams creating from:\n"+ Xml.getString(node));
         }
 		Element site    = node.getChild("site");
-		Element opt     = node.getChild("options");
+        Assert.isTrue(site != null, "Site cannot be null");
+        Element opt     = node.getChild("options");
 		Element content = node.getChild("content");
 		
 		
-		Element account = (site == null) ? null : site.getChild("account");
+		Element account = site.getChild("account");
 
 		name       = Util.getParam(site, "name", "");
 		uuid       = Util.getParam(site, "uuid", UUID.randomUUID().toString());
-		
+
         Element ownerIdE = site.getChild("ownerId");
         if(ownerIdE != null) {
             ownerId = ownerIdE.getText();

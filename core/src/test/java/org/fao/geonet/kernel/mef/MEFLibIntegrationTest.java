@@ -6,6 +6,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -66,11 +67,13 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testDoExport() throws Exception {
         fail("to implement");
     }
 
     @Test
+    @Ignore
     public void testDoMEF2Export() throws Exception {
         fail("to implement");
     }

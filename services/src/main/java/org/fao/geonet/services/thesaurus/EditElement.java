@@ -139,8 +139,6 @@ public class EditElement implements Service {
 				
 				elResp.addContent(keywordType);
 			}
-			
-			searcherBNR = null;
 		}
 		
 		String thesaType = ref;

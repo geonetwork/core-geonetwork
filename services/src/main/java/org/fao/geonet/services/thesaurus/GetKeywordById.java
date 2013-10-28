@@ -91,11 +91,8 @@ public class GetKeywordById implements Service {
                     String currentUri = url[i];
                     kb = searcher.searchById(currentUri, sThesaurusName,
                             langForThesaurus);
-                    if (kb == null) {
-                        root = new Element("null");
-                    } else {
+                    if (kb != null) {
                         kbList.add(kb);
-                        kb = null;
                     }
                 }
                 root = new Element("descKeys");

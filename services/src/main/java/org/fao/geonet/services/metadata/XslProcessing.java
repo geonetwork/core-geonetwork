@@ -233,12 +233,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
 	                // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
 	                boolean updateDateStamp = true;
 	                dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
-	                if (useIndexGroup) {
-	                    dataMan.indexMetadata(id);
-	                }
-	                else {
-                        dataMan.indexMetadata(id);
-                    }
+                    dataMan.indexMetadata(id);
 	            }
 	
 	            report.addMetadataId(iId);

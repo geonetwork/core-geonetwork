@@ -6,7 +6,7 @@
 	">
     <import resource="defaultJdbcDataSource.xml" />
 
-    <bean id="hibernateJpaVendorAdapterDatabaseType" class="java.lang.String">
+    <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
         <constructor-arg value="POSTGRESQL"/>
     </bean>
 
@@ -15,7 +15,7 @@
     </bean>
 
     <bean id="jdbcURL" class="java.lang.String">
-        <constructor-arg value="jdbc:postgresql://localhost:5432/geonetwork"/>
+        <constructor-arg value="jdbc:postgresql://${jdbc.host}:5432/${jdbc.database}"/>
     </bean>
 
 </beans>

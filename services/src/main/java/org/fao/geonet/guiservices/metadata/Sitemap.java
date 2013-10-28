@@ -54,8 +54,7 @@ import java.util.Set;
  *
  * See http://www.sitemaps.org/protocol.php
  */
-public class Sitemap implements Service
-{
+public class Sitemap implements Service {
     private static final String FORMAT_XML = "xml";
     private static final String FORMAT_HTML = "html";
 

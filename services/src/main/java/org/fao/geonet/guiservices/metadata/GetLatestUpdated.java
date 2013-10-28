@@ -66,7 +66,7 @@ public class GetLatestUpdated implements Service
 	{
 		String sMaxItems           = config.getValue("maxItems",           "10");
 		String sTimeBetweenUpdates = config.getValue("timeBetweenUpdates", "60");
-		_timeBetweenUpdates = Integer.parseInt(sTimeBetweenUpdates) * 1000;
+		_timeBetweenUpdates = Long.parseLong(sTimeBetweenUpdates) * 1000;
 		_maxItems           = Integer.parseInt(sMaxItems);
 		_config             = config;
 	}

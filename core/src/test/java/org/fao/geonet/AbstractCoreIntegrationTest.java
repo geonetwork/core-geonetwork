@@ -191,7 +191,8 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
     private String getWebappDir() {
         File here = getClassFile();
-        while (!new File(here, "pom.xml").exists()) {
+        while (!new File(here, "pom.xml").exists() && !new File(here.getParentFile(), "web/src/main/webapp/").exists()) {
+            System.out.println("Did not find pom file in: "+here);
             here = here.getParentFile();
         }
 
@@ -199,8 +200,8 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     }
 
     private File getClassFile() {
-        final String testClassName = AbstractCoreIntegrationTest.class.getSimpleName();
-        return new File(AbstractCoreIntegrationTest.class.getResource(testClassName + ".class").getFile());
+        final String testClassName = getClass().getSimpleName();
+        return new File(getClass().getResource(testClassName + ".class").getFile());
     }
 
     protected User loginAsAdmin(ServiceContext context) {

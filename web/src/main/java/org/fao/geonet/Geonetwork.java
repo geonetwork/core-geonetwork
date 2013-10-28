@@ -422,6 +422,8 @@ public class Geonetwork implements ApplicationHandler {
                 Statement statement = null;
                 try {
                     connection = bean.getConnection();
+                    connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+                    connection.setAutoCommit(false);
                     statement = connection.createStatement();
                     final DbLib dbLib = new DbLib();
                     for (Pair<String, String> pair : importData) {
@@ -431,8 +433,8 @@ public class Geonetwork implements ApplicationHandler {
                         final String filePrefix = pair.two();
                         dbLib.insertData(servletContext, statement, appPath, filePath, filePrefix);
                     }
-                    String siteUuid = UUID.randomUUID().toString();
-                    context.getBean(SettingManager.class).setSiteUuid(siteUuid);
+                    connection.commit();
+                    connection.setAutoCommit(true);
                 } finally {
                     try {
                         if (statement != null) {
@@ -444,6 +446,10 @@ public class Geonetwork implements ApplicationHandler {
                         }
                     }
                 }
+                context.getEntityManager().flush();
+                context.getEntityManager().clear();
+                String siteUuid = UUID.randomUUID().toString();
+                context.getBean(SettingManager.class).setSiteUuid(siteUuid);
             } catch (Throwable t) {
                 throw new RuntimeException(t);
             }

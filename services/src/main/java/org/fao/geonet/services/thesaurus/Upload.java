@@ -195,8 +195,8 @@ public class Upload implements Service {
 			
 			// Rename .xml to .rdf for all thesaurus
 			fname = fname.substring(0, extensionIdx) + ".rdf";
-			eTSResult = UploadThesaurus(rdfFile, style, context, fname, type,
-					dir);
+			eTSResult = uploadThesaurus(rdfFile, style, context, fname, type,
+                    dir);
 		} else {
             if(Log.isDebugEnabled(Geonet.THESAURUS)) {
                 Log.debug(Geonet.THESAURUS, "Incorrect extension for thesaurus named: " + fname);
@@ -217,23 +217,23 @@ public class Upload implements Service {
 	 * @return Element thesaurus uploaded
 	 * @throws Exception
 	 */
-	private Element UploadThesaurus(File rdfFile, String style,
-			ServiceContext context, String fname, String type, String dir)
+	private Element uploadThesaurus(File rdfFile, String style,
+                                    ServiceContext context, String fname, String type, String dir)
 			throws Exception {
 
-		Element TS_xml = null;
+		Element tsXml = null;
 		Element xml = Xml.loadFile(rdfFile);
 		xml.detach();
 
 		if (!style.equals("_none_")) {
-			TS_xml = Xml.transform(xml, stylePath + "/" + style);
-			TS_xml.detach();
+			tsXml = Xml.transform(xml, stylePath + "/" + style);
+			tsXml.detach();
 		} else
-			TS_xml = xml;
+			tsXml = xml;
 
 		// Load document and check namespace
-		if (TS_xml.getNamespacePrefix().equals("rdf")
-				&& TS_xml.getName().equals("RDF")) {
+		if (tsXml.getNamespacePrefix().equals("rdf")
+				&& tsXml.getName().equals("RDF")) {
 
 			GeonetContext gc = (GeonetContext) context
 					.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -242,7 +242,7 @@ public class Upload implements Service {
 			// copy to directory according to type
 			String path = thesaurusMan.buildThesaurusFilePath(fname, type, dir);
 			File newFile = new File(path);
-			Xml.writeResponse(new Document(TS_xml), new FileOutputStream(
+			Xml.writeResponse(new Document(tsXml), new FileOutputStream(
 					newFile));
 
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);

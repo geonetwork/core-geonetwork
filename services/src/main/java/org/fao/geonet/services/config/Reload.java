@@ -47,12 +47,6 @@ public class Reload implements Service {
 		ServiceConfig handlerConfig = gc.getBean(ServiceConfig.class);
 		String luceneConfigXmlFile = handlerConfig
 				.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
-		String path = context.getAppPath();
-
-        ServletContext servletContext = null;
-        if(context.getServlet() != null) {
-            servletContext = context.getServlet().getServletContext();
-        }
 
 		LuceneConfig lc = context.getBean(LuceneConfig.class);
         lc.configure(luceneConfigXmlFile);

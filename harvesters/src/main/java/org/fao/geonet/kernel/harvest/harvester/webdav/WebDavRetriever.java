@@ -107,6 +107,7 @@ class WebDavRetriever implements RemoteRetriever {
 
 	private DavResource createResource(String url) throws Exception {
         if(log.isDebugEnabled()) log.debug("Creating WebdavResource");
+        context.error(getClass().getName()+" has not yet been reimplemented");
 //
 //		HttpURL http = url.startsWith("https") ? new HttpsURL(url) : new HttpURL(url);
 //

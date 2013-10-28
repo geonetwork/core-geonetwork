@@ -90,7 +90,7 @@ public class Groups implements Service {
             if (count > 0) {
                 Group group = groupRepository.findOne(groupId);
 
-                if (group == null) {
+                if (group != null) {
                     Element record = group.asXml();
                     record.detach();
                     record.setName("group");

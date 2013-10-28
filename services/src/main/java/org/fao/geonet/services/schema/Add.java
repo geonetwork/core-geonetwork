@@ -61,7 +61,7 @@ public class Add implements Service {
 
 		String schema = Util.getParam(params, Params.SCHEMA);
 		String urlStr, uuid, fname;
-		urlStr = uuid = fname = "";
+		uuid = "";
 		URL url = null;
 
 		// -- try the file name argument then the url then the uuid of a metadata 

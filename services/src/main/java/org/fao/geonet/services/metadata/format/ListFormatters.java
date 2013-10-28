@@ -45,7 +45,7 @@ public class ListFormatters extends AbstractFormatService {
         		Util.getParam(params, Params.UUID, null) != null) {
 	        try {
 	        	schema = getMetadataSchema(params, context);
-	        } catch (Exception e) {
+	        } catch (Throwable e) {
 	        	// its ok.  just can't use metadata
 	        }
         }

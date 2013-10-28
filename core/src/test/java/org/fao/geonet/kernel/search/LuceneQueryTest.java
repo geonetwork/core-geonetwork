@@ -1,34 +1,39 @@
 package org.fao.geonet.kernel.search;
 
-import junit.framework.TestCase;
+import jeeves.server.ServiceConfig;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.search.Query;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.jdom.DefaultJDOMFactory;
 import org.jdom.Element;
 import org.jdom.JDOMFactory;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Unit test for building Lucene queries.
  *
  * @author heikki doeleman
  */
-public class LuceneQueryTest extends TestCase {
+public class LuceneQueryTest {
 
     private Set<String> _tokenizedFieldSet;
     private Map<String, LuceneConfigNumericField> _numericFieldSet;
     private PerFieldAnalyzerWrapper _analyzer;
 
-    public LuceneQueryTest(String name) throws Exception {
-        super(name);
-
+    @Before
+    public void before() throws Exception {
         Map<String, Analyzer> analyzers = new HashMap<String, Analyzer>();
         analyzers.put("_uuid", new GeoNetworkAnalyzer());
         analyzers.put("parentUuid", new GeoNetworkAnalyzer());
@@ -39,7 +44,13 @@ public class LuceneQueryTest extends TestCase {
 
         final String configFile = "/WEB-INF/config-lucene.xml";
         final String appDir = new File(LuceneQueryTest.class.getResource(configFile).getFile()).getParentFile().getParent();
+        final GeonetworkDataDirectory dataDirectory = new GeonetworkDataDirectory();
+        dataDirectory.init("test", appDir, new ServiceConfig(), null);
         LuceneConfig lc = new LuceneConfig();
+        lc._geonetworkDataDirectory = dataDirectory;
+        final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext();
+        lc._appContext = context;
+        context.refresh();
         lc.configure(configFile);
 
         _tokenizedFieldSet = lc.getTokenizedField();
@@ -49,6 +60,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
      */
+    @Test
     public void testSingleORSingleValue() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -70,6 +82,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
      */
+    @Test
     public void testMoreThanOneORParamSingleValue() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -95,6 +108,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
      */
+    @Test
     public void testSingleORSingleValueAndANDparam() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -120,6 +134,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
      */
+    @Test
     public void testSingleORMultipleValue() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -142,6 +157,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
      */
+    @Test
     public void testMultiORSingleValue() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -164,6 +180,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
      */
+    @Test
     public void testMultiORMultipleValue() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -186,6 +203,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
      */
+    @Test
     public void testMultiORWithSecurityField() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -207,6 +225,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
      */
+    @Test
     public void testMultiORMultipleNonTokenizedValuesWithOr() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -229,6 +248,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
      */
+    @Test
     public void testSingleORSingleTokenWithUUID() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -250,6 +270,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
      */
+    @Test
     public void testSingleORMultipleTokenWithUUID() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -268,6 +289,7 @@ public class LuceneQueryTest extends TestCase {
         assertEquals("unexpected Lucene query", "+(title:xxx title:yyy _uuid:xxx _uuid:yyy) +_isTemplate:n", query.toString());
     }
 
+    @Test
     public void testSingleORWithBB() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -288,6 +310,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
      */
+    @Test
     public void testSingleORSingleValueWithALL() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -310,6 +333,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
      */
+    @Test
     public void testSingleORMultiValueWithOR() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -333,6 +357,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
      */
+    @Test
     public void testSingleORMultiValueWithWithout() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -355,6 +380,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'phrase' parameter with a multiple token value.
      */
+    @Test
     public void testSingleORWithMultipleTokenPhrase() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -376,6 +402,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'phrase' parameter with a multiple token value.
      */
+    @Test
     public void testSingleORWithTemporal() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -398,6 +425,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'any' parameter with a single token value.
      */
+    @Test
     public void testSingleTokenAny() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -416,6 +444,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'any' parameter with a single token value.
      */
+    @Test
     public void testMultiAny() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -434,6 +463,7 @@ public class LuceneQueryTest extends TestCase {
         assertEquals("unexpected Lucene query", "+(+any:demo +any:hoeperdepoep) +_isTemplate:n", query.toString());
     }
 
+    @Test
     public void testSingleTokenQMarkWildcardAny() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -452,6 +482,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'any' parameter with a single token value that has a wildcard.
      */
+    @Test
     public void testSingleTokenWildcardAny() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -470,6 +501,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'any' parameter with a single token value that has a wildcard.
      */
+    @Test
     public void testSingleTokenWildcardWhitespace() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -488,6 +520,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'any' parameter with a no value.
      */
+    @Test
     public void testNoTokenAny() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -506,6 +539,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'any' parameter check case insensitivity..
      */
+    @Test
     public void testSingleTokenAnyCaseInsensitive() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -524,6 +558,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'any' parameter with a single token value and with fuzziness.
      */
+    @Test
     public void testSingleTokenAnyFuzzy() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -545,6 +580,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'uuid' parameter with a single token value.
      */
+    @Test
     public void testSingleTokenUUID() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -563,6 +599,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'uuid' parameter with a double token value.
      */
+    @Test
     public void testDoubleTokenUUID() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -582,6 +619,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'uuid' parameter with a double token value.
      */
+    @Test
     public void testDoubleTokenUUIDWithNonStandardUUID() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -602,6 +640,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'any' parameter with a single token value and with fuzziness 1.
      */
+    @Test
     public void testSingleTokenAnyFuzzy1() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -623,6 +662,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'any' parameter with multiple token values.
      */
+    @Test
     public void testMultipleTokensAny() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -641,6 +681,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'any' parameter with multiple token values and with fuzziness.
      */
+    @Test
     public void testMultipleTokensAnyFuzzy() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -662,6 +703,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'or' parameter with a single token value.
      */
+    @Test
     public void testSingleTokenOr() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -680,6 +722,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'or' parameter with a multiple token value.
      */
+    @Test
     public void testMultipleTokenOr() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -698,6 +741,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'or' parameter with a multiple token value and fuzziness.
      */
+    @Test
     public void testMultipleTokenOrFuzzy() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -719,6 +763,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'all' parameter with a single token value.
      */
+    @Test
     public void testSingleTokenAll() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -737,6 +782,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'all' parameter with multiple token values and with fuzziness.
      */
+    @Test
     public void testMultipleTokensAllFuzzy() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -758,6 +804,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'without' parameter with a single token value.
      */
+    @Test
     public void testSingleTokenWithout() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -777,6 +824,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'without' parameter with a multiple token value.
      */
+    @Test
     public void testMultipleTokenWithout() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -795,6 +843,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'without' parameter with a multiple token value and fuzziness.
      */
+    @Test
     public void testMultipleTokenWithoutfuzzy() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -816,6 +865,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'phrase' parameter with a single token value.
      */
+    @Test
     public void testSingleTokenPhrase() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -834,6 +884,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'phrase' parameter with a multiple token value.
      */
+    @Test
     public void testMultipleTokenPhrase() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -852,6 +903,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'phrase' parameter with a multiple token value and fuzziness.
      */
+    @Test
     public void testMultipleTokenPhraseFuzzy() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -873,6 +925,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'topic-category' parameter with single value.
      */
+    @Test
     public void testSingleTopicCategory() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -891,6 +944,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'topic-category' parameter with multiple values.
      */
+    @Test
     public void testMultipleAndTopicCategories() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -916,6 +970,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'any' parameter with a single token value that has a wildcard.
      */
+    @Test
     public void testSingleTokenStarWildcardAtTheEndAny() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -934,6 +989,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'any' parameter with a single token value that has a wildcard.
      */
+    @Test
     public void testSingleTokenQMarkWildcardAtTheEndAny() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -949,6 +1005,7 @@ public class LuceneQueryTest extends TestCase {
         assertEquals("unexpected Lucene query", "+any:hoeper? +_isTemplate:n", query.toString());
     }
 
+    @Test
     public void testMultipleOrTopicCategories() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -969,6 +1026,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'template' parameter with value 'y'.
      */
+    @Test
     public void testIsTemplateY() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -987,6 +1045,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'template' parameter with value 's'.
      */
+    @Test
     public void testIsTemplateS() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1005,6 +1064,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'template' parameter with value 'WTF'.
      */
+    @Test
     public void testIsTemplateWTF() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1023,6 +1083,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'template' parameter with no value.
      */
+    @Test
     public void testIsTemplateNoValue() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1038,6 +1099,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'dateFrom' parameter.
      */
+    @Test
     public void testDateFrom() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1056,6 +1118,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'dateTo' parameter.
      */
+    @Test
     public void testDateTo() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1075,6 +1138,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'dateTo' and 'dateFrom' parameter.
      */
+    @Test
     public void testDateToFrom() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1096,6 +1160,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'siteId' parameter.
      */
+    @Test
     public void testSource() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1114,6 +1179,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'title' parameter.
      */
+    @Test
     public void testTitle() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1132,6 +1198,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'protocol' parameter.
      */
+    @Test
     public void testProtocol() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1150,6 +1217,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'type' parameter.
      */
+    @Test
     public void testType() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1168,6 +1236,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'inspire' parameter with a single value.
      */
+    @Test
     public void testSingleInspire() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1186,6 +1255,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'inspiretheme' parameter with a single value.
      */
+    @Test
     public void testSingleInspireTheme() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1205,6 +1275,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'inspiretheme' parameter with a single multi-token value.
      */
+    @Test
     public void testSingleMultiTokenInspireTheme() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1224,6 +1295,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'inspiretheme' parameter with multiple values.
      */
+    @Test
     public void testMultipleInspireTheme() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1246,6 +1318,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'inspireannex' parameter with a single token value.
      */
+    @Test
     public void testSingleTokenInspireAnnex() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1264,6 +1337,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'themekey' parameter with a single value.
      */
+    @Test
     public void testSingleThemeKey() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1282,6 +1356,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'themekey' parameter with multiple values.
      */
+    @Test
     public void testMultipleThemeKey() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1305,6 +1380,7 @@ public class LuceneQueryTest extends TestCase {
      * This is how the search page JS delivers themekey; that's unwanted behaviour, it's better
      * to have it deliver multiple themekey elements as in the testcase above.
      */
+    @Test
     public void testMultipleThemeKeyOrSeparated() {
         String keywordSeparator = " or ";
         // create request object
@@ -1326,6 +1402,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'category' parameter with a single value.
      */
+    @Test
     public void testSingleCategory() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1344,6 +1421,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'parentUUID' parameter.
      */
+    @Test
     public void testParentUUID() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1362,6 +1440,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'operatesOn' parameter.
      */
+    @Test
     public void testOperatesOn() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1380,6 +1459,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * '_schema' parameter.
      */
+    @Test
     public void testSchema() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1398,6 +1478,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'temporalExtent' parameters
      */
+    @Test
     public void testTemporalExtent() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1469,6 +1550,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'category' parameter with a multiple values.
      */
+    @Test
     public void testMultipleCategory() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1487,6 +1569,7 @@ public class LuceneQueryTest extends TestCase {
         assertEquals("unexpected Lucene query", "+(+_cat:\"zat op de stoep\" +_cat:hoeperdepoep) +_isTemplate:n", query.toString());
     }
 
+    @Test
     public void testMultipleOrCategory() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1505,6 +1588,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'groupOwner' parameter with a single value (it should be ignored and not go into the query).
      */
+    @Test
     public void testSingleGroupOwner() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1523,6 +1607,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'groupOwner' parameter with multiple values (it should be ignored and not go into the query).
      */
+    @Test
     public void testMultipleGroupOwner() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1544,6 +1629,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'editable' parameter true.
      */
+    @Test
     public void testEditableTrue() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1562,6 +1648,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'featured' parameter true.
      */
+    @Test
     public void testFeaturedTrue() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1580,6 +1667,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'featured' parameter not true.
      */
+    @Test
     public void testFeaturedNotTrue() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1599,6 +1687,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'groups' parameter single.
      */
+    @Test
     public void testSingleGroup() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1617,6 +1706,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'groups' parameter multi.
      */
+    @Test
     public void testMultiGroup() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1639,6 +1729,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'groups' parameter multi with reviewer.
      */
+    @Test
     public void testMultiGroupReviewer() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1664,6 +1755,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'groups' parameter multi with owner.
      */
+    @Test
     public void testMultiGroupOwner() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1689,6 +1781,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'groups' parameter multi with admin.
      */
+    @Test
     public void testMultiGroupAdmin() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1715,6 +1808,7 @@ public class LuceneQueryTest extends TestCase {
      * 'bounding box' parameter equals.
      * TODO verify with Jose why he put the float values here.
      */
+    @Test
     public void testBBEquals() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1746,6 +1840,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'bounding box' parameter overlaps.
      */
+    @Test
     public void testBBOverlaps() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1777,6 +1872,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'bounding box' parameter encloses.
      */
+    @Test
     public void testBBEncloses() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1808,6 +1904,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'bounding box' parameter fullyEnclosedWithin.
      */
+    @Test
     public void testBBFullyEnclosedWithin() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1839,6 +1936,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'bounding box' parameter fullyOutsideOf.
      */
+    @Test
     public void testBBFullyOutsideOf() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1870,6 +1968,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'bounding box' parameter overlaps - standard values from search page.
      */
+    @Test
     public void testBBOverlapsStandard() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1915,6 +2014,7 @@ public class LuceneQueryTest extends TestCase {
      * <group>0</group>
      * </request>
      */
+    @Test
     public void testRandomTest1() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -1981,6 +2081,7 @@ public class LuceneQueryTest extends TestCase {
      * All parameters as sent by the Popular Get service when it searches for metadata. This test
      * includes many parameters that are present, but empty.
      */
+    @Test
     public void testPopularGet() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -2088,13 +2189,15 @@ public class LuceneQueryTest extends TestCase {
         // build lucene query
         Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+_isTemplate:n +westBL:[-180.0 TO 180.0] +eastBL:[-180.0 TO 180.0] +northBL:[-90.0 TO 90.0] +southBL:[-90.0 TO 90.0]", query.toString());
+        assertEquals("unexpected Lucene query", "+_isTemplate:n +westBL:[-180.0 TO 180.0] +eastBL:[-180.0 TO 180.0] +northBL:[-90.0 TO " +
+                                                "90.0] +southBL:[-90.0 TO 90.0]", query.toString());
     }
 
 
     /**
      * 'dynamic' parameter.
      */
+    @Test
     public void testDynamic() {
         // create request object with dynamic=on
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -2113,6 +2216,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'download' parameter.
      */
+    @Test
     public void testDownload() {
         // create request object with dynamic=on
         JDOMFactory factory = new DefaultJDOMFactory();
@@ -2133,6 +2237,7 @@ public class LuceneQueryTest extends TestCase {
     /**
      * 'download' parameter.
      */
+    @Test
     public void testDigitalAndPaper() {
         // create request object with digital=on, paper=off
         JDOMFactory factory = new DefaultJDOMFactory();

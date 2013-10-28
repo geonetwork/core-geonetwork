@@ -6,7 +6,7 @@
 	">
     <import resource="defaultJdbcDataSource.xml" />
 
-    <bean id="hibernateJpaVendorAdapterDatabaseType" class="java.lang.String">
+    <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
         <constructor-arg value="SQL_SERVER"/>
     </bean>
 
@@ -15,7 +15,7 @@
     </bean>
 
     <bean id="jdbcURL" class="java.lang.String">
-        <constructor-arg value="jdbc:sqlserver://SERVER;database=geonetwork;integratedSecurity=false;"/>
+        <constructor-arg value="jdbc:sqlserver://SERVER;database=${jdbc.database};integratedSecurity=false;"/>
     </bean>
 
 </beans>

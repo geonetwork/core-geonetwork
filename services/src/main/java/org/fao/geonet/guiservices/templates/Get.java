@@ -119,13 +119,14 @@ public class Get implements Service
             if (!displayOrderList.contains(displayOrderI)) {
                 // add to list
                 displayOrderList.add(displayOrderI);
-            }
-            // already in list
-            else {
+            } else {
+                // already in list
                 // while in list
+                int tmp = displayOrderI;
                 while (displayOrderList.contains(displayOrderI)) {
-                    displayOrderI++;
+                    tmp++;
                 }
+                displayOrderI = tmp;
                 // add to list
                 displayOrderList.add(displayOrderI);
             }

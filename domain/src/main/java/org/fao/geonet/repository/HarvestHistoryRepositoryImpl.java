@@ -30,60 +30,6 @@ public class HarvestHistoryRepositoryImpl implements HarvestHistoryRepositoryCus
     @PersistenceContext
     EntityManager _entityManager;
 
-    @Nonnull
-    public Element findAllAsXml() {
-        return findAllAsXml(null, null);
-    }
-
-    @Nonnull
-    public Element findAllAsXml(final Specification<HarvestHistory> specification) {
-        return findAllAsXml(specification, null);
-    }
-
-    @Nonnull
-    public Element findAllAsXml(final Sort sort) {
-        return findAllAsXml(null, sort);
-    }
-
-    /**
-     * This method is intended to override the findAllAsXml methods in GeonetRepositoryImpl because Harvest history needs special handling
-     * of these methods.
-     * <p>
-     * The major change is that this method takes the data of the "info" and "params" properties and parses then as XML and
-     * replaces the corresponding elements with the parsed XML.
-     * </p>
-     */
-    @Nonnull
-    public Element findAllAsXml(final Specification<HarvestHistory> specification, final Sort sort) {
-        final Element result = GeonetRepositoryImpl.findAllAsXml(_entityManager, HarvestHistory.class, specification, sort);
-        for (int i = 0; i < result.getContentSize(); i++) {
-            Element record = (Element) result.getContent(i);
-
-            Element info = record.getChild("info");
-            Element xml = null;
-            try {
-                xml = Xml.loadString(info.getValue(), false);
-            } catch (Exception e) {
-                xml = new Element("error").setText("Invalid XML harvester result: " + e.getMessage());
-                e.printStackTrace();
-            }
-            info.removeContent();
-            info.addContent(xml);
-
-            Element params = record.getChild("params");
-            try {
-                xml = Xml.loadString(params.getValue(), false);
-            } catch (Exception e) {
-                xml = new Element("error").setText("Invalid XML harvester params: " + e.getMessage());
-                e.printStackTrace();
-            }
-            params.removeContent();
-            params.addContent(xml);
-        }
-        return result;
-
-    }
-
     @Override
     public int deleteAllById(Collection<Integer> ids) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();

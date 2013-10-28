@@ -63,6 +63,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -961,7 +962,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
                         new Function<HttpClientBuilder, Void>() {
                             @Nullable
                             @Override
-                            public Void apply(@Nullable HttpClientBuilder input) {
+                            public Void apply(@Nonnull HttpClientBuilder input) {
                                 SettingManager settingManager = applicationContext.getBean(SettingManager.class);
                                 Lib.net.setupProxy(settingManager, input);
                                 input.setRetryHandler(new DefaultHttpRequestRetryHandler());

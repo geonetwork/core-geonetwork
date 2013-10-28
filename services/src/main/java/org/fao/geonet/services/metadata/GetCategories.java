@@ -65,9 +65,7 @@ public class GetCategories implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dataMan = gc.getBean(DataManager.class);
-		AccessManager am = gc.getBean(AccessManager.class);
+		AccessManager am = context.getBean(AccessManager.class);
 
 		String id = Utils.getIdentifierFromParameters(params, context);
 

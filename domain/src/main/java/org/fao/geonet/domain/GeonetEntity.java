@@ -3,6 +3,7 @@ package org.fao.geonet.domain;
 import org.jdom.Element;
 import org.springframework.beans.BeanWrapperImpl;
 
+import javax.annotation.Nonnull;
 import java.beans.PropertyDescriptor;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,17 @@ public class GeonetEntity {
     public static final String LABEL_EL_NAME = "label";
     public static final String RECORD_EL_NAME = "record";
 
+    /**
+     * Convert the entity to Xml.  The process is to find all getters and invoke the getters to get the value.  The xml
+     * tag is the name of the getter as per the Java bean conventions, and the data is the text.
+     * <p/>
+     * If the returned value of the getter is another GeonetEntity then the the entity is recursively encoded, if the returned
+     * value is a collection then the collection is encoded and many children of the tag.  Each child tag will have the singular
+     * form of the getter or if that cannot be determined they will have the same tagname.
+     *
+     * @return XML representing the entity.
+     */
+    @Nonnull
     public Element asXml() {
         Element record = new Element(RECORD_EL_NAME);
         BeanWrapperImpl wrapper = new BeanWrapperImpl(this);
@@ -62,7 +74,7 @@ public class GeonetEntity {
             element.addContent(list);
         } else if (rawData instanceof Iterable) {
             String childName = pluralToSingular(descName);
-            for (Object o : (Iterable <?>) rawData) {
+            for (Object o : (Iterable<?>) rawData) {
                 element.addContent(propertyToElement(childName, o));
             }
         } else {

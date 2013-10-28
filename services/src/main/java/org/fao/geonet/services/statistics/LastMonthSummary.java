@@ -33,8 +33,6 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  *
  */
 public class LastMonthSummary extends NotInReadOnlyModeService {
-	private SimpleDateFormat dateFormat;
-	
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -43,7 +41,6 @@ public class LastMonthSummary extends NotInReadOnlyModeService {
 
 	public void init(String appPath, ServiceConfig params) throws Exception	{
         super.init(appPath, params);
-		dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	}
 
 	//--------------------------------------------------------------------------

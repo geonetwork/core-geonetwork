@@ -77,8 +77,7 @@ public abstract class CatalogRequest {
 	public CatalogRequest(final ServiceContext context, final String host, final int port, final String protocol) {
         client = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(host, port, protocol);
 		setMethod(Method.POST);
-
-        if (context != null) Lib.net.setupProxy(context, client);
+        Lib.net.setupProxy(context, client);
 	}
 
 	//---------------------------------------------------------------------------

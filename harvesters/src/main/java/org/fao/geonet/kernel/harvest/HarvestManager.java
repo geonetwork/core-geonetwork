@@ -41,7 +41,7 @@ public interface HarvestManager {
      * @return the configuration element for the identified harvester.
      * @throws Exception
      */
-    @Nonnull
+    @Nullable
     Element get(@Nullable String id, @Nonnull ServiceContext context, @Nullable String sort) throws Exception;
 
     /**

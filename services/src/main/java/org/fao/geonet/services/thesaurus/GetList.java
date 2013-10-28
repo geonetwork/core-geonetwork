@@ -63,8 +63,6 @@ public class GetList implements Service {
 			throws Exception {
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 		
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
 		ThesaurusManager th = context.getBean(ThesaurusManager.class);
 		Map<String, Thesaurus> thTable = th.getThesauriMap();
 		

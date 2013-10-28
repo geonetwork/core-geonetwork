@@ -5,6 +5,7 @@ import org.jfree.data.time.Day;
 import org.jfree.data.time.RegularTimePeriod;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -19,6 +20,7 @@ import java.io.File;
 public class RequestsByDateTest {
 
     @Test
+    @Ignore
     public void testByDay() throws Exception {
         RequestsByDate rdb = new RequestsByDate();
         RequestsByDateParams params = new RequestsByDateParams();

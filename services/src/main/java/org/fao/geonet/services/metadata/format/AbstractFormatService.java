@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
  * @author jeichar
  */
 abstract class AbstractFormatService implements Service {
-    protected static String XSL_EXTENSION = ".xsl";
     protected static final String USER_XSL_DIR = "user_xsl_dir";
     protected static final Pattern ID_XSL_REGEX = Pattern.compile("[\\w0-9\\-_]+");
     protected static final String VIEW_XSL_FILENAME = "view.xsl";

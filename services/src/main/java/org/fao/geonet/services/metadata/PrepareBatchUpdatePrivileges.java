@@ -84,7 +84,7 @@ public class PrepareBatchUpdatePrivileges implements Service {
 			//--- get all operations that this group can do on given metadata
 			String sGrpId = el.getChildText("id");
 
-			el.setAttribute("userGroup", userGroups.contains(sGrpId) ? "true" : "false");
+			el.setAttribute("userGroup", userGroups.contains(Integer.valueOf(sGrpId)) ? "true" : "false");
 
 			//--- now extend the group list adding proper operations
 			@SuppressWarnings("unchecked")

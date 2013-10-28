@@ -18,7 +18,7 @@
         </property>
     </bean>
 
-    <bean id="hibernateJpaVendorAdapterDatabaseType" class="java.lang.String">
+    <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
         <constructor-arg value="DB2"/>
     </bean>
 
@@ -27,7 +27,7 @@
     </bean>
 
     <bean id="jdbcURL" class="java.lang.String">
-        <constructor-arg value="jdbc:db2:geonet"/>
+        <constructor-arg value="jdbc:db2:${jdbc.database}"/>
     </bean>
 
 </beans>

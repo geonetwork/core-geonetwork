@@ -140,6 +140,9 @@ public class TableExport extends NotInReadOnlyModeService {
             IOUtils.closeQuietly(fileOutputStream);
             IO.closeQuietly(rs);
             IO.closeQuietly(stmt);
+            if (con != null) {
+                con.close();
+            }
         }
         // dbms.disconnect();
         if (Log.isDebugEnabled(Geonet.SEARCH_LOGGER))

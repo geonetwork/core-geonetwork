@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Date: 10/22/13
  * Time: 4:17 PM
  */
-public class AbstractHarvesterServiceIntegrationTest extends AbstractCoreIntegrationTest {
+public abstract class AbstractHarvesterServiceIntegrationTest extends AbstractCoreIntegrationTest {
 
     @Autowired
     protected HarvestManagerImpl _harvestManager;

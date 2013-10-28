@@ -8,6 +8,10 @@
 
     <jdbc:embedded-database type="H2" id="jdbcDataSource" />
 
+    <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
+        <constructor-arg value="H2"/>
+    </bean>
+
     <bean id="generateDdl" class="java.lang.String">
         <constructor-arg value="true"/>
     </bean>

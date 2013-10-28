@@ -169,7 +169,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      */
     @Transactional
-    public void add(Element node) throws BadInputEx, SQLException {
+    public synchronized void add(Element node) throws BadInputEx, SQLException {
         status = Status.INACTIVE;
         error = null;
         id = doAdd(node);
@@ -370,7 +370,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @param node
      */
     @Transactional
-    public void addInfo(Element node) {
+    public synchronized void addInfo(Element node) {
         Element info = node.getChild("info");
 
         //--- 'running'
@@ -609,7 +609,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      *
      * @return
      */
-    public List<HarvestError> getErrors() {
+    public synchronized List<HarvestError> getErrors() {
        return errors;
     }
 

@@ -47,3 +47,4 @@ web/images/
 *.launch
 idea/
 web/src/main/webapp/WEB-INF/data/0*
+jcs_caching/
