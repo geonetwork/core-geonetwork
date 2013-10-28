@@ -51,6 +51,10 @@ import java.util.Map;
 
 public final class ServiceRequestFactory
 {
+
+    private static String JSON_URL_FLAG = "@json";
+    private static String DEBUG_URL_FLAG = "!";
+
 	/**
 	 * Default constructor.
 	 * Builds a ServiceRequestFactory.
@@ -91,6 +95,7 @@ public final class ServiceRequestFactory
 		srvReq.setDebug       (extractDebug(url));
 		srvReq.setLanguage    (extractLanguage(url));
 		srvReq.setService     (extractService(url));
+        srvReq.setJSONOutput  (extractJSONFlag(url));
 		String ip = req.getRemoteAddr();
 		String forwardedFor = req.getHeader("x-forwarded-for");
 		if (forwardedFor != null) ip = forwardedFor;
@@ -191,9 +196,18 @@ public final class ServiceRequestFactory
 		if (url == null)
 			return false;
 
-		return url.indexOf('!') != -1;
+		return url.indexOf(DEBUG_URL_FLAG) != -1;
 	}
 
+    /** 
+     * Extracts the JSON output flag from the url
+     */
+    private static boolean extractJSONFlag(String url) {
+       if (url == null)
+           return false;
+       
+       return url.indexOf(JSON_URL_FLAG) != -1;
+    }
 	//---------------------------------------------------------------------------
 	/** Extracts the language code from the url
 	  */
@@ -222,8 +236,11 @@ public final class ServiceRequestFactory
 		if (url == null)
 			return null;
 
-		if (url.endsWith("!"))
-			url = url.substring(0, url.length() -1);
+		if (url.endsWith(DEBUG_URL_FLAG))
+            url = url.substring(0, url.length() - 1);
+
+        if (url.endsWith(JSON_URL_FLAG))
+            url = url.substring(0, url.length() - JSON_URL_FLAG.length());
 
 		int pos = url.lastIndexOf('/');
 

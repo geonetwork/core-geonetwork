@@ -619,13 +619,21 @@ public class ServiceManager
 
 					req.beginStream("application/soap+xml; charset=UTF-8", cache);
 
-					if (!SOAPUtil.isEnvelope(response))
+					if (!SOAPUtil.isEnvelope(response)) {
 						response = SOAPUtil.embed(response);
-				}
-				else
-					req.beginStream("application/xml; charset=UTF-8", cache);
-
-                req.write(response);
+						req.write(response);
+					}
+				} else {
+                    
+                    if (req.hasJSONOutput()) {
+                        req.beginStream("application/json; charset=UTF-8", cache);
+                        req.getOutputStream().write(Xml.getJSON(response).getBytes(Jeeves.ENCODING));
+                        req.endStream();
+                    } else {
+                        req.beginStream("application/xml; charset=UTF-8", cache);
+                        req.write(response);
+                    }
+                }
 			}
 		}
 

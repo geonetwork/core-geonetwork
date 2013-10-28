@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    
+    <service name="pdf.search">
+      <documentation><![CDATA[
+        Run a search and return a PDF document.
+        
+        ]]></documentation>
+      <class name=".services.main.Search">
+        <param name="maxSummaryKeys" value="1000" />
+        <param name="maxHitsInSummary" value="1000" />
+      </class>
+      
+      <output sheet="../xslt/services/pdf/portal-present-fop.xsl" file="true" contentType="application/pdf">
+        <call name="mdresults" class=".services.main.Result" >
+          <param name="range" value="1000" /> <!-- too many causes problems -->
+        </call>
+        <call name="siteURL" class=".guiservices.util.GetSiteURL" />
+      </output>
+      
+      <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
+    </service>
+    
+    
+    
+    <service name="pdf.selection.search">
+      <documentation><![CDATA[
+        Print current selection as PDF. Use selection service first.
+        ]]></documentation>
+      <class name=".services.main.SelectionSearch">
+        <param name="restoreLastSearch" value="yes" />
+      </class>
+      <output forward="pdf.present" />
+    </service>
+    
+    <service name="pdf.present" internal="true">
+      <documentation><![CDATA[
+        Used after pdf.selection.search to print results from session.
+        ]]></documentation>
+      <class name=".services.main.Result">
+        <param name="range" value="1000" /> 
+      </class>
+      <output sheet="../xslt/services/pdf/portal-present-fop.xsl" file="true" contentType="application/pdf">
+        <call name="siteURL" class=".guiservices.util.GetSiteURL" />
+      </output>
+      <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
+    </service>
+
+  </services>
+</geonet>

@@ -1,0 +1,203 @@
+<div class="row" 
+    data-ng-controller="GnUserGroupController">
+    <div class="col-lg-4">
+        <div class="panel">
+            <div class="panel-heading"
+                data-translate>users</div>
+            
+            <input class="form-control" data-ng-model="userSearch.$" 
+                autofocus=""
+                placeholder="{{'filter' | translate}}"/>
+            <input type="hidden" data-ng-model="userSelected.id"/>
+            <div class="list-group">
+                <a class="list-group-item" 
+                    data-ng-repeat="u in users | filter:userSearch | orderBy:'name'"  
+                    data-ng-class="u.id === userSelected.id ? 'active' : ''"
+                    data-ng-click="selectUser(u)">
+                    {{u.name}} {{u.surname}}
+                </a>
+            </div>
+            
+            
+            <button type="button" class="btn btn-primary btn-block" 
+                data-ng-click="addUser()">
+                <i class="icon-plus"></i>
+                <span data-translate>newUser</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="col-lg-8" 
+        data-ng-hide="userSelected.id == null">
+        <div class="panel">
+            <div class="panel-heading"
+                title="{{userHasRecords() ? ('cantDeleteUserHavingRecords' | translate) : ''}}">
+                <span data-ng-hide="userSelected.id == ''" data-translate="">updateUser</span>
+                <span data-ng-hide="userSelected.id != ''" data-translate="">newUser</span>
+                <strong>{{userSelected.name}} {{userSelected.surname}}</strong>
+                <div class="btn-toolbar">
+                <button type="button" class="btn btn-primary pull-right icon-save" 
+                    data-ng-disabled="!userUpdated"
+                    data-ng-click="saveUser('#gn-user-edit')" 
+                    data-translate>saveUser</button>
+                <button type="button" class="btn btn-primary pull-right btn-danger icon-remove" 
+                    data-ng-disabled="userHasRecords()"
+                    data-ng-hide="userSelected.id == ''"
+                    data-ng-click="deleteUser(userSelected.id)" 
+                    data-translate>deleteUser</button>
+                </div>
+            </div>
+            
+            
+            
+            <form id="gn-user-edit" name="gnUserEdit"
+                data-ng-keypress="updatingUser()">
+                <fieldset>
+                    <input type="hidden" name="id" 
+                        data-ng-model="userSelected.id" value="{{userSelected.id}}"></input>
+                    <input type="hidden" name="operation" 
+                        data-ng-model="userOperation" value="{{userOperation}}"></input>
+                    
+                    <div data-ng-class="userSelected.username == '' ? 'has-error' : ''">
+                      <label class="control-label" data-translate>username</label>
+                      <input type="text" name="username" class="form-control"
+                          data-ng-model="userSelected.username"></input>
+                      <p class="help-block" data-translate>usernameHelp</p>
+                    </div>
+                    
+                    <!-- Password are disabled when updating user -->
+                    <div ng-hide="userOperation != 'newuser'">
+                      <div data-ng-class="gnUserEdit.password.$valid != true ? 'has-error' : ''">
+                        <label class="control-label" data-translate>password</label>
+                        <input type="password" id="gn-user-password" name="password" class="form-control"
+                            data-ng-minlength="6"
+                            data-ng-model="userSelected.password"></input>
+                        <p class="help-block">
+                          <span class="error" ng-show="gnUserEdit.password.$error.minlength" data-translate="">passwordMinlength</span>
+                        </p>
+                      </div>
+                      <div data-ng-class="gnUserEdit.password.$valid == false || 
+                        (passwordCheck !== userSelected.password) ? 'has-error' : ''">
+                        <label class="control-label" data-translate>passwordRepeat</label>
+                        <input type="password" id="gn-user-password2" name="password2" class="form-control"
+                          data-ng-model="passwordCheck"></input>
+                        <p class="help-block">
+                          <span class="error" ng-show="gnUserEdit.password.$valid 
+                            && passwordCheck != userSelected.password" data-translate="">passwordNotMatching</span>
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div data-ng-class="userSelected.name == '' ? 'has-error' : ''">
+                        <label class="control-label" data-translate>name</label>
+                        <input type="text" name="name" class="form-control"
+                            data-ng-model="userSelected.name"></input>
+                    </div>
+                    
+                    <div data-ng-class="userSelected.surname == '' ? 'has-error' : ''">
+                        <label class="control-label" data-translate>surname</label>
+                        <input type="text" name="surname" class="form-control"
+                            data-ng-model="userSelected.surname"></input>
+                    </div>
+                    
+                    
+                    <div data-ng-class="userSelected.email == '' ? 'has-error' : ''">
+                        <label class="control-label" data-translate>email</label>
+                        <input type="email" name="email" class="form-control"
+                            data-ng-model="userSelected.email"></input>
+                    </div>
+                    
+                    
+                    <label data-translate>organisation</label>
+                    <!-- TODO : Add org list -->
+                    <input type="text" name="org" class="form-control"
+                        data-ng-model="userSelected.organisation"></input>
+                    
+                    <fieldset>
+                        <legend data-translate>address</legend>
+                        
+                        <label data-translate>address</label>
+                        <input type="text" name="address" class="form-control"
+                            data-ng-model="userSelected.address"></input>
+                        <label data-translate>zip</label>
+                        <input type="text" name="zip" class="form-control"
+                            data-ng-model="userSelected.zip"></input>
+                        <label data-translate>state</label>
+                        <input type="text" name="state" class="form-control"
+                            data-ng-model="userSelected.state"></input>
+                        <label data-translate>city</label>
+                        <input type="text" name="city" class="form-control"
+                            data-ng-model="userSelected.city"></input>
+                        <label data-translate>country</label>
+                        <!-- TODO : Add country list -->
+                        <input type="text" name="country" class="form-control"
+                            data-ng-model="userSelected.country"></input>
+                    </fieldset>
+                    
+                    <fieldset>
+                        <legend data-translate>defineUserGroupsPerProfile</legend>
+                        
+                        <input type="hidden" name="profile" 
+                            data-ng-model="userSelected.profile"
+                            value="{{userSelected.profile}}"></input>
+                        
+                        <label>
+                            <input type="checkbox" 
+                                data-ng-model="userIsAdmin"
+                                data-ng-click="setUserProfile(true)"
+                            />
+                            <span data-translate="">isAdministrator</span>
+                        </label>
+                        <div data-ng-hide="userIsAdmin || groups === null">
+                            <h3 data-translate>RegisteredUser</h3>
+                            <select multiple="multiple" id="groups_RegisteredUser"
+                                name="groups_RegisteredUser" class="form-control"
+                                data-ng-click="setUserProfile()">
+                                <option data-ng-repeat="g in groups" value="{{g.id}}"
+                                    data-ng-selected="isUserGroup(g.id, 'RegisteredUser')">{{g.label[lang]}}</option>
+                            </select>
+                            <h3 data-translate>Editor</h3>
+                            <select multiple="multiple" id="groups_Editor"
+                                name="groups_EditorUser" class="form-control"
+                                data-ng-click="setUserProfile()">
+                                <option data-ng-repeat="g in groups" value="{{g.id}}"
+                                    data-ng-selected="isUserGroup(g.id, 'Editor')">{{g.label[lang]}}</option>
+                            </select>
+                            <h3 data-translate>Reviewer</h3>
+                            <select multiple="multiple" id="groups_Reviewer"
+                                name="groups_Reviewer" class="form-control"
+                                data-ng-click="setUserProfile()">
+                                <option data-ng-repeat="g in groups" value="{{g.id}}"
+                                    data-ng-selected="isUserGroup(g.id, 'Reviewer')">{{g.label[lang]}}</option>
+                            </select>
+                            <h3 data-translate>UserAdmin</h3>
+                            <select multiple="multiple" id="groups_UserAdmin"
+                                name="groups_UserAdmin" class="form-control"
+                                data-ng-click="setUserProfile()">
+                                <option data-ng-repeat="g in groups" value="{{g.id}}"
+                                    data-ng-selected="isUserGroup(g.id, 'UserAdmin')">{{g.label[lang]}}</option>
+                            </select>
+                        </div>
+                    </fieldset>
+                </fieldset>
+            </form>
+            
+            
+            
+            <div data-ng-hide="!userRecords">
+                <h3>
+                  <ng-pluralize count="userRecords.count"
+                    when="{'0': ('noRecordFound' | translate),
+                    'one': '1' +  ('userRecord' | translate) + ' {{userSelected.name}} {{userSelected.surname}}',
+                    'other': '{}' +  ('userRecords' | translate) + ' {{userSelected.name}} {{userSelected.surname}}'}">
+                  </ng-pluralize>
+                </h3>
+                <div data-gn-search-results="userRecords"
+                  data-allow-selection="false"/>
+                
+                <div data-gn-pagination="userRecordsPagination"/>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>

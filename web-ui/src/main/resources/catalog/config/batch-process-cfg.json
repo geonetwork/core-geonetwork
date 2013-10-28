@@ -1,0 +1,20 @@
+{"config": [{
+        "key": "url-host-relocator",
+        "params": [
+             {"name": "urlPrefix", "value": "http://oldurl"},
+             {"name": "newUrlPrefix", "value": "http://newurl"}
+        ]
+    }, {
+        "key": "keywords-mapper",
+        "params": [
+          {"name": "search", "value": "key1;key2"},
+          {"name": "replace", "value": "newkey1;newkey2"}
+        ]
+    },{
+        "key": "contact-updater",
+        "params": [
+            {"name": "emailToSearch", "value": "", "type": "email"},
+            {"name": "contactAsXML", "value": "", "type": "textarea"}
+        ]
+    }]
+}

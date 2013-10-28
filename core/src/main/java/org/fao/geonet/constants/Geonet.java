@@ -138,6 +138,7 @@ public final class Geonet {
 		public static final String CSW                = Jeeves.Path.XML + "csw/";
 		public static final String VALIDATION         = Jeeves.Path.XML + "validation/";
 		public static final String STYLESHEETS        = "/xsl";
+        public static final String XSLT_FOLDER        = java.io.File.separator + "xslt";
 		public static final String CONV_STYLESHEETS   = STYLESHEETS + "/conversion";
 		public static final String IMPORT_STYLESHEETS = CONV_STYLESHEETS + "/import";
 		public static final String WFS_STYLESHEETS    = "/convert/WFSToFragments";

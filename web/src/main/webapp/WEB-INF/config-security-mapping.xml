@@ -110,7 +110,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/virtualcsw.config.edit!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/virtualcsw.config.delete!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw.config.set!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw-publication!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw.customelementset.get!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw.customelementset.set!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/test.i18n!?.*" access="hasRole('Administrator')"></sec:intercept-url>
@@ -309,7 +308,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/view!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/edit!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/q!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/portal.search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/portal.opensearch!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/portal.search.keywords!?.*" access="permitAll"></sec:intercept-url>
@@ -345,8 +343,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/csv.present!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/google.kml!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.group.list!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw-.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/oaipmh!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/mef.export!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.relation.get!?.*" access="permitAll"></sec:intercept-url>
@@ -360,7 +356,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/crs.search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/crs.types!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/crs.get!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/portal.sru!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/test.csw!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/user.register.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/user.register.submit!?.*" access="permitAll"></sec:intercept-url>
@@ -401,6 +396,139 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/region\.geom\.\w\w\w!?.*" access="permitAll"></sec:intercept-url>
 
 
+
+                <!-- New section of services based on refactoring
+                guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/q!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/qi!?.*" access="permitAll"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/info!?.*" access="permitAll"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.list!?.*" access="hasRole('Editor')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.update!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.update.labels!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.group.remove!?.*" access="hasRole('Administrator')"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.user.list!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.user.update!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.user.remove!?.*" access="hasRole('UserAdmin')"/>
+                
+
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.category.update!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.category.remove!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.category.update.labels!?.*" access="hasRole('UserAdmin')"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.logo.list!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.logo.update!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.logo.remove!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.logo.upload!?.*" access="hasRole('UserAdmin')"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.list!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.save!?.*" access="hasRole('Administrator')"/>
+                
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.notifications.list!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.notifications.save!?.*" access="hasRole('Administrator')"/>
+                
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.csw!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.csw.save!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.csw.customelementset!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.csw.customelementset.save!?.*" access="hasRole('Administrator')"/>
+                
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.virtualcsw.list!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.virtualcsw.get!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.virtualcsw.update!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.config.virtualcsw.remove!?.*" access="hasRole('Administrator')"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.index.rebuild!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.index.optimize!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.index.rebuildxlinks!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.index.config.reload!?.*" access="hasRole('Administrator')"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.schema.list!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.schema.update!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.schema.add!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.schema.remove!?.*" access="hasRole('Administrator')"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.load.samples!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.load.templates!?.*" access="hasRole('Administrator')"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.templates.list!?.*" access="hasRole('Reviewer')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.templates.save.order!?.*" access="hasRole('Reviewer')"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.list!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.add!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.update!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.clone!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.remove!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.clear!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.stop!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.start!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.run!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.info!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.history!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.history.full!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.history.delete!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.log!?.*" access="hasRole('UserAdmin')"/>
+                
+                
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.languages.get!?.*" access="permitAll"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.console!?.*" access="hasRole('RegisteredUser')"/>
+                
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/keywords!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.upload!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.download!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.add.from.register!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.clear!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.update!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.remove!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.enable!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.keyword!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.keyword.links!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.keyword.add!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.keyword.update!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.keyword.remove!?.*" access="hasRole('Administrator')"/>
+                
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.edit.save.and.close!?.*" access="hasRole('Editor')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.edit.saveonly!?.*" access="hasRole('Editor')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.edit.save!?.*" access="hasRole('Editor')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.edit!?.*" access="hasRole('Editor')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.element.add!?.*" access="hasRole('Editor')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.element.remove!?.*" access="hasRole('Editor')"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.view!?.*" access="hasRole('Editor')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.processing.batch!?.*" access="hasRole('Editor')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.processing.batch.report!?.*" access="hasRole('Editor')"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw-publication!?.*" access="hasRole('Editor')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw-.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw!?.*" access="permitAll"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/portal.sru!?.*" access="permitAll"></sec:intercept-url>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.search!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.search.nojs!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.signin!?.*" access="permitAll"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/new.account!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/create.account!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/new.password!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/password.reminder!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/password.change!?.*" access="permitAll"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.edit!?.*" access="hasRole('Editor')"/>
+                
+                
+                
+                
+                
                 <sec:intercept-url pattern="/.*" access="denyAll"></sec:intercept-url>
             </sec:filter-security-metadata-source>
         </property>
