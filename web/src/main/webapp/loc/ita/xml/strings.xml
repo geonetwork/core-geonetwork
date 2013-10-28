@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
-    <createNewSharedObject js="true">Edit %objtype%</createNewSharedObject>
-    <noRecords js='true'>No Records found</noRecords>
-    <edit js='true'>Edit</edit>
-    <searchView js='true'>Search</searchView>
-    <actions js='true'>Actions</actions>
-    <contacts js='true'>Contacts</contacts>
+    <createNewSharedObject js="true">Modifica %objtype%</createNewSharedObject>
+    <noRecords js='true'>Nessun record trovato</noRecords>
+    <edit js='true'>Modifica</edit>
+    <searchView js='true'>Ricerca</searchView>
+    <actions js='true'>Azioni</actions>
+    <contacts js='true'>Contatti</contacts>
     <SharedObjects js='true'>Shared Objects</SharedObjects>
     <openInSearch>Search View</openInSearch>
     <reusable_confirmValidate js="true">Confirm Validate Action</reusable_confirmValidate>
