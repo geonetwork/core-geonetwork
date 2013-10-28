@@ -21,7 +21,7 @@ each module (assuming there is module specific documentation required).
 # Software Development
 
 Instructions for setting up a development environment/building Geonetwork/compiling user documentation/making a release see:
-(./software_development)
+[Software Development Documentation](/software_development/)
 
 # Testing
 
