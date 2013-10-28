@@ -186,7 +186,7 @@ public class JeevesEngine
 			//--- with the ProfileManager already loaded
 
 			for(int i=0; i<appHandList.size(); i++)
-				initAppHandler((Element) appHandList.get(i), servlet, jeevesAppContext);
+				initAppHandler(appHandList.get(i), servlet, jeevesAppContext);
 
 			info("Starting schedule manager...");
 			scheduleMan.start();

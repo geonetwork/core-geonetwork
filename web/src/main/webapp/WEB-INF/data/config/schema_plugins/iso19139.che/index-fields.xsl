@@ -568,10 +568,10 @@
 		<Field name="valid_xlink_extent" string="{@xlink:href}" store="true" index="true" token="false"/>
 	</xsl:template>
 
-	<xsl:template mode="non-valid-xlink" match="gmd:distributionFormat|gmd:resourceFormat">
+	<xsl:template mode="non-valid-xlink" match="gmd:distributorFormat|gmd:distributionFormat|gmd:resourceFormat">
 		<Field name="invalid_xlink_format" string="{@xlink:href}" store="true" index="true" token="false"/>
 	</xsl:template>
-	<xsl:template mode="valid-xlink" match="gmd:distributionFormat|gmd:resourceFormat">
+	<xsl:template mode="valid-xlink" match="gmd:distributorFormat|gmd:distributionFormat|gmd:resourceFormat">
 		<Field name="valid_xlink_format" string="{@xlink:href}" store="true" index="true" token="false"/>	
 	</xsl:template>
 
