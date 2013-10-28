@@ -31,11 +31,15 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 /**
@@ -85,11 +89,12 @@ public class Create extends NotInReadOnlyModeService {
 		}
 		
 		String groupOwner= Util.getParam(params, Params.GROUP);
+		String groupName = "";
 		
 		// TODO : Check user can create a metadata in that group
 		UserSession user = context.getUserSession();
 		if (!user.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
-			String selectGroupIdQuery = "SELECT groupId FROM UserGroups WHERE profile='Editor' AND userId=? AND groupId=?";
+			String selectGroupIdQuery = "SELECT groupId, name FROM UserGroups, Groups WHERE id = groupId AND profile='Editor' AND userId=? AND groupId=?";
             @SuppressWarnings("unchecked")
             java.util.List<Element> list = dbms.select(selectGroupIdQuery, 
 						Integer.valueOf(user.getUserId()),
@@ -98,15 +103,35 @@ public class Create extends NotInReadOnlyModeService {
 				throw new ServiceNotAllowedEx("Service not allowed. User needs to be Editor in group with id " + groupOwner);
 			}
 		}
-		
+        
 		//--- query the data manager
 
 		String newId = dm.createMetadata(context, dbms, id, groupOwner, context.getSerialFactory(),
 												  gc.getSiteId(), context.getUserSession().getUserIdAsInt(), 
 												  (child.equals("n")?null:uuid), isTemplate, haveAllRights);
 
+		
+		// Sextant / Enable workflow by default for records created in MYOCEAN groups
+        String selectGroupNameQuery = "SELECT name FROM Groups WHERE id=?";
+        
+        @SuppressWarnings("unchecked")
+        java.util.List<Element> list = dbms.select(selectGroupNameQuery, 
+                    Integer.valueOf(groupOwner)).getChildren();
+        if (list.size() != 0) {
+            groupName = list.get(0).getChildText("name");
+        }
+        if (groupName.toLowerCase().contains("myocean")) {
+            // TODO : trigger another indexing
+            dm.setStatus(context, dbms, Integer.valueOf(newId), Integer.valueOf(Params.Status.DRAFT), new ISODate().toString(), "Workflow enabled");
+            
+            dm.unsetOperation(context, dbms, newId, groupOwner, AccessManager.OPER_EDITING);
+		}
+        // Sextant - end / Enable workflow by default for records created in MYOCEAN groups
+
+		
         Element response = new Element(Jeeves.Elem.RESPONSE);
         response.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
+        
         
         String sessionTabProperty = useEditTab ? Geonet.Session.METADATA_EDITING_TAB : Geonet.Session.METADATA_SHOW;
         
