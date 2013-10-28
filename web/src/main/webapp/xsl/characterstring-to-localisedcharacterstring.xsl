@@ -38,8 +38,7 @@
 	che:organisationAcronym[gco:CharacterString] | 
 	gmd:statement[gco:CharacterString] | 
 	gmd:abstract[gco:CharacterString] | 
-	gmd:purpose[gco:CharacterString] | 
-	gmd:code[gco:CharacterString] | 
+	gmd:purpose[gco:CharacterString] |
 	gmd:keyword[gco:CharacterString] | 
 	gmd:issueIdentification[gco:CharacterString] | 
 	gmd:name[gco:CharacterString] | 
@@ -241,7 +240,7 @@
     <!-- The following are NOT multilingual text -->
     <xsl:template priority="100" match="gmd:identifier|
         gmd:fileIdentifier|
-        
+        gmd:code|
         gmd:metadataStandardName|
         gmd:metadataStandardVersion|
         gmd:hierarchyLevelName|

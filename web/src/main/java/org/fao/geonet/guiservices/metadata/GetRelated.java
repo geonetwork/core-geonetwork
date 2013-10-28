@@ -47,6 +47,8 @@ import org.fao.geonet.services.relations.Get;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -235,8 +237,40 @@ public class GetRelated implements Service {
             // Or feature catalogue define in feature catalogue citation
             relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from,
                     to, fast));
+            
+            //Now, add the aggregationInfo elements
+            if(md != null) {
+	            for(String e : Get.getAggregationInfos(md)) {
+	            	String[] tmp = e.split(" ");
+	            	String type_ = tmp[0];
+	            	String uuid_ = tmp[1];
+
+                    Element element = new Element(type_);
+                    Element metadata = search(uuid_, "sources", context, from,
+                            to, fast);
+                    Element response = metadata.getChild("response");
+                    response.detach();
+                    element.addContent(response);
+                    
+                    element.setAttribute("parent", "true");
+                   relatedRecords.addContent(element);
+	            }
+            }
+            
+            //And lucene ones:
+            relatedRecords.addContent(search(uuid, "crossReference", context, from,
+                    to, fast));
+            relatedRecords.addContent(search(uuid, "partOfSeamlessDatabase", context, 
+            		from, to, fast));
+            relatedRecords.addContent(search(uuid, "source", context, from,
+                    to, fast));
+            relatedRecords.addContent(search(uuid, "stereoMate", context, from,
+                    to, fast));
 
         }
+        
+        XMLOutputter xmlout = new XMLOutputter();
+        xmlout.output(relatedRecords,  System.out);
 
         return relatedRecords;
 
@@ -281,6 +315,9 @@ public class GetRelated implements Service {
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
             else if ("datasets".equals(type) || "fcats".equals(type) || "sources".equals(type) || "siblings".equals(type))
                 parameters.addContent(new Element("uuid").setText(uuid));
+            else if ("crossReference".equals(type) || "partOfSeamlessDatabase".equals(type) 
+            			|| "source".equals(type) || "stereoMate".equals(type))
+            	parameters.addContent(new Element(type).setText(uuid));
             parameters.addContent(new Element("fast").addContent("index"));
             parameters.addContent(new Element("sortBy").addContent("title"));
             parameters.addContent(new Element("sortOrder").addContent("reverse"));

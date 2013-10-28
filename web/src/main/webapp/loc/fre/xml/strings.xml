@@ -593,6 +593,8 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<createIfNotExistButton js="true">Créer une nouvelle métadonnée</createIfNotExistButton>
 	<associateService js="true">Associer une métadonnée de service</associateService>
 	<associateDataset js="true">Associer une métadonnée de données</associateDataset>
+	<associateSibling js="true">Associer une métadonnée des fréres</associateSibling>
+	<associateSiblingText js="true">Rechercher le frère que vous souhaitez ajouter. Ensuite, double cliquez sur relation colonne et spécifier pour chaque frère.</associateSiblingText>
 	<associateServiceHelp>Pour associer une métadonnée de service, rechercher un service et choisir la couche associée.</associateServiceHelp>
 	<associateDatasetHelp>Pour associer une métadonnée de données, aller dans la vue ISO &gt; onglet Identification,
 		et définir l'élément "operates on".</associateDatasetHelp>
@@ -610,8 +612,17 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<serviceCreate>Créer une métadonnée de service</serviceCreate>
 	<parentSearch js="true">Chercher un parent pour la métadonnée en cours.</parentSearch>
 	<linkedMetadataSelectionWindowTitle js="true">Sélection des métadonnées associées</linkedMetadataSelectionWindowTitle>
+	<relatedMetadataTitle js="true">Métadonnées associées</relatedMetadataTitle>
 	<searchText js="true">Recherche libre</searchText>
 	<mdTitle js="true">Titre de la métadonnée</mdTitle>
+	<selectRelation js="true">Double-cliquez pour sélectionner relation</selectRelation>
+	<parent js="true">Père</parent>
+	<source js="true">Source</source>
+	<sourceLabel js="true">Source</sourceLabel>
+	<crossReference js="true">Cross Reference</crossReference>
+	<partOfSeamlessDatabase js="true">Part of Seamless Database</partOfSeamlessDatabase>
+	<stereoMate js="true">Stereo Mate</stereoMate>
+	<relationships js="true">Relations</relationships>
 	<createRelation js="true">Créer la relation</createRelation>
 	<export js="true">Exporter</export>
 	<exportText>Export (TXT)</exportText>
@@ -632,6 +643,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<rateMetadataFailed js="true">Impossible de noter la métadonnée.</rateMetadataFailed>
 	<error js="true">Erreur</error>
 	<errors>erreurs</errors>
+	<errorNotSelected js="true">Vous devez sélectionner au moins une chose.</errorNotSelected>
 	<northSouth js="true">Nord &lt; Sud</northSouth>
 	<north90 js="true">Nord &gt; 90 degrés</north90>
 	<south90 js="true">Sud &lt; -90 degrés</south90>

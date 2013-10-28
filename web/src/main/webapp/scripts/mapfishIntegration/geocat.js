@@ -374,6 +374,7 @@ var geocat = {
         searchTools.transformXML(result.responseText, geocat.getResultsTemplate(getQuery), target.dom);
         geocat.transformSortBy();
         geocat.transformURIButtons(target.dom);
+        geocat.transformRelated(target.dom);
         geocat.metadataSelectInfo('selected=status');
         geocat.processRefinement(result);
 
@@ -570,6 +571,84 @@ var geocat = {
                 scope: cur
             });
         }
+    },
+    
+    transformRelated: function(target) {
+    	if(!target) {
+    		return;
+    	}
+    	
+    	Ext.each(Ext.query("ul.relatedMetadataResults", target), function(ul) {
+        	Ext.Ajax.request({
+        		url: geocat.baseUrl + "srv/" + geocat.language + 
+        				"/xml.relation?uuid=" + ul.getAttribute("uuid"),
+        		success: function(a){
+        			var relations = a.responseXML;
+        	    	
+        			//FIXME very basic heuristic
+        			var heuristic_array = [];
+        			var heuristic_array2 = [];
+        			var used_values = [];
+        			
+        			Ext.each(Ext.query("relation", relations),
+        					function(relation) {
+        					//Now we create a div for this relation
+        					//and add it to one of the arrays of the basic heuristic
+        					var type = relation.getAttribute("type");
+        					var uuid = Ext.query("uuid", relation)[0];
+        					if(!uuid) {
+        						return; //It must be a deprecated parent
+        					}
+        					uuid = (uuid.innerText || uuid.textContent);
+        					var title =  Ext.query("title", relation)[0];
+        					if(title) {
+        						title = (title.innerText || title.textContent);
+        					}
+        					var parent = (relation.getAttribute("parent") == "true");
+        					var sibling = (type == "source" || type == "stereoMate" 
+        									|| type == "partOfSeamlessDatabase" 
+        										|| type == "crossReference");
+        					
+        					var div = "<li class='relation arrow " + ((sibling)? "sibling" : "") + " " 
+        							+ type + " " + ((parent)? "parent" : "") +
+        							"'><a href='" + geocat.baseUrl + "srv/" + geocat.language + 
+        	        				"/metadata.show?uuid=" + uuid + "'>" + (title || uuid) + "</a></li>";
+        					
+        					if(used_values.indexOf(type) < 0) {
+        						heuristic_array.unshift(div);
+        					} else if(parent) {
+        						heuristic_array.push(div);
+        					} else {
+        						heuristic_array2.push(div);
+        					}
+        			});
+        			
+
+    	    		Ext.get(ul).insertHtml("beforeEnd", "<li><h3>" + translate("relatedMetadataTitle") + "</h3></li>");
+        			
+        	    	var i = 0;
+        	    	//number of relations to show
+        	    	var max = 5;
+        	    	Ext.each(heuristic_array, function(relation) {
+        	    		if(i < max) {
+            	    		Ext.get(ul).insertHtml("beforeEnd", relation);
+            	    		i++;
+        	    		}
+        	    	});
+        	    	Ext.each(heuristic_array2, function(relation) {
+        	    		if(i < max) {
+            	    		Ext.get(ul).insertHtml("beforeEnd", relation);
+            	    		i++;
+        	    		}
+        	    	});
+        	    	
+        	    	//If we have relations to show
+        	    	if(i > 0) {
+        	    		Ext.get(ul).show();
+        	    	}
+        		}
+        	});
+    	});
     },
 
     transformURIButtons: function(target) {
@@ -2218,6 +2297,7 @@ var geocat = {
             '            <br/><i>(' + translate('modified') + ': <xsl:value-of select="dct:modified"/>)</i>\n' +
             '          </xsl:if>\n' +
             '          <br/>\n' +
+            '          <ul class="relatedMetadataResults" uuid="{dc:identifier}></ul>\n' +
             '          <ul class="URIButtons" uuid="{dc:identifier}">\n' +
 //            Turn off metadata button, as a link on title is available '            <li proto="show" title="' + translate("show") + '">' + geocat.baseUrl + 'srv/' + geocat.language + '/metadata.show.embedded?id=<xsl:value-of select="geonet:info/id"/>&amp;currTab=simple</li>\n' +
             '          <xsl:for-each select="dc:URI">\n' +
@@ -2266,6 +2346,7 @@ var geocat = {
             '            <br/><i>(' + translate('modified') + ': <xsl:value-of select="dct:modified"/>)</i>\n' +
             '          </xsl:if>\n' +
             '          <br/>\n' +
+            '          <ul class="relatedMetadataResults" uuid="{dc:identifier}"></ul>' +
             '          <ul style="padding-top:4px" class="URIButtons" uuid="{dc:identifier}">\n' +
             '            <li proto="show" title="' + translate("show") + '">' + geocat.baseUrl + 'srv/' + geocat.language + '/metadata.show.embedded?id=<xsl:value-of select="geonet:info/id"/>&amp;currTab=simple</li>\n' +
             '          <xsl:for-each select="dc:URI">\n' +

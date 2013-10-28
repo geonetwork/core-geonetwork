@@ -279,6 +279,13 @@
 	<searchText js="true">Text search</searchText>
 	<mdTitle js="true">Metadata title</mdTitle>
 	<createRelation js="true">Create relation</createRelation>
+	<parent js="true">Parent</parent>
+	<source js="true">Source</source>
+	<crossReference js="true">Cross Reference</crossReference>
+	<partOfSeamlessDatabase js="true">Part of Seamless Database</partOfSeamlessDatabase>
+	<stereoMate js="true">Stereo Mate</stereoMate>
+	<relationships js="true">Relationships</relationships>
+	<createRelation js="true">Create relation</createRelation>
 	<export>Export</export>
 	<exportText>Export (TXT)</exportText>	
 	<addXMLFragment>Add from dictionary ...</addXMLFragment>

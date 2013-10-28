@@ -4133,6 +4133,7 @@
 	-->
 	<xsl:template mode="iso19139"
 		match="
+		gmd:code[gco:CharacterString]|
 		gmd:identifier[gco:CharacterString]|
 		gmd:metadataStandardName[gco:CharacterString]|
 		gmd:metadataStandardVersion[gco:CharacterString]|

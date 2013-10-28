@@ -169,6 +169,10 @@
 			<xsl:variable name="siblings" select="/root/gui/relation/siblings/response/sibling"/>
 			<xsl:variable name="relatedRecords" select="/root/gui/relation/related/response/*[geonet:info]"/> <!-- Usually feature catalogues -->
             <!-- <xsl:variable name="relatedRecords" select="/root/gui/relation/fcats/response/*[geonet:info]"/> -->
+			<xsl:variable name="siblings" select="/root/gui/relation/crossReference/response/*|
+													/root/gui/relation/partOfSeamlessDatabase/response/*|
+													/root/gui/relation/source/response/*|
+													/root/gui/relation/stereoMate/response/*"/>
 
 			<!-- The GetCapabilities URL -->
 			<xsl:variable name="capabilitiesUrl">
@@ -205,14 +209,14 @@
 						
 						Display a tree representation of parent
 					-->
-		        	<xsl:if test="(normalize-space($parent)!='' or $children or $edit) and geonet:info/schema != 'iso19110'">
-		        		<h3><img src="{/root/gui/url}/images/dataset.gif"
+		        	<xsl:if test="(normalize-space($parent)!='' or $children or $siblings or $edit) and geonet:info/schema != 'iso19110'">
+		        		<!-- <h3><img src="{/root/gui/url}/images/dataset.gif"
 		        			alt="{/root/gui/strings/linkedParentMetadataHelp}" title="{/root/gui/strings/linkedParentMetadataHelp}" align="absmiddle"/>
 		        			<xsl:value-of select="/root/gui/strings/linkedParentMetadata"/></h3>
-		        		
-		        		<xsl:if test="normalize-space($parent)!='' or $children">
+		        		 -->
+		        		<xsl:if test="$children or $siblings">
 		        			<ul>
-		        				<xsl:if test="normalize-space($parent)!=''">
+		        				<!-- <xsl:if test="normalize-space($parent)!=''">
 		        					<li>
 			        					<a class="arrow" href="metadata.show?uuid={$parent}">
 				        					<xsl:call-template name="getMetadataTitle">
@@ -220,7 +224,8 @@
 				        					</xsl:call-template>
 			        					</a>
 		        					</li>
-		        				</xsl:if>
+		        				</xsl:if> -->
+		        				<xsl:if test="$children">
 		        				<li>
 		        					<ul>
 		        						<li><xsl:call-template name="getMetadataTitle">
@@ -230,7 +235,7 @@
 	        								<li>
 		        								<ul>
 		        									<xsl:for-each select="$children">
-		        										<li><a class="arrow" href="metadata.show?uuid={geonet:info/uuid}">
+		        										<li><a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}">
 		        											<xsl:call-template name="getMetadataTitle">
 		        												<xsl:with-param name="uuid" select="geonet:info/uuid"/>
 		        											</xsl:call-template>
@@ -241,7 +246,47 @@
 	        							</xsl:if>
 		        					</ul>
 		        				</li>
+		        				</xsl:if>
 		        			</ul>
+	        				<xsl:if test="$siblings">
+								<br/>
+								<br/>
+	        					<ul>
+		        					<li><h3><img src="{/root/gui/url}/images/chain.png"
+		        							alt="{/root/gui/strings/linkedSiblingMetadataHelp}" 
+		        							title="{/root/gui/strings/linkedSiblingMetadataHelp}" align="absmiddle"/>
+		        							<xsl:value-of select="/root/gui/strings/linkedSiblingMetadata"/></h3></li>
+		        					<xsl:for-each select="$siblings">
+		        						<xsl:variable name="type" select="string(name(../..))"/>
+		        						<xsl:variable name="isParent">
+		        							<xsl:if test="string(../../@parent) = 'true'">
+		        								parent
+		        							</xsl:if>
+	        							</xsl:variable>
+		        						<xsl:for-each select="geonet:info">
+		        						<xsl:variable name="helpText">
+		        							<xsl:if test="$type = 'partOfSeamlessDatabase'">
+		        								<xsl:value-of select="/root/gui/strings/partOfSeamlessDatabase" />
+		        							</xsl:if>
+		        							<xsl:if test="$type = 'source'">
+		        								<xsl:value-of select="/root/gui/strings/sourceLabel" />
+		        							</xsl:if>
+		        							<xsl:if test="$type = 'stereoMate'">
+		        								<xsl:value-of select="/root/gui/strings/stereoMate" />
+		        							</xsl:if>
+		        							<xsl:if test="$type = 'crossReference'">
+		        								<xsl:value-of select="/root/gui/strings/crossReference" />
+		        							</xsl:if>
+		        						</xsl:variable>
+		        						<li><a class="arrow sibling {$type} {$isParent}" title="{$helpText}" href="javascript:geocat.openMetadataWindow('{uuid}');">
+    											<xsl:call-template name="getMetadataTitle">
+    												<xsl:with-param name="uuid" select="uuid"/>
+    											</xsl:call-template>
+   										</a></li>
+   										</xsl:for-each>
+		        					</xsl:for-each>
+	        					</ul>
+	        				</xsl:if>
 		        		</xsl:if>
 		        		
 		        		<xsl:choose>
@@ -251,7 +296,7 @@
 		        				<xsl:text> </xsl:text>
 		        				<a alt="{/root/gui/strings/linkedParentMetadataHelp}"
 		        					title="{/root/gui/strings/linkedParentMetadataHelp}"
-		        					href="javascript:doTabAction('metadata.update', 'metadata');"><xsl:value-of select="/root/gui/strings/addParent"/></a>
+		        					href="javascript:javascript:showLinkedMetadataSelectionPanel(null, null, true);"><xsl:value-of select="/root/gui/strings/addParent"/></a>
 		        			</xsl:when>
 		        			<xsl:otherwise>
 		        				<!-- update child option only for iso19139 schema based metadata and admin user -->
@@ -288,7 +333,7 @@
 								alt="{/root/gui/strings/associateService}" title="{/root/gui/strings/associateService}" align="absmiddle"/><xsl:value-of select="/root/gui/strings/linkedServices"/></h3>
 							<ul>
 								<xsl:for-each select="$services">
-									<li><a class="arrow" href="metadata.show?uuid={geonet:info/uuid}">
+									<li><a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}');">
 										<xsl:call-template name="getMetadataTitle">
 											<xsl:with-param name="uuid" select="geonet:info/uuid"/>
 										</xsl:call-template>
@@ -320,7 +365,7 @@
 							<xsl:value-of select="/root/gui/strings/linkedDatasetMetadata"/></h3>
 						<ul>
 							<xsl:for-each select="$metadata/gmd:identificationInfo/(srv:SV_ServiceIdentification | *[@gco:isoType='srv:SV_ServiceIdentification'])/srv:operatesOn[@uuidref!='']">
-								<li><a class="arrow" href="metadata.show?uuid={@uuidref}">
+								<li><a class="arrow" href="javascript:geocat.openMetadataWindow('{@uuidref}');">
 									<xsl:call-template name="getMetadataTitle">
 										<xsl:with-param name="uuid" select="@uuidref"/>
 									</xsl:call-template>
@@ -363,7 +408,7 @@
 		        				<xsl:value-of select="/root/gui/strings/linkedDataset"/></h3>
 		        			<ul>
 		        				<xsl:for-each select="$relatedRecords">
-		        					<li><a class="arrow" href="metadata.show?uuid={geonet:info/uuid}">
+		        					<li><a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}');">
 		        						<xsl:call-template name="getMetadataTitle">
 		        							<xsl:with-param name="uuid" select="geonet:info/uuid"/>
 		        						</xsl:call-template>
@@ -380,7 +425,7 @@
 			        				<xsl:value-of select="/root/gui/strings/linkedFeatureCatalogue"/></h3>
 			        			<ul>
 			        				<xsl:for-each select="$relatedRecords">
-			        					<li><a class="arrow" href="metadata.show?uuid={geonet:info/uuid}">
+			        					<li><a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}');">
 			        						<xsl:call-template name="getMetadataTitle">
 			        							<xsl:with-param name="uuid" select="geonet:info/uuid"/>
 			        						</xsl:call-template>

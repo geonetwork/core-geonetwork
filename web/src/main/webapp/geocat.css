@@ -94,6 +94,57 @@ a.no-help:hover {
 
 }
 
+/** Siblings **/
+.arrow.sibling {
+	padding: 0 0 5px 14px;
+	background-size: 14px 14px;
+}
+
+.relatedMetadataResults {
+	background-color: rgba(250, 250, 200, 1);
+	border: 1px solid rgba(160, 180, 0, 1);
+	padding: 3px;
+	margin: 4px;
+	display: none;
+}
+
+.relatedMetadataResults li.arrow {
+	width: 16%;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.arrow.crossReference {
+	background-image: url('images/chain_child_crossReference.png');
+}
+
+.arrow.source {
+	background-image: url('images/chain_child_source.png');
+}
+
+.arrow.stereoMate {
+	background-image: url('images/chain_child_stereoMate.png');
+}
+
+.arrow.partOfSeamlessDatabase {
+	background-image: url('images/chain_child_partOfSeamlessDatabase.png');
+}
+.arrow.crossReference.parent {
+	background-image: url('images/chain_parent_crossReference.png');
+}
+
+.arrow.source.parent {
+	background-image: url('images/chain_parent_source.png');
+}
+
+.arrow.stereoMate.parent {
+	background-image: url('images/chain_parent_stereoMate.png');
+}
+
+.arrow.partOfSeamlessDatabase.parent {
+	background-image: url('images/chain_parent_partOfSeamlessDatabase.png');
+}
+
 .resultsHeader {
     padding-bottom: 2em;
     margin-bottom: 2em;
@@ -1126,4 +1177,10 @@ li.blue-content a {
 
 select.lang_selector {
 	max-width: 100px;
+}
+
+/** For Metadata Editor, hide parent **/
+fieldset.metadata-block table tbody tr[id^="gmd:parentIdentifier_"],
+fieldset.metadata-block table tbody tr[id^="child_gmd:parentIdentifier_"] {
+	display: none;
 }

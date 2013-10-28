@@ -278,6 +278,13 @@
 	<linkedMetadataSelectionWindowTitle js="true">Selecció de les metadades associades</linkedMetadataSelectionWindowTitle>
 	<searchText js="true">Cerca de text</searchText>
 	<mdTitle js="true">Títol de la metadada</mdTitle>
+	<createRelation js="true">Create relation</createRelation>
+	<parent js="true">Parent</parent>
+	<source js="true">Source</source>
+	<crossReference js="true">Cross Reference</crossReference>
+	<partOfSeamlessDatabase js="true">Part of Seamless Database</partOfSeamlessDatabase>
+	<stereoMate js="true">Stereo Mate</stereoMate>
+	<relationships js="true">Relationships</relationships>
 	<createRelation js="true">Crear relació</createRelation>
 	<export>Exportar (ZIP)</export>
 	<exportText>Exportar (TXT)</exportText>	
