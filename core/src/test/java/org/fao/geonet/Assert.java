@@ -1,4 +1,4 @@
-package org.fao.geonet.test;
+package org.fao.geonet;
 
 import java.util.Collection;
 
@@ -7,7 +7,7 @@ import java.util.Collection;
  *
  * @author heikki doeleman
  */
-public class GeonetworkTestCase extends junit.framework.TestCase {
+public final class Assert extends junit.framework.TestCase {
 
     /**
      * Just to prevent junit.framework.AssertionFailedError: No tests found in org.fao.geonet.test.TestCase.
@@ -28,26 +28,5 @@ public class GeonetworkTestCase extends junit.framework.TestCase {
             }
         }
         fail(msg);
-    }
-
-    /**
-     * No-arg constructor to enable serialization. This method is not intended to be used by mere mortals without
-     * calling setName().
-     */
-    public GeonetworkTestCase() {
-        super();
-    }
-    /**
-     * Constructs a test case with the given name.
-     */
-    public GeonetworkTestCase(String name) {
-        super(name);
-    }
-    /**
-     * Sets the name of a TestCase.
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        super.setName(name);
     }
 }
