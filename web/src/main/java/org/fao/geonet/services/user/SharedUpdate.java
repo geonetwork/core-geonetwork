@@ -112,7 +112,7 @@ public class SharedUpdate implements Service
 		String directnumber = Util.getParam(params, Geocat.Params.DIRECTNUMBER, "");
 		String mobile = Util.getParam(params, Geocat.Params.MOBILE, "");
 
-        String validated = Util.getParam(params, Geocat.Params.VALIDATED);
+        String validated = Util.getParam(params, Geocat.Params.VALIDATED, "y");
 
 
 		Processor.uncacheXLinkUri(ContactsStrategy.baseHref(id));
@@ -241,7 +241,7 @@ public class SharedUpdate implements Service
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getDataManager();
         for (MetadataRecord metadataRecord : referencingMetadata) {
-            dm.indexMetadata(dbms, metadataRecord.id, true, context, true, false);
+            dm.indexMetadata(dbms, metadataRecord.id, false, context, false, false);
         }
 
         return new Element(Jeeves.Elem.RESPONSE);

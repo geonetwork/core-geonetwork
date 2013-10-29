@@ -40,9 +40,17 @@ angular.module('SharedObjects.controllers', []).
               $scope.format.name = data.name;
               $scope.format.version = data.version;
               $('#editModal').modal('show');
+
+              $scope.finishEdit = function () {
+                  $scope.doUpdate(row.id, $scope.isValidated ? 'y' : 'n');
+              }
           });
       };
       $scope.createNewObject = function () {
+        $scope.doUpdate(undefined, 'y');
+      }
+
+      $scope.doUpdate = function (id, validated) {
           $scope.performOperation({
               method: 'GET',
               url: $scope.baseUrl + '/format',
@@ -50,7 +58,8 @@ angular.module('SharedObjects.controllers', []).
                   action: 'PUT',
                   name: $scope.format.name,
                   version: $scope.format.version,
-                  validated: 'y'
+                  validated: 'y',
+                  id: id
               }
           }).
           success(function () {

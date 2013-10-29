@@ -151,7 +151,7 @@ public class UpdateElement implements Service {
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         DataManager dm = gc.getDataManager();
         for (MetadataRecord metadataRecord : referencingMetadata) {
-            dm.indexMetadata(dbms, metadataRecord.id, true, context, true, false);
+            dm.indexMetadata(dbms, metadataRecord.id, false, context, false, false);
         }
 
         return elResp;

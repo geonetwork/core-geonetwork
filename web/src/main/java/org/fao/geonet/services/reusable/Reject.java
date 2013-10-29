@@ -155,8 +155,7 @@ public class Reject implements Service
     {
         Element newIds = new Element("newIds");
         // Move the reusable object to the DeletedObjects table and update
-        // the xlink attribute information
-        // so that the objects are obtained from that table
+        // the xlink attribute information so that the objects are obtained from that table
         Map<String/* oldHref */, String/* newHref */> updatedHrefs = new HashMap<String, String>();
         for (MetadataRecord metadataRecord : results) {
             for (String href : metadataRecord.xlinks) {
