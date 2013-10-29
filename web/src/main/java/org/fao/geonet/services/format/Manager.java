@@ -123,7 +123,7 @@ public class Manager implements Service {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
                 DataManager dm = gc.getDataManager();
                 for (MetadataRecord metadataRecord : referencingMetadata) {
-                    dm.indexMetadata(dbms, metadataRecord.id, true, context, true, false);
+                    dm.indexMetadata(dbms, metadataRecord.id, false, context, false, false);
                 }
             }
 		}
