@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
-    <createNewSharedObject js="true">Edit %objtype%</createNewSharedObject>
+    <createNewSharedObject js="true">Bearbeite %objtype%</createNewSharedObject>
     <noRecords js='true'>Keine Metadaten gefunden</noRecords>
     <edit js='true'>Bearbeiten</edit>
     <searchView js='true'>Suche</searchView>
