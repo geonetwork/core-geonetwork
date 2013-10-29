@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('SharedObjects.controllers', []).
-  controller('ContactControl', function ($scope, $routeParams, commonProperties) {
+  controller('ContactControl', function ($scope, $routeParams, $location, commonProperties) {
       commonProperties.addValidated($scope, $routeParams);
       commonProperties.add($scope, $routeParams);
       $scope.edit = function (row) {
@@ -16,10 +16,12 @@ angular.module('SharedObjects.controllers', []).
       }
       $scope.startCreateNew = function () {
           open($scope.baseUrl + '/shared.user.edit?closeOnSavevalidated=y&operation=newuser', '_sharedObject');
+
+          $location.path("/validated/contacts");
       };
       $scope.includeRowPartial = 'row-formless.html';
   })
-  .controller('FormatControl', function ($scope, $routeParams, $http, commonProperties) {
+  .controller('FormatControl', function ($scope, $routeParams, $http, $location, commonProperties) {
       commonProperties.addValidated($scope, $routeParams);
       commonProperties.add($scope, $routeParams);
       $scope.format = {
@@ -52,6 +54,7 @@ angular.module('SharedObjects.controllers', []).
               }
           }).
           success(function () {
+              $location.path("/validated/formats");
               $scope.format.name = '';
               $scope.format.version = '';
           });
@@ -59,7 +62,7 @@ angular.module('SharedObjects.controllers', []).
       };
 
   })
-  .controller('ExtentControl', function ($scope, $routeParams, commonProperties) {
+  .controller('ExtentControl', function ($scope, $routeParams, $location, commonProperties) {
       commonProperties.addValidated($scope, $routeParams);
       commonProperties.add($scope, $routeParams);
       if ($scope.isValid) {
@@ -71,6 +74,7 @@ angular.module('SharedObjects.controllers', []).
           $scope.open(row.url);
       };
       $scope.startCreateNew = function () {
+          $location.path("/validated/extents");
           open($scope.baseUrl + '/extent.edit?crs=EPSG:21781&typename=gn:xlinks&id=&wfs=default&modal', '_sharedObject');
       };
 
@@ -182,6 +186,7 @@ angular.module('SharedObjects.controllers', []).
                       $scope.keyword[lang].label = '';
                       $scope.keyword[lang].desc = '';
                   }
+                  $location.path("/validated/keywords");
               });
           } else {
               $('#editModal').modal('hide');

@@ -94,6 +94,7 @@ angular.module('SharedObjects.factories', []).
                   window.open(finalUrl, '_sharedTab');
               };
               $scope.editTitle = Geonet.translate('createNewSharedObject').replace(/\%objtype\%/g, Geonet.translate($scope.type))
+              $scope.editTitle = Geonet.translate('createNewSharedObject').replace(/\%objtype\%/g, Geonet.translate($scope.type))
               $scope.startCreateNew = function () {
                   $scope.finishEdit = $scope.createNewObject;
                   $('#editModal').modal('show');
@@ -117,7 +118,7 @@ angular.module('SharedObjects.factories', []).
               }
               
               $scope.performUpdateOperation = function (service) {
-                  var params = { type: $scope.type, id: $scope.selected.id };
+                  var params = { type: $scope.type, id: $scope.selected.id, isValidObject: $scope.isValidated };
 
                   if ($scope.message) {
                       params.msg = $scope.message;

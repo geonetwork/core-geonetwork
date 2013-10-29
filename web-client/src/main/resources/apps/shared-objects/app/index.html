@@ -26,6 +26,12 @@
                     languageHolder = matches[1];
                 }
 
+                if(languageHolder === 'deu') {
+                    languageHolder = 'ger'
+                } else if(languageHolder === 'fra') {
+                    languageHolder = 'fre'
+                }
+
                 jQuery.ajax('../../../srv/'+languageHolder+'/strings.js', {async:false, cache:true, dataType:'script'});
 
                 Geonet.language = languageHolder;
