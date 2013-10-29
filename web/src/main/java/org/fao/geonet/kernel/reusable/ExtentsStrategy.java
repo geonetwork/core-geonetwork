@@ -104,7 +104,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
 
     public static final Envelope DEFAULT_BBOX = new Envelope(5.5, 10.5, 45.5, 48);
     public static final String NON_VALIDATED_TYPE = "gn:non_validated";
-    private static final String XLINK_TYPE = "gn:xlinks";
+    public static final String XLINK_TYPE = "gn:xlinks";
 
     //private final String _baseURL;
     private final ExtentManager _extentMan;

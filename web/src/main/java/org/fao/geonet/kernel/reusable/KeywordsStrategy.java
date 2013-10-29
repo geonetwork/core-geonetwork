@@ -254,14 +254,15 @@ public final class KeywordsStrategy extends ReplacementStrategy
 
     public void performDelete(String[] ids, Dbms dbms, UserSession session, String thesaurusName) throws Exception
     {
-       Thesaurus thesaurus = _thesaurusMan.getThesaurusByName(validateName(thesaurusName));
 
         for (String id : ids) {
             try {
                 // A test to see if id is from a previous search or 
                 KeywordBean concept = lookup(id, session);
+                Thesaurus thesaurus = _thesaurusMan.getThesaurusByName(concept.getThesaurusKey());
                 thesaurus.removeElement(concept);
             } catch (NumberFormatException e) {
+                Thesaurus thesaurus = _thesaurusMan.getThesaurusByName(validateName(thesaurusName));
                 thesaurus.removeElement(NAMESPACE, extractCode(id));
             }
         }

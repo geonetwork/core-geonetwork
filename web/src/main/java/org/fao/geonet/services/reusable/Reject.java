@@ -46,12 +46,7 @@ import jeeves.xlink.XLink;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.reusable.DeletedObjects;
-import org.fao.geonet.kernel.reusable.MetadataRecord;
-import org.fao.geonet.kernel.reusable.ReplacementStrategy;
-import org.fao.geonet.kernel.reusable.ReusableTypes;
-import org.fao.geonet.kernel.reusable.SendEmailParameter;
-import org.fao.geonet.kernel.reusable.Utils;
+import org.fao.geonet.kernel.reusable.*;
 import org.fao.geonet.kernel.reusable.Utils.FindXLinks;
 import org.jdom.Element;
 
@@ -75,8 +70,13 @@ public class Reject implements Service
         boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
         boolean isValidObject = Boolean.parseBoolean(Util.getParam(params, "isValidObject", "false"));
 
-        
-        Element results = reject(context, ReusableTypes.valueOf(page), ids, msg, null, isValidObject, testing);
+
+        String specificData = null;
+        if (isValidObject && ReusableTypes.extents.toString().equals(page)) {
+            specificData = ExtentsStrategy.XLINK_TYPE;
+        }
+
+        Element results = reject(context, ReusableTypes.valueOf(page), ids, msg, specificData, isValidObject, testing);
 
         return results;
     }
@@ -95,7 +95,7 @@ public class Reject implements Service
         Element results = new Element("results");
         if (strategy != null) {
             results.addContent(performReject(ids, strategy, context, gc, dbms, session, baseUrl, msg,
-                    strategySpecificData, testing, isValidObject));
+                    strategySpecificData, isValidObject, testing));
         }
         Log.info(Geocat.Module.REUSABLE, "Successfully rejected following reusable objects: \n"
                 + reusableType + " (" + Arrays.toString(ids) + ")\nRejection message is:\n" + msg);

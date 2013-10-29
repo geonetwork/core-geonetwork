@@ -1142,7 +1142,6 @@ public class SearchManager {
      *
      * @param schemaDir
      * @param xml
-     * @param translationForSorting 
      * @return
      * @throws Exception
      */
