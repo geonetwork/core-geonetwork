@@ -27,22 +27,22 @@
             [{
               type: 'status',
               label: 'status',
-              icon: 'icon-dashboard',
+              icon: 'fa-dashboard',
               href: '#/dashboard/status'
             },{
               type: 'statistics-search',
               label: 'searchStatistics',
-              icon: 'icon-search',
+              icon: 'fa-search',
               href: '#/dashboard/statistics-search'
             },{
               type: 'statistics-content',
               label: 'contentStatistics',
-              icon: 'icon-bar-chart',
+              icon: 'fa-bar-chart',
               href: '#/dashboard/statistics-content'
             },{
               type: 'information',
               label: 'information',
-              icon: 'icon-list-ul',
+              icon: 'fa-list-ul',
               href: '#/dashboard/information'
             }]
       };

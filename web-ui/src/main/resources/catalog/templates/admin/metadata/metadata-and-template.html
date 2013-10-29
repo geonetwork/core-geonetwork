@@ -33,12 +33,12 @@
             <div class="col-lg-6">
                 <button type="button" class="btn btn-primary btn-block"
                 data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadTemplates()">
-                    <i class="icon-upload"></i> <span data-translate="">loadTemplatesForSelectedSchema</span></button>
+                    <i class="fa fa-upload"></i> <span data-translate="">loadTemplatesForSelectedSchema</span></button>
             </div>
             <div class="col-lg-6">
                 <button type="button" class="btn btn-primary btn-block"
                 data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadSamples()">
-                    <i class="icon-upload"></i> <span data-translate="">loadSamplesForSelectedSchema</span></button>
+                    <i class="fa fa-upload"></i> <span data-translate="">loadSamplesForSelectedSchema</span></button>
             </div>
         </div>
     </div>
@@ -59,11 +59,11 @@
         <p data-ng-show="loadReport['@error']">{{loadReport['@error']}}</p>
 
         <ul class="icons-ul">
-          <li data-ng-repeat="schema in selectedSchemas"><i class="icon-li icon-archive"/>{{schema |
+          <li data-ng-repeat="schema in selectedSchemas"><i class="fa fa-li fa fa-archive"/>{{schema |
             translate}} <ul class="icons-ul">
               <li data-ng-repeat="record in loadReport[schema]">
-                <i class="icon-li"
-                  data-ng-class="record['@status'] == 'loaded' ? 'icon-ok' : 'icon-remove'"/>
+                <i class="fa fa-li"
+                  data-ng-class="record['@status'] == 'loaded' ? 'fa fa-ok' : 'fa fa-trash-o'"/>
                 {{record['@name']}}</li>
             </ul>
           </li>
@@ -76,11 +76,11 @@
         <p data-ng-show="loadTplReport['@error']">{{loadTplReport['@error']}}</p>
 
         <ul class="icons-ul">
-          <li data-ng-repeat="schema in selectedSchemas"><i class="icon-li icon-archive"/>{{schema |
+          <li data-ng-repeat="schema in selectedSchemas"><i class="fa fa-li fa fa-archive"/>{{schema |
             translate}} <ul class="icons-ul">
               <li data-ng-repeat="record in loadTplReport[schema]">
-                <i class="icon-li"
-                  data-ng-class="record['@status'] == 'loaded' ? 'icon-ok' : 'icon-remove'"/>
+                <i class="fa fa-li"
+                  data-ng-class="record['@status'] == 'loaded' ? 'fa fa-ok' : 'fa fa-trash-o'"/>
                 {{record['@name']}}</li>
             </ul>
           </li>

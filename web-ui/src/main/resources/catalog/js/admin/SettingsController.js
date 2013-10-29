@@ -40,12 +40,12 @@
             [{
               type: 'system',
               label: 'settings',
-              icon: 'icon-cogs',
+              icon: 'fa-cogs',
               href: '#/settings/system'
             },{
               type: 'logo',
               label: 'manageLogo',
-              icon: 'icon-picture',
+              icon: 'fa-picture-o',
               href: '#/settings/logo'
             },{
               type: 'csw',

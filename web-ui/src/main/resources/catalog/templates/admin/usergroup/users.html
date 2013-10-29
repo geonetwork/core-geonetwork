@@ -21,7 +21,7 @@
             
             <button type="button" class="btn btn-primary btn-block" 
                 data-ng-click="addUser()">
-                <i class="icon-plus"></i>
+                <i class="fa fa-plus"></i>
                 <span data-translate>newUser</span>
             </button>
         </div>
@@ -36,11 +36,11 @@
                 <span data-ng-hide="userSelected.id != ''" data-translate="">newUser</span>
                 <strong>{{userSelected.name}} {{userSelected.surname}}</strong>
                 <div class="btn-toolbar">
-                <button type="button" class="btn btn-primary pull-right icon-save" 
+                <button type="button" class="btn btn-primary pull-right fa fa-save" 
                     data-ng-disabled="!userUpdated"
                     data-ng-click="saveUser('#gn-user-edit')" 
                     data-translate>saveUser</button>
-                <button type="button" class="btn btn-primary pull-right btn-danger icon-remove" 
+                <button type="button" class="btn btn-primary pull-right btn-danger fa fa-trash-o" 
                     data-ng-disabled="userHasRecords()"
                     data-ng-hide="userSelected.id == ''"
                     data-ng-click="deleteUser(userSelected.id)" 

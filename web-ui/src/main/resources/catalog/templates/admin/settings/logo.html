@@ -21,7 +21,7 @@
                     data-file-upload="logoUploadOptions"
                     >
                     <span class="btn btn-success btn-block fileinput-button" ng-class="{disabled: disabled}">
-                        <i class="icon-plus icon-white"></i>
+                        <i class="fa fa-plus fa fa-white"></i>
                         <span data-translate="">chooseLogos</span>
                         <input type="file" name="fname" multiple="true" 
                             autofocus="" ng-disabled="disabled"></input>
@@ -52,11 +52,11 @@
         <div class="thumbnail gn-thumbnail">
           <div class="caption">
             <p>
-              <a class="btn btn-link icon-picture" title="{{'useLogoForCatalog' | translate}}"
+              <a class="btn btn-link fa fa-picture-o" title="{{'useLogoForCatalog' | translate}}"
                 data-ng-click="setCatalogLogo(l, false)"></a>
-              <a class="btn btn-link icon-bookmark" title="{{'useLogoForCatalogFavicon' | translate}}"
+              <a class="btn btn-link fa fa-bookmark" title="{{'useLogoForCatalogFavicon' | translate}}"
                 data-ng-click="setCatalogLogo(l, true)"></a>
-              <a class="btn btn-link icon-remove" title="{{'removeLogo' | translate}}"
+              <a class="btn btn-link fa fa-trash-o" title="{{'removeLogo' | translate}}"
                 data-ng-click="removeLogo(l)"></a>
             </p>
           </div>

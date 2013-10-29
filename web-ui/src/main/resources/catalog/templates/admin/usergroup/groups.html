@@ -19,7 +19,7 @@
             
             <button type="button" class="btn btn-primary btn-block" 
                 data-ng-click="addGroup()">
-                <i class="icon-plus"></i>
+                <i class="fa fa-plus"></i>
                 <span data-translate>newGroup</span>
             </button>
         </div>
@@ -35,11 +35,11 @@
                 <span data-ng-hide="groupSelected.id == ''" data-translate="">updateGroup</span>
                 <span data-ng-hide="groupSelected.id != ''" data-translate="">newGroup</span><strong>{{groupSelected.name}}</strong>
                 <div class="btn-toolbar">
-                <button type="button" class="btn btn-primary pull-right icon-save" 
+                <button type="button" class="btn btn-primary pull-right fa fa-save" 
                     data-ng-disabled="!groupUpdated"
                     data-ng-click="saveGroup('#gn-group-edit')" 
                     data-translate>saveGroup</button>
-                <button type="button" class="btn btn-primary pull-right btn-danger icon-remove" 
+                <button type="button" class="btn btn-primary pull-right btn-danger fa fa-trash-o" 
                     data-ng-disabled="groupHasRecords()"
                     data-ng-hide="groupSelected.id == ''"
                     data-ng-click="deleteGroup(groupSelected.id)" 

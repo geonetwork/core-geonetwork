@@ -26,12 +26,12 @@
             [{
               type: 'groups',
               label: 'manageGroups',
-              icon: 'icon-group',
+              icon: 'fa-group',
               href: '#/organization/groups'
             },{
               type: 'users',
               label: 'manageUsers',
-              icon: 'icon-user',
+              icon: 'fa-user',
               href: '#/organization/users'
             }]
       };

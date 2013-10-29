@@ -12,7 +12,7 @@
                         <li data-ng-repeat="t in pageMenu.tabs"
                             data-ng-class="type === t.type && 'active'">
                             <a href="{{t.href}}">
-                                <i class="{{t.icon || 'icon-fixed-width'}}"/>
+                                <i class="fa {{t.icon || 'fa-fw'}}"/>
                                 <span data-translate="">{{t.label}}</span>
                             </a>
                         </li>
@@ -28,7 +28,7 @@
       <li data-ng-repeat="t in pageMenu.tabs"
         data-ng-class="type === t.type && 'active'">
         <a href="{{t.href}}">
-          <i class="{{t.icon || 'icon-fixed-width'}}"/>
+          <i class="fa {{t.icon || 'fa-fw'}}"/>
           <span data-translate="">{{t.label}}</span>
         </a>
       </li>
