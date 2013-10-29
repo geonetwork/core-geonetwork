@@ -18,9 +18,6 @@
         <property name="dataSource" ref="jdbcDataSource"/>
         <property name="packagesToScan" value="org.fao.geonet.domain"/>
         <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
-        <property name="jpaDialect">
-            <bean class="org.fao.geonet.HibernateExtendedJpaDialect"/>
-        </property>
         <property name="jpaPropertyMap">
             <map>
                 <entry key="access" value="PROPERTY"/>

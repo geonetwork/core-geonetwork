@@ -106,7 +106,7 @@ public class JeevesEngine {
 
 	/** Inits the engine, loading all needed data.
 	  */
-    @Transactional()
+    @Transactional
     public void init(final String appPath, final String configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException
 	{
         ServletContext servletContext = null;

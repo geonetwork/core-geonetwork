@@ -763,22 +763,22 @@
       </dependency>
 
       <!-- db -->
-      <dependency>
-        <groupId>postgresql</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>9.1-901.jdbc3</version>
-      </dependency>
+      <!--<dependency>-->
+        <!--<groupId>postgresql</groupId>-->
+        <!--<artifactId>postgresql</artifactId>-->
+        <!--<version>9.1-901.jdbc3</version>-->
+      <!--</dependency>-->
       <dependency>
         <groupId>org.postgis</groupId>
         <artifactId>postgis-jdbc</artifactId>
         <version>1.3.3</version>
       </dependency>
       <!-- Postgres JDBC4 for Java 1.6 -->
-      <!--dependency>
+      <dependency>
         <groupId>postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>9.1-901.jdbc4</version>
-      </dependency-->
+      </dependency>
       <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>

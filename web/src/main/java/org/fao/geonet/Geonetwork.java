@@ -73,6 +73,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import javax.persistence.EntityManager;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 import java.io.File;
@@ -414,37 +415,14 @@ public class Geonetwork implements ApplicationHandler {
             try {
                 // import data from init files
                 List<Pair<String, String>> importData = (List) context.getApplicationContext().getBean("initial-data");
-                final DataSource bean = context.getBean(DataSource.class);
-                Connection connection = null;
-                Statement statement = null;
-                try {
-                    connection = bean.getConnection();
-                    connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
-                    connection.setAutoCommit(false);
-                    statement = connection.createStatement();
                     final DbLib dbLib = new DbLib();
                     for (Pair<String, String> pair : importData) {
                         final ServletContext servletContext = context.getServlet().getServletContext();
                         final String appPath = context.getAppPath();
                         final String filePath = pair.one();
                         final String filePrefix = pair.two();
-                        dbLib.insertData(servletContext, statement, appPath, filePath, filePrefix);
+                        dbLib.insertData(servletContext, context, appPath, filePath, filePrefix);
                     }
-                    connection.commit();
-                    connection.setAutoCommit(true);
-                } finally {
-                    try {
-                        if (statement != null) {
-                            statement.close();
-                        }
-                    } finally {
-                        if (connection != null) {
-                            connection.close();
-                        }
-                    }
-                }
-                context.getEntityManager().flush();
-                context.getEntityManager().clear();
                 String siteUuid = UUID.randomUUID().toString();
                 context.getBean(SettingManager.class).setSiteUuid(siteUuid);
             } catch (Throwable t) {

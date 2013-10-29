@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 
 /**
@@ -33,6 +35,7 @@ public class Setting extends GeonetEntity {
 
     @Lob
     @Column(name = "value", nullable = true)
+    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
     public String getValue() {
         return value;
     }

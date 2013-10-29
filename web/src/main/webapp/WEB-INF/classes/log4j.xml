@@ -172,11 +172,11 @@
     </logger>
 
     <category name="org.hibernate.SQL">
-        <priority value="DEBUG" />
+        <priority value="WARN" />
         <appender-ref ref="fileAppender" />
     </category>
     <category name="org.hibernate.type">
-        <priority value="DEBUG" />
+        <priority value="WARN" />
         <appender-ref ref="fileAppender" />
     </category>
 

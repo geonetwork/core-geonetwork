@@ -3,6 +3,7 @@ package org.fao.geonet.domain;
 import com.vividsolutions.jts.util.Assert;
 import org.apache.lucene.document.Document;
 import org.fao.geonet.utils.Xml;
+import org.hibernate.annotations.Type;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.Format;
@@ -102,6 +103,7 @@ public class Metadata extends GeonetEntity {
     @Column(nullable = false)
     @Lob
     @Basic(fetch = FetchType.LAZY)
+    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
     public String getData() {
         return _data;
     }

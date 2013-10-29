@@ -23,14 +23,19 @@
 
 package org.fao.geonet.lib;
 
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
+import org.springframework.context.ApplicationContext;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.servlet.ServletContext;
+import javax.sql.DataSource;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -47,32 +52,25 @@ public class DbLib {
 
 	private static final String SQL_EXTENSION = ".sql";
 
+	public void insertData(ServletContext servletContext, ServiceContext context, String appPath, String filePath,
+                           String filePrefix) throws Exception {
+        if(Log.isDebugEnabled(Geonet.DB))
+            Log.debug(Geonet.DB, "Filling database tables");
+
+		List<String> data = loadSqlDataFile(servletContext, context.getApplicationContext(), appPath, filePath, filePrefix);
+		runSQL(context.getEntityManager(), data, true);
+	}
+
 	public void insertData(ServletContext servletContext, Statement statement, String appPath, String filePath,
                            String filePrefix) throws Exception {
         if(Log.isDebugEnabled(Geonet.DB))
             Log.debug(Geonet.DB, "Filling database tables");
 
 		List<String> data = loadSqlDataFile(servletContext, statement, appPath, filePath, filePrefix);
-		runSQL(statement, data);
+		runSQL(statement, data, true);
 	}
 
-	/**
-	 * SQL File MUST be in UTF-8.
-	 * 
-	 * @param statement
-	 * @param sqlFile
-	 * @throws Exception
-	 */
-	public void runSQL(ServletContext servletContext, Statement statement, File sqlFile) throws Exception {
-		runSQL(servletContext, statement, sqlFile, true);
-	}
-
-	public void runSQL(ServletContext servletContext, Statement statement, File sqlFile, boolean failOnError) throws Exception {
-		List<String> data = Lib.text.load(servletContext, sqlFile.getCanonicalPath(), Constants.ENCODING);
-		runSQL(statement, data, failOnError);
-	}
-	
-	private void runSQL(Statement statement, List<String> data, boolean failOnError) throws Exception {
+	private void runSQL(EntityManager entityManager, List<String> data, boolean failOnError) throws Exception {
 		StringBuffer sb = new StringBuffer();
 
 		for (String row : data) {
@@ -90,6 +88,46 @@ public class DbLib {
                         Log.debug(Geonet.DB, "Executing " + sql);
 					
 					try {
+                        final String trimmedSQL = sql.trim();
+                        final Query query = entityManager.createNativeQuery(trimmedSQL);
+                        if (trimmedSQL.startsWith("SELECT")) {
+							query.setFirstResult(1);
+                            query.getSingleResult();
+						} else {
+							query.executeUpdate();
+						}
+					} catch (Throwable e) {
+						Log.warning(Geonet.DB, "SQL failure for: " + sql + ", error is:" + e.getMessage());
+
+						if (failOnError)
+							throw new RuntimeException(e);
+					}
+					sb = new StringBuffer();
+				}
+			}
+		}
+        entityManager.flush();
+        entityManager.clear();
+
+	}
+	private void runSQL(Statement statement, List<String> data, boolean failOnError) throws Exception {
+		StringBuffer sb = new StringBuffer();
+
+		for (String row : data) {
+			if (!row.toUpperCase().startsWith("REM") && !row.startsWith("--")
+					&& !row.trim().equals("")) {
+				sb.append(" ");
+				sb.append(row);
+
+				if (row.endsWith(";")) {
+					String sql = sb.toString();
+
+					sql = sql.substring(0, sql.length() - 1);
+
+                    if(Log.isDebugEnabled(Geonet.DB))
+                        Log.debug(Geonet.DB, "Executing " + sql);
+
+					try {
 						if (sql.trim().startsWith("SELECT")) {
 							statement.executeQuery(sql).close();
 						} else {
@@ -99,38 +137,13 @@ public class DbLib {
 						Log.warning(Geonet.DB, "SQL failure for: " + sql + ", error is:" + e.getMessage());
 
 						if (failOnError)
-							throw e;						
+							throw e;
 					}
 					sb = new StringBuffer();
 				}
 			}
 		}
         statement.getConnection().commit();
-	}
-	private void runSQL(Statement statement, List<String> data) throws Exception {
-		runSQL(statement, data, true);
-	}
-
-	/**
-	 * Execute query and commit
-	 * 
-	 * @param statement
-	 * @param query
-	 * @return
-	 */
-	private boolean safeExecute(Statement statement, String query) {
-		try {
-			statement.execute(query);
-
-			// --- as far as I remember, PostgreSQL needs a commit even for DDL
-			statement.getConnection().commit();
-
-			return true;
-		} catch (SQLException e) {
-            if(Log.isDebugEnabled(Geonet.DB))
-                Log.debug(Geonet.DB, "Safe execute error: " + query + ", error is:" + e.getMessage());
-			return false;
-		}
 	}
 
 	/**
@@ -181,14 +194,30 @@ public class DbLib {
         return null;
     }
 
-    private List<String> loadSqlDataFile(ServletContext servletContext, Statement statement, String appPath, String filePath, String filePrefix)
+    private List<String> loadSqlDataFile(ServletContext servletContext, ApplicationContext appContext, String appPath, String filePath, String filePrefix)
+            throws IOException, SQLException {
+        final DataSource dataSource = appContext.getBean(DataSource.class);
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+            // --- find out which dbms data file to load
+            String file = checkFilePath(servletContext, appPath, filePath, filePrefix, DatabaseType.lookup(connection).toString());
 
-            throws FileNotFoundException, IOException, SQLException {
-		// --- find out which dbms data file to load
-		String file = checkFilePath(servletContext, appPath, filePath, filePrefix, DatabaseType.lookup(statement.getConnection()).toString());
-		
-		// --- load the sql data
-		return Lib.text.load(servletContext, appPath, file, Constants.ENCODING);
+            // --- load the sql data
+            return Lib.text.load(servletContext, appPath, file, Constants.ENCODING);
+        } finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
+	}
+    private List<String> loadSqlDataFile(ServletContext servletContext, Statement statement, String appPath, String filePath, String filePrefix)
+            throws IOException, SQLException {
+            // --- find out which dbms data file to load
+            String file = checkFilePath(servletContext, appPath, filePath, filePrefix, DatabaseType.lookup(statement.getConnection()).toString());
+
+            // --- load the sql data
+            return Lib.text.load(servletContext, appPath, file, Constants.ENCODING);
 	}
 
 	private String getObjectName(String createStatem) {

@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.hibernate.annotations.Type;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
@@ -107,6 +109,7 @@ public class HarvesterSetting extends GeonetEntity {
      */
     @Lob
     @Column(name = "value", nullable = true)
+    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
     public
     @Nullable
     String getValue() {

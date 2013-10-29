@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 
 /**
@@ -126,6 +128,7 @@ public class MetadataNotification extends GeonetEntity {
      */
     @Lob
     @Column(name = "errormsg")
+    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
     public String getErrorMessage() {
         return _errorMessage;
     }

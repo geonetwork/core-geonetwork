@@ -2,6 +2,7 @@ package org.fao.geonet.domain.statistic;
 
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.ISODate;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -126,6 +127,7 @@ public class SearchRequest {
      */
     @Lob
     @Column(name = "query")
+    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
     public String getLuceneQuery() {
         return _luceneQuery;
     }
@@ -203,6 +205,7 @@ public class SearchRequest {
      */
     @Column(name = "spatialfilter")
     @Lob
+    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
     public String getSpatialFilter() {
         return _spatialFilter;
     }
@@ -223,6 +226,7 @@ public class SearchRequest {
      */
     @Lob
     @Column(name = "type")
+    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
     public String getMetadataType() {
         return _metadataType;
     }
