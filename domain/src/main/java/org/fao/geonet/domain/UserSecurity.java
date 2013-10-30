@@ -77,11 +77,13 @@ public class UserSecurity extends GeonetEntity implements Serializable {
 
     protected UserSecurity setSecurityNotificationsString(final String securityNotifications) {
         _securityNotifications.clear();
-        String[] parts = securityNotifications.split(",");
+        if (securityNotifications != null) {
+            String[] parts = securityNotifications.split(",");
 
-        for (String string : parts) {
-            if (!string.trim().isEmpty()) {
-                _securityNotifications.add(UserSecurityNotification.find(string));
+            for (String string : parts) {
+                if (!string.trim().isEmpty()) {
+                    _securityNotifications.add(UserSecurityNotification.find(string));
+                }
             }
         }
         return this;

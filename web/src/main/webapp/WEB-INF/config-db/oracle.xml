@@ -13,7 +13,7 @@
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="properties">
             <props>
-                <prop key="jdbc.basic.validationQuery">SELECT 1 FROM DUAL</prop>
+                <prop key="jdbcDataSource.validationQuery">SELECT 1 FROM DUAL</prop>
             </props>
         </property>
     </bean>

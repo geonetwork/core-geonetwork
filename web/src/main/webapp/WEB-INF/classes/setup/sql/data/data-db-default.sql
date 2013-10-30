@@ -575,7 +575,7 @@ INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/port', '25', 1, 640);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/username', '', 0, 642);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/password', '', 0, 643);
-INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/ssl', false, 2, 641);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/ssl', 'false', 2, 641);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/removedMetadata/dir', 'WEB-INF/data/removed', 0, 710);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/selectionmanager/maxrecords', '1000', 1, 910);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/csw/enable', 'true', 2, 1210);

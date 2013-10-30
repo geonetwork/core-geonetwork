@@ -97,7 +97,7 @@ public class DbLib {
 							query.executeUpdate();
 						}
 					} catch (Throwable e) {
-						Log.warning(Geonet.DB, "SQL failure for: " + sql + ", error is:" + e.getMessage());
+						Log.warning(Geonet.DB, "SQL failure for: " + sql + ", error is:" + e.getMessage(), e);
 
 						if (failOnError)
 							throw new RuntimeException(e);
