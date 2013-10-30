@@ -10,7 +10,9 @@
   <xsl:template mode="render-xml" match="*">
     <xsl:choose>
       <xsl:when test="$isEditing">
-        <textarea class="gn-textarea-xml">
+        <!-- TODO: could help editor to have basic
+        syntax highlighting. -->
+        <textarea class="gn-textarea-xml form-control">
           <xsl:apply-templates mode="gn-element-cleaner" select="."/>
         </textarea>
       </xsl:when>

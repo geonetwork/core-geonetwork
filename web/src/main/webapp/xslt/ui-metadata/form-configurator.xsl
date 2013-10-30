@@ -103,11 +103,16 @@
             -->
             <xsl:when test="@localName">
               <xsl:variable name="elementLocalName" select="@localName"/>
-              <saxon:call-template name="{concat('dispatch-', $schema)}">
-                <xsl:with-param name="base"
-                  select="$base/descendant-or-self::node()/gn:child[string(@name) = $elementLocalName]"
-                />
-              </saxon:call-template>
+              
+              <xsl:variable name="rootElement"
+                select="$base/descendant-or-self::node()/gn:child[string(@name) = $elementLocalName]"
+              />
+              
+              <xsl:if test="$rootElement">
+                <saxon:call-template name="{concat('dispatch-', $schema)}">
+                  <xsl:with-param name="base" select="$rootElement"/>
+                </saxon:call-template>
+              </xsl:if>
             </xsl:when>
             <!-- 2)
             

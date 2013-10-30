@@ -35,7 +35,49 @@
       <!-- The element containing the value eg. gco:Date -->
       <xsl:param name="childName" as="xs:string"/>
 <!--    <xsl:message>FieldType:<xsl:value-of select="$name"/>/<xsl:value-of select="$childName"/></xsl:message>
--->    <xsl:value-of select="if ($name = 'gmd:abstract' or $name = 'gmd:statement') 
+      
+      
+      md:abstract'">large</xsl:when>
+       name(.)='gmd:supplementalInformation'
+          or name(.)='gmd:purpose'
+          or name(.)='gmd:orderingInstructions'
+          or name(.)='gmd:statement'">medium</xsl:when>
+        <xsl:when test="name(.)='gmd:description'
+          or name(.)='gmd:specificUsage'
+          or name(.)='gmd:explanation'
+          or name(.)='gmd:credit'
+          or name(.)='gmd:evaluationMethodDescription'
+          or name(.)='gmd:measureDescription'
+          or name(.)='gmd:maintenanceNote'
+          or name(.)='gmd:useLimitation'
+          or name(.)='gmd:otherConstraints'
+          or name(.)='gmd:handlingDescription'
+          or name(.)='gmd:userNote'
+          or name(.)='gmd:checkPointDescription'
+          or name(.)='gmd:evaluationMethodDescription'
+          or name(.)='gmd:measureDescription'
+      
+      
+-->    <xsl:value-of select="if ($name = 'gmd:abstract' 
+                                  or $name = 'gmd:statement' 
+                                  or $name = 'gmd:supplementalInformation'
+                                  or $name = 'gmd:purpose'
+                                  or $name = 'gmd:orderingInstructions'
+                                  or $name = 'gmd:statement'
+                                  or $name = 'gmd:description'
+                                  or $name = 'gmd:specificUsage'
+                                  or $name = 'gmd:explanation'
+                                  or $name = 'gmd:credit'
+                                  or $name = 'gmd:evaluationMethodDescription'
+                                  or $name = 'gmd:measureDescription'
+                                  or $name = 'gmd:maintenanceNote'
+                                  or $name = 'gmd:useLimitation'
+                                  or $name = 'gmd:otherConstraints'
+                                  or $name = 'gmd:handlingDescription'
+                                  or $name = 'gmd:userNote'
+                                  or $name = 'gmd:checkPointDescription'
+                                  or $name = 'gmd:evaluationMethodDescription'
+                                  or $name = 'gmd:measureDescription') 
                           then 'textarea' 
                           else if ($name = 'gmd:denominator') 
                           then 'number' 

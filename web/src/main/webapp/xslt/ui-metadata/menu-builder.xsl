@@ -38,7 +38,7 @@
               </xsl:if>
               <!-- When a view contains multiple tab, the one with
                 the default attribute is the one to open -->
-              <a data-ng-click="switchToTab('{tab[@default]/@id}')">
+              <a data-ng-click="switchToTab('{tab[@default]/@id}', '{tab[@default]/@mode}')">
                 <xsl:variable name="viewName" select="@name"/>
                 <xsl:value-of select="$strings/*[name() = $viewName]"/>
               </a>
@@ -56,7 +56,7 @@
       <xsl:if test="$tab = @id">
         <xsl:attribute name="class">active</xsl:attribute>
       </xsl:if>
-      <a data-ng-click="switchToTab('{@id}')">
+      <a data-ng-click="switchToTab('{@id}', '{@mode}')">
         <xsl:variable name="tabId" select="@id"/>
         <xsl:value-of select="$strings/*[name() = $tabId]"/>
       </a>

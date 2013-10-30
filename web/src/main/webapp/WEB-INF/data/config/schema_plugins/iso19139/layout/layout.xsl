@@ -88,7 +88,8 @@
 		gmd:report/*|
 		gmd:result/*|
 		gmd:processStep|
-		gmd:lineage">
+		gmd:lineage|
+		*[namespace-uri(.) != $gnUri and $isFlatMode = false() and gmd:*]">
 
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
@@ -152,7 +153,7 @@
     <geonet:attribute name="codeSpace" add="true"/>
   
   -->
-  <xsl:template mode="mode-iso19139" priority="100" match="gmd:*[*/@codeList]|srv:*[*/@codeList]">
+  <xsl:template mode="mode-iso19139" priority="200" match="gmd:*[*/@codeList]|srv:*[*/@codeList]">
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
@@ -202,5 +203,60 @@
         </xsl:call-template>
         
     </xsl:template>
+  
+  
+  <!-- TODO match attributes -->
+  
+  <!-- Duration
+      
+       xsd:duration elements use the following format:
+       
+       Format: PnYnMnDTnHnMnS
+       
+       *  P indicates the period (required)
+       * nY indicates the number of years
+       * nM indicates the number of months
+       * nD indicates the number of days
+       * T indicates the start of a time section (required if you are going to specify hours, minutes, or seconds)
+       * nH indicates the number of hours
+       * nM indicates the number of minutes
+       * nS indicates the number of seconds
+       
+       A custom directive is created.
+  -->
+  <xsl:template mode="mode-iso19139" match="gts:TM_PeriodDuration|gml:duration" priority="200">
+    
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
+      <xsl:with-param name="value" select="."/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="xpath" select="$xpath"/>
+      <xsl:with-param name="directive" select="'gn-field-duration'"/>
+      <xsl:with-param name="editInfo" select="gn:element"/>
+    </xsl:call-template>
+    
+  </xsl:template>
+  
+  
+  
+  <xsl:template mode="mode-iso19139" match="gmd:parentIdentifier" priority="200">
+    
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
+      <xsl:with-param name="value" select="."/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="xpath" select="$xpath"/>
+      <xsl:with-param name="directive" select="'gn-field-cherry-pick-uuid'"/>
+      <xsl:with-param name="editInfo" select="gco:CharacterString/gn:element"/>
+    </xsl:call-template>
+    
+  </xsl:template>
+  
 
 </xsl:stylesheet>

@@ -31,5 +31,4 @@
   <xsl:variable name="withXPath" select="false()"/>
   
   <xsl:variable name="tab" select="/root/gui/currTab"/>
-  
 </xsl:stylesheet>

@@ -64,6 +64,7 @@
         <input type="hidden" id="version" name="version" value="{$metadata/gn:info/version}"/>
         <input type="hidden" id="currTab" name="currTab" value="{$tab}"/>
         <input type="hidden" id="minor" name="minor" value="{$isMinorEdit}"/>
+        <input type="hidden" id="flat" name="flat" value="{$isFlatMode}"/>
         <input type="hidden" name="showvalidationerrors" value="{$showValidationErrors}"/>
        
         <!-- Dispatch to profile mode -->

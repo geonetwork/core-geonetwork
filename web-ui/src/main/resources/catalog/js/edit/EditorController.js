@@ -1,9 +1,10 @@
 (function() {
   goog.provide('gn_editor_controller');
 
+  goog.require('gn_fields');
 
   var module = angular.module('gn_editor_controller',
-      []);
+      ['gn_fields']);
 
 
   /**
@@ -22,10 +23,7 @@
 
       $scope.metadataId = gnUtilityService.getUrlParameter('id');
       $scope.metadataUuid = gnUtilityService.getUrlParameter('uuid');
-      $scope.resourceId = gnUtilityService.getUrlParameter('resourceId');
       $scope.tab = gnUtilityService.getUrlParameter('tab');
-      $scope.flat = gnUtilityService.getUrlParameter('flat');
-      // TODO : propagate flat mode to all call
 
       /**
        * Animation duration for slide up/down
@@ -33,18 +31,18 @@
       var duration = 300;
 
       $scope.getEditorForm = function() {
-        // TODO: init by UUID or resourceId
         // TODO: Check requested metadata exist - return message if it happens
         // Would you like to create a new one ?
         return 'md.edit?id=' + $scope.metadataId +
             ($scope.tab ? '&currTab=' + $scope.tab : '');
       };
 
-      $scope.switchToTab = function(tabIdentifier) {
+      $scope.switchToTab = function(tabIdentifier, mode) {
         //          $scope.tab = tabIdentifier;
         //          FIXME: this trigger an edit
         //          better to use ng-model in the form ?
         $('#currTab')[0].value = tabIdentifier;
+        $('#flat')[0].value = mode === 'flat';
         $scope.save(true);
       };
 

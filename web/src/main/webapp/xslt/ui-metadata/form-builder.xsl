@@ -34,7 +34,13 @@
 
     <!-- For editing -->
     <xsl:param name="name" required="no" as="xs:string" select="generate-id()"/>
-    <xsl:param name="type" required="no" as="xs:string" select="'input'"/>
+    
+    <!-- The input type eg. number, date, datetime, email-->
+    <xsl:param name="type" required="no" as="xs:string" select="''"/>
+    
+    <!-- The AngularJS directive name eg. gn-field-duration -->
+    <xsl:param name="directive" required="no" as="xs:string" select="''"/>
+    
     <xsl:param name="hidden" required="no" as="xs:boolean" select="false()"/>
     <xsl:param name="editInfo" required="no"/>
     <xsl:param name="parentEditInfo" required="no"/>
@@ -72,38 +78,13 @@
     <!-- The form field identified by the element ref.
             This HTML element should be removed when action remove is called.
         -->
-    
-    <div class="form-group" id="gn-el-{$editInfo/@ref}">
-      <label for="gn-field-{$editInfo/@ref}"
-        class="col-lg-2 control-label {if ($isRequired) then 'gn-required' else ''}">
-        <xsl:if test="$xpath and $withXPath">
-          <xsl:attribute name="data-gn-xpath" select="$xpath"/>
-        </xsl:if>
-        <xsl:if test="$widget != ''">
-          <xsl:attribute name="data-gn-widget" select="$widget"/>
-          <xsl:if test="$widgetParams != ''">
-            <xsl:attribute name="data-gn-widget-params" select="$widgetParams"/>
-          </xsl:if>
-        </xsl:if>
-        <xsl:value-of select="$label"/>
-      </label>
-
-
-
-      <xsl:choose>
-        <xsl:when test="$isEditing">
-          <!-- TODO : Add custom fields -->
-          <div class="col-lg-8 gn-value">
-            <xsl:call-template name="render-form-field">
-              <xsl:with-param name="name" select="$name"/>
-              <xsl:with-param name="value" select="$value"/>
-              <xsl:with-param name="type" select="$type"/>
-              <xsl:with-param name="isRequired" select="$isRequired"/>
-              <xsl:with-param name="isDisabled" select="$isDisabled"/>
-              <xsl:with-param name="editInfo" select="$editInfo"/>
-              <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
-              <xsl:with-param name="listOfValues" select="$listOfValues"/>
-            </xsl:call-template>
+    <xsl:choose>
+      <xsl:when test="$directive != ''">
+        <div class="form-group" id="gn-el-{$editInfo/@ref}">
+          <div class="col-lg-10">
+            <xsl:attribute name="data-{$directive}" select="$value"/>
+            <xsl:attribute name="data-ref" select="concat('_', $editInfo/@ref)"/>
+            <xsl:attribute name="data-label" select="$label"/>
           </div>
           <div class="col-lg-2 gn-control">
             <xsl:if test="not($isDisabled)">
@@ -114,10 +95,55 @@
                 <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
               </xsl:call-template>
             </xsl:if>
-            <!-- TODO: Add the set on save text ? -->
           </div>
-
-          <!-- Next line display the add element control
+        </div>
+      </xsl:when>
+      <xsl:otherwise>
+        <div class="form-group" id="gn-el-{$editInfo/@ref}">
+          <label for="gn-field-{$editInfo/@ref}"
+            class="col-lg-2 control-label {if ($isRequired) then 'gn-required' else ''}">
+            <xsl:if test="$xpath and $withXPath">
+              <xsl:attribute name="data-gn-xpath" select="$xpath"/>
+            </xsl:if>
+            <xsl:if test="$widget != ''">
+              <xsl:attribute name="data-gn-widget" select="$widget"/>
+              <xsl:if test="$widgetParams != ''">
+                <xsl:attribute name="data-gn-widget-params" select="$widgetParams"/>
+              </xsl:if>
+            </xsl:if>
+            <xsl:value-of select="$label"/>
+          </label>
+          
+          
+          
+          <xsl:choose>
+            <xsl:when test="$isEditing">
+              <!-- TODO : Add custom fields -->
+              <div class="col-lg-8 gn-value">
+                <xsl:call-template name="render-form-field">
+                  <xsl:with-param name="name" select="$name"/>
+                  <xsl:with-param name="value" select="$value"/>
+                  <xsl:with-param name="type" select="$type"/>
+                  <xsl:with-param name="isRequired" select="$isRequired"/>
+                  <xsl:with-param name="isDisabled" select="$isDisabled"/>
+                  <xsl:with-param name="editInfo" select="$editInfo"/>
+                  <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+                  <xsl:with-param name="listOfValues" select="$listOfValues"/>
+                </xsl:call-template>
+              </div>
+              <div class="col-lg-2 gn-control">
+                <xsl:if test="not($isDisabled)">
+                  <xsl:call-template name="render-form-field-control-remove">
+                    <xsl:with-param name="name" select="name(.)"/>
+                    <xsl:with-param name="isRequired" select="$isRequired"/>
+                    <xsl:with-param name="editInfo" select="$editInfo"/>
+                    <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+                  </xsl:call-template>
+                </xsl:if>
+                <!-- TODO: Add the set on save text ? -->
+              </div>
+              
+              <!-- Next line display the add element control
                     the geonet:child element is taking care of that
                   <xsl:if test="not($isDisabled)">
                     <div class="col-lg-10"> </div>
@@ -130,19 +156,22 @@
                         </xsl:call-template>
                     </div>
                   </xsl:if> -->
-
-        </xsl:when>
-        <xsl:otherwise>
-          <div class="col-lg-10 gn-value">
-            <xsl:value-of select="$value"/>
-          </div>
-        </xsl:otherwise>
-      </xsl:choose>
-
-      <xsl:if test="$attributesSnippet">
-        <xsl:copy-of select="$attributesSnippet"/>
-      </xsl:if>
-    </div>
+              
+            </xsl:when>
+            <xsl:otherwise>
+              <div class="col-lg-10 gn-value">
+                <xsl:value-of select="$value"/>
+              </div>
+            </xsl:otherwise>
+          </xsl:choose>
+          
+          <xsl:if test="$attributesSnippet">
+            <xsl:copy-of select="$attributesSnippet"/>
+          </xsl:if>
+        </div>
+      </xsl:otherwise>
+    </xsl:choose>
+    
   </xsl:template>
 
 
@@ -208,7 +237,7 @@
         <textarea><xsl:copy-of select="$parentEditInfo"/></textarea>
         -->
 
-    <button class="btn icon-remove text-danger pull-right"
+    <button class="btn fa fa-minus text-danger pull-right"
       data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
       data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
       data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"/>
@@ -217,7 +246,7 @@
       Add a box element from here or after the current one ?
       
       <xsl:if test="$parentEditInfo and $parentEditInfo/@del = 'true'">
-      <button class="btn icon-remove btn-danger gn-remove"
+      <button class="btn fa fa-minus btn-danger gn-remove"
         data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"/>
     </xsl:if>-->
   </xsl:template>
@@ -273,7 +302,7 @@
                 TODO: Could be nice to select a type by default - a recommended type -->
           <xsl:when test="$childEditInfo/gn:choose">
             <div class="btn-group">
-              <button type="button" class="btn dropdown-toggle icon-plus" data-toggle="dropdown">
+              <button type="button" class="btn dropdown-toggle fa fa-plus" data-toggle="dropdown">
                 <span/>
                 <span class="caret"/>
               </button>
@@ -290,7 +319,7 @@
             </div>
           </xsl:when>
           <xsl:otherwise>
-            <i class="btn icon icon-plus"
+            <i class="btn fa fa-plus"
               data-ng-click="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');"
             />
           </xsl:otherwise>
@@ -396,11 +425,11 @@
     <xsl:param name="editInfo"/>
     <xsl:param name="parentEditInfo"/>
 
-    <!--<textarea><xsl:copy-of select="$editInfo"/></textarea>
-        <textarea><xsl:copy-of select="$parentEditInfo"/></textarea>
-        -->
-    <xsl:if test="$parentEditInfo and $parentEditInfo/@del = 'true'">
-      <button class="btn icon-remove text-danger gn-remove"
+<!--    <textarea><xsl:copy-of select="$editInfo"/></textarea>
+    <textarea><xsl:copy-of select="$parentEditInfo"/></textarea>-->
+    
+    <xsl:if test="($parentEditInfo and $parentEditInfo/@del = 'true') or $parentEditInfo = ''">
+      <button class="btn fa fa-minus text-danger gn-remove"
         data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
         data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
         data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"/>
@@ -417,7 +446,7 @@
 
     <!-- Add icon for last element of its kind -->
     <xsl:if test="$parentEditInfo and $parentEditInfo/@add = 'true' and not($parentEditInfo/@down)">
-      <button class="btn icon-plus gn-add"
+      <button class="btn fa fa-plus gn-add"
         data-ng-click="add({$parentEditInfo/@parent}, '{$name}', {$editInfo/@ref})"/>
     </xsl:if>
   </xsl:template>

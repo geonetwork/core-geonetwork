@@ -10,6 +10,8 @@ goog.addDependency('../../components/category/CategoryDirective.js', ['gn_catego
 goog.addDependency('../../components/category/CategoryModule.js', ['gn_category'], ['gn_category_directive']);
 goog.addDependency('../../components/dv/GaugeDirective.js', ['gn_gauge_directive'], []);
 goog.addDependency('../../components/dv/GaugeModule.js', ['gn_gauge'], ['gn_gauge_directive']);
+goog.addDependency('../../components/edit/FieldsModule.js', ['gn_fields'], ['gn_field_duration_directive']);
+goog.addDependency('../../components/edit/fieldduration/FieldDurationDirective.js', ['gn_field_duration_directive'], []);
 goog.addDependency('../../components/languageswitcher/LanguageSwitcherDirective.js', ['gn_language_switcher_directive'], []);
 goog.addDependency('../../components/languageswitcher/LanguageSwitcherModule.js', ['gn_language_switcher'], ['gn_language_switcher_directive']);
 goog.addDependency('../../components/metadatamanager/MetadataManagerModule.js', ['gn_metadata_manager'], ['gn_metadata_manager_service']);
@@ -49,5 +51,5 @@ goog.addDependency('../../js/admin/StandardsController.js', ['gn_standards_contr
 goog.addDependency('../../js/admin/SystemSettingsController.js', ['gn_system_settings_controller'], []);
 goog.addDependency('../../js/admin/ThesaurusController.js', ['gn_thesaurus_controller'], ['gn_thesaurus_type']);
 goog.addDependency('../../js/admin/UserGroupController.js', ['gn_usergroup_controller'], ['gn_dbtranslation']);
-goog.addDependency('../../js/edit/EditorController.js', ['gn_editor_controller'], []);
+goog.addDependency('../../js/edit/EditorController.js', ['gn_editor_controller'], ['gn_fields']);
 goog.addDependency('../../js/search/SearchController.js', ['gn_search_controller'], []);
