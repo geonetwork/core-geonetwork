@@ -23,12 +23,15 @@
 
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
+import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.resources.ResourceManager;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Xml;
 import jeeves.utils.XmlRequest;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -39,9 +42,12 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
+import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.thumbnail.Set;
@@ -59,6 +65,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -138,7 +145,7 @@ import java.util.Map;
  * @author fxprunayre
  *   
  */
-class Harvester extends BaseAligner
+class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 {
 	
 	
@@ -161,7 +168,7 @@ class Harvester extends BaseAligner
 		this.dbms   = dbms;
 		this.params = params;
 
-		result = new HarvestResult ();
+		result = new HarvestResult();
 		
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getBean(DataManager.class);
@@ -176,8 +183,10 @@ class Harvester extends BaseAligner
 	/** 
      * Start the harvesting of a WMS, WFS or WCS node.
      */
-	public HarvestResult harvest() throws Exception {
+	public HarvestResult harvest(Logger log) throws Exception {
         Element xml;
+        
+        this.log = log;
 
         log.info("Retrieving remote metadata information for : " + params.name);
         
@@ -613,7 +622,7 @@ class Harvester extends BaseAligner
 		
 		
 		//--- using GetCapabilities document
-		if (!loaded){
+		if (!loaded && params.useLayer){
 			try {
 				//--- set XSL param to filter on layer and set uuid
 				Map<String, String> param = new HashMap<String, String>();
@@ -907,6 +916,15 @@ class Harvester extends BaseAligner
 		public Double miny = -90.0;
 		public Double maxx = 180.0;
 		public Double maxy = 90.0;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.fao.geonet.kernel.harvest.harvester.IHarvester#getErrors()
+	 */
+	@Override
+	public List<HarvestError> getErrors() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

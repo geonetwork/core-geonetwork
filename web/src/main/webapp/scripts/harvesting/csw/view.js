@@ -57,10 +57,13 @@ function init()
 		{ id:'csw.capabUrl',    type:'length',   minSize :1,  maxSize :200 },
 		{ id:'csw.capabUrl',    type:'url' },
 		{ id:'csw.username',    type:'length',   minSize :0,  maxSize :200 },
-		{ id:'csw.password',    type:'length',   minSize :0,  maxSize :200 }
+		{ id:'csw.password',    type:'length',   minSize :0,  maxSize :200 },
+		{ id:'csw.hopCount',    type:'integer',   minSize :0,  maxSize :200 },
+	 	{ id:'csw.queryScope',    type:'length',   minSize :0,  maxSize :200 }
 	]);
 
 	shower = new Shower('csw.useAccount', 'csw.account');
+	showerDistributed = new Shower('csw.queryScope', 'csw.queryScopeContainer');
 }
 
 //=====================================================================================
@@ -85,6 +88,7 @@ function setEmpty()
 		}
 
 	shower.update();
+	showerDistributed.update();
 	updateIcon();
 }
 
@@ -100,6 +104,8 @@ function setData(node)
 	hvutil.setOption(site, 'capabilitiesUrl', 'csw.capabUrl');
 	hvutil.setOption(site, 'icon',            'csw.icon');
     hvutil.setOption(site, 'rejectDuplicateResource', 'csw.rejectDuplicateResource');
+    hvutil.setOption(site, 'hopCount', 'csw.hopCount');
+    hvutil.setOption(site, 'queryScope', 'csw.queryScope');
     
 	//--- add search entries
 	
@@ -122,6 +128,7 @@ function setData(node)
 	this.selectCategories(node);	
 	
 	shower.update();
+	showerDistributed.update();
 	updateIcon();
 }
 
@@ -134,6 +141,8 @@ function getData()
 	data.CAPAB_URL = $F('csw.capabUrl');
 	data.ICON      = $F('csw.icon');
 	data.REJECTDUPLICATERESOURCE = $('csw.rejectDuplicateResource').checked;
+	data.HOPCOUNT = $F('csw.hopCount');
+	data.QUERYSCOPE = $('csw.queryScope').checked;
 	//--- retrieve search information
 	
 	var searchData = [];

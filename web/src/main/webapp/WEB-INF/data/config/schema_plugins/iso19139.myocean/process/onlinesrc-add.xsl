@@ -18,6 +18,8 @@ attached it to the metadata for data.
     <xsl:param name="url"/>
     <xsl:param name="name"/>
     <xsl:param name="desc"/>
+    <xsl:param name="serviceDescr"/>
+    <xsl:param name="serviceName"/>
     
     <!-- ============================================================================= -->
 
@@ -55,8 +57,8 @@ attached it to the metadata for data.
                         <gmd:MD_Distribution>
                             <xsl:copy-of
                                 select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"/>
-                            
-                            <xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor"/>
+                            <xsl:copy-of
+								select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor"/>
                             
                             <!-- Copy non existing ressource attached to one responsible party  -->
                             <xsl:for-each select="//extra/gmd:MD_Metadata">
@@ -64,12 +66,11 @@ attached it to the metadata for data.
                             </xsl:for-each>
                 
                             <xsl:if test="$url">
-                                <xsl:for-each select="tokenize($name, ',')">
-                                    <xsl:variable name="pos" select="position()"/>
-                                    
-                                       <gmd:distributor>
-                                           <gmd:MD_Distributor>
-                                            <!-- the following distributorContact description may be previouly populated by harvesting, edition with pop up should not remove this, when created with manual pop-up the tag is empty -->     <gmd:distributorContact/> 
+                                <xsl:choose>
+                					<xsl:when test="$protocol != 'OGC:WMS'">
+                                    <gmd:distributor>
+                                        <gmd:MD_Distributor>
+                                        	<gmd:distributorContact/>
                                             <gmd:distributorFormat/>
                                             <gmd:distributorTransferOptions>
                                                 <gmd:MD_DigitalTransferOptions>
@@ -90,38 +91,111 @@ attached it to the metadata for data.
                                                             </gmd:protocol>
                                                             <gmd:name>
                                                                 <gco:CharacterString>
-                                                                <xsl:value-of select="."/>
+                                                                <xsl:value-of select="$name"/>
                                                                 </gco:CharacterString>
                                                             </gmd:name>
                                                             <gmd:description>
                                                                 <gco:CharacterString>
-                                                                <xsl:value-of select="tokenize($desc, ',')[position() = $pos]"/>
+                                                                <xsl:value-of select="$desc"/>
                                                                 </gco:CharacterString>
                                                             </gmd:description>
+                                                            <gmd:function>
+                                                                <gmd:CI_OnLineFunctionCode
+                                                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnL
+                                                                ineFunctionCode" codeListValue=""/>
+                                                            </gmd:function>
                                                         </gmd:CI_OnlineResource>
                                                     </gmd:onLine>
                                                   </gmd:MD_DigitalTransferOptions>
                                             </gmd:distributorTransferOptions>
                                         </gmd:MD_Distributor>
                                     </gmd:distributor>
-                                </xsl:for-each>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <gmd:distributor>
+                                        <gmd:MD_Distributor>
+                                        	<gmd:distributorContact/>
+                                            <gmd:distributorFormat />
+                                            <gmd:distributorTransferOptions>
+                                                <gmd:MD_DigitalTransferOptions>
+                                                    <gmd:onLine>
+                                                        <xsl:if test="$uuidref">
+                                                            <xsl:attribute name="uuidref" select="$uuidref"/>
+                                                        </xsl:if>
+                                                        <gmd:CI_OnlineResource>
+                                                            <gmd:linkage>
+                                                                <gmd:URL>
+                                                                <xsl:value-of select="$url"/>
+                                                                </gmd:URL>
+                                                            </gmd:linkage>
+                                                            <gmd:protocol>
+                                                                <gco:CharacterString>
+                                                                <xsl:value-of select="'OGC:WMS:getCapabilities'"/>
+                                                                </gco:CharacterString>
+                                                            </gmd:protocol>
+                                                            <gmd:name>
+                                                                <gco:CharacterString>
+                                                                <xsl:value-of select="$serviceName"/>
+                                                                </gco:CharacterString>
+                                                            </gmd:name>
+                                                            <gmd:description>
+                                                                <gco:CharacterString>
+                                                                <xsl:value-of select="$serviceDescr"/>
+                                                                </gco:CharacterString>
+                                                            </gmd:description>
+                                                            <gmd:function>
+                                                                <gmd:CI_OnLineFunctionCode
+                                                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnL
+                                                                ineFunctionCode" codeListValue=""/>
+                                                            </gmd:function>
+                                                        </gmd:CI_OnlineResource>
+                                                    </gmd:onLine>
+                                                    
+                                                    <xsl:for-each select="tokenize($name, ',')">
+                                                        <xsl:variable name="pos" select="position()" />
+                                                        <gmd:onLine>
+                                                            <xsl:if test="$uuidref">
+                                                                <xsl:attribute name="uuidref" select="$uuidref" />
+                                                            </xsl:if>
+                                                            <gmd:CI_OnlineResource>
+                                                                <gmd:linkage>
+                                                                    <gmd:URL>
+                                                                        <xsl:value-of select="$url" />
+                                                                    </gmd:URL>
+                                                                </gmd:linkage>
+                                                                <gmd:protocol>
+                                                                    <gco:CharacterString>
+                                                                        <xsl:value-of select="$protocol" />
+                                                                    </gco:CharacterString>
+                                                                </gmd:protocol>
+                                                                <gmd:name>
+                                                                    <gco:CharacterString>
+                                                                        <xsl:value-of select="." />
+                                                                    </gco:CharacterString>
+                                                                </gmd:name>
+                                                                <gmd:description>
+                                                                    <gco:CharacterString>
+                                                                        <xsl:value-of select="tokenize($desc, ',')[position() = $pos]" />
+                                                                    </gco:CharacterString>
+                                                                </gmd:description>
+                                                                <gmd:function>
+                                                                    <gmd:CI_OnLineFunctionCode
+                                                                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnL
+                                                                    ineFunctionCode" codeListValue=""/>
+                                                                </gmd:function>
+                                                                
+                                                            </gmd:CI_OnlineResource>
+                                                        </gmd:onLine>
+                                                    </xsl:for-each>
+                                                </gmd:MD_DigitalTransferOptions>
+                                            </gmd:distributorTransferOptions>
+                                        </gmd:MD_Distributor>
+                                    </gmd:distributor>
+                                </xsl:otherwise>
+                                </xsl:choose>
                             </xsl:if>
-                                    
-                            <gmd:transferOptions>
-                                <gmd:MD_DigitalTransferOptions>
-                                    <xsl:copy-of
-                                        select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:unitsOfDistribution"/>
-                                    <xsl:copy-of
-                                        select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:transferSize"/>
-                                    <xsl:copy-of
-                                        select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:onLine"/>
-                                    <xsl:copy-of
-                                        select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:offLine"
-                                    />
-                                </gmd:MD_DigitalTransferOptions>
-                            </gmd:transferOptions>
                             <xsl:copy-of
-                                select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[position() > 1]"
+                                select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions"
                             />
                         </gmd:MD_Distribution>
                         

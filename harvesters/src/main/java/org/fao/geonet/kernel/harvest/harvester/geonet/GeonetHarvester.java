@@ -23,23 +23,26 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
+import java.sql.SQLException;
+import java.util.UUID;
+
 import jeeves.exceptions.BadInputEx;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
+
+import org.apache.commons.lang.time.StopWatch;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
-import java.sql.SQLException;
-import java.util.UUID;
-
 //=============================================================================
 
-public class GeonetHarvester extends AbstractHarvester
+public class GeonetHarvester extends AbstractHarvester<HarvestResult>
 {
 	public static final String TYPE = "geonetwork";
 
@@ -201,7 +204,7 @@ public class GeonetHarvester extends AbstractHarvester
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
 		Harvester h = new Harvester(log, context, dbms, params);
-		result = h.harvest();
+		result = h.harvest(log);
 	}
 
 	//---------------------------------------------------------------------------

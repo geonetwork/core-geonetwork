@@ -29,8 +29,10 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+
 import org.fao.geonet.arcgis.ArcSDEMetadataAdapter;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -57,10 +59,11 @@ import java.util.UUID;
  * @author heikki doeleman
  *
  */
-public class ArcSDEHarvester extends AbstractHarvester {
+public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
 	private ArcSDEParams params;
-    private HarvestResult result;
+    //FIXME use custom class?
+    private BaseAligner aligner = new BaseAligner() {};
 	
 	static final String ARCSDE_LOG_MODULE_NAME = Geonet.HARVESTER + ".arcsde";
 	private static final String ARC_TO_ISO19115_TRANSFORMER = "ArcCatalog8_to_ISO19115.xsl";
@@ -234,10 +237,10 @@ public class ArcSDEHarvester extends AbstractHarvester {
         dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, new ISODate().toString(), false);
 
 		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
 
 		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+		aligner.addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 		dbms.commit();
 		dataMan.indexMetadata(dbms, id);
@@ -271,8 +274,8 @@ public class ArcSDEHarvester extends AbstractHarvester {
 		dataMan.setTemplateExt(dbms, iId, "n", null);
 		dataMan.setHarvestedExt(dbms, iId, source);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+		aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+		aligner.addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 		dbms.commit();
 		dataMan.indexMetadata(dbms, id);

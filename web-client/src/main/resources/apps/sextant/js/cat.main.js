@@ -504,8 +504,10 @@ cat.app = function() {
 			buttonAlign : 'left',
 			resetCb : function() {
 				this.getForm().reset();
-				var elt = this.findByType('gn_categorytree', true);
-				elt[0].reset();
+				var trees = this.findByType('gn_categorytree', true);
+				Ext.each(trees, function (tree) {
+				    tree.reset();
+				});
 				this.find('id', 'E__groupPublished')[0].getStore().load();
 				catalogue.metadataStore.removeAll();
 				resetResultPanels();
@@ -658,16 +660,33 @@ cat.app = function() {
 		return searchForm;
 	}
 	
-	function modalActionFn(title, url, cb){
-        if (url) {
+	function modalActionFn(title, urlOrPanel, cb){
+        if (urlOrPanel) {
             var app = this, win, defaultCb = function(el, success, response, options) {
                 if (!success){
                     app.showError('Catalogue error', title);
                     win.close();
                 }
             };
+            
+            if(typeof(urlOrPanel) == 'string') {
+                item = new Ext.Panel({
+                    autoLoad: {
+                        url: urlOrPanel,
+                        callback: cb || defaultCb,
+                        scope: win
+                    },
+                    border: false,
+                    frame: false,
+                    autoScroll: true
+                })
+            }
+            else {
+                item =urlOrPanel;
+            }
+            
             win = new Ext.Window({
-            	id: 'gn-modalWindow',
+            	id: 'modalWindow',
                 layout: 'fit',
                 closeAction: 'destroy',
                 maximized: false,
@@ -681,16 +700,7 @@ cat.app = function() {
                 cls: 'view-win',
                 bodyStyle:'padding:10px',
                 title: title,
-                items: new Ext.Panel({
-                	border:false,
-                    autoLoad: {
-                        url: url,
-                        callback: cb || defaultCb,
-                        scope: win
-                    },
-                    frame: false,
-                    autoScroll: true
-                })
+                items: item
             });
             win.show(this);
         }

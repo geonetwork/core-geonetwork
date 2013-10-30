@@ -207,12 +207,13 @@ Le comité de pilotage est actuellement composé des personnes suivantes :
 Contributeurs anciens et actuels
 --------------------------------
 
-Les développeurs actifs sur le trunk sont les suivants :
+Les committers sur le trunk sont les suivants :
 
+- María Arias de Reyna
 - Mathieu Coudert
 - Heikki Doeleman
-- Jose Garcia
 - Jesse Eichar
+- Jose Garcia
 - Roberto Giaccio
 - Simon Pigot
 - Francois Prunayre	

@@ -266,7 +266,10 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             parameters += "&uuidref=" + uuid;
         } else if (type === 'onlinesrc') {
             parameters += "&url=" + encodeURIComponent(id);
-            parameters += "&name=" + encodeURIComponent(uuid.trim().split(' ')[0]);
+
+            var name = uuid.split('||')[0].trim().split(' ');
+            name.pop();
+            parameters += "&name=" + encodeURIComponent(name.join(' '));
             
             // if a file is upload remove the file before removing the link
             if (uuid.indexOf('WWW:DOWNLOAD-1.0-http--download') !== -1) {
@@ -324,8 +327,18 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
 //                this.removeUploadedFile(uuid, parameters);
 //                return;
 //            }
-            var info = uuid.trim().split(' ');
-            this.addRelation(type, id, info.shift(), info.join(' ').substring(1, info.join(' ').length -1), descr);
+            var protocol, names = '';
+            var uuids = uuid.split('||');
+            Ext.each(uuids, function(curUuid) {
+                var info = curUuid.trim().split(' ');
+                protocol = info.pop();
+                if(names != '') {
+                    names += '||';
+                }
+                names += info.join(' ');
+            });
+            
+            this.addRelation(type, id, names, protocol.substring(1, protocol.length -1), descr);
         }
     },
     
@@ -400,7 +413,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 '<tpl if="type !== \'thumbnail\'">',
                   '<li alt="{abstract}">' + 
                     '<tpl if="type === \'onlinesrc\'">',
-                      '<a href="{id}" target="_blank">{title}</a> ',
+                      '<a href="{id}" target="_blank">{[this.getTitle(values.title)]}</a> ',
                     '</tpl>',
                     '<tpl if="type !== \'onlinesrc\'">',
                       '{title} ',
@@ -422,6 +435,10 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             {
                 isDownloadProtocol: function(protocol){
                     return protocol.indexOf('WWW:DOWNLOAD-1.0-http--download') >= 0;
+                },
+                getTitle: function(title) {
+                    if(title.indexOf('||') < 0) return title;
+                    return title.split('||')[0];
                 }
             }
         );
@@ -455,6 +472,50 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 // Group title with a place for actions
                 var id = 'add' + this.sep + type;
                 var mds = store.query('type', type);
+                
+                // Specific MyOcean
+                if(type == 'onlinesrc') {
+                    var datasets = [];
+                    
+                    // get a list of unique pair name + url
+                    mds.each(function(md) {
+                        var dsInStore = false;
+                        for(var i=0;i<datasets.length;i++) {
+                            if(datasets[i].url == md.get('id') && datasets[i].parentName == md.get('parentName')) {
+                                dsInStore = true;
+                                break;
+                            }
+                        }
+                        if(!dsInStore) {
+                            datasets.push({url:md.get('id'),parentName:md.get('parentName')});
+                        }
+                    });
+                    
+                    Ext.each(datasets, function(ds) {
+                        // get all relations that belong to the same dataset
+                        var mdsPerDataset = store.queryBy(function(rec,id) {
+                            return (rec.get('id') == ds.url && rec.get('parentName') == ds.parentName);
+                        });
+                        if(mdsPerDataset.getCount() > 1) {
+                            var rec = new store.recordType();
+                            mdsPerDataset.each(function(mdPerUrl) {
+                                store.fields.each(function(f) {
+                                    rec.set(f.name, (rec.get(f.name) ? rec.get(f.name) + '||' : '') + mdPerUrl.get(f.name)); 
+                                });
+                                mds.remove(mdPerUrl);
+                            });
+                            rec.set('id', ds.url);
+                            rec.set('type', type);
+                            mds.add(rec);
+                        }
+                    });
+                    mds.sort('ASC', function(a,b,c) {
+                        if (a.get('title') === b.get('title')) {
+                            return 0;
+                        }
+                        return a.get('title') < b.get('title') ? -1 : 1;
+                    });
+                }
                 
                 mds.items.type = type;
                 if (panel.addMenuByType || (panel.addMenuByType === false && mds.items.length !== 0)) {
