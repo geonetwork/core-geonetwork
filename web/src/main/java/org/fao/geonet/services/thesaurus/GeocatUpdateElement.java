@@ -133,7 +133,7 @@ public class GeocatUpdateElement implements Service {
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         DataManager dm = gc.getDataManager();
         for (MetadataRecord metadataRecord : referencingMetadata) {
-            dm.indexMetadata(dbms, metadataRecord.id, true, context, false, false);
+            dm.indexMetadata(dbms, metadataRecord.id, true, context, false, false, true);
         }
     }
 

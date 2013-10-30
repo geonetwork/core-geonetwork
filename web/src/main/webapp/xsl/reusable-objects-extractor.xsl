@@ -48,12 +48,12 @@
         <xsl:copy-of select="." />
     </xsl:template>
 
-    <xsl:template match="gmd:resourceFormat|gmd:distributionFormat"
+    <xsl:template match="gmd:resourceFormat|gmd:distributionFormat|gmd:distributorFormat"
         mode="metadata">
         <formatsPlaceholder/>
     </xsl:template>
 
-    <xsl:template match="gmd:resourceFormat|gmd:distributionFormat"
+    <xsl:template match="gmd:resourceFormat|gmd:distributionFormat|gmd:distributorFormat"
         mode="formats">
         <xsl:copy-of select="." />
     </xsl:template>

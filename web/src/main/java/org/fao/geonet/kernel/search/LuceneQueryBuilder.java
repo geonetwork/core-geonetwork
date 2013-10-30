@@ -374,6 +374,9 @@ public class LuceneQueryBuilder {
         for (String fieldValue : fieldValues) {
             if (LuceneIndexField.ANY.equals(fieldName)) {
                 addAnyTextQuery(fieldValue, similarity, (criteriaIsASet ? bq : query));
+            }      // GEOCAT HACK
+             else if (fieldName.equals("format")) {
+                addFormatQuery(fieldValue, (criteriaIsASet ? bq : query));
             }
             else if (LuceneIndexField.UUID.equals(fieldName) || SearchParameter.UUID.equals(fieldName)) {
                 addUUIDQuery(fieldValue, similarity, criteriaIsASet, bq, query);
@@ -1319,4 +1322,16 @@ public class LuceneQueryBuilder {
 
         return booleanQuery;
     }
+
+    //GEOCAT specific
+    private void addFormatQuery(String fieldValue, BooleanQuery booleanClauses) {
+        if (fieldValue != null) {
+            String[] parts = fieldValue.split("_", 2);
+            booleanClauses.add(new BooleanClause(new TermQuery(new Term("format", parts[0])), BooleanClause.Occur.MUST));
+            if (parts.length == 2) {
+                booleanClauses.add(new BooleanClause(new TermQuery(new Term("formatversion", parts[1])), BooleanClause.Occur.MUST));
+            }
+        }
+    }
+
 }

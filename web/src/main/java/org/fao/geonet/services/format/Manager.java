@@ -21,8 +21,6 @@
 
 package org.fao.geonet.services.format;
 
-import static org.fao.geonet.services.extent.ExtentHelper.ID;
-
 import com.google.common.base.Functions;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.kernel.DataManager;
@@ -123,7 +121,7 @@ public class Manager implements Service {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
                 DataManager dm = gc.getDataManager();
                 for (MetadataRecord metadataRecord : referencingMetadata) {
-                    dm.indexMetadata(dbms, metadataRecord.id, true, context, false, false);
+                    dm.indexMetadata(dbms, metadataRecord.id, true, context, false, false, true);
                 }
             }
 		}

@@ -2133,4 +2133,23 @@ public class LuceneQueryTest extends TestCase {
 		// verify query
 		assertEquals("unexpected Lucene query", "+paper:true +_isTemplate:n", query.toString());
     }
+
+
+   /**
+	 * 'download' parameter.
+	 */
+	public void testFormat() {
+		// create request object with digital=on, paper=off
+		JDOMFactory factory = new DefaultJDOMFactory();
+		Element request = factory.element("request");
+		Element any = factory.element("format");
+		any.addContent("formatname_formatversion");
+		request.addContent(any);
+        // build lucene query input
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+		// build lucene query
+		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
+		// verify query
+		assertEquals("unexpected Lucene query", "+format:formatname +formatversion:formatversion +_isTemplate:n", query.toString());
+    }
 }
