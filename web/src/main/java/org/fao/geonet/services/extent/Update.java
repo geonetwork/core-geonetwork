@@ -190,7 +190,7 @@ public class Update implements Service
 
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         for (MetadataRecord metadataRecord : referencingMetadata) {
-            dm.indexMetadata(dbms, metadataRecord.id, false, context, false, false);
+            dm.indexMetadata(dbms, metadataRecord.id, true, context, false, false);
         }
 
 

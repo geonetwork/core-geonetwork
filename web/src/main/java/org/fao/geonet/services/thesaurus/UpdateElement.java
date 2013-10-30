@@ -139,20 +139,7 @@ public class UpdateElement implements Service {
 		elResp.addContent(new Element("selected").setText(ref));
 		elResp.addContent(new Element("mode").setText("edit"));
 
-        final KeywordsStrategy strategy = new KeywordsStrategy(manager, context.getAppPath(), context.getBaseUrl(), context.getLanguage());
-        ArrayList<String> fields = new ArrayList<String>();
-
-        fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
-        fields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
-        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, newid, false,
-                Functions.<String>identity());
-
-
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        DataManager dm = gc.getDataManager();
-        for (MetadataRecord metadataRecord : referencingMetadata) {
-            dm.indexMetadata(dbms, metadataRecord.id, false, context, false, false);
-        }
+        GeocatUpdateElement.reindex(context, gc, newid, manager);
 
         return elResp;
 	}
