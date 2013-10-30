@@ -23,7 +23,7 @@ public class Setting extends GeonetEntity {
     private int position;
 
     @Id
-    @Column(name = "name", nullable = false, length = 512)
+    @Column(name = "name", nullable = false, length = 255/* mysql cannot accept it any bigger if it is to be the id */)
     public String getName() {
         return name;
     }

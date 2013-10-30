@@ -26,11 +26,11 @@ public class CustomElementSetRepositoryTest extends AbstractSpringDataTest {
         CustomElementSet info2 = newCustomElementSet();
         info2 = _repo.save(info2);
 
-        CustomElementSet info = _repo.findOne(info1.getXpath());
+        CustomElementSet info = _repo.findOne(info1.getXpathHashcode());
 
         assertEquals(info1.getXpath(), info.getXpath());
 
-        info = _repo.findOne(info2.getXpath());
+        info = _repo.findOne(info2.getXpathHashcode());
 
         assertEquals(info2.getXpath(), info.getXpath());
     }

@@ -7,5 +7,5 @@ import org.fao.geonet.domain.CustomElementSet;
  *
  * @author Jesse
  */
-public interface CustomElementSetRepository extends GeonetRepository<CustomElementSet, String> {
+public interface CustomElementSetRepository extends GeonetRepository<CustomElementSet, Integer> {
 }

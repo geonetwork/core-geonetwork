@@ -13,13 +13,33 @@ import javax.persistence.*;
 public class CustomElementSet extends GeonetEntity {
     private static final int XPATH_COLUMN_LENGTH = 1000;
     private String _xpath;
+    private int _xpathHashcode;
+
+    /**
+     * The hashcode of the xpath.  This has to be the id because mysql + JPA have a problem with a Ids longer than 255 characters.
+     *
+     * @return the hashcode of the xpath.
+     */
+    @Id
+    public int getXpathHashcode() {
+        return _xpathHashcode;
+    }
+
+    /**
+     * Set the xpath hashcode.
+     * Method is protected because it is set when calling setXPath.
+     *
+     * @param xpathHashcode the hashcode.
+     */
+    protected void setXpathHashcode(int xpathHashcode) {
+        this._xpathHashcode = xpathHashcode;
+    }
 
     /**
      * Get the xpath of the element to include in the element set. Each included element is described by a full xpath relative to the
      * document root. <br/>
      * This is a required element.
      */
-    @Id
     @Column(length = XPATH_COLUMN_LENGTH, nullable = false)
     public String getXpath() {
         return _xpath;
@@ -35,6 +55,7 @@ public class CustomElementSet extends GeonetEntity {
      */
     public CustomElementSet setXpath(final String xpath) {
         this._xpath = xpath;
+        setXpathHashcode(xpath.hashCode());
         return this;
     }
 }
