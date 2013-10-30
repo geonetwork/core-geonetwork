@@ -33,6 +33,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import com.vividsolutions.jts.geom.*;
+import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -67,9 +69,8 @@ import org.opengis.geometry.BoundingBox;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
+
 
 /**
  * Obtains the geometry and description from the wfs (configured in config.xml)
@@ -521,6 +522,8 @@ public class Get implements Service
         Geometry transformed = JTS.transform((Geometry) feature.getDefaultGeometry(), transform );
         reducePrecision(transformed, coordPrecision);
 
+        transformed = removeDuplicatePoints(transformed);
+
         ExtentHelper.addGmlId(transformed);
         encoder.encode(transformed, org.geotools.gml3.GML.geometryMember, outputStream);
         String gmlString = outputStream.toString();
@@ -535,6 +538,88 @@ public class Get implements Service
         } while (iter.hasNext());
 
         throw new RuntimeException(transform+ " was not encoded correctly to GML");
+    }
+
+    static Geometry removeDuplicatePoints(Geometry geometry) {
+        GeometryFactory factory = new GeometryFactory();
+
+        if (geometry instanceof MultiPolygon) {
+            MultiPolygon multiPolygon = (MultiPolygon) geometry;
+            Polygon[] polygons = new Polygon[multiPolygon.getNumGeometries()];
+            for (int i = 0; i < multiPolygon.getNumGeometries(); i++) {
+                polygons[i] = (Polygon) removeDuplicatePoints(multiPolygon.getGeometryN(i));
+            }
+
+            return factory.createMultiPolygon(polygons);
+        } else if (geometry instanceof Polygon) {
+            Polygon polygon = (Polygon) geometry;
+
+            LinearRing shell = (LinearRing) removeDuplicatePoints(polygon.getExteriorRing());
+
+            LinearRing[] holes = new LinearRing[polygon.getNumInteriorRing()];
+            for (int i = 0; i < polygon.getNumInteriorRing(); i++) {
+                holes[i] = (LinearRing) removeDuplicatePoints(polygon.getInteriorRingN(i));
+            }
+
+            return factory.createPolygon(shell, holes);
+        } else if (geometry instanceof MultiLineString) {
+            MultiLineString lineString = (MultiLineString) geometry;
+            LineString[] lineStrings = new LineString[lineString.getNumGeometries()];
+            for (int i = 0; i < lineString.getNumGeometries(); i++) {
+                lineStrings[i] = (LineString) removeDuplicatePoints(lineString.getGeometryN(i));
+            }
+
+            return factory.createMultiLineString(lineStrings);
+        } else if (geometry instanceof LinearRing) {
+            CoordinateSequence coords = removeDuplicatePoints(((LineString) geometry).getCoordinateSequence());
+
+            return factory.createLinearRing(coords);
+        } else if (geometry instanceof LineString) {
+            CoordinateSequence coords = removeDuplicatePoints(((LineString) geometry).getCoordinateSequence());
+
+            return factory.createLineString(coords);
+        } else {
+            return geometry;
+        }
+    }
+
+    private static CoordinateSequence removeDuplicatePoints(CoordinateSequence coordinateSequence) {
+        if (coordinateSequence.size() == 0) {
+            return coordinateSequence;
+        }
+        final Coordinate[] coordinates = new Coordinate[coordinateSequence.size()];
+
+        int coords = 1;
+        double x,y,z;
+        x = coordinateSequence.getX(0);
+        y = coordinateSequence.getY(0);
+        z = coordinateSequence.getOrdinate(0, 2);
+        coordinates[0] = coordinateSequence.getCoordinate(0);
+
+        for (int i = 1; i < coordinates.length; i++) {
+            double nx = coordinateSequence.getX(i);
+            double ny = coordinateSequence.getY(i);
+            double nz = coordinateSequence.getOrdinate(i, 2);
+
+            if (Math.abs(x - nx) > 0.0000001 ||
+                Math.abs(y - ny) > 0.0000001 ||
+                Math.abs(z - nz) > 0.0000001) {
+                coordinates[coords++] = coordinateSequence.getCoordinate(i);
+            }
+
+            x = nx;
+            y = ny;
+            z = nz;
+
+        }
+
+        if (coords < coordinates.length) {
+            final Coordinate[] finalCoords = new Coordinate[coords];
+            System.arraycopy(coordinates, 0, finalCoords, 0, coords);
+            return new CoordinateArraySequence(finalCoords);
+        }
+
+        return coordinateSequence;
     }
 
 }

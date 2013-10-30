@@ -9,6 +9,8 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.lucene.document.Document;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -63,6 +65,9 @@ public class MetadataRecord
     public void commit(Dbms dbms, ServiceContext srvContext) throws Exception
     {
         xmlSerializer.update(dbms, id, xml, new ISODate().toString(), true, null, srvContext);
+        GeonetContext context = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+
+        context.getDataManager().indexMetadata(dbms, id, true, srvContext, false, false);
     }
 
     public String email(Dbms dbms) throws SQLException {

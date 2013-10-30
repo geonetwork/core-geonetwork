@@ -115,6 +115,7 @@ public abstract class DatastoreMapper {
 					geometry = (Geometry) feature.getDefaultGeometry();
 				}
 				geometry.setUserData(featureSource.getSchema().getGeometryDescriptor().getCoordinateReferenceSystem());
+
 				return geometry;
 			} else {
 				return null;
