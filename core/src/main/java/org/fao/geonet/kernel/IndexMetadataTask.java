@@ -45,23 +45,21 @@ final class IndexMetadataTask implements Runnable {
         }
     }
 
-    /**
-     * TODO javadoc.
-     */
     public void run() {
         try {
             _context.setAsThreadLocal();
             while (_transactionStatus != null && !_transactionStatus.isCompleted()) {
                 try {
-                    wait(100);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     return ;
                 }
             }
             // poll context to see whether servlet is up yet
             while (!_context.isServletInitialized()) {
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER, "Waiting for servlet to finish initializing..");
+                }
                 try {
                     Thread.sleep(10000); // sleep 10 seconds
                 } catch (InterruptedException e) {
