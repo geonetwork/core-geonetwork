@@ -21,8 +21,8 @@ public class GetTest {
 
 
         Polygon[] polygons = new Polygon[]{
-                createPolygon(1),
-                createPolygon(2)
+                createPolygon(),
+                createPolygon()
         };
         final MultiPolygon multiPolygon = factory.createMultiPolygon(polygons);
 
@@ -62,7 +62,7 @@ public class GetTest {
         return !duplicates;
     }
 
-    private Polygon createPolygon(int i) {
+    private Polygon createPolygon() {
         LinearRing shell = createLinearRing(0, 20);
         LinearRing[] rings = new LinearRing[]{
                 createLinearRing(2, 1),
