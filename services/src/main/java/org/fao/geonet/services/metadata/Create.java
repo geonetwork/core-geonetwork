@@ -120,7 +120,7 @@ public class Create extends NotInReadOnlyModeService {
         if (list.size() != 0) {
             groupName = list.get(0).getChildText("name");
         }
-        if (groupName.toLowerCase().contains("myocean")) {
+        if (groupName.toLowerCase().contains("myocean-core-products")) {
             // TODO : trigger another indexing
             dm.setStatus(context, dbms, Integer.valueOf(newId), Integer.valueOf(Params.Status.DRAFT), new ISODate().toString(), "Workflow enabled");
             
