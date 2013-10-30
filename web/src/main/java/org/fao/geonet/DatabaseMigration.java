@@ -217,12 +217,12 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
         ResultSet results = null;
         // Before 2.11, settings was a tree. Check using keys
         try {
-            results = statement.executeQuery("SELECT value FROM settings WHERE id = " + VERSION_NUMBER_ID_BEFORE_2_11);
+            results = statement.executeQuery("SELECT value FROM settings WHERE name = '" + Geonet.Settings.VERSION+"'");
             if (results.next()) {
                 version = results.getString(1);
             }
             results.close();
-            results = statement.executeQuery("SELECT value FROM settings WHERE id = " + SUBVERSION_NUMBER_ID_BEFORE_2_11);
+            results = statement.executeQuery("SELECT value FROM settings WHERE name = '" + Geonet.Settings.SUBVERSION+"'");
             if (results.next()) {
                 subversion = results.getString(1);
             }

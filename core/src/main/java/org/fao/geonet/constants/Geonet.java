@@ -185,6 +185,8 @@ public final class Geonet {
         public static final String SERVER_PORT = "system/server/port";
         public static final String SERVER_SECURE_PORT = "system/server/securePort";
         public static final String SERVER_PROTOCOL = "system/server/protocol";
+        public static final String VERSION = "system/platform/version";
+        public static final String SUBVERSION = "system/platform/subVersion";
     }
 
     /**
