@@ -23,6 +23,7 @@
     <reusable_rejectDefaultMsg js="true">Choose another shared object...</reusable_rejectDefaultMsg>
     <archived>Archived</archived>
     <performingOperation js="true">Performing Operation.  Please wait...</performingOperation>
+    <description js="true">Description</description>
 
 
 	<local._none_.non_validated>geocat.ch Thesaurus (non validated)</local._none_.non_validated>

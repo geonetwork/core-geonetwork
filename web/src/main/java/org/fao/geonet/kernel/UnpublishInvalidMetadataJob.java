@@ -14,6 +14,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ScheduleContext;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
@@ -44,6 +45,9 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             Dbms dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
             try {
+                ServiceContext serviceContext = new ServiceContext("unpublish.metadata", context.getApplicationContext(), new XmlCacheManager(), context.getMonitorManager(), context.getProviderManager(),
+                        context.getSerialFactory(), context.getProfileManager(), context.allContexts());
+                serviceContext.setAsThreadLocal();
                 performJob(gc, dbms);
             } finally {
                 context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
