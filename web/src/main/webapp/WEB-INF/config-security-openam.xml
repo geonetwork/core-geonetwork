@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.1.xsd"
+	xmlns:sec="http://www.springframework.org/schema/security" xmlns:ctx="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
+
+	<!-- requires that config-security imports a config file that has the casUserService 
+		bean -->
+	<!-- override beans in config-security-core with the changes required for 
+		cas -->
+	<alias name="casEntryPoint" alias="authenticationEntryPoint" />
+	<bean id="filter" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<ref bean="securityContextPersistenceFilter" />
+				<ref bean="requestSingleLogoutFilter" />
+				<ref bean="logoutFilter" />
+				<ref bean="openamFilter" />
+				<ref bean="basicAuthenticationFilter" />
+				<ref bean="requestCacheFilter" />
+				<ref bean="anonymousFilter" />
+				<ref bean="sessionMgmtFilter" />
+				<ref bean="exceptionTranslationFilter" />
+				<ref bean="filterSecurityInterceptor" />
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<!-- Adds the openamAuthenticationProvider to the AuthenticationManager -->
+	<bean id="openamAuthenticationProviderPostProcessor"
+		class="jeeves.config.springutil.AddAuthenticationProviderPostProcessor">
+		<constructor-arg value="0" />
+		<constructor-arg ref="openamAuthenticationProvider"></constructor-arg>
+	</bean>
+	<!-- End overrides -->
+
+	<!-- authentication process based upon the authentication providers specified -->
+	<bean id="openamFilter"
+		class="com.sun.identity.provider.springsecurity.OpenSSOProcessingFilter">
+		<property name="authenticationManager" ref="authenticationManager" />
+	</bean>
+
+	<!-- bean called "casEntryPoint" instead of "openamEntryPoint" for geonetwork GUI matters -->
+	<!-- there is a control on the bean name to determine if a login form is to be displayed or not -->
+	<!-- this may be confusing : a change is needed in the GUI to take into account the openam entry point bean --> 
+	<bean id="casEntryPoint"
+		class="com.sun.identity.provider.springsecurity.OpenSSOProcessingFilterEntryPoint">
+		<property name="loginUrl" value="${openam.login.url}" />
+		<property name="gotoUrl" value="${geonetwork.https.url}/j_spring_openam_security_check" />
+	</bean>
+
+	<!-- mapping between authorities (openam groups vs. geonetwork profiles) -->
+	<!-- set openam groups as the attributes2grantedAuthoritiesMap entry key, uppercase + prefixed with "ROLE_" -->
+	<!-- set geonetwork profile as the attributes2grantedAuthoritiesMap entry value -->
+	<bean id="mapper" class="org.springframework.security.core.authority.mapping.MapBasedAttributes2GrantedAuthoritiesMapper">
+			<property name="attributes2grantedAuthoritiesMap">
+				<map>
+					<entry key="ROLE_IGCADMINS" value="Administrator" />
+					<entry key="ROLE_IGCSERVICES" value="UserAdmin" />
+					<entry key="ROLE_IGCUSERS" value="RegisteredUser" />
+					<entry key="ROLE_IGCPROVIDERS" value="UserAdmin" />
+				</map>
+			</property>
+	</bean>
+	
+	<!-- bean to derive granted authorities from token -->
+	<bean id="authoritiesPopulator"
+		class="org.fao.geonet.kernel.security.openam.OpenAMAuthoritiesPopulator">
+			<property name="mapper" ref="mapper" />
+	</bean>
+	
+	<!-- authentication provider --> 
+	<bean id="openamAuthenticationProvider"	class="org.fao.geonet.kernel.security.openam.CustomAuthenticationProvider">		
+		<property name="authoritiesPopulator" ref="authoritiesPopulator"/>
+		<property name="defaultUserGroup" value="IGC"/>
+	</bean>
+
+	<!-- logout handler -->
+	<bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<constructor-arg ref="logoutSuccessHandler" />
+		<constructor-arg>
+			<list>
+				<bean class="jeeves.config.springutil.LogoutUserSessionHandler" />
+                <bean id="openSsoLogoutHandler" class="com.sun.identity.provider.springsecurity.OpenSSOLogoutHandler"/>
+				<bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+            </list>
+		</constructor-arg>
+		<property name="filterProcessesUrl" value="/j_spring_security_logout" />
+	</bean>
+	
+	<bean id="logoutSuccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
+    	<property name="defaultTargetUrl" value="${openam.logout.url}"></property>
+    </bean>
+	
+</beans>
