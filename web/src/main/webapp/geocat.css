@@ -1127,3 +1127,10 @@ li.blue-content a {
 select.lang_selector {
 	max-width: 100px;
 }
+
+.loading {
+   text-indent: -9999px;
+   height: 50px;
+   width: 50px;
+   background-image:url('images/spinner.gif');
+}

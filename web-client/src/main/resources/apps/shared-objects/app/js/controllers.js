@@ -15,7 +15,7 @@ angular.module('SharedObjects.controllers', []).
           $scope.luceneIndexField = 'V_valid_xlink_contact';
       }
       $scope.startCreateNew = function () {
-          open($scope.baseUrl + '/shared.user.edit?closeOnSavevalidated=y&operation=newuser', '_sharedObject');
+           $scope.reloadOnWindowClosed(open($scope.baseUrl + '/shared.user.edit?closeOnSavevalidated=y&operation=newuser', '_sharedObject'));
 
           $location.path("/validated/contacts");
       };
@@ -84,7 +84,7 @@ angular.module('SharedObjects.controllers', []).
       };
       $scope.startCreateNew = function () {
           $location.path("/validated/extents");
-          open($scope.baseUrl + '/extent.edit?crs=EPSG:21781&typename=gn:xlinks&id=&wfs=default&modal', '_sharedObject');
+          $scope.reloadOnWindowClosed(open($scope.baseUrl + '/extent.edit?crs=EPSG:21781&typename=gn:xlinks&id=&wfs=default&modal', '_sharedObject'));
       };
 
   })

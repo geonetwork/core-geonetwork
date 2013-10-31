@@ -134,6 +134,14 @@ angular.module('SharedObjects.factories', []).
               $scope.alert = function (name) {
                   alert(name);
               };
+              $scope.reloadOnWindowClosed = function (win) {
+                  var intervalId = setInterval(function() {
+                      if (win.closed) {
+                          clearInterval(intervalId);
+                          $scope.reloadData();
+                      }
+                  }, 100);
+              };
           }
 
       }
