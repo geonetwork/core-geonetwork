@@ -12,7 +12,7 @@ import java.util.Map;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "services")
+@Table(name = "Services")
 public class Service extends GeonetEntity {
     private int _id;
     private String _name;
@@ -106,7 +106,7 @@ public class Service extends GeonetEntity {
      */
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(joinColumns = @JoinColumn(name = "service", insertable = true, updatable = true, unique = false,
-            nullable = false), name = "serviceparameters")
+            nullable = false), name = "ServiceParameters")
     @MapKeyColumn(name = "name")
     @Column(name = "value", nullable = false, length = 1024)
     public Map<String, String> getParameters() {

@@ -49,7 +49,7 @@ public class MetadataDataInfo implements Serializable {
     /**
      * Get ID of the schema the metadata belongs to.
      */
-    @Column(name = "schemaid", length = 32, nullable = false)
+    @Column(name = "schemaId", length = 32, nullable = false)
     public String getSchemaId() {
         return _schemaId;
     }
@@ -69,7 +69,7 @@ public class MetadataDataInfo implements Serializable {
      * For backwards compatibility we need the istemplate column to be either 'n' or 'y'. This is a workaround to allow this until future
      * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
-    @Column(name = "istemplate", length = 1, nullable = false)
+    @Column(name = "isTemplate", length = 1, nullable = false)
     protected char getType_JPAWorkaround() {
         return _template;
     }
@@ -223,7 +223,7 @@ public class MetadataDataInfo implements Serializable {
      * @return the date of the last change made to the metadata.
      */
 
-    @AttributeOverride(name = "dateAndTime", column = @Column(name = "changedate", nullable = false, length = 30))
+    @AttributeOverride(name = "dateAndTime", column = @Column(name = "changeDate", nullable = false, length = 30))
     public ISODate getChangeDate() {
         return _changeDate;
     }
@@ -244,7 +244,7 @@ public class MetadataDataInfo implements Serializable {
      *
      * @return the creation date.
      */
-    @AttributeOverride(name = "dateAndTime", column = @Column(name = "createdate", nullable = false, length = 30))
+    @AttributeOverride(name = "dateAndTime", column = @Column(name = "createDate", nullable = false, length = 30))
     public ISODate getCreateDate() {
         return _createDate;
     }

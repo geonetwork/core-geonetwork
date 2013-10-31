@@ -14,7 +14,7 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "languages")
+@Table(name = "Languages")
 public class Language extends GeonetEntity {
     String _id;
     String _name;
@@ -69,7 +69,7 @@ public class Language extends GeonetEntity {
      * For backwards compatibility we need the isinspire column to be either 'n' or 'y'. This is a workaround to allow this until future
      * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
-    @Column(name = "isinspire", length = 1)
+    @Column(name = "isInspire", length = 1)
     protected char getInspire_JPAWorkaround() {
         return _inspire;
     }
@@ -106,7 +106,7 @@ public class Language extends GeonetEntity {
      * For backwards compatibility we need the isdefault column to be either 'n' or 'y'. This is a workaround to allow this until future
      * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
-    @Column(name = "isdefault", length = 1)
+    @Column(name = "isDefault", length = 1)
     protected char getDefaultLanguage_JPAWorkaround() {
         return _defaultLanguage;
     }

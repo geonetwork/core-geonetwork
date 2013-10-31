@@ -11,7 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "metadatarating")
+@Table(name = "MetadataRating")
 public class MetadataRatingByIp extends GeonetEntity {
     private MetadataRatingByIpId _id;
     private int _rating;

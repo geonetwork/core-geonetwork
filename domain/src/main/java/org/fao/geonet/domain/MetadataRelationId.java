@@ -57,7 +57,7 @@ public class MetadataRelationId implements Serializable {
      *
      * @return the id of the second metadata.
      */
-    @Column(name = "relatedid")
+    @Column(name = "relatedId")
     public int getRelatedId() {
         return _relatedId;
     }

@@ -16,7 +16,7 @@ public class OperationAllowed extends GeonetEntity {
     /**
      * Name of the operationallowed table.
      */
-    public static final String TABLE_NAME = "operationallowed";
+    public static final String TABLE_NAME = "OperationAllowed";
 
     private OperationAllowedId _id = new OperationAllowedId();
 

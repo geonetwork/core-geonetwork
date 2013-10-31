@@ -16,7 +16,7 @@ import java.util.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "users")
+@Table(name = "Users")
 @Cacheable
 public class User extends GeonetEntity implements UserDetails {
     private static final long serialVersionUID = 2589607276443866650L;
@@ -51,9 +51,8 @@ public class User extends GeonetEntity implements UserDetails {
      * @param id the userid
      * @return this user object
      */
-    public
     @Nonnull
-    User setId(int id) {
+    public User setId(int id) {
         this._id = id;
         return this;
     }
@@ -64,9 +63,8 @@ public class User extends GeonetEntity implements UserDetails {
      * @return the username
      */
     @Column(nullable = false, unique = true)
-    public
     @Nonnull
-    String getUsername() {
+    public String getUsername() {
         return _username;
     }
 
@@ -76,9 +74,8 @@ public class User extends GeonetEntity implements UserDetails {
      * @param username the username.  This is both required and must be unique
      * @return this user object
      */
-    public
     @Nonnull
-    User setUsername(@Nonnull String username) {
+    public User setUsername(@Nonnull String username) {
         this._username = username;
         return this;
     }
@@ -97,9 +94,8 @@ public class User extends GeonetEntity implements UserDetails {
      *
      * @return the Surname/lastname of the user.  May be null
      */
-    public
     @Nullable
-    String getSurname() {
+    public String getSurname() {
         return _surname;
     }
 
@@ -109,9 +105,8 @@ public class User extends GeonetEntity implements UserDetails {
      * @param surname the Surname/lastname of the user.  May be null
      * @return this user object
      */
-    public
     @Nonnull
-    User setSurname(@Nullable String surname) {
+    public User setSurname(@Nullable String surname) {
         this._surname = surname;
         return this;
     }
@@ -121,9 +116,8 @@ public class User extends GeonetEntity implements UserDetails {
      *
      * @return the user's actual first name.  May be null.
      */
-    public
     @Nullable
-    String getName() {
+    public String getName() {
         return _name;
     }
 
@@ -133,9 +127,8 @@ public class User extends GeonetEntity implements UserDetails {
      * @param name the user's actual first name.  May be null.
      * @return this user object
      */
-    public
     @Nonnull
-    User setName(@Nullable String name) {
+    public User setName(@Nullable String name) {
         this._name = name;
         return this;
     }
@@ -180,7 +173,7 @@ public class User extends GeonetEntity implements UserDetails {
      * @return all the user's addresses.
      */
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(name = "USER_ADDRESS", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = {@JoinColumn(name = "addressid",
+    @JoinTable(name = "UserAddress", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = {@JoinColumn(name = "addressid",
             referencedColumnName = "ID", unique = true)})
     public Set<Address> getAddresses() {
         return _addresses;

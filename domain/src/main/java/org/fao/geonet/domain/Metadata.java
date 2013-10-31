@@ -26,12 +26,12 @@ import java.util.Set;
  * @author Jesse
  */
 @Entity
-@Table(name = "metadata")
+@Table(name = "Metadata")
 @Access(AccessType.PROPERTY)
 public class Metadata extends GeonetEntity {
 
-    public static final String METADATA_CATEG_JOIN_TABLE_NAME = "metadatacateg";
-    public static final String METADATA_CATEG_JOIN_TABLE_CATEGORY_ID = "categoryid";
+    public static final String METADATA_CATEG_JOIN_TABLE_NAME = "MetadataCateg";
+    public static final String METADATA_CATEG_JOIN_TABLE_CATEGORY_ID = "categoryId";
     private int _id;
     private String _uuid;
     private String _data;
@@ -278,7 +278,7 @@ public class Metadata extends GeonetEntity {
      * @return the metadata categories
      */
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
-    @JoinTable(name = METADATA_CATEG_JOIN_TABLE_NAME, joinColumns = @JoinColumn(name = "metadataid"),
+    @JoinTable(name = METADATA_CATEG_JOIN_TABLE_NAME, joinColumns = @JoinColumn(name = "metadataId"),
             inverseJoinColumns = @JoinColumn(name =
             METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
     @Nonnull

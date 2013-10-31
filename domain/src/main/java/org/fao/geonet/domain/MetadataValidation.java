@@ -9,7 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "validation")
+@Table(name = "Validation")
 public class MetadataValidation extends GeonetEntity {
     private MetadataValidationId _id;
     private MetadataValidationStatus _status;
@@ -126,7 +126,7 @@ public class MetadataValidation extends GeonetEntity {
      *
      * @return The moment that the validation completed.
      */
-    @AttributeOverride(name = "dateAndTime", column = @Column(name = "valdate", length = 30))
+    @AttributeOverride(name = "dateAndTime", column = @Column(name = "valDate", length = 30))
     public ISODate getValidationDate() {
         return _validationDate;
     }

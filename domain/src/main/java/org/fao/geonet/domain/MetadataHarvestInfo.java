@@ -20,7 +20,7 @@ public class MetadataHarvestInfo {
      * For backwards compatibility we need the isharvested column to be either 'n' or 'y'. This is a workaround to allow this until future
      * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
-    @Column(name = "isharvested", length = 1, nullable = false)
+    @Column(name = "isHarvested", length = 1, nullable = false)
     protected char getHarvested_JPAWorkaround() {
         return _harvested;
     }
@@ -61,7 +61,7 @@ public class MetadataHarvestInfo {
      * @return the uuid of the harvester that harvested this metadata (if the metadata is harvested metadata)
      * @see #isHarvested()
      */
-    @Column(name = "harvestuuid")
+    @Column(name = "harvestUuid")
     public String getUuid() {
         return _uuid;
     }
@@ -81,7 +81,7 @@ public class MetadataHarvestInfo {
      *
      * @return the optional uri indicating what was harvested to get this metadata.
      */
-    @Column(name = "harvesturi", length = 512)
+    @Column(name = "harvestUri", length = 512)
     public String getUri() {
         return _uri;
     }

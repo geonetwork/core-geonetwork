@@ -18,7 +18,7 @@ import static javax.persistence.CascadeType.*;
  * @author Jesse
  */
 @Entity
-@Table(name = "harvestersettings")
+@Table(name = "HarvesterSettings")
 @Access(AccessType.PROPERTY)
 public class HarvesterSetting extends GeonetEntity {
     public static final int ROOT_ID = 0;

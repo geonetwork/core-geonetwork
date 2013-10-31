@@ -9,7 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "sources")
+@Table(name = "Sources")
 public class Source extends GeonetEntity {
     private String _uuid;
     private String _name;
@@ -75,7 +75,7 @@ public class Source extends GeonetEntity {
      * For backwards compatibility we need the islocal column to be either 'n' or 'y'. This is a workaround to allow this until future
      * versions of JPA that allow different ways of controlling how types are mapped to the database.
      */
-    @Column(name = "islocal", nullable = false, length = 1)
+    @Column(name = "isLocal", nullable = false, length = 1)
     protected char getIsLocal_JpaWorkaround() {
         return _local;
     }

@@ -10,7 +10,7 @@ import java.util.Map;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "statusvalues")
+@Table(name = "StatusValues")
 public class StatusValue extends Localized {
     private int _id;
     private String _name;
@@ -100,8 +100,8 @@ public class StatusValue extends Localized {
 
     @Override
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
-    @CollectionTable(joinColumns = @JoinColumn(name = "iddes"), name = "statusvaluesdes")
-    @MapKeyColumn(name = "langid", length = 5)
+    @CollectionTable(joinColumns = @JoinColumn(name = "idDes"), name = "StatusValuesDes")
+    @MapKeyColumn(name = "langId", length = 5)
     @Column(name = "label", nullable = false)
     public Map<String, String> getLabelTranslations() {
         return super.getLabelTranslations();

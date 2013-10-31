@@ -56,12 +56,11 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
     public final Object postProcessAfterInitialization(final Object bean, final String beanName) {
         if (beanName.equals("jdbcDataSource")) {
 
-            Servlet servlet = _applicationContext.getBean(Servlet.class);
-            if (servlet == null) {
+            ServletContext servletContext = _applicationContext.getBean(ServletContext.class);
+            if (servletContext == null) {
                 _logger.warning("No servletContext found.  Database migration aborted.");
                 return bean;
             }
-            ServletContext servletContext = servlet.getServletConfig().getServletContext();
 
             try {
                 ServerLib sl = new ServerLib(servletContext, null);

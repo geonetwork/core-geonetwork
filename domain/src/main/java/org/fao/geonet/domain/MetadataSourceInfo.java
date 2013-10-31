@@ -51,7 +51,7 @@ public class MetadataSourceInfo {
      *
      * @return the group that owns this metadata.
      */
-    @Column(name = "groupowner")
+    @Column(name = "groupOwner")
     public int getGroupOwner() {
         return _groupOwner;
     }

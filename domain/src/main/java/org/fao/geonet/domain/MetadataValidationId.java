@@ -56,7 +56,7 @@ public class MetadataValidationId implements Serializable {
      *
      * @return a string representing the type of validation of this validation entity (example: iso19139)
      */
-    @Column(name = "valtype", length = 40)
+    @Column(name = "valType", length = 40)
     public String getValidationType() {
         return _validationType;
     }

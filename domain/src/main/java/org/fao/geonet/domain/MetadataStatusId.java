@@ -22,7 +22,7 @@ public class MetadataStatusId implements Serializable {
      *
      * @return the date of the status change in string form.
      */
-    @AttributeOverride(name = "dateAndTime", column = @Column(name = "changedate", nullable = false, length = 30))
+    @AttributeOverride(name = "dateAndTime", column = @Column(name = "changeDate", nullable = false, length = 30))
     public ISODate getChangeDate() {
         return _changedate;
     }

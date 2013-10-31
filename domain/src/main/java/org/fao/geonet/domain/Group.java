@@ -14,7 +14,7 @@ import java.util.Map;
  * @author Jesse
  */
 @Entity
-@Table(name = "groups")
+@Table(name = "Groups")
 @Cacheable
 @Access(AccessType.PROPERTY)
 public class Group extends Localized {
@@ -153,8 +153,8 @@ public class Group extends Localized {
 
     @Override
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
-    @CollectionTable(joinColumns = @JoinColumn(name = "iddes"), name = "groupsdes")
-    @MapKeyColumn(name = "langid", length = 5)
+    @CollectionTable(joinColumns = @JoinColumn(name = "idDes"), name = "GroupsDes")
+    @MapKeyColumn(name = "langId", length = 5)
     @Column(name = "label", nullable = false, length = 96)
     public Map<String, String> getLabelTranslations() {
         return super.getLabelTranslations();

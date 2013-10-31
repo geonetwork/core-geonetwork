@@ -14,7 +14,7 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "metadatastatus")
+@Table(name = "MetadataStatus")
 public class MetadataStatus extends GeonetEntity {
     /**
      * The Root element of the xml returned by {@link #getAsXml}.
@@ -84,7 +84,7 @@ public class MetadataStatus extends GeonetEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "statusid", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "statusId", nullable = false, insertable = false, updatable = false)
     @MapsId("statusId")
     public StatusValue getStatusValue() {
         return statusValue;

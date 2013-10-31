@@ -45,7 +45,7 @@ public class UserGroup extends GeonetEntity {
      */
     @MapsId("groupId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "groupid", referencedColumnName = "id")
+    @JoinColumn(name = "groupId", referencedColumnName = "id")
     public Group getGroup() {
         return _group;
     }
@@ -69,7 +69,7 @@ public class UserGroup extends GeonetEntity {
      */
     @MapsId("userId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid", referencedColumnName = "id")
+    @JoinColumn(name = "userId", referencedColumnName = "id")
     public User getUser() {
         return _user;
     }

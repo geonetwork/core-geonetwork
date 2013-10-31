@@ -9,7 +9,7 @@ public interface UserGroupNamedQueries {
     /**
      * UserGroups table name
      */
-    String TABLE_NAME = "usergroups";
+    String TABLE_NAME = "UserGroups";
 
     /**
      * Constants for the Delete all UserGRoups by userId query.

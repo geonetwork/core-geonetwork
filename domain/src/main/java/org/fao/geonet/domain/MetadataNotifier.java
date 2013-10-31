@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "metadatanotifiers")
+@Table(name = "MetadataNotifiers")
 public class MetadataNotifier extends GeonetEntity {
     private int _id;
     private String _name;

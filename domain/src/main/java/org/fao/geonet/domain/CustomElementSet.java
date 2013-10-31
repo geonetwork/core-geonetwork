@@ -9,7 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "customelementset")
+@Table(name = "CustomElementSet")
 public class CustomElementSet extends GeonetEntity {
     private static final int XPATH_COLUMN_LENGTH = 1000;
     private String _xpath;

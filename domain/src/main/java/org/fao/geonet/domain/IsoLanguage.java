@@ -12,7 +12,7 @@ import java.util.Map;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "isolanguages")
+@Table(name = "IsoLanguages")
 public class IsoLanguage extends Localized {
     private int id;
     private String code;
@@ -86,8 +86,8 @@ public class IsoLanguage extends Localized {
      * Get the map of langid -> label translations for groups
      */
     @ElementCollection(fetch = FetchType.EAGER, targetClass = String.class)
-    @CollectionTable(joinColumns = @JoinColumn(name = "iddes"), name = "isolanguagesdes")
-    @MapKeyColumn(name = "langid", length = 5)
+    @CollectionTable(joinColumns = @JoinColumn(name = "idDes"), name = "IsoLanguagesDes")
+    @MapKeyColumn(name = "langId", length = 5)
     @Column(name = "label", nullable = false)
     public Map<String, String> getLabelTranslations() {
         return super.getLabelTranslations();

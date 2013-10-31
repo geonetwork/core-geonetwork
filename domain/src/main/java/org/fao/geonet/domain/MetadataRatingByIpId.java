@@ -42,7 +42,7 @@ public class MetadataRatingByIpId implements Serializable {
      *
      * @return the id of the associated metadata.
      */
-    @Column(name = "metadataid", nullable = false)
+    @Column(name = "metadataId", nullable = false)
     public int getMetadataId() {
         return _metadataId;
     }
@@ -61,7 +61,7 @@ public class MetadataRatingByIpId implements Serializable {
      *
      * @return the IP Address of the user the rating is related to.
      */
-    @Column(name = "ipaddress", nullable = false, length = Constants.IP_ADDRESS_COLUMN_LENGTH)
+    @Column(name = "ipAddress", nullable = false, length = Constants.IP_ADDRESS_COLUMN_LENGTH)
     public String getIpAddress() {
         return _ipAddress;
     }

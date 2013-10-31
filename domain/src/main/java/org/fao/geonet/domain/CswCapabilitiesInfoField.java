@@ -14,7 +14,7 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "cswservercapabilitiesinfo")
+@Table(name = "CswServerCapabilitiesInfo")
 public class CswCapabilitiesInfoField extends GeonetEntity {
     private static final int ID_COLUMN_LENGTH = 10;
     private static final int LANG_ID_COLUMN_LENGTH = 5;

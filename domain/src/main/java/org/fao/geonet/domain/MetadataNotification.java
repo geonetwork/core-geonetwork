@@ -11,7 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "metadatanotifications")
+@Table(name = "MetadataNotifications")
 public class MetadataNotification extends GeonetEntity {
     private MetadataNotificationId _id;
     private char _notified = Constants.YN_FALSE;
@@ -84,7 +84,7 @@ public class MetadataNotification extends GeonetEntity {
      *
      * @return the metadata uuid of the metadata that the notification is for.
      */
-    @Column(name = "metadatauuid", nullable = false)
+    @Column(name = "metadataUuid", nullable = false)
     public String getMetadataUuid() {
         return _metadataUuid;
     }

@@ -14,7 +14,7 @@ import java.util.Map;
 @Entity
 @Access(AccessType.PROPERTY)
 @Cacheable
-@Table(name = "categories")
+@Table(name = "Categories")
 public class MetadataCategory extends Localized {
     private int _id;
     private String _name;
@@ -62,8 +62,8 @@ public class MetadataCategory extends Localized {
 
     @Override
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
-    @CollectionTable(joinColumns = @JoinColumn(name = "iddes"), name = "categoriesdes")
-    @MapKeyColumn(name = "langid", length = 5)
+    @CollectionTable(joinColumns = @JoinColumn(name = "idDes"), name = "CategoriesDes")
+    @MapKeyColumn(name = "langId", length = 5)
     @Column(name = "label", nullable = false)
     public Map<String, String> getLabelTranslations() {
         return super.getLabelTranslations();

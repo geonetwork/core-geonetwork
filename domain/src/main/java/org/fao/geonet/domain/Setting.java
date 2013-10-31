@@ -13,7 +13,7 @@ import javax.persistence.*;
  * @author Jesse
  */
 @Entity
-@Table(name = "settings")
+@Table(name = "Settings")
 @Cacheable
 @Access(AccessType.PROPERTY)
 public class Setting extends GeonetEntity {

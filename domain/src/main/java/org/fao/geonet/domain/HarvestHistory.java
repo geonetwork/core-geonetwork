@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "harvesthistory")
+@Table(name = "HarvestHistory")
 public class HarvestHistory extends GeonetEntity {
     private int _id;
     private ISODate _harvestDate;

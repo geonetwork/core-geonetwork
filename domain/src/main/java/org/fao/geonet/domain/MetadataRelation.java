@@ -20,7 +20,7 @@ import javax.persistence.*;
  * @author Jesse
  */
 @Entity
-@Table(name = "relations")
+@Table(name = "Relations")
 @Access(AccessType.PROPERTY)
 public class MetadataRelation extends GeonetEntity {
     private MetadataRelationId _id = new MetadataRelationId();

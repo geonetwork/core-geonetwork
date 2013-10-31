@@ -9,7 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "thesaurus")
+@Table(name = "Thesaurus")
 public class ThesaurusActivation {
     private String _id;
     private char _activated = Constants.YN_TRUE;
