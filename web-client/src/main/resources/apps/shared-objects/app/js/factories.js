@@ -116,9 +116,9 @@ angular.module('SharedObjects.factories', []).
 
                   return promise;
               }
-              
+              $scope.reject = { message: '' };
               $scope.performUpdateOperation = function (service) {
-                  var params = { type: $scope.type, id: $scope.selected.id, isValidObject: $scope.isValidated };
+                  var params = { type: $scope.type, id: $scope.selected.id, isValidObject: $scope.isValidated, msg: $scope.reject.message };
 
                   if ($scope.message) {
                       params.msg = $scope.message;
