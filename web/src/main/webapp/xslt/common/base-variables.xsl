@@ -5,6 +5,8 @@
   
   <xsl:output name="default-serialize-mode" indent="no"
     omit-xml-declaration="yes" />
+  <xsl:output name="default-indent-mode" indent="yes"
+    omit-xml-declaration="yes" />
   
   <!--
   -->
