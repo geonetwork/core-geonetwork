@@ -48,6 +48,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -76,13 +77,14 @@ class MEF2Exporter {
 	 *            {@link Format} to export.
 	 * @param skipUUID
 	 * @param stylePath
-	 * @param removeXlinkAttribute 
-	 * @param resolveXlink 
+	 * @param removeXlinkAttribute
+	 * @param resolveXlink
 	 * @return MEF2 File
 	 * @throws Exception
 	 */
 	public static String doExport(ServiceContext context, Set<String> uuids,
-			Format format, boolean skipUUID, String stylePath, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+                                  Format format, boolean skipUUID, String stylePath, boolean resolveXlink, boolean removeXlinkAttribute,
+                                  boolean skipError) throws Exception {
 
 		Dbms dbms = (Dbms) context.getResourceManager()
 				.open(Geonet.Res.MAIN_DB);
@@ -92,8 +94,19 @@ class MEF2Exporter {
 
         for (Object uuid1 : uuids) {
             String uuid = (String) uuid1;
+            try {
             createMetadataFolder(context, dbms, uuid, zos, skipUUID, stylePath,
                     format, resolveXlink, removeXlinkAttribute);
+            } catch (Throwable t) {
+                if (skipError) {
+                    Log.error(Geonet.MEF, "Error exporting metadata to MEF file: "+uuid1, t);
+                } else {
+                    if (t instanceof RuntimeException) {
+                        throw (RuntimeException) t;
+                    }
+                    throw new RuntimeException(t);
+                }
+            }
         }
 
 		// --- cleanup and exit

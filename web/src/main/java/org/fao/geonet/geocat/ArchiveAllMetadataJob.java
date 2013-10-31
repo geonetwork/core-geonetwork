@@ -81,6 +81,10 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
     		@SuppressWarnings("unchecked")
     		List<Element> uuidQuery = dbms.select("SELECT uuid FROM Metadata where not isharvested='y'").getChildren();
 
+            // don't keep dbms open...
+            serviceContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+            dbms = null;
+
     		Set<String> uuids = new HashSet<String>();
     		for (Element uuidElement : uuidQuery) {
     			uuids.add(uuidElement.getChildText("uuid"));
@@ -91,7 +95,8 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
     		String format = "full";
     		boolean resolveXlink = true;
     		boolean removeXlinkAttribute = false;
-    		File srcFile = new File(MEFLib.doMEF2Export(serviceContext, uuids, format, false, stylePath, resolveXlink , removeXlinkAttribute));
+            boolean skipOnError = true;
+            File srcFile = new File(MEFLib.doMEF2Export(serviceContext, uuids, format, false, stylePath, resolveXlink , removeXlinkAttribute, skipOnError));
 		
     		String datadir = System.getProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY);
     		File backupDir = new File(datadir, BACKUP_DIR);
@@ -110,6 +115,7 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 			if(dbms != null) {
 				serviceContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
 			}
+            serviceContext.getResourceManager().close();
 		    backupIsRunning.set(false);
 		}
 	}
