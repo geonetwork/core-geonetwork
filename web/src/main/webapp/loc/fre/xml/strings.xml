@@ -155,8 +155,8 @@
         <management>Gestion des formats de distribution</management>
         <manDes>Ajouter/modifier/supprimer des formats de distribution</manDes>
     </format>
-    <formats>Formats</formats>
-    <extents>Etendues</extents>
+    <formats js='true'>Formats</formats>
+    <extents js='true'>Etendues</extents>
     <deleted js='true'>Supprimé</deleted>
     <insufficient.privileges.import.replace>Une métadonnée avec le même identifiant existe déjà. Vos privilèges ne suffisent pas pour la remplacer.</insufficient.privileges.import.replace>
     <updateDatasetTitle>Mettre à jour une MDD</updateDatasetTitle>

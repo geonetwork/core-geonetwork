@@ -7,7 +7,7 @@
     <searchView js='true'>Ricerca</searchView>
     <actions js='true'>Azioni</actions>
     <contacts js='true'>Contatti</contacts>
-    <SharedObjects js='true'>Shared Objects</SharedObjects>
+    <SharedObjects js='true'>Oggetti condivisi</SharedObjects>
     <openInSearch>Search View</openInSearch>
     <reusable_confirmValidate js="true">Confirm Validate Action</reusable_confirmValidate>
     <reusable_confirmDelete js="true">Confirm Delete Action</reusable_confirmDelete>
@@ -21,7 +21,7 @@
     <reusable_rejectDefaultMsg js="true">Selezionare un'altro oggetto riutilizzabile...</reusable_rejectDefaultMsg>
     <archived>Archived</archived>
     <performingOperation js="true">Performing Operation.  Please wait...</performingOperation>
-
+    <description>Descrizione</description>
 
 	<local._none_.non_validated>geocat.ch Thesaurus (non confermato)</local._none_.non_validated>
 	<local._none_.geocat.ch>geocat.ch Thesaurus</local._none_.geocat.ch>
@@ -160,8 +160,8 @@
            <management>Gestione dei formati di distribuzione</management>
            <manDes>Aggiungere/eliminare/modificare e visualizzare i formati</manDes>
     </format>
-    <formats>Formati</formats>
-    <extents>Estensioni</extents>
+    <formats js='true'>Formati</formats>
+    <extents js='true'>Estensioni</extents>
     <deleted js='true'>Eliminati</deleted>
     <insufficient.privileges.import.replace>Esiste un metadato che non può rimpiazzare perché non ha i diritti necessari</insufficient.privileges.import.replace>
     <updateDatasetTitle>Attualizzare dataset</updateDatasetTitle>
