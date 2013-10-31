@@ -239,7 +239,7 @@
         <textarea><xsl:copy-of select="$parentEditInfo"/></textarea>
         -->
 
-    <button class="btn fa fa-times text-danger pull-right"
+    <i class="btn fa fa-times text-danger pull-right"
       data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
       data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
       data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"/>
@@ -304,16 +304,18 @@
                 TODO: Could be nice to select a type by default - a recommended type -->
           <xsl:when test="$childEditInfo/gn:choose">
             <div class="btn-group">
-              <button type="button" class="btn dropdown-toggle fa fa-plus" data-toggle="dropdown">
+              <button type="button" class="btn dropdown-toggle fa fa-plus gn-control" data-toggle="dropdown">
                 <span/>
                 <span class="caret"/>
               </button>
               <ul class="dropdown-menu">
                 <xsl:for-each select="$childEditInfo/gn:choose">
-                  <li>
+                  <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
+                  
+                  <li title="{$label/description}">
                     <a
                       data-ng-click="addChoice({$parentEditInfo/@ref}, '{concat($childEditInfo/@prefix, ':', $childEditInfo/@name)}', '{@name}', '{$id}', 'before');">
-                      <xsl:value-of select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
+                     <xsl:value-of select="$label/label"/>
                     </a>
                   </li>
                 </xsl:for-each>
@@ -321,7 +323,7 @@
             </div>
           </xsl:when>
           <xsl:otherwise>
-            <i class="btn fa fa-plus"
+            <i class="btn fa fa-plus gn-control"
               data-ng-click="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');"
             />
           </xsl:otherwise>
@@ -460,7 +462,7 @@
                      $parentEditInfo/@min != 1)
                    ) or 
                    not($parentEditInfo)">
-      <button class="btn fa fa-times text-danger gn-remove pull-right"
+      <i class="btn fa fa-times text-danger gn-control pull-right"
         data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
         data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
         data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"/>
@@ -477,7 +479,7 @@
 
     <!-- Add icon for last element of its kind -->
     <xsl:if test="$parentEditInfo and $parentEditInfo/@add = 'true' and not($parentEditInfo/@down)">
-      <button class="btn fa fa-plus gn-add"
+      <i class="btn fa fa-plus gn-control"
         data-ng-click="add({$parentEditInfo/@parent}, '{$name}', {$editInfo/@ref})"/>
     </xsl:if>
   </xsl:template>
