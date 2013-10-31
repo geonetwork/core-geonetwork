@@ -11,14 +11,14 @@
   <xsl:template name="menu-builder">
     <xsl:param name="config" as="node()"/>
 
-    <xsl:variable name="currentView" select="$config/editor/view[tab/@id = $tab]"/>
+    <xsl:variable name="currentView" select="$config/editor/views/view[tab/@id = $tab]"/>
 
 
     <ul class="nav nav-pills">
 
       <!-- Make a tab switcher for all tabs of the current view -->
       <xsl:if test="count($currentView/tab) > 1">
-        <xsl:apply-templates mode="menu-builder" select="$config/editor/view[tab/@id = $tab]/tab"/>
+        <xsl:apply-templates mode="menu-builder" select="$config/editor/views/view[tab/@id = $tab]/tab"/>
       </xsl:if>
 
 
@@ -31,7 +31,7 @@
         </a>
         <ul class="dropdown-menu">
           <!-- links -->
-          <xsl:for-each select="$config/editor/view">
+          <xsl:for-each select="$config/editor/views/view">
             <li>
               <xsl:if test="@name = $currentView/@name">
                 <xsl:attribute name="class">disabled</xsl:attribute>

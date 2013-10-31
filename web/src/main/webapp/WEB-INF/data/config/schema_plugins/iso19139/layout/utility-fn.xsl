@@ -38,39 +38,11 @@
     <xsl:param name="childName" as="xs:string"/>
     <!--    <xsl:message>FieldType:<xsl:value-of select="$name"/>/<xsl:value-of select="$childName"/></xsl:message>
 -->
+    <xsl:variable name="type" select="$iso19139EditorConfiguration/editor/fields/for[@name = $name]/@use"/>
     <xsl:value-of
-      select="if ($name = 'gmd:abstract' 
-                                  or $name = 'gmd:statement' 
-                                  or $name = 'gmd:supplementalInformation'
-                                  or $name = 'gmd:purpose'
-                                  or $name = 'gmd:orderingInstructions'
-                                  or $name = 'gmd:statement'
-                                  or $name = 'gmd:description'
-                                  or $name = 'gmd:specificUsage'
-                                  or $name = 'gmd:explanation'
-                                  or $name = 'gmd:credit'
-                                  or $name = 'gmd:evaluationMethodDescription'
-                                  or $name = 'gmd:measureDescription'
-                                  or $name = 'gmd:maintenanceNote'
-                                  or $name = 'gmd:useLimitation'
-                                  or $name = 'gmd:otherConstraints'
-                                  or $name = 'gmd:handlingDescription'
-                                  or $name = 'gmd:userNote'
-                                  or $name = 'gmd:checkPointDescription'
-                                  or $name = 'gmd:evaluationMethodDescription'
-                                  or $name = 'gmd:measureDescription') 
-                          then 'textarea' 
-                          else if ($name = 'gmd:denominator') 
-                          then 'number' 
-                          else if ($name = 'gmd:electronicMailAddress') 
-                          then 'email' 
-                          else if ($name = 'time') 
-                          then 'time'
-                          else if ($childName = 'gco:Date') 
-                          then 'date' 
-                          else if ($childName = 'gco:DateTime') 
-                          then 'datetime' 
-                          else 'text'"
+      select="if ($type != '')
+                then $type 
+                else 'text'"
     />
   </xsl:function>
 

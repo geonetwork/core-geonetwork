@@ -9,25 +9,35 @@
   xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
   xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
   exclude-result-prefixes="#all">
-
+  
+  <!-- 
+    Load the schema configuration for the editor.
+    
+    
+    Using ENTITY may be more efficient and cache ?
+      <!DOCTYPE document [ 
+            <!ENTITY  config SYSTEM 'config-editor.xml'> 
+        ]>
+      -->
+  <xsl:variable name="iso19139EditorConfiguration" select="document('config-editor.xml')"/>
+  
+  
   <xsl:include href="layout.xsl"/>
-
+  
+  
+  
+  
+  
   <!-- Dispatching to the profile mode according to the tab -->
   <xsl:template name="render-iso19139">
     <xsl:param name="base" as="node()"/>
 
-    <!-- Using ENTITY may be more efficient and cache ?
-	    <!DOCTYPE document [ 
-            <!ENTITY  config SYSTEM 'config-editor.xml'> 
-        ]>
-	    -->
-    <xsl:variable name="editorConfiguration" select="document('config-editor.xml')"/>
     <xsl:variable name="tabConfiguration"
-      select="$editorConfiguration/editor/view/tab[@id = $tab]/section"/>
+      select="$iso19139EditorConfiguration/editor/views/view/tab[@id = $tab]/section"/>
 
     <xsl:if test="$service != 'md.element.add'">
       <xsl:call-template name="menu-builder">
-        <xsl:with-param name="config" select="$editorConfiguration"/>
+        <xsl:with-param name="config" select="$iso19139EditorConfiguration"/>
       </xsl:call-template>
     </xsl:if>
 
