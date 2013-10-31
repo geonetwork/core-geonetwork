@@ -1000,7 +1000,7 @@
 		<xsl:param name="edit" select="false()"/>
 		<xsl:param name="id" select="generate-id(.)"/>
 	        
-        <xsl:variable name="rejected" select="count(*[contains(@xlink:title,'rejected')]) > 0"/>
+        <xsl:variable name="rejected" select="count(.[contains(@xlink:title,'rejected')]) > 0"/>
 	    <xsl:variable name="updatedTitle">
             <xsl:choose>
                 <xsl:when test="$rejected">

@@ -104,7 +104,9 @@ public class Delete implements Service
         }
 
         Utils.unpublish(metadataIds, context);
-
+        for (String metadataId : metadataIds) {
+            gc.getDataManager().indexMetadata(dbms, metadataId, true, context, false, false, true);
+        }
         DeletedObjects.delete(dbms, ids);
 
         Log.debug(Geocat.Module.REUSABLE, "Successfully deleted following rejected objects: \n("
