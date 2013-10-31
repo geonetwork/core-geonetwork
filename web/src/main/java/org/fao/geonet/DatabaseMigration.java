@@ -2,6 +2,8 @@ package org.fao.geonet;
 
 import com.vividsolutions.jts.util.Assert;
 import jeeves.config.springutil.JeevesApplicationContext;
+import jeeves.server.sources.http.ServletPathFinder;
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.lib.DatabaseType;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -42,7 +45,7 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
     private LinkedHashMap<Integer/*version number*/, List<String> /*path to sql files*/> _migration;
 
     private Logger _logger = Log.createLogger(Geonet.GEONETWORK);
-    private JeevesApplicationContext _applicationContext;
+    private ApplicationContext _applicationContext;
 
     @Override
     public final Object postProcessBeforeInitialization(final Object bean, final String beanName) {
@@ -53,17 +56,18 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
     public final Object postProcessAfterInitialization(final Object bean, final String beanName) {
         if (beanName.equals("jdbcDataSource")) {
 
-            ServletContext servletContext = _applicationContext.getServletContext();
-            if (servletContext == null) {
+            Servlet servlet = _applicationContext.getBean(Servlet.class);
+            if (servlet == null) {
                 _logger.warning("No servletContext found.  Database migration aborted.");
                 return bean;
             }
+            ServletContext servletContext = servlet.getServletConfig().getServletContext();
 
             try {
                 ServerLib sl = new ServerLib(servletContext, null);
                 String version = sl.getVersion();
                 String subVersion = sl.getSubVersion();
-                migrateDatabase((DataSource) bean, version, subVersion);
+                migrateDatabase(servletContext, (DataSource) bean, version, subVersion);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
@@ -78,105 +82,20 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
         this._migration = migration;
     }
 
-    private void migrateDatabase(final DataSource dataSource, final String webappVersion, final String subVersion) throws SQLException {
+    private void migrateDatabase(ServletContext servletContext, final DataSource dataSource, final String webappVersion, final String subVersion) throws SQLException {
         _logger.info("  - Migration ...");
 
-        ServletContext servletContext = _applicationContext.getServletContext();
-        String path = _applicationContext.getAppPath();
+        ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
+
+        String path = pathFinder.getAppPath();
+
         Connection conn = null;
         Statement statement = null;
         try {
             conn = dataSource.getConnection();
             statement = conn.createStatement();
-            // Get db version and subversion
-            Pair<String, String> dbVersionInfo = getDatabaseVersion(statement);
-            String dbVersion = dbVersionInfo.one();
-            String dbSubVersion = dbVersionInfo.two();
+            if (doMigration(webappVersion, subVersion, servletContext, path, conn, statement)) return;
 
-            // Migrate db if needed
-            _logger.info("      Webapp   version:" + webappVersion + " subversion:" + subVersion);
-            _logger.info("      Database version:" + dbVersion + " subversion:" + dbSubVersion);
-            if (dbVersion == null || webappVersion == null) {
-                _logger.warning("      Database does not contain any version information. Check that the database is a GeoNetwork "
-                                + "database with data.  Migration step aborted.");
-                return;
-            }
-
-            int from = 0, to = 0;
-
-            try {
-                from = parseVersionNumber(dbVersion);
-                to = parseVersionNumber(webappVersion);
-            } catch (Exception e) {
-                _logger.warning("      Error parsing version numbers: " + e.getMessage());
-                e.printStackTrace();
-            }
-
-            if (from == to) {
-                _logger.info("      Webapp version = Database version, no migration task to apply.");
-            } else if (to > from) {
-                boolean anyMigrationAction = false;
-                boolean anyMigrationError = false;
-
-                // Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
-                String dbType = DatabaseType.lookup(conn).toString();
-                _logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
-
-                _logger.info("      Loading SQL migration step configuration from <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n ...");
-                for (Map.Entry<Integer, List<String>> migrationEntry : _migration.entrySet()) {
-                    int versionNumber = migrationEntry.getKey();
-                    if (versionNumber > from && versionNumber <= to) {
-                        _logger.info("       - running tasks for " + versionNumber + "...");
-                        for (String file : migrationEntry.getValue()) {
-                            if (file.startsWith(JAVA_MIGRATION_PREFIX)) {
-                                anyMigrationAction = true;
-                                anyMigrationError |= runJavaMigration(conn, file);
-                            } else {
-                                int lastSep = file.lastIndexOf('/');
-                                Assert.isTrue(lastSep > -1, file + " has the wrong format");
-                                String filePath = path + file.substring(0, lastSep);
-
-                                String filePrefix = file.substring(lastSep);
-                                anyMigrationAction = true;
-                                _logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
-                                try {
-                                    Lib.db.insertData(servletContext, statement, path, filePath, filePrefix);
-                                } catch (Exception e) {
-                                    _logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-                                    e.printStackTrace();
-                                    anyMigrationError = true;
-                                }
-                            }
-                        }
-                    }
-                }
-                if (anyMigrationAction && !anyMigrationError) {
-                    _logger.info("      Successfull migration.\n"
-                                 + "      Catalogue administrator still need to update the catalogue\n"
-                                 + "      logo and data directory in order to complete the migration process.\n"
-                                 + "      Lucene index rebuild is also recommended after migration."
-                    );
-                }
-
-                if (!anyMigrationAction) {
-                    _logger.warning("      No migration task found between webapp and database version.\n"
-                                    + "      The system may be unstable or may failed to start if you try to run \n"
-                                    + "      the current GeoNetwork " + webappVersion + " with an older database (ie. " + dbVersion
-                                    + "\n"
-                                    + "      ). Try to run the migration task manually on the current database\n"
-                                    + "      before starting the application or start with a new empty database.\n"
-                                    + "      Sample SQL scripts for migration could be found in WEB-INF/sql/migrate folder.\n"
-                    );
-
-                }
-
-                if (anyMigrationError) {
-                    _logger.warning("      Error occurs during migration. Check the log file for more details.");
-                }
-                // TODO : Maybe some migration stuff has to be done in Java ?
-            } else {
-                _logger.info("      Running on a newer database version.");
-            }
         } finally {
             try {
                 if (statement != null) {
@@ -188,6 +107,99 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
                 }
             }
         }
+    }
+
+    boolean doMigration(String webappVersion, String subVersion, ServletContext servletContext, String path, Connection conn, Statement statement) throws SQLException {
+        // Get db version and subversion
+        Pair<String, String> dbVersionInfo = getDatabaseVersion(statement);
+        String dbVersion = dbVersionInfo.one();
+        String dbSubVersion = dbVersionInfo.two();
+
+        // Migrate db if needed
+        _logger.info("      Webapp   version:" + webappVersion + " subversion:" + subVersion);
+        _logger.info("      Database version:" + dbVersion + " subversion:" + dbSubVersion);
+        if (dbVersion == null || webappVersion == null) {
+            _logger.warning("      Database does not contain any version information. Check that the database is a GeoNetwork "
+                            + "database with data.  Migration step aborted.");
+            return true;
+        }
+
+        int from = 0, to = 0;
+
+        try {
+            from = parseVersionNumber(dbVersion);
+            to = parseVersionNumber(webappVersion);
+        } catch (Exception e) {
+            _logger.warning("      Error parsing version numbers: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        if (from == to) {
+            _logger.info("      Webapp version = Database version, no migration task to apply.");
+        } else if (to > from) {
+            boolean anyMigrationAction = false;
+            boolean anyMigrationError = false;
+
+            // Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
+            String dbType = DatabaseType.lookup(conn).toString();
+            _logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
+
+            _logger.info("      Loading SQL migration step configuration from <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n ...");
+            for (Map.Entry<Integer, List<String>> migrationEntry : _migration.entrySet()) {
+                int versionNumber = migrationEntry.getKey();
+                if (versionNumber > from && versionNumber <= to) {
+                    _logger.info("       - running tasks for " + versionNumber + "...");
+                    for (String file : migrationEntry.getValue()) {
+                        if (file.startsWith(JAVA_MIGRATION_PREFIX)) {
+                            anyMigrationAction = true;
+                            anyMigrationError |= runJavaMigration(conn, file);
+                        } else {
+                            int lastSep = file.lastIndexOf('/');
+                            Assert.isTrue(lastSep > -1, file + " has the wrong format");
+                            String filePath = path + file.substring(0, lastSep);
+
+                            String filePrefix = file.substring(lastSep);
+                            anyMigrationAction = true;
+                            _logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
+                            try {
+                                Lib.db.insertData(servletContext, statement, path, filePath, filePrefix);
+                            } catch (Exception e) {
+                                _logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
+                                e.printStackTrace();
+                                anyMigrationError = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (anyMigrationAction && !anyMigrationError) {
+                _logger.info("      Successfull migration.\n"
+                             + "      Catalogue administrator still need to update the catalogue\n"
+                             + "      logo and data directory in order to complete the migration process.\n"
+                             + "      Lucene index rebuild is also recommended after migration."
+                );
+            }
+
+            if (!anyMigrationAction) {
+                _logger.warning("      No migration task found between webapp and database version.\n"
+                                + "      The system may be unstable or may failed to start if you try to run \n"
+                                + "      the current GeoNetwork " + webappVersion + " with an older database (ie. " + dbVersion
+                                + "\n"
+                                + "      ). Try to run the migration task manually on the current database\n"
+                                + "      before starting the application or start with a new empty database.\n"
+                                + "      Sample SQL scripts for migration could be found in WEB-INF/sql/migrate folder.\n"
+                );
+
+            }
+
+            if (anyMigrationError) {
+                _logger.warning("      Error occurs during migration. Check the log file for more details.");
+            }
+            // TODO : Maybe some migration stuff has to be done in Java ?
+        } else {
+            _logger.info("      Running on a newer database version.");
+        }
+        return false;
     }
 
     private boolean runJavaMigration(Connection conn, String file) {
@@ -214,55 +226,53 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
         String version = null;
         String subversion = null;
 
-        ResultSet results = null;
-        // Before 2.11, settings was a tree. Check using keys
         try {
-            results = statement.executeQuery("SELECT value FROM settings WHERE name = '" + Geonet.Settings.VERSION+"'");
-            if (results.next()) {
-                version = results.getString(1);
-            }
-            results.close();
-            results = statement.executeQuery("SELECT value FROM settings WHERE name = '" + Geonet.Settings.SUBVERSION+"'");
-            if (results.next()) {
-                subversion = results.getString(1);
+            version = newLookup(statement, Geonet.Settings.VERSION);
+            subversion = newLookup(statement, Geonet.Settings.SUBVERSION);
+
+            if (version == null) {
+                // Before 2.11, settings was a tree. Check using keys
+                version = oldLookup(statement, VERSION_NUMBER_ID_BEFORE_2_11);
+                subversion = oldLookup(statement, SUBVERSION_NUMBER_ID_BEFORE_2_11);
             }
         } catch (SQLException e) {
             _logger.info("     Error getting database version: " + e.getMessage() +
                          ". Probably due to an old version. Trying with new Settings structure.");
+        }
+
+        return Pair.read(version, subversion);
+    }
+
+    private String newLookup(Statement statement, String key) throws SQLException {
+        ResultSet results = null;
+        try {
+            final String newGetVersion = "SELECT value FROM settings WHERE name = '" + key + "'";
+            results = statement.executeQuery(newGetVersion);
+            if (results.next()) {
+                return results.getString(1);
+            }
+            return null;
         } finally {
             if (results != null) {
                 results.close();
             }
         }
+    }
 
-        // Now settings is KVP
-        if (version == null) {
-            try {
-                try {
-                    results = statement.executeQuery("SELECT value FROM settings WHERE name = " + VERSION_NUMBER_KEY);
-                    if (results.next()) {
-                        version = results.getString(1);
-                    }
-                } finally {
-                    if (results != null) {
-                        results.close();
-                    }
-                }
-                try {
-                    results = statement.executeQuery("SELECT value FROM settings WHERE name = " + SUBVERSION_NUMBER_KEY);
-                    if (results.next()) {
-                        subversion = results.getString(1);
-                    }
-                } finally {
-                    if (results != null) {
-                        results.close();
-                    }
-                }
-            } catch (SQLException e) {
-                _logger.info("     Error getting database version: " + e.getMessage() + ".");
+    private String oldLookup(Statement statement, int key) throws SQLException {
+        ResultSet results = null;
+        try {
+            final String newGetVersion = "SELECT value FROM settings WHERE id = " + key;
+            results = statement.executeQuery(newGetVersion);
+            if (results.next()) {
+                return results.getString(1);
+            }
+            return null;
+        } finally {
+            if (results != null) {
+                results.close();
             }
         }
-        return Pair.read(version, subversion);
     }
 
     /**
@@ -283,6 +293,6 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this._applicationContext = (JeevesApplicationContext) applicationContext;
+        this._applicationContext = applicationContext;
     }
 }

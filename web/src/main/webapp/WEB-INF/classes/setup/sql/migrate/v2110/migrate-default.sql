@@ -85,6 +85,16 @@ UPDATE Settings SET name = 'system/requestedLanguage/sorted', datatype = 2 WHERE
 UPDATE Settings SET name = 'system/hidewithheldelements/enable', datatype = 2 WHERE id = 957;
 UPDATE Settings SET name = 'system/hidewithheldelements/keepMarkedElement', datatype = 2 WHERE id = 958;
 
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/harvesting/mail/recipient', NULL, 0, 9020);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/harvesting/mail/template', '', 0, 9021);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/harvesting/mail/templateError', 'There was an error on the harvesting: $$errorMsg$$', 0, 9022);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/harvesting/mail/templateWarning', '', 0, 9023);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/harvesting/mail/subject', '[$$harvesterType$$] $$harvesterName$$ finished harvesting', 0, 9024);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/harvesting/mail/enabled', 'false', 2, 9025);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/harvesting/mail/level1', 'false', 2, 9026);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/harvesting/mail/level2', 'false', 2, 9027);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/harvesting/mail/level3', 'false', 2, 9028);
+
 UPDATE Settings SET parentId = null;
 
 DELETE FROM Settings WHERE id = 173;
