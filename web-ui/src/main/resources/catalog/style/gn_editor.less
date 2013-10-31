@@ -1,1 +1,19 @@
 @import "gn.less";
+
+
+form.gn-editor {
+    /* Move each sub fieldset to the left */
+    @editor-fieldset-padding-left: 5px;
+
+    fieldset fieldset {
+        padding-left: @editor-fieldset-padding-left;
+    }
+    
+    /* Reset margin in helper for documentation
+     * to properly align radios
+     */
+    .helper .help-block {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+}

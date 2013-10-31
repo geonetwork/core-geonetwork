@@ -1,18 +1,22 @@
 package org.fao.geonet.util;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import jeeves.server.ProfileManager;
 import jeeves.utils.Log;
+import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
  * params are objects because it is hard to determine what is passed in from XSLT.
@@ -36,6 +40,21 @@ public final class XslUtil
         return result;
     }
 
+    /**
+     * Convert a serialized XML node in JSON
+     * 
+     * @param xml
+     * @return
+     */
+    public static String xmlToJson(Object xml) {
+        try {
+            return Xml.getJSON(xml.toString());
+        } catch (IOException e) {
+            Log.error(Geonet.GEONETWORK, "XMLtoJSON conversion I/O error. Error is " + e.getMessage() + ". XML is " + xml.toString());
+        }
+        return "";
+    }
+    
     /**
      * Returns 'true' if the pattern matches the src
      */

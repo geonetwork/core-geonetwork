@@ -672,6 +672,21 @@ public final class Xml
      * @throws IOException
      */
     public static String getJSON (Element xml) throws IOException {
+        return Xml.getJSON(Xml.getString(xml));
+    }
+    
+
+    /**
+     * Converts a serialized xml string to JSON
+     * 
+     * @param xmlAsString the XML element
+     * @return the JSON response
+     * 
+     * @throws JsonParseException
+     * @throws JsonMappingException
+     * @throws IOException
+     */
+    public static String getJSON (String xmlAsString) throws IOException {
         XMLSerializer xmlSerializer = new XMLSerializer();
         
         // Disable type hints. When enable, a type attribute in the root 
@@ -679,9 +694,10 @@ public final class Xml
         // http://sourceforge.net/mailarchive/message.php?msg_id=27646519
         xmlSerializer.setTypeHintsEnabled(false);
         xmlSerializer.setTypeHintsCompatibility(false);
-        JSON json = xmlSerializer.read(Xml.getString(xml));
+        JSON json = xmlSerializer.read(xmlAsString);
         return json.toString(2);
     }
+    
     /**
      *
      * @param data

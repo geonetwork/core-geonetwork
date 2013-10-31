@@ -2,7 +2,9 @@
 <xsl:stylesheet version="2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" exclude-result-prefixes="#all">
+  xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:saxon="http://saxon.sf.net/"
+  extension-element-prefixes="saxon" exclude-result-prefixes="#all">
   <!-- Build the form for creating HTML elements. -->
 
   <xsl:import href="../common/base-variables-metadata.xsl"/>
@@ -12,7 +14,7 @@
   <xsl:import href="../layout-xml.xsl"/>
 
   <xsl:import href="form-configurator.xsl"/>
-  
+
   <xsl:import href="menu-builder.xsl"/>
 
   <!-- 
@@ -34,13 +36,13 @@
 
     <!-- For editing -->
     <xsl:param name="name" required="no" as="xs:string" select="generate-id()"/>
-    
+
     <!-- The input type eg. number, date, datetime, email-->
     <xsl:param name="type" required="no" as="xs:string" select="''"/>
-    
+
     <!-- The AngularJS directive name eg. gn-field-duration -->
     <xsl:param name="directive" required="no" as="xs:string" select="''"/>
-    
+
     <xsl:param name="hidden" required="no" as="xs:boolean" select="false()"/>
     <xsl:param name="editInfo" required="no"/>
     <xsl:param name="parentEditInfo" required="no"/>
@@ -113,9 +115,9 @@
             </xsl:if>
             <xsl:value-of select="$label"/>
           </label>
-          
-          
-          
+
+
+
           <xsl:choose>
             <xsl:when test="$isEditing">
               <!-- TODO : Add custom fields -->
@@ -142,7 +144,7 @@
                 </xsl:if>
                 <!-- TODO: Add the set on save text ? -->
               </div>
-              
+
               <!-- Next line display the add element control
                     the geonet:child element is taking care of that
                   <xsl:if test="not($isDisabled)">
@@ -156,7 +158,7 @@
                         </xsl:call-template>
                     </div>
                   </xsl:if> -->
-              
+
             </xsl:when>
             <xsl:otherwise>
               <div class="col-lg-10 gn-value">
@@ -164,14 +166,14 @@
               </div>
             </xsl:otherwise>
           </xsl:choose>
-          
+
           <xsl:if test="$attributesSnippet">
             <xsl:copy-of select="$attributesSnippet"/>
           </xsl:if>
         </div>
       </xsl:otherwise>
     </xsl:choose>
-    
+
   </xsl:template>
 
 
@@ -237,7 +239,7 @@
         <textarea><xsl:copy-of select="$parentEditInfo"/></textarea>
         -->
 
-    <button class="btn fa fa-minus text-danger pull-right"
+    <button class="btn fa fa-times text-danger pull-right"
       data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
       data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
       data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"/>
@@ -351,7 +353,7 @@
     <!-- Get variable from attribute (eg. codelist) or node (eg. gco:CharacterString) -->
     <xsl:variable name="valueToEdit"
       select="if ($value/*) then normalize-space($value/text()) else $value"/>
-    
+
     <xsl:choose>
       <xsl:when test="$type = 'textarea'">
         <textarea class="form-control" id="gn-field-{$editInfo/@ref}" name="_{$name}">
@@ -391,6 +393,8 @@
 
       </xsl:when>
       <xsl:otherwise>
+        <xsl:variable name="hasHelper" select="$listOfValues and count($listOfValues/*) > 0"/>
+        
         <input class="form-control" id="gn-field-{$editInfo/@ref}" name="_{$name}"
           value="{$valueToEdit}">
           <xsl:if test="$isRequired">
@@ -402,16 +406,34 @@
           <xsl:if test="$type != ''">
             <xsl:attribute name="type" select="$type"/>
           </xsl:if>
-          <xsl:if test="$hidden">
-            <xsl:attribute name="hidden"/>
+          <xsl:if test="$hidden or $hasHelper">
+            <!-- hide the form field if helper is available, the 
+            value is set by the directive which provide customized 
+            forms -->
+            <xsl:attribute name="class" select="'hidden'"/>
           </xsl:if>
         </input>
 
-        <!-- Helpers -->
-        <xsl:if test="$listOfValues">
-          <select class="form-control">
-            <xsl:copy-of select="$listOfValues/*"/>
-          </select>
+
+        <!-- 
+        Create an helper list for the current input element.
+        Current input could be an element or an attribute (eg. uom). 
+        -->
+        <xsl:if test="$hasHelper">
+          <!-- 
+            The helper config to pass to the directive in JSON format
+          -->
+          <textarea id="_{$editInfo/@ref}_config" class="hidden">
+            <xsl:copy-of select="java-xsl-util:xmlToJson(
+                                    saxon:serialize($listOfValues, 'default-serialize-mode'))"/></textarea>
+          <div 
+            data-gn-editor-helper="{$listOfValues/@editorMode}"
+            data-ref="_{$editInfo/@ref}"
+            data-related-element="{if ($listOfValues/@relElementRef != '') 
+                                    then concat('_', $listOfValues/@relElementRef) else ''}"
+            data-related-attr="{if ($listOfValues/@relAtt) 
+                                    then concat('_', $editInfo/@ref, '_', $listOfValues/@relAtt) else ''}">
+          </div>
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
@@ -419,17 +441,26 @@
   </xsl:template>
 
 
+  <!-- Display the remove control 
+  if parent info is not defined and element is not 
+  mandatory. 
+  -->
   <xsl:template name="render-form-field-control-remove">
     <xsl:param name="name"/>
     <xsl:param name="isRequired"/>
     <xsl:param name="editInfo"/>
     <xsl:param name="parentEditInfo"/>
 
-<!--    <textarea><xsl:copy-of select="$editInfo"/></textarea>
-    <textarea><xsl:copy-of select="$parentEditInfo"/></textarea>-->
-    
-    <xsl:if test="($parentEditInfo and $parentEditInfo/@del = 'true') or $parentEditInfo = ''">
-      <button class="btn fa fa-minus text-danger gn-remove"
+    <!--<textarea><xsl:copy-of select="$editInfo"/></textarea>
+    <textarea><xsl:copy-of select="$parentEditInfo"/></textarea>
+    -->
+    <xsl:if
+      test="($parentEditInfo and 
+                     ($parentEditInfo/@del = 'true' or 
+                     $parentEditInfo/@min != 1)
+                   ) or 
+                   not($parentEditInfo)">
+      <button class="btn fa fa-times text-danger gn-remove pull-right"
         data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
         data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
         data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"/>

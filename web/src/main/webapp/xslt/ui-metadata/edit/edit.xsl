@@ -53,10 +53,10 @@
           The main editor form.
           
           Disable form validation with novalidate attribute. -->
-      <form id="gn-editor-{$metadataId}" name="gn-editor" 
+      <form id="gn-editor-{$metadataId}" name="gnEditor" 
           accept-charset="UTF-8" method="POST"
           novalidate=""
-          class="form-horizontal" role="form">
+          class="form-horizontal gn-editor" role="form">
         <input type="hidden" id="schema" value="{$schema}"/>
         <input type="hidden" id="template" name="template" value="{$isTemplate}"/>
         <input type="hidden" id="uuid" value="{$metadataUuid}"/>
