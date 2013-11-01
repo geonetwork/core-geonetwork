@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gn="http://www.fao.org/geonetwork"
+  xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
   xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
   exclude-result-prefixes="#all" version="2.0">
   <!-- 
@@ -13,13 +14,18 @@
     legend according to the matching element. -->
   <xsl:template mode="form-builer" match="section[@name]|fieldset">
     <xsl:param name="base" as="node()"/>
-
+    
+    <xsl:variable name="sectionName" select="@name"/>
+    
     <xsl:choose>
-      <xsl:when test="@name">
+      <xsl:when test="$sectionName">
         <fieldset>
-          <!-- TODO : get translation for labels -->
+          <!-- Get translation for labels.
+          If labels contains ':', search into labels.xml. -->
           <legend>
-            <xsl:value-of select="@name"/>
+            <xsl:value-of select="if (contains($sectionName, ':')) 
+                then gn-fn-metadata:getLabel($schema, $sectionName, $labels)/label 
+                else $strings/*[name() = $sectionName]"/>
           </legend>
           <xsl:apply-templates mode="form-builer" select="@*|*">
             <xsl:with-param name="base" select="$base"/>
