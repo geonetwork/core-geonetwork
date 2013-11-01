@@ -63,8 +63,23 @@
             <scope>test</scope>
         </dependency>
 	</dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>test-jar</id>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
-	<profiles>
+    <profiles>
 		<profile>
 			<id>run-static-analysis</id>
 			<activation>

@@ -97,6 +97,11 @@
 		<Method name="serviceSpecificExec"/>
 	</Match>
     <Match>
+        <Class name="org.fao.geonet.DatabaseMigration" />
+        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
+        <Method name="newLookup"/>
+    </Match>
+    <Match>
         <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
     </Match>
     <Match>
