@@ -174,7 +174,6 @@
     <xsl:param name="server"/>
     <xsl:param name="gui"/>
     <xsl:param name="remote"/>
-<xsl:message><xsl:copy-of select="$res"></xsl:copy-of></xsl:message>
     <xsl:for-each select="$res/*[name() != 'summary' and name() != 'from' and name() != 'to']">
 
       <xsl:variable name="md">

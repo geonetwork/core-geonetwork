@@ -100,12 +100,27 @@
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
 
+    <xsl:variable name="attributes">
+      <xsl:if test="$isEditing">
+        <!-- Create form for all existing attribute (not in gn namespace)
+        and all non existing attributes not already present. -->
+        <xsl:apply-templates mode="render-for-field-for-attribute" 
+          select="
+          @*|
+          gn:attribute[not(@name = parent::node()/@*/name())]">
+          <xsl:with-param name="ref" select="gn:element/@ref"/>
+          <xsl:with-param name="insertRef" select="gn:element/@ref"/>
+        </xsl:apply-templates>
+      </xsl:if>
+    </xsl:variable>
+
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
         select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
       <xsl:with-param name="editInfo" select="gn:element"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
+      <xsl:with-param name="attributesSnippet" select="$attributes"/>
       <xsl:with-param name="subTreeSnippet">
         <!-- Process child of those element -->
         <xsl:apply-templates mode="mode-iso19139" select="*"/>
@@ -235,7 +250,6 @@
   </xsl:template>
 
 
-  <!-- TODO match attributes -->
 
   <!-- Duration
       
@@ -290,5 +304,55 @@
 
   </xsl:template>
 
-
+  <!-- ===================================================================== -->
+  <!-- gml:TimePeriod (format = %Y-%m-%dThh:mm:ss) -->
+  <!-- ===================================================================== -->
+  
+  <xsl:template mode="mode-iso19139" match="gml:beginPosition|gml:endPosition|gml:timePosition" priority="200">
+    
+    
+      <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+      <xsl:variable name="value" select="normalize-space(text())"/>
+      
+      
+      <xsl:variable name="attributes">
+        <xsl:if test="$isEditing">
+          <!-- Create form for all existing attribute (not in gn namespace)
+        and all non existing attributes not already present. -->
+          <xsl:apply-templates mode="render-for-field-for-attribute" 
+            select="
+            @*|
+            gn:attribute[not(@name = parent::node()/@*/name())]">
+            <xsl:with-param name="ref" select="gn:element/@ref"/>
+            <xsl:with-param name="insertRef" select="gn:element/@ref"/>
+          </xsl:apply-templates>
+        </xsl:if>
+      </xsl:variable>
+      
+      
+      <xsl:call-template name="render-element">
+        <xsl:with-param name="label"
+          select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', $xpath)/label"/>
+        <xsl:with-param name="name" select="gn:element/@ref"/>
+        <xsl:with-param name="value" select="text()"/>
+        <xsl:with-param name="cls" select="local-name()"/>
+        <xsl:with-param name="xpath" select="$xpath"/>
+        <!-- 
+          Default field type is Date.
+          
+          TODO : Add the capability to edit those elements as:
+           * xs:time
+           * xs:dateTime
+           * xs:anyURI
+           * xs:decimal
+           * gml:CalDate
+          See http://trac.osgeo.org/geonetwork/ticket/661
+        -->
+        <xsl:with-param name="type" select="if (string-length($value) = 10 or $value = '') then 'date' else 'datetime'"/>
+        <xsl:with-param name="editInfo" select="gn:element"/>
+        <xsl:with-param name="attributesSnippet" select="$attributes"/>
+      </xsl:call-template>
+      
+    
+  </xsl:template>
 </xsl:stylesheet>

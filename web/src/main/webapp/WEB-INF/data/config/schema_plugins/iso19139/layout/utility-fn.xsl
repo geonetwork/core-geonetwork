@@ -55,39 +55,5 @@
 
 
 
-  <xsl:function name="gn-fn-iso19139:getTextareaCSS" as="xs:string">
-    <xsl:param name="name" as="xs:string"/>
-
-    <xsl:choose>
-      <xsl:when test="$name='gmd:title'">title</xsl:when>
-      <xsl:when test="$name='gmd:abstract'">large</xsl:when>
-      <xsl:when
-        test="$name='gmd:supplementalInformation'
-          or $name='gmd:purpose'
-          or $name='gmd:orderingInstructions'
-          or $name='gmd:statement'"
-        >medium</xsl:when>
-      <xsl:when
-        test="$name='gmd:description'
-          or $name='gmd:specificUsage'
-          or $name='gmd:explanation'
-          or $name='gmd:credit'
-          or $name='gmd:evaluationMethodDescription'
-          or $name='gmd:measureDescription'
-          or $name='gmd:maintenanceNote'
-          or $name='gmd:useLimitation'
-          or $name='gmd:otherConstraints'
-          or $name='gmd:handlingDescription'
-          or $name='gmd:userNote'
-          or $name='gmd:checkPointDescription'
-          or $name='gmd:evaluationMethodDescription'
-          or $name='gmd:measureDescription'
-          "
-        >small</xsl:when>
-      <xsl:otherwise>small</xsl:otherwise>
-    </xsl:choose>
-
-  </xsl:function>
-
 
 </xsl:stylesheet>

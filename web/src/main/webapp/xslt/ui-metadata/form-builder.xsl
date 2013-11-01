@@ -134,7 +134,7 @@
                 
                 
                 
-                <div class="well well-sm gn-attr {if ($isAttributeDisplayed) then '' else 'hidden'}">
+                <div class="well well-sm gn-attr {if ($isDisplayingAttributes) then '' else 'hidden'}">
                   <xsl:if test="$attributesSnippet">
                     <xsl:copy-of select="$attributesSnippet"/>
                   </xsl:if>
@@ -222,11 +222,15 @@
             <xsl:with-param name="editInfo" select="$editInfo"/>
           </xsl:call-template>
         </xsl:if>
-
-        <xsl:if test="$attributesSnippet">
-          <xsl:copy-of select="$attributesSnippet"/>
-        </xsl:if>
       </legend>
+
+
+      <xsl:if test="count($attributesSnippet/*) > 0">
+        <div class="well well-sm gn-attr {if ($isDisplayingAttributes) then '' else 'hidden'}">
+          <xsl:copy-of select="$attributesSnippet"/>
+        </div>
+      </xsl:if>
+
 
       <xsl:if test="$subTreeSnippet">
         <xsl:copy-of select="$subTreeSnippet"/>
@@ -237,22 +241,11 @@
   <xsl:template name="render-boxed-element-control">
     <xsl:param name="editInfo"/>
 
-    <!--<textarea><xsl:copy-of select="$editInfo"/></textarea>
-        <textarea><xsl:copy-of select="$parentEditInfo"/></textarea>
-        -->
-
     <i class="btn fa fa-times text-danger pull-right"
       data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
       data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
       data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"/>
 
-    <!--
-      Add a box element from here or after the current one ?
-      
-      <xsl:if test="$parentEditInfo and $parentEditInfo/@del = 'true'">
-      <button class="btn fa fa-minus btn-danger gn-remove"
-        data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"/>
-    </xsl:if>-->
   </xsl:template>
 
 
@@ -504,10 +497,10 @@
     <xsl:variable name="fieldName" select="concat('_', $ref, '_', replace($attributeName, ':', 'COLON'))"/>
     
     <div class="form-group">
-      <label class="col-lg-2">
+      <label class="col-lg-4">
         <xsl:value-of select="gn-fn-metadata:getLabel($schema, $attributeName, $labels)/label"/>
       </label>
-      <div class="col-lg-10">
+      <div class="col-lg-8">
         <xsl:choose>
           <xsl:when test="$attributeSpec/gn:text">
             
@@ -543,7 +536,9 @@
   Ignore some internal attributes and do not allow to apply this mode
   to a node (only for gn:attribute, see next template).
   -->
-  <xsl:template mode="render-for-field-for-attribute" match="@gn:xsderror|@gn:addedObj|@min|@max|@name|@del|@add" priority="2"/>
+  <xsl:template mode="render-for-field-for-attribute" 
+    match="@gn:xsderror|@gn:addedObj|
+          @min|@max|@name|@del|@add|@id|@uuid" priority="2"/>
   
   
   <!-- 
@@ -554,11 +549,24 @@
                   <geonet:text value="inapplicable"/>
                   <geonet:text value="missing"/>
                   ...
+                  
+                  
+   TODO: externalize exception ?
   -->
-  <xsl:template mode="render-for-field-for-attribute" match="gn:attribute" priority="4">
+  <xsl:template mode="render-for-field-for-attribute" 
+    match="gn:attribute[not(@name = ('id', 'uuid', 'type', 'uuidref', 
+    'xlink:show', 'xlink:actuate', 'xlink:arcrole', 'xlink:role', 'xlink:title', 'xlink:href'))]" priority="4">
     <xsl:param name="ref"/>
     <xsl:param name="insertRef" select="''"/>
-    <i class="fa fa-plus" data-ng-click="add('{$ref}', '{@name}', '{$insertRef}', null, true)" title="{@name}"/>
+    
+    <xsl:variable name="attributeLabel" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
+    
+    <button type="button" class="btn btn-link btn-xs" 
+      data-ng-click="add('{$ref}', '{@name}', '{$insertRef}', null, true)" 
+      title="{$attributeLabel/description}">
+      <i class="fa fa-plus"/>
+      <xsl:value-of select="$attributeLabel/label"/>
+    </button>
   </xsl:template>
   
 

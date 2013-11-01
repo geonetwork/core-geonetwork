@@ -48,9 +48,9 @@
 
           <li class="divider"/>
           <li>
-            <a data-ng-click="toggleAttributes()">
+            <a data-ng-click="toggleAttributes(true)">
               <i class="fa"
-                data-ng-class="isAttributesDisplayed ? 'fa-check-square-o' : 'fa-square-o'"/>
+                data-ng-class="displayAttributes ? 'fa-check-square-o' : 'fa-square-o'"/>
               <span data-translate="">toggleAttributes</span></a>
           </li>
         </ul>
@@ -65,7 +65,11 @@
       <xsl:if test="$tab = @id">
         <xsl:attribute name="class">active</xsl:attribute>
       </xsl:if>
-      <a data-ng-click="switchToTab('{@id}', '{@mode}')">
+      <a>
+        <xsl:if test="$tab != @id">
+          <xsl:attribute name="data-ng-click" 
+            select="concat('switchToTab(''', @id, ''', ''', @mode, ''')')"/>
+        </xsl:if>
         <xsl:variable name="tabId" select="@id"/>
         <xsl:value-of select="$strings/*[name() = $tabId]"/>
       </a>

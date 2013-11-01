@@ -20,22 +20,32 @@
             gnSearchManagerService, 
             gnUtilityService) {
 
-
+      // TODO: move parameter to the route parameter
       $scope.metadataId = gnUtilityService.getUrlParameter('id');
       $scope.metadataUuid = gnUtilityService.getUrlParameter('uuid');
       $scope.tab = gnUtilityService.getUrlParameter('tab');
-      $scope.isAttributesDisplayed = false;
-      
+      $scope.displayAttributes =
+          gnUtilityService.getUrlParameter('displayAttributes') === 'true';
+
       /**
        * Animation duration for slide up/down
        */
       var duration = 300;
+      var saving = false;
+
+      var buildEditUrlPrefix = function(service) {
+        var params = [service, '?id=', $scope.metadataId];
+        $scope.tab && params.push('&currTab=',
+                                     $scope.tab);
+        $scope.displayAttributes && params.push('&displayAttributes=',
+                                                   $scope.displayAttributes);
+        return params.join('');
+      };
 
       $scope.getEditorForm = function() {
         // TODO: Check requested metadata exist - return message if it happens
         // Would you like to create a new one ?
-        return 'md.edit?id=' + $scope.metadataId +
-            ($scope.tab ? '&currTab=' + $scope.tab : '');
+        return buildEditUrlPrefix('md.edit');
       };
 
       $scope.switchToTab = function(tabIdentifier, mode) {
@@ -44,17 +54,33 @@
         //          better to use ng-model in the form ?
         $('#currTab')[0].value = tabIdentifier;
         $('#flat')[0].value = mode === 'flat';
+
+        // Make the current form disapearing
+        $('#gn-editor-' + $scope.metadataId + ' > fieldset').fadeOut(duration);
+
         $scope.save(true);
       };
 
-      $scope.toggleAttributes = function () {
-          $scope.isAttributesDisplayed = $scope.isAttributesDisplayed === false;
-          if ($scope.isAttributesDisplayed) {
-              $('.gn-attr').removeClass('hidden');
-          } else {
-              $('.gn-attr').addClass('hidden');
-          }
-      }
+      /**
+       * Display or not attributes editor.
+       *
+       * if toggle is true, the current value is inverted.
+       */
+      $scope.toggleAttributes = function(toggle) {
+        if (toggle) {
+          $scope.displayAttributes = $scope.displayAttributes === false;
+        }
+        // Update the form to propagate info when saved
+        // or tab switch - Needs to be propagated in Update service
+        $('#displayAttributes')[0].value = $scope.displayAttributes;
+
+        // Toggle class on all gn-attr widgets
+        if ($scope.displayAttributes) {
+          $('.gn-attr').removeClass('hidden');
+        } else {
+          $('.gn-attr').addClass('hidden');
+        }
+      };
 
       $scope.remove = function(ref, parent) {
         // md.element.remove?id=<metadata_id>&ref=50&parent=41
@@ -85,13 +111,13 @@
 
         var attributeAction = attribute ? '&child=geonet:attribute' : '';
 
-        $http.get('md.element.add?id=' + $scope.metadataId +
+        $http.get(buildEditUrlPrefix('md.element.add') +
                 '&ref=' + ref + '&name=' + name + attributeAction)
                 .success(function(data) {
               // Append HTML snippet after current element - compile Angular
               var target = $('#gn-el-' + insertRef);
               var snippet = $(data);
-          
+
               if (attribute) {
                 target.replaceWith(snippet);
               } else {
@@ -113,7 +139,7 @@
 
       $scope.addChoice = function(ref, parent, name, insertRef) {
         // md.elem.add?id=1250&ref=41&name=gmd:presentationForm
-        $http.get('md.element.add?id=' + $scope.metadataId +
+        $http.get(buildEditUrlPrefix('md.element.add') +
                   '&ref=' + ref +
                   '&name=' + parent +
                   '&child=' + name).success(function(data) {
@@ -145,6 +171,11 @@
        * value in the form and trigger save to update the view.
        */
       $scope.save = function(refreshForm) {
+        if (saving) {
+          return;
+        }
+        saving = true;
+
         $http.post(
             refreshForm ? 'md.edit.save' : 'md.edit.saveonly',
             $('#gn-editor-' + $scope.metadataId).serialize(),
@@ -156,13 +187,18 @@
             var snippet = $(data);
             $('#gn-editor-' + $scope.metadataId).replaceWith(snippet);
             $compile(snippet)($scope);
+
+            $scope.toggleAttributes();
           }
 
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate('saveMetadataSuccess')
           });
 
+          saving = false;
         }).error(function(data) {
+          saving = false;
+
           console.log(data);
 
           $rootScope.$broadcast('StatusUpdated', {
