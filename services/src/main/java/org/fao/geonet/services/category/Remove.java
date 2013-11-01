@@ -66,10 +66,7 @@ public class Remove extends NotInReadOnlyModeService {
         final MetadataCategory category = categoryRepository.findOne(iId);
         final List<Integer> affectedMd = context.getBean(MetadataRepository.class).findAllIdsBy(MetadataSpecs.hasCategory(category));
 
-        categoryRepository.delete(iId);
-        context.getBean(EntityManager.class).flush();
-        context.getBean(EntityManager.class).clear();
-
+        categoryRepository.deleteCategoryAndMetadataReferences(iId);
 		//--- reindex affected metadata
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
