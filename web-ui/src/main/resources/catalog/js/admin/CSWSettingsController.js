@@ -94,7 +94,7 @@
       function loadCSWElementSetName() {
         $http.get('admin.config.csw.customelementset@json')
         .success(function(data) {
-              $scope.cswElementSetName = data.xpath;
+              $scope.cswElementSetName = data.xpath || [];
             });
       }
       $scope.addCSWElementSetName = function() {
