@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import jeeves.exceptions.JeevesException;
+import jeeves.guiservices.session.JeevesUser;
 import jeeves.interfaces.Schedule;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ScheduleContext;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
@@ -44,9 +46,31 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         if (new DateTime().getHourOfDay() == 1) {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             try {
+                String id = "1";
+                Dbms dbms = null;
+                try {
+                    Element result = dbms.select("select id from users where username='admin'");
+                    if (result.getChild("record") != null) {
+                        id = result.getChildText("id");
+                    }
+                } catch (Throwable e) {
+                    Log.error(Geonet.DATA_MANAGER, "Error during unpublish", e);
+                }finally {
+                    if (dbms != null) {
+                        context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+                    }
+                }
                 ServiceContext serviceContext = new ServiceContext("unpublish.metadata", context.getApplicationContext(), new XmlCacheManager(), context.getMonitorManager(), context.getProviderManager(),
                         context.getSerialFactory(), context.getProfileManager(), context.allContexts());
                 serviceContext.setAsThreadLocal();
+
+                final UserSession userSession = new UserSession();
+                JeevesUser user = new JeevesUser(serviceContext.getProfileManager());
+                user.setId(id);
+                user.setProfile(Geonet.Profile.ADMINISTRATOR);
+                user.setUsername("admin");
+
+                userSession.loginAs(user);
                 performJob(gc, serviceContext);
             } finally {
                 context.getResourceManager().close();
