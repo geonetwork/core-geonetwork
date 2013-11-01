@@ -257,13 +257,19 @@ public class Info implements Service {
 		UserSession userSession = context.getUserSession();
 		if (userSession.isAuthenticated()) {
 			data.setAttribute("authenticated","true");
-			data.addContent(new Element(Geonet.Elem.PROFILE).setText(userSession.getProfile().name()))
+            final String emailAddr = userSession.getEmailAddr();
+            data.addContent(new Element(Geonet.Elem.PROFILE).setText(userSession.getProfile().name()))
 				.addContent(new Element(Geonet.Elem.USERNAME).setText(userSession.getUsername()))
 				.addContent(new Element(Geonet.Elem.ID).setText(userSession.getUserId()))
 				.addContent(new Element(Geonet.Elem.NAME).setText(userSession.getName()))
 				.addContent(new Element(Geonet.Elem.SURNAME).setText(userSession.getSurname()))
-				.addContent(new Element(Geonet.Elem.EMAIL).setText(userSession.getEmailAddr()))
-				.addContent(new Element(Geonet.Elem.HASH).setText(org.apache.commons.codec.digest.DigestUtils.md5Hex(userSession.getEmailAddr())));
+				.addContent(new Element(Geonet.Elem.EMAIL).setText(emailAddr));
+
+            if (emailAddr != null) {
+                data.addContent(new Element(Geonet.Elem.HASH).setText(org.apache.commons.codec.digest.DigestUtils.md5Hex(emailAddr)));
+            } else {
+                data.addContent(new Element(Geonet.Elem.HASH).setText(""));
+            }
 		} else {
 			data.setAttribute("authenticated","false");
 		}
