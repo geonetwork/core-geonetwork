@@ -155,10 +155,10 @@
 											<xsl:sort select="name"/>
 											<option value="{id}">
 												<xsl:variable name="aGroup" select="id"/>
-												<xsl:for-each select="/root/response/groups/id[.=$aGroup and @profile=$profileName]">
-													<xsl:attribute name="selected"/>
-												</xsl:for-each>
-												<xsl:value-of select="label/child::*[name() = $lang]"/>
+                                                <xsl:for-each select="/root/record/groups/id[.=$aGroup and @profile=$profileName]">
+                                                    <xsl:attribute name="selected"/>
+                                                </xsl:for-each>
+                                                <xsl:value-of select="label/child::*[name() = $lang]"/>
 											</option>
 										</xsl:for-each>
 									</select>
