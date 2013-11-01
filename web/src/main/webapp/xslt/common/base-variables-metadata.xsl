@@ -26,6 +26,9 @@
   
   <xsl:variable name="isEditing" select="$service = 'md.edit' or $service = 'md.element.add'"/>
   
+  <!-- Display attributes in editor -->
+  <xsl:variable name="isAttributeDisplayed" select="false()"/>
+  
   <xsl:variable name="withInlineEditing" select="false()"/>
   
   <xsl:variable name="withXPath" select="false()"/>

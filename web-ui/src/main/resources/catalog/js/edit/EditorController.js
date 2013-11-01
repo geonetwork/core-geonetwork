@@ -24,7 +24,8 @@
       $scope.metadataId = gnUtilityService.getUrlParameter('id');
       $scope.metadataUuid = gnUtilityService.getUrlParameter('uuid');
       $scope.tab = gnUtilityService.getUrlParameter('tab');
-
+      $scope.isAttributesDisplayed = false;
+      
       /**
        * Animation duration for slide up/down
        */
@@ -46,6 +47,14 @@
         $scope.save(true);
       };
 
+      $scope.toggleAttributes = function () {
+          $scope.isAttributesDisplayed = $scope.isAttributesDisplayed === false;
+          if ($scope.isAttributesDisplayed) {
+              $('.gn-attr').removeClass('hidden');
+          } else {
+              $('.gn-attr').addClass('hidden');
+          }
+      }
 
       $scope.remove = function(ref, parent) {
         // md.element.remove?id=<metadata_id>&ref=50&parent=41

@@ -18,7 +18,8 @@
 
       <!-- Make a tab switcher for all tabs of the current view -->
       <xsl:if test="count($currentView/tab) > 1">
-        <xsl:apply-templates mode="menu-builder" select="$config/editor/views/view[tab/@id = $tab]/tab"/>
+        <xsl:apply-templates mode="menu-builder"
+          select="$config/editor/views/view[tab/@id = $tab]/tab"/>
       </xsl:if>
 
 
@@ -44,6 +45,14 @@
               </a>
             </li>
           </xsl:for-each>
+
+          <li class="divider"/>
+          <li>
+            <a data-ng-click="toggleAttributes()">
+              <i class="fa"
+                data-ng-class="isAttributesDisplayed ? 'fa-check-square-o' : 'fa-square-o'"/>
+              <span data-translate="">toggleAttributes</span></a>
+          </li>
         </ul>
       </li>
     </ul>

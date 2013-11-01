@@ -134,7 +134,7 @@
                 
                 
                 
-                <div class="well well-sm gn-attr">
+                <div class="well well-sm gn-attr {if ($isAttributeDisplayed) then '' else 'hidden'}">
                   <xsl:if test="$attributesSnippet">
                     <xsl:copy-of select="$attributesSnippet"/>
                   </xsl:if>
