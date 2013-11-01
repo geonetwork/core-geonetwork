@@ -16,13 +16,17 @@
     <xsl:copy-of select="gn-fn-metadata:getLabel($schema, $name, $labels, '', '', '')"/>
   </xsl:function>
 
+
+  <!-- Return an element label taking care of the profil, 
+  the context (ie. parent element) or a complete xpath.
+  -->
   <xsl:function name="gn-fn-metadata:getLabel" as="node()">
     <xsl:param name="schema" as="xs:string"/>
     <xsl:param name="name" as="xs:string"/>
     <xsl:param name="labels" as="node()"/>
-    <xsl:param name="parent" as="xs:string"/>
-    <xsl:param name="parentIsoType" as="xs:string"/>
-    <xsl:param name="xpath" as="xs:string"/>
+    <xsl:param name="parent" as="xs:string?"/>
+    <xsl:param name="parentIsoType" as="xs:string?"/>
+    <xsl:param name="xpath" as="xs:string?"/>
 
     <!-- TODO : add fallback schema -->
 

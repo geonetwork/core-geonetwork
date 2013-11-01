@@ -66,28 +66,39 @@
        * Add another element of the same type to the metadata record.
        *
        * Default position is after. Other value is before.
+       * When attribute is expanded, the returned element contains the field
+       * and the element is replaced.
        */
-      $scope.add = function(ref, name, insertRef, position) {
-        // md.elem.add?id=1250&ref=41&name=gmd:presentationForm
+      $scope.add = function(ref, name, insertRef, position, attribute) {
+        // for element: md.elem.add?id=1250&ref=41&name=gmd:presentationForm
+        // for attribute md.elem.add?id=19&ref=42&name=gco:nilReason
+        //                  &child=geonet:attribute
+
+        var attributeAction = attribute ? '&child=geonet:attribute' : '';
+
         $http.get('md.element.add?id=' + $scope.metadataId +
-                '&ref=' + ref + '&name=' + name).success(function(data) {
-          console.log(data);
-          // Append HTML snippet after current element - compile Angular
-          var target = $('#gn-el-' + insertRef);
-          var snippet = $(data);
-          snippet.css('display', 'none');   // Hide
-          target[position || 'after'](snippet); // Insert
-          snippet.slideDown(duration, function() {});   // Slide
+                '&ref=' + ref + '&name=' + name + attributeAction)
+                .success(function(data) {
+              // Append HTML snippet after current element - compile Angular
+              var target = $('#gn-el-' + insertRef);
+              var snippet = $(data);
+          
+              if (attribute) {
+                target.replaceWith(snippet);
+              } else {
+                snippet.css('display', 'none');   // Hide
+                target[position || 'after'](snippet); // Insert
+                snippet.slideDown(duration, function() {});   // Slide
 
-          $compile(snippet)($scope); // Compile
+                // Remove the Add control from the current element
+                var addControl = $('#gn-el-' + insertRef + ' .gn-add');
+              }
 
-          // Remove the Add control from the current element
-          var addControl = $('#gn-el-' + insertRef + ' .gn-add');
-          console.log(addControl);
+              $compile(snippet)($scope); // Compile
 
-        }).error(function(data) {
-          console.log(data);
-        });
+            }).error(function(data) {
+              console.log(data);
+            });
       };
 
 
@@ -100,7 +111,9 @@
           // Append HTML snippet after current element - compile Angular
           var target = $('#gn-el-' + insertRef);
           var snippet = $(data);
+
           target.replaceWith(snippet); // Replace
+
           $compile(snippet)($scope); // Compile
         }).error(function(data) {
           console.log(data);
@@ -129,12 +142,13 @@
             {
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).success(function(data) {
-          console.log(data);
+
           if (refreshForm) {
             var snippet = $(data);
             $('#gn-editor-' + $scope.metadataId).replaceWith(snippet);
             $compile(snippet)($scope);
           }
+
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate('saveMetadataSuccess')
           });

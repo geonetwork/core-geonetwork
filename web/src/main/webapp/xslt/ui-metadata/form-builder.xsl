@@ -120,7 +120,6 @@
 
           <xsl:choose>
             <xsl:when test="$isEditing">
-              <!-- TODO : Add custom fields -->
               <div class="col-lg-8 gn-value">
                 <xsl:call-template name="render-form-field">
                   <xsl:with-param name="name" select="$name"/>
@@ -132,6 +131,14 @@
                   <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
                   <xsl:with-param name="listOfValues" select="$listOfValues"/>
                 </xsl:call-template>
+                
+                
+                
+                <div class="well well-sm gn-attr">
+                  <xsl:if test="$attributesSnippet">
+                    <xsl:copy-of select="$attributesSnippet"/>
+                  </xsl:if>
+                </div>
               </div>
               <div class="col-lg-2 gn-control">
                 <xsl:if test="not($isDisabled)">
@@ -144,7 +151,6 @@
                 </xsl:if>
                 <!-- TODO: Add the set on save text ? -->
               </div>
-
               <!-- Next line display the add element control
                     the geonet:child element is taking care of that
                   <xsl:if test="not($isDisabled)">
@@ -166,10 +172,6 @@
               </div>
             </xsl:otherwise>
           </xsl:choose>
-
-          <xsl:if test="$attributesSnippet">
-            <xsl:copy-of select="$attributesSnippet"/>
-          </xsl:if>
         </div>
       </xsl:otherwise>
     </xsl:choose>
@@ -304,7 +306,7 @@
                 TODO: Could be nice to select a type by default - a recommended type -->
           <xsl:when test="$childEditInfo/gn:choose">
             <div class="btn-group">
-              <button type="button" class="btn dropdown-toggle fa fa-plus gn-control" data-toggle="dropdown">
+              <button type="button" class="btn dropdown-toggle fa fa-plus gn-add" data-toggle="dropdown">
                 <span/>
                 <span class="caret"/>
               </button>
@@ -323,7 +325,7 @@
             </div>
           </xsl:when>
           <xsl:otherwise>
-            <i class="btn fa fa-plus gn-control"
+            <i class="btn fa fa-plus gn-add"
               data-ng-click="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');"
             />
           </xsl:otherwise>
@@ -479,10 +481,86 @@
 
     <!-- Add icon for last element of its kind -->
     <xsl:if test="$parentEditInfo and $parentEditInfo/@add = 'true' and not($parentEditInfo/@down)">
-      <i class="btn fa fa-plus gn-control"
+      <i class="btn fa fa-plus gn-add"
         data-ng-click="add({$parentEditInfo/@parent}, '{$name}', {$editInfo/@ref})"/>
     </xsl:if>
   </xsl:template>
+
+
+
+
+
+  <!-- 
+    Render attribute as select list or simple output 
+  -->
+  <xsl:template mode="render-for-field-for-attribute" match="@*">
+    <xsl:param name="ref"/>
+    
+    <xsl:variable name="attributeName" select="name()"/>
+    <xsl:variable name="attributeValue" select="."/>
+    <xsl:variable name="attributeSpec" select="../gn:attribute[@name = $attributeName]"/>
+    <!-- Form field name escaping ":" which will be invalid character for
+    Jeeves request parameters. -->
+    <xsl:variable name="fieldName" select="concat('_', $ref, '_', replace($attributeName, ':', 'COLON'))"/>
+    
+    <div class="form-group">
+      <label class="col-lg-2">
+        <xsl:value-of select="gn-fn-metadata:getLabel($schema, $attributeName, $labels)/label"/>
+      </label>
+      <div class="col-lg-10">
+        <xsl:choose>
+          <xsl:when test="$attributeSpec/gn:text">
+            
+            <xsl:variable name="attributeCodeList" select="gn-fn-metadata:getCodeListValues($schema, $attributeName, $codelists)"/>
+            
+            <select class="form-control" name="{$fieldName}">
+              <xsl:for-each select="$attributeSpec/gn:text">
+                <xsl:variable name="optionValue" select="@value"/>
+                
+                <!-- Check if a translation is available for the attribute value -->
+                <xsl:variable name="label" 
+                  select="$attributeCodeList/entry[code = $optionValue]/label"/>
+                
+                <option value="{$optionValue}">
+                  <xsl:if test="$optionValue = $attributeValue">
+                    <xsl:attribute name="selected"/>
+                  </xsl:if>
+                  <xsl:value-of select="if ($label) then $label else $optionValue"/>
+                </option>
+              </xsl:for-each>
+            </select>
+          </xsl:when>
+          <xsl:otherwise>
+            <input type="text" class="form-control" name="{$fieldName}" value="{$attributeValue}"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </div>
+    </div>
+  </xsl:template>
+  
+  
+  <!-- 
+  Ignore some internal attributes and do not allow to apply this mode
+  to a node (only for gn:attribute, see next template).
+  -->
+  <xsl:template mode="render-for-field-for-attribute" match="@gn:xsderror|@gn:addedObj|@min|@max|@name|@del|@add" priority="2"/>
+  
+  
+  <!-- 
+    Add attribute control
+  <geonet:attribute 
+                  name="gco:nilReason"
+                  add="true">
+                  <geonet:text value="inapplicable"/>
+                  <geonet:text value="missing"/>
+                  ...
+  -->
+  <xsl:template mode="render-for-field-for-attribute" match="gn:attribute" priority="4">
+    <xsl:param name="ref"/>
+    <xsl:param name="insertRef" select="''"/>
+    <i class="fa fa-plus" data-ng-click="add('{$ref}', '{@name}', '{$insertRef}', null, true)" title="{@name}"/>
+  </xsl:template>
+  
 
 
   <!-- Nav bars -->

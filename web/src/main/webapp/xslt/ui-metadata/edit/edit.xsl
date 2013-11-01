@@ -40,6 +40,7 @@
 
   <xsl:include href="../../common/base-variables-metadata-editor.xsl"/>
   
+  <xsl:include href="../../common/functions-core.xsl"/>
   <xsl:include href="../../common/functions-metadata.xsl"/>
 
   <xsl:include href="../../common/profiles-loader.xsl"/>

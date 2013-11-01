@@ -38,6 +38,9 @@
     <for name="gmd:electronicMailAddress" use="email"/>
   </fields>
   
+  <fieldset>
+    <for></for>
+  </fieldset>
   
   <!-- View configuration -->
   <views>
