@@ -1276,7 +1276,9 @@ public class DataManager {
         String data   = templateMetadata.getData();
         String uuid   = UUID.randomUUID().toString();
         Element xml = Xml.loadString(data, false);
-
+        if (templateMetadata.getDataInfo().getType() == MetadataType.METADATA) {
+            xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
+        }
         final Metadata newMetadata = new Metadata().setUuid(uuid);
         newMetadata.getDataInfo()
                 .setChangeDate(new ISODate())
