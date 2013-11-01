@@ -27,12 +27,12 @@ INSERT INTO MetadataNotifications_Tmp SELECT metadataId, notifierId, notified, m
 
 -- ----  Change params querytype column to map to the LuceneQueryParamType enumeration
 
-INSERT INTO Params_TEMP SELECT id, requestId, 0, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='BOOLEAN_QUERY';
-INSERT INTO Params_TEMP SELECT id, requestId, 1, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='TERM_QUERY';
-INSERT INTO Params_TEMP SELECT id, requestId, 2, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='FUZZY_QUERY';
-INSERT INTO Params_TEMP SELECT id, requestId, 3, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='PREFIX_QUERY';
-INSERT INTO Params_TEMP SELECT id, requestId, 4, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='MATCH_ALL_DOCS_QUERY';
-INSERT INTO Params_TEMP SELECT id, requestId, 5, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='WILDCARD_QUERY';
-INSERT INTO Params_TEMP SELECT id, requestId, 6, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='PHRASE_QUERY';
-INSERT INTO Params_TEMP SELECT id, requestId, 7, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='RANGE_QUERY';
-INSERT INTO Params_TEMP SELECT id, requestId, 8, termField, termText, similarity, lowerText, upperText, inclusive FROM MetadataNotifications where action='NUMERIC_RANGE_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 0, termField, termText, similarity, lowerText, upperText, inclusive FROM Params where querytype='BOOLEAN_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 1, termField, termText, similarity, lowerText, upperText, inclusive FROM Params where querytype='TERM_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 2, termField, termText, similarity, lowerText, upperText, inclusive FROM Params where querytype='FUZZY_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 3, termField, termText, similarity, lowerText, upperText, inclusive FROM Params where querytype='PREFIX_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 4, termField, termText, similarity, lowerText, upperText, inclusive FROM Params where querytype='MATCH_ALL_DOCS_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 5, termField, termText, similarity, lowerText, upperText, inclusive FROM Params where querytype='WILDCARD_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 6, termField, termText, similarity, lowerText, upperText, inclusive FROM Params where querytype='PHRASE_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 7, termField, termText, similarity, lowerText, upperText, inclusive FROM Params where querytype='RANGE_QUERY';
+INSERT INTO Params_TEMP SELECT id, requestId, 8, termField, termText, similarity, lowerText, upperText, inclusive FROM Params where querytype='NUMERIC_RANGE_QUERY';

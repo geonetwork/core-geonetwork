@@ -19,5 +19,4 @@
     <!--<bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>-->
     <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.MemoryDirectoryFactory" lazy-init="true"/>
 
-
 </beans>

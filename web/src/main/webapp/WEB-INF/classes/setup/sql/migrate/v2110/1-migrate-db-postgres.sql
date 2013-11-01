@@ -13,16 +13,7 @@ CREATE TABLE HarvesterSettings
   );
 
 
-CREATE TABLE USERADDRESS
-(
-	userid 	int not null,
-	addressid int not null,
-	primary key(userid,addressid),
-    foreign key(userid) references Users(id),
-    foreign key(addressid) references Address(id)
-);
-
-CREATE TABLE ADDRESS
+CREATE TABLE Address
 (
 	id			  int 			not null,
 	address       varchar(128),
@@ -33,11 +24,20 @@ CREATE TABLE ADDRESS
 	primary key(id)
 );
 
-CREATE TABLE EMAIL
+CREATE TABLE UserAddress
+(
+	userid 	int not null,
+	addressid int not null,
+	primary key(userid,addressid),
+    foreign key(userid) references Users(id),
+    foreign key(addressid) references Address(id)
+);
+
+CREATE TABLE Email
 (
 	user_id			  int 			not null,
 	email         varchar(128),
 
-	primary key(userid),
+	primary key(user_id),
     foreign key(userId) references Users(id),
 );

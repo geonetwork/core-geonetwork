@@ -1,5 +1,6 @@
 package org.fao.geonet;
 
+import com.google.common.util.concurrent.Callables;
 import com.vividsolutions.jts.util.Assert;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.server.sources.http.ServletPathFinder;
@@ -18,6 +19,7 @@ import org.springframework.context.ApplicationContextAware;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -26,6 +28,7 @@ import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * Postprocessor that runs after the jdbcDataSource bean has been initialized and migrates the
@@ -38,14 +41,14 @@ import java.util.Map;
 public class DatabaseMigration implements BeanPostProcessor, ApplicationContextAware {
     private static final int VERSION_NUMBER_ID_BEFORE_2_11 = 15;
     private static final int SUBVERSION_NUMBER_ID_BEFORE_2_11 = 16;
-    private static final String VERSION_NUMBER_KEY = "system/platform/version";
-    private static final String SUBVERSION_NUMBER_KEY = "system/platform/subVersion";
     private static final String JAVA_MIGRATION_PREFIX = "java:";
 
-    private LinkedHashMap<Integer/*version number*/, List<String> /*path to sql files*/> _migration;
+    private Callable<LinkedHashMap<Integer, List<String>>> _migration;
 
     private Logger _logger = Log.createLogger(Geonet.GEONETWORK);
     private ApplicationContext _applicationContext;
+    private Pair<String/* Version */, String /* Subversion */> currentVersionAndSubVersion;
+    private boolean foundErrors;
 
     @Override
     public final Object postProcessBeforeInitialization(final Object bean, final String beanName) {
@@ -54,22 +57,45 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
 
     @Override
     public final Object postProcessAfterInitialization(final Object bean, final String beanName) {
-        if (beanName.equals("jdbcDataSource")) {
+        if (bean instanceof DataSource) {
 
-            ServletContext servletContext = _applicationContext.getBean(ServletContext.class);
-            if (servletContext == null) {
-                _logger.warning("No servletContext found.  Database migration aborted.");
-                return bean;
-            }
 
             try {
-                ServerLib sl = new ServerLib(servletContext, null);
-                String version = sl.getVersion();
-                String subVersion = sl.getSubVersion();
-                migrateDatabase(servletContext, (DataSource) bean, version, subVersion);
+                String version;
+                String subVersion;
+                ServletContext servletContext;
+                String path;
+
+                if (currentVersionAndSubVersion != null) {
+                    version = currentVersionAndSubVersion.one();
+                    subVersion = currentVersionAndSubVersion.two();
+                    servletContext = null;
+                    File currentPath = new File(".").getAbsoluteFile();
+                    String pathToWebapp = "web/src/main/webapp";
+                    while (!new File(currentPath, pathToWebapp).exists()) {
+                        currentPath = currentPath.getParentFile();
+                    }
+                    path = new File(currentPath, pathToWebapp).getAbsolutePath()+"/";
+                } else {
+                    servletContext = _applicationContext.getBean(ServletContext.class);
+                    if (servletContext == null) {
+                        _logger.warning("No servletContext found.  Database migration aborted.");
+                        return bean;
+                    }
+
+                    ServerLib sl = new ServerLib(servletContext, null);
+                    version = sl.getVersion();
+                    subVersion = sl.getSubVersion();
+                    ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
+
+                    path = pathFinder.getAppPath();
+                }
+                migrateDatabase(servletContext, path, (DataSource) bean, version, subVersion);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (Throwable e) {
                 throw new RuntimeException(e);
             }
             return bean;
@@ -78,22 +104,22 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
     }
 
     public final void setMigration(final LinkedHashMap<Integer, List<String>> migration) {
+        this._migration = Callables.returning(migration);
+    }
+
+    public final void setMigrationLoader(final Callable<LinkedHashMap<Integer, List<String>>> migration) {
         this._migration = migration;
     }
 
-    private void migrateDatabase(ServletContext servletContext, final DataSource dataSource, final String webappVersion, final String subVersion) throws SQLException {
+    private void migrateDatabase(ServletContext servletContext, String path, final DataSource dataSource, final String webappVersion, final String subVersion) throws Exception {
         _logger.info("  - Migration ...");
-
-        ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
-
-        String path = pathFinder.getAppPath();
 
         Connection conn = null;
         Statement statement = null;
         try {
             conn = dataSource.getConnection();
             statement = conn.createStatement();
-            doMigration(webappVersion, subVersion, servletContext, path, conn, statement);
+            this.foundErrors = doMigration(webappVersion, subVersion, servletContext, path, conn, statement);
 
         } finally {
             try {
@@ -108,7 +134,7 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
         }
     }
 
-    boolean doMigration(String webappVersion, String subVersion, ServletContext servletContext, String path, Connection conn, Statement statement) throws SQLException {
+    boolean doMigration(String webappVersion, String subVersion, ServletContext servletContext, String path, Connection conn, Statement statement) throws Exception {
         // Get db version and subversion
         Pair<String, String> dbVersionInfo = getDatabaseVersion(statement);
         String dbVersion = dbVersionInfo.one();
@@ -145,7 +171,7 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
             _logger.debug("      Migrating from " + from + " to " + to + " (dbtype:" + dbType + ")...");
 
             _logger.info("      Loading SQL migration step configuration from <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n ...");
-            for (Map.Entry<Integer, List<String>> migrationEntry : _migration.entrySet()) {
+            for (Map.Entry<Integer, List<String>> migrationEntry : _migration.call().entrySet()) {
                 int versionNumber = migrationEntry.getKey();
                 if (versionNumber > from && versionNumber <= to) {
                     _logger.info("       - running tasks for " + versionNumber + "...");
@@ -203,17 +229,27 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
     }
 
     private boolean runJavaMigration(Connection conn, String file) {
+        Statement statement = null;
         try {
             String className = file.substring(JAVA_MIGRATION_PREFIX.length());
             _logger.info("         - Java migration class:" + className);
 
+            statement = conn.createStatement();
             DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
-            task.update(conn);
+            task.update(statement);
             return false;
         } catch (Throwable e) {
             _logger.info("          Errors occurs during Java migration file: " + e.getMessage());
             e.printStackTrace();
             return true;
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    return true;
+                }
+            }
         }
     }
 
@@ -294,5 +330,28 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this._applicationContext = applicationContext;
+    }
+
+    public void setVersion(String version) {
+        String subversion = "";
+        if (currentVersionAndSubVersion != null) {
+            subversion = currentVersionAndSubVersion.two();
+        }
+        currentVersionAndSubVersion = Pair.read(version, subversion);
+    }
+    public void setSubversion(String subversion) {
+        String version = "";
+        if (currentVersionAndSubVersion != null) {
+            version = currentVersionAndSubVersion.one();
+        }
+        currentVersionAndSubVersion = Pair.read(version, subversion);
+    }
+
+    public LinkedHashMap<Integer, List<String>> getMigrationConfig() throws Exception {
+        return _migration.call();
+    }
+
+    public boolean isFoundErrors() {
+        return foundErrors;
     }
 }

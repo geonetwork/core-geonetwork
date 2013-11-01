@@ -51,10 +51,6 @@ CREATE TABLE MetadataNotifications
 -- ----  Change params querytype column to map to the LuceneQueryParamType enumeration
 
 DROP TABLE Params;
-DROP INDEX ParamsNDX1 ON Params(requestId);
-DROP INDEX ParamsNDX2 ON Params(queryType);
-DROP INDEX ParamsNDX3 ON Params(termField);
-DROP INDEX ParamsNDX4 ON Params(termText);
 
 CREATE TABLE Params
   (

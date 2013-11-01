@@ -12,14 +12,7 @@ CREATE TABLE HarvesterSettings
 ALTER TABLE HarvesterSettings ADD FOREIGN KEY (parentId) REFERENCES HarvesterSettings (id);
 
 
-CREATE TABLE USER_ADDRESS
-(
-	userid 	int not null,
-	addressid int not null,
-	primary key(userid,addressid)
-);
-
-CREATE TABLE ADDRESS
+CREATE TABLE Address
 (
 	id			  int 			not null,
 	address       varchar(128),
@@ -30,9 +23,16 @@ CREATE TABLE ADDRESS
 	primary key(id)
 );
 
-CREATE TABLE EMAIL
+CREATE TABLE USER_ADDRESS
+(
+	userId 	int not null,
+	addressId int not null,
+	primary key(userId,addressId)
+);
+
+CREATE TABLE Email
 (
 	user_id			  int 			not null,
 	email         varchar(128),
-	primary key(userid)
+	primary key(user_id)
 );

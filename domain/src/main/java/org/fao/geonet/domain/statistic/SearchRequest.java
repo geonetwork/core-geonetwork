@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "requests")
+@Table(name = "Requests")
 public class SearchRequest {
     private int _id;
     private ISODate _requestDate;

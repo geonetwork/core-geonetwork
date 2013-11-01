@@ -53,6 +53,7 @@
         </entry>
         <entry key="280">
             <list>
+                <value>java:v280.MoveHarvesterSettingsToHigherNumber</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/migrate-db-</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/migrate-</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-eng-</value>
@@ -75,6 +76,7 @@
         </entry>
         <entry key="2100">
             <list>
+                <value>java:v280.MoveHarvesterSettingsToHigherNumber</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v2100/migrate-db-</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v2100/migrate-</value>
             </list>

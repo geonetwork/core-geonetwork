@@ -1,5 +1,7 @@
 -- Creates New tables required for this version
 
+ALTER TABLE Services ADD PRIMARY KEY (id);
+
 CREATE TABLE HarvesterSettings
   (
     id        int            not null,
@@ -11,7 +13,7 @@ CREATE TABLE HarvesterSettings
 
 ALTER TABLE HarvesterSettings ADD FOREIGN KEY (parentId) REFERENCES HarvesterSettings (id);
 
-CREATE TABLE ADDRESS
+CREATE TABLE Address
 (
 	id			  int 			not null,
 	address       varchar(128),
@@ -22,16 +24,16 @@ CREATE TABLE ADDRESS
 	primary key(id)
 );
 
-CREATE TABLE USERADDRESS
+CREATE TABLE UserAddress
 (
 	userid 	int not null,
 	addressid int not null,
 	primary key(userid,addressid)
 );
 
-CREATE TABLE EMAIL
+CREATE TABLE Email
 (
 	user_id			  int 			not null,
 	email         varchar(128),
-	primary key(userid)
+	primary key(user_id)
 );

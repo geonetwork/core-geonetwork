@@ -2,7 +2,7 @@
 
 -- Update UserGroups profiles to be one of the enumerated profiles
 
-INSERT INTO USERGROUPS (SELECT * FROM USERGROUPS_TMP);
+INSERT INTO USERGROUPS SELECT * FROM USERGROUPS_TMP;
 DROP TABLE USERGROUPS_TMP;
 
 -- Convert Profile column to the profile enumeration ordinal

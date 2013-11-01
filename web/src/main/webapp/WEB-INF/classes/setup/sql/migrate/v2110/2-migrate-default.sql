@@ -1,7 +1,7 @@
 --Inserts new data and modifies data
 
 ALTER TABLE operations DROP COLUMN reserved;
-ALTER TABLE service DROP COLUMN id;
+ALTER TABLE services DROP COLUMN id;
 
 INSERT INTO HarvesterSettings VALUES  (1,NULL,'harvesting',NULL);
 -- Copy all harvester's root nodes config
@@ -172,6 +172,6 @@ UPDATE Settings SET value='2.11.0' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 
 -- Populate new tables from Users
-INSERT INTO ADDRESS SELECT id, address, city, state, zip, country FROM Users;
-INSERT INTO USER_ADDRESS SELECT id, id FROM Users;
-INSERT INTO EMAIL SELECT id, email FROM Users;
+INSERT INTO Address (SELECT id, address, city, state, zip, country FROM Users);
+INSERT INTO UserAddress (SELECT id, id FROM Users);
+INSERT INTO Email (SELECT id, email FROM Users);

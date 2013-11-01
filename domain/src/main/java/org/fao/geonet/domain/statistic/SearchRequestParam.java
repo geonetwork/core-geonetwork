@@ -11,7 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "params")
+@Table(name = "Params")
 public class SearchRequestParam {
     private int _id;
     private LuceneQueryParamType _queryType;

@@ -1,5 +1,6 @@
 package org.fao.geonet;
 
+import com.google.common.base.Optional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.datasource.embedded.ConnectionProperties;
@@ -11,6 +12,7 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.Callable;
 
 /**
  * Configures the H2 database to be a bit more string so mysql and other databases are more likely to work if the tests pass.
@@ -23,6 +25,9 @@ public class GeonetworkH2TestEmbeddedDatabaseConfigurer implements EmbeddedDatab
 
     private final Class<? extends Driver> driverClass;
     private String _mode = "";
+    private String _username = "sa";
+    private String _password = "p";
+    private Optional<Callable<String>> _dbPathLocator = Optional.absent();
 
     public GeonetworkH2TestEmbeddedDatabaseConfigurer() {
         try {
@@ -35,9 +40,17 @@ public class GeonetworkH2TestEmbeddedDatabaseConfigurer implements EmbeddedDatab
     public void configureConnectionProperties(ConnectionProperties properties, String databaseName) {
         properties.setDriverClass(this.driverClass);
 //        properties.setUrl(String.format("jdbc:h2:mem:%s;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE", databaseName));
-        properties.setUrl(String.format("jdbc:h2:mem:%s;DB_CLOSE_DELAY=-1%s", databaseName, _mode));
-        properties.setUsername("sa");
-        properties.setPassword("");
+        if (_dbPathLocator.isPresent()) {
+            try {
+                properties.setUrl(String.format("jdbc:h2:%s;DB_CLOSE_DELAY=-1%s", _dbPathLocator.get().call(), _mode));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            properties.setUrl(String.format("jdbc:h2:mem:%s;DB_CLOSE_DELAY=-1%s", databaseName, _mode));
+        }
+        properties.setUsername(_username);
+        properties.setPassword(_password);
     }
     protected final Log logger = LogFactory.getLog(getClass());
 
@@ -56,5 +69,17 @@ public class GeonetworkH2TestEmbeddedDatabaseConfigurer implements EmbeddedDatab
                 logger.warn("Could not shutdown embedded database", ex);
             }
         }
+    }
+
+    public void setDatabasePathLocator(Callable<String> locator) {
+        this._dbPathLocator = Optional.of(locator);
+    }
+
+    public void setUsername(String username) {
+        this._username = username;
+    }
+
+    public void setPassword(String password) {
+        this._password = password;
     }
 }
