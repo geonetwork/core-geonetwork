@@ -79,7 +79,7 @@ public class GetCategories implements Service
         }
 
 		Element isOwner = new Element("owner");
-		if (am.isOwner(context,id)) {
+		if (am.isOwner(context, id)) {
 			isOwner.setText("true");
         } else {
 			isOwner.setText("false");
