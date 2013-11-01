@@ -1,8 +1,12 @@
 // Functions called from the metadata viewer
 
-			var getGNServiceURL = function(service) {
-			  return Env.locService+"/"+service;
-			};
+            var getGNServiceURL = function(service) {
+                if (service.indexOf("/") == 0) {
+                    return Env.locService+service;
+                } else {
+                    return Env.locService+'/'+service;
+                }
+            };
 
 // for processing categories and privileges buttons
 
