@@ -175,10 +175,10 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
      *
      * @param params the params map to convert to Element
      */
-    protected Element createParams(Pair<String, String>... params) {
+    protected Element createParams(Pair<String, ? extends Object>... params) {
         final Element request = new Element("request");
-        for (Pair<String, String> param : params) {
-            request.addContent(new Element(param.one()).setText(param.two()));
+        for (Pair<String, ?> param : params) {
+            request.addContent(new Element(param.one()).setText(param.two().toString()));
         }
         return request;
     }
