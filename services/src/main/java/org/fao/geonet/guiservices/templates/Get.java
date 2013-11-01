@@ -123,7 +123,7 @@ public class Get implements Service
                 // already in list
                 // while in list
                 int tmp = displayOrderI;
-                while (displayOrderList.contains(displayOrderI)) {
+                while (displayOrderList.contains(tmp)) {
                     tmp++;
                 }
                 displayOrderI = tmp;
