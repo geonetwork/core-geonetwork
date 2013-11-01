@@ -30,6 +30,7 @@ package org.fao.geonet.kernel;
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.exceptions.JeevesException;
@@ -1287,17 +1288,15 @@ public class DataManager {
                 .setOwner(owner)
                 .setSourceId(source);
 
-        Collection<MetadataCategory> copiedCategories = Collections2.transform(templateMetadata.getCategories(),
-                new Function<MetadataCategory, MetadataCategory>() {
-                    @Nullable
+        Collection<MetadataCategory> filteredCategories = Collections2.filter(templateMetadata.getCategories(),
+                new Predicate<MetadataCategory>() {
                     @Override
-                    public MetadataCategory apply(@Nullable MetadataCategory input) {
-                        MetadataCategory categeory = new MetadataCategory();
-                        categeory.setName(input.getName());
-                        return null;  //To change body of implemented methods use File | Settings | File Templates.
+                    public boolean apply(@Nullable MetadataCategory input) {
+                        return input != null;
                     }
                 });
-        newMetadata.getCategories().addAll(copiedCategories);
+
+        newMetadata.getCategories().addAll(filteredCategories);
 
         int finalId = insertMetadata(context, newMetadata, xml, false, true, true, UpdateDatestamp.YES,
                 fullRightsForGroup).getId();
