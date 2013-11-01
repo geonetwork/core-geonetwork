@@ -164,7 +164,7 @@ public class DbLib {
             finalPath = testPath(appPath + "/" + filePath + "/" +  prefix + type + SQL_EXTENSION);
         }
 
-        if (finalPath == null) {
+        if (finalPath == null && servletContext != null) {
             finalPath = servletContext.getRealPath(filePath + "/" + prefix + type + SQL_EXTENSION);
         }
         if (finalPath == null) {
@@ -174,7 +174,7 @@ public class DbLib {
             finalPath = testPath(appPath + "/" + filePath + "/" +  prefix + "default" + SQL_EXTENSION);
         }
 
-        if (finalPath == null) {
+        if (finalPath == null && servletContext != null) {
             finalPath = servletContext.getRealPath(filePath + "/" +  prefix + "default" + SQL_EXTENSION);
         }
 

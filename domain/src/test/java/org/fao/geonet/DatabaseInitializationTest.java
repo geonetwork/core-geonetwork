@@ -143,7 +143,7 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             "METADATANOTIFICATIONS",
             "METADATANOTIFIERS", "METADATARATING", "METADATASTATUS", "OPERATIONALLOWED", "OPERATIONS", "OPERATIONSDES", "PARAMS",
             "RELATIONS", "REQUESTS", "SERVICEPARAMETERS", "SERVICES", "SETTINGS", "SOURCES", "STATUSVALUES", "STATUSVALUESDES",
-            "THESAURUS", "USERGROUPS", "USERS", "USER_ADDRESS", "VALIDATION"};
+            "THESAURUS", "USERGROUPS", "USERS", "USERADDRESS", "VALIDATION"};
     Column[] FROM_COLUMNS_TABLE = new Column[]{column("CATEGORIES", "NAME", "<null>", "NO", "VARCHAR", "255"),
             column("CATEGORIES", "ID", "<null>", "NO", "INTEGER", "10", true), column("CATEGORIESDES", "LANGID", "<null>", "NO",
             "VARCHAR", "5"),
@@ -295,8 +295,8 @@ public class DatabaseInitializationTest extends AbstractSpringDataTest {
             column("ADDRESS", "ID", "<null>", "NO", "INTEGER", "10", true),
             column("ADDRESS", "STATE", "<null>", "YES", "VARCHAR", "255"),
             column("ADDRESS", "ZIP", "<null>", "YES", "VARCHAR", "16"),
-            column("USER_ADDRESS", "ADDRESSID", "<null>", "NO", "INTEGER", "10"),
-            column("USER_ADDRESS", "USERID", "<null>", "NO", "INTEGER", "10"),
+            column("USERADDRESS", "ADDRESSID", "<null>", "NO", "INTEGER", "10"),
+            column("USERADDRESS", "USERID", "<null>", "NO", "INTEGER", "10"),
             column("EMAIL", "EMAIL", "<null>", "YES", "VARCHAR", "255"),
             column("EMAIL", "USER_ID", "<null>", "NO", "INTEGER", "10"),
             column("VALIDATION", "FAILED", "<null>", "NO", "INTEGER", "10"),

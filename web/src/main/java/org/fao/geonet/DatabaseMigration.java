@@ -93,7 +93,7 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
         try {
             conn = dataSource.getConnection();
             statement = conn.createStatement();
-            if (doMigration(webappVersion, subVersion, servletContext, path, conn, statement)) return;
+            doMigration(webappVersion, subVersion, servletContext, path, conn, statement);
 
         } finally {
             try {
@@ -113,6 +113,8 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
         Pair<String, String> dbVersionInfo = getDatabaseVersion(statement);
         String dbVersion = dbVersionInfo.one();
         String dbSubVersion = dbVersionInfo.two();
+
+        boolean anyMigrationError = false;
 
         // Migrate db if needed
         _logger.info("      Webapp   version:" + webappVersion + " subversion:" + subVersion);
@@ -137,7 +139,6 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
             _logger.info("      Webapp version = Database version, no migration task to apply.");
         } else if (to > from) {
             boolean anyMigrationAction = false;
-            boolean anyMigrationError = false;
 
             // Migrating from 2.0 to 2.5 could be done 2.0 -> 2.3 -> 2.4 -> 2.5
             String dbType = DatabaseType.lookup(conn).toString();
@@ -198,7 +199,7 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
         } else {
             _logger.info("      Running on a newer database version.");
         }
-        return false;
+        return anyMigrationError;
     }
 
     private boolean runJavaMigration(Connection conn, String file) {

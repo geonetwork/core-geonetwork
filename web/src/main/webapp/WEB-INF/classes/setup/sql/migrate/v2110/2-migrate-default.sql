@@ -1,3 +1,8 @@
+--Inserts new data and modifies data
+
+ALTER TABLE operations DROP COLUMN reserved;
+ALTER TABLE service DROP COLUMN id;
+
 INSERT INTO HarvesterSettings VALUES  (1,NULL,'harvesting',NULL);
 -- Copy all harvester's root nodes config
 INSERT INTO HarvesterSettings SELECT id, 1, name, value FROM Settings WHERE parentId = 2;
@@ -85,16 +90,6 @@ UPDATE Settings SET name = 'system/requestedLanguage/sorted', datatype = 2 WHERE
 UPDATE Settings SET name = 'system/hidewithheldelements/enable', datatype = 2 WHERE id = 957;
 UPDATE Settings SET name = 'system/hidewithheldelements/keepMarkedElement', datatype = 2 WHERE id = 958;
 
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/recipient', NULL, 0, 9020);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/template', '', 0, 9021);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/templateError', 'There was an error on the harvesting: $$errorMsg$$', 0, 9022);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/templateWarning', '', 0, 9023);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/subject', '[$$harvesterType$$] $$harvesterName$$ finished harvesting', 0, 9024);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/enabled', 'false', 2, 9025);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/level1', 'false', 2, 9026);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/level2', 'false', 2, 9027);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/level3', 'false', 2, 9028);
-
 UPDATE Settings SET parentId = null;
 
 DELETE FROM Settings WHERE id = 173;
@@ -150,6 +145,16 @@ INSERT INTO Settings (name, value, datatype, position) VALUES ('system/feedback/
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/password', '', 0, 643);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/ssl', false, 2, 641);
 
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/recipient', NULL, 0, 9020);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/template', '', 0, 9021);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/templateError', 'There was an error on the harvesting: $$errorMsg$$', 0, 9022);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/templateWarning', '', 0, 9023);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/subject', '[$$harvesterType$$] $$harvesterName$$ finished harvesting', 0, 9024);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/enabled', 'false', 2, 9025);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/level1', 'false', 2, 9026);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/level2', 'false', 2, 9027);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/level3', 'false', 2, 9028);
+
 
 
 ALTER TABLE StatusValues ADD displayorder int;
@@ -165,3 +170,8 @@ UPDATE StatusValues SET displayorder = 4 WHERE id = 5;
 -- Version update
 UPDATE Settings SET value='2.11.0' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
+
+-- Populate new tables from Users
+INSERT INTO ADDRESS SELECT id, address, city, state, zip, country FROM Users;
+INSERT INTO USER_ADDRESS SELECT id, id FROM Users;
+INSERT INTO EMAIL SELECT id, email FROM Users;
