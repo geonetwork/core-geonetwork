@@ -29,6 +29,7 @@ import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Namespace;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
@@ -45,7 +46,9 @@ import javax.persistence.PersistenceContext;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.apache.commons.io.FileUtils.cleanDirectory;
@@ -163,9 +166,15 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
      * @param expected the expected text
      * @param xml      the xml to search
      * @param xpath    the xpath to the element to check
+     * @param namespaces the namespaces required for xpath
      */
-    protected void assertEqualsText(String expected, Element xml, String xpath) throws JDOMException {
-        final Element element = Xml.selectElement(xml, xpath);
+    protected void assertEqualsText(String expected, Element xml, String xpath, Namespace... namespaces) throws JDOMException {
+        final Element element;
+        if (namespaces == null || namespaces.length == 0) {
+            element = Xml.selectElement(xml, xpath);
+        } else {
+            element = Xml.selectElement(xml, xpath, Arrays.asList(namespaces));
+        }
         assertNotNull("No element found at: " + xpath + " in \n" + Xml.getString(xml), element);
         assertEquals(expected, element.getText());
     }
@@ -210,5 +219,10 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         userSession.loginAs(admin);
         context.setUserSession(userSession);
         return admin;
+    }
+
+    protected Element getSampleMetadataXml() throws IOException, JDOMException {
+        final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.xml");
+        return Xml.loadStream(resource.openStream());
     }
 }

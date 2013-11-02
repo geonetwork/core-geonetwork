@@ -47,10 +47,13 @@ public class Source extends GeonetEntity {
     /**
      * Set the uuid of the source.
      *
+     *
      * @param uuid the uuid of the source.
+     * @return this entity
      */
-    public void setUuid(String uuid) {
+    public Source setUuid(String uuid) {
         this._uuid = uuid;
+        return this;
     }
 
     /**
@@ -65,10 +68,13 @@ public class Source extends GeonetEntity {
     /**
      * Set the name of the source.
      *
+     *
      * @param name the name of the source.
+     * @return this entity
      */
-    public void setName(String name) {
+    public Source setName(String name) {
         this._name = name;
+        return this;
     }
 
     /**
@@ -103,9 +109,11 @@ public class Source extends GeonetEntity {
      * Set true is the source refers to the local geonetwork.
      *
      * @param local true is the source refers to the local geonetwork.
+     * @return this entity
      */
-    public void setLocal(boolean local) {
+    public Source setLocal(boolean local) {
         setIsLocal_JpaWorkaround(Constants.toYN_EnabledChar(local));
+        return this;
     }
 
     @Override
