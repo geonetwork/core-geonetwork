@@ -325,6 +325,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             
             var checkboxSM = new Ext.grid.CheckboxSelectionModel({
                 singleSelect: false,
+                checkOnly: true,
                 header: '<div class="x-grid3-hd-checker">&#160;</div>',
                 listeners: {
                     rowselect: {
