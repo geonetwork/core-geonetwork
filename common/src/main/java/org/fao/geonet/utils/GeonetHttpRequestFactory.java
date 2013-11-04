@@ -43,7 +43,7 @@ public class GeonetHttpRequestFactory {
      * @return
      */
     public XmlRequest createXmlRequest(String host, int port, String protocol) {
-        return new XmlRequest(null, 80, "http", this);
+        return new XmlRequest(host, port, protocol, this);
     }
 
     /**
@@ -60,7 +60,11 @@ public class GeonetHttpRequestFactory {
      * @return
      */
     public final XmlRequest createXmlRequest(String host, int port) {
-        return createXmlRequest(host, port, "http");
+        String protocol = "http";
+        if (port == 443) {
+            protocol = "https";
+        }
+        return createXmlRequest(host, port, protocol);
     }
 
     /**
@@ -71,11 +75,14 @@ public class GeonetHttpRequestFactory {
      * @return the XmlRequest.
      */
     public final XmlRequest createXmlRequest(URL url) {
-        final XmlRequest request = createXmlRequest(url.getHost(), url.getPort() == -1 ? url.getDefaultPort() : url.getPort(),
+        final int port = url.getPort() == -1 ? url.getDefaultPort() : url.getPort();
+        final XmlRequest request = createXmlRequest(url.getHost(), port,
                 url.getProtocol());
 
         request.setAddress(url.getPath());
         request.setQuery(url.getQuery());
+        request.setFragment(url.getRef());
+        request.setUserInfo(url.getUserInfo());
 
         return request;
     }

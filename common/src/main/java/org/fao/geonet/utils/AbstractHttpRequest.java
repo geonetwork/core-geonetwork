@@ -28,6 +28,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -60,8 +61,13 @@ public class AbstractHttpRequest {
     private String postData;
     private UsernamePasswordCredentials credentials;
     private UsernamePasswordCredentials proxyCredentials;
+    private String fragment;
+    private String userInfo;
 
     public AbstractHttpRequest(String protocol, String host, int port, GeonetHttpRequestFactory requestFactory) {
+        if (!(protocol.equals("http") || protocol.equals("https"))) {
+            throw new IllegalArgumentException("Currently only http and https requests are supported.  Protocol given: '"+protocol+"'");
+        }
         this.port = port;
         this.protocol = protocol;
         this.requestFactory = requestFactory;
@@ -223,6 +229,28 @@ public class AbstractHttpRequest {
     }
 
     protected HttpRequestBase setupHttpMethod() throws IOException {
+        String queryString = query;
+
+        if (query == null || query.trim().isEmpty()) {
+            StringBuilder b = new StringBuilder();
+
+            for (NameValuePair alSimpleParam : alSimpleParams) {
+                if (b.length() > 0) {
+                    b.append("&");
+                }
+                b.append(alSimpleParam.getName()).append('=').append(alSimpleParam.getValue());
+            }
+            if (b.length() > 0) {
+                queryString = b.toString();
+            }
+        }
+
+        if (host == null || port < 0 || protocol == null) {
+            throw new IllegalStateException(String.format(getClass().getSimpleName()+" is not ready to be executed: \n\tprotocol: '%s' " +
+                                            "\n\tuserinfo: '%s'\n\thost: '%s' \n\tport: '%s' \n\taddress: '%s'\n\tquery '%s'" +
+                                            "\n\tfragment: '%s'", protocol, userInfo, host, port, address, query, fragment));
+        }
+
         HttpRequestBase httpMethod;
 
         if (method == Method.GET) {
@@ -246,24 +274,8 @@ public class AbstractHttpRequest {
             httpMethod = post;
         }
 
-        String queryString = query;
-
-        if (query == null || query.trim().isEmpty()) {
-            StringBuilder b = new StringBuilder();
-
-            for (NameValuePair alSimpleParam : alSimpleParams) {
-                if (b.length() > 0) {
-                    b.append("&");
-                }
-                b.append(alSimpleParam.getName()).append('=').append(alSimpleParam.getValue());
-            }
-            if (b.length() > 0) {
-                queryString = b.toString();
-            }
-        }
-
         try {
-            URI uri = new URI(protocol, null, host, port, address, queryString, null);
+            URI uri = new URI(protocol, userInfo, host, port, address, queryString, fragment);
             httpMethod.setURI(uri);
         } catch (URISyntaxException e) {
             throw new IOException(e);
@@ -332,6 +344,26 @@ public class AbstractHttpRequest {
 
     public String getProtocol() {
         return protocol;
+    }
+
+    public void setFragment(String fragment) {
+        this.fragment = fragment;
+    }
+
+    public String getFragment() {
+        return fragment;
+    }
+
+    public void setUserInfo(String userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public String getUserInfo() {
+        return userInfo;
+    }
+
+    public String getQuery() {
+        return query;
     }
 
     public enum Method {GET, POST}
