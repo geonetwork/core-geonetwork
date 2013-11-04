@@ -616,7 +616,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 fieldLabel: OpenLayers.i18n('URL'),
                 name: 'href',
                 value: '',
-                validator: function(value){
+                validFn: function(value){
                     if(value && value.indexOf('http') == 0) {
                         var request = OpenLayers.Request.HEAD({
                             url: value,
@@ -625,10 +625,21 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         var success = (request.status == '200');
                         if(success) {
                             this.el.addClass('x-form-valid');
-                        } else if(this.el.hasClass('x-form-valid')) {
-                            this.el.removeClass('x-form-valid');
+                            if(this.el.hasClass('x-form-invalid')) {
+                                this.el.removeClass('x-form-invalid');
+                            }
+                        } else {
+                            if(this.el.hasClass('x-form-valid')) {
+                                this.el.removeClass('x-form-valid');
+                            }
+                            this.el.addClass('x-form-invalid');
+
                         }
-                        return request.status == '200';
+                    }
+                },
+                listeners: {
+                    blur: function(cpt) {
+                        cpt.validFn(cpt.getValue());
                     }
                 }
             }],
@@ -676,6 +687,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         combo.ownerCt.find('name', 'refreshCapabilities-Btn')[0].setVisible(visible);
                         
                         var urlField = combo.ownerCt.find('name', 'href')[0];
+                        urlField.validFn(urlField.getValue());
                         if(visible && urlField && urlField.isVisible() && urlField.getValue() != '') {
                             this.capabilitiesStore.baseParams.url = urlField.getValue();
                             this.capabilitiesStore.reload({params: {url: urlField.getValue()}});
