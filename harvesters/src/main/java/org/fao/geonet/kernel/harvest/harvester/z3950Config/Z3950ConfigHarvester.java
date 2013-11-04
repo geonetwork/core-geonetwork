@@ -31,13 +31,14 @@ import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.jdom.Element;
 
 import java.sql.SQLException;
 
 //=============================================================================
 
-public class Z3950ConfigHarvester extends AbstractHarvester
+public class Z3950ConfigHarvester extends AbstractHarvester<HarvestResult>
 {
 	public static final String TYPE = "z3950Config";
 
@@ -167,8 +168,8 @@ public class Z3950ConfigHarvester extends AbstractHarvester
 	{
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 
-		Harvester h = new Harvester(log, context, dbms, params);
-		result = h.harvest();
+		h = new Harvester(log, context, dbms, params);
+		result = h.harvest(log);
 	}
 
 	//---------------------------------------------------------------------------

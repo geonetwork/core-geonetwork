@@ -79,19 +79,19 @@
 				userLang = "eng";
 			}
 
-		  	window.location="srv/"+userLang+"/login.form"+window.location.search;
+			window.location = "srv/" + userLang + "/catalog.signin" + window.location.search;
 		}
 		</script>
+		
+        <link href="catalog/style/font-awesome-3.2.1/css/font-awesome.css" rel="stylesheet" media="screen" />
 	</head>
 	<body onload="init()">
-		<p>&nbsp;&nbsp;Please wait...</p>
-		<p>&nbsp;&nbsp;Patientez s'il vous plaît...</p>
-		<p>&nbsp;&nbsp;Bitte warten...</p>
-		<p>&nbsp;&nbsp;Un momento per favore...</p>
-
+		<i class="icon-spinner icon-spin icon-large"></i>
 		<noscript>
-			<h2>JavaScript warning</h2>
-			<p>To use GeoNetwork you need to enable JavaScript in your browser</p>
+			<div class="alert" ng-hide="">
+		      <strong>Warning!</strong> Javascript is not enabled. Enable it or click 
+		        <a href="srv/eng/catalog.search.nojs">here to search</a> in a degraded mode.
+		    </div>
 		</noscript>
 	</body>
 </html>

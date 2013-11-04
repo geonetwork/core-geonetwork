@@ -23,6 +23,19 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
+import static org.quartz.JobKey.jobKey;
+
+import java.io.File;
+import java.lang.reflect.Method;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import jeeves.exceptions.BadInputEx;
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.JeevesException;
@@ -35,11 +48,15 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import jeeves.utils.QuartzSchedulerUtils;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.StopWatch;
+import org.apache.log4j.DailyRollingFileAppender;
+import org.apache.log4j.PatternLayout;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
-import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEHarvester;
@@ -59,6 +76,7 @@ import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.monitor.harvest.AbstractHarvesterErrorCounter;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.services.harvesting.notifier.SendNotification;
 import org.jdom.Element;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -67,20 +85,12 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
-import java.io.File;
-import java.lang.reflect.Method;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.quartz.JobKey.jobKey;
-
 /**
- * TODO javadoc.
+ * Represents a harvester job. Used to launch harvester workers.
  *
  */
-public abstract class AbstractHarvester extends BaseAligner {
-
+public abstract class AbstractHarvester<T extends HarvestResult> {
+	
     private static final String SCHEDULER_ID = "abstractHarvester";
     public static final String HARVESTER_GROUP_NAME = "HARVESTER_GROUP_NAME";
 
@@ -91,7 +101,7 @@ public abstract class AbstractHarvester extends BaseAligner {
 	//---------------------------------------------------------------------------
 
     /**
-     * TODO Javadoc.
+     * Adds all AbstractHarvester instances
      *
      * @param context
      * @throws Exception
@@ -114,7 +124,7 @@ public abstract class AbstractHarvester extends BaseAligner {
 	}
 
     /**
-     * TODO Javadoc.
+     * Register one instance of {@link AbstractHarvester} on the singleton.
      *
      * @param context
      * @param harvester
@@ -124,7 +134,7 @@ public abstract class AbstractHarvester extends BaseAligner {
 		try {
 			Method initMethod = harvester.getMethod("init", context.getClass());
 			initMethod.invoke(null, context);
-			AbstractHarvester ah = (AbstractHarvester) harvester.newInstance();
+			AbstractHarvester<?> ah = (AbstractHarvester<?>) harvester.newInstance();
 			hsHarvesters.put(ah.getType(), harvester);
 		}
 		catch(Exception e) {
@@ -143,7 +153,7 @@ public abstract class AbstractHarvester extends BaseAligner {
      * @throws BadParameterEx
      * @throws OperationAbortedEx
      */
-	public static AbstractHarvester create(String type, ServiceContext context, HarvesterSettingsManager sm, DataManager dm) throws BadParameterEx, OperationAbortedEx {
+	public static AbstractHarvester<?> create(String type, ServiceContext context, HarvesterSettingsManager sm, DataManager dm) throws BadParameterEx, OperationAbortedEx {
 		//--- raises an exception if type is null
 		if (type == null) {
 			throw new BadParameterEx("type", null);
@@ -156,7 +166,7 @@ public abstract class AbstractHarvester extends BaseAligner {
         }
 
 		try {
-			AbstractHarvester ah = (AbstractHarvester) c.newInstance();
+			AbstractHarvester<?> ah = (AbstractHarvester<?>) c.newInstance();
 
 			ah.context    = context;
 			ah.settingMan = sm;
@@ -168,6 +178,45 @@ public abstract class AbstractHarvester extends BaseAligner {
 		}
 	}
 
+    /**
+     * For the log name
+     */
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
+
+    public String initializeLog() {
+
+        // configure personalized logger
+        String packagename = getClass().getPackage().getName();
+        String[] packages = packagename.split("\\.");
+        String packageType = packages[packages.length - 1];
+        log = Log.createLogger(this.getParams().name,
+                "geonetwork.harvester");
+
+        String directory = log.getFileAppender();
+        if(directory.isEmpty()) {
+        	directory = "./";
+        }
+        File d = new File(directory);
+        if (!d.isDirectory()) {
+            directory = d.getParent() + File.separator;
+        }
+
+        DailyRollingFileAppender fa = new DailyRollingFileAppender();
+        fa.setName(this.getParams().name);
+        String logfile = directory + "harvester_" + packageType + "_"
+                + this.getParams().name + "_"
+                + dateFormat.format(new Date(System.currentTimeMillis()))
+                + ".log";
+        fa.setFile(logfile);
+        fa.setLayout(new PatternLayout("%d{ISO8601} %-5p [%c] - %m%n"));
+        fa.setThreshold(log.getThreshold());
+        fa.setAppend(true);
+        fa.activateOptions();
+
+        log.setAppender(fa);
+
+        return logfile;
+    }
 	//--------------------------------------------------------------------------
 	//---
 	//--- API methods
@@ -347,7 +396,7 @@ public abstract class AbstractHarvester extends BaseAligner {
 		try {
 			status = Status.ACTIVE;
 			log.info("Started harvesting from node : " + nodeName);
-			doHarvest(log, rm);
+			doHarvest_(log, rm);
 			log.info("Ended harvesting from node : " + nodeName);
 			rm.close();
 		}
@@ -464,7 +513,7 @@ public abstract class AbstractHarvester extends BaseAligner {
          */
 		@Override
 		public void process() throws Exception {
-			doHarvest(logger, rm);
+			doHarvest_(logger, rm);
 		}
 	}
 	
@@ -511,8 +560,11 @@ public abstract class AbstractHarvester extends BaseAligner {
 	void harvest()  {
 	    running = true;
 	    long startTime = System.currentTimeMillis();
+        String logfile = initializeLog();
+        this.log.info("Starting harvesting of " + this.getParams().name);
 	    try {
             error = null;
+            errors.clear();
 		ResourceManager rm = new ResourceManager(context.getMonitorManager(), context.getProviderManager());
 		Logger logger = Log.createLogger(Geonet.HARVESTER);
             String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
@@ -535,11 +587,26 @@ public abstract class AbstractHarvester extends BaseAligner {
 				stop(dbms);
                 }
 			rm.close();
-		}
+			} catch (InvalidParameterValueEx e) {
+				logger.error("The harvester " + this.getParams().name + "["
+						+ this.getType()
+						+ "] didn't accept some of the parameters sent.");
+
+				errors.add(new HarvestError(e, logger));
+				error = e;
+
+				try {
+					rm.abort();
+				} catch (Exception ex) {
+					logger.fatal("CANNOT ABORT EXCEPTION");
+					logger.fatal(" (C) Exc : " + ex.getMessage());
+				}
+			}
             catch(Throwable t) {
 			logger.warning("Raised exception while harvesting from : "+ nodeName);
 			logger.warning(" (C) Class   : "+ t.getClass().getSimpleName());
 			logger.warning(" (C) Message : "+ t.getMessage());
+			errors.add(new HarvestError(t, logger));
 			error = t;
 			t.printStackTrace();
                 try {
@@ -549,6 +616,11 @@ public abstract class AbstractHarvester extends BaseAligner {
 				logger.warning("CANNOT ABORT EXCEPTION");
 				logger.warning(" (C) Exc : "+ ex);
 			}
+		} finally {
+		    List<HarvestError> harvesterErrors = getErrors();
+		    if (harvesterErrors != null) {
+		        errors.addAll(harvesterErrors);
+		    }
 		}
         long elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
 
@@ -556,40 +628,98 @@ public abstract class AbstractHarvester extends BaseAligner {
 		Dbms dbms = null;
 		try {
 			dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
-			Element result = getResult();
-			if (error != null) result = JeevesException.toElement(error);
-			HarvesterHistoryDao.write(dbms, context.getSerialFactory(), getType(), getParams().name, getParams().uuid, elapsedTime, lastRun, getParams().node, result);
+            Element result = getResult();
+            if (error != null) {
+                result = JeevesException.toElement(error);
             }
+            Element logfile_ = new Element("logfile");
+            logfile_.setText(logfile);
+            result.addContent(logfile_);
+
+            result.addContent(toElement(errors));
+            
+			HarvesterHistoryDao.write(dbms, context.getSerialFactory(), getType(), getParams().name, getParams().uuid, elapsedTime, lastRun, getParams().node, result);
+
+            //Send notification email, if needed
+            try {
+                SendNotification.process(context, HarvesterHistoryDao.retrieve(dbms, getParams().uuid), this);
+            } catch (Exception e) {
+                logger.error("Raised exception while attempting to send email");
+                logger.error(" (C) Exc   : "+ e);
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (dbms != null)
+                        rm.close(Geonet.Res.MAIN_DB, dbms);
+
+                } catch (Exception dbe) {
+                    dbe.printStackTrace();
+                    logger.error("Raised exception while attempting to close dbms connection to harvest history table");
+                    logger.error(" (C) Exc   : " + dbe);
+                }
+            }
+
+        }
             catch (Exception e) {
 			logger.warning("Raised exception while attempting to store harvest history from : "+ nodeName);
 			e.printStackTrace();
 			logger.warning(" (C) Exc   : "+ e);
             }
             finally {
-			try {
-                    if (dbms != null) {
-                        rm.close(Geonet.Res.MAIN_DB, dbms);
-                    }
-                }
-                catch (Exception dbe) {
-				dbe.printStackTrace();
-				logger.error("Raised exception while attempting to close dbms connection to harvest history table");
-				logger.error(" (C) Exc   : "+ dbe);
-			}
 		}
+
+
 	    }
         finally {
 	        running  = false;
 	    }
 
 	}
-
+	  /**
+     * Convert {@link HarvestError} to an element that can be saved on the
+     * database
+     * 
+     * @param errors
+     * @return
+     */
+    private Element toElement(List<HarvestError> errors) {
+        Element res = new Element("errors");
+        for (HarvestError error : errors) {
+            Element herror = new Element("error");
+            
+            Element desc = new Element("description");
+            desc.setText(error.getDescription());
+            herror.addContent(desc);
+            
+            Element hint = new Element("hint");
+            hint.setText(error.getHint());
+            herror.addContent(hint);
+            
+            herror.addContent(JeevesException.toElement(error.getOrigin()));
+            res.addContent(herror);
+        }
+        return res;
+    }
 	//---------------------------------------------------------------------------
 	//---
 	//--- Abstract methods that must be overridden
 	//---
 	//---------------------------------------------------------------------------
-
+	/**
+	 * Should be overriden to get a better insight on harvesting
+	 * 
+	 * Returns the list of exceptions that ocurred during the harvesting but
+	 * didn't really stop and abort the harvest.
+	 * 
+	 * @return
+	 */
+	protected List<HarvestError> getErrors() {
+		if (h != null) {
+			return h.getErrors();
+		} else {
+			return new LinkedList<HarvestError>();
+		}
+	}
     /**
      *
      * @return
@@ -666,12 +796,25 @@ public abstract class AbstractHarvester extends BaseAligner {
     }
 
     /**
+     * 
+     * Extend to do the actual harvesting.
      *
      * @param l
      * @param rm
      * @throws Exception
      */
 	protected abstract void doHarvest(Logger l, ResourceManager rm) throws Exception;
+	
+	/**
+	 * Outer function to get the execution time and common code.
+	 * @param log
+	 * @param rm
+	 * @throws Exception
+	 */
+	protected void doHarvest_(Logger log, ResourceManager rm) throws Exception
+	{
+        doHarvest(log, rm);
+	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -851,16 +994,51 @@ public abstract class AbstractHarvester extends BaseAligner {
         }
         return res;
     }
+    
+    /**
+     * Get the list of registered harvester
+     * @return
+     */
+    public static Set<String> getHarvesterTypes() {
+        return hsHarvesters.keySet();
+    }
+
+	/**
+	 * 
+	 * Who should we notify by default?
+	 * 
+	 * @return
+	 * @throws Exception 
+	 */
+	public String getOwnerEmail() throws Exception {
+		String ownerId = getParams().ownerIdGroup;
+
+		Dbms dbms = (Dbms) context.getResourceManager()
+				.open(Geonet.Res.MAIN_DB);
+
+		Element e = dbms.select("SELECT email FROM Groups WHERE id = " + ownerId);
+
+		e = e.getChild("record");
+		e = e.getChild("email");
+		
+		return e.getTextTrim();
+	}
+
     //--------------------------------------------------------------------------
 	//---
 	//--- Variables
 	//---
 	//--------------------------------------------------------------------------
-
 	private String id;
 	private volatile Status status;
-
+	/**
+	 * Exception that aborted the harvesting
+	 */
 	private Throwable error;
+	/**
+	 *  Contains all the warnings and errors that didn't abort the execution, but were thrown during harvesting
+	 */
+	private List<HarvestError> errors = new LinkedList<HarvestError>();
     private boolean running = false;
 
 	protected ServiceContext context;
@@ -868,10 +1046,11 @@ public abstract class AbstractHarvester extends BaseAligner {
 	protected DataManager    dataMan;
 
     protected AbstractParams params;
-    protected HarvestResult result;
+    protected T result;
 
     protected Logger log = Log.createLogger(Geonet.HARVESTER);
 
 	private static Map<String, Class<?>> hsHarvesters = new HashMap<String, Class<?>>();
+	protected IHarvester<T> h = null;
 
 }

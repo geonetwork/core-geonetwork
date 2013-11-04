@@ -44,6 +44,8 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.fao.oaipmh.exceptions.NoSetHierarchyException;
@@ -99,6 +101,9 @@ public class Info implements Service
 				if (type.equals("icons"))
 					result.addContent(getIcons(context));
 
+				else if (type.equals("harvesterTypes"))
+				    result.addContent(getHarvesterTypes(context));
+				
 				else if (type.equals("oaiPmhServer"))
 					result.addContent(getOaiPmhServer(el, context));
 
@@ -140,7 +145,15 @@ public class Info implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	private Element getIcons(ServiceContext context)
+	private Element getHarvesterTypes(ServiceContext context) {
+	    Element types = new Element("types");
+	    for (String type : AbstractHarvester.getHarvesterTypes()) {
+            types.addContent(new Element("type").setText(type));
+        }
+        return types;
+    }
+
+    private Element getIcons(ServiceContext context)
 	{
 		Set<File> icons = Resources.listFiles(context, "harvesting", iconFilter);
 		List<File> list = new ArrayList<File>(icons);

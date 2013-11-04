@@ -129,28 +129,41 @@ public class ISODate implements Cloneable
 
 		try
 		{
-			year  = Integer.parseInt(isoDate.substring(0,  4));
-			month = Integer.parseInt(isoDate.substring(5,  7));
-			day   = Integer.parseInt(isoDate.substring(8, 10));
+            if (isoDate.contains("T")) {
+                // Check if iso date contains time info and if using non UTC time zone to parse the date with
+                // JODAISODate. This class converts to UTC format to avoid timezones issues.
+                boolean timeZoneInfo = ((isoDate.split("T")[1].contains("+")) || (isoDate.split("T")[1].contains("-")));
 
-			isShort = true;
+                if (timeZoneInfo) {
+                    isoDate = JODAISODate.parseISODateTime(isoDate);
+                }
+            }
 
-			hour = 0;
-			min  = 0;
-			sec  = 0;
+            year  = Integer.parseInt(isoDate.substring(0,  4));
+            month = Integer.parseInt(isoDate.substring(5,  7));
+            day   = Integer.parseInt(isoDate.substring(8, 10));
 
-			//--- is the date in 'yyyy-mm-dd' or 'yyyy-mm-ddZ' format?
+            isShort = true;
 
-			if (isoDate.length() < 12)
-				return;
+            hour = 0;
+            min  = 0;
+            sec  = 0;
 
-			isoDate = isoDate.substring(11);
+            //--- is the date in 'yyyy-mm-dd' or 'yyyy-mm-ddZ' format?
 
-			hour  = Integer.parseInt(isoDate.substring(0,2));
-			min   = Integer.parseInt(isoDate.substring(3,5));
-			sec   = Integer.parseInt(isoDate.substring(6,8));
+            if (isoDate.length() < 12)
+                return;
 
-			isShort = false;
+            isoDate = isoDate.substring(11);
+
+            hour  = Integer.parseInt(isoDate.substring(0,2));
+            min   = Integer.parseInt(isoDate.substring(3,5));
+            sec   = Integer.parseInt(isoDate.substring(6,8));
+
+
+
+            isShort = false;
+
 		}
 		catch(Exception e)
 		{

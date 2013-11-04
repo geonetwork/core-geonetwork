@@ -1,0 +1,158 @@
+<div class="row">
+    <div class="col-lg-4">
+        <div class="panel">
+            <div class="panel-heading"
+                data-translate="">harvester</div>
+            <input class="form-control" data-ng-model="harvesterSearch.$" 
+                autofocus=""
+                placeholder="{{'filter' | translate}}"/>
+            <div class="list-group">
+                <a class="list-group-item" 
+                    data-ng-repeat="h in harvesters | filter:harvesterSearch | orderBy:'name'"  
+                    data-ng-class="h['@id'] === harvesterSelected['@id'] ? 'active' : ''"
+                    data-ng-click="selectHarvester(h)" title="{{h.info.lastRun.length === 0 ? '' : ('lastRun' | translate) + (h.info.lastRun | gnFromNow)}}">
+                    <!-- TODO : Add a tooltip with last run info -->
+                    <i data-ng-show="h.options.status === 'active'" class="icon-play"/>
+                    <i data-ng-show="h.options.status === 'inactive'" class="icon-pause"/>
+                    {{h.site.name}} ({{('harvester-' + h['@type']) | translate}}) 
+                    <span class="badge">{{h.info.result.total}}</span>
+                    <i data-ng-show="h.info.running" class="icon-spinner icon-spin"/>
+                </a>
+            </div>
+            
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary icon-plus dropdown-toggle" data-toggle="dropdown">
+                    <span data-translate="">newHarvester</span> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li data-ng-repeat="(key, value) in harvesterTypes"
+                        data-ng-class="value.loaded ? '' : 'disabled'"
+                        >
+                        <a data-ng-click="addHarvester(key)" 
+                            title="{{'harvester-' + value.label + 'Help' | translate}}">
+                            {{('harvester-' + value.label) | translate}} <span data-ng-hide="value.loaded" data-translate="">notYetSupported</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="btn-group" data-ng-show="harvesters.length > 0">
+                <button type="button" class="btn dropdown-toggle icon-copy" data-toggle="dropdown">
+                    <span data-translate="">cloneHarvester</span> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li data-ng-repeat="h in harvesters | orderBy:'site.name'">
+                        <a data-ng-click="cloneHarvester(h['@id'])" 
+                            title="{{'cloneHarvester' | translate}} {{h.site.name}}">
+                            {{h.site.name}} ({{('harvester-' + h['@type']) | translate}}) 
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <button type="button" class="btn icon-refresh" 
+                data-ng-show="harvesters.length > 0"
+                data-ng-click="refreshHarvester()" title="{{'refreshHarvester' | translate}}">
+            </button>
+        </div>
+    </div>
+    
+    
+    <div class="col-lg-8" 
+        data-ng-hide="harvesterSelected['@id'] == null">
+        <div class="panel">
+            <div class="panel-heading">
+                <span data-ng-hide="harvesterSelected['@id'] == ''" data-translate="">updateHarvester</span>
+                <span data-ng-hide="harvesterSelected['@id'] != ''" data-translate="">newHarvester</span>
+                <strong>{{harvesterSelected.site.name}}</strong>
+                
+                
+                <div class="btn-toolbar">
+                    <button type="button" class="btn btn-primary pull-right icon-play" 
+                        data-ng-click="runHarvester(harvesterSelected['@id'])" 
+                        data-ng-disabled="harvesterSelected.info.running === true"
+                        data-translate="">runHarvester</button>
+                    <button type="button" class="btn btn-primary pull-right icon-save" 
+                        data-ng-click="saveHarvester('#gn-harvester-edit')" 
+                        data-translate="">saveHarvester</button>
+                    <button type="button" class="btn btn-warning pull-right icon-remove" 
+                        data-ng-hide="harvesterSelected['@id'] == ''"
+                        data-ng-click="deleteHarvesterRecord(harvesterSelected['@id'])" 
+                        title="{{'deleteHarvesterRecordsHelp' | translate}}"
+                        data-translate="">deleteHarvesterRecords</button>
+                    <button type="button" class="btn btn-danger pull-right icon-remove" 
+                        data-ng-hide="harvesterSelected['@id'] == ''"
+                        data-ng-click="deleteHarvester(harvesterSelected['@id'])" 
+                        title="{{'deleteHarvesterHelp' | translate}}"
+                        data-translate="">deleteHarvester</button>
+                </div>
+            </div>
+            
+            
+            <div class="alert alert-info" data-ng-show="harvesterSelected.info.running === true">
+                <strong data-translate="">harvesterIsRunning</strong>
+            </div>
+
+
+            <div data-ng-include="getTplForHarvester()"> </div>
+        </div>
+        
+        <div class="panel"
+            data-ng-hide="harvesterSelected['@id'] == ''"
+            >
+            <div class="panel-heading"><span data-translate="">harvesterHistory</span>
+                <div class="btn-toolbar">
+                    <button type="button" class="btn btn-primary pull-right btn-danger icon-remove" 
+                        data-ng-hide="harvesterHistory.length === 0"
+                        data-ng-click="deleteHarvesterHistory()" 
+                        data-translate="">deleteHarvesterHistory</button>
+                </div>
+            </div>
+            
+            <div class="alert alert-info" data-ng-show="harvesterHistory.length === 0">
+                <strong data-translate="">noHarvesterHistory</strong>
+            </div>
+            
+            <table class="table" data-ng-show="harvesterHistory">
+                <tr>
+                    <th data-translate="">lastRun</th>
+                    <th data-translate="">time</th>
+                    <th data-translate="">details</th>
+                </tr>
+                <tr data-ng-repeat="h in harvesterHistory"
+                    data-ng-class="h.info[0]['@id'] === 'error' ? 'danger' : 'success'">
+                    <td>{{ h.harvestdate | gnFromNow }}</td>
+                    <td>{{h.elapsedtime}}</td>
+                    <td>
+                        <ul>
+                            <li data-ng-repeat="(key, value) in h.info[0]">{{key}}: 
+                                <span data-ng-switch="" data-on="key">
+                                    <pre data-ng-switch-when="stack">{{value}}</pre>
+                                    <span data-ng-switch-when="logfile"/>
+                                    <span data-ng-switch-default="">{{value}}</span>
+                                </span>
+                            </li>
+                        </ul>
+                        
+                        <a data-ng-show="h.info[0].logfile" href="admin.harvester.log?file={{h.info[0].logfile}}" target="_blank" data-translate="">logFile</a>
+                    </td>
+                </tr>
+            </table>
+            
+        </div>
+        
+        
+        <div class="panel"
+            data-ng-hide="harvesterSelected['@id'] == ''"
+            >
+            <div class="panel-heading" data-translate="">harvesterRecords</div>
+            <!-- This information is not relevant for GeoNetwork protocol
+            which attach records to the source catalogs which has different
+            UUIDs. TODO -->
+            <div data-gn-search-results="harvesterRecords"
+                data-allow-selection="false"/>
+            
+            <div data-gn-pagination="harvesterRecordsPagination"/>
+        </div>
+        </div>
+    </div>
+</div>

@@ -583,7 +583,7 @@ GeoNetwork.app = function() {
                         statusBarId : 'info',
                         hostUrl : geonetworkUrl,
                         mdOverlayedCmpId : 'resultsPanel',
-                        adminAppUrl : geonetworkUrl + '/srv/' + lang + '/admin',
+                        adminAppUrl : geonetworkUrl + '/srv/' + lang + '/admin.console',
                         // Declare default store to be used for records and
                         // summary
                         metadataStore : GeoNetwork.Settings.mdStore ? new GeoNetwork.Settings.mdStore()
@@ -647,6 +647,13 @@ GeoNetwork.app = function() {
             if (urlParameters.create !== undefined && catalogue.isIdentified()) {
                 var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
                 actionCtn.createMetadataAction.handler.apply(actionCtn);
+            }
+
+            if (urlParameters.insert !== undefined) {
+                setTimeout(function () {
+                    var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
+                    actionCtn.mdImportAction.handler.apply(actionCtn);
+                }, 500);
             }
         },
         edit : function(uuid) {

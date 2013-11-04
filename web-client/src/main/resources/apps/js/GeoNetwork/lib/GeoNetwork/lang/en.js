@@ -21,6 +21,8 @@ Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 GeoNetwork.Lang.en = {
     'metadata-not-found': 'Metadata with UUID ${uuid} not found or not shared with you.',
     'harvestingAdmin': 'Harvesting',
+    'checkAllOrNone': 'Check all/none',
+    'filterGroup': 'Filter group ...',
     'updateUserInfo': 'Edit my profile',
     'updatePassword': 'Change my password',
     'myMetadata': 'My metadata',
@@ -413,6 +415,7 @@ GeoNetwork.Lang.en = {
     'removeSelected': 'Remove selected',
     'ownerName': 'Metadata record owner',
     'setPrivileges': 'Set privileges',
+    'setBatchPrivileges': 'Overwrite privileges of selected records',
     'setCategories': 'Set categories',
     'massiveOp': 'Batch operation ',
     'prepareDownload': 'Download files',

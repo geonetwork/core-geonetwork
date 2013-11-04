@@ -127,7 +127,6 @@
 				
 			<executable targetfile="$INSTALL_PATH/bin/start-geonetwork.sh" />
 			<executable targetfile="$INSTALL_PATH/bin/stop-geonetwork.sh" />
-			<executable targetfile="$INSTALL_PATH/bin/gast.sh" />
 		</pack>
 
 
@@ -170,18 +169,6 @@
                     override="true"/>
     </pack>
 
-    <pack id="gast" name="GAST" required="no" preselected="no">
-      <description/>
-      
-      <fileset dir="../gast" targetdir="$INSTALL_PATH/gast">
-        <exclude name="logs/gast.log*"/>
-        <exclude name="src/**"/>
-        <exclude name="target/**"/>
-        <exclude name="pom.xml"/>
-      </fileset>
-      
-      <singlefile target="$INSTALL_PATH/gast/gast.jar" src="../gast/target/gast.jar" override="true"/>
-    </pack>
 	</packs>
 
 	<!-- =================================================================================== -->

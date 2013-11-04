@@ -16,6 +16,8 @@
 		<constructor-arg>
 			<list>
 				<sec:filter-chain pattern="/apps/**" filters="" />
+			    <sec:filter-chain pattern="/catalog/**" filters="" />
+			    <sec:filter-chain pattern="/test/**" filters="" />
 				<sec:filter-chain pattern="/" filters="" />
 				<sec:filter-chain pattern="/*.html" filters="" />
 				<sec:filter-chain pattern="/*.jsp" filters="" />

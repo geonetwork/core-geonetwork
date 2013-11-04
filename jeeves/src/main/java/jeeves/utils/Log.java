@@ -24,6 +24,11 @@
 package jeeves.utils;
 
 
+import java.util.Enumeration;
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
@@ -152,19 +157,81 @@ public final class Log
 
 	//--------------------------------------------------------------------------
 	/** Returns a simple logger object */
-
 	public static jeeves.interfaces.Logger createLogger(final String module)
 	{
-		return new jeeves.interfaces.Logger()
-		{
+		return createLogger(module, null);
+	}
 
-		    @Override public boolean isDebugEnabled() { return Log.isDebugEnabled(module);}
-            @Override public void debug  (String message) { Log.debug  (module, message); }
-            @Override public void info   (String message) { Log.info   (module, message); }
-			@Override public void warning(String message) { Log.warning(module, message); }
-			@Override public void error  (String message) { Log.error  (module, message); }
-			@Override public void fatal  (String message) { Log.fatal  (module, message); }
-			@Override public String getModule() {return module;}
+	public static jeeves.interfaces.Logger createLogger(final String module,
+			final String fallbackModule) {
+		return new jeeves.interfaces.Logger() {
+
+			public boolean isDebugEnabled() {
+				return Log.isDebugEnabled(module);
+			}
+
+			public void debug(String message) {
+				Log.debug(module, message);
+			}
+
+			public void info(String message) {
+				Log.info(module, message);
+			}
+
+			public void warning(String message) {
+				Log.warning(module, message);
+			}
+
+			public void error(String message) {
+				Log.error(module, message);
+			}
+
+			public void fatal(String message) {
+				Log.fatal(module, message);
+			}
+
+			public void error(Throwable t) {
+				Log.error(module, t.getMessage(), t);
+			}
+
+			public void setAppender(FileAppender fa) {
+				Logger.getLogger(module).removeAllAppenders();
+				Logger.getLogger(module).addAppender(fa);
+			}
+
+			public String getFileAppender() {
+				// Set effective level to be sure it writes the log
+				Logger.getLogger(module).setLevel(getThreshold());
+
+				@SuppressWarnings("rawtypes")
+				Enumeration appenders = Logger.getLogger(module)
+						.getAllAppenders();
+				while (appenders.hasMoreElements()) {
+					Appender a = (Appender) appenders.nextElement();
+					if (a instanceof FileAppender) {
+						return ((FileAppender) a).getFile();
+					}
+				}
+				appenders = Logger.getLogger(fallbackModule).getAllAppenders();
+				while (appenders.hasMoreElements()) {
+					Appender a = (Appender) appenders.nextElement();
+					if (a instanceof FileAppender) {
+						return ((FileAppender) a).getFile();
+					}
+				}
+
+				return "";
+
+			}
+
+			public Level getThreshold() {
+				return Logger.getLogger(fallbackModule).getEffectiveLevel();
+			}
+
+			@Override
+			public String getModule() {
+				return module;
+			}
 		};
 	}
 

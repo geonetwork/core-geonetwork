@@ -80,11 +80,11 @@
 		</phone>
 	
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<xsl:for-each select="ContactAddress|wms:ContactAddress|
+		<xsl:for-each select="ContactAddress|../wms:ContactInformation|wms:ContactAddress|
 							wcs:contactInfo|
 							ows:ServiceContact/ows:ContactInfo/ows:Address|
 							ows11:ServiceContact/ows11:ContactInfo/ows11:Address">
+			
 			<address>
 				<CI_Address>
 					<xsl:apply-templates select="." mode="Address"/>
@@ -116,7 +116,6 @@
 	<!-- ============================================================================= -->
 
 	<xsl:template match="*" mode="Address">
-
 		<xsl:for-each select="Address|wms:Address|ows:DeliveryPoint|ows11:DeliveryPoint">
 			<deliveryPoint>
 				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
@@ -157,7 +156,7 @@
 
 		<!-- TODO - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<xsl:for-each select="ContactElectronicMailAddress|../wms:ContactElectronicMailAddress|wcs:address/wcs:electronicMailAddress|ows:ElectronicMailAddress|ows11:ElectronicMailAddress">
+		<xsl:for-each select="ContactElectronicMailAddress|wms:ContactElectronicMailAddress|wcs:address/wcs:electronicMailAddress|ows:ElectronicMailAddress|ows11:ElectronicMailAddress">
 			<electronicMailAddress>
 				<gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
 			</electronicMailAddress>

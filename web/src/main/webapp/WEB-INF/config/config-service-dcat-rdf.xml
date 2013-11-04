@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<geonet>
+  <services package="org.fao.geonet">
+
+    <service name="rdf.metadata.get">
+      <documentation> Return a metadata in DCAT format. See
+        http://trac.osgeo.org/geonetwork/wiki/proposals/DCATandRDFServices </documentation>
+      <class name=".services.metadata.Show">
+        <param name="addRefs" value="n"/>
+        <param name="cache" value="y"/>
+      </class>
+      <output sheet="../xslt/services/dcat/rdf.xsl" contentType="application/rdf+xml; charset=UTF-8">
+        <call name="relation" class=".guiservices.metadata.GetRelated"/>
+        <call name="isoLang" class=".guiservices.isolanguages.Get"/>
+        <call name="thesaurus" class=".services.thesaurus.GetList"/>
+        <call name="clear" class=".services.metadata.ClearCachedShowMetadata"/>
+      </output>
+    </service>
+
+
+    <service name="rdf.search">
+      <documentation> Search the catalogue and return results in RDF/DCAT format. </documentation>
+      <class name=".services.main.XmlSearch"/>
+      <output sheet="../xslt/services/dcat/rdf.xsl" contentType=" application/rdf+xml; charset=UTF-8"/>
+      <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
+    </service>
+
+  </services>
+</geonet>

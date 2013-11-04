@@ -54,7 +54,7 @@ On Windows
 If you use Windows, the following steps will guide you to complete the installation (other FOSS will follow):
 
 1. Double click on **geonetwork-install-2.8.0.exe** to start the GeoNetwork opensource desktop installer
-2. Follow the instructions on screen. You can choose to install the embedded map server (based on `GeoServer <http://www.geoserver.org>`_, GAST and the European Union Inspire Directive configuration pack. Developers may be interested in installing the source code and installer building tools. Full source code can be found in the GeoNetwork github code repository at http://github.com/geonetwork.
+2. Follow the instructions on screen. You can choose to install the embedded map server (based on `GeoServer <http://www.geoserver.org>`_ and the European Union Inspire Directive configuration pack. Developers may be interested in installing the source code and installer building tools. Full source code can be found in the GeoNetwork github code repository at http://github.com/geonetwork.
 3. After completion of the installation process, a 'GeoNetwork desktop' menu will be added to your Windows Start menu under 'Programs'
 4. Click Start\>Programs\>GeoNetwork desktop\>Start server to start the Geonetwork opensource Web server. The first time you do this, the system will require about 1 minute to complete startup.
 5. Click Start\>Programs\>Geonetwork desktop\>Open GeoNetwork opensource to start using GeoNetwork opensource, or connect your Web browser to `http://localhost:8080/geonetwork/ <http://localhost:8080/geonetwork/>`_
@@ -77,8 +77,6 @@ The installer allows to install these additional packages:
  - Thesaurus files (GEMET, Inspire themes).
  - INSPIRE search panel.
  - INSPIRE metadata view.
-
-4. GAST: Installs GeoNetwork's Administrator Survival Tool. See :ref:`gast`.
 
 Installation using the platform independent installer
 `````````````````````````````````````````````````````
@@ -107,15 +105,12 @@ To run the installation from the commandline, issue the following command in a t
     Try to add to selection [Name: Core and Index: 0]
     Try to add to selection [Name: GeoServer and Index: 1]
     Try to add to selection [Name: European Union INSPIRE Directive configuration pack and Index: 2]
-    Try to add to selection [Name: GAST and Index: 3]
     Modify pack selection.
     Pack [Name: European Union INSPIRE Directive configuration pack and Index: 2] added to selection.
-    Pack [Name: GAST and Index: 3] added to selection.
     [ Starting to unpack ]
-    [ Processing package: Core (1/4) ]
-    [ Processing package: GeoServer (2/4) ]
-    [ Processing package: European Union INSPIRE Directive configuration pack (3/4) ]
-    [ Processing package: GAST (4/4) ]
+    [ Processing package: Core (1/3) ]
+    [ Processing package: GeoServer (2/3) ]
+    [ Processing package: European Union INSPIRE Directive configuration pack (3/3) ]
     [ Unpacking finished ]
     [ Creating shortcuts ....... done. ]
     [ Add shortcuts to uninstaller  done. ]
@@ -239,9 +234,7 @@ For the Apache DBCP pool, JDBC database driver jar files should be in **INSTALL_
 Specify configuration in GeoNetwork
 ```````````````````````````````````
 
-GAST provides a graphical user interface to make database configuration easy. You can find out how to do this in the GAST section of the manual: :ref:`gast`. 
-
-Alternatively you can manually configure the database by editing **INSTALL_DIR/WEB-INF/config.xml**. In the resources element of this file, you will find a resource element for each database that GeoNetwork supports. Only one of these resource elements can be enabled. The following is an example for the default H2 database used by GeoNetwork:: 
+You can manually configure the database by editing **INSTALL_DIR/WEB-INF/config.xml**. In the resources element of this file, you will find a resource element for each database that GeoNetwork supports. Only one of these resource elements can be enabled. The following is an example for the default H2 database used by GeoNetwork:: 
 
             <resource enabled="true">
               <name>main-db</name>

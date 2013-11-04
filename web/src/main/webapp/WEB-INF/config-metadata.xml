@@ -385,7 +385,11 @@
 			
 			<output sheet="metadata-admin.xsl"/>
 		</service>
-
+	    
+	    <service name="xml.metadata.batch.admin.form">
+	        <class name=".services.metadata.PrepareBatchUpdatePrivileges"/>
+	    </service>
+	    
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.batch.update.privileges">
@@ -395,7 +399,11 @@
 				<xml name="info" file="xml/metadata-batchUpdatePrivileges.xml" />
 			</output>
 		</service>
-		
+	    
+	    <service name="xml.metadata.batch.update.privileges">
+	        <class name=".services.metadata.BatchUpdatePrivileges"/>
+	    </service>
+	    
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Update child -->
 		
@@ -408,7 +416,7 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<service name="metadata.batch.processing.report">
+		<service name="metadata.batch.processing.report" deprecated="true">
 			<documentation><![CDATA[
 Return the current or last batch process report in the user session.
 
@@ -453,7 +461,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 			<class name=".services.metadata.XslProcessingReportGet"/>
 		</service>
 		
-		<service name="metadata.batch.processing">
+		<service name="metadata.batch.processing" deprecated="true">
 			<class name=".services.metadata.BatchXslProcessing"/>
 			
 			<output sheet="metadata-batch-results.xsl">
@@ -517,7 +525,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.admin.index.rebuild">
+	  <service name="metadata.admin.index.rebuild" deprecated="true">
 			<documentation>
 				<para>Service to force a complete rebuild of Lucene index</para>
 			</documentation>
@@ -526,7 +534,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.admin.index.rebuildxlinks">
+	  <service name="metadata.admin.index.rebuildxlinks" deprecated="true">
 			<documentation>
 				<para>Service to clear all cached xlinks and rebuild index for metadata records with xlinks</para>
 			</documentation>
@@ -538,7 +546,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 
-		<service name="metadata.admin.index.optimize">
+		<service name="metadata.admin.index.optimize" deprecated="true">
 			<documentation>
 				<para>Service to force optimization of Lucene index</para>
 			</documentation>
@@ -552,6 +560,9 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 
 			<output sheet="metadata-admin.xsl"/>
 		</service>
+	    <service name="xml.metadata.admin.form">
+	        <class name=".services.metadata.GetAdminOper"/>
+	    </service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 

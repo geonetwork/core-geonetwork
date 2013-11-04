@@ -45,6 +45,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
@@ -119,7 +120,7 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public HarvestResult align(Set<RecordInfo> records) throws Exception
+	public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception
 	{
 		log.info("Start of alignment for : "+ params.name);
 
@@ -152,12 +153,20 @@ public class Aligner extends BaseAligner
 
 		for(RecordInfo ri : records)
 		{
-			result.totalMetadata++;
-
-			String id = dataMan.getMetadataId(dbms, ri.uuid);
-
-			if (id == null)	addMetadata(ri);
-			else				updateMetadata(ri, id);
+		    try{
+    
+    			String id = dataMan.getMetadataId(dbms, ri.uuid);
+    
+    			if (id == null)	addMetadata(ri);
+    			else				updateMetadata(ri, id);
+                result.totalMetadata++;
+		    }catch(Throwable t) {
+		        errors.add(new HarvestError(t, log));
+                log.error("Unable to process record from csw (" + this.params.name + ")");
+                log.error("   Record failed: " + ri.uuid); 
+		    } finally {
+		        result.originalMetadata++;
+		    }
 		}
 
 		log.info("End of alignment for : "+ params.name);

@@ -39,6 +39,7 @@ import jeeves.utils.IO;
 import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -57,8 +58,10 @@ import org.jdom.JDOMException;
  * @author heikki doeleman
  *
  */
-public class LocalFilesystemHarvester extends AbstractHarvester {
+public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 	
+	//FIXME Put on a different file?
+	private BaseAligner aligner = new BaseAligner() {};
 	private LocalFilesystemParams params;
 	
 	public static void init(ServiceContext context) throws Exception {
@@ -253,10 +256,10 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
         dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, new ISODate().toString(), false);
 
 		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
 
 		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+		aligner.addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 		dbms.commit();
 		dataMan.indexMetadata(dbms, id);
@@ -291,8 +294,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		dataMan.setTemplateExt(dbms, iId, "n", null);
 		dataMan.setHarvestedExt(dbms, iId, source);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+		aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+		aligner.addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 		dbms.commit();
 		dataMan.indexMetadata(dbms, id);

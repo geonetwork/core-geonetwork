@@ -944,6 +944,7 @@
     <module>jeeves</module>
     <module>sde</module>
     <module>web-client</module>
+    <module>web-ui</module>
     <module>domain</module>
     <module>core</module>
     <module>oaipmh</module>

@@ -40,6 +40,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.util.MailUtil;
 import org.jdom.Element;
 
 import java.io.File;
@@ -58,7 +59,7 @@ public class Change extends NotInReadOnlyModeService {
 	// --------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
-		this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
+	    this.stylePath = appPath + Geonet.Path.XSLT_FOLDER + FS + "services" + FS + "account" + FS;
 	}
 
 	// --------------------------------------------------------------------------
@@ -101,19 +102,12 @@ public class Change extends NotInReadOnlyModeService {
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
 
-		String host = sm.getValue("system/feedback/mailServer/host");
-		String port = sm.getValue("system/feedback/mailServer/port");
 		String adminEmail = sm.getValue("system/feedback/email");
 		String thisSite = sm.getValue("system/site/name");
 
 		// get site URL
 		SettingInfo si = new SettingInfo(context);
 		String siteURL = si.getSiteUrl() + context.getBaseUrl();
-
-		// Do not allow an unconfigured site to send out change password emails
-		if (thisSite == null || host == null || port == null || adminEmail == null || thisSite.equals("dummy") || host.equals("") || port.equals("") || adminEmail.equals("")) {
-			throw new IllegalArgumentException("Missing settings in System Configuration (see Administration menu) - cannot change passwords");
-		}
 		
 		// All ok so update password
 		dbms.execute ( "UPDATE Users SET password=? WHERE username=?", PasswordUtil.encode(context, password), username);
@@ -135,7 +129,7 @@ public class Change extends NotInReadOnlyModeService {
 		String content = elEmail.getChildText("content");
 		
 		// send password changed email
-        if (!sendMail(host, Integer.parseInt(port), subject, adminEmail, to, content, PROTOCOL)) {
+        if (!MailUtil.sendMail(to, subject, content, sm, adminEmail, "")) {
             throw new OperationAbortedEx("Could not send email");
 		}
 
@@ -144,7 +138,6 @@ public class Change extends NotInReadOnlyModeService {
 
 	private static String FS = File.separator;
 	private String stylePath;
-	private static final String PROTOCOL = "smtp";
 	private static final String CHANGE_KEY = "changeKey";
 	private static final String PWD_CHANGED_XSLT = "password-changed-email.xsl";
 	public static final String DATE_FORMAT = "yyyy-MM-dd";

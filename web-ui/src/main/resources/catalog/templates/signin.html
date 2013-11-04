@@ -1,0 +1,63 @@
+<div class="container" data-ng-controller="GnLoginController">
+    <div class="col-lg-6">
+        <form class="form-horizontal" name="gnSigninForm" action="../../j_spring_security_check"
+            method="post">
+            <label for="inputUsername" data-translate="">username</label>
+            <input type="text" class="form-control" id="inputUsername" name="username" autofocus=""
+                placeholder="{{'username' | translate}}" data-ng-model="signinUsername" required=""/>
+            <label for="inputPassword" data-translate="">password</label>
+            <input type="password" class="form-control" id="inputPassword" name="password"
+                data-ng-model="signinPassword" placeholder="{{'password' | translate}}" required=""/>
+            <input type="hidden" name="redirectUrl" value="/"/>
+            <!--<div class="checkbox">
+                <label class="checkbox">
+                    <input type="checkbox"/><span translate>rememberMe</span>
+                </label>
+            </div>-->
+            <p/>
+            <button type="submit" class="btn btn-primary" data-ng-disabled="!gnSigninForm.$valid">
+                <i class="icon-signin"/>
+                <span data-translate="">signIn</span>
+            </button>
+        </form>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel">
+            <div class="panel-heading" data-translate="">needAnAccount</div>
+            <p data-translate="">needAnAccountInfo</p>
+            <p>
+                <a class="btn btn-default" href="new.account" data-translate="">createAnAccount</a>
+            </p>
+        </div>
+        <div class="panel">
+            <div class="panel-heading" data-translate="">forgetDetails</div>
+            <div data-ng-show="sendPassword === false">
+                <p data-translate="">forgetDetailsInfo</p>
+                <p>
+                    <a type="submit" class="btn btn-default" data-ng-click="setSendPassword(true)"
+                        data-translate="">recoverPassword</a>
+                </p>
+            </div>
+            <div data-ng-show="sendPassword === true">
+                <div>
+                    <form class="form-horizontal" id="userinfo">
+                        <div class="form-group">
+                            <label class="control-label col-lg-3" data-translate="">username</label>
+                            <div class="col-lg-6">
+                                <input type="text" name="username" id="username"
+                                    class="form-control"/>
+                            </div>
+                            <div class="col-lg-2">
+                                <a type="submit" class="btn btn-default"
+                                    data-ng-click="remindMyPassword('#userinfo')">
+                                    <i class="icon-question-sign"/>
+                                    <span data-translate="">submit</span>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
