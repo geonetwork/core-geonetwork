@@ -96,29 +96,31 @@ public class XmlResolver extends XMLCatalogResolver {
 			try {
 				elResult = isXmlInCache(externalRef.toString());
 			} catch (CacheException e) {
-				Log.error(Log.XML_RESOLVER, "Request to cache for "+externalRef+" failed.");
+				Log.error(Log.XML_RESOLVER, "Request to cache for " + externalRef + " failed.");
 				e.printStackTrace();
 			}
 
 			if (elResult == null) { // use XMLRequest to get the XML
 				XmlRequest xml = new GeonetHttpRequestFactory().createXmlRequest(externalRef);
-				Log.error(Log.XML_RESOLVER, "proxyParams are "+proxyParams.useProxy);
+				Log.error(Log.XML_RESOLVER, "proxyParams are " + proxyParams.useProxy);
 				if (proxyParams.useProxy) { 
 					xml.setUseProxy(true);
 					xml.setProxyHost(proxyParams.proxyHost);
 					xml.setProxyPort(proxyParams.proxyPort);
-					if (proxyParams.useProxyAuth) xml.setProxyCredentials(proxyParams.username, proxyParams.password);
+					if (proxyParams.useProxyAuth) {
+                        xml.setProxyCredentials(proxyParams.username, proxyParams.password);
+                    }
 				}
 	
 				elResult = null;
 				try {
 					elResult = xml.execute();
 					addXmlToCache(externalRef.toString(), elResult);
-                    if(Log.isDebugEnabled(Log.XML_RESOLVER))
-                        Log.debug(Log.XML_RESOLVER,"Retrieved: \n"+ Xml.getString(elResult));
+                    if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
+                        Log.debug(Log.XML_RESOLVER, "Retrieved: \n" + Xml.getString(elResult));
+                    }
 				} catch (Exception e) {
-					Log.error(Log.XML_RESOLVER, "Request on "+externalRef+" failed.");
-					e.printStackTrace();
+					Log.error(Log.XML_RESOLVER, "Request on " + externalRef + " failed." + e.getMessage());
 				}
 
 			}

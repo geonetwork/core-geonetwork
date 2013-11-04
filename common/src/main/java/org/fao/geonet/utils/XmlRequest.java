@@ -2,6 +2,7 @@
 package org.fao.geonet.utils;
 
 import org.apache.http.client.methods.HttpRequestBase;
+import org.fao.geonet.exceptions.BadServerResponseEx;
 import org.fao.geonet.exceptions.BadSoapResponseEx;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
 
@@ -97,6 +98,9 @@ public class XmlRequest extends AbstractHttpRequest {
 
         final ClientHttpResponse httpResponse = doExecute(httpMethod);
 
+        if (httpResponse.getRawStatusCode() > 399) {
+            throw new BadServerResponseEx(httpResponse.getStatusText()+" -- Response Code: "+httpResponse.getRawStatusCode());
+        }
 
         byte[] data = null;
 

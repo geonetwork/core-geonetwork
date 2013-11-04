@@ -36,7 +36,7 @@ public class BadServerResponseEx extends BadResponseEx
 
 	public BadServerResponseEx(Object response)
 	{
-		super("Bad server response", response);
+		super("Bad server response: '"+response+"'", response);
 
 		id = "bad-server-response";
 	}
