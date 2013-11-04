@@ -25,6 +25,7 @@ package org.fao.geonet.services.category;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataCategory;
@@ -59,8 +60,11 @@ public class XmlUpdate extends NotInReadOnlyModeService {
 
             categoryRepository.update(Integer.valueOf(id), new Updater<MetadataCategory>() {
                 @Override
-                public void apply(@Nonnull MetadataCategory entity) {
-                    entity.setLabelTranslations(label.getChildren());
+                public void apply(@Nonnull MetadataCategory category) {
+                    for (Object t : label.getChildren()) {
+                        Element translationEl = (Element) t;
+                        category.getLabelTranslations().put(translationEl.getName(), translationEl.getText());
+                    }
                 }
             });
         }

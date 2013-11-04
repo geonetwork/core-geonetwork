@@ -58,7 +58,10 @@ public class XmlUpdate extends NotInReadOnlyModeService {
             groupRepository.update(Integer.valueOf(id), new Updater<Group>() {
                 @Override
                 public void apply(@Nonnull Group group) {
-                    group.setLabelTranslations(label.getChildren());
+                    for (Object t : label.getChildren()) {
+                        Element translationEl = (Element) t;
+                        group.getLabelTranslations().put(translationEl.getName(), translationEl.getText());
+                    }
                 }
             });
         }

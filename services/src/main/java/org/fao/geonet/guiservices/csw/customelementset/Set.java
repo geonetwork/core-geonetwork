@@ -75,6 +75,8 @@ public class Set implements Service {
         }
 
         final CustomElementSetRepository repository = context.getBean(CustomElementSetRepository.class);
+        repository.deleteAll();
+
         @SuppressWarnings("unchecked")
         List<Element> xpaths = params.getChildren("xpath");
         for(Element xpath : xpaths) {

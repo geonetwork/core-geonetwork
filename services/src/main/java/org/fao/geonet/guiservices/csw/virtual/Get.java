@@ -55,6 +55,7 @@ public class Get implements Service {
                     .setText(parameter.getValue()));
         }
         return new Element("service")
+               .addContent(new Element("id").setText(String.valueOf(service.getId())))
                .addContent(new Element("name").setText(service.getName()))
                .addContent(new Element("description").setText(service.getDescription()))
                .addContent(elParameters);

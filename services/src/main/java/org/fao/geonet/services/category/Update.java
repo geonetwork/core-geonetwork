@@ -26,9 +26,12 @@ package org.fao.geonet.services.category;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
@@ -63,6 +66,12 @@ public class Update extends NotInReadOnlyModeService {
         {
             category = new MetadataCategory();
             category.setName(name);
+
+            final LanguageRepository langRepository = context.getBean(LanguageRepository.class);
+            java.util.List<Language> allLanguages = langRepository.findAll();
+            for (Language l : allLanguages) {
+                category.getLabelTranslations().put(l.getId(), name);
+            }
 
             categoryRepository.save(category);
             elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.ADDED));

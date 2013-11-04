@@ -23,18 +23,22 @@
 
 package org.fao.geonet.services.group;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Language;
 import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
-
-import javax.annotation.Nonnull;
 
 
 /**
@@ -68,6 +72,12 @@ public class Update extends NotInReadOnlyModeService {
                     .setName(name)
                     .setDescription(description)
                     .setEmail(email);
+
+            final LanguageRepository langRepository = context.getBean(LanguageRepository.class);
+            java.util.List<Language> allLanguages = langRepository.findAll();
+            for (Language l : allLanguages) {
+                group.getLabelTranslations().put(l.getId(), name);
+            }
 
             groupRepository.save(group);
 
