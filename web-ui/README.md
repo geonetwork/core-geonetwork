@@ -18,6 +18,7 @@ See https://developers.google.com/closure/utilities/docs/linter_howto for instal
 
 
 ```
+sudo easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
 cd /path/to/closure-library-parent-dir
 git clone http://code.google.com/p/closure-library/
 cd closure-library

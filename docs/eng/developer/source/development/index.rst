@@ -62,6 +62,7 @@ The following tools are required to be installed to setup a development environm
 
 - **Python and closure** - To build Javascript::
 
+   sudo easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
    cd /path/to/closure-library-parent-dir
    git clone http://code.google.com/p/closure-library/
    cd closure-library
