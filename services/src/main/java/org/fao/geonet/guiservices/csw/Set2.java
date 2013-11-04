@@ -22,18 +22,21 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw;
 
+import java.util.List;
 import java.util.Map;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
+import org.fao.geonet.domain.Language;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.CswCapabilitiesInfo;
+import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
+import org.fao.geonet.repository.LanguageRepository;
 import org.jdom.Element;
 
 /**
@@ -47,25 +50,24 @@ public class Set2 implements Service {
     }
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
         // Process parameters and save capabilities information in database
-        saveCswCapabilitiesInfo(params, gc, dbms);
+        saveCswCapabilitiesInfo(params, context);
 
         // Build response
         return new Element(Jeeves.Elem.RESPONSE).setText("ok");
     }
 
-    private void saveCswCapabilitiesInfo(Element params, GeonetContext gc, Dbms dbms) throws Exception {
+    private void saveCswCapabilitiesInfo(Element params, ServiceContext context) throws Exception {
 
-        Map<String, String> langs = Lib.local.getLanguages(dbms);
+        final List<Language> langs = context.getBean(LanguageRepository.class).findAll();
 
-        for (String langId : langs.keySet()) {
+        final CswCapabilitiesInfoFieldRepository cswInfoFieldRepository = context.getBean(CswCapabilitiesInfoFieldRepository.class);
 
-            CswCapabilitiesInfo cswCapInfo = new CswCapabilitiesInfo();
+        for (Language lang : langs) {
 
-            cswCapInfo.setLangId(langId);
+            CswCapabilitiesInfo cswCapInfo = cswInfoFieldRepository.findCswCapabilitiesInfo(lang.getId());
+
+            String langId = lang.getId();
             Element title = params.getChild("csw.title_" + langId);
             if (title != null) {
                 cswCapInfo.setTitle(title.getValue());
@@ -83,7 +85,7 @@ public class Set2 implements Service {
                 cswCapInfo.setAccessConstraints(accessConstraints.getValue());
             }
             // Save item
-            CswCapabilitiesInfo.saveCswCapabilitiesInfo(dbms, cswCapInfo);
+            cswInfoFieldRepository.save(cswCapInfo);
         }
     }
 

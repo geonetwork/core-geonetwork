@@ -44,6 +44,7 @@ import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
+import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NotAllowedEx;
@@ -609,7 +610,7 @@ public class ServiceManager {
                     
                     if (req.hasJSONOutput()) {
                         req.beginStream("application/json; charset=UTF-8", cache);
-                        req.getOutputStream().write(Xml.getJSON(response).getBytes(Jeeves.ENCODING));
+                        req.getOutputStream().write(Xml.getJSON(response).getBytes(Constants.ENCODING));
                         req.endStream();
                     } else {
                         req.beginStream("application/xml; charset=UTF-8", cache);
