@@ -1,0 +1,80 @@
+<div class="panel" data-ng-controller="GnSystemSettingsController">
+    <div class="panel-heading">
+        <span data-translate="">settings</span>
+
+        <div class="btn-toolbar">
+            <div class="btn-group">
+                <button type="button" class="btn dropdown-toggle icon-sort-by-attributes"
+                    data-toggle="dropdown">
+                    <span data-translate="">flyTo</span>
+                    <span class="caret"/>
+                </button>
+                <ul class="dropdown-menu">
+                    <li data-ng-repeat="section in sectionsLevel2 | orderBy:getOrderBy">
+                        <a data-ng-click="scrollTo('#{{section.name.replace('/', '-')}}')"
+                            >{{section.name | translate}}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <button type="submit" class="btn btn-primary pull-right icon-save"
+                data-ng-click="saveSettings('#gn-settings')" data-translate="">saveSettings</button>
+        </div>
+    </div>
+    <form id="gn-settings" class="form-horizontal">
+
+        <fieldset data-ng-repeat="section1 in sectionsLevel1 track by $index">
+            <h1>{{section1.name | translate}}</h1>
+            <fieldset data-ng-repeat="section in sectionsLevel2 | orderBy:getOrderBy"
+                id="{{section.name.replace('/', '-')}}">
+                <legend>{{section.name | translate}}</legend>
+                <!-- According to data type -->
+                <div data-ng-repeat="s in filterBySection(section.name) | orderBy:getOrderBy"
+                    data-ng-switch="s['@datatype']">
+                    <div data-ng-switch-when="2">
+                        <label class="col-lg-4 control-label" for="{{s['@name']}}"> {{s['@name'] |
+                            translate}} </label>
+                        <div class="col-lg-8">
+                            <input type="checkbox" id="{{s['@name']}}" name="{{s.formName}}"
+                                ng-model="s['#text']"/>
+
+                            <p class="help-block ">{{s['@name'] + '-help' | translate}}</p>
+
+                        </div>
+                    </div>
+                    <div data-ng-switch-default="" class="form-group">
+                        <label class="col-lg-4 control-label" for="{{s['@name']}}">{{s['@name'] |
+                            translate}}</label>
+                        <!-- According to entry -->
+                        <div class="col-lg-8" data-ng-switch="s['@name']">
+                            
+                            <!-- List of user to be used as CSW contact -->
+                            <select data-ng-switch-when="system/csw/contactId" class="form-control"
+                                name="{{s.formName}}" >
+                                <option data-ng-repeat="u in systemUsers" value="{{u.id}}"
+                                    ng-selected="u.id == s['#text']">{{u.name + ' ' +
+                                    u.surname}}</option>
+                            </select>
+                            <textarea data-ng-switch-when="system/harvesting/mail/template" type="text" class="form-control"
+                                id="{{s['@name']}}" name="{{s.formName}}">{{s['#text']}}</textarea>
+                            <textarea data-ng-switch-when="system/harvesting/mail/templateError" type="text" class="form-control"
+                                id="{{s['@name']}}" name="{{s.formName}}">{{s['#text']}}</textarea>
+                            <textarea data-ng-switch-when="system/harvesting/mail/templateWarning" type="text" class="form-control"
+                                id="{{s['@name']}}" name="{{s.formName}}">{{s['#text']}}</textarea>
+                            <input data-ng-switch-default="" type="text" class="form-control"
+                                id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"/>
+
+                            <p class="help-block"
+                                data-ng-show="(s['@name'] + '-help' | translate) != (s['@name'] + '-help')"
+                                > {{s['@name'] + '-help' | translate}} </p>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <button type="submit" class="btn btn-primary pull-right icon-save"
+                data-ng-click="saveSettings('#gn-settings')" data-translate="">saveSettings</button>
+        </fieldset>
+    </form>
+</div>

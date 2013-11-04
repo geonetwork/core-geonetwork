@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+    <services package="org.fao.geonet">
+
+        <service name="admin.console">
+            <documentation>The administration console page.</documentation>
+            <output sheet="../xslt/ui-admin/admin.xsl"/>
+        </service>
+
+        <service name="catalog.signin">
+            <documentation>The user authentication page.</documentation>
+            <output sheet="../xslt/ui-admin/signin.xsl"/>
+        </service>
+
+        <service name="new.account">
+            <documentation><![CDATA[
+                User self-registration services
+                ]]></documentation>
+            <output sheet="../xslt/ui-admin/new-account.xsl"/>
+
+        </service>
+
+
+        <service name="new.password">
+            <documentation><![CDATA[
+                Change user password page.
+                ]]></documentation>
+            <output sheet="../xslt/ui-admin/new-password.xsl"/>
+        </service>
+    </services>
+</geonet>

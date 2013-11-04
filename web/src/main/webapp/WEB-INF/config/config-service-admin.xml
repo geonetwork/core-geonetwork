@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    
+    <service name="info">
+      <class name=".services.main.Info" />
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+    
+    <service name="admin.languages.get">
+      <documentation><![CDATA[
+        Return the list of languages
+        ]]></documentation>
+      <class name=".guiservices.languages.Get"/>
+    </service>
+    
+    <service name="admin.config.list">
+      <documentation>Retrieve the catalog settings.</documentation>
+      <class name=".services.config.Get"/>
+    </service>
+    
+    
+    <service name="admin.config.save">
+      <class name=".services.config.Set">
+        <param name="reloadServices" value="y"/>
+      </class>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+  </services>
+</geonet>

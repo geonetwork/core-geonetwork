@@ -1000,6 +1000,7 @@
     <module>cachingxslt</module>
     <module>jeeves</module>
     <module>sde</module>
+    <module>web-ui</module>
     <module>domain</module>
     <module>oaipmh</module>
     <module>core</module>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+      <service name="admin.notifications.list">
+          <class name=".services.notifications.List" />
+      </service>
+      
+      <service name="admin.notifications.save">
+          <documentation><![CDATA[
+              See JavaDoc
+              ]]></documentation>
+          <class name=".services.notifications.Save" />
+      </service>
+  </services>
+</geonet>

@@ -49,6 +49,7 @@ public class ServiceRequest
 	protected String       language  = null;
 	protected Element      params    = new Element(Jeeves.Elem.REQUEST);
 	protected boolean      debug     = false;
+	protected boolean jsonOutput = false;
 	protected OutputStream outStream = null;
 	protected String       address   = "0.0.0.0";
 	protected int          statusCode= 200;
@@ -127,6 +128,9 @@ public class ServiceRequest
 	//---------------------------------------------------------------------------
 
 	public void setDebug(boolean yesno) { debug = yesno; }
+
+    public void setJSONOutput(boolean yesno) { jsonOutput = yesno; }
+    public boolean hasJSONOutput() { return jsonOutput; }
 
 	//---------------------------------------------------------------------------
 

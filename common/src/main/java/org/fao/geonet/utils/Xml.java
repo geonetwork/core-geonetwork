@@ -26,6 +26,8 @@ import static org.fao.geonet.Constants.ENCODING;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.FeatureKeys;
+import net.sf.json.JSON;
+import net.sf.json.xml.XMLSerializer;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.SystemUtils;
@@ -658,6 +660,27 @@ public final class Xml
 
 	//---------------------------------------------------------------------------
 
+    /**
+     * Converts an xml element to JSON
+     * 
+     * @param xml the XML element
+     * @return the JSON response
+     * 
+     * @throws JsonParseException
+     * @throws JsonMappingException
+     * @throws IOException
+     */
+    public static String getJSON (Element xml) throws IOException {
+        XMLSerializer xmlSerializer = new XMLSerializer();
+        
+        // Disable type hints. When enable, a type attribute in the root 
+        // element will throw NPE.
+        // http://sourceforge.net/mailarchive/message.php?msg_id=27646519
+        xmlSerializer.setTypeHintsEnabled(false);
+        xmlSerializer.setTypeHintsCompatibility(false);
+        JSON json = xmlSerializer.read(Xml.getString(xml));
+        return json.toString(2);
+    }
     /**
      *
      * @param data

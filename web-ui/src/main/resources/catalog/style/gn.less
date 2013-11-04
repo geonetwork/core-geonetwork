@@ -1,0 +1,54 @@
+@import "bootstrap-3.0.0/bootstrap.less";
+@import "font-awesome-3.2.1/less/font-awesome.less";
+
+
+/**
+ * Nav bar title may be longer than default
+ */
+.navbar-brand {
+    max-width: 280px;
+}
+
+[ng\:cloak],
+[ng-cloak],
+.ng-cloak{
+  display:none !important;
+}
+
+/**
+ * Required when displaying long text like
+ * exception report. Eg. catalog health check.
+ */
+.list-group-item-text{
+  word-break:break-word;
+}
+
+
+.gn-sidebar .nav .nav > li > a{
+  padding-top:3px;
+  padding-bottom:3px;
+  padding-left:30px;
+  font-size:90%;
+}
+
+.gn-info{
+  position:fixed;
+  z-index:9999;
+  top:5px;
+  left:5px;
+}
+
+/**
+ * Logo in nav bar can't be big
+ */
+.gn-logo {
+  max-height: 20px;
+}
+
+/**
+ * Properly break stack trace error.
+ */
+.gn-stack,
+.gn-code{
+  white-space:normal;
+}

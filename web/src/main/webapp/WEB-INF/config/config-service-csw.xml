@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+    <services package="org.fao.geonet">
+
+        <service name="csw">
+            <documentation>
+                <![CDATA[
+                Catalogue Services for the Web
+                ]]>
+            </documentation>
+            <class name=".services.main.CswDiscoveryDispatcher"/>
+        </service>
+
+        <service name="csw-publication">
+            <documentation>
+                <![CDATA[
+                Catalogue Services for the Web for running transaction operation.
+                ]]>
+            </documentation>
+            <class name=".services.main.CswPublicationDispatcher"/>
+        </service>
+
+    </services>
+</geonet>

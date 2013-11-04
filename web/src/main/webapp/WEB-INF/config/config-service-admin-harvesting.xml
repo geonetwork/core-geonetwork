@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+      
+      <service name="admin.harvester.list">
+          <documentation><![CDATA[
+              Return the list of harvester in the catalog.
+              ]]></documentation>
+          <class name=".services.harvesting.Get" />
+      </service>
+      
+      <service name="admin.harvester.add">
+          <documentation><![CDATA[
+              Add a new harvester.
+              ]]></documentation>
+          <class name=".services.harvesting.Add" />
+      </service>
+      
+      <service name="admin.harvester.update">
+          <documentation><![CDATA[
+              Update an existing harvester.
+              ]]></documentation>
+          <class name=".services.harvesting.Update" />
+      </service>
+      
+      <service name="admin.harvester.clone">
+          <documentation><![CDATA[
+              Clone an existing harvester.
+              ]]></documentation>
+          <class name=".services.harvesting.CreateClone" />
+      </service>
+      
+      <service name="admin.harvester.clear">
+          <documentation><![CDATA[
+              Remove all records attached to an harvester.
+              ]]></documentation>
+          <class name=".services.harvesting.Clear" />
+      </service>
+      
+      <service name="admin.harvester.remove">
+          <documentation><![CDATA[
+              Drop an existing harvester.
+              ]]></documentation>
+          <class name=".services.harvesting.Remove" />
+      </service>
+      
+      
+      <service name="admin.harvester.start">
+          <documentation><![CDATA[
+              Activate an harvester.
+              ]]>
+          </documentation>
+          <class name=".services.harvesting.Start" />
+      </service>
+      
+      
+      <service name="admin.harvester.stop">
+          <documentation><![CDATA[
+              Desactivate an harvester.
+              ]]>
+          </documentation>
+          <class name=".services.harvesting.Stop" />
+      </service>
+      
+      <service name="admin.harvester.run">
+          <documentation><![CDATA[
+              Activate and run a harvester.
+              ]]></documentation>
+          <class name=".services.harvesting.Run" />
+      </service>
+      
+      <service name="admin.harvester.info">
+          <documentation><![CDATA[
+              Return information about harvester configuration
+              like type of supported harvester.]]></documentation>
+          <class name=".services.harvesting.Info" />
+      </service>
+      
+      
+      <service name="admin.harvester.history">
+          <documentation><![CDATA[
+              Get history for a harvester (ie. data and time, records report).
+              
+              Parameters are:
+              * uuid
+              * sort
+              ]]>
+          </documentation>
+          <class name=".services.harvesting.History" />
+      </service>
+      
+      <service name="admin.harvester.history.full">
+          <class name=".services.harvesting.History" />
+      </service>
+      
+      <service name="admin.harvester.history.delete">
+          <documentation><![CDATA[
+              Delete history.
+              ]]></documentation>
+          <class name=".services.harvesting.HistoryDelete" />
+      </service>
+      
+      <service name="admin.harvester.log">
+          <class name=".services.harvesting.Log" />
+          <output file="true" contentType="text/plain"/>
+      </service>
+      
+  </services>
+</geonet>

@@ -51,7 +51,7 @@
                                 <font class="banner-active"><xsl:value-of select="/root/gui/strings/admin"/></font>
                             </xsl:when>
                             <xsl:otherwise>
-                                <a class="banner" onclick="doAdminBannerButton('{/root/gui/locService}/admin','{/root/gui/strings/admin}','{$modal}',800, 500)" href="javascript:void(0);"><xsl:value-of select="/root/gui/strings/admin"/></a>
+                                <a class="banner" onclick="doAdminBannerButton('{/root/gui/locService}/admin.console','{/root/gui/strings/admin}','{$modal}',800, 500)" href="javascript:void(0);"><xsl:value-of select="/root/gui/strings/admin"/></a>
                             </xsl:otherwise>
                         </xsl:choose>
                         |

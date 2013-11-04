@@ -51,7 +51,13 @@ The following tools are required to be installed to setup a development environm
 * **Git** - GeoNetwork source code is stored and versioned in a Git repository on Github. Depending on your operating system a variety of git clients are avalaible. Check in http://git-scm.com/downloads/guis for some alternatives.  Good documentation can be found on the git website: http://git-scm.com/documentation and on the Github website https://help.github.com/.
 * **Ant** - GeoNetwork uses `Ant <http://ant.apache.org/>`_ to build the installer.  Version 1.6.5 works but any other recent version should be OK. Once installed, you should have the ant command in your path (on Windows systems, you have to open a shell to check).
 * **Sphinx** - To create the GeoNetwork documentation in a nice format `Sphinx <http://sphinx.pocoo.org/>`_  is used.
-
+* **Python and closure** - To build Javascript:
+   cd /path/to/closure-library-parent-dir
+   git clone http://code.google.com/p/closure-library/
+   cd closure-library
+   wget http://closure-compiler.googlecode.com/files/compiler-latest.zip
+   unzip compiler-latest.zip
+ 
 # Check out source code
 
 If you just want to quickly get the code the fastest way is to download the zip bundle: https://github.com/geonetwork/core-geonetwork/zipball/master
@@ -102,31 +108,37 @@ Geonetwork uses git submodules in order to keep track of externals dependencies.
 
 Once you checked out the code from Github repository, go inside the GeoNetwork’s root folder and execute the maven build command::
 
-  $ mvn clean install
+  $ mvn clean install -Dclosure.path=/path/to/closure-library
 
 
 If the build is succesful you'll get an output like::
+        
+        [INFO] 
+        [INFO] ------------------------------------------------------------------------
+        [INFO] Reactor Summary:
+        [INFO] ------------------------------------------------------------------------
+        [INFO] GeoNetwork opensource ................................. SUCCESS [1.345s]
+        [INFO] Caching xslt module ................................... SUCCESS [1.126s]
+        [INFO] Jeeves modules ........................................ SUCCESS [3.970s]
+        [INFO] ArcSDE module (dummy-api) ............................. SUCCESS [0.566s]
+        [INFO] GeoNetwork web client module .......................... SUCCESS [23.084s]
+        [INFO] GeoNetwork user interface module ...................... SUCCESS [15.940s]
+        [INFO] Oaipmh modules ........................................ SUCCESS [1.029s]
+        [INFO] GeoNetwork domain ..................................... SUCCESS [0.808s]
+        [INFO] GeoNetwork core ....................................... SUCCESS [6.426s]
+        [INFO] GeoNetwork CSW server ................................. SUCCESS [2.050s]
+        [INFO] GeoNetwork health monitor ............................. SUCCESS [1.014s]
+        [INFO] GeoNetwork harvesters ................................. SUCCESS [2.583s]
+        [INFO] GeoNetwork services ................................... SUCCESS [3.178s]
+        [INFO] GeoNetwork Web module ................................. SUCCESS [2:31.387s]
+        [INFO] ------------------------------------------------------------------------
+        [INFO] ------------------------------------------------------------------------
+        [INFO] BUILD SUCCESSFUL
+        [INFO] ------------------------------------------------------------------------
+        [INFO] Total time: 3 minutes 35 seconds
+        [INFO] Finished at: Sun Oct 27 16:21:46 CET 2013
 
-    [INFO]
-    [INFO] ------------------------------------------------------------------------
-    [INFO] Reactor Summary:
-    [INFO] ------------------------------------------------------------------------
-    [INFO] GeoNetwork opensource ................................. SUCCESS [1.825s]
-    [INFO] Caching xslt module ................................... SUCCESS [1.579s]
-    [INFO] Jeeves modules ........................................ SUCCESS [1.140s]
-    [INFO] Oaipmh modules ........................................ SUCCESS [0.477s]
-    [INFO] ArcSDE module (dummy-api) ............................. SUCCESS [0.503s]
-    [INFO] GeoNetwork Web module ................................. SUCCESS [31.758s]
-    [INFO] GeoServer module ...................................... SUCCESS [16.510s]
-    [INFO] Gast module ........................................... SUCCESS [24.961s]
-    [INFO] ------------------------------------------------------------------------
-    [INFO] ------------------------------------------------------------------------
-    [INFO] BUILD SUCCESSFUL
-    [INFO] ------------------------------------------------------------------------
-    [INFO] Total time: 1 minute 19 seconds
-    [INFO] Finished at: Tue Aug 03 16:49:15 CEST 2010
-    [INFO] Final Memory: 79M/123M
-    [INFO] ------------------------------------------------------------------------
+
 
 and your local maven repository should contain the GeoNetwork artifacts created (``$HOME/.m2/repository/org/geonetwork-opensource``).
 

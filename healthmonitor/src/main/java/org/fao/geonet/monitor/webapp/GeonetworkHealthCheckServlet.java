@@ -10,6 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jeeves.utils.Xml;
+
+import org.hibernate.exception.ExceptionUtils;
+import org.jdom.Element;
+
 import com.yammer.metrics.HealthChecks;
 import com.yammer.metrics.core.HealthCheck;
 import com.yammer.metrics.core.HealthCheckRegistry;
@@ -29,7 +34,7 @@ public class GeonetworkHealthCheckServlet extends HttpServlet {
      * The attribute name of the {@link HealthCheckRegistry} instance in the servlet context.
      */
     public static final String REGISTRY_ATTRIBUTE_KEY = "REGISTRY_ATTRIBUTE_KEY";
-    private static final String CONTENT_TYPE = "text/plain";
+    private static final String CONTENT_TYPE = "application/json";
 
     private transient HealthCheckRegistry registry;
 
@@ -49,9 +54,10 @@ public class GeonetworkHealthCheckServlet extends HttpServlet {
         resp.setContentType(CONTENT_TYPE);
         resp.setHeader("Cache-Control", "must-revalidate,no-cache,no-store");
         final PrintWriter writer = resp.getWriter();
+        Element report = new Element("report");
         if (results.isEmpty()) {
             resp.setStatus(HttpServletResponse.SC_OK);
-            writer.println("No health checks registered.");
+            report.addContent(new Element("msg").setText("No health checks registered."));
         } else {
             if (isAllHealthy(results)) {
                 resp.setStatus(HttpServletResponse.SC_OK);
@@ -59,26 +65,27 @@ public class GeonetworkHealthCheckServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
             for (Map.Entry<String, HealthCheck.Result> entry : results.entrySet()) {
+                Element healthcheck = new Element("healthcheck");
                 final HealthCheck.Result result = entry.getValue();
+                healthcheck.addContent(new Element("name").setText(entry.getKey()));
                 if (result.isHealthy()) {
+                    healthcheck.addContent(new Element("status").setText("OK"));
                     if (result.getMessage() != null) {
-                        writer.format("* %s: OK%n  %s%n", entry.getKey(), result.getMessage());
-                    } else {
-                        writer.format("* %s: OK%n", entry.getKey());
+                        healthcheck.addContent(new Element("msg").setText(result.getMessage()));
                     }
                 } else {
+                    healthcheck.addContent(new Element("status").setText("ERROR"));
                     if (result.getMessage() != null) {
-                        writer.format("! %s: ERROR%n!  %s%n", entry.getKey(), result.getMessage());
+                        healthcheck.addContent(new Element("msg").setText(result.getMessage()));
                     }
-
                     final Throwable error = result.getError();
                     if (error != null) {
-                        writer.println();
-                        error.printStackTrace(writer);
-                        writer.println();
+                        healthcheck.addContent(new Element("exception").setText(ExceptionUtils.getStackTrace(error)));
                     }
                 }
+                report.addContent(healthcheck);
             }
+            writer.println(Xml.getJSON(report));
         }
         writer.close();
     }

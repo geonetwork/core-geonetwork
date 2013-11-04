@@ -1,0 +1,34 @@
+<fieldset>
+    <legend><span data-translate="">harvesterSchedule</span>
+        <div class="btn-group pull-right" data-toggle="buttons">
+            <label class="btn btn-primary"
+                data-ng-click="harvester.options.status = 'active'"
+                data-ng-class="harvester.options.status === 'active' ? 'active' : ''"
+                >
+                <input type="radio" name="harvesterStatus"/>
+                <strong data-translate="" class="">on</strong>
+            </label>
+            <label class="btn btn-primary"
+                data-ng-class="harvester.options.status === 'active' ? '' : 'active'"
+                data-ng-click="harvester.options.status = 'inactive'" >
+                <input type="radio" name="harvesterStatus"/>
+                <strong data-translate="" class="">off</strong>
+            </label>
+        </div>
+    </legend>
+    
+    <div>
+        <label class="control-label" data-translate="">every</label>
+        <input type="text" class="form-control" 
+            data-ng-model="harvester.options.every"/>
+    </div>
+    
+    <div>
+        <label class="control-label">
+            <input type="checkbox"
+                data-ng-model="harvester.options.oneRunOnly"/>
+            <span data-translate="">oneRunOnly</label>
+        <p class="help-block" data-translate="">oneRunOnlyHelp</p>
+    </div>
+    
+</fieldset>

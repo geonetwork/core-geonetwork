@@ -1,0 +1,19 @@
+<div>
+    <label class="control-label">
+        <input type="checkbox"
+            data-ng-model="harvester.site.account.use"/>
+        <span data-translate="">useAccount</span></label>
+    
+    <fieldset data-ng-show="harvester.site.account.use">
+        <div>
+            <label class="control-label" data-translate="">username</label>
+            <input type="text" class="form-control" 
+                data-ng-model="harvester.site.account.username"/>
+        </div>
+        <div>
+            <label class="control-label" data-translate="">password</label>
+            <input type="text" class="form-control" 
+                data-ng-model="harvester.site.account.password"/>
+        </div>
+    </fieldset>
+</div>
