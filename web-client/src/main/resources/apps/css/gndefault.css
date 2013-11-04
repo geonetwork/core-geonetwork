@@ -831,3 +831,8 @@ ul.gn-relation-thumbnail {
 .gn-onlineResForm-grid .x-panel-header {
     background-image: none;
 }
+.x-form-valid, textarea.x-form-valid {
+background-color: #DDF8DD;
+border-color: #59B854;
+background-image: none;
+}

@@ -126,7 +126,7 @@ public class HttpProxyServlet extends HttpServlet {
             // Checks if allowed host
             if (!isAllowedHost(host)) {
                 //throw new ServletException("This proxy does not allow you to access that location.");
-                returnExceptionMessage(response, "This proxy does not allow you to access that location.");
+                returnExceptionMessage(response, HttpStatus.SC_FORBIDDEN, "This proxy does not allow you to access that location.");
                 return;
             }
 
@@ -139,6 +139,7 @@ public class HttpProxyServlet extends HttpServlet {
                 }
 
                 httpGet = new GetMethod(url);
+//                httpGet.setFollowRedirects(false);
                 httpGet.setParams(urlParams);
                 client.executeMethod(httpGet);
 
@@ -164,23 +165,29 @@ public class HttpProxyServlet extends HttpServlet {
                     out.close();
 
                 } else {
-                    returnExceptionMessage(response, "Unexpected failure: " + httpGet.getStatusLine().toString());
+                    returnExceptionMessage(response, 
+                            httpGet != null ? httpGet.getStatusCode() : HttpStatus.SC_BAD_REQUEST,
+                            "Unexpected failure: " + httpGet.getStatusLine().toString()
+                    );
                 }
 
                 httpGet.releaseConnection();
 
             } else {
-                //throw new ServletException("only HTTP(S) protocol supported");
-                returnExceptionMessage(response, "only HTTP(S) protocol supported");
+                returnExceptionMessage(response, HttpStatus.SC_FORBIDDEN, "only HTTP(S) protocol supported");
             }
+        } 
+        catch (UnknownHostException e) {
+            e.printStackTrace();
+            response.sendError(HttpStatus.SC_NOT_FOUND, "url can't be found");
         } catch (Exception e) {
             e.printStackTrace();
             //throw new ServletException("Some unexpected error occurred. Error text was: " + e.getMessage());
-            returnExceptionMessage(response, "Some unexpected error occurred. Error text was: " + e.getMessage());
+            returnExceptionMessage(response, HttpStatus.SC_INTERNAL_SERVER_ERROR,
+                    "Some unexpected error occurred. Error text was: " + e.getMessage());
         } finally {
             if (httpGet != null) httpGet.releaseConnection();
         }
-
     }
 
     @Override
@@ -211,7 +218,7 @@ public class HttpProxyServlet extends HttpServlet {
             // Checks if allowed host
             if (!isAllowedHost(host)) {
                 //throw new ServletException("This proxy does not allow you to access that location.");
-                returnExceptionMessage(response, "This proxy does not allow you to access that location.");
+            	returnExceptionMessage(response, HttpStatus.SC_FORBIDDEN, "This proxy does not allow you to access that location.");
                 return;
             }
 
@@ -255,24 +262,32 @@ public class HttpProxyServlet extends HttpServlet {
                     out.close();
 
                 } else {
-                    returnExceptionMessage(response, "Unexpected failure: " + httpPost.getStatusLine().toString());
+                	returnExceptionMessage(response, 
+                			httpPost != null ? httpPost.getStatusCode() : HttpStatus.SC_BAD_REQUEST,
+                            "Unexpected failure: " + httpPost.getStatusLine().toString()
+                    );
                 }
 
                 httpPost.releaseConnection();
 
             } else {
                 //throw new ServletException("only HTTP(S) protocol supported");
-                returnExceptionMessage(response, "only HTTP(S) protocol supported");
+            	returnExceptionMessage(response, HttpStatus.SC_FORBIDDEN, "only HTTP(S) protocol supported");
             }
+        } 
+        catch (UnknownHostException e) {
+            e.printStackTrace();
+            response.sendError(HttpStatus.SC_NOT_FOUND, "url can't be found");
         } catch (Exception e) {
             e.printStackTrace();
             //throw new ServletException("Some unexpected error occurred. Error text was: " + e.getMessage());
-            returnExceptionMessage(response, "Some unexpected error occurred. Error text was: " + e.getMessage());
+            returnExceptionMessage(response, HttpStatus.SC_INTERNAL_SERVER_ERROR,
+                    "Some unexpected error occurred. Error text was: " + e.getMessage());
         } finally {
             if (httpPost != null) httpPost.releaseConnection();
         }
     }
-
+    
     /**
      * Gets the contentType for response
      *
@@ -344,9 +359,9 @@ public class HttpProxyServlet extends HttpServlet {
         return false;
     }
 
-    private void returnExceptionMessage(HttpServletResponse response, String message) throws IOException {
+    private void returnExceptionMessage(HttpServletResponse response, int codeStatus, String message) throws IOException {
         response.setContentType("Content-Type: text/plain");
-
+        response.setStatus(codeStatus);
         response.setContentLength(message.length());
 
         PrintWriter out = response.getWriter();

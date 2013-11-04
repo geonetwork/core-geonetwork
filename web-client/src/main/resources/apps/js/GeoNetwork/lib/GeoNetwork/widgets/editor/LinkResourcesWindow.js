@@ -615,7 +615,33 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 anchor: '90%',
                 fieldLabel: OpenLayers.i18n('URL'),
                 name: 'href',
-                value: ''
+                value: '',
+                validFn: function(value){
+                    if(value && value.indexOf('http') == 0) {
+                        var request = OpenLayers.Request.HEAD({
+                            url: value,
+                            async: false
+                        });
+                        var success = (request.status == '200');
+                        if(success) {
+                            this.el.addClass('x-form-valid');
+                            if(this.el.hasClass('x-form-invalid')) {
+                                this.el.removeClass('x-form-invalid');
+                            }
+                        } else {
+                            if(this.el.hasClass('x-form-valid')) {
+                                this.el.removeClass('x-form-valid');
+                            }
+                            this.el.addClass('x-form-invalid');
+
+                        }
+                    }
+                },
+                listeners: {
+                    blur: function(cpt) {
+                        cpt.validFn(cpt.getValue());
+                    }
+                }
             }],
             listeners: {
                 collapse: {
@@ -661,6 +687,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         combo.ownerCt.find('name', 'refreshCapabilities-Btn')[0].setVisible(visible);
                         
                         var urlField = combo.ownerCt.find('name', 'href')[0];
+                        urlField.validFn(urlField.getValue());
                         if(visible && urlField && urlField.isVisible() && urlField.getValue() != '') {
                             this.capabilitiesStore.baseParams.url = urlField.getValue();
                             this.capabilitiesStore.reload({params: {url: urlField.getValue()}});
