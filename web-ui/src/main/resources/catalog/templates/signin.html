@@ -8,7 +8,8 @@
       <label for="inputPassword" data-translate="">password</label>
       <input type="password" class="form-control" id="inputPassword" name="password"
         data-ng-model="signinPassword" placeholder="{{'password' | translate}}" required=""/>
-      <input type="hidden" name="redirectUrl" value="/"/>
+      <input type="hidden" name="redirectUrl" data-ng-model="redirectUrl" 
+        value="{{redirectUrl}}"/>
       <!--<div class="checkbox">
                 <label class="checkbox">
                     <input type="checkbox"/><span translate>rememberMe</span>

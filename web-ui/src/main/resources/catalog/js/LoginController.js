@@ -22,6 +22,8 @@
           $scope.changeKey = null;
           $scope.passwordUpdated = false;
 
+          $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
+
           function initForm() {
            if ($window.location.pathname.indexOf('new.password') !== -1) {
              // Retrieve username from URL parameter
