@@ -662,7 +662,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         var reloadCapabilitiesStore = function(stringUrl, protocol) {
             if(this.isGetMap(protocol)) {
                 var params = {};
-                
+                this.layerNames = [];
                 if(stringUrl.split('?').length == 2) {
                     params = Ext.urlDecode(stringUrl.split('?')[1]);
                 }
