@@ -52,6 +52,8 @@ The following tools are required to be installed to setup a development environm
 * **Ant** - GeoNetwork uses `Ant <http://ant.apache.org/>`_ to build the installer.  Version 1.6.5 works but any other recent version should be OK. Once installed, you should have the ant command in your path (on Windows systems, you have to open a shell to check).
 * **Sphinx** - To create the GeoNetwork documentation in a nice format `Sphinx <http://sphinx.pocoo.org/>`_  is used.
 * **Python and closure** - To build Javascript:
+   
+   sudo easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
    cd /path/to/closure-library-parent-dir
    git clone http://code.google.com/p/closure-library/
    cd closure-library
