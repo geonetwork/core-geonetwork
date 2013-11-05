@@ -43,7 +43,7 @@ describe('GeoNetwork sign in page', function() {
   beforeEach(function() {
     signInPage = new GeoNetworkSignInPage();
     signInPage.signOut().then(function() {
-        signInPage.get();
+      signInPage.get();
     });
   });
 
@@ -51,7 +51,7 @@ describe('GeoNetwork sign in page', function() {
     signInPage.setUsername('admin');
     signInPage.setPassword('dummyPassword');
     signInPage.signIn();
-    
+
     expect(browser.getCurrentUrl()).toContain(
         signInPage.service + '?failure=true');
   });
@@ -86,7 +86,7 @@ describe('GeoNetwork sign in page', function() {
     browser.get(adminPageUrl);
     expect(browser.driver.getCurrentUrl()).toContain(signInPage.service);
   });
-  
+
   it('should redirect to the URL set in redirect parameter', function() {
     signInPage.get('?redirect=/srv/eng/' + adminPageUrl);
     signInPage.setUsername('admin');
