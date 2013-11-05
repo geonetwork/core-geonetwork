@@ -426,6 +426,7 @@
           <div 
             data-gn-editor-helper="{$listOfValues/@editorMode}"
             data-ref="_{$editInfo/@ref}"
+            data-type="{$type}"
             data-related-element="{if ($listOfValues/@relElementRef != '') 
                                     then concat('_', $listOfValues/@relElementRef) else ''}"
             data-related-attr="{if ($listOfValues/@relAtt) 
@@ -538,7 +539,7 @@
   -->
   <xsl:template mode="render-for-field-for-attribute" 
     match="@gn:xsderror|@gn:addedObj|
-          @min|@max|@name|@del|@add|@id|@uuid" priority="2"/>
+          @min|@max|@name|@del|@add|@id|@uuid|@ref|@parent|@up|@down" priority="2"/>
   
   
   <!-- 
@@ -554,7 +555,7 @@
    TODO: externalize exception ?
   -->
   <xsl:template mode="render-for-field-for-attribute" 
-    match="gn:attribute[not(@name = ('id', 'uuid', 'type', 'uuidref', 
+    match="gn:attribute[not(@name = ('ref', 'parent', 'id', 'uuid', 'type', 'uuidref', 
     'xlink:show', 'xlink:actuate', 'xlink:arcrole', 'xlink:role', 'xlink:title', 'xlink:href'))]" priority="4">
     <xsl:param name="ref"/>
     <xsl:param name="insertRef" select="''"/>

@@ -7,28 +7,28 @@
   <!-- Form field type configuration. Default is text. -->
   <fields>
     <for name="gmd:abstract" use="textarea"/>
-    <for name="gmd:statement" use="textarea"/>
-    <for name="gmd:supplementalInformation" use="textarea"/>
+    <for name="gmd:checkPointDescription" use="textarea"/>
+    <for name="gmd:credit" use="textarea"/>
+    <for name="gmd:description" use="textarea"/>
+    <for name="gmd:evaluationMethodDescription" use="textarea"/>
+    <for name="gmd:explanation" use="textarea"/>
+    <for name="gmd:evaluationMethodDescription" use="textarea"/>
+    <for name="gmd:handlingDescription" use="textarea"/>
+    <for name="gmd:maintenanceNote" use="textarea"/>
+    <for name="gmd:measureDescription" use="textarea"/>
     <for name="gmd:purpose" use="textarea"/>
     <for name="gmd:orderingInstructions" use="textarea"/>
-    <for name="gmd:statement" use="textarea"/>
-    <for name="gmd:description" use="textarea"/>
-    <for name="gmd:specificUsage" use="textarea"/>
-    <for name="gmd:explanation" use="textarea"/>
-    <for name="gmd:credit" use="textarea"/>
-    <for name="gmd:evaluationMethodDescription" use="textarea"/>
-    <for name="gmd:measureDescription" use="textarea"/>
-    <for name="gmd:maintenanceNote" use="textarea"/>
-    <for name="gmd:useLimitation" use="textarea"/>
     <for name="gmd:otherConstraints" use="textarea"/>
-    <for name="gmd:handlingDescription" use="textarea"/>
+    <for name="gmd:statement" use="textarea"/>
+    <for name="gmd:supplementalInformation" use="textarea"/>
+    <for name="gmd:specificUsage" use="textarea"/>
     <for name="gmd:userNote" use="textarea"/>
-    <for name="gmd:checkPointDescription" use="textarea"/>
-    <for name="gmd:evaluationMethodDescription" use="textarea"/>
-    <for name="gmd:measureDescription" use="textarea"/>
+    <for name="gmd:useLimitation" use="textarea"/>
 
 
-    <for name="gmd:denominator" use="number"/>
+    <for name="gco:Distance" use="number"/>
+    <for name="gco:Decimal" use="number"/>
+    <for name="gco:Integer" use="number"/>
 
 
     <for name="gco:Date" use="date"/>

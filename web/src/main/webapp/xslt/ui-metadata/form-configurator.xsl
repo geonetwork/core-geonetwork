@@ -149,7 +149,7 @@
                     <input class="form-control" type="{@use}" value="" id="{$id}_{@label}"/>
                   </xsl:for-each>
                   <textarea class="form-control" name="_X_TODO" data-gn-template-field="{$id}" data-keys="{string-join(template/values/key/@label, ',')}">
-                    <xsl:copy-of select="template/snippet"/>
+                    <xsl:copy-of select="template/snippet/*"/>
                   </textarea>
                 </div>
               </div>

@@ -15,7 +15,8 @@
   <xsl:include href="layout-custom-fields.xsl"/>
 
   <!-- Ignore all gn element -->
-  <xsl:template mode="mode-iso19139" match="gn:*|@gn:*|@*" priority="1000"/>
+  <xsl:template mode="mode-iso19139" match="gn:*|@gn:*" priority="1000"/>
+
 
   <!-- Template to display non existing element ie. geonet:child element
 	of the metadocument. Display in editing mode only and if 
@@ -131,15 +132,25 @@
     
     <xsl:variable name="attributes">
       <xsl:if test="$isEditing">
+        
         <!-- Create form for all existing attribute (not in gn namespace)
-        and all non existing attributes not already present. -->
+        and all non existing attributes not already present for the
+        current element and its children (eg. @uom in gco:Distance). 
+        A list of exception is defined in form-builder.xsl#render-for-field-for-attribute. -->
         <xsl:apply-templates mode="render-for-field-for-attribute" 
           select="
               @*|
               gn:attribute[not(@name = parent::node()/@*/name())]">
-            <xsl:with-param name="ref" select="gn:element/@ref"/>
-            <xsl:with-param name="insertRef" select="*/gn:element/@ref"/>
-          </xsl:apply-templates>
+          <xsl:with-param name="ref" select="gn:element/@ref"/>
+          <xsl:with-param name="insertRef" select="*/gn:element/@ref"/>
+        </xsl:apply-templates>
+        <xsl:apply-templates mode="render-for-field-for-attribute" 
+          select="
+          */@*|
+          */gn:attribute[not(@name = parent::node()/@*/name())]">
+          <xsl:with-param name="ref" select="*/gn:element/@ref"/>
+          <xsl:with-param name="insertRef" select="*/gn:element/@ref"/>
+        </xsl:apply-templates>
       </xsl:if>
     </xsl:variable>
     

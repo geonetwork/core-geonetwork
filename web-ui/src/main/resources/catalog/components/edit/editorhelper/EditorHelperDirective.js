@@ -18,6 +18,7 @@
            scope: {
                mode: '@gnEditorHelper',
                ref: '@',
+               type: '@',
                relatedElement: '@',
                relatedAttr: '@'
            },
@@ -28,6 +29,14 @@
                    relatedAttributeField = document.gnEditor[scope.relatedAttribute],
                    relatedElementField = document.gnEditor[scope.relatedElement],
                    initialValue = field.value;
+
+               // Function to properly set the target field value
+               var populateField = function (field, value) {
+                   if (field && value !== undefined) {
+                       field.value = field.type === 'number' ? parseFloat(value) : value;
+                   }
+               };
+               
                
                // Load the config from the textarea containing the helpers
                scope.config = angular.fromJson($('#' + scope.ref + '_config')[0].value);
@@ -35,20 +44,9 @@
                
                // Set the initial value
                scope.config.selected = {};
-               scope.config.value = field.value;
+               scope.config.value = field.type === 'number' ? parseFloat(field.value) : field.value;
                scope.config.layout = scope.mode && scope.mode.indexOf('radio') !== -1 ? 'radio' : scope.mode;
                
-               
-               // Function to properly set the target field value
-               var populateField = function (field, value) {
-                   if (field && value !== undefined) {
-                       if (field.type === 'number') {
-                           field.value = parseInt(value);
-                       } else {
-                           field.value = value;
-                       }
-                   }
-               };
                
                scope.select = function (o) {
                    scope.config.selected = o;
@@ -60,7 +58,8 @@
                    var option = scope.config.selected;
                    if (option && option['@value']) {
                        // Set the current value to the selected option if not empty
-                       scope.config.value = option['@value'];
+                       scope.config.value = 
+                           field.type === 'number' ? parseFloat(option['@value']) : option['@value'];
                        populateField(relatedAttributeField, option['@title'] || '');
                        populateField(relatedElementField, option['@title'] || '');
                    }

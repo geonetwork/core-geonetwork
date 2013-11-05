@@ -30,17 +30,25 @@
 
 
 
-
+  <!-- Get field type based on editor configuration.
+  Search by element name or the child element name (the one
+  containing the value).
+  
+  The child element take priority if defined.
+  -->
   <xsl:function name="gn-fn-iso19139:getFieldType" as="xs:string">
     <!-- The container element -->
     <xsl:param name="name" as="xs:string"/>
     <!-- The element containing the value eg. gco:Date -->
-    <xsl:param name="childName" as="xs:string"/>
-    <!--    <xsl:message>FieldType:<xsl:value-of select="$name"/>/<xsl:value-of select="$childName"/></xsl:message>
--->
-    <xsl:variable name="type" select="$iso19139EditorConfiguration/editor/fields/for[@name = $name]/@use"/>
+    <xsl:param name="childName" as="xs:string?"/>
+    
+    <xsl:variable name="childType" select="normalize-space($iso19139EditorConfiguration/editor/fields/for[@name = $childName]/@use)"/>
+    <xsl:variable name="type" select="normalize-space($iso19139EditorConfiguration/editor/fields/for[@name = $name]/@use)"/>
+    
     <xsl:value-of
-      select="if ($type != '')
+      select="if ($childType != '') 
+              then $childType 
+              else if ($type != '')
                 then $type 
                 else 'text'"
     />
