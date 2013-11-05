@@ -2025,5 +2025,29 @@
 			<code>in/out</code>
 			<label>Input/output</label>
 		</entry>
-	</codelist>	
+	</codelist>
+  
+  
+  <codelist name="gco:nilReason">
+    <entry>
+      <code>missing</code>
+      <label>Missing</label>
+    </entry>
+    <entry>
+      <code>inapplicable</code>
+      <label>Inapplicable</label>
+    </entry>
+    <entry>
+      <code>template</code>
+      <label>Template</label>
+    </entry>
+    <entry>
+      <code>unknown</code>
+      <label>Unkown</label>
+    </entry>
+    <entry>
+      <code>withheld</code>
+      <label>With held</label>
+    </entry>
+  </codelist>
 </codelists>
