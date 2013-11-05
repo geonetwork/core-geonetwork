@@ -117,6 +117,7 @@ public class Update extends NotInReadOnlyModeService {
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+        elResp.addContent(new Element(Geonet.Elem.FLAT_MODE).setText(Util.getParam(params, Geonet.Elem.FLAT_MODE, "")));
 		elResp.addContent(new Element(Geonet.Elem.SHOWVALIDATIONERRORS).setText(showValidationErrors));
         boolean justCreated = Util.getParam(params, Params.JUST_CREATED, null) != null ;
         if(justCreated) {
