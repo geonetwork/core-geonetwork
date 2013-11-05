@@ -10,12 +10,6 @@
   
   <xsl:variable name="isMinorEdit" select="/root/request/minor"/>
   
-  <!-- 
-  In flat mode, only existing element are displayed. This means that
-  all geonet:child element from the metadocument are ignored.
-  -->
-  <xsl:variable name="isFlatMode" select="/root/request/flat = 'true'"/>
-  
   <xsl:variable name="showValidationErrors" select="/root/request/showvalidationerrors"/>
   
 </xsl:stylesheet>

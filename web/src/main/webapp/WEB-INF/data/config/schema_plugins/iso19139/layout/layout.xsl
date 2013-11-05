@@ -15,13 +15,15 @@
   <xsl:include href="layout-custom-fields.xsl"/>
 
   <!-- Ignore all gn element -->
-  <xsl:template mode="mode-iso19139" match="gn:*|@gn:*" priority="1000"/>
+  <xsl:template mode="mode-iso19139" match="gn:*|@gn:*|@*" priority="1000"/>
 
   <!-- Template to display non existing element ie. geonet:child element
-	of the metadocument. -->
+	of the metadocument. Display in editing mode only and if 
+  the editor mode is not flat mode. -->
   <xsl:template mode="mode-iso19139" match="gn:child" priority="2000">
     <!-- TODO: this should be common to all schemas -->
-    <xsl:if test="$isEditing and not($isFlatMode)">
+    <xsl:if test="$isEditing and 
+      not($isFlatMode)">
       <xsl:call-template name="render-element-to-add">
         <xsl:with-param name="label"
           select="gn-fn-metadata:getLabel($schema, concat(@prefix, ':', @name), $labels)/label"/>
@@ -164,6 +166,69 @@
 
   </xsl:template>
 
+
+  <!-- 
+    
+    gmx:FileName could be used as substitution of any
+    gco:CharacterString. To turn this on add a schema 
+    suggestion.
+    
+   <gmd:otherCitationDetails>
+      <gmx:FileName 
+                    src="http://localhost:8080/geonetwork/srv/eng/resources.get?uuid=da165110-88fd-11da-a88f-000d939bc5d8&amp;fname=&amp;access=private">
+                    Quality report</gmd:FileName>
+   </gmd:otherCitationDetails>
+  -->
+  <xsl:template mode="mode-iso19139" match="*[gmx:FileName]">
+    
+    <xsl:variable name="src" select="gmx:FileName/@src"/>
+    
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    <xsl:variable name="labelConfig"
+      select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
+    <xsl:variable name="helper" select="gn-fn-metadata:getHelper($labelConfig/helper, .)"/>
+    
+    <xsl:variable name="attributes">
+      <xsl:if test="$isEditing">
+        <!-- Add specific attribute for the child element -->
+        <xsl:apply-templates mode="render-for-field-for-attribute" 
+          select="
+          gmx:FileName/@src">
+          <xsl:with-param name="ref" select="gmx:FileName/gn:element/@ref"/>
+        </xsl:apply-templates>
+        
+        <!-- Create form for all existing attribute (not in gn namespace)
+        and all non existing attributes not already present. -->
+        <xsl:apply-templates mode="render-for-field-for-attribute" 
+          select="
+          @*|
+          gn:attribute[not(@name = parent::node()/@*/name())]">
+          <xsl:with-param name="ref" select="gn:element/@ref"/>
+          <xsl:with-param name="insertRef" select="*/gn:element/@ref"/>
+        </xsl:apply-templates>
+      </xsl:if>
+    </xsl:variable>
+    
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label" select="$labelConfig/label"/>
+      <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <!--<xsl:with-param name="widget"/>
+      <xsl:with-param name="widgetParams"/>-->
+      <xsl:with-param name="xpath" select="$xpath"/>
+      <xsl:with-param name="attributesSnippet" select="$attributes"/>
+      <xsl:with-param name="type"
+        select="gn-fn-iso19139:getFieldType(name(), 
+        name(gmx:FileName))"/>
+      <xsl:with-param name="name" select="if ($isEditing) then */gn:element/@ref else ''"/>
+      <xsl:with-param name="editInfo" select="*/gn:element"/>
+      <xsl:with-param name="parentEditInfo" select="gn:element"/>
+      <!-- TODO: Handle conditional helper -->
+      <xsl:with-param name="listOfValues" select="$helper"/>
+    </xsl:call-template>
+    
+  </xsl:template>
 
 
   <!-- Match codelist values.

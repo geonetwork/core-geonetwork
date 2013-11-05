@@ -34,4 +34,6 @@
   <xsl:variable name="withXPath" select="false()"/>
   
   <xsl:variable name="tab" select="/root/gui/currTab"/>
+  
+  <xsl:variable name="isFlatMode" select="/root/request/flat = 'true'"/>
 </xsl:stylesheet>

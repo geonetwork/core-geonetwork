@@ -9,6 +9,19 @@ form.gn-editor {
         padding-left: @editor-fieldset-padding-left;
     }
     
+    /**
+     * Define a minimum height. It could be
+     * better to extend the textarea according
+     * to page height. Something like
+     * http://alistapart.com/article/expanding-text-areas-made-elegant
+     * may help. TODO
+     */
+    .gn-textarea-xml {
+        font-family: courier;
+        font-size: 12px;
+        min-height: 700px;
+    }
+    
     /* Reset margin in helper for documentation
      * to properly align radios
      */

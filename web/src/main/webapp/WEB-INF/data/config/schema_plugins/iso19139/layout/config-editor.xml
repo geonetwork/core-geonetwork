@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<editor xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts"
-  xmlns:gco="http://www.isotc211.org/2005/gco">
-  
+<editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="../../config-editor.xsd"
+  xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+  xmlns:gts="http://www.isotc211.org/2005/gts">
+
   <!-- Form field type configuration. Default is text. -->
   <fields>
     <for name="gmd:abstract" use="textarea"/>
@@ -24,24 +26,21 @@
     <for name="gmd:checkPointDescription" use="textarea"/>
     <for name="gmd:evaluationMethodDescription" use="textarea"/>
     <for name="gmd:measureDescription" use="textarea"/>
-    
-    
+
+
     <for name="gmd:denominator" use="number"/>
-    
-    
+
+
     <for name="gco:Date" use="date"/>
-    
-    
+
+
     <for name="gco:DateTime" use="datetime"/>
-    
-    
+
+
     <for name="gmd:electronicMailAddress" use="email"/>
   </fields>
-  
-  <fieldset>
-    <for></for>
-  </fieldset>
-  
+
+
   <!-- View configuration -->
   <views>
     <view name="default">
@@ -49,7 +48,28 @@
         <section xpath="/gmd:MD_Metadata/gmd:identificationInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:distributionInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:dataQualityInfo"/>
-        <section xpath="/gmd:MD_Metadata"/>
+        <section name="gmd:MD_Metadata">
+          <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
+          <field xpath="/gmd:MD_Metadata/gmd:language"/>
+          <field xpath="/gmd:MD_Metadata/gmd:characterSet"/>
+          <field xpath="/gmd:MD_Metadata/gmd:parentIdentifier" or="parentIdentifier"
+            in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel" or="hierarchyLevel"
+            in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevelName" or="hierarchyLevelName"
+            in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
+          <field xpath="/gmd:MD_Metadata/gmd:metadataStandardName"/>
+          <field xpath="/gmd:MD_Metadata/gmd:metadataStandardVersion"/>
+          <field xpath="/gmd:MD_Metadata/gmd:contact" or="contact" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:dataSetURI" or="dataSetURI" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:locale" or="locale" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:series"/>
+          <field xpath="/gmd:MD_Metadata/gmd:describes"/>
+          <field xpath="/gmd:MD_Metadata/gmd:propertyType"/>
+          <field xpath="/gmd:MD_Metadata/gmd:featureType"/>
+          <field xpath="/gmd:MD_Metadata/gmd:featureAttribute"/>
+        </section>
       </tab>
     </view>
     <view name="advanced">
@@ -77,8 +97,28 @@
           localName="portrayalCatalogueInfo"/>
       </tab>
       <tab id="metadata">
-        <section xpath="/gmd:MD_Metadata"/>
-        <!-- TODO: should exclude some subelement -->
+        <section name="gmd:MD_Metadata">
+          <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
+          <field xpath="/gmd:MD_Metadata/gmd:language"/>
+          <field xpath="/gmd:MD_Metadata/gmd:characterSet"/>
+          <field xpath="/gmd:MD_Metadata/gmd:parentIdentifier" or="parentIdentifier"
+            in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel" or="hierarchyLevel"
+            in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevelName" or="hierarchyLevelName"
+            in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
+          <field xpath="/gmd:MD_Metadata/gmd:metadataStandardName"/>
+          <field xpath="/gmd:MD_Metadata/gmd:metadataStandardVersion"/>
+          <field xpath="/gmd:MD_Metadata/gmd:contact" or="contact" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:dataSetURI" or="dataSetURI" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:locale" or="locale" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:series"/>
+          <field xpath="/gmd:MD_Metadata/gmd:describes"/>
+          <field xpath="/gmd:MD_Metadata/gmd:propertyType"/>
+          <field xpath="/gmd:MD_Metadata/gmd:featureType"/>
+          <field xpath="/gmd:MD_Metadata/gmd:featureAttribute"/>
+        </section>
       </tab>
       <tab id="metadataConstraints">
         <section xpath="/gmd:MD_Metadata/gmd:metadataConstraints" localName="metadataConstraints"/>
@@ -87,8 +127,8 @@
         <section xpath="/gmd:MD_Metadata/gmd:metadataMaintenance" localName="metadataMaintenance"/>
       </tab>
       <tab id="applicationSchemaInfo">
-        <section xpath="/gmd:MD_Metadata/gmd:applicationSchemaInfo" localName="applicationSchemaInfo"
-        />
+        <section xpath="/gmd:MD_Metadata/gmd:applicationSchemaInfo"
+          localName="applicationSchemaInfo"/>
       </tab>
     </view>
     <view name="inspire">
@@ -102,28 +142,29 @@
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract"
             if="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"/>
-  
+
           <!-- Add multiple dates -->
           <field name="revisionDate"
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-                  gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']"
-            type="calendar">
-            <values>
-              <key xpath="gmd:CI_Date/gmd:date/gco:DateTime">date</key>
-            </values>
+                  gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']">
             <template>
-              <gmd:date>
-                <gmd:CI_Date>
-                  <gmd:date>
-                    <gco:DateTime>{{date}}</gco:DateTime>
-                  </gmd:date>
-                  <gmd:dateType>
-                    <gmd:CI_DateTypeCode
-                      codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
-                      codeListValue="revision"/>
-                  </gmd:dateType>
-                </gmd:CI_Date>
-              </gmd:date>
+              <values>
+                <key label="date" xpath="gmd:CI_Date/gmd:date/gco:DateTime" use="date"/>
+              </values>
+              <snippet>
+                <gmd:date>
+                  <gmd:CI_Date>
+                    <gmd:date>
+                      <gco:DateTime>{{date}}</gco:DateTime>
+                    </gmd:date>
+                    <gmd:dateType>
+                      <gmd:CI_DateTypeCode
+                        codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
+                        codeListValue="revision"/>
+                    </gmd:dateType>
+                  </gmd:CI_Date>
+                </gmd:date>
+              </snippet>
             </template>
           </field>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:test"/>
@@ -174,9 +215,7 @@
       <tab id="xml" default="true"/>
     </view>
   </views>
-  
-  <!-- TODO: Define the list of multilingual field. -->
-  <multilingual>
-    
-  </multilingual>
+
+  <!-- TODO: Define the list of multilingual field.
+  <multilingual> </multilingual> -->
 </editor>
