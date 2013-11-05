@@ -54,7 +54,7 @@ import com.iplanet.sso.SSOToken;
 
 
 /**
- * 
+ * CustomAuthenticationProvider
  * @author tx.chevallier
  */
 public class CustomAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider 
@@ -131,7 +131,7 @@ public class CustomAuthenticationProvider extends AbstractUserDetailsAuthenticat
 		        
 		        if (defaultUserGroup!=null){
 		        	int groupId = getGroupId(dbms, defaultUserGroup);
-		        	attachUserToDefaultGroup(dbms, userId, groupId);
+		        	attachUserToDefaultGroup(dbms, userId, groupId, user.getProfile());
 		        }
 				
 			} else {
@@ -224,7 +224,7 @@ public class CustomAuthenticationProvider extends AbstractUserDetailsAuthenticat
 	 * @throws SQLException 
 	 * @throws NumberFormatException 
 	 */
-	private void attachUserToDefaultGroup(Dbms dbms, String id, int groupId) 
+	private void attachUserToDefaultGroup(Dbms dbms, String id, int groupId, String profile) 
 			throws NumberFormatException, SQLException {
 
 		if (!defaultUserGroup.equals("")){
@@ -235,7 +235,7 @@ public class CustomAuthenticationProvider extends AbstractUserDetailsAuthenticat
 			if (listXml == null){
 	
 				query = "INSERT INTO UserGroups(userid, groupid, profile) values(?,?,?)";
-				dbms.execute(query, new Integer(id), groupId, "");
+				dbms.execute(query, new Integer(id), groupId, profile);
 				
 			}
 		}
