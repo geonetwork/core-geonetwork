@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="editor">
+    <xs:annotation>
+      <xs:documentation>An editor configuration</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" ref="fields"/>
+        <xs:element maxOccurs="1" ref="views"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fields">
+    <xs:annotation>
+      <xs:documentation>Form field type configuration. Default is text. Define the list of exception
+        which does not propose a simple text field.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="for" minOccurs="1" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="for">
+    <xs:annotation>
+      <xs:documentation>A field configuration.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The field name including namespace prefix.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute ref="use"/>
+
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="views">
+    <xs:annotation>
+      <xs:documentation>An editor configuration</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="view">
+          <xs:annotation>
+            <xs:documentation>A view has a label and define a specific rendering of the metadata
+              records. A view is composed of one or more tabs.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="view">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="tab">
+          <xs:annotation>
+            <xs:documentation>A tab is composed of a set of elements.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The key of the view name stored in {schema}/log/{lang}/strings.xml or
+            the element name with namespace prefix.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tab">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="section">
+          <xs:annotation>
+            <xs:documentation>For each section a fieldset is created.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="default" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Define if this tab is the default one for the view. Only one tab should
+            be the default in a view.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="id" use="required" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The tab key used in URL parameter to activate that tab. The key is also
+            use for the tab label as defined in {schema}/loc/{lang}/strings.xml.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="mode">
+        <xs:annotation>
+          <xs:documentation>"flat" mode does not display elements containing only children and no
+            value. They are displayed as boxed element.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="flat"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="section">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="field">
+          <xs:annotation>
+            <xs:documentation>A form field</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="0" ref="fieldset">
+          <xs:annotation>
+            <xs:documentation>A fieldset</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="localName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>If the requested xpath does not exist, defined the local name of the
+            element to match. This match is made on all children of the metadocument ie.
+            geonet:element which correspond to non existing elements.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="mode" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>flat or not set</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>An optional name to override the default one base on field name for the
+            section.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="xpath">
+        <xs:annotation>
+          <xs:documentation>The xpath of the element to match.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fieldset">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="field"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="field">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" ref="template">
+          <xs:annotation>
+            <xs:documentation>A XML snippet of the element to edit.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="if">
+        <xs:annotation>
+          <xs:documentation>An optional xpath expression to evaluate to define if element should be
+            displayed only in some situation (eg. only for service metadata
+            records).</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>A field name to override the default name.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="xpath" use="required">
+        <xs:annotation>
+          <xs:documentation>The xpath of the element to match.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="or">
+        <xs:annotation>
+          <xs:documentation>The local name of the geonet child (ie. non existing element) to match.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="in">
+        <xs:annotation>
+          <xs:documentation>The element to search in for the geonet child.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="template">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" ref="values">
+          <xs:annotation>
+            <xs:documentation>The list of values to match from the template.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="1" maxOccurs="1" ref="snippet"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:attribute name="use">
+    <xs:annotation>
+      <xs:documentation>The form field type to use (one of the HTML5 type).</xs:documentation>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="textarea"/>
+        <xs:enumeration value="number"/>
+        <xs:enumeration value="date"/>
+        <xs:enumeration value="datetime"/>
+        <xs:enumeration value="email"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:attribute>
+  <xs:element name="values">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="key"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="key">
+    <xs:complexType>
+      <xs:attribute name="xpath" type="xs:string"/>
+      <xs:attribute name="label" type="xs:string"/>
+      <xs:attribute ref="use"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="snippet" type="xs:anyType"/>
+</xs:schema>
