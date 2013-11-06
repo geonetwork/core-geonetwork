@@ -3,7 +3,6 @@ package org.fao.geonet.kernel.reusable;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
@@ -67,7 +66,7 @@ public class MetadataRecord
         xmlSerializer.update(dbms, id, xml, new ISODate().toString(), true, null, srvContext);
         GeonetContext context = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
 
-        context.getDataManager().indexMetadata(dbms, id, true, srvContext, false, false);
+        context.getDataManager().indexMetadata(dbms, id, true, srvContext, false, false, false);
     }
 
     public String email(Dbms dbms) throws SQLException {

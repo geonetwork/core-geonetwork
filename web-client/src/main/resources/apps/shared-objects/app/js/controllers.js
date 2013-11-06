@@ -15,7 +15,7 @@ angular.module('SharedObjects.controllers', []).
           $scope.luceneIndexField = 'V_valid_xlink_contact';
       }
       $scope.startCreateNew = function () {
-          open($scope.baseUrl + '/shared.user.edit?closeOnSavevalidated=y&operation=newuser', '_sharedObject');
+           $scope.reloadOnWindowClosed(open($scope.baseUrl + '/shared.user.edit?closeOnSavevalidated=y&operation=newuser', '_sharedObject'));
 
           $location.path("/validated/contacts");
       };
@@ -84,7 +84,7 @@ angular.module('SharedObjects.controllers', []).
       };
       $scope.startCreateNew = function () {
           $location.path("/validated/extents");
-          open($scope.baseUrl + '/extent.edit?crs=EPSG:21781&typename=gn:xlinks&id=&wfs=default&modal', '_sharedObject');
+          $scope.reloadOnWindowClosed(open($scope.baseUrl + '/extent.edit?crs=EPSG:21781&typename=gn:xlinks&id=&wfs=default&modal', '_sharedObject'));
       };
 
   })
@@ -207,7 +207,7 @@ angular.module('SharedObjects.controllers', []).
       $scope.isDeletePage = true;
       $scope.validated = 'validated';
       $scope.isValidated = true;
-      $scope.validatedTitle = Geonet.translate('deleted');
+      $scope.validatedTitle = Geonet.translate('rejected');
       commonProperties.add($scope, $routeParams);
       if ($scope.isValidated) {
           $scope.luceneIndexField = 'V_invalid_xlink_keyword';

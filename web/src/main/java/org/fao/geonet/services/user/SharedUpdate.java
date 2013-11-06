@@ -48,6 +48,7 @@ import org.jdom.Element;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.UUID;
 
 //=============================================================================
 
@@ -75,7 +76,7 @@ public class SharedUpdate implements Service
 		String operation = Util.getParam(params, Params.OPERATION);
 		String id       = params.getChildText(Params.ID);
 		String username = Util.getParam(params, Params.USERNAME);
-		String password = Util.getParam(params, Params.PASSWORD);
+		String password = UUID.randomUUID().toString();
 		String surname  = Util.getParam(params, Params.SURNAME, "");
 		String name     = Util.getParam(params, Params.NAME,    "");
 		String profile  = Geocat.Profile.SHARED;
@@ -241,7 +242,7 @@ public class SharedUpdate implements Service
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getDataManager();
         for (MetadataRecord metadataRecord : referencingMetadata) {
-            dm.indexMetadata(dbms, metadataRecord.id, true, context, false, false);
+            dm.indexMetadata(dbms, metadataRecord.id, true, context, false, false, true);
         }
 
         return new Element(Jeeves.Elem.RESPONSE);

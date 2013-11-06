@@ -106,9 +106,9 @@ GeoNetwork.Geocatch.Templates = Ext.extend(Ext.XTemplate, {
     initComponent: function() {
         GeoNetwork.Geocatch.Templates.superclass.initComponent.call(this);
     },
-    /** api: method[getHarvesterTemplate]
+    /** api: method[getHarvesterTemplate]e
      *
-     *  :return: A template for harvester configuration
+     *  :return: A template for harvestr configuration
      */
     getHarvesterTemplate: function() {
         return new Ext.XTemplate(this.xmlTplMarkup);
@@ -146,7 +146,9 @@ GeoNetwork.Geocatch.Templates.TITLE =
 		    class="selector" \
 		    onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/>'+
 	    GeoNetwork.Geocatch.Templates.LOGO+
-        '<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>\
+        '<a class="metadatatitle" href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}\
+            <span class="metadatatitletooltip">{fulltitle}</span> \
+        </a>\
         <tpl if="isdataset==true"><img src="{[catalogue.URL]}/images/dataset.gif" title="dataset" alt="dataset"/></tpl>\
         <tpl if="isservice==true"><img src="{[catalogue.URL]}/images/service.gif" title="service" alt="service"/></tpl>\
         <tpl if="historicalArchive==true"><img src="{[catalogue.URL]}/apps/geocatch/images/archived.png" title="archive" alt="archive"/></tpl>\

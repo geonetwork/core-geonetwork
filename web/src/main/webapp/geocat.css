@@ -212,8 +212,10 @@ div.pop fieldset legend {
 banner
 *******************************************************************************/
 
-tr.deleted-reusable {
-	border: 2px solid #F6FF68;
+.deleted-reusable *{
+    background-color: #F6FF68;
+    background-image: none;
+
 }
 td.deleted-reusable {
 	background: #F6FF68;
@@ -1183,4 +1185,10 @@ select.lang_selector {
 fieldset.metadata-block table tbody tr[id^="gmd:parentIdentifier_"],
 fieldset.metadata-block table tbody tr[id^="child_gmd:parentIdentifier_"] {
 	display: none;
+}
+.loading {
+   text-indent: -9999px;
+   height: 50px;
+   width: 50px;
+   background-image:url('images/spinner.gif');
 }

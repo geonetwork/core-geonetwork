@@ -155,6 +155,8 @@
             }
             
             function submitExtent(){
+               submitButton().addClass('loading');
+               Ext.get('resetButton').setVisible(false);
 			   new Ajax.Request($('editform').action,
 				{
 		            method: 'post',
@@ -163,7 +165,9 @@
 		                window.close();
 		            },
 		            onFailure: function(req) {
-		                alert(translate("errorSaveFailed") + "/ status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
+                        submitButton().removeClass('loading');
+                        Ext.get('resetButton').setVisible(true);
+                        alert(translate("errorSaveFailed") + "/ status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
 		            }
 			    });
             }
@@ -218,7 +222,7 @@
                          <option value="EPSG:4326">WGS 84 (EPSG:4326)</option>
                      </select>
 	           </td></tr>
-		       <tr><td><br></br><INPUT class="button" type="button" onclick="submitExtent()" id="submitButton" value="Send"/>&#160;<INPUT class="button" type="reset"/>&#160;</td>
+		       <tr><td><br></br><INPUT class="button" type="button" onclick="submitExtent()" id="submitButton" value="Send"/>&#160;<INPUT class="button" id="resetButton" type="reset"/>&#160;</td>
 		           <td style="text-align: center"><br/><INPUT class="content" type="radio" name="format" id="WKT" value="WKT" checked="checked"/> WKT
 	                   &#160;<INPUT class="content" type="radio" name="format" value="GML2"/> GML</td></tr>
                   <tr><td colspan="3"><div id="olMap"></div></td></tr>

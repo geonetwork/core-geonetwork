@@ -329,7 +329,7 @@
 			<xsl:for-each select="//srv:SV_CouplingType/srv:code/@codeListValue">
 				<Field  name="couplingType" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
-			
+						
 			<!-- Sibling relationships -->
 			<xsl:for-each select="*/gmd:MD_AggregateInformation">
 				<Field name="{gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue}" 
@@ -337,14 +337,33 @@
 					store="true" index="true" token="false"/>					 
 			</xsl:for-each>
 			
-		</xsl:for-each>
+            <xsl:for-each select="gmd:resourceFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
+                <Field name="format" string="{string(.)}" store="true" index="true" token="false"/>
+            </xsl:for-each>
+
+            <xsl:for-each select="gmd:resourceFormat/gmd:MD_Format/gmd:version/gco:CharacterString">
+                <Field name="formatversion" string="{string(.)}" store="true" index="true" token="false"/>
+            </xsl:for-each>
+
+        </xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		<!-- === Distribution === -->		
 
         <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
             <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
-                <Field name="format" string="{string(.)}" store="true" index="false"/>
+                <Field name="format" string="{string(.)}" store="true" index="true" token="false"/>
+            </xsl:for-each>
+
+            <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:version/gco:CharacterString">
+                <Field name="formatversion" string="{string(.)}" store="true" index="true" token="false"/>
+            </xsl:for-each>
+
+            <xsl:for-each select="gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
+                <Field name="format" string="{string(.)}" store="true" index="true"/>
+            </xsl:for-each>
+            <xsl:for-each select="gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat/gmd:MD_Format/gmd:version/gco:CharacterString">
+                <Field name="format" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
 
             <!-- index online protocol -->
@@ -605,7 +624,10 @@
 		<Field name="metadata_broken_xlink" string="1" store="true" index="true" token="false"/>
 	</xsl:template>
 
-	<xsl:template match="text()" mode="broken-xlinks">
-	</xsl:template>	
+    <xsl:template match="text()" mode="broken-xlinks">
+    </xsl:template>
+
+    <xsl:template match="text()">
+    </xsl:template>
 
 </xsl:stylesheet>

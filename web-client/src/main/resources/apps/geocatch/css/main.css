@@ -561,3 +561,19 @@ ul.x-menu-list {
 	margin-left: 30px;
 	padding: 5px;
 }
+
+.metadatatitle:hover .metadatatitletooltip { /* NEW */
+    display: block;
+}
+
+
+.metadatatitletooltip {
+    display: none;  /* NEW */
+    color: #0076a1;
+    background: #C8C8C8;
+    margin-left: 28px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1000;
+    max-width:85%;
+}

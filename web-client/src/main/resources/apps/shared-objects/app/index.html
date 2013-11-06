@@ -18,6 +18,10 @@
 
     <script src="lib/jquery.js"></script>
     <script id="load-language-script" type="text/javascript">
+        changePageLanguage = function(lang) {
+            window.location.search='?lang='+lang;
+        };
+
         var languageHolder='eng';
         var init = function () {
             try {

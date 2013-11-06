@@ -25,7 +25,6 @@ package org.fao.geonet.services.mef;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.JeevesClientEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -185,7 +184,7 @@ public class Export implements Service {
 					+ " records.");
 
 			file = MEFLib
-					.doMEF2Export(context, uuids, format, false, stylePath, resolveXlink, removeXlinkAttribute);
+					.doMEF2Export(context, uuids, format, false, stylePath, resolveXlink, removeXlinkAttribute, false);
 		}
 
 		// -- Reset selection manager

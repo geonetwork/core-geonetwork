@@ -21,7 +21,7 @@
     <reusable_rejectDefaultMsg js="true">Wählen Sie ein anderes wiederverwendbares Objekt...</reusable_rejectDefaultMsg>
     <archived>Archiviert</archived>
     <performingOperation js="true">Die Operation wird ausgeführt. Bitte warten...</performingOperation>
-
+    <description js="true">Beschreibung</description>
 
 	<local._none_.non_validated>geocat.ch Thesaurus (nicht validiert)</local._none_.non_validated>
 	<local._none_.geocat.ch>geocat.ch Thesaurus</local._none_.geocat.ch>
@@ -158,8 +158,8 @@
         <management>Datenformate</management>
         <manDes>Hinzufügen/Bearbeiten/Löschen und Anzeigen der Datenformate</manDes>
     </format>
-    <formats>Format</formats>
-    <extents>Ausdehnung</extents>
+    <formats js='true'>Format</formats>
+    <extents js='true'>Ausdehnung</extents>
     <deleted js='true'>Gelöscht</deleted>
     <insufficient.privileges.import.replace>Es gibt einen Metadatensatz mit diesem Identifikator, der nicht ersetzt werden kann, da Sie nicht über die nötigen Rechte verfügen.</insufficient.privileges.import.replace>
     <updateDatasetTitle>Datensatz updaten</updateDatasetTitle>

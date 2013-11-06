@@ -42,9 +42,6 @@ import jeeves.utils.Xml;
 import jeeves.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.FieldType;
-import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geocat;
@@ -408,7 +405,8 @@ public class DataManager {
                         try {
                             for(int i=beginIndex; i<beginIndex+count; i++) {
                                 try {
-                                    indexMetadata(dbms, ids.get(i).toString(), processSharedObjects, context, performValidation, false);
+                                    indexMetadata(dbms, ids.get(i).toString(), processSharedObjects, context, performValidation, false,
+                                            false);
                                 }
                                 catch (Exception e) {
                                     Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '"+ids.get(i)+"': "+e.getMessage()+"\n"+ Util.getStackTrace(e));
@@ -419,7 +417,7 @@ public class DataManager {
                         }
                     }
                     else {
-                        indexMetadata(dbms, ids.get(0), processSharedObjects, context, performValidation, false);
+                        indexMetadata(dbms, ids.get(0), processSharedObjects, context, performValidation, false, false);
                     }
                 }
                 finally {
@@ -439,17 +437,18 @@ public class DataManager {
         }
     }
     public void indexMetadata(Dbms dbms, String id, boolean processSharedObjects, ServiceContext servContext) throws Exception {
-        indexMetadata(dbms, id, processSharedObjects, servContext, false, false);
+        indexMetadata(dbms, id, processSharedObjects, servContext, false, false, false);
     }
     /**
      * TODO javadoc.
      *
+     *
      * @param dbms
      * @param id
-     * @param b 
+     * @param reloadXLinks
      * @throws Exception
      */
-	public void indexMetadata(Dbms dbms, String id, boolean processSharedObjects, ServiceContext servContext, boolean performValidation, boolean fastIndex) throws Exception {
+	public void indexMetadata(Dbms dbms, String id, boolean processSharedObjects, ServiceContext servContext, boolean performValidation, boolean fastIndex, boolean reloadXLinks) throws Exception {
         try {
             Vector<Element> moreFields = new Vector<Element>();
             int id$ = new Integer(id);
@@ -457,6 +456,11 @@ public class DataManager {
             // get metadata, extracting and indexing any xlinks
 
             Element md   = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, true, servContext);
+
+            if (reloadXLinks) {
+                Processor.detachXLink(md, servContext);
+
+            }
 
             // get metadata table fields
             String query = "SELECT schemaId, createDate, changeDate, source, isTemplate, root, " +
@@ -1919,7 +1923,7 @@ public class DataManager {
                 //--- update search criteria
                 boolean indexGroup = false;
                 boolean processSharedObjects = false;
-                indexMetadata(dbms, id, processSharedObjects, servContext, true, false);
+                indexMetadata(dbms, id, processSharedObjects, servContext, true, false, false);
             }
 		}
 		return true;
@@ -3720,7 +3724,7 @@ public class DataManager {
             String updateQuery = "UPDATE Metadata SET popularity = popularity +1 WHERE id = ?";
             Integer iId = new Integer(id);
             dbms.execute(updateQuery, iId);
-            indexMetadata(dbms, id, false, srvContext, false, false);
+            indexMetadata(dbms, id, false, srvContext, false, false, false);
         }
         catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "The following exception is ignored: " + e.getMessage());

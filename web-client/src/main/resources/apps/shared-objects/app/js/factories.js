@@ -116,9 +116,9 @@ angular.module('SharedObjects.factories', []).
 
                   return promise;
               }
-              
+              $scope.reject = { message: '' };
               $scope.performUpdateOperation = function (service) {
-                  var params = { type: $scope.type, id: $scope.selected.id, isValidObject: $scope.isValidated };
+                  var params = { type: $scope.type, id: $scope.selected.id, isValidObject: $scope.isValidated, msg: $scope.reject.message };
 
                   if ($scope.message) {
                       params.msg = $scope.message;
@@ -133,6 +133,14 @@ angular.module('SharedObjects.factories', []).
 
               $scope.alert = function (name) {
                   alert(name);
+              };
+              $scope.reloadOnWindowClosed = function (win) {
+                  var intervalId = setInterval(function() {
+                      if (win.closed) {
+                          clearInterval(intervalId);
+                          $scope.reloadData();
+                      }
+                  }, 100);
               };
           }
 

@@ -26,6 +26,8 @@
 				}
 				// all ok, proceed
 				if (window.location.search.indexOf("closeOnSave") != -1) {
+            $('update').addClassName('loading');
+            $('goBack').hide();
 				   new Ajax.Request($('userupdateform').action,
 					{
 			            method: 'post',
@@ -34,10 +36,14 @@
 			                window.close();
 			            },
 			            onFailure: function(req) {
+                            $('update').removeClassName('loading');
+                            $('goBack').show();
 			                alert(translate("errorSaveFailed") + "/ status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
 			            }
 				    });
 				} else {
+                    $('update').addClassName('loading');
+                    $('goBack').hide();
 					document.userupdateform.submit();
 					if(window.opener) {  
 	                    window.opener.location.href="javascript:refresh();";
@@ -78,9 +84,9 @@
 				<xsl:call-template name="form"/>
 			</xsl:with-param>
 			<xsl:with-param name="buttons">
-				<button class="content" onclick="goBack()">
+				<button id = "goBack" class="content" onclick="goBack()">
 					<xsl:value-of select="/root/gui/strings/back"/>
-				</button> &#160; <button class="content" onclick="update1()">
+				</button> &#160; <button id="update" class="content" onclick="update1()">
 					<xsl:value-of select="/root/gui/strings/save"/>
 				</button>
 			</xsl:with-param>

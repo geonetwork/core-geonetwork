@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import jeeves.exceptions.JeevesException;
+import jeeves.guiservices.session.JeevesUser;
 import jeeves.interfaces.Schedule;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ScheduleContext;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
@@ -42,11 +45,35 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
     public void exec(ScheduleContext context) throws Exception {
         if (new DateTime().getHourOfDay() == 1) {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            Dbms dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
             try {
-                performJob(gc, dbms);
+                String id = "1";
+                Dbms dbms = null;
+                try {
+                    Element result = dbms.select("select id from users where username='admin'");
+                    if (result.getChild("record") != null) {
+                        id = result.getChildText("id");
+                    }
+                } catch (Throwable e) {
+                    Log.error(Geonet.DATA_MANAGER, "Error during unpublish", e);
+                }finally {
+                    if (dbms != null) {
+                        context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+                    }
+                }
+                ServiceContext serviceContext = new ServiceContext("unpublish.metadata", context.getApplicationContext(), new XmlCacheManager(), context.getMonitorManager(), context.getProviderManager(),
+                        context.getSerialFactory(), context.getProfileManager(), context.allContexts());
+                serviceContext.setAsThreadLocal();
+
+                final UserSession userSession = new UserSession();
+                JeevesUser user = new JeevesUser(serviceContext.getProfileManager());
+                user.setId(id);
+                user.setProfile(Geonet.Profile.ADMINISTRATOR);
+                user.setUsername("admin");
+
+                userSession.loginAs(user);
+                performJob(gc, serviceContext);
             } finally {
-                context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+                context.getResourceManager().close();
             }
         }
 
@@ -55,10 +82,9 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
     @Override
     public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         
         try {
-            performJob(gc, dbms);
+            performJob(gc, context);
             return new Element("status").setText("true");
         } catch (Throwable e) {
             return new Element("status").setText("false");
@@ -67,7 +93,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
 
     // --------------------------------------------------------------------------------
 
-    private void performJob(GeonetContext gc, Dbms dbms) throws SQLException, Exception {
+    private void performJob(GeonetContext gc, ServiceContext serviceContext) throws SQLException, Exception {
         if (!running.compareAndSet(false, true)) {
             throw new IllegalStateException("Unpublish Job is already running");
         }
@@ -77,14 +103,20 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
                 keepDuration = 100;
             }
 
-            // clean up expired changes
-            dbms.execute("DELETE FROM publish_tracking where changedate < current_date-" + Math.max(1, keepDuration));
+            List<MetadataRecord> metadataids;
+            Dbms dbms = (Dbms) serviceContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
+            try {
+                // clean up expired changes
+                dbms.execute("DELETE FROM publish_tracking where changedate < current_date-" + Math.max(1, keepDuration));
 
-            List<MetadataRecord> metadataids = lookUpMetadataIds(dbms);
-
+                metadataids = lookUpMetadataIds(dbms);
+            } finally {
+                serviceContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+            }
             DataManager dataManager = gc.getDataManager();
             for (MetadataRecord metadataRecord : metadataids) {
                 String id = "" + metadataRecord.id;
+                dbms = (Dbms) serviceContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
                 try {
                     Record newTodayRecord = validate(gc, metadataRecord, dbms, dataManager);
                     if (newTodayRecord != null) {
@@ -95,6 +127,8 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
                     String error = Xml.getString(JeevesException.toElement(e));
                     Log.error(Geonet.INDEX_ENGINE, "Error during Validation/Unpublish process of metadata " + id + ".  Exception: "
                             + error);
+                } finally {
+                    serviceContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
                 }
             }
         } finally {
