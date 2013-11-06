@@ -9,7 +9,7 @@ web/src/main/webapp/images/logos/*
 web/src/main/webapp/images/statTmp
 web/logs/
 web/jcs_caching/
-geonetwork*.db
+web/geonetwork*.db
 /geonetwork*
 changes-*
 web/coverage.ec

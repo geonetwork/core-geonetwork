@@ -869,7 +869,8 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>8.1.9.v20130131</version>
         <configuration>
-          <connectors>
+            <contextXml>${basedir}/jetty-context.xml</contextXml>
+            <connectors>
             <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
               <port>8080</port>
               <maxIdleTime>10000</maxIdleTime>
