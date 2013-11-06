@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="navbar navbar-default"
+    data-ng-include="'../../catalog/templates/editor/top-toolbar.html'"> </div>
+
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="panel dynamic-list">
+        <ul class="list-unstyled">
+           <div data-ng-repeat="type in mdTypes">
+             <li data-ng-click="getTemplateNamesByType(type)">{{type}}</li>
+          </div>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="panel">
+        <ul>
+           <div data-ng-repeat="name in tplNames">
+             <li data-ng-click="getTemplateNamesByType">{{name}}</li>
+          </div>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="panel">
+        <div groups-combo></div>
+      </div>
+    </div>
+    
+    <div my-customer></div>
+</div>

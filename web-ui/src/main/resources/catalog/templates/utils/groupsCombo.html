@@ -1,0 +1,7 @@
+<label class="control-label" data-translate="group"></label>
+<div class="col-xs-4 dynamic-list" >
+<select class="form-control input-sm" data-ng-model="harvester.ownerGroup">
+  <option data-ng-repeat="g in groups" value="{{g['id']}}"
+    data-ng-selected="g['id'] == harvester.ownerGroup">{{g.label[lang]}}</option>
+</select>
+<div>

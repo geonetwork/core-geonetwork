@@ -2,10 +2,20 @@
   goog.provide('gn_editor_controller');
 
   goog.require('gn_fields');
+  goog.require('gn_new_metadata_controller');
 
   var module = angular.module('gn_editor_controller',
-      ['gn_fields']);
+      ['gn_fields', 'gn_new_metadata_controller']);
 
+  var tplFolder = '../../catalog/templates/editor/';
+
+  module.config(['$routeProvider', function($routeProvider) {
+    $routeProvider.
+        when('/', {
+          templateUrl: tplFolder + 'newMetadata.html',
+          controller: 'GnNewMetadataController'}).
+        otherwise({templateUrl: tplFolder + 'editor.html', controller: 'GnEditorController'});
+  }]);
 
   /**
    * Metadata editor controller - draft
