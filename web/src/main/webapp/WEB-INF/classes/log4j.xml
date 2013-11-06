@@ -152,8 +152,10 @@
     </logger>
     <logger name="org.springframework.security.ldap" additivity="false">
         <level value="WARN" />
-    </logger>                             n
-
+    </logger>
+    <logger name="org.springframework.aop.framework.CglibAopProxy" additivity="false">
+        <level value="ERROR" />
+    </logger>
 
     <!--  JZKIT logging configuration -->
     <logger name="com.k_int" additivity="false">
