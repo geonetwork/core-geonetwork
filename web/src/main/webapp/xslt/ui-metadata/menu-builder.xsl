@@ -23,10 +23,9 @@
       </xsl:if>
 
 
-
       <!-- Make a drop down choice to swith to one view to another -->
       <li class="dropdown pull-right">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
           <xsl:value-of select="$i18n/selectView"/>
           <b class="caret"/>
         </a>
@@ -48,10 +47,11 @@
 
           <li class="divider"/>
           <li>
-            <a data-ng-click="toggleAttributes(true)">
+            <a data-ng-click="toggleAttributes(true)" >
               <i class="fa"
                 data-ng-class="displayAttributes ? 'fa-check-square-o' : 'fa-square-o'"/>
-              <span data-translate="">toggleAttributes</span></a>
+              <span data-translate="">toggleAttributes</span>
+            </a>
           </li>
         </ul>
       </li>

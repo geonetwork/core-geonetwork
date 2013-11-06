@@ -20,13 +20,18 @@
             gnSearchManagerService, 
             gnUtilityService) {
 
-      // TODO: move parameter to the route parameter
-      $scope.metadataId = gnUtilityService.getUrlParameter('id');
-      $scope.metadataUuid = gnUtilityService.getUrlParameter('uuid');
-      $scope.tab = gnUtilityService.getUrlParameter('tab');
-      $scope.displayAttributes =
-          gnUtilityService.getUrlParameter('displayAttributes') === 'true';
+      var init = function() {
+        // TODO: move parameter to the route parameter
+        $scope.metadataId = gnUtilityService.getUrlParameter('id');
+        $scope.metadataUuid = gnUtilityService.getUrlParameter('uuid');
+        $scope.tab = gnUtilityService.getUrlParameter('tab');
+        $scope.displayAttributes =
+            gnUtilityService.getUrlParameter('displayAttributes') === 'true';
 
+        // TODO: Check requested metadata exist - return message if it happens
+        // Would you like to create a new one ?
+        $scope.editorFormUrl = buildEditUrlPrefix('md.edit');
+      };
       /**
        * Animation duration for slide up/down
        */
@@ -40,12 +45,6 @@
         $scope.displayAttributes && params.push('&displayAttributes=',
                                                    $scope.displayAttributes);
         return params.join('');
-      };
-
-      $scope.getEditorForm = function() {
-        // TODO: Check requested metadata exist - return message if it happens
-        // Would you like to create a new one ?
-        return buildEditUrlPrefix('md.edit');
       };
 
       $scope.switchToTab = function(tabIdentifier, mode) {
@@ -70,6 +69,7 @@
         if (toggle) {
           $scope.displayAttributes = $scope.displayAttributes === false;
         }
+
         // Update the form to propagate info when saved
         // or tab switch - Needs to be propagated in Update service
         $('#displayAttributes')[0].value = $scope.displayAttributes;
@@ -225,6 +225,9 @@
         target.removeClass('text-danger');
         target.find('legend').removeClass('text-danger');
       };
+
+      init();
+
     }]);
 
 })();
