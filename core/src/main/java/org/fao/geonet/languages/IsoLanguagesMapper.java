@@ -87,7 +87,7 @@ public class IsoLanguagesMapper {
             if (shortCode != null && code != null) {
                 _isoLanguagesMap639.forcePut(shortCode, code);
             } else {
-                Log.warning(Geonet.GEONETWORK, "Unable to add IsoLanguage mapping for "+record);
+                Log.info(Geonet.GEONETWORK, "Unable to add IsoLanguage mapping for "+record);
             }
         }
     }
