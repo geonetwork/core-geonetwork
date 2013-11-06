@@ -75,13 +75,20 @@ public final class DeletedObjects
     public static Element list(Dbms dbms) throws SQLException
     {
 
-        List<Element> records = dbms.select("SELECT id,description,deletionDate FROM DeletedObjects").getChildren();
+        List<Element> records = dbms.select("SELECT id,description,deletionDate FROM DeletedObjects order by deletionDate").getChildren();
 
         Element deleted = new Element(ReplacementStrategy.REPORT_ROOT);
         for (Element element : records) {
             Element delete = new Element(ReplacementStrategy.REPORT_ELEMENT);
             String desc = element.getChildTextTrim("description");
             String date = element.getChildTextTrim("deletiondate");
+            if (date != null) {
+                if (desc == null) {
+                    desc = date;
+                } else {
+                    desc = date + " - " + desc ;
+                }
+            }
             String id = element.getChildTextTrim("id");
             addChild(delete, ReplacementStrategy.REPORT_ID, id);
             if (desc != null) {

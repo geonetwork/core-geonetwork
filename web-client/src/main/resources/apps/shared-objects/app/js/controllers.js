@@ -207,7 +207,7 @@ angular.module('SharedObjects.controllers', []).
       $scope.isDeletePage = true;
       $scope.validated = 'validated';
       $scope.isValidated = true;
-      $scope.validatedTitle = Geonet.translate('deleted');
+      $scope.validatedTitle = Geonet.translate('rejected');
       commonProperties.add($scope, $routeParams);
       if ($scope.isValidated) {
           $scope.luceneIndexField = 'V_invalid_xlink_keyword';
