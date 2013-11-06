@@ -263,28 +263,35 @@ public class SearchManager {
             // create hardcoded default PerFieldAnalyzerWrapper w/o stopwords
             _defaultAnalyzer = SearchManager.createHardCodedPerFieldAnalyzerWrapper(null);
         }
-        if(!_stopwordsDir.exists() || !_stopwordsDir.isDirectory()) {
-            Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.getAbsolutePath() + ", not using any stopwords.");
-        }
-        else {
-            if(Log.isDebugEnabled(Geonet.LUCENE))
+        if (!_stopwordsDir.exists() || !_stopwordsDir.isDirectory()) {
+            Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.getAbsolutePath() +
+                                              ", not using any stopwords.");
+        } else {
+            if (Log.isDebugEnabled(Geonet.LUCENE)) {
                 Log.debug(Geonet.LUCENE, "loading stopwords");
-            for(File stopwordsFile : _stopwordsDir.listFiles()) {
+            }
+            File[] files = _stopwordsDir.listFiles();
+            if (files == null) {
+                files = new File[0];
+            }
+
+            for (File stopwordsFile : files) {
                 String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
-                if(language.length() != 2) {
-                    Log.warning(Geonet.LUCENE, "invalid iso 639-1 code for language: " + language);
+                if (language.length() != 2) {
+                    Log.info(Geonet.LUCENE, "invalid iso 639-1 code for language: " + language);
                 }
                 // look up stopwords for that language
                 Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());
-                if(stopwordsForLanguage != null) {
-                    if(Log.isDebugEnabled(Geonet.LUCENE))
+                if (stopwordsForLanguage != null) {
+                    if (Log.isDebugEnabled(Geonet.LUCENE)) {
                         Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
+                    }
                     Analyzer languageAnalyzer = SearchManager.createHardCodedPerFieldAnalyzerWrapper(stopwordsForLanguage);
                     analyzerMap.put(language, languageAnalyzer);
-                }
-                else {
-                    if(Log.isDebugEnabled(Geonet.LUCENE))
+                } else {
+                    if (Log.isDebugEnabled(Geonet.LUCENE)) {
                         Log.debug(Geonet.LUCENE, "failed to load any stopwords for language " + language);
+                    }
                 }
             }
         }        

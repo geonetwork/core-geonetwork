@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_0.dtd">
+<!--
+    This file is used by pom.xml to configure jetty.  It disables the jar scan performed by jetty so that startup
+    is faster
+-->
 
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
     <Call name="setAttribute">
