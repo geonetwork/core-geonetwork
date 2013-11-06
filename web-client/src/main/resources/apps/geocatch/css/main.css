@@ -569,8 +569,8 @@ ul.x-menu-list {
 
 .metadatatitletooltip {
     display: none;  /* NEW */
-    color: rgb(0, 118, 161);
-    background: rgba(200,200,200,1);
+    color: #0076a1;
+    background: #C8C8C8;
     margin-left: 28px;
     padding: 10px;
     position: absolute;
