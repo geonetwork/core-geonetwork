@@ -114,9 +114,9 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         copyDirectory(templateDataDir, dataDir);
 
         final File configDir = new File(dataDir, "config");
-        final String schemaPluginsCatalogFile = new File(getClassFile(), "../schemaplugin-uri-catalog.xml").getPath();
         final String schemaPluginsDir = new File(configDir, "schema_plugins").getPath();
         final String resourcePath = new File(dataDir, "data/resources").getPath();
+        final String schemaPluginsCatalogFile = new File(schemaPluginsDir, "/schemaplugin-uri-catalog.xml").getPath();
 
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
 

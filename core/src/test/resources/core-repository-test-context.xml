@@ -13,7 +13,7 @@
 
     <jdbc:initialize-database data-source="jdbcDataSource" ignore-failures="DROPS">
         <jdbc:script location="classpath:cleanoutdatabase.sql" />
-        <jdbc:script location="file:..\web\src\main\webapp\WEB-INF\classes\setup\sql\data\data-db-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql"/>
     </jdbc:initialize-database>
 
     <!--<bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>-->
