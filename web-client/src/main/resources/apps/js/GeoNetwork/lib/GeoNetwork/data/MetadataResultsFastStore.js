@@ -41,6 +41,18 @@ Ext.namespace('GeoNetwork.data');
 GeoNetwork.data.MetadataResultsFastStore = function() {
     var separator = "|";
 
+    function getFullTitle(v, record) {
+    	var title;
+        if (record.title && record.title[0]) {
+            title = record.title[0].value;
+        } else if (record.defaultTitle && record.defaultTitle[0]) {
+        	title = record.defaultTitle[0].value;
+        } else {
+        	title = translate('missing');
+        }
+
+        return title;
+    }
     function getTitle(v, record) {
     	var title;
         if (record.title && record.title[0]) {
@@ -56,6 +68,7 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
         	return title;
         }
     }
+
     function getGroupLogoUuid(v, record) {
 
         if (record.groupLogoUuid && record.groupLogoUuid[0]) {
@@ -383,6 +396,9 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
         fields : [ {
             name : 'title',
             convert : getTitle
+        }, {
+            name : 'fulltitle',
+            convert : getFullTitle
         }, {
             name : 'abstract',
             convert : getAbstract
