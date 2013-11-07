@@ -51,7 +51,7 @@
 	<bean id="casEntryPoint"
 		class="com.sun.identity.provider.springsecurity.OpenSSOProcessingFilterEntryPoint">
 		<property name="loginUrl" value="${openam.login.url}" />
-		<property name="gotoUrl" value="${geonetwork.https.url}/j_spring_openam_security_check" />
+		<property name="gotoUrl" value="${geonetwork.http.url}/j_spring_openam_security_check" />
 	</bean>
 
 	<!-- mapping between authorities (openam groups vs. geonetwork profiles) -->
@@ -61,9 +61,8 @@
 			<property name="attributes2grantedAuthoritiesMap">
 				<map>
 					<entry key="ROLE_IGCADMINS" value="Administrator" />
-					<entry key="ROLE_IGCSERVICES" value="UserAdmin" />
 					<entry key="ROLE_IGCUSERS" value="RegisteredUser" />
-					<entry key="ROLE_IGCPROVIDERS" value="UserAdmin" />
+					<entry key="ROLE_IGCPROVIDERS" value="Editor" />
 				</map>
 			</property>
 	</bean>
