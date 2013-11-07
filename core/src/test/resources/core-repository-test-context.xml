@@ -14,6 +14,22 @@
     <jdbc:initialize-database data-source="jdbcDataSource" ignore-failures="DROPS">
         <jdbc:script location="classpath:cleanoutdatabase.sql" />
         <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-ara-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-cat-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-chi-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-dut-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-eng-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-fin-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-fre-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-ger-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-ita-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-nor-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-pol-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-por-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-rus-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-spa-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-tur-default.sql"/>
+        <jdbc:script location="file:../web/src/main/webapp/WEB-INF/classes/setup/sql/data/loc-vie-default.sql"/>
     </jdbc:initialize-database>
 
     <!--<bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>-->

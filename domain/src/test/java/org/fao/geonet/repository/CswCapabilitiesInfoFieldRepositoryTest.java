@@ -81,6 +81,7 @@ public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTe
         assertNull(info.getAbstract());
         assertNull(info.getAccessConstraints());
         assertNull(info.getFees());
+        assertEquals("eng", info.getLangId());
 
         info.setAbstract("abstract");
         info.setAccessConstraints("accessConstraints");
@@ -99,13 +100,13 @@ public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTe
 
         final CswCapabilitiesInfo engFound = _repo.findCswCapabilitiesInfo("eng");
 
-        assertEquals(engFound.getLangId(), info.getLangId());
-        assertEquals(engFound.getAbstract(), info.getAbstract());
+        assertEquals(info.getLangId(), engFound.getLangId());
+        assertEquals(info.getAbstract(), engFound.getAbstract());
 
         final CswCapabilitiesInfo freFound = _repo.findCswCapabilitiesInfo("fre");
 
-        assertEquals(freFound.getLangId(), info2.getLangId());
-        assertEquals(freFound.getAbstract(), info2.getAbstract());
+        assertEquals(info2.getLangId(), freFound.getLangId());
+        assertEquals(info2.getAbstract(), freFound.getAbstract());
 
     }
 

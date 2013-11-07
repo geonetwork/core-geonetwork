@@ -85,15 +85,24 @@ public class Set implements Service {
             CswCapabilitiesInfo cswCapInfo = capabilitiesInfoFieldRepository.findCswCapabilitiesInfo(language.getId());
 
             final String langId = language.getId();
-            cswCapInfo.setTitle(params.getChild("csw.title_" + langId).getValue());
-            cswCapInfo.setAbstract(params.getChild("csw.abstract_" + langId).getValue());
-            cswCapInfo.setFees(params.getChild("csw.fees_" + langId).getValue());
-            cswCapInfo.setAccessConstraints(params.getChild("csw.accessConstraints_" + langId).getValue());
+            cswCapInfo.setTitle(getValue(params, "csw.title_" + langId));
+            cswCapInfo.setAbstract(getValue(params, "csw.abstract_" + langId));
+            cswCapInfo.setFees(getValue(params, "csw.fees_" + langId));
+            cswCapInfo.setAccessConstraints(getValue(params, "csw.accessConstraints_" + langId));
 
             toSave.addAll(cswCapInfo.getFields());
         }
 
         capabilitiesInfoFieldRepository.save(toSave);
+    }
+
+    private String getValue(Element params, String paramId) {
+        final Element child = params.getChild(paramId);
+        if (child != null) {
+            return child.getValue();
+        } else {
+            return "";
+        }
     }
 
 }

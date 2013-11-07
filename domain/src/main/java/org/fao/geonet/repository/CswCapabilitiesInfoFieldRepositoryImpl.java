@@ -28,9 +28,9 @@ public class CswCapabilitiesInfoFieldRepositoryImpl implements CswCapabilitiesIn
         final CriteriaBuilder cb = _EntityManager.getCriteriaBuilder();
         final CriteriaQuery<CswCapabilitiesInfoField> query = cb.createQuery(CswCapabilitiesInfoField.class);
         final Root<CswCapabilitiesInfoField> root = query.from(CswCapabilitiesInfoField.class);
-        query.where(cb.equal(root.get(CswCapabilitiesInfoField_.fieldName), languageCode));
+        query.where(cb.equal(root.get(CswCapabilitiesInfoField_.langId), languageCode));
         List<CswCapabilitiesInfoField> allFieldsForLang = _EntityManager.createQuery(query).getResultList();
-        return new CswCapabilitiesInfo(allFieldsForLang);
+        return new CswCapabilitiesInfo(languageCode, allFieldsForLang);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class CswCapabilitiesInfoFieldRepositoryImpl implements CswCapabilitiesIn
         Collection<CswCapabilitiesInfoField> fields = info.getFields();
 
         for (CswCapabilitiesInfoField field : fields) {
-            if (field.getId() == -1) {
+            if (field.getId() == 0) {
                 _EntityManager.persist(field);
             } else {
                 _EntityManager.merge(field);

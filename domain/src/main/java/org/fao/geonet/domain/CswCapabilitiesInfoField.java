@@ -19,7 +19,7 @@ public class CswCapabilitiesInfoField extends GeonetEntity {
     private static final int ID_COLUMN_LENGTH = 10;
     private static final int LANG_ID_COLUMN_LENGTH = 5;
     private static final int FIELD_NAME_COLUMN_LENGTH = 32;
-    private int _id = -1;
+    private int _id = 0;
     private String _langId;
     private String _fieldName;
     private String _value;
