@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.util.Map;
 
@@ -24,6 +26,8 @@ public class Group extends Localized {
     private String _description;
     private String _email;
     private Integer _referrer;
+    private String logo;
+    private String website;
 
     /**
      * Get the id of the group.
@@ -190,5 +194,50 @@ public class Group extends Localized {
     @Transient
     public boolean isReserved() {
         return ReservedGroup.isReserved(getId());
+    }
+
+    /**
+     * Set the logo filename.
+     *
+     * @param logo the logo filename
+     *
+     * @return this entity.
+     */
+    @Nonnull
+    public Group setLogo(@Nullable String logo) {
+        this.logo = logo;
+        return this;
+    }
+
+    /**
+     * Get the logo filename.
+     *
+     * @return the filename of the logo or null if there is no logo associated with this group.
+     */
+    @Nullable
+    public String getLogo() {
+        return logo;
+    }
+
+    /**
+     * Set the website url of this group.
+     *
+     * @param website the website url of this group.
+     *
+     * @return this group entity object.
+     */
+    @Nonnull
+    public Group setWebsite(@Nullable String website) {
+        this.website = website;
+        return this;
+    }
+
+    /**
+     * Return the website url for this group.
+     * @return the website url for this group or null if there is none.
+     */
+    @Nullable
+    public String getWebsite() {
+        return website;
     }
 }
