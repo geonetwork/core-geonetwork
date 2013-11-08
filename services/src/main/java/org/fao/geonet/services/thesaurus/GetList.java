@@ -35,7 +35,9 @@ import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
@@ -78,7 +80,7 @@ public class GetList implements Service {
      * @return {@link org.jdom.Element}
 	 * @throws java.sql.SQLException
 	 */
-	private Element buildResultfromThTable(ServiceContext context, Map<String, Thesaurus> thTable) throws SQLException {
+	private Element buildResultfromThTable(ServiceContext context, Map<String, Thesaurus> thTable) throws SQLException, JDOMException, IOException {
 		
 		Element elRoot = new Element("thesauri");
 		
@@ -99,7 +101,10 @@ public class GetList implements Service {
 			elFname.addContent(fname);
 			
 			Element elTitle = new Element("title");
-			String title = currentTh.getTitle();
+			String title = currentTh.getTitles(context).get(context.getLanguage());
+			if(title == null) {
+				title = currentTh.getTitle();
+			}
 			elTitle.addContent(title);
 			
 			Element elType = new Element("type");
