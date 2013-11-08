@@ -24,19 +24,23 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.Util;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -121,18 +125,17 @@ public class Insert extends NotInReadOnlyModeService {
 		
 
         DataManager dm = gc.getBean(DataManager.class);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        
+
 		// Import record
-		Importer.importRecord(uuid, localId , uuidAction, md, schema, 0,
-				gc.getSiteId(), gc.getSiteName(), context, id, date,
-				date, group, isTemplate, dbms);
+        Importer.importRecord(uuid, localId , uuidAction, md, schema, 0,
+                gc.getBean(SettingManager.class).getSiteId(), gc.getBean(SettingManager.class).getSiteName(), context, id, date,
+				date, group, isTemplate);
 		
 		int iId = Integer.parseInt(id.get(0));
 		
 		
 		// Set template
-		dm.setTemplate(dbms, iId, isTemplate, null);
+		dm.setTemplate(iId, MetadataType.lookup(isTemplate), null);
 
 		
 		// Import category
@@ -143,16 +146,17 @@ public class Insert extends NotInReadOnlyModeService {
 			categs.addContent((new Element("category")).setAttribute(
 					"name", category));
 
-			Importer.addCategories(context, dm, dbms, id.get(0), categs);
+            final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id.get(0));
+            Importer.addCategoriesToMetadata(metadata , categs, context);
 		} 
 
 		// Index
-        dm.indexInThreadPool(context, id.get(0), dbms);
-        
-		// Return response
+        dm.indexMetadata(id.get(0));
+
+        // Return response
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 		response.addContent(new Element(Params.ID).setText(String.valueOf(iId)));
-	        response.addContent(new Element(Params.UUID).setText(String.valueOf(dm.getMetadataUuid(dbms, id.get(0)))));
+	        response.addContent(new Element(Params.UUID).setText(String.valueOf(dm.getMetadataUuid(id.get(0)))));
 
 		return response;
 	};

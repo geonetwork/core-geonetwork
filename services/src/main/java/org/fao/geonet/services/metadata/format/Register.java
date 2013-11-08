@@ -23,11 +23,12 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.IO;
+import org.fao.geonet.utils.IO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.fao.geonet.Constants;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.util.ZipUtil;
@@ -54,8 +55,8 @@ public class Register extends AbstractFormatService {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         ensureInitializedDir(context);
-        String fileName = jeeves.utils.Util.getParam(params, Params.FNAME);
-        String xslid = jeeves.utils.Util.getParam(params, Params.ID, null);
+        String fileName = Util.getParam(params, Params.FNAME);
+        String xslid = Util.getParam(params, Params.ID, null);
         if (xslid == null) {
             xslid = fileName;
             int extentionIdx = xslid.lastIndexOf('.');
@@ -104,7 +105,7 @@ public class Register extends AbstractFormatService {
             IO.mkdirs(new File(file, "loc"), "Localization directory");
             PrintStream out = null;
             try {
-                out = new PrintStream(new File(file, "loc"+File.separator+"README"), Jeeves.ENCODING);
+                out = new PrintStream(new File(file, "loc"+File.separator+"README"), Constants.ENCODING);
                 out.println("If a formatter requires localization that cannot be found in strings or schema ");
                 out.println("localization the format bundle can have a loc subfolder containing translations.");
                 out.println("");

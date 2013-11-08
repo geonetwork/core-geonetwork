@@ -32,11 +32,11 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.geonetwork-opensource</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>jeeves</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -56,10 +56,6 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>findbugs-maven-plugin</artifactId>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-checkstyle-plugin</artifactId>
 					</plugin>
 				</plugins>
 			</build>

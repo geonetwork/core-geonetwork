@@ -24,18 +24,21 @@
 package org.fao.geonet.services.register;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.PasswordUtil;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.util.PasswordUtil;
 import org.fao.geonet.util.MailUtil;
 import org.jdom.Element;
 
@@ -88,9 +91,6 @@ public class SelfRegister extends NotInReadOnlyModeService {
 		String organ = Util.getParam(params, Params.ORG, "");
 		String kind = Util.getParam(params, Params.KIND, "");
 
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
-		
 		String username = email;
 		String password = getInitPassword();
 
@@ -98,46 +98,50 @@ public class SelfRegister extends NotInReadOnlyModeService {
 		SettingManager sm = gc.getBean(SettingManager.class);
 		
 		String catalogAdminEmail = sm.getValue("system/feedback/email");
-		String thisSite = sm.getValue("system/site/name");
+		String thisSite = sm.getSiteName();
 
-		
-		Element element = new Element(Jeeves.Elem.RESPONSE);
-		element.setAttribute(Params.SURNAME,surname);
-		element.setAttribute(Params.NAME,name);
-		element.setAttribute(Params.EMAIL,email);
 
-		if (userExists(dbms, email)) {
-			return element.addContent(new Element("result").setText("errorEmailAddressAlreadyRegistered"));
-		}
+        Element element = new Element(Jeeves.Elem.RESPONSE);
+        element.setAttribute(Params.SURNAME, surname);
+        element.setAttribute(Params.NAME, name);
+        element.setAttribute(Params.EMAIL, email);
 
-		// Add new user to database
+        final UserRepository userRepository = context.getBean(UserRepository.class);
+        if (userRepository.findOneByEmail(email) != null) {
+            return element.addContent(new Element("result").setText("errorEmailAddressAlreadyRegistered"));
+        }
 
-		String id = context.getSerialFactory().getSerial(dbms, "Users")
-					+ "";
-		String group = getGroupID(dbms);
-		String query = "INSERT INTO Users (id, username, password, surname, name, profile, "
-				+ "address, city, state, zip, country, email, organisation, kind) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        // Add new user to database
 
-		String passwordHash = PasswordUtil.encode(context, password);
-		dbms.execute(query, Integer.valueOf(id), username, passwordHash , surname, name, PROFILE, address,
-				city, state, zip, country, email, organ, kind);
+        Group group = getGroup(context);
+        String passwordHash = PasswordUtil.encode(context, password);
+        User user = new User()
+                .setKind(kind)
+                .setName(name)
+                .setOrganisation(organ)
+                .setProfile(Profile.findProfileIgnoreCase(profile))
+                .setSurname(surname)
+                .setUsername(username);
+        user.getSecurity().setPassword(passwordHash);
+        user.getEmailAddresses().add(email);
+        user.getAddresses().add(new Address().setAddress(address).setCountry(country).setCity(city).setState(state).setZip(zip));
 
-		dbms.execute("INSERT INTO UserGroups(userId, profile, groupId) VALUES (?, ?, ?)", Integer.valueOf(id), PROFILE, Integer.valueOf(group));
+        userRepository.save(user);
 
+        UserGroup userGroup = new UserGroup().setUser(user).setGroup(group);
+        context.getBean(UserGroupRepository.class).save(userGroup);
 		// Send email to user confirming registration
 
-    SettingInfo si = new SettingInfo(context);
+    SettingInfo si = context.getBean(SettingInfo.class);
     String siteURL = si.getSiteUrl() + context.getBaseUrl();
 
     if (!sendRegistrationEmail(params, password, catalogAdminEmail, thisSite, siteURL, sm)) {
-      dbms.abort();
-      return element.addContent(new Element("result").setText("errorEmailToAddressFailed"));
+        return element.addContent(new Element("result").setText("errorEmailToAddressFailed"));
     }
 
     // Send email to admin requesting non-standard profile if required
 
-    if (!profile.equalsIgnoreCase(Geonet.Profile.REGISTERED_USER) && !sendProfileRequest(params, catalogAdminEmail, thisSite, siteURL, sm)) {
+    if (!profile.equalsIgnoreCase(Profile.RegisteredUser.name()) && !sendProfileRequest(params, catalogAdminEmail, thisSite, siteURL, sm)) {
         return element.addContent(new Element("result").setText("errorProfileRequestFailed"));
       }
 
@@ -210,35 +214,18 @@ public class SelfRegister extends NotInReadOnlyModeService {
         return MailUtil.sendMail(from, subject, message, sm);
     }
 
-	/**
-	 * Check if the user exists. 
-   *
-	 * @param dbms
-	 * @param mail
-	 * @return
-	 * @throws java.sql.SQLException
-	 */
-	boolean userExists(Dbms dbms, String mail) throws SQLException {
-		Element e = dbms.select("SELECT email " +
-                "FROM Users " +
-                "WHERE lower(username)=lower(?)",
-                 mail);
-		return (e.getChildren().size() > 0);
-	}
-
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
 
 	/**
 	 * Get group id.
    *
-	 * @param dbms
+	 * @param context
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
-	String getGroupID(Dbms dbms) throws SQLException {
-		String sql = "select id from Groups where name=?";
-		Element e = dbms.select(sql, "GUEST");
-		return e.getChild("record").getChild("id").getText();
+	Group getGroup(ServiceContext context) throws SQLException {
+        final GroupRepository bean = context.getBean(GroupRepository.class);
+        return bean.findOne(ReservedGroup.guest.getId());
 	}
 
 	// --------------------------------------------------------------------------

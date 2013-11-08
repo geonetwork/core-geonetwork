@@ -25,10 +25,10 @@ package org.fao.geonet.services.notifications;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.repository.MetadataNotificationRepository;
 import org.jdom.Element;
 
 
@@ -45,7 +45,9 @@ public class List implements Service {
      * @param params
      * @throws Exception
      */
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+        // nothing to do.
+    }
 
     /**
      * Retrieves notification targets.
@@ -56,8 +58,7 @@ public class List implements Service {
      * @throws Exception
      */
 	public Element exec(Element params, ServiceContext context) throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        Element notifiers = dbms.select("select * from MetadataNotifiers");
+        final Element notifiers = context.getBean(MetadataNotificationRepository.class).findAllAsXml();
         Element response = new Element(Jeeves.Elem.RESPONSE);
         response.addContent(notifiers);
 		return response;

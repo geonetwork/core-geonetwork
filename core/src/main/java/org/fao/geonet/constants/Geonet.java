@@ -108,6 +108,7 @@ public final class Geonet {
         public static final String NOTIFICATIONS = "notifications";
 		public static final String SURNAME    = "surname";
 		public static final String PROFILE    = "profile";
+		public static final String USERNAME    = "username";
 		public static final String EMAIL      = "email";
 		public static final String OPERATIONS = "operations";
 		public static final String OPER       = "oper";
@@ -185,6 +186,8 @@ public final class Geonet {
         public static final String SERVER_PORT = "system/server/port";
         public static final String SERVER_SECURE_PORT = "system/server/securePort";
         public static final String SERVER_PROTOCOL = "system/server/protocol";
+        public static final String VERSION = "system/platform/version";
+        public static final String SUBVERSION = "system/platform/subVersion";
     }
 
     /**
@@ -461,19 +464,6 @@ public final class Geonet {
 	}
 
     /**
-     * Container for profile names.
-     */
-	public static final class Profile {
-		public static final String ADMINISTRATOR   = "Administrator";
-		public static final String USER_ADMIN      = "UserAdmin";
-		public static final String REVIEWER        = "Reviewer";
-		public static final String EDITOR          = "Editor";
-		public static final String REGISTERED_USER = "RegisteredUser";
-		public static final String GUEST           = "Guest";
-		public static final String MONITOR         = "Monitor";
-	}
-
-    /**
      * Container for config elements that are inside the configuration file.
      */
 	public static final class Config {
@@ -498,7 +488,6 @@ public final class Geonet {
 		public static final String STAT_LUCENE_TERMS_EXCLUDE = "statLuceneTermsExclude";
 		public static final String STAT_LOG_ASYNCH = "statLogAsynch";
 		public static final String MAX_WRITES_IN_TRANSACTION = "maxWritesInTransaction";
-		public static final String USE_SUBVERSION  = "useSubversion";
 		public static final String SUBVERSION_PATH = "subversionPath";
 		public static final String STATUS_ACTIONS_CLASS = "statusActionsClass";
 		public static final String CONFIG_DIR = "configDir";

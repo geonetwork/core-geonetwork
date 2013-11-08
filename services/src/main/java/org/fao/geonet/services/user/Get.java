@@ -25,88 +25,95 @@ package org.fao.geonet.services.user;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specifications;
+
+import java.util.List;
+
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
+import static org.springframework.data.jpa.domain.Specifications.*;
 
 //=============================================================================
 
-/** Retrieves a particular user
-  */
+/**
+ * Retrieves a particular user
+ */
 
-public class Get implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class Get implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		String id = params.getChildText(Params.ID);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        String id = params.getChildText(Params.ID);
 
-		UserSession usrSess = context.getUserSession();
-		if (!usrSess.isAuthenticated()) return new Element(Jeeves.Elem.RESPONSE);
+        UserSession usrSess = context.getUserSession();
+        if (!usrSess.isAuthenticated()) return new Element(Jeeves.Elem.RESPONSE);
 
-		String      myProfile = usrSess.getProfile();
-		String      myUserId  = usrSess.getUserId();
+        Profile myProfile = usrSess.getProfile();
+        String myUserId = usrSess.getUserId();
 
-		if (id == null) return new Element(Jeeves.Elem.RESPONSE);
+        if (id == null) return new Element(Jeeves.Elem.RESPONSE);
 
-		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) || myProfile.equals(Geonet.Profile.USER_ADMIN) || myUserId.equals(id)) {
+        if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin || myUserId.equals(id)) {
 
-			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+            Element elUser = context.getBean(UserRepository.class).findOne(Integer.valueOf(id)).asXml();
 
-			Element elUser = dbms.select ("SELECT * FROM Users WHERE id=?", Integer.valueOf(id));
+            //--- retrieve user groups
 
-		//--- retrieve user groups
+            Element elGroups = new Element(Geonet.Elem.GROUPS);
 
-			Element elGroups = new Element(Geonet.Elem.GROUPS);
+            final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
+            final List<UserGroup> userGroups = userGroupRepository.findAll(hasUserId(Integer
+                    .valueOf(id)));
 
-			String selectGroupIdAndProfileQuery = "SELECT groupId, profile FROM UserGroups WHERE userId=?";
-            @SuppressWarnings("unchecked")
-            java.util.List<Element> list = dbms.select(selectGroupIdAndProfileQuery,Integer.valueOf(id)).getChildren();
+            for (UserGroup grp : userGroups) {
+                String grpId = "" + grp.getId().getGroupId();
 
-            for (Element grp : list) {
-				String grpId = grp.getChildText("groupid");
+                elGroups.addContent(new Element(Geonet.Elem.ID).setText(grpId).setAttribute("profile", grp.getProfile().name()));
+            }
 
-                elGroups.addContent(new Element(Geonet.Elem.ID).setText(grpId).setAttribute("profile", grp.getChildText("profile")));
-			}
+            if (!(myUserId.equals(id)) && myProfile == Profile.UserAdmin) {
 
-			if (!(myUserId.equals(id)) && myProfile.equals(Geonet.Profile.USER_ADMIN)) {
-			
-		//--- retrieve session user groups and check to see whether this user is 
-		//--- allowed to get this info
+                //--- retrieve session user groups and check to see whether this user is
+                //--- allowed to get this info
+                List<Integer> adminlist = userGroupRepository.findGroupIds(where(hasUserId(Integer.valueOf(myUserId))).or(hasUserId
+                        (Integer.valueOf(id))));
+                if (adminlist.isEmpty()) {
+                    throw new IllegalArgumentException("You don't have rights to do this because the user you want to edit is not part of your group");
+                }
+            }
 
-				@SuppressWarnings("unchecked")
-                java.util.List<Element> adminlist = dbms.select("SELECT groupId FROM UserGroups WHERE userId=? or userId=? group by groupId having count(*) > 1",Integer.valueOf(myUserId),Integer.valueOf(id)).getChildren();
-				if (adminlist.size() == 0) {
-					throw new IllegalArgumentException("You don't have rights to do this because the user you want to edit is not part of your group");
-				}
-			}
+            //--- return data
 
-		//--- return data
+            elUser.addContent(elGroups);
+            return elUser;
+        } else {
+            throw new IllegalArgumentException("You don't have rights to do this");
+        }
 
-			elUser.addContent(elGroups);
-			return elUser;
-		} else {
-			throw new IllegalArgumentException("You don't have rights to do this");
-		}
-
-	}
+    }
 }
 
 //=============================================================================

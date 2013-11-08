@@ -25,7 +25,6 @@ package org.fao.geonet.services.status;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
@@ -60,23 +59,21 @@ public class Get implements Service
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dataMan = gc.getBean(DataManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		String id = Utils.getIdentifierFromParameters(params, context);
 
 		//-----------------------------------------------------------------------
 		//--- check access
 		int iLocalId = Integer.parseInt(id);
 		
-		if (!dataMan.existsMetadata(dbms, iLocalId))
+		if (!dataMan.existsMetadata(iLocalId))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		//-----------------------------------------------------------------------
 		//--- retrieve metadata status
 
-		Element stats = dataMan.getStatus(dbms, iLocalId);
-		stats.setName(Jeeves.Elem.RESPONSE);
-		return stats;
+		Element status = dataMan.getStatus(iLocalId).getAsXml();
+        status.setName(Jeeves.Elem.RESPONSE);
+		return status;
 	}
 }
 

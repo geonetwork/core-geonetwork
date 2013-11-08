@@ -24,10 +24,10 @@
 package org.fao.geonet.services.resources;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.lib.Lib;

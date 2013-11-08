@@ -25,8 +25,8 @@ package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.Xml;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -85,7 +85,7 @@ public class Format extends AbstractFormatService {
         Element root = new Element("root");
         
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        String url = new SettingInfo(gc.getBean(SettingManager.class)).getSiteUrl() + context.getBaseUrl();
+        String url = gc.getBean(SettingManager.class).getSiteURL(context);
 
         root.addContent (new Element("url").setText(url));
         String locUrl = url+"/srv/"+context.getLanguage()+"/";

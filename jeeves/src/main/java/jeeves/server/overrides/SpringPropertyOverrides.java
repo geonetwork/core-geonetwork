@@ -1,13 +1,12 @@
 package jeeves.server.overrides;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
-
-
 import org.jdom.Element;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
 
 public class SpringPropertyOverrides {
 

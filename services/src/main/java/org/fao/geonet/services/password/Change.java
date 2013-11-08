@@ -24,22 +24,23 @@
 package org.fao.geonet.services.password;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.OperationAbortedEx;
-import jeeves.exceptions.OperationNotAllowedEx;
-import jeeves.exceptions.UserNotFoundEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.PasswordUtil;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
-import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.util.PasswordUtil;
 import org.fao.geonet.util.MailUtil;
 import org.jdom.Element;
 
@@ -77,18 +78,19 @@ public class Change extends NotInReadOnlyModeService {
 		String template = Util.getParam(params, Params.TEMPLATE, PWD_CHANGED_XSLT);
 		
 		// check valid user 
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
-		Element elUser = dbms.select(	"SELECT * FROM Users WHERE username=?", username);
-		if (elUser.getChildren().size() == 0)
+        final UserRepository userRepository = context.getBean(UserRepository.class);
+        User elUser = userRepository.findOneByUsername(username);
+		if (elUser == null) {
 			throw new UserNotFoundEx(username);
+        }
 
 		// only let registered users change their password this way  
-		if (!elUser.getChild("record").getChild("profile").getText().equals(Geonet.Profile.REGISTERED_USER)) 
+		if ( elUser.getProfile() != Profile.RegisteredUser) {
 			throw new OperationNotAllowedEx("Only users with profile RegisteredUser can change their password using this option");
+        }
 		
 		// construct expected change key - only valid today 
-		String scrambledPassword = elUser.getChild("record").getChildText(Params.PASSWORD);
+		String scrambledPassword = elUser.getPassword();
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		String todaysDate = sdf.format(cal.getTime());
@@ -99,23 +101,22 @@ public class Change extends NotInReadOnlyModeService {
 			throw new BadParameterEx("Change key invalid or expired", changeKey);
 		
 		// get mail details
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm = gc.getBean(SettingManager.class);
+		SettingManager sm = context.getBean(SettingManager.class);
 
 		String adminEmail = sm.getValue("system/feedback/email");
-		String thisSite = sm.getValue("system/site/name");
+		String thisSite = sm.getSiteName();
 
 		// get site URL
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 		String siteURL = si.getSiteUrl() + context.getBaseUrl();
-		
-		// All ok so update password
-		dbms.execute ( "UPDATE Users SET password=? WHERE username=?", PasswordUtil.encode(context, password), username);
+
+        elUser.getSecurity().setPassword(PasswordUtil.encode(context, password));
+        userRepository.save(elUser);
 
 		// generate email details using customisable stylesheet
 		//TODO: allow internationalised emails
 		Element root = new Element("root");
-		root.addContent((Element)elUser.getChild("record").clone());
+		root.addContent(elUser.asXml());
 		root.addContent(new Element("site").setText(thisSite));
 		root.addContent(new Element("siteURL").setText(siteURL));
 		root.addContent(new Element("adminEmail").setText(adminEmail));

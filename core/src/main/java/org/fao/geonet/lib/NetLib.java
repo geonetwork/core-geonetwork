@@ -24,23 +24,20 @@
 package org.fao.geonet.lib;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.XmlRequest;
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthPolicy;
-import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.oaipmh.requests.Transport;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 //=============================================================================
@@ -98,19 +95,19 @@ public class NetLib
 
 	//---------------------------------------------------------------------------
 
-	public void setupProxy(ServiceContext context, HttpClient client)
+	public CredentialsProvider setupProxy(ServiceContext context, HttpClientBuilder client)
 	{
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
 
-		setupProxy(sm, client);
+		return setupProxy(sm, client);
 	}
 
 	//---------------------------------------------------------------------------
 
 	/** Setup proxy for http client
 	  */
-	public void setupProxy(SettingManager sm, HttpClient client)
+	public CredentialsProvider setupProxy(SettingManager sm, HttpClientBuilder client)
 	{
 		boolean enabled = sm.getValueAsBool(ENABLED, false);
 		String  host    = sm.getValue(HOST);
@@ -118,60 +115,22 @@ public class NetLib
 		String  username= sm.getValue(USERNAME);
 		String  password= sm.getValue(PASSWORD);
 
-		if (enabled) {
-			if (!Lib.type.isInteger(port)) {
-				Log.error(Geonet.GEONETWORK, "Proxy port is not an integer : "+ port);
-			} else {
-				HostConfiguration config = client.getHostConfiguration();
-				if (config == null) config = new HostConfiguration();
-				config.setProxy(host,Integer.parseInt(port));
-				client.setHostConfiguration(config);
+        CredentialsProvider provider = new BasicCredentialsProvider();
+        if (enabled) {
+            if (!Lib.type.isInteger(port)) {
+                Log.error(Geonet.GEONETWORK, "Proxy port is not an integer : "+ port);
+            } else {
+                final HttpHost proxy = new HttpHost(host, Integer.parseInt(port));
+                client.setProxy(proxy);
 
-				if (username.trim().length()!=0) {
-					Credentials cred = new UsernamePasswordCredentials(username, password);
-					AuthScope scope = new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
-
-					client.getState().setProxyCredentials(scope, cred);
-				}
-				List<String> authPrefs = new ArrayList<String>(2);
-				authPrefs.add(AuthPolicy.DIGEST);
-				authPrefs.add(AuthPolicy.BASIC);
-				// This will exclude the NTLM authentication scheme
-				client.getParams().setParameter(AuthPolicy.AUTH_SCHEME_PRIORITY, authPrefs);
-			}
-		}
-	}
-
-	//---------------------------------------------------------------------------
-
-	public void setupProxy(ServiceContext context, Transport t)
-	{
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm = gc.getBean(SettingManager.class);
-
-		setupProxy(sm, t);
-	}
-
-	//---------------------------------------------------------------------------
-
-	private void setupProxy(SettingManager sm, Transport t) {
-		boolean enabled = sm.getValueAsBool(ENABLED, false);
-		String  host    = sm.getValue(HOST);
-		String  port    = sm.getValue(PORT);
-		String  username= sm.getValue(USERNAME);
-		String  password= sm.getValue(PASSWORD);
-		if (enabled) {
-			if (!Lib.type.isInteger(port)) {
-				Log.error(Geonet.GEONETWORK, "Proxy port is not an integer : "+ port);
-			} else {
-				t.setUseProxy(enabled);
-				t.setProxyHost(host);
-				t.setProxyPort(Integer.parseInt(port));
+                client.setDefaultCredentialsProvider(provider);
 				if (username.trim().length() != 0) {
-					t.setProxyCredentials(username, password);	
+                    provider.setCredentials(new AuthScope(proxy), new UsernamePasswordCredentials(username, password));
 				}
 			}
 		}
+
+        return provider;
 	}
 
 	//---------------------------------------------------------------------------

@@ -23,11 +23,10 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.EditLib;
@@ -56,7 +55,6 @@ public class AddElement extends NotInReadOnlyModeService {
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		UserSession session = context.getUserSession();
 
 		String id    = Util.getParam(params, Params.ID);
@@ -76,7 +74,7 @@ public class AddElement extends NotInReadOnlyModeService {
 		// -- Note that the metadata-embedded.xsl stylesheet
 		// -- only applies the templating to the added element, not to 
 		// -- the entire metadata so performance should not be a big issue
-		Element elResp = new AjaxEditUtils(context).addElementEmbedded(dbms, session, id, ref, name, child);
+		Element elResp = new AjaxEditUtils(context).addElementEmbedded(session, id, ref, name, child);
         EditLib.tagForDisplay(elResp);
         Element md = (Element) findRoot(elResp).clone();
         EditLib.removeDisplayTag(elResp);

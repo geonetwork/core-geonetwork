@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       ">
+    <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"/>
+    <bean id="geonetworkAuthenticationProvider" class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider"/>
+    <bean id="geonetworkEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
+    <bean id="dataStore" class="org.geotools.data.memory.MemoryDataStore"/>
+    <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.MemoryDirectoryFactory" lazy-init="true"/>
+
+    <bean id="databaseMigrationPostProcessor" class="org.fao.geonet.DatabaseMigration">
+        <property name="version" value="2.11.0" />
+        <property name="subversion" value="SNAPSHOT" />
+        <property name="migrationLoader">
+            <bean class="org.fao.geonet.DatabaseMigrationTest$MigrationConfigLoader" />
+        </property>
+    </bean>
+
+    <!--<jdbc:embedded-database type="H2" id="jdbcDataSource" />-->
+    <bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactoryBean">
+        <property name="databaseType" value="H2"/>
+        <property name="databaseConfigurer">
+            <bean class="org.fao.geonet.GeonetworkH2TestEmbeddedDatabaseConfigurer">
+                <!--<property name="compatilityMode" value="MySQL"/>-->
+                <!--<property name="compatilityMode" value="Oracle"/>-->
+                <!--<property name="compatilityMode" value="DB2"/>-->
+                <!--<property name="compatilityMode" value="MSSQLServer"/>-->
+                <!--<property name="compatilityMode" value="PostgreSQL"/>-->
+                <property name="databasePathLocator" ref="databasePathLocator"/>
+                <property name="username" value="admin"/>
+                <property name="password" value="gnos"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="databasePathLocator" class="org.fao.geonet.DatabaseMigrationTest$DatabasePathLocator"/>
+</beans>

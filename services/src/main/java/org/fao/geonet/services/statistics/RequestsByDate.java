@@ -1,13 +1,18 @@
 package org.fao.geonet.services.statistics;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.IO;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.repository.statistic.DateInterval;
+import org.fao.geonet.repository.statistic.SearchRequestRepository;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.NotInReadOnlyModeService;
@@ -27,52 +32,33 @@ import java.util.List;
  *
  */
 public class RequestsByDate extends NotInReadOnlyModeService {
-	public static final String BY_YEAR = "YEAR";
-	public static final String BY_MONTH = "MONTH";
-	public static final String BY_DAY = "DAY";
 
-	/** the date to search for from (format MUST be: ) */
-	private String dateFrom;
-	/** the date to search for too (format MUST be: yyy-MM-ddThh:mm) */
-	private String dateTo;
-	/** the type of graphic (by year, month or day to display */
-	private String graphicType;
-
-	/** the graph factory used to write images */
-	//private ChartFactory chartFact;
-
-	/** the class of the time period to get from JFreeeChart, to allow timeSeries to be
-	 * correctly formatted */
-	private Class<? extends RegularTimePeriod> chartClass;
-
-	/** the custom part of the date query; according to user choice for graphic */
+    /** the custom part of the date query; according to user choice for graphic */
 	private Hashtable<String, String> queryFragments;
 
 	/** should we generate and send tooltips to client (caution, can slow down the process if
 	 * dataset is big)
 	 */
-	private boolean createTooltips;
-
-	/** the imagemap for this chart, allowing to display tooltips */
-	private String imageMap;
+    boolean createTooltips;
 	/** should we generate and send legend to client (caution, can slow down the process if
 	 * dataset is big)
 	 */
-	private boolean createLegend;
+    boolean createLegend;
 
 	/** chart width, service parameter, can be overloaded by request */
-	private int chartWidth;
+    int chartWidth;
 
 	/** chart width, can be overloaded by request */
-	private int chartHeight;
-    
+    int chartHeight;
+
     /** the Element doc containing I18N strings, got from the current app language */
-    private Element i18nStrings;
-    
+    private Cache<String, Element> i18nStringsCache;
+
+    /** the current language */
+    private String defaultLang;
+
     /** the full path to the application directory */
     private  String appDir;
-    /** the current language */
-    private String lang;
 
 
 
@@ -89,17 +75,18 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 		this.chartWidth = Integer.parseInt(params.getValue("chartWidth"));
 		this.chartHeight = Integer.parseInt(params.getValue("chartHeight"));
 
-		//this.chartFact = new ChartFactory(verbose);
-
-		queryFragments = new Hashtable<String, String>(3);
-
-		queryFragments.put(RequestsByDate.BY_DAY,   "substring(requestDate, 1, 10)");
-		queryFragments.put(RequestsByDate.BY_MONTH, "substring(requestDate, 1, 7)");
-		queryFragments.put(RequestsByDate.BY_YEAR,  "substring(requestDate, 1, 4)");
-
         this.appDir = appPath;
-        this.lang = "eng";
-        this.i18nStrings = loadStrings(appPath + "loc" + File.separator + this.lang + File.separator  + "xml" + File.separator + "strings.xml");
+        this.defaultLang = "eng";
+        final String SEP = File.separator;
+        this.i18nStringsCache = CacheBuilder.<String, Element>newBuilder().softValues().maximumSize(3).build();
+        this.i18nStringsCache.put(defaultLang, loadStrings(appPath + "loc" + SEP + this.defaultLang + SEP + "xml" + SEP + "strings.xml"));
+
+        queryFragments = new Hashtable<String, String>(3);
+
+        queryFragments.put(RequestsByDateParams.BY_DAY,   "substring(requestDate, 1, 10)");
+        queryFragments.put(RequestsByDateParams.BY_MONTH, "substring(requestDate, 1, 7)");
+        queryFragments.put(RequestsByDateParams.BY_YEAR,  "substring(requestDate, 1, 4)");
+
 	}
 
 	//--------------------------------------------------------------------------
@@ -109,60 +96,64 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        if (! this.lang.equalsIgnoreCase(context.getLanguage()) ) {
-            // user changed the language, must reload strings file to get translated values
-            this.lang = context.getLanguage();
-            this.i18nStrings = loadStrings(appDir + "loc" +
-                    File.separator +
-                    this.lang +
-                    File.separator  + 
-                    "xml" +
-                    File.separator +
-                    "strings.xml");
+        final String SEP = File.separator;
+        final RequestsByDateParams dateParams = new RequestsByDateParams();
+
+        synchronized (this) {
+            final String language = context.getLanguage();
+            dateParams.setLang(language);
+            Element strings = i18nStringsCache.getIfPresent(language);
+
+            if (strings == null) {
+                // user changed the language, must reload strings file to get translated values
+                this.i18nStringsCache.put(language, loadStrings(appDir + "loc" + SEP
+                                                                  + language + SEP + "xml" + SEP + "strings.xml"));
+            }
+
+            dateParams.setStringElementHashMap18nStrings(strings);
         }
-		this.dateFrom = Util.getParam(params, "dateFrom");
-		this.dateTo = Util.getParam(params, "dateTo");
-		this.graphicType  = Util.getParam(params, "graphicType");
+		dateParams.setDateFrom(Util.getParam(params, "dateFrom"));
+        dateParams.setDateTo(Util.getParam(params, "dateTo"));
+        dateParams.setGraphicType(Util.getParam(params, "graphicType"));
 		String message = "";
 
 		// initialize some variables needed by JFreeChart
-		if (this.graphicType.equals(RequestsByDate.BY_MONTH))
-			this.chartClass = Month.class;
-		else if (this.graphicType.equals(RequestsByDate.BY_YEAR))
-			this.chartClass = Year.class;
-		else if (this.graphicType.equals(RequestsByDate.BY_DAY))
-			this.chartClass = Day.class;
-		// query to values according to type,
-		String query = buildQuery();
-        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"query to get count by date:\n" + query);
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		if (dateParams.getGraphicType() instanceof DateInterval.Month) {
+            dateParams.setChartClass(Month.class);
+        } else if (dateParams.getGraphicType() instanceof DateInterval.Year) {
+            dateParams.setChartClass(Year.class);
+        } else if (dateParams.getGraphicType()  instanceof DateInterval.Day) {
+            dateParams.setChartClass(Day.class);
+        }
+
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		
-		TimeSeries ts = new TimeSeries("By " + this.graphicType.toLowerCase(), this.chartClass);
+		TimeSeries ts = new TimeSeries("By " + dateParams.getGraphicType().getClass().getSimpleName(), dateParams.getChartClass());
 		TimeSeriesCollection dataset = new TimeSeriesCollection();
 
-		@SuppressWarnings("unchecked")
-        List<Element> resultSet = dbms.select(query, this.dateFrom, this.dateTo).getChildren();
-		for (Element record : resultSet) {
-			String curDate = record.getChildText("reqdate");
-			ts.add(getTimePeriod(
-					graphicType,
-					curDate),
-					Double.parseDouble(record.getChildText("number")));
+        SearchRequestRepository repository = context.getBean(SearchRequestRepository.class);
+
+        List<Pair<DateInterval, Integer>> countMap = repository.getRequestDateToRequestCountBetween(dateParams.getGraphicType(),
+                new ISODate(dateParams.getDateFrom()),
+                new ISODate(dateParams.getDateTo()));
+		for (Pair<DateInterval, Integer> record : countMap) {
+			String curDate = record.one().getDateString();
+
+			ts.add(getTimePeriod(dateParams.getGraphicType(), curDate), record.two());
 		}
 		dataset.addSeries(ts);
 
    		String axisFormat = "MM/yy";
-		if ("MONTH".equals(this.graphicType)) {
+		if (dateParams.getGraphicType()  instanceof DateInterval.Month) {
 			axisFormat = "MM/yy";
-		} else if ("YEAR".equals(this.graphicType)) {
+		} else if (dateParams.getGraphicType()  instanceof DateInterval.Year) {
 			axisFormat = "yyyy";
-		} else if ("DAY".equals(this.graphicType)) {
+		} else if (dateParams.getGraphicType()  instanceof DateInterval.Day) {
 			axisFormat = "dd/MM/yy";
 		}
 
-        String xAxisLabel = this.getI18NValue("stat." + this.graphicType.toLowerCase());
-        String yAxisLabel = this.getI18NValue("stat.numberOfSearch");
+        String xAxisLabel = this.getI18NValue(dateParams, "stat." + dateParams.getGraphicType().getClass().getSimpleName().toLowerCase());
+        String yAxisLabel = this.getI18NValue(dateParams, "stat.numberOfSearch");
 
         JFreeChart chart = ChartFactory.getTimeSeriesChart(
                 dataset,
@@ -175,23 +166,23 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 		// chart filename is built here with pattern:
 		// type_datefrom_dateto.png, after having removed time from date
 		// build tmp path from Jeeves context
-		String chartFilename = getFileName();
+		String chartFilename = getFileName(dateParams);
 
 		File statFolder = new File(gc.getBean(ServiceConfig.class).getMandatoryValue(
-				Geonet.Config.RESOURCES_DIR) + File.separator + "images" + File.separator + "statTmp");
+				Geonet.Config.RESOURCES_DIR) + SEP + "images" + SEP + "statTmp");
         IO.mkdirs(statFolder, "Statistics temp directory");
 
-		File f = new File(statFolder, chartFilename);
+		File imageFile = new File(statFolder, chartFilename);
 		//if (!f.exists()) {
 			// generate the graph
-			this.imageMap = ChartFactory.writeChartImage(
-					chart,
-					f,
-					this.chartWidth,
-					this.chartHeight,
-					this.createTooltips,
-					"graphByDateImageMap");
-			message = "Graphic generated from request";
+        dateParams.setImageMap(ChartFactory.writeChartImage(
+                chart, imageFile,
+                this.chartWidth,
+                this.chartHeight,
+                this.createTooltips,
+                "graphByDateImageMap"));
+
+        message = "Graphic generated from request";
 		//} else {
 		//	message = "cached graphic image used";
 		//}
@@ -201,13 +192,11 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 		// message, chartWidth, chartHeight
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		Element elDateFrom = new Element("dateFrom").setText(this.dateFrom);
-		Element elDateTo = new Element("dateTo").setText(this.dateTo);
-		Element elGraph = new Element("graphicType").setText(this.graphicType);
-		Element elchartUrl = new Element("graphByDateUrl").setText(context.getBaseUrl() +
-				"/images/statTmp/" + chartFilename);
-		Element elTooltipImageMap = new Element("tooltipImageMap").addContent(
-				this.createTooltips ? this.imageMap : "");
+		Element elDateFrom = new Element("dateFrom").setText(dateParams.getDateFrom());
+		Element elDateTo = new Element("dateTo").setText(dateParams.getDateTo());
+		Element elGraph = new Element("graphicType").setText(dateParams.getGraphicType().getClass().toString().toUpperCase());
+		Element elchartUrl = new Element("graphByDateUrl").setText(context.getBaseUrl() + "/images/statTmp/" + chartFilename);
+		Element elTooltipImageMap = new Element("tooltipImageMap").addContent(this.createTooltips ? dateParams.getImageMap() : "");
 
 		Element elMessage = new Element("message").setText(message);
 		Element elChartWidth= new Element("chartWidth").setText("" + this.chartWidth);
@@ -225,29 +214,13 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 		return elResp;
 	}
 
-	public String buildQuery() {
-        String requestDateSubstring = this.queryFragments.get(this.graphicType);
-
-		StringBuilder query = new StringBuilder("SELECT ");
-        query.append(requestDateSubstring);
-        query.append(" as reqdate, count(*) as number FROM Requests ");
-		query.append(" where requestdate >= ?");
-		query.append(" and requestdate <= ?");
-        query.append(" GROUP BY ");
-        query.append(requestDateSubstring);
-        query.append(" ORDER BY ");
-        query.append(requestDateSubstring);
-
-		return query.toString();
-	}
-
 	/**
 	 * type_datefrom_dateto.png, after having replaced semi column from date:
 	 * example: YEAR_20090213T120300_20100101T120300.png
 	 * @return
 	 */
-	public String getFileName() {
-		return this.graphicType + "_" + this.dateFrom.replaceAll(":","") + "_" + this.dateTo.replaceAll(":", "") + ".png";
+	public String getFileName(RequestsByDateParams dateParams) {
+		return dateParams.getGraphicType() + "_" + dateParams.getDateFrom().replaceAll(":", "") + "_" + dateParams.getDateTo().replaceAll(":", "") + ".png";
 	}
 
 	/**
@@ -260,56 +233,22 @@ public class RequestsByDate extends NotInReadOnlyModeService {
 	 *            the date, expressed as yyyy-MM-ddThh:mm:ss java pattern
 	 * @return a timePeriod with the right type
 	 */
-	private RegularTimePeriod getTimePeriod(
-			String dateType,
-			String date) throws Exception {
+    RegularTimePeriod getTimePeriod(
+            DateInterval dateType,
+            String date) throws Exception {
 
-		if ("MONTH".equals(dateType)) {
+		if (dateType instanceof DateInterval.Month) {
 			return new Month(Integer.parseInt(date.substring(5, 7)), Integer
 					.parseInt(date.substring(0, 4)));
-		} else if ("YEAR".equals(dateType)) {
+		} else if (dateType instanceof DateInterval.Year) {
 			return new Year(Integer.parseInt(date.substring(0, 4)));
-		} else if ("DAY".equals(dateType)) {
+		} else if (dateType instanceof DateInterval.Day) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			return new Day(dateFormat.parse(date));
 		}
 		return null;
 	}
 
-	/**
-	 * To test graphic generation locally
-	 * @param args
-	 */
-	public static void main(String[] args) throws Exception {
-		RequestsByDate rdb = new RequestsByDate();
-		rdb.dateFrom = "2009-04-03T12:00:00";
-		rdb.dateTo = "2009-04-04T12:00:00";
-		rdb.graphicType = RequestsByDate.BY_DAY;
-		//rdb.graphicType = RequestsByDate.BY_MONTH;
-		//rdb.graphicType = RequestsByDate.BY_YEAR;
-		rdb.createTooltips = false;
-		rdb.createLegend = false;
-		rdb.chartWidth = 600;
-		rdb.chartHeight = 500;
-        //rdb.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        rdb.chartClass = Day.class;
-
-		TimeSeries ts = new TimeSeries("By " + rdb.graphicType.toLowerCase(), rdb.chartClass);
-		TimeSeriesCollection dataset = new TimeSeriesCollection();
-        String curDate = "2009-04-04T12:00:00";
-
-        RegularTimePeriod tp = rdb.getTimePeriod(rdb.graphicType,curDate);
-
-        ts.add(tp, new Double(2.0));
-
-        curDate = "2009-04-04T14:00:00";
-        ts.add(tp, new Double(2.0));
-
-        dataset.addSeries(ts);
-
-        JFreeChart chart = ChartFactory.getTimeSeriesChart(dataset, "toto", "titi", "MM/yy", true, true);
-        ChartFactory.writeChartImage(chart, new File("/tmp/toto.png"), 600, 400, true, "imageMapName");
-    }
 
     /**
      * Returns the value corresponding to the given key by looking at Strings.xml I18N files,
@@ -317,18 +256,21 @@ public class RequestsByDate extends NotInReadOnlyModeService {
      * @param key the key whose value is needed
      * @return the value for the given key, or the key itself if value not found
      */
-    private String getI18NValue(String key) {
+    private String getI18NValue(RequestsByDateParams params, String key) {
         if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"searching for key: " + key);
-        if (this.i18nStrings == null) {
-            if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+        if (params.getI18nStrings() == null) {
+            if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) {
                 Log.debug(Geonet.SEARCH_LOGGER,"I18N file is null, returning key as value: " + key);
+            }
             return key;
         }
-        return this.i18nStrings.getChildText(key) == null ? key : this.i18nStrings.getChildText(key);
+        return params.getI18nStrings().getChildText(key) == null ? key : params.getI18nStrings().getChildText(key);
     }
 
     private Element loadStrings(String filePath) {
-        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"loading file: " + filePath);
+        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) {
+            Log.debug(Geonet.SEARCH_LOGGER,"loading file: " + filePath);
+        }
         File f = new File(filePath);
         Element xmlDoc = null;
         Element ret = null;
@@ -337,8 +279,9 @@ public class RequestsByDate extends NotInReadOnlyModeService {
             try {
                 xmlDoc = Xml.loadFile(f);
             } catch (Exception ex) {
-                if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+                if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) {
                     Log.debug(Geonet.SEARCH_LOGGER,"Cannot load file: " + filePath + ": " + ex.getMessage());
+                }
                 return ret;
             }
             ret = xmlDoc;

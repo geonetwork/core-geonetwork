@@ -28,7 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -139,8 +139,6 @@ public class EditElement implements Service {
 				
 				elResp.addContent(keywordType);
 			}
-			
-			searcherBNR = null;
 		}
 		
 		String thesaType = ref;

@@ -76,11 +76,11 @@
                     <th data-translate="">value</th>
                 </tr>
                 <tr data-ng-repeat="element in cswFilter(cswConfig) track by $index">
-                    <td>{{element.field | translate}}</td>
+                    <td>{{element.fieldname | translate}}</td>
                     <td>{{element.langid | translate}}</td>
                     <td>
                         <input type="text" class="form-control"
-                            name="csw.{{element.field}}_{{element.langid}}"
+                            name="csw.{{element.fieldname}}_{{element.langid}}"
                             value="{{element.label}}" data-ng-model="element.label"/>
                     </td>
                 </tr>

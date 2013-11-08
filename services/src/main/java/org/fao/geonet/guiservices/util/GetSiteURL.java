@@ -29,6 +29,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
 //=============================================================================
@@ -48,11 +49,9 @@ public class GetSiteURL implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getBean(DataManager.class);
-
 		Element root = new Element("a");
-		root.addContent(new Element(Geonet.Elem.SITE_URL).setText(dm.getSiteURL(context)));
+        final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
+        root.addContent(new Element(Geonet.Elem.SITE_URL).setText(siteURL));
 
 		return root;
 	}

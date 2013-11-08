@@ -52,8 +52,6 @@ public class DescribeRecordRequest extends CatalogRequest
 	//---
 	//---------------------------------------------------------------------------
 
-    public DescribeRecordRequest() { }
-
 	public DescribeRecordRequest(ServiceContext context) { super(context); }
 
 	//---------------------------------------------------------------------------

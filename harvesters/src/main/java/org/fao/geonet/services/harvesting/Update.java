@@ -25,7 +25,6 @@ package org.fao.geonet.services.harvesting;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
@@ -64,10 +63,8 @@ public class Update implements Service {
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		HarvestManager hm = gc.getBean(HarvestManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		
 		// Add current user has harvester owner
-        hm.update(dbms, params, context.getUserSession().getUserId());
+        hm.update(params, context.getUserSession().getUserId());
 
 		String id = params.getAttributeValue("id");
 

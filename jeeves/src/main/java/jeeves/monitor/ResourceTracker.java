@@ -1,12 +1,10 @@
 package jeeves.monitor;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import jeeves.utils.Log;
-
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ResourceTracker {
 
@@ -23,15 +21,6 @@ public class ResourceTracker {
     private static final Lock trackerLock = new ReentrantLock(false);
 
     private void open(Object resource, Multimap<Object, Exception> tracker) {
-        boolean debugEnabled = Log.isDebugEnabled(Log.Dbms.RESOURCE_TRACKING);
-        if(debugEnabled) {
-            try {
-                trackerLock.lock();
-                tracker.put(resource, new Exception());
-            } finally {
-            	trackerLock.unlock();
-            }
-        }
 
     }
     /**

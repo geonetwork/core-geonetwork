@@ -26,7 +26,7 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
@@ -91,11 +91,8 @@ public class GetKeywordById implements Service {
                     String currentUri = url[i];
                     kb = searcher.searchById(currentUri, sThesaurusName,
                             langForThesaurus);
-                    if (kb == null) {
-                        root = new Element("null");
-                    } else {
+                    if (kb != null) {
                         kbList.add(kb);
-                        kb = null;
                     }
                 }
                 root = new Element("descKeys");

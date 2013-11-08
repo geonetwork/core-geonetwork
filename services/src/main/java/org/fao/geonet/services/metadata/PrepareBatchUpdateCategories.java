@@ -25,11 +25,10 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.jdom.Element;
 
 import java.util.List;
@@ -57,12 +56,10 @@ public class PrepareBatchUpdateCategories implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		Element isOwner = new Element("owner").setText("true");
 		
 		//--- retrieve categories
-		Element elCateg = Lib.local.retrieve(dbms, "Categories");
+		Element elCateg = context.getBean(MetadataCategoryRepository.class).findAllAsXml();
 		@SuppressWarnings("unchecked")
         List<Element> list = elCateg.getChildren();
 

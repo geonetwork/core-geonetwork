@@ -23,15 +23,17 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.lib.Lib;
@@ -94,10 +96,11 @@ public class Show extends ShowViewBaseService
 		if (XmlSerializer.getThreadLocal(false) != null || witholdWithheldElements) {
 		   XmlSerializer.getThreadLocal(true).setForceHideWithheld(witholdWithheldElements);
 		}
-		if (id == null)
-			throw new MetadataNotFoundEx("Metadata not found.");
+		if (id == null) {
+            throw new MetadataNotFoundEx("Metadata not found.");
+        }
 		
-		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
+		Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 
 		//-----------------------------------------------------------------------
 		//--- get metadata
@@ -107,12 +110,13 @@ public class Show extends ShowViewBaseService
 		if (!skipInfo) {
             boolean withValidationErrors = false, keepXlinkAttributes = false;
             elMd = gc.getBean(DataManager.class).getMetadata(context, id, addEditing, withValidationErrors, keepXlinkAttributes);
-		}
-        else {
+		} else {
 			elMd = dm.getMetadataNoInfo(context, id);
 		}
 
-		if (elMd == null) throw new MetadataNotFoundEx(id);
+		if (elMd == null) {
+            throw new MetadataNotFoundEx(id);
+        }
 
 		if (addRefs) { // metadata.show for GeoNetwork needs geonet:element 
 			elMd = dm.enumerateTree(elMd);
@@ -123,9 +127,9 @@ public class Show extends ShowViewBaseService
 		// that is in the GeoNetwork schema identification and if there isn't one 
 		// of those then build one pointing to the XSD in GeoNetwork 
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
-		Attribute schemaLocAtt = sm.getSchemaLocation(mdInfo.schemaId, context);
+		Metadata info = context.getBean(MetadataRepository.class).findOne(id);
+		Attribute schemaLocAtt = sm.getSchemaLocation(info.getDataInfo().getSchemaId(), context);
+
 		if (schemaLocAtt != null) {
 			if (elMd.getAttribute(schemaLocAtt.getName(), schemaLocAtt.getNamespace()) == null) {
 				elMd.setAttribute(schemaLocAtt);

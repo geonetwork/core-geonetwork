@@ -27,8 +27,8 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.apache.commons.collections.CollectionUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -106,11 +106,11 @@ public class EditLib {
      */
 	public void addEditingInfo(String schema, Element md, int id, int parent) throws Exception {
         if(Log.isDebugEnabled(Geonet.EDITOR))
-            Log.debug(Geonet.EDITOR,"MD before editing infomation:\n" + jeeves.utils.Xml.getString(md));
+            Log.debug(Geonet.EDITOR,"MD before editing infomation:\n" + Xml.getString(md));
 		enumerateTree(md,id,parent);
 		expandTree(scm.getSchema(schema), md);
         if(Log.isDebugEnabled(Geonet.EDITOR))
-            Log.debug(Geonet.EDITOR,"MD after editing infomation:\n" + jeeves.utils.Xml.getString(md));
+            Log.debug(Geonet.EDITOR,"MD after editing infomation:\n" + Xml.getString(md));
 	}
 
     /**

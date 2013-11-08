@@ -6,12 +6,12 @@ import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.IO;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
 
 import org.apache.commons.io.IOUtils;
+import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
@@ -34,7 +34,7 @@ public abstract class BackupFileService extends NotInReadOnlyModeService {
         try {
             // When metadata records contains character not supported by filesystem
             // it may be an issue. eg. acri-st.fr/96443
-            outFile = outDir + URLEncoder.encode(uuid, Jeeves.ENCODING) +".mef";
+            outFile = outDir + URLEncoder.encode(uuid, Constants.ENCODING) +".mef";
         } catch (UnsupportedEncodingException e1) {
             outFile = outDir + uuid +".mef";
         }

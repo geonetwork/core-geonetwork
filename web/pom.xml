@@ -72,19 +72,28 @@
       <groupId>org.openrdf</groupId>
       <artifactId>rio</artifactId>
     </dependency>
-		<!-- may be required to register connection unwrappers with
-		     geotools
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-jdbc</artifactId>
-    </dependency>
-		-->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context-support</artifactId>
-    </dependency>
-    
-    <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-context</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-aop</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-orm</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-tx</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-web</artifactId>
+      </dependency>
+
+      <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
       <artifactId>cql-java</artifactId>
@@ -172,8 +181,8 @@
       <artifactId>batik-ext</artifactId>
     </dependency>
     <dependency>
-      <groupId>commons-httpclient</groupId>
-      <artifactId>commons-httpclient</artifactId>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
     </dependency>
     <dependency>
         <groupId>commons-net</groupId>
@@ -213,10 +222,6 @@
       <artifactId>commons-collections</artifactId>
     </dependency>
     <dependency>
-      <groupId>mckoi</groupId>
-      <artifactId>mckoi</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
     </dependency>
@@ -239,14 +244,6 @@
     </dependency>
 		-->
     <dependency>
-      <groupId>javax.persistence</groupId>
-      <artifactId>persistence-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-annotations</artifactId>
-    </dependency>
-    <dependency>
       <groupId>eu.medsea.mimeutil</groupId>
       <artifactId>mime-util</artifactId>
     </dependency>
@@ -267,19 +264,6 @@
       <artifactId>guava</artifactId>
     </dependency>
     
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>xmlunit</groupId>
-      <artifactId>xmlunit</artifactId>
-    </dependency>
-	<dependency>
-		<groupId>org.mockito</groupId>
-		<artifactId>mockito-all</artifactId>
-		<scope>test</scope>
-	</dependency>
 	            
     <dependency>
       <groupId>org.tmatesoft.svnkit</groupId>
@@ -443,8 +427,32 @@
 		<artifactId>flying-saucer-pdf-itext5</artifactId>
 		<version>9.0.1</version>
 	</dependency>
-	
-	
+
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-test</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>domain</artifactId>
+          <version>${project.version}</version>
+          <classifier>tests</classifier>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>core</artifactId>
+          <version>${project.version}</version>
+          <classifier>tests</classifier>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>services</artifactId>
+          <version>${project.version}</version>
+          <classifier>tests</classifier>
+          <scope>test</scope>
+      </dependency>
 	</dependencies>
 
   
@@ -549,6 +557,7 @@
           </execution>
         </executions> 
         <configuration>
+          <statistics>false</statistics>
           <nosuffix>true</nosuffix>
           <gzip>false</gzip>
           <force>true</force>
@@ -860,7 +869,8 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>8.1.9.v20130131</version>
         <configuration>
-          <connectors>
+            <contextXml>${basedir}/jetty-context.xml</contextXml>
+            <connectors>
             <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
               <port>8080</port>
               <maxIdleTime>10000</maxIdleTime>
@@ -909,10 +919,6 @@
 		  <plugin>
 			<groupId>org.codehaus.mojo</groupId>
 			<artifactId>findbugs-maven-plugin</artifactId>
-		  </plugin>
-		  <plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-checkstyle-plugin</artifactId>
 		  </plugin>
 		</plugins>
 		</build>
@@ -987,16 +993,6 @@
     </profile>
     
   </profiles>
-  
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.6</version>
-      </plugin>
-    </plugins>
-  </reporting>
 
   <properties>
     <geonetwork.version>${project.version}</geonetwork.version>

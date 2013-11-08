@@ -27,7 +27,7 @@
 
 package org.fao.geonet.util;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -63,27 +63,26 @@ public class ThreadUtils {
 		return threadCount;
 	}
 
- /** Initialize threadUtils during GeoNetwork startup.
-   *
-	 * @param props Map of database properties. Used to make decisions about 
-	 *              whether a database supports threaded access.
-	 * @param sm SettingManager. Used to find settings for threaded methods.
-	 */
-	public static void init(Map<String,String> props, SettingManager sm) throws Exception {
-		settingMan = sm;
-		dbUrl = props.get("url");
-		if (dbUrl != null) {
-			// postgres has been tested with this function
-			if (dbUrl.toLowerCase().contains("postgres")) {
-				dbCanUseMultipleThreads = true;
-			// oracle has also been tested with this function
-			} else if (dbUrl.toLowerCase().contains("oracle")) {
-				dbCanUseMultipleThreads = true;
-			}
-		}
-	}
+    /**
+     * Initialize threadUtils during GeoNetwork startup.
+     *
+     * @param dbUrl database url
+     * @param sm    SettingManager. Used to find settings for threaded methods.
+     */
+    public static void init(String dbUrl, SettingManager sm) throws Exception {
+        settingMan = sm;
+        if (dbUrl != null) {
+            // postgres has been tested with this function
+            if (dbUrl.toLowerCase().contains("postgres")) {
+                dbCanUseMultipleThreads = true;
+                // oracle has also been tested with this function
+            } else if (dbUrl.toLowerCase().contains("oracle")) {
+                dbCanUseMultipleThreads = true;
+            }
+        }
+    }
 
- /** Get number of threads calc'd from runtime or settings and 
+    /** Get number of threads calc'd from runtime or settings and
 	 * restrict if not using capable database or threaded processing
 	 * not available.
 	 * 

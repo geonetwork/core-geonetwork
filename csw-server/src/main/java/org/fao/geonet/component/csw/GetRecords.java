@@ -23,10 +23,10 @@
 
 package org.fao.geonet.component.csw;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.Sort;
 import org.fao.geonet.GeonetContext;
@@ -40,17 +40,18 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.domain.CustomElementSet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
-import org.fao.geonet.kernel.csw.domain.CustomElementSet;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.repository.CustomElementSetRepository;
 import org.fao.geonet.util.xml.NamespaceUtils;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -88,12 +89,12 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     //---------------------------------------------------------------------------
 
 	private SearchController _searchController;
+    @Autowired
+    private CatalogConfiguration _catalogConfig;
+    @Autowired
+    private FieldMapper _fieldMapper;
 
-    /**
-     * @param summaryConfig
-     * @param luceneConfig
-     */
-	@Autowired
+    @Autowired
 	public GetRecords(ApplicationContext context) {
     	_searchController = new SearchController(context);
     }
@@ -187,29 +188,12 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             setName = getElementSetName(query , ElementSetName.SUMMARY);
             // elementsetname is FULL: use customized elementset if defined
             if(setName.equals(ElementSetName.FULL)) {
-                List<Element> customElementSets;
-                Dbms dbms = null;
-                try {
-					dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-                    customElementSets = CustomElementSet.getCustomElementSets(dbms);
-                    // custom elementset defined
-                    if(!CollectionUtils.isEmpty(customElementSets)) {
-                        elemNames = new HashSet<String>();
-                        for(Element customElementSet : customElementSets) {
-                            elemNames.add(customElementSet.getChildText("xpath"));
-                        }
-                    }
-                }
-                catch(Exception x) {
-                    Log.warning(Geonet.CSW, "Failed to check for custom element sets; ignoring -- request will be handled with default FULL elementsetname. Message was: " + x.getMessage());
-                    // an error here could make the dbms unusable so close it so that a new one can be used...
-                    // should it be committed or aborted?
-                    if(dbms != null) {
-                    	try {
-							context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
-						} catch (Exception e) {
-							throw new RuntimeException("Unable to close database connection", e);
-						}
+                final List<CustomElementSet> customElementSets = context.getBean(CustomElementSetRepository.class).findAll();
+                // custom elementset defined
+                if(!CollectionUtils.isEmpty(customElementSets)) {
+                    elemNames = new HashSet<String>();
+                    for(CustomElementSet customElementSet : customElementSets) {
+                        elemNames.add(customElementSet.getXpath());
                     }
                 }
             }
@@ -437,7 +421,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     	
     	// Handle outputFormat parameter
 		if (parameterName.equalsIgnoreCase("outputformat")) {
-			Set<String> formats = CatalogConfiguration
+			Set<String> formats = _catalogConfig
 					.getGetRecordsOutputFormat();
 			List<Element> values = createValuesElement(formats);
             if (listOfValues != null) {
@@ -447,7 +431,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
     	
 		// Handle outputSchema parameter
 		if (parameterName.equalsIgnoreCase("outputSchema")) {
-			Set<String> namespacesUri = CatalogConfiguration
+			Set<String> namespacesUri = _catalogConfig
 					.getGetRecordsOutputSchema();
 			List<Element> values = createValuesElement(namespacesUri);
             if (listOfValues != null) {
@@ -457,7 +441,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
 		// Handle typenames parameter
 		if (parameterName.equalsIgnoreCase("typenames")) {
-			Set<String> typenames = CatalogConfiguration
+			Set<String> typenames = _catalogConfig
 					.getGetRecordsTypenames();
 			List<Element> values = createValuesElement(typenames);
             if (listOfValues != null) {
@@ -768,7 +752,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             String order = el.getChildText("SortOrder", Csw.NAMESPACE_OGC);
 
             // Map CSW search field to Lucene for sorting. And if not mapped assumes the field is a Lucene field.
-            String luceneField = FieldMapper.map(field);
+            String luceneField = _fieldMapper.map(field);
             if (luceneField != null) {
                 sortFields.add(Pair.read(luceneField, "DESC".equals(order)));
             }
@@ -779,7 +763,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager sm = gc.getBean(SearchManager.class);
-        boolean requestedLanguageOnTop = sm.get_settingInfo().getRequestedLanguageOnTop();
+        boolean requestedLanguageOnTop = sm.getSettingInfo().getRequestedLanguageOnTop();
 		// we always want to keep the relevancy as part of the sorting mechanism
 		return LuceneSearcher.makeSort(sortFields, context.getLanguage(), requestedLanguageOnTop);
 	}

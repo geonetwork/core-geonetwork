@@ -1,9 +1,9 @@
 package org.fao.geonet.kernel.search;
 
-import jeeves.constants.Jeeves;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.apache.commons.io.IOUtils;
+import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 
 import java.io.BufferedReader;
@@ -45,7 +45,7 @@ public class StopwordFileParser {
                 Scanner scanner = null;
                 try {
                     fin = new FileInputStream(file);
-                    reader = new BufferedReader(new InputStreamReader(fin, Jeeves.ENCODING)); 
+                    reader = new BufferedReader(new InputStreamReader(fin, Constants.ENCODING));
                     scanner = new Scanner(reader);
                     while (scanner.hasNextLine()) {
                         Set<String> stopwordsFromLine = parseLine(scanner.nextLine());

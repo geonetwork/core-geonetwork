@@ -35,22 +35,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadSoapResponseEx;
-import jeeves.exceptions.BadXmlResponseEx;
-import jeeves.exceptions.OperationAbortedEx;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.Constants;
+import org.fao.geonet.Logger;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.exceptions.BadSoapResponseEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
 
@@ -65,11 +65,10 @@ class Harvester implements IHarvester<HarvestResult>
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, GeoPRESTParams params)
+	public Harvester(Logger log, ServiceContext context, GeoPRESTParams params)
 	{
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 
 	}
@@ -86,7 +85,7 @@ class Harvester implements IHarvester<HarvestResult>
 	    this.log = log;
 		//--- perform all searches
 
-		XmlRequest request = new XmlRequest(new URL(params.baseUrl+"/rest/find/document"));
+		XmlRequest request = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.baseUrl+"/rest/find/document"));
 
 		Set<RecordInfo> records = new HashSet<RecordInfo>();
 
@@ -128,7 +127,7 @@ class Harvester implements IHarvester<HarvestResult>
 
 		//--- align local node
 
-		Aligner aligner = new Aligner(log, context, dbms, params);
+		Aligner aligner = new Aligner(log, context, params);
 
 		return aligner.align(records, errors);
 	}
@@ -214,7 +213,7 @@ class Harvester implements IHarvester<HarvestResult>
 			// uuid is in <guid> child
 			String guidLink = record.getChildText("guid");
 			if (guidLink != null) {
-				guidLink = URLDecoder.decode(guidLink, Jeeves.ENCODING);
+				guidLink = URLDecoder.decode(guidLink, Constants.ENCODING);
 				identif = StringUtils.substringAfter(guidLink, "id=");
 			}
 			if (identif.length() == 0) {
@@ -227,7 +226,7 @@ class Harvester implements IHarvester<HarvestResult>
 			// it must be converted to ISODate, 
 			// TODO: does it come in any other form??? Check geoportal stuff?
 			Date modDate = sdf.parse(modified);
-			modified = new ISODate(modDate.getTime()).toString(); 
+			modified = new ISODate(modDate.getTime(), false).toString(); 
 			if (modified != null && modified.length() == 0) modified = null;
 
 			if (log.isDebugEnabled())
@@ -258,7 +257,6 @@ class Harvester implements IHarvester<HarvestResult>
 	//---
 	//---------------------------------------------------------------------------
 	private Logger         log;
-	private Dbms           dbms;
 	private GeoPRESTParams params;
 	private ServiceContext context;
 	private SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");

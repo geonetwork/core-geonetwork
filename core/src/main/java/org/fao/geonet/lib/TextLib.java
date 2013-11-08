@@ -24,7 +24,7 @@
 package org.fao.geonet.lib;
 
 import jeeves.server.overrides.ConfigurationOverrides;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 
 import javax.servlet.ServletContext;
 import java.io.BufferedReader;

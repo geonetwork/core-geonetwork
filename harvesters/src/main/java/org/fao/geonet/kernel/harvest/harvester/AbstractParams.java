@@ -23,17 +23,18 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.MissingParameterEx;
-import jeeves.utils.Log;
-import jeeves.utils.QuartzSchedulerUtils;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import com.vividsolutions.jts.util.Assert;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.MissingParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.QuartzSchedulerUtils;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
@@ -76,16 +77,17 @@ public abstract class AbstractParams {
             Log.debug(Geonet.HARVEST_MAN, "AbstractParams creating from:\n"+ Xml.getString(node));
         }
 		Element site    = node.getChild("site");
-		Element opt     = node.getChild("options");
+        Assert.isTrue(site != null, "Site cannot be null");
+        Element opt     = node.getChild("options");
 		Element content = node.getChild("content");
 		
 		
-		Element account = (site == null) ? null : site.getChild("account");
+		Element account = site.getChild("account");
 
 		name       = Util.getParam(site, "name", "");
 		uuid       = Util.getParam(site, "uuid", UUID.randomUUID().toString());
-		
-        Element ownerIdE = node.getChild("ownerId");
+
+        Element ownerIdE = site.getChild("ownerId");
         if(ownerIdE != null) {
             ownerId = ownerIdE.getText();
         }
@@ -94,7 +96,7 @@ public abstract class AbstractParams {
             Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
         }
 
-        Element ownerIdGroupE = node.getChild("ownerGroup");
+        Element ownerIdGroupE = site.getChild("ownerGroup");
         if(ownerIdGroupE != null) {
             Element idE = ownerIdGroupE.getChild("id");
             if(idE != null) {

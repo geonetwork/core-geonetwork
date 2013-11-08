@@ -24,16 +24,15 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
@@ -73,8 +72,6 @@ public class Update extends NotInReadOnlyModeService {
 		DataManager   dataMan = gc.getBean(DataManager.class);
 		UserSession		session = context.getUserSession();
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		String id         = Utils.getIdentifierFromParameters(params, context);
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 		String showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
@@ -88,13 +85,13 @@ public class Update extends NotInReadOnlyModeService {
 
 		if (!forget) {
 			int iLocalId = Integer.parseInt(id);
-			dataMan.setTemplateExt(dbms, iLocalId, isTemplate, title);
+			dataMan.setTemplateExt(iLocalId, MetadataType.lookup(isTemplate), title);
 
 			//--- use StatusActionsFactory and StatusActions class to possibly
 			//--- change status as a result of this edit (use onEdit method)
 			StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
-			StatusActions sa = saf.createStatusActions(context, dbms);
-			saf.onEdit(sa, iLocalId, minor.equals("true"));
+			StatusActions sa = saf.createStatusActions(context);
+            sa.onEdit(iLocalId, minor.equals("true"));
 
 			if (data != null) {
 				Element md = Xml.loadString(data, false);
@@ -104,9 +101,7 @@ public class Update extends NotInReadOnlyModeService {
                 boolean updateDateStamp = !minor.equals("true");
                 boolean ufo = true;
                 boolean index = true;
-				if (!dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp)) {
-					throw new ConcurrentUpdateEx(id);
-				}
+				dataMan.updateMetadata(context, id, md, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
 			} else {
 				ajaxEditUtils.updateContent(params, false, true);
 			}

@@ -23,14 +23,20 @@
 
 package org.fao.geonet.services.group;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import org.fao.geonet.constants.Geonet;
+
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Language;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -39,45 +45,56 @@ import org.jdom.Element;
  * Update the information of a group.
  */
 public class Update extends NotInReadOnlyModeService {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		String id    = params.getChildText(Params.ID);
-		String name  = Util.getParam(params, Params.NAME);
-		String descr = Util.getParam(params, Params.DESCRIPTION, "");
-		String email = params.getChildText(Params.EMAIL);
+    public Element serviceSpecificExec(final Element params, final ServiceContext context) throws Exception {
+        final String id = params.getChildText(Params.ID);
+        final String name = Util.getParam(params, Params.NAME);
+        final String description = Util.getParam(params, Params.DESCRIPTION, "");
+        final String email = params.getChildText(Params.EMAIL);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
 
-		Element elRes = new Element(Jeeves.Elem.RESPONSE);
+        final Element elRes = new Element(Jeeves.Elem.RESPONSE);
 
-		if (id == null || "".equals(id))	// For Adding new group
-		{
-			int newId = context.getSerialFactory().getSerial(dbms, "Groups");
 
-			String query = "INSERT INTO Groups(id, name, description, email) VALUES (?, ?, ?, ?)";
+        if (id == null || "".equals(id)) {
 
-			dbms.execute(query, newId, name, descr, email);
-			Lib.local.insert(dbms, "Groups", newId, name);
 
-			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.ADDED));
-		}
-		else 	//--- For Update
-		{
-			String query = "UPDATE Groups SET name=?, description=?, email=? WHERE id=?";
+            Group group = new Group()
+                    .setName(name)
+                    .setDescription(description)
+                    .setEmail(email);
 
-			dbms.execute(query, name, descr, email, Integer.valueOf(id));
+            final LanguageRepository langRepository = context.getBean(LanguageRepository.class);
+            java.util.List<Language> allLanguages = langRepository.findAll();
+            for (Language l : allLanguages) {
+                group.getLabelTranslations().put(l.getId(), name);
+            }
 
-			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
-		}
+            groupRepository.save(group);
 
-		return elRes;
-	}
+            elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.ADDED));
+        } else {
+            groupRepository.update(Integer.valueOf(id), new Updater<Group>() {
+                @Override
+                public void apply(final Group entity) {
+                    entity.setEmail(email)
+                            .setName(name)
+                            .setDescription(description);
+                }
+            });
+
+            elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
+        }
+
+        return elRes;
+    }
 }

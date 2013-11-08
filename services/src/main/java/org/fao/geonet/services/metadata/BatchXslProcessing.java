@@ -24,14 +24,11 @@
 package org.fao.geonet.services.metadata;
 
 import java.util.Iterator;
-import java.util.Map.Entry;
 
-import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -39,6 +36,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -92,9 +90,6 @@ public class BatchXslProcessing extends NotInReadOnlyModeService {
 		DataManager dataMan = gc.getBean(DataManager.class);
 		UserSession session = context.getUserSession();
 
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
-
         XslProcessingReport xslProcessingReport = new XslProcessingReport(process);
         
 
@@ -103,7 +98,7 @@ public class BatchXslProcessing extends NotInReadOnlyModeService {
 		
 		synchronized(sm.getSelection("metadata")) {
 			xslProcessingReport.setTotalRecords(sm.getSelection("metadata").size());
-			BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(dataMan, dbms, sm.getSelection("metadata").iterator(), 
+			BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(dataMan, sm.getSelection("metadata").iterator(),
 					process, _appPath, params, context, xslProcessingReport);
 			m.process();
 		}
@@ -118,7 +113,6 @@ public class BatchXslProcessing extends NotInReadOnlyModeService {
 	// --------------------------------------------------------------------------
 
 	static final class BatchXslMetadataReindexer extends MetadataIndexerProcessor {
-		Dbms dbms;
 		Iterator<String> iter;
 		String process;
 		String appPath;
@@ -126,11 +120,10 @@ public class BatchXslProcessing extends NotInReadOnlyModeService {
 		ServiceContext context;
         XslProcessingReport xslProcessingReport;
 
-        public BatchXslMetadataReindexer(DataManager dm, Dbms dbms, Iterator<String> iter, String process, 
+        public BatchXslMetadataReindexer(DataManager dm, Iterator<String> iter, String process,
         		String appPath, Element params, ServiceContext context, 
         		XslProcessingReport xslProcessingReport) {
             super(dm);
-            this.dbms = dbms;
             this.iter = iter;
             this.process = process;
             this.appPath = appPath;
@@ -141,16 +134,14 @@ public class BatchXslProcessing extends NotInReadOnlyModeService {
 
         @Override
         public void process() throws Exception {
-            GeonetContext gc = (GeonetContext) context
-                               .getHandlerContext(Geonet.CONTEXT_NAME);
-            DataManager dataMan = gc.getBean(DataManager.class);
 
             while (iter.hasNext()) {
-                String uuid = (String) iter.next();
-                String id = getDataManager().getMetadataId(dbms, uuid);
+                String uuid = iter.next();
+                String id = getDataManager().getMetadataId(uuid);
                 context.info("Processing metadata with id:" + id);
-                
-                XslProcessing.process(id, process, true, appPath, params, context, xslProcessingReport, true, dataMan.getSiteURL(context));
+
+                final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
+                XslProcessing.process(id, process, true, appPath, params, context, xslProcessingReport, true, siteURL);
                 
                 UserSession  session = context.getUserSession();
                 session.setProperty("BATCH_PROCESSING_REPORT", xslProcessingReport);

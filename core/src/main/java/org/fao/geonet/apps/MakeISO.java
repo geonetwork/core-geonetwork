@@ -23,9 +23,9 @@
 
 package org.fao.geonet.apps;
 
-import jeeves.constants.Jeeves;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.dlib.tools.FullTokenizer;
+import org.fao.geonet.Constants;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -54,7 +54,7 @@ public class MakeISO
 		FileInputStream  is = new FileInputStream(new File(args[0]));
 		FileOutputStream os = new FileOutputStream(new File(args[0]+".sql"));
 
-		BufferedReader ir = new BufferedReader(new InputStreamReader(is, Jeeves.ENCODING));
+		BufferedReader ir = new BufferedReader(new InputStreamReader(is, Constants.ENCODING));
 //		BufferedWriter ow = new BufferedWriter(new OutputStreamWriter(os));
 
 		String line;
@@ -112,7 +112,7 @@ public class MakeISO
 		}
 
 		String xml = Xml.getString(new Document(root));
-		BufferedWriter ow = new BufferedWriter(new OutputStreamWriter(os, Jeeves.ENCODING));
+		BufferedWriter ow = new BufferedWriter(new OutputStreamWriter(os, Constants.ENCODING));
 		ow.write(xml);
 
 //		pool.close(dbms);

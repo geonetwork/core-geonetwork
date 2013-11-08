@@ -54,7 +54,7 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
         this.thesaurusName = thesaurusName;
     }
 
-    private Thesaurus getThesaurus(ServiceContext context) throws Exception {
+    private synchronized Thesaurus getThesaurus(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         ThesaurusManager th = gc.getBean(ThesaurusManager.class);
         Thesaurus regions = th.getThesaurusByName(thesaurusName);

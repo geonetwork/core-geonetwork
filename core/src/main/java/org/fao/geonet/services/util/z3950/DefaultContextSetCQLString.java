@@ -20,7 +20,7 @@
 
 package org.fao.geonet.services.util.z3950;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.util.z3950.jzkitextensions.GNCQLString;
 import org.jzkit.search.util.QueryModel.Internal.AttrPlusTermNode;

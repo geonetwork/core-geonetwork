@@ -56,8 +56,6 @@ public class GetCapabilitiesRequest extends CatalogRequest
 	//---
 	//---------------------------------------------------------------------------
 
-    public GetCapabilitiesRequest() { }
-
     public GetCapabilitiesRequest(ServiceContext context) { super(context); }
 
 	//---------------------------------------------------------------------------

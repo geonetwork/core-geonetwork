@@ -4,7 +4,7 @@ import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;

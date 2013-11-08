@@ -23,10 +23,10 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import jeeves.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.Util;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 

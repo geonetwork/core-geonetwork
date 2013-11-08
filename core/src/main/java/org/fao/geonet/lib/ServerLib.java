@@ -36,8 +36,8 @@ import java.util.Properties;
 import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
 
-import jeeves.constants.Jeeves;
 import jeeves.server.overrides.ConfigurationOverrides;
+import org.fao.geonet.Constants;
 
 //=============================================================================
 
@@ -67,7 +67,7 @@ public class ServerLib
 		    stream = new FileInputStream(appPath + (SERVER_PROPS.replace("/",File.separator)));
 		}
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(stream, Jeeves.ENCODING));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stream, Constants.ENCODING));
 		
 		try {
 			List<String> lines = ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(

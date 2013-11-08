@@ -437,13 +437,13 @@ The service response contains:
 
 Sample response:
 ```
-<response 
-  process="sextant-theme-add" 
-  startdate="2013-08-23T18:33:09" 
-  reportdate="2013-08-23T18:34:09" 
-  running="true" 
-  totalRecords="477" 
-  processedRecords="43" 
+<response
+  process="sextant-theme-add"
+  startdate="2013-08-23T18:33:09"
+  reportdate="2013-08-23T18:34:09"
+  running="true"
+  totalRecords="477"
+  processedRecords="43"
   nullRecords="0">
   <done>28</done>
   <notProcessFound>0</notProcessFound>
@@ -453,7 +453,7 @@ Sample response:
     <metadata id="1186">
       <message>Failed to compile stylesheet. 1 error detected.</message>
       <stack>
-javax.xml.transform.TransformerConfigurationException: Failed to compile stylesheet. 1 error detected. at net.sf.saxon.PreparedStylesheet.prepare(PreparedStylesheet.java:176) at net.sf.saxon.TransformerFactoryImpl.newTemplates(TransformerFactoryImpl.java:139) at net.sf.saxon.TransformerFactoryImpl.newTransformer(TransformerFactoryImpl.java:91) at jeeves.utils.Xml.transform(Xml.java:538) at jeeves.utils.Xml.transform(Xml.java:382) at org.fao.geonet.kernel.DataManager.updateFixedInfo(DataManager.java:2728) at org.fao.geonet.kernel.DataManager.updateMetadata(DataManager.java:1733) at 
+javax.xml.transform.TransformerConfigurationException: Failed to compile stylesheet. 1 error detected. at net.sf.saxon.PreparedStylesheet.prepare(PreparedStylesheet.java:176) at net.sf.saxon.TransformerFactoryImpl.newTemplates(TransformerFactoryImpl.java:139) at net.sf.saxon.TransformerFactoryImpl.newTransformer(TransformerFactoryImpl.javorg.fao.geonet.Xmlutils.Xml.transform(Xml.java:538) at org.fao.geonet.utils.Xml.transform(Xml.java:382) at org.fao.geonet.kernel.DataManager.updateFixedInfo(DataManager.java:2728) at org.fao.geonet.kernel.DataManager.updateMetadata(DataManager.java:1733) at
 ...
 ```
 				]]>

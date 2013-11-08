@@ -12,8 +12,8 @@ package org.fao.geonet.util;
 import java.io.File;
 import java.io.IOException;
 
-import jeeves.utils.BinaryFile;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Log;
 
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Geonet;

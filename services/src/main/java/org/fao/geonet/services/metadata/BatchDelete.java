@@ -24,18 +24,19 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Element;
 
@@ -64,29 +65,27 @@ public class BatchDelete extends BackupFileService {
 		AccessManager accessMan = gc.getBean(AccessManager.class);
 		UserSession   session   = context.getUserSession();
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		Set<Integer> metadata = new HashSet<Integer>();
 		Set<Integer> notFound = new HashSet<Integer>();
 		Set<Integer> notOwner = new HashSet<Integer>();
 
-        if(context.isDebug())
+        if(context.isDebugEnabled())
             context.debug("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session);
 
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 			String uuid = (String) iter.next();
-            if(context.isDebug())
+            if(context.isDebugEnabled())
                 context.debug("Deleting metadata with uuid:"+ uuid);
 
-			String id   = dataMan.getMetadataId(dbms, uuid);
+			String id   = dataMan.getMetadataId(uuid);
 			//--- Metadata may have been deleted since selection
 			if (id != null) {
 				//-----------------------------------------------------------------------
 				//--- check access
 	
-				MdInfo info = dataMan.getMetadataInfo(dbms, id);
+				Metadata info = context.getBean(MetadataRepository.class).findOne(id);
 	
 				if (info == null) {
 					notFound.add(Integer.valueOf(id));
@@ -95,8 +94,8 @@ public class BatchDelete extends BackupFileService {
 				} else {
 	
 					//--- backup metadata in 'removed' folder
-					if (info.template != MdInfo.Template.SUBTEMPLATE) {
-						backupFile(context, id, info.uuid, MEFLib.doExport(context, info.uuid, "full", false, true, false));
+					if (info.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
+						backupFile(context, id, info.getUuid(), MEFLib.doExport(context, info.getUuid(), "full", false, true, false));
 					}
 			
 					//--- remove the metadata directory
@@ -104,13 +103,13 @@ public class BatchDelete extends BackupFileService {
 					FileCopyMgr.removeDirectoryOrFile(pb);
 	
 					//--- delete metadata and return status
-					dataMan.deleteMetadata(context, dbms, id);
-                    if(context.isDebug())
+					dataMan.deleteMetadata(context, id);
+                    if(context.isDebugEnabled())
                         context.debug("  Metadata with id " + id + " deleted.");
 					metadata.add(Integer.valueOf(id));
 				}
 			} else
-            if(context.isDebug())
+            if(context.isDebugEnabled())
                 context.debug("  Metadata not found in db:"+ uuid);
 				// TODO : add to notFound set
 			}

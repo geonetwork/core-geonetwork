@@ -23,42 +23,32 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.BadXmlResponseEx;
-import jeeves.exceptions.OperationAbortedEx;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlRequest;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.ConstraintLanguage;
-import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.CswOperation;
-import org.fao.geonet.csw.common.CswServer;
-import org.fao.geonet.csw.common.ElementSetName;
-import org.fao.geonet.csw.common.ResultType;
-import org.fao.geonet.csw.common.TypeName;
+import org.fao.geonet.csw.common.*;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.AbstractHttpRequest;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
+
+import java.net.URL;
+import java.util.*;
 
 //=============================================================================
 
@@ -70,11 +60,10 @@ class Harvester implements IHarvester<HarvestResult>
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, CswParams params)
+	public Harvester(Logger log, ServiceContext context, CswParams params)
 	{
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 	}
 
@@ -140,7 +129,7 @@ class Harvester implements IHarvester<HarvestResult>
 
 		//--- align local node
 
-		Aligner aligner = new Aligner(log, context, dbms, server, params);
+		Aligner aligner = new Aligner(log, context, server, params);
 
 		return aligner.align(records, errors);
 	}
@@ -159,10 +148,11 @@ class Harvester implements IHarvester<HarvestResult>
 
 		XmlRequest req;
 		// Support both full GetCapbilities URL or CSW entry point
-		if (params.capabUrl.contains("GetCapabilities")) {
-			req = new XmlRequest(new URL(params.capabUrl));
+        final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
+        if (params.capabUrl.contains("GetCapabilities")) {
+            req = requestFactory.createXmlRequest(new URL(params.capabUrl));
 		} else {
-			req = new XmlRequest(new URL(params.capabUrl + (params.capabUrl.contains("?") ? "&" : "?") + GETCAPABILITIES_PARAMETERS));
+			req = requestFactory.createXmlRequest(new URL(params.capabUrl + (params.capabUrl.contains("?") ? "&" : "?") + GETCAPABILITIES_PARAMETERS));
 		}
 
 		Lib.net.setupProxy(context, req);
@@ -224,13 +214,13 @@ class Harvester implements IHarvester<HarvestResult>
 	private Set<RecordInfo> search(CswServer server, Search s) throws Exception
 	{
 		int start =  1;
-		
+
 		GetRecordsRequest request = new GetRecordsRequest(context);
 
 		request.setResultType(ResultType.RESULTS);
 		//request.setOutputSchema(OutputSchema.OGC_CORE);	// Use default value
 		request.setElementSetName(ElementSetName.SUMMARY);
-		request.setMaxRecords(GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE +"");
+		request.setMaxRecords(GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE + "");
         request.setDistribSearch(params.queryScope.equalsIgnoreCase("true"));
         request.setHopCount(params.hopCount + "");
 
@@ -339,7 +329,7 @@ class Harvester implements IHarvester<HarvestResult>
      * @param method
      */
     private void setUpRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, URL url,
-                              ConstraintLanguage constraintLanguage, String constraint, CatalogRequest.Method method) {
+                              ConstraintLanguage constraintLanguage, String constraint, AbstractHttpRequest.Method method) {
 
         request.setUrl(url);
         request.setServerVersion(server.getPreferredServerVersion());
@@ -348,13 +338,14 @@ class Harvester implements IHarvester<HarvestResult>
         request.setConstraintLangVersion(CONSTRAINT_LANGUAGE_VERSION);
         request.setConstraint(constraint);
         request.setMethod(method);
-        for(String typeName: oper.getTypeNamesList()) {
+        for (String typeName : oper.getTypeNamesList()) {
             request.addTypeName(TypeName.getTypeName(typeName));
         }
-        request.setOutputFormat(oper.getPreferredOutputFormat()) ;
+        request.setOutputFormat(oper.getPreferredOutputFormat());
     }
+
     /**
-     * Configs the harvester request
+     * Configs the harvester request.
      *
      * @param request
      * @param oper
@@ -363,7 +354,8 @@ class Harvester implements IHarvester<HarvestResult>
      * @param preferredMethod
      * @throws Exception
      */
-    private void configRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, String preferredMethod)
+    private void configRequest(final GetRecordsRequest request, final CswOperation oper, final CswServer server,
+                               final Search s, final String preferredMethod)
             throws Exception {
         if (oper.getGetUrl() == null && oper.getPostUrl() == null) {
             throw new OperationAbortedEx("No GET or POST DCP available in this service.");
@@ -371,49 +363,50 @@ class Harvester implements IHarvester<HarvestResult>
 
         // Use the preferred HTTP method and check one exist.
         if (oper.getGetUrl() != null && preferredMethod.equals("GET") && oper.getConstraintLanguage().contains("cql_text")) {
-            setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
-        }
-        else if (oper.getPostUrl() != null && preferredMethod.equals("POST") && oper.getConstraintLanguage().contains("filter")) {
-            setUpRequest(request, oper, server, s, oper.getPostUrl(), ConstraintLanguage.FILTER, getFilterConstraint(s), CatalogRequest.Method.POST);
-        }
-        else {
+            setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s),
+                    AbstractHttpRequest.Method.GET);
+        } else if (oper.getPostUrl() != null && preferredMethod.equals("POST") && oper.getConstraintLanguage().contains("filter")) {
+            setUpRequest(request, oper, server, s, oper.getPostUrl(), ConstraintLanguage.FILTER, getFilterConstraint(s),
+                    AbstractHttpRequest.Method.POST);
+        } else {
             if (oper.getGetUrl() != null && oper.getConstraintLanguage().contains("cql_text")) {
-                setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
-            }
-            else if (oper.getPostUrl() != null && oper.getConstraintLanguage().contains("filter")) {
-                setUpRequest(request, oper, server, s, oper.getPostUrl(), ConstraintLanguage.FILTER, getFilterConstraint(s), CatalogRequest.Method.POST);
-            }
-            else {
+                setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s),
+                        AbstractHttpRequest.Method.GET);
+            } else if (oper.getPostUrl() != null && oper.getConstraintLanguage().contains("filter")) {
+                setUpRequest(request, oper, server, s, oper.getPostUrl(), ConstraintLanguage.FILTER, getFilterConstraint(s),
+                        AbstractHttpRequest.Method.POST);
+            } else {
                 // TODO : add GET+FE and POST+CQL support
                 log.warning("No GET (using CQL) or POST (using FE) DCP available in this service... Trying GET CQL anyway ...");
-                setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s), CatalogRequest.Method.GET);
+                setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s),
+                        AbstractHttpRequest.Method.GET);
             }
         }
     }
 
 	//---------------------------------------------------------------------------
 
-	private String getFilterConstraint(Search s)
-	{
-		//--- collect queriables
-		
-		ArrayList<Element> queriables = new ArrayList<Element>();
+	private String getFilterConstraint(final Search s) {
+        //--- collect queriables
 
-		if (!s.attributesMap.isEmpty()){
-			for(Entry<String, String> entry : s.attributesMap.entrySet()) {
-			    if (entry.getValue()!=null){
-			    	buildFilterQueryable(queriables, "csw:"+entry.getKey(), entry.getValue());
-		    	}
-			}
-		} else {
-		    log.debug("no search criterion specified, harvesting all ... ");
-		}
-		
-		
-		//--- build filter expression
+        ArrayList<Element> queriables = new ArrayList<Element>();
 
-		if (queriables.isEmpty())
-			return null;
+        if (!s.attributesMap.isEmpty()) {
+            for (Map.Entry<String, String> entry : s.attributesMap.entrySet()) {
+                if (entry.getValue() != null) {
+                    buildFilterQueryable(queriables, "csw:" + entry.getKey(), entry.getValue());
+                }
+            }
+        } else {
+            log.debug("no search criterion specified, harvesting all ... ");
+        }
+
+
+        //--- build filter expression
+
+		if (queriables.isEmpty()) {
+            return null;
+        }
 
 		Element filter = new Element("Filter", Csw.NAMESPACE_OGC);
 
@@ -478,7 +471,7 @@ class Harvester implements IHarvester<HarvestResult>
 		ArrayList<String> queryables = new ArrayList<String>();
 		
 		if (!s.attributesMap.isEmpty()){
-			for(Entry<String, String> entry : s.attributesMap.entrySet()) {
+			for(Map.Entry<String, String> entry : s.attributesMap.entrySet()) {
 			    if (entry.getValue()!=null){
 			    	buildCqlQueryable(queryables, "csw:"+entry.getKey(), entry.getValue());
 		    	}
@@ -520,16 +513,18 @@ class Harvester implements IHarvester<HarvestResult>
 	private void buildCqlQueryable(List<String> queryables, String name, String value)
 	{
 		if (value.length() != 0) {
-			if (value.contains("%"))
-				buildCqlQueryable(queryables, name, value, "like");
-			else
-				buildCqlQueryable(queryables, name, value, "=");
+			if (value.contains("%")) {
+                buildCqlQueryable(queryables, name, value, "like");
+            } else {
+                buildCqlQueryable(queryables, name, value, "=");
+            }
 		}
 	}
 	private void buildCqlQueryable(List<String> queryables, String name, String value, String operator)
 	{
-		if (value.length() != 0)
-			queryables.add(name +" " + operator + " '"+ value +"'");
+		if (value.length() != 0) {
+            queryables.add(name + " " + operator + " '" + value + "'");
+        }
 	}
 	//---------------------------------------------------------------------------
 
@@ -620,14 +615,13 @@ class Harvester implements IHarvester<HarvestResult>
 	//---
 	//---------------------------------------------------------------------------
 	// FIXME : Currently switch from POST to GET for testing mainly.
-	public static final String PREFERRED_HTTP_METHOD = CatalogRequest.Method.GET.toString();
+	public static final String PREFERRED_HTTP_METHOD = AbstractHttpRequest.Method.GET.toString();
 	private static int GETRECORDS_NUMBER_OF_RESULTS_PER_PAGE = 20;
 	private static String CONSTRAINT_LANGUAGE_VERSION = "1.1.0";
 	
 	//FIXME version should be parametrized
 	private static String GETCAPABILITIES_PARAMETERS = "SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2";
 	private Logger         log;
-	private Dbms           dbms;
 	private CswParams      params;
 	private ServiceContext context;
 	

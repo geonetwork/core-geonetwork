@@ -23,44 +23,52 @@
 
 package org.fao.geonet.services.category;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import org.fao.geonet.constants.Geonet;
+
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import javax.annotation.Nonnull;
+
 //=============================================================================
 
-public class XmlUpdate extends NotInReadOnlyModeService
-{
-	public void init(String appPath, ServiceConfig params) throws Exception {
+public class XmlUpdate extends NotInReadOnlyModeService {
+    public void init(String appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 
-		for (Object r : params.getChildren("category"))
-		{
-			Element categ = (Element) r;
+        final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
+        for (Object r : params.getChildren("category")) {
+            Element categoryEl = (Element) r;
 
-			String  id    = Util.getAttrib(categ, Params.ID);
-			Element label = Util.getChild (categ, "label");
+            String id = Util.getAttrib(categoryEl, Params.ID);
+            final Element label = Util.getChild(categoryEl, "label");
 
-			Lib.local.update(dbms, "Categories", Integer.parseInt(id), label);
-		}
+            categoryRepository.update(Integer.valueOf(id), new Updater<MetadataCategory>() {
+                @Override
+                public void apply(@Nonnull MetadataCategory category) {
+                    for (Object t : label.getChildren()) {
+                        Element translationEl = (Element) t;
+                        category.getLabelTranslations().put(translationEl.getName(), translationEl.getText());
+                    }
+                }
+            });
+        }
 
-		return new Element("ok");
-	}
+        return new Element("ok");
+    }
 }

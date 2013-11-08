@@ -23,18 +23,31 @@
 
 package org.fao.geonet.services.user;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationNotAllowedEx;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specifications;
 
+import javax.annotation.Nullable;
 import java.util.List;
+
+import static org.springframework.data.jpa.domain.Specifications.*;
 
 //=============================================================================
 
@@ -64,50 +77,53 @@ public class UserGroups implements Service
 		if (id == null) return new Element(Jeeves.Elem.RESPONSE);
 
 		UserSession usrSess = context.getUserSession();
-		String      myProfile = usrSess.getProfile();
+		Profile myProfile = usrSess.getProfile();
 		String      myUserId  = usrSess.getUserId();
 
-		if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) || myProfile.equals(Geonet.Profile.USER_ADMIN) || myUserId.equals(id)) {
+        final UserRepository userRepository = context.getBean(UserRepository.class);
+        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
+        final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
 
-			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+        if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin || myUserId.equals(id)) {
 
 			// -- get the profile of the user id supplied
-			String query= "SELECT * FROM Users WHERE id=?";
-			@SuppressWarnings("unchecked")
-            List<Element>  uList = dbms.select(query, Integer.valueOf(id)).getChildren();
-
-			if (uList.size() == 0)
+            User user = userRepository.findOne(Integer.valueOf(id));
+			if (user == null) {
 				throw new IllegalArgumentException("user "+id+" doesn't exist");
+            }
 
-			Element theUser    = uList.get(0);
-			String  theProfile = theUser.getChildText("profile");
+			String  theProfile = user.getProfile().name();
 
 			//--- retrieve user groups of the user id supplied
 			Element elGroups = new Element(Geonet.Elem.GROUPS);
-			Element theGroups;
-			
-            if (myProfile.equals(Geonet.Profile.ADMINISTRATOR) && (theProfile.equals(Geonet.Profile.ADMINISTRATOR))) {
-                theGroups = dbms.select("SELECT id, name, description, 'Administrator' AS profile FROM Groups");
+			List<Group> theGroups;
+            List<UserGroup> userGroups;
+
+            if (myProfile == Profile.Administrator && theProfile.equals(Profile.Administrator.name())) {
+                theGroups = groupRepository.findAll();
+
+                for (Group group : theGroups) {
+                    final Element element = group.asXml();
+                    element.addContent(new Element("profile").setText(Profile.Administrator.name()));
+                    elGroups.addContent(element);
+                }
             } else {
-                theGroups = dbms.select("SELECT id, name, description, profile FROM UserGroups, Groups WHERE groupId=id AND userId=?",Integer.valueOf(id));
+                userGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(Integer.valueOf(id)));
+
+                for (UserGroup userGroup : userGroups) {
+                    final Element element = userGroup.getGroup().asXml();
+                    element.addContent(new Element("profile").setText(userGroup.getProfile().name()));
+                    elGroups.addContent(element);
+                }
             }
 
-			@SuppressWarnings("unchecked")
-            List<Element> list = theGroups.getChildren();
-			for (Element group : list) {
-				group.setName("group");
-				elGroups.addContent((Element)group.clone());
-			}
-
-			if (!(myUserId.equals(id)) && myProfile.equals(Geonet.Profile.USER_ADMIN)) {
+			if (!(myUserId.equals(id)) && myProfile == Profile.UserAdmin) {
 			
 		//--- retrieve session user groups and check to see whether this user is 
 		//--- allowed to get this info
-
-				String selectGroupIdQuery = "SELECT groupId FROM UserGroups WHERE userId=? or userId =?  group by groupId having count(*) > 1";
-                @SuppressWarnings("unchecked")
-                List<Element> adminlist = dbms.select(selectGroupIdQuery, Integer.valueOf(myUserId), Integer.valueOf(id)).getChildren();
-				if (adminlist.size() == 0) {
+                List<Integer> adminList = userGroupRepository.findGroupIds(where(UserGroupSpecs.hasUserId(Integer.valueOf(myUserId)))
+                        .or(UserGroupSpecs.hasUserId(Integer.valueOf(id))));
+				if (adminList.isEmpty()) {
 					throw new OperationNotAllowedEx("You don't have rights to do this because the user you want is not part of your group");
 				}
 			}

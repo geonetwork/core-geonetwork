@@ -1,22 +1,26 @@
 package org.fao.geonet.services.statistics;
 
+import com.google.common.base.Optional;
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.IO;
-import jeeves.utils.Log;
-import org.fao.geonet.GeonetContext;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.statistic.MetadataStatisticSpec;
+import org.fao.geonet.repository.statistic.MetadataStatisticsQueries;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.awt.*;
 import java.io.File;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Service to get the db-stored requests information group by source (node) id
@@ -29,8 +33,6 @@ import java.util.List;
  *
  */
 public class CategoriesPopularity extends NotInReadOnlyModeService {
-	/** the SQL query to get results */
-	private String query;
 	/** should we generate and send tooltips to client (caution, can slow down the process if
 	 * dataset is big)
 	 */
@@ -62,7 +64,6 @@ public class CategoriesPopularity extends NotInReadOnlyModeService {
 		this.createTooltips = Boolean.parseBoolean(params.getValue("createTooltips"));
 		this.chartWidth = Integer.parseInt(params.getValue("chartWidth"));
 		this.chartHeight = Integer.parseInt(params.getValue("chartHeight"));
-		this.query = params.getValue("query");
 	}
 
 	//--------------------------------------------------------------------------
@@ -73,42 +74,19 @@ public class CategoriesPopularity extends NotInReadOnlyModeService {
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
         String message = "";
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		
-		// gets the total popularity count (=100)
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		
-		// wont work if there is no metadata
-		String sumPopularityQuery = "select sum(popularity) as sumpop from metadata";
-        @SuppressWarnings("unchecked")
-        List<Element> sumPopularityResult  = dbms.select(sumPopularityQuery).getChildren();
 
-		if (!sumPopularityResult.isEmpty()) {
-			message = "cannot get popularity count";
-			return null;
-		}
-		
-		int cnt = Integer.parseInt((sumPopularityResult.get(0)).getChildText("sumpop"));
+        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        final MetadataStatisticsQueries metadataStatistics = metadataRepository.getMetadataStatistics();
+        final int totalMetadataPopularity = metadataStatistics.getTotalStat(MetadataStatisticSpec.StandardSpecs.popularitySum(), Optional.<Specification<Metadata>>absent());
+        final Map<MetadataCategory,Integer> metadataCategoryToPopularityMap = metadataStatistics.getMetadataCategoryToStatMap(MetadataStatisticSpec.StandardSpecs.popularitySum());
 
-        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
-            Log.debug(Geonet.SEARCH_LOGGER,"query to get popularity by category:\n" + query);
-		dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		
-		DefaultPieDataset dataset = new DefaultPieDataset(); 
-		@SuppressWarnings("unchecked")
-        List<Element> resultSet = dbms.select(query).getChildren();
-		
-		for (Element record : resultSet) {
-			String popularity = record.getChildText("popularity");
-			if (!popularity.equals("0")) {
-				Double d = 0.0;
-				if (popularity.length() > 0 ) {
-					d = (Double.parseDouble(popularity) / cnt ) * 100; 
-				}
-				dataset.setValue(record.getChildText("categoryname"),d);
-			}
-		}
-		
+        DefaultPieDataset dataset = new DefaultPieDataset();
+
+        for(Map.Entry<MetadataCategory, Integer> entry: metadataCategoryToPopularityMap.entrySet()) {
+            final double percentageOfPopularity = (entry.getValue().doubleValue() / totalMetadataPopularity) * 100;
+            dataset.setValue(entry.getKey().getName(), percentageOfPopularity);
+        }
+
 		// create a chart... 
 		JFreeChart chart = ChartFactory.createPieChart( 
 			null, 
@@ -123,7 +101,7 @@ public class CategoriesPopularity extends NotInReadOnlyModeService {
 		chart.setBackgroundPaint(Color.decode("#E7EDF5"));
 		String chartFilename = "popularitybycategory_" + System.currentTimeMillis() + ".png";
 		
-		File statFolder = new File(gc.getBean(ServiceConfig.class).getMandatoryValue(
+		File statFolder = new File(context.getBean(ServiceConfig.class).getMandatoryValue(
 				Geonet.Config.RESOURCES_DIR) + File.separator + "images" + File.separator + "statTmp");
 		IO.mkdirs(statFolder, "Statistices tmp dir");
 		File f = new File(statFolder, chartFilename);
@@ -139,8 +117,8 @@ public class CategoriesPopularity extends NotInReadOnlyModeService {
 		Element elTooltipImageMap = new Element("tooltipImageMap").addContent(
 				this.createTooltips ? this.imageMap : "");
 		
-		Element elMessage = new Element("message").setText(message);		
-		Element elChartWidth= new Element("chartWidth").setText("" + this.chartWidth);		
+		Element elMessage = new Element("message").setText(message);
+		Element elChartWidth= new Element("chartWidth").setText("" + this.chartWidth);
 		Element elChartHeight= new Element("chartHeight").setText("" + this.chartHeight);	
 		
 		elResp.addContent(elchartUrl);

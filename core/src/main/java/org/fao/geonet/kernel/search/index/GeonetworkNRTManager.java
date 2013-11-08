@@ -3,7 +3,7 @@ package org.fao.geonet.kernel.search.index;
 import java.io.Closeable;
 import java.io.IOException;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.search.IndexSearcher;

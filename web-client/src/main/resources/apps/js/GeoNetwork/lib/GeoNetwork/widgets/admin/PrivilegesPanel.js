@@ -219,8 +219,12 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
         // Load the store to get the Ext.grid.ColumnModel, the view and the datas
         store.load({
             callback: function(recs,opt,suc) {
-                operationsStore.loadData(Ext.DomQuery.selectNode('operations',store.reader.xmlData));
-                
+                var ops = Ext.DomQuery.selectNode('operation',store.reader.xmlData);
+                if (ops === undefined) {
+                    ops = Ext.DomQuery.selectNode('operations',store.reader.xmlData);
+                }
+                operationsStore.loadData(ops);
+
                 // Disable groups you d'ont have rights on
                 var groupOwner = this.batch ? '' : catalogue.getNodeText(store.reader.xmlData.getElementsByTagName('groupOwner')[0]);
                 var isOwner = this.batch ? '' : catalogue.getNodeText(store.reader.xmlData.getElementsByTagName('owner')[0]);

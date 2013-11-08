@@ -1,9 +1,10 @@
 package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
@@ -18,7 +19,6 @@ import org.fao.oaipmh.requests.TokenListRequest;
 import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.responses.ListResponse;
 import org.fao.oaipmh.responses.GeonetworkResumptionToken;
-import org.fao.oaipmh.util.ISODate;
 import org.fao.oaipmh.util.SearchResult;
 import org.jdom.Element;
 
@@ -105,17 +105,17 @@ public abstract class AbstractTokenLister implements OaiPmhService {
 
 			if (from != null)
 			{
-				String sFrom = from.isShort ? from.getDate() : from.toString();
+				String sFrom = from.isDateOnly() ? from.getDateAsString() : from.toString();
 				params.addContent(new Element(getDateFrom()).setText(sFrom));
 			}
 
 			if (until != null)
 			{
-				String sTo = until.isShort ? until.getDate() : until.toString();
+				String sTo = until.isDateOnly() ? until.getDateAsString() : until.toString();
 				params.addContent(new Element(getDateUntil()).setText(sTo));
 			}
 
-			if (from != null && until != null && from.sub(until) > 0)
+			if (from != null && until != null && from.timeDifferenceInSeconds(until) > 0)
 				throw new BadArgumentException("From is greater than until");
 
 			if (set != null)

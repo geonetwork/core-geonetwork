@@ -30,9 +30,10 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -169,13 +170,15 @@ public class Do implements Service {
     		// unescape \\n from metadataAbstract so they're properly sent to geoserver
     		String metadataAbstract = Util.getParam(params, "metadataAbstract", "").replace("\\n","\n");
     		GeoServerNode g = geoserverNodes.get(nodeId);
-    		if (g == null)
-    			throw new IllegalArgumentException(
-    					"Invalid node id "
-    							+ nodeId
-    							+ ". Can't find node id in current registered nodes. Use action=LIST parameter to retrieve the list of valid nodes.");
-    
-    		GeoServerRest gs = new GeoServerRest(g.getUrl(), g.getUsername(), g.getUserpassword(), g.getNamespacePrefix(), baseUrl);
+    		if (g == null) {
+                throw new IllegalArgumentException(
+                        "Invalid node id " + nodeId + ". Can't find node id in current registered nodes. "
+                        + "Use action=LIST parameter to retrieve the list of valid nodes.");
+            }
+
+
+            final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
+            GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(), g.getUsername(), g.getUserpassword(), g.getNamespacePrefix(), baseUrl);
     
     		String file = Util.getParam(params, "file");
     		String access = Util.getParam(params, "access");
@@ -339,12 +342,9 @@ public class Do implements Service {
 	 * Analyze ZIP file content and if valid, push the data
 	 * to GeoServer.
 	 * 
-	 * @param context
 	 * @param action
-	 * @param metadataId
 	 * @param gs
 	 * @param file
-	 * @param access
 	 * @return
 	 * @throws java.io.IOException
 	 */

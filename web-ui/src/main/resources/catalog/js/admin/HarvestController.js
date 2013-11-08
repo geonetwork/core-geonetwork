@@ -74,7 +74,7 @@
         $scope.harvesterHistory = undefined;
         $http.get('admin.harvester.history@json?uuid=' +
                 $scope.harvesterSelected.site.uuid).success(function(data) {
-          $scope.harvesterHistory = data.response;
+          $scope.harvesterHistory = data.harvesthistory;
         }).error(function(data) {
           // TODO
         });

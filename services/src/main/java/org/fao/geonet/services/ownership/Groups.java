@@ -23,117 +23,114 @@
 
 package org.fao.geonet.services.ownership;
 
+import com.google.common.collect.Iterables;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
+import static org.springframework.data.jpa.domain.Specifications.not;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
 //=============================================================================
 
-public class Groups implements Service
-{
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+public class Groups implements Service {
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		int id = Util.getParamAsInt(params, "id");
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        int userId = Util.getParamAsInt(params, "id");
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		UserSession   us = context.getUserSession();
-		AccessManager am = gc.getBean(AccessManager.class);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        UserSession us = context.getUserSession();
+        AccessManager am = gc.getBean(AccessManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        Set<Integer> userGroups = am.getVisibleGroups(userId);
+        Set<Integer> myGroups = am.getUserGroups(us, null, false);
 
-		Set<String> userGroups = am.getVisibleGroups(dbms, id);
-		Set<String> myGroups   = am.getUserGroups(dbms, us, null, false);
+        //--- remove 'Intranet' and 'All' groups
+        myGroups.remove(ReservedGroup.intranet.getId());
+        myGroups.remove(ReservedGroup.all.getId());
 
-		//--- remove 'Intranet' and 'All' groups
-		myGroups.remove("0");
-		myGroups.remove("1");
+        Element response = new Element("response");
 
-		Element response = new Element("response");
+        OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);
+        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
+        for (Integer groupId : userGroups) {
+            Specifications<OperationAllowed> spec = where(hasGroupId(groupId)).and(hasMetadataId(userId));
+            long count = opAllowedRepo.count(spec);
 
-		for (String groupId : userGroups)
-		{
-			String query = "SELECT count(*) as cnt "+
-								"FROM OperationAllowed, Metadata "+
-								"WHERE metadataId = id AND groupId=? AND owner=?";
+            if (count > 0) {
+                Group group = groupRepository.findOne(groupId);
 
-			@SuppressWarnings("unchecked")
-            List<Element> list  = dbms.select(query, Integer.valueOf(groupId), id).getChildren();
-			String size  = (list.get(0)).getChildText("cnt");
+                if (group != null) {
+                    Element record = group.asXml();
+                    record.detach();
+                    record.setName("group");
 
-			if (Integer.parseInt(size) != 0)
-			{
-				@SuppressWarnings("unchecked")
-                List<Element> records = Lib.local.retrieveById(dbms, "Groups", groupId).getChildren();
+                    response.addContent(record);
+                }
+            }
+        }
 
-				if (!records.isEmpty())
-				{
-					Element record  = records.get(0);
-					record.detach();
-					record.setName("group");
+        for (Integer groupId : myGroups) {
+            @SuppressWarnings("unchecked")
+            Group group = groupRepository.findOne(groupId);
 
-					response.addContent(record);
-				}
-			}
-		}
+            if (group != null) {
+                Element record = group.asXml();
+                record.detach();
+                record.setName("targetGroup");
+                response.addContent(record);
 
-		for (String groupId : myGroups)
-		{
-			@SuppressWarnings("unchecked")
-            List<Element> records = Lib.local.retrieveById(dbms, "Groups", groupId).getChildren();
+                // List all group users or administrator
+                final List<User> administrators = context.getBean(UserRepository.class).findAllByProfile(Profile.Administrator);
 
-			if (!records.isEmpty())
-			{
-				Element record  = records.get(0);
-				record.detach();
-				record.setName("targetGroup");
-				response.addContent(record);
-				// List all group users or administrator
-				String query = "SELECT id, surname, name, username FROM Users LEFT JOIN UserGroups ON (id = userId) "+
-									" WHERE (groupId=? AND usergroups.profile != 'RegisteredUser') OR users.profile = 'Administrator'";
+                final Specification<UserGroup> userGroupSpec = not(UserGroupSpecs.hasProfile(Profile.RegisteredUser)).and(UserGroupSpecs.hasGroupId(groupId));
 
-				Element editors = dbms.select(query, Integer.valueOf(groupId));
-
+                final List<User> nonRegisteredUsersInGroups = context.getBean(UserRepository.class).findAllUsersInUserGroups(userGroupSpec);
                 // Avoid duplicated users: if a user is a Reviewer in a group, in the database exists a row as Editor also
-                List<String> editorsId = new ArrayList<String>();
+                Set<Integer> editorsId = new HashSet<Integer>();
 
-                for (Object o : editors.getChildren())
-				{
-					Element editor = (Element) o;
-                    if (editorsId.contains(editor.getChildText("id"))) continue;
+                for (User editor : Iterables.concat(administrators, nonRegisteredUsersInGroups)) {
+                    if (editorsId.contains(editor.getId())) {
+                        continue;
+                    }
+                    record.addContent(editor.asXml().setName("editor"));
+                    editorsId.add(editor.getId());
+                }
+            }
+        }
 
-					editor = (Element) editor.clone();
-					editor.removeChild("password");
-					editor.setName("editor");
-
-					record.addContent(editor);
-
-                    editorsId.add(editor.getChildText("id"));
-				}
-			}
-		}
-
-		return response;
-	}
+        return response;
+    }
 }
 
 //=============================================================================

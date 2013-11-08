@@ -20,8 +20,6 @@
     </monitors>
     <monitors package="jeeves.monitor.timer">
         <!-- timer must implement the MetricsFactory<Timer> interface -->
-       <timer class=".ResourceManagerResourceIsOpenTimer"/>
-       <timer class=".ResourceManagerWaitForResourceTimer"/>
        <timer class=".ServiceManagerGuiServicesTimer"/>
        <timer class=".ServiceManagerServicesTimer"/>
        <timer class=".ServiceManagerXslOutputTransformTimer"/>
@@ -32,17 +30,6 @@
        <!-- <counter class=".ResourceManagerOpenCounter"/> -->
     </monitors>
     <monitors package="org.fao.geonet.monitor.gauge">
-       <gauge class=".ResourceManagerIdleConnectionsGauge"/>
-       <gauge class=".ResourceManagerOpenConnectionsGauge"/>
-       <gauge class=".ResourceManagerMaxConnectionsGauge"/>
        <gauge class="jeeves.monitor.guage.FreeFileDescriptorsGuage"/>
     </monitors>
-    <services package="org.fao.geonet">
-        <service name="debug.openconnection.accessors">
-            <class name=".services.debug.OpenConnectionRequestors"/>
-        </service>
-        <service name="debug.filehandles">
-            <class name=".services.debug.ListOpenFileHandles"/>
-        </service>
-    </services>
 </config>

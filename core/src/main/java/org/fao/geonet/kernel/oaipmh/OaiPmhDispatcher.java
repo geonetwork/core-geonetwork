@@ -28,8 +28,8 @@ import java.util.Map;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
@@ -108,14 +108,14 @@ public class OaiPmhDispatcher
 
 		Map<String, String> params = null;
 
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 
 		try
 		{
 			url    = si.getSiteUrl() + context.getBaseUrl() +"/"+ Jeeves.Prefix.SERVICE +"/en/"+ context.getService();
 			params = OaiPmhFactory.extractParams(request);
 
-			AbstractRequest  req = OaiPmhFactory.parse(params);
+			AbstractRequest  req = OaiPmhFactory.parse(context.getApplicationContext(), params);
 			OaiPmhService    srv = hmServices.get(req.getVerb());
 			AbstractResponse res = srv.execute(req, context);
 
@@ -148,7 +148,7 @@ public class OaiPmhDispatcher
 	{
 		String schema = context.getAppPath() + Geonet.SchemaPath.OAI_PMH;
 
-        if(context.isDebug())
+        if(context.isDebugEnabled())
             context.debug("Validating against : "+ schema);
 
 		try

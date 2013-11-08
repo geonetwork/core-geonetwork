@@ -10,8 +10,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
-import jeeves.utils.Log;
-import jeeves.utils.QuartzSchedulerUtils;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.QuartzSchedulerUtils;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingInfo;

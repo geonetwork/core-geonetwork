@@ -1,13 +1,12 @@
 package jeeves.monitor.healthcheck;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
-
+import com.sun.management.UnixOperatingSystemMXBean;
+import com.yammer.metrics.core.HealthCheck;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
 
-import com.sun.management.UnixOperatingSystemMXBean;
-import com.yammer.metrics.core.HealthCheck;
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
 
 /**
  * Checks the number of free and used file handles and ensures that 1% are free.

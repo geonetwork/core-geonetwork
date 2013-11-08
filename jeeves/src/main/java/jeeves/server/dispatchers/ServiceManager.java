@@ -23,73 +23,66 @@
 
 package jeeves.server.dispatchers;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.Map.Entry;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
-
+import com.yammer.metrics.core.TimerContext;
+import jeeves.component.ProfileManager;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.JeevesException;
-import jeeves.exceptions.NotAllowedEx;
-import jeeves.exceptions.ServiceNotFoundEx;
-import jeeves.exceptions.ServiceNotMatchedEx;
 import jeeves.interfaces.Service;
 import jeeves.monitor.MonitorManager;
 import jeeves.monitor.timer.ServiceManagerGuiServicesTimer;
 import jeeves.monitor.timer.ServiceManagerServicesTimer;
 import jeeves.monitor.timer.ServiceManagerXslOutputTransformTimer;
-import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.Call;
 import jeeves.server.dispatchers.guiservices.GuiService;
-import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.dispatchers.guiservices.XmlFile;
-import jeeves.server.resources.ProviderManager;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
-import jeeves.utils.BLOB;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.Log;
-import jeeves.utils.SOAPUtil;
-import jeeves.utils.SerialFactory;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
-
+import org.fao.geonet.Constants;
+import org.fao.geonet.Util;
+import org.fao.geonet.exceptions.JeevesException;
+import org.fao.geonet.exceptions.NotAllowedEx;
+import org.fao.geonet.exceptions.ServiceNotFoundEx;
+import org.fao.geonet.exceptions.ServiceNotMatchedEx;
+import org.fao.geonet.utils.*;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.yammer.metrics.core.TimerContext;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 //=============================================================================
+@Component
+@Lazy
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Transactional
+public class ServiceManager {
+	private Map<String, ArrayList<ServiceInfo>> htServices = new HashMap<String, ArrayList<ServiceInfo>>(100);
+	private Map<String, Object> htContexts = new HashMap<String, Object>();
+	private List<ErrorPage> vErrorPipe = new ArrayList<ErrorPage>();
+	private List<GuiService> vDefaultGui = new ArrayList<GuiService>();
 
-public class ServiceManager
-{
-	private Hashtable<String, ArrayList<ServiceInfo>> htServices = 
-		new Hashtable<String, ArrayList<ServiceInfo>>(100);
-	private Hashtable<String, Object> htContexts = 
-		new Hashtable<String, Object>();
-	private Vector<ErrorPage> vErrorPipe = new Vector<ErrorPage>();
-	private Vector<GuiService> vDefaultGui = new Vector<GuiService>();
 
-    private ProviderManager providMan;
-    private ProfileManager  profilMan;
-    private MonitorManager monitorManager;
-    private XmlCacheManager xmlCacheManager;
-
-	private SerialFactory   serialFact;
     private String  appPath;
     private String  baseUrl;
     private String  uploadDir;
@@ -100,7 +93,10 @@ public class ServiceManager
     private JeevesServlet servlet;
     private boolean startupError = false;
     private Map<String,String> startupErrors;
-    private JeevesApplicationContext jeevesApplicationContext;
+    @Autowired
+    private ConfigurableApplicationContext jeevesApplicationContext;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     //---------------------------------------------------------------------------
 	//---
@@ -115,13 +111,7 @@ public class ServiceManager
     public void setMaxUploadSize  (int  size)     { maxUploadSize  = size;  }
 	public void setDefaultLocal   (boolean yesno) { defaultLocal   = yesno; }
 
-	public void setProviderMan  (ProviderManager p) { providMan  = p; }
-	public void setMonitorMan  (MonitorManager mm) { monitorManager  = mm; }
-	public void setXmlCacheManager  (XmlCacheManager xcm) { xmlCacheManager  = xcm; }
-    public void setApplicationContext(JeevesApplicationContext c) { this.jeevesApplicationContext = c;}
-
-	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
-	public void setServlet(JeevesServlet serv) { servlet = serv; }
+    public void setServlet(JeevesServlet serv) { servlet = serv; }
     public void setStartupErrors(Map<String,String> errors)   { startupErrors = errors; startupError = true; }
 	public boolean isStartupError() { return startupError; }
 
@@ -133,14 +123,6 @@ public class ServiceManager
 
 		if (!baseUrl.startsWith("/") && baseUrl.length() != 0)
 			baseUrl = "/"+ baseUrl;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public ProfileManager loadProfiles(ServletContext servletContext, String file) throws Exception
-	{
-		profilMan = new ProfileManager(servletContext, appPath, appPath + Jeeves.Path.WEBINF + file);
-		return profilMan;
 	}
 
 	//---------------------------------------------------------------------------
@@ -170,8 +152,8 @@ public class ServiceManager
 		String sheet = srv.getAttributeValue(ConfigFile.Service.Attr.SHEET);
 		String cache = srv.getAttributeValue(ConfigFile.Service.Attr.CACHE);
 
-		ServiceInfo si = new ServiceInfo(appPath);
-
+		ServiceInfo si = this.jeevesApplicationContext.getBean(ServiceInfo.class);
+        si.setAppPath(appPath);
 		si.setMatch(match);
 		si.setSheet(sheet);
 		si.setCache(cache);
@@ -224,11 +206,13 @@ public class ServiceManager
 
 		String name = clas.getAttributeValue(ConfigFile.Class.Attr.NAME);
 
-		if (name == null)
-			throw new IllegalArgumentException("Missing 'name' attrib in 'class' element");
+		if (name == null) {
+            throw new IllegalArgumentException("Missing 'name' attrib in 'class' element");
+        }
 
-		if (name.startsWith("."))
-			name = pack + name;
+		if (name.startsWith(".")) {
+            name = pack + name;
+        }
 
 		//--- create instance
 
@@ -343,7 +327,8 @@ public class ServiceManager
 
 	public ServiceContext createServiceContext(String name, JeevesApplicationContext jeevesApplicationContext)
 	{
-		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, xmlCacheManager, monitorManager, providMan, serialFact, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, htContexts,
+                entityManager);
 
 		context.setBaseUrl(baseUrl);
 		context.setLanguage("?");
@@ -358,7 +343,8 @@ public class ServiceManager
 	}
 
 	public void dispatch(ServiceRequest req, UserSession session) {
-		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext, xmlCacheManager, monitorManager, providMan, serialFact, profilMan, htContexts);
+		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext,
+                htContexts, entityManager);
 		dispatch(req, session, context);
 	}
 
@@ -367,7 +353,6 @@ public class ServiceManager
 	//--- Dispatching methods
 	//---
 	//---------------------------------------------------------------------------
-
 	public void dispatch(ServiceRequest req, UserSession session, ServiceContext context)
 	{
 		context.setBaseUrl(baseUrl);
@@ -392,11 +377,10 @@ public class ServiceManager
 
 		try
 		{
-			while(true)
-			{
+			while (true) {
 				String srvName = req.getService();
 
-				info("Dispatching : " +srvName);
+				info("Dispatching : " + srvName);
 				logParameters(req.getParams());
 
 				ArrayList<ServiceInfo> al = htServices.get(srvName);
@@ -414,8 +398,7 @@ public class ServiceManager
 					}
 				}
 
-				if (srvInfo == null)
-				{
+				if (srvInfo == null) {
 					error("Service not matched in list : " +srvName);
 					throw new ServiceNotMatchedEx(srvName);
 				}
@@ -423,8 +406,8 @@ public class ServiceManager
 				//---------------------------------------------------------------------
 				//--- check access
 
-                TimerContext timerContext = monitorManager.getTimer(ServiceManagerServicesTimer.class).time();
-                try{
+                TimerContext timerContext = getMonitorManager().getTimer(ServiceManagerServicesTimer.class).time();
+                try {
 				    response = srvInfo.execServices(req.getParams(), context);
                 } finally {
                     timerContext.stop();
@@ -438,8 +421,7 @@ public class ServiceManager
                 }
 
                 if (context.getStatusCode() != null) {
-                    ((ServiceRequest) req).setStatusCode(context
-                            .getStatusCode());
+                    req.setStatusCode(context.getStatusCode());
                 }
 				//---------------------------------------------------------------------
 				//--- handle forward
@@ -447,14 +429,11 @@ public class ServiceManager
 				OutputPage outPage = srvInfo.findOutputPage(response);
 				String forward = dispatchOutput(req, context, response, outPage, srvInfo.isCacheSet());
 
-				if (forward == null)
-				{
-					info(" -> dispatch ended for : " +srvName);
+				if (forward == null) {
+					info(" -> dispatch ended for : " + srvName);
 					return;
-				}
-				else
-				{
-					info(" -> forwarding to : " +forward);
+				} else {
+					info(" -> forwarding to : " + forward);
 
                     // Use servlet redirect for user.login and user.logout services.
                     // TODO: Make redirect configurable for services in jeeves
@@ -491,7 +470,11 @@ public class ServiceManager
 		}
 	}
 
-	//---------------------------------------------------------------------------
+    private MonitorManager getMonitorManager() {
+        return this.jeevesApplicationContext.getBean(MonitorManager.class);
+    }
+
+    //---------------------------------------------------------------------------
 	//--- Handle error
 	//---------------------------------------------------------------------------
 
@@ -627,7 +610,7 @@ public class ServiceManager
                     
                     if (req.hasJSONOutput()) {
                         req.beginStream("application/json; charset=UTF-8", cache);
-                        req.getOutputStream().write(Xml.getJSON(response).getBytes(Jeeves.ENCODING));
+                        req.getOutputStream().write(Xml.getJSON(response).getBytes(Constants.ENCODING));
                         req.endStream();
                     } else {
                         req.beginStream("application/xml; charset=UTF-8", cache);
@@ -749,7 +732,7 @@ public class ServiceManager
 
 			String  styleSheet = outPage.getStyleSheet();
 			Element guiElem;
-            TimerContext guiServicesTimerContext = monitorManager.getTimer(ServiceManagerGuiServicesTimer.class).time();
+            TimerContext guiServicesTimerContext = getMonitorManager().getTimer(ServiceManagerGuiServicesTimer.class).time();
             try {
                 guiElem = outPage.invokeGuiServices(context, response, vDefaultGui);
             } finally {
@@ -964,7 +947,7 @@ public class ServiceManager
 	static  void info   (String message) { Log.info   (Log.SERVICE, message); }
 	private void warning(String message) { Log.warning(Log.SERVICE, message); }
 	static  void error  (String message) { Log.error  (Log.SERVICE, message); }
-	public ProfileManager getProfileManager() { return profilMan; }
+	public ProfileManager getProfileManager() { return jeevesApplicationContext.getBean(ProfileManager.class); }
 }
 
 //=============================================================================

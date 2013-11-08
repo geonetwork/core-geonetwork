@@ -1,22 +1,29 @@
 package org.fao.geonet.services.statistics;
 
+import com.google.common.base.Optional;
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.IO;
-import jeeves.utils.Log;
-import org.fao.geonet.GeonetContext;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.statistic.MetadataStatisticSpec;
+import org.fao.geonet.repository.statistic.MetadataStatisticsQueries;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.awt.*;
 import java.io.File;
-import java.util.List;
+import java.util.Map;
+
+import static org.fao.geonet.repository.statistic.MetadataStatisticSpec.StandardSpecs.*;
 
 /**
  * Service to get the db-stored requests information group by source (node) id
@@ -28,8 +35,6 @@ import java.util.List;
  *
  */
 public class CatalogsPopularity extends NotInReadOnlyModeService {
-	/** the SQL query to get results */
-	private String query;
 	/** should we generate and send tooltips to client (caution, can slow down the process if
 	 * dataset is big)
 	 */
@@ -61,7 +66,6 @@ public class CatalogsPopularity extends NotInReadOnlyModeService {
 		this.createTooltips = Boolean.parseBoolean(params.getValue("createTooltips"));
 		this.chartWidth = Integer.parseInt(params.getValue("chartWidth"));
 		this.chartHeight = Integer.parseInt(params.getValue("chartHeight"));
-		this.query = params.getValue("query");
 	}
 
 	//--------------------------------------------------------------------------
@@ -72,37 +76,25 @@ public class CatalogsPopularity extends NotInReadOnlyModeService {
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
         String message = "";
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		
-		// gets the total popularity count (=100)
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		
-        // wont work if there is no metadata
-		String sumPopularityQuery = "select sum(popularity) as sumpop from metadata";
-		@SuppressWarnings("unchecked")
-        List<Element> sumPopularityResult  = dbms.select(sumPopularityQuery).getChildren();
-		if (sumPopularityResult.size() != 1) {
-			message = "cannot get popularity count";
+
+        final MetadataStatisticsQueries metadataStatistics = context.getBean(MetadataRepository.class).getMetadataStatistics();
+
+        int sumPopularityResult  = metadataStatistics.getTotalStat(popularitySum(), Optional.<Specification<Metadata>>absent());
+		if (sumPopularityResult == 0) {
+			message = "There is no popularity on any of the metadata.";
 			return null;
 		}
 		
-		int cnt = Integer.parseInt((sumPopularityResult.get(0)).getChildText("sumpop"));
 
-        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER,"query to get popularity by group:\n" + query);
-		dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		
-		DefaultPieDataset dataset = new DefaultPieDataset(); 
-		@SuppressWarnings("unchecked")
-        List<Element> resultSet = dbms.select(query).getChildren();
-		
-		for (Element record : resultSet) {
-			String popularity = record.getChildText("popu");
-			Double d = 0.0;
-			if (popularity.length() > 0 ) {
-				d = (Double.parseDouble(popularity) / cnt ) * 100; 
-			}
-			dataset.setValue(record.getChildText("source"),d);
-			//System.out.println(record.getChildText("groupname") + ", " + d);
+		DefaultPieDataset dataset = new DefaultPieDataset();
+
+        final Map<Source,Integer> sourceToStatMap = metadataStatistics.getSourceToStatMap(popularitySum());
+
+
+        for (Map.Entry<Source, Integer> entry : sourceToStatMap.entrySet()) {
+
+            double popularityPercentage = (entry.getValue().doubleValue() / sumPopularityResult) * 100;
+			dataset.setValue(entry.getKey().getUuid(), popularityPercentage);
 		}
 		
 		// create a chart... 
@@ -118,9 +110,10 @@ public class CatalogsPopularity extends NotInReadOnlyModeService {
 		//hard coded values for the moment. should come from a configuration file.
 		chart.setBackgroundPaint(Color.decode("#E7EDF5"));
 		String chartFilename = "popubycatalog_" + System.currentTimeMillis() + ".png";
-		
-		File statFolder = new File(gc.getBean(ServiceConfig.class).getMandatoryValue(
-				Geonet.Config.RESOURCES_DIR) + File.separator + "images" + File.separator + "statTmp");
+
+        final ServiceConfig serviceConfig = context.getBean(ServiceConfig.class);
+        File statFolder = new File(serviceConfig.getMandatoryValue(
+                Geonet.Config.RESOURCES_DIR) + File.separator + "images" + File.separator + "statTmp");
 		IO.mkdirs(statFolder, "Statistics directory");
 		File f = new File(statFolder, chartFilename);
 		this.imageMap = org.fao.geonet.services.statistics.ChartFactory.writeChartImage(

@@ -25,10 +25,10 @@ package org.fao.geonet.kernel;
 
 import java.sql.SQLException;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
@@ -38,22 +38,17 @@ import org.jdom.Element;
  */
 public class XmlSerializerDb extends XmlSerializer {
 
-		public XmlSerializerDb(SettingManager sMan) {
-			super(sMan);
-		}
-
     /**
      *  Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read
      *  is converted into xml, XLinks are resolved when config'd on.
      *
-     * @param dbms
-     * @param table
+     *
      * @param id
      * @return
      * @throws Exception
      */
-	public Element select(Dbms dbms, String table, String id) throws Exception {
-		Element rec = internalSelect(dbms, table, id, false);
+	public Element select(String id) throws Exception {
+		Element rec = internalSelect(id, false);
 		if (resolveXLinks()) Processor.detachXLink(rec);
 		return rec;
 	}
@@ -63,73 +58,56 @@ public class XmlSerializerDb extends XmlSerializer {
      * converted into xml, XLinks are NOT resolved even if they are config'd on - this is used when you want to do XLink
      * processing yourself.
      *
-     * @param dbms
-     * @param table
+     *
      * @param id
      * @return
      * @throws Exception
      */
-	public Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask) throws Exception {
-		return internalSelect(dbms, table, id, isIndexingTask);
+	public Element selectNoXLinkResolver(String id, boolean isIndexingTask) throws Exception {
+		return internalSelect(id, isIndexingTask);
 	}
 
     /**
      * TODO javadoc.
      *
-     * @param dbms
-     * @param schema
-     * @param xml
-     * @param serial
-     * @param source
-     * @param uuid
-     * @param createDate
-     * @param changeDate
-     * @param isTemplate
-     * @param title
-     * @param owner
-     * @param groupOwner
-     * @param docType
-		 * @param session
-     * @return
+     *
+     * @param newMetadata the metadata to insert
+     * @param dataXml the data to set on the metadata before saving
+     * @param context a service context
+     * @return the saved metadata
      * @throws SQLException
      */
-	public String insert(Dbms dbms, String schema, Element xml, int serial,
-					 String source, String uuid, String createDate,
-					 String changeDate, String isTemplate, String title,
-					 int owner, String groupOwner, String docType, ServiceContext context) 
-					 throws SQLException {
-
-		return insertDb(dbms, schema, xml, serial, source, uuid, createDate, changeDate, isTemplate, xml.getQualifiedName(), title, owner, groupOwner, docType);
+    public Metadata insert(final Metadata newMetadata, final Element dataXml,ServiceContext context) throws SQLException {
+		return insertDb(newMetadata, dataXml, context);
 
 	}
 
     /**
      *  Updates an xml element into the database. The new data replaces the old one.
      *
-     * @param dbms
+     *
      * @param id
      * @param xml
      * @param changeDate
      * @param updateDateStamp
      * @param context
-     * @param userId
      * @throws SQLException
      */
-	public void update(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) throws SQLException {
-		updateDb(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, uuid);
+	public void update(String id, Element xml, String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) throws SQLException {
+		updateDb(id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, uuid);
 	}
 
     /**
      * Deletes an xml element given its id.
      *
-     * @param dbms
-     * @param table
+     *
+     *
      * @param id
 		 * @param context
      * @throws Exception
      */
-	public void delete(Dbms dbms, String table, String id, ServiceContext context) throws Exception {
-		deleteDb(dbms, table, id);
+	public void delete(String id, ServiceContext context) throws Exception {
+		deleteDb(id);
 	}
 
 }

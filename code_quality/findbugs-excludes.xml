@@ -8,6 +8,10 @@
 		<Class name="~.*\..*Test" />
 	</Match>
 
+    <!-- 			Domain Exceptions 					-->
+	<Match>
+		<Class name="~org\.fao\.geonet\.domain\.\S+_$" />
+	</Match>
     <!-- 			Oaipmh Exceptions 					-->
 	<Match>
 		<Class name="org.fao.oaipmh.util.ISODate" />
@@ -92,9 +96,17 @@
 		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
 		<Method name="serviceSpecificExec"/>
 	</Match>
-	<Match>
-		<Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
-	</Match>
+    <Match>
+        <Class name="org.fao.geonet.DatabaseMigration" />
+        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
+        <Method name="newLookup"/>
+    </Match>
+    <Match>
+        <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
+    </Match>
+    <Match>
+        <Class name="org.fao.geonet.services.ownership.OwnershipUtils$1" />
+    </Match>
 
 	
 <!-- The following bugs are hard to fix should be fixed because they can cause problems in servers with multiple geonetworks running -->	

@@ -27,11 +27,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.XmlRequest;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.util.Lib;
 //import org.fao.oaipmh.util.Xml;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
@@ -47,9 +49,16 @@ public abstract class AbstractRequest
 	//---------------------------------------------------------------------------
 
 	private File      schemaPath;
-	private Transport transport = new Transport();
-	
-	//---------------------------------------------------------------------------
+	private final XmlRequest transport;
+
+    public AbstractRequest(GeonetHttpRequestFactory transport) {
+        this.transport = transport.createXmlRequest();
+    }
+    public AbstractRequest(XmlRequest transport) {
+        this.transport = transport;
+    }
+
+    //---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---
@@ -73,16 +82,8 @@ public abstract class AbstractRequest
 	/**
 	 * @return the transport
 	 */
-	public Transport getTransport() {
+	public XmlRequest getTransport() {
 		return transport;
-	}
-
-
-	/**
-	 * @param transport the transport to set
-	 */
-	public void setTransport(Transport transport) {
-		this.transport = transport;
 	}
 
 
@@ -100,18 +101,19 @@ public abstract class AbstractRequest
 	protected Element sendRequest(Map<String, String> params) throws IOException, OaiPmhException,
 																						  JDOMException, SAXException, Exception
 	{
-		transport.clearParameters();
+		transport.clearParams();
 
 		for (Map.Entry<String, String> param: params.entrySet()) {
-			transport.addParameter(param.getKey(), param.getValue());
+			transport.addParam(param.getKey(), param.getValue());
 		}
 
-		transport.addParameter("verb", getVerb());
+		transport.addParam("verb", getVerb());
 
 		Element response = transport.execute();
 
-		if (!Lib.isRootValid(response))
-			throw new Exception("Response is not in OAI-PMH format");
+		if (!Lib.isRootValid(response)) {
+            throw new Exception("Response is not in OAI-PMH format");
+        }
 
 		//--- validate the result
 		Xml.validate(response);

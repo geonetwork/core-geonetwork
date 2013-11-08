@@ -24,19 +24,28 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.ServiceNotAllowedEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specifications;
+
+import java.util.List;
+
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Creates a metadata copying data from a given template.
@@ -58,8 +67,7 @@ public class Create extends NotInReadOnlyModeService {
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getBean(DataManager.class);
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		
+
 		String child = Util.getParam(params, Params.CHILD, "n");
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 		String id = "";
@@ -70,12 +78,12 @@ public class Create extends NotInReadOnlyModeService {
 		try {
 			uuid = Util.getParam(params, Params.UUID);
 			// lookup ID by UUID
-			id = dm.getMetadataId(dbms, uuid);
+			id = dm.getMetadataId(uuid);
 		}
 		catch(BadInputEx x) {
 			try {
 				id = Util.getParam(params, Params.ID);
-				uuid = dm.getMetadataUuid(dbms, id);
+				uuid = dm.getMetadataUuid(id);
 			}
 			// request does not contain ID
 			catch(BadInputEx xx) {
@@ -88,21 +96,22 @@ public class Create extends NotInReadOnlyModeService {
 		
 		// TODO : Check user can create a metadata in that group
 		UserSession user = context.getUserSession();
-		if (!user.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
-			String selectGroupIdQuery = "SELECT groupId FROM UserGroups WHERE profile='Editor' AND userId=? AND groupId=?";
-            @SuppressWarnings("unchecked")
-            java.util.List<Element> list = dbms.select(selectGroupIdQuery, 
-						Integer.valueOf(user.getUserId()),
-						Integer.valueOf(groupOwner)).getChildren();
-			if (list.size() == 0) {
+		if (user.getProfile() != Profile.Administrator) {
+            final Specifications<UserGroup> spec = where(UserGroupSpecs.hasProfile(Profile.Editor))
+                    .and(UserGroupSpecs.hasUserId(user.getUserIdAsInt()))
+                    .and(UserGroupSpecs.hasGroupId(Integer.valueOf(groupOwner)));
+
+            final List<UserGroup> userGroups = context.getBean(UserGroupRepository.class).findAll(spec);
+
+			if (userGroups.size() == 0) {
 				throw new ServiceNotAllowedEx("Service not allowed. User needs to be Editor in group with id " + groupOwner);
 			}
 		}
 		
 		//--- query the data manager
 
-		String newId = dm.createMetadata(context, dbms, id, groupOwner, context.getSerialFactory(),
-												  gc.getSiteId(), context.getUserSession().getUserIdAsInt(), 
+        String newId = dm.createMetadata(context, id, groupOwner,
+                gc.getBean(SettingManager.class).getSiteId(), context.getUserSession().getUserIdAsInt(),
 												  (child.equals("n")?null:uuid), isTemplate, haveAllRights);
 
         Element response = new Element(Jeeves.Elem.RESPONSE);

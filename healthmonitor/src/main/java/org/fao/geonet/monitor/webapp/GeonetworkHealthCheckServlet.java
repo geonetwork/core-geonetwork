@@ -10,9 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import jeeves.utils.Xml;
-
-import org.hibernate.exception.ExceptionUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import com.yammer.metrics.HealthChecks;

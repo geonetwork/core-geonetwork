@@ -24,57 +24,68 @@
 package org.fao.geonet.services.category;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import org.fao.geonet.constants.Geonet;
+
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.domain.Language;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
+
+import javax.annotation.Nonnull;
 
 /**
  * Update the information of a category.
  */
-public class Update extends NotInReadOnlyModeService
-{
-	public void init(String appPath, ServiceConfig params) throws Exception {
+public class Update extends NotInReadOnlyModeService {
+    public void init(String appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
     @Override
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		String id   = params.getChildText(Params.ID);
-		String name = Util.getParam(params, Params.NAME);
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        String id = params.getChildText(Params.ID);
+        final String name = Util.getParam(params, Params.NAME);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        Element elRes = new Element(Jeeves.Elem.RESPONSE);
+        final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
 
-		Element elRes = new Element(Jeeves.Elem.RESPONSE);
+        MetadataCategory category;
+        if (id == null || "".equals(id))    // For Adding new category
+        {
+            category = new MetadataCategory();
+            category.setName(name);
 
-		if (id == null || "".equals(id))	// For Adding new category
-		{
-			int newId = context.getSerialFactory().getSerial(dbms, "Categories");
+            final LanguageRepository langRepository = context.getBean(LanguageRepository.class);
+            java.util.List<Language> allLanguages = langRepository.findAll();
+            for (Language l : allLanguages) {
+                category.getLabelTranslations().put(l.getId(), name);
+            }
 
-			dbms.execute("INSERT INTO Categories(id, name) VALUES (?, ?)", newId, name);
-			Lib.local.insert(dbms, "Categories", newId, name);
+            categoryRepository.save(category);
+            elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.ADDED));
+        } else {
+            categoryRepository.update(Integer.valueOf(id), new Updater<MetadataCategory>() {
+                @Override
+                public void apply(@Nonnull MetadataCategory entity) {
+                    entity.setName(name);
+                }
+            });
 
-			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.ADDED));
-		}
-		else 	//--- For Update
-		{
-			dbms.execute("UPDATE Categories SET name=? WHERE id=?", name, Integer.valueOf(id));
+            elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
+        }
 
-			elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
-		}
-
-		return elRes;
-	}
+        return elRes;
+    }
 }

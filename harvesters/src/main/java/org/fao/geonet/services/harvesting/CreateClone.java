@@ -24,13 +24,10 @@
 package org.fao.geonet.services.harvesting;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.ObjectNotFoundEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Element;
 
@@ -63,10 +60,7 @@ public class CreateClone implements Service {
 		//--- if 'id' is null all entries are returned
 		String id = params.getChildText("id");
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-        String newId = gc.getBean(HarvestManager.class).createClone(dbms, id, context.getUserSession().getUserId(), context);
+        String newId = context.getBean(HarvestManager.class).createClone(id, context.getUserSession().getUserId(), context);
 
 		if (newId != null) {
 			Element elem = new Element(Jeeves.Elem.RESPONSE).addContent(new Element("id").setText(newId));

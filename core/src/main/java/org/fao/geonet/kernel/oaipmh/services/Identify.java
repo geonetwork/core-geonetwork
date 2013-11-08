@@ -24,18 +24,19 @@
 package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.oaipmh.requests.AbstractRequest;
 import org.fao.oaipmh.requests.IdentifyRequest;
 import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.responses.IdentifyResponse;
 import org.fao.oaipmh.responses.IdentifyResponse.DeletedRecord;
 import org.fao.oaipmh.responses.IdentifyResponse.Granularity;
-import org.fao.oaipmh.util.ISODate;
 import org.jdom.Element;
 
 import java.util.List;
@@ -55,7 +56,7 @@ public class Identify implements OaiPmhService
 	public AbstractResponse execute(AbstractRequest request, ServiceContext context) throws Exception
 	{
 		IdentifyResponse res = new IdentifyResponse();
-		SettingInfo      si  = new SettingInfo(context);
+		SettingInfo      si  = context.getBean(SettingInfo.class);
 
 		String baseUrl = si.getSiteUrl() + context.getBaseUrl() +"/"+ Jeeves.Prefix.SERVICE +"/en/"+ context.getService();
 
@@ -73,23 +74,13 @@ public class Identify implements OaiPmhService
 
 	private ISODate getEarliestDS(ServiceContext context) throws Exception
 	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		String query = "SELECT min(changeDate) as mcd FROM Metadata";
-
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query).getChildren();
+        final Metadata oldestByChangeDate = context.getBean(MetadataRepository.class).findOneOldestByChangeDate();
 
 		//--- if we don't have metadata, just return 'now'
-		if (list.isEmpty())
+		if (oldestByChangeDate == null)
 			return new ISODate();
 
-		Element rec = list.get(0);
-	
-		String date = rec.getChildText("mcd");
-		if (date == null || date.equals("")) return new ISODate();
-
-		return new ISODate(date);
+		return oldestByChangeDate.getDataInfo().getChangeDate();
 	}
 }
 

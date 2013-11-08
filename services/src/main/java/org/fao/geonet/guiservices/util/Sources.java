@@ -24,12 +24,12 @@
 package org.fao.geonet.guiservices.util;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.SourceRepository;
 import org.jdom.Element;
 
 //=============================================================================
@@ -49,12 +49,10 @@ public class Sources implements Service
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm =gc.getBean(SettingManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
 		//--- create local node
 
-		String name   = sm.getValue("system/site/name");
-		String siteId = sm.getValue("system/site/siteId");
+		String name   = sm.getSiteName();
+		String siteId = sm.getSiteId();
 
 		Element local = new Element("record");
 
@@ -62,12 +60,10 @@ public class Sources implements Service
 		local.addContent(new Element("siteid").setText(siteId));
 
 		//--- retrieve known nodes
+        final Element asXml = context.getBean(SourceRepository.class).findAllAsXml();
+        asXml.addContent(local);
 
-		Element nodes = dbms.select("SELECT uuid as siteId, name FROM Sources");
-		nodes.addContent(local);
-
-
-		return nodes;
+		return asXml;
 	}
 }
 

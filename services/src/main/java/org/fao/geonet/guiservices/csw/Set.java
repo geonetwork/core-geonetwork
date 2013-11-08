@@ -24,18 +24,21 @@ package org.fao.geonet.guiservices.csw;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
+import org.fao.geonet.domain.CswCapabilitiesInfoField;
+import org.fao.geonet.domain.Language;
+import org.fao.geonet.repository.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
+import org.fao.geonet.repository.LanguageRepository;
 import org.jdom.Element;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Set implements Service {
@@ -44,50 +47,61 @@ public class Set implements Service {
 
 	public Element exec(Element params, ServiceContext context) throws Exception {
 	    GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
         // Save values in settings
-        saveCswServerConfig(params, gc.getBean(SettingManager.class), dbms);
+        saveCswServerConfig(params, gc.getBean(SettingManager.class));
 
         // Process parameters and save capabilities information in database
-        saveCswCapabilitiesInfo(params, gc, dbms);
+        saveCswCapabilitiesInfo(params, context);
 
         // Build response
         return new Element(Jeeves.Elem.RESPONSE).setText("ok");
 	}
 
-    private void saveCswServerConfig(Element params, SettingManager sm, Dbms dbms)
+    private void saveCswServerConfig(Element params, SettingManager settingManager)
             throws Exception {
 
         String cswEnableValue = Util.getParam(params, "csw.enable", "");
-        sm.setValue(dbms, "system/csw/enable", cswEnableValue.equals("on"));
+        settingManager.setValue("system/csw/enable", cswEnableValue.equals("on"));
 
 
         String cswMetadataPublicValue = Util.getParam(params, "csw.metadataPublic", "");
-        sm.setValue(dbms, "system/csw/metadataPublic", cswMetadataPublicValue.equals("on"));
+        settingManager.setValue("system/csw/metadataPublic", cswMetadataPublicValue.equals("on"));
 
         // Save contact
         String contactIdValue = Util.getParam(params, "csw.contactId", "-1");
-        sm.setValue(dbms, "system/csw/contactId", contactIdValue);
+        settingManager.setValue("system/csw/contactId", contactIdValue);
     }
 
-    private void saveCswCapabilitiesInfo(Element params, GeonetContext gc, Dbms dbms)
+    private void saveCswCapabilitiesInfo(Element params, ServiceContext serviceContext)
             throws Exception {
 
-        Map<String, String> langs = Lib.local.getLanguages(dbms);
+        List<Language> languages = serviceContext.getBean(LanguageRepository.class).findAll();
 
-        for(String langId : langs.keySet()) {
+        List<CswCapabilitiesInfoField> toSave = new ArrayList<CswCapabilitiesInfoField>();
 
-            CswCapabilitiesInfo cswCapInfo = new CswCapabilitiesInfo();
+        final CswCapabilitiesInfoFieldRepository capabilitiesInfoFieldRepository = serviceContext.getBean(CswCapabilitiesInfoFieldRepository.class);
+        for (Language language : languages) {
+            CswCapabilitiesInfo cswCapInfo = capabilitiesInfoFieldRepository.findCswCapabilitiesInfo(language.getId());
 
-            cswCapInfo.setLangId(langId);
-            cswCapInfo.setTitle(params.getChild("csw.title_" + langId).getValue());
-            cswCapInfo.setAbstract(params.getChild("csw.abstract_" + langId).getValue());
-            cswCapInfo.setFees(params.getChild("csw.fees_" + langId).getValue());
-            cswCapInfo.setAccessConstraints(params.getChild("csw.accessConstraints_" + langId).getValue());
+            final String langId = language.getId();
+            cswCapInfo.setTitle(getValue(params, "csw.title_" + langId));
+            cswCapInfo.setAbstract(getValue(params, "csw.abstract_" + langId));
+            cswCapInfo.setFees(getValue(params, "csw.fees_" + langId));
+            cswCapInfo.setAccessConstraints(getValue(params, "csw.accessConstraints_" + langId));
 
-            // Save item
-            CswCapabilitiesInfo.saveCswCapabilitiesInfo(dbms, cswCapInfo);
+            toSave.addAll(cswCapInfo.getFields());
+        }
+
+        capabilitiesInfoFieldRepository.save(toSave);
+    }
+
+    private String getValue(Element params, String paramId) {
+        final Element child = params.getChild(paramId);
+        if (child != null) {
+            return child.getValue();
+        } else {
+            return "";
         }
     }
 

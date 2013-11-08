@@ -24,10 +24,9 @@
 package org.fao.geonet.services.thumbnail;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -74,14 +73,12 @@ public class Get implements Service
 
 		DataManager dataMan = gc.getBean(DataManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		String id = Util.getParam(params, Params.ID);
 
 		//-----------------------------------------------------------------------
 		//--- get metadata
 
-		Element result = dataMan.getThumbnails(dbms, id);
+		Element result = dataMan.getThumbnails(id);
 
 		if (result == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);

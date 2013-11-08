@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
@@ -47,7 +46,6 @@ public class SaveDisplayOrder implements Service {
 
 	public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         DataManager dm = gc.getBean(DataManager.class) ;
         @SuppressWarnings("unchecked")
         List<Element> requestParameters = params.getChildren();
@@ -59,12 +57,11 @@ public class SaveDisplayOrder implements Service {
             if (StringUtils.isNotEmpty(id) && !"_".equals(id)) {    // In Chrome with POST method, Ajax.Request sends <_/> parameters,
                 // If id is not an integer, exception will occur later.
                 String displayPosition = param.getText();
-                dm.updateDisplayOrder(dbms, id, displayPosition);
-                dbms.commit();
+                dm.updateDisplayOrder(id, displayPosition);
                 ids.add(id);
             }
         }
-        dm.indexInThreadPool(context, ids, dbms);
+        dm.indexMetadata(ids);
         return null;
     }
 }

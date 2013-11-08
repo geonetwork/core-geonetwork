@@ -25,12 +25,12 @@ package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.oaipmh.requests.AbstractRequest;
 import org.fao.oaipmh.requests.ListMetadataFormatsRequest;
 import org.fao.oaipmh.responses.AbstractResponse;
@@ -69,7 +69,7 @@ public class ListMetadataFormats implements OaiPmhService
 		String uuid = req.getIdentifier();
 		if (uuid != null)
 		{
-			String schema = Lib.getMetadataSchema(context, uuid);
+            String schema = context.getBean(MetadataRepository.class).findOneByUuid(uuid).getDataInfo().getSchemaId();
 			res.addFormat(getSchemaInfo(context, sm, schema));
 		}
 		else

@@ -24,12 +24,13 @@
 package org.fao.geonet.services.resources;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.IO;
-import jeeves.utils.Util;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.Util;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -77,32 +78,14 @@ public class Upload implements Service {
         // get info to log the upload
 
         UserSession session = context.getUserSession();
-        Dbms dbms = (Dbms) context.getResourceManager()
-                .open(Geonet.Res.MAIN_DB);
         String username = session.getUsername();
         if (username == null)
             username = "unknown (this shouldn't happen?)";
 
-        StringBuffer query = new StringBuffer();
-        query.append("SELECT m.id, m.source, m.uuid ");
-        query.append("FROM   Metadata m ");
-        query.append("WHERE  m.id = ?");
 
-        String siteId = "unknown";
-        String mdUuid = "unknown";
-        Element sites = dbms.select(query.toString(), Integer.valueOf(id));
-        if (sites != null) {
-            @SuppressWarnings("unchecked")
-            List<Element> sitesList = sites.getChildren();
-            for (Element site : sitesList) {
-                siteId = site.getChildText("source");
-                mdUuid = site.getChildText("uuid");
-                if (siteId == null)
-                    siteId = "unknown";
-                if (mdUuid == null)
-                    mdUuid = "unknown";
-            }
-        }
+        final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+
+        String mdUuid =  metadata.getUuid();
 
         // Jeeves will place the uploaded file name in the f_{ref} element
         // we do it this way because Jeeves will sanitize the name to remove

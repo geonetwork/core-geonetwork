@@ -26,6 +26,8 @@ package org.fao.oaipmh.requests;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.ListMetadataFormatsResponse;
 import org.jdom.JDOMException;
@@ -37,7 +39,11 @@ public class ListMetadataFormatsRequest extends AbstractRequest
 {
 	public static final String VERB = "ListMetadataFormats";
 
-	//---------------------------------------------------------------------------
+    public ListMetadataFormatsRequest(GeonetHttpRequestFactory transport) {
+        super(transport);
+    }
+
+    //---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---

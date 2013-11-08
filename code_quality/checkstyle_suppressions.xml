@@ -7,5 +7,17 @@
 <suppressions>
     <suppress files=".*Test.*\.java" checks="[a-zA-Z0-9]*"/>
     <suppress files=".*DummyGraph\.java" checks="[a-zA-Z0-9]*"/>
-    <suppress files=".*" checks="[a-zA-Z0-9]*"/>
+    <suppress files="core/.*" checks="[a-zA-Z0-9]*"/>
+    <suppress files="cachingxslt/.*" checks="[a-zA-Z0-9]*"/>
+    <suppress files="csw-server/.*" checks="[a-zA-Z0-9]*"/>
+    <suppress files="dummy-api/.*" checks="[a-zA-Z0-9]*"/>
+    <suppress files="harvesters/.*" checks="[a-zA-Z0-9]*"/>
+    <suppress files="health-monitor/.*" checks="[a-zA-Z0-9]*"/>
+    <suppress files="jeeves/.*" checks="[a-zA-Z0-9]*"/>
+    <suppress files="oaipmh/.*" checks="[a-zA-Z0-9]*"/>
+    <suppress files="services/.*" checks="[a-zA-Z0-9]*"/>
+    <suppress files="web-app/.*" checks="[a-zA-Z0-9]*"/>
+    <suppress files="common/.*" checks="[a-zA-Z0-9]*"/>
+    <suppress files="domain/.*_.java" checks="[a-zA-Z0-9]*"/>
+    <suppress files="domain/.*" checks="DesignForExtension"/>
 </suppressions>

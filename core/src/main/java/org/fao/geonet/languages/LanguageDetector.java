@@ -24,7 +24,7 @@ package org.fao.geonet.languages;
 import com.cybozu.labs.langdetect.Detector;
 import com.cybozu.labs.langdetect.DetectorFactory;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -111,12 +111,12 @@ public class LanguageDetector {
     /**
      * Creates mapping to ISO 639-2 for all languages supported by this language detector.
      *
+     *
+     *
      * @param path path to profiles directory
-     * @param context everywhere !
-     * @param dataManager Der DatenGeschäftsführer
      * @throws Exception hmm
      */
-    public static void init(String path, ServiceContext context, DataManager dataManager) throws Exception {
+    public static void init(String path) throws Exception {
         if(!LanguageDetector.languageLevelSupported) {
             throw new Exception(LanguageDetector.upgradeMessage);
         }

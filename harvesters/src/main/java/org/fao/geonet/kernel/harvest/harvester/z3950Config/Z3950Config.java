@@ -24,16 +24,16 @@
 package org.fao.geonet.kernel.harvest.harvester.z3950Config;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Logger;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.services.util.z3950.Repositories;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
 import java.io.File;

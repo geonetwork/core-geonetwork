@@ -79,8 +79,6 @@ public class GetRecordsRequest extends CatalogRequest
 	//---
 	//---------------------------------------------------------------------------
 
-    public GetRecordsRequest() { }
-
 	public GetRecordsRequest(ServiceContext context) { super(context);}
 
 	//---------------------------------------------------------------------------

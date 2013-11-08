@@ -29,11 +29,11 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
@@ -66,7 +66,7 @@ public class GetLatestUpdated implements Service
 	{
 		String sMaxItems           = config.getValue("maxItems",           "10");
 		String sTimeBetweenUpdates = config.getValue("timeBetweenUpdates", "60");
-		_timeBetweenUpdates = Integer.parseInt(sTimeBetweenUpdates) * 1000;
+		_timeBetweenUpdates = Long.parseLong(sTimeBetweenUpdates) * 1000;
 		_maxItems           = Integer.parseInt(sMaxItems);
 		_config             = config;
 	}
@@ -100,7 +100,7 @@ public class GetLatestUpdated implements Service
 			Log.info(Geonet.SEARCH_ENGINE, "Creating latest updates searcher");
 			MetaSearcher searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
 			searcher.search(context, _request, _config);
-			Map<Integer,MdInfo> allMdInfo = ((LuceneSearcher)searcher).getAllMdInfo(_maxItems);
+			Map<Integer,Metadata> allMdInfo = ((LuceneSearcher)searcher).getAllMdInfo(_maxItems);
 			for (Integer id : allMdInfo.keySet()) {
 				try {
 					boolean forEditing = false;

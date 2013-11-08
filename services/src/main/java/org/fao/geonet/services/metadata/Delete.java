@@ -24,17 +24,18 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationNotAllowedEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Element;
@@ -59,16 +60,14 @@ public class Delete extends BackupFileService {
 		DataManager   dataMan   = gc.getBean(DataManager.class);
 		AccessManager accessMan = gc.getBean(AccessManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		String id = Utils.getIdentifierFromParameters(params, context);
 		
 		//-----------------------------------------------------------------------
 		//--- check access
 
-		MdInfo info = dataMan.getMetadataInfo(dbms, id);
+        Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
 
-		if (info == null)
+		if (metadata == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		if (!accessMan.canEdit(context, id))
@@ -77,8 +76,8 @@ public class Delete extends BackupFileService {
 		//-----------------------------------------------------------------------
 		//--- backup metadata in 'removed' folder
 
-		if (info.template != MdInfo.Template.SUBTEMPLATE)
-			backupFile(context, id, info.uuid, MEFLib.doExport(context, info.uuid, "full", false, true, false));
+		if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE)
+			backupFile(context, id, metadata.getUuid(), MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false));
 
 		//-----------------------------------------------------------------------
 		//--- remove the metadata directory including the public and private directories.
@@ -88,7 +87,7 @@ public class Delete extends BackupFileService {
 		//-----------------------------------------------------------------------
 		//--- delete metadata and return status
 
-		dataMan.deleteMetadata(context, dbms, id);
+		dataMan.deleteMetadata(context, id);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));

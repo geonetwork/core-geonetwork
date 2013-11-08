@@ -23,14 +23,14 @@
 
 package org.fao.geonet.services.config;
 
-import jeeves.JeevesProxyInfo;
+import jeeves.server.JeevesProxyInfo;
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.ProxyInfo;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.ProxyInfo;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -76,7 +76,7 @@ public class DoActions implements Service
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager		dataMan = gc.getBean(DataManager.class);
 		SettingManager settingMan = gc.getBean(SettingManager.class);
-		SettingInfo si = new SettingInfo(settingMan);
+		SettingInfo si = context.getBean(SettingInfo.class);
 
 		try {
 			if (si.getLuceneIndexOptimizerSchedulerEnabled()) {

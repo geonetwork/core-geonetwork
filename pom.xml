@@ -92,6 +92,11 @@
     <!-- =========================================================== -->
     <pluginManagement>
       <plugins>
+		<plugin>
+			<groupId>org.bsc.maven</groupId>
+			<artifactId>maven-processor-plugin</artifactId>
+          <version>2.2.3</version>
+		</plugin>
         <plugin>
           <groupId>net.alchim31.maven</groupId>
           <artifactId>yuicompressor-maven-plugin</artifactId>
@@ -171,9 +176,7 @@
           <target>1.6</target>  <!-- The -target argument for the Java compiler. -->
           <debug>true</debug>   <!-- Whether to include debugging information.   -->
           <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
-          <excludes>
-            <exclude>**/trash/*.java</exclude>
-          </excludes>
+          <compilerArgument>-proc:none</compilerArgument> <!-- disable automatic annotation processing accoring to: http://docs.jboss.org/hibernate/jpamodelgen/1.0/reference/en-US/html_single/#d0e261 -->
         </configuration>
       </plugin>
 
@@ -239,6 +242,33 @@
           <outputDirectory>${project.build.directory}/release</outputDirectory>
         </configuration>
       </plugin>
+        <!-- run integration tests after unit tests -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+                <excludes>
+                    <exclude>**/*IntegrationTest.java</exclude>
+                </excludes>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>integration-test</id>
+                    <goals>
+                        <goal>test</goal>
+                    </goals>
+                    <phase>integration-test</phase>
+                    <configuration>
+                        <excludes>
+                            <exclude>none</exclude>
+                        </excludes>
+                        <includes>
+                            <include>**/*IntegrationTest.java</include>
+                        </includes>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
     </plugins>
   </build>
 
@@ -288,7 +318,11 @@
         <artifactId>jts</artifactId>
         <version>1.13</version>
       </dependency>
-
+        <dependency>
+            <groupId>com.github.lookfirst</groupId>
+            <artifactId>sardine</artifactId>
+            <version>5.0.1</version>
+        </dependency>
       <!-- universal character set detector -->
       <dependency>
         <groupId>com.googlecode.juniversalchardet</groupId>
@@ -372,12 +406,12 @@
       <dependency>
         <groupId>commons-dbcp</groupId>
         <artifactId>commons-dbcp</artifactId>
-        <version>1.3</version>
+        <version>1.4</version>
       </dependency>
       <dependency>
         <groupId>commons-pool</groupId>
         <artifactId>commons-pool</artifactId>
-        <version>1.5.5</version>
+        <version>1.6</version>
       </dependency>
       <dependency>
         <groupId>commons-io</groupId>
@@ -426,9 +460,9 @@
         <!-- Same as the dependency in commons-logging -->
       </dependency>
       <dependency>
-        <groupId>commons-httpclient</groupId>
-        <artifactId>commons-httpclient</artifactId>
-        <version>3.0.1</version>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>4.3.1</version>
       </dependency>
       <dependency>
         <groupId>xerces</groupId>
@@ -607,27 +641,10 @@
         <artifactId>lizard-tiff</artifactId>
         <version>1.0</version>
       </dependency>
-
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-annotations</artifactId>
-        <version>3.2.0.ga</version>
-        <exclusions>
-          <exclusion>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
       <dependency>
         <groupId>javax.media</groupId>
         <artifactId>jai_codec</artifactId>
         <version>1.1.3</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.persistence</groupId>
-        <artifactId>persistence-api</artifactId>
-        <version>1.0</version>
       </dependency>
       <dependency>
         <groupId>eu.medsea.mimeutil</groupId>
@@ -685,14 +702,9 @@
 
       <!-- Databased stuff -->
       <dependency>
-        <groupId>mckoi</groupId>
-        <artifactId>mckoi</artifactId>
-        <version>1.0.2</version>
-      </dependency>
-      <dependency>
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
-        <version>1.3.152</version>
+        <version>1.3.174</version>
       </dependency>
       <!-- Other stuff -->
       <dependency>
@@ -705,7 +717,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>13.0</version>
+        <version>15.0</version>
       </dependency>
 
       <!-- Monitoring libraries -->
@@ -734,7 +746,7 @@
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.10</version>
-        <!--<scope>test</scope>-->
+          <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
@@ -750,33 +762,27 @@
         <version>1.2</version>
       </dependency>
 
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-all</artifactId>
-        <version>1.9.0</version>
-      </dependency>
-
       <!-- db -->
-      <dependency>
-        <groupId>postgresql</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>9.1-901.jdbc3</version>
-      </dependency>
+      <!--<dependency>-->
+        <!--<groupId>postgresql</groupId>-->
+        <!--<artifactId>postgresql</artifactId>-->
+        <!--<version>9.1-901.jdbc3</version>-->
+      <!--</dependency>-->
       <dependency>
         <groupId>org.postgis</groupId>
         <artifactId>postgis-jdbc</artifactId>
         <version>1.3.3</version>
       </dependency>
       <!-- Postgres JDBC4 for Java 1.6 -->
-      <!--dependency>
+      <dependency>
         <groupId>postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>9.1-901.jdbc4</version>
-      </dependency-->
+      </dependency>
       <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
-        <version>5.1.12</version>
+        <version>5.1.26</version>
       </dependency>
       <!-- Not permitted under oracle licensing rules
       <dependency>
@@ -811,38 +817,99 @@
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
         <artifactId>spring-context-support</artifactId>
         <version>${spring.version}</version>
       </dependency>
       <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-aop</artifactId>
+          <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+            <groupId>aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.5.2</version>
+      </dependency>
+      <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-core</artifactId>
-        <version>${spring.version}</version>
+        <version>${spring.security.version}</version>
+		<exclusions>
+		  <exclusion>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-expression</artifactId>
+		  </exclusion>
+		</exclusions>
       </dependency>
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-cas</artifactId>
-        <version>${spring.version}</version>
+        <version>${spring.security.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-config</artifactId>
-        <version>${spring.version}</version>
+        <version>${spring.security.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-ldap</artifactId>
-        <version>${spring.version}</version>
+        <version>${spring.security.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-web</artifactId>
-        <version>${spring.version}</version>
+        <version>${spring.security.version}</version>
       </dependency>
-      <dependency>
+	  <dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-test</artifactId>
+		<version>${spring.version}</version>
+		<scope>test</scope>
+	  </dependency>
+	  
+	  <!-- Persistence dependencies -->
+    <dependency>
+	  <groupId>org.hibernate</groupId>
+	  <artifactId>hibernate-entitymanager</artifactId>
+	  <version>4.3.0.Beta5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-jpa</artifactId>
+	  <version>1.4.1.RELEASE</version>
+    </dependency>
+
+	<dependency>
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
         <version>2.0.1</version>
+      </dependency>
+      <dependency>
+          <groupId>net.sf.json-lib</groupId>
+          <artifactId>json-lib</artifactId>
+          <version>2.4</version>
+          <classifier>jdk15</classifier>
+      </dependency>
+      <dependency>
+          <groupId>xom</groupId>
+          <artifactId>xom</artifactId>
+          <version>1.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -940,18 +1007,19 @@
   <!--     Modules for the build in approximate dependency order   -->
   <!-- =========================================================== -->
   <modules>
+    <module>common</module>
     <module>cachingxslt</module>
     <module>jeeves</module>
     <module>sde</module>
-    <module>web-client</module>
     <module>web-ui</module>
     <module>domain</module>
-    <module>core</module>
     <module>oaipmh</module>
+    <module>core</module>
     <module>csw-server</module>
     <module>harvesters</module>
     <module>healthmonitor</module>
     <module>services</module>
+    <module>web-client</module>
     <module>web</module>
   </modules>
 
@@ -1000,7 +1068,8 @@
     <jetty.version>7.3.1.v20110307</jetty.version>
     <geotools.version>8.6</geotools.version>
     <lucene.version>4.1.0</lucene.version>
-    <spring.version>3.1.1.RELEASE</spring.version>
+    <spring.version>3.2.4.RELEASE</spring.version>
+	<spring.security.version>3.1.4.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>

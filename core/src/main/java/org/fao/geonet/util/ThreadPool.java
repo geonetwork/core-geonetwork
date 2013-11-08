@@ -33,7 +33,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 
@@ -66,7 +66,7 @@ public class ThreadPool {
 	    runTask(task,0,TimeUnit.SECONDS);
 	}
     public void runTask( Runnable task, int delayBeforeStart, TimeUnit unit ) {
-        if (Boolean.parseBoolean(System.getProperty(SEQUENTIAL_EXECUTION, "true"))) {
+        if (Boolean.parseBoolean(System.getProperty(SEQUENTIAL_EXECUTION, "false"))) {
             task.run();
         } else {
             this.task = task;

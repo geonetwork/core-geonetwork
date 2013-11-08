@@ -23,11 +23,10 @@
 
 package org.fao.geonet.services.thumbnail;
 
-import jeeves.exceptions.OperationAbortedEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -68,14 +67,12 @@ public class Unset extends NotInReadOnlyModeService {
 
 		DataManager dataMan = gc.getBean(DataManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		//--- check if the metadata has been modified from last time
 
 		if (version != null && !dataMan.getVersion(id).equals(version))
 			throw new ConcurrentUpdateEx(id);
 
-		Element result = dataMan.getThumbnails(dbms, id);
+		Element result = dataMan.getThumbnails(id);
 
 		if (result == null)
 			throw new OperationAbortedEx("Metadata not found", id);
@@ -90,7 +87,7 @@ public class Unset extends NotInReadOnlyModeService {
 		//-----------------------------------------------------------------------
 		//--- remove thumbnail
 
-		dataMan.unsetThumbnail(context, dbms, id, type.equals("small"), true);
+		dataMan.unsetThumbnail(context, id, type.equals("small"), true);
 		
 		
 		File thumbnail = new File(file);
@@ -99,7 +96,7 @@ public class Unset extends NotInReadOnlyModeService {
 				context.error("Error while deleting thumbnail: " + file);
 			}
 		} else {
-            if(context.isDebug())
+            if(context.isDebugEnabled())
 			    context.debug("Thumbnail does not exist: " + file);
 		}
 		
@@ -111,48 +108,6 @@ public class Unset extends NotInReadOnlyModeService {
 
 		return response;
 	}
-
-	/*
-	 * Remove thumbnail images. 
-	 * (Useful for harvester which can not edit metadata but could have
-	 * set up a thumbnail on harvesting
-	 * )
-	 */
-	public void removeThumbnailFile (String id,  String type, ServiceContext context) throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-		DataManager dataMan = gc.getBean(DataManager.class);
-
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		
-		Element result = dataMan.getThumbnails(dbms, id);
-		
-		if (result == null)
-			throw new OperationAbortedEx("Metadata not found", id);
-		
-		if (type == null) {
-			remove (result, "thumbnail", id, context);
-			remove (result, "large_thumbnail", id, context);
-		} else {
-			remove (result, type, id, context);
-		}
-		
-	}
-	
-	private void remove (Element result, String type, String id, ServiceContext context) throws Exception {
-		
-		result = result.getChild(type);
-		
-		if (result == null)
-			throw new OperationAbortedEx("Metadata has no thumbnail", id);
-
-		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + getFileName(result.getText());
-		
-		if (!new File(file).delete())
-			context.error("Error while deleting thumbnail : "+file);
-		
-		
-	} 
 	
 	//--------------------------------------------------------------------------
 	

@@ -23,13 +23,13 @@
 package org.fao.geonet.guiservices.csw.virtual;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.repository.ServiceRepository;
 import org.jdom.Element;
+
+import java.util.Map;
 
 /**
  * Retrieves a particular service
@@ -44,26 +44,20 @@ public class Get implements Service {
 
         String id = params.getChildText(Params.ID);
 
-        Dbms dbms = (Dbms) context.getResourceManager()
-                .open(Geonet.Res.MAIN_DB);
+        final ServiceRepository serviceRepository = context.getBean(ServiceRepository.class);
+        final org.fao.geonet.domain.Service service = serviceRepository.findOne(Integer.valueOf(id));
 
-        Element elService = dbms.select("SELECT * FROM Services WHERE id=?",
-                Integer.valueOf(id));
+        final Map<String,String> parameters = service.getParameters();
 
-        Element elParameters = new Element(Geonet.Elem.FILTER);
-
-        String selectServiceParamsQuery = "SELECT name, value FROM ServiceParameters WHERE service =?";
-        @SuppressWarnings("unchecked")
-        java.util.List<Element> list = dbms.select(selectServiceParamsQuery, Integer.valueOf(id)).getChildren();
-
-        for (int i = 0; i < list.size(); i++) {
-
-            Element filter = (Element) list.get(i);
-            elParameters.addContent(new Element(filter.getChildText("name"))
-                    .setText(filter.getChildText("value")));
+        Element elParameters = new Element("serviceParameters");
+        for (Map.Entry<String, String> parameter : parameters.entrySet()) {
+            elParameters.addContent(new Element(parameter.getKey())
+                    .setText(parameter.getValue()));
         }
-        elService.addContent(elParameters);
-
-        return elService;
+        return new Element("service")
+               .addContent(new Element("id").setText(String.valueOf(service.getId())))
+               .addContent(new Element("name").setText(service.getName()))
+               .addContent(new Element("description").setText(service.getDescription()))
+               .addContent(elParameters);
     }
 }

@@ -2,7 +2,7 @@ package org.fao.geonet.kernel.harvest.harvester;
 
 import java.util.List;
 
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 
 /**
  * Common interface for all Harvesters. T is the return type of the harvest

@@ -30,7 +30,7 @@ import org.apache.lucene.search.FieldCache;
 import org.apache.lucene.search.FieldCache.DocTerms;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.BytesRef;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.domain.ISODate;
 
 import java.io.IOException;
 
@@ -86,7 +86,7 @@ public class RecencyBoostingQuery extends CustomScoreQuery {
 			BytesRef ret = new BytesRef();
 			publishDay.getTerm(doc, ret);
             ISODate d = new ISODate(ret.utf8ToString());
-			long daysAgo = today.sub(d) / SEC_PER_DAY;
+			long daysAgo = today.timeDifferenceInSeconds(d) / SEC_PER_DAY;
 			if (daysAgo < maxDaysAgo) {	// skip old document
 				float boost = (float) (multiplier * (maxDaysAgo - daysAgo) / maxDaysAgo);
 				return (float) (subQueryScore * (1.0 + boost));

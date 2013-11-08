@@ -25,7 +25,6 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -34,7 +33,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.StatusValueRepository;
 import org.jdom.Element;
 
 import java.util.HashSet;
@@ -70,8 +69,6 @@ public class PrepareBatchUpdateStatus implements Service
 		AccessManager am = gc.getBean(AccessManager.class);
 		UserSession us = context.getUserSession();
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(us);
 
@@ -82,7 +79,7 @@ public class PrepareBatchUpdateStatus implements Service
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 			String uuid = (String) iter.next();
-			String id   = dataMan.getMetadataId(dbms, uuid);
+			String id   = dataMan.getMetadataId(uuid);
 
 			//--- check access, if owner then process 
 			
@@ -94,7 +91,7 @@ public class PrepareBatchUpdateStatus implements Service
 
 		//-----------------------------------------------------------------------
 		//--- retrieve status values
-		Element elStatus = Lib.local.retrieve(dbms, "StatusValues");
+		Element elStatus = gc.getBean(StatusValueRepository.class).findAllAsXml();
 		@SuppressWarnings("unchecked")
         List<Element> list = elStatus.getChildren();
 
@@ -104,7 +101,7 @@ public class PrepareBatchUpdateStatus implements Service
 
 		//-----------------------------------------------------------------------
 		//--- get the list of content reviewers for this metadata record
-		Element cRevs = am.getContentReviewers(dbms, ids);
+		Element cRevs = am.getContentReviewers(ids);
 		cRevs.setName("contentReviewers");
 
 		//-----------------------------------------------------------------------

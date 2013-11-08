@@ -24,11 +24,9 @@
 package org.fao.geonet.services.ownership;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
 import java.util.List;
@@ -53,10 +51,8 @@ public class Editors implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		UserSession   us   = context.getUserSession();
-		List<Element> list = OwnershipUtils.getOwnerUsers(context, us, dbms);
+		List<Element> list = OwnershipUtils.getOwnerUsers(context, us);
 
 		Element result = new Element("root");
 

@@ -24,13 +24,26 @@
 package org.fao.geonet.guiservices.groups;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.specification.GroupSpecs;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specifications;
+
+import java.util.List;
+
+import static org.fao.geonet.repository.specification.GroupSpecs.isReserved;
+import static org.springframework.data.jpa.domain.Specifications.not;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Service used to return all groups and profiles for current user.
@@ -46,17 +59,13 @@ public class GetMineWithProfiles implements Service {
 		if (!session.isAuthenticated())
 			return new Element(Geonet.Elem.GROUPS);
 
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
-
 		// --- retrieve user groups
-		if (Geonet.Profile.ADMINISTRATOR.equals(session.getProfile())) {
-			String query = "SELECT id, '' as profile FROM Groups WHERE id > 1";
-			return dbms.select(query);
+		if (Profile.Administrator == session.getProfile()) {
+            return context.getBean(GroupRepository.class).findAllAsXml(not(isReserved()));
 		} else {
-			String query = "SELECT groupId as id, profile FROM UserGroups WHERE groupId > 1 "
-					+ "AND userId=?";
-			return dbms.select(query, session.getUserIdAsInt());
+            final int userIdAsInt = session.getUserIdAsInt();
+            final Specifications<UserGroup> spec = where(UserGroupSpecs.hasUserId(userIdAsInt)).and(UserGroupSpecs.isReservedGroup(false));
+            return context.getBean(UserGroupRepository.class).findAllAsXml(spec);
 		}
 	}
 }

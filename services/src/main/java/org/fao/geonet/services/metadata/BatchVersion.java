@@ -25,7 +25,6 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -62,23 +61,21 @@ public class BatchVersion implements Service
 		AccessManager accessMan = gc.getBean(AccessManager.class);
 		UserSession   session   = context.getUserSession();
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		Set<Integer> metadata = new HashSet<Integer>();
 		Set<Integer> notFound = new HashSet<Integer>();
 		Set<Integer> notOwner = new HashSet<Integer>();
 
-        if(context.isDebug())
+        if(context.isDebugEnabled())
             context.debug("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(session);
 
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 			String uuid = (String) iter.next();
-            if(context.isDebug())
+            if(context.isDebugEnabled())
                 context.debug("Deleting metadata with uuid:"+ uuid);
 
-			String id   = dataMan.getMetadataId(dbms, uuid);
+			String id   = dataMan.getMetadataId(uuid);
 			//--- Metadata may have been deleted since selection
 			if (id != null) {
 				//-----------------------------------------------------------------------
@@ -93,12 +90,12 @@ public class BatchVersion implements Service
 	
 					//--- now set metadata into subversion repo
 					dataMan.versionMetadata(context, id, md);
-                    if(context.isDebug())
+                    if(context.isDebugEnabled())
                         context.debug("  Metadata with id " + id + " added to subversion repo.");
 					metadata.add(Integer.valueOf(id));
 				}
 			} else
-            if(context.isDebug())
+            if(context.isDebugEnabled())
                 context.debug("  Metadata not found in db:"+ uuid);
 				// TODO : add to notFound set
 

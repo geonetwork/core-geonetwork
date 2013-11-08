@@ -1,7 +1,6 @@
 package jeeves.server;
 
 import jeeves.server.context.ScheduleContext;
-
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobListener;
@@ -34,7 +33,7 @@ public class ScheduleListener implements JobListener {
 
             ScheduleInfo info = scheduleManager.getScheduleInfo(scheduleJob.getScheduleName());
             ScheduleContext scheduleContext = new ScheduleContext(info.name, scheduleManager.getApplicationContext(), scheduleManager.getMonitorManager(),
-                    scheduleManager.getProvidMan(), scheduleManager.getSerialFact(), scheduleManager.getHtContexts());
+                scheduleManager.getHtContexts());
             scheduleContext.setBaseUrl(scheduleManager.getBaseUrl());
             scheduleContext.setAppPath(scheduleManager.getAppPath());
 

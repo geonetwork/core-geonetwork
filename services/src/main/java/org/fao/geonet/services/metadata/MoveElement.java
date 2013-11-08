@@ -25,11 +25,10 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
@@ -64,7 +63,6 @@ public class MoveElement implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		UserSession session = context.getUserSession();
 
 		String id  = Util.getParam(params, Params.ID);
@@ -73,7 +71,7 @@ public class MoveElement implements Service
 		//-----------------------------------------------------------------------
 		//--- swap elements and return status
 
-		new AjaxEditUtils(context).swapElementEmbedded(dbms, session, id, ref, down);
+		new AjaxEditUtils(context).swapElementEmbedded(session, id, ref, down);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));

@@ -23,11 +23,10 @@
 
 package org.fao.geonet.services.thumbnail;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.IO;
-import jeeves.utils.Util;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.Util;
 import lizard.tiff.Tiff;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -85,8 +84,6 @@ public class Set extends NotInReadOnlyModeService {
 
 		DataManager dataMan = gc.getBean(DataManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		//--- check if the metadata has been modified from last time
 
 		if (version != null && !dataMan.getVersion(id).equals(version))
@@ -108,15 +105,15 @@ public class Set extends NotInReadOnlyModeService {
 			String inFile    = context.getUploadDir() + file;
 			String outFile   = dataDir + smallFile;
 
-			removeOldThumbnail(context, dbms, id, "small", false);
+			removeOldThumbnail(context, id, "small", false);
 			createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-			dataMan.setThumbnail(context, dbms, id, true, smallFile, false);
+			dataMan.setThumbnail(context, id, true, smallFile, false);
 		}
 
 		//-----------------------------------------------------------------------
 		//--- create the requested thumbnail, removing the old one
 
-		removeOldThumbnail(context, dbms, id, type, false);
+		removeOldThumbnail(context, id, type, false);
 
 		if (scaling)
 		{
@@ -129,7 +126,7 @@ public class Set extends NotInReadOnlyModeService {
 			if (!new File(inFile).delete())
 				context.error("Error while deleting thumbnail : "+inFile);
 
-			dataMan.setThumbnail(context, dbms, id, type.equals("small"), newFile, false);
+			dataMan.setThumbnail(context, id, type.equals("small"), newFile, false);
 		}
 		else
 		{
@@ -149,11 +146,11 @@ public class Set extends NotInReadOnlyModeService {
 						"Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
 			}
 
-			dataMan.setThumbnail(context, dbms, id, type.equals("small"), file, false);
+			dataMan.setThumbnail(context, id, type.equals("small"), file, false);
 		}
 
-		dataMan.indexInThreadPool(context, id, dbms);
-		//-----------------------------------------------------------------------
+        dataMan.indexMetadata(id);
+        //-----------------------------------------------------------------------
 
 		Element response = new Element("a");
 		response.addContent(new Element("id").setText(id));
@@ -180,7 +177,6 @@ public class Set extends NotInReadOnlyModeService {
 	public Element execOnHarvest(
 							Element params, 
 							ServiceContext context, 
-							Dbms dbms, 
 							DataManager dataMan) throws Exception {
 
 		String  id            = Util.getParam     (params, Params.ID);
@@ -204,24 +200,24 @@ public class Set extends NotInReadOnlyModeService {
             int     smallScalingFactor = Util.getParam(params, Params.SMALL_SCALING_FACTOR, 0);
 			// FIXME should be done before removeOldThumbnail(context, dbms, id, "small");
 			createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-            dataMan.setThumbnail(context, dbms, id, true, smallFile, false);
+            dataMan.setThumbnail(context, id, true, smallFile, false);
        }
 
 		//-----------------------------------------------------------------------
 		//--- create the requested thumbnail, removing the old one
-        removeOldThumbnail(context,dbms,id,type, false);
-        saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, dbms, id, context);
+        removeOldThumbnail(context, id, type, false);
+        saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, id, context);
 
 		//-----------------------------------------------------------------------
-		dataMan.indexInThreadPool(context, id, dbms);
-		Element response = new Element("Response");
+        dataMan.indexMetadata(id);
+        Element response = new Element("Response");
 		response.addContent(new Element("id").setText(id));
 		// NOT NEEDEDresponse.addContent(new Element("version").setText(dataMan.getNewVersion(id)));
 
 		return response;
 	}
 
-	public void addHarvested(Element params, ServiceContext context, Dbms dbms, DataManager dataMan) throws Exception
+	public void addHarvested(Element params, ServiceContext context, DataManager dataMan) throws Exception
         {
             String  id            = Util.getParam     (params, Params.ID);
             String dataDir = createDataDir(id, context);
@@ -245,24 +241,24 @@ public class Set extends NotInReadOnlyModeService {
                 String smallFile = getFileName(file, true);
                 String inFile    = context.getUploadDir() + file;
                 String outFile   = dataDir + smallFile;
-                removeOldThumbnail(context,dbms,id,"small", false);
+                removeOldThumbnail(context , id, "small", false);
                 createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-                dataMan.setThumbnail(context, dbms, id, true, smallFile, false);
+                dataMan.setThumbnail(context, id, true, smallFile, false);
             }
 
             //-----------------------------------------------------------------------
             //--- create the requested thumbnail
             
-            removeOldThumbnail(context,dbms,id,type, false);
-            saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, dbms, id, context);
+            removeOldThumbnail(context, id, type, false);
+            saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, id, context);
 
-            dataMan.indexInThreadPool(context, id, dbms);
+            dataMan.indexMetadata(id);
         }
         
-        public void removeHarvested(Element params, ServiceContext context, Dbms dbms) throws Exception {
+        public void removeHarvested(Element params, ServiceContext context) throws Exception {
             String  id   = Util.getParam(params, Params.ID);
             String  type = Util.getParam(params, Params.TYPE);
-            removeOldThumbnail(context,dbms,id,type, true);
+            removeOldThumbnail(context,id,type, true);
         }
 
 	//--------------------------------------------------------------------------
@@ -271,23 +267,8 @@ public class Set extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-    /**
-     * TODO Javadoc.
-     *
-     * @param scaling
-     * @param file
-     * @param type
-     * @param dataDir
-     * @param scalingDir
-     * @param scalingFactor
-     * @param dataMan
-     * @param dbms
-     * @param id
-     * @param context
-     * @throws Exception
-     */
     private void saveThumbnail(boolean scaling, String file, String type, String dataDir, String scalingDir,
-                               int scalingFactor, DataManager dataMan, Dbms dbms, String id, ServiceContext context) throws Exception {
+                               int scalingFactor, DataManager dataMan, String id, ServiceContext context) throws Exception {
             if (scaling) {
                 String newFile = getFileName(file, type.equals("small"));
                 String inFile  = context.getUploadDir() + file;
@@ -295,7 +276,7 @@ public class Set extends NotInReadOnlyModeService {
                 
                 createThumbnail(inFile, outFile, scalingFactor, scalingDir);
                 if (!new File(inFile).delete()) context.error("Error while deleting thumbnail : "+inFile);
-                dataMan.setThumbnail(context, dbms, id, type.equals("small"), newFile, false);
+                dataMan.setThumbnail(context, id, type.equals("small"), newFile, false);
             } else {
                 //--- move uploaded file to destination directory
                 File inFile  = new File(context.getUploadDir(), file);
@@ -308,17 +289,17 @@ public class Set extends NotInReadOnlyModeService {
                     throw new Exception("Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
                 }
 			
-                dataMan.setThumbnail(context, dbms, id, type.equals("small"), file, false);
+                dataMan.setThumbnail(context, id, type.equals("small"), file, false);
             }
         }
 
-	private void removeOldThumbnail(ServiceContext context, Dbms dbms, String id, String type, boolean indexAfterChange) throws Exception
+	private void removeOldThumbnail(ServiceContext context, String id, String type, boolean indexAfterChange) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		DataManager dataMan = gc.getBean(DataManager.class);
 
-		Element result = dataMan.getThumbnails(dbms, id);
+		Element result = dataMan.getThumbnails(id);
 
 		if (result == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);
@@ -333,7 +314,7 @@ public class Set extends NotInReadOnlyModeService {
 		//-----------------------------------------------------------------------
 		//--- remove thumbnail
 
-		dataMan.unsetThumbnail(context, dbms, id, type.equals("small"), indexAfterChange);
+		dataMan.unsetThumbnail(context, id, type.equals("small"), indexAfterChange);
 
 		//--- remove file
 

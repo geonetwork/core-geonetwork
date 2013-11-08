@@ -38,8 +38,9 @@ import javax.servlet.ServletContext;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.NumericUtils;
@@ -47,6 +48,10 @@ import org.apache.lucene.util.Version;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 /**
  * Lucene configuration class load Lucene XML configuration file.
@@ -54,16 +59,23 @@ import org.jdom.JDOMException;
  * @author fxprunayre
  * 
  */
+@Component(value = LuceneConfig.LUCENE_CONFIG_BEAN_NAME)
 public class LuceneConfig {
-	public static final String USE_NRT_MANAGER_REOPEN_THREAD = "useNRTManagerReopenThread";
+    public static final String LUCENE_CONFIG_BEAN_NAME = "luceneConfig";
+    public static final String USE_NRT_MANAGER_REOPEN_THREAD = "useNRTManagerReopenThread";
     private static final int ANALYZER_CLASS = 1;
 	private static final int BOOST_CLASS = 2;
 	private static final int DOC_BOOST_CLASS = 3;
 
+
+    @Autowired
+    GeonetworkDataDirectory _geonetworkDataDirectory;
+    @Autowired
+    ApplicationContext _appContext;
+
 	private File configurationFile;
 	private File taxonomyConfigurationFile;
-	private String appPath;
-	
+
     public static class Facet {
         /**
          * Default number of values for a facet
@@ -318,24 +330,27 @@ public class LuceneConfig {
 	
 	private Version LUCENE_VERSION = Geonet.LUCENE_VERSION;
 	private Set<String> multilingualSortFields = new HashSet<String>();
-    public static final String LUCENE_CONFIG_BEAN_NAME = "luceneConfig";
 
 	
     /**
 	 * Creates a new Lucene configuration from an XML configuration file.
-	 * 
-	 * @param appPath
-	 * @param servletContext
-	 * @param luceneConfigXmlFile
-	 */
-	public LuceneConfig(String appPath, ServletContext servletContext, String luceneConfigXmlFile) {
+	 *
+     * @param luceneConfigXmlFile
+     */
+	public void configure(String luceneConfigXmlFile) {
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
-		this.appPath = appPath;
-		this.configurationFile = new File(appPath + luceneConfigXmlFile);
-		this.load(servletContext, luceneConfigXmlFile);
+		this.configurationFile = new File(_geonetworkDataDirectory.getWebappDir(), luceneConfigXmlFile);
+        ServletContext servletContext;
+        try {
+            servletContext = _appContext.getBean(ServletContext.class);
+        } catch (NoSuchBeanDefinitionException e) {
+            servletContext = null;
+        }
+
+        this.load(servletContext, luceneConfigXmlFile);
 		String taxonomyConfig = "WEB-INF/config-summary.xml";
-		this.taxonomyConfigurationFile = new File(appPath + taxonomyConfig);
+		this.taxonomyConfigurationFile = new File(_geonetworkDataDirectory.getWebappDir(), taxonomyConfig);
 		this.loadTaxonomy(servletContext, taxonomyConfig);
 	}
 
@@ -344,7 +359,7 @@ public class LuceneConfig {
 			luceneConfig = Xml.loadStream(new FileInputStream(
 					this.configurationFile));
 			if (servletContext != null) {
-				ConfigurationOverrides.DEFAULT.updateWithOverrides(luceneConfigXmlFile, servletContext, appPath, luceneConfig);
+				ConfigurationOverrides.DEFAULT.updateWithOverrides(luceneConfigXmlFile, servletContext, _geonetworkDataDirectory.getWebappDir(), luceneConfig);
 			}
 			
 			// Main Lucene index configuration option
@@ -596,7 +611,7 @@ public class LuceneConfig {
 			Element taxonomyConfig = Xml.loadStream(new FileInputStream(
 					this.taxonomyConfigurationFile));
 			if (servletContext != null) {
-				ConfigurationOverrides.DEFAULT.updateWithOverrides(taxonomyConfigFile, servletContext, appPath, taxonomyConfig);
+				ConfigurationOverrides.DEFAULT.updateWithOverrides(taxonomyConfigFile, servletContext, _geonetworkDataDirectory.getWebappDir(), taxonomyConfig);
 			}
 			
 			taxonomy = new HashMap<String, Map<String,FacetConfig>>();
@@ -619,8 +634,6 @@ public class LuceneConfig {
 
     /**
      *
-     * @param summaryConfig
-     * @param resultType
      * @return
      * @throws Exception
      */
@@ -704,7 +717,7 @@ public class LuceneConfig {
 							&& value != null) {
 						File f = new File(value);
 						if (!f.exists()) { // try relative to appPath
-							f = new File(appPath + value);
+							f = new File(_geonetworkDataDirectory.getWebappDir(), value);
 						}
 						if (f != null) {
 							params[i] = f;

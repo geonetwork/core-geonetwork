@@ -24,23 +24,25 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.Util;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 import java.io.File;
@@ -99,10 +101,6 @@ public class XslProcessing extends NotInReadOnlyModeService {
      */
     public Element serviceSpecificExec(Element params, ServiceContext context)
             throws Exception {
-
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager   dataMan = gc.getBean(DataManager.class);
-
         String process = Util.getParam(params, Params.PROCESS);
         boolean save = "1".equals(Util.getParam(params, Params.SAVE, "1"));
         
@@ -111,8 +109,9 @@ public class XslProcessing extends NotInReadOnlyModeService {
         String id = Utils.getIdentifierFromParameters(params, context);
         Element processedMetadata;
         try {
+            final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
             processedMetadata = process(id, process, save, _appPath, params,
-                    context, xslProcessingReport, false, dataMan.getSiteURL(context));
+                    context, xslProcessingReport, false, siteURL);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                         + xslProcessingReport.getNotFoundMetadataCount() + 
@@ -142,7 +141,6 @@ public class XslProcessing extends NotInReadOnlyModeService {
      * @param appPath	The application path (use to get the process XSL)
      * @param params	The input parameters
      * @param context	The current context
-     * @param metadata
      * @param report
      * @return
      * @throws Exception
@@ -155,9 +153,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
         DataManager dataMan = gc.getBean(DataManager.class);
         SchemaManager schemaMan = gc.getBean(SchemaManager.class);
         AccessManager accessMan = gc.getBean(AccessManager.class);
-        Dbms dbms = (Dbms) context.getResourceManager()
-                .open(Geonet.Res.MAIN_DB);
-        
+
         report.incrementProcessedRecords();
         
         // When a record is deleted the UUID is in the selection manager
@@ -168,7 +164,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
         }
         
         int iId = Integer.valueOf(id);
-        MdInfo info = dataMan.getMetadataInfo(dbms, id);
+        Metadata info = context.getBean(MetadataRepository.class).findOne(id);
         
         
         if (info == null) {
@@ -179,7 +175,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
 
             // -----------------------------------------------------------------------
             // --- check processing exist for current schema
-            String schema = info.schemaId;
+            String schema = info.getDataInfo().getSchemaId();
 
             String filePath = schemaMan.getSchemaDir(schema) + "/process/" + process + ".xsl";
             File xslProcessing = new File(filePath);
@@ -206,8 +202,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
 	                // Add extra metadata
 	                if (param.getName().equals("extra_metadata_uuid")
 	                        && !param.getTextTrim().equals("")) {
-	                    String extraMetadataId = dataMan.getMetadataId(dbms,
-	                            param.getTextTrim());
+	                    String extraMetadataId = dataMan.getMetadataId(param.getTextTrim());
 	                    if (extraMetadataId != null) {
 	                        Element extraMetadata = dataMan.getMetadata(context,
 	                                extraMetadataId, forEditing,
@@ -237,13 +232,8 @@ public class XslProcessing extends NotInReadOnlyModeService {
 	                String language = context.getLanguage();
 	                // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
 	                boolean updateDateStamp = true;
-	                dataMan.updateMetadata(context, dbms, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
-	                if (useIndexGroup) {
-	                    dataMan.indexMetadata(dbms, id);
-	                }
-	                else {
-	                    dataMan.indexInThreadPool(context, id, dbms);
-	                }
+	                dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
+                    dataMan.indexMetadata(id);
 	            }
 	
 	            report.addMetadataId(iId);

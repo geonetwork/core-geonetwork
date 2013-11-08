@@ -23,76 +23,50 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.resources.dbms.Dbms;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.*;
+import static org.springframework.data.jpa.domain.Specifications.where;
+import java.util.*;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.jdom.Element;
 
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.stereotype.Component;
 
 /**
  * Handles the access to a metadata depending on the metadata/group.
  */
+@Component
 public class AccessManager {
-	public static final String OPER_VIEW     				= "0";
-	public static final String OPER_DOWNLOAD 				= "1";
-	public static final String OPER_EDITING  				= "2";
-	public static final String OPER_NOTIFY   				= "3";
-	public static final String OPER_DYNAMIC  				= "5";
-	public static final String OPER_FEATURED 				= "6";
 
-	public static final Map<String,String> ops = new HashMap<String,String>();
+    @Autowired
+    private HarvesterSettingRepository _settingRepository;
 
-	static {
-		ops.put("0","VIEW");
-		ops.put("1","DOWNLOAD");
-		ops.put("2","EDITING");
-		ops.put("3","NOTIFY");
-		ops.put("5","DYNAMIC");
-		ops.put("6","FEATURED");
-	};
+    @Autowired
+    private OperationRepository _opRepository;
+    
+    @Autowired
+    private MetadataRepository _metadataRepository;
+    
+    @Autowired
+    private OperationAllowedRepository _opAllowedRepository;
+    
+    @Autowired
+    private GroupRepository _groupRepository;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    @Autowired
+    private UserGroupRepository _userGroupRepository;
 
-    /**
-     * Loads all permissions from database and caches them.
-     *
-     * @param dbms
-     * @param sm
-     * @throws SQLException
-     */
-	public AccessManager(Dbms dbms, SettingManager sm) throws SQLException {
-		settMan = sm;
-		@SuppressWarnings("unchecked")
-        List<Element> operList = dbms.select("SELECT * FROM Operations").getChildren();
-
-		for (Element oper : operList) {
-			String id   = oper.getChildText("id");
-			String name = oper.getChildText("name");
-
-			//--- build Hashset of all operations
-			hsAllOps.add(id);
-			hmIdToName.put(Integer.parseInt(id), name);
-			hmNameToId.put(name, Integer.parseInt(id));
-		}
-	}
-
+    @Autowired
+    private UserRepository _userRepository;
 	//--------------------------------------------------------------------------
 	//---
 	//--- API methods
@@ -111,7 +85,7 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-	public Set<String> getOperations(ServiceContext context, String mdId, String ip) throws Exception {
+	public Set<Operation> getOperations(ServiceContext context, String mdId, String ip) throws Exception {
 		return getOperations(context, mdId, ip, null);
 	}
 
@@ -125,36 +99,38 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-	public Set<String> getOperations(ServiceContext context, String mdId, String ip, Element operations) throws Exception {
-		UserSession us = context.getUserSession();
+	public Set<Operation> getOperations(ServiceContext context, String mdId, String ip, Collection<Operation> operations) throws Exception {
+		Set<Operation> results;
         // if user is an administrator OR is the owner of the record then allow all operations
 		if (isOwner(context,mdId)) {
-			return hsAllOps;
-		}
+			results = new HashSet<Operation>(_opRepository.findAll());
+		} else {
+    		if (operations == null) {
+    		    results = new HashSet<Operation>(getAllOperations(context, mdId, ip));
+    		}
+            else {
+                results = new HashSet<Operation>(operations);
+    		}
 
-		// otherwise build result
-		Set<String> out = new HashSet<String>();
-
-		Element ops;
-		if (operations == null) {
-			ops = getAllOperations(context, mdId, ip);
-		}
-        else {
-			ops = operations;
-		}
-
-		List<?> operIds = Xml.selectNodes(ops, "record/operationid");
-        for (Object operId : operIds) {
-            Element elem = (Element) operId;
-            out.add(elem.getText());
-        }
-		if (us.isAuthenticated() && us.getProfile().equals(Geonet.Profile.EDITOR) && out.contains(OPER_EDITING)) {
-			out.add(OPER_VIEW);
+    		UserSession us = context.getUserSession();
+            if (us.isAuthenticated() && us.getProfile() == Profile.Editor) {
+                results.add(_opRepository.findReservedOperation(ReservedOperation.view));
+            }
 		}
 		
-		return out;
+		return results;
 	}
 
+    public Set<String> getOperationNames(ServiceContext context, String mdId, String ip, Collection<Operation> operations) throws Exception {
+        Set<String> names = new HashSet<String>();
+        
+        for (Operation op : getOperations(context, mdId, ip, operations)) {
+            names.add(op.getName());
+        }
+        
+        return names;
+    }
+	
     /**
      * Returns all operations permitted by the user on a particular metadata.
      *
@@ -164,98 +140,49 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-	public Element getAllOperations(ServiceContext context, String mdId, String ip) throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		UserSession usrSess = context.getUserSession();
-
-        // build group list
-		Set<String>  groups = getUserGroups(dbms, usrSess, ip, false);
-		StringBuffer groupList = new StringBuffer();
-
-		for (String groupId : groups) {
-		    if(groupList.length() > 0)
-		        groupList.append(", ");
-			groupList.append(groupId);
-		}
-		// get allowed operations
-		StringBuffer query = new StringBuffer();
-
-		query.append("SELECT operationId, groupId ");
-		query.append("FROM   OperationAllowed ");
-		query.append("WHERE  groupId IN (");
-		query.append(groupList.toString());
-		query.append(") AND  metadataId = ?");
-		
-		Element operations = dbms.select(query.toString(), Integer.valueOf(mdId));
-
-		// find out what they could do if they registered and offer that as as a separate element
-		if (!usrSess.isAuthenticated()) {
-			query = new StringBuffer();
-			query.append("SELECT operationId, groupId ");
-			query.append("FROM   OperationAllowed ");
-			query.append("WHERE  groupId = -1 ");
-			query.append("AND    metadataId = ?");
-			
-			Element therecords = dbms.select(query.toString(), Integer.valueOf(mdId));
-			if (therecords != null) {
-				Element guestOperations = new Element("guestoperations");
-				guestOperations.addContent(therecords.cloneContent());
-				operations.addContent(guestOperations);
-			}
-		}
+	public Set<Operation> getAllOperations(ServiceContext context, String mdId, String ip) throws Exception {
+	    HashSet<Operation> operations = new HashSet<Operation>();
+	    for (OperationAllowed opAllow: _opAllowedRepository.findByMetadataId(mdId)) {
+	        operations.add(_opRepository.findOne(opAllow.getId().getOperationId()));
+	    }
 		return operations;
 	}
 
     /**
      * Returns all groups accessible by the user (a set of ids).
      *
-     * @param dbms
      * @param usrSess
      * @param ip
      * @param editingGroupsOnly TODO
      * @return
      * @throws Exception
      */
-	public Set<String> getUserGroups(Dbms dbms, UserSession usrSess, String ip, boolean editingGroupsOnly) throws Exception {
-		Set<String> hs = new HashSet<String>();
-
+	public Set<Integer> getUserGroups(UserSession usrSess, String ip, boolean editingGroupsOnly) throws Exception {
+		Set<Integer> hs = new HashSet<Integer>();
+		
 		// add All (1) network group
-		hs.add("1");
+		hs.add(ReservedGroup.all.getId());
 
 		if (ip != null && isIntranet(ip))
-			hs.add("0");
+			hs.add(ReservedGroup.intranet.getId());
 
 		// get other groups
 		if (usrSess.isAuthenticated()) {
 			// add (-1) GUEST group 
-			hs.add("-1");
+			hs.add(ReservedGroup.guest.getId());
 
-			if (Geonet.Profile.ADMINISTRATOR.equals(usrSess.getProfile())) {
-				Element elUserGrp = dbms.select("SELECT id FROM Groups");
+			if (Profile.Administrator == usrSess.getProfile()) {
+				List<Integer> allGroupIds = _groupRepository.findIds();
 
-				@SuppressWarnings("unchecked")
-                List<Element> list = elUserGrp.getChildren();
-
-                for (Element el : list) {
-                    String groupId = el.getChildText("id");
-                    hs.add(groupId);
-                }
+				hs.addAll(allGroupIds);
 			}
 			else {
-				StringBuffer query = new StringBuffer("SELECT distinct(groupId) FROM UserGroups WHERE ");
+                Specification<UserGroup> spec = UserGroupSpecs.hasUserId(usrSess.getUserIdAsInt());
 				if (editingGroupsOnly) {
-					query.append("profile='"+Geonet.Profile.EDITOR+"' AND ");
-				}
-				query.append("userId=?");
-				Element elUserGrp = dbms.select(query.toString(), usrSess.getUserIdAsInt());
-
-				@SuppressWarnings("unchecked")
-                List<Element> list = elUserGrp.getChildren();
-
-                for (Element el : list) {
-                    String groupId = el.getChildText("groupid");
-                    hs.add(groupId);
+                    spec = Specifications.where(UserGroupSpecs.hasProfile(Profile.Editor)).and(spec);
                 }
+
+                hs.addAll(_userGroupRepository.findGroupIds(spec));
 			}
 		}
 		return hs;
@@ -264,56 +191,28 @@ public class AccessManager {
     /**
      * TODO javadoc.
      *
-     * @param dbms
-     * @param userId
-     * @return
+     * @param userId the id of the user
      * @throws Exception
      */
-	public Set<String> getVisibleGroups(Dbms dbms, String userId) throws Exception {
-        if(StringUtils.isEmpty(userId)){
-            Log.warning(Geonet.ACCESS_MANAGER, "userId is empty. AccessManager getVisibleGroups()");
-            return new HashSet<String>();
-        }
-        int id = Integer.parseInt(userId);
-		return getVisibleGroups(dbms,id);
-	}
+	public Set<Integer> getVisibleGroups(final int userId) throws Exception {
+		Set<Integer> hs = new HashSet<Integer>();
 
-    /**
-     * TODO javadoc.
-     *
-     * @param dbms
-     * @param userId
-     * @return
-     * @throws Exception
-     */
-	public Set<String> getVisibleGroups(Dbms dbms, int userId) throws Exception {
-		Set<String> hs = new HashSet<String>();
+        User user = _userRepository.findOne(userId);
 
-		String query= "SELECT * FROM Users WHERE id=?";
-		@SuppressWarnings("unchecked")
-        List<Element>   list = dbms.select(query, Integer.valueOf(userId)).getChildren();
-
-		//--- return an empty list if the user does not exist
-
-		if (list.size() == 0)
+		if (user == null) {
 			return hs;
+        }
 
-		Element user    = (Element) list.get(0);
-		String  profile = user.getChildText("profile");
+		Profile profile = user.getProfile();
 
-		Element elUserGrp;
-		if (profile.equals(Geonet.Profile.ADMINISTRATOR)) {
-			elUserGrp = dbms.select("SELECT id AS grp FROM Groups");
-		}
-        else {
-			elUserGrp = dbms.select("SELECT groupId AS grp FROM UserGroups WHERE userId=?", Integer.valueOf(userId));
+		List<Integer> groupIds;
+		if (profile == Profile.Administrator) {
+			groupIds = _groupRepository.findIds();
+		} else {
+			groupIds = _userGroupRepository.findGroupIds(UserGroupSpecs.hasUserId(user.getId()));
 		}
 
-		for(Object o : elUserGrp.getChildren()) {
-			Element el = (Element) o;
-			String groupId =el.getChildText("grp");
-			hs.add(groupId);
-		}
+        hs.addAll(groupIds);
 
 		return hs;
 	}
@@ -331,7 +230,7 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-	public boolean canEdit(ServiceContext context, String id) throws Exception {
+	public boolean canEdit(final ServiceContext context, final String id) throws Exception {
 		return isOwner(context, id) || hasEditPermission(context, id);
 	}
 
@@ -343,43 +242,39 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-	public boolean isOwner(ServiceContext context, String id) throws Exception {
+	public boolean isOwner(final ServiceContext context, final String id) throws Exception {
 		UserSession us = context.getUserSession();
 		if (!us.isAuthenticated()) {
 			return false;
 		}
 
 		//--- retrieve metadata info
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getBean(DataManager.class);
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		MdInfo info = dm.getMetadataInfo(dbms, id);
+		Metadata info = _metadataRepository.findOne(id);
 
 		//--- harvested metadata cannot be edited
-
 //		if (info == null || info.isHarvested)
 		if (info == null)
 			return false;
 
 		//--- check if the user is an administrator
-		if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR))
+        final Profile profile = us.getProfile();
+        if (profile == Profile.Administrator)
 			return true;
 
 		//--- check if the user is the metadata owner
 		//
-		if (us.getUserId().equals(info.owner))
+		if (us.getUserIdAsInt() == info.getSourceInfo().getOwner())
 			return true;
 
 		//--- check if the user is a reviewer or useradmin
-		if (!us.getProfile().equals(Geonet.Profile.REVIEWER) && !us.getProfile().equals(Geonet.Profile.USER_ADMIN))
+		if (profile != Profile.Reviewer && profile != Profile.UserAdmin)
 			return false;
 
 		//--- if there is no group owner then the reviewer cannot review and the useradmin cannot administer
-		if (info.groupOwner == null)
-			return false;
+        final Integer groupOwner = info.getSourceInfo().getGroupOwner();
 
-		for (String userGroup : getUserGroups(dbms, us, null, true)) {
-			if (userGroup.equals(info.groupOwner))
+		for (Integer userGroup : getUserGroups(us, null, true)) {
+			if (userGroup.intValue() == groupOwner.intValue())
 				return true;
 		}
 		return false;
@@ -404,69 +299,55 @@ public class AccessManager {
 	}
 
     /**
-     * Returns owners of metadata records.
-     *
-     * @param dbms
-     * @param metadataIds
-     * @return
-     * @throws Exception
-     */
-    public Element getOwners(Dbms dbms, Set<Integer> metadataIds) throws Exception {
-				String query=
-				"SELECT m.id as metadataid, u.id as userid, u.name as name, u.surname as surname, u.email as email from Metadata m "+
-				"JOIN Users u on u.id = m.owner "+
-				"WHERE m.id IN (" + join(metadataIds,",") + ") "+
-				"ORDER BY u.id";
-
-        return dbms.select(query);
-    }
-
-    /**
      * Returns content reviewers for metadata records.
      *
-     * @param dbms
      * @param metadataIds
      * @return
      * @throws Exception
      */
-    public Element getContentReviewers(Dbms dbms, Set<Integer> metadataIds) throws Exception {
-				String query=
-				"SELECT m.id as metadataid, u.id as userid, u.name as name, u.surname as surname, u.email as email from Metadata m "+
-				"JOIN UserGroups ug on m.groupOwner = ug.groupId "+
-				"JOIN Users u on u.id = ug.userId "+
-				"WHERE m.id IN (" + join(metadataIds,",") + ") "+
-				"AND ug.profile = '"+Geonet.Profile.REVIEWER+"' "+
-				"ORDER BY u.id";
+    public Element getContentReviewers(final Set<Integer> metadataIds) throws Exception {
+        List<Pair<Integer, User>> results = _userRepository.findAllByGroupOwnerNameAndProfile(metadataIds,
+                Profile.Reviewer, SortUtils.createSort(User_.name));
 
-        return dbms.select(query);
+        Element resultEl = new Element("results");
+        for (Pair<Integer, User> integerUserPair : results) {
+            resultEl.addContent(new Element("record").
+                    addContent(new Element("userid")).
+                    addContent(new Element("name")).
+                    addContent(new Element("surname")).
+                    addContent(new Element("email"))
+            );
+        }
+        return resultEl;
     }
 
     /**
      * Returns whether a particular metadata is visible to group 'all'.
      *
-     * @param dbms
-     * @param metadataId
+     * @param metadataId the id of the metadata
      * @return
      * @throws Exception
      */
-    public boolean isVisibleToAll(Dbms dbms, String metadataId) throws Exception {
-        // group 'all' has the magic id 1.
-        String query = "SELECT operationId FROM OperationAllowed WHERE groupId = 1 AND metadataId = ?";
-        Element result = dbms.select(query, Integer.valueOf(metadataId));
-        if(result == null) {
+    public boolean isVisibleToAll(final String metadataId) throws Exception {
+        Metadata metadata = _metadataRepository.findOne(metadataId);
+        if (metadata == null) {
             return false;
+        } else {
+            Group allGroup = _groupRepository.findReservedGroup(ReservedGroup.all);
+            int opId = ReservedOperation.view.getId();
+            return hasPermission(metadata, allGroup, opId);
         }
-        else {
-            @SuppressWarnings("unchecked")
-            List<Element> records = result.getChildren("record");
-            for(Element record : records) {
-                String operationId = record.getChildText("operationid");
-                if(operationId != null && operationId.equals(OPER_VIEW))  {
-                    return true;
-                }
-            }
-            return false;
-        }
+    }
+
+    /**
+     * Check if the group has the permission.
+     *
+     * @param metadata the metadata object
+     * @param group the group to check
+     * @param opId the id of the operation to check for
+     */
+    public boolean hasPermission(final Metadata metadata, final Group group, final int opId) {
+        return _opAllowedRepository.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(group.getId(), metadata.getId(), opId) != null;
     }
 
     /**
@@ -478,38 +359,34 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-    public boolean hasEditPermission(ServiceContext context, String id) throws Exception {
+    public boolean hasEditPermission(final ServiceContext context, final String id) throws Exception {
         UserSession us = context.getUserSession();
         if (!us.isAuthenticated())
             return false;
-        
-        //--- check if the user is an editor and has edit rights over the metadata record
-        String isEditorQuery = "SELECT ug.groupId FROM UserGroups ug, OperationAllowed oa " +
-                                "WHERE ug.groupId = oa.groupId AND operationId = ? AND " + 
-                                "userId = ? AND profile = ? AND metadataId = ?";
-        
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        
-        Element isEditorRes = dbms.select(isEditorQuery, 
-                                Integer.parseInt(OPER_EDITING), 
-                                Integer.parseInt(us.getUserId()), 
-                                Geonet.Profile.EDITOR, 
-                                Integer.parseInt(id));
-        
-        if (isEditorRes.getChildren().size() != 0) {
-            return true;
+
+
+        List<OperationAllowed> allOpAlloweds = _opAllowedRepository.findAll(where(hasMetadataId(id)).and(hasOperation(ReservedOperation
+                .editing)));
+        if (allOpAlloweds.isEmpty()) {
+            return false;
         }
-        return false;
+
+        Specifications spec = where (UserGroupSpecs.hasProfile(Profile.Editor)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
+
+        for (OperationAllowed opAllowed : allOpAlloweds) {
+                spec = spec.and(UserGroupSpecs.hasGroupId(opAllowed.getId().getGroupId()));
+        }
+        return _userGroupRepository.findOne(spec) != null;
     }
 
     /**
      * TODO javadoc.
      *
-     * @param descr
+     * @param name 
      * @return
      */
-	public int getPrivilegeId(String descr) {
-		return hmNameToId.containsKey(descr) ? hmNameToId.get(descr) : -1;
+	public int getPrivilegeId(final String name) {
+		return _opRepository.findByName(name).getId();
 	}
 
     /**
@@ -519,7 +396,7 @@ public class AccessManager {
      * @return
      */
 	public String getPrivilegeName(int id) {
-		return hmIdToName.get(id);
+		return _opRepository.findOne(id).getName();
 	}
 
 	//--------------------------------------------------------------------------
@@ -552,18 +429,20 @@ public class AccessManager {
 
         // IPv4
 
-		String network = settMan.getValue("system/intranet/network");
-		String netmask = settMan.getValue("system/intranet/netmask");
+		HarvesterSetting network = _settingRepository.findOneByPath("system/intranet/network");
+		HarvesterSetting netmask = _settingRepository.findOneByPath("system/intranet/netmask");
 
-		try {
-		long lIntranetNet  = getAddress(network);
-		long lIntranetMask = getAddress(netmask);
-		long lAddress      = getAddress(ip);
-		return (lAddress & lIntranetMask) == lIntranetNet ;
-		} catch (Exception nfe) {
+        try {
+            if (network != null && netmask != null) {
+                long lIntranetNet = getAddress(network.getValue());
+                long lIntranetMask = getAddress(netmask.getValue());
+                long lAddress = getAddress(ip);
+                return (lAddress & lIntranetMask) == lIntranetNet;
+            }
+        } catch (Exception nfe) {
 			nfe.printStackTrace();
-			return false;
 		}
+        return false;
 	}
 
     /**
@@ -584,15 +463,4 @@ public class AccessManager {
 			return a1<<24 | a2<<16 | a3<<8 | a4;
 		}
 	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//--------------------------------------------------------------------------
-
-	private SettingManager  settMan;
-	private Set<String> hsAllOps = new HashSet<String>();
-	private Map<Integer, String> hmIdToName = new HashMap<Integer, String>();
-	private Map<String, Integer> hmNameToId = new HashMap<String, Integer>();
 }

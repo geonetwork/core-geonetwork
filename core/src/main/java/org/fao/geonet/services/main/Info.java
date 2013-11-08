@@ -23,15 +23,15 @@
 
 package org.fao.geonet.services.main;
 
+import jeeves.component.ProfileManager;
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadParameterEx;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -39,12 +39,17 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.security.GeonetworkUser;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.kernel.region.RegionsDAO;
+import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.GroupSpecs;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
 import org.jdom.Element;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specifications;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -97,8 +102,6 @@ public class Info implements Service {
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		Element params = (Element)inParams.clone();
 
 		// --- if we have a parameter specified in the config then use it instead
@@ -119,88 +122,79 @@ public class Info implements Service {
 			if (type.equals("site")) {
 				result.addContent(gc.getBean(SettingManager.class).getValues(
                         new String[]{
-                                "system/site/name", 
+                                SettingManager.SYSTEM_SITE_NAME_PATH,
                                 "system/site/organization", 
-                                "system/site/siteId", 
+                                SettingManager.SYSTEM_SITE_SITE_ID_PATH,
                                 "system/platform/version", 
                                 "system/platform/subVersion"
                                 }));
-			}
-
-			else if (type.equals("inspire"))
+			} else if (type.equals("inspire")) {
 				result.addContent(gc.getBean(SettingManager.class).getValues(
 				            new String[]{
 				                         "system/inspire/enableSearchPanel", 
 				                         "system/inspire/enable"
 				                         }));
-
-			else if (type.equals("harvester"))
+            } else if (type.equals("harvester")) {
 			    result.addContent(gc.getBean(SettingManager.class).getValues(
-                        new String[]{
-                                "system/harvester/enableEditing"
-                                }));
+                        new String[]{ "system/harvester/enableEditing"}));
 			
-			else if (type.equals("userGroupOnly"))
+			} else if (type.equals("userGroupOnly")) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(
-                        new String[]{
-                                "system/metadataprivs/usergrouponly"
-                                }));
+                        new String[]{"system/metadataprivs/usergrouponly"}));
 
-			else if (type.equals("categories"))
-				result.addContent(Lib.local.retrieve(dbms, "Categories"));
+            } else if (type.equals("categories")) {
+				result.addContent(context.getBean(MetadataCategoryRepository.class).findAllAsXml());
 
-			else if (type.equals("groups"))   {
-                Element r = getGroups(context, dbms, params.getChildText("profile"), false);
+            } else if (type.equals("groups"))   {
+                String profile = params.getChildText("profile");
+                Element r = getGroups(context, Profile.findProfileIgnoreCase(profile), false);
 				result.addContent(r);
-            }
 
-            else if (type.equals("groupsIncludingSystemGroups")) {
-                Element r = getGroups(context, dbms, null, true);
+            } else if (type.equals("groupsIncludingSystemGroups")) {
+                Element r = getGroups(context, null, true);
                 result.addContent(r);
-            }
 
-			else if (type.equals("operations"))
-				result.addContent(Lib.local.retrieve(dbms, "Operations"));
+            } else if (type.equals("operations")) {
+				result.addContent(context.getBean(OperationRepository.class).findAllAsXml());
 
-			else if (type.equals("regions")) {
+            } else if (type.equals("regions")) {
 		        RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
 		        Element regions = dao.createSearchRequest(context).xmlResult();
 				result.addContent(regions);
-			}
+			} else if (type.equals("isolanguages")) {
+                result.addContent(context.getBean(IsoLanguageRepository.class).findAllAsXml());
 
-            else if (type.equals("isolanguages"))
-                result.addContent(Lib.local.retrieve(dbms, "IsoLanguages"));
+            } else if (type.equals("sources")) {
+				result.addContent(getSources(context, sm));
 
-			else if (type.equals("sources"))
-				result.addContent(getSources(dbms, sm));
+            } else if (type.equals("users")) {
+				result.addContent(getUsers(context));
 
-			else if (type.equals("users"))
-				result.addContent(getUsers(context, dbms));
-
-			else if (type.equals("templates"))
+            } else if (type.equals("templates"))   {
 				result.addContent(getTemplates(context));
 
-			else if (type.equals("z3950repositories"))
+            } else if (type.equals("z3950repositories")) {
 				result.addContent(getZRepositories(context, sm));
 
-			else if (type.equals("me"))
+            } else if (type.equals("me")) {
 				result.addContent(getMyInfo(context));
 			
-			else if (type.equals("auth"))
+            } else if (type.equals("auth")) {
 				result.addContent(getAuth(context));
 
-            else if(type.equals(READ_ONLY))
+            } else if (type.equals(READ_ONLY)) {
                 result.addContent(getReadOnly(gc));
-            else if(type.equals(INDEX)) 
+            } else if (type.equals(INDEX)) {
                 result.addContent(getIndex(gc));
-			else if (type.equals("schemas"))
+            } else if (type.equals("schemas")) {
 				result.addContent(getSchemas(gc.getBean(SchemaManager.class)));
 
-			else if (type.equals("status"))
-				result.addContent(Lib.local.retrieve(dbms, "StatusValues"));
+            } else if (type.equals("status")) {
+				result.addContent(context.getBean(StatusValueRepository.class).findAllAsXml());
 
-			else
+            } else {
 				throw new BadParameterEx("Unknown type parameter value.", type);
+            }
 		}
 		
 		result.addContent(getEnv(context));
@@ -263,13 +257,19 @@ public class Info implements Service {
 		UserSession userSession = context.getUserSession();
 		if (userSession.isAuthenticated()) {
 			data.setAttribute("authenticated","true");
-			data.addContent(new Element(Geonet.Elem.PROFILE).setText(userSession.getProfile()))
-				.addContent(new Element(GeonetworkUser.USERNAME_COLUMN).setText(userSession.getUsername()))
+            final String emailAddr = userSession.getEmailAddr();
+            data.addContent(new Element(Geonet.Elem.PROFILE).setText(userSession.getProfile().name()))
+				.addContent(new Element(Geonet.Elem.USERNAME).setText(userSession.getUsername()))
 				.addContent(new Element(Geonet.Elem.ID).setText(userSession.getUserId()))
 				.addContent(new Element(Geonet.Elem.NAME).setText(userSession.getName()))
 				.addContent(new Element(Geonet.Elem.SURNAME).setText(userSession.getSurname()))
-				.addContent(new Element(Geonet.Elem.EMAIL).setText(userSession.getEmailAddr()))
-				.addContent(new Element(Geonet.Elem.HASH).setText(org.apache.commons.codec.digest.DigestUtils.md5Hex(userSession.getEmailAddr())));
+				.addContent(new Element(Geonet.Elem.EMAIL).setText(emailAddr));
+
+            if (emailAddr != null) {
+                data.addContent(new Element(Geonet.Elem.HASH).setText(org.apache.commons.codec.digest.DigestUtils.md5Hex(emailAddr)));
+            } else {
+                data.addContent(new Element(Geonet.Elem.HASH).setText(""));
+            }
 		} else {
 			data.setAttribute("authenticated","false");
 		}
@@ -312,50 +312,45 @@ public class Info implements Service {
      * Retrieves a user's groups.
      *
      * @param context
-     * @param dbms
      * @param profile
      * @param includingSystemGroups if true, also returns the system groups ('GUEST', 'intranet', 'all')
      * @return
      * @throws java.sql.SQLException
      */
-    private Element getGroups(ServiceContext context, Dbms dbms, String profile, boolean includingSystemGroups) throws SQLException {
-		UserSession session = context.getUserSession();
-		if (!session.isAuthenticated()) {
-			return Lib.local.retrieveWhereOrderBy(dbms, "Groups", "id < ?", "id", 2);
-		}
+    private Element getGroups(ServiceContext context, Profile profile, boolean includingSystemGroups) throws SQLException {
+        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
+        final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
+        final Sort sort = SortUtils.createSort(Group_.id);
+
+        UserSession session = context.getUserSession();
+        if (!session.isAuthenticated()) {
+            return groupRepository.findAllAsXml(Specifications.not(GroupSpecs.isReserved()), sort);
+        }
 
         Element result;
         // you're Administrator
-		if (Geonet.Profile.ADMINISTRATOR.equals(session.getProfile())) {
-
-        // return all groups
-			result = Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
-        }
+        if (Profile.Administrator == session.getProfile()) {
+            // return all groups
+            result = groupRepository.findAllAsXml(null, sort);
+        } else {
+            Specifications<UserGroup> spec = Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
             // you're no Administrator
-		else {
             // retrieve your groups
-            Element list;
-			if (profile == null) {
-				String query = "SELECT groupId AS id FROM UserGroups WHERE userId=?";
-				list = dbms.select(query, session.getUserIdAsInt());
-			}
-            else {
-				String query = "SELECT groupId AS id FROM UserGroups WHERE userId=? and profile=?";
-				list = dbms.select(query, session.getUserIdAsInt(), profile);
-			}
-
-			Set<String> ids = Lib.element.getIds(list);
+			if (profile != null) {
+                spec = spec.and(UserGroupSpecs.hasProfile(profile));
+            }
+            Set<Integer> ids = new HashSet<Integer>(userGroupRepository.findGroupIds(UserGroupSpecs.hasUserId(session.getUserIdAsInt())));
 
             // include system groups if requested (used in harvesters)
-            if(includingSystemGroups) {
+            if (includingSystemGroups) {
                 // these DB keys of system groups are hardcoded !
-                ids.add("-1");
-                ids.add("0");
-                ids.add("1");
+                for (ReservedGroup reservedGroup : ReservedGroup.values()) {
+                    ids.add(reservedGroup.getId());
+                }
             }
 
             // retrieve all groups
-            Element groups = Lib.local.retrieveWhereOrderBy(dbms, "Groups", null, "id");
+            Element groups = groupRepository.findAllAsXml(null, sort);
 
             // filter all groups so only your groups (+ maybe system groups) are retained
             result = Lib.element.pruneChildren(groups, ids);
@@ -365,32 +360,27 @@ public class Info implements Service {
 
     /**
      *
-     * @param dbms
+     *
+     * @param context
      * @param sm
      * @return
      * @throws java.sql.SQLException
      */
-	private Element getSources(Dbms dbms, SettingManager sm) throws SQLException
+	private Element getSources(ServiceContext context, SettingManager sm) throws SQLException
 	{
-		String  query   = "SELECT * FROM Sources ORDER BY name";
-		Element sources = new Element("sources");
+        Element element = new Element("results");
+        final List<Source> sourceList = context.getBean(SourceRepository.class).findAll(SortUtils.createSort(Source_.name));
 
-		String siteId   = sm.getValue("system/site/siteId");
-		String siteName = sm.getValue("system/site/name");
+		String siteId   = sm.getSiteId();
+        String siteName = sm.getSiteName();
 
-		add(sources, siteId, siteName);
-
-		for (Object o : dbms.select(query).getChildren())
-		{
-			Element rec = (Element) o;
-
-			String uuid = rec.getChildText("uuid");
-			String name = rec.getChildText("name");
-
-			add(sources, uuid, name);
+		for (Source o : sourceList) {
+            element.addContent(buildRecord(o.getUuid(), o.getName(), null, null));
 		}
 
-		return sources;
+        element.addContent(buildRecord(siteId, siteName, null, null));
+
+		return element;
 	}
 
 	//--------------------------------------------------------------------------
@@ -522,10 +512,10 @@ public class Info implements Service {
 	//--- Users
 	//--------------------------------------------------------------------------
 
-	private Element getUsers(ServiceContext context, Dbms dbms) throws SQLException
+	private Element getUsers(ServiceContext context) throws SQLException
 	{
 		UserSession us   = context.getUserSession();
-		List<Element> list = getUsers(context, us, dbms);
+		List<Element> list = getUsers(context, us);
 
 		Element users = new Element("users");
 
@@ -542,34 +532,34 @@ public class Info implements Service {
 
 	//--------------------------------------------------------------------------
 
-	private List<Element> getUsers(ServiceContext context, UserSession us, Dbms dbms) throws SQLException
-	{
+	private List<Element> getUsers(ServiceContext context, UserSession us) throws SQLException {
 		if (!us.isAuthenticated())
 			return new ArrayList<Element>();
 
-		int id = Integer.parseInt(us.getUserId());
+		int userId = Integer.parseInt(us.getUserId());
 
-		if (us.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
+        final UserRepository userRepository = context.getBean(UserRepository.class);
+        if (us.getProfile() == Profile.Administrator) {
 			@SuppressWarnings("unchecked")
-            List<Element> allUsers = dbms.select("SELECT * FROM Users").getChildren();
+            List<Element> allUsers = userRepository.findAllAsXml().getChildren();
             return allUsers;
 		}
 
-		if (!us.getProfile().equals(Geonet.Profile.USER_ADMIN)) {
+		if (us.getProfile() != Profile.UserAdmin) {
             @SuppressWarnings("unchecked")
-            List<Element> identifiedUsers = dbms.select("SELECT * FROM Users WHERE id=?", id).getChildren();
+            List<Element> identifiedUsers = userRepository.findAllAsXml(UserSpecs.hasUserId(userId)).getChildren();;
             return identifiedUsers;
         }
 
 		//--- we have a user admin
 
-		Set<String> hsMyGroups = getUserGroups(dbms, id);
+		Set<Integer> hsMyGroups = getUserGroups(context, userId);
 
-		Set<String> profileSet = context.getProfileManager().getProfilesSet(us.getProfile());
+        Set<String> profileSet = us.getProfile().getAllNames();
 
 		//--- retrieve all users
 
-		Element elUsers = dbms.select("SELECT * FROM Users ORDER BY username");
+		Element elUsers = userRepository.findAllAsXml(null, SortUtils.createSort(User_.name));
 
 		//--- now filter them
 
@@ -579,13 +569,13 @@ public class Info implements Service {
 		{
 			Element elRec = (Element) o;
 
-			String userId = elRec.getChildText("id");
+			String sUserId = elRec.getChildText("id");
 			String profile= elRec.getChildText("profile");
 
 			if (!profileSet.contains(profile))
 				alToRemove.add(elRec);
 
-			else if (!hsMyGroups.containsAll(getUserGroups(dbms, Integer.parseInt(userId))))
+			else if (!hsMyGroups.containsAll(getUserGroups(context, Integer.parseInt(sUserId))))
 				alToRemove.add(elRec);
 		}
 
@@ -603,20 +593,10 @@ public class Info implements Service {
 
 	//--------------------------------------------------------------------------
 
-	private Set<String> getUserGroups(Dbms dbms, int id) throws SQLException
-	{
-		String query = "SELECT groupId AS id FROM UserGroups WHERE userId=?";
+	private Set<Integer> getUserGroups(ServiceContext context, int userId) throws SQLException {
+        final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
 
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, id).getChildren();
-
-		HashSet<String> hs = new HashSet<String>();
-
-		for (Element el : list) {
-			hs.add(el.getChildText("id"));
-		}
-
-		return hs;
+        return new HashSet<Integer>(userGroupRepository.findGroupIds(UserGroupSpecs.hasUserId(userId)));
 	}
 
 	//--------------------------------------------------------------------------
@@ -624,15 +604,6 @@ public class Info implements Service {
 	//--- General purpose methods
 	//---
 	//--------------------------------------------------------------------------
-
-	private void add(Element sources, String uuid, String name)
-	{
-		Element source = new Element("source")
-					.addContent(new Element("uuid").setText(uuid))
-					.addContent(new Element("name").setText(name));
-
-		sources.addContent(source);
-	}
 
 	//--------------------------------------------------------------------------
 

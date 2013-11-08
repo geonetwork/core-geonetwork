@@ -25,40 +25,40 @@ package org.fao.geonet.services.group;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.specification.GroupSpecs;
 import org.jdom.Element;
+
+import static org.springframework.data.jpa.domain.Specifications.not;
 
 //=============================================================================
 
-/** Retrieves all groups in the system
-  */
+/**
+ * Retrieves all groups in the system
+ */
 
-public class List implements Service
-{
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+public class List implements Service {
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        Element elRes = context.getBean(GroupRepository.class).findAllAsXml(not(GroupSpecs.isReserved()));
 
-		Element elRes = Lib.local.retrieveWhere(dbms, "Groups", "id > ?", 1);
-		Element elOper= params.getChild(Jeeves.Elem.OPERATION);
+        Element elOper = params.getChild(Jeeves.Elem.OPERATION);
 
-		if (elOper != null)
-			elRes.addContent(elOper.detach());
+        if (elOper != null)
+            elRes.addContent(elOper.detach());
 
-		return elRes.setName(Jeeves.Elem.RESPONSE);
-	}
+        return elRes.setName(Jeeves.Elem.RESPONSE);
+    }
 }
 
 //=============================================================================

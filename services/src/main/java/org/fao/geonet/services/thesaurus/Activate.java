@@ -25,15 +25,17 @@ package org.fao.geonet.services.thesaurus;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.jdom.Element;
 
 
@@ -59,17 +61,13 @@ public class Activate implements Service {
 
         if (t != null) {
             // Save activated status in the database
-            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-            String checkQuery = "SELECT count(*) AS existing FROM Thesaurus WHERE id = ?";
-            Element records = dbms.select(checkQuery, fname);
+            final ThesaurusActivationRepository thesaurusRepository = context.getBean(ThesaurusActivationRepository.class);
 
-            if (records.getChild("record").getChildText("existing").equals("0")) {
-                String query = "INSERT INTO Thesaurus (id, activated) VALUES (?,?)";
-                dbms.execute(query, fname, activated);
-            } else {
-                String query = "UPDATE Thesaurus SET activated = ? WHERE id = ?";
-                dbms.execute(query, activated, fname);
-            }
+            final ThesaurusActivation activation = new ThesaurusActivation();
+            activation.setId(fname);
+            activation.setActivated(Constants.toBoolean_fromYNChar(activated.charAt(0)));
+
+            thesaurusRepository.save(activation);
 
         } else {
             // Thesaurus does not exist

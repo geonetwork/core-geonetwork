@@ -23,11 +23,11 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import jeeves.resources.dbms.Dbms;
-import org.jdom.Element;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 
 import java.util.HashMap;
-import java.util.List;
 
 //=============================================================================
 
@@ -43,16 +43,15 @@ public class CategoryMapper
 	//---
 	//--------------------------------------------------------------------------
 
-	public CategoryMapper(Dbms dbms) throws Exception
+	public CategoryMapper(ServiceContext context) throws Exception
 	{
-		String query = "SELECT * FROM Categories";
 
-		@SuppressWarnings("unchecked")
-        List<Element> idsList = dbms.select(query).getChildren();
+        final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
 
-		for (Element record : idsList) {
-            String id = record.getChildText("id");
-            String name = record.getChildText("name");
+
+		for (MetadataCategory record : categoryRepository.findAll()) {
+            String id = "" + record.getId();
+            String name = record.getName();
 
             add(name, id);
         }

@@ -37,11 +37,12 @@ import java.util.logging.Level;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Pair;
 import org.geotools.data.DataStore;
 import org.geotools.data.FeatureEvent;
 import org.geotools.data.FeatureListener;
@@ -110,7 +111,6 @@ public class SpatialIndexWriter implements FeatureListener
     /**
 			* TODO: javadoc.
 			* 
-			* @param dataStore
 			* @param parser
 			* @param transaction
 			* @param maxWrites Maximum number of writes in a transaction. If set to

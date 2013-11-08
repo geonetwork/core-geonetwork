@@ -27,12 +27,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import jeeves.server.ProfileManager;
-import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Geonet.Profile;
+import org.fao.geonet.domain.Profile;
 
 /**
  * Get all user information from the LDAP user's attributes (including profile and groups)
@@ -42,8 +40,7 @@ import org.fao.geonet.constants.Geonet.Profile;
 public class LDAPUserDetailsContextMapper extends
 		AbstractLDAPUserDetailsContextMapper {
 
-	protected void setProfilesAndPrivileges(ResourceManager resourceManager,
-			ProfileManager profileManager, String defaultProfile,
+	protected void setProfilesAndPrivileges(Profile defaultProfile,
 			String defaultGroup, Map<String, ArrayList<String>> userInfo,
 			LDAPUser userDetails) {
 
@@ -62,30 +59,30 @@ public class LDAPUserDetailsContextMapper extends
 							+ " found in attribute "
 							+ mapping.get("profile")[0]);
 				}
-				addProfile(profileManager, userDetails, profile);
+				addProfile(userDetails, profile, null);
 			}
 		}
 
 		// If no profile defined, use default profile
-		if (userDetails.getProfile() == null) {
+		if (userDetails.getUser().getProfile() == null) {
 			if (Log.isDebugEnabled(Geonet.LDAP)) {
 				Log.debug(Geonet.LDAP,
 						"  No profile defined in LDAP, using default profile "
 								+ defaultProfile);
 			}
-			userDetails.setProfile(defaultProfile);
+			userDetails.getUser().setProfile(defaultProfile);
 		}
 
-		if (userDetails.getProfile() != Profile.ADMINISTRATOR) {
+		if (userDetails.getUser().getProfile() != Profile.Administrator) {
 			List<String> ldapGroups = userInfo.get(mapping.get("privilege")[0]);
 			if (ldapGroups != null) {
 				for (String group : ldapGroups) {
 					if (Log.isDebugEnabled(Geonet.LDAP)) {
 						Log.debug(Geonet.LDAP,
 								"  Define group privilege for group " + group
-										+ " as " + userDetails.getProfile());
+										+ " as " + userDetails.getUser().getProfile());
 					}
-					userDetails.addPrivilege(group, userDetails.getProfile());
+					userDetails.addPrivilege(group, userDetails.getUser().getProfile());
 				}
 			}
 
@@ -96,10 +93,10 @@ public class LDAPUserDetailsContextMapper extends
 							Geonet.LDAP,
 							"  No privilege defined, setting privilege for group "
 									+ defaultGroup + " as "
-									+ userDetails.getProfile());
+									+ userDetails.getUser().getProfile());
 				}
 				userDetails
-						.addPrivilege(defaultGroup, userDetails.getProfile());
+						.addPrivilege(defaultGroup, userDetails.getUser().getProfile());
 			}
 		}
 	}

@@ -22,41 +22,60 @@
 //==============================================================================
 package org.fao.geonet.services.statistics;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.statistic.SearchRequestParam;
+import org.fao.geonet.repository.specification.SearchRequestParamSpecs;
+import org.fao.geonet.repository.statistic.SearchRequestParamRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
+
+import java.util.List;
 
 /**
- * Service to get the search terms for a field and optionnally a specific service
+ * Service to get the search terms for a field and optionally a specific service
  */
 public class SearchTermsStatistics extends NotInReadOnlyModeService {
-    
-    private static final String FIELD_QUERY = "SELECT termtext, COUNT(*) AS total " +
-                                            "FROM params WHERE termfield = ? " + 
-                                            "GROUP BY termtext ORDER BY total DESC";
-    private static final String FIELD_AND_SERVICE_QUERY = "SELECT termtext, COUNT(*) AS total " +
-                                            "FROM params p, requests r WHERE p.requestid = r.id AND termfield = ? AND service = ?" + 
-                                            "GROUP BY termtext ORDER BY total DESC";
+
     private static final String FIELD_PARAM = "field";
     private static final String SERVICE_PARAM = "service";
+    private static final String LIMIT_PARAM = "limit";
+    public static final int DEFAULT_LIMIT = 25;
+
     public void init(String appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
-    
+
     @Override
     public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
         String field = Util.getParam(params, FIELD_PARAM);
         String service = Util.getParam(params, SERVICE_PARAM, "");
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        if (service.equals("")) {
-            return dbms.select(FIELD_QUERY, field);
-        } else {
-            return dbms.select(FIELD_AND_SERVICE_QUERY, field, service);
+        int limit = Util.getParam(params, LIMIT_PARAM, DEFAULT_LIMIT);
+
+        final SearchRequestParamRepository paramRepository = context.getBean(SearchRequestParamRepository.class);
+        Specification<SearchRequestParam> specification = SearchRequestParamSpecs.hasTermField(field);
+        if (!service.equals("")) {
+            specification = Specifications.where(specification).and(SearchRequestParamSpecs.hasService(service));
         }
+
+        final List<Pair<String, Integer>> termTextToRequestCount = paramRepository.getTermTextToRequestCount(limit,
+                specification);
+        return toElement(termTextToRequestCount);
+    }
+
+    private Element toElement(List<Pair<String, Integer>> termTextToRequestCount) {
+        final Element param = new Element("params");
+        for (Pair<String, Integer> summary : termTextToRequestCount) {
+            param.addContent(
+                    new Element("record")
+                            .addContent(new Element("termtext").setText(summary.one()))
+                            .addContent(new Element("total").setText("" + summary.two()))
+            );
+        }
+        return param;
     }
 }

@@ -23,7 +23,8 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.jdom.Element;
 
 //=============================================================================
@@ -59,15 +60,24 @@ public class RecordInfo
 		this.source     = source;
 	}
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public RecordInfo(Element record)
-	{
-		id         = record.getChildText("id");
-		uuid       = record.getChildText("uuid");
-		isTemplate = record.getChildText("istemplate");
-		changeDate = record.getChildText("changedate");
-	}
+    public RecordInfo(Element record)
+    {
+        id         = record.getChildText("id");
+        uuid       = record.getChildText("uuid");
+        isTemplate = record.getChildText("istemplate");
+        changeDate = record.getChildText("changedate");
+    }
+    //---------------------------------------------------------------------------
+
+    public RecordInfo(Metadata record)
+    {
+        id         = "" + record.getId();
+        uuid       = record.getUuid();
+        isTemplate = record.getDataInfo().getType().codeString;
+        changeDate = record.getDataInfo().getChangeDate().getDateAndTime();
+    }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -89,7 +99,7 @@ public class RecordInfo
 
         //--- modified:  we accept metadata modified from 24 hours before
         //--- to harvest several changes during a day (if short date format used) or date local differences
-        return (remoteDate.sub(localDate) > (-1) * SECONDS_PER_DAY);
+        return (remoteDate.timeDifferenceInSeconds(localDate) > (-1) * SECONDS_PER_DAY);
 	}
 
 	//-----------------------------------------------------------------------------
@@ -103,7 +113,7 @@ public class RecordInfo
 
         //--- modified:  we accept metadata modified from 24 hours before
         //--- to harvest several changes during a day (if short date format used) or date local differences
-        return (remoteDate.sub(localDate) > (-1) * SECONDS_PER_DAY);
+        return (remoteDate.timeDifferenceInSeconds(localDate) > (-1) * SECONDS_PER_DAY);
     }
 	//---------------------------------------------------------------------------
 

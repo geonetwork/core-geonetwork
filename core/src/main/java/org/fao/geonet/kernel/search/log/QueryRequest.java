@@ -1,14 +1,20 @@
 package org.fao.geonet.kernel.search.log;
 
-import jeeves.resources.dbms.Dbms;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.statistic.LuceneQueryParamType;
+import org.fao.geonet.domain.statistic.SearchRequest;
+import org.fao.geonet.domain.statistic.SearchRequestParam;
+import org.fao.geonet.repository.statistic.SearchRequestParamRepository;
+import org.fao.geonet.repository.statistic.SearchRequestRepository;
+import org.springframework.util.Assert;
 
-import java.sql.SQLException;
+import javax.annotation.Nonnull;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * A bean representing a query request.
@@ -36,7 +42,7 @@ public class QueryRequest {
 	/** The db unique identifier for the stored request */
 	int requestId;
 	/** the QueryInfo objects generated during this query: search terms and search fields */
-	private Vector<QueryInfo> queryInfos;
+	private List<SearchRequestParam> queryInfos;
 	
 	/** The date of the Query */
 	private Date date;
@@ -65,7 +71,7 @@ public class QueryRequest {
 	private String spatialFilter;
 	
 	/** the metadata searched type. see static constants for the list of types. */
-	private String mdType;
+	private LuceneQueryParamType mdType;
 	
 	/** the service use to do the search */
 	private String service;
@@ -88,32 +94,28 @@ public class QueryRequest {
 		this.date = new Date(queryDate);
 		this.formattedDate = new SimpleDateFormat(QueryRequest.DATE_FORMAT).format(this.date);
 		//all queries default to ALL mdType, except if overloaded by a queryInfo object
-		this.mdType = QueryRequest.QUERY_TYPE_ALL;
-	}
-
-	public Vector<QueryInfo> getQueryInfos() {
-		return queryInfos;
+		this.mdType = LuceneQueryParamType.MATCH_ALL_DOCS;
 	}
 
 	/**
 	 * sets the queryinfo object and also look into all queryInfos to see if a query type can be guessed
 	 * @param queryInfos
 	 */
-	public void setQueryInfos(Vector<QueryInfo> queryInfos) {
-		this.queryInfos = queryInfos;
-		if (queryInfos != null) {
-			for (QueryInfo qi : queryInfos) {
-				String t = qi.getMdQueryType();
-				if (t != null) {
-					this.setMdType(t);
-					// type is unique into a Lucene query ?
-					break;
-				}
-			}
-		}
-	}
+    public void setQueryInfos(@Nonnull List<SearchRequestParam> queryInfos) {
+        Assert.isTrue(queryInfos != null);
+        this.queryInfos = queryInfos;
+        for (SearchRequestParam qi : queryInfos) {
+            Assert.isTrue(qi != null);
+            LuceneQueryParamType t = qi.getQueryType();
+            if (t != null) {
+                this.mdType = t;
+                // type is unique into a Lucene query ?
+                break;
+            }
+        }
+    }
 
-	public Date getDate() {
+    public Date getDate() {
 		return (Date) date.clone();
 	}
 
@@ -177,15 +179,6 @@ public class QueryRequest {
 	public void setFormattedDate(String formattedDate) {
 		this.formattedDate = formattedDate;
 	}
-	
-
-	public String getMdType() {
-		return mdType;
-	}
-
-	public void setMdType(String mdtype) {
-		this.mdType = mdtype;
-	}
 
 	public void setService(String service) {
 		this.service = service;
@@ -217,14 +210,14 @@ public class QueryRequest {
 		
 		if (this.queryInfos != null) {
 			simpleQuery = true;
-			for (QueryInfo qi : this.queryInfos) {
-				if ( QueryInfo.MATCH_ALL_DOCS_QUERY.equals(qi.getLuceneQueryType()) ||
-				        !"any".equals(qi.getField()) &&
-						! "type".equals(qi.getField()) &&
-						! "_owner".equals(qi.getField()) &&
-						! qi.getField().contains("_op") &&
-						! "_isTemplate".equals(qi.getField()) &&
-						! "_locale".equals(qi.getField())) {
+			for (SearchRequestParam qi : this.queryInfos) {
+				if ( LuceneQueryParamType.MATCH_ALL_DOCS == qi.getQueryType() ||
+				        !"any".equals(qi.getTermField()) &&
+						! "type".equals(qi.getTermField()) &&
+						! "_owner".equals(qi.getTermField()) &&
+						! qi.getTermField().contains("_op") &&
+						! "_isTemplate".equals(qi.getTermField()) &&
+						! "_locale".equals(qi.getTermField())) {
 					simpleQuery = false;
 					break;
 				}
@@ -234,77 +227,48 @@ public class QueryRequest {
 	}
 
 	/**
-	 * Stores this object to 
-	 * @param dbms
+	 * Stores this object to.
+	 * @param context
 	 * @return
 	 */
-	public boolean storeToDb(Dbms dbms, SerialFactory sf) {
-		if (dbms == null || dbms.isClosed()) {
-            if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
-                Log.debug(Geonet.SEARCH_LOGGER, "null or closed dbms object");
-			return false;
-		}
-		// prepares a transaction to log all or nothing into database.
-		
-		//Connection con = null;
-		try {
-			//--- generate a new metadata id
-			this.requestId = sf.getSerial(dbms, "Requests");
-			
-			String query = "insert into requests(id,requestDate, ip, query, ";
-			query += "hits, lang, sortBy, spatialFilter, type, simple, autogenerated, service) values(?,?,?,?,?,?,?,?,?,?,?,?)";
-			
-			int res = dbms.execute(query,
-					this.requestId,
-					this.getFormattedDate(),
-					this.getIp(),
-					this.getLuceneQuery(),
-					this.getHits(),
-					this.getLanguage(),
-					this.getSortBy(),
-					this.getSpatialFilter(),
-					this.getMdType(),
-					(this.simpleQuery ? 1 : 0),
-					(this.autoGenQuery ? 1 : 0),
-					this.getService());
-            if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
-                Log.debug(Geonet.SEARCH_LOGGER, res + " queryRequest inserted (id: " + this.requestId + ")");
-			
-			// stores each QueryInfo object into the database
-			if (this.queryInfos != null && !this.autoGenQuery) {
-				for (QueryInfo qi : this.queryInfos) {
-					if (qi != null) {
-						if (!qi.storeToDb(dbms, sf, this.requestId)) {
-							Log.warning(Geonet.SEARCH_LOGGER, "unable to log this QueryInfo: " + qi.toString());
-						}
-					} else {
-                        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
-                            Log.debug(Geonet.SEARCH_LOGGER, "null queryInfo object to store ??!!");
-					}
-				}
-			} else {
-				if (this.autoGenQuery) {
-                    if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
-                        Log.debug(Geonet.SEARCH_LOGGER, "Guiservice/autogenerated query not inserted into database: " + this.luceneQuery);
-				} else {
-                    if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
-                        Log.debug(Geonet.SEARCH_LOGGER, "No queryInfo objects to insert into database for this query: " + this.luceneQuery);
-				}
-			}
-            if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
-                Log.debug(Geonet.SEARCH_LOGGER, "commiting query to db...");
-			dbms.commit();
-		} catch (SQLException sqle) {
-			dbms.abort();
-			Log.warning(Geonet.SEARCH_LOGGER, "an error occuring during QueryRequest database storage. Aborting :" + 
-					sqle.getMessage() + 
-					"\n" + 
-					"Is rollback occured ?");
-			sqle.printStackTrace();
-		} finally {
-			//try { con.close(); } catch (SQLException sqle2) {sqle.printStackTrace();}
-		}
-		return true;
-	}
+    public boolean storeToDb(ServiceContext context) {
+        SearchRequestRepository requestRepo = context.getBean(SearchRequestRepository.class);
+        // prepares a transaction to log all or nothing into database.
+
+        //Connection con = null;
+        //--- generate a new metadata id
+        SearchRequest request = new SearchRequest();
+        request.setAutogenerated(this.autoGenQuery);
+        request.setHits(this.hits);
+        request.setIpAddress(this.ip);
+        request.setLang(this.language);
+        request.setLuceneQuery(this.luceneQuery);
+        request.setMetadataType(this.mdType.name());
+        request.setRequestDate(new ISODate(this.date.getTime(), false));
+        request.setService(this.service);
+        request.setSimple(this.isSimpleQuery());
+        request.setSortBy(this.sortBy);
+        request.setSpatialFilter(this.spatialFilter);
+
+        // stores each QueryInfo object into the database
+        if (this.queryInfos != null && !this.autoGenQuery) {
+            request.addAll(this.queryInfos);
+        } else {
+            if (this.autoGenQuery) {
+                if (Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) {
+                    Log.debug(Geonet.SEARCH_LOGGER, "Guiservice/autogenerated query not inserted into database: " + this.luceneQuery);
+                }
+            } else {
+                if (Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) {
+                    Log.debug(Geonet.SEARCH_LOGGER, "No queryInfo objects to insert into database for this query: " + this.luceneQuery);
+                }
+            }
+        }
+
+        requestRepo.save(request);
+        if (Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
+            Log.debug(Geonet.SEARCH_LOGGER, "QueryRequest inserted (id: " + this.requestId + ")");
+        return true;
+    }
 
 }

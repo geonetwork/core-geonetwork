@@ -35,24 +35,25 @@ import static org.fao.geonet.kernel.mef.MEFConstants.SCHEMA;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
-import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
+import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataRelation;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.Utils;
+import org.fao.geonet.repository.MetadataRelationRepository;
 import org.jdom.Element;
 
 class MEF2Exporter {
@@ -72,15 +73,13 @@ class MEF2Exporter {
 	public static String doExport(ServiceContext context, Set<String> uuids,
 			Format format, boolean skipUUID, String stylePath, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
 		File file = File.createTempFile("mef-", ".mef");
 		FileOutputStream fos = new FileOutputStream(file);
 		ZipOutputStream zos = new ZipOutputStream(fos);
 
         for (Object uuid1 : uuids) {
             String uuid = (String) uuid1;
-            createMetadataFolder(context, dbms, uuid, zos, skipUUID, stylePath,
+            createMetadataFolder(context, uuid, zos, skipUUID, stylePath,
                     format, resolveXlink, removeXlinkAttribute);
         }
 
@@ -98,7 +97,6 @@ class MEF2Exporter {
 	 * parameter.
 	 * 
 	 * @param context
-	 * @param dbms
 	 * @param uuid
 	 *            Metadata record to export
 	 * @param zos
@@ -108,17 +106,17 @@ class MEF2Exporter {
 	 * @param format
 	 * @throws Exception
 	 */
-	private static void createMetadataFolder(ServiceContext context, Dbms dbms,
+	private static void createMetadataFolder(ServiceContext context,
 			String uuid, ZipOutputStream zos, boolean skipUUID,
 			String stylePath, Format format, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 
 		MEFLib.createDir(zos, uuid + FS);
 
-		Element record = MEFLib.retrieveMetadata(context, dbms, uuid, resolveXlink, removeXlinkAttribute);
+		Metadata record = MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
 
-		String id = record.getChildText("id");
-		String isTemp = record.getChildText("istemplate");
-		String schema = record.getChildText("schemaid");
+		String id = "" + record.getId();
+		String isTemp = record.getDataInfo().getType().codeString;
+		String schema = record.getDataInfo().getSchemaId();
 
 		if (!"y".equals(isTemp) && !"n".equals(isTemp))
 			throw new Exception("Cannot export sub template");
@@ -138,12 +136,7 @@ class MEF2Exporter {
 		    MetadataSchema metadataSchema = dm.getSchema(schema);
 			String path = metadataSchema.getSchemaDir() + "/convert/to19139.xsl";
 
-			// Element record needs to be cloned due to transform method in
-			// formatData,
-			// performing a detach() method this element.
-			Element profilMetadata = (Element) record.clone();
-
-			ByteArrayInputStream data19139 = formatData(profilMetadata, true,
+			ByteArrayInputStream data19139 = formatData(record, true,
 					path);
 			MEFLib.addFile(zos, uuid + FS + MD_DIR + FILE_METADATA_19139,
 					data19139);
@@ -154,28 +147,29 @@ class MEF2Exporter {
 		MEFLib.addFile(zos, uuid + FS + MD_DIR + FILE_METADATA, data);
 
 		// --- save Feature Catalog
-		String ftUUID = getFeatureCatalogID(context, dbms, uuid);
+		String ftUUID = getFeatureCatalogID(context, record.getId());
 		if (!ftUUID.equals("")) {
-			Element ft = MEFLib.retrieveMetadata(context, dbms, ftUUID, resolveXlink, removeXlinkAttribute);
+			Metadata ft = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute);
 			ByteArrayInputStream ftData = formatData(ft);
 			MEFLib.addFile(zos, uuid + FS + SCHEMA + FILE_METADATA, ftData);
 		}
 
 		// --- save info file
 		byte[] binData = MEFLib.buildInfoFile(context, record, format, pubDir,
-				priDir, skipUUID).getBytes(Jeeves.ENCODING);
+				priDir, skipUUID).getBytes(Constants.ENCODING);
 
 		MEFLib.addFile(zos, uuid + FS + FILE_INFO, new ByteArrayInputStream(
 				binData));
 
 		// --- save thumbnails and maps
 
-		if (format == Format.PARTIAL || format == Format.FULL)
+		if (format == Format.PARTIAL || format == Format.FULL) {
 			MEFLib.savePublic(zos, pubDir, uuid);
+        }
 
 		if (format == Format.FULL) {
 			try {
-				Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
+                Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
 				MEFLib.savePrivate(zos, priDir, uuid);
 			} catch (Exception e) {
 				// Current user could not download private data
@@ -186,26 +180,26 @@ class MEF2Exporter {
 	/**
 	 * Format xml data
 	 * 
-	 * @param elt
+	 * @param metadata
 	 * @return
 	 * @throws Exception
 	 */
-	private static ByteArrayInputStream formatData(Element elt)
+	private static ByteArrayInputStream formatData(Metadata metadata)
 			throws Exception {
-		return formatData(elt, false, "");
+		return formatData(metadata, false, "");
 	}
 
 	/**
 	 * Format xml data
 	 * 
-	 * @param elt
+	 * @param metadata
 	 * @param transform
 	 * @return ByteArrayInputStream
 	 * @throws Exception
 	 */
-	private static ByteArrayInputStream formatData(Element elt,
+	private static ByteArrayInputStream formatData(Metadata metadata,
 			boolean transform, String stylePath) throws Exception {
-		String xmlData = elt.getChildText("data");
+		String xmlData = metadata.getData();
 
 		Element md = Xml.loadString(xmlData, false);
 
@@ -219,10 +213,11 @@ class MEF2Exporter {
 
 		String data = Xml.getString(md);
 
-		if (!data.startsWith("<?xml"))
+		if (!data.startsWith("<?xml")) {
 			data = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + data;
+        }
 
-		byte[] binData = data.getBytes(Jeeves.ENCODING);
+		byte[] binData = data.getBytes(Constants.ENCODING);
 
 		return new ByteArrayInputStream(binData);
 	}
@@ -231,31 +226,26 @@ class MEF2Exporter {
 	 * Get Feature Catalog ID if exists using relation table.
 	 * 
 	 * @param context
-	 * @param dbms
-	 * @param uuid
-	 *            Metadata record uuid to search for feature catalogue for.
+	 * @param metadataId
+	 *            Metadata record id to search for feature catalogue for.
 	 * @return String Feature catalogue uuid.
 	 * @throws Exception
 	 */
-	private static String getFeatureCatalogID(ServiceContext context,
-			Dbms dbms, String uuid) throws Exception {
+	private static String getFeatureCatalogID(ServiceContext context, int metadataId) throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dm = gc.getBean(DataManager.class);
 
-		String id = dm.getMetadataId(dbms, uuid);
-		if (id == null)
-			throw new MetadataNotFoundEx("uuid=" + uuid);
+        List<MetadataRelation> relations = context.getBean(MetadataRelationRepository.class).findAllById_MetadataId(metadataId);
 
-		Set<String> relatedIds = Utils.getRelationIds(Integer.valueOf(id), "normal", context);
-		if (relatedIds.size() == 0)
+		if (relations.isEmpty()) {
 			return "";
+        }
 
 		// Assume only one feature catalogue is available for a metadata record.
-		String ftId =  (String) relatedIds.toArray()[0];
-		String ftUuid = null;
-		if (!ftId.equals(""))
-			ftUuid = dm.getMetadataUuid(dbms, ftId);
+		int ftId =  relations.get(0).getId().getRelatedId();
+
+        String ftUuid = dm.getMetadataUuid("" + ftId);
 
 		return ftUuid != null ? ftUuid : "";
 	}

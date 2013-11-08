@@ -1,16 +1,16 @@
 package jeeves.config.springutil;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import javax.servlet.ServletContext;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.ServletContext;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * A Spring Bean that will update a tag in a String property of the provided
@@ -113,9 +113,7 @@ public class ServerBeanPropertyUpdater {
 		lookUpField(bean.getClass(), propertyName).set(bean, newValue);
 	}
 
-	public static void updateURL(String newURL, ServletContext servletContext) throws Exception {
-		WebApplicationContext context = WebApplicationContextUtils
-				.getWebApplicationContext(servletContext);
+	public static void updateURL(String newURL, ApplicationContext context) throws Exception {
 		Map<String, ServerBeanPropertyUpdater> updaters = context
 				.getBeansOfType(ServerBeanPropertyUpdater.class);
 		for (ServerBeanPropertyUpdater updater : updaters.values()) {

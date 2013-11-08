@@ -23,29 +23,21 @@
 
 package org.fao.geonet.csw.common.requests;
 
+import static org.fao.geonet.utils.AbstractHttpRequest.Method;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Util;
 
-import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.HttpState;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.cookie.CookiePolicy;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -61,47 +53,31 @@ import java.util.List;
 
 //=============================================================================
 
-public abstract class CatalogRequest
-{
-	public enum Method { GET, POST }
-
+public abstract class CatalogRequest {
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-    public CatalogRequest() { this(null, null); }
-
 	public CatalogRequest(ServiceContext context) { this(context, null); }
 
 	//---------------------------------------------------------------------------
 
-	public CatalogRequest(ServiceContext context, String host) { this(context, host, 80); }
+	public CatalogRequest(final ServiceContext context, final String host) { this(context, host, 80); }
 
     //---------------------------------------------------------------------------
 
-    public CatalogRequest(ServiceContext context, String host, int port)
-    {
+    public CatalogRequest(final ServiceContext context, final String host, final int port) {
         this(context, host, port, "http");
     }
 
 	//---------------------------------------------------------------------------
 
-	public CatalogRequest(ServiceContext context, String host, int port, String protocol)
-	{
-		this.host    = host;
-		this.port    = port;
-        this.protocol= protocol;
-
+	public CatalogRequest(final ServiceContext context, final String host, final int port, final String protocol) {
+        client = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(host, port, protocol);
 		setMethod(Method.POST);
-        Cookie cookie = new Cookie();
-        HttpState state = new HttpState();
-        state.addCookie(cookie);
-		client.setState(state);
-		client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
-
-        if (context != null) Lib.net.setupProxy(context, client);
+        Lib.net.setupProxy(context, client);
 	}
 
 	//---------------------------------------------------------------------------
@@ -110,13 +86,12 @@ public abstract class CatalogRequest
 	//---
 	//---------------------------------------------------------------------------
 
-	public String getHost()         { return host;         }
-	public int    getPort()         { return port;         }
-    public String getProtocol()     { return protocol;     }
-	public String getAddress()      { return address;      }
-	public Method getMethod()       { return method;       }
-	public String getSentData()     { return sentData;     }
-	public String getReceivedData() { return receivedData; }
+	public String getHost()         { return client.getHost();         }
+	public int    getPort()         { return client.getPort();         }
+    public String getProtocol()     { return client.getProtocol();     }
+	public String getAddress()      { return client.getAddress();      }
+	public Method getMethod()       { return client.getMethod();       }
+	public String getSentData()     { return client.getSentData();     }
 
 	//---------------------------------------------------------------------------
 
@@ -136,32 +111,6 @@ public abstract class CatalogRequest
         this.serverVersion = serverVersion;
     }
 
-	public void setHost(String host)
-	{
-		this.host = host;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public void setPort(int port)
-	{
-		this.port = port;
-	}
-
-    //---------------------------------------------------------------------------
-
-    public void setProtocol(String protocol)
-    {
-        this.protocol = protocol;
-    }
-
-	//---------------------------------------------------------------------------
-
-	public void setAddress(String address)
-	{
-		this.address = address;
-	}
-
 	//---------------------------------------------------------------------------
 	/**
 	 * Set request URL host, port, address and path.
@@ -171,27 +120,20 @@ public abstract class CatalogRequest
 	 */
 	public void setUrl(URL url)
 	{
-		this.host    = url.getHost();
-		this.port    = url.getPort();
-        this.protocol= url.getProtocol();
-		this.address = url.toString();
-		this.path = url.getPath();
-		
-		alSetupGetParams = new ArrayList<NameValuePair>();
-		String query = url.getQuery();
+        client.setUrl(url);
+
+        client.setQuery(null);
+        client.clearParams();
+        String query = url.getQuery();
 
 		if (StringUtils.isNotEmpty(query)) {
 			String[] params = query.split("&");
 			for (String param : params) {
 				String[] kvp = param.split("=");
 				if (!excludedParameters.contains(kvp[0].toLowerCase())) {
-					this.alSetupGetParams.add(new NameValuePair(kvp[0], kvp[1]));
+					client.addParam(kvp[0], kvp[1]);
 				}
 			}
-		}
-
-		if (this.port == -1) {
-			this.port = url.getDefaultPort();
 		}
 	}
 
@@ -199,72 +141,31 @@ public abstract class CatalogRequest
 
 	public void setMethod(Method m)
 	{
-		method = m;
+		client.setMethod(m);
 	}
-
-	//---------------------------------------------------------------------------
-
-	public void setLoginAddress(String address)
-	{
-		loginAddr = address;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public void setUseSOAP(boolean yesno)
-	{
-		useSOAP = yesno;
-	}
-
-	//---------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------
 
-    public Element execute() throws Exception
-	{
-		HttpMethodBase httpMethod = setupHttpMethod();
-
-		Element response = doExecute(httpMethod);
-
-		if (useSOAP)
-			response = soapUnembed(response);
-
-		//--- raises an exception if the case
+    public Element execute() throws Exception {
+        if (getMethod() == Method.GET) {
+            client.clearParams();
+            setupGetParams();
+        } else {
+            final Element postParams = getPostParams();
+            client.setRequest(postParams);
+        }
+        Element response = client.execute();
+        //--- raises an exception if the case
 		CatalogException.unmarshal(response);
 
 		return response;
 	}
 
-    public boolean login(String username, String password) throws Exception
-
-    {
-        Element request = new Element("request")
-                .addContent(new Element("username").setText(username))
-                .addContent(new Element("password").setText(password));
-
-        PostMethod post = new PostMethod();
-
-        postData = Xml.getString(new Document(request));
-
-        post.setRequestEntity(new StringRequestEntity(postData, "application/xml", "UTF8"));
-//		post.setFollowRedirects(true);
-        post.setPath(loginAddr);
-
-        Element response = doExecute(post);
-
-        if (Csw.NAMESPACE_ENV.getURI().equals(response.getNamespace().getURI()))
-            response = soapUnembed(response);
-
-        return response.getName().equals("ok");
-    }
-
     //---------------------------------------------------------------------------
 
 	public void setCredentials(String username, String password)
 	{
-		this.useAuthent = true;
-		this.username   = username;
-		this.password   = password;
+		client.setCredentials(username, password);
 	}
 
 	//---------------------------------------------------------------------------
@@ -445,218 +346,17 @@ public abstract class CatalogRequest
 
 	protected void addParam(String name, Object value, String prefix)
 	{
-		if (value != null)
-			alGetParams.add(new NameValuePair(name, prefix+value.toString()));
+        client.addParam(name, prefix+value.toString());
 	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
-
-	private Element doExecute(HttpMethodBase httpMethod) throws IOException, JDOMException
-	{
-		client.getHostConfiguration().setHost(host, port, protocol);
-
-		byte[] data = null;
-
-		try
-		{
-			client.executeMethod(httpMethod);
-			
-			///data = httpMethod.getResponseBody();
-			// If server return HTTP Error 500 Server error 
-			// when retrieving the data return null
-			if (httpMethod.getStatusCode() == 500) {
-				System.out.println("  Status code: " + httpMethod.getStatusCode());
-				return null;
-			} else {
-				return Xml.loadStream(httpMethod.getResponseBodyAsStream());
-			}
-		}
-		finally
-		{
-			httpMethod.releaseConnection();
-			try {
-			setupSentData(httpMethod);
-			setupReceivedData(httpMethod, data);
-			} catch (Throwable e) {
-			    Log.warning(Geonet.HARVESTER, "Exception was raised during cleanup of a CSW request : "+ Util.getStackTrace(e));
-			}
-		}
-	}
-
-	//---------------------------------------------------------------------------
-
-	private HttpMethodBase setupHttpMethod() throws UnsupportedEncodingException
-	{
-		HttpMethodBase httpMethod;
-
-		if (method == Method.GET)
-		{
-			alGetParams = new ArrayList<NameValuePair>();
-			
-			if (alSetupGetParams.size() != 0) {
-				alGetParams.addAll(alSetupGetParams);
-			}
-			
-			setupGetParams();
-			httpMethod = new GetMethod();
-			httpMethod.setPath(path);
-			httpMethod.setQueryString(alGetParams.toArray(new NameValuePair[1]));
-			System.out.println("GET params:"+httpMethod.getQueryString());
-			if (useSOAP)
-				httpMethod.addRequestHeader("Accept", "application/soap+xml");
-		}
-		else
-		{
-			Element    params = getPostParams();
-			PostMethod post   = new PostMethod();
-			if (!useSOAP)
-			{
-				postData = Xml.getString(new Document(params));
-				post.setRequestEntity(new StringRequestEntity(postData, "application/xml", "UTF8"));
-			}
-			else
-			{
-				postData = Xml.getString(new Document(soapEmbed(params)));
-				post.setRequestEntity(new StringRequestEntity(postData, "application/soap+xml", "UTF8"));
-			}
-			System.out.println("POST params:"+Xml.getString(params));
-			httpMethod = post;
-			httpMethod.setPath(address);
-		}
- 
-//		httpMethod.setFollowRedirects(true);
-		
-		if (useAuthent)
-		{
-			Credentials cred = new UsernamePasswordCredentials(username, password);
-			AuthScope   scope= new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
-
-			client.getState().setCredentials(scope, cred);
-			httpMethod.setDoAuthentication(true);
-		}
-
-		return httpMethod;
-	}
-
-	//---------------------------------------------------------------------------
-
-	private void setupSentData(HttpMethodBase httpMethod)
-	{
-		sentData = httpMethod.getName() +" "+ httpMethod.getPath();
-
-		if (httpMethod.getQueryString() != null)
-			sentData += "?"+ httpMethod.getQueryString();
-
-		sentData += "\r\n";
-
-		for (Header h : httpMethod.getRequestHeaders())
-			sentData += h;
-
-		sentData += "\r\n";
-
-		if (httpMethod instanceof PostMethod)
-			sentData += postData;
-	}
-
-	//---------------------------------------------------------------------------
-
-	private void setupReceivedData(HttpMethodBase httpMethod, byte[] response)
-	{
-		receivedData = httpMethod.getStatusText() +"\r\r";
-
-		for (Header h : httpMethod.getResponseHeaders())
-			receivedData += h;
-
-		receivedData += "\r\n";
-
-		try
-		{
-			if (response != null)
-				receivedData += new String(response, "UTF8");
-		}
-		catch (UnsupportedEncodingException e) {
-            // TODO what's this ?
-        }
-	}
-
-	//---------------------------------------------------------------------------
-
-	private Element soapEmbed(Element elem)
-	{
-		Element envl = new Element("Envelope", Csw.NAMESPACE_ENV);
-		Element body = new Element("Body",     Csw.NAMESPACE_ENV);
-
-		envl.addContent(body);
-		body.addContent(elem);
-
-		return envl;
-	}
-
-	//---------------------------------------------------------------------------
-
-	private Element soapUnembed(Element envelope) throws Exception
-	{
-		Namespace ns   = envelope.getNamespace();
-		Element   body = envelope.getChild("Body", ns);
-
-		if (body == null)
-			throw new Exception("Bad SOAP response");
-
-		@SuppressWarnings("unchecked")
-        List<Element> list = body.getChildren();
-
-		if (list.size() == 0)
-			throw new Exception("Bas SOAP response");
-
-		return list.get(0);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-	private String  host;
-	private int     port;
-    private String  protocol;
-	private String  address;
-	private String  path;
-	private String  loginAddr;
-	private Method  method;
-	private boolean useSOAP;
-	private boolean useAuthent;
-	private String  username;
-	private String  password;
 	protected String outputSchema;
 
     protected String serverVersion = Csw.CSW_VERSION;  // Sets default value
 
-	private HttpClient client = new HttpClient();
-
-    private ArrayList<NameValuePair> alGetParams;
-    private ArrayList<NameValuePair> alSetupGetParams;
+	private final XmlRequest client;
 
     // Parameters to not take into account in GetRequest
 	private static final List<String> excludedParameters = Arrays.asList("", "request", "version", "service");
-	
-	//--- transient vars
-
-	private String sentData;
-	private String receivedData;
-	private String postData;
 }
 
 //=============================================================================

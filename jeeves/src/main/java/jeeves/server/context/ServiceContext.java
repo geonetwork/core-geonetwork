@@ -23,27 +23,23 @@
 
 package jeeves.server.context;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.CheckForNull;
-
-import jeeves.config.springutil.JeevesApplicationContext;
-import jeeves.interfaces.Logger;
-import jeeves.monitor.MonitorManager;
-import jeeves.server.ProfileManager;
+import jeeves.component.ProfileManager;
+import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.local.LocalServiceRequest;
-import jeeves.server.resources.ProviderManager;
-import jeeves.server.resources.ResourceManager;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.JeevesServlet;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
-
+import org.fao.geonet.Logger;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import javax.annotation.CheckForNull;
+import javax.persistence.EntityManager;
+import java.util.HashMap;
+import java.util.Map;
 
 //=============================================================================
 
@@ -75,7 +71,6 @@ public class ServiceContext extends BasicContext
 
 
     private UserSession    userSession = new UserSession();
-	private ProfileManager profilMan;
 
 	private InputMethod    input;
 	private OutputMethod   output;
@@ -89,7 +84,7 @@ public class ServiceContext extends BasicContext
 	private JeevesServlet servlet;
 	private boolean startupError = false;
 	Map<String,String> startupErrors;
-    private XmlCacheManager xmlCacheManager;
+    private EntityManager entityManager;
     /**
      * Property to be able to add custom response headers depending on the code
      * (and not the xml of Jeeves)
@@ -119,12 +114,11 @@ public class ServiceContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ServiceContext(String service, JeevesApplicationContext jeevesApplicationContext, XmlCacheManager cacheManager, MonitorManager mm, ProviderManager pm, SerialFactory sf, ProfileManager p, Map<String, Object> contexts)
+	public ServiceContext(String service, ConfigurableApplicationContext jeevesApplicationContext, Map<String, Object> contexts, EntityManager entityManager)
 	{
-		super(jeevesApplicationContext, mm, pm, sf, contexts);
+		super(jeevesApplicationContext, contexts);
 
-		this.xmlCacheManager = cacheManager;
-		profilMan    = p;
+        this.entityManager = entityManager;
 		setService(service);
 
         setResponseHeaders(new HashMap<String, String>());
@@ -143,7 +137,7 @@ public class ServiceContext extends BasicContext
     public int getMaxUploadSize() { return maxUploadSize; }
 
 	public UserSession    getUserSession()    { return userSession; }
-	public ProfileManager getProfileManager() { return profilMan;   }
+	public ProfileManager getProfileManager() { return getBean(ProfileManager.class);   }
 
 	public InputMethod  getInputMethod()  { return input;  }
 	public OutputMethod getOutputMethod() { return output; }
@@ -212,32 +206,7 @@ public class ServiceContext extends BasicContext
     }
 
 	public Element execute(LocalServiceRequest request) throws Exception {
-		ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), getXmlCacheManager(), getMonitorManager(), getProviderManager(), getSerialFactory(), getProfileManager(), htContexts) {
-			public ResourceManager getResourceManager() {
-				return new ResourceManager(getMonitorManager(), getProviderManager()) {
-					@Override
-					public synchronized void abort() throws Exception {
-					}
-					@Override
-					public synchronized void close() throws Exception {
-					}
-					@Override
-					public synchronized void close(String name, Object resource)
-							throws Exception {
-					}
-					@Override
-					public synchronized void abort(String name, Object resource)
-							throws Exception {
-					}
-					@Override
-					protected void openMetrics(Object resource) {
-					}
-					@Override
-					protected void closeMetrics(Object resource) {
-					}
-				};
-			}
-		};
+		ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, getEntityManager());
 		
 		UserSession session = userSession;
 		if(userSession == null) {
@@ -245,7 +214,7 @@ public class ServiceContext extends BasicContext
 		} 
 		
 		try {
-		servlet.getEngine().getServiceManager().dispatch(request,session,context);
+            context.getBean(JeevesEngine.class).getServiceManager().dispatch(request,session,context);
 		} catch (Exception e) {
 			Log.error(Log.XLINK_PROCESSOR,"Failed to parse result xml"+ request.getService());
 			throw new ServiceExecutionFailedException(request.getService(),e);
@@ -262,7 +231,7 @@ public class ServiceContext extends BasicContext
 	}
     
     public XmlCacheManager getXmlCacheManager() {
-        return this.xmlCacheManager;
+        return getBean(XmlCacheManager.class);
     }
     public Map<String, String> getResponseHeaders() {
         return responseHeaders;
@@ -280,7 +249,9 @@ public class ServiceContext extends BasicContext
         return statusCode;
     }
 
-
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
 }
 
 //=============================================================================

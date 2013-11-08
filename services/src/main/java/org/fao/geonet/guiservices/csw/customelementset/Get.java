@@ -23,14 +23,14 @@
 package org.fao.geonet.guiservices.csw.customelementset;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.domain.CustomElementSet;
+import org.fao.geonet.repository.CustomElementSetRepository;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.csw.domain.CustomElementSet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
@@ -66,10 +66,9 @@ public class Get implements Service {
 
         Element result = new Element("customelementsets");
         if(cswEnabled) {
-            Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-            List<Element> records = CustomElementSet.getCustomElementSets(dbms);
-            for(Element record : records) {
-                String xpath = record.getChild("xpath").getText();
+            List<CustomElementSet> records = context.getBean(CustomElementSetRepository.class).findAll();
+            for(CustomElementSet record : records) {
+                String xpath = record.getXpath();
                 Element xpathElement = new Element("xpath");
                 xpathElement.setText(xpath);
                 result.addContent(xpathElement);

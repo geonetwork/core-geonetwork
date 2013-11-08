@@ -26,12 +26,11 @@ package org.fao.geonet.component.csw;
 import java.util.Iterator;
 import java.util.Map;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Util;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -43,13 +42,13 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
-import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +76,8 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
     static final String NAME = "GetRecordById";
     private SearchController _searchController;
+    @Autowired
+    private CatalogConfiguration _catalogConfig;
 
     @Autowired
     public GetRecordById(ApplicationContext applicationContext) {
@@ -116,9 +117,8 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 			while(ids.hasNext())
 			{
 				String  uuid = ids.next().getText();
-				Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-				String id = gc.getBean(DataManager.class).getMetadataId(dbms, uuid);
+				String id = gc.getBean(DataManager.class).getMetadataId(uuid);
 				
 				// Metadata not found, search for next ids
 				if (id == null)
@@ -154,14 +154,14 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 				// Check if the current user has access 
 			    // to the requested MD 
-			    Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW); 
+                Lib.resource.checkPrivilege(context, id, ReservedOperation.view); 
 				
 				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null);
 
 				if (md != null)
 					response.addContent(md);
 				
-				if (CatalogConfiguration.is_increasePopularity()) {
+				if (_catalogConfig.isIncreasePopularity()) {
 				    gc.getBean(DataManager.class).increasePopularity(context, id);
 				}
 			}

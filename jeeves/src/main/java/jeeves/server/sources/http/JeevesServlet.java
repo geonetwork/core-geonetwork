@@ -23,23 +23,26 @@
 
 package jeeves.server.sources.http;
 
-import java.io.File;
-import java.io.IOException;
+import jeeves.config.springutil.JeevesApplicationContext;
+import jeeves.constants.Jeeves;
+import jeeves.server.JeevesEngine;
+import jeeves.server.UserSession;
+import jeeves.server.sources.ServiceRequest;
+import jeeves.server.sources.ServiceRequestFactory;
+import org.fao.geonet.Util;
+import org.fao.geonet.exceptions.FileUploadTooBigEx;
+import org.fao.geonet.utils.Log;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import jeeves.constants.Jeeves;
-import jeeves.exceptions.FileUploadTooBigEx;
-import jeeves.server.JeevesEngine;
-import jeeves.server.UserSession;
-import jeeves.server.sources.ServiceRequest;
-import jeeves.server.sources.ServiceRequestFactory;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
+import java.io.File;
+import java.io.IOException;
 
 //=============================================================================
 
@@ -50,44 +53,32 @@ public class JeevesServlet extends HttpServlet
 {
     private static final long serialVersionUID = 1L;
 	public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
-	private transient JeevesEngine jeeves = new JeevesEngine();
 	private boolean initialized = false;
+    private transient JeevesApplicationContext jeevesAppContext;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//---------------------------------------------------------------------------
 
     public void init() throws ServletException {
-        String appPath = new File(getServletContext().getRealPath("/xsl")).getParent() + File.separator;
+        final ServletContext servletContext = getServletContext();
+        final ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
+        this.jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
 
-        String baseUrl = "";
+        jeevesAppContext.setAppPath(pathFinder.getAppPath());
 
-        try {
-            // 2.5 servlet spec or later (eg. tomcat 6 and later)
-            baseUrl = getServletContext().getContextPath();
-        } catch (java.lang.NoSuchMethodError ex) {
-            // 2.4 or earlier servlet spec (eg. tomcat 5.5)
-            try {
-                String resource = getServletContext().getResource("/").getPath();
-                baseUrl = resource.substring(resource.indexOf('/', 1), resource.length() - 1);
-            } catch (java.net.MalformedURLException e) { // unlikely
-                baseUrl = getServletContext().getServletContextName();
-            }
-        }
+        // initialize all JPA Repositories.  This should be done outside of the init
+        // because spring-data-jpa first looks up named queries (based on method names) and
+        // if the query is not found an exception is thrown.  This exception will set rollback
+        // on the transaction if a transaction is active.
+        //
+        // We want to initialize all repositories here so they are not lazily initialized
+        // at random places through out the code where it may be in a transaction.
+        jeevesAppContext.getBeansOfType(JpaRepository.class, false, true);
 
-        if (!appPath.endsWith(File.separator))
-            appPath += File.separator;
-
-        String configPath = getServletConfig().getServletContext().getRealPath("/WEB-INF/config.xml");
-        if (configPath == null) {
-            configPath = appPath + "WEB-INF" + File.separator;
-        } else {
-            configPath = new File(configPath).getParent() + File.separator;
-        }
-
-        jeeves.init(appPath, configPath, baseUrl, this);
+        jeevesAppContext.getBean(JeevesEngine.class).init(pathFinder.getAppPath(), pathFinder.getConfigPath(), pathFinder.getBaseUrl(), this);
         initialized = true;
     }
 
@@ -99,8 +90,8 @@ public class JeevesServlet extends HttpServlet
 
 	public void destroy()
 	{
-		jeeves.destroy();
-		super .destroy();
+        jeevesAppContext.getBean(JeevesEngine.class).destroy();
+		super.destroy();
 	}
 
 	//---------------------------------------------------------------------------
@@ -182,6 +173,7 @@ public class JeevesServlet extends HttpServlet
 
 		//--- create request
 
+        JeevesEngine jeeves = jeevesAppContext.getBean(JeevesEngine.class);
 		try {
 			srvReq = ServiceRequestFactory.create(req, res, jeeves.getUploadDir(), jeeves.getMaxUploadSize());
 		} catch (FileUploadTooBigEx e) {
@@ -216,11 +208,6 @@ public class JeevesServlet extends HttpServlet
 	}
 
 	public boolean isInitialized() { return initialized; }
-
-	public JeevesEngine getEngine() {
-		return jeeves;
-		
-	}
 }
 
 //=============================================================================

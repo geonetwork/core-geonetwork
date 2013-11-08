@@ -23,34 +23,19 @@
 
 package org.fao.geonet.kernel.setting;
 
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
 
 //=============================================================================
-
+@Component
 public class SettingInfo
 {
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    @Autowired
+    private SettingManager _settingManager;
 
-	public SettingInfo(ServiceContext context)
-	{
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		sm = gc.getBean(SettingManager.class);
-	}
-
-	//---------------------------------------------------------------------------
-
-	public SettingInfo(SettingManager sm)
-	{
-		this.sm = sm;
-	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -60,20 +45,20 @@ public class SettingInfo
 
 	public String getSiteName()
 	{
-		return sm.getValue("system/site/name");
+		return _settingManager.getSiteName();
 	}
 
 	//---------------------------------------------------------------------------
 	/** Return a string like 'http://HOST[:PORT]' */
 	public String getSiteUrl() {
-        String protocol = sm.getValue(Geonet.Settings.SERVER_PROTOCOL);
+        String protocol = _settingManager.getValue(Geonet.Settings.SERVER_PROTOCOL);
         return getSiteUrl(protocol.equalsIgnoreCase("https"));
 	}
 	/** Return a string like 'http://HOST[:PORT]' */
 	public String getSiteUrl(boolean secureUrl) {
 		String protocol;
 		Integer port;
-        String host = sm.getValue(Geonet.Settings.SERVER_HOST);
+        String host = _settingManager.getValue(Geonet.Settings.SERVER_HOST);
 		Integer secureport = toIntOrNull(Geonet.Settings.SERVER_SECURE_PORT);
 		Integer insecureport = toIntOrNull(Geonet.Settings.SERVER_PORT);
 		if (secureUrl) {
@@ -114,7 +99,7 @@ public class SettingInfo
 
 	private Integer toIntOrNull(String key) {
         try {
-             return Integer.parseInt(sm.getValue(key));
+             return Integer.parseInt(_settingManager.getValue(key));
         } catch (NumberFormatException e) {
             return null;
         }
@@ -122,7 +107,7 @@ public class SettingInfo
 
     public String getSelectionMaxRecords()
 	{
-		String value = sm.getValue("system/selectionmanager/maxrecords");
+		String value = _settingManager.getValue("system/selectionmanager/maxrecords");
 		if (value == null) value = "10000";
 		return value;
 	}
@@ -132,7 +117,7 @@ public class SettingInfo
      * @return
      */
     public boolean getAutoDetect() {
-        String value = sm.getValue("system/autodetect/enable");
+        String value = _settingManager.getValue("system/autodetect/enable");
         if(value == null) {
             return false;
         }
@@ -146,7 +131,7 @@ public class SettingInfo
      * @return
      */
     public String getRequestedLanguageOnly() {
-        String value = sm.getValue("system/requestedLanguage/only");
+        String value = _settingManager.getValue("system/requestedLanguage/only");
         if(value == null || value.trim().equalsIgnoreCase("off")) {
             return null;
         } else {
@@ -159,7 +144,7 @@ public class SettingInfo
      * @return
      */
     public boolean getRequestedLanguageOnTop() {
-        String value = sm.getValue("system/requestedLanguage/sorted");
+        String value = _settingManager.getValue("system/requestedLanguage/sorted");
         if(value == null) {
             return false;
         }
@@ -178,7 +163,7 @@ public class SettingInfo
 
     public boolean getLuceneIndexOptimizerSchedulerEnabled()
 	{
-		String value = sm.getValue("system/indexoptimizer/enable");
+		String value = _settingManager.getValue("system/indexoptimizer/enable");
 		if (value == null) return false;
 		else return value.equals("true");
 	}
@@ -187,7 +172,7 @@ public class SettingInfo
 
 	public boolean isXLinkResolverEnabled()
 	{
-		String value = sm.getValue("system/xlinkResolver/enable");
+		String value = _settingManager.getValue("system/xlinkResolver/enable");
 		if (value == null) return false;
 		else return value.equals("true");
 	}
@@ -196,7 +181,7 @@ public class SettingInfo
 
 	public boolean isSearchStatsEnabled()
 	{
-		String value = sm.getValue("system/searchStats/enable");
+		String value = _settingManager.getValue("system/searchStats/enable");
 		if (value == null) return false;
 		else return value.equals("true");
 	}
@@ -207,9 +192,9 @@ public class SettingInfo
 		Calendar calendar = Calendar.getInstance();
 		try {
 			calendar.set(0,0,0,
-					Integer.parseInt(sm.getValue("system/indexoptimizer/at/hour")),
-					Integer.parseInt(sm.getValue("system/indexoptimizer/at/min")) ,
-					Integer.parseInt(sm.getValue("system/indexoptimizer/at/sec")));
+					Integer.parseInt(_settingManager.getValue("system/indexoptimizer/at/hour")),
+					Integer.parseInt(_settingManager.getValue("system/indexoptimizer/at/min")) ,
+					Integer.parseInt(_settingManager.getValue("system/indexoptimizer/at/sec")));
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Failed parsing schedule at info from settings: "+e.getMessage());
 		}
@@ -221,9 +206,9 @@ public class SettingInfo
 	public int getLuceneIndexOptimizerSchedulerInterval() throws IllegalArgumentException {
 		int result = -1;
 		try {
-			int day  = Integer.parseInt(sm.getValue("system/indexoptimizer/interval/day"));
-			int hour = Integer.parseInt(sm.getValue("system/indexoptimizer/interval/hour"));
-			int min  = Integer.parseInt(sm.getValue("system/indexoptimizer/interval/min"));
+			int day  = Integer.parseInt(_settingManager.getValue("system/indexoptimizer/interval/day"));
+			int hour = Integer.parseInt(_settingManager.getValue("system/indexoptimizer/interval/hour"));
+			int min  = Integer.parseInt(_settingManager.getValue("system/indexoptimizer/interval/min"));
 			result = (day * 24 * 60) + (hour * 60) + min;
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Failed parsing scheduler interval from settings: "+e.getMessage());
@@ -235,23 +220,16 @@ public class SettingInfo
 
 	public String getFeedbackEmail()
 	{
-		return sm.getValue("system/feedback/email");
+		return _settingManager.getValue("system/feedback/email");
 	}
 
     //---------------------------------------------------------------------------
 
     public boolean getInspireEnabled()
     {
-        return sm.getValueAsBool("system/inspire/enable");
+        return _settingManager.getValueAsBool("system/inspire/enable");
     }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Vars
-	//---
-	//---------------------------------------------------------------------------
-
-	private SettingManager sm;
 
 }
 

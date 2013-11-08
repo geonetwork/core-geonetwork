@@ -50,7 +50,6 @@ public class GetRecordByIdRequest extends CatalogRequest
 	//---
 	//---------------------------------------------------------------------------
 
-    public GetRecordByIdRequest() { }
 
 	public GetRecordByIdRequest(ServiceContext context) { super(context); }
 

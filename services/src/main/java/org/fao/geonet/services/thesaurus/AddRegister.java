@@ -24,15 +24,17 @@
 package org.fao.geonet.services.thesaurus;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -54,7 +56,6 @@ public class AddRegister extends NotInReadOnlyModeService {
 	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-    Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
 		String uuid = Util.getParam(params, Params.UUID);
 		String type = Util.getParam(params, "type");
@@ -68,20 +69,14 @@ public class AddRegister extends NotInReadOnlyModeService {
 		Thesaurus gst = tm.getThesaurusByName(theKey);
 		String fname = gst.getFname();
 
-		// Save activated status in the database
-		String query = "SELECT * FROM Thesaurus WHERE id = ?";
-		
-		@SuppressWarnings("unchecked")
-        java.util.List<Element> result = dbms.select(query, fname).getChildren();
+        final ThesaurusActivationRepository activationRepository = context.getBean(ThesaurusActivationRepository.class);
 
-		if (result.size() == 0) {
-			query = "INSERT INTO Thesaurus (id, activated) VALUES (?,?)";
-			dbms.execute(query, fname, activated);
-		} else {
-			query = "UPDATE Thesaurus SET activated = ? WHERE id = ?";
-			dbms.execute(query, activated, fname);
-		}
-		
+        final ThesaurusActivation activation = new ThesaurusActivation();
+        activation.setId(fname);
+        activation.setActivated(Constants.toBoolean_fromYNChar(activated.charAt(0)));
+
+        activationRepository.save(activation);
+
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		Element elRef = new Element("ref");		
 		elRef.addContent(theKey);

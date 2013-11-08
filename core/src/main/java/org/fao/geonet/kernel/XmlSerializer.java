@@ -23,33 +23,32 @@
 
 package org.fao.geonet.kernel;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
-import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
+import com.vividsolutions.jts.util.Assert;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import jeeves.xlink.Processor;
 
 import org.apache.log4j.Priority;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.Filter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This class is responsible of reading and writing xml on the database. 
@@ -74,8 +73,6 @@ public abstract class XmlSerializer {
 			return false;
 		}
 	};
-	
-	protected SettingManager sm;
 
 	public static class ThreadLocalConfiguration {
 	    private boolean forceHideWithheld = false;
@@ -87,6 +84,11 @@ public abstract class XmlSerializer {
             this.forceHideWithheld = forceHideWithheld;
         }
 	}
+
+    @Autowired
+    protected SettingManager _settingManager;
+    @Autowired
+    private MetadataRepository _metadataRepository;
 
 	private static InheritableThreadLocal<ThreadLocalConfiguration> configThreadLocal = new InheritableThreadLocal<XmlSerializer.ThreadLocalConfiguration>();
 	public static ThreadLocalConfiguration getThreadLocal(boolean setIfNotPresent) {
@@ -101,26 +103,18 @@ public abstract class XmlSerializer {
 	public static void clearThreadLocal() {
 		configThreadLocal.set(null);
 	}
-	
-    /**
-     *
-     * @param sMan
-     */
-	public XmlSerializer(SettingManager sMan) {
-		sm = sMan;
-	}
 
     /**
      *
      * @return
      */
 	public boolean resolveXLinks() {
-		if (sm == null) { // no initialization, no XLinks
+		if (_settingManager == null) { // no initialization, no XLinks
 			Log.error(Geonet.DATA_MANAGER,"No settingManager in XmlSerializer, XLink Resolver disabled.");
 			return false; 
 		}
 
-		String xlR = sm.getValue("system/xlinkResolver/enable");
+		String xlR = _settingManager.getValue("system/xlinkResolver/enable");
 		if (xlR != null) {
 			boolean isEnabled = xlR.equals("true");
 			if (isEnabled) Log.info(Geonet.DATA_MANAGER,"XLink Resolver enabled.");
@@ -135,28 +129,25 @@ public abstract class XmlSerializer {
     /**
      * Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read is converted into xml.
      *
-     * @param dbms
-     * @param table
+     *
      * @param id
      * @param isIndexingTask If true, then withheld elements are not removed.
      * @return
      * @throws Exception
      */
-	protected Element internalSelect(Dbms dbms, String table, String id, boolean isIndexingTask) throws Exception {
-		String query = "SELECT * FROM " + table + " WHERE id = ?";
-		Element select = dbms.select(query, Integer.valueOf(id));
-		Element record = select.getChild(Jeeves.Elem.RECORD);
+	protected Element internalSelect(String id, boolean isIndexingTask) throws Exception {
+        Metadata metadata = _metadataRepository.findOne(id);
 
-		if (record == null)
+		if (metadata == null)
 			return null;
 
-		String xmlData = record.getChildText("data");
-		Element metadata = Xml.loadString(xmlData, false);
+		String xmlData = metadata.getData();
+		Element metadataXml = Xml.loadString(xmlData, false);
 
-		logEmptyWithheld(id, metadata, "XmlSerializer.internalSelect");
+		logEmptyWithheld(id, metadataXml, "XmlSerializer.internalSelect");
 		
 		if (!isIndexingTask) { 
-			boolean hideWithheldElements = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
+			boolean hideWithheldElements = _settingManager.getHideWitheldElements();
 			ServiceContext context = ServiceContext.get();
     		if(context != null) {
     			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -166,14 +157,14 @@ public abstract class XmlSerializer {
     			}
     		}
     		if (hideWithheldElements || (getThreadLocal(false) != null && getThreadLocal(false).forceHideWithheld)) {
-    		    removeWithheldElements(metadata, sm);
+    		    removeWithheldElements(metadataXml, _settingManager);
     		}
 		}
-		return (Element) metadata.detach();
+		return (Element) metadataXml.detach();
 	}
 
     private boolean logEmptyWithheld(String id, Element metadata, String methodName) {
-        boolean hideWithheldElements = sm.getValueAsBool("system/" + Geonet.Config.HIDE_WITHHELD_ELEMENTS + "/enable", false);
+        boolean hideWithheldElements = _settingManager.getValueAsBool("system/" + Geonet.Config.HIDE_WITHHELD_ELEMENTS + "/enable", false);
         if (hideWithheldElements && Log.isEnabledFor(Geonet.DATA_MANAGER, Priority.WARN_INT)) {
             Iterator<?> emptyWithheld = metadata.getDescendants(EMPTY_WITHHELD);
             if (emptyWithheld.hasNext()) {
@@ -234,81 +225,24 @@ public abstract class XmlSerializer {
     /**
      * TODO javadoc.
      *
-     * @param dbms
-     * @param schema
-     * @param xml
-     * @param serial
-     * @param source
-     * @param uuid
-     * @param createDate
-     * @param changeDate
-     * @param isTemplate
-     * @param root
-     * @param title
-     * @param owner
-     * @param groupOwner
-     * @param docType
-     * @return
+     *
+     * @param newMetadata the metadata to insert
+     * @param dataXml the data to set on the metadata before saving
+     * @param context a service context
+     * @return the saved metadata
      * @throws SQLException
      */
-	protected String insertDb(Dbms dbms, String schema, Element xml, int serial,
-					 String source, String uuid, String createDate,
-					 String changeDate, String isTemplate, String root, String title,
-					 int owner, String groupOwner, String docType) throws SQLException {
-	
-		if (resolveXLinks()) Processor.removeXLink(xml);
+	protected Metadata insertDb(final Metadata newMetadata, final Element dataXml,ServiceContext context) throws SQLException {
+		if (resolveXLinks()) Processor.removeXLink(dataXml);
 
-		String date = new ISODate().toString();
-
-		if (createDate == null)
-			createDate = date;
-
-		if (changeDate == null)
-			changeDate = date;
-
-		fixCR(xml);
-
-		StringBuffer fields = new StringBuffer("id, schemaId, data, createDate, changeDate, source, "+
-															"uuid, isTemplate, isHarvested, root, owner, doctype");
-		StringBuffer values = new StringBuffer("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
-
-		Vector<Serializable> args = new Vector<Serializable>();
-		args.add(serial);
-		args.add(schema);
-		args.add(Xml.getString(xml));
-		args.add(createDate);
-		args.add(changeDate);
-		args.add(source);
-		args.add(uuid);
-		args.add(isTemplate);
-		args.add("n");
-		args.add(root);
-		args.add(owner);
-		args.add(docType);
-
-		if (groupOwner != null) {
-			fields.append(", groupOwner");
-			values.append(", ?");
-			args.add(Integer.valueOf(groupOwner));
-		}
-
-		if (title != null)
-		{
-			fields.append(", title");
-			values.append(", ?");
-			args.add(title);
-		}
-
-		String query = "INSERT INTO Metadata (" + fields + ") VALUES(" + values + ")";
-		dbms.execute(query, args.toArray());
-
-		return Integer.toString(serial);
+        newMetadata.setData(Xml.getString(dataXml));
+        Metadata savedMetadata = _metadataRepository.save(newMetadata);
+		return savedMetadata;
 	}
 
     /**
      *  Updates an xml element into the database. The new data replaces the old one.
      *
-     * @param dbms
      * @param id
      * @param xml
      * @param changeDate
@@ -316,7 +250,10 @@ public abstract class XmlSerializer {
      * @param uuid null to not update metadata uuid column or the uuid value to be used for the update.
      * @throws SQLException
      */
-	protected void updateDb(Dbms dbms, String id, Element xml, String changeDate, String root, boolean updateDateStamp, String uuid) throws SQLException {
+	protected void updateDb(final String id, final Element xml, final String changeDate, final String root,
+                            final boolean updateDateStamp,
+                            final String uuid) throws SQLException {
+
 		if (resolveXLinks()) Processor.removeXLink(xml);
         if (logEmptyWithheld(id, xml, "XmlSerializer.updateDb")) {
             StackTraceElement[] stacktrace = new Exception("").getStackTrace();
@@ -346,84 +283,61 @@ public abstract class XmlSerializer {
             }
             Log.warning(Geonet.DATA_MANAGER, info.toString());
         }
+        int metadataId = Integer.valueOf(id);
+        Metadata md = _metadataRepository.findOne(metadataId);
 
-		fixCR(xml);
-		String metadata = Xml.getString(xml);
-		int metadataId = Integer.valueOf(id);
-		
+        md.setDataAndFixCR(xml);
+
         if (updateDateStamp)  {
             if (changeDate == null)	{
-                changeDate = new ISODate().toString();
-            }
-            if (uuid != null)  {
-                String queryWithUUIDUpdate = "UPDATE Metadata SET data=?, changeDate=?, root=?, uuid=? WHERE id=?";
-                dbms.execute(queryWithUUIDUpdate, metadata, changeDate, root, uuid, metadataId);
+                md.getDataInfo().setChangeDate( new ISODate());
             } else {
-                String query = "UPDATE Metadata SET data=?, changeDate=?, root=? WHERE id=?";
-                dbms.execute(query, metadata, changeDate, root, metadataId);
-            }
-        } else {
-            if (uuid != null)  {
-                String queryMinorWithUUIDUpdate = "UPDATE Metadata SET data=?, root=?, uuid=? WHERE id=?";
-                dbms.execute(queryMinorWithUUIDUpdate, metadata, root, uuid, metadataId);
-            } else {
-                String queryMinor = "UPDATE Metadata SET data=?, root=? WHERE id=?";
-                dbms.execute(queryMinor, metadata, root, metadataId);
+                md.getDataInfo().setChangeDate( new ISODate(changeDate));
             }
         }
+
+        if (uuid != null) {
+            md.setUuid(uuid);
+        }
+
+        _metadataRepository.save(md);
 	}
 
     /**
      * Deletes an xml element given its id.
      *
-     * @param dbms
-     * @param table
+     *
      * @param id
      * @throws SQLException
      */
-	protected void deleteDb(Dbms dbms, String table, String id) throws Exception {
+	protected void deleteDb(String id) throws Exception {
 		// TODO: Ultimately we want to remove any xlinks in this document
 		// that aren't already in use from the xlink cache. For now we
 		// rely on the admin clearing cache and reindexing regularly
-		String query = "DELETE FROM " + table + " WHERE id=?";
-		dbms.execute(query, Integer.valueOf(id));
-	}
+        _metadataRepository.delete(Integer.valueOf(id));
 
-    /**
-     *
-     * @param xml
-     */
-	private void fixCR(Element xml) {
-		List<?> list = xml.getChildren();
-		if (list.size() == 0) {
-			String text = xml.getText();
-			xml.setText(Util.replaceString(text, "\r\n", "\n"));
-		}
-		else {
-            for (Object o : list) {
-                fixCR((Element) o);
-            }
-        }
+//        Assert.isTrue(!_metadataRepository.exists(Integer.valueOf(id)), "Metadata should have been deleted");
+
 	}
 
 	/* API to be overridden by extensions */
 
-	public abstract void delete(Dbms dbms, String table, String id, ServiceContext context) 
+	public abstract void delete(String id, ServiceContext context)
 	   throws Exception;
 
-	public abstract void update(Dbms dbms, String id, Element xml, 
-		 String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) 
+	public abstract void update(String id, Element xml,
+                                String changeDate, boolean updateDateStamp, String uuid, ServiceContext context)
 		 throws Exception;
 
-	public abstract String insert(Dbms dbms, String schema, Element xml, 
-					 int serial, String source, String uuid, String createDate,
-					 String changeDate, String isTemplate, String title,
-			 int owner, String groupOwner, String docType, ServiceContext context) 
+	public abstract Metadata insert(Metadata metadata, Element dataXml, ServiceContext context)
 			 throws Exception;
 
-	
-	public abstract Element select(Dbms dbms, String table, String id) 
-			 throws Exception;
-	public abstract Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask) 
+
+    /**
+     * Return metadata xml.
+     * @param id the metadata id.
+     */
+	public abstract Element select(String id) throws Exception;
+	public abstract Element selectNoXLinkResolver(String id, boolean isIndexingTask)
 			 throws Exception;
 } 

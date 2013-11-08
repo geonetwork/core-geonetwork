@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.oaipmh.responses.GeonetworkResumptionToken;
-import org.fao.oaipmh.util.ISODate;
 
 public class ResumptionTokenCache extends Thread {
 
@@ -114,7 +114,7 @@ public class ResumptionTokenCache extends Thread {
 			removeLast();
 		}
 		
-		resumptionToken.setExpirDate(new ISODate( getUTCTime().getTime() + getTimeout()*1000  ));
+		resumptionToken.setExpirDate(new ISODate( getUTCTime().getTime() + getTimeout()*1000, false));
 		map.put(resumptionToken.getKey(), resumptionToken);
 	}
 

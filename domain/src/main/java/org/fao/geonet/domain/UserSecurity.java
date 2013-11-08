@@ -1,0 +1,162 @@
+package org.fao.geonet.domain;
+
+import org.jdom.Element;
+
+import javax.annotation.Nonnull;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Transient;
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Encapsulates security information about the user. This is a JPA Embeddable object that is embedded into a {@link User} Entity
+ *
+ * @author Jesse
+ */
+@Embeddable
+public class UserSecurity extends GeonetEntity implements Serializable {
+    private char[] _password;
+    private Set<UserSecurityNotification> _securityNotifications = new HashSet<UserSecurityNotification>();
+    private String _authType;
+
+    /**
+     * Get the hashed password. This is a required property.
+     *
+     * @return the hashed password
+     */
+    @Column(nullable = false, length = 120)
+    public
+    @Nonnull
+    char[] getPassword() {
+        return _password.clone();
+    }
+
+    /**
+     * Set the hashed password. This is a required property.
+     *
+     * @param password the hashed password.
+     * @return this UserSecurity object
+     */
+    public
+    @Nonnull
+    UserSecurity setPassword(@Nonnull char[] password) {
+        this._password = password.clone();
+        return this;
+    }
+
+    /**
+     * Set the hashed password. This is a required property.
+     *
+     * @param password the hashed password.
+     * @return this UserSecurity object
+     */
+    public UserSecurity setPassword(String password) {
+        setPassword(password.toCharArray());
+        return this;
+    }
+
+    /**
+     * Get the security notifications. This property used to store arbitrary security related notifications.
+     *
+     * @return
+     */
+    @Column(name = "security", length = 128)
+    protected String getSecurityNotificationsString() {
+        StringBuilder builder = new StringBuilder();
+        for (UserSecurityNotification not : _securityNotifications) {
+            if (builder.length() > 0) {
+                builder.append(',');
+            }
+            builder.append(not.toString());
+        }
+        return builder.toString();
+    }
+
+    protected UserSecurity setSecurityNotificationsString(final String securityNotifications) {
+        _securityNotifications.clear();
+        if (securityNotifications != null) {
+            String[] parts = securityNotifications.split(",");
+
+            for (String string : parts) {
+                if (!string.trim().isEmpty()) {
+                    _securityNotifications.add(UserSecurityNotification.find(string));
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Get the mutable set if security notifications.
+     *
+     * @return the mutable set if security notifications.
+     */
+    @Transient
+    public Set<UserSecurityNotification> getSecurityNotifications() {
+        return _securityNotifications;
+    }
+
+    @Column(name = "authtype", length = 32)
+    public String getAuthType() {
+        return _authType;
+    }
+
+    public UserSecurity setAuthType(String authType) {
+        this._authType = authType;
+        return this;
+    }
+
+    /**
+     * Merge all data from other security into this security.
+     *
+     * @param otherSecurity other user to merge data from.
+     * @param mergeNullData if true then also set null values from other security. If false then only merge non-null data
+     */
+    public void mergeSecurity(UserSecurity otherSecurity, boolean mergeNullData) {
+        if (mergeNullData || otherSecurity.getPassword() != null) {
+            setPassword(otherSecurity.getPassword());
+        }
+        if (mergeNullData || otherSecurity.getSecurityNotifications() != null) {
+            setSecurityNotificationsString(otherSecurity.getSecurityNotificationsString());
+        }
+        if (mergeNullData || otherSecurity.getAuthType() != null) {
+            setAuthType(otherSecurity.getAuthType());
+        }
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserSecurity)) return false;
+
+        UserSecurity that = (UserSecurity) o;
+
+        if (_authType != null ? !_authType.equals(that._authType) : that._authType != null) return false;
+        if (!Arrays.equals(_password, that._password)) return false;
+        if (_securityNotifications != null ? !_securityNotifications.equals(that._securityNotifications) : that._securityNotifications
+                                                                                                           != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = _password != null ? Arrays.hashCode(_password) : 0;
+        result = 31 * result + (_securityNotifications != null ? _securityNotifications.hashCode() : 0);
+        result = 31 * result + (_authType != null ? _authType.hashCode() : 0);
+        return result;
+    }
+
+
+    @Override
+    public Element asXml() {
+        final Element element = super.asXml();
+        element.removeChild("password");
+        return element;
+    }
+}

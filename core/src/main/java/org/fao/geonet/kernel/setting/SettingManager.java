@@ -24,175 +24,114 @@
 package org.fao.geonet.kernel.setting;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.NoSuchElementException;
 
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.resources.ProviderManager;
-import jeeves.utils.Log;
+import javax.annotation.Nonnull;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.HarvesterSetting;
+import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.Setting_;
+import org.fao.geonet.repository.SettingRepository;
 import org.jdom.Element;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 
 /**
- * 
+ * A convenience class for updating and accessing settings.  One of the primary needs of this
+ * class at the moment is to maintain backwards compatibility so not all code and xsl files
+ * that make use of the settings need to be modified.
  */
+@Component
 public class SettingManager {
-    
-    private static final int DATATYPE_INT = 1;
-    private static final int DATATYPE_BOOLEAN = 2;
 
-    private class SettingEntry {
-        private String name;
-        private String value;
-        private int position;
-        private int datatype;
-        
-        public SettingEntry(String name, String value, int position, int datatype) {
-            this.setName(name);
-            this.setValue(value);
-            this.setPosition(position);
-            this.setDatatype(datatype);
-        }
+    public static final String SYSTEM_SITE_SITE_ID_PATH = "system/site/siteId";
+    public static final String SYSTEM_SITE_NAME_PATH = "system/site/name";
+    @Autowired
+    private SettingRepository _repo;
 
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-
-        public int getPosition() {
-            return position;
-        }
-
-        public void setPosition(int position) {
-            this.position = position;
-        }
-
-        public int getDatatype() {
-            return datatype;
-        }
-
-        public void setDatatype(int datatype) {
-            this.datatype = datatype;
-        }
-    }
-    private Map<String, SettingEntry> settings = new ConcurrentHashMap<String, SettingEntry>();
-
-    public SettingManager(Dbms dbms, ProviderManager provMan) throws SQLException {
-        init(dbms);
-    }
+    @PersistenceContext
+    private EntityManager _entityManager;
 
     /**
-     * Init the settings map from the Settings table content
-     * 
-     * @param dbms
-     * @throws SQLException
-     */
-    private void init(Dbms dbms) throws SQLException {
-        @SuppressWarnings("unchecked")
-        List<Element> records = dbms.select("SELECT * FROM Settings").getChildren();
-        for (Iterator<Element> i = records.iterator(); i.hasNext();) {
-            Element elem = (Element) i.next();
-            settings.put(elem.getChildText("name"), 
-                    new SettingEntry(elem.getChildText("name"),
-                            elem.getChildText("value"),
-                            Integer.parseInt(elem.getChildText("position")),
-                            Integer.parseInt(elem.getChildText("datatype"))
-                            )
-            );
-        }
-    }
-    /**
-     * Return all settings sorted by key
-     * 
-     * @param asTree true to return an XML tree based on settings
-     * key or false to return a flat list.
-     * 
-     * @return
+     * Get all settings as xml.
+     *
+     * @param asTree get the settings as a tree
+     *
+     * @return all settings as xml.
      */
     public Element getAllAsXML(boolean asTree) {
         Element env = new Element("settings");
-        List<String> sortedSetting = new ArrayList<String>(settings.keySet());
-        Collections.sort(sortedSetting);
-        for(String key : sortedSetting) {
-            // settings/site/host
+        List<Setting> settings = _repo.findAll(SortUtils.createSort(Setting_.name));
+
+        Map<String, Element> pathElements = new HashMap<String, Element>();
+
+        for (Setting setting : settings) {
             if (asTree) {
-                buildTree(env, key, "");
+                buildXmlTree(env, pathElements, setting);
             } else {
-                SettingEntry entry = settings.get(key);
-                Element setting = new Element("setting");
-                setting.setAttribute("name", key);
-                setting.setAttribute("position", entry.getPosition() + "");
-                setting.setAttribute("datatype", entry.getDatatype() + "");
-                setting.setText(entry.getValue());
-                env.addContent(setting);
+                Element settingEl = new Element("setting");
+                settingEl.setAttribute("name", setting.getName());
+                settingEl.setAttribute("position", String.valueOf(setting.getPosition()));
+                settingEl.setAttribute("datatype", String.valueOf(setting.getDataType()));
+                settingEl.setText(setting.getValue());
+                env.addContent(settingEl);
             }
         }
         return env;
     }
-    private void buildTree(Element env, String key, String keyRoot) {
-        int separatorIndex = key.indexOf("/");
-        // settings
-        String start= key.substring(0, separatorIndex);
-        // site/host
-        String end = key.substring(separatorIndex + 1, key.length());
-        // Add settings to env if not exist
-        Element child = env.getChild(start);
-        // create it if not
-        if (child == null) {
-            child = new Element(start);
-            String id = (keyRoot.equals("") ? key : keyRoot.substring(1, keyRoot.length()) + "/" + key);
-            child.setAttribute("position", settings.get(id).getPosition() + "");
-            env.addContent(child);
-        }
-        
-        // site/host contains separator, continue
-        if (end.contains("/")) {
-            buildTree(child, end, keyRoot + "/" + start);
-        } else {
-            // host is a end node, add value
-            String id = keyRoot.substring(1, keyRoot.length()) + "/" + key;
-            Element setting = new Element(end);
-            setting.setAttribute("name", id);
-            setting.setAttribute("position", settings.get(id).getPosition() + "");
-            setting.setAttribute("datatype", settings.get(id).getDatatype() + "");
-            setting.setText(settings.get(id).getValue());
-            child.addContent(setting);
+
+    private void buildXmlTree(Element env, Map<String, Element> pathElements, Setting setting) {
+        String[] segments = setting.getName().split("/");
+        Element parent = env;
+        String path = "";
+        for (int i = 0; i < segments.length; i++) {
+            String segment = segments[i];
+            path = path + "/" + segment;
+            Element currentElement = pathElements.get(path);
+            if (currentElement == null) {
+                currentElement = new Element(segment);
+                currentElement.setAttribute("name", path.substring(1));
+                currentElement.setAttribute("position", String.valueOf(setting.getPosition()));
+                if (i == segments.length - 1) {
+                    currentElement.setAttribute("datatype", String.valueOf(setting.getDataType().ordinal()));
+                    currentElement.setAttribute("datatypeName", setting.getDataType().name());
+                    currentElement.setText(setting.getValue());
+                }
+                parent.addContent(currentElement);
+                pathElements.put(path, currentElement);
+            }
+
+            parent = currentElement;
         }
     }
-    
+
     /**
      * Return a setting by its key
      * 
      * @param path eg. system/site/name
-     * @return
      */
     public String getValue(String path) {
         if (Log.isDebugEnabled(Geonet.SETTINGS)) {
             Log.debug(Geonet.SETTINGS, "Requested setting with name: " + path);
         }
-        SettingEntry se = settings.get(path);
+        Setting se = _repo.findOne(path);
         if (se == null) {
             // TODO : When a settings is not available in the settings table
             // we end here. It could be relevant to add a list of default
-            // settings and populate the settings table when the settings is 
+            // settings and populate the settings table when the settings is
             // missing (due to bad migration for example).
             Log.error(Geonet.SETTINGS, "  Requested setting with name: " + path + "  not found. Add it to the settings table.");
             return null;
@@ -203,17 +142,17 @@ public class SettingManager {
         }
         return value;
     }
-    
+
     /**
      * Return a set of values as XML
-     * @param keys  A list of setting's key to retrieve
-     * @return
+     * 
+     * @param keys A list of setting's key to retrieve
      */
     public Element getValues(String[] keys) {
         Element env = new Element("settings");
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i];
-            SettingEntry se = settings.get(key);
+            Setting se = _repo.findOne(key);
             if (se == null) {
                 Log.error(Geonet.SETTINGS, "  Requested setting with name: " + key + " not found. Add it to the settings table.");
             } else {
@@ -231,8 +170,8 @@ public class SettingManager {
     /**
      * Get value of a setting as boolean
      * 
-     * @param key   The setting key
-     * @return  The setting valueThe setting key
+     * @param key The setting key
+     * @return The setting valueThe setting key
      */
     public boolean getValueAsBool(String key) {
         String value = getValue(key);
@@ -244,9 +183,9 @@ public class SettingManager {
     /**
      * Get value of a setting as boolean
      * 
-     * @param key   The setting key
-     * @param defaultValue  The default value
-     * @return  The setting value as boolean
+     * @param key The setting key
+     * @param defaultValue The default value
+     * @return The setting value as boolean
      */
     public boolean getValueAsBool(String key, boolean defaultValue) {
         String value = getValue(key);
@@ -255,8 +194,9 @@ public class SettingManager {
 
     /**
      * Get value of a setting as integer
-     * @param key   The setting key
-     * @return  The integer value of the setting or null
+     * 
+     * @param key The setting key
+     * @return The integer value of the setting or null
      */
     public Integer getValueAsInt(String key) {
         String value = getValue(key);
@@ -266,74 +206,100 @@ public class SettingManager {
     }
 
     /**
-     * TODO javadoc.
+     * Set the value of a Setting entity
      * 
-     * @param dbms
-     * @param path
-     * @param value
-     * @return
-     * @throws SQLException
+     * @param key the path/name/key of the setting.
+     * @param value the new value
+     * 
+     * @return true if the types are correct and the setting is found.
      */
-    public boolean setValue(Dbms dbms, String path, String value) throws Exception {
-        Map<String, String> values = new HashMap<String, String>();
-        values.put(path, value);
-        return setValues(dbms, values);
+    public boolean setValue(String key, String value) {
+        if (Log.isDebugEnabled(Geonet.SETTINGS)) {
+            Log.debug(Geonet.SETTINGS, "Setting with name: " + key + ", value: " + value);
+        }
+
+        Setting setting = _repo.findOne(key);
+
+        if (setting == null) {
+            throw new NoSuchElementException("There is no existing setting element with the key: " + key);
+        }
+
+        setting.getDataType().validate(value);
+
+        setting.setValue(value);
+
+        _repo.save(setting);
+        return true;
     }
-    public boolean setValue(Dbms dbms, String path, boolean value) throws Exception {
-        return setValue(dbms, path, String.valueOf(value));
+
+    /**
+     * Set the setting value by key to the boolean value.
+     * 
+     * @param key the key/path/name of the setting.
+     * @param value the new boolean value
+     */
+    public boolean setValue(String key, boolean value) {
+        return setValue(key, String.valueOf(value));
     }
-    
+
     /**
      * Set a list of settings.
      * 
-     * @param dbms
-     * @param values    The settings to update
-     * @return
+     * @param values The settings to update
+     * @return true if the types are correct and the setting is found.
+     * 
      * @throws SQLException
      */
-    public boolean setValues(Dbms dbms, Map<String, String> values) throws Exception {
+    public final boolean setValues(final Map<String, String> values) {
         boolean success = true;
         for (Map.Entry<String, String> entry : values.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            SettingEntry setting = settings.get(key);
-            
-            if (Log.isDebugEnabled(Geonet.SETTINGS)) {
-                Log.debug(Geonet.SETTINGS, "Setting with name: " + key + ", value: " + value);
-            }
-            try {
-                if (setting.getDatatype() == DATATYPE_BOOLEAN) {
-                    dbms.execute("UPDATE Settings SET value=? WHERE name=?", Boolean.parseBoolean(value), key);
-                } else if (setting.getDatatype() == DATATYPE_INT && !"".equals(value)) {
-                    dbms.execute("UPDATE Settings SET value=? WHERE name=?", Integer.parseInt(value), key);
-                } else {
-                    dbms.execute("UPDATE Settings SET value=? WHERE name=?", value, key);
-                }
-                setting.setValue(value);
-            } catch (Exception e) {
-            	e.printStackTrace();
-                Log.warning(Geonet.SETTINGS, "Failed to save setting with name: " + key + ", value: " + value + ". Error: " + e.getMessage());
-                throw e;
-            }
+            setValue(key, value);
         }
         return success;
     }
 
     /**
-     * Refreshes current settings manager. This has to be used when updating the Settings table without 
-     * using this class. For example when
+     * Refreshes current settings manager. This has to be used when updating the Settings table without using this class. For example when
      * using an SQL script.
      */
-    public boolean refresh(Dbms dbms) throws SQLException {
-        this.init(dbms);
+    public final boolean refresh() throws SQLException {
+        _entityManager.getEntityManagerFactory().getCache().evict(HarvesterSetting.class);
         return true;
     }
 
-    public String getSiteId() {
-        return getValue("system/site/siteId");
+    public final String getSiteId() {
+        return getValue(SYSTEM_SITE_SITE_ID_PATH);
     }
-    
-    public String getSiteName() {
-        return getValue("system/site/name");
+
+    public final String getSiteName() {
+        return getValue(SYSTEM_SITE_NAME_PATH);
+    }
+
+    public void setSiteUuid(String siteUuid) {
+       setValue(SYSTEM_SITE_SITE_ID_PATH, siteUuid);
+    }
+
+    public @Nonnull String getSiteURL(@Nonnull ServiceContext context) {
+        String lang = context.getLanguage();
+        if(lang == null) {
+            lang = context.getBean(LanguageRepository.class).findOneByDefaultLanguage().getId();
+        }
+        String baseURL = context.getBaseUrl();
+        String protocol = getValue(Geonet.Settings.SERVER_PROTOCOL);
+        String host    = getValue(Geonet.Settings.SERVER_HOST);
+        String port    = getValue(Geonet.Settings.SERVER_PORT);
+        String locServ = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/" + lang;
+
+        return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
+    }
+
+    public boolean getHideWitheldElements() {
+        return getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
+    }
+
+    public boolean setHideWitheldElements(boolean value) {
+        return setValue("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", value);
     }
 }

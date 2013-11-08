@@ -33,7 +33,7 @@
       function loadCSWVirtual() {
         $scope.virtualCSWSelected = {};
         $http.get('admin.config.virtualcsw.list@json').success(function(data) {
-          $scope.cswVirtual = data;
+          $scope.cswVirtual = data != 'null' ? data : [];
         }).error(function(data) {
           // TODO
         });
@@ -70,12 +70,10 @@
       $scope.addVirtualCSW = function() {
         operation = 'newservice';
         $scope.virtualCSWSelected = {
-          'record': {
-            'id': '',
-            'name': 'csw-servicename',
-            'description': ''
-          },
-          'filter': {
+          'id': '',
+          'name': 'csw-servicename',
+          'description': '',
+          'serviceParameters': {
             'any': '',
             'abstract': '',
             'title': '',
@@ -110,7 +108,7 @@
 
       $scope.deleteVirtualCSW = function() {
         $http.get('admin.config.virtualcsw.remove?id=' +
-                  $scope.virtualCSWSelected.record.id)
+                  $scope.virtualCSWSelected.id)
           .success(function(data) {
               loadCSWVirtual();
             })
@@ -124,8 +122,8 @@
       };
 
       $scope.getCapabilitiesUrl = function(v) {
-        if (v && v.record) {
-          return v.record.name + '?SERVICE=CSW&REQUEST=GetCapabilities';
+        if (v) {
+          return v.name + '?SERVICE=CSW&REQUEST=GetCapabilities';
         } else {
           return null;
         }

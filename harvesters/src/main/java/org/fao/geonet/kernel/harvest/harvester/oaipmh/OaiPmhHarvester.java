@@ -23,17 +23,14 @@
 
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
-
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.Logger;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
@@ -45,21 +42,6 @@ import java.util.UUID;
 
 public class OaiPmhHarvester extends AbstractHarvester<HarvestResult>
 {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Static init
-	//---
-	//--------------------------------------------------------------------------
-
-	public static void init(ServiceContext context) throws Exception {}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Harvesting type
-	//---
-	//--------------------------------------------------------------------------
-
-	public String getType() { return "oaipmh"; }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -67,7 +49,7 @@ public class OaiPmhHarvester extends AbstractHarvester<HarvestResult>
 	//---
 	//--------------------------------------------------------------------------
 
-	protected void doInit(Element node) throws BadInputEx
+	protected void doInit(Element node, ServiceContext context) throws BadInputEx
 	{
 		params = new OaiPmhParams(dataMan);
         super.setParams(params);
@@ -81,7 +63,7 @@ public class OaiPmhHarvester extends AbstractHarvester<HarvestResult>
 	//---
 	//---------------------------------------------------------------------------
 
-	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
+	protected String doAdd(Element node) throws BadInputEx, SQLException
 	{
 		params = new OaiPmhParams(dataMan);
         super.setParams(params);
@@ -92,11 +74,12 @@ public class OaiPmhHarvester extends AbstractHarvester<HarvestResult>
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
 
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
+		String id = settingMan.add("harvesting", "node", getType());
 
-		storeNode(dbms, params, "id:"+id);
-		Lib.sources.update(dbms, params.uuid, params.name, true);
-		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
+		storeNode(params, "id:"+id);
+        Source source = new Source(params.uuid, params.name, true);
+        context.getBean(SourceRepository.class).save(source);
+        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
 		
 		return id;
 	}
@@ -107,7 +90,7 @@ public class OaiPmhHarvester extends AbstractHarvester<HarvestResult>
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doUpdate(Dbms dbms, String id, Element node)
+	protected void doUpdate(String id, Element node)
 									throws BadInputEx, SQLException
 	{
 		OaiPmhParams copy = params.copy();
@@ -117,16 +100,17 @@ public class OaiPmhHarvester extends AbstractHarvester<HarvestResult>
 
 		String path = "harvesting/id:"+ id;
 
-		settingMan.removeChildren(dbms, path);
+		settingMan.removeChildren(path);
 
 		//--- update database
-		storeNode(dbms, copy, path);
+		storeNode(copy, path);
 
 		//--- we update a copy first because if there is an exception CswParams
 		//--- could be half updated and so it could be in an inconsistent state
 
-		Lib.sources.update(dbms, copy.uuid, copy.name, true);
-		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
+        Source source = new Source(copy.uuid, copy.name, true);
+        context.getBean(SourceRepository.class).save(source);
+        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
 
 		params = copy;
         super.setParams(params);
@@ -135,27 +119,27 @@ public class OaiPmhHarvester extends AbstractHarvester<HarvestResult>
 
 	//---------------------------------------------------------------------------
 
-	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path,
+	protected void storeNodeExtra(AbstractParams p, String path,
 											String siteId, String optionsId) throws SQLException
 	{
 		OaiPmhParams params = (OaiPmhParams) p;
 
-		settingMan.add(dbms, "id:"+siteId, "url",  params.url);
-		settingMan.add(dbms, "id:"+siteId, "icon", params.icon);
+		settingMan.add("id:"+siteId, "url",  params.url);
+		settingMan.add("id:"+siteId, "icon", params.icon);
 
-		settingMan.add(dbms, "id:"+optionsId, "validate", params.validate);
+		settingMan.add("id:"+optionsId, "validate", params.validate);
 
 		//--- store search nodes
 
 		for (Search s : params.getSearches())
 		{
-			String  searchID = settingMan.add(dbms, path, "search", "");
+			String  searchID = settingMan.add(path, "search", "");
 
-			settingMan.add(dbms, "id:"+searchID, "from",       s.from);
-			settingMan.add(dbms, "id:"+searchID, "until",      s.until);
-			settingMan.add(dbms, "id:"+searchID, "set",        s.set);
-			settingMan.add(dbms, "id:"+searchID, "prefix",     s.prefix);
-			settingMan.add(dbms, "id:"+searchID, "stylesheet", s.stylesheet);
+			settingMan.add("id:"+searchID, "from",       s.from);
+			settingMan.add("id:"+searchID, "until",      s.until);
+			settingMan.add("id:"+searchID, "set",        s.set);
+			settingMan.add("id:"+searchID, "prefix",     s.prefix);
+			settingMan.add("id:"+searchID, "stylesheet", s.stylesheet);
 		}
 	}
 
@@ -165,11 +149,10 @@ public class OaiPmhHarvester extends AbstractHarvester<HarvestResult>
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doHarvest(Logger log, ResourceManager rm) throws Exception
+	public void doHarvest(Logger log) throws Exception
 	{
-		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
-		h = new Harvester(log, context, dbms, params);
-        result = h.harvest(log);
+		Harvester h = new Harvester(log, context, params);
+		result = h.harvest(log);
 	}
 
 	//---------------------------------------------------------------------------

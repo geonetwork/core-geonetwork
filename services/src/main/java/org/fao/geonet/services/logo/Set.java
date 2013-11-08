@@ -23,12 +23,12 @@
 
 package org.fao.geonet.services.logo;
 
-import jeeves.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.Util;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.Util;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -83,7 +83,7 @@ public class Set implements Service {
         GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager settingMan = gc.getBean(SettingManager.class);
-        String nodeUuid = settingMan.getValue("system/site/siteId");
+        String nodeUuid = settingMan.getSiteId();
 
         try {
         	String logoFilePath = harvestingLogoDirectory + File.separator + file;

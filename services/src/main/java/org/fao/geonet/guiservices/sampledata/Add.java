@@ -25,11 +25,11 @@ package org.fao.geonet.guiservices.sampledata;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Util;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -58,29 +58,29 @@ public class Add implements Service {
 	 * @return A report on the sample import with information about the status
 	 *         of the insertion operation (failed|loaded).
 	 */
-	public Element exec(Element params, ServiceContext context)
+	public Element exec(final Element params, final ServiceContext context)
 			throws Exception {
 
 		String schemaList = Util.getParam(params, Params.SCHEMA);
-		String serviceStatus = "true";
-		String serviceError = "";
+		final String[] serviceStatus = {"true"};
+		final String[] serviceError = {""};
 
 		Element result = new Element(Jeeves.Elem.RESPONSE);
 
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		SchemaManager schemaMan = gc.getBean(SchemaManager.class);
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
 
 		String schemas[] = schemaList.split(",");
 
+        int count = 0;
 		for (String schemaName : schemas) {
 			Log.info(Geonet.DATA_MANAGER, "Loading sample data for schema "
 					+ schemaName);
 			String schemaDir = schemaMan.getSchemaSampleDataDir(schemaName);
 			if (schemaDir == null) {
 				Log.error(Geonet.DATA_MANAGER, "Skipping - No sample data?");
+                result.addContent(new Element(schemaName).setText("0"));
 				continue;
 			}
 
@@ -94,26 +94,30 @@ public class Add implements Service {
 					if (file.getName().endsWith(".mef"))
 						sampleDataFilesList.add(file);
 			}
-
-			for (File file : sampleDataFilesList) {
-				try {
-                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            int schemaCount = 0;
+            for (final File file : sampleDataFilesList) {
+                try {
+                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                         Log.debug(Geonet.DATA_MANAGER, "Loading sample data: " + file);
-					MEFLib.doImport(params, context, file, "");
-					dbms.commit();
-				}
-                catch (Exception e) {
+                    }
+                    schemaCount += MEFLib.doImport(params, context, file, "").size();
+                } catch (Exception e) {
                     e.printStackTrace();
-					serviceStatus = "false";
-					serviceError = e.getMessage() + " whilst loading " + file;
-					Log.error(Geonet.DATA_MANAGER,
-							"Error loading sample data: " + e.getMessage());
-				}
-			}
-		}
+                    serviceStatus[0] = "false";
+                    serviceError[0] = e.getMessage() + " whilst loading " + file;
+                    Log.error(Geonet.DATA_MANAGER,
+                            "Error loading sample data: " + e.getMessage(), e);
+                }
+                context.getBean(DataManager.class).flush();
+            }
+            count += schemaCount;
+            result.addContent(new Element(schemaName).setText(""+schemaCount));
+        }
 
-		result.setAttribute("status", serviceStatus);
-		result.setAttribute("error", serviceError);
+		result.setAttribute("status", serviceStatus[0]);
+		result.setAttribute("error", serviceError[0]);
+		result.setAttribute("total", ""+count);
+
 		return result;
 	}
 }

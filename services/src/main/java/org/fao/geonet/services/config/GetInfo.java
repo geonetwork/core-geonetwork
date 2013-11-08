@@ -23,11 +23,13 @@
 package org.fao.geonet.services.config;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.resources.Stats;
-import jeeves.utils.TransformerFactoryFactory;
+import org.apache.commons.dbcp.BasicDataSource;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -35,8 +37,11 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
+import javax.sql.DataSource;
 import javax.xml.transform.TransformerFactory;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -55,8 +60,6 @@ public class GetInfo implements Service {
 	private HashMap<String, String> indexProperties = new HashMap<String, String>();
 	private HashMap<String, String> systemProperties = new HashMap<String, String>();
 	private HashMap<String, String> databaseProperties = new HashMap<String, String>();
-	private SearchManager sm;
-	private Dbms dbms; 
 
 	final Properties properties = System.getProperties();
 
@@ -67,14 +70,10 @@ public class GetInfo implements Service {
 			throws Exception {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
-		sm = gc.getBean(SearchManager.class);
-		dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		
-		String luceneDir = gc.getBean(ServiceConfig.class).getMandatoryValue(
-				Geonet.Config.LUCENE_DIR);
+
 		loadSystemInfo();
 		loadCatalogueInfo(gc);
-		loadIndexInfo(luceneDir);
+		loadIndexInfo(context);
 		loadDatabaseInfo(context);
 
 		Element system = gc.getBean(SettingManager.class).getAllAsXML(true);
@@ -102,11 +101,9 @@ public class GetInfo implements Service {
 	}
 
     /**
-     * Load catalogue properties
-     * 
-     * @param dataDir
+     * Load catalogue properties.
      */
-    private void loadCatalogueInfo(GeonetContext gc) {
+    private void loadCatalogueInfo(final GeonetContext gc) {
     	ServiceConfig sc = gc.getBean(ServiceConfig.class);
     	String[] props = {Geonet.Config.DATA_DIR, Geonet.Config.CODELIST_DIR, Geonet.Config.CONFIG_DIR, 
     			Geonet.Config.SCHEMAPLUGINS_DIR, Geonet.Config.SUBVERSION_PATH, Geonet.Config.RESOURCES_DIR};
@@ -146,23 +143,25 @@ public class GetInfo implements Service {
 
 	/**
 	 * Compute information about Lucene index.
-	 * 
-	 * @param luceneDir
-	 */
-	private void loadIndexInfo(String luceneDir) {
-		indexProperties.put("index.path", luceneDir);
-		File dir = new File(luceneDir);
-		File lDir = new File(luceneDir + SearchManager.NON_SPATIAL_DIR);
-		if (dir.exists()) {
-			long size = FileUtils.sizeOfDirectory(dir) / 1024;
+	 *
+     * @param context
+     */
+	private void loadIndexInfo(ServiceContext context) {
+        final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
+        File luceneDir = dataDirectory.getLuceneDir();
+		indexProperties.put("index.path", luceneDir.getAbsolutePath());
+		File lDir = dataDirectory.getSpatialIndexPath();
+		if (luceneDir.exists()) {
+			long size = FileUtils.sizeOfDirectory(luceneDir) / 1024;
 			indexProperties.put("index.size", "" + size); // lucene + Shapefile
 															// if exist
-			if (lDir.exists()) {
-				size = FileUtils.sizeOfDirectory(lDir) / 1024;
-				indexProperties.put("index.size.lucene", "" + size);
-			}
-		}
-		indexProperties.put("index.lucene.config", sm.getCurrentLuceneConfiguration().toString());
+        }
+
+        if (lDir.exists()) {
+            long size = FileUtils.sizeOfDirectory(lDir) / 1024;
+            indexProperties.put("index.size.lucene", "" + size);
+        }
+		indexProperties.put("index.lucene.config", context.getBean(LuceneConfig.class).toString());
 	}
 	
 	/**
@@ -170,25 +169,37 @@ public class GetInfo implements Service {
 	 * 
 	 * @param context
 	 */
-	private void loadDatabaseInfo(ServiceContext context) {
-		String dbURL = dbms.getURL();
+	private void loadDatabaseInfo(ServiceContext context) throws SQLException {
+		String dbURL = null;
+
+        Connection connection = null;
+        try {
+            connection = context.getBean(DataSource.class).getConnection();
+            dbURL = connection.getMetaData().getURL();
+            databaseProperties.put("db.openattempt", "Database Opened Successfully");
+
+
+            if (connection instanceof BasicDataSource) {
+                BasicDataSource basicDataSource = (BasicDataSource) connection;
+                try {
+                    databaseProperties.put("db.numactive", ""+basicDataSource.getNumActive());
+                    databaseProperties.put("db.numidle", ""+basicDataSource.getNumIdle());
+                    databaseProperties.put("db.maxactive", ""+basicDataSource.getMaxActive());
+                } catch (Exception e) {
+                    databaseProperties.put("db.statserror", "Failed to get stats on database connections. Error is: "+e.getMessage());
+                }
+            }
+
+        } catch (Exception e) {
+            databaseProperties.put("db.openattempt", "Failed to open database connection, Check config.xml db file configuration. Error" +
+                                                     " is: " + e.getMessage());
+        } finally {
+            if (connection != null) {
+                connection.close();
+            }
+        }
 		databaseProperties.put("db.url", dbURL);
 
-		try {
-			context.getResourceManager().open(Geonet.Res.MAIN_DB);
-			databaseProperties.put("db.openattempt", "Database Opened Successfully");
-		} catch (Exception e) {
-			databaseProperties.put("db.openattempt", "Failed to open database connection, Check config.xml db file configuration. Error is: " + e.getMessage());
-		}
-
-		try {
-			Stats dbStats = context.getResourceManager().getStats(Geonet.Res.MAIN_DB);
-			databaseProperties.put("db.numactive", Integer.toString(dbStats.numActive));
-			databaseProperties.put("db.numidle", Integer.toString(dbStats.numIdle));
-			databaseProperties.put("db.maxactive", Integer.toString(dbStats.maxActive));
-		} catch (Exception e) {
-			databaseProperties.put("db.statserror", "Failed to get stats on database connections. Error is: "+e.getMessage());
-		}
 	}
 	
 	

@@ -1,0 +1,10 @@
+DELETE FROM Categories;
+DELETE FROM Groups;
+DELETE FROM IsoLanguages;
+DELETE FROM StatusValues;
+DELETE FROM Operations;
+DELETE FROM settings;
+DELETE FROM HarvesterSettings;
+DELETE FROM UserAddress;
+DELETE FROM Users;
+DELETE FROM Address;

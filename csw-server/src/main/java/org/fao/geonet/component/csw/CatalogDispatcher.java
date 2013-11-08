@@ -30,10 +30,10 @@ import java.util.Map;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
-import jeeves.utils.Log;
-import jeeves.utils.SOAPUtil;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.SOAPUtil;
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
@@ -155,7 +155,7 @@ public class CatalogDispatcher
 				request.addContent(new Element(Geonet.Elem.FILTER).setText(cswServiceSpecificContraint));
 			}
 
-            if(context.isDebug())
+            if(context.isDebugEnabled())
                 context.debug("Adapted GET request is:\n"+Xml.getString(request));
 			context.info("Dispatching operation : "+ operation);
 

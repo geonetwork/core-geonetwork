@@ -9,7 +9,7 @@ web/src/main/webapp/images/logos/*
 web/src/main/webapp/images/statTmp
 web/logs/
 web/jcs_caching/
-geonetwork*.db
+web/geonetwork*.db
 /geonetwork*
 changes-*
 web/coverage.ec
@@ -40,7 +40,14 @@ web/src/main/webapp/WEB-INF/data/data/resources
 web/src/main/webapp/WEB-INF/data/index
 web-itest/jcs_caching
 datadir/
+*.factorypath
 web/src/main/webapp/WEB-INF/data/removed/
+web/.springBeans
+web/images/
+*.launch
+idea/
+web/src/main/webapp/WEB-INF/data/0*
+jcs_caching/
 web-ui/src/main/resources/catalog/lib/gn*.min.js
 web-ui/src/main/resources/catalog/style/gn*.css
 web-ui/src/main/resources/catalog/style/gn.css

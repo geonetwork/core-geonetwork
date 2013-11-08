@@ -23,12 +23,9 @@
 
 package org.fao.geonet.kernel.harvest.harvester.z3950Config;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.Logger;
+import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
@@ -40,31 +37,13 @@ import java.sql.SQLException;
 
 public class Z3950ConfigHarvester extends AbstractHarvester<HarvestResult>
 {
-	public static final String TYPE = "z3950Config";
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Static init
-	//---
-	//--------------------------------------------------------------------------
-
-	public static void init(ServiceContext context) throws Exception {}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Harvesting type
-	//---
-	//--------------------------------------------------------------------------
-
-	public String getType() { return TYPE; }
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	protected void doInit(Element node) throws BadInputEx
+	protected void doInit(Element node, ServiceContext context) throws BadInputEx
 	{
 		params = new Z3950ConfigParams(dataMan);
         super.setParams(params);
@@ -79,16 +58,16 @@ public class Z3950ConfigHarvester extends AbstractHarvester<HarvestResult>
 	//---
 	//---------------------------------------------------------------------------
 
-	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
+	protected String doAdd(Element node) throws BadInputEx, SQLException
 	{
 		params = new Z3950ConfigParams(dataMan);
         super.setParams(params);
 		//--- retrieve/initialize information
 		params.create(node);
 
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
+		String id = settingMan.add("harvesting", "node", getType());
 
-		storeNode(dbms, params, "id:"+id);
+		storeNode(params, "id:"+id);
 
 		return id;
 	}
@@ -99,7 +78,7 @@ public class Z3950ConfigHarvester extends AbstractHarvester<HarvestResult>
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doUpdate(Dbms dbms, String id, Element node) throws BadInputEx, SQLException
+	protected void doUpdate(String id, Element node) throws BadInputEx, SQLException
 	{
 		Z3950ConfigParams copy = params.copy();
 
@@ -108,10 +87,10 @@ public class Z3950ConfigHarvester extends AbstractHarvester<HarvestResult>
 
 		String path = "harvesting/id:"+ id;
 
-		settingMan.removeChildren(dbms, path);
+		settingMan.removeChildren(path);
 
 		//--- update database
-		storeNode(dbms, copy, path);
+		storeNode(copy, path);
 
 		params = copy;
         super.setParams(params);
@@ -120,30 +99,30 @@ public class Z3950ConfigHarvester extends AbstractHarvester<HarvestResult>
 
 	//---------------------------------------------------------------------------
 
-	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path,
+	protected void storeNodeExtra(AbstractParams p, String path,
 											String siteId, String optionsId) throws SQLException
 	{
 		Z3950ConfigParams params = (Z3950ConfigParams) p;
         super.setParams(params);
 
-        settingMan.add(dbms, "id:"+siteId, "host",    params.host);
-		settingMan.add(dbms, "id:"+siteId, "port",    params.port);
+        settingMan.add("id:"+siteId, "host",    params.host);
+		settingMan.add("id:"+siteId, "port",    params.port);
 
 		//--- store options
 
-		settingMan.add(dbms, "id:"+optionsId, "clearConfig",  params.clearConfig);
+		settingMan.add("id:"+optionsId, "clearConfig",  params.clearConfig);
 
 		//--- store search nodes
 
 		for (Search s : params.getSearches())
 		{
-			String  searchID = settingMan.add(dbms, path, "search", "");
+			String  searchID = settingMan.add(path, "search", "");
 
-			settingMan.add(dbms, "id:"+searchID, "freeText",   s.freeText);
-			settingMan.add(dbms, "id:"+searchID, "title",      s.title);
-			settingMan.add(dbms, "id:"+searchID, "abstract",   s.abstrac);
-			settingMan.add(dbms, "id:"+searchID, "keywords",   s.keywords);
-			settingMan.add(dbms, "id:"+searchID, "category",   s.category);
+			settingMan.add("id:"+searchID, "freeText",   s.freeText);
+			settingMan.add("id:"+searchID, "title",      s.title);
+			settingMan.add("id:"+searchID, "abstract",   s.abstrac);
+			settingMan.add("id:"+searchID, "keywords",   s.keywords);
+			settingMan.add("id:"+searchID, "category",   s.category);
 		}
 	}
 
@@ -164,11 +143,9 @@ public class Z3950ConfigHarvester extends AbstractHarvester<HarvestResult>
 	//---
 	//---------------------------------------------------------------------------
 
-	protected void doHarvest(Logger log, ResourceManager rm) throws Exception
+	public void doHarvest(Logger log) throws Exception
 	{
-		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
-
-		h = new Harvester(log, context, dbms, params);
+		Harvester h = new Harvester(log, context, params);
 		result = h.harvest(log);
 	}
 

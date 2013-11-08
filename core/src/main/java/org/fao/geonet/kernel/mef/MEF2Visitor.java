@@ -23,10 +23,10 @@
 
 package org.fao.geonet.kernel.mef;
 
-import jeeves.exceptions.BadFormatEx;
-import jeeves.interfaces.Logger;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.exceptions.BadFormatEx;
+import org.fao.geonet.Logger;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.util.ZipUtil;
@@ -94,8 +94,7 @@ public class MEF2Visitor implements IVisitor {
                     File fcFile = getFeatureCalalogFile(file);
                     if (fcFile != null) {
                         fc = Xml.loadFile(fcFile);
-                    }
-                    else {
+                    } else {
                         fc = null;
                     }
 

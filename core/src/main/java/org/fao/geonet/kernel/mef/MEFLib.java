@@ -23,12 +23,13 @@
 
 package org.fao.geonet.kernel.mef;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.Xml;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
@@ -37,7 +38,10 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.OperationRepository;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -153,12 +157,8 @@ public class MEFLib {
 		 */
 		V2
 	}
-	
-	public static List<String> doImportIndexGroup(Element params, ServiceContext context, File mefFile, String stylePath) throws Exception {
-		return Importer.doImport(params, context, mefFile, stylePath, true);
-	}
 
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
 	
 	public static List<String> doImport(Element params, ServiceContext context,
 			File mefFile, String stylePath) throws Exception {
@@ -223,32 +223,28 @@ public class MEFLib {
 	/**
 	 * Get metadata record.
 	 * 
-	 * @param dbms
 	 * @param uuid
 	 * @return
 	 */
-	static Element retrieveMetadata(ServiceContext context, Dbms dbms, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
+	static Metadata retrieveMetadata(ServiceContext context, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
 			throws Exception {
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select("SELECT * FROM Metadata WHERE uuid=?", uuid).getChildren();
 
-		if (list.isEmpty())
+        final Metadata metadata = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
+
+		if (metadata == null) {
 			throw new MetadataNotFoundEx("uuid=" + uuid);
+        }
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = gc.getBean(DataManager.class);
+        DataManager dm = context.getBean(DataManager.class);
 
-		Element record = list.get(0);
-		String id = record.getChildText("id");
-        record.removeChildren("data");
+		String id = ""+metadata.getId();
         boolean forEditing = false;
         boolean withEditorValidationErrors = false;
-        Element metadata = dm.getMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute);
-        metadata.removeChild("info", Edit.NAMESPACE);
-        Element mdEl = new Element("data").setText(Xml.getString(metadata));
-        record.addContent(mdEl);
+        Element data = dm.getMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute);
+        data.removeChild("info", Edit.NAMESPACE);
+        metadata.setData(Xml.getString(data));
 
-        return record;
+        return metadata;
 	}
 
 	/**
@@ -339,17 +335,14 @@ public class MEFLib {
 	 * @return
 	 * @throws Exception
 	 */
-	static String buildInfoFile(ServiceContext context, Element md,
+	static String buildInfoFile(ServiceContext context, Metadata md,
 			Format format, String pubDir, String priDir, boolean skipUUID)
 			throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
-
 		Element info = new Element("info");
 		info.setAttribute("version", VERSION);
 
 		info.addContent(buildInfoGeneral(md, format, skipUUID, context));
-		info.addContent(buildInfoCategories(dbms, md));
+		info.addContent(buildInfoCategories(md));
 		info.addContent(buildInfoPrivileges(context, md));
 
 		info.addContent(buildInfoFiles("public", pubDir));
@@ -369,18 +362,17 @@ public class MEFLib {
 	 * @param context
 	 * @return
 	 */
-	static Element buildInfoGeneral(Element md, Format format,
+	static Element buildInfoGeneral(Metadata md, Format format,
 			boolean skipUUID, ServiceContext context) {
-		String id = md.getChildText("id");
-		String uuid = md.getChildText("uuid");
-		String schema = md.getChildText("schemaid");
-		String isTemplate = md.getChildText("istemplate").equals("y") ? "true"
-				: "false";
-		String createDate = md.getChildText("createdate");
-		String changeDate = md.getChildText("changedate");
-		String siteId = md.getChildText("source");
-		String rating = md.getChildText("rating");
-		String popularity = md.getChildText("popularity");
+		String id = String.valueOf(md.getId());
+		String uuid = md.getUuid();
+		String schema = md.getDataInfo().getSchemaId();
+		String isTemplate = md.getDataInfo().getType().codeString;
+		String createDate = md.getDataInfo().getCreateDate().getDateAndTime();
+		String changeDate = md.getDataInfo().getChangeDate().getDateAndTime();
+		String siteId = md.getSourceInfo().getSourceId();
+		String rating = "" + md.getDataInfo().getRating();
+		String popularity = "" + md.getDataInfo().getPopularity();
 
 		Element general = new Element("general").addContent(
 				new Element("createDate").setText(createDate)).addContent(
@@ -398,8 +390,8 @@ public class MEFLib {
 
 			general.addContent(new Element("uuid").setText(uuid));
 			general.addContent(new Element("siteId").setText(siteId));
-			general.addContent(new Element("siteName")
-					.setText(gc.getSiteName()));
+            general.addContent(new Element("siteName")
+					.setText(gc.getBean(SettingManager.class).getSiteName()));
 		}
 
 		return general;
@@ -408,30 +400,23 @@ public class MEFLib {
 	/**
 	 * Build category section of info file.
 	 * 
-	 * @param dbms
 	 * @param md
 	 * @return
 	 * @throws SQLException
 	 */
-	static Element buildInfoCategories(Dbms dbms, Element md)
+	static Element buildInfoCategories(Metadata md)
 			throws SQLException {
 		Element categ = new Element("categories");
 
-		String id = md.getChildText("id");
-		String query = "SELECT name FROM MetadataCateg, Categories "
-				+ "WHERE categoryId = id AND metadataId = ?";
 
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
+        for (MetadataCategory category : md.getCategories()) {
+            String name = category.getName();
 
-		for (Element record : list) {
-			String name = record.getChildText("name");
+            Element cat = new Element("category");
+            cat.setAttribute("name", name);
 
-			Element cat = new Element("category");
-			cat.setAttribute("name", name);
-
-			categ.addContent(cat);
-		}
+            categ.addContent(cat);
+        }
 
 		return categ;
 	}
@@ -444,24 +429,19 @@ public class MEFLib {
 	 * @return
 	 * @throws Exception
 	 */
-	static Element buildInfoPrivileges(ServiceContext context, Element md)
+	static Element buildInfoPrivileges(ServiceContext context, Metadata md)
 			throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
 
-		String id = md.getChildText("id");
-		int iId = Integer.valueOf(id);
-		String query = "SELECT Groups.id as grpid, Groups.name as grpName, Operations.name as operName "
-				+ "FROM   OperationAllowed, Groups, Operations "
-				+ "WHERE  groupId = Groups.id "
-				+ "  AND  operationId = Operations.id "
-				+ "  AND  metadataId = ?";
+		int iId = md.getId();
 
-		String grpOwnerQuery = "SELECT groupOwner FROM Metadata WHERE id = ?";
-		// Only one groupOwner per metadata
-		Element grpOwnerRs = dbms.select(grpOwnerQuery, iId).getChild("record");
+		OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
+		GroupRepository groupRepository = context.getBean(GroupRepository.class);
+		OperationRepository operationRepository = context.getBean(OperationRepository.class);
+
+		allowedRepository.findAllById_MetadataId(iId);
+
 		// Get group Owner ID
-		String grpOwnerId = grpOwnerRs.getChildText("groupowner");
+		int grpOwnerId = md.getSourceInfo().getGroupOwner();
 		String grpOwnerName = "";
 
 		HashMap<String, ArrayList<String>> hmPriv = new HashMap<String, ArrayList<String>>();
@@ -472,34 +452,38 @@ public class MEFLib {
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		AccessManager am = gc.getBean(AccessManager.class);
 
-		Set<String> userGroups = am.getUserGroups(dbms, context
-				.getUserSession(), context.getIpAddress(), false);
+		Set<Integer> userGroups = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
 
 		// --- scan query result to collect info
 
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, iId).getChildren();
+        OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
+        List<OperationAllowed> opsAllowed = operationAllowedRepository.findAllById_MetadataId(iId);
 
-		for (Element record : list) {
-			String grpId = record.getChildText("grpid");
-			String grpName = record.getChildText("grpname");
-			String operName = record.getChildText("opername");
+        for (OperationAllowed operationAllowed : opsAllowed) {
+            int grpId = operationAllowed.getId().getGroupId();
+            Group group = groupRepository.findOne(grpId);
+            String grpName = group.getName();
 
-			if (!userGroups.contains(grpId))
-				continue;
+            if (!userGroups.contains(grpId)) {
+                continue;
+            }
 
-			if (grpOwnerId != null && grpOwnerId.equals(grpId))
-				grpOwnerName = grpName;
+            Operation operation = operationRepository.findOne(operationAllowed.getId().getOperationId());
+            String operName = operation.getName();
 
-			ArrayList<String> al = hmPriv.get(grpName);
+            if (grpOwnerId == grpId) {
+                grpOwnerName = grpName;
+            }
 
-			if (al == null) {
-				al = new ArrayList<String>();
-				hmPriv.put(grpName, al);
-			}
+            ArrayList<String> al = hmPriv.get(grpName);
 
-			al.add(operName);
-		}
+            if (al == null) {
+                al = new ArrayList<String>();
+                hmPriv.put(grpName, al);
+            }
+
+            al.add(operName);
+        }
 
 		// --- generate elements
 
@@ -540,7 +524,7 @@ public class MEFLib {
 
 		if (files != null)
 			for (File file : files) {
-				String date = new ISODate(file.lastModified()).toString();
+				String date = new ISODate(file.lastModified(), false).toString();
 
 				Element el = new Element("file");
 				el.setAttribute("name", file.getName());

@@ -1,9 +1,8 @@
 package org.fao.geonet.services;
 
-import jeeves.exceptions.MissingParameterEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.exceptions.MissingParameterEx;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
@@ -58,8 +57,7 @@ public class Utils {
     		try {
     			String uuid = Util.getParam(params, uuidParamName);
     			// lookup ID by UUID
-                Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-    			id = dm.getMetadataId(dbms, uuid);
+    			id = dm.getMetadataId(uuid);
     		}
             catch (MissingParameterEx x) {
     			// request does not contain UUID; use ID from request
@@ -128,63 +126,4 @@ public class Utils {
 		return getIdentifierFromParameters(params, context, Params.UUID, Params.ID);
 	}
 
-    public static void addGroup(Dbms dbms, int userId, int groupId, String profile) throws Exception {
-        dbms.execute("INSERT INTO UserGroups(userId, groupId, profile) VALUES (?, ?, ?)",
-                userId, groupId, profile);
-    }
-
-    /**
-     * Method to query Relation table and get a Set of identifiers of related
-     * metadata
-     *
-     * @param id
-     * @param relation
-     * @param context
-     * @return
-     * @throws Exception
-     */
-    public static Set<String> getRelationIds(int id, String relation, ServiceContext context) throws Exception {
-        Dbms dbms = (Dbms) context.getResourceManager()
-                .open(Geonet.Res.MAIN_DB);
-
-        Set<String> result = new HashSet<String>();
-
-        // --- perform proper queries to retrieve the id set
-        if (relation.equals("normal") || relation.equals("full")) {
-            String query = "SELECT relatedId FROM Relations WHERE id=?";
-            result.addAll(retrieveIds(dbms, query, "relatedid", id));
-        }
-
-        if (relation.equals("reverse") || relation.equals("full")) {
-            String query = "SELECT id FROM Relations WHERE relatedId=?";
-            result.addAll(retrieveIds(dbms, query, "id", id));
-        }
-
-        return result;
-    }
-
-    /**
-     * Run the query and load a Set based on query results.
-     *
-     * @param dbms
-     * @param query
-     * @param field
-     * @param id
-     * @return
-     * @throws java.sql.SQLException
-     */
-    private static Set<String> retrieveIds(Dbms dbms, String query,
-                                           String field, int id) throws SQLException {
-        @SuppressWarnings("unchecked")
-        List<Element> records = dbms.select(query, Integer.valueOf(id)).getChildren();
-        Set<String> results = new HashSet<String>();
-
-        for (Element rec : records) {
-            String val = rec.getChildText(field);
-
-            results.add(val);
-        }
-
-        return results;
-    }
 }

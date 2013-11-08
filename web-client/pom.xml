@@ -76,6 +76,7 @@
           </execution>-->
         </executions>
         <configuration>
+          <statistics>false</statistics>
           <nosuffix>true</nosuffix>
           <gzip>false</gzip>
           <force>true</force>

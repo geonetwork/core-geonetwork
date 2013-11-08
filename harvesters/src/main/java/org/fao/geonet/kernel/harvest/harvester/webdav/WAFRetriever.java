@@ -23,8 +23,8 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import jeeves.interfaces.Logger;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

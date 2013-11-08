@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.harvest;
 
-import jeeves.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 
 //=============================================================================
 

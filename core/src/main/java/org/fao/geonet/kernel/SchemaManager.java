@@ -27,15 +27,16 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationAbortedEx;
+import jeeves.server.ServiceConfig;
+import org.fao.geonet.Constants;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.overrides.ConfigurationOverrides;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.IO;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -45,7 +46,7 @@ import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaLoader;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Attribute;
 import org.jdom.Content;
@@ -53,6 +54,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -80,8 +82,20 @@ import java.util.zip.ZipInputStream;
  * The SchemaManager holds a map of Schema objects known to GeoNetwork. 
  *
  */
+@Component
 public class SchemaManager {
-	private Map<String, Schema> hmSchemas = new HashMap<String, Schema>();
+
+    private static final int MODE_NEEDLE = 0;
+    private static final int MODE_ROOT = 1;
+    private static final int MODE_NEEDLEWITHVALUE = 2;
+    private static final int MODE_ATTRIBUTEWITHVALUE = 3;
+    private static final int MODE_NAMESPACE = 4;
+
+    private static final String GEONET_SCHEMA_URI = "http://geonetwork-opensource.org/schemas/schema-ident";
+    private static final Namespace GEONET_SCHEMA_PREFIX_NS = Namespace.getNamespace("gns", GEONET_SCHEMA_URI);
+    private static final Namespace GEONET_SCHEMA_NS = Namespace.getNamespace(GEONET_SCHEMA_URI);
+
+    private Map<String, Schema> hmSchemas = new HashMap<String, Schema>();
 	private String[] fnames = { "labels.xml", "codelists.xml", "strings.xml" };
     private String   schemaPluginsDir;
 	private String   schemaPluginsCat;
@@ -92,31 +106,43 @@ public class SchemaManager {
 	private	String	 basePath;
 	private String resourcePath;
 	private int numberOfCoreSchemasAdded = 0;
-	
-	private static final int MODE_NEEDLE = 0;
-	private static final int MODE_ROOT = 1;
-	private static final int MODE_NEEDLEWITHVALUE = 2;
-	private static final int MODE_ATTRIBUTEWITHVALUE = 3;
-	private static final int MODE_NAMESPACE = 4;
-
-	private static final String GEONET_SCHEMA_URI = "http://geonetwork-opensource.org/schemas/schema-ident";
-	private static final Namespace GEONET_SCHEMA_PREFIX_NS = Namespace.getNamespace("gns", GEONET_SCHEMA_URI);
-	private static final Namespace GEONET_SCHEMA_NS = Namespace.getNamespace(GEONET_SCHEMA_URI);
 
 	/** Active readers count */
 	private static int activeReaders = 0;
 	/** Active writers count */
 	private static int activeWriters = 0;
 
-    private static SchemaManager schemaManager = null; 
+    public static String registerXmlCatalogFiles(String path, String schemapluginUriCatalog) {
+        String webapp = path + "WEB-INF" + File.separator;
 
-	//--------------------------------------------------------------------------
+        //--- Set jeeves.xml.catalog.files property
+        //--- this is critical to schema support so must be set correctly
+        String catalogProp = System.getProperty(Constants.XML_CATALOG_FILES);
+        if (catalogProp == null) {
+            catalogProp = "";
+        }
+        if (!catalogProp.equals("")) {
+            Log.info(Geonet.SCHEMA_MANAGER, "Overriding " + Constants.XML_CATALOG_FILES + " property (was set to " + catalogProp + ")");
+        }
+        catalogProp = webapp + "oasis-catalog.xml;" + schemapluginUriCatalog;
+        System.setProperty(Constants.XML_CATALOG_FILES, catalogProp);
+        Log.info(Geonet.SCHEMA_MANAGER, Constants.XML_CATALOG_FILES + " property set to " + catalogProp);
+
+        String blankXSLFile = path + "xsl" + File.separator + "blanks.xsl";
+        System.setProperty(Constants.XML_CATALOG_BLANKXSLFILE, blankXSLFile);
+        Log.info(Geonet.SCHEMA_MANAGER, Constants.XML_CATALOG_BLANKXSLFILE + " property set to " + blankXSLFile);
+
+        return webapp;
+    }
+
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
 
-	/**	Constructor
+	/**
+     * initialize and configure schema manager. should only be on startup.
 		*
 		* @param basePath the web app base path
 		* @param schemaPluginsCat the schema catalogue file
@@ -124,7 +150,8 @@ public class SchemaManager {
 		* @param defaultLang the default language (taken from context)
 		* @param defaultSchema the default schema (taken from config.xml)
 	  */
-	private SchemaManager(String basePath, String resourcePath, String schemaPluginsCat, String sPDir, String defaultLang, String defaultSchema, boolean createOrUpdateSchemaCatalog) throws Exception {
+    public void configure(String basePath, String resourcePath, String schemaPluginsCat, String sPDir, String defaultLang,
+                          String defaultSchema, boolean createOrUpdateSchemaCatalog) throws Exception {
 
 		hmSchemas .clear();
 
@@ -157,24 +184,6 @@ public class SchemaManager {
 
 		writeSchemaPluginCatalog(schemaPluginCatRoot);
 
-	}
-
-
-    /**
-     * Returns singleton instance.
-     *
-     * @param basePath
-     * @param sPDir
-     * @param defaultLang
-     * @param defaultSchema
-     * @return
-     * @throws Exception
-     */
-	public synchronized static SchemaManager getInstance(String basePath, String resourcePath, String schemaPluginsCat, String sPDir, String defaultLang, String defaultSchema, boolean createOrUpdateSchemaCatalog) throws Exception {
-		if (schemaManager == null) {
-			schemaManager = new SchemaManager(basePath, resourcePath, schemaPluginsCat, sPDir, defaultLang, defaultSchema, createOrUpdateSchemaCatalog);
-		}
-		return schemaManager;
 	}
 
     /**
@@ -948,7 +957,7 @@ public class SchemaManager {
         // -- property for resolver to pick up
 
         if (new File(oasisCatFile).exists()) {
-            String catalogProp = System.getProperty(Jeeves.XML_CATALOG_FILES);
+            String catalogProp = System.getProperty(Constants.XML_CATALOG_FILES);
             if (catalogProp == null)
                 catalogProp = ""; // shouldn't happen
             if (catalogProp.equals("")) {
@@ -956,7 +965,7 @@ public class SchemaManager {
             } else {
                 catalogProp = catalogProp + ";" + oasisCatFile;
             }
-            System.setProperty(Jeeves.XML_CATALOG_FILES, catalogProp);
+            System.setProperty(Constants.XML_CATALOG_FILES, catalogProp);
         }
 
         Pair<String, String> idInfo = extractIdInfo(xmlIdFile, name);
@@ -979,7 +988,7 @@ public class SchemaManager {
                 extractDepends(xmlIdFile));
 
         if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
-            Log.debug(Geonet.SCHEMA_MANAGER, "Property " + Jeeves.XML_CATALOG_FILES + " is " + System.getProperty(Jeeves.XML_CATALOG_FILES));
+            Log.debug(Geonet.SCHEMA_MANAGER, "Property " + Constants.XML_CATALOG_FILES + " is " + System.getProperty(Constants.XML_CATALOG_FILES));
         }
 
         // -- Add entry for presentation xslt to schemaPlugins catalog
@@ -1731,7 +1740,7 @@ public class SchemaManager {
      * @return
 	 */
 	private String getSchemaUrl(ServiceContext context, String schemaName) {
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 
 		String relativePath = Geonet.Path.SCHEMAS + schemaName + "/schema.xsd"; 
 		return si.getSiteUrl() + context.getBaseUrl() + "/" + relativePath;
