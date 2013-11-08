@@ -154,7 +154,7 @@ INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvestin
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/level1', 'false', 2, 9026);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/level2', 'false', 2, 9027);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/level3', 'false', 2, 9028);
-
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/lucene/ignorechars', '', 0, 9590);
 
 
 ALTER TABLE StatusValues ADD displayorder int;

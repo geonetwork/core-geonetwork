@@ -416,8 +416,9 @@ public class SpatialIndexWriter implements FeatureListener
             e.printStackTrace();
         }
         _index = new STRtree();
-        FeatureIterator<SimpleFeature> features = _featureStore.getFeatures().features();
+        FeatureIterator<SimpleFeature> features = null;
         try {
+            features = _featureStore.getFeatures().features();
             while (features.hasNext()) {
                 SimpleFeature feature = features.next();
                 Pair<FeatureId, Object> data = Pair.read(feature.getIdentifier(), feature.getAttribute(_idColumn));
@@ -428,7 +429,9 @@ public class SpatialIndexWriter implements FeatureListener
             }
 
         } finally {
-            features.close();
+            if (features != null) {
+                features.close();
+            }
         }
     }
 
