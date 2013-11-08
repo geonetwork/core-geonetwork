@@ -290,4 +290,11 @@ public final class XslUtil
 		return src.toString().matches(pattern.toString());
 	}
 
+    private static ThreadLocal<Boolean> allowScripting = new InheritableThreadLocal<Boolean>();
+    public static void setNoScript() {
+        allowScripting.set(false);
+    }
+    public static boolean allowScripting() {
+        return allowScripting.get() == null || allowScripting.get();
+    }
 }
