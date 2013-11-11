@@ -38,7 +38,7 @@ public class Group extends Localized {
      * @return the id of the group.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     public int getId() {
         return _id;

@@ -25,7 +25,7 @@ public class MetadataCategory extends Localized {
      * @return the id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     public int getId() {
         return _id;
     }

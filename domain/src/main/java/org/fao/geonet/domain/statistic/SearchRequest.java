@@ -46,7 +46,7 @@ public class SearchRequest {
      * @return the id of the {@link SearchRequest} entity object.
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     public int getId() {
         return _id;
     }

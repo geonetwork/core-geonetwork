@@ -27,7 +27,7 @@ public class Service extends GeonetEntity {
      * @return the id of the service.
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     public int getId() {
         return _id;
     }

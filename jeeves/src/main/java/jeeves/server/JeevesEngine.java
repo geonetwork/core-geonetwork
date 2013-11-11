@@ -58,6 +58,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PreDestroy;
+import javax.persistence.PersistenceContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.xml.transform.TransformerConfigurationException;
@@ -161,8 +162,6 @@ public class JeevesEngine {
             _serviceMan.setServlet(servlet);
 
             _scheduleMan.setAppPath(appPath);
-            _scheduleMan.setMonitorManager(_monitorManager);
-            _scheduleMan.setApplicationContext(jeevesAppContext);
             _scheduleMan.setBaseUrl(baseUrl);
 
             loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, _serviceMan);
@@ -171,7 +170,7 @@ public class JeevesEngine {
             //--- with the ProfileManager already loaded
 
             for (int i = 0; i < _appHandList.size(); i++)
-                initAppHandler((Element) _appHandList.get(i), servlet, jeevesAppContext);
+                initAppHandler(_appHandList.get(i), servlet, jeevesAppContext);
 
             info("Starting schedule manager...");
             _scheduleMan.start();
@@ -220,7 +219,7 @@ public class JeevesEngine {
     	if(servlet != null) {
     		in = servlet.getServletContext().getResourceAsStream(TRANSFORMER_PATH);
     	}
-    	if(in == null){
+    	if(in == null) {
     		File f = new File(_appPath + TRANSFORMER_PATH);
     		in = new FileInputStream(f);
     	}
@@ -237,17 +236,15 @@ public class JeevesEngine {
                     break;
                 }
             }
-        }
-        catch(IOException x) {
+        } catch(IOException x) {
         	String msg = "Definition of XSLT transformer not found (tried: " + new File(_appPath + TRANSFORMER_PATH).getCanonicalPath() + ")";
-        	if(servlet != null) {
+        	if (servlet != null) {
         		msg += " and servlet.getServletContext().getResourceAsStream("+TRANSFORMER_PATH+")";
         	}
         	warning(msg);
             error(x.getMessage());
             x.printStackTrace();
-        }
-        finally {
+        } finally {
             IOUtils.closeQuietly(in);
             if(br != null) {
                 IOUtils.closeQuietly(br);
@@ -272,8 +269,7 @@ public class JeevesEngine {
 		Element elGeneral = configRoot.getChild(ConfigFile.Child.GENERAL);
 		Element elDefault = configRoot.getChild(ConfigFile.Child.DEFAULT);
 
-		if (!_generalLoaded)
-		{
+		if (!_generalLoaded) {
 			if (elGeneral == null)
 				throw new NullPointerException("Missing 'general' element in config file :" +file);
 

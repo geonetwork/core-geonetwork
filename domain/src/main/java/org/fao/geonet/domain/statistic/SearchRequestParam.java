@@ -31,7 +31,7 @@ public class SearchRequestParam {
      * @return the id of the request parameters this entity represents.
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     public int getId() {
         return _id;
     }

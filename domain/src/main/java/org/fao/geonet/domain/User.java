@@ -39,7 +39,7 @@ public class User extends GeonetEntity implements UserDetails {
      * @return the user id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     public int getId() {
         return _id;
     }

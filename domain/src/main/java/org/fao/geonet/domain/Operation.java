@@ -25,7 +25,7 @@ public class Operation extends Localized {
      * @return the Id of the operation.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return _id;

@@ -52,7 +52,7 @@ public class Metadata extends GeonetEntity {
      * @return the id of the metadata
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     public int getId() {
         return _id;

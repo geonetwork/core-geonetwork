@@ -4,10 +4,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import jeeves.utils.Log;
-
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 import org.xhtmlrenderer.extend.FSImage;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;

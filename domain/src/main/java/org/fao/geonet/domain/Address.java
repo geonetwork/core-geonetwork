@@ -24,7 +24,7 @@ public class Address extends GeonetEntity implements Serializable {
      * the value for you on save.
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     public int getId() {
         return _id;
     }

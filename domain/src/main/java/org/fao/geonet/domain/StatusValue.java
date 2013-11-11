@@ -25,7 +25,7 @@ public class StatusValue extends Localized {
      * @return the id of the StatusValue object
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     public int getId() {
         return _id;
     }

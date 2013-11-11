@@ -29,7 +29,7 @@ public class MetadataNotifier extends GeonetEntity {
      * @return the id of this notifier.
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     public int getId() {
         return _id;
     }

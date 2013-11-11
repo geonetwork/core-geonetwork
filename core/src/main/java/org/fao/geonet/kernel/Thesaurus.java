@@ -22,6 +22,8 @@
 
 package org.fao.geonet.kernel;
 
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 
@@ -30,6 +32,7 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Graph;
@@ -58,12 +61,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Thesaurus {
@@ -897,4 +896,7 @@ public class Thesaurus {
             return this.defaultNamespace;
         }
 
+    public Map<String, String> getTitles(ServiceContext context) throws JDOMException, IOException {
+        return LangUtils.translate(context, getKey());
+    }
 }

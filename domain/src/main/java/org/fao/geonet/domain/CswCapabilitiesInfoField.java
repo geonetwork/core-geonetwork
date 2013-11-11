@@ -28,7 +28,7 @@ public class CswCapabilitiesInfoField extends GeonetEntity {
      * The id of the entity. This is a generated value and not controlled by the developer.
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "idfield", length = ID_COLUMN_LENGTH)
     public int getId() {
         return _id;

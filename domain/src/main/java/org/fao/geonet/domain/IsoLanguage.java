@@ -26,7 +26,7 @@ public class IsoLanguage extends Localized {
      * @return the id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     public int getId() {
         return id;
     }
