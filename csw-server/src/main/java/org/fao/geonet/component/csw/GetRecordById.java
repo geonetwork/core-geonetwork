@@ -26,6 +26,7 @@ package org.fao.geonet.component.csw;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
@@ -158,13 +159,23 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 				
 				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null);
 
-				if (md != null)
+				if (md != null) {
+                    final Map<String, GetRecordByIdMetadataTransformer> transformers = context.getApplicationContext()
+                            .getBeansOfType(GetRecordByIdMetadataTransformer.class);
+                    for (GetRecordByIdMetadataTransformer transformer : transformers.values()) {
+                        final Optional<Element> transformedMd = transformer.apply(context, md, outSchema);
+                        if (transformedMd.isPresent()) {
+                            md = transformedMd.get();
+                        }
+                    }
+
 					response.addContent(md);
-				
-				if (_catalogConfig.isIncreasePopularity()) {
-				    gc.getBean(DataManager.class).increasePopularity(context, id);
-				}
-			}
+
+                    if (_catalogConfig.isIncreasePopularity()) {
+                        gc.getBean(DataManager.class).increasePopularity(context, id);
+                    }
+                }
+            }
 		} catch (Exception e) {
 			context.error("Raised : "+ e);
 			context.error(" (C) Stacktrace is\n"+Util.getStackTrace(e));

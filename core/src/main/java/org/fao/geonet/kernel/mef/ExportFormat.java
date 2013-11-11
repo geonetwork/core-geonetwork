@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.GeonetworkExtension;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * Date: 11/8/13
  * Time: 3:21 PM
  */
-public abstract class ExportFormat {
+public abstract class ExportFormat implements GeonetworkExtension {
     /**
      * Return a list of &lt;filename, fileContents>.
      *
