@@ -312,7 +312,7 @@
 
     <servlet-mapping>
         <servlet-name>gn-servlet</servlet-name>
-        <url-pattern>/srv/*</url-pattern>
+        <url-pattern>/nouse/*</url-pattern>
     </servlet-mapping>
 
     <!-- Web map context servlet -->
@@ -320,6 +320,32 @@
         <servlet-name>wmc</servlet-name>
         <servlet-class>org.geonetwork.map.wmc.WmcServlet</servlet-class>
     </servlet>
+
+        <!-- Spring dispatcher servlet -->
+    <servlet>
+        <servlet-name>spring</servlet-name>
+        <servlet-class>
+            org.springframework.web.servlet.DispatcherServlet
+        </servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>spring</servlet-name>
+        <url-pattern>/srv/*</url-pattern>
+    </servlet-mapping>
+
+
+    <filter>
+        <filter-name>oemInViewFilter</filter-name>
+        <filter-class>
+            org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter
+        </filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>oemInViewFilter</filter-name>
+        <url-pattern>/srv/*</url-pattern>
+    </filter-mapping>
 
     <servlet-mapping>
         <servlet-name>wmc</servlet-name>

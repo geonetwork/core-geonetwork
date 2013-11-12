@@ -93,6 +93,12 @@
           <artifactId>spring-web</artifactId>
       </dependency>
 
+<dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-webmvc</artifactId>
+      </dependency>
+
+
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
@@ -321,6 +327,12 @@
       <dependency>
           <groupId>${project.groupId}</groupId>
           <artifactId>health-monitor</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+
+            <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>geonetwork-controllers</artifactId>
           <version>${project.version}</version>
       </dependency>
 
