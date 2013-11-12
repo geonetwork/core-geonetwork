@@ -373,8 +373,16 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });
+        var createMetadataAction2 = new Ext.menu.Item({text: OpenLayers.i18n('newMetadataNew'),
+            ctCls: 'gn-bt-main',
+            iconCls: 'addIcon',
+            handler: function() {
+              catalogue.metadataEdit2(null, true);
+            }
+        });
         if(!this.catalogue.isReadOnly()) {
             this.actionMenu.addItem(this.createMetadataAction);
+            this.actionMenu.addItem(createMetadataAction2);
         }
 
         this.mdImportAction = new Ext.menu.Item({

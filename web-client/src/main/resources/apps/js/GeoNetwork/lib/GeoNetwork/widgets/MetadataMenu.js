@@ -56,6 +56,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
     resultsView: undefined,
     catalogue: undefined,
     editAction: undefined,
+    editAction2: undefined,
     deleteAction: undefined,
     zoomToAction: undefined,
     otherActions: undefined,
@@ -93,6 +94,15 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             handler: function(){
                 var id = this.record.get('id');
                 this.catalogue.metadataEdit(id);
+            },
+            scope: this
+        });
+        this.editAction2 = new Ext.Action({
+            text: OpenLayers.i18n('edit'),
+            iconCls: 'md-mn-edit',
+            handler: function(){
+                var id = this.record.get('id');
+                this.catalogue.metadataEdit2(id);
             },
             scope: this
         });
@@ -272,6 +282,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
     composeMenu: function(){
         if(!this.catalogue.isReadOnly()) {
             this.add(this.editAction);
+            this.add(this.editAction2);
             this.add(this.deleteAction);
             this.otherActions = new Ext.menu.Item({
                 text: OpenLayers.i18n('otherActions'),
@@ -340,6 +351,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         if (!identified || isReadOnly) {
             this.editAction.setText(OpenLayers.i18n('edit'));
             this.editAction.hide();
+            this.editAction2.setText(OpenLayers.i18n('editNew'));
+            this.editAction2.hide();
             this.deleteAction.hide();
         } else {
             // TODO : if editor and status is submitted - turn off editing
@@ -353,6 +366,13 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                             }) : '')
                     );
             this.editAction.show();
+            this.editAction2.setText(OpenLayers.i18n('editNew') 
+                    + (statusIdx !== -1 && status > 0 ? 
+                            OpenLayers.String.format(OpenLayers.i18n('currentStatus'), {
+                                status: this.statusStore.getAt(statusIdx).get('label')[catalogue.lang]
+                            }) : '')
+                    );
+            this.editAction2.show();
             this.deleteAction.show();
             
             // If status is unkown or undefined
@@ -370,8 +390,10 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         /* Actions status depend on records */
         if(GeoNetwork.Settings && GeoNetwork.Settings.editor && GeoNetwork.Settings.editor.disableIfSubmittedForEditor) {
             this.editAction.setDisabled(disableIfSubmittedForEditor || !isEditable || isReadOnly);
+            this.editAction2.setDisabled(disableIfSubmittedForEditor || !isEditable || isReadOnly);
         } else {
             this.editAction.setDisabled(!isEditable || isReadOnly);
+            this.editAction2.setDisabled(!isEditable || isReadOnly);
         }
         this.adminAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         this.statusAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);

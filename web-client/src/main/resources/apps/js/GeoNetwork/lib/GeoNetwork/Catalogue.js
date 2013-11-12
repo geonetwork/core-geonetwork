@@ -1021,6 +1021,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             window.open(url, this.windowName, this.windowOption);
         }
     },
+    metadataEdit2: function(id, create, group, child, isTemplate, schema){
+        if (create) {
+            window.open('../../srv/' + catalogue.lang + '/catalog.edit', '_blank');
+        } else {
+            window.open('../../srv/' + catalogue.lang + '/catalog.edit#/metadata/' + id, '_blank');
+        }
+    },
     /** api: method[metadataDuplicate]
      *  :param uuid: ``String`` Uuid of the metadata to duplicate
      *
