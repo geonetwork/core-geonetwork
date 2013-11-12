@@ -186,7 +186,7 @@ public class ProfileManager
             }
         }
         if (Log.isDebugEnabled(Log.REQUEST)) {
-            Log.info(Log.REQUEST, fi.toString() + " denied for " + authentication.toString());
+            Log.debug(Log.REQUEST, fi.toString() + " denied for " + authentication.toString());
         }
 
         return false;
