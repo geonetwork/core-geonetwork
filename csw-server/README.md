@@ -1,0 +1,1 @@
+The csw-server module implements the services and support classes for implementing a CSW Server.

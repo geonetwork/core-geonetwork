@@ -5,7 +5,7 @@ import itest.org.fao.geonet.Utils;
 import java.io.IOException;
 import java.util.List;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 import org.jdom.Element;
 import org.jdom.Namespace;

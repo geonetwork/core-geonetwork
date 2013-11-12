@@ -8,6 +8,8 @@
 
 	<xsl:template name="editPanel-Z3950Config">
 		<div id="z3950Config.editPanel">
+            <xsl:call-template name="ownerGroup-Z3950Config"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-Z3950Config"/>
 			<div class="dots"/>
 			<xsl:call-template name="search-Z3950Config"/>
@@ -26,6 +28,19 @@
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-Z3950Config">
+        <table border="0">
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
+                <td class="padded"><select id="z3950Config.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-Z3950Config">

@@ -17,6 +17,12 @@
 .metadata * img.logo {
   max-height : 100px;
   max-width : 100px;
+  margin : 5px;
+}
+
+.metadata * img.thumbnail {
+  max-height : 100px;
+  max-width : 100px;
   border : 1px solid #B3D4E6;
   margin : 5px;
 }
@@ -265,10 +271,12 @@ for long description */
 .metadata * textarea.large {
   height : 240px;
 }
-.metadata * textarea.xml {
-  width : 100% !important;
-  min-height : 700px; /* FIXME : Auto height*/
-  height : 100% !important;
+
+.metadata.xml * textarea.xml {
+  width : 99% !important;
+  font-size: 80%;
+  border: none;
+  height : 100% !important; /* Don't work */
 }
 
 /* Form - end */
@@ -403,15 +411,19 @@ span.buttons a.small span {
 }
 .buttons a.add span {
   background-image : url(../images/default/bullet_toggle_plus.png);
+  background-size: 10px;
 }
 .buttons a.del span {
   background-image : url(../images/default/bullet_toggle_minus.png);
+  background-size: 10px;
 }
 .buttons a.up span {
   background-image : url(../images/default/bullet_arrow_up.png);
+  background-size: 8px;
 }
 .buttons a.down span {
   background-image : url(../images/default/bullet_arrow_down.png);
+  background-size: 8px;
 }
 
 div.button {
@@ -426,6 +438,7 @@ div.button {
 }
 .tgDown {
   background-image : url(../images/default/bullet_arrow_down.png);
+  background-position: 50% 50%;
 }
 .edit {
   background-image : url(../images/default/page_white.png) !important;
@@ -471,11 +484,17 @@ div.button {
 }
 .valid--1 {
 }
+.addMenu {
+  background-image : url(../images/default/add.png) !important;
+}
 .cat-children, .cat-parent, .cat-sibling {
   background-image : url(../images/default/chart_organisation.png) !important;
 }
 .book {
   background-image : url(../images/default/book.png) !important;
+}
+.feedback {
+    background-image : url(../images/default/feedback.png) !important;
 }
 .subtemplateIcon {
   background-image : url(../images/default/report_magnify.png) !important;
@@ -518,6 +537,10 @@ div.button {
 }
 .lightBox {
   background-image : url(../images/default/map/icon_zoomin.png) !important;
+}
+
+.cat-thumbnail {
+  background-image : url(../images/default/picture_go.png) !important;
 }
 .cat-applications {
   background-image : url(../images/default/category/applications.png) !important;

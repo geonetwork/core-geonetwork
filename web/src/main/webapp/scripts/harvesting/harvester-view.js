@@ -95,6 +95,9 @@ this.setDataCommon = function(node)
 
 	hvutil.setOption(content, 'validate', prefix+'.validate');
 	hvutil.setOption(content, 'importxslt', prefix+'.importxslt');
+
+    var ownerGroup = node.getElementsByTagName('ownerGroup')   [0];
+    hvutil.setOption(ownerGroup, 'id', prefix+'.ownerGroup');
 }
 
 //=====================================================================================
@@ -113,6 +116,7 @@ this.getDataCommon = function()
 	{
 		//--- site	
 		NAME     : $F(prefix+'.name'),
+        OWNERGROUP: $F(prefix+'.ownerGroup'),
 		
 		USE_ACCOUNT: $(prefix+'.useAccount').checked,
 		USERNAME   : $F(prefix+'.username'),
@@ -177,15 +181,22 @@ this.isDataValidCommon = function()
 //=====================================================================================
 
 this.clearGroups = function() 
-{ 
-	$(prefix+ '.groups').options.length = 0;
+{   if($(prefix+ '.groups')) {
+	    $(prefix+ '.groups').options.length = 0;
+    }
 }
 
 //=====================================================================================
 
 this.addGroup = function(id, label)
 {
-	gui.addToSelect(prefix+'.groups', id, label);
+	if($(prefix+ '.groups')) {
+        gui.addToSelect(prefix+'.groups', id, label);
+    }
+    // do not add system groups [-1..1] to ownerGroup control
+    if(id != '-1' && id != '0' && id != '1') {
+        gui.addToSelect(prefix+'.ownerGroup', id, label);
+    }
 }
 
 //=====================================================================================

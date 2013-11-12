@@ -1,10 +1,10 @@
 <profiles>
     <profile name="Developer" extends="Administrator"></profile>
-    <profile extends="UserAdmin,Monitor" name="Administrator"></profile>
-    <profile extends="Reviewer" name="UserAdmin"></profile>
-    <profile extends="Editor" name="Reviewer"></profile>
-    <profile extends="RegisteredUser" name="Editor"></profile>
-    <profile extends="Guest" name="RegisteredUser"></profile>
+    <profile name="Administrator" extends="UserAdmin,Monitor"></profile>
+    <profile name="UserAdmin" extends="Reviewer"></profile>
+    <profile name="Reviewer" extends="Editor"></profile>
+    <profile name="Editor" extends="RegisteredUser"></profile>
+    <profile name="RegisteredUser" extends="Guest"></profile>
     <profile name="Guest"></profile>
-    <profile extends="RegisteredUser" name="Monitor"></profile>
+    <profile name="Monitor" extends="RegisteredUser"></profile>
 </profiles>

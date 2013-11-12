@@ -1369,6 +1369,23 @@
 			<label>Tessel·la</label>
 			<description>informació aplicada a una tessel·la</description>
 		</entry>
+		
+		<!-- Used for facet translation only and not displayed in editor -->
+		<entry hideInEditMode="true">
+			<code>map</code>
+			<label>Map</label>
+			<description></description>
+		</entry>
+		<entry hideInEditMode="true">
+			<code>staticMap</code>
+			<label>Static map</label>
+			<description></description>
+		</entry>
+		<entry hideInEditMode="true">
+			<code>interactiveMap</code>
+			<label>Interactive map</label>
+			<description></description>
+		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
 	<!-- ==================================================== -->

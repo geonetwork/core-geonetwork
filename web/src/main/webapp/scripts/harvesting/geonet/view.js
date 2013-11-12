@@ -162,7 +162,9 @@ function getData()
 			TITLE       : xml.getElementById(divElem, 'gn.title')   .value,
 			ABSTRACT    : xml.getElementById(divElem, 'gn.abstract').value,
 			KEYWORDS    : xml.getElementById(divElem, 'gn.keywords').value,
-			DIGITAL     : xml.getElementById(divElem, 'gn.digital') .checked,
+			ANYFIELD    : xml.getElementById(divElem, 'gn.anyField').value,
+			ANYVALUE    : xml.getElementById(divElem, 'gn.anyValue').value,
+            DIGITAL     : xml.getElementById(divElem, 'gn.digital') .checked,
 			HARDCOPY    : xml.getElementById(divElem, 'gn.hardcopy').checked,
 			SOURCE_UUID : $F(sourceElem),
 			SOURCE_NAME : xml.textContent(sourceElem.options[sourceElem.selectedIndex])

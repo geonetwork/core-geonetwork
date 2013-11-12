@@ -9,6 +9,8 @@
 
 	<xsl:template name="editPanel-OGCWXS">
 		<div id="ogcwxs.editPanel">
+            <xsl:call-template name="ownerGroup-OGCWXS"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-OGCWXS"/>
 			<div class="dots"/>
 			<xsl:call-template name="options-OGCWXS"/>
@@ -23,6 +25,19 @@
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-OGCWXS">
+        <table border="0">
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
+                <td class="padded"><select id="ogcwxs.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-OGCWXS">
@@ -122,7 +137,7 @@
 				<td class="padded">
 					<select id="ogcwxs.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="ogcwxs.icon.image" src="" alt="" />
+					<img id="ogcwxs.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>
 			

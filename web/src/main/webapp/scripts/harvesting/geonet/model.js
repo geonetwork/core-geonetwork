@@ -13,7 +13,8 @@ gn.Model = function(xmlLoader)
 
 	this.retrieveImportXslts = retrieveImportXslts;
 	this.retrieveSources   = retrieveSources;
-	this.retrieveGroups    = retrieveGroups;
+    this.retrieveGroups    = retrieveGroups;
+    this.retrieveLocalGroups = retrieveLocalGroups;
 	this.retrieveCategories= retrieveCategories;
 	this.getUpdateRequest  = getUpdateRequest;
 	
@@ -37,20 +38,32 @@ function retrieveSources(data, callBack)
 
 //=====================================================================================
 
+function retrieveLocalGroups(callBack) {
+    new InfoService(loader, 'groupsIncludingSystemGroups', callBack);
+}
+
 function retrieveGroups(data, callBack, username, password)
 {
 	this.retrieveGroupsCB = callBack;
 
     var url = data.HOST;
-	//var url = 'http://'+ data.HOST;
-	
-	//if (data.PORT != '')
-	//	url += ':'+data.PORT;
-		
-	//url += '/'+data.SERVLET+'/srv/'+Env.lang+'/xml.info';
     url += '/srv/'+Env.lang+'/xml.info';
 
-	new InfoService(loader, 'groups', callBack, url, username, password);
+    // Check if GeoNetwork node is 2.10 or previous release in
+    // order to properly retrieve groups (hack for #150).
+    OpenLayers.Request.GET({
+        url: url + "?type=groupsIncludingSystemGroups",
+        success: function(response){
+            if (response.responseXML) {
+                new InfoService(loader, 'groupsIncludingSystemGroups', callBack, url, username, password);
+            } else {
+                new InfoService(loader, 'groups', callBack, url, username, password);
+            }
+        },
+        failure: function(response){
+            new InfoService(loader, 'groups', callBack, url, username, password);
+        }
+    });
 }
 
 //=====================================================================================
@@ -121,6 +134,7 @@ function getUpdateRequest(data)
 
 var updateTemp = 
 ' <node id="{ID}" type="{TYPE}">'+ 
+'    <ownerGroup><id>{OWNERGROUP}</id></ownerGroup>'+
 '    <site>'+
 '      <name>{NAME}</name>'+
 '      <host>{HOST}</host>'+
@@ -169,6 +183,8 @@ var searchTemp =
 '      <keywords>{KEYWORDS}</keywords>'+
 '      <digital>{DIGITAL}</digital>'+
 '      <hardcopy>{HARDCOPY}</hardcopy>'+
+'      <anyField>{ANYFIELD}</anyField>'+
+'      <anyValue>{ANYVALUE}</anyValue>'+
 '      <source>'+
 '         <uuid>{SOURCE_UUID}</uuid>'+
 '         <name>{SOURCE_NAME}</name>'+

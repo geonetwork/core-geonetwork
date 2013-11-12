@@ -19,7 +19,7 @@ function Geonetwork20(xmlLoader)
 	var loader= xmlLoader;
 	var model = new gn20.Model(loader);
 	var view  = new gn20.View(loader);
-	
+
 	//--- public methods
 	
 	this.addSearchRow    = addSearchRow;
@@ -40,6 +40,18 @@ this.getLabel     = function() { return loader.eval("info[@type='geonetwork20']/
 this.getEditPanel = function() { return "gn20.editPanel"; }
 
 //=====================================================================================
+
+    this.init = function() {
+        this.view.init();
+        model.retrieveGroups(ker.wrap(this, init_groups_OK));
+    }
+    function init_groups_OK(data) {
+        view.clearGroups();
+
+        for (var i=0; i<data.length; i++) {
+            view.addGroup(data[i].id, data[i].label[Env.lang]);
+        }
+    }
 
 function addSearchRow()
 {

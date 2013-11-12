@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd" >
+
+	<bean id="RegionsDAO" class="org.fao.geonet.services.region.ThesaurusBasedRegionsDAO">
+		<constructor-arg ref="languages" />
+		<property name="cacheAllRegionsInMemory" value="true"/>
+		<property name="thesaurusName" value="external.place.regions"/>
+	</bean>
+	<bean id="MetadataRegionsDAO" class="org.fao.geonet.services.region.MetadataRegionDAO">
+		<property name="cacheAllRegionsInMemory" value="false"/>
+	</bean>
+</beans>

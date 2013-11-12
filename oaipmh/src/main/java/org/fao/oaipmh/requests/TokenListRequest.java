@@ -1,6 +1,7 @@
 package org.fao.oaipmh.requests;
 
-import org.fao.oaipmh.util.ISODate;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 
 
 public abstract class TokenListRequest extends ListRequest {
@@ -10,8 +11,12 @@ public abstract class TokenListRequest extends ListRequest {
 	protected ISODate until;
 	protected String  mdPrefix;
 	protected String  set;
-	
-	//---------------------------------------------------------------------------
+
+    public TokenListRequest(GeonetHttpRequestFactory transport) {
+        super(transport);
+    }
+
+    //---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---

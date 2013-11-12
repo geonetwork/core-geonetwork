@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
+<langpack>
+    <str id="core" txt="Core Package"/>
+    <str id="core.description" txt="The GeoNetwork opensource application. This is the Spatial Data Catalog web application."/>
+    <str id="idSampleM" txt="Sample metadata"/>
+    <str id="idSampleM.description" txt="Import sample metadata for testing"/>
+    <str id="geoserver" txt="GeoServer web map server"/>
+    <str id="geoserver.description" txt="GeoServer is an Open Source server that connects your information to the Geospatial Web. This embedded version is setup to provide the base layers 
+for the map viewers in GeoNetwork. You can safely install this on modern computers, but be careful on older computers with little memory (less then 256MB RAM). To have a full resolution background layer, check the GeoNetwork site for 
+instructions and download."/>
+    <str id="csw" txt="CSW test client"/>
+    <str id="csw.description" txt="The GeoNetwork opensource provides Catalog Services for the Web 2.0.1 support. This is a separate test application that can be used to test the CSW 2.0.1 services."/>
+    <str id="src" txt="Source code"/>
+    <str id="src.description" txt="The GeoNetwork source code and the ant build script."/>
+    <str id="ibt" txt="Installer building tools"/>
+    <str id="ibt.description" txt="The installer data files. Installing this package you will be able to create the installer."/>        
+</langpack>
+        

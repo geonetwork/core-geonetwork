@@ -84,7 +84,9 @@ ConfigModel.prototype.getConfig_OK = function(node)
             METADATA_DEFAULT_VIEW            : xml.evalXPath(node, 'metadata/defaultView'),
 
             METADATA_PRIVS_USERGROUPONLY     : xml.evalXPath(node, 'metadataprivs/usergrouponly'),
-            
+
+            METADATA_EDITOR_EDITUUID     : xml.evalXPath(node, 'metadataeditor/edituuid'),
+
             HARVESTER           : xml.evalXPath(node, 'harvester/enableEditing'),
 			LOCAL_RATING      : xml.evalXPath(node, 'localrating/enable'),			
             AUTO_FIXING       : xml.evalXPath(node, 'autofixing/enable'),
@@ -94,6 +96,9 @@ ConfigModel.prototype.getConfig_OK = function(node)
 			PROXY_USER        : xml.evalXPath(node, 'proxy/username'),
 			PROXY_PASS        : xml.evalXPath(node, 'proxy/password'),
 			FEEDBACK_EMAIL    : xml.evalXPath(node, 'feedback/email'),
+			FEEDBACK_SSL      : xml.evalXPath(node, 'feedback/mailServer/ssl'),
+            FEEDBACK_USERNAME : xml.evalXPath(node, 'feedback/mailServer/username'),
+            FEEDBACK_PASSWORD : xml.evalXPath(node, 'feedback/mailServer/password'),
 			FEEDBACK_MAIL_HOST: xml.evalXPath(node, 'feedback/mailServer/host'),
 			FEEDBACK_MAIL_PORT: xml.evalXPath(node, 'feedback/mailServer/port'),
 			REMOVEDMD_DIR     : xml.evalXPath(node, 'removedMetadata/dir'),
@@ -232,6 +237,9 @@ ConfigModel.updateTemp =
 '	<metadataprivs>' +
 '		<usergrouponly>{METADATA_PRIVS_USERGROUPONLY}</usergrouponly>'+
 '	</metadataprivs>' +
+'	<metadataeditor>' +
+'		<edituuid>{METADATA_EDITOR_EDITUUID}</edituuid>'+
+'	</metadataeditor>' +
 '	<harvester>' +
 '		<enableEditing>{HARVESTER}</enableEditing>'+
 '	</harvester>' +
@@ -243,9 +251,12 @@ ConfigModel.updateTemp =
 '		<password>{PROXY_PASS}</password>'+
 '	</proxy>'+
 '	<feedback>'+
-'		<email>{FEEDBACK_EMAIL}</email>'+
+'       <email>{FEEDBACK_EMAIL}</email>'+
 '		<mailServer>'+
+'           <ssl>{FEEDBACK_SSL}</ssl>'+
 '			<host>{FEEDBACK_MAIL_HOST}</host>'+
+'           <username>{FEEDBACK_USERNAME}</username>'+
+'           <password>{FEEDBACK_PASSWORD}</password>'+
 '			<port>{FEEDBACK_MAIL_PORT}</port>'+
 '		</mailServer>'+
 '	</feedback>'+

@@ -1348,7 +1348,17 @@ var processLayersSuccess = function(response) {
             
             map.addLayer(featureinfolayer);
         },
-
+        addWMC: function (url) {
+            var map = this.getMap();
+            
+            OpenLayers.Request.GET({
+                url: url, 
+                scope: this,
+                callback: function (response) {
+                    GeoNetwork.WMCManager.loadWmc(map, response.responseText);
+                 }
+            });
+        },
         /**
          * Add a list of WMS layers to the map
          *

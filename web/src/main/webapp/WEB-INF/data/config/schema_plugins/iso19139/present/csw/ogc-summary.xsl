@@ -36,9 +36,9 @@
 			<!-- DataIdentification -->
 			
 			<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification|
-				gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
+				gmd:identificationInfo/*[contains(@gco:isoType, 'MD_DataIdentification')]|
 				gmd:identificationInfo/srv:SV_ServiceIdentification|
-				gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
+				gmd:identificationInfo/*[contains(@gco:isoType, 'SV_ServiceIdentification')]">
 				
 				<xsl:for-each select="gmd:citation/gmd:CI_Citation/gmd:title">
 					<dc:title>

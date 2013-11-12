@@ -1,13 +1,12 @@
 package jeeves.server.overrides;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
-
-
 import org.jdom.Element;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
 
 public class SpringPropertyOverrides {
 
@@ -32,6 +31,10 @@ public class SpringPropertyOverrides {
             return PropertyUpdater.create(element);
         } else if ("addInterceptUrl".equalsIgnoreCase(element.getName())) {
             return new AddInterceptUrlUpdater(element);
+        } else if ("removeInterceptUrl".equalsIgnoreCase(element.getName())) {
+            return new RemoveInterceptUrlUpdater(element);
+        } else if ("SetInterceptUrl".equalsIgnoreCase(element.getName())) {
+            return new SetInterceptUrlUpdater(element);
         } else {
             throw new IllegalArgumentException(element.getName()+" is not known type of updater");
         }

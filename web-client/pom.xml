@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>2.9.0-SNAPSHOT</version>
+    <version>2.11.0-SNAPSHOT</version>
   </parent>
 
   <groupId>org.geonetwork-opensource</groupId>
@@ -76,6 +76,7 @@
           </execution>-->
         </executions>
         <configuration>
+          <statistics>false</statistics>
           <nosuffix>true</nosuffix>
           <gzip>false</gzip>
           <force>true</force>
@@ -123,7 +124,8 @@
                 <include>${project.build.directory}/classes/apps/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.js</include>
                 <include>${project.build.directory}/classes/apps/js/ext-ux/LightBox/lightbox.js</include>
                 <include>${project.build.directory}/classes/apps/js/ext-ux/SuperBoxSelect/SuperBoxSelect.js</include>
-
+                <include>${project.build.directory}/classes/apps/js/ext-ux/CheckColumn.js</include>
+                
                 <include>${project.build.directory}/classes/apps/js/proj4js-compressed.js</include>
 
 
@@ -138,6 +140,7 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/CSWGetRecords.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Events.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Events/buttonclick.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Icon.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Animation.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Marker.js</include>
@@ -155,6 +158,7 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon/v1.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon/v1_0_0.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/OWSCommon/v1_1_0.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMC.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMC/v1.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMC/v1_0_0.js</include>
@@ -168,6 +172,7 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMSGetFeatureInfo.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Geometry.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/Zoom.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/PanZoom.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/PanZoomBar.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Tween.js</include>
@@ -240,6 +245,7 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/HTTPRequest.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/Grid.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/WMS.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/WMTS.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/XYZ.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Renderer/SVG.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Layer/TileCache.js</include>
@@ -252,12 +258,18 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/Filter/v1_1_0.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/CSWGetRecords/v2_0_2.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMSCapabilities.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMTSCapabilities.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMSCapabilities/v1.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMSCapabilities/v1_1.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMSCapabilities/v1_1_0.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMSCapabilities/v1_1_1.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMSCapabilities/v1_3.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMSCapabilities/v1_3_0.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WMTSCapabilities/v1_0_0.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1_0_0.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Format/WFSCapabilities/v1_1_0.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/Scale.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/DrawFeature.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Rule.js</include>
@@ -371,6 +383,7 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/CategoryView.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/SearchFormPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/FacetsPanel.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/FeedbackForm.js</include>
                 
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/view/ViewWindow.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/view/ViewPanel.js</include>
@@ -383,10 +396,12 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/HelpPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/KeywordSelectionPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/ConceptSelectionPanel.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/LinkResourcesWindow.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/LinkedMetadataPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/LinkedMetadataSelectionPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/LogoSelectionPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/NewMetadataPanel.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/InsertMetadataPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/GeoPublisherPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/SuggestionsPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/ThumbnailPanel.js</include>
@@ -398,7 +413,8 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/MetadataInsertPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/SubTemplateManagerPanel.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/ThesaurusManagerPanel.js</include>
-
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/PrivilegesPanel.js</include>
+                
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/widgets/OGCServiceQuickRegister.js</include>
 
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/ExtentMap.js</include>
@@ -430,6 +446,7 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/BaseWindow.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/SingletonWindowManager.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/AddWMS.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/AddWMTS.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/FeatureInfo.js</include>
                 <!--<include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/Opacity.js</include>-->
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/LoadWmc.js</include>
@@ -461,6 +478,28 @@
                 <include>${project.build.directory}/classes/apps/tabsearch/js/map/MapApp.js</include>
                 <include>${project.build.directory}/classes/apps/tabsearch/js/Shortcuts.js</include>
                 <include>${project.build.directory}/classes/apps/tabsearch/js/App.js</include>
+              </includes>
+            </aggregation>
+
+            <aggregation>
+              <output>src/main/resources/apps/html5ui/js/App-mini.js</output>
+              <includes>
+                  <include>../../js/GeoNetwork-mini.js</include>
+                  <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/Panel.js</include>
+                  <!--                <include>${project.build.directory}/classes/apps/html5ui/js/vendor/modernizr-2.6.1-respond-1.1.0.min.js</include>
+                  -->
+                  <include>${project.build.directory}/classes/apps/html5ui/js/GlobalFunctions.js</include>
+                  <include>${project.build.directory}/classes/apps/html5ui/js/Settings.js</include>
+                  <include>${project.build.directory}/classes/apps/html5ui/js/Templates.js</include>
+                  <include>${project.build.directory}/classes/apps/html5ui/js/Shortcuts.js</include>
+                  <include>${project.build.directory}/classes/apps/html5ui/js/map/Settings.js</include>
+                  <include>${project.build.directory}/classes/apps/html5ui/js/map/MapApp.js</include>
+                  <include>${project.build.directory}/classes/apps/html5ui/js/search/SearchApp.js</include>
+                  <include>${project.build.directory}/classes/apps/html5ui/js/user/LoginApp.js</include>
+                  <include>${project.build.directory}/classes/apps/html5ui/js/state/PermalinkProvider.js</include>
+                  <include>${project.build.directory}/classes/apps/html5ui/js/state/History.js</include>
+                  <include>${project.build.directory}/classes/apps/html5ui/js/BreadCrumb.js</include>
+                  <include>${project.build.directory}/classes/apps/html5ui/js/App.js</include>
               </includes>
             </aggregation>
 

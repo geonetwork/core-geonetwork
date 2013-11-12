@@ -23,8 +23,8 @@
 
 package org.fao.oaipmh.responses;
 
+import org.fao.geonet.domain.ISODate;
 import org.fao.oaipmh.OaiPmh;
-import org.fao.oaipmh.util.ISODate;
 import org.jdom.Element;
 
 //=============================================================================
@@ -56,8 +56,8 @@ public class ResumptionToken
 		String curs  = rt.getAttributeValue("cursor");
 
 		expirDate = (expDt  == null) ? null : new ISODate(expDt);
-		listSize  = (listSz == null) ? null : new Integer(listSz);
-		cursor    = (curs   == null) ? null : new Integer(curs);
+		listSize  = (listSz == null) ? null : Integer.valueOf(listSz);
+		cursor    = (curs   == null) ? null : Integer.valueOf(curs);
 	}
 
 	//---------------------------------------------------------------------------

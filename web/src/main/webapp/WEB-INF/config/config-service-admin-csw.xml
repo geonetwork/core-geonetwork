@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+    <services package="org.fao.geonet">
+        <service name="admin.config.csw">
+            <documentation><![CDATA[
+          Get CSW configuration for capabilities properties.
+          ]]></documentation>
+            <class name=".guiservices.csw.Get"/>
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+
+        <service name="admin.config.csw.save">
+            <documentation><![CDATA[
+          Save CSW configuration for capabilities properties such as
+          title, abstract, fees and access constraints in different
+          languages.
+          ]]></documentation>
+            <class name=".guiservices.csw.Set2"/>
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+
+
+        <service name="admin.config.virtualcsw.list">
+            <documentation><![CDATA[
+        Get list of virtual CSW entry points.
+        ]]></documentation>
+            <class name=".guiservices.csw.virtual.List"/>
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+
+        <service name="admin.config.virtualcsw.get">
+            <documentation><![CDATA[
+        Get a virtual CSW entry point configuration.
+        ]]></documentation>
+            <class name=".guiservices.csw.virtual.Get"/>
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+
+        <service name="admin.config.virtualcsw.update">
+            <documentation><![CDATA[
+        Create or update a virtual CSW
+        ]]></documentation>
+            <class name=".guiservices.csw.virtual.Update"/>
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+
+        <service name="admin.config.virtualcsw.remove">
+            <documentation><![CDATA[
+        Delete a virtual CSW
+        ]]></documentation>
+            <class name=".guiservices.csw.virtual.Delete"/>
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+
+
+        <service name="admin.config.csw.customelementset">
+            <documentation>
+                <![CDATA[
+                Retrieve the list of custom element set.
+                ]]>
+            </documentation>
+            <class name=".guiservices.csw.customelementset.Get"/>
+        </service>
+
+        <service name="admin.config.csw.customelementset.save">
+            <documentation>
+                <![CDATA[
+                Define elements to be included in your custom element set here. 
+                Each element must be identified by its full XPATH from the document root. 
+                These elements and their descendants will be included in responses to 
+                CSW GetRecord requests with ElementSetName=FULL.
+                To revert to the default ElementSetName=FULL responses, delete all 
+                elements from this list.
+                
+                Parameters:
+                * xpath (1..n): Xpath to be use
+                ]]>
+            </documentation>
+            <class name=".guiservices.csw.customelementset.Set"/>
+        </service>
+
+
+    </services>
+</geonet>

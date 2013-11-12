@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    
+    <service name="portal.sitemap">
+      <class name=".guiservices.metadata.Sitemap" />
+      <output sheet="../xslt/services/sitemap/sitemap.xsl" contentType="text/xml; charset=UTF-8"/>
+    </service>
+    
+    <service name="robots.txt">
+      <output sheet="../xslt/services/sitemap/robots.xsl" contentType="text; charset=UTF-8"/>
+    </service>
+
+  </services>
+</geonet>

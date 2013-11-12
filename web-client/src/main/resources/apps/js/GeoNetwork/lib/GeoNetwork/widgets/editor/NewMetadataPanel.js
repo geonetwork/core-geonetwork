@@ -47,20 +47,40 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
         layout: 'anchor'
     },
     editor: undefined,
+    combo : undefined,
     getGroupUrl: undefined,
     groupStore: undefined,
     catalogue: undefined,
     tplStore: undefined,
     selectedGroup: undefined,
     selectedTpl: undefined,
+    selectedSchema: undefined,
     isChild: undefined,
     filter: undefined,
     createBt: undefined,
+    nbStore: 2, // number of store to be loaded
+    storeLoaded: 0, // number of store currently loaded
     validate: function(){
         if (this.selectedGroup !== undefined && this.selectedTpl !== undefined) {
             this.createBt.setDisabled(false);
         } else {
             this.createBt.setDisabled(true);
+        }
+    },
+    
+    /**
+     * manageLoadedEvent
+     * Check if groupStore and templateStore are loaded. When both are loaded,
+     * fires the dataLoaded event with the current template and current group.
+     * The event has the following arguments :
+     *   - this (newMetadataPnel)
+     *   - template store value
+     *   - group store value
+     */
+    manageLoadedEvent: function() {
+        this.storeLoaded++;
+        if(this.storeLoaded >= this.nbStore) {
+            this.fireEvent('dataLoaded', this, this.selectedTpl, this.selectedGroup);
         }
     },
     
@@ -71,6 +91,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
         Ext.applyIf(this, this.defaultConfig);
         var checkboxSM, colModel;
         
+        this.addEvents('dataLoaded');
         
         this.createBt = new Ext.Button({
             text: OpenLayers.i18n('create'),
@@ -79,7 +100,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
             disabled: true,
             handler: function(){
                 // FIXME could be improved
-                this.catalogue.metadataEdit(this.selectedTpl, true, this.selectedGroup, this.isChild, this.isTemplate);
+                this.catalogue.metadataEdit(this.selectedTpl, true, this.selectedGroup, this.isChild, this.isTemplate, this.selectedSchema);
                 this.ownerCt.hide();
             },
             scope: this
@@ -97,7 +118,6 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
         GeoNetwork.editor.NewMetadataPanel.superclass.initComponent.call(this);
         
         this.groupStore = GeoNetwork.data.GroupStore(this.getGroupUrl + '&profile=Editor');
-        this.groupStore.load();
         
         var cmp = [];
         
@@ -151,6 +171,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
             grid.getSelectionModel().on('rowselect', function(sm, rowIndex, r) {
                 if (sm.getCount() !== 0) {
                     this.selectedTpl = r.data.id;
+                    this.selectedSchema = r.data.schema;
                 } else {
                     this.selectedTpl = undefined;
                 }
@@ -161,12 +182,13 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
             grid.getStore().on('load', function(store) {
                 grid.getSelectionModel().selectFirstRow();
                 grid.getView().focusEl.focus();
-            }, grid);
+                this.manageLoadedEvent();
+            }, this);
             cmp.push(grid);
-            this.catalogue.search({E_template: 'y'}, null, null, 1, true, this.tplStore, null);
+            this.catalogue.search({E_template: 'y', E_hitsperpage: 150}, null, null, 1, true, this.tplStore, null);
         }
         
-        cmp.push(new Ext.form.ComboBox({
+        this.combo = new Ext.form.ComboBox({
             name: 'E_group',
             mode: 'local',
             anchor: '100%',
@@ -185,7 +207,9 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
                 },
                 scope: this
             }
-        }));
+        });
+        
+        cmp.push(this.combo);
         
         cmp.push({
                     xtype: 'textfield',
@@ -195,6 +219,29 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
                 });
         
         this.add(cmp);
+        
+        // Remove special groups and select first group in the list
+        this.groupStore.load({
+            callback: function(){
+                this.groupStore.each(function(record) {
+                    if ((record.get('id') == '-1') || (record.get('id') == '0') || (record.get('id') == '1')) {
+                        this.remove(record);
+                    }
+                },  this.groupStore);
+
+
+                if (this.groupStore.getCount() > 0) {
+                    var recordSelected = this.groupStore.getAt(0);
+                    if (recordSelected) {
+                        this.selectedGroup = recordSelected.get('id');
+                        this.combo.setValue(recordSelected.data.label[GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode())]);
+                        this.validate();
+                    }
+                }
+                this.manageLoadedEvent();
+            },
+            scope: this
+        });
         
     }
 });

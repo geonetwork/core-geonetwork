@@ -1,0 +1,10 @@
+== Code provenance checklist ==
+
+Created by: Jeroen Ticheler
+
+Creation date: 09-03-2007, updated on 10-10-2007
+
+=== Purpose ===
+Ensure all source code has a know provenance and has correct headers with license and contact details.
+
+Please refer to the online documentation at http://wiki.osgeo.org/index.php/GeoNetwork_Provenance_Review

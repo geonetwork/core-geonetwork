@@ -1,8 +1,9 @@
 package jeeves.server.local;
 
 import jeeves.server.sources.ServiceRequest;
-import jeeves.utils.StringBufferOutputStream;
-import jeeves.utils.Xml;
+import org.fao.geonet.Constants;
+import org.fao.geonet.utils.StringBufferOutputStream;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -200,7 +201,7 @@ public class LocalServiceRequest extends ServiceRequest
 			{
 				param = new Element(name);
 				try {
-					param.setText(URLDecoder.decode(value, "UTF-8"));
+					param.setText(URLDecoder.decode(value, Constants.ENCODING));
 				} catch (UnsupportedEncodingException e) {
 					param.setText(value);
 				}

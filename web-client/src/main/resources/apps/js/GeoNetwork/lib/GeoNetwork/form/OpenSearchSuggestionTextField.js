@@ -84,13 +84,16 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
         field: 'any',
         /** api: config[fieldName] 
          *  ``String`` Optional, Field name.
-         *
          */
         name: 'E_any',
         /**
          * Don't set to true if Lucene field is not analyzed with an Analyzer using a lowerCaseFilter.
          */
-        forceLowerCase: true
+        forceLowerCase: true,
+        /** api: config[sortBy] 
+         *  ``String`` request elements sorting order. FREQUENCY (default), ALPHA, STARTSWITHFIRST
+         */
+        sortBy: "STARTSWITHFIRST"
     },
     /** api: config[url] 
      * ``String`` OpenSearch suggestion service URL.
@@ -107,7 +110,7 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
     
     /** api: config[tpl] 
      *  ``Ext.XTemplate`` Optional template to use.
-     *  Default tempalte, highlight search string in the suggestion returned.
+     *  Default template, highlight search string in the suggestion returned.
      *
      */
     tpl: undefined,
@@ -133,12 +136,13 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
              * of doing getDom
              * FIXME : in case of lower casing, replace could not work that way
              * use /regexp/i instead probably
+             * 
              */
             var tpl = '<tpl for="."><div class="search-item">' + 
-                        '<h3>{[values.value.replace(Ext.getDom(\'' + this.id + 
-                        '\').value, \'<span>\' + Ext.getDom(\'' + this.id + 
-                        '\').value + \'</span>\')]}</h3>' + 
-                      '</div></tpl>';
+                '<h3>{[values.value.replace(Ext.getDom(\'' + this.id + 
+                '\').value.replace(/[*]/g, \'\'), \'<span>\' + Ext.getDom(\'' + this.id + 
+                '\').value.replace(/[*]/g, \'\') + \'</span>\')]}</h3>' + 
+              '</div></tpl>';
             this.tpl = new Ext.XTemplate(tpl);
         }
         
@@ -151,7 +155,9 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
             url: this.url,
             rootId: 1,
             baseParams: {
-                field: this.field
+                field: this.field,
+//                withFrequency: true, // To display frequency info
+                sortBy: this.sortBy
             }
         });
     }

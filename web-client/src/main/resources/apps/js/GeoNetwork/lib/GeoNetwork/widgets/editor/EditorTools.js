@@ -212,6 +212,7 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement){
                 Ext.getCmp('editorPanel').save();
                 return;
             }
+            
             if (what == 'replace') {
                 Ext.DomHelper.insertHtml('afterEnd', thisElement.dom, html);
                 thisElement.remove();
@@ -455,12 +456,11 @@ function doFileRemoveAction(action, ref, access, id){
  * Called when protocol select field changes in metadata form.
  * Protocol could not be changed if file is already uploaded.
  */
-function checkForFileUpload(fref, pref){
+function checkForFileUpload(fref, pref, protocolSelect){
     //protocol object
     var protoSelect = Ext.getDom('s_' + pref); // the protocol <select> - user selected value
     var protoIn = Ext.getDom('_' + pref);      // the protocol input field to be submitted - currently value
     //protocol value
-    var protocolSelect = protoSelect.value;  // Selected protocol
     var protocolIn = protoIn.value;          // currently set protocol
     //Can protocol be a file
     var regex = new RegExp( '^WWW:DOWNLOAD-.*-http--download.*');
@@ -476,7 +476,8 @@ function checkForFileUpload(fref, pref){
 
     // don't let anyone change the protocol if a file has already been uploaded 
     // unless the old and the new are downloadable.
-    if (possibleFileUploaded) {
+    // TODO : improve protocol change for radiomode
+    if (possibleFileUploaded && protoSelect) {
         if (protocolDownloadIn && !protocolDownloadSelect) {
             alert(OpenLayers.i18n("errorChangeProtocol")); 
             // protocol change is not ok so reset the protocol value
@@ -493,9 +494,10 @@ function checkForFileUpload(fref, pref){
     var finput = Ext.get('di_' + fref);
     var fbuttn = Ext.get('db_' + fref);
     
-	// protocol change is ok so set the protocol value to that selected
-	protoIn.value = protoSelect.value;
-
+    // protocol change is ok so set the protocol value to that selected
+    if (protoSelect) {
+        protoIn.value = protoSelect.value;
+    }
     if (protocolDownloadSelect) {
         if (finput !== null) {
             finput.hide();

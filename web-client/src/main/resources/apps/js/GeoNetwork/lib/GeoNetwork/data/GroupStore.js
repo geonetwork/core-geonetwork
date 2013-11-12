@@ -53,7 +53,22 @@ GeoNetwork.data.GroupStore = function(url){
             }
         }
         return labels;
-        
+    }
+    function getLabelForCurrentLang(v, record){
+        var labels = {};
+        var i;
+        var label = record.getElementsByTagName('label');
+        if (label.length === 1) {
+            var children = label[0].childNodes;
+            var child;
+            for (i = 0, len = children.length; i < len; ++i) {
+                child = children[i];
+                if (child.nodeType === 1 && child.nodeName == catalogue.lang) {
+                    label = child.firstChild.nodeValue;
+                }
+            }
+        }
+        return label;
     }
     
     return new Ext.data.XmlStore({
@@ -79,6 +94,9 @@ GeoNetwork.data.GroupStore = function(url){
         }, {
             name: 'label',
             convert: getLabel
+        }, {
+            name: 'labelInLang',
+            convert: getLabelForCurrentLang
         }]
     });
 };

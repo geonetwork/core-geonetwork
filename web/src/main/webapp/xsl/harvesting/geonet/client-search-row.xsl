@@ -54,7 +54,13 @@
 				<td class="padded"><xsl:value-of select="/root/strings/keywords"/></td>
 				<td class="padded"><input id="gn.keywords" class="content" type="text" value="{keywords}" size="30"/></td>
 			</tr>
-
+			
+			<tr>
+				<td/>
+				<td class="padded"><input id="gn.anyField" class="content" type="text" value="{anyField}" size="30"/></td>
+				<td class="padded"><input id="gn.anyValue" class="content" type="text" value="{anyValue}" size="30"/></td>
+			</tr>
+			
 			<tr>
 				<td/>
 				<td class="padded"><xsl:value-of select="/root/strings/digital"/></td>

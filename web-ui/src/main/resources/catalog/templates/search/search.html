@@ -1,0 +1,21 @@
+<div class="container" data-ng-controller="GnSearchController">
+
+  <h1 data-ng-translate="">Search Your Data, Maps &amp; Services</h1>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <input class="form-control" type="text" 
+          autofocus=""
+          placeholder="{{'anyPlaceHolder' | translate}}"
+        data-ng-keyup="searchRecordsSearchFor($event)"/>
+    </div>
+  </div>
+  <p>
+    <div data-gn-search-results="searchRecords"
+      data-selected-records-count="selectedRecordsCount"
+      data-allow-selection="false"
+      data-authenticated="authenticated"/>
+
+    <div data-gn-pagination="searchRecordsPagination"/>
+  </p>
+</div>

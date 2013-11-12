@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+	" >
+    <bean id="database-migration-bean" class="org.fao.geonet.DatabaseMigration">
+        <property name="migration" ref="migrationMap"/>
+    </bean>
+
+    <util:map id="migrationMap"
+              map-class="java.util.LinkedHashMap"
+              key-type="java.lang.Integer"
+              value-type="java.lang.String">
+        <entry key="243">
+            <list>
+                <value>WEB-INF/classes/setup/sql/migrate/v243/migrate-</value>
+            </list>
+        </entry>
+        <entry key="260">
+            <list>
+                <value>WEB-INF/classes/setup/sql/migrate/v260/migrate-db-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v260/migrate-</value>
+            </list>
+        </entry>
+        <entry key="261">
+            <list>
+                <value>WEB-INF/classes/setup/sql/migrate/v261/migrate-</value>
+            </list>
+        </entry>
+        <entry key="262">
+            <list>
+                <value>WEB-INF/classes/setup/sql/migrate/v262/migrate-</value>
+            </list>
+        </entry>
+        <entry key="263">
+            <list>
+                <value>WEB-INF/classes/setup/sql/migrate/vv263243/migrate-</value>
+            </list>
+        </entry>
+        <entry key="264">
+            <list>
+                <value>WEB-INF/classes/setup/sql/migrate/v264/migrate-db-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v264/migrate-</value>
+            </list>
+        </entry>
+        <entry key="265">
+            <list>
+                <value>WEB-INF/classes/setup/sql/migrate/v265/migrate-</value>
+            </list>
+        </entry>
+        <entry key="280">
+            <list>
+                <value>java:v280.MoveHarvesterSettingsToHigherNumber</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/migrate-db-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/migrate-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-eng-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-fre-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-ger-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-spa-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-cat-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-rus-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-por-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-chi-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-dut-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-nor-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-fin-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-ara-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-ita-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-tur-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-vie-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v280/loc-pol-</value>
+            </list>
+        </entry>
+        <entry key="2100">
+            <list>
+                <value>java:v280.MoveHarvesterSettingsToHigherNumber</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v2100/migrate-db-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v2100/migrate-</value>
+            </list>
+        </entry>
+        <entry key="2110">
+            <list>
+                <value>WEB-INF/classes/setup/sql/migrate/v2110/1-migrate-db-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v2110/2-migrate-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v2110/3-create-tmp-tables-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v2110/4-copy-to-tmp-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v2110/5-recreate-old-tables-</value>
+                <value>WEB-INF/classes/setup/sql/migrate/v2110/6-copy-from-tmp-</value>
+            </list>
+        </entry>
+    </util:map>
+</beans>

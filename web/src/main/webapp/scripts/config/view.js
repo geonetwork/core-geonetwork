@@ -234,9 +234,8 @@ ConfigView.prototype.setData = function(data)
     $('metadata.enableInspireView').checked = data['METADATA_INSPIRE_VIEW'] == 'true';
     $('metadata.enableXmlView').checked = data['METADATA_XML_VIEW'] == 'true';
     $('metadata.defaultView').value = data['METADATA_DEFAULT_VIEW'];
-    
-    $('metadata.usergrouponly').checked = data['METADATA_PRIVS_USERGROUPONLY'] == 'true';
-    
+    $('metadata.usergrouponly').checked = data['METADATA_PRIVS_USERGROUPONLY'];
+    $('metadata.edituuid').checked = data['METADATA_EDITOR_EDITUUID'] == 'true';
     $('harvester.enableEditing').checked = data['HARVESTER'] == 'true';
 
 	$('proxy.use') .checked   = data['PROXY_USE'] == 'true';
@@ -244,9 +243,12 @@ ConfigView.prototype.setData = function(data)
 	$('proxy.port').value     = data['PROXY_PORT'];
 	$('proxy.username').value = data['PROXY_USER'];
 	$('proxy.password').value = data['PROXY_PASS'];
-	
-	$('feedback.email')    .value = data['FEEDBACK_EMAIL'];
-	$('feedback.mail.host').value = data['FEEDBACK_MAIL_HOST'];
+
+    $('feedback.email')    .value = data['FEEDBACK_EMAIL'];
+    $('feedback.ssl') .checked    = data['FEEDBACK_SSL'] == 'true';
+    $('feedback.mail.host').value = data['FEEDBACK_MAIL_HOST'];
+    $('feedback.username').value = data['FEEDBACK_USERNAME'];
+    $('feedback.password').value = data['FEEDBACK_PASSWORD'];
 	$('feedback.mail.port').value = data['FEEDBACK_MAIL_PORT'];
 	
 	$('removedMd.dir').value = data['REMOVEDMD_DIR'];
@@ -351,7 +353,9 @@ ConfigView.prototype.getData = function()
         METADATA_DEFAULT_VIEW: $('metadata.defaultView').value,
 
         METADATA_PRIVS_USERGROUPONLY : $('metadata.usergrouponly').checked,
-        
+
+        METADATA_EDITOR_EDITUUID : $('metadata.edituuid').checked,
+
         HARVESTER : $('harvester.enableEditing').checked,
 
 		PROXY_USE  : $('proxy.use') .checked,
@@ -359,9 +363,12 @@ ConfigView.prototype.getData = function()
 		PROXY_PORT : $('proxy.port').value,
 		PROXY_USER : $('proxy.username').value,
 		PROXY_PASS : $('proxy.password').value,
-		
-		FEEDBACK_EMAIL     : $('feedback.email')    .value,
-		FEEDBACK_MAIL_HOST : $('feedback.mail.host').value,
+
+        FEEDBACK_EMAIL     : $('feedback.email').value,
+        FEEDBACK_USERNAME  : $('feedback.username').value,
+        FEEDBACK_PASSWORD  : $('feedback.password').value,
+        FEEDBACK_SSL       : $('feedback.ssl').checked,
+        FEEDBACK_MAIL_HOST : $('feedback.mail.host').value,
 		FEEDBACK_MAIL_PORT : $('feedback.mail.port').value,		
 
 		REMOVEDMD_DIR : $('removedMd.dir').value,

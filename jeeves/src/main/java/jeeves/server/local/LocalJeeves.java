@@ -1,19 +1,12 @@
 package jeeves.server.local;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import jeeves.guiservices.session.JeevesUser;
 import jeeves.server.JeevesEngine;
-import jeeves.server.ProfileManager;
 import jeeves.server.UserSession;
-import jeeves.utils.Xml;
-
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -139,13 +132,13 @@ public class LocalJeeves
 
 			// Make session with all permissions
 			session = new UserSession();
-			JeevesUser user = new JeevesUser(jeeves.getProfileManager())
-			.setId("0")
-			.setUsername("local")
-			.setName("local")
-			.setProfile(ProfileManager.ADMIN)
-			.setEmail( "local@localhost");
-		
+			User user = new User().
+			        setProfile(Profile.Administrator).
+			        setUsername(Profile.Administrator.name()).
+			        setId(0).
+			        setName(Profile.Administrator.name()).
+			        setSurname(Profile.Administrator.name());
+
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities() ) ;
 		authentication.setDetails(user);
 

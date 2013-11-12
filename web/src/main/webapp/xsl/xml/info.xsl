@@ -14,28 +14,6 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="system">
-		<site>
-			<name><xsl:value-of select="children/site/children/name/value"/></name>
-			<organization><xsl:value-of select="children/site/children/organization/value"/></organization>
-			<siteId><xsl:value-of select="children/site/children/siteId/value"/></siteId>
-			<platform>
-				<name>geonetwork</name>
-				<version><xsl:value-of select="children/platform/children/version/value"/></version>
-				<subVersion><xsl:value-of select="children/platform/children/subVersion/value"/></subVersion>
-			</platform>
-		</site>
-	</xsl:template>
-
-    <xsl:template match="inspire">
-        <inspire>
-            <enable><xsl:value-of select="children/enable/value"/></enable>
-            <enableSearchPanel><xsl:value-of select="children/enableSearchPanel/value"/></enableSearchPanel>
-        </inspire>
-    </xsl:template>
-	
-	<!-- ============================================================================================= -->
-
     <xsl:template match="isolanguages">
         <xsl:copy>
             <xsl:for-each select="record">
@@ -50,7 +28,7 @@
 	
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="categories">
+	<xsl:template match="metadatacategory">
 		<xsl:copy>
 			<xsl:for-each select="record">
 				<xsl:sort select="name" order="ascending"/>
@@ -80,7 +58,7 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="groups">
+	<xsl:template match="group">
 		<xsl:copy>
 			<xsl:for-each select="record">
 				<xsl:sort select="name" order="ascending"/>
@@ -97,7 +75,7 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="operations">
+	<xsl:template match="operation">
 		<xsl:copy>
 			<xsl:for-each select="record">
 				<operation id="{id}">
@@ -108,20 +86,20 @@
 			</xsl:for-each>
 		</xsl:copy>
 	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template match="regions">
-		<xsl:copy-of select="."/>
+	
+	<xsl:template match="statusvalues">
+		<xsl:copy>
+			<xsl:for-each select="record">
+				<xsl:sort select="name" order="ascending"/>
+				<status id="{id}">
+					<xsl:copy-of select="name"/>
+					<xsl:copy-of select="reserved"/>
+					<xsl:copy-of select="displayorder"/>
+					<xsl:copy-of select="label"/>
+				</status>
+			</xsl:for-each>
+		</xsl:copy>
 	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template match="sources">
-		<xsl:copy-of select="."/>
-	</xsl:template>
-
-	<!-- ============================================================================================= -->
 
 	<xsl:template match="templates">
 		<xsl:copy>
@@ -139,28 +117,46 @@
 			</xsl:for-each>
 		</xsl:copy>
 	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template match="users">
-		<xsl:copy-of select="."/>
+	
+	<xsl:template match="users|me|auth|readonly|index|env|regions|sources|schemas">
+        <xsl:copy-of select="."/>
+    </xsl:template>
+	
+	<xsl:template match="settings">
+		<xsl:choose>
+			<xsl:when test="setting[@name='system/site/name']">
+				<site>
+					<name><xsl:value-of select="setting[@name='system/site/name']/@value"/></name>
+					<organization><xsl:value-of select="setting[@name='system/site/organization']/@value"/></organization>
+					<siteId><xsl:value-of select="setting[@name='system/site/siteId']/@value"/></siteId>
+					<platform>
+						<name>geonetwork</name>
+						<version><xsl:value-of select="setting[@name='system/platform/version']/@value"/></version>
+						<subVersion><xsl:value-of select="setting[@name='system/platform/subVersion']/@value"/></subVersion>
+					</platform>
+				</site>
+			</xsl:when>
+			<!-- Only INSPIRE -->
+			<xsl:when test="not(setting[@name='system/site/name']) and setting[@name='system/inspire/enable']">
+				<inspire>
+					<enable><xsl:value-of select="setting[@name='system/inspire/enable']/@value"/></enable>
+					<enableSearchPanel><xsl:value-of select="setting[@name='system/inspire/enableSearchPanel']/@value"/></enableSearchPanel>
+				</inspire>
+			</xsl:when>
+			<xsl:when test="not(setting[@name='system/site/name']) and setting[@name='system/harvester/enableEditing']">
+				<harvester>
+					<enable><xsl:value-of select="setting[@name='system/harvester/enableEditing']/@value"/></enable>
+				</harvester>
+			</xsl:when>
+		    <xsl:when test="not(setting[@name='system/site/name']) and setting[@name='system/metadataprivs/usergrouponly']">
+		        <metadataprivs>
+		            <userGroupOnly><xsl:value-of select="setting[@name='system/metadataprivs/usergrouponly']/@value"/></userGroupOnly>
+		        </metadataprivs>
+		    </xsl:when>
+			<xsl:otherwise>
+				<!-- Not needed -->
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template match="me">
-		<xsl:copy-of select="."/>
-	</xsl:template>
-	<!-- ============================================================================================= -->
-
-	<xsl:template match="auth">
-		<xsl:copy-of select="."/>
-	</xsl:template>
-
-	<!-- ============================================================================================= -->
-
-	<xsl:template match="env"/>
-
-	<!-- ============================================================================================= -->
 
 </xsl:stylesheet>

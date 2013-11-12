@@ -75,7 +75,8 @@
 			</xsl:call-template>
 		</xsl:variable>
 
-		<xsl:if test="not($ownerbuttonsonly) and 
+        <xsl:variable name="readonly" select="/root/gui/env/readonly = 'true'"/>
+		<xsl:if test="not($readonly) and not($ownerbuttonsonly) and
 	 /root/gui/schemalist/name[.=$metadata/geonet:info/schema]/@edit='true'">
 			&#160;
 			<!-- create button -->
@@ -94,12 +95,13 @@
 		</xsl:if>
 		
 		<!-- delete button -->
-		<xsl:if test="geonet:info/owner='true'">
+		<xsl:if test="not($readonly) and ((/root/gui/config/harvester/enableEditing = 'true' and geonet:info/isHarvested = 'y' and geonet:info/edit='true')
+		or (geonet:info/isHarvested = 'n' and geonet:info/edit='true'))">
 			&#160;
 			<button class="content" onclick="return doConfirmDelete('{/root/gui/locService}/metadata.delete?id={$metadata/geonet:info/id}', '{/root/gui/strings/confirmDelete}','{$ltitle}','{$metadata/geonet:info/id}', '{/root/gui/strings/deleteConfirmationTitle}')"><xsl:value-of select="/root/gui/strings/delete"/></button>
 		</xsl:if>
 						
-		<xsl:if test="geonet:info/edit='true'">
+		<xsl:if test="not($readonly) and geonet:info/edit='true'">
 			&#160;
 			<!-- =========================  -->
 			<!-- Add other actions list     -->

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    <service name="catalog.edit">
+      <documentation>Metadata editor</documentation>
+      <output sheet="../xslt/ui-metadata/editor.xsl">
+        <xml name="i18n" file="xml/i18n.xml"/>
+      </output>
+    </service>
+
+    <service name="md.view">
+      <documentation>View a metadata record</documentation>
+      <class name=".services.metadata.View"/>
+      <output sheet="../xslt/ui-metadata/view/view.xsl">
+        <xml name="i18n" file="xml/i18n.xml"/>
+      </output>
+      <error sheet="../xslt/common/error.xsl"/>
+    </service>
+
+    <service name="md.edit">
+      <documentation>Edit a metadata record</documentation>
+      <class name=".services.metadata.GetEditableData"/>
+      <output sheet="../xslt/ui-metadata/edit/edit.xsl">
+        <call name="currTab" class=".guiservices.util.GetCurrentMDTab"/>
+        <xml name="i18n" file="xml/i18n.xml"/>
+      </output>
+      <error sheet="../xslt/common/error.xsl"/>
+    </service>
+
+    <service name="md.edit.saveonly">
+      <documentation><![CDATA[
+        Save the metadata record currently edited. 
+        md.edit should be used first to initialized the
+        editing session.
+        
+        Return the following response if success:
+        ```
+        <response>
+          <id>1190</id>
+          <showvalidationerrors>false</showvalidationerrors>
+          <minor>false</minor>
+        </response>
+        ```
+        ]]></documentation>
+      <class name=".services.metadata.Update"/>
+      <error sheet="../xslt/common/error.xsl"/>
+    </service>
+
+    <service name="md.edit.save">
+      <documentation>
+        <![CDATA[
+        Save a metadata record and return the new form.
+        ]]>
+      </documentation>
+      <class name=".services.metadata.Update"/>
+      <output forward="md.edit"/>
+      <error sheet="../xslt/common/error.xsl"/>
+    </service>
+
+    <service name="md.edit.save.and.close">
+      <documentation><![CDATA[
+        Terminate an editing session.
+        ]]></documentation>
+      <class name=".services.metadata.Update">
+        <!--<param name="finished" value="yes" />-->
+      </class>
+      <error sheet="../xslt/common/error.xsl"/>
+    </service>
+
+    <service name="md.element.add">
+      <documentation><![CDATA[
+                Add an element to the metadata record.
+                
+                Parameters are:
+                * ref: parent element reference
+                * name: element name
+                
+                TODO: Check if all those call are necessary
+                ]]></documentation>
+      <class name=".services.metadata.AddElement"/>
+
+      <output sheet="../xslt/ui-metadata/edit/edit-embedded.xsl">
+        <call name="currTab" class=".guiservices.util.GetCurrentMDEditingTab"/>
+        <call name="position" class=".guiservices.util.GetPositionMD"/>
+        <call name="groups" class=".guiservices.groups.GetMine"/>
+        <call name="sources" class=".guiservices.util.Sources"/>
+        <call name="isoLang" class=".guiservices.isolanguages.Get"/>
+        <call name="subtemplates" class="jeeves.services.db.Select">
+          <param name="db" value="main-db"/>
+          <param name="query"
+            value="SELECT distinct(root) AS type FROM metadata WHERE isTemplate = 's'"/>
+        </call>
+      </output>
+
+    </service>
+
+    <service name="md.element.remove">
+      <documentation><![CDATA[
+                Remove an element to the metadata record.
+                
+                Parameters are:
+                * ref: parent element reference
+                * parent: parent element reference
+                
+                TODO: Check if all those call are necessary
+                ]]></documentation>
+      <class name=".services.metadata.DeleteElement"/>
+
+      <output sheet="../xslt/ui-metadata/edit/edit-embedded.xsl">
+        <call name="currTab" class=".guiservices.util.GetCurrentMDEditingTab"/>
+        <call name="position" class=".guiservices.util.GetPositionMD"/>
+        <call name="groups" class=".guiservices.groups.GetMine"/>
+        <call name="sources" class=".guiservices.util.Sources"/>
+        <call name="isoLang" class=".guiservices.isolanguages.Get"/>
+        <call name="subtemplates" class="jeeves.services.db.Select">
+          <param name="db" value="main-db"/>
+          <param name="query"
+            value="SELECT distinct(root) AS type FROM metadata WHERE isTemplate = 's'"/>
+        </call>
+      </output>
+    </service>
+
+
+  </services>
+</geonet>

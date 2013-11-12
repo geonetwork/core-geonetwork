@@ -8,6 +8,8 @@
 
 	<xsl:template name="editPanel-wfsfeatures">
 		<div id="wfsfeatures.editPanel">
+            <xsl:call-template name="ownerGroup-wfsfeatures"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-wfsfeatures"/>
 			<div class="dots"/>
 			<xsl:call-template name="options-wfsfeatures"/>
@@ -22,6 +24,19 @@
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-wfsfeatures">
+        <table border="0">
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
+                <td class="padded"><select id="wfsfeatures.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-wfsfeatures">
@@ -45,7 +60,7 @@
 				<td class="padded">
 					<select id="wfsfeatures.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="wfsfeatures.icon.image" src="" alt="" />
+					<img id="wfsfeatures.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>
 			

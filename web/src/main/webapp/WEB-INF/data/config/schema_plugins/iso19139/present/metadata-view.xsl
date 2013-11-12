@@ -30,7 +30,7 @@
         </xsl:call-template>
       </xsl:with-param>
       <xsl:with-param name="logo">
-        <img src="../../images/logos/{//geonet:info/source}.gif" alt="logo"/>
+        <img src="../../images/logos/{//geonet:info/source}.gif" alt="logo" class="logo"/>
       </xsl:with-param>
       <xsl:with-param name="relatedResources">
         <xsl:apply-templates mode="relatedResources"
@@ -207,7 +207,7 @@
         </xsl:for-each>
         
         <xsl:if test="descendant::gmx:FileName">
-          <img src="{descendant::gmx:FileName/@src}" alt="logo" class="orgLogo" style="float:right;"/>
+          <img src="{descendant::gmx:FileName/@src}" alt="logo" class="logo orgLogo" style="float:right;"/>
           <!-- FIXME : css -->
         </xsl:if>
       </xsl:with-param>
@@ -257,10 +257,15 @@
           </xsl:choose>
           
         </xsl:for-each>
-        <xsl:if test="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
+        
+        
+        <xsl:variable name="type" select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>
+        <xsl:if test="$type">
           (<xsl:value-of
-            select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>)
+            select="/root/gui/schemas/*[name(.)='iso19139']/codelists/codelist[@name = 'gmd:MD_KeywordTypeCode']/
+            entry[code = $type]/label"/>)
         </xsl:if>
+        
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
@@ -604,7 +609,7 @@
         else geonet:get-thumbnail-url($fileName, //geonet:info, /root/gui/locService)"/>
   
       <a href="{$url}" rel="lightbox-viewset">
-        <img class="logo" src="{$url}" alt="thumbnail"
+        <img class="thumbnail" src="{$url}" alt="thumbnail"
           title="{gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString}"/>
       </a>
     </xsl:if>

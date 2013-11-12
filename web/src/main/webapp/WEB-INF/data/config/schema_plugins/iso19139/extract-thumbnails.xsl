@@ -5,12 +5,9 @@
 						xmlns:srv="http://www.isotc211.org/2005/srv"
 						xmlns:gmd="http://www.isotc211.org/2005/gmd">
 
-	<xsl:template match="gmd:MD_Metadata">
+	<xsl:template match="gmd:MD_Metadata|*[contains(@gco:isoType, 'MD_Metadata')]">
 		<thumbnail>
-			<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic
-				|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic
-				|gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']/gmd:graphicOverview/gmd:MD_BrowseGraphic
-				|gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:graphicOverview/gmd:MD_BrowseGraphic
+			<xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/gmd:MD_BrowseGraphic
 				">
 				<xsl:choose>
 					<xsl:when test="gmd:fileDescription/gco:CharacterString = 'large_thumbnail' and gmd:fileName/gco:CharacterString != ''">

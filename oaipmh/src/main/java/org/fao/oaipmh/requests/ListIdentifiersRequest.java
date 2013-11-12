@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.ListIdentifiersResponse;
 import org.jdom.JDOMException;
@@ -38,8 +39,12 @@ public class ListIdentifiersRequest extends TokenListRequest
 {
 	public static final String VERB = "ListIdentifiers";
 
+    public ListIdentifiersRequest(GeonetHttpRequestFactory transport) {
+        super(transport);
+    }
 
-	//---------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------
 
 	public ListIdentifiersResponse execute() throws IOException, OaiPmhException,
 																	JDOMException, SAXException, Exception
@@ -53,10 +58,10 @@ public class ListIdentifiersRequest extends TokenListRequest
 			params.put("metadataPrefix", mdPrefix);
 
 			if (from != null)
-				params.put("from", (from.isShort) ? from.getDate() : from.toString() +"Z");
+				params.put("from", (from.isDateOnly()) ? from.getDateAsString() : from.toString() +"Z");
 
 			if (until != null)
-				params.put("until", (until.isShort) ? until.getDate() : until.toString() +"Z");
+				params.put("until", (until.isDateOnly()) ? until.getDateAsString() : until.toString() +"Z");
 
 			if (set != null)
 				params.put("set", set);

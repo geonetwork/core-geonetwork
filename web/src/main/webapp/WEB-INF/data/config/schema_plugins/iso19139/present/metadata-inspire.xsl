@@ -14,12 +14,8 @@
 		<xsl:param name="dataset" />
 
 		<xsl:for-each
-			select="gmd:identificationInfo/gmd:MD_DataIdentification|
-				gmd:identificationInfo/srv:SV_ServiceIdentification|
-				gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
-				gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
-
-
+			select="gmd:identificationInfo/*[namespace-uri() != 'http://www.fao.org/geonetwork']">
+			
 			<xsl:call-template name="complexElementGuiWrapper">
 				<xsl:with-param name="title"
 					select="/root/gui/strings/inspireSection/identification/title" />

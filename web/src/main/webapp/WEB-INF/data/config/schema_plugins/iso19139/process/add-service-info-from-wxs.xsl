@@ -71,7 +71,7 @@
     <xsl:param name="root"/>
     
     <xsl:variable name="srv"
-      select="$root//*[local-name(.)='SV_ServiceIdentification' or @gco:isoType='srv:SV_ServiceIdentification']"/>
+      select="$root//*[local-name(.)='SV_ServiceIdentification' or contains(@gco:isoType, 'SV_ServiceIdentification')]"/>
     
     <xsl:variable name="onlineResources"
       select="$root//gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[(contains(gmd:protocol/gco:CharacterString, 'OGC:WMS')
@@ -107,10 +107,7 @@
 
   <!-- Here set extent and graphicOverview -->
   <xsl:template
-    match="gmd:identificationInfo/gmd:MD_DataIdentification|
-        gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
-        gmd:identificationInfo/srv:SV_ServiceIdentification|
-        gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']"
+    match="gmd:identificationInfo/*"
     priority="2">
 
     <xsl:copy>

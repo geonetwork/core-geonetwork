@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.fao.geonet.domain.ISODate;
 import org.fao.oaipmh.OaiPmh;
-import org.fao.oaipmh.util.ISODate;
 import org.fao.oaipmh.util.Lib;
 import org.jdom.Element;
 

@@ -5,10 +5,10 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>2.9.0-SNAPSHOT</version>
+  <version>2.11.0-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
-  <description>GeoNetwork opensource is a standards based, Free and 
-    Open Source catalog application to manage spatially referenced 
+  <description>GeoNetwork opensource is a standards based, Free and
+    Open Source catalog application to manage spatially referenced
     resources through the web.</description>
   <url>http://geonetwork-opensource.org</url>
   <scm>
@@ -59,7 +59,7 @@
       <archive>http://n2.nabble.com/GeoNetwork-commit-f2020497.html</archive>
     </mailingList>
   </mailingLists>
-  
+
   <!-- TODO developer part-->
   <developers>
     <developer>
@@ -74,16 +74,16 @@
       <timezone/>
     </developer>
   </developers>
-  
+
   <licenses>
     <license>
       <name>General Public License (GPL)</name>
       <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
     </license>
   </licenses>
-  
+
   <build>
-    
+
     <!-- =========================================================== -->
     <!--     Plugin Management                                       -->
     <!--     If a POM declares one of those plugins, then it         -->
@@ -92,6 +92,11 @@
     <!-- =========================================================== -->
     <pluginManagement>
       <plugins>
+		<plugin>
+			<groupId>org.bsc.maven</groupId>
+			<artifactId>maven-processor-plugin</artifactId>
+          <version>2.2.3</version>
+		</plugin>
         <plugin>
           <groupId>net.alchim31.maven</groupId>
           <artifactId>yuicompressor-maven-plugin</artifactId>
@@ -100,7 +105,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
-          <version>2.1-alpha-2</version>
+          <version>2.3</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -112,11 +117,56 @@
           <artifactId>maven-release-plugin</artifactId>
           <version>2.0</version>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <version>2.5.2</version>
+          <configuration>
+            <effort>Default</effort>
+            <threshold>Default</threshold>
+            <xmlOutput>true</xmlOutput>
+            <xmlOutput>true</xmlOutput>
+            <excludeFilterFile>${rootProjectDir}/code_quality/findbugs-excludes.xml</excludeFilterFile>
+            <debug>false</debug>
+            <includeTests>false</includeTests>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <phase>test</phase>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>2.10</version>
+          <executions>
+            <execution>
+              <id>check</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <phase>test</phase>
+            </execution>
+          </executions>
+          <configuration>
+            <enableRulesSummary>false</enableRulesSummary>
+            <configLocation>${rootProjectDir}/code_quality/checkstyle_checks.xml</configLocation>
+            <propertyExpansion>samedir=${rootProjectDir}/code_quality/</propertyExpansion>
+            <logViolationsToConsole>true</logViolationsToConsole>
+            <maxAllowedViolations>0</maxAllowedViolations>
+            <violationSeverity>warning</violationSeverity>
+            <encoding>UTF-8</encoding>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
 
     <plugins>
-      
+
       <!--     Compilation.                                        -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -126,9 +176,7 @@
           <target>1.6</target>  <!-- The -target argument for the Java compiler. -->
           <debug>true</debug>   <!-- Whether to include debugging information.   -->
           <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
-					<excludes>
-						<exclude>**/trash/*.java</exclude>
-					</excludes>
+          <compilerArgument>-proc:none</compilerArgument> <!-- disable automatic annotation processing accoring to: http://docs.jboss.org/hibernate/jpamodelgen/1.0/reference/en-US/html_single/#d0e261 -->
         </configuration>
       </plugin>
 
@@ -153,7 +201,7 @@
             <output>${project.build.directory}/server-output</output>
             <systemProperties>
               <GEOSERVER_DATA_DIR>release/data/geoserver_data</GEOSERVER_DATA_DIR>
-	      <mime-mappings>web/target/geonetwork/WEB-INF/mime-types.properties</mime-mappings>
+              <mime-mappings>web/target/geonetwork/WEB-INF/mime-types.properties</mime-mappings>
             </systemProperties>
           </container>
           <configuration>
@@ -168,7 +216,7 @@
                 <location>${project.build.directory}/../web/target/geonetwork.war</location>
                 <type>war</type>
               </deployable>
-<!--              <deployable>
+              <!--              <deployable>
                 <location>${project.build.directory}/../intermap/target/intermap.war</location>
                 <type>war</type>
               </deployable> -->
@@ -194,7 +242,33 @@
           <outputDirectory>${project.build.directory}/release</outputDirectory>
         </configuration>
       </plugin>
-
+        <!-- run integration tests after unit tests -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+                <excludes>
+                    <exclude>**/*IntegrationTest.java</exclude>
+                </excludes>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>integration-test</id>
+                    <goals>
+                        <goal>test</goal>
+                    </goals>
+                    <phase>integration-test</phase>
+                    <configuration>
+                        <excludes>
+                            <exclude>none</exclude>
+                        </excludes>
+                        <includes>
+                            <include>**/*IntegrationTest.java</include>
+                        </includes>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
     </plugins>
   </build>
 
@@ -207,16 +281,16 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-      	<groupId>net.sf.ehcache</groupId>
-      	<artifactId>ehcache-core</artifactId>
-      	<version>2.5.3</version>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache-core</artifactId>
+        <version>2.5.3</version>
       </dependency>
-        <!-- rewrite url servletfilter -->
-        <dependency>
-            <groupId>org.tuckey</groupId>
-            <artifactId>urlrewritefilter</artifactId>
-            <version>3.2.0</version>
-        </dependency>
+      <!-- rewrite url servletfilter -->
+      <dependency>
+        <groupId>org.tuckey</groupId>
+        <artifactId>urlrewritefilter</artifactId>
+        <version>3.2.0</version>
+      </dependency>
 
       <!-- XML -->
       <dependency>
@@ -232,20 +306,29 @@
       <dependency>
         <groupId>net.sf.saxon</groupId>
         <artifactId>saxon</artifactId>
-        <version>9.1.0.8b-patch</version> 
+        <version>9.1.0.8b-patch</version>
       </dependency>
-			<dependency>
+      <dependency>
         <groupId>net.sf.saxon</groupId>
         <artifactId>saxon-dom</artifactId>
         <version>9.1.0.8b</version>
       </dependency>
-
-			<!-- universal character set detector -->
-			<dependency>
-				<groupId>com.googlecode.juniversalchardet</groupId>
-				<artifactId>juniversalchardet</artifactId>
-				<version>1.0.3</version>
-			</dependency>
+      <dependency>
+        <groupId>com.vividsolutions</groupId>
+        <artifactId>jts</artifactId>
+        <version>1.13</version>
+      </dependency>
+        <dependency>
+            <groupId>com.github.lookfirst</groupId>
+            <artifactId>sardine</artifactId>
+            <version>5.0.1</version>
+        </dependency>
+      <!-- universal character set detector -->
+      <dependency>
+        <groupId>com.googlecode.juniversalchardet</groupId>
+        <artifactId>juniversalchardet</artifactId>
+        <version>1.0.3</version>
+      </dependency>
 
       <!-- Thesaurus stuff -->
       <dependency>
@@ -262,13 +345,13 @@
         <groupId>org.openrdf</groupId>
         <artifactId>sesame</artifactId>
         <version>1.2.7</version>
-      </dependency>	  
+      </dependency>
       <dependency>
         <groupId>org.openrdf</groupId>
         <artifactId>rio</artifactId>
         <version>1.0.9</version>
       </dependency>
-      
+
       <!-- PDF stuff: Managed by Mapfish -->
       <!--dependency>
         <groupId>com.lowagie</groupId>
@@ -280,7 +363,7 @@
         <artifactId>fop</artifactId>
         <version>0.95</version>
       </dependency>
-     
+
       <!-- Jetty stuff -->
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
@@ -311,25 +394,25 @@
         <!-- 1.0.2 in Geonetwork -->
       </dependency>
       <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-            <version>3.0.1</version>
-        </dependency>
+        <groupId>commons-net</groupId>
+        <artifactId>commons-net</artifactId>
+        <version>3.0.1</version>
+      </dependency>
       <dependency>
         <groupId>commons-digester</groupId>
         <artifactId>commons-digester</artifactId>
         <version>1.6</version>
       </dependency>
-			<dependency>
-				<groupId>commons-dbcp</groupId>
-				<artifactId>commons-dbcp</artifactId>
-				<version>1.3</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-pool</groupId>
-				<artifactId>commons-pool</artifactId>
-				<version>1.5.5</version>
-			</dependency>
+      <dependency>
+        <groupId>commons-dbcp</groupId>
+        <artifactId>commons-dbcp</artifactId>
+        <version>1.4</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-pool</groupId>
+        <artifactId>commons-pool</artifactId>
+        <version>1.6</version>
+      </dependency>
       <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
@@ -377,9 +460,9 @@
         <!-- Same as the dependency in commons-logging -->
       </dependency>
       <dependency>
-        <groupId>commons-httpclient</groupId>
-        <artifactId>commons-httpclient</artifactId>
-        <version>3.0.1</version>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>4.3.1</version>
       </dependency>
       <dependency>
         <groupId>xerces</groupId>
@@ -402,19 +485,19 @@
         <version>${lucene.version}</version>
       </dependency>
       <dependency>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-misc</artifactId>
-          <version>${lucene.version}</version>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-misc</artifactId>
+        <version>${lucene.version}</version>
       </dependency>
       <dependency>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-queries</artifactId>
-          <version>${lucene.version}</version>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-queries</artifactId>
+        <version>${lucene.version}</version>
       </dependency>
       <dependency>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-queryparser</artifactId>
-          <version>${lucene.version}</version>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-queryparser</artifactId>
+        <version>${lucene.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.lucene</groupId>
@@ -422,9 +505,9 @@
         <version>${lucene.version}</version>
       </dependency>
       <dependency>
-          <groupId>pcj</groupId>
-          <artifactId>pcj</artifactId>
-          <version>1.2</version>
+        <groupId>pcj</groupId>
+        <artifactId>pcj</artifactId>
+        <version>1.2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.jcs</groupId>
@@ -433,15 +516,15 @@
       </dependency>
       <dependency>
         <groupId>jfree</groupId>
-	<artifactId>jfreechart</artifactId>
-	<version>1.0.0</version>
+        <artifactId>jfreechart</artifactId>
+        <version>1.0.0</version>
       </dependency>
       <dependency>
         <groupId>jfree</groupId>
         <artifactId>jcommon</artifactId>
         <version>1.0.15</version>
       </dependency>
-			<!-- May be required to register connection unwrappers with 
+      <!-- May be required to register connection unwrappers with
 			     geotools
       <dependency>
         <groupId>org.springframework</groupId>
@@ -449,7 +532,7 @@
         <version>2.5.3</version>
       </dependency>
 			-->
- 
+
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
       <dependency>
         <groupId>org.dspace</groupId>
@@ -466,10 +549,10 @@
         <artifactId>marc4j</artifactId>
         <version>2.3.1</version>
       </dependency>
-      <dependency> 
+      <dependency>
         <groupId>jdbm</groupId>
-     	<artifactId>jdbm</artifactId>
-     	<version>1.0</version>
+        <artifactId>jdbm</artifactId>
+        <version>1.0</version>
       </dependency>
 
       <!-- Geotools and spatial search stuff -->
@@ -558,27 +641,10 @@
         <artifactId>lizard-tiff</artifactId>
         <version>1.0</version>
       </dependency>
-
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-annotations</artifactId>
-        <version>3.2.0.ga</version>
-        <exclusions>
-          <exclusion>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
       <dependency>
         <groupId>javax.media</groupId>
         <artifactId>jai_codec</artifactId>
         <version>1.1.3</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.persistence</groupId>
-        <artifactId>persistence-api</artifactId>
-        <version>1.0</version>
       </dependency>
       <dependency>
         <groupId>eu.medsea.mimeutil</groupId>
@@ -607,7 +673,7 @@
       <dependency>
         <groupId>jaxen</groupId>
         <artifactId>jaxen</artifactId>
-        <version>1.1.1</version>
+        <version>1.1.4</version>
       </dependency>
       <dependency>
         <groupId>org.quartz-scheduler</groupId>
@@ -631,20 +697,15 @@
       <dependency>
         <groupId>org.tmatesoft.svnkit</groupId>
         <artifactId>svnkit</artifactId>
-        <version>1.3.8</version>
+        <version>1.7.8</version>
       </dependency>
 
       <!-- Databased stuff -->
       <dependency>
-        <groupId>mckoi</groupId>
-        <artifactId>mckoi</artifactId>
-        <version>1.0.2</version>
-      </dependency>
-      <dependency>
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
-        <version>1.3.152</version>
-      </dependency> 
+        <version>1.3.174</version>
+      </dependency>
       <!-- Other stuff -->
       <dependency>
         <groupId>dlib</groupId>  <!--FIXME Handled by local repository -->
@@ -652,40 +713,40 @@
         <version>1.0</version> <!-- FIXME totally unknown -->
       </dependency>
 
-        <!-- Lib utils -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>13.0</version>
-        </dependency>
+      <!-- Lib utils -->
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>15.0</version>
+      </dependency>
 
-        <!-- Monitoring libraries -->
-        <dependency>
-            <groupId>com.yammer.metrics</groupId>
-            <artifactId>metrics-core</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.yammer.metrics</groupId>
-            <artifactId>metrics-servlet</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.yammer.metrics</groupId>
-            <artifactId>metrics-web</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.yammer.metrics</groupId>
-            <artifactId>metrics-log4j</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-        <!-- Tests -->
+      <!-- Monitoring libraries -->
+      <dependency>
+        <groupId>com.yammer.metrics</groupId>
+        <artifactId>metrics-core</artifactId>
+        <version>${metrics.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.yammer.metrics</groupId>
+        <artifactId>metrics-servlet</artifactId>
+        <version>${metrics.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.yammer.metrics</groupId>
+        <artifactId>metrics-web</artifactId>
+        <version>${metrics.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.yammer.metrics</groupId>
+        <artifactId>metrics-log4j</artifactId>
+        <version>${metrics.version}</version>
+      </dependency>
+      <!-- Tests -->
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.6</version>
-        <!--<scope>test</scope>-->
+        <version>4.10</version>
+          <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
@@ -700,36 +761,30 @@
         <artifactId>xmlunit</artifactId>
         <version>1.2</version>
       </dependency>
-      
-      <dependency>
-      	<groupId>org.mockito</groupId>
-      	<artifactId>mockito-all</artifactId>
-      	<version>1.9.0</version>
-      </dependency>
 
       <!-- db -->
-      <dependency>
-        <groupId>postgresql</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>9.1-901.jdbc3</version>
-      </dependency>
+      <!--<dependency>-->
+        <!--<groupId>postgresql</groupId>-->
+        <!--<artifactId>postgresql</artifactId>-->
+        <!--<version>9.1-901.jdbc3</version>-->
+      <!--</dependency>-->
       <dependency>
         <groupId>org.postgis</groupId>
         <artifactId>postgis-jdbc</artifactId>
         <version>1.3.3</version>
       </dependency>
-      <!-- Postgres JDBC4 for Java 1.6 -->  
-      <!--dependency>
+      <!-- Postgres JDBC4 for Java 1.6 -->
+      <dependency>
         <groupId>postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>9.1-901.jdbc4</version>
-      </dependency-->
+      </dependency>
       <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
-        <version>5.1.12</version>
+        <version>5.1.26</version>
       </dependency>
-			<!-- Not permitted under oracle licensing rules
+      <!-- Not permitted under oracle licensing rules
       <dependency>
         <groupId>ojdbc</groupId>
         <artifactId>ojdbc</artifactId>
@@ -741,55 +796,121 @@
         <artifactId>izpack-standalone-compiler</artifactId>
         <version>4.3.1</version>
       </dependency>
-        <!-- language detection -->
-       <dependency>
-          <groupId>com.cybozu.labs</groupId>
-          <artifactId>langdetect</artifactId>
-          <version>1.1-20120112</version>
+      <!-- language detection -->
+      <dependency>
+        <groupId>com.cybozu.labs</groupId>
+        <artifactId>langdetect</artifactId>
+        <version>1.1-20120112</version>
+      </dependency>
+      <dependency>
+        <groupId>net.arnx.jsonic</groupId>
+        <artifactId>jsonic</artifactId>
+        <version>1.2.0</version>
+      </dependency>
+      <!-- end language detection -->
+
+      <!-- Spring dependencies -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>${spring.version}</version>
       </dependency>
         <dependency>
-            <groupId>net.arnx.jsonic</groupId>
-            <artifactId>jsonic</artifactId>
-            <version>1.2.0</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
         </dependency>
-        <!-- end language detection -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context-support</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-aop</artifactId>
+          <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+            <groupId>aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.5.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-core</artifactId>
+        <version>${spring.security.version}</version>
+		<exclusions>
+		  <exclusion>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-expression</artifactId>
+		  </exclusion>
+		</exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-cas</artifactId>
+        <version>${spring.security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-config</artifactId>
+        <version>${spring.security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-ldap</artifactId>
+        <version>${spring.security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+        <version>${spring.security.version}</version>
+      </dependency>
+	  <dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-test</artifactId>
+		<version>${spring.version}</version>
+		<scope>test</scope>
+	  </dependency>
+	  
+	  <!-- Persistence dependencies -->
+    <dependency>
+	  <groupId>org.hibernate</groupId>
+	  <artifactId>hibernate-entitymanager</artifactId>
+	  <version>4.3.0.Beta5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-jpa</artifactId>
+	  <version>1.4.1.RELEASE</version>
+    </dependency>
 
-         <!-- Spring dependencies -->
-         <dependency>
-           <groupId>org.springframework</groupId>
-           <artifactId>spring-context</artifactId>
-           <version>${spring.version}</version>
-         </dependency>
-         <dependency>
-           <groupId>org.springframework</groupId>
-           <artifactId>spring-context-support</artifactId>
-           <version>${spring.version}</version>
-         </dependency>
-         <dependency>
-           <groupId>org.springframework.security</groupId>
-           <artifactId>spring-security-core</artifactId>
-           <version>${spring.version}</version>
-         </dependency>
-         <dependency>
-           <groupId>org.springframework.security</groupId>
-           <artifactId>spring-security-cas</artifactId>
-           <version>${spring.version}</version>
-         </dependency>
-         <dependency>
-           <groupId>org.springframework.security</groupId>
-           <artifactId>spring-security-config</artifactId>
-           <version>${spring.version}</version>
-         </dependency>
-         <dependency>
-           <groupId>org.springframework.security</groupId>
-           <artifactId>spring-security-ldap</artifactId>
-           <version>${spring.version}</version>
-         </dependency>
-         <dependency>
-           <groupId>org.springframework.security</groupId>
-           <artifactId>spring-security-web</artifactId>
-           <version>${spring.version}</version>
-         </dependency>
+	<dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>2.0.1</version>
+      </dependency>
+      <dependency>
+          <groupId>net.sf.json-lib</groupId>
+          <artifactId>json-lib</artifactId>
+          <version>2.4</version>
+          <classifier>jdk15</classifier>
+      </dependency>
+      <dependency>
+          <groupId>xom</groupId>
+          <artifactId>xom</artifactId>
+          <version>1.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -797,6 +918,11 @@
   <!--     Dependencies to be inherited by all modules.            -->
   <!-- =========================================================== -->
   <dependencies>
+    <!-- This find bugs jars allows annotations like @Nullable and @Nonnull see the jsr305 -->
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -808,7 +934,7 @@
       <groupId>org.jdom</groupId>
       <artifactId>jdom</artifactId>
     </dependency>
-    <dependency> 
+    <dependency>
       <groupId>jdbm</groupId>
       <artifactId>jdbm</artifactId>
     </dependency>
@@ -839,8 +965,8 @@
       <name>Developer k-int repository</name>
       <url>http://developer.k-int.com/maven2/</url>
     </repository>
-    
-    <!-- Local repository which allow to handle temporarly local dependencies 
+
+    <!-- Local repository which allow to handle temporarly local dependencies
      // FIXME : Should be a remote repository -->
     <repository>
       <snapshots>
@@ -854,41 +980,18 @@
       <url>file://maven_repo</url>
     </repository>
 
-		<repository>
-			<id>mvnrepository.com</id>
-			<name>Repository that has juniversalchardet</name>
-			<url>http://mvnrepository.com/artifact</url>
-		</repository>
-
-
-	<!-- Mapfish repository -->
     <repository>
-      <id>org.mapfish</id>
-      <url>http://dev.mapfish.org/maven/repository</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
+      <id>mvnrepository.com</id>
+      <name>Repository that has juniversalchardet</name>
+      <url>http://mvnrepository.com/artifact</url>
     </repository>
 
-     <repository>
-        <id>thus.ch</id>
-        <name>Patrick Valsecchi's repository</name>
-        <url>http://www.thus.ch/~patrick/maven</url>
+    <!-- seasar repo, has jsonic - used by langdetect -->
+    <repository>
+      <id>maven.seasar.org</id>
+      <name>The Seasar Foundation Maven2 Repository</name>
+      <url>http://maven.seasar.org/maven2</url>
     </repository>
-
-		<!-- tmatesoft repo for svnkit -->
-     <repository>
-        <id>org.tmatesoft.svnkit</id>
-        <name>svnkit repository</name>
-        <url>http://maven.tmatesoft.com/content/repositories/releases/</url>
-    </repository>
-
-      <!-- seasar repo, has jsonic - used by langdetect -->
-      <repository>
-          <id>maven.seasar.org</id>
-          <name>The Seasar Foundation Maven2 Repository</name>
-          <url>http://maven.seasar.org/maven2</url>
-      </repository>
 
   </repositories>
 
@@ -904,36 +1007,34 @@
   <!--     Modules for the build in approximate dependency order   -->
   <!-- =========================================================== -->
   <modules>
-    
-    <!-- Remove comment tag to include documentation in the build. 
-      Python and Latex are required to build the documentation. -->
-    
-<!--    <module>docs</module> -->
-
+    <module>common</module>
     <module>cachingxslt</module>
-    <module>jeeves</module> 
-    <module>oaipmh</module>
+    <module>jeeves</module>
     <module>sde</module>
+    <module>web-ui</module>
+    <module>domain</module>
+    <module>oaipmh</module>
+    <module>core</module>
+    <module>csw-server</module>
+    <module>harvesters</module>
+    <module>healthmonitor</module>
+    <module>services</module>
     <module>web-client</module>
     <module>web</module>
   </modules>
-  
+
   <profiles>
+    <!-- Python and Latex are required to build the documentation. -->
+    <profile>
+      <id>with-doc</id>
+      <modules>
+        <module>docs</module>
+      </modules>
+    </profile>
     <profile>
       <id>itests</id>
       <modules>
         <module>web-itest</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>gast</id>
-      <activation>
-        <file>
-          <exists>gast/pom.xml</exists>
-        </file>
-      </activation>
-      <modules>
-        <module>gast</module>
       </modules>
     </profile>
     <profile>
@@ -966,9 +1067,12 @@
   <properties>
     <jetty.version>7.3.1.v20110307</jetty.version>
     <geotools.version>8.6</geotools.version>
-    <lucene.version>4.1-SNAPSHOT</lucene.version>
-    <spring.version>3.1.1.RELEASE</spring.version>
+    <lucene.version>4.1.0</lucene.version>
+    <spring.version>3.2.4.RELEASE</spring.version>
+	<spring.security.version>3.1.4.RELEASE</spring.security.version>
+    <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
+    <rootProjectDir>..</rootProjectDir>
   </properties>
 </project>

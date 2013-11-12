@@ -24,16 +24,17 @@
 package jeeves.server.sources;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.FileUploadTooBigEx;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.fao.geonet.Constants;
+import org.fao.geonet.exceptions.FileUploadTooBigEx;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -51,6 +52,10 @@ import java.util.Map;
 
 public final class ServiceRequestFactory
 {
+
+    private static String JSON_URL_FLAG = "@json";
+    private static String DEBUG_URL_FLAG = "!";
+
 	/**
 	 * Default constructor.
 	 * Builds a ServiceRequestFactory.
@@ -78,7 +83,7 @@ public final class ServiceRequestFactory
 
 		if (encoding == null) {
 			try {
-				req.setCharacterEncoding("UTF-8");
+				req.setCharacterEncoding(Constants.ENCODING);
 			} catch (UnsupportedEncodingException ex) {
 				ex.printStackTrace();
 			}
@@ -91,6 +96,7 @@ public final class ServiceRequestFactory
 		srvReq.setDebug       (extractDebug(url));
 		srvReq.setLanguage    (extractLanguage(url));
 		srvReq.setService     (extractService(url));
+        srvReq.setJSONOutput  (extractJSONFlag(url));
 		String ip = req.getRemoteAddr();
 		String forwardedFor = req.getHeader("x-forwarded-for");
 		if (forwardedFor != null) ip = forwardedFor;
@@ -191,9 +197,18 @@ public final class ServiceRequestFactory
 		if (url == null)
 			return false;
 
-		return url.indexOf('!') != -1;
+		return url.indexOf(DEBUG_URL_FLAG) != -1;
 	}
 
+    /** 
+     * Extracts the JSON output flag from the url
+     */
+    private static boolean extractJSONFlag(String url) {
+       if (url == null)
+           return false;
+       
+       return url.indexOf(JSON_URL_FLAG) != -1;
+    }
 	//---------------------------------------------------------------------------
 	/** Extracts the language code from the url
 	  */
@@ -222,8 +237,11 @@ public final class ServiceRequestFactory
 		if (url == null)
 			return null;
 
-		if (url.endsWith("!"))
-			url = url.substring(0, url.length() -1);
+		if (url.endsWith(DEBUG_URL_FLAG))
+            url = url.substring(0, url.length() - 1);
+
+        if (url.endsWith(JSON_URL_FLAG))
+            url = url.substring(0, url.length() - JSON_URL_FLAG.length());
 
 		int pos = url.lastIndexOf('/');
 
@@ -280,7 +298,7 @@ public final class ServiceRequestFactory
 		DiskFileItemFactory fif = new DiskFileItemFactory();
 		ServletFileUpload   sfu = new ServletFileUpload(fif);
 
-    sfu.setSizeMax(maxUploadSize * 1024 * 1024);
+		sfu.setSizeMax(((long)maxUploadSize) * 1024L * 1024L);
 
 		try {
 			for (Object i : sfu.parseRequest(req)) {

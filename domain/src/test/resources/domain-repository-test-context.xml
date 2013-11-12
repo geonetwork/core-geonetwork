@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+		">
+
+    <!--<jdbc:embedded-database type="H2" id="jdbcDataSource" />-->
+    <bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactoryBean">
+        <property name="databaseType" value="H2"/>
+        <property name="databaseConfigurer">
+            <bean class="org.fao.geonet.GeonetworkH2TestEmbeddedDatabaseConfigurer">
+                <!--<property name="compatilityMode" value="MySQL"/>-->
+                <!--<property name="compatilityMode" value="Oracle"/>-->
+                <!--<property name="compatilityMode" value="DB2"/>-->
+                <!--<property name="compatilityMode" value="MSSQLServer"/>-->
+                <!--<property name="compatilityMode" value="PostgreSQL"/>-->
+            </bean>
+        </property>
+    </bean>
+    <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
+        <constructor-arg value="H2"/>
+    </bean>
+
+    <bean id="generateDdl" class="java.lang.String">
+        <constructor-arg value="true"/>
+    </bean>
+</beans>

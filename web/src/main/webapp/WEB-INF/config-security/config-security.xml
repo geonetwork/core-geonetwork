@@ -1,0 +1,21 @@
+<beans 
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.1.xsd" 
+          xmlns:sec="http://www.springframework.org/schema/security"
+          xmlns:ctx="http://www.springframework.org/schema/context"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xmlns="http://www.springframework.org/schema/beans">
+    <!-- <sec:debug/> -->
+    <import resource="config-security-core.xml"/>
+    <import resource="config-security-mapping.xml"/>
+    <!-- <import resource="config-security-ldap.xml"/> -->
+    <!-- <import resource="config-security-cas.xml"/>
+    <import resource="config-security-cas-ldap.xml"/> -->
+    <!-- <import resource="config-security-cas-database.xml"/> -->
+    <ctx:property-placeholder location="WEB-INF/config-security/config-security.properties" file-encoding="UTF-8" ignore-unresolvable="true" order="100"/>
+
+</beans>

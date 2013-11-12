@@ -1,0 +1,65 @@
+<span data-ng-controller="GnLogoSettingsController">
+  <div class="row">
+    <div class="col-lg-3">
+      <div class="panel panel-default gn-logo-settings">
+        <div class="panel-heading">
+          <span data-translate="">currentCatalogLogo</span>
+        </div>
+        <div class="panel-body thumbnail gn-thumbnail">
+          <img src="../../images/logos/{{info.site.siteId}}.gif?{{info.site.lastUpdate}}"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-9">
+      <div class="panel panel-default gn-logo-settings">
+        <div class="panel-heading">
+          <span data-translate="">addNewLogo</span>
+        </div>
+        <div class="panel-body">
+          <form id="fileupload" action="admin.logo.upload@json" method="POST"
+            enctype="multipart/form-data" data-file-upload="logoUploadOptions">
+            <span class="btn btn-success btn-block fileinput-button" ng-class="{disabled: disabled}">
+              <i class="fa fa-plus fa fa-white"/>
+              <span data-translate="">chooseLogos</span>
+              <input type="file" name="fname" multiple="true" autofocus="" ng-disabled="disabled"/>
+            </span>
+
+            <div class="col-lg-5 fade" data-ng-class="{in: active()}">
+              <!-- The global progress bar -->
+              <div class="progress progress-striped active" data-file-upload-progress="progress()"
+                data-file-upload-done="loadLogo()">
+                <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"/>
+              </div>
+              <div class="progress-extended">&nbsp;</div>
+            </div>
+            <p class="help-block" data-translate="">logoUploadHelp</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default gn-logo-settings">
+    <div class="panel-heading">
+      <span data-translate="">defineCatalogLogo</span>
+    </div>
+    <div class="row panel-body">
+      <div class="col-lg-3" data-ng-repeat="l in logos">
+        <div class="thumbnail gn-thumbnail">
+          <div class="caption">
+            <p>
+              <a class="btn btn-link fa fa-picture-o" title="{{'useLogoForCatalog' | translate}}"
+                data-ng-click="setCatalogLogo(l, false)"/>
+              <a class="btn btn-link fa fa-bookmark"
+                title="{{'useLogoForCatalogFavicon' | translate}}"
+                data-ng-click="setCatalogLogo(l, true)"/>
+              <a class="btn btn-link fa fa-trash-o" title="{{'removeLogo' | translate}}"
+                data-ng-click="removeLogo(l)"/>
+            </p>
+          </div>
+          <img src="{{logoPath}}{{l}}" alt="{{l}}"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</span>

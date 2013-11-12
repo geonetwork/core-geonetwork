@@ -12,6 +12,8 @@
 			<img src="{/root/gui/url}/images/spinner.gif" alt="busy"/>
 		</div>
 		<div id="oai.editPanel">
+            <xsl:call-template name="ownerGroup-OAI"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-OAI"/>
 			<div class="dots"/>
 			<xsl:call-template name="search-OAI"/>
@@ -29,6 +31,19 @@
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-OAI">
+        <table border="0">
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
+                <td class="padded"><select id="oai.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-OAI">
@@ -50,7 +65,7 @@
 				<td class="padded">
 					<select id="oai.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="oai.icon.image" src="" alt="" />
+					<img id="oai.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>
 			

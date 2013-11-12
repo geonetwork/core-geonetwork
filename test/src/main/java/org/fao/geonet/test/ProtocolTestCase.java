@@ -1,6 +1,6 @@
 package org.fao.geonet.test;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.DifferenceListener;
 import org.custommonkey.xmlunit.XMLTestCase;

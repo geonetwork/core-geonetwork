@@ -1,0 +1,107 @@
+@import "bootstrap-3.0.1/bootstrap.less";
+@import "font-awesome-4.0.1/less/font-awesome.less";
+
+
+/**
+ * Nav bar title may be longer than default
+ */
+.navbar-brand {
+  max-width: 280px;
+}
+
+[ng\:cloak],
+[ng-cloak],
+.ng-cloak{
+  display:none !important;
+}
+
+/**
+ * Required when displaying long text like
+ * exception report. Eg. catalog health check.
+ */
+.list-group-item-text{
+  word-break:break-word;
+}
+
+
+.gn-sidebar .nav .nav > li > a{
+  padding-top:3px;
+  padding-bottom:3px;
+  padding-left:30px;
+  font-size:90%;
+}
+
+.gn-info{
+  position:fixed;
+  z-index:9999;
+  top:5px;
+  left:5px;
+}
+
+/**
+ * Logo in nav bar can't be big
+ */
+.gn-logo {
+  max-height: 20px;
+}
+
+/**
+ * Properly break stack trace error.
+ */
+.gn-stack,
+.gn-code{
+  white-space:normal;
+}
+
+div.gn-scroll-spy {
+  position: fixed;
+  bottom: 0%;
+  left: 0px;
+  opacity: 0.7;
+  font-size: 80%;
+  
+  ul {
+    li {
+      a {
+      padding-left: 5px;
+      padding-right: 5px;
+      padding-top: 1px;
+      padding-bottom: 1px;
+      }
+      ul {
+        li {
+          a {
+            padding-top: 1px;
+            padding-bottom: 1px;
+            padding-left: 15px;
+            font-size: 90%;
+          }
+        }
+        li.active > a {
+            font-weight: bold;
+        }
+      }
+    }
+    li.active > a {
+      font-weight: bold;
+      color: @brand-primary;
+      background-color: @navbar-default-brand-hover-bg;
+    }
+  }
+}
+
+.gn-popup {
+  display: none;
+  overflow: hidden;
+  min-width: 200px;
+  max-width: 600px;
+  min-height: 100px;
+  max-height: 400px;
+  z-index: 2000;
+}
+
+#onlinesrc-popup, #linkparent-popup {
+  max-width: none;
+  max-height: none;
+  display: none;
+}

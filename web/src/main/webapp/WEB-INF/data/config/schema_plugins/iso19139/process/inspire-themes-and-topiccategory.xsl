@@ -234,10 +234,7 @@
     
 
     <xsl:template
-        match="gmd:identificationInfo/gmd:MD_DataIdentification|
-        gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
-        gmd:identificationInfo/srv:SV_ServiceIdentification|
-        gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']"
+        match="gmd:identificationInfo/*"
         priority="2">
         
         <xsl:copy>

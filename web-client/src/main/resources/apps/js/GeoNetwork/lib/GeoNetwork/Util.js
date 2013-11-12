@@ -22,6 +22,32 @@
  */
 Ext.namespace('GeoNetwork');
 
+//Required for IE6, 7, 8
+//https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/bind
+if (!Function.prototype.bind) {
+     Function.prototype.bind = function (oThis) {
+         if (typeof this !== "function") {
+           // closest thing possible to the ECMAScript 5 internal IsCallable function
+           throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+         }
+      
+         var aArgs = Array.prototype.slice.call(arguments, 1), 
+             fToBind = this, 
+             fNOP = function () {},
+             fBound = function () {
+               return fToBind.apply(this instanceof fNOP && oThis
+                                      ? this
+                                      : oThis,
+                                    aArgs.concat(Array.prototype.slice.call(arguments)));
+             };
+      
+         fNOP.prototype = this.prototype;
+         fBound.prototype = new fNOP();
+      
+         return fBound;
+    };
+}
+
 GeoNetwork.Lang = {};
 
 GeoNetwork.Util = {
@@ -126,6 +152,7 @@ GeoNetwork.Util = {
      */
     protocolToCSS: {
         'application/vnd.ogc.wms_xml': 'addLayerIcon',
+        'application/vnd.ogc.wmc': 'addLayerIcon',
         'OGC:WMS': 'addLayer',
         'application/vnd.google-earth.kml+xml': 'md-mn-kml',
         'application/zip': 'md-mn-zip',

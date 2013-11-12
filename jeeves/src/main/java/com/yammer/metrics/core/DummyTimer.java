@@ -3,7 +3,6 @@ package com.yammer.metrics.core;
 import com.yammer.metrics.stats.Snapshot;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -13,8 +12,8 @@ import java.util.concurrent.TimeUnit;
  * Time: 12:02 PM
  */
 public class DummyTimer extends Timer {
-    public static final Timer INSTANCE = new DummyTimer();
     private static final TimeUnit TU = TimeUnit.MILLISECONDS;
+    public static final Timer INSTANCE = new DummyTimer();
     DummyTimer() {
         super(DummyExecutorService.INSTANCE, TU, TU);
     }

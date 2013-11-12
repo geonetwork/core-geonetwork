@@ -96,6 +96,7 @@ function radioModalUpdate(div, service, modalbox, title) {
         Ext.getDom(div).innerHTML = response.responseText;
         if (service === 'metadata.status') {
             Ext.getCmp('modalWindow').close();
+            catalogue.onAfterStatus();
         }
     }, null);
 }
@@ -216,5 +217,42 @@ function checkBatchNewOwner(action, title) {
     catalogue.doAction(catalogue.services.metadataMassiveNewOwner + "?" + Ext.Ajax.serializeForm(Ext.getDom('batchnewowner')), null, null, null, function(response){
         Ext.getDom('batchnewowner').parentNode.innerHTML = response.responseText;
     });
+}
+
+
+/**
+* Build duration format for gts:TM_PeriodDuration onkeyup or onchange
+* events of duration widget define in metadata-iso19139.xsl.
+*
+* This only apply to iso19139 (or iso profil) metadata.
+*
+* Duration format is: PnYnMnDTnHnMnS and could be negative.
+*
+* Parameters:
+* ref - {String} Identifier of a form element (ie. geonet:element/@ref)
+*/
+function buildDuration(ref) {
+    if ($('Y' + ref).value == '')
+    $('Y' + ref).value = 0;
+    if ($('M' + ref).value == '')
+    $('M' + ref).value = 0;
+    if ($('D' + ref).value == '')
+    $('D' + ref).value = 0;
+    if ($('H' + ref).value == '')
+    $('H' + ref).value = 0;
+    if ($('MI' + ref).value == '')
+    $('MI' + ref).value = 0;
+    if ($('S' + ref).value == '')
+    $('S' + ref).value = 0;
+    
+    $('_' + ref).value =
+    ($('N' + ref).checked? "-": "") +
+    "P" +
+    $('Y' + ref).value + "Y" +
+    $('M' + ref).value + "M" +
+    $('D' + ref).value + "DT" +
+    $('H' + ref).value + "H" +
+    $('MI' + ref).value + "M" +
+    $('S' + ref).value + "S";
 }
 

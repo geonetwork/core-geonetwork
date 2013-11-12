@@ -139,7 +139,7 @@
 	<!-- =================================================================== -->
 
 	<xsl:template match="gmd:MD_DataIdentification
-		|*[@gco:isoType='gmd:MD_DataIdentification']">
+		|*[contains(@gco:isoType, 'MD_DataIdentification')]">
 		<xsl:copy>
 			<xsl:apply-templates select="gmd:citation"/>
 			<xsl:apply-templates select="gmd:abstract"/>
@@ -161,7 +161,7 @@
 	<!-- =================================================================== -->
 
 	<xsl:template match="srv:SV_ServiceIdentification|
-		*[@gco:isoType='srv:SV_ServiceIdentification']">
+		*[contains(@gco:isoType, 'SV_ServiceIdentification')]">
 		<xsl:copy>
 			<xsl:apply-templates select="gmd:citation"/>
 			<xsl:apply-templates select="gmd:abstract"/>

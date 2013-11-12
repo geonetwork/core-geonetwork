@@ -8,6 +8,8 @@
 
 	<xsl:template name="editPanel-GN">
 		<div id="gn.editPanel">
+            <xsl:call-template name="ownerGroup-GN"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-GN"/>
 			<div class="dots"/>
 			<xsl:call-template name="search-GN"/>
@@ -22,6 +24,19 @@
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-GN">
+        <table border="0">
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
+                <td class="padded"><select id="gn.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-GN">

@@ -1,0 +1,103 @@
+<div class="container" data-ng-controller="GnLoginController">
+  <div class="col-lg-6">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">needAnAccount</div>
+      <div class="panel-body">
+        <form class="form-horizontal" id="userinfo" action="create.account" method="post">
+
+          <div class="form-group">
+            <label class="control-label col-lg-4" data-translate="">email</label>
+            <div class="col-lg-8">
+              <input type="email" name="email" autofocus="" class="form-control"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-lg-4" for="inputName" translate="">name</label>
+            <div class="col-lg-8">
+              <input type="text" class="form-control" id="inputName" name="name"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-lg-4" for="inputUsername" translate="">surname</label>
+            <div class="col-lg-8">
+              <input type="text" class="form-control" id="inputUsername" name="surname"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-lg-4" data-translate="">organisation</label>
+            <div class="col-lg-8">
+              <!-- TODO : Add org list -->
+              <input type="text" name="org" class="form-control"/>
+            </div>
+          </div>
+
+
+          <fieldset>
+            <legend data-translate="">address</legend>
+
+
+            <div class="form-group">
+              <label class="control-label col-lg-4" data-translate="">address</label>
+              <div class="col-lg-8">
+                <input type="text" name="address" class="form-control"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-lg-4" data-translate="">zip</label>
+              <div class="col-lg-8">
+                <input type="text" name="zip" class="form-control"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-lg-4" data-translate="">state</label>
+              <div class="col-lg-8">
+                <input type="text" name="state" class="form-control"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-lg-4" data-translate="">city</label>
+              <div class="col-lg-8">
+                <input type="text" name="city" class="form-control"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-lg-4" data-translate="">country</label>
+              <div class="col-lg-8">
+                <!-- TODO : Add country list -->
+                <input type="text" name="country" class="form-control"/>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="form-group">
+            <label class="control-label col-lg-4" data-translate="">requestedProfile</label>
+            <div class="col-lg-8">
+              <select name="profile" class="form-control">
+                <option data-ng-repeat="p in profiles" value="{{p}}">{{p | translate}}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+        <button data-ng-click="register('#userinfo')" class="btn btn-primary btn-block"
+          data-translate="">register</button>
+
+        <p
+          data-ng-show="registrationStatus && registrationStatus['result'] != 'errorEmailAddressAlreadyRegistered'">
+          <span data-translate="">contactDetailsSentTo</span>
+          <strong>{{registrationStatus['@email']}}</strong>. </p>
+        <p
+          data-ng-show="registrationStatus && registrationStatus['result'] == 'errorEmailAddressAlreadyRegistered'">
+          <span class="text-danger"
+            data-ng-show="registrationStatus['result'] == 'errorEmailAddressAlreadyRegistered'">
+            {{registrationStatus['result'] | translate}} </span>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <p data-translate="">newAccountInfo</p>
+  </div>
+</div>

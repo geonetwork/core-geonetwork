@@ -83,10 +83,21 @@
 				<xsl:apply-templates select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata">
 					<xsl:with-param name="langId" select="$poundLangId"/>
 				</xsl:apply-templates>
-		
+
+				<xsl:apply-templates mode="index" select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']">
+					<xsl:with-param name="langId" select="$poundLangId"/>
+				</xsl:apply-templates>
 			</Document>
 	</xsl:template>
-
+	
+	<xsl:template mode="index" match="*|@*">
+		<xsl:param name="langId" />
+		
+		<xsl:apply-templates mode="index" select="*|@*">
+			<xsl:with-param name="langId" select="$langId"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
 	<!-- ========================================================================================= -->
 
 	<xsl:template match="*" mode="metadata">
@@ -96,10 +107,7 @@
 		<!-- the double // here seems needed to index MD_DataIdentification when
 			it is nested in a SV_ServiceIdentification class -->
 
-		<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification|
-							gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
-							gmd:identificationInfo/srv:SV_ServiceIdentification|
-							gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
+		<xsl:for-each select="gmd:identificationInfo/*">
 
 			<xsl:for-each select="gmd:citation/gmd:CI_Citation">
 
@@ -267,12 +275,26 @@
                     <xsl:variable name="fileDescr" select="gmd:fileDescription/gco:CharacterString"/>
                     <xsl:choose>
                         <xsl:when test="contains($fileName ,'://')">
-                            <Field  name="image" string="{concat('unknown|', $fileName)}" store="true" index="false"/>
+							<xsl:choose>
+								<xsl:when test="string($fileDescr)='thumbnail'">
+									<Field  name="image" string="{concat('thumbnail|', $fileName)}" store="true" index="false"/>
+								</xsl:when>
+								<xsl:when test="string($fileDescr)='large_thumbnail'">
+									<Field  name="image" string="{concat('overview|', $fileName)}" store="true" index="false"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<Field  name="image" string="{concat('unknown|', $fileName)}" store="true" index="false"/>
+								</xsl:otherwise>
+							</xsl:choose>
                         </xsl:when>
                         <xsl:when test="string($fileDescr)='thumbnail'">
                             <!-- FIXME : relative path -->
                             <Field  name="image" string="{concat($fileDescr, '|', '../../srv/eng/resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
                         </xsl:when>
+						<xsl:when test="string($fileDescr)='large_thumbnail'">
+							<!-- FIXME : relative path -->
+							<Field  name="image" string="{concat('overview', '|', '../../srv/eng/resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
+						</xsl:when>
                     </xsl:choose>
                 </xsl:if>
             </xsl:for-each>
@@ -333,13 +355,13 @@
 		<!-- === Service stuff ===  -->
 		<!-- Service type           -->
 		<xsl:for-each select="gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName|
-			gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:serviceType/gco:LocalName">
+			gmd:identificationInfo/*[contains(@gco:isoType, 'SV_ServiceIdentification')]/srv:serviceType/gco:LocalName">
 			<Field name="serviceType" string="{string(.)}" store="true" index="true"/>
 		</xsl:for-each>
 
 		<!-- Service version        -->
 		<xsl:for-each select="gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString|
-			gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:serviceTypeVersion/gco:CharacterString">
+			gmd:identificationInfo/*[contains(@gco:isoType, 'SV_ServiceIdentification')]/srv:serviceTypeVersion/gco:CharacterString">
 			<Field name="serviceTypeVersion" string="{string(.)}" store="true" index="true"/>
 		</xsl:for-each>
 

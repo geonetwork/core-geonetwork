@@ -1,13 +1,12 @@
 package jeeves.server.overrides;
 
-import java.beans.PropertyDescriptor;
-import java.util.Properties;
-
-import jeeves.utils.Xml;
-
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationContext;
+
+import java.beans.PropertyDescriptor;
+import java.util.Properties;
 
 abstract class PropertyUpdater extends BeanUpdater {
 
@@ -39,7 +38,7 @@ abstract class PropertyUpdater extends BeanUpdater {
         Object value = valueLoader.load(applicationContext, properties);
         if (value instanceof String) {
             String string = (String) value;
-            value = ConfigurationOverrides.updatePropertiesInText(properties, string);
+            value = ConfigurationOverrides.DEFAULT.updatePropertiesInText(properties, string);
         }
         PropertyDescriptor descriptor = BeanUtils.getPropertyDescriptor(bean.getClass(), propertyName);
         

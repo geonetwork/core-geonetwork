@@ -12,7 +12,8 @@ Z3950Config.Model = function(xmlLoader)
 	var callBackStyleSheets = null;
 
 	this.retrieveImportXslts = retrieveImportXslts;
-	this.getUpdateRequest  = getUpdateRequest;
+    this.retrieveGroups    = retrieveGroups;
+    this.getUpdateRequest  = getUpdateRequest;
 	
 //=====================================================================================
 
@@ -42,6 +43,10 @@ function retrieveXslts_OK(xmlRes)
 	}
 }
 
+    function retrieveGroups(callBack) {
+        new InfoService(loader, 'groupsIncludingSystemGroups', callBack);
+    }
+
 //=====================================================================================
 
 function getUpdateRequest(data)
@@ -65,6 +70,7 @@ function getUpdateRequest(data)
 
 var updateTemp = 
 ' <node id="{ID}" type="{TYPE}">'+ 
+'    <ownerGroup><id>{OWNERGROUP}</id></ownerGroup>'+
 '    <site>'+
 '      <name>{NAME}</name>'+
 '      <host>{HOST}</host>'+

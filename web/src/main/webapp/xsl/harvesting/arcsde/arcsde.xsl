@@ -8,6 +8,8 @@
 
 	<xsl:template name="editPanel-Arcsde">
 		<div id="arcsde.editPanel">
+            <xsl:call-template name="ownerGroup-Arcsde"/>
+            <div class="dots"/>
 			<xsl:call-template name="site-Arcsde"/>
 			<div class="dots"/>
 			<xsl:call-template name="options-Arcsde"/>
@@ -23,6 +25,19 @@
 		</div>
 	</xsl:template>
 
+	<!-- ============================================================================================= -->
+
+    <xsl:template name="ownerGroup-Arcsde">
+        <table border="0">
+            <tr>
+                <td class="padded"><xsl:value-of select="/root/gui/harvesting/selectownergroup"/></td>
+                <td class="padded"><select id="arcsde.ownerGroup" class="content"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">&#xA0;</td>
+            </tr>
+        </table>
+    </xsl:template>
 	<!-- ============================================================================================= -->
 
 	<xsl:template name="site-Arcsde">
@@ -64,7 +79,7 @@
 				<td class="padded">
 					<select id="arcsde.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="arcsde.icon.image" src="" alt="" />
+					<img id="arcsde.icon.image" src="" alt="" class="logo"/>
 				</td>
 			</tr>			
 		</table>

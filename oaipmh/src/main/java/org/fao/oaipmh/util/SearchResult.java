@@ -38,7 +38,7 @@ public class SearchResult
 	//---------------------------------------------------------------------------
 	
 	public String        prefix;
-	public List<Integer> ids;
+	private List<Integer> ids;
 	
 	private String token;
 	
@@ -65,6 +65,9 @@ public class SearchResult
 		if (!Lib.isInteger(token))
 			throw new BadResumptionTokenException("Invalid token : "+ token);
 
+        if (ids == null) {
+            throw new IllegalStateException("res.ids should not be null");
+        }
 		int pos = Integer.parseInt(token);
 
 		if (pos >= ids.size())

@@ -1,6 +1,5 @@
 package com.yammer.metrics.core;
 
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**

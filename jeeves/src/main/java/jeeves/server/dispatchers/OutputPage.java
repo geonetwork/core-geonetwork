@@ -23,7 +23,7 @@
 
 package jeeves.server.dispatchers;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 //=============================================================================

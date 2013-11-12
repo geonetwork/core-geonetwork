@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.ListRecordsResponse;
 import org.jdom.JDOMException;
@@ -38,8 +39,12 @@ public class ListRecordsRequest extends TokenListRequest
 {
 	public static final String VERB = "ListRecords";
 
-	
-	public ListRecordsResponse execute() throws IOException, OaiPmhException, JDOMException,
+    public ListRecordsRequest(GeonetHttpRequestFactory transport) {
+        super(transport);
+    }
+
+
+    public ListRecordsResponse execute() throws IOException, OaiPmhException, JDOMException,
 															  SAXException, Exception
 	{
 		Map<String, String> params = new HashMap<String, String>();

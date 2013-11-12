@@ -26,6 +26,8 @@ package org.fao.oaipmh.requests;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.ListSetsResponse;
 import org.jdom.JDOMException;
@@ -37,7 +39,11 @@ public class ListSetsRequest extends ListRequest
 {
 	public static final String VERB = "ListSets";
 
-	//---------------------------------------------------------------------------
+    public ListSetsRequest(GeonetHttpRequestFactory transport) {
+        super(transport);
+    }
+
+    //---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---

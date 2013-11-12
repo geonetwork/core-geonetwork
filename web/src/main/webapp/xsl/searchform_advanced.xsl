@@ -305,7 +305,7 @@
 				<!-- Status -->
 				<div class="row">
 					<span class="labelField"><xsl:value-of select="/root/gui/strings/status"/></span>
-						
+					
 					<select class="content" name="_status" id="_status">
 						<option value="">
 							<xsl:if test="/root/gui/searchDefaults/_status=''">
@@ -313,12 +313,12 @@
 							</xsl:if>
 							<xsl:value-of select="/root/gui/strings/any"/>
 						</option>
-						
-						<xsl:for-each select="/root/gui/status/record">
-							<xsl:sort select="label/child::*[name() = $mylang]" order="ascending"/>
+						<xsl:for-each select="/root/gui/status/statusvalues/status">
+							<xsl:sort select="displayorder"/>
+							<xsl:sort select="label/child::*[name() = $mylang]"/>
 							
-							<option value="{id}">
-								<xsl:if test="id = /root/gui/searchDefaults/_status">
+							<option value="{@id}">
+								<xsl:if test="@id = /root/gui/searchDefaults/_status">
 									<xsl:attribute name="selected"/>
 								</xsl:if>
 								<xsl:value-of select="label/child::*[name() = $mylang]"/>

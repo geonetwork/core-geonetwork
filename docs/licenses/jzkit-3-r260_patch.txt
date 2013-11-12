@@ -1,0 +1,325 @@
+Index: jzkit_z3950_plugin/src/main/java/org/jzkit/search/provider/z3950/Z3950SearchTask.java
+===================================================================
+--- jzkit_z3950_plugin/src/main/java/org/jzkit/search/provider/z3950/Z3950SearchTask.java	(revision 260)
++++ jzkit_z3950_plugin/src/main/java/org/jzkit/search/provider/z3950/Z3950SearchTask.java	(working copy)
+@@ -49,6 +49,7 @@
+ import javax.xml.parsers.DocumentBuilderFactory;
+ import javax.xml.parsers.ParserConfigurationException;
+ import org.w3c.dom.Document;
++import org.w3c.dom.Element;
+ 
+ public class Z3950SearchTask extends AbstractIRResultSet implements IRResultSet
+ {
+@@ -87,6 +88,7 @@
+   private String charset = "UTF-8";
+ 
+   private DocumentBuilder docBuilder = null;
++	private DocumentBuilder htmldb = null;
+ 
+   // This will hold result records. It may be that we start to throw out elements
+   // on a LRU basis at some point in the future
+@@ -103,7 +105,18 @@
+       DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+       docFactory.setNamespaceAware(true);
+       docFactory.setValidating(false);
++    	// Check http://xml.apache.org/xerces2-j/features.html for features
++    	docFactory.setAttribute("http://xml.org/sax/features/validation",Boolean.FALSE);
++    	docFactory.setAttribute("http://apache.org/xml/features/nonvalidating/load-external-dtd",Boolean.FALSE);
+       docBuilder = docFactory.newDocumentBuilder();
++
++			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
++			dbf.setValidating(false);
++			dbf.setNamespaceAware(true);
++			dbf.setIgnoringComments(false);
++			dbf.setIgnoringElementContentWhitespace(false);
++			dbf.setExpandEntityReferences(false);
++			htmldb = dbf.newDocumentBuilder();
+     }
+     catch ( Exception e ) {
+       e.printStackTrace();
+@@ -256,7 +269,7 @@
+                                                                                               new ExplicitRecordFormatSpecification("iso2709:unimarc:F"));
+                               break;
+                             case 3: // CCF
+-                              // System.out.println("CCF");
++                              // log.debug("CCF");
+                               break;
+                             case 10: // US Marc
+                             case 11: // UK Marc
+@@ -342,38 +355,33 @@
+                               case 1:
+                                 log.debug("PDF Document...");
+                                 break;
+-                              case 3:
+-                                log.debug("HTML record...");
+-                                String html_rec = null;
+-                                if ( et.encoding.o instanceof byte[] )
+-                                  html_rec = new String((byte[])et.encoding.o);
+-                                else
+-                                  html_rec = et.encoding.o.toString();  
+-                                break;
+                               case 9:
+                                 log.debug("SGML record...");
+                                 break;
++                              case 3: // HTML
++                                String htm = new String((byte[])(et.encoding.o));
++																log.debug("HTML doc is "+htm);
++    														Document doc = null;
++    														try {
++      														doc = htmldb.newDocument();
++      														Element root = doc.createElement("HTML");
++      														root.appendChild( doc.createTextNode(htm) );
++      														doc.appendChild( root );
++																	result[counter++] = new InformationFragmentImpl(hitno, source_name, source_collection, null, doc, actual_spec);
++    														} catch ( Exception e ) {
++      														e.printStackTrace();
++    														}
++                                break;
+                               case 10: // XML
+-                                // String rec = new String((byte[])(et.encoding.o));
+-                                // result[counter++] =  new org.jzkit.search.util.RecordModel.InformationFragmentImpl(0,
+-                                //                                                             source_name,
+-                                //                                                             source_collection,
+-                                //                                                             null,
+-                                //                                                             rec,
+-                                //                                                             new ExplicitRecordFormatSpecification("string::F"));
++                                String rec = new String((byte[])(et.encoding.o));
++																log.debug("XML doc is "+rec);
+                                 try {
+                                   Document new_result_document = docBuilder.parse(new java.io.ByteArrayInputStream((byte[])(et.encoding.o)));
+-                                  result[counter++] = new InformationFragmentImpl(hitno,
+-                                                                                  source_name,
+-                                                                                  source_collection,
+-                                                                                  null,
+-                                                                                  new_result_document,
+-                                                                                  actual_spec);
++                                  result[counter++] = new InformationFragmentImpl(hitno, source_name, source_collection, null, new_result_document, actual_spec);
+                                 }
+                                 catch ( Exception e ) {
+                                   e.printStackTrace();
+                                 }
+-
+                                 break;
+                               default:
+                                 break;
+Index: jzkit_z3950_plugin/src/main/java/org/jzkit/z3950/server/ZServerAssociation.java
+===================================================================
+--- jzkit_z3950_plugin/src/main/java/org/jzkit/z3950/server/ZServerAssociation.java	(revision 260)
++++ jzkit_z3950_plugin/src/main/java/org/jzkit/z3950/server/ZServerAssociation.java	(working copy)
+@@ -323,6 +323,7 @@
+     String element_set_name = null;
+     String result_set_name = present_request.resultSetId;
+     String record_syntax = null;
++		String schema = null;
+ 
+     OIDRegisterEntry ent = reg.lookupByOID(present_request.preferredRecordSyntax);
+     if ( ent != null )
+@@ -341,8 +342,8 @@
+ 
+     ArchetypeRecordFormatSpecification archetype = new ArchetypeRecordFormatSpecification(element_set_name);
+ 
+-    ExplicitRecordFormatSpecification explicit = getExplicitFormat(record_syntax,element_set_name);
+-    // ExplicitRecordFormatSpecification explicit = new ExplicitRecordFormatSpecification(record_syntax,schema,element_set_name);
++    //ExplicitRecordFormatSpecification explicit = getExplicitFormat(record_syntax,element_set_name);
++    ExplicitRecordFormatSpecification explicit = new ExplicitRecordFormatSpecification(record_syntax,schema,element_set_name);
+ 
+     backend.present(new BackendPresentDTO(this,
+                                           result_set_name != null ? result_set_name : "Default",
+@@ -689,14 +690,15 @@
+       rec.encoding.which = encoding_inline0_type.octet_aligned_CID;
+       try {
+         Document d = (Document) fragment.getOriginalObject();
+-        log.debug("serialize "+d);
++        log.debug("serialize "+d.getDocumentElement() );
+         OutputFormat format  = new OutputFormat( "xml","utf-8",false );
+         format.setOmitXMLDeclaration(true);
+         java.io.StringWriter  stringOut = new java.io.StringWriter();
+         XMLSerializer serial = new XMLSerializer( stringOut,format );
+-        serial.setNamespaces(true);
++        //serial.setNamespaces(true);
+         serial.asDOMSerializer();
+         serial.serialize( d.getDocumentElement() );
++				log.debug("Serialized form is "+stringOut.toString());
+         rec.encoding.o = stringOut.toString().getBytes("UTF-8");
+       }
+       catch( Exception e ) {
+@@ -765,7 +767,7 @@
+       result = new ExplicitRecordFormatSpecification("string","sutrs",element_set_name);
+     }
+     else if ( record_syntax.equalsIgnoreCase("xml") ) {
+-      result = new ExplicitRecordFormatSpecification("xml",element_set_name,null);
++      result = new ExplicitRecordFormatSpecification("xml", null, element_set_name);
+     }
+ 
+     return result;
+Index: jzkit_core/src/main/java/org/jzkit/search/util/RecordModel/ExplicitRecordFormatSpecification.java
+===================================================================
+--- jzkit_core/src/main/java/org/jzkit/search/util/RecordModel/ExplicitRecordFormatSpecification.java	(revision 260)
++++ jzkit_core/src/main/java/org/jzkit/search/util/RecordModel/ExplicitRecordFormatSpecification.java	(working copy)
+@@ -46,7 +46,7 @@
+ 
+   public ExplicitRecordFormatSpecification(String rfs) {
+     // Passed in a string in the format FORMAT:SCHEMA:SETNAME.. Parse it
+-    String[] components = rfs.split(":");
++    String[] components = rfs.split(":",3);
+ 
+     if ( components[0] != null )
+       this.encoding = new DirectRefFormatProperty(components[0]);    // eg XML
+@@ -109,7 +109,8 @@
+   }
+ 
+   public FormatProperty getSchema() {
+-    return schema;
++		if (schema == null) return new DirectRefFormatProperty("");
++    else return schema;
+   }
+ 
+   public FormatProperty getSetname() {
+Index: jzkit_core/src/main/resources/org/jzkit/search/util/QueryModel/PrefixString/ConversionRules.properties
+===================================================================
+--- jzkit_core/src/main/resources/org/jzkit/search/util/QueryModel/PrefixString/ConversionRules.properties	(revision 260)
++++ jzkit_core/src/main/resources/org/jzkit/search/util/QueryModel/PrefixString/ConversionRules.properties	(working copy)
+@@ -1,3 +1,7 @@
++geo.1=AccessPoint
++geo.2=Relation
++geo.3=Position
++geo.4=Structure
+ bib-1.1=AccessPoint
+ bib-1.2=Relation
+ bib-1.3=Position
+Index: jzkit_service/src/main/java/org/jzkit/ServiceDirectory/SearchServiceDescriptionDBO.java
+===================================================================
+--- jzkit_service/src/main/java/org/jzkit/ServiceDirectory/SearchServiceDescriptionDBO.java	(revision 260)
++++ jzkit_service/src/main/java/org/jzkit/ServiceDirectory/SearchServiceDescriptionDBO.java	(working copy)
+@@ -152,6 +152,12 @@
+     this.collection_info.add(coll);
+   }
+ 
++	public void addCollection(String code, String collection_name, String local_id, String profile) {
++			addCollection(new org.jzkit.ServiceDirectory.CollectionDescriptionDBO(code,collection_name,local_id,profile));
++	}
++
++
++
+   /**
+    * Return the list of allowable access points.
+    * @return The set of AttrValue objects that are allowed to be used as access points. May return null, which means anything goes!
+Index: jzkit_service/src/main/java/org/jzkit/ServiceDirectory/CollectionDescriptionDBO.java
+===================================================================
+--- jzkit_service/src/main/java/org/jzkit/ServiceDirectory/CollectionDescriptionDBO.java	(revision 260)
++++ jzkit_service/src/main/java/org/jzkit/ServiceDirectory/CollectionDescriptionDBO.java	(working copy)
+@@ -32,6 +32,12 @@
+     this.cd_metadata_record_id = cd_metadata_record_id;
+   }
+ 
++  public CollectionDescriptionDBO(String code, String collection_name, String local_id, String profile) {
++    this.code = code;
++    this.collection_name = collection_name;
++    this.local_id = local_id;
++		this.profile = profile;
++  }
+   @Id
+   @Column(name="ID")
+   @GeneratedValue(strategy=GenerationType.AUTO)
+Index: jzkit_service/src/main/java/org/jzkit/search/util/ResultSet/SimpleAggregatingResultSet.java
+===================================================================
+--- jzkit_service/src/main/java/org/jzkit/search/util/ResultSet/SimpleAggregatingResultSet.java	(revision 260)
++++ jzkit_service/src/main/java/org/jzkit/search/util/ResultSet/SimpleAggregatingResultSet.java	(working copy)
+@@ -696,18 +696,23 @@
+             log.debug("Get the xml for the input document type");
+             Document d = record_builder_service.getCanonicalXML(records[i]);
+ 
+-            String from_schema = source_spec.getSchema().toString();
+-            String to_schema = transform_spec.getSchema().toString();
+-            Document raw_data = (Document) transformation_service.convert(d, from_schema, to_schema, trans_props);
++            //String from_schema = source_spec.getSchema().toString();
++            //String to_schema = transform_spec.getSchema().toString();
++            //Document raw_data = (Document) transformation_service.convert(d, from_schema, to_schema, trans_props);
++						// SP: Handle spec massaging in transformation service
++						log.debug("Translating from "+source_spec+" to "+transform_spec);
++						Document raw_data = (Document) transformation_service.convert(d, source_spec.toString(), transform_spec.toString(), trans_props);
+ 
+             log.debug("Creating instance of record model");
+ 
+-            result[i] = record_builder_service.createFrom(starting_fragment+i,
+-                                                          "svc",
+-                                                          "coll",
+-                                                          null,
+-                                                          raw_data,
+-                                                          transform_spec);
++						// SP: record_builder_service has bugs doesn't work?
++						result[i] = new InformationFragmentImpl(starting_fragment+i, "svc", "coll", null, raw_data, transform_spec);
++            //result[i] = record_builder_service.createFrom(starting_fragment+i,
++            //                                              "svc",
++            //                                              "coll",
++            //                                               null,
++            //                                              raw_data,
++            //                                              transform_spec);
+           }
+         }
+         else {
+Index: jzkit_service/src/main/java/org/jzkit/configuration/provider/xml/InMemoryImpl.java
+===================================================================
+--- jzkit_service/src/main/java/org/jzkit/configuration/provider/xml/InMemoryImpl.java	(revision 260)
++++ jzkit_service/src/main/java/org/jzkit/configuration/provider/xml/InMemoryImpl.java	(working copy)
+@@ -135,6 +135,7 @@
+   }
+ 
+   public void registerRecordModelConverterType(RecordTransformerTypeInformationDBO info) {
++		log.debug("Calling register with "+info.getType()+" "+info.getClassname());
+     record_converter_types.add(info);
+   }
+ 
+@@ -142,7 +143,9 @@
+     return record_converter_types.iterator();
+   }
+                                                                                                                                         
+-  public void registerRecordModelMapping(RecordMappingInformationDBO info) {
++  public void registerRecordModelMapping(String fromspec, String tospec, String type, String resource) {
++		RecordMappingInformationDBO info = new RecordMappingInformationDBO(fromspec, tospec, type, resource);
++		log.debug("Calling register with "+info);
+     record_converter_mappings.add(info);
+   }
+ 
+Index: jzkit_service/src/main/resources/org/jzkit/configuration/provider/xml/DigesterRules.xml
+===================================================================
+--- jzkit_service/src/main/resources/org/jzkit/configuration/provider/xml/DigesterRules.xml	(revision 260)
++++ jzkit_service/src/main/resources/org/jzkit/configuration/provider/xml/DigesterRules.xml	(working copy)
+@@ -42,9 +42,14 @@
+ 
+       <pattern value="Collections">
+         <pattern value="Collection">
+-          <object-create-rule classname="org.jzkit.ServiceDirectory.CollectionDescriptionDBO" />
++       <!--   <object-create-rule classname="org.jzkit.ServiceDirectory.CollectionDescriptionDBO" />
+           <set-properties-rule/>
+-          <set-next-rule methodname="addCollection" />
++          <set-next-rule methodname="addCollection" /> -->
++       <call-method-rule methodname="addCollection" paramcount="4" paramtypes="java.lang.String,java.lang.String,java.lang.String,java.lang.String"/>
++			 <call-param-rule paramnumber="0" attrname="code"/>
++			 <call-param-rule paramnumber="1" attrname="name"/>
++			 <call-param-rule paramnumber="2" attrname="localId"/>
++			 <call-param-rule paramnumber="3" attrname="profile"/>
+         </pattern>
+       </pattern>
+      
+@@ -107,14 +112,16 @@
+ 
+    <pattern value="ServiceDirectory/RecordConversion">
+      <pattern value="converter">
+-       <object-create-rule classname="org.jzkit.configuration.api.RecordTransformerTypeInformationDBO"/>
++       <object-create-rule classname="org.jzkit.configuration.api.RecordTransformerTypeInformationDBO" />
+        <set-properties-rule/>
+        <set-next-rule methodname="registerRecordModelConverterType" />
+      </pattern>
+      <pattern value="mapping">
+-       <object-create-rule classname="org.jzkit.configuration.api.RecordMappingInformationDBO"/>
+-       <set-properties-rule/>
+-       <set-next-rule methodname="registerRecordModelMapping" />
++       <call-method-rule methodname="registerRecordModelMapping" paramcount="4" paramtypes="java.lang.String,java.lang.String,java.lang.String,java.lang.String"/>
++			 <call-param-rule paramnumber="0" attrname="fromSpec"/>
++			 <call-param-rule paramnumber="1" attrname="toSpec"/>
++			 <call-param-rule paramnumber="2" attrname="type"/>
++			 <call-param-rule paramnumber="3" attrname="resource"/>
+      </pattern>
+    </pattern>
+ 

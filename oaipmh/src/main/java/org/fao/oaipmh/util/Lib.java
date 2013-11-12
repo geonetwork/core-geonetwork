@@ -25,6 +25,7 @@ package org.fao.oaipmh.util;
 
 import java.util.Map;
 
+import org.fao.geonet.domain.ISODate;
 import org.fao.oaipmh.OaiPmh;
 import org.jdom.Element;
 
@@ -44,7 +45,7 @@ public class Lib
 		root.setAttribute("schemaLocation", OaiPmh.SCHEMA_LOCATION, OaiPmh.Namespaces.XSI);
 
 		Element date = new Element("responseDate", OaiPmh.Namespaces.OAI_PMH)
-									.setText(new ISODate().toString() +"Z");
+									.setText(new ISODate().getDateAndTime() +"Z");
 
 		root.addContent(date);
 
@@ -61,10 +62,11 @@ public class Lib
 
 		//--- if there is no verb, there are no params
 
-		if (params != null)
-			for (String key : params.keySet())
-				req.setAttribute(key, params.get(key));
-
+		if (params != null) {
+	        for (Map.Entry<String, String> param: params.entrySet()) {
+	            req.setAttribute(param.getKey(), param.getValue());
+			}
+		}
 		root.addContent(req);
 		root.addContent(response);
 
