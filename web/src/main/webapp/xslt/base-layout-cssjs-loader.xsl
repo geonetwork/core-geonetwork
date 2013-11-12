@@ -49,7 +49,7 @@
         
         <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
         
-        <script src="{$uiResourcesPath}lib/bootstrap-3.0.0.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
         
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
@@ -82,7 +82,7 @@
         <script src="{$uiResourcesPath}lib/angular/angular-route.min.js"></script>
           
         <script src="{$uiResourcesPath}lib/angular-translate.min.js"></script>
-        <script src="{$uiResourcesPath}lib/bootstrap-3.0.0.min.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.min.js"></script>
         
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.min.js"></script>

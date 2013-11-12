@@ -1,12 +1,12 @@
-@import "bootstrap-3.0.0/bootstrap.less";
-@import "font-awesome-3.2.1/less/font-awesome.less";
+@import "bootstrap-3.0.1/bootstrap.less";
+@import "font-awesome-4.0.1/less/font-awesome.less";
 
 
 /**
  * Nav bar title may be longer than default
  */
 .navbar-brand {
-    max-width: 280px;
+  max-width: 280px;
 }
 
 [ng\:cloak],
@@ -51,4 +51,57 @@
 .gn-stack,
 .gn-code{
   white-space:normal;
+}
+
+div.gn-scroll-spy {
+  position: fixed;
+  bottom: 0%;
+  left: 0px;
+  opacity: 0.7;
+  font-size: 80%;
+  
+  ul {
+    li {
+      a {
+      padding-left: 5px;
+      padding-right: 5px;
+      padding-top: 1px;
+      padding-bottom: 1px;
+      }
+      ul {
+        li {
+          a {
+            padding-top: 1px;
+            padding-bottom: 1px;
+            padding-left: 15px;
+            font-size: 90%;
+          }
+        }
+        li.active > a {
+            font-weight: bold;
+        }
+      }
+    }
+    li.active > a {
+      font-weight: bold;
+      color: @brand-primary;
+      background-color: @navbar-default-brand-hover-bg;
+    }
+  }
+}
+
+.gn-popup {
+  display: none;
+  overflow: hidden;
+  min-width: 200px;
+  max-width: 600px;
+  min-height: 100px;
+  max-height: 400px;
+  z-index: 2000;
+}
+
+#onlinesrc-popup, #linkparent-popup {
+  max-width: none;
+  max-height: none;
+  display: none;
 }

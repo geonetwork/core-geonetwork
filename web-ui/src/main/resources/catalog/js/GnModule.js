@@ -1,8 +1,6 @@
 (function() {
   goog.provide('gn');
 
-
-
   goog.require('gn_cat_controller');
   goog.require('gn_language_switcher');
   goog.require('gn_metadata_manager');
@@ -10,13 +8,13 @@
   goog.require('gn_search_controller');
   goog.require('gn_search_manager');
   goog.require('gn_search_results');
-  goog.require('gn_utility_service');
+  goog.require('gn_utility');
 
   var module = angular.module('gn', [
     'ngRoute',
     'pascalprecht.translate',
     'gn_language_switcher',
-    'gn_utility_service',
+    'gn_utility',
     'gn_search_manager',
     'gn_metadata_manager',
     'gn_search_results',

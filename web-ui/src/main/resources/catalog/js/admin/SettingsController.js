@@ -9,14 +9,11 @@
 
 
 
-
-
-
-
   goog.require('gn_csw_settings_controller');
   goog.require('gn_csw_test_controller');
   goog.require('gn_csw_virtual_controller');
   goog.require('gn_logo_settings_controller');
+  goog.require('gn_scroll_spy');
   goog.require('gn_system_settings_controller');
 
   var module = angular.module('gn_settings_controller',
@@ -24,7 +21,8 @@
        'gn_csw_settings_controller',
        'gn_csw_virtual_controller',
        'gn_csw_test_controller',
-       'gn_logo_settings_controller']);
+       'gn_logo_settings_controller',
+       'gn_scroll_spy']);
 
 
   /**
@@ -40,12 +38,12 @@
             [{
               type: 'system',
               label: 'settings',
-              icon: 'icon-cogs',
+              icon: 'fa-cogs',
               href: '#/settings/system'
             },{
               type: 'logo',
               label: 'manageLogo',
-              icon: 'icon-picture',
+              icon: 'fa-picture-o',
               href: '#/settings/logo'
             },{
               type: 'csw',

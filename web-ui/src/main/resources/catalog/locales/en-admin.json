@@ -156,11 +156,13 @@
     "saveUser": "Save",
     "deleteUser": "Delete",
     "updateUser": "Update user ",
+    "userUpdateError": "User can't be created or updated",
     "newUser": "New user ",
     "userRecords": " records found for ",
     "userRecord": " record found for ",
     "isAdministrator": "Is an administrator ?",
     "defineUserGroupsPerProfile": "Select user groups per profile",
+    "cantDeleteUserHavingRecords": "User having records can't be deleted. Transfert records to another user.",
     
     "groups": "Groups",
     "groupName": "Name",
