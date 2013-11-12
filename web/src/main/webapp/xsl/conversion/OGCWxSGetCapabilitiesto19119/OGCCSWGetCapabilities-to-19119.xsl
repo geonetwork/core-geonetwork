@@ -12,7 +12,7 @@ Mapping between :
 
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
 
-	<xsl:param name="uuid">uuid</xsl:param>
+	<xsl:param name="uuid"></xsl:param>
 	<xsl:param name="lang">eng</xsl:param>
 	<xsl:param name="topic"/>
 
