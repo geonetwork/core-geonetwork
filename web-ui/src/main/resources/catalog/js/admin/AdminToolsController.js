@@ -29,12 +29,12 @@
             [{
               type: 'index',
               label: 'indexAdmin',
-              icon: 'icon-search',
+              icon: 'fa-search',
               href: '#/tools/index'
             },{
               type: 'batch',
               label: 'batchProcess',
-              icon: 'icon-medkit',
+              icon: 'fa-medkit',
               href: '#/tools/batch'
             },{
               type: 'transfert-privs',

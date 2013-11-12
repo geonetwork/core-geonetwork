@@ -28,12 +28,12 @@
             id="gn-record-{{md['geonet:info'].uuid}}" 
             data-ng-class="md['geonet:info'].selected == true ? 'active' : ''">
           <h4 class="list-group-item-heading">
-              <i class="" 
-              data-ng-class="md['geonet:info'].selected == true ? 'icon-check' : 'icon-check-empty'" 
-              data-ng-show="allowSelection == 'true'" 
-              data-ng-click="select(md, $event)"></i>
+              <i class="fa" 
+                data-ng-class="md['geonet:info'].selected == true ? 'fa-check-square-o' : 'fa-square-o'" 
+                data-ng-show="allowSelection == 'true'" 
+                data-ng-click="select(md, $event)"></i>
               <span class="" data-ng-click="view(md)">{{md.title || md.defaultTitle}}</span>
-              <i class="icon-edit pull-right" 
+              <i class="fa fa-edit pull-right" 
                   data-ng-show="authenticated" 
                   data-ng-click="edit(md)"></i>
           </h4>

@@ -1,46 +1,52 @@
 <div class="row" data-ng-controller="GnAdminMetadataController">
   <div class="col-lg-12">
-    <div class="panel">
+    <div class="panel panel-default">
       <div class="panel-heading" data-translate="">loadSchemaSamplesOrTemplates</div>
+      <div class="panel-body">
+        <h2 data-translate="">listOfSchemas</h2>
 
-      <h2 data-translate="">listOfSchemas</h2>
-
-      <div class="clearfix">
-        <div class="btn-group pull-right">
-          <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
-            {{selectedSchemas.length}} <span data-translate="">selected</span><span class="caret"/>
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <a data-ng-click="selectAllSchemas(true)" data-translate="">selectAll</a>
-            </li>
-            <li>
-              <a data-ng-click="selectAllSchemas(false)" data-translate="">selectNone</a>
-            </li>
-          </ul>
+        <div class="clearfix">
+          <div class="btn-group pull-right">
+            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
+              {{selectedSchemas.length}} <span data-translate="">selected</span><span class="caret"
+              />
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a data-ng-click="selectAllSchemas(true)" data-translate="">selectAll</a>
+              </li>
+              <li>
+                <a data-ng-click="selectAllSchemas(false)" data-translate="">selectNone</a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
 
-      <div class="list-group">
-        <a class="list-group-item" data-ng-repeat="s in schemas"
-          data-ng-class="isSchemaSelected(s) ? 'active' : ''" data-ng-click="selectSchema(s)">
-          <h4 class="list-group-item-heading">{{s | translate}}</h4>
-          <p> {{(s + '-help') | translate}} </p>
-        </a>
-      </div>
-        
+        <div class="list-group">
+          <a class="list-group-item" data-ng-repeat="s in schemas"
+            data-ng-class="isSchemaSelected(s) ? 'active' : ''" data-ng-click="selectSchema(s)">
+            <h4 class="list-group-item-heading">{{s | translate}}</h4>
+            <p> {{(s + '-help') | translate}} </p>
+          </a>
+        </div>
+
         <div class="row">
-            <div class="col-lg-6">
-                <button type="button" class="btn btn-primary btn-block"
-                data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadTemplates()">
-                    <i class="icon-upload"></i> <span data-translate="">loadTemplatesForSelectedSchema</span></button>
-            </div>
-            <div class="col-lg-6">
-                <button type="button" class="btn btn-primary btn-block"
-                data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadSamples()">
-                    <i class="icon-upload"></i> <span data-translate="">loadSamplesForSelectedSchema</span></button>
-            </div>
+          <div class="col-lg-6">
+            <button type="button" class="btn btn-primary btn-block"
+              data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadTemplates()">
+              <i class="fa fa-upload"/>
+              <span data-translate="">loadTemplatesForSelectedSchema</span>
+            </button>
+          </div>
+          <div class="col-lg-6">
+            <button type="button" class="btn btn-primary btn-block"
+              data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadSamples()">
+              <i class="fa fa-upload"/>
+              <span data-translate="">loadSamplesForSelectedSchema</span>
+            </button>
+          </div>
         </div>
+      </div>
     </div>
 
     <div class="progress progress-striped active"
@@ -48,43 +54,44 @@
       <div class="progress-bar" style="width: 100%"/>
     </div>
 
-    <div class="panel" data-ng-hide="!loadReport && !loadTplReport"
+    <div class="panel panel-default" data-ng-hide="!loadReport && !loadTplReport"
       data-ng-class="loadReport['@status'] == 'true' || loadTplReport['@status'] == 'true' ? 
                         'panel-success' : 'panel-danger'">
       <div class="panel-heading" data-translate="">loadReport</div>
+      <div class="panel-body">
+        <div data-ng-show="loadReport">
+          <h2 data-translate="">loadSampleReport</h2>
 
-      <div data-ng-show="loadReport">
-        <h2 data-translate="">loadSampleReport</h2>
+          <p data-ng-show="loadReport['@error']">{{loadReport['@error']}}</p>
 
-        <p data-ng-show="loadReport['@error']">{{loadReport['@error']}}</p>
+          <ul class="icons-ul">
+            <li data-ng-repeat="schema in selectedSchemas"><i class="fa fa-li fa fa-archive"
+              />{{schema | translate}} <ul class="icons-ul">
+                <li data-ng-repeat="record in loadReport[schema]">
+                  <i class="fa fa-li"
+                    data-ng-class="record['@status'] == 'loaded' ? 'fa fa-ok' : 'fa fa-trash-o'"/>
+                  {{record['@name']}}</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
 
-        <ul class="icons-ul">
-          <li data-ng-repeat="schema in selectedSchemas"><i class="icon-li icon-archive"/>{{schema |
-            translate}} <ul class="icons-ul">
-              <li data-ng-repeat="record in loadReport[schema]">
-                <i class="icon-li"
-                  data-ng-class="record['@status'] == 'loaded' ? 'icon-ok' : 'icon-remove'"/>
-                {{record['@name']}}</li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+        <div data-ng-show="loadTplReport">
+          <h2 data-translate="">loadTemplatesReport</h2>
 
-      <div data-ng-show="loadTplReport">
-        <h2 data-translate="">loadTemplatesReport</h2>
+          <p data-ng-show="loadTplReport['@error']">{{loadTplReport['@error']}}</p>
 
-        <p data-ng-show="loadTplReport['@error']">{{loadTplReport['@error']}}</p>
-
-        <ul class="icons-ul">
-          <li data-ng-repeat="schema in selectedSchemas"><i class="icon-li icon-archive"/>{{schema |
-            translate}} <ul class="icons-ul">
-              <li data-ng-repeat="record in loadTplReport[schema]">
-                <i class="icon-li"
-                  data-ng-class="record['@status'] == 'loaded' ? 'icon-ok' : 'icon-remove'"/>
-                {{record['@name']}}</li>
-            </ul>
-          </li>
-        </ul>
+          <ul class="icons-ul">
+            <li data-ng-repeat="schema in selectedSchemas"><i class="fa fa-li fa fa-archive"
+              />{{schema | translate}} <ul class="icons-ul">
+                <li data-ng-repeat="record in loadTplReport[schema]">
+                  <i class="fa fa-li"
+                    data-ng-class="record['@status'] == 'loaded' ? 'fa fa-ok' : 'fa fa-trash-o'"/>
+                  {{record['@name']}}</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

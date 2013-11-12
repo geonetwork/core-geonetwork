@@ -16,6 +16,8 @@ goog.addDependency('../../components/metadatamanager/MetadataManagerModule.js', 
 goog.addDependency('../../components/metadatamanager/MetadataManagerService.js', ['gn_metadata_manager_service'], []);
 goog.addDependency('../../components/pagination/PaginationDirective.js', ['gn_pagination_directive'], []);
 goog.addDependency('../../components/pagination/PaginationModule.js', ['gn_pagination'], ['gn_pagination_directive']);
+goog.addDependency('../../components/scrollspy/ScrollSpyDirective.js', ['gn_scroll_spy_directive'], ['gn_utility_service']);
+goog.addDependency('../../components/scrollspy/ScrollSpyModule.js', ['gn_scroll_spy'], ['gn_scroll_spy_directive']);
 goog.addDependency('../../components/searchmanager/SearchManagerModule.js', ['gn_search_manager'], ['gn_search_manager_service']);
 goog.addDependency('../../components/searchmanager/SearchManagerService.js', ['gn_search_manager_service'], []);
 goog.addDependency('../../components/searchresults/SearchResultsDirective.js', ['gn_search_results_directive'], []);
@@ -26,9 +28,8 @@ goog.addDependency('../../components/utility/UtilityModule.js', ['gn_utility'], 
 goog.addDependency('../../components/utility/UtilityService.js', ['gn_utility_service'], []);
 goog.addDependency('../../js/CatController.js', ['gn_cat_controller'], ['gn_search_manager']);
 goog.addDependency('../../js/GnAdminModule.js', ['gn_admin'], ['gn', 'gn_admin_controller']);
-goog.addDependency('../../js/GnEditorModule.js', ['gn_editor'], ['gn', 'gn_editor_controller']);
 goog.addDependency('../../js/GnLoginModule.js', ['gn_login'], ['gn', 'gn_login_controller']);
-goog.addDependency('../../js/GnModule.js', ['gn'], ['gn_cat_controller', 'gn_language_switcher', 'gn_metadata_manager', 'gn_pagination', 'gn_search_controller', 'gn_search_manager', 'gn_search_results', 'gn_utility_service']);
+goog.addDependency('../../js/GnModule.js', ['gn'], ['gn_cat_controller', 'gn_language_switcher', 'gn_metadata_manager', 'gn_pagination', 'gn_search_controller', 'gn_search_manager', 'gn_search_results', 'gn_utility']);
 goog.addDependency('../../js/LoginController.js', ['gn_login_controller'], []);
 goog.addDependency('../../js/admin/AdminController.js', ['gn_admin_controller'], ['gn_adminmetadata_controller', 'gn_admintools_controller', 'gn_cat_controller', 'gn_classification_controller', 'gn_dashboard_controller', 'gn_harvest_controller', 'gn_settings_controller', 'gn_standards_controller', 'gn_usergroup_controller']);
 goog.addDependency('../../js/admin/AdminMetadataController.js', ['gn_adminmetadata_controller'], []);
@@ -44,10 +45,9 @@ goog.addDependency('../../js/admin/DashboardSearchStatController.js', ['gn_dashb
 goog.addDependency('../../js/admin/DashboardStatusController.js', ['gn_dashboard_status_controller'], ['gn_gauge']);
 goog.addDependency('../../js/admin/HarvestController.js', ['gn_harvest_controller'], ['gn_category', 'gn_harvester', 'gn_importxsl']);
 goog.addDependency('../../js/admin/LogoSettingsController.js', ['gn_logo_settings_controller'], []);
-goog.addDependency('../../js/admin/SettingsController.js', ['gn_settings_controller'], ['gn_csw_settings_controller', 'gn_csw_test_controller', 'gn_csw_virtual_controller', 'gn_logo_settings_controller', 'gn_system_settings_controller']);
+goog.addDependency('../../js/admin/SettingsController.js', ['gn_settings_controller'], ['gn_csw_settings_controller', 'gn_csw_test_controller', 'gn_csw_virtual_controller', 'gn_logo_settings_controller', 'gn_scroll_spy', 'gn_system_settings_controller']);
 goog.addDependency('../../js/admin/StandardsController.js', ['gn_standards_controller'], []);
 goog.addDependency('../../js/admin/SystemSettingsController.js', ['gn_system_settings_controller'], []);
 goog.addDependency('../../js/admin/ThesaurusController.js', ['gn_thesaurus_controller'], ['gn_thesaurus_type']);
 goog.addDependency('../../js/admin/UserGroupController.js', ['gn_usergroup_controller'], ['gn_dbtranslation']);
-goog.addDependency('../../js/edit/EditorController.js', ['gn_editor_controller'], []);
 goog.addDependency('../../js/search/SearchController.js', ['gn_search_controller'], []);

@@ -93,37 +93,37 @@
        */
       var userAdminMenu = [
         {name: 'harvesters', route: '#harvest',
-          classes: 'btn-primary', icon: 'icon-cloud-download'},
+          classes: 'btn-primary', icon: 'fa-cloud-download'},
         {name: 'statisticsAndStatus', route: '#dashboard',
-          classes: 'btn-success', icon: 'icon-dashboard'},
+          classes: 'btn-success', icon: 'fa-dashboard'},
         {name: 'usersAndGroups', route: '#organization',
-          classes: 'btn-default', icon: 'icon-group'}
+          classes: 'btn-default', icon: 'fa-group'}
       ];
       $scope.menu = {
         UserAdmin: userAdminMenu,
         Administrator: [
           // TODO : create gn classes
           {name: 'metadatasAndTemplates', route: '#metadata',
-            classes: 'btn-primary', icon: 'icon-archive'},
+            classes: 'btn-primary', icon: 'fa-archive'},
           {name: 'io',
             // Metadata import is made in the widget apps
             url: 'home?insert',
             classes: 'btn-primary',
-            icon: 'icon-upload'},
+            icon: 'fa-upload'},
           {name: 'harvesters', route: '#harvest', //url: 'harvesting',
-            classes: 'btn-primary', icon: 'icon-cloud-download'},
+            classes: 'btn-primary', icon: 'fa-cloud-download'},
           {name: 'statisticsAndStatus', route: '#dashboard',
-            classes: 'btn-success', icon: 'icon-dashboard'},
+            classes: 'btn-success', icon: 'fa-dashboard'},
           {name: 'classificationSystems', route: '#classification',
-            classes: 'btn-info', icon: 'icon-tags'},
+            classes: 'btn-info', icon: 'fa-tags'},
           {name: 'standards', route: '#standards',
-            classes: 'btn-info', icon: 'icon-puzzle-piece'},
+            classes: 'btn-info', icon: 'fa-puzzle-piece'},
           {name: 'usersAndGroups', route: '#organization',
-            classes: 'btn-default', icon: 'icon-group'},
+            classes: 'btn-default', icon: 'fa-group'},
           {name: 'settings', route: '#settings',
-            classes: 'btn-warning', icon: 'icon-gear'},
+            classes: 'btn-warning', icon: 'fa-gear'},
           {name: 'tools', route: '#tools',
-            classes: 'btn-warning', icon: 'icon-medkit'}]
+            classes: 'btn-warning', icon: 'fa-medkit'}]
         // TODO : add other role menu
       };
 

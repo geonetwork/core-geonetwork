@@ -27,12 +27,12 @@
             [{
               type: 'metadata-and-template',
               label: 'metadataAndTemplates',
-              icon: 'icon-archive',
+              icon: 'fa-archive',
               href: '#/metadata/metadata-and-template'
             },{
               type: 'template-sort',
               label: 'sortTemplate',
-              icon: 'icon-sort',
+              icon: 'fa-sort',
               href: '#/metadata/template-sort'
             }]
       };
