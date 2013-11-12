@@ -1,0 +1,54 @@
+<div class="container">
+  <div
+    data-ng-include="'../../catalog/templates/editor/top-toolbar.html'">
+  </div>
+
+  <div class="row">
+    <div class="col-lg-9">
+      <div class="" data-ng-include="editorFormUrl"></div>
+    </div>
+    <div class="col-lg-3">
+      <div class="panel panel-default">
+        <div class="panel-heading" data-translate="">relatedResources</div>
+        <div class="panel-body">
+          <a href="" ng-click="onlinesrcPopupShown = !onlinesrcPopupShown">
+            <i class="icon-external-link ga-icon-separator"></i> <span
+            translate>Add online resource</span>
+          </a>
+          <br>
+          <a href="" ng-click="linkParentMdPopupShown = !linkParentMdPopupShown">
+            <i class="icon-external-link ga-icon-separator"></i> <span
+            translate>Link to a parent</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading" data-translate="">suggestions</div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading" data-translate="">validationReport</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div gn-popup="onlinesrcPopupShown"
+  gn-popup-options="{title:'Ajout de resource en ligne'}" id="onlinesrc-popup">
+  <div ng-controller="GnOnlineSrcController">
+    <div gn-add-onlinesrc gn-import-wms-map="map"
+      gn-import-wms-options="options" id="import-wms" class="add-onlinesrc">
+    </div>
+  </div>
+</div>
+
+<div gn-popup="linkParentMdPopupShown"
+  gn-popup-options="{title:'Ajouter un parent à une métadonnée'}" id="linkparent-popup">
+  <div ng-controller="GnOnlineSrcController">
+    <div gn-link-parent-md id="link-parent-md" class="link-parent-md">
+    </div>
+  </div>
+</div>
+

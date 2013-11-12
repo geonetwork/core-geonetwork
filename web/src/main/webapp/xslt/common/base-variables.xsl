@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <!-- Global XSL variables about the catalog and user session -->
-
+  
+  
+  <xsl:output name="default-serialize-mode" indent="no"
+    omit-xml-declaration="yes" />
+  <xsl:output name="default-indent-mode" indent="yes"
+    omit-xml-declaration="yes" />
+  
+  <!--
+  -->
+  <xsl:variable name="gnUri" select="'http://www.fao.org/geonetwork'"/>
+  
+  
   <xsl:variable name="uiResourcesPath" select="'../../catalog/'"/>
   
   <!-- The current service name -->

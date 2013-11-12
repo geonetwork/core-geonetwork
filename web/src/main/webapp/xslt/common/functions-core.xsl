@@ -30,4 +30,18 @@
       <xsl:otherwise>text/plain</xsl:otherwise>
     </xsl:choose>
   </xsl:function>
+  
+  
+  <!-- Search for any of the searchStrings provided -->
+  <xsl:function name="gn-fn-core:contains-any-of" as="xs:boolean">
+    <xsl:param name="arg" as="xs:string?"/>
+    <xsl:param name="searchStrings" as="xs:string*"/>
+    
+    <xsl:sequence
+      select=" 
+      some $searchString in $searchStrings
+      satisfies contains($arg,$searchString)
+      "
+    />
+  </xsl:function>
 </xsl:stylesheet>

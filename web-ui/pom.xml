@@ -197,6 +197,26 @@ python $CLOSURE_LIB/closure/bin/build/closurebuilder.py \
               </arguments>
             </configuration>
           </execution>
+          <execution>
+            <id>minify-js-gn-editor</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>python</executable>
+              <workingDirectory>src/main/resources</workingDirectory>
+              <arguments>
+                <argument>${closure.path}/closure/bin/build/closurebuilder.py</argument>
+                <argument>--root=catalog</argument>
+                <argument>--namespace=gn_editor</argument>
+                <argument>--output_mode=compiled</argument>
+                <!--<argument>-\-compiler_flags="-\-compilation_level=ADVANCED_OPTIMIZATIONS"</argument>-->
+                <argument>--compiler_jar=${closure.path}/compiler.jar</argument>
+                <argument>--output_file=catalog/lib/gn_editor.min.js</argument>
+              </arguments>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -211,6 +231,7 @@ python $CLOSURE_LIB/closure/bin/build/closurebuilder.py \
             <include>gn.less</include>
             <include>gn_admin.less</include>
             <include>gn_login.less</include>
+            <include>gn_editor.less</include>
           </includes>
         </configuration>
         <executions>

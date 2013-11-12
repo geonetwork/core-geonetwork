@@ -1,0 +1,75 @@
+<div class="container" id="gn-newMetadata-container">
+	<h2>New Metadata</h3>
+<!-- 	<div class="row">
+		<div class="col-lg-8">
+			<div class="panel-default panel">
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-9">
+							<dl class="dl-horizontal">
+								<dt>Type :</dt>
+								<dd>{{activeType}}</dd>
+								<dt>Template :</dt>
+								<dd>{{activeTpl.title}}</dd>
+								<dt>Group :</dt>
+								<dd>{{ownerGroup}}</dd>
+							</dl>
+						</div>
+						<div class="col-lg-3">
+							<button type="button" class="btn btn-success btn-lg"
+								data-ng-click="createNewMetadata()"
+								ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup)}">
+								<i class="fa fa-save" /> <span data-translate="">Create</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+ -->	<div class="row">
+		<div class="col-lg-4">
+			<div class="panel panel-default dynamic-list">
+				<div class="panel-heading">Template Types</div>
+				<div class="panel-body">
+					<div class="list-group">
+						<a data-ng-repeat="type in mdTypes" href="#"
+							class="list-group-item"
+							data-ng-click="getTemplateNamesByType(type)"
+							ng-class="{'active': type==activeType}"> {{type}} </a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="panel-default panel">
+				<div class="panel-heading">Template List</div>
+				<div class="panel-body">
+					<div class="list-group">
+						<a data-ng-repeat="tpl in tpls" href="#" class="list-group-item"
+							data-ng-click="setActiveTpl(tpl)"
+							ng-class="{'active': tpl==activeTpl}"> {{tpl.title}} </a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="panel-default panel">
+				<div class="panel-heading">Owner Group</div>
+				<div class="panel-body">
+					<div groups-combo></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<nav class="navbar navbar-default " role="navigation">
+		<div class="navbar-form navbar-right">
+			<button type="button" class="btn navbar-btn btn-success btn-lg"
+				data-ng-click="createNewMetadata()"
+				ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup)}">
+				<i class="fa fa-file-o" /> <span data-translate="">Create</span>
+			</button>
+		</div>
+	</nav>
+
+</div>

@@ -23,8 +23,16 @@
   <xsl:variable name="labels" select="$schemaInfo/labels"/>
   <xsl:variable name="codelists" select="$schemaInfo/codelists"/>
   <xsl:variable name="strings" select="$schemaInfo/strings"/>
+
+  <xsl:variable name="iso19139schema" select="/root/gui/schemas/iso19139"/>
+  <xsl:variable name="iso19139labels" select="$iso19139schema/labels"/>
+  <xsl:variable name="iso19139codelists" select="$iso19139schema/codelists"/>
+  <xsl:variable name="iso19139strings" select="$iso19139schema/strings"/>
   
   <xsl:variable name="isEditing" select="$service = 'md.edit' or $service = 'md.element.add'"/>
+  
+  <!-- Display attributes in editor -->
+  <xsl:variable name="isDisplayingAttributes" select="/root/request/displayAttributes = 'true'"/>
   
   <xsl:variable name="withInlineEditing" select="false()"/>
   
@@ -32,4 +40,5 @@
   
   <xsl:variable name="tab" select="/root/gui/currTab"/>
   
+  <xsl:variable name="isFlatMode" select="/root/request/flat = 'true'"/>
 </xsl:stylesheet>

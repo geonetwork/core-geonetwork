@@ -1,0 +1,60 @@
+@import "gn.less";
+
+
+form.gn-editor {
+    /* Move each sub fieldset to the left */
+    @editor-fieldset-padding-left: 5px;
+    
+    /**
+     * Make space on the following element of a well 
+     */
+    div.well + fieldset, div.well + div {
+        padding-top: 10px;
+    }
+    
+    div.well {
+        margin-bottom: 0px;
+    }
+    
+    fieldset fieldset {
+        padding-left: @editor-fieldset-padding-left;
+    }
+    
+    /**
+     * Define a minimum height. It could be
+     * better to extend the textarea according
+     * to page height. Something like
+     * http://alistapart.com/article/expanding-text-areas-made-elegant
+     * may help. TODO
+     */
+    .gn-textarea-xml {
+        font-family: courier;
+        font-size: 12px;
+        min-height: 700px;
+    }
+    
+    .gn-debug {
+        display: none;
+    }
+    
+    /* Reset margin in helper for documentation
+     * to properly align radios
+     */
+    .helper .help-block {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    
+    
+    /* Avoid white on white when i:hover
+     */
+    .btn:hover {
+        color: #000;
+    }
+}
+
+    /* Onlinesrc styles */
+    .link-parent-md .onlinesrc-container,
+    .add-onlinesrc .onlinesrc-container {
+    	width: 680px;
+    }

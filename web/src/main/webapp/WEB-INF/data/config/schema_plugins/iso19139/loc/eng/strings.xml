@@ -16,6 +16,8 @@
   <advanced>Full</advanced>
   <default>Simple</default>
   <inspire>INSPIRE</inspire>
+  <resource>Resource</resource>
+  <xml>XML</xml>
   <metadata>Metadata</metadata>
   <identificationInfo>Identification</identificationInfo>
   <distributionInfo>Distribution</distributionInfo>

@@ -1,0 +1,27 @@
+<nav class="navbar navbar-default" role="navigation">
+  <div class="navbar-form navbar-left">
+    <button type="button" class="btn navbar-btn dropdown-toggle" data-toggle="dropdown">
+      <span data-translate="">metadataType</span>
+      <span class="caret"/>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li>
+        <a href="#">metadata</a>
+      </li>
+      <li>
+        <a href="#">template</a>
+      </li>
+    </ul>
+  </div>
+  <div class="navbar-form navbar-right">
+    <button type="button" class="btn btn-primary navbar-btn" data-ng-click="save()">
+      <i class="fa fa-save"/>
+      <span data-translate="">save</span>
+    </button>
+    <!-- TODO: automatic save status -->
+    <button type="button" class="btn btn-danger navbar-btn" data-ng-click="reset()">
+      <i class="fa fa-cross"/>
+      <span data-translate="">cancel</span>
+    </button>
+  </div>
+</nav>

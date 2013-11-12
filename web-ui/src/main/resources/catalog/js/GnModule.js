@@ -4,7 +4,10 @@
   goog.require('gn_cat_controller');
   goog.require('gn_language_switcher');
   goog.require('gn_metadata_manager');
+  goog.require('gn_onlinesrc_controller');
+  goog.require('gn_onlinesrc_directive');
   goog.require('gn_pagination');
+  goog.require('gn_popup');
   goog.require('gn_search_controller');
   goog.require('gn_search_manager');
   goog.require('gn_search_results');
@@ -20,6 +23,9 @@
     'gn_search_results',
     'gn_pagination',
     'gn_cat_controller',
+    'gn_popup',
+    'gn_onlinesrc_controller',
+    'gn_onlinesrc_directive',
     'gn_search_controller'
   ]);
 

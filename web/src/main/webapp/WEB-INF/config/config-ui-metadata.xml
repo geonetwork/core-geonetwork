@@ -74,6 +74,7 @@
                 Parameters are:
                 * ref: parent element reference
                 * name: element name
+                * child=geonet:attribute to add attribute
                 
                 TODO: Check if all those call are necessary
                 ]]></documentation>

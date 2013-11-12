@@ -52,8 +52,10 @@ public class AjaxEditUtils extends EditUtils {
      * <li>ElementId_AttributeName=AttributeValue</li>
      * <li>ElementId_AttributeNamespacePrefixCOLONAttributeName=AttributeValue</li>
      * <li>XElementId=ElementValue</li>
+     * <li>XElementId_replace=ElementValue</li>
      * <li>XElementId_ElementName=ElementValue</li>
      * <li>XElementId_ElementName_replace=ElementValue</li>
+     * <li>P{key}=xpath with P{key}_xml=XML snippet</li>
      * </ul>
      * 
      * ElementName MUST contain "{@value #COLON_SEPARATOR}" instead of ":" for prefixed elements.
@@ -68,6 +70,16 @@ public class AjaxEditUtils extends EditUtils {
      * 
      * <p>
      * 
+     * <p>
+     * <pre>
+     *  _Pd2295e223:/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+     *              gmd:citation/gmd:CI_Citation/
+     *              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'creation']
+     *              
+     *  _Pd2295e223_xml:&lt;gmd:date/&gt; ... &lt;/gmd:date&gt;
+     * </pre>
+     * </p>
+     * 
      * @param id        Metadata internal identifier.
      * @param changes   List of changes to apply.
      * @param currVersion       Editing version which is checked against current editing version.
@@ -77,7 +89,9 @@ public class AjaxEditUtils extends EditUtils {
     protected Element applyChangesEmbedded(String id,
                                         Map<String, String> changes, String currVersion) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
+
         String schema = dataManager.getMetadataSchema(id);
+        MetadataSchema metadataSchema = dataManager.getSchema(schema);
         EditLib editLib = dataManager.getEditLib();
 
         // --- check if the metadata has been modified from last time
@@ -92,6 +106,7 @@ public class AjaxEditUtils extends EditUtils {
 
         // Store XML fragments to be handled after other elements update
         Map<String, String> xmlInputs = new HashMap<String, String>();
+        Map<String, String> xmlAndXpathInputs = new HashMap<String, String>();
 
         // --- update elements
         for (Map.Entry<String, String> entry : changes.entrySet()) {
@@ -108,6 +123,21 @@ public class AjaxEditUtils extends EditUtils {
             if (ref.startsWith("X")) {
                 ref = ref.substring(1);
                 xmlInputs.put(ref, value);
+                continue;
+            } else if (ref.startsWith("P") && !ref.endsWith("_xml")) {
+                // Catch element starting with a P for xpath update mode
+                
+                // Only path from the root of the record are supported
+                if (value.startsWith("/")) {
+                    Log.warning(Geonet.EDITOR, "Only path from the root of the record are supported. Xpath is " + value);
+                }
+                
+                String snippet = changes.get(ref + "_xml");
+                if (snippet != null && !"".equals(snippet)) {
+                    xmlAndXpathInputs.put(value, snippet);
+                } else {
+                    Log.warning(Geonet.EDITOR, "No XML snippet or value found for xpath " + value + " and element ref " + ref);
+                }
                 continue;
             }
 
@@ -155,55 +185,80 @@ public class AjaxEditUtils extends EditUtils {
             
             // Loop over each XML fragments to insert or replace
             for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
-                String ref = entry.getKey();
-                String value = entry.getValue();
-                String name = null;
-                int addIndex = ref.indexOf('_');
-                if (addIndex != -1) {
-                    name = ref.substring(addIndex + 1);
-                    ref = ref.substring(0, addIndex);
+                String nodeRef = entry.getKey();
+                String xmlSnippetAsString = entry.getValue();
+                String nodeName = null;
+                boolean replaceExisting = false;
+                
+                String[] nodeConfig = nodeRef.split("_");
+                // Possibilities:
+                // * X125
+                // * X125_replace
+                // * X125_gmdCOLONkeywords
+                // * X125_gmdCOLONkeywords_replace
+                nodeRef = nodeConfig[0];
+                
+                if (nodeConfig.length > 1 && nodeConfig[1] != null) {
+                    if (nodeConfig[1].equals("replace")) {
+                        replaceExisting = true;
+                    } else {
+                        nodeName = nodeConfig[1].replace(COLON_SEPARATOR, ":");
+                    }
                 }
                 
+                if (nodeConfig.length > 2 && nodeConfig[2] != null) {
+                    if (nodeConfig[2].equals("replace")) {
+                        replaceExisting = true;
+                    }
+                }
+                
+                
                 // Get element to fill
-                Element el = editLib.findElement(md, ref);
+                Element el = editLib.findElement(md, nodeRef);
                 if (el == null) {
-                    Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+                    Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + nodeRef);
                     continue;
                 }
                 
-                if (value != null && !value.equals("")) {
-                    String[] fragments = value.split(XML_FRAGMENT_SEPARATOR);
+                
+                if (xmlSnippetAsString != null && !xmlSnippetAsString.equals("")) {
+                    String[] fragments = xmlSnippetAsString.split(XML_FRAGMENT_SEPARATOR);
                     for (String fragment : fragments) {
-                        if (name != null) {
+                        if (nodeName != null) {
                             if(Log.isDebugEnabled(Geonet.EDITOR))
-                                Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment + " to element with ref: " + ref);
+                                Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment + " to element with ref: " + nodeRef);
                             
-                            int unIndex = name.indexOf('_');
-                            boolean replaceExisting = false;
-                            if (unIndex != -1) {
-                                replaceExisting = true;
-                                name = name.substring(0, unIndex);
-                            }
-                            
-                            name = name.replace(COLON_SEPARATOR, ":");
-                            editLib.addFragment(schema, el, name, fragment, replaceExisting);
+                            editLib.addFragment(schema, el, nodeName, fragment, replaceExisting);
                         } else {
                             if(Log.isDebugEnabled(Geonet.EDITOR))
                                 Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment
-                                    + " to element with ref: " + ref + " replacing content.");
+                                    + " to element with ref: " + nodeRef + " replacing content.");
                             
                             // clean before update
                             el.removeContent();
                             fragment = addNamespaceToFragment(fragment);
                             
                             // Add content
-                            el.addContent(Xml.loadString(fragment, false));
+                            Element node = Xml.loadString(fragment, false);
+                            if (replaceExisting) {
+                                @SuppressWarnings("unchecked")
+                                List<Element> children = node.getChildren();
+                                for (int i = 0; i < children.size(); i++) {
+                                    el.addContent(children.get(i).detach());
+                                }
+                            } else {
+                                el.addContent(node);
+                            }
                         }
                     }
                 }
             }
         }
-        
+
+        // Deals with XML fragments to insert or update
+        if (!xmlAndXpathInputs.isEmpty()) {
+            editLib.addElementOrFragmentFromXpaths(md, xmlAndXpathInputs, metadataSchema);
+        }
         // --- remove editing info
         editLib.removeEditingInfo(md);
         editLib.contractElements(md);
