@@ -16,7 +16,21 @@
       </output>
       <error sheet="../xslt/common/error.xsl"/>
     </service>
-
+    
+    <service name="md.create">
+      <documentation><![CDATA[
+        Create a new metadata from a template or an existing record.
+        
+        Parameters are:
+        * uuid or id: the record to start from
+        * isTemplate: is this new record a metadata or a template. Value y or n
+        * child: to create a child of the record. Value y or n
+        * currTab: the tab to start with
+        
+        ]]></documentation>
+      <class name=".services.metadata.Create"/>
+    </service>
+    
     <service name="md.edit">
       <documentation>Edit a metadata record</documentation>
       <class name=".services.metadata.GetEditableData"/>

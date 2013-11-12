@@ -27,6 +27,9 @@
         when('/metadata/:id/tab/:tab/:displayAttributes', {
           templateUrl: tplFolder + 'editor.html',
           controller: 'GnEditorController'}).
+        when('/create/from/:id/in/:group/astemplate/:template', {
+          templateUrl: tplFolder + 'editor.html',
+          controller: 'GnNewMetadataController'}).
         otherwise({
           templateUrl: tplFolder + 'newMetadata.html',
           controller: 'GnNewMetadataController'

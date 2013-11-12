@@ -496,6 +496,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/thesaurus.keyword.remove!?.*" access="hasRole('Administrator')"/>
                 
                 
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.create!?.*" access="hasRole('Editor')"/>
+                
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.edit.save.and.close!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.edit.saveonly!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.edit.save!?.*" access="hasRole('Editor')"/>

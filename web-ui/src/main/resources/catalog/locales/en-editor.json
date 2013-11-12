@@ -3,5 +3,11 @@
     "suggestions": "Suggestions",
     "validationReport": "Validation",
     "recommendedValues": "Recommended values",
-    "toggleAttributes": "More details"
+    "toggleAttributes": "More details",
+    "createA": "Create a ",
+    "fromTemplate": "From ",
+    "inGroup": "In",
+    "createNewMetadata": "Add a new record",
+    "createMetadata": "Create",
+    "inGroup": "In"
 }

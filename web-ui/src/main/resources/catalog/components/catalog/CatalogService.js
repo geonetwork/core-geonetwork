@@ -8,24 +8,25 @@
   ]);
 
   module.provider('gnNewMetadata', function() {
-    this.$get = ['$http', 'gnUrlUtils', function($http, gnUrlUtils) {
-      return {
-        createNewMetadata: function(id, groupId) {
-          var url = gnUrlUtils.append('metadata.create.new',
-              gnUrlUtils.toKeyValue({
-                        group: groupId,
-                        id: id,
-                        isTemplate: 'n',
-                        fullPrivileges: true
-              })
-                    );
+    this.$get = ['$http', '$location', 'gnUrlUtils',
+                 function($http, $location, gnUrlUtils) {
+        return {
+          createNewMetadata: function(id, groupId) {
+            var url = gnUrlUtils.append('md.create@json',
+                gnUrlUtils.toKeyValue({
+                  group: groupId,
+                  id: id,
+                  isTemplate: 'n',
+                  fullPrivileges: true
+                })
+                );
 
-          $http.get(url).success(function(data) {
-            console.log('md creted with id = ' + id +
-                ' and groupid = ' + groupId);
-          });
-        }
-      };
-    }];
+            $http.get(url).success(function(data) {
+              $location.path('/metadata/' + data.id);
+            });
+            // TODO : handle creation error
+          }
+        };
+      }];
   });
 })();
