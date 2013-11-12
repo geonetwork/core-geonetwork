@@ -70,32 +70,41 @@ public class RequestsByDateStatistics extends NotInReadOnlyModeService {
     // --------------------------------------------------------------------------
     @Override
     public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        ISODate dateFrom = new ISODate(Util.getParam(params, "dateFrom"));
-        ISODate dateTo = new ISODate(Util.getParam(params, "dateTo"));
+        String dateFromParam = Util.getParam(params, "dateFrom");
+        String dateToParam = Util.getParam(params, "dateTo");
         String graphicType = Util.getParam(params, "graphicType");
         boolean byType = Util.getParam(params, "byType", false);
         
-        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        ISODate dateFrom = null;
+        ISODate dateTo = null;
 
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
         final SearchRequestRepository requestRepository = context.getBean(SearchRequestRepository.class);
 
-        // TODO : if ByServiceType
-        if (byType) {
-            final List<String> serviceTypes = requestRepository.selectAllDistinctAttributes(SearchRequest_
-                    .service);
-            for (String serviceType : serviceTypes) {
+        try {
+            dateFrom = new ISODate(dateFromParam);
+            dateTo = new ISODate(dateToParam);
 
-                Element results = buildQuery(requestRepository, serviceType, dateFrom, dateTo, graphicType);
+            // TODO : if ByServiceType
+            if (byType) {
+                final List<String> serviceTypes = requestRepository.selectAllDistinctAttributes(SearchRequest_
+                        .service);
+                for (String serviceType : serviceTypes) {
+                    Element results = buildQuery(requestRepository, serviceType, dateFrom, dateTo, graphicType);
 
-
-                results.setAttribute("service", serviceType);
+                    results.setAttribute("service", serviceType);
+                    elResp.addContent(results);
+                }
+            } else {
+                Element results = buildQuery(requestRepository, null, dateFrom, dateTo, graphicType);
                 elResp.addContent(results);
             }
-        } else {
-            Element results = buildQuery(requestRepository, null, dateFrom, dateTo, graphicType);
-            elResp.addContent(results);
-        }
 
+            elResp.addContent(new Element("dateFrom").setText(dateFrom.getDateAndTime()));
+            elResp.addContent(new Element("dateTo").setText(dateTo.getDateAndTime()));
+        } catch (Exception e) {
+            elResp.setAttribute("error", e.getMessage());
+        }
 
         final ISODate oldestRequestDate = requestRepository.getOldestRequestDate();
         SearchStatistics.addSingleDBValueToElement(elResp,
@@ -105,11 +114,7 @@ public class RequestsByDateStatistics extends NotInReadOnlyModeService {
         SearchStatistics.addSingleDBValueToElement(elResp,
                 mostRecentRequestDate ,
                 "dateMax", "max");
-        
-        elResp.addContent(new Element("dateFrom").setText(dateFrom.getDateAndTime()));
-        elResp.addContent(new Element("dateTo").setText(dateTo.getDateAndTime()));
 
-        
         return elResp;
     }
 
