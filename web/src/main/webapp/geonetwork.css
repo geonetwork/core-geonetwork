@@ -28,6 +28,23 @@ table, tr, td {
 	vertical-align: top; /*ETJ*/
 }
 
+tr[name=logentry]{
+    border-width: 1px;
+    border-color: black;
+
+}
+td[name=logdata]{
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    border-style: solid;
+}
+td[name=logdate]{
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    border-style: solid;
+}
 td.padded-content-box {
 	border-style: solid;
 	border-width: 1px;
