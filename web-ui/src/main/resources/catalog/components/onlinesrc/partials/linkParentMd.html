@@ -1,24 +1,35 @@
 <div>
-<form class="form-horizontal" role="form">
-<div class="onlinesrc-container">
-  <div class="form-group">
-    <label for="onlinesrcName" class="col-sm-2 control-label">TOTO</label>
-    <div class="col-sm-10">
-      <input ng-model="onlinesrcName" class="form-control" id="onlinesrcName" placeholder="Name">
+  <form class="form-horizontal" role="form"
+    data-ng-controller="GnSearchFormController">
+    <div class="onlinesrc-container">
+      <div class="form-group">
+        <label for="ownerGroup" class="col-sm-2 control-label"><span
+          data-translate="">Groups</span></label>
+        <div class="col-sm-10" groups-combo
+          data-owner-group="params.groupPublished" lang="lang"></div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-10">
+          <div class="input-group">
+            <span class="input-group-addon"><i
+              class="fa fa-search" /></span> <input class="form-control"
+              type="text" data-ng-model="params.any"
+              placeholder="{{'search' | translate}}" autofocus="" />
+          </div>
+        </div>
+      </div>
+      <div data-gn-search-form-results
+        data-gn-search-form-results-mode="title"
+        data-gn-search-form-results-selection-mode="local simple"
+        data-result-records="resultRecords"></div>
     </div>
-  </div>
-  <div class="form-group">
-    <label for="onlinesrcUrl" class="col-sm-2 control-label">Url</label>
-    <div class="col-sm-10">
-      <input ng-model="onlinesrcUrl" class="form-control" id="onlinesrcUrl" placeholder="Url">
+    <div class="navbar-form navbar-right">
+      <button type="button" class="btn navbar-btn btn-success"
+        data-ng-click="triggerSearch()">
+        <i class="fa fa-archive" /> <span data-translate="">Create</span>
+      </button>
     </div>
-  </div>
-  <div class="form-group">
-    <label for="onlinesrcDescr" class="col-sm-2 control-label">Description</label>
-    <div class="col-sm-10">
-      <textarea rows="3" ng-model="onlinesrcDescr" class="form-control" id="onlinesrcDescr" placeholder="Description">
-    </div>
-  </div>
-</div>
-</form>
+
+  </form>
 </div>

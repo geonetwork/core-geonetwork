@@ -30,8 +30,10 @@ goog.addDependency('../../components/popup/PopupModule.js', ['gn_popup'], ['gn_p
 goog.addDependency('../../components/popup/PopupService.js', ['gn_popup_service'], ['gn_draggable_directive']);
 goog.addDependency('../../components/scrollspy/ScrollSpyDirective.js', ['gn_scroll_spy_directive'], ['gn_utility_service']);
 goog.addDependency('../../components/scrollspy/ScrollSpyModule.js', ['gn_scroll_spy'], ['gn_scroll_spy_directive']);
+goog.addDependency('../../components/searchmanager/SearchFormController.js', ['gn_search_form_controller'], ['gn_catalog_service', 'gn_search_form_results_directive', 'gn_urlutils_service']);
 goog.addDependency('../../components/searchmanager/SearchManagerModule.js', ['gn_search_manager'], ['gn_search_manager_service']);
 goog.addDependency('../../components/searchmanager/SearchManagerService.js', ['gn_search_manager_service'], []);
+goog.addDependency('../../components/searchmanager/SearchResultsDirective.js', ['gn_search_form_results_directive'], []);
 goog.addDependency('../../components/searchresults/SearchResultsDirective.js', ['gn_search_results_directive'], []);
 goog.addDependency('../../components/searchresults/SearchResultsModule.js', ['gn_search_results'], ['gn_cat_controller', 'gn_search_results_directive']);
 goog.addDependency('../../components/thesaurus-type/ThesaurusTypeDirective.js', ['gn_thesaurus_type_directive'], []);
@@ -41,9 +43,9 @@ goog.addDependency('../../components/utility/UtilityModule.js', ['gn_utility'], 
 goog.addDependency('../../components/utility/UtilityService.js', ['gn_utility_service'], []);
 goog.addDependency('../../js/CatController.js', ['gn_cat_controller'], ['gn_search_manager']);
 goog.addDependency('../../js/GnAdminModule.js', ['gn_admin'], ['gn', 'gn_admin_controller']);
-goog.addDependency('../../js/GnEditorModule.js', ['gn_editor'], ['gn', 'gn_editor_controller']);
+goog.addDependency('../../js/GnEditorModule.js', ['gn_editor'], ['gn', 'gn_draggable_directive', 'gn_editor_controller', 'gn_onlinesrc_controller', 'gn_onlinesrc_directive', 'gn_popup']);
 goog.addDependency('../../js/GnLoginModule.js', ['gn_login'], ['gn', 'gn_login_controller']);
-goog.addDependency('../../js/GnModule.js', ['gn'], ['gn_cat_controller', 'gn_draggable_directive', 'gn_language_switcher', 'gn_metadata_manager', 'gn_onlinesrc_controller', 'gn_onlinesrc_directive', 'gn_pagination', 'gn_popup', 'gn_search_controller', 'gn_search_manager', 'gn_search_results', 'gn_utility']);
+goog.addDependency('../../js/GnModule.js', ['gn'], ['gn_cat_controller', 'gn_language_switcher', 'gn_metadata_manager', 'gn_pagination', 'gn_search_controller', 'gn_search_form_controller', 'gn_search_manager', 'gn_search_results', 'gn_utility']);
 goog.addDependency('../../js/LoginController.js', ['gn_login_controller'], []);
 goog.addDependency('../../js/admin/AdminController.js', ['gn_admin_controller'], ['gn_adminmetadata_controller', 'gn_admintools_controller', 'gn_cat_controller', 'gn_classification_controller', 'gn_dashboard_controller', 'gn_harvest_controller', 'gn_settings_controller', 'gn_standards_controller', 'gn_usergroup_controller']);
 goog.addDependency('../../js/admin/AdminMetadataController.js', ['gn_adminmetadata_controller'], []);

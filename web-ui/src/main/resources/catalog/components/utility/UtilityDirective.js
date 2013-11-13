@@ -8,11 +8,15 @@
           return {
             restrict: 'A',
             templateUrl: '../../catalog/templates/utils/groupsCombo.html',
-            controller: ['$scope', '$translate', function($scope, $translate) {
+            scope: {
+              ownerGroup: '=',
+              lang: '='
+            },
+            link: function(scope, element, attrs) {
               $http.get('admin.group.list@json').success(function(data) {
-                $scope.groups = data !== 'null' ? data : null;
+                scope.groups = data !== 'null' ? data : null;
               });
-            }]
+            }
           };
         }])
   .directive('protocolsCombo', ['$http',
