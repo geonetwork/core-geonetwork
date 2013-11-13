@@ -1,16 +1,9 @@
 package org.fao.geonet.guiservices.versioning;
 
 
-import org.tmatesoft.svn.core.ISVNLogEntryHandler;
-import org.tmatesoft.svn.core.SVNLogEntry;
-import org.tmatesoft.svn.core.SVNProperties;
-import org.tmatesoft.svn.core.SVNLogEntryPath;
-import org.tmatesoft.svn.core.SVNPropertyValue;
+import org.tmatesoft.svn.core.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Converts {@link org.tmatesoft.svn.core.SVNLogEntry} objects to {@link org.fao.geonet.guiservices.versioning.MetadataAction} objects. One {@link org.tmatesoft.svn.core.SVNLogEntry}
@@ -105,14 +98,34 @@ public class MyLogEntryHandler implements ISVNLogEntryHandler {
 
             // If SVNLogEntry seems to contain info about more than one metadata (more than one different ID)...
             // then create a new MetadataAction with the existing properties.
-            } else if (!id.equals(previousId)) {
-                ma = new MetadataAction(ma);
-                ma.setId(id);
-                list.add(ma);
+            // also do the same when more than one subject had the modify action.
+            } else if (!id.equals(previousId) || (action == 'M' && !subjectsAreSame(changedPaths))) {
+                MetadataAction newMetadataAction = new MetadataAction(ma);
+                newMetadataAction.setId(id);
+                list.add(newMetadataAction);
             }
             previousId = id;
         }
         return list;
+    }
+
+    private boolean subjectsAreSame(Map changedPaths) {
+        final Collection values = changedPaths.values();
+        boolean allAreSame = true;
+        String subject = null;
+        for (Object next : values) {
+            SVNLogEntryPath svnLogEntryPath = (SVNLogEntryPath) next;
+            String currentSubject = getSubject(svnLogEntryPath.getPath());
+            if (subject == null) {
+                subject = currentSubject;
+            } else {
+            allAreSame = allAreSame && subject.compareTo(currentSubject) == 0;
+            }
+            if (!allAreSame) {
+                return allAreSame;
+            }
+        }
+        return allAreSame;
     }
 
     private String getSubject(final String path) {

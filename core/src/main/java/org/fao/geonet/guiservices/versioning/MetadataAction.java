@@ -3,7 +3,7 @@ package org.fao.geonet.guiservices.versioning;
 import java.util.Comparator;
 import java.util.Date;
 
-public class MetadataAction implements Comparable<MetadataAction> {
+public class MetadataAction {
     private Date date;
     private String username;
     private String ip;
@@ -27,12 +27,12 @@ public class MetadataAction implements Comparable<MetadataAction> {
     public MetadataAction() {
     }
 
-    public Date getDate() {
-        return date;
+    public final Date getDate() {
+        return (Date) date.clone();
     }
 
     public void setDate(final Date d) {
-        this.date = d;
+        this.date = (Date) d.clone();
     }
 
     public String getUsername() {
@@ -91,10 +91,6 @@ public class MetadataAction implements Comparable<MetadataAction> {
         this.revision = r;
     }
 
-    @Override
-    public int compareTo(final MetadataAction o) {
-        return 0;
-    }
     public static final Comparator<MetadataAction> DATE_COMPARATOR_ASC = new Comparator<MetadataAction>() {
         public int compare(final MetadataAction o1, final MetadataAction o2) {
             Date compareDate1 = o1.getDate();
@@ -210,17 +206,17 @@ public class MetadataAction implements Comparable<MetadataAction> {
      * Alwyays returning english!
      */
     public final String translatedSubject() {
-        if (subject.equals("all")) {
+        if (subject.compareTo("all") == 0) {
             return "All";
-        } else if (subject.equals("metadata")) {
+        } else if (subject.compareTo("metadata") == 0) {
             return "Metadata";
-        } else if (subject.equals("owner")) {
+        } else if (subject.compareTo("owner") == 0) {
             return "Owner";
-        } else if (subject.equals("privileges")) {
+        } else if (subject.compareTo("privileges") == 0) {
             return "Privileges";
-        } else if (subject.equals("categories")) {
+        } else if (subject.compareTo("categories") == 0) {
             return "Categories";
-        } else if (subject.equals("status")) {
+        } else if (subject.compareTo("status") == 0) {
             return "Status";
         }
         return null;

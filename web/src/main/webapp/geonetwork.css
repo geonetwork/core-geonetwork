@@ -242,15 +242,15 @@ td.content {
 
 .hit {
 	border-top: 1px solid silver;
-	padding-top: 10px;	
+	padding-top: 10px;
 	margin-top: 10px;
 }
 
 .results_header {
-	margin-top: 5px; 
-	margin-bottom: 5px; 
-    overflow-x: hidden;	
-	overflow-y: auto;	
+	margin-top: 5px;
+	margin-bottom: 5px;
+    overflow-x: hidden;
+	overflow-y: auto;
 	width: 100%;
 }
 
@@ -299,6 +299,10 @@ select.banner-content {
 input.error, textarea.error, select.error {
     color: #FF2211 !important;
     border: 3px solid #FF2211 !important;
+}
+
+h1.error {
+	color: red !important;
 }
 
 select.lang_selector {
@@ -554,7 +558,7 @@ div.handle {
 	cursor:move;
 }
 
-.dots 
+.dots
 {
 	height: 1px;
 	width: 1px;
@@ -592,7 +596,7 @@ Ajax styles
 	text-align: left;
 }
 
-.policyGroup 
+.policyGroup
 {
 	margin: 5px;
 	border-style:dashed;
@@ -760,7 +764,7 @@ div.keywordResults ul li.selected {
     margin-bottom: 1px;
 
     vertical-align: top;
-    
+
 }
 
 .geosearch{
@@ -878,7 +882,7 @@ div.metadata_current td
 }
 
 img.calendar {
-    cursor: pointer; 
+    cursor: pointer;
     background:none;
     vertical-align: middle;
     margin-left: 2px;
@@ -904,7 +908,7 @@ img.calendar:hover {
 
 /* Rating popup */
 
-button.rating 
+button.rating
 {
 	font-family: Verdana;
 	font-size: 9pt;
@@ -926,7 +930,7 @@ button.rating
 	margin: 0px;
 }
 
-.ratingCloser 
+.ratingCloser
 {
     position: absolute;
     top:     1px;
@@ -934,8 +938,8 @@ button.rating
     width:  16px;
     height: 16px;
     cursor: pointer;
-    
-    z-index: 20;    
+
+    z-index: 20;
 }
 
 div#error {
@@ -1026,7 +1030,7 @@ div.relatedElements ul li ul li ul {
 /*******************************
  Keywords search box
  *******************************/
- 
+
 .ux-mselect-item .ux-mselect-item-thesaurus {
     color: #555;
     font-style: italic;
@@ -1086,8 +1090,8 @@ div.toolTipOverlay ul li, div.shortcutHelp ul li {
 .delVector { background-image: url('images/vector_delete.png') !important; }
 .connect { background-image: url('images/connect.png') !important; }
 .processMetadata { background-image: url('images/table_gear.png') !important; }
-.repository { 
-    background-image: url('images/database_yellow.png') !important; 
+.repository {
+    background-image: url('images/database_yellow.png') !important;
     background-repeat: no-repeat;
     padding-left: 15px;
 }
@@ -1099,7 +1103,7 @@ div.toolTipOverlay ul li, div.shortcutHelp ul li {
 img.category {
     width:15px;
     height:15px;
-    margin: 2px;    
+    margin: 2px;
     vertical-align: middle;
 }
 
@@ -1190,8 +1194,8 @@ div.hitdescription {
 }
 
 div.buttons {
-	margin-top: 5px; 
-	margin-bottom: 5px; 
+	margin-top: 5px;
+	margin-bottom: 5px;
 	/*overflow: auto;*/
     height: 30px;
 	width: 100%;
@@ -1242,7 +1246,7 @@ div.hittext_top {
 
 div.keywords {
 	text-align: left;
-	margin: 5px 5px 5px 100px;	
+	margin: 5px 5px 5px 100px;
 }
 
 div.attributionlogo {
@@ -1417,4 +1421,14 @@ div#privileges {
   border: 1px solid #99bbe8;
   background-color: #dddddd;
   padding: 4px;
+}
+
+img.logo {
+  max-height: 100px;
+  max-width: 100px;
+  margin: 5px;
+}
+
+div#editPanel * div table tr > td {
+    max-width: 350px;
 }
