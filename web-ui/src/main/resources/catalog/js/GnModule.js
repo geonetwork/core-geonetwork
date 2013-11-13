@@ -1,7 +1,7 @@
 (function() {
   goog.provide('gn');
-
   goog.require('gn_cat_controller');
+  goog.require('gn_draggable_directive');
   goog.require('gn_language_switcher');
   goog.require('gn_metadata_manager');
   goog.require('gn_onlinesrc_controller');
@@ -26,6 +26,7 @@
     'gn_popup',
     'gn_onlinesrc_controller',
     'gn_onlinesrc_directive',
+    'gn_draggable_directive',
     'gn_search_controller'
   ]);
 

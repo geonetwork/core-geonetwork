@@ -11,11 +11,13 @@
       <div class="panel panel-default">
         <div class="panel-heading" data-translate="">relatedResources</div>
         <div class="panel-body">
+          <i class="fa fa-archive" />
           <a href="" ng-click="onlinesrcPopupShown = !onlinesrcPopupShown">
             <i class="icon-external-link ga-icon-separator"></i> <span
             translate>Add online resource</span>
           </a>
           <br>
+          <i class="fa fa-sitemap" />
           <a href="" ng-click="linkParentMdPopupShown = !linkParentMdPopupShown">
             <i class="icon-external-link ga-icon-separator"></i> <span
             translate>Link to a parent</span>
@@ -36,7 +38,8 @@
 </div>
 
 <div gn-popup="onlinesrcPopupShown"
-  gn-popup-options="{title:'Ajout de resource en ligne'}" id="onlinesrc-popup">
+  gn-popup-options="{title:'Ajout de resource en ligne'}"
+  gn-draggable=".gn-popup-title" id="onlinesrc-popup">
   <div ng-controller="GnOnlineSrcController">
     <div gn-add-onlinesrc gn-import-wms-map="map"
       gn-import-wms-options="options" id="import-wms" class="add-onlinesrc">

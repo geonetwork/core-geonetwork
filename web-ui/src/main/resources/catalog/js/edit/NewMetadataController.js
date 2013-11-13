@@ -48,7 +48,7 @@
               $routeParams.id,
               $routeParams.group,
               fullPrivileges,
-              $routeParams.template); 
+              $routeParams.template);
           // TODO: add fullPrivileges
         } else {
 

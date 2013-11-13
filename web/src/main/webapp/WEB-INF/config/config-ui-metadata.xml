@@ -137,6 +137,24 @@
         </call>
       </output>
     </service>
+    
+    <service name="md.element.info">
+      <documentation><![CDATA[
+            Get help on an element.
+            
+            POST request, body is :
+            <request>
+              <element schema="iso19139" name="gmd:protocol" context="gmd:CI_OnlineResource" 
+                  fullContext="gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/
+                               gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol" 
+                  isoType="" />
+            </request>
+            
+            ]]></documentation>
+    
+      <class name=".services.schema.Info" />
+    </service>
+    
 
 
   </services>

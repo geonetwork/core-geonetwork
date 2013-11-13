@@ -39,12 +39,12 @@
                 return requestBody;
               };
 
-
-              $http.post('xml.schema.info', getPostRequestBody(), {
+              $http.post('md.element.info@json', getPostRequestBody(), {
                 headers: {'Content-type': 'application/xml'}
               }).
                   success(function(data) {
-                    $scope.groups = data !== 'null' ? data : null;
+                    $scope.protocols = data !== 'null' ?
+                            data[0].helper.option : null;
                   });
             }]
           };

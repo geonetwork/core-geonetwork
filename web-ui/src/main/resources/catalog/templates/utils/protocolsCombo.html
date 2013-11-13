@@ -1,2 +1,4 @@
-<div class="dynamic-list" >
-TOTOTOO<div>
+<select class="form-control" data-ng-model="onlinesrcProtocol">
+  <option data-ng-repeat="p in protocols" value="{{p['id']}}"
+    data-ng-selected="p['id'] == ownerGroup">{{p['#text']}}</option>
+</select>

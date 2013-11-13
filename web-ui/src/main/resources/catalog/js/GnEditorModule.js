@@ -3,10 +3,18 @@
 
 
   goog.require('gn');
+  goog.require('gn_popup');
+  goog.require('gn_onlinesrc_controller');
+  goog.require('gn_onlinesrc_directive');
+  goog.require('gn_draggable_directive');
   goog.require('gn_editor_controller');
 
   var module = angular.module('gn_editor', [
     'gn',
+    'gn_popup',
+    'gn_onlinesrc_controller',
+    'gn_onlinesrc_directive',
+    'gn_draggable_directive',
     'gn_editor_controller'
   ]);
 
