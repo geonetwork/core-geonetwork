@@ -18,6 +18,7 @@
 		<constructor-arg>
 			<list>
 				<ref bean="securityContextPersistenceFilter" />
+				<ref bean="preAuthenticationFilter" />
 				<ref bean="requestSingleLogoutFilter" />
 				<ref bean="logoutFilter" />
 				<ref bean="openamFilter" />
@@ -29,6 +30,11 @@
 				<ref bean="filterSecurityInterceptor" />
 			</list>
 		</constructor-arg>
+	</bean>
+	
+	<bean id="preAuthenticationFilter" class="com.sun.identity.provider.springsecurity.OpenSSOPreAuthenticatedProcessingFilter">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="checkForPrincipalChanges" value="true"/>
 	</bean>
 	
 	<!-- Adds the openamAuthenticationProvider to the AuthenticationManager -->
@@ -43,13 +49,14 @@
 	<bean id="openamFilter"
 		class="com.sun.identity.provider.springsecurity.OpenSSOProcessingFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="filterProcessesUrl" value="/j_spring_openam_security_check" />
 	</bean>
 
 	<!-- bean called "casEntryPoint" instead of "openamEntryPoint" for geonetwork GUI matters -->
 	<!-- there is a control on the bean name to determine if a login form is to be displayed or not -->
 	<!-- this may be confusing : a change is needed in the GUI to take into account the openam entry point bean --> 
 	<bean id="casEntryPoint"
-		class="com.sun.identity.provider.springsecurity.OpenSSOProcessingFilterEntryPoint">
+		class="com.sun.identity.provider.springsecurity.OpenSSOAuthenticationEntryPoint">
 		<property name="loginUrl" value="${openam.login.url}" />
 		<property name="gotoUrl" value="${geonetwork.http.url}/j_spring_openam_security_check" />
 	</bean>
