@@ -28,6 +28,23 @@ table, tr, td {
 	vertical-align: top; /*ETJ*/
 }
 
+tr[name=logentry]{
+    border-width: 1px;
+    border-color: black;
+
+}
+td[name=logdata]{
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    border-style: solid;
+}
+td[name=logdate]{
+    border-width: 1px;
+    border-color: black;
+    padding: 2px;
+    border-style: solid;
+}
 td.padded-content-box {
 	border-style: solid;
 	border-width: 1px;
@@ -282,10 +299,6 @@ select.banner-content {
 input.error, textarea.error, select.error {
     color: #FF2211 !important;
     border: 3px solid #FF2211 !important;
-}
-
-h1.error {
-	color: red !important;
 }
 
 select.lang_selector {
@@ -1404,14 +1417,4 @@ div#privileges {
   border: 1px solid #99bbe8;
   background-color: #dddddd;
   padding: 4px;
-}
-
-img.logo {
-  max-height: 100px;
-  max-width: 100px;
-  margin: 5px;
-}
-
-div#editPanel * div table tr > td {
-    max-width: 350px;
 }

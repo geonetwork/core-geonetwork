@@ -824,7 +824,14 @@
            <output file="true"/>
            <error id="illegal-params" sheet="metadata-error.xsl"/>
        </service>
-        
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Versioning log                                                -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	   <service name="versioning.log">
+		   <output sheet="versioning/log.xsl">
+		   </output>
+       </service>
     </services>
 </geonet>
 
