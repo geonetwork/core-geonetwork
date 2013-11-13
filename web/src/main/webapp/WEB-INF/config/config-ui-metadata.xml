@@ -26,9 +26,12 @@
         * isTemplate: is this new record a metadata or a template. Value y or n
         * child: to create a child of the record. Value y or n
         * currTab: the tab to start with
+        * fullPrivileges: all privileges for the group. default is false.
         
         ]]></documentation>
-      <class name=".services.metadata.Create"/>
+      <class name=".services.metadata.Create">
+        <param name="editTab" value="true"/>
+      </class>
     </service>
     
     <service name="md.edit">

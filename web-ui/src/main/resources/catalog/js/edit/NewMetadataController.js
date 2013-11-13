@@ -36,6 +36,7 @@
       // Could be avoided if a new index field is created FIXME ?
       var dataTypesToExclude = ['staticMap'];
       var defaultType = 'dataset';
+      var fullPrivileges = true;
 
       $scope.getTypeIcon = function(type) {
         return icons[type] || 'fa-square-o';
@@ -46,7 +47,9 @@
           gnNewMetadata.createNewMetadata(
               $routeParams.id,
               $routeParams.group,
-              $routeParams.template);
+              fullPrivileges,
+              $routeParams.template); 
+          // TODO: add fullPrivileges
         } else {
 
           gnSearchManagerService.search('qi@json?template=y&fast=index').
@@ -121,6 +124,7 @@
         gnNewMetadata.createNewMetadata(
             $scope.activeTpl['geonet:info'].id,
             $scope.ownerGroup,
+            fullPrivileges,
             $scope.isTemplate);
       };
 

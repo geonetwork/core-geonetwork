@@ -11,13 +11,13 @@
     this.$get = ['$http', '$location', 'gnUrlUtils',
                  function($http, $location, gnUrlUtils) {
         return {
-          createNewMetadata: function(id, groupId) {
+          createNewMetadata: function(id, groupId, fullPrivileges, template, tab) {
             var url = gnUrlUtils.append('md.create@json',
                 gnUrlUtils.toKeyValue({
                   group: groupId,
                   id: id,
-                  isTemplate: 'n',
-                  fullPrivileges: true
+                  isTemplate: template || 'n',
+                  fullPrivileges: fullPrivileges || true
                 })
                 );
 

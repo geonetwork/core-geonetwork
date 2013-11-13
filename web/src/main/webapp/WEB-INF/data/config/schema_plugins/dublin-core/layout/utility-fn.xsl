@@ -15,7 +15,7 @@
   <xsl:function name="gn-fn-dublin-core:getFieldType" as="xs:string">
     <xsl:param name="name" as="xs:string"/>
 
-    <xsl:value-of select="gn-fn-metadata:getFieldType($dublin-coreEditorConfiguration, $name, '')"/>
+    <xsl:value-of select="gn-fn-metadata:getFieldType($editorConfig, $name, '')"/>
   </xsl:function>
 
 

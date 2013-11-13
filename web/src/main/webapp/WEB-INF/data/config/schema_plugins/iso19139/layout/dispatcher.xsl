@@ -10,51 +10,15 @@
   xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
   exclude-result-prefixes="#all">
   
-  <!-- 
-    Load the schema configuration for the editor.
-    
-    
-    Using ENTITY may be more efficient and cache ?
-      <!DOCTYPE document [ 
-            <!ENTITY  config SYSTEM 'config-editor.xml'> 
-        ]>
-      -->
-  <xsl:variable name="iso19139EditorConfiguration" select="document('config-editor.xml')"/>
-  
-  
   <xsl:include href="layout.xsl"/>
   
   
-  
-  
-  
-  <!-- Dispatching to the profile mode according to the tab -->
-  <xsl:template name="render-iso19139">
-    <xsl:param name="base" as="node()"/>
-    
-    <xsl:variable name="tabConfiguration"
-      select="$iso19139EditorConfiguration/editor/views/view/tab[@id = $tab]/section"/>
-    <xsl:if test="$service != 'md.element.add'">
-      <xsl:call-template name="menu-builder">
-        <xsl:with-param name="config" select="$iso19139EditorConfiguration"/>
-      </xsl:call-template>
-    </xsl:if>
-
-    <xsl:choose>
-      <xsl:when test="$service != 'md.element.add' and $tabConfiguration">
-        <xsl:apply-templates mode="form-builer" select="$tabConfiguration">
-          <xsl:with-param name="base" select="$base"/>
-        </xsl:apply-templates>
-      </xsl:when>
-      <xsl:when test="$tab = 'xml'">
-        <xsl:apply-templates mode="render-xml" select="$base"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates mode="mode-iso19139" select="$base"/>
-      </xsl:otherwise>
-    </xsl:choose>
+  <!-- 
+    Load the schema configuration for the editor.
+      -->
+  <xsl:template name="get-iso19139-configuration">
+    <xsl:copy-of select="document('config-editor.xml')"/>
   </xsl:template>
-
 
 
   <xsl:template name="dispatch-iso19139">

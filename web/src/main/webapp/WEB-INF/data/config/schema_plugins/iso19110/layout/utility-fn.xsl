@@ -20,12 +20,12 @@
     <xsl:param name="childName" as="xs:string?"/>
 
     <xsl:variable name="iso19110type"
-      select="gn-fn-metadata:getFieldType($iso19110EditorConfiguration, $name, $childName)"/>
+      select="gn-fn-metadata:getFieldType($editorConfig, $name, $childName)"/>
 
     <xsl:choose>
       <xsl:when test="$iso19110type = $defaultFieldType">
         <xsl:value-of
-          select="gn-fn-metadata:getFieldType($iso19139EditorConfiguration, $name, $childName)"/>
+          select="gn-fn-metadata:getFieldType($iso19139EditorConfig, $name, $childName)"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$iso19110type"/>

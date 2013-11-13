@@ -6,41 +6,16 @@
     xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
     exclude-result-prefixes="#all">
 
-    <xsl:variable name="iso19115EditorConfiguration" select="document('config-editor.xml')"/>
-
-
     <xsl:include href="layout.xsl"/>
 
-
-    <!-- Dispatching to the profile mode according to the tab -->
-    <xsl:template name="render-iso19115">
-        <xsl:param name="base" as="node()"/>
-
-        <xsl:variable name="tabConfiguration"
-            select="$iso19115EditorConfiguration/editor/views/view/tab[@id = $tab]/section"/>
-        <xsl:if test="$service != 'md.element.add'">
-            <xsl:call-template name="menu-builder">
-                <xsl:with-param name="config" select="$iso19115EditorConfiguration"/>
-            </xsl:call-template>
-        </xsl:if>
-
-        <xsl:choose>
-            <xsl:when test="$service != 'md.element.add' and $tabConfiguration">
-                <xsl:apply-templates mode="form-builer" select="$tabConfiguration">
-                    <xsl:with-param name="base" select="$base"/>
-                </xsl:apply-templates>
-            </xsl:when>
-            <xsl:when test="$tab = 'xml'">
-                <xsl:apply-templates mode="render-xml" select="$base"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:apply-templates mode="mode-iso19115" select="$base"/>
-            </xsl:otherwise>
-        </xsl:choose>
+    <!-- 
+    Load the schema configuration for the editor.
+      -->
+    <xsl:template name="get-iso19115-configuration">
+        <xsl:copy-of select="document('config-editor.xml')"/>
     </xsl:template>
 
-
-
+    <!-- Dispatching to the profile mode -->
     <xsl:template name="dispatch-iso19115">
         <xsl:param name="base" as="node()"/>
         <xsl:apply-templates mode="mode-iso19115" select="$base"/>

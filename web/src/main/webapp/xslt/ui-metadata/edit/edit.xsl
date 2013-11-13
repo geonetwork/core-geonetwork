@@ -65,9 +65,27 @@
       <input type="hidden" name="showvalidationerrors" value="{$showValidationErrors}"/>
 
       <!-- Dispatch to profile mode -->
-      <saxon:call-template name="{concat('render-',$schema)}">
-        <xsl:with-param name="base" select="$metadata"/>
-      </saxon:call-template>
+      <xsl:if test="$service != 'md.element.add'">
+        <xsl:call-template name="menu-builder">
+          <xsl:with-param name="config" select="$editorConfig"/>
+        </xsl:call-template>
+      </xsl:if>
+      
+      <xsl:choose>
+        <xsl:when test="$service != 'md.element.add' and $tabConfig/section">
+          <xsl:apply-templates mode="form-builer" select="$tabConfig/section">
+            <xsl:with-param name="base" select="$metadata"/>
+          </xsl:apply-templates>
+        </xsl:when>
+        <xsl:when test="$tab = 'xml'">
+          <xsl:apply-templates mode="render-xml" select="$metadata"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <saxon:call-template name="{concat('dispatch-',$schema)}">
+            <xsl:with-param name="base" select="$metadata"/>
+          </saxon:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
     </form>
 
   </xsl:template>

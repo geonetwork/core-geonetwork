@@ -4,45 +4,17 @@
   xmlns:gn="http://www.fao.org/geonetwork" xmlns:saxon="http://saxon.sf.net/"
   extension-element-prefixes="saxon" exclude-result-prefixes="#all">
 
-  <!-- 
-    Load the schema configuration for the editor.
-    -->
-  <xsl:variable name="dublin-coreEditorConfiguration" select="document('config-editor.xml')"/>
-
   <xsl:include href="layout.xsl"/>
 
-
-
-  <!-- Dispatching to the profile mode according to the tab -->
-  <xsl:template name="render-dublin-core">
-    <xsl:param name="base" as="node()"/>
-
-    <xsl:variable name="tabConfiguration"
-      select="$dublin-coreEditorConfiguration/editor/views/view/tab[@id = $tab]/section"/>
-
-    <xsl:if test="$service != 'md.element.add'">
-      <xsl:call-template name="menu-builder">
-        <xsl:with-param name="config" select="$dublin-coreEditorConfiguration"/>
-      </xsl:call-template>
-    </xsl:if>
-
-    <xsl:choose>
-      <xsl:when test="$service != 'md.element.add' and $tabConfiguration">
-        <xsl:apply-templates mode="form-builer" select="$tabConfiguration">
-          <xsl:with-param name="base" select="$base"/>
-        </xsl:apply-templates>
-      </xsl:when>
-      <xsl:when test="$tab = 'xml'">
-        <xsl:apply-templates mode="render-xml" select="$base"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates mode="mode-dublin-core" select="$base"/>
-      </xsl:otherwise>
-    </xsl:choose>
+  <!-- 
+    Load the schema configuration for the editor.
+      -->
+  <xsl:template name="get-dublin-core-configuration">
+    <xsl:copy-of select="document('config-editor.xml')"/>
   </xsl:template>
 
 
-
+  <!-- Dispatching to the profile mode  -->
   <xsl:template name="dispatch-dublin-core">
     <xsl:param name="base" as="node()"/>
     <xsl:apply-templates mode="mode-dublin-core" select="$base"/>

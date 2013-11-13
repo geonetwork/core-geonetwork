@@ -44,7 +44,7 @@
     <xsl:param name="childName" as="xs:string?"/>
     
     <xsl:value-of
-      select="gn-fn-metadata:getFieldType($iso19139EditorConfiguration, $name, $childName)"/>
+      select="gn-fn-metadata:getFieldType($editorConfig, $name, $childName)"/>
   </xsl:function>
 
 

@@ -2,6 +2,7 @@
 <xsl:stylesheet version="2.0" 
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:gn="http://www.fao.org/geonetwork"
+  xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
   >
   <!-- Global XSL variables about the metadata record. This should be included for
   service dealing with one metadata record (eg. viewing, editing). -->
@@ -38,7 +39,21 @@
   
   <xsl:variable name="withXPath" select="false()"/>
   
-  <xsl:variable name="tab" select="/root/gui/currTab"/>
+  <xsl:variable name="editorConfig">
+    <saxon:call-template name="{concat('get-', $schema, '-configuration')}"/>
+  </xsl:variable>
   
-  <xsl:variable name="isFlatMode" select="/root/request/flat = 'true'"/>
+  <xsl:variable name="iso19139EditorConfig">
+    <!-- TODO only load for ISO profiles -->
+    <xsl:call-template name="get-iso19139-configuration"/>
+  </xsl:variable>
+  
+  
+  <xsl:variable name="tab" select="if (/root/gui/currTab) then /root/gui/currTab else 
+    $editorConfig/editor/views/view/tab[@default]/@id"/>
+  
+  <xsl:variable name="tabConfig" select="$editorConfig/editor/views/view/tab[@id = $tab]"/>
+  
+  <xsl:variable name="isFlatMode" select="if (/root/request/flat) then /root/request/flat = 'true'
+    else $tabConfig/@mode = 'flat'"/>
 </xsl:stylesheet>
