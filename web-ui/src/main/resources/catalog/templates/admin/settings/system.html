@@ -21,7 +21,7 @@
           <!-- According to data type -->
           <div data-ng-repeat="s in filterBySection(section.name) | orderBy:getOrderBy"
             data-ng-switch="s['@datatype']">
-            <div data-ng-switch-when="2">
+            <div data-ng-switch-when="BOOLEAN">
               <label class="col-lg-4 control-label" for="{{s['@name']}}"> {{s['@name'] | translate}} </label>
               <div class="col-lg-8">
                 <input type="checkbox" id="{{s['@name']}}" name="{{s.formName}}"
