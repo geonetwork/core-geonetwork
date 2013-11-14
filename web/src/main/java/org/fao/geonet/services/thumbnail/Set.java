@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.thumbnail;
 
+import com.google.common.io.Files;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -80,6 +81,7 @@ public class Set implements Service
 
 		Lib.resource.checkEditPrivilege(context, id);
 
+
 		//-----------------------------------------------------------------------
 		//--- environment vars
 
@@ -94,7 +96,16 @@ public class Set implements Service
 		if (version != null && !dataMan.getVersion(id).equals(version))
 			throw new ConcurrentUpdateEx(id);
 
-		//-----------------------------------------------------------------------
+
+        boolean imageExists = testValidImage(new File(getFileName(file, true)), false);
+        imageExists |= testValidImage(new File(getFileName(file, false)), false);
+        imageExists |= testValidImage(new File(context.getUploadDir(), file), false);
+
+        if (!imageExists) {
+            throw new IllegalArgumentException("No image file uploaded");
+        }
+
+        //-----------------------------------------------------------------------
 		//--- create destination directory
 
 		String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
@@ -126,7 +137,7 @@ public class Set implements Service
 			String inFile  = context.getUploadDir() + file;
 			String outFile = dataDir + newFile;
 
-			createThumbnail(inFile, outFile, scalingFactor, scalingDir);
+            createThumbnail(inFile, outFile, scalingFactor, scalingDir);
 
 			if (!new File(inFile).delete())
 				context.error("Error while deleting thumbnail : "+inFile);
@@ -139,13 +150,13 @@ public class Set implements Service
 
 			File inFile  = new File(context.getUploadDir(), file);
 			File outFile = new File(dataDir,                file);
-
-			if(outFile.exists() && !outFile.delete()) {
+            if(outFile.exists() && !outFile.delete()) {
 				throw new Exception("Unable to overwrite existing file: "+outFile);
 			}
 			try {
-				FileUtils.moveFile(inFile, outFile);
-			} catch (Exception e) {
+                final BufferedImage image = ImageIO.read(inFile);
+                ImageIO.write(image, Files.getFileExtension(outFile.getName()), outFile);
+            } catch (Exception e) {
 				inFile.delete();
 				throw new Exception(
 						"Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
@@ -164,7 +175,23 @@ public class Set implements Service
 		return response;
 	}
 
-	// FIXME : not elegant
+    private boolean testValidImage(File inFile, boolean mustExistAndBeValid) throws IOException {
+        if (inFile != null && inFile.exists()) {
+            // Test that file is an image before removing old files.
+            BufferedImage image = ImageIO.read(inFile);
+            if (image == null) {
+                throw new IllegalArgumentException("Unable to create an image from: "+inFile);
+            }
+            return true;
+        } else {
+            if (mustExistAndBeValid) {
+                throw new IllegalArgumentException(inFile + ": expected but does not exist");
+            }
+            return false;
+        }
+    }
+
+    // FIXME : not elegant
 	public Element execOnHarvest(
 							Element params, 
 							ServiceContext context, 
