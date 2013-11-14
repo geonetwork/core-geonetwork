@@ -1,6 +1,8 @@
 package jeeves.config.springutil;
 
+import com.google.common.collect.ObjectArrays;
 import jeeves.server.overrides.ConfigurationOverrides;
+import jeeves.server.sources.http.ServletPathFinder;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
@@ -9,25 +11,42 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
+import javax.servlet.ServletContext;
 import java.io.IOException;
 
-public class JeevesApplicationContext extends XmlWebApplicationContext {
-    
-    private String appPath;
+public class JeevesApplicationContext extends XmlWebApplicationContext  {
+
+    /**
+     * Bean Id of the string representing the nodeId of the current application context.
+     */
+    public static final String NODE_ID_BEAN_ID = "NODE_ID_BEAN_ID";
+    /**
+     * The nodeId of the 'default' node.
+     */
+    public static final String DEFAULT_NODE_ID = "srv";
     private final ConfigurationOverrides _configurationOverrides;
-    
+    private final String nodeId;
+
     public JeevesApplicationContext() {
-        this(ConfigurationOverrides.DEFAULT);
+        this(ConfigurationOverrides.DEFAULT, "srv");
     }
 
-    public JeevesApplicationContext(final ConfigurationOverrides configurationOverrides) {
+    public JeevesApplicationContext(final ConfigurationOverrides configurationOverrides, String nodeId, String... configLocations) {
+        if (configLocations == null || configLocations.length == 0) {
+            throw new IllegalArgumentException("No config locations were specified.  There must be at least one");
+        }
+        setConfigLocations(configLocations);
+        this.nodeId = nodeId;
         this._configurationOverrides = configurationOverrides;
         addApplicationListener(new ApplicationListener<ApplicationEvent>() {
             @Override
             public void onApplicationEvent(ApplicationEvent event) {
                 try {
                     if (event instanceof ContextRefreshedEvent) {
-                        configurationOverrides.applyNonImportSpringOverides(JeevesApplicationContext.this, getServletContext(), appPath);
+                        final ServletContext servletContext = getServletContext();
+
+                        String appPath = getAppPath();
+                        configurationOverrides.applyNonImportSpringOverides(JeevesApplicationContext.this, servletContext, appPath);
                     }
                 } catch (RuntimeException e) {
                     throw e;
@@ -40,23 +59,29 @@ public class JeevesApplicationContext extends XmlWebApplicationContext {
         });
     }
 
-    public String getAppPath() {
-        return appPath;
+    /**
+     * Get the path to the webapplication directory.
+     *
+     * This method is protected so tests can provide custom implementations.
+     */
+    protected String getAppPath() {
+        final ServletPathFinder pathFinder = new ServletPathFinder(getServletContext());
+        return pathFinder.getAppPath();
     }
 
-    public void setAppPath(String appPath) {
-        this.appPath = appPath;
-    }
-
-	@Override
+    @Override
 	protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws IOException {
         reader.setValidating(false);
         super.loadBeanDefinitions(reader);
+
+        String appPath = getAppPath();
         try {
             this._configurationOverrides.importSpringConfigurations(reader, (ConfigurableBeanFactory) reader.getBeanFactory(),
                     getServletContext(), appPath);
+            ((ConfigurableBeanFactory) reader.getBeanFactory()).registerSingleton(JeevesApplicationContext.NODE_ID_BEAN_ID, nodeId);
         } catch (JDOMException e) {
             throw new IOException(e);
         }
     }
+
 }

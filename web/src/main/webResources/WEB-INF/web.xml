@@ -9,11 +9,13 @@
     <display-name>geonetwork</display-name>
 	<context-param>
 		<param-name>contextClass</param-name>
- 		<param-value>
-	          jeeves.config.springutil.JeevesApplicationContext
-	      </param-value>
+ 		<param-value>jeeves.config.springutil.JeevesApplicationContext</param-value>
 	</context-param>
-	<!-- comma separated list of classes that implement 
+	<context-param>
+		<param-name>nodes</param-name>
+ 		<param-value>srv node1</param-value>
+	</context-param>
+	<!-- comma separated list of classes that implement
 		 org.springframework.beans.factory.config.BeanFactoryPostProcessor
 
 		 This is an additional method of overriding the spring configuration
@@ -24,13 +26,9 @@
 		<param-name>applicationContextPostProcessors</param-name>
 		<param-value></param-value>
 	</context-param>
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/config-spring-geonetwork.xml</param-value>
-	</context-param>
-    <listener>
-        <listener-class>jeeves.config.springutil.JeevesContextLoaderListener</listener-class>
-    </listener>
+    <!--<listener>-->
+        <!--<listener-class>jeeves.config.springutil.JeevesContextLoaderListener</listener-class>-->
+    <!--</listener>-->
     <listener>
 	    <listener-class>
 	        org.springframework.web.context.request.RequestContextListener
@@ -66,7 +64,7 @@
     <!-- Spring security -->
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <filter-class>jeeves.config.springutil.DelegatingFilterProxy</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
@@ -314,7 +312,6 @@
         <servlet-name>gn-servlet</servlet-name>
         <url-pattern>/srv/*</url-pattern>
     </servlet-mapping>
-
     <!-- Web map context servlet -->
     <servlet>
         <servlet-name>wmc</servlet-name>

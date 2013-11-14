@@ -325,9 +325,9 @@ public class ServiceManager {
 
 	//---------------------------------------------------------------------------
 
-	public ServiceContext createServiceContext(String name, JeevesApplicationContext jeevesApplicationContext)
+	public ServiceContext createServiceContext(String name, ConfigurableApplicationContext appContext)
 	{
-		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, htContexts,
+		ServiceContext context = new ServiceContext(name, appContext, htContexts,
                 entityManager);
 
 		context.setBaseUrl(baseUrl);
