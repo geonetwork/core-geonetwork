@@ -508,7 +508,6 @@ cat.app = function() {
 				Ext.each(trees, function (tree) {
 				    tree.reset();
 				});
-				this.find('id', 'E__groupPublished')[0].getStore().load();
 				catalogue.metadataStore.removeAll();
 				resetResultPanels();
 				cookie.set('cat.search.page', 0);
@@ -567,8 +566,12 @@ cat.app = function() {
                             this.remove(cur);
                         }
                     }, this);
-                    
-                    this.fireEvent('search');
+                    searchForm.find('id', 'E__groupPublished')[0].getStore().load({
+                        callback: function() {
+                            this.fireEvent('search');
+                        },
+                        scope: this
+                    });
                 }
             },
 			items : formItems
