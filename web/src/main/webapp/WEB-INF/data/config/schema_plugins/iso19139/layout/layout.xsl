@@ -28,9 +28,14 @@
     <!-- TODO: this should be common to all schemas -->
     <xsl:if test="$isEditing and 
       not($isFlatMode)">
+      
+      <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
+      <xsl:variable name="directive" select="gn-fn-iso19139:getFieldType($editorConfig, $name)"/>
+      
       <xsl:call-template name="render-element-to-add">
         <xsl:with-param name="label"
-          select="gn-fn-metadata:getLabel($schema, concat(@prefix, ':', @name), $labels)/label"/>
+          select="gn-fn-metadata:getLabel($schema, $name, $labels)/label"/>
+        <xsl:with-param name="directive" select="if($directive != 'text') then $directive else ''"/>
         <xsl:with-param name="childEditInfo" select="."/>
         <xsl:with-param name="parentEditInfo" select="../gn:element"/>
       </xsl:call-template>

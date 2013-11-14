@@ -38,6 +38,9 @@
 
 
     <for name="gmd:electronicMailAddress" use="email"/>
+    
+    <for name="gmd:pointOfContact" use="data-gn-directory-entry-selector"/>
+    <for name="gmd:descriptiveKeywords" use="data-gn-thesaurus-selector"/>
   </fields>
 
 

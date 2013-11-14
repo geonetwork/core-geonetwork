@@ -9,7 +9,9 @@
           '$q',
           '$rootScope',
           '$http',
-          function($q, $rootScope, $http) {
+          '$translate',
+          '$compile',
+          function($q, $rootScope, $http, $translate, $compile) {
             return {
               // TODO : move select to SearchManagerService
               _select: function(uuid, andClearSelection, action) {

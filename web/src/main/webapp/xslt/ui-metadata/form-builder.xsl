@@ -332,6 +332,7 @@
   -->
   <xsl:template name="render-element-to-add">
     <xsl:param name="label" as="xs:string?"/>
+    <xsl:param name="directive" as="xs:string?"/>
     <xsl:param name="childEditInfo"/>
     <xsl:param name="parentEditInfo"/>
 
@@ -345,6 +346,9 @@
         </xsl:if>
       </label>
       <div class="col-lg-10">
+        
+        <xsl:variable name="qualifiedName" select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
+        
         <xsl:choose>
           <!-- When element have different types, provide
                 a list of those types to be selected. The type list
@@ -361,7 +365,7 @@
                   
                   <i type="button" class="btn fa fa-plus gn-add" 
                   title="{$label/description}"
-                  data-ng-click="addChoice({$parentEditInfo/@ref}, '{concat($childEditInfo/@prefix, ':', $childEditInfo/@name)}', '{@name}', '{$id}', 'replaceWith');">
+                  data-ng-click="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'replaceWith');">
                   </i>
                 </xsl:for-each>
           </xsl:when>
@@ -379,7 +383,7 @@
                   
                   <li title="{$label/description}">
                     <a
-                      data-ng-click="addChoice({$parentEditInfo/@ref}, '{concat($childEditInfo/@prefix, ':', $childEditInfo/@name)}', '{@name}', '{$id}', 'before');">
+                      data-ng-click="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'before');">
                       <xsl:value-of select="$label/label"/>
                     </a>
                   </li>
@@ -393,6 +397,17 @@
             />
           </xsl:otherwise>
         </xsl:choose>
+
+        <!-- Add custom widget to add element.
+        This could be a subtemplate (if one available), or a helper
+        like for projection. -->
+        <xsl:if test="$directive != ''">
+          <div>
+            <xsl:attribute name="{$directive}"/>
+            <xsl:attribute name="data-element-name" select="$qualifiedName"/>
+            <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
+          </div>
+        </xsl:if>
 
       </div>
     </div>

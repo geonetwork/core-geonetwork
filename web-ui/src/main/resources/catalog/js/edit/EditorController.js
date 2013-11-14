@@ -5,14 +5,20 @@
 
 
 
+
+
+
+
+
   goog.require('gn_fields');
   goog.require('gn_new_metadata_controller');
   goog.require('gn_scroll_spy');
+  goog.require('gn_thesaurus_manager_service');
   goog.require('gn_utility_directive');
 
   var module = angular.module('gn_editor_controller',
       ['gn_fields', 'gn_new_metadata_controller', 'gn_utility_directive',
-       'gn_scroll_spy']);
+       'gn_scroll_spy', 'gn_thesaurus_manager_service']);
 
   var tplFolder = '../../catalog/templates/editor/';
 
@@ -212,7 +218,6 @@
             {
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).success(function(data) {
-
           if (refreshForm) {
             var snippet = $(data);
             $('#gn-editor-' + $scope.metadataId).replaceWith(snippet);
@@ -238,6 +243,13 @@
             type: 'danger'});
         });
       };
+
+
+      // Broadcast event to SaveEdits from form's directive
+      $scope.$on('SaveEdits', function(event, refreshForm) {
+        $scope.save(refreshForm);
+      });
+
 
 
       $scope.reset = function() {
