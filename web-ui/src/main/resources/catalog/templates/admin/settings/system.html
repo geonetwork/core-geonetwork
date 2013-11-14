@@ -79,6 +79,15 @@
                   <option value="only_docLocale"
                           ng-selected="'only_docLocale' == s['#text']">{{'system/requestedLanguage/only-value5' | translate}}</option>
                 </select>
+                <!-- Read only fields -->
+                <input data-ng-switch-when="system/platform/version" type="text" class="form-control"
+                     id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}" readonly="readonly"/>
+                <input data-ng-switch-when="system/platform/subVersion" type="text" class="form-control"
+                     id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}" readonly="readonly"/>
+                <input data-ng-switch-when="system/site/svnUuid" type="text" class="form-control"
+                     id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}" readonly="readonly"/>
+
+                <!-- Default -->
                 <input data-ng-switch-default="" type="text" class="form-control"
                   id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"/>
 
