@@ -66,7 +66,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 	    	var theme = this.getStore().getAt(this.curId).get("sextantTheme")[0];
 	    	if(theme) {
 	    		var translationStore = Ext.getCmp('E_sextantTheme').storeLabel;
-	    		var idx = translationStore.find('name',theme.value, null, false);
+	    		var idx = translationStore.findExact('name', theme.value);
 	            if(idx >= 0 && translationStore.getAt(idx).get('label')) {
 	            	Ext.get(Ext.query('input[id*=layergroup]')[0]).dom.value = 
 	            		translationStore.getAt(idx).get('label');
