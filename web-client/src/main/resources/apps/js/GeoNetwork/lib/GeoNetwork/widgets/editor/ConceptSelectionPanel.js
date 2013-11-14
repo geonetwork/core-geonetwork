@@ -192,7 +192,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
      */
     generateSimpleCombo: function () {
         var self = this, 
-            initKeyword = (self.initialKeyword.length === 1 && self.initialKeyword[0] !== '') ? self.initialKeyword[0] : null;
+            initKeyword = (self.initialKeyword.length >= 1 && self.initialKeyword[0] !== '') ? self.initialKeyword[0] : null;
         
         var combo = new Ext.form.ComboBox({
             store: this.keywordStore,
