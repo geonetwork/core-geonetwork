@@ -1,0 +1,45 @@
+<div>
+  <!--   <div class="clearfix">
+    <div>
+      <ng-pluralize count="searchResults.count"
+        when="{'0 ': ('noRecordFound' | translate),
+              'one': '1 ' +  ('record' | translate),
+              'other': '{} ' +  ('records' | translate)}">
+      </ng-pluralize>
+    </div>
+    <div class="btn-group pull-right" data-ng-show="allowSelection">
+      <button type="button" class="btn dropdown-toggle"
+        data-toggle="dropdown">
+        {{selectedRecordsCount}} <span data-translate="">selected</span><span
+          class="caret" />
+      </button>
+      <ul class="dropdown-menu">
+        <li><a data-ng-click="selectAll(true)" data-translate="">selectAll</a>
+        </li>
+        <li><a data-ng-click="selectAll(false)" data-translate="">selectNone</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+ -->
+  <div>
+    <div class="list-group">
+      <a class="list-group-item gn-record"
+        data-ng-repeat="md in resultRecords"
+        id="gn-record-{{md['geonet:info'].uuid}}" href=""
+        data-ng-class="{'active': selection.indexOf(md) >= 0}"
+        data-ng-click="select(md)">
+        <div class="row" ng-if="options.mode == 'title'">
+          {{md.title || md.defaultTitle}}
+        </div>
+        <div class="row" ng-if="options.mode == 'simple'">
+          <div class="col-lg-3"><p>{{md.type}}</p></div>
+          <div class="col-lg-9">
+            <p><strong>{{md.title || md.defaultTitle}}</strong></p>
+            <p class="small">{{md.abstract}}</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
