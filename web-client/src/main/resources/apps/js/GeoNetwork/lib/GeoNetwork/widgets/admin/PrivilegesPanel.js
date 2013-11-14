@@ -253,9 +253,9 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
                 if (self.getColumnOrder()) {
                     Ext.each(self.getColumnOrder(), function(id) {
                         var recId = operationsStore.find('id',id);
-                        if (recId) {
+                        if (recId !== undefined) {
                             var rec = operationsStore.getAt(recId);
-                             columns.push({
+                            columns.push({
                                  xtype: 'checkcolumn',
                                  header: rec.get('label'),
                                  dataIndex: 'oper'+rec.get('id'),
