@@ -47,6 +47,14 @@ GeoNetwork.Settings.editor = {
 //    defaultViewMode : 'inspire'
 };
 
+GeoNetwork.Settings.privileges = {
+        // Customize column to be displayed and the order
+        columnOrder: ['0', '5', '1', '2'],
+        // Use topGroups to place those groups with internet, intranet groups
+        // on top of the privileges panel.
+        topGroups: ['82'] // GEOCATALOGUE group on top
+};
+
 GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'}, 
                                        {name: 'inspireThemes'},  
                                        {name: 'categories'},  
