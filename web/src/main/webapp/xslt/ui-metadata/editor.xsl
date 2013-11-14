@@ -7,7 +7,7 @@
 
   <xsl:template mode="content" match="/">
   
-    <div class="container" data-ng-controller="GnEditorController" data-ng-show="authenticated" data-ng-view="">
+    <div class="container" data-ng-show="authenticated" data-ng-view="">
     </div>
   </xsl:template>
 </xsl:stylesheet>
