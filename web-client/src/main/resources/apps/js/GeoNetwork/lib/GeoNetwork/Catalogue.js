@@ -1403,7 +1403,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     metadataAdmin: function(record){
         var url = this.services.mdAdminXml + "?id=" + record.get('id');
         var privilegesPanel = new GeoNetwork.admin.PrivilegesPanel({
-            id: id,
+            id: record.get('id'),
             url: url,
             onlyUserGroup: this.info.userGroupOnly.toLowerCase() === 'true' || false
         });
