@@ -59,7 +59,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     menuAction: function(link, type) {
     	
     	var url;
-
+    	var showPopup = true;
     	if(type == 'wms') {
 	    	var c = link.split('|');
 	    	
@@ -90,8 +90,19 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 	        }
 	    	
 	    	Ext.get(Ext.query('input[id*=wmsversion]')[0]).set({value:p});
-	    	Ext.query('a[id*=viewerButton]')[0].onclick();
 	    	url=Ext.get(Ext.query('input[id*=configgeoviewerurl]')[0]).getValue();
+	    	
+	    	//check if configgeoviewerurl is on the same host
+	    	var aElt = document.createElement('a');
+	    	aElt.setAttribute('href', url);
+	    	if(aElt.host != window.location.host) {
+	    	    showPopup = false;
+	    	    url = url.replace('${wmsurl}', encodeURIComponent(c[2])).replace('${layername}', encodeURIComponent(c[0]));
+	    	    window.open(url,'_blank');
+	    	}
+	    	else {
+	    	    Ext.query('a[id*=viewerButton]')[0].onclick();
+	    	}
     	}
     	else if(type=='download') {
     		Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = link;
@@ -100,7 +111,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     		Ext.query('a[id*=panierButton]')[0].onclick();
     		url=Ext.get(Ext.query('input[id*=configpanierurl]')[0]).getValue();
     	}
-    	if(this.popup) {
+    	if(this.popup && showPopup) {
     		this.displayPopup(type,url);
     	}
     },

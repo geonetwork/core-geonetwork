@@ -43,7 +43,7 @@ cat.list = function() {
 			'<td class="thumb">',
 			'<div class="thumbnail">',
 			'<tpl if="thumbnail">',
-			    '<a rel="lightbox" href="{thumbnail}"><img src="{thumbnail}" alt="Thumbnail"/></a>',
+			    '<a rel="lightbox" href="{overview}"><img src="{thumbnail}" alt="Thumbnail"/></a>',
 			'</tpl>',
 			'<tpl if="thumbnail==\'\'"><span>' + OpenLayers.i18n('thumbnail_not_available') + '</tpl>',
 			'</div>',
