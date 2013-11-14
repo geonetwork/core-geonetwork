@@ -52,6 +52,14 @@
                 <textarea data-ng-switch-when="system/harvesting/mail/templateWarning" type="text"
                   class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
                   >{{s['#text']}}</textarea>
+                <select data-ng-switch-when="system/server/protocol" class="form-control"
+                      name="{{s.formName}}">
+                  <option value="http"
+                          ng-selected="'http == s['#text']">http</option>
+                  <option value="https"
+                          ng-selected="'https == s['#text']">https</option>
+                </select>
+
                 <input data-ng-switch-default="" type="text" class="form-control"
                   id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"/>
 
