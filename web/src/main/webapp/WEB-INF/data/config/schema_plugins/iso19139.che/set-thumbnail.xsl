@@ -65,7 +65,7 @@
 
 	<!-- ================================================================= -->
 	
-	<xsl:template match="che:CHE_MD_DataIdentification|che:CHE_SV_ServiceIdentification">
+	<xsl:template match="che:CHE_MD_DataIdentification|che:CHE_SV_ServiceIdentification|srv:SV_ServiceIdentification|MD_DataIdentification">
 		<xsl:copy>
 			<xsl:apply-templates select="@*"/>
 			<xsl:apply-templates select="gmd:citation"/>
