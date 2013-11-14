@@ -31,22 +31,6 @@
 
 
 
-  <!-- Get field type based on editor configuration.
-  Search by element name or the child element name (the one
-  containing the value).
-  
-  The child element take priority if defined.
-  -->
-  <xsl:function name="gn-fn-iso19139:getFieldType" as="xs:string">
-    <!-- The container element -->
-    <xsl:param name="name" as="xs:string"/>
-    <!-- The element containing the value eg. gco:Date -->
-    <xsl:param name="childName" as="xs:string?"/>
-    
-    <xsl:value-of
-      select="gn-fn-metadata:getFieldType($editorConfig, $name, $childName)"/>
-  </xsl:function>
-
 
 
   <xsl:function name="gn-fn-iso19139:getCodeListType" as="xs:string">

@@ -19,7 +19,7 @@
       <xsl:with-param name="value" select="*"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-      <xsl:with-param name="type" select="gn-fn-iso19139:getFieldType(name(), '')"/>
+      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
       <xsl:with-param name="name" select="''"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>
       <xsl:with-param name="parentEditInfo" select="gn:element"/>

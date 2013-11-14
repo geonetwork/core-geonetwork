@@ -5,20 +5,6 @@
   xmlns:gn-fn-dublin-core="http://geonetwork-opensource.org/xsl/functions/profiles/dublin-core">
 
 
-
-  <!-- Get field type based on editor configuration.
-  Search by element name or the child element name (the one
-  containing the value).
-  
-  The child element take priority if defined.
-  -->
-  <xsl:function name="gn-fn-dublin-core:getFieldType" as="xs:string">
-    <xsl:param name="name" as="xs:string"/>
-
-    <xsl:value-of select="gn-fn-metadata:getFieldType($editorConfig, $name, '')"/>
-  </xsl:function>
-
-
   <xsl:function name="gn-fn-dublin-core:getFieldWidget" as="xs:string">
     <xsl:param name="name" as="xs:string"/>
 
