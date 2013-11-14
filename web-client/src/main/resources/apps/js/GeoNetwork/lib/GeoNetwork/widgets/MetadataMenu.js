@@ -140,8 +140,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             tooltip: OpenLayers.i18n('privilegesTT'),
             iconCls : 'privIcon',
             handler: function(){
-                var id = this.record.get('id');
-                this.catalogue.metadataAdmin(id);
+                this.catalogue.metadataAdmin(this.record);
             },
             scope: this
         });
@@ -162,8 +161,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             tooltip: OpenLayers.i18n('statusTT'),
             iconCls : 'statusIcon',
             handler: function(){
-                var id = this.record.get('id');
-                this.catalogue.metadataStatus(id);
+                this.catalogue.metadataStatus(this.record);
             },
             scope: this
         });

@@ -392,7 +392,7 @@
 		<updated>Mis à jour</updated>
 		<unchanged>Inchangé</unchanged>
 		<unknownSchema>Schema inconnu</unknownSchema>
-		<unretrievable>Inrécupérable</unretrievable>
+		<unretrievable>Irrécupérable</unretrievable>
 		<badFormat>Mauvais format XML</badFormat>
 		<doesNotValidate>Non valide</doesNotValidate>
 		<datasetAdded>Datasets</datasetAdded>
