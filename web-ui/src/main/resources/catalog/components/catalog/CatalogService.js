@@ -45,13 +45,14 @@
           runProcessNew: function(params) {
             var url = gnUrlUtils.append('md.processing.new?',
                 gnUrlUtils.toKeyValue(params));
-                
+
             $http.get(url).success(function(data) {
-              console.log('md.processing.new success')
+              console.log('md.processing.new success');
             });
           },
 
-          // TODO : write batch processing service here from adminTools controller
+          // TODO : write batch processing service here
+          // from adminTools controller
           runProcess: function(formId) {
             processing = true;
             processReport = null;
