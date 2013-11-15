@@ -10,5 +10,9 @@
     "createNewMetadata": "Add a new record",
     "createMetadata": "Create",
     "inGroup": "In",
-    "addFromDictionnary": "Add from dictionnary"
+    "addFromDictionnary": "Add from dictionnary",
+    "addOnlinesrc" : "Add online resource",
+    "linkToParent" : "Link to parent",
+    "onlinesrcUploadHelp": "Drag & drop here one resource",
+    "chooseOnlinesrc": "Choose or drop resource here"
 }

@@ -6,13 +6,16 @@
   angular.module('gn_onlinesrc_directive', [
     'gn_utility'
   ])
-  .directive('gnAddOnlinesrc', ['$http',
-        function($http) {
+  .directive('gnAddOnlinesrc', ['gnOnlinesrc',
+        function(gnOnlinesrc) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/onlinesrc/' +
                 'partials/addOnlinesrc.html',
+            scope: {},
             link: function(scope, element, attrs) {
+              scope.mode = 'url';
+              scope.params = {};
               scope.onlinesrcService = gnOnlinesrc;
             }
           };

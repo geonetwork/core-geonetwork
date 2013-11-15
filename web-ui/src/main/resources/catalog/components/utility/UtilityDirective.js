@@ -24,6 +24,10 @@
           return {
             restrict: 'A',
             templateUrl: '../../catalog/templates/utils/protocolsCombo.html',
+            scope: {
+              protocol: '=',
+              lang: '='
+            },
             controller: ['$scope', '$translate', function($scope, $translate) {
 
               var getPostRequestBody = function() {

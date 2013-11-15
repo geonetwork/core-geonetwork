@@ -12,20 +12,21 @@
           '$translate',
           '$compile',
           function($q, $rootScope, $http, $translate, $compile) {
+            var _select = function(uuid, andClearSelection, action) {
+              var defer = $q.defer();
+              $http.get(
+                  'metadata.select@json?' + (uuid ? 'id=' + uuid : '') +
+                  (andClearSelection ? '' : '&selected=' + action))
+                    .success(function(data, status) {
+                    defer.resolve(data);
+                  }).error(function(data, status) {
+                    defer.reject(error);
+                  });
+              return defer.promise;
+            };
+
             return {
               // TODO : move select to SearchManagerService
-              _select: function(uuid, andClearSelection, action) {
-                var defer = $q.defer();
-                $http.get(
-                    'metadata.select@json?' + (uuid ? 'id=' + uuid : '') +
-                    (andClearSelection ? '' : '&selected=' + action))
-                      .success(function(data, status) {
-                      defer.resolve(data);
-                    }).error(function(data, status) {
-                      defer.reject(error);
-                    });
-                return defer.promise;
-              },
               select: function(uuid, andClearSelection) {
                 return _select(uuid, andClearSelection, 'add');
               },
