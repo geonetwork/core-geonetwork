@@ -111,6 +111,11 @@
           <param name="filter" value="+_groupPublished:CLUB_SIG_MAYOTTE"/>
         </class>
       </service>
+      <service name="csw-DCE">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:DCE"/>
+        </class>
+      </service>
       <service name="csw-DCSMM">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:DCSMM"/>
@@ -269,6 +274,11 @@
       <service name="csw-URANTILLES">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:URANTILLES"/>
+        </class>
+      </service>
+      <service name="csw-VALMER">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:VALMER"/>
         </class>
       </service>
     </addXML>
