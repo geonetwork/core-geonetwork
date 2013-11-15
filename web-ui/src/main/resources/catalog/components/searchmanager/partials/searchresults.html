@@ -29,7 +29,7 @@
         id="gn-record-{{md['geonet:info'].uuid}}" href=""
         data-ng-class="{'active': selection.indexOf(md) >= 0}"
         data-ng-click="select(md)">
-        <div class="row" ng-if="options.mode == 'title'">
+        <div ng-if="options.mode == 'title'">
           {{md.title || md.defaultTitle}}
         </div>
         <div class="row" ng-if="options.mode == 'simple'">

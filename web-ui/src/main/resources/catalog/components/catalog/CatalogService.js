@@ -30,4 +30,58 @@
         };
       }];
   });
+
+  module.provider('gnBatchProcessing', function() {
+    this.$get = ['$http', '$location', 'gnUrlUtils',
+                 function($http, $location, gnUrlUtils) {
+
+        var processing = true;
+        var processReport = null;
+        return {
+
+          /**
+           * Run process md.processing.new
+           */
+          runProcessNew: function(params) {
+            var url = gnUrlUtils.append('md.processing.new?',
+                gnUrlUtils.toKeyValue(params));
+                
+            $http.get(url).success(function(data) {
+              console.log('md.processing.new success')
+            });
+          },
+
+          // TODO : write batch processing service here from adminTools controller
+          runProcess: function(formId) {
+            processing = true;
+            processReport = null;
+            $http.get('md.processing.batch@json?' +
+                    $(formId).serialize())
+              .success(function(data) {
+                  processReport = data;
+                  processReportWarning = data.notFound != 0 ||
+                      data.notOwner != 0 ||
+                      data.notProcessFound != 0;
+                  $rootScope.$broadcast('StatusUpdated', {
+                    msg: $translate('processFinished'),
+                    timeout: 2,
+                    type: 'success'});
+                  $scope.processing = false;
+
+                  checkLastBatchProcessReport();
+                })
+              .error(function(data) {
+                  $rootScope.$broadcast('StatusUpdated', {
+                    title: $translate('processError'),
+                    error: data,
+                    timeout: 0,
+                    type: 'danger'});
+                  $scope.processing = false;
+                });
+            gnUtilityService.scrollTo('#gn-batch-process-report');
+            $timeout(checkLastBatchProcessReport, processCheckInterval);
+          }
+        };
+      }];
+  });
 })();

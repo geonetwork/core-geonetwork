@@ -10,14 +10,16 @@
       <div class="panel panel-default">
         <div class="panel-heading" data-translate="">relatedResources</div>
         <div class="panel-body">
-          <i class="fa fa-archive" />
+         
           <a href="" ng-click="onlinesrcPopupShown = !onlinesrcPopupShown">
+           <i class="fa fa-archive" />
             <i class="icon-external-link ga-icon-separator"></i> <span
             translate>Add online resource</span>
           </a>
           <br>
-          <i class="fa fa-sitemap" />
+          
           <a href="" ng-click="linkParentMdPopupShown = !linkParentMdPopupShown">
+            <i class="fa fa-sitemap" />
             <i class="icon-external-link ga-icon-separator"></i> <span
             translate>Link to a parent</span>
           </a>
@@ -39,18 +41,16 @@
 <div gn-popup="onlinesrcPopupShown"
   gn-popup-options="{title:'Ajout de resource en ligne'}"
   gn-draggable=".gn-popup-title" id="onlinesrc-popup">
-  <div ng-controller="GnOnlineSrcController">
     <div gn-add-onlinesrc gn-import-wms-map="map"
       gn-import-wms-options="options" id="import-wms" class="add-onlinesrc">
     </div>
-  </div>
 </div>
 
 <div gn-popup="linkParentMdPopupShown"
-  gn-popup-options="{title:'Ajouter un parent à une métadonnée'}" id="linkparent-popup">
-  <div ng-controller="GnOnlineSrcController">
+  gn-popup-options="{title:'Ajouter un parent à une métadonnée'}" 
+  gn-draggable=".gn-popup-title"
+  id="linkparent-popup">
     <div gn-link-parent-md id="link-parent-md" class="link-parent-md">
     </div>
-  </div>
 </div>
 
