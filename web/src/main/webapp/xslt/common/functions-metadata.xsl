@@ -168,6 +168,22 @@
   </xsl:function>
 
 
+  <!-- Return the directive to use for add control if a custom one 
+  is defined. Eg. Adding from a thesaurus propose a list of available
+  thesaurus. -->
+  <xsl:function name="gn-fn-metadata:getFieldAddDirective" as="xs:string">
+    <xsl:param name="configuration" as="node()"/>
+    <xsl:param name="name" as="xs:string"/>
+    
+    <xsl:variable name="type" select="normalize-space($configuration/editor/fields/for[@name = $name]/@addDirective)"/>
+    
+    <xsl:value-of
+      select="if ($type != '')
+      then $type 
+      else ''"
+    />
+  </xsl:function>
+
 
 
 

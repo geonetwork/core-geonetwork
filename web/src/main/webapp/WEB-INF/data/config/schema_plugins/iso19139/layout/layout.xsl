@@ -30,7 +30,7 @@
       not($isFlatMode)">
       
       <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
-      <xsl:variable name="directive" select="gn-fn-iso19139:getFieldType($editorConfig, $name)"/>
+      <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
       
       <xsl:call-template name="render-element-to-add">
         <xsl:with-param name="label"
@@ -187,7 +187,7 @@
       <xsl:with-param name="xpath" select="$xpath"/>
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
       <xsl:with-param name="type"
-        select="gn-fn-iso19139:getFieldType(name(), 
+        select="gn-fn-metadata:getFieldType($editorConfig, name(), 
             name(gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|
                 gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|
                 gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL))"/>
@@ -253,7 +253,7 @@
       <xsl:with-param name="xpath" select="$xpath"/>
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
       <xsl:with-param name="type"
-        select="gn-fn-iso19139:getFieldType(name(), 
+        select="gn-fn-metadata:getFieldType($editorConfig, name(), 
         name(gmx:FileName))"/>
       <xsl:with-param name="name" select="if ($isEditing) then */gn:element/@ref else ''"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>

@@ -1,9 +1,9 @@
 (function() {
-  goog.provide('gn_thesaurus_manager_service');
+  goog.provide('gn_thesaurus_service');
 
-  var module = angular.module('gn_thesaurus_manager_service', []);
+  var module = angular.module('gn_thesaurus_service', []);
 
-  module.provider('gnThesaurusManagerService',
+  module.provider('gnThesaurusService',
       function() {
         this.$get = [
           '$q',
@@ -13,16 +13,17 @@
           function($q, $rootScope, $http, gnUrlUtils) {
             return {
               getThesaurusSnippet: function(thesaurus, 
-                  keywords, transformation) {
+                  keywordUris, transformation) {
                 // http://localhost:8080/geonetwork/srv/eng/
                 // xml.keyword.get?thesaurus=external.place.regions&id=&
                 // multiple=false&transformation=to-iso19139-keyword&
                 var defer = $q.defer();
-                var url = gnUrlUtils.append('xml.keyword.get@json',
+                var url = gnUrlUtils.append('thesaurus.keyword',
                     gnUrlUtils.toKeyValue({
                       thesaurus: thesaurus,
-                      id: keywords || '',
-                      multiple: false,
+                      id: keywordUris instanceof Array ?
+                          keywordUris.join(',') : keywordUris || '',
+                      multiple: keywordUris instanceof Array ? 'true' : 'false',
                       transformation: transformation || 'to-iso19139-keyword'
                     })
                     );
@@ -56,6 +57,29 @@
                     });
                 return defer.promise;
 
+              },
+
+              getKeywords: function(filter, thesaurus, max, typeSearch) {
+                var defer = $q.defer();
+                var url = gnUrlUtils.append('keywords@json',
+                    gnUrlUtils.toKeyValue({
+                      pNewSearch: 'true',
+                      pTypeSearch: typeSearch || 1,
+                      pThesauri: thesaurus,
+                      pMode: 'searchBox',
+                      maxResults: max,
+                      pKeyword: filter || ''
+                    })
+                    );
+                $http.get(url).
+                    success(function(data, status) {
+                      defer.resolve(data[0]);
+                    }).
+                    error(function(data, status) {
+                      //                TODO handle error
+                      //                defer.reject(error);
+                    });
+                return defer.promise;
               }
             };
           }];

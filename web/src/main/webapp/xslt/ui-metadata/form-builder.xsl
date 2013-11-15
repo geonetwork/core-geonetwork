@@ -392,23 +392,28 @@
             </div>
           </xsl:when>
           <xsl:otherwise>
-            <i class="btn fa fa-plus gn-add"
-              data-ng-click="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');"
-            />
+            <!-- Add custom widget to add element.
+              This could be a subtemplate (if one available), or a helper
+              like for projection.
+              The directive is in charge of displaying the default add button if needed.
+            -->
+            <xsl:choose>
+              <xsl:when test="$directive != ''">
+                <div>
+                  <xsl:attribute name="{$directive}"/>
+                  <xsl:attribute name="data-dom-id" select="$id"/>
+                  <xsl:attribute name="data-element-name" select="$qualifiedName"/>
+                  <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
+                </div>
+              </xsl:when>
+              <xsl:otherwise>
+                <i class="btn fa fa-plus gn-add"
+                  data-ng-click="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');"
+                />
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:otherwise>
         </xsl:choose>
-
-        <!-- Add custom widget to add element.
-        This could be a subtemplate (if one available), or a helper
-        like for projection. -->
-        <xsl:if test="$directive != ''">
-          <div>
-            <xsl:attribute name="{$directive}"/>
-            <xsl:attribute name="data-element-name" select="$qualifiedName"/>
-            <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
-          </div>
-        </xsl:if>
-
       </div>
     </div>
   </xsl:template>

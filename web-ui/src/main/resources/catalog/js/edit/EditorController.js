@@ -13,12 +13,12 @@
   goog.require('gn_fields');
   goog.require('gn_new_metadata_controller');
   goog.require('gn_scroll_spy');
-  goog.require('gn_thesaurus_manager_service');
+  goog.require('gn_thesaurus');
   goog.require('gn_utility_directive');
 
   var module = angular.module('gn_editor_controller',
       ['gn_fields', 'gn_new_metadata_controller', 'gn_utility_directive',
-       'gn_scroll_spy', 'gn_thesaurus_manager_service']);
+       'gn_scroll_spy', 'gn_thesaurus']);
 
   var tplFolder = '../../catalog/templates/editor/';
 
@@ -249,6 +249,11 @@
       $scope.$on('SaveEdits', function(event, refreshForm) {
         $scope.save(refreshForm);
       });
+
+      $scope.$on('AddElement', function(event, ref, name, 
+          insertRef, position, attribute) {
+            $scope.add(ref, name, insertRef, position, attribute);
+          });
 
 
 

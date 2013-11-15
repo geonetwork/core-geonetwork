@@ -42,7 +42,7 @@
               $scope.resultCount = data.count;
             });
       };
-      
+
       $scope.triggerSearch();
     }
   ]);
