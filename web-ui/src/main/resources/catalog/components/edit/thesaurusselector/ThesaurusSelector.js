@@ -30,7 +30,7 @@
              scope.snippet = null;
              scope.snippetRef = null;
 
-             // TODO: Remove from list existing thesaurus 
+             // TODO: Remove from list existing thesaurus
              // in the record ?
              gnThesaurusManagerService.getThesaurusList().then(
              function(data) {

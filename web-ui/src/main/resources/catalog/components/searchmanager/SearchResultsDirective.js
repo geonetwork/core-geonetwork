@@ -15,7 +15,8 @@
         templateUrl: '../../catalog/components/searchmanager/partials/' +
             'searchresults.html',
         scope: {
-          resultRecords: '='
+          resultRecords: '=',
+          selection: '=selectRecords'
         },
         link: function(scope, element, attrs) {
 

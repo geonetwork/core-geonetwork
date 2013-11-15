@@ -12,24 +12,24 @@
             restrict: 'A',
             templateUrl: '../../catalog/components/onlinesrc/' +
                 'partials/addOnlinesrc.html',
-            controller: ['$scope', '$translate', function($scope, $translate) {
-              $http.get('admin.group.list@json').success(function(data) {
-                $scope.groups = data !== 'null' ? data : null;
-              });
-            }]
+            link: function(scope, element, attrs) {
+              scope.onlinesrcService = gnOnlinesrc;
+            }
           };
         }])
-  .directive('gnLinkParentMd', ['$http',
-        function($http) {
+  .directive('gnLinkParentMd', ['gnOnlinesrc',
+        function(gnOnlinesrc) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/onlinesrc/' +
                 'partials/linkParentMd.html',
-            controller: ['$scope', '$translate', function($scope, $translate) {
-              $http.get('admin.group.list@json').success(function(data) {
-                $scope.groups = data !== 'null' ? data : null;
-              });
-            }]
+            link: function(scope, element, attrs) {
+              scope.onlinesrcService = gnOnlinesrc;
+            }
           };
         }]);
+  //  .config(['gnOnlinesrc',
+  //        function(gnOnlinesrc) {
+  //
+  //  }]);
 })();

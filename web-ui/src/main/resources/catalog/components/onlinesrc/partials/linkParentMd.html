@@ -3,17 +3,12 @@
     data-ng-controller="GnSearchFormController">
     <div class="onlinesrc-container">
       <div class="form-group">
-        <label for="ownerGroup" class="col-sm-2 control-label"><span
-          data-translate="">Groups</span></label>
-        <div class="col-sm-10" groups-combo
-          data-owner-group="params.groupPublished" lang="lang"></div>
-      </div>
-
-      <div class="form-group">
         <div class="col-sm-10">
           <div class="input-group">
             <span class="input-group-addon"><i
-              class="fa fa-search" /></span> <input class="form-control"
+              class="fa fa-search" /></span>
+              <input class="form-control"
+              data-ng-change="triggerSearch()"
               type="text" data-ng-model="params.any"
               placeholder="{{'search' | translate}}" autofocus="" />
           </div>
@@ -22,14 +17,14 @@
       <div data-gn-search-form-results
         data-gn-search-form-results-mode="title"
         data-gn-search-form-results-selection-mode="local simple"
-        data-result-records="resultRecords"></div>
+        data-result-records="resultRecords"
+        data-select-records="selectRecords"></div>
     </div>
     <div class="navbar-form navbar-right">
       <button type="button" class="btn navbar-btn btn-success"
-        data-ng-click="triggerSearch()">
-        <i class="fa fa-archive" /> <span data-translate="">Create</span>
+        data-ng-click="onlinesrcService.linkToParent(selectRecords)">
+        <i class="fa fa-sitemap" /> <span data-translate="">linkToParent</span>
       </button>
     </div>
-
   </form>
 </div>
