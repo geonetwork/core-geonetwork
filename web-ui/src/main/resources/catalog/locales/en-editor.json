@@ -10,5 +10,7 @@
     "createNewMetadata": "Add a new record",
     "createMetadata": "Create",
     "inGroup": "In",
-    "addFromDictionnary": "Add from dictionnary"
+    "addFromDictionnary": "Add from dictionnary",
+    "addKeywordNotFromThesaurus": "Add new keywords",
+    "addFromThesaurus": "or select them in a thesaurus"
 }

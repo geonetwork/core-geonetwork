@@ -1,0 +1,35 @@
+<div>
+  <h2>{{thesaurusName}}</h2>
+
+  <div class="row">
+    <div class="col-lg-4">
+      <input type="text" class="form-control" placeholder="{{'keywordFilter' | translate}}"
+        data-ng-model="filter"/>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4">
+      <select multiple="" class="form-control" data-ng-model="currentSelectionLeft">
+        <option data-ng-repeat="k in results track by $index" value="{{k.value['#text']}}"
+          data-ng-dblclick="select(k)">{{k.value['#text']}}</option>
+      </select>
+    </div>
+    <div class="col-lg-1">
+      <div class="btn-group-vertical">
+        <button class="btn btn-link fa fa-angle-right" data-ng-click="select()"/>
+        <button class="btn btn-link fa fa-angle-left" data-ng-click="unselect()"/>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <select multiple="" class="form-control" data-ng-model="currentSelectionRight">
+        <option data-ng-repeat="k in selected track by $index" value="{{k.value['#text']}}"
+          data-ng-dblclick="unselect(k)">{{k.value['#text']}}</option>
+      </select>
+    </div>
+    <div class="col-lg-2"> </div>
+  </div>
+  <!-- The thesaurus snippet to insert once received -->
+  <div data-ng-if="snippet">
+    <input name="{{elementRef}}" type="hidden" value="{{snippet}}"/>
+  </div>
+</div>

@@ -9,9 +9,9 @@
      */
   module.directive('gnThesaurusSelector',
       ['$http', '$rootScope', '$timeout',
-       'gnThesaurusManagerService', 'gnMetadataManagerService',
+       'gnThesaurusService', 'gnMetadataManagerService',
        function($http, $rootScope, $timeout,
-       gnThesaurusManagerService, gnMetadataManagerService) {
+       gnThesaurusService, gnMetadataManagerService) {
 
          return {
            restrict: 'A',
@@ -20,9 +20,10 @@
            scope: {
              mode: '@gnThesaurusSelector',
              elementName: '@',
-             elementRef: '@'
+             elementRef: '@',
+             domId: '@'
            },
-           templateUrl: '../../catalog/components/edit/' +
+           templateUrl: '../../catalog/components/thesaurus/' +
            'thesaurusselector/partials/' +
            'thesaurusselector.html',
            link: function(scope, element, attrs) {
@@ -30,16 +31,21 @@
              scope.snippet = null;
              scope.snippetRef = null;
 
-             // TODO: Remove from list existing thesaurus 
+             // TODO: Remove from list existing thesaurus
              // in the record ?
-             gnThesaurusManagerService.getThesaurusList().then(
+             gnThesaurusService.getThesaurusList().then(
              function(data) {
                // TODO: Sort them
                scope.thesaurus = data;
              });
 
-             scope.add = function(thesaurusIdentifier) {
-               gnThesaurusManagerService
+             scope.add = function() {
+               $rootScope.$broadcast('AddElement',
+                   scope.elementRef, scope.elementName, scope.domId, 'before');
+             };
+
+             scope.addThesaurus = function(thesaurusIdentifier) {
+               gnThesaurusService
                .getThesaurusSnippet(thesaurusIdentifier).then(
                function(data) {
                  // Add the fragment to the form
