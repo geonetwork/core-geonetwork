@@ -11,6 +11,8 @@
     "createMetadata": "Create",
     "inGroup": "In",
     "addFromDictionnary": "Add from dictionnary",
+    "addKeywordNotFromThesaurus": "Add new keywords",
+    "addFromThesaurus": "or select them in a thesaurus",
     "addOnlinesrc" : "Add online resource",
     "linkToParent" : "Link to parent",
     "onlinesrcUploadHelp": "Drag & drop here one resource",
