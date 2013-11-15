@@ -164,7 +164,62 @@
         <xsl:with-param name="editInfo" select="gn:element"/>
         <xsl:with-param name="attributesSnippet" select="$attributes"/>
       </xsl:call-template>
-      
-    
   </xsl:template>
+  
+  <xsl:template mode="mode-iso19139" match="gmd:MD_Keywords" priority="2000">
+    <!-- TODO: never provide widget editor if thesaurus not available in the catalog -->
+    
+    <!-- Create a div which contains the JSON configuration 
+    * thesaurus: thesaurus to use
+    * keywords: list of keywords in the element
+    * transformations: list of transformations
+    * transformation: current transformation
+    -->
+    
+    <!-- Single quote are escaped inside keyword. 
+    TODO: support multilingual editing of keywords
+    -->
+    <xsl:variable name="keywords" select="string-join(gmd:keyword/*[1], ',')"/>
+    
+    <!-- Define the list of transformation mode available. -->
+    <xsl:variable name="transformations">'to-iso19139-keyword', 'to-iso19139-keyword-with-anchor', 'to-iso19139-keyword-as-xlink'</xsl:variable>
+    
+    <!-- Get current transformation mode based on XML fragement analysis -->
+    <xsl:variable name="transformation" select="if (count(gmd:keyword/gmx:Anchor) > 0) 
+      then 'to-iso19139-keyword-with-anchor' 
+      else if (@xlink:href) then 'to-iso19139-keyword-as-xlink' 
+      else 'to-iso19139-keyword'"/>
+    
+    <xsl:variable name="parentName" select="name(..)"/>
+    
+    <!-- Create custom widget: 
+      * '' for item selector, 
+      * 'combo' for simple combo, 
+      * 'list' for selection list, 
+      * 'multiplelist' for multiple selection list
+      -->
+    <xsl:variable name="widgetMode" select="''"/>
+    
+    
+    
+    <xsl:variable name="thesaurusName" select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
+    
+    <!-- The thesaurus key may be contained in the MD_Identifier field or 
+    get it from the list of thesaurus based on its title.
+    -->
+    <xsl:variable name="thesaurusKey" select="if (gmd:thesaurusName/gmd:CI_Citation/
+      gmd:identifier/gmd:MD_Identifier/gmd:code) 
+      then gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code 
+      else /root/gui/thesaurus/thesauri/thesaurus[title=$thesaurusName]/key"/>
+    
+    <div data-gn-keyword-selector="{$widgetMode}"
+      data-element-ref="{concat('_X', ../gn:element/@ref)}"
+      data-thesaurus-name="{$thesaurusName}"
+      data-thesaurus-key="{substring-after($thesaurusKey, 'geonetwork.thesaurus.')}"
+      data-keywords="{$keywords}"
+      data-transformations="{$transformations}"
+      data-current-transformation="{$transformation}"
+      ></div>
+  </xsl:template>
+  
 </xsl:stylesheet>

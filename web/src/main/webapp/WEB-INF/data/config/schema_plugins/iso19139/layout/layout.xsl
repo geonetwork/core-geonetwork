@@ -30,7 +30,7 @@
       not($isFlatMode)">
       
       <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
-      <xsl:variable name="directive" select="gn-fn-metadata:getFieldType($editorConfig, $name, '')"/>
+      <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
       
       <xsl:call-template name="render-element-to-add">
         <xsl:with-param name="label"
