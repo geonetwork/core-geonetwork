@@ -38,6 +38,7 @@
       <documentation>Edit a metadata record</documentation>
       <class name=".services.metadata.GetEditableData"/>
       <output sheet="../xslt/ui-metadata/edit/edit.xsl">
+        <call name="thesaurus" class=".services.thesaurus.GetList" />
         <call name="currTab" class=".guiservices.util.GetCurrentMDTab"/>
         <xml name="i18n" file="xml/i18n.xml"/>
       </output>

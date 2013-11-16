@@ -12,6 +12,9 @@
   <!-- The metadata record in whatever profile -->
   <xsl:variable name="metadata" select="/root/*[name(.)!='gui' and name(.) != 'request']"/>
   
+  <!-- The list of thesaurus -->
+  <xsl:variable name="listOfThesaurus" select="/root/gui/thesaurus/thesauri"/>
+  
   <!-- The metadata schema -->
   <xsl:variable name="schema" select="$metadata/gn:info/schema"/>
   <xsl:variable name="metadataUuid" select="$metadata/gn:info/uuid"/>

@@ -66,7 +66,6 @@
 		gmd:distributionInfo|
 		gmd:portrayalCatalogueInfo|
 		gmd:portrayalCatalogueCitation|
-		gmd:descriptiveKeywords|
 		gmd:thesaurusName|
 		*[name(..)='gmd:resourceConstraints']|
 		gmd:spatialRepresentationInfo|
