@@ -68,7 +68,7 @@
                       transformation: transformation || 'to-iso19139-keyword'
                     })
                     );
-                $http.get(url).
+                $http.get(url, { cache: true }).
                     success(function(data, status) {
                       // TODO: could be a global constant ?
                       var xmlDeclaration =
@@ -88,7 +88,7 @@
                 var defer = $q.defer();
                 $http.get('thesaurus@json?' +
                     'element=gmd:descriptiveKeywords&schema=' +
-                    (schema || 'iso19139')).
+                    (schema || 'iso19139'), { cache: true }).
                     success(function(data, status) {
                       var listOfThesaurus = [];
                       angular.forEach(data[0], function(k) {
@@ -116,7 +116,7 @@
                       pKeyword: filter || ''
                     })
                     );
-                $http.get(url).
+                $http.get(url, { cache: true }).
                     success(function(data, status) {
                       var listOfKeywords = [];
                       angular.forEach(data[0], function(k) {
