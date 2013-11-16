@@ -99,11 +99,14 @@
              scope.results = null;
              scope.snippet = null;
              scope.isInitialized = false;
+             scope.invalidKeywordMatch = false;
              scope.selected = [];
              scope.currentSelectionLeft = [];
              scope.currentSelectionRight = [];
              scope.initialKeywords = scope.keywords ?
                  scope.keywords.split(',') : [];
+             scope.transformationLists = scope.transformations.indexOf(',') !== -1 ?
+                 scope.transformations.split(',') : [scope.transformations];
              var sortOnSelection = true;
 
              // Check initial keywords are available in the thesaurus
@@ -126,29 +129,35 @@
                scope.isInitialized = scope.initialKeywords.length === 0;
 
                // Check that all initial keywords are in the thesaurus
+               var counter = 0;
                angular.forEach(scope.initialKeywords, function(keyword) {
                  // One keyword only and exact match search
                  gnThesaurusService.getKeywords(keyword,
                  scope.thesaurusKey, 1, 2).then(function(listOfKeywords) {
+                   counter ++;
+                   
                    listOfKeywords[0] && scope.selected.push(listOfKeywords[0]);
                    // Init done when all keywords are selected
-                   scope.isInitialized =
-                   scope.selected.length === scope.initialKeywords.length;
+                   if (counter === scope.initialKeywords.length) {
+                     scope.isInitialized = true;
+                     scope.invalidKeywordMatch =
+                       scope.selected.length !== scope.initialKeywords.length;
+
+                     // Get the matching XML snippet for the initial set of keywords
+                     // once the loaded keywords are all selected.
+                     checkState();
+                   }
                  });
                });
 
                // Then register search filter change
                scope.$watch('filter', search);
-
-               // Get the matching XML snippet for the initial set of keywords
-               // once the loaded keywords are all selected.
-               scope.$watch('isInitialized', checkState);
              };
 
              var checkState = function() {
-               if (scope.isInitialized) {
+               if (scope.isInitialized && !scope.invalidKeywordMatch) {
                  getSnippet();
-               } else {
+               } else if (scope.invalidKeywordMatch) {
                  // invalidate element ref to not trigger
                  // an update of the record with an invalid
                  // state ie. keywords not loaded properly
@@ -173,7 +182,14 @@
                  });
                });
              };
-
+             scope.setTransformation = function(t) {
+               scope.currentTransformation = t;
+               getSnippet();
+               return false;
+             }
+             scope.isCurrent = function(t) {
+               return t === scope.currentTransformation;
+             }
              var getKeywordIds = function() {
                var ids = [];
                angular.forEach(scope.selected, function(k) {
@@ -185,7 +201,7 @@
              var getSnippet = function() {
                gnThesaurusService
               .getXML(scope.thesaurusKey,
-               getKeywordIds(), scope.transformation).then(
+               getKeywordIds(), scope.currentTransformation).then(
                function(data) {
                  scope.snippet = data;
                });
