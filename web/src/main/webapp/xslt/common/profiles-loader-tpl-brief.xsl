@@ -37,6 +37,8 @@
   <xsl:include href="blanks/metadata-schema20/layout/tpl-brief.xsl"/>
   
   
+  <xsl:template match="*[name() = 'summary']" mode="brief"/>
+  
   <xsl:template match="*" mode="brief">
     <xsl:variable name="schema" select="gn:info/schema"/>
     <xsl:variable name="briefSchemaCallBack" select="concat($schema,'Brief')"/>

@@ -21,6 +21,10 @@
   <xsl:variable name="i18n" select="/root/gui/i18n"/>
   <xsl:variable name="lang" select="/root/gui/language"/>
   
+  <!-- XSL using this variable should be refactored to not rely on the
+  old i18n files. FIXME eg. metadata-fop.xsl -->
+  <xsl:variable name="oldGuiStrings" select="/root/gui/strings"/>
+  
   <xsl:variable name="isDebugMode" select="/root/request/debug"/>
   <xsl:variable name="isReadOnly" select="/root/gui/env/readonly = 'true'"/>
   <xsl:variable name="withD3" select="$service = 'admin.console'"/>
