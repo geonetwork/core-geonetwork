@@ -77,7 +77,7 @@
 
                 // Select the default one or the first one
                 if (defaultType && $.inArray(defaultType, $scope.mdTypes)) {
-                  $scope.getTemplateNamesByType(dataset);
+                  $scope.getTemplateNamesByType(defaultType);
                 } else if ($scope.mdTypes[0]) {
                   $scope.getTemplateNamesByType($scope.mdTypes[0]);
                 } else {
