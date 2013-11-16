@@ -22,12 +22,16 @@
     'gnSearchManagerService',
     'gnUrlUtils',
     function($scope, gnSearchManagerService, gnUrlUtils) {
-      var serviceUrl = 'qi@json?fast=index';
+      var defaultServiceUrl = 'qi@json';
+      var defaultParams = {
+        fast: 'index'
+      };
       $scope.resultRecords = [];
       $scope.resultCount = 0;
 
-      var composeUrl = function() {
-        var url = serviceUrl;
+      var composeUrl = function(service) {
+        var url = service || defaultServiceUrl;
+        $scope.params = $.extend($scope.params, defaultParams);
         for (param in $scope.params) {
           url = gnUrlUtils.append(url,
               param + '=' + $scope.params[param]);
@@ -35,15 +39,19 @@
         return url;
       };
 
-      $scope.triggerSearch = function() {
-        gnSearchManagerService.search(composeUrl()).then(
+      $scope.triggerSearch = function(service) {
+        gnSearchManagerService.search(composeUrl(service)).then(
             function(data) {
               $scope.resultRecords = data.metadata;
               $scope.resultCount = data.count;
             });
       };
+      $scope.clearResults = function() {
+        $scope.resultRecords = null;
+        $scope.resultCount = null;
+      };
 
-      $scope.triggerSearch();
+      //      $scope.triggerSearch();
     }
   ]);
 })();

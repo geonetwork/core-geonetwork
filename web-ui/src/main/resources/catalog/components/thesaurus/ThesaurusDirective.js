@@ -48,9 +48,9 @@
                .getXML(thesaurusIdentifier).then(
                function(data) {
                  // Add the fragment to the form
-                 scope.snippet = gnThesaurusService.
+                 scope.snippet = gnMetadataManagerService.
                  buildXML(scope.elementName, data);
-                 scope.snippetRef = gnThesaurusService.
+                 scope.snippetRef = gnMetadataManagerService.
                  buildXMLFieldName(scope.elementRef, scope.elementName);
 
 
@@ -105,7 +105,8 @@
              scope.currentSelectionRight = [];
              scope.initialKeywords = scope.keywords ?
                  scope.keywords.split(',') : [];
-             scope.transformationLists = scope.transformations.indexOf(',') !== -1 ?
+             scope.transformationLists =
+                 scope.transformations.indexOf(',') !== -1 ?
                  scope.transformations.split(',') : [scope.transformations];
              var sortOnSelection = true;
 
@@ -134,16 +135,17 @@
                  // One keyword only and exact match search
                  gnThesaurusService.getKeywords(keyword,
                  scope.thesaurusKey, 1, 2).then(function(listOfKeywords) {
-                   counter ++;
-                   
+                   counter++;
+
                    listOfKeywords[0] && scope.selected.push(listOfKeywords[0]);
                    // Init done when all keywords are selected
                    if (counter === scope.initialKeywords.length) {
                      scope.isInitialized = true;
                      scope.invalidKeywordMatch =
-                       scope.selected.length !== scope.initialKeywords.length;
+                     scope.selected.length !== scope.initialKeywords.length;
 
-                     // Get the matching XML snippet for the initial set of keywords
+                     // Get the matching XML snippet for
+                     // the initial set of keywords
                      // once the loaded keywords are all selected.
                      checkState();
                    }
@@ -186,10 +188,10 @@
                scope.currentTransformation = t;
                getSnippet();
                return false;
-             }
+             };
              scope.isCurrent = function(t) {
                return t === scope.currentTransformation;
-             }
+             };
              var getKeywordIds = function() {
                var ids = [];
                angular.forEach(scope.selected, function(k) {

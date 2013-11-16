@@ -5,7 +5,7 @@
 
   module.factory('Keyword', function() {
     function Keyword(k) {
-      this.props = jQuery.extend(true, {}, k);
+      this.props = $.extend(true, {}, k);
     };
     Keyword.prototype = {
       getId: function() {
@@ -21,7 +21,7 @@
 
   module.factory('Thesaurus', function() {
     function Thesaurus(k) {
-      this.props = jQuery.extend(true, {}, k);
+      this.props = $.extend(true, {}, k);
     };
     Thesaurus.prototype = {
       getKey: function() {
@@ -80,29 +80,6 @@
                       //                defer.reject(error);
                     });
                 return defer.promise;
-              },
-              /**
-               * Create an XML fragment to be inserted in a form field.
-               * The element name will be the parent element of the
-               * snippet provided. It has to be in the gmd: namespace.
-               *
-               * TODO : could be nice to have namespaces as global constant
-               */
-              buildXML: function(elementName, snippet) {
-                var tokens = [
-                  '<', elementName,
-                  " xmlns:gmd='http://www.isotc211.org/2005/gmd'>",
-                  snippet, '</', elementName, '>'];
-                return tokens.join('');
-              },
-              /**
-               * Build a field name for an XML field
-               * TODO: move to editor service
-               */
-              buildXMLFieldName: function(elementRef, elementName) {
-                var t = ['_X', elementRef,
-                         '_', elementName.replace(':', 'COLON')];
-                return t.join('');
               },
               /**
                * Get thesaurus list.

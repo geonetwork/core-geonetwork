@@ -1,9 +1,40 @@
-<div class="input-group">
-  <span class="input-group-btn">
-    <button class="btn btn-default" type="button">
-      <i class="fa fa-book"/>
-      <span data-translate="">addFromDictionnary</span>
-    </button>
-  </span>
-  <input type="text" class="form-control" placeholder="{{'searchAContact' | translate}}"/>
-</div>
+<span data-ng-controller="GnSearchFormController">
+  <div class="input-group">
+    <span class="input-group-btn">
+      <button class="btn btn-default" type="button">
+        <i class="fa fa-book"/>
+        <span data-translate="">addFromDictionnary</span>
+      </button>
+    </span>
+
+    <!-- subtemplates only -->
+    <input type="hidden" data-ng-model="params._isTemplate" ng-init="params._isTemplate='s'"/>
+    <input type="hidden" data-ng-model="params.fast" ng-init="params.fast='false'"/>
+
+    <!-- Contact only -->
+    <input type="hidden" data-ng-model="params._root"
+      ng-init="params._root='gmd:CI_ResponsibleParty'"/>
+
+    <input type="text" class="form-control" placeholder="{{'searchAContact' | translate}}"
+      data-ng-model="params.any" data-ng-change="triggerSearch('qi@json')"/>
+
+    <div class="list-group" style="position: absolute; z-index:2">
+      <li class="list-group-item" data-ng-repeat="r in resultRecords">
+        <p class="list-group-item-text">
+          {{r.title}}
+          <div class="btn-group pull-right">
+            <button class="btn btn-link" data-ng-click="addContact(r)" data-translate=""
+              alt="{{'addContactAsText-help' | translate}}">addContactAsText</button>
+            <button class="btn btn-link" data-ng-click="addContact(r, true)" data-translate=""
+              alt="{{'addContactAsLink-help' | translate}}">addContactAsLink</button>
+          </div>
+        </p>
+      </li>
+    </div>
+    <!-- The contact to insert once received -->
+    <div data-ng-if="snippet">
+      <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
+    </div>
+  </div>
+
+</span>

@@ -146,6 +146,8 @@
               });
       return defer.promise;
     };
+
+
     return {
       search: search,
       register: register
