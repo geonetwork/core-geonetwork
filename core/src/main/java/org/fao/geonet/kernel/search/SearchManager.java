@@ -739,34 +739,15 @@ public class SearchManager {
                                    List<Element> moreFields, MetadataType metadataType, String title,
                                    boolean group) throws Exception
      {
-        
-		Element xmlDoc;
+        if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+            Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n" + Xml.getString(metadata));
+        }
 
-		// check for subtemplates
-		if (metadataType == MetadataType.SUB_TEMPLATE) {
-			// create empty document with only title and "any" fields
-			xmlDoc = new Element("Document");
+        Element xmlDoc = getIndexFields(schemaDir, metadata);
 
-			Element defaultDoc = new Element("Document");
-            defaultDoc.setAttribute(Geonet.LUCENE_LOCALE_KEY, Geonet.DEFAULT_LANGUAGE);
-            xmlDoc.addContent(defaultDoc);
-
-           StringBuilder sb = new StringBuilder();
-			allText(metadata, sb);
-			SearchManager.addField(defaultDoc, LuceneIndexField.TITLE, title, true, true);
-			SearchManager.addField(defaultDoc, LuceneIndexField.ANY, sb.toString(), true, true);
-		} else {
-            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n" + Xml.getString(metadata));
-            }
-
-            xmlDoc = getIndexFields(schemaDir, metadata);
-
-            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n" + Xml.getString(xmlDoc));
-            }
-		}
-
+        if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+            Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n" + Xml.getString(xmlDoc));
+        }
         @SuppressWarnings(value = "unchecked")
         List<Element> documentElements = xmlDoc.getContent();
         Collection<Field> multilingualSortFields = findMultilingualSortElements(documentElements);
