@@ -47,8 +47,9 @@
                    // Save the metadata and refresh the form
                    $rootScope.$broadcast('SaveEdits', true);
                  });
-
                });
+               
+               return false;
              };
              scope.openSelector = function() {
                console.log('open');

@@ -19,16 +19,15 @@
       data-ng-model="params.any" data-ng-change="triggerSearch('qi@json')"/>
 
     <div class="list-group" style="position: absolute; z-index:2">
-      <li class="list-group-item" data-ng-repeat="r in resultRecords">
-        <p class="list-group-item-text">
+      <li href="" class="list-group-item" data-ng-repeat="r in resultRecords">
           {{r.title}}
-          <div class="btn-group pull-right">
-            <button class="btn btn-link" data-ng-click="addContact(r)" data-translate=""
-              alt="{{'addContactAsText-help' | translate}}">addContactAsText</button>
-            <button class="btn btn-link" data-ng-click="addContact(r, true)" data-translate=""
-              alt="{{'addContactAsLink-help' | translate}}">addContactAsLink</button>
-          </div>
-        </p>
+          <span class="pull-right">
+            <!-- TODO: Display only if XLink enable -->
+            <a href="" data-ng-click="addContact(r, true)" class="fa fa-link pull-right"
+              title="{{'addContactAsLink-help' | translate}}"></a>
+            <a href="" data-ng-click="addContact(r)" class="fa fa-plus pull-right"
+                title="{{'addContactAsText-help' | translate}}"></a>
+          </span>
       </li>
     </div>
     <!-- The contact to insert once received -->
