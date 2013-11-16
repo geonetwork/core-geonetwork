@@ -3,8 +3,9 @@
 
 
 
-  goog.require('gn_thesaurus_service');
+
   goog.require('gn_thesaurus_directive');
+  goog.require('gn_thesaurus_service');
 
   angular.module('gn_thesaurus', [
     'gn_thesaurus_service',

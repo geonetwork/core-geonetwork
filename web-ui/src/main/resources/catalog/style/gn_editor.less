@@ -20,6 +20,14 @@ form.gn-editor {
     padding-left: @editor-fieldset-padding-left;
   }
   
+  .form-group {
+    margin-bottom: 10px;
+  }
+  
+  legend {
+    margin-bottom: 10px;
+  }
+  
   /**
    * Define a minimum height. It could be
    * better to extend the textarea according
@@ -51,6 +59,13 @@ form.gn-editor {
   .btn:hover {
     color: #000;
   }
+  
+  /**
+   * Keyword selector directive
+   */
+   *[data-gn-keyword-selector] {
+       margin-bottom: 10px;
+   }
 }
 
 /* Onlinesrc styles */

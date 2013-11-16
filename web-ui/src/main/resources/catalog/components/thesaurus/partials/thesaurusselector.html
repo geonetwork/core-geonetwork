@@ -1,4 +1,4 @@
-<span>
+<div>
   <div class="btn-group">
     <button class="btn btn-default" type="button" data-ng-click="add()">
       <i class="fa fa-plus gn-add"/>
@@ -12,7 +12,7 @@
       </button>
       <ul class="dropdown-menu">
         <li data-ng-repeat="t in thesaurus | orderBy:'title'">
-          <a href="" data-ng-click="addThesaurus(t.key)">{{t.title}}</a>
+          <a href="" data-ng-click="addThesaurus(t.getKey())">{{t.getTitle()}}</a>
         </li>
       </ul>
     </div>
@@ -21,4 +21,4 @@
   <div data-ng-if="snippet">
     <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
   </div>
-</span>
+</div>

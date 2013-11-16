@@ -26,16 +26,16 @@
            templateUrl: '../../catalog/components/thesaurus/' +
            'partials/thesaurusselector.html',
            link: function(scope, element, attrs) {
-             scope.thesaurus = {};
+             scope.thesaurus = null;
              scope.snippet = null;
              scope.snippetRef = null;
 
              // TODO: Remove from list existing thesaurus
              // in the record ?
-             gnThesaurusService.getThesaurusList().then(
-             function(data) {
+             gnThesaurusService.getAll().then(
+             function(listOfThesaurus) {
                // TODO: Sort them
-               scope.thesaurus = data;
+               scope.thesaurus = listOfThesaurus;
              });
 
              scope.add = function() {
@@ -45,22 +45,19 @@
 
              scope.addThesaurus = function(thesaurusIdentifier) {
                gnThesaurusService
-               .getThesaurusSnippet(thesaurusIdentifier).then(
+               .getXML(thesaurusIdentifier).then(
                function(data) {
                  // Add the fragment to the form
-                 scope.snippet = '<' + scope.elementName +
-                 " xmlns:gmd='http://www.isotc211.org/2005/gmd'>" +
-                 data + '</' + scope.elementName + '>';
-                 scope.snippetRef = '_X' + scope.elementRef +
-                 '_' + scope.elementName.replace(':', 'COLON');
+                 scope.snippet = gnThesaurusService.
+                 buildXML(scope.elementName, data);
+                 scope.snippetRef = gnThesaurusService.
+                 buildXMLFieldName(scope.elementRef, scope.elementName);
 
-                 // FIXME : time out may not be the best options.
-                 // We need to have the form updated before saving
-                 // edits
+
                  $timeout(function() {
                    // Save the metadata and refresh the form
                    $rootScope.$broadcast('SaveEdits', true);
-                 }, 200);
+                 });
 
                });
                return false;
@@ -77,8 +74,9 @@
   module.directive('gnKeywordSelector',
       ['$http', '$rootScope', '$timeout',
        'gnThesaurusService', 'gnMetadataManagerService',
+       'Keyword',
        function($http, $rootScope, $timeout,
-       gnThesaurusService, gnMetadataManagerService) {
+       gnThesaurusService, gnMetadataManagerService, Keyword) {
 
          return {
            restrict: 'A',
@@ -87,7 +85,6 @@
            scope: {
              mode: '@gnKeywordSelector',
              elementRef: '@',
-             thesaurusName: '@',
              thesaurusKey: '@',
              keywords: '@',
              transformations: '@',
@@ -97,10 +94,11 @@
            'partials/keywordselector.html',
            link: function(scope, element, attrs) {
 
-             scope.max = 200;
+             scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
              scope.filter = null;
              scope.results = null;
              scope.snippet = null;
+             scope.isInitialized = false;
              scope.selected = [];
              scope.currentSelectionLeft = [];
              scope.currentSelectionRight = [];
@@ -111,44 +109,64 @@
              // Check initial keywords are available in the thesaurus
 
              var sort = function(a, b) {
-               if (a.value['#text'].toLowerCase() <
-               b.value['#text'].toLowerCase()) {
+               if (a.getLabel().toLowerCase() <
+               b.getLabel().toLowerCase()) {
                  return -1;
                }
-               if (a.value['#text'].toLowerCase() >
-               b.value['#text'].toLowerCase()) {
+               if (a.getLabel().toLowerCase() >
+               b.getLabel().toLowerCase()) {
                  return 1;
                }
                return 0;
              };
 
              var init = function() {
+
+               // Nothing to load - init done
+               scope.isInitialized = scope.initialKeywords.length === 0;
+
                // Check that all initial keywords are in the thesaurus
                angular.forEach(scope.initialKeywords, function(keyword) {
                  // One keyword only and exact match search
                  gnThesaurusService.getKeywords(keyword,
-                 scope.thesaurusKey, 1, 2).then(function(data) {
-                   scope.selected.push(data[0]);
+                 scope.thesaurusKey, 1, 2).then(function(listOfKeywords) {
+                   listOfKeywords[0] && scope.selected.push(listOfKeywords[0]);
+                   // Init done when all keywords are selected
+                   scope.isInitialized =
+                   scope.selected.length === scope.initialKeywords.length;
                  });
                });
 
-               // Get the matching XML snippet for the initial set of keywords
-               getSnippet();
-
                // Then register search filter change
                scope.$watch('filter', search);
+
+               // Get the matching XML snippet for the initial set of keywords
+               // once the loaded keywords are all selected.
+               scope.$watch('isInitialized', checkState);
              };
+
+             var checkState = function() {
+               if (scope.isInitialized) {
+                 getSnippet();
+               } else {
+                 // invalidate element ref to not trigger
+                 // an update of the record with an invalid
+                 // state ie. keywords not loaded properly
+                 scope.elementRef = '';
+               }
+             };
+
 
              var search = function() {
                gnThesaurusService.getKeywords(scope.filter,
                scope.thesaurusKey, scope.max)
-              .then(function(data) {
+              .then(function(listOfKeywords) {
                  // Remove from search already selected keywords
-                 scope.results = $.grep(data, function(n) {
+                 scope.results = $.grep(listOfKeywords, function(n) {
                    var alreadySelected = true;
                    if (scope.selected.length !== 0) {
                      alreadySelected = $.grep(scope.selected, function(s) {
-                       return s.value['#text'] === n.value['#text'];
+                       return s.getLabel() === n.getLabel();
                      }).length === 0;
                    }
                    return alreadySelected;
@@ -159,14 +177,14 @@
              var getKeywordIds = function() {
                var ids = [];
                angular.forEach(scope.selected, function(k) {
-                 ids.push(k.uri);
+                 ids.push(k.getId());
                });
                return ids;
              };
 
              var getSnippet = function() {
                gnThesaurusService
-              .getThesaurusSnippet(scope.thesaurusKey,
+              .getXML(scope.thesaurusKey,
                getKeywordIds(), scope.transformation).then(
                function(data) {
                  scope.snippet = data;
@@ -182,7 +200,7 @@
                if (!k) {
                  angular.forEach(scope.currentSelectionLeft, function(value) {
                    elementsToAdd.push($.grep(scope.results, function(n) {
-                     return n.value['#text'] === value;
+                     return n.getLabel() === value;
                    })[0]);
                  });
                } else {
@@ -206,10 +224,10 @@
 
              scope.unselect = function(k) {
                var elementsToRemove = k ?
-                   [k.value['#text']] : scope.currentSelectionRight;
+                   [k.getLabel()] : scope.currentSelectionRight;
                scope.selected = $.grep(scope.selected, function(n) {
                  var toUnselect =
-                 $.inArray(n.value['#text'], elementsToRemove) !== -1;
+                 $.inArray(n.getLabel(), elementsToRemove) !== -1;
                  if (toUnselect) {
                    scope.results.push(n);
                  }

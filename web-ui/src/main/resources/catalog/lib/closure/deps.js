@@ -24,7 +24,7 @@ goog.addDependency('../../components/metadatamanager/MetadataManagerModule.js', 
 goog.addDependency('../../components/metadatamanager/MetadataManagerService.js', ['gn_metadata_manager_service'], []);
 goog.addDependency('../../components/onlinesrc/OnlineSrcDirective.js', ['gn_onlinesrc_directive'], ['gn_utility']);
 goog.addDependency('../../components/onlinesrc/OnlineSrcModule.js', ['gn_onlinesrc'], ['gn_onlinesrc_directive', 'gn_onlinesrc_service']);
-goog.addDependency('../../components/onlinesrc/OnlineSrcService.js', ['gn_onlinesrc_service'], ['gn_urlutils_service']);
+goog.addDependency('../../components/onlinesrc/OnlineSrcService.js', ['gn_onlinesrc_service'], []);
 goog.addDependency('../../components/pagination/PaginationDirective.js', ['gn_pagination_directive'], []);
 goog.addDependency('../../components/pagination/PaginationModule.js', ['gn_pagination'], ['gn_pagination_directive']);
 goog.addDependency('../../components/popup/DraggableDirective.js', ['gn_draggable_directive'], []);
@@ -42,9 +42,8 @@ goog.addDependency('../../components/searchresults/SearchResultsModule.js', ['gn
 goog.addDependency('../../components/thesaurus-type/ThesaurusTypeDirective.js', ['gn_thesaurus_type_directive'], []);
 goog.addDependency('../../components/thesaurus-type/ThesaurusTypeModule.js', ['gn_thesaurus_type'], ['gn_thesaurus_type_directive']);
 goog.addDependency('../../components/thesaurus/ThesaurusDirective.js', ['gn_thesaurus_directive'], []);
-goog.addDependency('../../components/thesaurus/ThesaurusModule.js', ['gn_thesaurus'], ['gn_keyword_selector', 'gn_thesaurus_directive']);
+goog.addDependency('../../components/thesaurus/ThesaurusModule.js', ['gn_thesaurus'], ['gn_thesaurus_directive', 'gn_thesaurus_service']);
 goog.addDependency('../../components/thesaurus/ThesaurusService.js', ['gn_thesaurus_service'], []);
-goog.addDependency('../../components/thesaurus/keywordselector/KeywordSelector.js', ['gn_keyword_selector'], []);
 goog.addDependency('../../components/utility/UtilityDirective.js', ['gn_utility_directive'], []);
 goog.addDependency('../../components/utility/UtilityModule.js', ['gn_utility'], ['gn_utility_directive', 'gn_utility_service']);
 goog.addDependency('../../components/utility/UtilityService.js', ['gn_utility_service'], []);
