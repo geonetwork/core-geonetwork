@@ -9,6 +9,15 @@
   <xsl:include href="utility-fn.xsl"/>
 
 
+  <!-- Get the main metadata languages - none for ISO19110 -->
+  <xsl:template name="get-dublin-core-language">
+    <xsl:value-of select="$metadata/descendant::node()/dc:language[1]"/>
+  </xsl:template>
+  
+  <!-- Get the list of other languages -->
+  <xsl:template name="get-dublin-core-other-languages"/>
+
+
   <!-- Visit all tree -->
   <xsl:template mode="mode-dublin-core" match="dc:*|dct:*">
     <xsl:apply-templates mode="mode-dublin-core" select="*|@*"/>

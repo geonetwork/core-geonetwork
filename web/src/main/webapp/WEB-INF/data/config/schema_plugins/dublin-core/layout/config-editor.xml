@@ -23,8 +23,13 @@
         <section xpath="/simpledc"/>
       </tab>
     </view>
+    <view name="advanced">
+      <tab id="advanced">
+        <section xpath="/simpledc"/>
+      </tab>
+    </view>
     <view name="xml">
-      <tab id="xml" default="true"/>
+      <tab id="xml"/>
     </view>
   </views>
 </editor>
