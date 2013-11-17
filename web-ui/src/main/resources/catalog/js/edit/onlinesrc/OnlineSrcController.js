@@ -8,7 +8,7 @@
   /**
    * Metadata editor controller - draft
    */
-  module.controller('GnOnlineSrcController', [
+  module.controller('GnOnlineSrcControllerDepecrated', [
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
     'gnMetadataManagerService',
     'gnSearchManagerService',

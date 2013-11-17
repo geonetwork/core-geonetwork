@@ -512,6 +512,10 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.processing.batch!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.processing.new!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.processing.batch.report!?.*" access="hasRole('Editor')"/>
+
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.relations.get!?.*" access="permitAll"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/config-service-admin-batchprocess.xml!?.*" access="hasRole('Editor')"/>
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw-publication!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw-.*" access="permitAll"/>

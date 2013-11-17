@@ -50,7 +50,7 @@
         <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
         
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
-        
+        <script src="{$uiResourcesPath}lib/ol.js"></script>
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
           <script src="{$uiResourcesPath}lib/d3.ext/gauge.js"></script>
