@@ -101,18 +101,16 @@
              scope.isInitialized = false;
              scope.invalidKeywordMatch = false;
              scope.selected = [];
-             scope.currentSelectionLeft = [];
-             scope.currentSelectionRight = [];
              scope.initialKeywords = scope.keywords ?
                  scope.keywords.split(',') : [];
              scope.transformationLists =
                  scope.transformations.indexOf(',') !== -1 ?
                  scope.transformations.split(',') : [scope.transformations];
-             var sortOnSelection = true;
+
 
              // Check initial keywords are available in the thesaurus
 
-             var sort = function(a, b) {
+             scope.sortKeyword = function(a, b) {
                if (a.getLabel().toLowerCase() <
                b.getLabel().toLowerCase()) {
                  return -1;
@@ -129,28 +127,33 @@
                // Nothing to load - init done
                scope.isInitialized = scope.initialKeywords.length === 0;
 
-               // Check that all initial keywords are in the thesaurus
-               var counter = 0;
-               angular.forEach(scope.initialKeywords, function(keyword) {
-                 // One keyword only and exact match search
-                 gnThesaurusService.getKeywords(keyword,
-                 scope.thesaurusKey, 1, 2).then(function(listOfKeywords) {
-                   counter++;
+               if (scope.initialKeywords.length === 0) {
+                 checkState();
+               } else {
+                 // Check that all initial keywords are in the thesaurus
+                 var counter = 0;
+                 angular.forEach(scope.initialKeywords, function(keyword) {
+                   // One keyword only and exact match search
+                   gnThesaurusService.getKeywords(keyword,
+                   scope.thesaurusKey, 1, 2).then(function(listOfKeywords) {
+                     counter++;
 
-                   listOfKeywords[0] && scope.selected.push(listOfKeywords[0]);
-                   // Init done when all keywords are selected
-                   if (counter === scope.initialKeywords.length) {
-                     scope.isInitialized = true;
-                     scope.invalidKeywordMatch =
-                     scope.selected.length !== scope.initialKeywords.length;
+                     listOfKeywords[0] &&
+                     scope.selected.push(listOfKeywords[0]);
+                     // Init done when all keywords are selected
+                     if (counter === scope.initialKeywords.length) {
+                       scope.isInitialized = true;
+                       scope.invalidKeywordMatch =
+                       scope.selected.length !== scope.initialKeywords.length;
 
-                     // Get the matching XML snippet for
-                     // the initial set of keywords
-                     // once the loaded keywords are all selected.
-                     checkState();
-                   }
+                       // Get the matching XML snippet for
+                       // the initial set of keywords
+                       // once the loaded keywords are all selected.
+                       checkState();
+                     }
+                   });
                  });
-               });
+               }
 
                // Then register search filter change
                scope.$watch('filter', search);
@@ -159,6 +162,9 @@
              var checkState = function() {
                if (scope.isInitialized && !scope.invalidKeywordMatch) {
                  getSnippet();
+
+                 scope.$watch('results', getSnippet);
+                 scope.$watch('selected', getSnippet);
                } else if (scope.invalidKeywordMatch) {
                  // invalidate element ref to not trigger
                  // an update of the record with an invalid
@@ -207,56 +213,6 @@
                function(data) {
                  scope.snippet = data;
                });
-             };
-
-             /**
-             * Select a single element or the list of currently
-             * selected element.
-             */
-             scope.select = function(k) {
-               var elementsToAdd = [];
-               if (!k) {
-                 angular.forEach(scope.currentSelectionLeft, function(value) {
-                   elementsToAdd.push($.grep(scope.results, function(n) {
-                     return n.getLabel() === value;
-                   })[0]);
-                 });
-               } else {
-                 elementsToAdd.push(k);
-               }
-
-               angular.forEach(elementsToAdd, function(k) {
-                 scope.selected.push(k);
-                 scope.results = $.grep(scope.results, function(n) {
-                   return n !== k;
-                 });
-               });
-
-               if (sortOnSelection) {
-                 scope.selected.sort(sort);
-               }
-
-               getSnippet();
-             };
-
-
-             scope.unselect = function(k) {
-               var elementsToRemove = k ?
-                   [k.getLabel()] : scope.currentSelectionRight;
-               scope.selected = $.grep(scope.selected, function(n) {
-                 var toUnselect =
-                 $.inArray(n.getLabel(), elementsToRemove) !== -1;
-                 if (toUnselect) {
-                   scope.results.push(n);
-                 }
-                 return !toUnselect;
-               });
-
-               if (sortOnSelection) {
-                 scope.results.sort(sort);
-               }
-
-               getSnippet();
              };
 
              if (scope.thesaurusKey) {

@@ -48,7 +48,7 @@
                    $rootScope.$broadcast('SaveEdits', true);
                  });
                });
-               
+
                return false;
              };
              scope.openSelector = function() {

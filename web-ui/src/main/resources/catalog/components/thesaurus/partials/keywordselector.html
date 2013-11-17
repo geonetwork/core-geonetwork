@@ -25,26 +25,9 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-4 col-md-offset-2">
-        <select multiple="" class="form-control" data-ng-model="currentSelectionLeft">
-          <option data-ng-repeat="k in results track by $index" value="{{k.getLabel()}}"
-            data-ng-dblclick="select(k)">{{k.getLabel()}}</option>
-        </select>
-      </div>
-      <div class="col-md-1">
-        <div class="btn-group-vertical">
-          <button class="btn btn-link fa fa-angle-right" data-ng-click="select()"/>
-          <button class="btn btn-link fa fa-angle-left" data-ng-click="unselect()"/>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <select multiple="" class="form-control" data-ng-model="currentSelectionRight">
-          <option data-ng-repeat="k in selected track by $index" value="{{k.getLabel()}}"
-            data-ng-dblclick="unselect(k)">{{k.getLabel()}}</option>
-        </select>
-      </div>
-    </div>
+    
+    <div data-gn-multiselect="selected" data-choices="results" data-sort-fn="sortKeyword"></div>
+    
     <!-- The thesaurus snippet to insert once received -->
     <div>
       <input name="{{elementRef}}" type="hidden" value="{{snippet}}"/>
