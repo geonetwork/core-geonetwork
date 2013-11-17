@@ -36,6 +36,7 @@
       // Could be avoided if a new index field is created FIXME ?
       var dataTypesToExclude = ['staticMap'];
       var defaultType = 'dataset';
+      var unknownType = 'unknownType';
       var fullPrivileges = true;
 
       $scope.getTypeIcon = function(type) {
@@ -59,7 +60,7 @@
 
                 var types = [];
                 for (var i = 0; i < data.metadata.length; i++) {
-                  var type = data.metadata[i].type;
+                  var type = data.metadata[i].type || unknownType;
                   if (type instanceof Array) {
                     for (var j = 0; j < type.length; j++) {
                       if (!$.inArray(type[j], dataTypesToExclude) &&
@@ -67,8 +68,7 @@
                         types.push(type[j]);
                       }
                     }
-                  }
-                  else if (types.indexOf(type) < 0 && type) {
+                  } else if (types.indexOf(type) < 0 && type) {
                     types.push(type);
                   }
                 }
@@ -90,7 +90,7 @@
       $scope.getTemplateNamesByType = function(type) {
         var tpls = [];
         for (var i = 0; i < $scope.mdList.metadata.length; i++) {
-          var mdType = $scope.mdList.metadata[i].type;
+          var mdType = $scope.mdList.metadata[i].type || unknownType;
           if (mdType instanceof Array) {
             if (mdType.indexOf(type) >= 0) {
               tpls.push($scope.mdList.metadata[i]);
