@@ -25,8 +25,12 @@
                   });
               return defer.promise;
             };
-
+            var NAMESPACES = {
+                gmd: 'http://www.isotc211.org/2005/gmd',
+                gfc: 'http://www.isotc211.org/2005/gfc'
+              };
             return {
+              NAMESPACES: NAMESPACES,
               // TODO : move select to SearchManagerService
               select: function(uuid, andClearSelection) {
                 return _select(uuid, andClearSelection, 'add');
@@ -89,9 +93,17 @@
                       '<?xml version="1.0" encoding="UTF-8"?>';
                   snippet = snippet.replace(xmlDeclaration, '');
                 }
+                
+                var ns = elementName.split(':');
+                var nsDeclaration = [];
+                if (ns.length === 2) {
+                  nsDeclaration = ['xmlns:', ns[0], "='", 
+                                   NAMESPACES[ns[0]], "'"];
+                }
+                
                 var tokens = [
                   '<', elementName,
-                  " xmlns:gmd='http://www.isotc211.org/2005/gmd'>",
+                  " ", nsDeclaration.join(''), '>',
                   snippet, '</', elementName, '>'];
                 return tokens.join('');
               }

@@ -8,6 +8,8 @@
     <for name="gfc:fieldOfApplication" use="textarea"/>
     <for name="gmx:scope" use="textarea"/>
     <for name="gmx:fieldOfApplication" use="textarea"/>
+    
+    <for name="gfc:producer" addDirective="data-gn-directory-entry-selector"/>
   </fields>
 
   <!-- View configuration -->
