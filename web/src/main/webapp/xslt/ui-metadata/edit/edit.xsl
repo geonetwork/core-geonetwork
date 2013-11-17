@@ -52,10 +52,13 @@
     <form id="gn-editor-{$metadataId}" name="gnEditor" accept-charset="UTF-8" method="POST"
       novalidate="" class="form-horizontal gn-editor" role="form" 
       data-spy="scroll" data-target="#gn-editor-{$metadataId}-spy">
+      
       <input type="hidden" id="schema" value="{$schema}"/>
       <input type="hidden" id="template" name="template" value="{$isTemplate}"/>
       <input type="hidden" id="uuid" value="{$metadataUuid}"/>
       <input type="hidden" name="id" value="{$metadataId}"/>
+      <input type="hidden" name="language" value="{$metadataLanguage}"/>
+      <input type="hidden" name="otherLanguages" value="{$metadataOtherLanguages}"/>
       <input type="hidden" id="version" name="version" value="{$metadata/gn:info/version}"/>
       <input type="hidden" id="currTab" name="currTab" value="{$tab}"/>
       <input type="hidden" id="displayAttributes" name="displayAttributes"

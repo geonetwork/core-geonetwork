@@ -137,10 +137,15 @@
             ($nonExistingChildParent/* and count($nodes/*) = 0 and @ifNotExist)">
             <xsl:variable name="childName" select="@or"/>
 
+
             <xsl:for-each select="$nonExistingChildParent/*/gn:child[@name = $childName]">
+              <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
+              <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
+
               <xsl:call-template name="render-element-to-add">
                 <xsl:with-param name="label"
-                  select="gn-fn-metadata:getLabel($schema, concat(@prefix, ':', @name), $labels)/label"/>
+                  select="gn-fn-metadata:getLabel($schema, $name, $labels)/label"/>
+                <xsl:with-param name="directive" select="$directive"/>
                 <xsl:with-param name="childEditInfo" select="."/>
                 <xsl:with-param name="parentEditInfo" select="../gn:element"/>
               </xsl:call-template>

@@ -4,6 +4,24 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all">
 
 
+  <!-- Get the main metadata languages -->
+  <xsl:template name="get-iso19139-language">
+    <xsl:value-of select="$metadata/gmd:language/gco:CharacterString|
+      $metadata/gmd:language/gmd:LanguageCode/@codeListValue"></xsl:value-of>
+  </xsl:template>
+
+
+  <!-- Get the list of other languages in JSON -->
+  <xsl:template name="get-iso19139-other-languages">
+    <xsl:variable name="langs">
+    <xsl:for-each select="$metadata/gmd:locale/gmd:PT_Locale">
+      <lang><xsl:value-of select="concat(gmd:languageCode/gmd:LanguageCode/@codeListValue, ':''#', @id, '''')"/></lang>
+    </xsl:for-each>
+    </xsl:variable>
+    {<xsl:value-of select="string-join($langs/lang, ',')"/>}
+  </xsl:template>
+
+
   <!-- Template used to return a gco:CharacterString element
         in default metadata language or in a specific locale
         if exist. 

@@ -12,6 +12,13 @@
   <!-- The metadata record in whatever profile -->
   <xsl:variable name="metadata" select="/root/*[name(.)!='gui' and name(.) != 'request']"/>
   
+  <xsl:variable name="metadataLanguage">
+    <saxon:call-template name="{concat('get-', $schema, '-language')}"/>
+  </xsl:variable>
+  <xsl:variable name="metadataOtherLanguages">
+    <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
+  </xsl:variable>
+  
   <!-- The list of thesaurus -->
   <xsl:variable name="listOfThesaurus" select="/root/gui/thesaurus/thesauri"/>
   

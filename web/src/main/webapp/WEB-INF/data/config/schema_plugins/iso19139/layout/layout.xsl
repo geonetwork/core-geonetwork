@@ -31,7 +31,7 @@
       
       <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
       <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
-      
+
       <xsl:call-template name="render-element-to-add">
         <xsl:with-param name="label"
           select="gn-fn-metadata:getLabel($schema, $name, $labels)/label"/>
@@ -58,7 +58,12 @@
   <!-- Could be nice to externalize TODO
   <xsl:template mode="mode-iso19139" priority="200"
       match="*[gn-fn-core:contains-any-of(name(.), ('gmd:MD_Metadata', 'gmd:identificationInfo', 'gmd:distributionInfo'))]|
-              *[namespace-uri(.) != $gnUri and $isFlatMode = false() and gmd:*]">
+              *[namespace-uri(.) != $gnUri and $isFlatMode = false() and gmd:* and not(gco:CharacterString)]">
+      Details about the last line :
+      * namespace-uri(.) != $gnUri: Only take into account profile's element 
+      * and $isFlatMode = false(): In flat mode, don't box any
+      * and gmd:*: Match all elements having gmd child elements
+      * and not(gco:CharacterString): Don't take into account those having gco:CharacterString (eg. multilingual elements)
   -->
   <xsl:template mode="mode-iso19139" priority="200"
     match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']|
@@ -95,7 +100,7 @@
 		gmd:result/*|
 		gmd:processStep|
 		gmd:lineage|
-		*[namespace-uri(.) != $gnUri and $isFlatMode = false() and gmd:*]">
+		*[namespace-uri(.) != $gnUri and $isFlatMode = false() and gmd:* and not(gco:CharacterString)]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     
@@ -146,6 +151,11 @@
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
 
+    <!-- TODO: Support gmd:LocalisedCharacterString -->
+    <xsl:variable name="theElement" select="gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|
+      gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|
+      gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL"/>
+
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
     <xsl:variable name="labelConfig"
@@ -176,7 +186,6 @@
       </xsl:if>
     </xsl:variable>
     
-    
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelConfig/label"/>
       <xsl:with-param name="value" select="*"/>
@@ -187,11 +196,9 @@
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
       <xsl:with-param name="type"
         select="gn-fn-metadata:getFieldType($editorConfig, name(), 
-            name(gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|
-                gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|
-                gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL))"/>
-      <xsl:with-param name="name" select="if ($isEditing) then */gn:element/@ref else ''"/>
-      <xsl:with-param name="editInfo" select="*/gn:element"/>
+        name($theElement))"/>
+      <xsl:with-param name="name" select="if ($isEditing) then $theElement/gn:element/@ref else ''"/>
+      <xsl:with-param name="editInfo" select="$theElement/gn:element"/>
       <xsl:with-param name="parentEditInfo" select="gn:element"/>
       <!-- TODO: Handle conditional helper -->
       <xsl:with-param name="listOfValues" select="$helper"/>

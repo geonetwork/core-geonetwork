@@ -40,6 +40,8 @@
     <for name="gmd:electronicMailAddress" use="email"/>
     
     <for name="gmd:pointOfContact" addDirective="data-gn-directory-entry-selector"/>
+    <for name="gmd:contact" addDirective="data-gn-directory-entry-selector"/>
+    <for name="gmd:citedResponsibleParty" addDirective="data-gn-directory-entry-selector"/>
     <for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector"/>
   </fields>
 
