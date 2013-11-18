@@ -104,9 +104,9 @@
        * elements eg. tooltip ?
        */
       $scope.formLoaded = function() {
-        $scope.metadataType = $($scope.formId + ' #template')[0].value;
-        $scope.metadataLanguage = $($scope.formId + ' #language')[0].value;
-        $scope.metadataOtherLanguages =
+        $scope.editorConfig.metadataType = $($scope.formId + ' #template')[0].value;
+        $scope.editorConfig.metadataLanguage = $($scope.formId + ' #language')[0].value;
+        $scope.editorConfig.metadataOtherLanguages =
             $($scope.formId + ' #otherLanguages')[0].value;
       };
 
@@ -132,8 +132,11 @@
        * Set type of record. Update the matching form element.
        */
       $scope.setTemplate = function(isTemplate) {
-        $scope.metadataType = isTemplate ? 'y' : 'n';
-        $('#template')[0].value = $scope.metadataType;
+        $scope.editorConfig.metadataType = isTemplate ? 'y' : 'n';
+        $('#template')[0].value = $scope.editorConfig.metadataType;
+      };
+      $scope.isTemplate = function() {
+        return $scope.editorConfig.metadataType === 'y';
       };
 
       /**
@@ -177,7 +180,6 @@
         gnMetadataManagerService.save($scope.metadataId, refreshForm)
           .then(function(form) {
               $scope.toggleAttributes();
-
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('saveMetadataSuccess')
               });

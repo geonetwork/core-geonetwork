@@ -40,11 +40,13 @@
 
 
              scope.search = function() {
-               $http.get('crs.search@json?type=&maxResults=50&name=' +
-                    scope.filter).success(
-                   function(data) {
-                     scope.crsResults = data;
-                   });
+               if (scope.filter) {
+                 $http.get('crs.search@json?type=&maxResults=50&name=' +
+                      scope.filter).success(
+                     function(data) {
+                       scope.crsResults = data;
+                     });
+               }
              };
 
              // Then register search filter change

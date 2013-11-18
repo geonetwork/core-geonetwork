@@ -3,11 +3,13 @@
     <div class="form-group navbar-btn">
       <div class="btn-group">
         <button type="button" class="btn btn-default"
-          data-ng-class="{'btn-primary': metadataType == 'n'}" data-ng-click="setTemplate(false)"
-          >metadata</button>
+          data-ng-class="{'btn-primary': !isTemplate()}" data-ng-click="setTemplate(false)"
+          ><i class="fa" data-ng-class="isTemplate() ? 'fa-circle-o' : 'fa-dot-circle-o'"></i>
+          <span data-translate="">metadata</span></button>
         <button type="button" class="btn btn-default"
-          data-ng-class="{'btn-primary': metadataType == 'y'}" data-ng-click="setTemplate(true)"
-          >template</button>
+          data-ng-class="{'btn-primary': isTemplate()}" data-ng-click="setTemplate(true)"
+          ><i class="fa" data-ng-class="isTemplate() ? 'fa-dot-circle-o' : 'fa-circle-o'"></i>
+          <span data-translate="">template</span></button>
       </div>
     </div>
   </div>

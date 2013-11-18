@@ -94,6 +94,11 @@
                if (refreshForm) {
                  var snippet = $(data);
                  $(config.formId).replaceWith(snippet);
+
+                 // Compiling
+                 if (config.compileScope) {
+                   $compile(snippet)(config.compileScope);
+                 }
                }
 
                config.savedStatus = $translate('allChangesSaved');
@@ -105,11 +110,6 @@
                //          $('#gn-tooltip').tooltip();
 
                config.saving = false;
-
-               // Compiling
-               if (config.compileScope) {
-                 $compile(snippet)(config.compileScope);
-               }
 
                defer.resolve(snippet);
              }).error(function(error) {
