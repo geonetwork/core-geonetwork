@@ -52,7 +52,7 @@
     <form id="gn-editor-{$metadataId}" name="gnEditor" accept-charset="UTF-8" method="POST"
       novalidate="" class="form-horizontal gn-editor" role="form" 
       data-spy="scroll" data-target="#gn-editor-{$metadataId}-spy">
-      
+
       <input type="hidden" id="schema" value="{$schema}"/>
       <input type="hidden" id="template" name="template" value="{$isTemplate}"/>
       <input type="hidden" id="uuid" value="{$metadataUuid}"/>

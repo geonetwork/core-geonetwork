@@ -1,25 +1,19 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <ul class="nav navbar-nav">
-    <li class="dropdown">
-      <a href="" class="dropdown-toggle" data-toggle="dropdown">
-        <span data-translate="">metadataType</span>
-        <b class="caret"/>
-      </a>
-      <ul class="dropdown-menu">
-        <li>
-          <a href="" data-translate="">metadata</a>
-        </li>
-        <li>
-          <a href="" data-translate="">template</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-  <p class="navbar-text gn-tooltip"
-    data-toggle="tooltip" 
-    data-placement="bottom"
-    data-ng-mouseover="getSaveStatus()"
-    data-title="{{getSaveStatus()}}">{{savedStatus}}</p>
+  <div class="pull-left">
+    <div class="form-group navbar-btn">
+      <div class="btn-group">
+        <button type="button" class="btn btn-default"
+          data-ng-class="{'btn-primary': metadataType == 'n'}" data-ng-click="setTemplate(false)"
+          >metadata</button>
+        <button type="button" class="btn btn-default"
+          data-ng-class="{'btn-primary': metadataType == 'y'}" data-ng-click="setTemplate(true)"
+          >template</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="navbar-text gn-tooltip" data-toggle="tooltip" data-placement="bottom"
+    data-ng-mouseover="getSaveStatus()" data-title="{{getSaveStatus()}}">{{savedStatus}}</p>
   <div class="pull-right">
     <button type="button" class="btn btn-primary navbar-btn gn-tooltip" data-ng-click="share()"
       data-title="{{'share-help' | translate}}" data-placement="bottom">

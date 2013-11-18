@@ -58,10 +58,19 @@
             gnUtilityService) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
+      $scope.formId = null;
 
+      /**
+       * Animation duration for slide up/down
+       */
+      var duration = 300;
+      var saving = false;
+
+
+      // Controller initialization
       var init = function() {
-        // TODO: move parameter to the route parameter
         $scope.metadataId = $routeParams.id;
+        $scope.formId = '#gn-editor-' + $scope.metadataId;
         //gnUtilityService.getUrlParameter('id');
         $scope.metadataUuid = gnUtilityService.getUrlParameter('uuid');
         $scope.tab = $routeParams.tab;
@@ -71,13 +80,10 @@
         // TODO: Check requested metadata exist - return message if it happens
         // Would you like to create a new one ?
         $scope.editorFormUrl = buildEditUrlPrefix('md.edit');
-
       };
-      /**
-       * Animation duration for slide up/down
-       */
-      var duration = 300;
-      var saving = false;
+
+
+
 
       var buildEditUrlPrefix = function(service) {
         var params = [service, '?id=', $scope.metadataId];
@@ -88,6 +94,23 @@
         return params.join('');
       };
 
+
+      /**
+       * When the form is loaded, this function is called.
+       * Use it to retrieve form variables or initialize
+       * elements eg. tooltip ?
+       */
+      $scope.formLoaded = function() {
+        $scope.metadataType = $($scope.formId + ' #template')[0].value;
+        $scope.metadataLanguage = $($scope.formId + ' #language')[0].value;
+        $scope.metadataOtherLanguages = $($scope.formId + ' #otherLanguages')[0].value;
+      };
+
+
+      /**
+       * Update the form according to the target tab
+       * properties and save.
+       */
       $scope.switchToTab = function(tabIdentifier, mode) {
         //          $scope.tab = tabIdentifier;
         //          FIXME: this trigger an edit
@@ -96,9 +119,17 @@
         $('#flat')[0].value = mode === 'flat';
 
         // Make the current form disapearing
-        $('#gn-editor-' + $scope.metadataId + ' > fieldset').fadeOut(duration);
+        $($scope.formId + ' > fieldset').fadeOut(duration);
 
         $scope.save(true);
+      };
+
+      /**
+       * Set type of record. Update the matching form element.
+       */
+      $scope.setTemplate = function (isTemplate) {
+        $scope.metadataType = isTemplate ? 'y' : 'n';
+        $('#template')[0].value = $scope.metadataType;
       };
 
       /**
@@ -196,12 +227,6 @@
         });
       };
 
-      /**
-       * Add a non existing element to the metadata record
-       */
-      $scope.expand = function() {
-
-      };
 
 
       /**
@@ -222,13 +247,13 @@
 
         $http.post(
             refreshForm ? 'md.edit.save' : 'md.edit.saveonly',
-            $('#gn-editor-' + $scope.metadataId).serialize(),
+            $($scope.formId).serialize(),
             {
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).success(function(data) {
           if (refreshForm) {
             var snippet = $(data);
-            $('#gn-editor-' + $scope.metadataId).replaceWith(snippet);
+            $($scope.formId).replaceWith(snippet);
             $compile(snippet)($scope);
 
             $scope.toggleAttributes();
