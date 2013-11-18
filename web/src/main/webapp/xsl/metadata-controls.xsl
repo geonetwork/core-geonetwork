@@ -19,9 +19,9 @@
 			<xsl:if test="geonet:*/@ref">
 				<a name="{concat('_', geonet:*/@ref)}"/>
 			</xsl:if>
-			<!-- 
+			<!--
 				add as remote XML fragment button when relevant -->
-			<xsl:if test="normalize-space($addXMLFragment)">
+			<xsl:if test="$addXMLFragment">
 				<xsl:variable name="xlinkTokens" select="tokenize($addXMLFragment,'!')"/>
 				<xsl:text> </xsl:text>
 				<xsl:choose>
@@ -37,11 +37,11 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:if>
-			
-			
+
+
 			<!-- add button -->
 			<xsl:choose>
-				<xsl:when test="normalize-space($addLink) and not(normalize-space($addXMLFragment))">
+				<xsl:when test="$addLink and not($addXMLFragment)">
 					<xsl:variable name="linkTokens" select="tokenize($addLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>
@@ -57,12 +57,12 @@
 					<span id="add_{$id}"/>
 				</xsl:otherwise>
 			</xsl:choose>
-			
-				
+
+
 			<!-- remove button -->
 			<!-- GEOCAT has hacked the 'gmd:name' stuff in to fix linkage name -->
 			<xsl:choose>
-				<xsl:when test="normalize-space($removeLink) or name(.) = 'gmd:name'">
+				<xsl:when test="$removeLink or name(.) = 'gmd:name'">
 					<xsl:variable name="linkTokens" select="tokenize($removeLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>
@@ -82,10 +82,10 @@
 					<span id="remove_{$id}"/>
 				</xsl:otherwise>
 			</xsl:choose>
-	
+
 			<!-- up button -->
 			<xsl:choose>
-				<xsl:when test="normalize-space($upLink)">
+				<xsl:when test="$upLink">
 					<xsl:variable name="linkTokens" select="tokenize($upLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>
@@ -101,10 +101,10 @@
 					<span id="up_{$id}"/>
 				</xsl:otherwise>
 			</xsl:choose>
-	
+
 			<!-- down button -->
 			<xsl:choose>
-				<xsl:when test="normalize-space($downLink)">
+				<xsl:when test="$downLink">
 					<xsl:variable name="linkTokens" select="tokenize($downLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>
@@ -120,9 +120,9 @@
 					<span id="down_{$id}"/>
 				</xsl:otherwise>
 			</xsl:choose>
-	
+
 			<!-- xsd and schematron validation error button -->
-			<xsl:if test="normalize-space($validationLink)">
+			<xsl:if test="$validationLink and string-length($validationLink) > 0">
 				<xsl:text> </xsl:text>
 				<a id="validationError{$id}" onclick="setBunload(false);" href='javascript:doEditorAlert("error_{$id}", "errorimg_{$id}");'><img id="errorimg_{$id}" src="{/root/gui/url}/images/validationError.gif"/></a>
 				<div style="display:none;" class="toolTipOverlay" id="error_{$id}" onclick="this.style.display='none';">
