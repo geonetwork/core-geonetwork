@@ -19,6 +19,7 @@
            transclude: true,
            scope: {
              mode: '@gnThesaurusSelector',
+             metadataId: '@',
              elementName: '@',
              elementRef: '@',
              domId: '@'
@@ -39,7 +40,7 @@
              });
 
              scope.add = function() {
-               $rootScope.$broadcast('AddElement',
+               gnMetadataManagerService.add(scope.metadataId,
                    scope.elementRef, scope.elementName, scope.domId, 'before');
              };
 
@@ -56,7 +57,7 @@
 
                  $timeout(function() {
                    // Save the metadata and refresh the form
-                   $rootScope.$broadcast('SaveEdits', true);
+                   gnMetadataManagerService.save(scope.metadataId, true);
                  });
 
                });

@@ -402,6 +402,7 @@
                 <div>
                   <xsl:attribute name="{$directive}"/>
                   <xsl:attribute name="data-dom-id" select="$id"/>
+                  <xsl:attribute name="data-metadata-id" select="$metadataId"/>
                   <xsl:attribute name="data-element-name" select="$qualifiedName"/>
                   <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
                 </div>

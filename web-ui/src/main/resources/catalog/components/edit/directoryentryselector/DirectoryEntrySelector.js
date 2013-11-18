@@ -19,6 +19,7 @@
            transclude: true,
            scope: {
              mode: '@gnDirectoryEntrySelector',
+             metadataId: '@',
              elementName: '@',
              elementRef: '@',
              domId: '@'
@@ -31,9 +32,14 @@
              scope.snippetRef = gnMetadataManagerService.
              buildXMLFieldName(scope.elementRef, scope.elementName);
 
+             scope.add = function() {
+               gnMetadataManagerService.add(scope.metadataId,
+                   scope.elementRef, scope.elementName, scope.domId, 'before');
+               return false;
+             };
+
              // <request><codelist schema="iso19139"
              // name="gmd:CI_RoleCode" /></request>
-
              scope.addContact = function(contact, usingXlink) {
                var id = contact['geonet:info'].id;
                gnMetadataManagerService.getRecord(id).then(function(xml) {
@@ -45,7 +51,7 @@
 
                  $timeout(function() {
                    // Save the metadata and refresh the form
-                   $rootScope.$broadcast('SaveEdits', true);
+                   gnMetadataManagerService.save(scope.metadataId, true);
                  });
                });
 

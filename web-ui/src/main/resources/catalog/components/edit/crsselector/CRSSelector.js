@@ -19,6 +19,7 @@
            transclude: true,
            scope: {
              mode: '@gnCrsSelector',
+             metadataId: '@',
              elementName: '@',
              elementRef: '@',
              domId: '@'
@@ -32,8 +33,9 @@
              buildXMLFieldName(scope.elementRef, scope.elementName);
 
              scope.add = function() {
-               // {$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}',
-               //               '{$id}', 'before'
+               gnMetadataManagerService.add(scope.metadataId,
+                   scope.elementRef, scope.elementName, scope.domId, 'before');
+               return false;
              };
 
 
@@ -54,7 +56,7 @@
 
                $timeout(function() {
                  // Save the metadata and refresh the form
-                 $rootScope.$broadcast('SaveEdits', true);
+                 gnMetadataManagerService.save(scope.metadataId, true);
                });
 
                return false;
