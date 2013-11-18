@@ -100,8 +100,20 @@ div.gn-scroll-spy {
   z-index: 2000;
 }
 
-#onlinesrc-popup, #linkparent-popup {
+.onlinesrc-popup {
   max-width: none;
   max-height: none;
   display: none;
+}
+.gn-layers-grid-container {
+overflow:auto;
+height:200px;
+font-size: small;
+}
+.gn-layers-grid-container tr {
+	cursor: pointer;
+}
+.gn-layers-grid-container .table > thead > tr > td.active tr.active > td {
+	color: red;
+  background-color: #428bca;
 }

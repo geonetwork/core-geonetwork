@@ -29,6 +29,9 @@ goog.addDependency('../../components/multiselect/MultiselectModule.js', ['gn_mul
 goog.addDependency('../../components/onlinesrc/OnlineSrcDirective.js', ['gn_onlinesrc_directive'], ['gn_utility']);
 goog.addDependency('../../components/onlinesrc/OnlineSrcModule.js', ['gn_onlinesrc'], ['gn_onlinesrc_directive', 'gn_onlinesrc_service']);
 goog.addDependency('../../components/onlinesrc/OnlineSrcService.js', ['gn_onlinesrc_service'], []);
+goog.addDependency('../../components/ows/OWSDirective.js', ['gn_ows_directive'], []);
+goog.addDependency('../../components/ows/OWSModule.js', ['gn_ows'], ['gn_ows_directive', 'gn_ows_service']);
+goog.addDependency('../../components/ows/OWSService.js', ['gn_ows_service'], []);
 goog.addDependency('../../components/pagination/PaginationDirective.js', ['gn_pagination_directive'], []);
 goog.addDependency('../../components/pagination/PaginationModule.js', ['gn_pagination'], ['gn_pagination_directive']);
 goog.addDependency('../../components/popup/DraggableDirective.js', ['gn_draggable_directive'], []);
@@ -53,7 +56,7 @@ goog.addDependency('../../components/utility/UtilityModule.js', ['gn_utility'], 
 goog.addDependency('../../components/utility/UtilityService.js', ['gn_utility_service'], []);
 goog.addDependency('../../js/CatController.js', ['gn_cat_controller'], ['gn_search_manager']);
 goog.addDependency('../../js/GnAdminModule.js', ['gn_admin'], ['gn', 'gn_admin_controller']);
-goog.addDependency('../../js/GnEditorModule.js', ['gn_editor'], ['gn', 'gn_draggable_directive', 'gn_editor_controller', 'gn_onlinesrc', 'gn_onlinesrc_controller', 'gn_popup']);
+goog.addDependency('../../js/GnEditorModule.js', ['gn_editor'], ['gn', 'gn_draggable_directive', 'gn_editor_controller', 'gn_onlinesrc', 'gn_ows', 'gn_popup']);
 goog.addDependency('../../js/GnLoginModule.js', ['gn_login'], ['gn', 'gn_login_controller']);
 goog.addDependency('../../js/GnModule.js', ['gn'], ['gn_cat_controller', 'gn_language_switcher', 'gn_metadata_manager', 'gn_pagination', 'gn_search_controller', 'gn_search_form_controller', 'gn_search_manager', 'gn_search_results', 'gn_utility']);
 goog.addDependency('../../js/LoginController.js', ['gn_login_controller'], []);

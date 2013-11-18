@@ -1,5 +1,8 @@
 <div>
-  <form class="form-horizontal" role="form">
+  <form id="gn-upload-onlinesrc" class="form-horizontal" role="form"
+     method="POST" enctype="multipart/form-data" action="resource.upload.and.link"
+     data-file-upload="onlinesrcUploadOptions">
+     
     <div class="onlinesrc-container">
       <div class="form-group" >
         <div class="btn-group col-sm-offset-2 col-sm-10">
@@ -25,24 +28,27 @@
       
           <div class="panel panel-default">
             <div class="panel-body">
-              <form id="fileupload" action="admin.logo.upload@json" method="POST"
-                enctype="multipart/form-data" data-file-upload="logoUploadOptions">
-                <span class="btn btn-success btn-block fileinput-button" ng-class="{disabled: disabled}">
-                  <i class="fa fa-plus fa fa-white"/>
-                  <span data-translate="">chooseOnlinesrc</span>
-                  <input type="file" name="fname" multiple="true" autofocus="" ng-disabled="disabled"/>
-                </span>
-    
-                <div class="col-lg-5 fade" data-ng-class="{in: active()}">
-                  <!-- The global progress bar -->
-                  <div class="progress progress-striped active" data-file-upload-progress="progress()"
-                    data-file-upload-done="loadLogo()">
-                    <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"/>
-                  </div>
-                  <div class="progress-extended">&nbsp;</div>
-                </div>
-                <p class="help-block" data-translate="">onlinesrcUploadHelp</p>
-              </form>
+            
+            <span
+              class="btn btn-success btn-block fileinput-button" ng-class="{disabled: disabled}">
+              <i class="fa fa-plus fa fa-white"/>
+              <span data-translate="">chooseOnlinesrc</span>
+              <input type="file" id="gn-onlinesrc-file" name="filename" multiple="false"
+                ng-disabled="disabled"/>
+            </span>
+            
+            <ul>
+              <li data-ng-repeat="file in queue">{{file.name}} ({{file.type}} / {{file.size | formatFileSize}}) <i
+                  class="fa fa-trash-o" data-ng-click="clear(file)"/>
+              </li>
+            </ul>
+            <div class="checkbox">
+				    <label>overwrite
+				      <input type="checkbox" name="overwrite"> 
+				    </label>
+				  </div>
+            <input name="process" value="onlinesrc-add" data-ng-hide="true"/>
+            <input name="id" value="22" data-ng-hide="true"/>
             </div>
           </div>
         </div>
@@ -50,7 +56,7 @@
       <div class="form-group">
         <label for="onlinesrcName" class="col-sm-2 control-label">Name</label>
         <div class="col-sm-10">
-          <input ng-model="params.onlinesrcName" class="form-control"
+          <input ng-model="params.onlinesrcName" name="name" class="form-control"
             id="onlinesrcName" placeholder="Name" data-ng-required="">
         </div>
       </div>
@@ -63,13 +69,17 @@
         <div class="col-sm-10">
           <textarea rows="3" ng-model="params.onlinesrcDescr"
             class="form-control" id="onlinesrcDescr"
-            placeholder="Description" />
+            placeholder="Description" name="description" />
         </div>
       </div>
+      <div data-gn-layers-grid 
+        data-ng-hide="params.onlinesrcProtocol.indexOf('OGC:WMS') >= 0"
+        data-gn-selection-mode="multiple"
+        data-selection="layersSelection"></div>
   </form>
   <div class="navbar-form navbar-right">
     <button type="button" class="btn navbar-btn btn-success"
-      data-ng-click="onlinesrcService.addOnlinesrc(params, (mode == 'upload'))">
+      data-ng-click="addOnlinesrc()">
       <i class="fa fa-archive" /> <span data-translate="">addOnlinesrc</span>
     </button>
   </div>

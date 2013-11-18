@@ -46,7 +46,7 @@
    * Metadata editor controller - draft
    */
   module.controller('GnEditorController', [
-    '$scope', '$routeParams', '$http', '$rootScope', 
+    '$scope', '$routeParams', '$http', '$rootScope',
     '$translate', '$compile', '$timeout',
     'gnMetadataManagerService',
     'gnSearchManagerService',
@@ -58,7 +58,7 @@
             gnUtilityService) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
-      
+
       var init = function() {
         // TODO: move parameter to the route parameter
         $scope.metadataId = $routeParams.id;
@@ -242,8 +242,8 @@
           });
 
           // FIXME : This should go somewhere else ?
-//          console.log($('.gn-tooltip'));
-//          $('#gn-tooltip').tooltip();
+          //          console.log($('.gn-tooltip'));
+          //          $('#gn-tooltip').tooltip();
 
           saving = false;
         }).error(function(data) {
@@ -262,16 +262,17 @@
 
       $scope.getSaveStatus = function() {
         if ($scope.savedTime) {
-          return $translate('saveAtimeAgo', {timeAgo: moment($scope.savedTime).fromNow()});
+          return $translate('saveAtimeAgo',
+              {timeAgo: moment($scope.savedTime).fromNow()});
         }
       };
 
-//      // Remove status message after 30s
-//      $scope.$watch('savedStatus', function () {
-//        $timeout(function () {
-//          $scope.savedStatus = '';
-//        }, 30000);
-//      });
+      //      // Remove status message after 30s
+      //      $scope.$watch('savedStatus', function () {
+      //        $timeout(function () {
+      //          $scope.savedStatus = '';
+      //        }, 30000);
+      //      });
 
       // Broadcast event to SaveEdits from form's directive
       $scope.$on('SaveEdits', function(event, refreshForm) {
