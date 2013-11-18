@@ -39,7 +39,7 @@
         
         <script src="{$uiResourcesPath}lib/closure/base.js"></script>
         
-        <script src="{$uiResourcesPath}lib/jquery-2.0.2.js"></script>
+        <script src="{$uiResourcesPath}lib/jquery-2.0.3.js"></script>
         
         <script src="{$uiResourcesPath}lib/moment+langs.min.js"></script>
         
@@ -73,8 +73,8 @@
         </script>
       </xsl:when>
       <xsl:otherwise>
-        <script src="{$uiResourcesPath}lib/jquery-2.0.2.min.js"></script>
-          
+        <script src="{$uiResourcesPath}lib/jquery-2.0.3.min.js"></script>
+        
         <script src="{$uiResourcesPath}lib/moment+langs.min.js"></script>
         
         <script src="{$uiResourcesPath}lib/angular/angular.min.js"></script>
