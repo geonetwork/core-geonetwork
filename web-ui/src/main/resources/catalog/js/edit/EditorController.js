@@ -104,8 +104,10 @@
        * elements eg. tooltip ?
        */
       $scope.formLoaded = function() {
-        $scope.editorConfig.metadataType = $($scope.formId + ' #template')[0].value;
-        $scope.editorConfig.metadataLanguage = $($scope.formId + ' #language')[0].value;
+        $scope.editorConfig.metadataType =
+            $($scope.formId + ' #template')[0].value;
+        $scope.editorConfig.metadataLanguage =
+            $($scope.formId + ' #language')[0].value;
         $scope.editorConfig.metadataOtherLanguages =
             $($scope.formId + ' #otherLanguages')[0].value;
       };
