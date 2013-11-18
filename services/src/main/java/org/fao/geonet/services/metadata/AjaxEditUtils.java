@@ -1,8 +1,10 @@
 package org.fao.geonet.services.metadata;
 
 import com.google.common.base.Optional;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -259,6 +261,9 @@ public class AjaxEditUtils extends EditUtils {
         if (!xmlAndXpathInputs.isEmpty()) {
             editLib.addElementOrFragmentFromXpaths(md, xmlAndXpathInputs, metadataSchema);
         }
+        
+        setMetadataIntoSession(session,(Element)md.clone(), id);
+        
         // --- remove editing info
         editLib.removeEditingInfo(md);
         editLib.contractElements(md);
