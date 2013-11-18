@@ -345,7 +345,7 @@
                 <xsl:value-of select="$label"/>
         </xsl:if>
       </label>
-      <div class="col-lg-10">
+      <div class="col-lg-8">
         
         <xsl:variable name="qualifiedName" select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
         
