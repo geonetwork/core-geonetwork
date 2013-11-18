@@ -1,22 +1,38 @@
-<nav class="navbar navbar-default" role="navigation">
-  <div class="navbar-form navbar-left">
-    <button type="button" class="btn navbar-btn dropdown-toggle" data-toggle="dropdown">
-      <span data-translate="">metadataType</span>
-      <span class="caret"/>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <ul class="nav navbar-nav">
+    <li class="dropdown">
+      <a href="" class="dropdown-toggle" data-toggle="dropdown">
+        <span data-translate="">metadataType</span>
+        <b class="caret"/>
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <a href="" data-translate="">metadata</a>
+        </li>
+        <li>
+          <a href="" data-translate="">template</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <p class="navbar-text gn-tooltip"
+    data-toggle="tooltip" 
+    data-placement="bottom"
+    data-ng-mouseover="getSaveStatus()"
+    data-title="{{getSaveStatus()}}">{{savedStatus}}</p>
+  <div class="pull-right">
+    <button type="button" class="btn btn-primary navbar-btn gn-tooltip" data-ng-click="share()"
+      data-title="{{'share-help' | translate}}" data-placement="bottom">
+      <i class="fa fa-lock"/>
+      <span data-translate="">share</span>
     </button>
-    <ul class="dropdown-menu" role="menu">
-      <li>
-        <a href="#">metadata</a>
-      </li>
-      <li>
-        <a href="#">template</a>
-      </li>
-    </ul>
-  </div>
-  <div class="navbar-form navbar-right">
     <button type="button" class="btn btn-primary navbar-btn" data-ng-click="save()">
       <i class="fa fa-save"/>
       <span data-translate="">save</span>
+    </button>
+    <button type="button" class="btn navbar-btn" data-ng-click="validate()">
+      <i class="fa fa-check"/>
+      <span data-translate="" title="{{'validate-help' | translate}}">validate</span>
     </button>
     <!-- TODO: automatic save status -->
     <button type="button" class="btn btn-danger navbar-btn" data-ng-click="reset()">

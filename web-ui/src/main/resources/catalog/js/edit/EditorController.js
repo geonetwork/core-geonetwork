@@ -46,15 +46,19 @@
    * Metadata editor controller - draft
    */
   module.controller('GnEditorController', [
-    '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
+    '$scope', '$routeParams', '$http', '$rootScope', 
+    '$translate', '$compile', '$timeout',
     'gnMetadataManagerService',
     'gnSearchManagerService',
     'gnUtilityService',
-    function($scope, $routeParams, $http, $rootScope, $translate, $compile,
+    function($scope, $routeParams, $http, $rootScope, 
+        $translate, $compile, $timeout,
             gnMetadataManagerService, 
             gnSearchManagerService, 
             gnUtilityService) {
-
+      $scope.savedStatus = null;
+      $scope.savedTime = null;
+      
       var init = function() {
         // TODO: move parameter to the route parameter
         $scope.metadataId = $routeParams.id;
@@ -67,6 +71,7 @@
         // TODO: Check requested metadata exist - return message if it happens
         // Would you like to create a new one ?
         $scope.editorFormUrl = buildEditUrlPrefix('md.edit');
+
       };
       /**
        * Animation duration for slide up/down
@@ -210,7 +215,10 @@
         if (saving) {
           return;
         }
+
+
         saving = true;
+        $scope.savedStatus = $translate('saving');
 
         $http.post(
             refreshForm ? 'md.edit.save' : 'md.edit.saveonly',
@@ -226,14 +234,22 @@
             $scope.toggleAttributes();
           }
 
+          $scope.savedStatus = $translate('allChangesSaved');
+          $scope.savedTime = moment();
+
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate('saveMetadataSuccess')
           });
 
+          // FIXME : This should go somewhere else ?
+//          console.log($('.gn-tooltip'));
+//          $('#gn-tooltip').tooltip();
+
           saving = false;
         }).error(function(data) {
           saving = false;
-
+          $scope.savedTime = moment();
+          $scope.saveStatus = $translate('saveMetadataError');
           console.log(data);
 
           $rootScope.$broadcast('StatusUpdated', {
@@ -244,6 +260,18 @@
         });
       };
 
+      $scope.getSaveStatus = function() {
+        if ($scope.savedTime) {
+          return $translate('saveAtimeAgo', {timeAgo: moment($scope.savedTime).fromNow()});
+        }
+      };
+
+//      // Remove status message after 30s
+//      $scope.$watch('savedStatus', function () {
+//        $timeout(function () {
+//          $scope.savedStatus = '';
+//        }, 30000);
+//      });
 
       // Broadcast event to SaveEdits from form's directive
       $scope.$on('SaveEdits', function(event, refreshForm) {

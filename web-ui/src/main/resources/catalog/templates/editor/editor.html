@@ -1,56 +1,61 @@
-<div class="container">
-  <div
-    data-ng-include="'../../catalog/templates/editor/top-toolbar.html'">
-  </div>
-  <div class="row">
-    <div class="col-lg-9">
-      <div class="" data-ng-include="editorFormUrl"></div>
+<div>
+  <div class="container">
+    <div
+      data-ng-include="'../../catalog/templates/editor/top-toolbar.html'">
     </div>
-    <div class="col-lg-3">
+    <div class="gn-editor-container" data-ng-include="editorFormUrl"></div>
+    <div class="gn-editor-tools-container">
+
       <div class="panel panel-default">
-        <div class="panel-heading" data-translate="">relatedResources</div>
+        <div class="panel-heading">
+          <i class="fa fa-picture-o"></i><span data-translate="">overviews</span>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <i class="fa fa-link"></i><span data-translate="">associatedResources</span>
+        </div>
         <div class="panel-body">
-         
-          <a href="" ng-click="onlinesrcPopupShown = !onlinesrcPopupShown">
-           <i class="fa fa-archive" />
-            <i class="icon-external-link ga-icon-separator"></i> <span
-            translate>Add online resource</span>
-          </a>
-          <br>
-          
-          <a href="" ng-click="linkParentMdPopupShown = !linkParentMdPopupShown">
-            <i class="fa fa-sitemap" />
-            <i class="icon-external-link ga-icon-separator"></i> <span
-            translate>Link to a parent</span>
+
+          <a href="" data-ng-click="onlinesrcPopupShown = !onlinesrcPopupShown">
+            <i class="fa fa-archive" ></i> <i class="icon-external-link"></i> <span
+            data-translate="">Add online resource</span>
+          </a> <br> <a href=""
+            data-ng-click="linkParentMdPopupShown = !linkParentMdPopupShown"> <i
+            class="fa fa-sitemap" ></i> <i class="icon-external-link"></i> <span
+            data-translate="">Link to a parent</span>
           </a>
         </div>
       </div>
 
       <div class="panel panel-default">
-        <div class="panel-heading" data-translate="">suggestions</div>
+        <div class="panel-heading">
+          <i class="fa fa-cogs"></i><span data-translate="">suggestions</span>
+        </div>
       </div>
 
       <div class="panel panel-default">
-        <div class="panel-heading" data-translate="">validationReport</div>
+        <div class="panel-heading">
+          <i class="fa fa-check"></i><span data-translate="">validationReport</span>
+        </div>
       </div>
     </div>
   </div>
 
-</div>
-
-<div gn-popup="onlinesrcPopupShown"
-  gn-popup-options="{title:'Ajout de resource en ligne'}"
-  gn-draggable=".gn-popup-title" id="onlinesrc-popup">
-    <div gn-add-onlinesrc gn-import-wms-map="map"
-      gn-import-wms-options="options" id="import-wms" class="add-onlinesrc">
+  <div data-gn-popup="onlinesrcPopupShown"
+    data-gn-popup-options="{title:'Ajout de resource en ligne'}"
+    data-gn-draggable=".gn-popup-title" id="onlinesrc-popup">
+    <div data-gn-add-onlinesrc="" data-gn-import-wms-map="map"
+      data-gn-import-wms-options="options" id="import-wms" class="add-onlinesrc">
     </div>
-</div>
+  </div>
 
-<div gn-popup="linkParentMdPopupShown"
-  gn-popup-options="{title:'Ajouter un parent à une métadonnée'}" 
-  gn-draggable=".gn-popup-title"
-  id="linkparent-popup">
-    <div gn-link-parent-md id="link-parent-md" class="link-parent-md">
+  <div data-gn-popup="linkParentMdPopupShown"
+    data-gn-popup-options="{title:'Ajouter un parent à une métadonnée'}"
+    data-gn-draggable=".gn-popup-title" id="linkparent-popup">
+    <div data-gn-link-parent-md="" id="link-parent-md" class="link-parent-md">
     </div>
+  </div>
 </div>
 
