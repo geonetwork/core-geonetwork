@@ -79,27 +79,32 @@
     </view>
     <view name="advanced">
       <tab id="identificationInfo" default="true">
-        <section xpath="/gmd:MD_Metadata/gmd:identificationInfo"/>
+        <section xpath="/gmd:MD_Metadata/gmd:identificationInfo" 
+          or="identificationInfo" in="/gmd:MD_Metadata"/>
       </tab>
       <tab id="distributionInfo">
-        <section xpath="/gmd:MD_Metadata/gmd:distributionInfo" localName="distributionInfo"/>
+        <section xpath="/gmd:MD_Metadata/gmd:distributionInfo" 
+          or="distributionInfo" in="/gmd:MD_Metadata"/>
       </tab>
       <tab id="dataQualityInfo">
-        <section xpath="/gmd:MD_Metadata/gmd:dataQualityInfo" localName="dataQualityInfo"/>
+        <section xpath="/gmd:MD_Metadata/gmd:dataQualityInfo" 
+          or="dataQualityInfo" in="/gmd:MD_Metadata"/>
       </tab>
       <tab id="spatialRepresentationInfo">
         <section xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo"
-          localName="spatialRepresentationInfo"/>
+          or="spatialRepresentationInfo" in="/gmd:MD_Metadata"/>
       </tab>
       <tab id="referenceSystemInfo">
-        <section xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo" localName="referenceSystemInfo"/>
+        <section xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo" 
+          or="referenceSystemInfo" in="/gmd:MD_Metadata"/>
       </tab>
       <tab id="contentInfo">
-        <section xpath="/gmd:MD_Metadata/gmd:contentInfo" localName="contentInfo"/>
+        <section xpath="/gmd:MD_Metadata/gmd:contentInfo" 
+          or="contentInfo" in="/gmd:MD_Metadata"/>
       </tab>
       <tab id="portrayalCatalogueInfo">
         <section xpath="/gmd:MD_Metadata/gmd:portrayalCatalogueInfo"
-          localName="portrayalCatalogueInfo"/>
+          or="portrayalCatalogueInfo" in="/gmd:MD_Metadata"/>
       </tab>
       <tab id="metadata">
         <section name="gmd:MD_Metadata">
