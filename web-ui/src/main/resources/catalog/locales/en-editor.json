@@ -39,5 +39,8 @@
     "linkToParent" : "Link to parent",
     "onlinesrcUploadHelp": "Drag & drop here one resource",
     "chooseOnlinesrc": "Choose or drop resource here",
-    "addFromThesaurus": "or select them in a thesaurus"
+    "addFromThesaurus": "or select them in a thesaurus",
+    "searchACRS": " or search for a coordinate system ...",
+    "addCRS-help": "",
+    "addFromEPSGdb": "Add from EPSG database"
 }

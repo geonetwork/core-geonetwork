@@ -57,8 +57,8 @@
       <input type="hidden" id="template" name="template" value="{$isTemplate}"/>
       <input type="hidden" id="uuid" value="{$metadataUuid}"/>
       <input type="hidden" name="id" value="{$metadataId}"/>
-      <input type="hidden" name="language" value="{$metadataLanguage}"/>
-      <input type="hidden" name="otherLanguages" value="{$metadataOtherLanguages}"/>
+      <input type="hidden" id="language" value="{$metadataLanguage}"/>
+      <input type="hidden" id="otherLanguages" value="{$metadataOtherLanguages}"/>
       <input type="hidden" id="version" name="version" value="{$metadata/gn:info/version}"/>
       <input type="hidden" id="currTab" name="currTab" value="{$tab}"/>
       <input type="hidden" id="displayAttributes" name="displayAttributes"

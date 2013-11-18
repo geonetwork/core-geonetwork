@@ -13,9 +13,10 @@ goog.addDependency('../../components/category/CategoryDirective.js', ['gn_catego
 goog.addDependency('../../components/category/CategoryModule.js', ['gn_category'], ['gn_category_directive']);
 goog.addDependency('../../components/dv/GaugeDirective.js', ['gn_gauge_directive'], []);
 goog.addDependency('../../components/dv/GaugeModule.js', ['gn_gauge'], ['gn_gauge_directive']);
-goog.addDependency('../../components/edit/FieldsModule.js', ['gn_fields'], ['gn_directory_entry_selector', 'gn_editor_helper_directive', 'gn_field_duration_directive', 'gn_template_field_directive']);
+goog.addDependency('../../components/edit/FieldsModule.js', ['gn_fields'], ['gn_crs_selector', 'gn_directory_entry_selector', 'gn_editor_helper_directive', 'gn_field_duration_directive', 'gn_template_field_directive']);
 goog.addDependency('../../components/edit/MdEditorModule.js', ['gn_md_editor'], ['gn_md_editor_service']);
 goog.addDependency('../../components/edit/MdEditorService.js', ['gn_md_editor_service'], []);
+goog.addDependency('../../components/edit/crsselector/CRSSelector.js', ['gn_crs_selector'], []);
 goog.addDependency('../../components/edit/directoryentryselector/DirectoryEntrySelector.js', ['gn_directory_entry_selector'], []);
 goog.addDependency('../../components/edit/editorhelper/EditorHelperDirective.js', ['gn_editor_helper_directive'], []);
 goog.addDependency('../../components/edit/fieldduration/FieldDurationDirective.js', ['gn_field_duration_directive'], []);

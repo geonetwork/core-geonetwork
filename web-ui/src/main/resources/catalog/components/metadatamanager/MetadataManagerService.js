@@ -29,6 +29,26 @@
               gmd: 'http://www.isotc211.org/2005/gmd',
               gfc: 'http://www.isotc211.org/2005/gfc'
             };
+            var CRS_TEMPLATE = '<gmd:referenceSystemInfo ' +
+                "xmlns:gmd='http://www.isotc211.org/2005/gmd' " +
+                "xmlns:gco='http://www.isotc211.org/2005/gco'>" +
+                '<gmd:MD_ReferenceSystem>' +
+                '<gmd:referenceSystemIdentifier>' +
+                '<gmd:RS_Identifier>' +
+                '<gmd:code>' +
+                    '<gco:CharacterString>{{description}}' +
+                    '</gco:CharacterString>' +
+                '</gmd:code>' +
+                '<gmd:codeSpace>' +
+                    '<gco:CharacterString>{{codeSpace}}</gco:CharacterString>' +
+                '</gmd:codeSpace>' +
+                '<gmd:version>' +
+                    '<gco:CharacterString>{{version}}</gco:CharacterString>' +
+                '</gmd:version>' +
+                '</gmd:RS_Identifier>' +
+                '</gmd:referenceSystemIdentifier>' +
+                '</gmd:MD_ReferenceSystem>' +
+                '</gmd:referenceSystemInfo>';
             return {
               NAMESPACES: NAMESPACES,
               // TODO : move select to SearchManagerService
@@ -69,7 +89,14 @@
                     });
                 return defer.promise;
               },
-
+              buildCRSXML: function(crs) {
+                var replacement = ['description', 'codeSpace', 'version'];
+                var xml = CRS_TEMPLATE;
+                angular.forEach(replacement, function(key) {
+                  xml = xml.replace('{{' + key + '}}', crs[key]);
+                });
+                return xml;
+              },
               /**
                * Build a field name for an XML field
                * TODO: move to editor service

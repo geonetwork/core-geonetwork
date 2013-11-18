@@ -1,6 +1,11 @@
 <span data-ng-controller="GnSearchFormController">
   <div class="input-group">
     <span class="input-group-btn">
+      <button class="btn btn-default" type="button" title="{{'add' | translate}}"
+        data-ng-click="add();">
+        <i class="fa fa-plus"/>
+        <span>&nbsp;</span>
+      </button>
       <button class="btn btn-default" type="button">
         <i class="fa fa-book"/>
         <span data-translate="">addFromDictionnary</span>
@@ -18,7 +23,7 @@
     <input type="text" class="form-control" placeholder="{{'searchAContact' | translate}}"
       data-ng-model="params.any" data-ng-change="triggerSearch('qi@json')"/>
 
-    <div class="list-group" style="position: absolute; z-index:2">
+    <div class="list-group gn-autocomplete-list">
       <li href="" class="list-group-item" data-ng-repeat="r in resultRecords">
           {{r.title}}
           <span class="pull-right">
