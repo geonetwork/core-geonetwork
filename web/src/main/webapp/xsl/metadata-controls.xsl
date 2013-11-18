@@ -21,7 +21,7 @@
 			</xsl:if>
 			<!--
 				add as remote XML fragment button when relevant -->
-			<xsl:if test="$addXMLFragment">
+			<xsl:if test="$addXMLFragment and normalize-space($addXMLFragment)">
 				<xsl:variable name="xlinkTokens" select="tokenize($addXMLFragment,'!')"/>
 				<xsl:text> </xsl:text>
 				<xsl:choose>
@@ -41,7 +41,7 @@
 
 			<!-- add button -->
 			<xsl:choose>
-				<xsl:when test="$addLink and not($addXMLFragment)">
+				<xsl:when test="$addLink and not($addXMLFragment and normalize-space($addXMLFragment))">
 					<xsl:variable name="linkTokens" select="tokenize($addLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>
@@ -62,7 +62,7 @@
 			<!-- remove button -->
 			<!-- GEOCAT has hacked the 'gmd:name' stuff in to fix linkage name -->
 			<xsl:choose>
-				<xsl:when test="$removeLink or name(.) = 'gmd:name'">
+				<xsl:when test="($removeLink and normalize-space($removeLink))or name(.) = 'gmd:name'">
 					<xsl:variable name="linkTokens" select="tokenize($removeLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>
@@ -85,7 +85,7 @@
 
 			<!-- up button -->
 			<xsl:choose>
-				<xsl:when test="$upLink">
+				<xsl:when test="$upLink and normalize-space($upLink)">
 					<xsl:variable name="linkTokens" select="tokenize($upLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>
@@ -104,7 +104,7 @@
 
 			<!-- down button -->
 			<xsl:choose>
-				<xsl:when test="$downLink">
+				<xsl:when test="$downLink and normalize-space($downLink)">
 					<xsl:variable name="linkTokens" select="tokenize($downLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>
