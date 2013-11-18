@@ -8,4 +8,23 @@
   <temporalRef>Référence(s) temporelle(s)</temporalRef>
   <refDate>Date(s) de référence</refDate>
   <constraintInfo>Contraintes d'accès et d'utilisation</constraintInfo>
+  
+  
+  
+  <advanced>Complète</advanced>
+  <default>Simple</default>
+  <inspire>INSPIRE</inspire>
+  <resource>Ressource</resource>
+  <xml>XML</xml>
+  <metadata>Métadonnées</metadata>
+  <identificationInfo>Identification</identificationInfo>
+  <distributionInfo>Distribution</distributionInfo>
+  <dataQualityInfo>Qualité</dataQualityInfo>
+  <spatialRepresentationInfo>Information spatiale</spatialRepresentationInfo>
+  <referenceSystemInfo>Système de réf.</referenceSystemInfo>
+  <contentInfo>Contenu</contentInfo>
+  <portrayalCatalogueInfo>Représentation</portrayalCatalogueInfo>
+  <metadataConstraints>Md. constraintes</metadataConstraints>
+  <metadataMaintenance>Md. maintenance</metadataMaintenance>
+  <applicationSchemaInfo>Extension</applicationSchemaInfo>
 </strings>
