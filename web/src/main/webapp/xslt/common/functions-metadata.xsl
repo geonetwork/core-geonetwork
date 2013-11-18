@@ -2,6 +2,7 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+  xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
   exclude-result-prefixes="#all">
   <!-- Provides XSL function related to metadata management like
   retrieving labels, helper, -->
@@ -59,6 +60,15 @@
 
 
   <!-- Return the list of values for a codelist or <null/>.
+  Codelist are defined in codelist.xml.
+  
+  One element may have more than one codelists. In that case, the
+  conditional codelist define a displayIf attribute with an XPath
+  expression. 
+  eg. Only for services:
+  <codelist name="gmd:MD_ScopeCode" 
+    displayIf="/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/srv:SV_ServiceIdentification">
+    
   
   The response is:
   <codelist name="gmd:MD_ScopeCode">
@@ -68,16 +78,54 @@
       <description>Information applies to the attribute class</description>
     </entry>
   -->
+  
   <xsl:function name="gn-fn-metadata:getCodeListValues" as="node()">
     <xsl:param name="schema" as="xs:string"/>
     <xsl:param name="name" as="xs:string"/>
     <xsl:param name="codelists" as="node()"/>
+    <xsl:copy-of select="gn-fn-metadata:getCodeListValues($schema, $name, $codelists, false())"/>
+  </xsl:function>
+  
+  <xsl:function name="gn-fn-metadata:getCodeListValues" as="node()">
+    <xsl:param name="schema" as="xs:string"/>
+    <xsl:param name="name" as="xs:string"/>
+    <xsl:param name="codelists" as="node()"/>
+    <xsl:param name="node" as="item()?"/>
 
-    <xsl:variable name="values" select="$codelists/codelist[@name=$name]"
+    <xsl:variable name="codelists" select="$codelists/codelist[@name=$name]"
       exclude-result-prefixes="#all"/>
+    
+    <!-- Conditional helpers which may define an xpath expression to evaluate 
+        if the xpath match. Check all codelists if one define an expression.
+        If the expression return a node, this codelist will be returned. -->
+    <xsl:variable name="conditionalCodelist">
+      <xsl:if test="$node">
+        <xsl:for-each select="$codelists">
+          <xsl:if test="@displayIf">
+            <xsl:variable name="match">
+              <xsl:call-template name="evaluate-iso19139">
+                <xsl:with-param name="base" select="$node"/>
+                <xsl:with-param name="in" select="@displayIf"/>
+              </xsl:call-template>
+            </xsl:variable>
+            <xsl:if test="$match != ''">
+              <xsl:copy-of select="."/>
+            </xsl:if>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:if>
+    </xsl:variable>
+    
+    
     <xsl:choose>
-      <xsl:when test="$values">
-        <xsl:copy-of select="$values"/>
+      <xsl:when test="$conditionalCodelist/*">
+        <xsl:copy-of select="$conditionalCodelist/codelist"/>
+      </xsl:when>
+      <xsl:when test="$codelists">
+        <!-- Return the default -->
+        <codelist>
+          <xsl:copy-of select="$codelists[not(@displayIf)]/*[not(@hideInEditMode)]"/>
+        </codelist>
       </xsl:when>
       <xsl:otherwise>
         <null/>

@@ -290,6 +290,7 @@
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
 
 
+    
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
         select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
@@ -304,7 +305,7 @@
         select="if ($isEditing) then concat(*/gn:element/@ref, '_codeListValue') else ''"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>
       <xsl:with-param name="listOfValues"
-        select="gn-fn-metadata:getCodeListValues($schema, name(*[@codeListValue]), $codelists)"/>
+        select="gn-fn-metadata:getCodeListValues($schema, name(*[@codeListValue]), $codelists, .)"/>
     </xsl:call-template>
 
   </xsl:template>
