@@ -106,7 +106,6 @@
       <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
       <xsl:with-param name="name" select="if ($isEditing) then gn:element/@ref else ''"/>
       <xsl:with-param name="editInfo" select="gn:element"/>
-      <xsl:with-param name="widget" select="gn-fn-dublin-core:getFieldWidget(name())"/>
       <xsl:with-param name="listOfValues" select="$helper"/>
     </xsl:call-template>
 

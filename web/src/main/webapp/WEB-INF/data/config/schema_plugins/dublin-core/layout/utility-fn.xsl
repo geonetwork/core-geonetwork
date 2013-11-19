@@ -4,12 +4,4 @@
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
   xmlns:gn-fn-dublin-core="http://geonetwork-opensource.org/xsl/functions/profiles/dublin-core">
 
-
-  <xsl:function name="gn-fn-dublin-core:getFieldWidget" as="xs:string">
-    <xsl:param name="name" as="xs:string"/>
-
-    <xsl:value-of select="if ($name = 'dc:coverage') 
-      then 'bbox' 
-      else 'text'"/>
-  </xsl:function>
 </xsl:stylesheet>
