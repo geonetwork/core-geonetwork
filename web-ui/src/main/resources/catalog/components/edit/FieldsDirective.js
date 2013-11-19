@@ -4,7 +4,7 @@
   goog.require('gn_metadata_manager_service');
 
   var module = angular.module('gn_fields_directive',
-      ['gn_metadata_manager_service']);
+      []);
 
   /**
    * Provide check field utilities.

@@ -1,6 +1,8 @@
 (function() {
   goog.provide('gn_utility_directive');
 
+  goog.require('gn_metadata_manager_service');
+  
   angular.module('gn_utility_directive', [
   ])
   .directive('groupsCombo', ['$http',
@@ -19,8 +21,8 @@
             }
           };
         }])
-  .directive('protocolsCombo', ['$http',
-        function($http) {
+  .directive('protocolsCombo', ['$http', 'gnMetadataManagerService',
+        function($http, gnMetadataManagerService) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/templates/utils/protocolsCombo.html',
@@ -29,31 +31,11 @@
               lang: '='
             },
             controller: ['$scope', '$translate', function($scope, $translate) {
-
-              var getPostRequestBody = function() {
-                var helpId = '|gmd:protocol|gmd:CI_OnlineResource|' +
-                    'gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution' +
-                    '/gmd:transferOptions/gmd:MD_DigitalTransferOptions/' +
-                    'gmd:onLine/gmd:CI_OnlineResource/gmd:protocol|';
-
-                var schema = 'iso19139';
-                var info = helpId.split('|'),
-                    requestBody = '<request><element schema="' + schema +
-                                    '" name="' + info[1] +
-                                    '" context="' + info[2] +
-                                    '" fullContext="' + info[3] +
-                                    '" isoType="' + info[4] + '" /></request>';
-                schema = schema || info[0].split('.')[1] || 'iso19139';
-                return requestBody;
-              };
-
-              $http.post('md.element.info@json', getPostRequestBody(), {
-                headers: {'Content-type': 'application/xml'}
-              }).
-                  success(function(data) {
-                    $scope.protocols = data !== 'null' ?
-                            data[0].helper.option : null;
-                  });
+              var config = 'iso19139|gmd:protocol|||';
+              gnMetadataManagerService.getTooltip(config).then(function (data) {
+                $scope.protocols = data !== 'null' ?
+                    data[0].helper.option : null;
+              });
             }]
           };
         }]);
