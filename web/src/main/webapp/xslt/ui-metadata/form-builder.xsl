@@ -494,6 +494,28 @@
         </select>
 
       </xsl:when>
+      <xsl:when test="$type = 'checkbox'">
+        <!-- Checkbox field is composed of an 
+        hidden input to host the checked or unchecked state
+        and a checkbox which updates the hidden field. 
+        If only a checkbox is used, unchecked state is not post
+        by forms.
+        -->
+        <xsl:variable name="elementId" select="concat('gn-field-', $editInfo/@ref)"/>
+        <input
+          id="{$elementId}" 
+          name="_{$name}"
+          type="hidden"
+          value="{$valueToEdit}"/>
+        <!-- FIXME : some JS here. Move to a directive ?-->
+        <input class="" 
+          onclick="$('#{$elementId}').val(this.checked)"
+          type="checkbox">
+          <xsl:if test="$valueToEdit = 'true'">
+            <xsl:attribute name="checked">checked</xsl:attribute>
+          </xsl:if>
+        </input>
+      </xsl:when>
       <xsl:otherwise>
         
         <xsl:variable name="input">

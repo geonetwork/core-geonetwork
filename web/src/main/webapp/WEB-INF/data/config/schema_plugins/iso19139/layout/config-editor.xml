@@ -29,6 +29,7 @@
     <for name="gco:Distance" use="number"/>
     <for name="gco:Decimal" use="number"/>
     <for name="gco:Integer" use="number"/>
+    <for name="gco:Boolean" use="checkbox"/>
 
 
     <for name="gco:Date" use="date"/>
