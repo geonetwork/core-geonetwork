@@ -443,14 +443,21 @@
     <xsl:variable name="valueToEdit"
       select="if ($value/*) then normalize-space($value/text()) else $value"/>
 
+    <!-- If a form field has suggestion list in helper 
+    then the element is hidden and the helper directive is added.
+    ListOfValues could be a codelist (with entry children) or
+    helper (with option).
+    -->
+    <xsl:variable name="hasHelper" select="$listOfValues and count($listOfValues/option) > 0"/>
+
     <xsl:choose>
       <xsl:when test="$type = 'textarea'">
         <textarea class="form-control" id="gn-field-{$editInfo/@ref}" name="_{$name}">
           <xsl:if test="$isRequired">
             <xsl:attribute name="required" select="'required'"/>
           </xsl:if>
-          <xsl:if test="$hidden">
-            <xsl:attribute name="display" select="'none'"/>
+          <xsl:if test="$hidden or $hasHelper">
+            <xsl:attribute name="class" select="'hidden'"/>
           </xsl:if>
           <xsl:value-of select="$valueToEdit"/>
         </textarea>
@@ -463,9 +470,6 @@
           <xsl:if test="$hidden">
             <xsl:attribute name="display" select="'none'"/>
           </xsl:if>
-          <!-- Build list from list of values.
-                    
-                    TODO : for enum -->
           <xsl:for-each select="$listOfValues/entry">
             <xsl:sort select="label"/>
             <option value="{code}" title="{normalize-space(description)}">
@@ -475,14 +479,22 @@
               <xsl:value-of select="label"/>
             </option>
           </xsl:for-each>
-          <!--<option value="{$valueToEdit}">
+          <!-- Add the value if not defined in the codelist to not lose it
+             -->
+          <xsl:if test="count($listOfValues/entry[code = $valueToEdit]) = 0">
+            <option value="{$valueToEdit}" selected="selected">
+              <xsl:value-of select="$valueToEdit"/>
+            </option>
+          </xsl:if>
+          <!--
+            Add the value if not defined in the codelist to not lose it
+            <option value="{$valueToEdit}">
                         <xsl:value-of select="$value"/>
                     </option>-->
         </select>
 
       </xsl:when>
       <xsl:otherwise>
-        <xsl:variable name="hasHelper" select="$listOfValues and count($listOfValues/*) > 0"/>
         
         <xsl:variable name="input">
           <input class="form-control " 
@@ -523,31 +535,30 @@
           </xsl:otherwise>
         </xsl:choose>-->
         
+      </xsl:otherwise>
+    </xsl:choose>
 
-
-        <!-- 
+    <!-- 
         Create an helper list for the current input element.
         Current input could be an element or an attribute (eg. uom). 
         -->
-        <xsl:if test="$hasHelper">
-          <!-- 
+    <xsl:if test="$hasHelper">
+      <!-- 
             The helper config to pass to the directive in JSON format
           -->
-          <textarea id="_{$editInfo/@ref}_config" class="hidden">
-            <xsl:copy-of select="java-xsl-util:xmlToJson(
-                                    saxon:serialize($listOfValues, 'default-serialize-mode'))"/></textarea>
-          <div 
-            data-gn-editor-helper="{$listOfValues/@editorMode}"
-            data-ref="_{$editInfo/@ref}"
-            data-type="{$type}"
-            data-related-element="{if ($listOfValues/@relElementRef != '') 
-                                    then concat('_', $listOfValues/@relElementRef) else ''}"
-            data-related-attr="{if ($listOfValues/@relAtt) 
-                                    then concat('_', $editInfo/@ref, '_', $listOfValues/@relAtt) else ''}">
-          </div>
-        </xsl:if>
-      </xsl:otherwise>
-    </xsl:choose>
+      <textarea id="_{$editInfo/@ref}_config" class="hidden">
+        <xsl:copy-of select="java-xsl-util:xmlToJson(
+          saxon:serialize($listOfValues, 'default-serialize-mode'))"/></textarea>
+      <div 
+        data-gn-editor-helper="{$listOfValues/@editorMode}"
+        data-ref="_{$editInfo/@ref}"
+        data-type="{$type}"
+        data-related-element="{if ($listOfValues/@relElementRef != '') 
+        then concat('_', $listOfValues/@relElementRef) else ''}"
+        data-related-attr="{if ($listOfValues/@relAtt) 
+        then concat('_', $editInfo/@ref, '_', $listOfValues/@relAtt) else ''}">
+      </div>
+    </xsl:if>
 
   </xsl:template>
 
