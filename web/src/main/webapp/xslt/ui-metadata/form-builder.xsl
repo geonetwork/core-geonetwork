@@ -26,10 +26,6 @@
     <!-- cls may define custom CSS class in order to activate
     custom widgets on client side -->
     <xsl:param name="cls" required="no" as="xs:string"/>
-    <!-- widget may define custom information in order to activate
-    custom widgets on client side. Eg. calendar, bboxMap -->
-    <xsl:param name="widget" required="no" as="xs:string" select="''"/>
-    <xsl:param name="widgetParams" required="no" as="xs:string" select="''"/>
     <!-- XPath is added as data attribute for client side references 
     to get help or inline editing ? -->
     <xsl:param name="xpath" required="no" as="xs:string" select="''"/>
@@ -101,18 +97,10 @@
         </div>
       </xsl:when>
       <xsl:otherwise>
-        <div class="form-group" id="gn-el-{$editInfo/@ref}">
+        <div class="form-group {if ($isRequired) then 'gn-required' else ''}" id="gn-el-{$editInfo/@ref}">
           <label for="gn-field-{$editInfo/@ref}"
-            class="col-lg-2 control-label {if ($isRequired) then 'gn-required' else ''}">
-            <xsl:if test="$xpath and $withXPath">
-              <xsl:attribute name="data-gn-xpath" select="$xpath"/>
-            </xsl:if>
-            <xsl:if test="$widget != ''">
-              <xsl:attribute name="data-gn-widget" select="$widget"/>
-              <xsl:if test="$widgetParams != ''">
-                <xsl:attribute name="data-gn-widget-params" select="$widgetParams"/>
-              </xsl:if>
-            </xsl:if>
+            class="col-lg-2 control-label" 
+            data-gn-field-tooltip="{$schema}|{name(.)}|{name(..)}|{$xpath}">
             <xsl:value-of select="$label"/>
           </label>
 
@@ -337,17 +325,17 @@
     <xsl:param name="parentEditInfo"/>
 
     <xsl:variable name="id" select="generate-id()"/>
+    <xsl:variable name="qualifiedName" select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
 
     <!-- This element is replaced by the content received when clicking add -->
     <div class="form-group" id="gn-el-{$id}">
-      <label class="col-lg-2 control-label">
+      <label class="col-lg-2 control-label"
+        data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
         <xsl:if test="normalize-space($label) != ''">
                 <xsl:value-of select="$label"/>
         </xsl:if>
       </label>
       <div class="col-lg-8">
-        
-        <xsl:variable name="qualifiedName" select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
         
         <xsl:choose>
           <!-- When element have different types, provide
@@ -483,24 +471,45 @@
       <xsl:otherwise>
         <xsl:variable name="hasHelper" select="$listOfValues and count($listOfValues/*) > 0"/>
         
-        <input class="form-control" id="gn-field-{$editInfo/@ref}" name="_{$name}"
-          value="{$valueToEdit}">
-          <xsl:if test="$isRequired">
-            <xsl:attribute name="required" select="'required'"/>
-          </xsl:if>
-          <xsl:if test="$isDisabled">
-            <xsl:attribute name="disabled" select="'disabled'"/>
-          </xsl:if>
-          <xsl:if test="$type != ''">
-            <xsl:attribute name="type" select="$type"/>
-          </xsl:if>
-          <xsl:if test="$hidden or $hasHelper">
-            <!-- hide the form field if helper is available, the 
-            value is set by the directive which provide customized 
-            forms -->
-            <xsl:attribute name="class" select="'hidden'"/>
-          </xsl:if>
-        </input>
+        <xsl:variable name="input">
+          <input class="form-control " 
+            id="gn-field-{$editInfo/@ref}" 
+            name="_{$name}" 
+            value="{$valueToEdit}">
+            <xsl:if test="$isRequired">
+              <xsl:attribute name="required" select="'required'"/>
+              <xsl:attribute name="data-gn-check" select="concat('#gn-el-', $editInfo/@ref)"/>
+            </xsl:if>
+            <xsl:if test="$isDisabled">
+              <xsl:attribute name="disabled" select="'disabled'"/>
+            </xsl:if>
+            <xsl:if test="$type != ''">
+              <xsl:attribute name="type" select="$type"/>
+            </xsl:if>
+            <xsl:if test="$hidden or $hasHelper">
+              <!-- hide the form field if helper is available, the 
+              value is set by the directive which provide customized 
+              forms -->
+              <xsl:attribute name="class" select="'hidden'"/>
+            </xsl:if>
+          </input>
+        </xsl:variable>
+
+        <xsl:copy-of select="$input"/>
+        <!--
+          Tentative to display asterisk for mandatory elements
+          <xsl:choose>
+          <xsl:when test="$isRequired">
+            <div class="input-group">
+              <xsl:copy-of select="$input"/>
+              <span class="input-group-addon"><i class="fa fa-asterisk"/>&#xA0;</span>
+            </div>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="$input"/>
+          </xsl:otherwise>
+        </xsl:choose>-->
+        
 
 
         <!-- 

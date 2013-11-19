@@ -162,12 +162,12 @@
           $('.gn-attr').addClass('hidden');
         }
       };
-
+      $scope.checkField = function(name) {
+        return gnEditor[name].$error.required ? 'has-error' : '';
+      };
       $scope.add = function(ref, name, insertRef, position, attribute) {
         gnMetadataManagerService.add($scope.metadataId, ref, name,
-            insertRef, position, attribute).then(function(snippet) {
-          $compile(snippet)($scope); // Compile
-        });
+            insertRef, position, attribute);
         return false;
       };
       $scope.addChoice = function(ref, name, insertRef, position) {

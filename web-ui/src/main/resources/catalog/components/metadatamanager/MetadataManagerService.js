@@ -36,10 +36,12 @@
        '$http',
        '$translate',
        '$compile',
+       '$cacheFactory',
        'gnUrlUtils',
        'gnNamespaces',
        'gnXmlTemplates',
        function($q, $rootScope, $http, $translate, $compile, 
+           $cacheFactory,
        gnUrlUtils, gnNamespaces, gnXmlTemplates) {
          /**
          * Contains a list of metadata records currently edited
@@ -51,6 +53,8 @@
          * Animation duration for slide up/down
          */
          var duration = 300;
+
+         var tooltipCache = $cacheFactory('tooltipCache');
 
          return {
            startEditing: function(metadataId, config) {
@@ -206,7 +210,44 @@
              });
              return defer.promise;
            },
+           /**
+            * Retrieve field information (ie. name, description, helpers).
+            * Information are cached in the tooltipCache.
+            *
+            * Return a promise.
+            */
+           getTooltip: function(config) {
+             //<request>
+             //  <element schema="iso19139"
+             //   name="gmd:geometricObjectType"
+             //   context="gmd:MD_GeometricObjects"
+             //   fullContext="xpath"
+             //   isoType="" /></request>
+             var defer = $q.defer();
+             var fromCache = tooltipCache.get(config);
+             if (fromCache) {
+               defer.resolve(fromCache);
+             } else {
+               var getPostRequestBody = function() {
+                 var info = config.split('|'),
+                 requestBody = '<request><element schema="' + info[0] +
+                 '" name="' + info[1] +
+                 '" context="' + info[2] +
+                 '" fullContext="' + info[3] +
+                 '" isoType="' + info[4] + '" /></request>';
+                 return requestBody;
+               };
 
+               $http.post('md.element.info@json', getPostRequestBody(), {
+                 headers: {'Content-type': 'application/xml'}
+               }).
+               success(function(data) {
+                 tooltipCache.put(config, data);
+                 defer.resolve(data);
+               });
+             }
+             return defer.promise;
+           },
            // TODO: move selection to search service
            select: function(uuid, andClearSelection) {
              return _select(uuid, andClearSelection, 'add');
@@ -230,6 +271,7 @@
            },
            getRecord: function(id) {
              var defer = $q.defer();
+             // TODO : replace to use new services
              var url = gnUrlUtils.append('xml.metadata.get',
                  gnUrlUtils.toKeyValue({
                    id: id
