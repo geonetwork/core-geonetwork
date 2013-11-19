@@ -23,6 +23,7 @@
   <xsl:template name="render-element">
     <xsl:param name="label" as="xs:string"/>
     <xsl:param name="value"/>
+    <xsl:param name="errors" required="no"/>
     <!-- cls may define custom CSS class in order to activate
     custom widgets on client side -->
     <xsl:param name="cls" required="no" as="xs:string"/>
@@ -105,7 +106,6 @@
           </label>
 
 
-
           <xsl:choose>
             <xsl:when test="$isEditing">
               <div class="col-lg-8 gn-value">
@@ -125,6 +125,12 @@
                   <div class="well well-sm gn-attr {if ($isDisplayingAttributes) then '' else 'hidden'}">
                     <xsl:copy-of select="$attributesSnippet"/>
                   </div>
+                </xsl:if>
+                
+                <xsl:if test="$errors">
+                  <xsl:for-each select="$errors/errors/error">
+                    <span class="help-block text-danger"><xsl:value-of select="."/></span>
+                  </xsl:for-each>
                 </xsl:if>
               </div>
               <div class="col-lg-2 gn-control">
@@ -183,6 +189,7 @@
   <xsl:template name="render-boxed-element">
     <xsl:param name="label" as="xs:string"/>
     <xsl:param name="value"/>
+    <xsl:param name="errors" required="no"/>
     <xsl:param name="editInfo" required="no"/>
     <!-- The content to put into the box -->
     <xsl:param name="subTreeSnippet" required="yes" as="node()"/>
@@ -211,13 +218,19 @@
         </xsl:if>
       </legend>
 
-
       <xsl:if test="count($attributesSnippet/*) > 0">
         <div class="well well-sm gn-attr {if ($isDisplayingAttributes) then '' else 'hidden'}">
           <xsl:copy-of select="$attributesSnippet"/>
         </div>
       </xsl:if>
 
+      <xsl:if test="normalize-space($errors) != ''">
+        <xsl:for-each select="$errors/errors/error">
+          <div class="alert alert-danger">
+            <xsl:value-of select="."/>
+          </div>
+        </xsl:for-each>
+      </xsl:if>
 
       <xsl:if test="$subTreeSnippet">
         <xsl:copy-of select="$subTreeSnippet"/>

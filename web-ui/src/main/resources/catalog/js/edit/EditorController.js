@@ -110,6 +110,8 @@
             $($scope.formId + ' #language')[0].value;
         $scope.editorConfig.metadataOtherLanguages =
             $($scope.formId + ' #otherLanguages')[0].value;
+        $scope.editorConfig.showValidationErrors =
+          $($scope.formId + ' #showvalidationerrors')[0].value;
       };
 
 
@@ -218,8 +220,9 @@
 
 
 
-      $scope.reset = function() {
-
+      $scope.validate = function() {
+        $($scope.formId + ' #showvalidationerrors')[0].value = 'true';
+        $scope.save(true);
       };
 
 

@@ -65,7 +65,7 @@
         value="{$isDisplayingAttributes}"/>
       <input type="hidden" id="minor" name="minor" value="{$isMinorEdit}"/>
       <input type="hidden" id="flat" name="flat" value="{$isFlatMode}"/>
-      <input type="hidden" name="showvalidationerrors" value="{$showValidationErrors}"/>
+      <input type="hidden" id="showvalidationerrors" name="showvalidationerrors" value="{$showValidationErrors}"/>
 
       <!-- Dispatch to profile mode -->
       <xsl:if test="$service != 'md.element.add'">

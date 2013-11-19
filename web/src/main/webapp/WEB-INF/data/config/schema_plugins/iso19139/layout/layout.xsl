@@ -120,11 +120,18 @@
         </xsl:apply-templates>
       </xsl:if>
     </xsl:variable>
-
+    
+    <xsl:variable name="errors">
+      <xsl:if test="$showValidationErrors">
+        <xsl:call-template name="get-errors"/>
+      </xsl:if>
+    </xsl:variable>
+    
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
         select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
       <xsl:with-param name="editInfo" select="gn:element"/>
+      <xsl:with-param name="errors" select="$errors"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
@@ -186,9 +193,18 @@
       </xsl:if>
     </xsl:variable>
     
+    <xsl:variable name="errors">
+      <xsl:if test="$showValidationErrors">
+        <xsl:call-template name="get-errors">
+          <xsl:with-param name="theElement" select="$theElement"/>
+        </xsl:call-template>
+      </xsl:if>
+    </xsl:variable>
+    
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelConfig/label"/>
       <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="errors" select="$errors"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
 			<xsl:with-param name="widgetParams"/>-->
@@ -254,8 +270,6 @@
       <xsl:with-param name="label" select="$labelConfig/label"/>
       <xsl:with-param name="value" select="*"/>
       <xsl:with-param name="cls" select="local-name()"/>
-      <!--<xsl:with-param name="widget"/>
-      <xsl:with-param name="widgetParams"/>-->
       <xsl:with-param name="xpath" select="$xpath"/>
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
       <xsl:with-param name="type"
@@ -296,10 +310,7 @@
         select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
       <xsl:with-param name="value" select="*/@codeListValue"/>
       <xsl:with-param name="cls" select="local-name()"/>
-      <!--<xsl:with-param name="widget"/>
-            <xsl:with-param name="widgetParams"/>-->
       <xsl:with-param name="xpath" select="$xpath"/>
-      <!--<xsl:with-param name="attributesSnippet" as="node()"/>-->
       <xsl:with-param name="type" select="gn-fn-iso19139:getCodeListType(name())"/>
       <xsl:with-param name="name"
         select="if ($isEditing) then concat(*/gn:element/@ref, '_codeListValue') else ''"/>
@@ -308,6 +319,36 @@
         select="gn-fn-metadata:getCodeListValues($schema, name(*[@codeListValue]), $codelists, .)"/>
     </xsl:call-template>
 
+  </xsl:template>
+  
+  
+  <!-- 
+    Take care of enumerations.
+    
+    In the metadocument an enumeration provide the list of possible values:
+  <gmd:topicCategory>
+    <gmd:MD_TopicCategoryCode>
+    <geonet:element ref="69" parent="68" uuid="gmd:MD_TopicCategoryCode_0073afa8-bc8f-4c52-94f3-28d3aa686772" min="1" max="1">
+      <geonet:text value="farming"/>
+      <geonet:text value="biota"/>
+      <geonet:text value="boundaries"/
+  -->
+  <xsl:template mode="mode-iso19139" match="*[gn:element/gn:text]">
+    <xsl:param name="schema" select="$schema" required="no"/>
+    <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="codelists" select="$iso19139codelists" required="no"/>
+
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label"
+        select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', '')/label"/>
+      <xsl:with-param name="value" select="text()"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="type" select="gn-fn-iso19139:getCodeListType(name())"/>
+      <xsl:with-param name="name" select="gn:element/@ref"/>
+      <xsl:with-param name="editInfo" select="*/gn:element"/>
+      <xsl:with-param name="listOfValues"
+        select="gn-fn-metadata:getCodeListValues($schema, name(), $codelists, .)"/>
+    </xsl:call-template>
   </xsl:template>
 
 </xsl:stylesheet>
