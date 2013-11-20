@@ -20,6 +20,11 @@ public class GeonetworkDataDirectoryDefaultMultiNodeTest extends AbstractGeonetw
     }
 
     @Override
+    protected boolean isDefaultContext() {
+        return false;
+    }
+
+    @Override
     protected String getDataDir() {
         return new File(getWebappDir() + GEONETWORK_DEFAULT_DATA_DIR).getAbsolutePath() + "_" + getGeonetworkNodeId() + separator;
     }

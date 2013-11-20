@@ -1136,21 +1136,21 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit, String langCode, 
 			Map<String, FacetConfig> summaryConfig, IndexReader reader, 
 			Query query, Filter cFilter, Sort sort, TaxonomyReader taxonomyReader, boolean buildSummary, boolean trackDocScores,
-			boolean trackMaxScore, boolean docsScoredInOrder) throws Exception
-	{
-        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
+			boolean trackMaxScore, boolean docsScoredInOrder) throws Exception {
+        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
             Log.debug(Geonet.SEARCH_ENGINE, "Build summary: " + buildSummary);
             Log.debug(Geonet.SEARCH_ENGINE, "Setting up the TFC with numHits " + numHits);
         }
 		TopFieldCollector tfc = TopFieldCollector.create(sort, numHits, true, trackDocScores, trackMaxScore, docsScoredInOrder);
 
-        if(query != null && reader != null ) {
+        if (query != null && reader != null ) {
             // too dangerous to do this only for logging, as it may throw NPE if Query was not constructed correctly
             // However if you need to see what Lucene queries are really used, print the rewritten query instead
             // Query rw = query.rewrite(reader);
             // System.out.println("Lucene query: " + rw.toString());
-            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
                 Log.debug(Geonet.SEARCH_ENGINE, "Lucene query: " + query.toString());
+            }
         }
         IndexSearcher searcher = new IndexSearcher(reader);
 

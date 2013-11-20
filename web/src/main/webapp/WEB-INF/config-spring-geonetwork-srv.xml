@@ -16,4 +16,8 @@
  	<!--<import resource="config-db/postgres.xml"/>-->
  	<!--<import resource="config-db/sqlserver.xml"/> -->
 
+    <!-- bean that indicates that this is the default context -->
+    <bean id="IS_DEFAULT_CONTEXT_BEAN" class="java.lang.Boolean">
+        <constructor-arg index="0" value="true"/>
+    </bean>
 </beans>

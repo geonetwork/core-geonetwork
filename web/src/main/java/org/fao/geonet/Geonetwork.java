@@ -148,7 +148,8 @@ public class Geonetwork implements ApplicationHandler {
         ServiceConfig handlerConfig = new ServiceConfig(serviceConfigElems);
 
         // Init configuration directory
-        _applicationContext.getBean(GeonetworkDataDirectory.class).init(webappName, appPath, handlerConfig, context.getServlet());
+        final GeonetworkDataDirectory dataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
+        dataDirectory.init(webappName, appPath, handlerConfig, context.getServlet());
 
         // Get config handler properties
         String systemDataDir = handlerConfig.getMandatoryValue(Geonet.Config.SYSTEM_DATA_DIR);
@@ -296,9 +297,6 @@ public class Geonetwork implements ApplicationHandler {
             nfe.printStackTrace();
         }
 
-        String htmlCacheDir = handlerConfig
-                .getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
-
         SettingInfo settingInfo = context.getBean(SettingInfo.class);
         searchMan = _applicationContext.getBean(SearchManager.class);
         searchMan.init(logAsynch,
@@ -325,7 +323,7 @@ public class Geonetwork implements ApplicationHandler {
 
         if (xmlSerializer instanceof XmlSerializerSvn && svnManager != null) {
             svnManager.setContext(context);
-            String subversionPath = handlerConfig.getValue(Geonet.Config.SUBVERSION_PATH);
+            String subversionPath = dataDirectory.getMetadataRevisionDir().getCanonicalPath();
             svnManager.setSubversionPath(subversionPath);
             svnManager.init();
         }

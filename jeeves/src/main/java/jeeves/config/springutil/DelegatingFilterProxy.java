@@ -22,7 +22,12 @@ public class DelegatingFilterProxy extends org.springframework.web.filter.Delega
         if (request instanceof HttpServletRequest) {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             final String nodeName = httpRequest.getServletPath().substring(1);
-            applicationContextAttributeKey.set(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY + nodeName);
+            String applicationKey = JeevesServlet.NODE_APPLICATION_CONTEXT_KEY + nodeName;
+            if (getServletContext().getAttribute(applicationKey) == null) {
+                // use default;
+                applicationKey = JeevesServlet.NODE_APPLICATION_CONTEXT_KEY;
+            }
+            applicationContextAttributeKey.set(applicationKey);
         super.doFilter(request, response, filterChain);
         } else {
             response.getWriter().write(request.getClass().getName() + " is not a supported type of request");

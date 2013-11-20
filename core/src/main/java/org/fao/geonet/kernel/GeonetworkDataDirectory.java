@@ -8,6 +8,7 @@ import java.io.IOException;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -200,7 +201,14 @@ public class GeonetworkDataDirectory {
 		} else {
             updateSystemDataDirWithNodeSuffix();
 			systemDataFolder = new File(systemDataDir);
-			if (!systemDataFolder.exists()) {
+            try {
+                IO.mkdirs(systemDataFolder, "Error creating data directory for node: " + nodeId + ": " + systemDataFolder);
+            } catch (IOException e) {
+                Log.error(Geonet.DATA_DIRECTORY, "Error creating system data directory: " + systemDataFolder);
+                useDefaultDataDir = true;
+            }
+
+            if (!systemDataFolder.exists()) {
 				Log.warning(Geonet.DATA_DIRECTORY,
 						"    - Data directory does not exist. Create it first.");
 				useDefaultDataDir = true;
@@ -237,6 +245,15 @@ public class GeonetworkDataDirectory {
 			systemDataDir += File.separator;
 		}
 
+        try {
+            systemDataDir = new File(systemDataDir).getCanonicalPath() + File.separator;
+            systemDataFolder = new File(systemDataDir);
+            if (!systemDataFolder.exists()) {
+                 Log.error(Geonet.DATA_DIRECTORY, "System Data Directory does not exist");
+            }
+        } catch (IOException e) {
+            Log.warning(Geonet.DATA_DIRECTORY, "Unable to make a canonical path from: " + systemDataDir);
+        }
 		Log.info(Geonet.DATA_DIRECTORY, "   - Data directory is: "
 				+ systemDataDir);
 
@@ -280,7 +297,8 @@ public class GeonetworkDataDirectory {
 	}
 
     private void updateSystemDataDirWithNodeSuffix() {
-        if (!JeevesApplicationContext.DEFAULT_NODE_ID.equals(this.nodeId)) {
+        final Boolean isDefault = _applicationContext.getBean(JeevesApplicationContext.IS_DEFAULT_CONTEXT_BEAN_ID, Boolean.class);
+        if (!isDefault) {
             if (systemDataDir.endsWith(File.separator)) {
                 systemDataDir = systemDataDir.substring(0, systemDataDir.length() - 1);
             }
@@ -289,7 +307,7 @@ public class GeonetworkDataDirectory {
     }
 
     private boolean isDefaultNodeId() {
-        return false;  //To change body of created methods use File | Settings | File Templates.
+        return false;
     }
 
     /**
@@ -299,47 +317,32 @@ public class GeonetworkDataDirectory {
 	 * @param path
 	 */
 	private void initDataDirectory(String path, ServiceConfig handlerConfig) {
-		Log.info(Geonet.DATA_DIRECTORY,
-				"   - Data directory initialization ...");
+		Log.info(Geonet.DATA_DIRECTORY, "   - Data directory initialization ...");
 
-		File codelistDir = new File(
-				handlerConfig.getValue(Geonet.Config.CODELIST_DIR));
-		if (!codelistDir.exists()) {
-			Log.info(Geonet.DATA_DIRECTORY,
-					"     - Copying codelists directory ...");
+		if (!this.thesauriDir.exists() || this.thesauriDir.listFiles().length == 0) {
+			Log.info(Geonet.DATA_DIRECTORY, "     - Copying codelists directory ..." + thesauriDir);
 			try {
-				BinaryFile.copyDirectory(new File(path
-						+ GEONETWORK_DEFAULT_DATA_DIR + "codelist"),
-						codelistDir);
+				BinaryFile.copyDirectory(new File(path, GEONETWORK_DEFAULT_DATA_DIR + "config" + File.separator + "codelist"),
+                        this.thesauriDir);
 			} catch (IOException e) {
-				Log.info(Geonet.DATA_DIRECTORY,
-						"     - Copy failed: " + e.getMessage());
-				e.printStackTrace();
+				Log.error(Geonet.DATA_DIRECTORY, "     - Copy failed: " + e.getMessage(), e);
 			}
 		}
 
-		String schemaCatPath = handlerConfig.getValue(Geonet.Config.CONFIG_DIR)
-				+ File.separator + Geonet.File.SCHEMA_PLUGINS_CATALOG;
-		File schemaCatFile = new File(schemaCatPath);
+		File schemaCatFile = new File(configDir, Geonet.File.SCHEMA_PLUGINS_CATALOG);
 		if (!schemaCatFile.exists()) {
-			Log.info(Geonet.DATA_DIRECTORY,
-					"     - Copying schema plugin catalogue ...");
-			FileInputStream in = null;
-			FileOutputStream out = null;
+			Log.info(Geonet.DATA_DIRECTORY, "     - Copying schema plugin catalogue ...");
 			try {
-                in = new FileInputStream(path + "WEB-INF"
-						+ File.separator + Geonet.File.SCHEMA_PLUGINS_CATALOG);
-                out = new FileOutputStream(schemaCatFile);
+                final File srcFile = new File(path,  "WEB-INF" + File.separator + Geonet.File.SCHEMA_PLUGINS_CATALOG);
+                FileUtils.copyFile(srcFile, schemaCatFile);
 
-				BinaryFile.copy(in, out);
+                FileUtils.copyDirectory(new File(path, GEONETWORK_DEFAULT_DATA_DIR + "config" + File.separator + "schema_plugins"),
+                        schemaPluginsDir);
 			} catch (IOException e) {
 				Log.info(
-						Geonet.DATA_DIRECTORY,
-						"      - Error copying schema plugin catalogue: "
-								+ e.getMessage());
-			} finally {
-		        IOUtils.closeQuietly(in);
-		        IOUtils.closeQuietly(out);
+                        Geonet.DATA_DIRECTORY,
+                        "      - Error copying schema plugin catalogue: "
+                        + e.getMessage());
 			}
 		}
 

@@ -20,7 +20,6 @@ import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.List;
 
-import static jeeves.config.springutil.JeevesApplicationContext.DEFAULT_NODE_ID;
 import static org.junit.Assert.*;
 
 public class ConfigurationOveridesTest {
@@ -114,15 +113,14 @@ public class ConfigurationOveridesTest {
     @Test //@Ignore
     public void updateSpringConfiguration() throws JDOMException, IOException {
         final ConfigurationOverrides configurationOverrides = new ConfigurationOverrides("/WEB-INF/test-spring-config-overrides.xml");
-        final String nodeId = JeevesApplicationContext.DEFAULT_NODE_ID;
-        JeevesApplicationContext applicationContext = new JeevesApplicationContext(configurationOverrides, nodeId){
+        final String nodeId = "srv";
+        JeevesApplicationContext applicationContext = new JeevesApplicationContext(configurationOverrides, nodeId, "classpath:test-spring-config.xml"){
 
             @Override
             protected String getAppPath() {
                 return appPath;
             }
         };
-        applicationContext.setConfigLocation("classpath:test-spring-config.xml");
         updateAndPerformSpringAssertions(applicationContext);
         
         // make sure refresh works multiple times

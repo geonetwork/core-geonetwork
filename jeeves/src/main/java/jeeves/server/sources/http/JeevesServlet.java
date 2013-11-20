@@ -23,6 +23,7 @@
 
 package jeeves.server.sources.http;
 
+import jeeves.config.springutil.DelegatingFilterProxy;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.Jeeves;
 import jeeves.server.JeevesEngine;
@@ -33,6 +34,8 @@ import jeeves.server.sources.ServiceRequestFactory;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -46,6 +49,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.regex.Pattern;
 
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
@@ -59,7 +63,7 @@ public class JeevesServlet extends HttpServlet
     private static final long serialVersionUID = 1L;
 	public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
     public static final String NODES_INIT_PARAM = "nodes";
-    private static final String NODE_APPLICATION_CONTEXT_KEY = "jeevesNodeApplicationContext_";
+    public static final String NODE_APPLICATION_CONTEXT_KEY = "jeevesNodeApplicationContext_";
     private boolean initialized = false;
 
     //---------------------------------------------------------------------------
@@ -69,11 +73,25 @@ public class JeevesServlet extends HttpServlet
 	//---------------------------------------------------------------------------
 
     public void init() throws ServletException {
+        final Pattern nodeNamePattern = Pattern.compile("[a-zA-Z0-9_\\-]+");
         final ServletContext servletContext = getServletContext();
         final ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
 
+        JeevesApplicationContext defaultContext = null;
         String[] nodes = servletContext.getInitParameter(NODES_INIT_PARAM).split("\\s+");
+
+        if (nodes.length == 0 || (nodes.length == 1 && nodes[0].trim().isEmpty())) {
+            throw new IllegalArgumentException("Need at least one node defined");
+        }
+
         for (String node : nodes) {
+            if (node.trim().isEmpty()) {
+                continue;
+            }
+            if (!nodeNamePattern.matcher(node.trim()).matches()) {
+                throw new IllegalArgumentException(node.trim() + " has an illegal name.  Node names must be of the form: [a-zA-Z_\\-]+ ");
+
+            }
             ConfigurationOverrides overrides = ConfigurationOverrides.DEFAULT;
             String commonConfigFile = "/WEB-INF/config-spring-geonetwork.xml";
             String configFile = "/WEB-INF/config-spring-geonetwork-" + node + ".xml";
@@ -91,10 +109,66 @@ public class JeevesServlet extends HttpServlet
             // at random places through out the code where it may be in a transaction.
             jeevesAppContext.getBeansOfType(JpaRepository.class, false, true);
 
-            jeevesAppContext.getBean(JeevesEngine.class).init(pathFinder.getAppPath(), pathFinder.getConfigPath(),
-                    pathFinder.getBaseUrl(), this);
+            servletContext.setAttribute(NODE_APPLICATION_CONTEXT_KEY + node.trim(), jeevesAppContext);
 
-            servletContext.setAttribute(NODE_APPLICATION_CONTEXT_KEY + node, jeevesAppContext);
+            // check if the context is the default context
+            try {
+                Boolean isDefault = jeevesAppContext.getBean(JeevesApplicationContext.IS_DEFAULT_CONTEXT_BEAN_ID, Boolean.class);
+                if (isDefault != null && isDefault) {
+                    if (defaultContext != null) {
+                        throw new IllegalArgumentException("Two nodes where defined as the default.  This is not acceptable.");
+                    }
+                    defaultContext = jeevesAppContext;
+
+                    servletContext.setAttribute(NODE_APPLICATION_CONTEXT_KEY, jeevesAppContext);
+                }
+            } catch (NoSuchBeanDefinitionException e) {
+                // no default bean defined so not default
+            }
+        }
+
+        // make sure there is a default context
+        for (int i = 0; i < nodes.length && defaultContext == null; i++) {
+            defaultContext = (JeevesApplicationContext) servletContext.getAttribute(NODE_APPLICATION_CONTEXT_KEY + nodes[i].trim());
+
+            if (defaultContext != null) {
+                try {
+                    defaultContext.getBeanFactory().registerSingleton(JeevesApplicationContext.IS_DEFAULT_CONTEXT_BEAN_ID, true);
+                    servletContext.setAttribute(NODE_APPLICATION_CONTEXT_KEY, defaultContext);
+                } catch (Exception e) {
+                    defaultContext = null;
+                }
+            }
+        }
+
+        // ensure that all application contexts have the is default context bean defined.
+        for (String node : nodes) {
+            if (!node.trim().isEmpty()) {
+
+                JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) servletContext.getAttribute(
+                        NODE_APPLICATION_CONTEXT_KEY + node.trim());
+                try {
+                    Boolean isDefault = jeevesAppContext.getBean(JeevesApplicationContext.IS_DEFAULT_CONTEXT_BEAN_ID, Boolean.class);
+                    if (isDefault == null) {
+                        jeevesAppContext.getBeanFactory().registerSingleton(JeevesApplicationContext.IS_DEFAULT_CONTEXT_BEAN_ID,
+                                defaultContext == jeevesAppContext);
+                    }
+                } catch (NoSuchBeanDefinitionException e) {
+                    jeevesAppContext.getBeanFactory().registerSingleton(JeevesApplicationContext.IS_DEFAULT_CONTEXT_BEAN_ID, defaultContext == jeevesAppContext);
+                }
+            }
+        }
+
+        // initialize each JeevesEngine now
+        for (String node : nodes) {
+            if (!node.trim().isEmpty()) {
+
+                JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) servletContext.getAttribute(
+                        NODE_APPLICATION_CONTEXT_KEY + node.trim());
+                jeevesAppContext.getBean(JeevesEngine.class).init(pathFinder.getAppPath(), pathFinder.getConfigPath(),
+                        pathFinder.getBaseUrl(), this);
+
+            }
         }
 
         initialized = true;
@@ -206,8 +280,7 @@ public class JeevesServlet extends HttpServlet
 
 		//--- create request
 
-        final String nodeKey = NODE_APPLICATION_CONTEXT_KEY + req.getServletPath();
-        final JeevesApplicationContext applicationContext = (JeevesApplicationContext) getServletContext().getAttribute(nodeKey);
+        ConfigurableApplicationContext applicationContext = DelegatingFilterProxy.getApplicationContextAttributeKey(getServletContext());
         JeevesEngine jeeves = applicationContext.getBean(JeevesEngine.class);
 
 		try {

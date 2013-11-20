@@ -107,6 +107,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
             _applicationContext.getBeanFactory().registerSingleton("serviceConfig", serviceConfig);
             _applicationContext.getBeanFactory().registerSingleton(initializedString, initializedString);
+            _applicationContext.getBeanFactory().registerSingleton(JeevesApplicationContext.IS_DEFAULT_CONTEXT_BEAN_ID, isDefaultContext());
         }
 
 
@@ -135,6 +136,10 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
     }
 
+    protected boolean isDefaultContext() {
+        return true;
+    }
+
     /**
      * Get the elements in the service config object.
      */
@@ -155,7 +160,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
      * @return the node id to put into the ApplicationContext.
      */
     protected String getGeonetworkNodeId() {
-        return JeevesApplicationContext.DEFAULT_NODE_ID;
+        return "srv";
     }
 
     /**
@@ -248,4 +253,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.xml");
         return Xml.loadStream(resource.openStream());
     }
+
+
 }

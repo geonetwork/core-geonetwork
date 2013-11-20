@@ -1,14 +1,19 @@
 package jeeves.config.springutil;
 
+import com.google.common.base.Function;
+import jeeves.server.sources.http.JeevesServlet;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.Lifecycle;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import java.util.Enumeration;
 
 public class JeevesContextLoaderListener extends ContextLoaderListener {
 
@@ -52,18 +57,45 @@ public class JeevesContextLoaderListener extends ContextLoaderListener {
     }
 
     @Override
-    public void contextInitialized(ServletContextEvent event) {
+    public void contextInitialized(final ServletContextEvent event) {
         super.contextInitialized(event);
-        Lifecycle context = (Lifecycle) WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
-        context.start();
+        final ServletContext servletContext = event.getServletContext();
+        withEachApplicationContext(servletContext, new Function<ConfigurableApplicationContext, Void>() {
+            @Nullable
+            @Override
+            public Void apply(@Nullable ConfigurableApplicationContext input) {
+                if (input != null) {
+                    input.start();
+                }
+                return null;
+            }
+        });
     }
 
     @Override
-    public void contextDestroyed(ServletContextEvent event) {
-        Lifecycle context = (Lifecycle) WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
-        if (context != null) {
-            context.stop();
-        }
+    public void contextDestroyed(final ServletContextEvent event) {
+        final ServletContext servletContext = event.getServletContext();
+        withEachApplicationContext(servletContext, new Function<ConfigurableApplicationContext, Void>() {
+            @Nullable
+            @Override
+            public Void apply(@Nullable ConfigurableApplicationContext input) {
+                if (input != null) {
+                    input.stop();
+                }
+                return null;
+            }
+        });
         super.contextDestroyed(event);
+    }
+
+    private void withEachApplicationContext (ServletContext servletContext, Function<ConfigurableApplicationContext, Void> action) {
+        final Enumeration attributeNames = servletContext.getAttributeNames();
+        while (attributeNames.hasMoreElements()) {
+            String name = (String) attributeNames.nextElement();
+            if (name.startsWith(JeevesServlet.NODE_APPLICATION_CONTEXT_KEY)) {
+                ConfigurableApplicationContext context = (ConfigurableApplicationContext) servletContext.getAttribute(name);
+                action.apply(context);
+            }
+        }
     }
 }

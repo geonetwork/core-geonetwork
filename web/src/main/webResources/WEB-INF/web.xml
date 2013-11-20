@@ -13,6 +13,17 @@
 	</context-param>
 	<context-param>
 		<param-name>nodes</param-name>
+        <!-- Node names must have the pattern: [a-zA-Z0-9_\-]+
+            Legal names:
+                node_1
+                node-2
+                n1
+            IllegalNames:
+                n/1
+                n@1
+                n n
+
+        -->
  		<param-value>srv node1</param-value>
 	</context-param>
 	<!-- comma separated list of classes that implement
@@ -311,6 +322,11 @@
     <servlet-mapping>
         <servlet-name>gn-servlet</servlet-name>
         <url-pattern>/srv/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>gn-servlet</servlet-name>
+        <url-pattern>/node1/*</url-pattern>
     </servlet-mapping>
     <!-- Web map context servlet -->
     <servlet>

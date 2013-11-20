@@ -23,10 +23,12 @@
 
 package jeeves.component;
 
+import jeeves.config.springutil.DelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
@@ -137,7 +139,7 @@ public class ProfileManager
         ServiceContext serviceContext = ServiceContext.get();
         if(serviceContext == null) return true;
         ServletContext servletContext = serviceContext.getServlet().getServletContext();
-        WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+        ConfigurableApplicationContext springContext = DelegatingFilterProxy.getApplicationContextAttributeKey(servletContext);
         if(springContext == null) return true;
         return springContext.containsBean(beanId);
     }
@@ -156,7 +158,7 @@ public class ProfileManager
         ServiceContext serviceContext = ServiceContext.get();
         if(serviceContext == null) return true;
         ServletContext servletContext = serviceContext.getServlet().getServletContext();
-        WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+        ConfigurableApplicationContext springContext = DelegatingFilterProxy.getApplicationContextAttributeKey(servletContext);
         SecurityContext context = SecurityContextHolder.getContext();
         if(springContext == null || context == null) return true;
         

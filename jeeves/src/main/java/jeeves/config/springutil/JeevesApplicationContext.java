@@ -21,9 +21,9 @@ public class JeevesApplicationContext extends XmlWebApplicationContext  {
      */
     public static final String NODE_ID_BEAN_ID = "NODE_ID_BEAN_ID";
     /**
-     * The nodeId of the 'default' node.
+     * The bean id of the boolean that indicates if this context is the default context
      */
-    public static final String DEFAULT_NODE_ID = "srv";
+    public static final String IS_DEFAULT_CONTEXT_BEAN_ID = "IS_DEFAULT_CONTEXT_BEAN";
     private final ConfigurationOverrides _configurationOverrides;
     private final String nodeId;
 

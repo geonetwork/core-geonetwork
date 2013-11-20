@@ -29,6 +29,11 @@ public class GeonetworkDataDirectoryMultiNodeSystemPropertyOnlySystemDataDirSetT
     protected String getGeonetworkNodeId() {
         return "node1";
     }
+    @Override
+    protected boolean isDefaultContext() {
+        return false;
+    }
+
 
     /**
      * Get The expected data directory
