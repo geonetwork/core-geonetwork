@@ -524,10 +524,11 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/password.change!?.*" access="permitAll"/>
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.edit!?.*" access="hasRole('Editor')"/>
-                
-                
-                
-                
+
+                <sec:intercept-url pattern="/groups/list.html!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/groups/edit.html!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/groups/update.html!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/groups/delete.html!?.*" access="permitAll"/>
                 
                 <sec:intercept-url pattern="/.*" access="denyAll"></sec:intercept-url>
             </sec:filter-security-metadata-source>

@@ -30,6 +30,8 @@ import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.jdom.Element;
 
+import javax.servlet.ServletContext;
+
 //=============================================================================
 
 /** Loads and returns an xml file
@@ -87,5 +89,19 @@ public class XmlFile implements GuiService
         element.setName(name);
         return element;
 	}
+
+    public Element exec(Element response, XmlCacheManager cacheManager, ServletContext context) throws Exception
+    {
+        // TODO: Change
+        String lang = "eng"; // context.getLanguage();
+
+        String preferedLanguage = language;
+        if(localized || preferedLanguage  == null) preferedLanguage = lang;
+        //if(preferedLanguage == null) preferedLanguage = defaultLang;
+
+        Element element = cacheManager.get(context, localized, base, file, preferedLanguage, defaultLang);
+        element.setName(name);
+        return element;
+    }
 }
 
