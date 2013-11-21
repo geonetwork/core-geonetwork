@@ -5,15 +5,15 @@
 
   module.value('gnNamespaces', {
     gmd: 'http://www.isotc211.org/2005/gmd',
-    gco:'http://www.isotc211.org/2005/gco',
+    gco: 'http://www.isotc211.org/2005/gco',
     gfc: 'http://www.isotc211.org/2005/gfc',
-    gml:'http://www.opengis.net/gml',
-    gmx:'http://www.isotc211.org/2005/gmx',
-    gsr:'http://www.isotc211.org/2005/gsr',
-    gss:'http://www.isotc211.org/2005/gss',
-    gts:'http://www.isotc211.org/2005/gts',
-    srv:'http://www.isotc211.org/2005/srv',
-    xlink:'http://www.w3.org/1999/xlink'
+    gml: 'http://www.opengis.net/gml',
+    gmx: 'http://www.isotc211.org/2005/gmx',
+    gsr: 'http://www.isotc211.org/2005/gsr',
+    gss: 'http://www.isotc211.org/2005/gss',
+    gts: 'http://www.isotc211.org/2005/gts',
+    srv: 'http://www.isotc211.org/2005/srv',
+    xlink: 'http://www.w3.org/1999/xlink'
   });
   module.value('gnXmlTemplates', {
     CRS: '<gmd:referenceSystemInfo ' +
@@ -360,7 +360,9 @@
              }
              var tokens = [
                '<', elementName,
-               ' ', nsDeclaration.join(''), ' xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="',
+               ' ', nsDeclaration.join(''), 
+               ' xmlns:xlink="http://www.w3.org/1999/xlink"',
+               'xlink:href="',
                xlink, '"/>'];
              return tokens.join('');
            }

@@ -210,7 +210,8 @@
 
     <xsl:variable name="hasXlink" select="@xlink:href"/>
 
-    <fieldset id="{concat('gn-el-', $editInfo/@ref)}" class="gn-has-xlink">
+    <fieldset id="{concat('gn-el-', $editInfo/@ref)}" 
+      class="{if ($hasXlink) then 'gn-has-xlink' else ''}">
 
       <legend class="{$cls}">
         <xsl:if test="$xpath and $withXPath">

@@ -48,11 +48,13 @@
                  if (usingXlink) {
                    // TODO: handle other types
                    // TODO: catalog base URL
-                   var xlink = 'http://localhost:8080/geonetwork/srv/eng/subtemplate?uuid=' + uuid;
-                   scope.snippet = gnMetadataManagerService.buildXMLForXlink(scope.elementName, xlink);
+                   var xlink = 'http://localhost:8080/geonetwork' +
+                   '/srv/eng/subtemplate?uuid=' + uuid;
+                   scope.snippet = gnMetadataManagerService.
+                   buildXMLForXlink(scope.elementName, xlink);
                  } else {
-                  scope.snippet = gnMetadataManagerService.
-                  buildXML(scope.elementName, xml);
+                   scope.snippet = gnMetadataManagerService.
+                   buildXML(scope.elementName, xml);
                  }
                  scope.clearResults();
 
