@@ -86,9 +86,9 @@
     
     "nostatus": "No status",
     
-    "n": "Metadata",
-    "y": "Template",
-    "s": "Directory entry",
+    "METADATA": "Metadata",
+    "TEMPLATE": "Template",
+    "SUB_TEMPLATE": "Directory entry",
     
     "dublin-core": "Dublin Core",
     "dublin-core-acr": "DC",
