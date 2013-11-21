@@ -55,7 +55,19 @@
          var duration = 300;
 
          var tooltipCache = $cacheFactory('tooltipCache');
-
+         var _select = function(uuid, andClearSelection, action) {
+           var defer = $q.defer();
+           $http.get('metadata.select@json?' +
+               (uuid ? 'id=' + uuid : '') +
+                       (andClearSelection ? '' : '&selected=' + action)).
+               success(function(data, status) {
+                 defer.resolve(data);
+               }).
+                   error(function(data, status) {
+                     defer.reject(error);
+                   });
+           return defer.promise;
+         };
          return {
            startEditing: function(metadataId, config) {
              metadataIdsConfig[metadataId] = config;
