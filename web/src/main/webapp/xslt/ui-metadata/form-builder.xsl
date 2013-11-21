@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:xlink="http://www.w3.org/1999/xlink" 
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
   xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
@@ -45,7 +46,11 @@
     <xsl:param name="parentEditInfo" required="no"/>
     <xsl:param name="attributesSnippet" required="no"/>
     <xsl:param name="listOfValues" select="''"/>
-    <xsl:param name="isDisabled" select="false()"/>
+    <!-- Disable all form fields included in a section based on an XLink.
+    It could be relevant to investigate if this check should be done on
+    only element potentially using XLink and not all of them. 
+    This may have performance inpact? -->
+    <xsl:param name="isDisabled" select="ancestor-or-self::node()[@xlink:href]"/>
 
     <!-- Required status is defined in parent element for
     some profiles like ISO19139. If not set, the element
@@ -200,9 +205,12 @@
     to get help or inline editing ? -->
     <xsl:param name="xpath" required="no"/>
     <xsl:param name="attributesSnippet" required="no"><null/></xsl:param>
+    <xsl:param name="isDisabled" select="ancestor::node()[@xlink:href]"/>
 
 
-    <fieldset id="{concat('gn-el-', $editInfo/@ref)}">
+    <xsl:variable name="hasXlink" select="@xlink:href"/>
+
+    <fieldset id="{concat('gn-el-', $editInfo/@ref)}" class="gn-has-xlink">
 
       <legend class="{$cls}">
         <xsl:if test="$xpath and $withXPath">
@@ -211,7 +219,7 @@
 
         <xsl:value-of select="$label"/>
 
-        <xsl:if test="$editInfo">
+        <xsl:if test="$editInfo and not($isDisabled)">
           <xsl:call-template name="render-boxed-element-control">
             <xsl:with-param name="editInfo" select="$editInfo"/>
           </xsl:call-template>
@@ -336,88 +344,92 @@
     <xsl:param name="directive" as="xs:string?"/>
     <xsl:param name="childEditInfo"/>
     <xsl:param name="parentEditInfo"/>
+    <!-- Hide add element if child of an XLink section. -->
+    <xsl:param name="isDisabled" select="ancestor::node()[@xlink:href]"/>
 
-    <xsl:variable name="id" select="generate-id()"/>
-    <xsl:variable name="qualifiedName" select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
-
-    <!-- This element is replaced by the content received when clicking add -->
-    <div class="form-group" id="gn-el-{$id}">
-      <label class="col-lg-2 control-label"
-        data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
-        <xsl:if test="normalize-space($label) != ''">
-                <xsl:value-of select="$label"/>
-        </xsl:if>
-      </label>
-      <div class="col-lg-8">
-        
-        <xsl:choose>
-          <!-- When element have different types, provide
-                a list of those types to be selected. The type list
-                is defined by the schema and optionaly overriden by
-                the schema suggestion.
-                
-                TODO: Could be nice to select a type by default - a recommended type 
-                
-                If only one choice, make a simple button
-          -->
-          <xsl:when test="count($childEditInfo/gn:choose) = 1">
-                <xsl:for-each select="$childEditInfo/gn:choose">
-                  <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
+    <xsl:if test="not($isDisabled)">
+      <xsl:variable name="id" select="generate-id()"/>
+      <xsl:variable name="qualifiedName" select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
+  
+      <!-- This element is replaced by the content received when clicking add -->
+      <div class="form-group" id="gn-el-{$id}">
+        <label class="col-lg-2 control-label"
+          data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
+          <xsl:if test="normalize-space($label) != ''">
+                  <xsl:value-of select="$label"/>
+          </xsl:if>
+        </label>
+        <div class="col-lg-8">
+          
+          <xsl:choose>
+            <!-- When element have different types, provide
+                  a list of those types to be selected. The type list
+                  is defined by the schema and optionaly overriden by
+                  the schema suggestion.
                   
-                  <i type="button" class="btn fa fa-plus gn-add" 
-                  title="{$label/description}"
-                  data-ng-click="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'replaceWith');">
-                  </i>
-                </xsl:for-each>
-          </xsl:when>
-          <!-- 
-                If many choices, make a dropdown button -->
-          <xsl:when test="count($childEditInfo/gn:choose) > 1">
-            <div class="btn-group">
-              <button type="button" class="btn dropdown-toggle fa fa-plus gn-add" data-toggle="dropdown">
-                <span/>
-                <span class="caret"/>
-              </button>
-              <ul class="dropdown-menu">
-                <xsl:for-each select="$childEditInfo/gn:choose">
-                  <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
+                  TODO: Could be nice to select a type by default - a recommended type 
                   
-                  <li title="{$label/description}">
-                    <a
-                      data-ng-click="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'before');">
-                      <xsl:value-of select="$label/label"/>
-                    </a>
-                  </li>
-                </xsl:for-each>
-              </ul>
-            </div>
-          </xsl:when>
-          <xsl:otherwise>
-            <!-- Add custom widget to add element.
-              This could be a subtemplate (if one available), or a helper
-              like for projection.
-              The directive is in charge of displaying the default add button if needed.
+                  If only one choice, make a simple button
             -->
-            <xsl:choose>
-              <xsl:when test="$directive != ''">
-                <div>
-                  <xsl:attribute name="{$directive}"/>
-                  <xsl:attribute name="data-dom-id" select="$id"/>
-                  <xsl:attribute name="data-metadata-id" select="$metadataId"/>
-                  <xsl:attribute name="data-element-name" select="$qualifiedName"/>
-                  <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
-                </div>
-              </xsl:when>
-              <xsl:otherwise>
-                <i class="btn fa fa-plus gn-add"
-                  data-ng-click="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');"
-                />
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:otherwise>
-        </xsl:choose>
+            <xsl:when test="count($childEditInfo/gn:choose) = 1">
+                  <xsl:for-each select="$childEditInfo/gn:choose">
+                    <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
+                    
+                    <i type="button" class="btn fa fa-plus gn-add" 
+                    title="{$label/description}"
+                    data-ng-click="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'replaceWith');">
+                    </i>
+                  </xsl:for-each>
+            </xsl:when>
+            <!-- 
+                  If many choices, make a dropdown button -->
+            <xsl:when test="count($childEditInfo/gn:choose) > 1">
+              <div class="btn-group">
+                <button type="button" class="btn dropdown-toggle fa fa-plus gn-add" data-toggle="dropdown">
+                  <span/>
+                  <span class="caret"/>
+                </button>
+                <ul class="dropdown-menu">
+                  <xsl:for-each select="$childEditInfo/gn:choose">
+                    <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
+                    
+                    <li title="{$label/description}">
+                      <a
+                        data-ng-click="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{@name}', '{$id}', 'before');">
+                        <xsl:value-of select="$label/label"/>
+                      </a>
+                    </li>
+                  </xsl:for-each>
+                </ul>
+              </div>
+            </xsl:when>
+            <xsl:otherwise>
+              <!-- Add custom widget to add element.
+                This could be a subtemplate (if one available), or a helper
+                like for projection.
+                The directive is in charge of displaying the default add button if needed.
+              -->
+              <xsl:choose>
+                <xsl:when test="$directive != ''">
+                  <div>
+                    <xsl:attribute name="{$directive}"/>
+                    <xsl:attribute name="data-dom-id" select="$id"/>
+                    <xsl:attribute name="data-metadata-id" select="$metadataId"/>
+                    <xsl:attribute name="data-element-name" select="$qualifiedName"/>
+                    <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
+                  </div>
+                </xsl:when>
+                <xsl:otherwise>
+                  <i class="btn fa fa-plus gn-add"
+                    data-ng-click="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');"
+                  />
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:otherwise>
+          </xsl:choose>
+        </div>
       </div>
-    </div>
+    </xsl:if>
   </xsl:template>
 
   <!-- Create a form field ie. a textarea, an input, a select, ...
