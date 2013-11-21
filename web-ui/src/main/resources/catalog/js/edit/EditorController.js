@@ -111,7 +111,7 @@
         $scope.editorConfig.metadataOtherLanguages =
             $($scope.formId + ' #otherLanguages')[0].value;
         $scope.editorConfig.showValidationErrors =
-          $($scope.formId + ' #showvalidationerrors')[0].value;
+            $($scope.formId + ' #showvalidationerrors')[0].value;
       };
 
 
