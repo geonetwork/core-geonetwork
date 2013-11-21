@@ -216,7 +216,7 @@
             <xsl:variable name="id" select="concat('_X', gn:element/@ref, '_replace')"/>
             
             <xsl:call-template name="render-element-template-field">
-              <xsl:with-param name="name" select="$name"/>
+              <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
               <xsl:with-param name="id" select="$id"/>
               <xsl:with-param name="isExisting" select="true()"/>
               <xsl:with-param name="template" select="$template"/>
@@ -234,7 +234,7 @@
             <xsl:variable name="id" select="concat($xpathFieldId, '_xml')"/>
             
             <xsl:call-template name="render-element-template-field">
-              <xsl:with-param name="name" select="$name"/>
+              <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
               <xsl:with-param name="id" select="$id"/>
               <xsl:with-param name="xpathFieldId" select="$xpathFieldId"/>
               <xsl:with-param name="isExisting" select="false()"/>

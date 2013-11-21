@@ -356,10 +356,10 @@
             xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result">
             <template>
               <values>
-                <key label="title" 
+                <key label="conformity_title" 
                   xpath="gmd:DQ_ConformanceResult/
                         gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
-                <key label="date" 
+                <key label="conformity_date" 
                   xpath="gmd:DQ_ConformanceResult/
                         gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date" 
                   use="date"/>
@@ -377,12 +377,12 @@
                     <gmd:specification>
                       <gmd:CI_Citation>
                         <gmd:title>
-                          <gco:CharacterString>{{title}}</gco:CharacterString>
+                          <gco:CharacterString>{{conformity_title}}</gco:CharacterString>
                         </gmd:title>
                         <gmd:date>
                           <gmd:CI_Date>
                             <gmd:date>
-                              <gco:Date>{{date}}</gco:Date>
+                              <gco:Date>{{conformity_date}}</gco:Date>
                             </gmd:date>
                             <gmd:dateType>
                               <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
@@ -505,7 +505,7 @@
         </section>
         <section name="metadata">
           <field
-            name="pointOfContact"
+            name="metadataPointOfContact"
             templateModeOnly="true"
             xpath="/gmd:MD_Metadata/gmd:pointOfContact"
             or="pointOfContact" in="/gmd:MD_Metadata">

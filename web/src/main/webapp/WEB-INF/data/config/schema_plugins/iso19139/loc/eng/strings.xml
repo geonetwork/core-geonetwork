@@ -29,4 +29,24 @@
   <metadataConstraints>Md. constraints</metadataConstraints>
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
   <applicationSchemaInfo>Schema info</applicationSchemaInfo>
+  
+  <!-- INSPIRE view labels and help -->
+  <url>Online resource</url>
+  <identifier>Resource identifier</identifier>
+  <rsIdentifier>Projection</rsIdentifier>
+  <creationDate>Creation date</creationDate>
+  <publicationDate>Publication date</publicationDate>
+  <revisionDate>Revision date</revisionDate>
+  <conformity>Conformity</conformity>
+  <conformity_title>Title</conformity_title>
+  <conformity_date>Date</conformity_date>
+  <explanation>Explanation</explanation>
+  <pass>Pass</pass>
+  <pointOfContact>Contact for the resource</pointOfContact>
+  <metadataPointOfContact>Contact for the metadata</metadataPointOfContact>
+  <organisationName>Organisation name</organisationName>
+  <electronicMailAddress>Email</electronicMailAddress>
+  <encoding>Encoding</encoding>
+  <format>Format</format>
+  <format_version>Version</format_version>
 </strings>

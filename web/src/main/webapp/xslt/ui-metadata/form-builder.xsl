@@ -278,7 +278,7 @@
     </xsl:message>-->
     <div class="form-group">
       <label class="col-lg-2 control-label">
-        <!-- TODO: get label i18n -->
+        <!-- TODO: set tooltip -->
         <xsl:value-of select="$name"/>
       </label>
       <div class="col-lg-8">
@@ -286,7 +286,8 @@
           <!-- Only display label if more than one key to match -->
           <xsl:if test="count($template/values/key) > 1">
             <label>
-              <xsl:value-of select="@label"/>
+              <xsl:variable name="valueLabelKey" select="@label"/>
+              <xsl:value-of select="$strings/*[name() = $valueLabelKey]"/>
             </label>
           </xsl:if>
           
