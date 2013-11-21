@@ -5,7 +5,15 @@
 
   module.value('gnNamespaces', {
     gmd: 'http://www.isotc211.org/2005/gmd',
-    gfc: 'http://www.isotc211.org/2005/gfc'
+    gco:'http://www.isotc211.org/2005/gco',
+    gfc: 'http://www.isotc211.org/2005/gfc',
+    gml:'http://www.opengis.net/gml',
+    gmx:'http://www.isotc211.org/2005/gmx',
+    gsr:'http://www.isotc211.org/2005/gsr',
+    gss:'http://www.isotc211.org/2005/gss',
+    gts:'http://www.isotc211.org/2005/gts',
+    srv:'http://www.isotc211.org/2005/srv',
+    xlink:'http://www.w3.org/1999/xlink'
   });
   module.value('gnXmlTemplates', {
     CRS: '<gmd:referenceSystemInfo ' +
@@ -322,7 +330,6 @@
             * The element name will be the parent element of the
             * snippet provided. It has to be in the gmd: namespace.
             *
-            * TODO : could be nice to have namespaces as global constant
             */
            buildXML: function(elementName, snippet) {
              if (snippet.match(/^<\?xml/g)) {
@@ -342,6 +349,19 @@
                '<', elementName,
                ' ', nsDeclaration.join(''), '>',
                snippet, '</', elementName, '>'];
+             return tokens.join('');
+           },
+           buildXMLForXlink: function(elementName, xlink) {
+             var ns = elementName.split(':');
+             var nsDeclaration = [];
+             if (ns.length === 2) {
+               nsDeclaration = ['xmlns:', ns[0], "='",
+                                gnNamespaces[ns[0]], "'"];
+             }
+             var tokens = [
+               '<', elementName,
+               ' ', nsDeclaration.join(''), ' xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="',
+               xlink, '"/>'];
              return tokens.join('');
            }
          };

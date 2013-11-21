@@ -41,12 +41,19 @@
              // <request><codelist schema="iso19139"
              // name="gmd:CI_RoleCode" /></request>
              scope.addContact = function(contact, usingXlink) {
-               var id = contact['geonet:info'].id;
+               var id = contact['geonet:info'].id,
+                    uuid = contact['geonet:info'].uuid;
                gnMetadataManagerService.getRecord(id).then(function(xml) {
                  // TODO: contact role
-                 scope.snippet = gnMetadataManagerService.
-                 buildXML(scope.elementName, xml);
-
+                 if (usingXlink) {
+                   // TODO: handle other types
+                   // TODO: catalog base URL
+                   var xlink = 'http://localhost:8080/geonetwork/srv/eng/subtemplate?uuid=' + uuid;
+                   scope.snippet = gnMetadataManagerService.buildXMLForXlink(scope.elementName, xlink);
+                 } else {
+                  scope.snippet = gnMetadataManagerService.
+                  buildXML(scope.elementName, xml);
+                 }
                  scope.clearResults();
 
                  $timeout(function() {
