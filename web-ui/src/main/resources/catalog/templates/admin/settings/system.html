@@ -25,7 +25,7 @@
               <label class="col-lg-4 control-label" for="{{s['@name']}}"> {{s['@name'] | translate}} </label>
               <div class="col-lg-8">
                 <input type="checkbox" id="{{s['@name']}}" name="{{s.formName}}"
-                  ng-model="s['#text']"/>
+                  data-ng-model="s['#text']"/>
 
                 <p class="help-block ">{{s['@name'] + '-help' | translate}}</p>
 
@@ -69,7 +69,7 @@
                 <select data-ng-switch-when="system/requestedLanguage/only" class="form-control"
                       name="{{s.formName}}">
                   <option value="off"
-                          ng-selected="'off == s['#text']">{{'system/requestedLanguage/only-value1' | translate}}</option>
+                          ng-selected="'off' == s['#text']">{{'system/requestedLanguage/only-value1' | translate}}</option>
                   <option value="prefer_locale"
                           ng-selected="'prefer_locale' == s['#text']">{{'system/requestedLanguage/only-value2' | translate}}</option>
                   <option value="prefer_docLocale"
