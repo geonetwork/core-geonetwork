@@ -226,7 +226,9 @@
           
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
-            gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword">
+            gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword" or="keyword"
+            in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+            gmd:descriptiveKeywords/gmd:MD_Keywords">
             <!-- TODO support for multiple nodes -->
           </field>
           
