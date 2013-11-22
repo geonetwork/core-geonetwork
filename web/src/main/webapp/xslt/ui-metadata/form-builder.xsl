@@ -481,6 +481,9 @@
           <xsl:if test="$isRequired">
             <xsl:attribute name="required" select="'required'"/>
           </xsl:if>
+          <xsl:if test="$isDisabled">
+            <xsl:attribute name="disabled" select="'disabled'"/>
+          </xsl:if>
           <xsl:if test="$hidden">
             <xsl:attribute name="display" select="'none'"/>
           </xsl:if>
