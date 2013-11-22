@@ -360,7 +360,7 @@
              }
              var tokens = [
                '<', elementName,
-               ' ', nsDeclaration.join(''), 
+               ' ', nsDeclaration.join(''),
                ' xmlns:xlink="http://www.w3.org/1999/xlink"',
                'xlink:href="',
                xlink, '"/>'];

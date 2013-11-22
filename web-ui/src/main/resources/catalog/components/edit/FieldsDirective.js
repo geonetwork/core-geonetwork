@@ -44,14 +44,17 @@
               // Retrieve field information (there is a cache)
               gnMetadataManagerService
                   .getTooltip(attrs.gnFieldTooltip).then(function(data) {
-                    // Initialize tooltip when description returned
-                    // TODO: Create some kind of template
-                    element.tooltip({
-                      title: data[0].description,
-                      placement: attrs.placement || 'bottom'
-                    });
-                    element.tooltip('show');
-                    isInitialized = true;
+                    var info = data[0];
+                    if (info.description && info.description.length > 0) {
+                      // Initialize tooltip when description returned
+                      // TODO: Create some kind of template
+                      element.tooltip({
+                        title: info.description,
+                        placement: attrs.placement || 'bottom'
+                      });
+                      element.tooltip('show');
+                      isInitialized = true;
+                    }
                   });
             }
           };
