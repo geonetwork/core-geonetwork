@@ -137,14 +137,16 @@
         </section>
       </tab>
       <tab id="metadataConstraints">
-        <section xpath="/gmd:MD_Metadata/gmd:metadataConstraints" localName="metadataConstraints"/>
+        <section xpath="/gmd:MD_Metadata/gmd:metadataConstraints" or="metadataConstraints"
+          in="/gmd:MD_Metadata"/>
       </tab>
       <tab id="metadataMaintenance">
-        <section xpath="/gmd:MD_Metadata/gmd:metadataMaintenance" localName="metadataMaintenance"/>
+        <section xpath="/gmd:MD_Metadata/gmd:metadataMaintenance" or="metadataMaintenance"
+          in="/gmd:MD_Metadata"/>
       </tab>
       <tab id="applicationSchemaInfo">
         <section xpath="/gmd:MD_Metadata/gmd:applicationSchemaInfo"
-          localName="applicationSchemaInfo"/>
+          or="applicationSchemaInfo"  in="/gmd:MD_Metadata"/>
       </tab>
     </view>
     <view name="inspire">
