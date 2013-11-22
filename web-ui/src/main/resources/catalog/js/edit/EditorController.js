@@ -229,12 +229,10 @@
       $scope.highlightRemove = function(ref) {
         var target = $('#gn-el-' + ref);
         target.addClass('text-danger');
-        target.find('legend').addClass('text-danger');
       };
       $scope.unhighlightRemove = function(ref) {
         var target = $('#gn-el-' + ref);
         target.removeClass('text-danger');
-        target.find('legend').removeClass('text-danger');
       };
 
       init();
