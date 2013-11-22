@@ -213,7 +213,7 @@
     <fieldset id="{concat('gn-el-', $editInfo/@ref)}" 
       class="{if ($hasXlink) then 'gn-has-xlink' else ''}">
 
-      <legend class="{$cls}" data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|">
+      <legend class="{$cls}" data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|" data-placement="left">
         <xsl:if test="$xpath and $withXPath">
           <xsl:attribute name="data-gn-xpath" select="$xpath"/>
         </xsl:if>
@@ -620,7 +620,10 @@
                      ($parentEditInfo/@del = 'true' or 
                      $parentEditInfo/@min != 1)
                    ) or 
-                   not($parentEditInfo)">
+                   (not($parentEditInfo) and ($editInfo and 
+                   ($editInfo/@del = 'true' or 
+                   $editInfo/@min != 1)
+                   ))">
       <i class="btn fa fa-times text-danger gn-control pull-right"
         data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
         data-ng-mouseenter="highlightRemove({$editInfo/@ref})"

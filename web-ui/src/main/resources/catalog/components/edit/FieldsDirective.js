@@ -48,7 +48,7 @@
                     // TODO: Create some kind of template
                     element.tooltip({
                       title: data[0].description,
-                      placement: 'bottom'
+                      placement: attrs.placement || 'bottom'
                     });
                     element.tooltip('show');
                     isInitialized = true;
