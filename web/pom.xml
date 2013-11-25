@@ -28,7 +28,8 @@
 
   <!-- FIXME set common dependencies to the root pom.xml  -->
   <dependencies>
-	  <dependency>
+
+      <dependency>
       	<groupId>net.sf.ehcache</groupId>
       	<artifactId>ehcache-core</artifactId>
       </dependency>
@@ -452,6 +453,11 @@
           <version>${project.version}</version>
           <classifier>tests</classifier>
           <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>wro4j</artifactId>
+          <version>${project.version}</version>
       </dependency>
 	</dependencies>
 
@@ -902,6 +908,72 @@
           <stopPort>8090</stopPort>
         </configuration>
       </plugin>
+
+        <!--
+            The following plugin is the maven configuration for:
+            Web Resource Optimizer For Java (WRO4J)  https://code.google.com/p/wro4j/wiki/Introduction
+
+            The output files are unimportant because the purpose of the maven plugin (in our usage) is to
+            only check that the javascript and css file can be correctly compiled, linted, compressed, etc...
+
+            There is a Servlet filter (see web.xml) that does the actual compilation,linting,compression at runtime.
+            The filter allows a developer to be able to make live modifications and automatically have the
+            compiling/linting/compression done during the development rather than just at build time.
+
+            WRO4J intelligently caches minified files (and automatically handles gzipping)
+        -->
+        <plugin>
+            <groupId>ro.isdc.wro4j</groupId>
+            <artifactId>wro4j-maven-plugin</artifactId>
+            <version>${wro.version}</version>
+            <executions>
+                <execution>
+                    <id>jshint</id>
+                    <phase>test</phase>
+                    <goals>
+                        <goal>jshint</goal>
+                    </goals>
+                    <configuration>
+                        <options>sub</options>
+                        <failFast>true</failFast>
+                        <failNever>false</failNever>
+                        <failThreshold>0</failThreshold>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>test-javascript-optimization</id>
+                    <phase>test</phase>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <targetGroups>core</targetGroups>
+                <minimize>true</minimize>
+                <destinationFolder>${wro4jOutput}</destinationFolder>
+                <cssDestinationFolder>${wro4jOutput}/css</cssDestinationFolder>
+                <jsDestinationFolder>${wro4jOutput}/js</jsDestinationFolder>
+                <contextFolder>${basedir}/src/main/webapp/</contextFolder>
+                <wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
+                <extraConfigFile>${build.webapp.resources}/WEB-INF/wro.properties</extraConfigFile>
+                <incrementalBuildEnabled>true</incrementalBuildEnabled>
+                <parallelProcessing>true</parallelProcessing>
+                <options>sub</options>
+                <failFast>true</failFast>
+                <failNever>false</failNever>
+                <failThreshold>0</failThreshold>
+            </configuration>
+
+            <dependencies>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>wro4j</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+
+        </plugin>
     </plugins>
   </build>
   

@@ -1020,6 +1020,7 @@
     <module>healthmonitor</module>
     <module>services</module>
     <module>web-client</module>
+    <module>wro4j</module>
     <module>web</module>
   </modules>
 
@@ -1074,5 +1075,6 @@
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
     <rootProjectDir>..</rootProjectDir>
+    <wro.version>1.7.1</wro.version>
   </properties>
 </project>

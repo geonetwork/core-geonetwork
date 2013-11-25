@@ -1,0 +1,5 @@
+<sources>
+    <jsSource webapp="catalog/js" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
+    <jsSource webapp="components" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
+    <cssSource webapp="catalog/style" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
+</sources>
