@@ -103,11 +103,11 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
 
         Metadata reloadedMd2 = _repo.findOne(md2.getId());
         assertEquals(newData, reloadedMd2.getData());
-        assertEquals(newGroupId, reloadedMd2.getSourceInfo().getGroupOwner());
+        assertEquals(newGroupId, reloadedMd2.getSourceInfo().getGroupOwner().intValue());
 
         Metadata reloadedMd3 = _repo.findOne(md3.getId());
         assertEquals(newData, reloadedMd3.getData());
-        assertEquals(newGroupId, reloadedMd3.getSourceInfo().getGroupOwner());
+        assertEquals(newGroupId, reloadedMd3.getSourceInfo().getGroupOwner().intValue());
     }
 
     @Test

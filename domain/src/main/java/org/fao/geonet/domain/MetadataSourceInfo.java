@@ -16,7 +16,7 @@ import javax.persistence.Embeddable;
 @Access(AccessType.PROPERTY)
 public class MetadataSourceInfo {
     private String _sourceId;
-    private int _groupOwner;
+    private Integer _groupOwner;
     private int _owner;
 
     /**
@@ -52,7 +52,7 @@ public class MetadataSourceInfo {
      * @return the group that owns this metadata.
      */
     @Column(name = "groupOwner")
-    public int getGroupOwner() {
+    public Integer getGroupOwner() {
         return _groupOwner;
     }
 
@@ -62,7 +62,7 @@ public class MetadataSourceInfo {
      *
      * @param groupOwner the group id that owns this metadata.
      */
-    public MetadataSourceInfo setGroupOwner(int groupOwner) {
+    public MetadataSourceInfo setGroupOwner(Integer groupOwner) {
         this._groupOwner = groupOwner;
         return this;
     }
