@@ -1221,6 +1221,14 @@
 	    <output forward="virtualcsw.config"/>
 	  </service>
 	  
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Versioning log                                                -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="versioning.logdata">
+			<class name=".guiservices.versioning.Get"/>
+		</service>
 	</services>
 
 	<!-- ====================================================================== -->

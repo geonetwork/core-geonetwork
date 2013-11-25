@@ -1408,21 +1408,21 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: method[metadataAdmin]
      *  Metadata admin form for privileges
      */
-    metadataAdmin: function(id){
-        var url = this.services.mdAdminXml + "?id=" + id;
+    metadataAdmin: function(record){
+        var url = this.services.mdAdminXml + "?id=" + record.get('id');
         var privilegesPanel = new GeoNetwork.admin.PrivilegesPanel({
-            id: id,
+            id: record.get('id'),
             url: url,
             onlyUserGroup: this.info.userGroupOnly.toLowerCase() === 'true' || false
         });
-        this.modalAction(OpenLayers.i18n('setPrivileges'), privilegesPanel);
+        this.modalAction(OpenLayers.i18n('setPrivileges') + ' - ' + record.get('title'), privilegesPanel);
     },
     /** api: method[metadataStatus]
      *  Open status form to update metadata status
      */
-    metadataStatus: function(id){
-        var url = this.services.mdStatus + "?id=" + id;
-        this.modalAction(OpenLayers.i18n('setStatus'), url);
+    metadataStatus: function(record){
+        var url = this.services.mdStatus + "?id=" + record.get('id');
+        this.modalAction(OpenLayers.i18n('setStatus') + ' - ' + record.get('title'), url);
     },
     /** api: method[metadataSetStatus]
      *  Change status for this metadata

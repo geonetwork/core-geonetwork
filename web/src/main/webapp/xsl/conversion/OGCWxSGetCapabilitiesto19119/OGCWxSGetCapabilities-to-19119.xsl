@@ -31,7 +31,7 @@ Mapping between :
 
 	<!-- ============================================================================= -->
 	
-    <xsl:param name="uuid">uuid</xsl:param>
+    <xsl:param name="uuid"></xsl:param>
 	<xsl:param name="lang">eng</xsl:param>
 	<xsl:param name="topic"></xsl:param>
 	
