@@ -257,10 +257,14 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             this.URL = this.SERVERURL + 'geonetwork';
         }
         
+        if (!this.node) {
+        	this.node = 'srv';
+        }
+        
         this.LANG = (this.lang ? this.lang : this.DEFAULT_LANG);
         
         // Register GeoNetwork services URL
-        var serviceUrl = this.URL + '/srv/' + this.LANG + "/";
+        var serviceUrl = this.URL + '/' + this.node + '/' + this.LANG + "/";
         this.services = {
             rootUrl: serviceUrl,
             csw: serviceUrl + 'csw',
@@ -1206,9 +1210,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         		}
         	}, 500);
         } else {
+        	var params = {username: username, password: password};
+        	if (!this.node) {
+            	params.node = this.node;
+            }
 			OpenLayers.Request.POST({
 			    url: this.services.login,
-			    data: OpenLayers.Util.getParameterString({username: username,password: password}),
+			    data: OpenLayers.Util.getParameterString(params),
 			    headers: {
 			        "Content-Type": "application/x-www-form-urlencoded"
 			    },
