@@ -106,7 +106,7 @@ public class MetadataSourceInfo {
         if (getClass() != obj.getClass())
             return false;
         MetadataSourceInfo other = (MetadataSourceInfo) obj;
-        if (_groupOwner != other._groupOwner)
+        if (!_groupOwner.equals(other._groupOwner))
             return false;
         if (_owner != other._owner)
             return false;

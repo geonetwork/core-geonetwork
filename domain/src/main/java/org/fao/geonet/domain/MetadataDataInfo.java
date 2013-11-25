@@ -296,7 +296,7 @@ public class MetadataDataInfo implements Serializable {
                 return false;
         } else if (!_createDate.equals(other._createDate))
             return false;
-        if (_displayOrder != other._displayOrder)
+        if (!_displayOrder.equals(other._displayOrder))
             return false;
         if (_doctype == null) {
             if (other._doctype != null)
