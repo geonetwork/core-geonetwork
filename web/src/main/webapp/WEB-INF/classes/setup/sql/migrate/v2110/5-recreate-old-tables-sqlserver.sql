@@ -14,6 +14,10 @@ CREATE TABLE USERGROUPS
     foreign key(userId) references Users(id),
     foreign key(groupId) references Groups(id)
   );
+-- Update UserGroups profiles to be one of the enumerated profiles
+
+INSERT INTO USERGROUPS SELECT * FROM USERGROUPS_TMP;
+DROP TABLE USERGROUPS_TMP;
 
 -- Convert Profile column to the profile enumeration ordinal
 
@@ -34,6 +38,11 @@ CREATE TABLE Users
     unique(username)
   );
 
+-- Convert Profile column to the profile enumeration ordinal
+
+INSERT INTO USERS SELECT * FROM USERS_TMP;
+DROP TABLE USERS_TMP;
+
 -- ----  Change notifier actions column to map to the MetadataNotificationAction enumeration
 
 DROP TABLE MetadataNotifications;
@@ -47,6 +56,11 @@ CREATE TABLE MetadataNotifications
     errormsg           varchar(max),
     primary key(metadataId,notifierId)
   );
+
+-- ----  Change notifier actions column to map to the MetadataNotificationAction enumeration
+
+INSERT INTO MetadataNotifications SELECT * FROM MetadataNotifications_Tmp;
+DROP TABLE MetadataNotifications_Tmp;
 
 -- ----  Change params querytype column to map to the LuceneQueryParamType enumeration
 
@@ -66,6 +80,11 @@ CREATE TABLE Params
     primary key(id),
     foreign key(requestId) references Requests(id)
   );
+
+-- ----  Change params querytype column to map to the LuceneQueryParamType enumeration
+
+INSERT INTO Params SELECT * FROM Params_TEMP;
+DROP TABLE Params_TEMP;
 
 CREATE INDEX ParamsNDX1 ON Params(requestId);
 CREATE INDEX ParamsNDX2 ON Params(queryType);

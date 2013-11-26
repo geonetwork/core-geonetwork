@@ -24,7 +24,7 @@
             'category.html',
         link: function(scope, element, attrs) {
           $http.get('info@json?type=categories').success(function(data) {
-            scope.categories = data.categories;
+            scope.categories = data.metadatacategory;
           }).error(function(data) {
             // TODO
           });

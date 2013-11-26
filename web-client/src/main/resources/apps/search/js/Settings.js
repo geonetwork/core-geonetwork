@@ -43,6 +43,14 @@ GeoNetwork.Settings.editor = {
 //    defaultViewMode : 'inspire'
 };
 
+GeoNetwork.Settings.privileges = {
+        // Customize column to be displayed and the order
+        columnOrder: ['0', '5', '1', '2', '3'],
+        // Use topGroups to place those groups with internet, intranet groups
+        // on top of the privileges panel.
+//        topGroups: ['82']
+};
+
 // Define if default mode should be used for HTML print output instead of tabs only
 GeoNetwork.printDefaultForTabs = false;
 
@@ -107,4 +115,4 @@ GeoNetwork.WMSList = [['Geoserver', 'http://localhost/geoserver/wms?']];
 
 GeoNetwork.defaultViewMode = 'view-simple';
 
-Ext.BLANK_IMAGE_URL = '../js/ext/resources/images/default/s.gif';
+Ext.BLANK_IMAGE_URL = '../../apps/js/ext/resources/images/default/s.gif';

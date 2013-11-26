@@ -4,6 +4,12 @@ var catalogue;
 var app;
 var cookie;
 
+var nodeInfo = /([a-zA-Z0-9_\-]+)\/([a-z]{3})\/tabsearch/
+        .exec(window.location.href);
+var catalogueLang = nodeInfo[2] || GeoNetwork.Util.defaultLocale;
+var catalogueNode = nodeInfo[1] || 'srv';
+
+
 GeoNetwork.app = function () {
     // private vars:
     var geonetworkUrl;
@@ -604,7 +610,7 @@ GeoNetwork.app = function () {
             // createLatestUpdate();
 //        } else {
             Ext.get('helpPanel').getUpdater().update({
-                url : 'help_eng.html'
+                url : '../../apps/tabsearch/help_eng.html'
             });
         }
     }
@@ -646,7 +652,7 @@ GeoNetwork.app = function () {
             id : 'helpPanel',
             autoWidth : true,
             autoLoad : {
-                url : 'help_' + catalogue.LANG + '.html',
+                url : '../../apps/tabsearch/help_' + catalogue.LANG + '.html',
                 callback: initShortcut,
                 scope : this,
                 loadScripts : false
@@ -793,9 +799,9 @@ GeoNetwork.app = function () {
     // public space:
     return {
         init : function () {
-            geonetworkUrl = GeoNetwork.URL || window.location.href.match(
-                            /(http.*\/.*)\/apps\/tabsearch.*/, '')[1];
-
+        	var geonetworkUrl = GeoNetwork.URL || window.location.href.match(
+                    /(http.*\/.*)\/.*\/.*\/.*/, '')[1];
+            
             urlParameters = GeoNetwork.Util.getParameters(location.href);
             var lang = urlParameters.hl || GeoNetwork.Util.defaultLocale;
             
@@ -827,10 +833,11 @@ GeoNetwork.app = function () {
             // Create connexion to the catalogue
             catalogue = new GeoNetwork.Catalogue({
                 statusBarId : 'info',
-                lang : lang,
-                hostUrl : geonetworkUrl,
-                mdOverlayedCmpId : 'resultsPanel',
-                adminAppUrl : geonetworkUrl + '/srv/' + lang + '/admin.console',
+                lang: lang,
+                node: catalogueNode,
+                hostUrl: geonetworkUrl,
+                mdOverlayedCmpId: 'resultsPanel',
+                adminAppUrl: geonetworkUrl + '/' + catalogueNode + '/' + lang + '/admin.console',
                 // Declare default store to be used for records and
                 // summary
                 metadataStore : GeoNetwork.Settings.mdStore ? GeoNetwork.Settings

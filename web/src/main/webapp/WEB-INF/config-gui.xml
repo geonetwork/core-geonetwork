@@ -71,8 +71,17 @@
    <crs code="EPSG:27572" edit="1" def="+proj=lcc +lat_1=46.8 +lat_0=46.8 +lon_0=0 +k_0=0.99987742 +x_0=600000 +y_0=2200000 +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +pm=paris +units=m +no_defs"/>
    -->
   </proj>
+
+  <!-- Setting used in the new UI (html5ui) to configure the layers in the maps. TODO: Use also in classic UI
+
+       - If this setting is true OSM is used in the map viewers.
+       - If this setting is false, html5ui uses the layers configured in /geonetwork/maps/mapviewer.wmc
+       You can configure your custom WMS layers in that file.
+  -->
+  <osm_map>true</osm_map>
  </map>
- 
+
+
  <!-- Configuration for small map search 
     mapSearch/@options:     OpenLayers options hash as expected in new OpenLayers.Map(div, options) 
        

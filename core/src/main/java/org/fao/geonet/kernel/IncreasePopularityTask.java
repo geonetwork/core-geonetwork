@@ -39,8 +39,8 @@ public class IncreasePopularityTask implements Runnable {
             @Override
             public void apply(@Nonnull Metadata entity) {
                 final MetadataDataInfo dataInfo = entity.getDataInfo();
-                int rating = dataInfo.getRating();
-                dataInfo.setRating(rating + 1);
+                int popularity = dataInfo.getPopularity();
+                dataInfo.setPopularity(popularity + 1);
             }
         });
         try {

@@ -303,6 +303,10 @@
 							<xsl:when test="contains(gmd:fileName/gco:CharacterString, '.png')">
 								<xsl:attribute name="protocol">image/png</xsl:attribute>
 							</xsl:when>
+							<xsl:when test="contains(gmd:fileName/gco:CharacterString, '.jpg') or 
+                                        contains(gmd:fileName/gco:CharacterString, '.jpeg')">
+								<xsl:attribute name="protocol">image/jpeg</xsl:attribute>
+							</xsl:when>
 						</xsl:choose>
 						
 						<xsl:if test="$fileDescr">
