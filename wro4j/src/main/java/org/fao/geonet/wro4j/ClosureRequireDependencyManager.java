@@ -112,7 +112,12 @@ public class ClosureRequireDependencyManager {
             throw new IllegalArgumentException("Module: " + sourceModule + " contains a cycle in its dependency graph: " + previousNodes);
         }
         previousNodes.add(moduleId);
-        for (String node : previousNodes) {
+        final Node moduleNode = _modules.get(moduleId);
+        if (moduleNode == null) {
+            throw new IllegalArgumentException("Found a dependency: " + moduleId + " that does not exist.  It is a transitive " +
+                                               "dependency of " + sourceModule + ".  Dependency path " + previousNodes);
+        }
+        for (String node : moduleNode.dependencyIds) {
             detectCyle(node, sourceModule, previousNodes);
         }
         previousNodes.remove(moduleId);

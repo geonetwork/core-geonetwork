@@ -2,6 +2,7 @@ package org.fao.geonet.wro4j;
 
 import com.google.common.base.Predicate;
 import com.google.common.io.Files;
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -19,9 +20,7 @@ import ro.isdc.wro.util.StopWatch;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Creates model of views to javascript and css.
@@ -34,6 +33,10 @@ public class GeonetWroModelFactory implements WroModelFactory {
     private static final Logger LOG = LoggerFactory.getLogger(GeonetWroModelFactory.class);
 
     private static final String WRO_SOURCES_KEY = "wroSources";
+    public static final String JS_SOURCE = "jsSource";
+    public static final String CSS_SOURCE = "cssSource";
+    public static final String WEBAPP_ATT = "webapp";
+    public static final String PATH_ON_DISK_EL = "pathOnDisk";
     @Inject
     private ReadOnlyContext context;
 
@@ -47,8 +50,9 @@ public class GeonetWroModelFactory implements WroModelFactory {
         final StopWatch stopWatch = new StopWatch("Create Wro Model using Geonetwork");
         try {
             stopWatch.start("createModel");
-            final Element element = Xml.loadFile(getSourcesXmlFile());
-            final List<Element> jsSources = element.getChildren("jsSource");
+            final String sourcesXmlFile = getSourcesXmlFile();
+            final Element element = Xml.loadFile(sourcesXmlFile);
+            final List<Element> jsSources = element.getChildren(JS_SOURCE);
 
             final WroModel model = new WroModel();
 
@@ -56,7 +60,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
             addJavascriptGroups(model, dependencyManager);
 
-            final List<Element> cssSources = element.getChildren("cssSource");
+            final List<Element> cssSources = element.getChildren(CSS_SOURCE);
             addCssGroups(model, cssSources);
 
             return model;
@@ -75,7 +79,8 @@ public class GeonetWroModelFactory implements WroModelFactory {
             ResourceDesc desc = parseSource(cssSource);
 
             for (File file : desc.files("css")) {
-                final Group group = new Group(Files.getNameWithoutExtension(file.getName()));
+                final String name = file.getName();
+                final Group group = new Group(name.substring(name.lastIndexOf('.')));
                 Resource resource = new Resource();
                 resource.setMinimize(true);
                 resource.setType(ResourceType.CSS);
@@ -111,7 +116,15 @@ public class GeonetWroModelFactory implements WroModelFactory {
         for (Element jsSource : jsSources) {
             ResourceDesc desc = parseSource(jsSource);
             for (File file : desc.files("js")) {
-                String path = desc.relativePath + file.getPath().substring(desc.finalPath.length());
+                String path;
+                // if servlet context is null then the build is the
+                // maven build. so the path has to be the full path because
+                // servletcontext is not used to locate the file.
+                if (isMavenBuild()) {
+                    path = file.getAbsoluteFile().toURI().toString();
+                } else {
+                    path = desc.relativePath + file.getPath().substring(desc.finalPath.length());
+                }
                 depManager.addFile(path, file);
             }
         }
@@ -124,12 +137,12 @@ public class GeonetWroModelFactory implements WroModelFactory {
     private ResourceDesc parseSource(final Element sourceEl) {
         ResourceDesc desc = new ResourceDesc();
 
-        desc.relativePath = sourceEl.getAttributeValue("webapp");
-        desc.pathOnDisk = sourceEl.getAttributeValue("pathOnDisk");
-        if (context.getServletContext() != null) {
-            desc.finalPath = context.getServletContext().getRealPath(desc.relativePath);
-        } else {
+        desc.relativePath = sourceEl.getAttributeValue(WEBAPP_ATT);
+        desc.pathOnDisk = sourceEl.getAttributeValue(PATH_ON_DISK_EL);
+        if (isMavenBuild()) {
             desc.finalPath = new File(desc.pathOnDisk, desc.relativePath).getPath();
+        } else {
+            desc.finalPath = context.getServletContext().getRealPath(desc.relativePath);
         }
 
         if (!desc.relativePath.endsWith(File.separator)) {
@@ -139,6 +152,10 @@ public class GeonetWroModelFactory implements WroModelFactory {
         desc.root = new File(desc.finalPath);
 
         return desc;
+    }
+
+    private boolean isMavenBuild() {
+        return context.getServletContext() == null;
     }
 
     public String getSourcesXmlFile() {
@@ -159,6 +176,9 @@ public class GeonetWroModelFactory implements WroModelFactory {
         return null;
     }
 
+    public void setContext(ReadOnlyContext context) {
+        this.context = context;
+    }
 
     private static class ResourceDesc {
             String relativePath;
@@ -167,18 +187,13 @@ public class GeonetWroModelFactory implements WroModelFactory {
             File root;
 
             public Iterable<File> files(final String extToCollect) {
-                final Predicate<File> filterByExt = new Predicate<File>() {
+                return new Iterable<File>() {
+
                     @Override
-                    public boolean apply(@Nullable final File input) {
-                        if (input != null) {
-                            return input.getName().endsWith("." + extToCollect);
-                        } else {
-                            return false;
-                        }
+                    public Iterator<File> iterator() {
+                        return FileUtils.iterateFiles(root, new String[]{extToCollect}, true);
                     }
                 };
-
-                return Files.fileTreeTraverser().breadthFirstTraversal(root).filter(filterByExt);
 
             }
         }

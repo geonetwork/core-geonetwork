@@ -6,6 +6,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.collect.TreeTraverser;
 import com.google.common.io.Files;
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,21 +31,29 @@ public class ClosureRequireDependencyManagerTest {
     @Before
     public void configureTestFile() throws IOException {
         this._depManager = new ClosureRequireDependencyManager();
-        final Class<ClosureRequireDependencyManagerTest> cls = ClosureRequireDependencyManagerTest
-                .class;
-        final URL resource = cls.getResource(cls.getSimpleName() + ".class");
-        if (resource == null) {
-            throw new Error("Programming error");
-        }
-        final File rootOfSearch = new File(resource.getFile()).getParentFile();
-        final TreeTraverser<File> fileTreeTraverser = Files.fileTreeTraverser();
-        for (File file : fileTreeTraverser.breadthFirstTraversal(rootOfSearch)) {
+        final File rootOfSearch = getJsTestBaseDir();
+        final Iterator<File> fileIterator = FileUtils.iterateFiles(rootOfSearch, new String[]{"js"}, true);
+
+        while (fileIterator.hasNext()) {
+            File file = fileIterator.next();
+
             if (!file.equals(rootOfSearch) && file.getName().endsWith(".js")) {
                 _depManager.addFile(file.getPath().substring(rootOfSearch.getPath().length()), file);
             }
         }
 
     }
+
+    static File getJsTestBaseDir() {
+        final Class<ClosureRequireDependencyManagerTest> cls = ClosureRequireDependencyManagerTest
+                .class;
+        final URL resource = cls.getResource(cls.getSimpleName() + ".class");
+        if (resource == null) {
+            throw new Error("Programming error");
+        }
+        return new File(resource.getFile()).getParentFile();
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileDuplicateModuleId() throws Exception {
         _depManager.addFile("abc", "goog.provide('1a')");
@@ -84,6 +93,11 @@ public class ClosureRequireDependencyManagerTest {
     public void testAddFileRequiresUsesDoubleQuotes() throws Exception {
         final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "goog.provide('xb'); goog.require(\"3a\")");
         assertTrue(node.dependencyIds.contains("3a"));
+    }
+    @Test
+    public void testValidateGraph() throws Exception {
+        _depManager.validateGraph();
+        // no errors indicates correct behaviour
     }
     @Test
     public void testAddFileProvidesUsesDoubleQuotes() throws Exception {

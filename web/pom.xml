@@ -949,13 +949,13 @@
                 </execution>
             </executions>
             <configuration>
-                <targetGroups>core</targetGroups>
+                <targetGroups>gn,gn_admin,gn_login</targetGroups>
                 <minimize>true</minimize>
                 <destinationFolder>${wro4jOutput}</destinationFolder>
                 <cssDestinationFolder>${wro4jOutput}/css</cssDestinationFolder>
                 <jsDestinationFolder>${wro4jOutput}/js</jsDestinationFolder>
                 <contextFolder>${basedir}/src/main/webapp/</contextFolder>
-                <wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
+                <wroManagerFactory>org.fao.geonet.wro4j.GeonetworkMavenWrojManagerFactory</wroManagerFactory>
                 <extraConfigFile>${build.webapp.resources}/WEB-INF/wro.properties</extraConfigFile>
                 <incrementalBuildEnabled>true</incrementalBuildEnabled>
                 <parallelProcessing>true</parallelProcessing>
