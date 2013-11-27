@@ -92,15 +92,23 @@
 
           /**
            * Run process md.processing on the edited
-           * metadata
+           * metadata after the form has been saved.
+           * Then refresh the editor.
+           * 
+           * Return a promise, called after the form
+           * refresh
            */
           runProcessMd: function(params) {
-            
-            gnMetadataManagerService.save(gnMetadataManagerService.
-                getCurrentEdit()[0].metdataId, false)
-            gnHttp.callService('processMd', params).success(function(data) {
-              console.log('md.processing.new success');
+            angular.extend(params, {
+              id: gnMetadataManagerService.getCurrentEdit().metadataId
             });
+            return gnMetadataManagerService.save()
+                .then(function() {
+                  gnHttp.callService('processMd', params).then(function(data) {
+                    console.log('md.processing.new success');
+                    gnMetadataManagerService.refreshEditorForm($(data.data));
+                  });
+                });
           }
 
           // TODO : write batch processing service here
