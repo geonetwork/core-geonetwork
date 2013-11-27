@@ -37,7 +37,7 @@
           templateUrl: tplFolder + 'editor.html',
           controller: 'GnNewMetadataController'}).
         otherwise({
-          templateUrl: tplFolder + 'newMetadata.html',
+          templateUrl: tplFolder + 'new-metadata.html',
           controller: 'GnNewMetadataController'
         });
   }]);
