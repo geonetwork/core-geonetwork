@@ -85,7 +85,7 @@
           displayAttributes: $scope.displayAttributes
         };
         gnMetadataManagerService
-          .startEditing($scope.metadataId, $scope.editorConfig);
+          .startEditing($scope.editorConfig);
 
         $scope.$watch('displayAttributes', function() {
           $scope.editorConfig.displayAttributes = $scope.displayAttributes;
@@ -94,7 +94,7 @@
         // TODO: Check requested metadata exist - return message if it happens
         // Would you like to create a new one ?
         $scope.editorFormUrl = gnMetadataManagerService
-          .buildEditUrlPrefix($scope.metadataId, 'md.edit');
+          .buildEditUrlPrefix('md.edit');
       };
 
 
@@ -181,7 +181,7 @@
         gnMetadataManagerService.remove($scope.metadataId, ref, parent);
       };
       $scope.save = function(refreshForm) {
-        gnMetadataManagerService.save($scope.metadataId, refreshForm)
+        gnMetadataManagerService.save(refreshForm)
           .then(function(form) {
               $scope.toggleAttributes();
               $rootScope.$broadcast('StatusUpdated', {

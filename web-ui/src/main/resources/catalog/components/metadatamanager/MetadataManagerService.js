@@ -21,7 +21,7 @@
          * Contains a list of metadata records currently edited
          * with the editor configuration.
          */
-         var metadataIdsConfig = {};
+         var mdConfig = null;
 
          /**
          * Animation duration for slide up/down
@@ -29,33 +29,31 @@
          var duration = 300;
 
 
-         var refreshEditorForm = function(config, snippet) {
-           $(config.formId).replaceWith(snippet);
+         var refreshEditorForm = function( snippet) {
+           $(mdConfig.formId).replaceWith(snippet);
            // Compiling
-           if (config.compileScope) {
-             $compile(snippet)(config.compileScope);
+           if (mdConfig.compileScope) {
+             $compile(snippet)(mdConfig.compileScope);
            }
          };
 
-         var setStatus = function(metadataId, status) {
-           var config = metadataIdsConfig[metadataId];
-           config.savedStatus = $translate(status.msg);
-           config.savedTime = moment();
-           config.saving = status.saving;
+         var setStatus = function(status) {
+           mdConfig.savedStatus = $translate(status.msg);
+           mdConfig.savedTime = moment();
+           mdConfig.saving = status.saving;
          };
          return {
-           startEditing: function(metadataId, config) {
-             metadataIdsConfig[metadataId] = config;
+           startEditing: function(config) {
+             mdConfig = config;
            },
            getCurrentEdit: function() {
-             return metadataIdsConfig;
+             return mdConfig;
            },
-           buildEditUrlPrefix: function(metadataId, service) {
-             var params = [service, '?id=', metadataId];
-             var config = metadataIdsConfig[metadataId];
-             config.tab && params.push('&currTab=', config.tab);
-             config.displayAttributes &&
-             params.push('&displayAttributes=', config.displayAttributes);
+           buildEditUrlPrefix: function(service) {
+             var params = [service, '?id=', mdConfig.metadataId];
+             mdConfig.tab && params.push('&currTab=', mdConfig.tab);
+             mdConfig.displayAttributes &&
+             params.push('&displayAttributes=', mdConfig.displayAttributes);
              return params.join('');
            },
            /**
@@ -65,18 +63,17 @@
             * This is required while switching tab for example. Update the tab
             * value in the form and trigger save to update the view.
             */
-           save: function(metadataId, refreshForm) {
+           save: function(refreshForm) {
              var defer = $q.defer();
-             var config = metadataIdsConfig[metadataId];
-             if (config.saving) {
+             if (mdConfig.saving) {
                return;
              } else {
-               setStatus(metadataId, {msg: 'saving', saving: true});
+               setStatus({msg: 'saving', saving: true});
              }
 
              $http.post(
                  refreshForm ? 'md.edit.save' : 'md.edit.saveonly',
-                 $(config.formId).serialize(),
+                 $(mdConfig.formId).serialize(),
                  {
                    headers: {'Content-Type':
                      'application/x-www-form-urlencoded'}
@@ -84,15 +81,13 @@
 
                var snippet = $(data);
                if (refreshForm) {
-                 refreshEditorForm(config, snippet);
+                 refreshEditorForm(snippet);
                }
-               setStatus(metadataId, {msg: 'allChangesSaved', saving: false});
-
-               config.saving = false;
+               setStatus({msg: 'allChangesSaved', saving: false});
 
                defer.resolve(snippet);
              }).error(function(error) {
-               setStatus(metadataId, {msg: 'saveMetadataError', saving: false});
+               setStatus({msg: 'saveMetadataError', saving: false});
                defer.reject(error);
              });
              return defer.promise;
@@ -117,10 +112,9 @@
              // for attribute md.elem.add?id=19&ref=42&name=gco:nilReason
              //                  &child=geonet:attribute
 
-             var config = metadataIdsConfig[metadataId];
              var attributeAction = attribute ? '&child=geonet:attribute' : '';
              var defer = $q.defer();
-             $http.get(this.buildEditUrlPrefix(metadataId, 'md.element.add') +
+             $http.get(this.buildEditUrlPrefix('md.element.add') +
              '&ref=' + ref + '&name=' + name + attributeAction)
                     .success(function(data) {
                // Append HTML snippet after current element - compile Angular
@@ -137,7 +131,7 @@
                  // Remove the Add control from the current element
                  var addControl = $('#gn-el-' + insertRef + ' .gn-add');
                }
-               $compile(snippet)(config.compileScope);
+               $compile(snippet)(mdConfig.compileScope);
                defer.resolve(snippet);
 
              }).error(function(data) {
@@ -149,9 +143,8 @@
            addChoice: function(metadataId, ref, parent, name, 
                insertRef, position) {
              var defer = $q.defer();
-             var config = metadataIdsConfig[metadataId];
              // md.elem.add?id=1250&ref=41&name=gmd:presentationForm
-             $http.get(this.buildEditUrlPrefix(metadataId, 'md.element.add') +
+             $http.get(this.buildEditUrlPrefix('md.element.add') +
                       '&ref=' + ref +
                       '&name=' + parent +
                       '&child=' + name).success(function(data) {
@@ -161,7 +154,7 @@
 
                target[position || 'before'](snippet);
 
-               $compile(snippet)(config.compileScope);
+               $compile(snippet)(mdConfig.compileScope);
                defer.resolve(snippet);
              }).error(function(data) {
                defer.reject(data);
@@ -172,7 +165,7 @@
              // md.element.remove?id=<metadata_id>&ref=50&parent=41
              // Call service to remove element from metadata record in session
              var defer = $q.defer();
-             $http.get('md.element.remove@json?id=' + metadataId +
+             $http.get('md.element.remove@json?id=' + mdConfig.metadataId +
                      '&ref=' + ref + '&parent=' + parent)
                      .success(function(data) {
                // Remove element from the DOM

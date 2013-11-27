@@ -1,30 +1,20 @@
 (function() {
   goog.provide('gn_popup_directive');
-  //  goog.require('gn_browsersniffer_service');
 
   var module = angular.module('gn_popup_directive', [
-    //    'gn_browsersniffer_service'
   ]);
 
-  module.directive('gnPopup',
+  module.directive('gnModal',
       function() {
         return {
           restrict: 'A',
           transclude: true,
-          // TODO: add options for modal popup
           scope: {
             toggle: '=gnPopup',
             optionsFunc: '&gnPopupOptions' // Options from directive
           },
-          template:
-              '<h4 class="popover-title gn-popup-title">' +
-              '<span data-translate="">{{options.title}}</span>' +
-              '<button type="button" class="close" data-ng-click="close()">' +
-              '&times;</button>' +
-              '</h4>' +
-              '<div class="popover-content gn-popup-content" ' +
-              'data-ng-transclude="">' +
-              '</div>',
+          templateUrl: '../../catalog/components/common/popup/' +
+          'partials/popup.html',
 
           link: function(scope, element, attrs) {
 
@@ -36,28 +26,7 @@
                 title: ''
               };
             }
-
-            // Add close popup function
-            scope.close = scope.options.close ||
-                (function() {element.toggle();});
-
-            // Move the popup to the correct position
-            element.addClass('popover gn-popup');
-            element.css({
-              left: scope.options.x ||
-                  $(document.body).width() / 2 - element.width() / 2,
-              top: scope.options.y || 150
-            });
-
-            // Watch the shown property
-            scope.$watch(
-                'toggle',
-                function(newVal, oldVal) {
-                  if (newVal != oldVal) {
-                    element.toggle();
-                  }
-                }
-            );
+            element.addClass('gn-popup modal fade');
           }
         };
       }

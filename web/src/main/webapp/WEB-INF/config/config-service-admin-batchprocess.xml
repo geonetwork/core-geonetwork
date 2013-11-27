@@ -14,13 +14,13 @@
     
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     
-    <service name="md.processing.new">
+    <service name="md.processing">
          <documentation>Processing one metadata to add onelinsrc for exemple.
          The process is an XSL</documentation>
     
       <class name=".services.metadata.XslProcessing"/>
-<!--       <output forward="edit"/>
- -->    </service>
+        <output forward="md.edit"/>
+      </service>
     
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <service name="md.processing.batch.report">
