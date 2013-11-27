@@ -87,6 +87,9 @@
            buildXMLForXlink: function(elementName, xlink) {
              var nsDeclaration = getNamespacesForElement(elementName);
 
+             // Escape & in XLink url
+             xlink = xlink.replace('&', '&amp;');
+
              var tokens = [
                '<', elementName,
                ' ', nsDeclaration,
