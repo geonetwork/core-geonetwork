@@ -19,24 +19,24 @@
         <div class="panel-body">
 
           <a href=""
-            data-ng-click="onlinesrcPopupShown = !onlinesrcPopupShown"> <i
+            data-toggle="modal" data-target="#addonlinesrc-popup"> <i
             class="fa fa-picture-o"></i> <i class="icon-external-link"></i> <span
             data-translate="">Add a Thumbnail</span>
           </a> <br> <a href=""
-            data-ng-click="onlinesrcPopupShown = !onlinesrcPopupShown"> <i
+            data-toggle="modal" data-target="#addonlinesrc-popup"> <i
             class="fa fa-archive"></i> <i class="icon-external-link"></i> <span
             data-translate="">Add online resource</span>
           </a> <br> <a href=""
-            data-ng-click="linkParentMdPopupShown = !linkParentMdPopupShown">
+            data-toggle="modal" data-target="#linkparent-popup">
             <i class="fa fa-sitemap"></i> <i class="icon-external-link"></i>
             <span data-translate="">Link to a parent</span>
           </a> <br> <a href=""
-            data-ng-click="linkToServicePopupShown = !linkToServicePopupShown">
+            data-toggle="modal" data-target="#linktoservice-popup">
             <i class="fa fa-share-square-o"></i> <i
             class="icon-external-link"></i> <span data-translate="">Link
               to a service</span>
           </a> <br> <a href=""
-            data-ng-click="linkToServicePopupShown = !linkToServicePopupShown">
+            data-toggle="modal" data-target="#addonlinesrc-popup">
             <i class="fa fa-files-o"></i> <i class="icon-external-link"></i>
             <span data-translate="">Link to a Dataset</span>
           </a>
@@ -58,26 +58,23 @@
     </div>
   </div>
 
-  <div data-gn-popup="onlinesrcPopupShown" class="onlinesrc-popup"
+  <div data-gn-modal="" class="onlinesrc-popup"
     data-gn-popup-options="{title:'Ajout de resource en ligne'}"
-    data-gn-draggable=".gn-popup-title" id="onlinesrc-popup">
-    <div data-gn-add-onlinesrc="" data-gn-import-wms-map="map"
-      data-gn-import-wms-options="options" id="import-wms"
-      class="add-onlinesrc"></div>
-   </div>
-
-  <div data-gn-popup="linkParentMdPopupShown" class="onlinesrc-popup"
-    data-gn-popup-options="{title:'Ajouter un parent à une métadonnée'}"
-    data-gn-draggable=".gn-popup-title" id="linkparent-popup">
-    <div data-gn-link-parent-md="" id="link-parent-md"
-      class="link-parent-md"></div>
+    id="addonlinesrc-popup">
+    <div data-gn-add-onlinesrc="" class="add-onlinesrc"></div>
   </div>
 
-  <div data-gn-popup="linkToServicePopupShown" class="onlinesrc-popup"
+  <div data-gn-modal="" class="onlinesrc-popup"
+    data-gn-popup-options="{title:'Ajout de resource en ligne'}"
+    id="linkparent-popup">
+    <div data-gn-add-onlinesrc="" class="link-parent-md"></div>
+  </div>
+
+  <div data-gn-modal="" class="onlinesrc-popup"
     data-gn-popup-options="{title:'Link to a Service'}"
-    data-gn-draggable=".gn-popup-title" id="linktoservice-popup">
+    id="linktoservice-popup">
     <div data-gn-link-to-service="" id="link-to-service"
-      class="link-parent-md"></div>
+      class="link-service-md"></div>
   </div>
 
 </div>
