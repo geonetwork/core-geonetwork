@@ -127,7 +127,7 @@
         $('#flat')[0].value = mode === 'flat';
 
         // Make the current form disapearing
-        $($scope.formId + ' > fieldset').fadeOut(duration);
+        //        $($scope.formId + ' > fieldset').fadeOut(duration);
 
         $scope.save(true);
       };
