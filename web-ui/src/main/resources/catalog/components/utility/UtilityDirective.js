@@ -1,7 +1,7 @@
 (function() {
   goog.provide('gn_utility_directive');
 
-  goog.require('gn_metadata_manager_service');
+  goog.require('gn_schema_manager_service');
 
   angular.module('gn_utility_directive', [
   ])
@@ -21,8 +21,8 @@
             }
           };
         }])
-  .directive('protocolsCombo', ['$http', 'gnMetadataManagerService',
-        function($http, gnMetadataManagerService) {
+  .directive('protocolsCombo', ['$http', 'gnSchemaManagerService',
+        function($http, gnSchemaManagerService) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/templates/utils/protocolsCombo.html',
@@ -32,7 +32,7 @@
             },
             controller: ['$scope', '$translate', function($scope, $translate) {
               var config = 'iso19139|gmd:protocol|||';
-              gnMetadataManagerService.getTooltip(config).then(function(data) {
+              gnSchemaManagerService.getTooltip(config).then(function(data) {
                 $scope.protocols = data !== 'null' ?
                     data[0].helper.option : null;
               });

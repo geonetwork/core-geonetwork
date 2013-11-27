@@ -9,9 +9,10 @@
    */
   module.directive('gnDirectoryEntrySelector',
       ['$rootScope', '$timeout', '$q', '$http',
-        'gnMetadataManagerService', 'gnUrlUtils',
+        'gnMetadataManagerService', 'gnSchemaManagerService',
+        'gnUrlUtils',
         function($rootScope, $timeout, $q, $http, 
-            gnMetadataManagerService, gnUrlUtils) {
+            gnMetadataManagerService, gnSchemaManagerService, gnUrlUtils) {
 
          return {
            restrict: 'A',
@@ -89,30 +90,13 @@
                    checkState();
                  });
 
-                 //gnMetadataManagerService.getRecord(id).then(function(xml) {
-                 //  // TODO: contact role
-                 //  if (usingXlink) {
-                 //    // TODO: handle other types
-                 //    // TODO: catalog base URL
-                 //    var xlink = 'http://localhost:8080/geonetwork' +
-                 //   '/srv/eng/subtemplate?uuid=' + uuid;
-                 //
-                 //    snippets.push(gnMetadataManagerService.
-                 //   buildXMLForXlink(scope.elementName, xlink));
-                 //  } else {
-                 //    snippets.push(gnMetadataManagerService.
-                 //   buildXML(scope.elementName, xml));
-                 //  }
-                 //  checkState();
-                 //                 });
-
                });
 
                return false;
              };
              scope.openSelector = function() {
                // TODO: Schema should be a parameter
-               gnMetadataManagerService
+               gnSchemaManagerService
                .getCodelist('iso19139|gmd:CI_RoleCode')
                .then(function(data) {
                  scope.roles = data[0].entry;
