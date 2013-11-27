@@ -86,9 +86,9 @@
     
     "nostatus": "No status",
     
-    "n": "Metadata",
-    "y": "Template",
-    "s": "Directory entry",
+    "METADATA": "Metadata",
+    "TEMPLATE": "Template",
+    "SUB_TEMPLATE": "Directory entry",
     
     "dublin-core": "Dublin Core",
     "dublin-core-acr": "DC",
@@ -258,6 +258,8 @@
     "system/oai/cachesize-help": "The number of OAI resultSets that can be stored in the Cache.",
     "system/oai/mdmode": "Datesearch",
     "system/oai/mdmode-help": "Influences the behaviour of OAI when parameters from or until are supplied. If set to temporal extent, the temporal extent of the date described by the metadata is searched. If set to modification date, the date at which the metadata was last modified is searched. Please note: restart GeoNetwork to make this change active.",
+    "system/oai/mdmode-valueTemporaExtent": "Temporal extent",
+    "system/oai/mdmode-valueModificationDate": "Modification date",
     "system/oai/tokentimeout": "ResumptionToken Timeout",
     "system/oai/tokentimeout-help": "The number of seconds a OAI resultset stays in the cache and can be scrolled using the OAI resumptionToken Please note: restart GeoNetwork to make this change active.",
     "system/platform": "Catalog",
@@ -276,6 +278,11 @@
     "system/removedMetadata/dir-help": "Directory used to store metadata (in MEF format) when they are deleted.",
     "system/requestedLanguage": "Search & language",
     "system/requestedLanguage/only": "Search only in requested language",
+    "system/requestedLanguage/only-value1": "All documents in all languages (No preferences)",
+    "system/requestedLanguage/only-value2": "Prefer documents with translations requested language",
+    "system/requestedLanguage/only-value3": "Prefer documents whose language is the requested language",
+    "system/requestedLanguage/only-value4": "Translations in requested language",
+    "system/requestedLanguage/only-value5": "Document language is the requested language",
     "system/requestedLanguage/sorted": "Search results in requested language sorted on top",
     "system/requestedLanguage/ignored": "Ignore requested language for search results.",
     "system/searchStats": "Search statistics",
@@ -334,7 +341,7 @@
     "system/site/siteId-help": "Unique catalogue identifier. After changing the site identifier, user should update the index and the logo from the administration panel.",
     "system/platform/version-help": "Version:",
     "system/platform/subVersion-help": "Sub-version:",
-    
+
     "metadataAndTemplates": "Metadata & templates",
     "loadSchemaSamplesOrTemplates": "Load samples and templates for metadata standards",
     "listOfSchemas": "Standards available",

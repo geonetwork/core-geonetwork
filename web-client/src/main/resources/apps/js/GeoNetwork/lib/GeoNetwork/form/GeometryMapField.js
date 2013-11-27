@@ -299,7 +299,7 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
             options.controls = [];
         }
         
-        if(this.layers) {
+        if(this.layers && this.layers.length > 0) {
         	for(i=0;i<this.layers.length;i++){
         		this.map = new OpenLayers.Map('search_map', options);
         		this.map.addLayer(this.layers[i]);
