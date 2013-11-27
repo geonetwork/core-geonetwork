@@ -10,8 +10,7 @@
   .controller('gnOnlinesrcController', [
         '$scope',
         'gnOnlinesrc',
-        'gnHttp',
-        function($scope, gnOnlinesrc, gnHttp) {
+        function($scope, gnOnlinesrc) {
           gnOnlinesrc.getAllResources();
 
         }
@@ -28,22 +27,14 @@
             }
           };
         }])
-  .directive('gnAddOnlinesrc', ['gnOnlinesrc', 'gnHttp',
-        function(gnOnlinesrc, gnHttp) {
+  .directive('gnAddOnlinesrc', ['gnOnlinesrc',
+        function(gnOnlinesrc) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/addOnlinesrc.html',
             scope: {},
             link: function(scope, element, attrs) {
-
-              //FIXME : to move
-              console.log('in gnOnlinesrcController');
-              gnHttp.callService('search', {
-                summaryOnly: true
-              }).success(function(data) {
-                console.log(data);
-              });
 
               // mode can be 'url' or 'upload'
               scope.mode = 'url';
