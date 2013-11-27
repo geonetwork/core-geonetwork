@@ -53,7 +53,7 @@
                  // Add the fragment to the form
                  scope.snippet = gnEditorXMLService.
                  buildXML(scope.elementName, data);
-                 scope.snippetRef = gnEditorXMLService.
+                 scope.snippetRef = gnMetadataManagerService.
                  buildXMLFieldName(scope.elementRef, scope.elementName);
 
 
