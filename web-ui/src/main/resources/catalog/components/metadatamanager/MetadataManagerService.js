@@ -65,19 +65,7 @@
           * Cache field info and codelist info
           */
          var tooltipCache = $cacheFactory('tooltipCache');
-         var _select = function(uuid, andClearSelection, action) {
-           var defer = $q.defer();
-           $http.get('metadata.select@json?' +
-               (uuid ? 'id=' + uuid : '') +
-                       (andClearSelection ? '' : '&selected=' + action)).
-               success(function(data, status) {
-                 defer.resolve(data);
-               }).
-                   error(function(data, status) {
-                     defer.reject(error);
-                   });
-           return defer.promise;
-         };
+
          return {
            startEditing: function(metadataId, config) {
              metadataIdsConfig[metadataId] = config;
@@ -117,7 +105,7 @@
                    headers: {'Content-Type':
                      'application/x-www-form-urlencoded'}
                  }).success(function(data) {
-                   // TODO: make refreshform method
+               // TODO: make refreshform method
                if (refreshForm) {
                  var snippet = $(data);
                  $(config.formId).replaceWith(snippet);
@@ -233,7 +221,7 @@
              });
              return defer.promise;
            },
-           // TODO Move to SchemaService 
+           // TODO Move to SchemaService
            getCodelist: function(config) {
              //<request><codelist schema="iso19139" name="gmd:CI_RoleCode"/>
              var defer = $q.defer();
@@ -296,19 +284,6 @@
                });
              }
              return defer.promise;
-           },
-           // TODO: move selection to search service
-           select: function(uuid, andClearSelection) {
-             return _select(uuid, andClearSelection, 'add');
-           },
-           unselect: function(uuid) {
-             return _select(uuid, false, 'remove');
-           },
-           selectAll: function() {
-             return _select(null, false, 'add-all');
-           },
-           selectNone: function() {
-             return _select(null, false, 'remove-all');
            },
            view: function(md) {
              window.open('../../?uuid=' + md['geonet:info'].uuid,

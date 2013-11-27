@@ -3,8 +3,8 @@
 
   var module = angular.module('gn_search_results_directive', []);
 
-  module.directive('gnSearchResults', ['gnMetadataManagerService',
-                                       function(gnMetadataManagerService) {
+  module.directive('gnSearchResults', ['gnSearchManagerService',
+                                       function(gnSearchManagerService) {
 
       var activeClass = 'active';
 
@@ -24,8 +24,8 @@
           scope.select = function(md, e) {
             var uuid = md['geonet:info'].uuid;
             var fn = $('#gn-record-' + uuid).hasClass(activeClass) ?
-                gnMetadataManagerService.unselect :
-                gnMetadataManagerService.select;
+                gnSearchManagerService.unselect :
+                gnSearchManagerService.select;
             fn(uuid).then(function(data) {
               scope.selectedRecordsCount = data[0];
               md['geonet:info'].selected = md['geonet:info'].selected !== true;
@@ -33,8 +33,8 @@
           };
           scope.selectAll = function(all) {
             var fn = all ?
-                gnMetadataManagerService.selectAll :
-                gnMetadataManagerService.selectNone;
+                gnSearchManagerService.selectAll :
+                gnSearchManagerService.selectNone;
             fn().then(function(data) {
               scope.selectedRecordsCount = data[0];
               angular.forEach(scope.searchResults.metadata, function(md) {
@@ -43,10 +43,10 @@
             });
           };
           scope.view = function(md, e) {
-            gnMetadataManagerService.view(md);
+            gnSearchManagerService.view(md);
           };
           scope.edit = function(md, e) {
-            gnMetadataManagerService.edit(md);
+            gnSearchManagerService.edit(md);
           };
         }
       };

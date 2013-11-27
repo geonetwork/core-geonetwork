@@ -147,10 +147,39 @@
       return defer.promise;
     };
 
+    var _select = function(uuid, andClearSelection, action) {
+      var defer = $q.defer();
+      $http.get('metadata.select@json?' +
+          (uuid ? 'id=' + uuid : '') +
+                  (andClearSelection ? '' : '&selected=' + action)).
+          success(function(data, status) {
+            defer.resolve(data);
+          }).
+          error(function(data, status) {
+            defer.reject(error);
+          });
+      return defer.promise;
+    };
+    var select = function(uuid, andClearSelection) {
+      return _select(uuid, andClearSelection, 'add');
+    };
+    var unselect = function(uuid) {
+      return _select(uuid, false, 'remove');
+    };
+    var selectAll = function() {
+      return _select(null, false, 'add-all');
+    };
+    var selectNone = function() {
+      return _select(null, false, 'remove-all');
+    };
 
     return {
       search: search,
-      register: register
+      register: register,
+      select: select,
+      unselect: unselect,
+      selectAll: selectAll,
+      selectNone: selectNone
     };
   };
 

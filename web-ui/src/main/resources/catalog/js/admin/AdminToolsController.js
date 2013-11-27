@@ -12,12 +12,10 @@
   module.controller('GnAdminToolsController', [
     '$scope', '$http', '$rootScope', '$translate', '$compile',
     '$q', '$timeout',
-    'gnMetadataManagerService',
     'gnSearchManagerService',
     'gnUtilityService',
     function($scope, $http, $rootScope, $translate, $compile, 
         $q, $timeout,
-            gnMetadataManagerService, 
             gnSearchManagerService, 
             gnUtilityService) {
 
@@ -276,7 +274,7 @@
       //        });
 
       // Clear current selection and then search for all by default
-      gnMetadataManagerService.selectNone().then(function() {
+      gnSearchManagerService.selectNone().then(function() {
         $scope.recordsToProcessSearch();
       });
 

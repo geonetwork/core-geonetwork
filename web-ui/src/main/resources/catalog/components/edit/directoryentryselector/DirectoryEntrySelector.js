@@ -44,7 +44,7 @@
              // <request><codelist schema="iso19139"
              // name="gmd:CI_RoleCode" /></request>
              scope.addContact = function(contact, role, usingXlink) {
-               if (!contact instanceof Array) {
+               if (!(contact instanceof Array)) {
                  contact = [contact];
                }
 
@@ -53,9 +53,7 @@
 
                var checkState = function() {
                  if (snippets.length === contact.length) {
-                   console.log(snippets);
                    scope.snippet = snippets.join(separator);
-                   console.log(scope);
                    scope.clearResults();
 
                     $timeout(function() {
@@ -73,7 +71,10 @@
                    params.process =
                    'gmd:role/gmd:CI_RoleCode/@codeListValue~' + role;
                  }
-                 var url = gnUrlUtils.append('subtemplate',
+                 var url = gnUrlUtils.append(
+                     // TODO: Get URL from gnHttp
+                     'http://localhost:8080/geonetwork/srv/eng/' +
+                     'subtemplate',
                      gnUrlUtils.toKeyValue(params));
 
                  // FIXME: this call is useless when using XLink
