@@ -98,6 +98,8 @@
              return defer.promise;
            },
            refreshEditorForm: refreshEditorForm,
+
+           //TODO : move edit services to new editor service
            /**
            * Add another element or attribute
            * of the same type to the metadata record.
