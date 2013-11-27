@@ -14,7 +14,7 @@
             optionsFunc: '&gnPopupOptions' // Options from directive
           },
           templateUrl: '../../catalog/components/common/popup/' +
-          'partials/popup.html',
+              'partials/popup.html',
 
           link: function(scope, element, attrs) {
 
