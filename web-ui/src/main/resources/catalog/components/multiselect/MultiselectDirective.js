@@ -24,7 +24,7 @@
           'selected': '=gnMultiselect',
           'choices': '=',
           'sortFn': '&',
-          'getLabelProp': '@'
+          'getLabelFn': '@'
         },
         templateUrl: '../../catalog/components/multiselect/partials/' +
             'multiselect.html',
@@ -56,7 +56,7 @@
             if (!k) {
               angular.forEach(scope.currentSelectionLeft, function(value) {
                 elementsToAdd.push($.grep(scope.choices, function(n) {
-                  return n.getLabel() === value;
+                  return n[getLabelFn]() === value;
                 })[0]);
               });
             } else {
@@ -78,10 +78,10 @@
 
           scope.unselect = function(k) {
             var elementsToRemove = k ?
-                [k.getLabel()] : scope.currentSelectionRight;
+                [k[getLabelFn]()] : scope.currentSelectionRight;
             scope.selected = $.grep(scope.selected, function(n) {
               var toUnselect =
-                  $.inArray(n.getLabel(), elementsToRemove) !== -1;
+                  $.inArray(n[getLabelFn](), elementsToRemove) !== -1;
               if (toUnselect) {
                 scope.choices.push(n);
               }
