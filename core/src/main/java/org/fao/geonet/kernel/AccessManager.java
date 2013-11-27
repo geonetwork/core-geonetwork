@@ -44,7 +44,6 @@ import org.springframework.stereotype.Component;
 /**
  * Handles the access to a metadata depending on the metadata/group.
  */
-@Component
 public class AccessManager {
 
     @Autowired

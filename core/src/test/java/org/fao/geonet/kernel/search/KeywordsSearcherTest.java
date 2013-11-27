@@ -24,6 +24,7 @@ import org.jdom.Element;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.support.GenericXmlApplicationContext;
 
 public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
 
@@ -73,7 +74,10 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
     
     private Thesaurus createThesaurus(File directory, String string) throws Exception {
         File thesaurusBlahFile = new  File(directory, string+".rdf");
-        Thesaurus thes = new Thesaurus(isoLangMapper, string+".rdf", Geonet.CodeList.EXTERNAL, string, thesaurusBlahFile, "http://"+string+".com");
+        GenericXmlApplicationContext appContext = new GenericXmlApplicationContext();
+        appContext.getBeanFactory().registerSingleton("IsoLangMapper", isoLangMapper);
+
+        Thesaurus thes = new Thesaurus(appContext, string+".rdf", Geonet.CodeList.EXTERNAL, string, thesaurusBlahFile, "http://"+string+".com");
         setRepository(thes);
         if(!thesaurusBlahFile.exists() || thesaurusBlahFile.length() == 0) {
             populateThesaurus(thes, smallWords, "http://"+string+".com#", string+"Val", string+"Note", languages);

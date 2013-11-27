@@ -44,7 +44,6 @@ import java.util.*;
  *
  * @author jose garcia
  */
-@Component
 public class MetadataNotifierManager {
     private MetadataNotifierClient client = new MetadataNotifierClient();
 

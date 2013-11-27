@@ -95,8 +95,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         try {
             _applicationContext.getBean(initializedString);
         } catch (NoSuchBeanDefinitionException e) {
-
-            _applicationContext.getBeanFactory().registerSingleton(Constants.BeanId.NODE_ID_BEAN_ID, getGeonetworkNodeId());
             SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
             AttributeDescriptor geomDescriptor = new AttributeTypeBuilder().crs(DefaultGeographicCRS.WGS84).binding(MultiPolygon.class).buildDescriptor("the_geom");
             builder.setName("spatialIndex");
@@ -106,8 +104,11 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
             _applicationContext.getBeanFactory().registerSingleton("serviceConfig", serviceConfig);
             _applicationContext.getBeanFactory().registerSingleton(initializedString, initializedString);
-            _applicationContext.getBeanFactory().registerSingleton(Constants.BeanId.IS_DEFAULT_CONTEXT_BEAN_ID, isDefaultContext());
         }
+
+        NodeInfo nodeInfo = _applicationContext.getBean(NodeInfo.class);
+        nodeInfo.setId(getGeonetworkNodeId());
+        nodeInfo.setDefaultNode(isDefaultNode());
 
 
         final File dataDir = _testTemporaryFolder.getRoot();
@@ -135,7 +136,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
     }
 
-    protected boolean isDefaultContext() {
+    protected boolean isDefaultNode() {
         return true;
     }
 

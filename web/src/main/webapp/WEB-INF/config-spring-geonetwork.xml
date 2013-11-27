@@ -12,16 +12,13 @@
     <import resource="classpath:JZkitApplicationContext.xml"/>
 
     <import resource="config-db/initial_data.xml"/>
-    <import resource="config-versioning.xml"/>
 
 
     <!--
-        Choose the XmlSerializer to use.
-        If the XmlSerializer is the SvnSerializer then subversion versioning will be enabled
-        otherwiser it will be disabled
+        Import the versioning configuration (subversion etc...)
     -->
-    <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerSvn" lazy-init="true" />
-    <!-- <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"  lazy-init="true" /> -->
+    <import resource="config-versioning.xml"/>
+
 
     <bean id="scheduler"
           class="org.springframework.scheduling.quartz.SchedulerFactoryBean">

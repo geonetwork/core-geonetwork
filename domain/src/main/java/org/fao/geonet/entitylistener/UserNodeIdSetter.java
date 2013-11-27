@@ -1,6 +1,7 @@
 package org.fao.geonet.entitylistener;
 
 import org.fao.geonet.Constants;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -24,7 +25,7 @@ public class UserNodeIdSetter implements GeonetworkEntityListener<User> {
     @Override
     public void handleEvent(final PersistentEventType type, final User entity) {
         if (type == PersistentEventType.PostLoad || type == PersistentEventType.PostPersist) {
-            entity.getSecurity().setNodeId(context.getBean(Constants.BeanId.NODE_ID_BEAN_ID, String.class));
+            entity.getSecurity().setNodeId(context.getBean(NodeInfo.class).getId());
         }
     }
 }

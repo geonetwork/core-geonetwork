@@ -6,6 +6,7 @@ import org.fao.geonet.Constants;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -17,38 +18,33 @@ import java.io.IOException;
 public class JeevesApplicationContext extends XmlWebApplicationContext  {
 
     private final ConfigurationOverrides _configurationOverrides;
-    private final String nodeId;
 
-    public JeevesApplicationContext() {
-        this(ConfigurationOverrides.DEFAULT, "srv");
-    }
-
-    public JeevesApplicationContext(final ConfigurationOverrides configurationOverrides, String nodeId, String... configLocations) {
+    public JeevesApplicationContext(final ConfigurationOverrides configurationOverrides,
+                                    ApplicationContext parent, String... configLocations) {
         if (configLocations == null || configLocations.length == 0) {
             throw new IllegalArgumentException("No config locations were specified.  There must be at least one");
         }
-        setConfigLocations(configLocations);
-        this.nodeId = nodeId;
-        this._configurationOverrides = configurationOverrides;
-        addApplicationListener(new ApplicationListener<ApplicationEvent>() {
-            @Override
-            public void onApplicationEvent(ApplicationEvent event) {
-                try {
-                    if (event instanceof ContextRefreshedEvent) {
-                        final ServletContext servletContext = getServletContext();
+        setParent(parent);
 
-                        String appPath = getAppPath();
-                        configurationOverrides.applyNonImportSpringOverides(JeevesApplicationContext.this, servletContext, appPath);
-                    }
-                } catch (RuntimeException e) {
-                    throw e;
-                } catch (Exception e) {
-                    RuntimeException e2 = new RuntimeException();
-                    e2.initCause(e);
-                    throw e2;
-                }
-            }
-        });
+        setConfigLocations(configLocations);
+        this._configurationOverrides = configurationOverrides;
+    }
+
+
+    @Override
+    protected void onRefresh() {
+        try {
+            final ServletContext servletContext = getServletContext();
+
+            String appPath = getAppPath();
+            _configurationOverrides.applyNonImportSpringOverides(JeevesApplicationContext.this, servletContext, appPath);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            RuntimeException e2 = new RuntimeException();
+            e2.initCause(e);
+            throw e2;
+        }
     }
 
     /**
@@ -70,10 +66,10 @@ public class JeevesApplicationContext extends XmlWebApplicationContext  {
         try {
             this._configurationOverrides.importSpringConfigurations(reader, (ConfigurableBeanFactory) reader.getBeanFactory(),
                     getServletContext(), appPath);
-            ((ConfigurableBeanFactory) reader.getBeanFactory()).registerSingleton(Constants.BeanId.NODE_ID_BEAN_ID, nodeId);
         } catch (JDOMException e) {
             throw new IOException(e);
         }
+
     }
 
 }

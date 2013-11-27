@@ -62,8 +62,6 @@ import java.sql.Connection;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
-@Lazy
 @Aspect
 public class SvnManager {
 

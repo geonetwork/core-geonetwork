@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-@Component
 public class XmlCacheManager {
     WeakHashMap<String, Map<String, XmlFileCacher>> xmlCaches = new WeakHashMap<String, Map<String, XmlFileCacher>>();
     private Map<String, XmlFileCacher> getCacheMap(boolean localized, String base, String file) {

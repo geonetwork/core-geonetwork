@@ -504,7 +504,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 try {
                     String test = request.getChildText("any");
                     if (StringUtils.isNotEmpty(test)) {
-                        String detectedLanguage = LanguageDetector.getInstance().detect(test);
+                        String detectedLanguage = LanguageDetector.getInstance().detect(srvContext, test);
                         if (Log.isDebugEnabled(Geonet.LUCENE)) {
                             Log.debug(Geonet.LUCENE, "automatic language detection: '" + request.getChildText("any") + "' is in " +
                                                      "language " + detectedLanguage);

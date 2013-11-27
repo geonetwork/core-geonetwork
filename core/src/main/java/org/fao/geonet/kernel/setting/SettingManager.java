@@ -54,7 +54,6 @@ import org.springframework.stereotype.Component;
  * class at the moment is to maintain backwards compatibility so not all code and xsl files
  * that make use of the settings need to be modified.
  */
-@Component
 public class SettingManager {
 
     public static final String SYSTEM_SITE_SITE_ID_PATH = "system/site/siteId";

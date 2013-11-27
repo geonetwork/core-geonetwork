@@ -329,11 +329,6 @@ public class Geonetwork implements ApplicationHandler {
         }
 
         /**
-         * Initialize iso languages mapper
-         */
-        IsoLanguagesMapper.getInstance().init(_applicationContext);
-
-        /**
          * Initialize language detector
          */
         LanguageDetector.init(appPath + languageProfilesDir);

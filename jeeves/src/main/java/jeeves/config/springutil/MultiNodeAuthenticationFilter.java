@@ -4,6 +4,7 @@ import com.google.common.escape.Escaper;
 import com.google.common.net.UrlEscapers;
 import jeeves.server.sources.ServiceRequestFactory;
 import org.fao.geonet.Constants;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.User;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.core.Authentication;
@@ -20,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static jeeves.config.springutil.DelegatingFilterProxy.getApplicationContextFromServletContext;
+import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicationContextFromServletContext;
 
 /**
  * This filter is designed to ensure that users logged in one node is not logged in in the others.
@@ -43,13 +44,13 @@ public class MultiNodeAuthenticationFilter extends GenericFilterBean {
             final Authentication user = context.getAuthentication();
 
             if (user != null) {
-                ConfigurableApplicationContext appContext = getApplicationContextFromServletContext(getServletContext());
-                final String nodeId = appContext.getBean(Constants.BeanId.NODE_ID_BEAN_ID, String.class);
+                final ConfigurableApplicationContext appContext = getApplicationContextFromServletContext(getServletContext());
+                final String nodeId = appContext.getBean(NodeInfo.class).getId();
 
                 final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
-                String lang = getRequestLanguage(httpServletRequest);
-                String redirectedFrom = httpServletRequest.getRequestURI();
+                final String lang = getRequestLanguage(httpServletRequest);
+                final String redirectedFrom = httpServletRequest.getRequestURI();
 
                 String oldNodeId = null;
 
@@ -64,7 +65,7 @@ public class MultiNodeAuthenticationFilter extends GenericFilterBean {
                 if (getServletContext().getAttribute(User.NODE_APPLICATION_CONTEXT_KEY + oldNodeId) == null) {
                     // the application context associated with the node id doesn't exist so log user out.
                     SecurityContextHolder.clearContext();
-                } else {
+                } else if (_location != null) {
                     final Escaper escaper = UrlEscapers.urlFormParameterEscaper();
                     final String location = getServletContext().getContextPath() + _location.replace("@@lang@@", escaper.escape(lang))
                             .replace("@@nodeId@@", escaper.escape(nodeId))
@@ -79,15 +80,12 @@ public class MultiNodeAuthenticationFilter extends GenericFilterBean {
                     }
                     final boolean isNodeWarningPage = requestURI.equals(location.split("\\?")[0]);
                     if (!isNodeWarningPage && !oldNodeId.equals(nodeId)) {
-                        if (_location != null && response instanceof HttpServletResponse) {
                             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
                             httpServletResponse.sendRedirect(httpServletResponse.encodeRedirectURL(location));
                             return;
-                        } else {
-                            throwAuthError();
-                        }
-
                     }
+                } else {
+                    throwAuthError();
                 }
             }
         }

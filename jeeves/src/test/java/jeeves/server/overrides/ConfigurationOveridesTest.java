@@ -114,7 +114,7 @@ public class ConfigurationOveridesTest {
     public void updateSpringConfiguration() throws JDOMException, IOException {
         final ConfigurationOverrides configurationOverrides = new ConfigurationOverrides("/WEB-INF/test-spring-config-overrides.xml");
         final String nodeId = "srv";
-        JeevesApplicationContext applicationContext = new JeevesApplicationContext(configurationOverrides, nodeId, "classpath:test-spring-config.xml"){
+        JeevesApplicationContext applicationContext = new JeevesApplicationContext(configurationOverrides, null, "classpath:test-spring-config.xml"){
 
             @Override
             protected String getAppPath() {

@@ -24,7 +24,7 @@ public class GeonetworkDataDirectorySystemPropertyOnlySystemDataDirSetTest exten
 
     @After
     public void resetSystemProperties() {
-        System.setProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY, null);
+        System.clearProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY);
     }
 
     /**

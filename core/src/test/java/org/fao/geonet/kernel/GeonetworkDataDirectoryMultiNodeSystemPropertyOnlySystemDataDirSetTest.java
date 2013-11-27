@@ -1,5 +1,6 @@
 package org.fao.geonet.kernel;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
@@ -22,15 +23,16 @@ public class GeonetworkDataDirectoryMultiNodeSystemPropertyOnlySystemDataDirSetT
                 "node1NonDefaultDataDir").getAbsolutePath());
     }
 
+    @After
     public void resetSystemProperties() {
-        System.setProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY, null);
+        System.clearProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY);
     }
     @Override
     protected String getGeonetworkNodeId() {
         return "node1";
     }
     @Override
-    protected boolean isDefaultContext() {
+    protected boolean isDefaultNode() {
         return false;
     }
 

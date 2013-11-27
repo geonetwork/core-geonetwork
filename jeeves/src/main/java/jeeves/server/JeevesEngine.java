@@ -73,7 +73,6 @@ import static org.springframework.web.context.support.WebApplicationContextUtils
 
 /** This is the main class. It handles http connections and inits the system
   */
-@Component
 public class JeevesEngine {
     private static final String TRANSFORMER_PATH = "/WEB-INF/classes/META-INF/services/javax.xml.transform.TransformerFactory";
     private static final int DEFAULT_MAX_UPLOAD_SIZE_MD = 50;

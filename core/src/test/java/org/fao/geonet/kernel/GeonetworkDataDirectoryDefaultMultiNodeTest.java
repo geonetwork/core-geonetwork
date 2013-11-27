@@ -20,7 +20,7 @@ public class GeonetworkDataDirectoryDefaultMultiNodeTest extends AbstractGeonetw
     }
 
     @Override
-    protected boolean isDefaultContext() {
+    protected boolean isDefaultNode() {
         return false;
     }
 

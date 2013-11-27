@@ -7,6 +7,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Constants;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Component;
  * used by GeoNetwork for various purposes (eg. Lucene index, spatial index,
  * logos).
  */
-@Component(GeonetworkDataDirectory.GEONETWORK_BEAN_KEY)
 public class GeonetworkDataDirectory {
 	/**
 	 * The default GeoNetwork data directory location.
@@ -41,7 +41,7 @@ public class GeonetworkDataDirectory {
     /**
      * The id used when registering this object in a spring application context.
      */
-	public static final String GEONETWORK_BEAN_KEY = GEONETWORK_DIR_KEY+".spring.bean";
+	public static final String GEONETWORK_BEAN_KEY = "GeonetworkDataDirectory";
 
     private String webappDir;
     private String systemDataDir;
@@ -58,6 +58,7 @@ public class GeonetworkDataDirectory {
 
     @Autowired
     private ConfigurableApplicationContext _applicationContext;
+    private boolean isDefaultNode;
 
     /**
 	 * Check and create if needed GeoNetwork data directory.
@@ -85,7 +86,14 @@ public class GeonetworkDataDirectory {
             Log.debug(Geonet.DATA_DIRECTORY, "Check and create if needed GeoNetwork data directory");
         }
         this.webappDir = webappDir;
-        this.nodeId = _applicationContext.getBean(Constants.BeanId.NODE_ID_BEAN_ID, String.class);
+        if (_applicationContext == null) {
+            this.nodeId = "srv";
+            this.isDefaultNode = true;
+        } else {
+            final NodeInfo nodeInfo = _applicationContext.getBean(NodeInfo.class);
+            this.isDefaultNode = nodeInfo.isDefaultNode();
+            this.nodeId = nodeInfo.getId();
+        }
 		setDataDirectory(jeevesServlet, webappName, webappDir, handlerConfig);
 	}
 	public void init(final String webappName, final String webappDir,  String systemDataDir,
@@ -294,17 +302,12 @@ public class GeonetworkDataDirectory {
 	}
 
     private void updateSystemDataDirWithNodeSuffix() {
-        final Boolean isDefault = _applicationContext.getBean(Constants.BeanId.IS_DEFAULT_CONTEXT_BEAN_ID, Boolean.class);
-        if (!isDefault) {
+        if (!isDefaultNode) {
             if (systemDataDir.endsWith(File.separator)) {
                 systemDataDir = systemDataDir.substring(0, systemDataDir.length() - 1);
             }
             systemDataDir += '_' + nodeId + File.separator;
         }
-    }
-
-    private boolean isDefaultNodeId() {
-        return false;
     }
 
     /**

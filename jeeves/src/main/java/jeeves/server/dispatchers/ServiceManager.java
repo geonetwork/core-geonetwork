@@ -72,9 +72,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 //=============================================================================
-@Component
-@Lazy
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Transactional
 public class ServiceManager {
 	private Map<String, ArrayList<ServiceInfo>> htServices = new HashMap<String, ArrayList<ServiceInfo>>(100);

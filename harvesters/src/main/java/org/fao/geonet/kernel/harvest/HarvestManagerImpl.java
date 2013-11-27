@@ -59,7 +59,6 @@ import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
  * TODO Javadoc.
  *
  */
-@Component
 public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
     //---------------------------------------------------------------------------

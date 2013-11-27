@@ -5,8 +5,9 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		">
 
-    <bean id="NODE_ID_BEAN_ID" class="java.lang.String">
-        <constructor-arg index="0" value="testNodeId"/>
+    <bean id="nodeInfo" class="org.fao.geonet.NodeInfo">
+        <property name="id" value="testNodeId" />
+        <property name="defaultNode" value="true" />
     </bean>
 
     <bean id="IS_DEFAULT_CONTEXT_BEAN" class="java.lang.Boolean">

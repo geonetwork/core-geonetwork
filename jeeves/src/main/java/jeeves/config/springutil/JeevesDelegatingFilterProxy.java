@@ -14,7 +14,7 @@ import java.io.IOException;
  * Date: 11/13/13
  * Time: 5:15 PM
  */
-public class DelegatingFilterProxy extends org.springframework.web.filter.DelegatingFilterProxy {
+public class JeevesDelegatingFilterProxy extends org.springframework.web.filter.DelegatingFilterProxy {
     private final static InheritableThreadLocal<String> applicationContextAttributeKey = new InheritableThreadLocal<String>();
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws ServletException, IOException {

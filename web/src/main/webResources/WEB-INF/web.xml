@@ -7,39 +7,9 @@
           metadata-complete="true">
 
     <display-name>geonetwork</display-name>
-	<context-param>
-		<param-name>contextClass</param-name>
- 		<param-value>jeeves.config.springutil.JeevesApplicationContext</param-value>
-	</context-param>
-	<context-param>
-		<param-name>nodes</param-name>
-        <!-- Node names must have the pattern: [a-zA-Z0-9_\-]+
-            Legal names:
-                node_1
-                node-2
-                n1
-            IllegalNames:
-                n/1
-                n@1
-                n n
-
-        -->
- 		<param-value>srv node1</param-value>
-	</context-param>
-	<!-- comma separated list of classes that implement
-		 org.springframework.beans.factory.config.BeanFactoryPostProcessor
-
-		 This is an additional method of overriding the spring configuration
-		 besides multiple bean configuration files with overriding beans by using
-		 same id in multiple files. 
-		  -->
-	<context-param>
-		<param-name>applicationContextPostProcessors</param-name>
-		<param-value></param-value>
-	</context-param>
-    <!--<listener>-->
-        <!--<listener-class>jeeves.config.springutil.JeevesContextLoaderListener</listener-class>-->
-    <!--</listener>-->
+    <listener>
+        <listener-class>jeeves.config.springutil.JeevesContextLoaderListener</listener-class>
+    </listener>
     <listener>
 	    <listener-class>
 	        org.springframework.web.context.request.RequestContextListener
@@ -75,7 +45,7 @@
     <!-- Spring security -->
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
-        <filter-class>jeeves.config.springutil.DelegatingFilterProxy</filter-class>
+        <filter-class>jeeves.config.springutil.JeevesDelegatingFilterProxy</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>

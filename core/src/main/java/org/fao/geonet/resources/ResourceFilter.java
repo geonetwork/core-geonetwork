@@ -12,7 +12,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import jeeves.config.springutil.DelegatingFilterProxy;
+import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
@@ -101,7 +101,7 @@ public class ResourceFilter implements Filter {
         servletContext = config.getServletContext();
         appPath = new java.io.File(servletContext.getRealPath(".")).getParent();
 
-        this.applicationContext = DelegatingFilterProxy.getApplicationContextFromServletContext(config.getServletContext());
+        this.applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(config.getServletContext());
         resourcesDir = Resources.locateResourcesDir(config.getServletContext(), applicationContext);
 
         defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/dummy.gif", new byte[0], -1);

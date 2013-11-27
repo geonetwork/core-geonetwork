@@ -246,7 +246,7 @@ public class Upload implements Service {
 					newFile));
 
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-            Thesaurus gst = new Thesaurus(fname, type, dir, newFile, siteURL);
+            Thesaurus gst = new Thesaurus(context.getApplicationContext(), fname, type, dir, newFile, siteURL);
 			thesaurusMan.addThesaurus(gst, false);
 		} else {
 			IO.delete(rdfFile, false, Geonet.THESAURUS);

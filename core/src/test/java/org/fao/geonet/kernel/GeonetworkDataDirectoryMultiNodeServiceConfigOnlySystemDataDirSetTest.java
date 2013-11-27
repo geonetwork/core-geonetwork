@@ -27,7 +27,7 @@ public class GeonetworkDataDirectoryMultiNodeServiceConfigOnlySystemDataDirSetTe
         return "node1";
     }
     @Override
-    protected boolean isDefaultContext() {
+    protected boolean isDefaultNode() {
         return false;
     }
 

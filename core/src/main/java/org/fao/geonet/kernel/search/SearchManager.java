@@ -120,8 +120,6 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Indexes metadata using Lucene.
  */
-@Component
-@Lazy
 public class SearchManager {
 	private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
 	private static final String INDEXING_ERROR_FIELD = "_indexingError";

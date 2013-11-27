@@ -7,7 +7,7 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd" >
     <import resource="classpath*:/config-spring-geonetwork.xml"/>
-    <import resource="config-db/database_migration.xml"/>
+    <import resource="../config-db/database_migration.xml"/>
 
     <context:property-override properties-ref="node1-configuration-overrides" />
 
@@ -19,8 +19,14 @@
             </props>
         </property>
     </bean>
+
+    <bean id="nodeInfo" class="org.fao.geonet.NodeInfo">
+        <property name="id" value="node1" />
+        <property name="defaultNode" value="false" />
+    </bean>
+
     <!-- Uncomment the database configuration you need to use -->
-    <import resource="config-db/h2.xml"/>
+    <import resource="../config-db/h2.xml"/>
  	<!--<import resource="config-db/jndi-postgres-postgis.xml"/> -->
  	<!--<import resource="config-db/oracle.xml"/>-->
  	<!--<import resource="config-db/mysql.xml"/> -->
