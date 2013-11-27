@@ -23,42 +23,42 @@
 
 package org.fao.geonet.services.config;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 //=============================================================================
 
-public class Get implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+@Controller
+@RequestMapping(value = "/srv/eng")
+/**
+ *  Return the list of languages
+ *
+ */
+public class Get {
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	@Autowired
+	private SettingManager sm;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+	@RequestMapping(value = "/admin.config.list")
+	public @ResponseBody
+	Element exec(
+			@RequestParam(required = false, defaultValue = "false") Boolean asTree)
+			throws Exception {
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		boolean asTree = Util.getParam(params, "asTree", "true").equals("true");
-
-        Element system  = gc.getBean(SettingManager.class).getAllAsXML(asTree);
+		Element system = sm.getAllAsXML(asTree);
 		return system;
 	}
+
+	public SettingManager getSm() {
+		return sm;
+	}
+
+	public void setSm(SettingManager sm) {
+		this.sm = sm;
+	}
 }
-
-//=============================================================================
-
