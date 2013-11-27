@@ -42,5 +42,7 @@
     "addFromThesaurus": "or select them in a thesaurus",
     "searchACRS": " or search for a coordinate system ...",
     "addCRS-help": "",
-    "addFromEPSGdb": "Add from EPSG database"
+    "addFromEPSGdb": "Add from EPSG database",
+    "add-extent-from-geokeywords": "Compute extent from keywords",
+    "add-extent-from-geokeywords-help": "Search all keywords from thesaurus of type place and add matching extents."
 }

@@ -29,7 +29,7 @@
          var duration = 300;
 
 
-         var refreshEditorForm = function( snippet) {
+         var refreshEditorForm = function(snippet) {
            $(mdConfig.formId).replaceWith(snippet);
            // Compiling
            if (mdConfig.compileScope) {
