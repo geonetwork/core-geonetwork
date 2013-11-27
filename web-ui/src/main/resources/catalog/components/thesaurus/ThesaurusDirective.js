@@ -10,8 +10,10 @@
   module.directive('gnThesaurusSelector',
       ['$http', '$rootScope', '$timeout',
        'gnThesaurusService', 'gnMetadataManagerService',
+       'gnEditorXMLService',
        function($http, $rootScope, $timeout,
-       gnThesaurusService, gnMetadataManagerService) {
+       gnThesaurusService, gnMetadataManagerService,
+       gnEditorXMLService) {
 
          return {
            restrict: 'A',
@@ -49,9 +51,9 @@
                .getXML(thesaurusIdentifier).then(
                function(data) {
                  // Add the fragment to the form
-                 scope.snippet = gnMetadataManagerService.
+                 scope.snippet = gnEditorXMLService.
                  buildXML(scope.elementName, data);
-                 scope.snippetRef = gnMetadataManagerService.
+                 scope.snippetRef = gnEditorXMLService.
                  buildXMLFieldName(scope.elementRef, scope.elementName);
 
 

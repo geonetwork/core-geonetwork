@@ -16,14 +16,15 @@ goog.addDependency('../../components/dv/GaugeModule.js', ['gn_gauge'], ['gn_gaug
 goog.addDependency('../../components/edit/FieldsDirective.js', ['gn_fields_directive'], ['gn_metadata_manager_service']);
 goog.addDependency('../../components/edit/FieldsModule.js', ['gn_fields'], ['gn_crs_selector', 'gn_directory_entry_selector', 'gn_editor_helper_directive', 'gn_field_duration_directive', 'gn_fields_directive', 'gn_template_field_directive']);
 goog.addDependency('../../components/edit/crsselector/CRSSelector.js', ['gn_crs_selector'], []);
-goog.addDependency('../../components/edit/directoryentryselector/DirectoryEntrySelector.js', ['gn_directory_entry_selector'], []);
+goog.addDependency('../../components/edit/directoryentryselector/DirectoryEntrySelector.js', ['gn_directory_entry_selector'], ['gn_editor_xml_service', 'gn_metadata_manager_service', 'gn_schema_manager_service']);
 goog.addDependency('../../components/edit/editorhelper/EditorHelperDirective.js', ['gn_editor_helper_directive'], []);
 goog.addDependency('../../components/edit/fieldduration/FieldDurationDirective.js', ['gn_field_duration_directive'], []);
 goog.addDependency('../../components/edit/templatefield/TemplateFieldDirective.js', ['gn_template_field_directive'], []);
 goog.addDependency('../../components/languageswitcher/LanguageSwitcherDirective.js', ['gn_language_switcher_directive'], []);
 goog.addDependency('../../components/languageswitcher/LanguageSwitcherModule.js', ['gn_language_switcher'], ['gn_language_switcher_directive']);
+goog.addDependency('../../components/metadatamanager/EditorXMLService.js', ['gn_editor_xml_service'], ['gn_schema_manager_service']);
 goog.addDependency('../../components/metadatamanager/MetadataManagerModule.js', ['gn_metadata_manager'], ['gn_metadata_manager_service']);
-goog.addDependency('../../components/metadatamanager/MetadataManagerService.js', ['gn_metadata_manager_service'], []);
+goog.addDependency('../../components/metadatamanager/MetadataManagerService.js', ['gn_metadata_manager_service'], ['gn_editor_xml_service', 'gn_schema_manager_service']);
 goog.addDependency('../../components/multiselect/MultiselectDirective.js', ['gn_multiselect_directive'], []);
 goog.addDependency('../../components/multiselect/MultiselectModule.js', ['gn_multiselect'], ['gn_multiselect_directive']);
 goog.addDependency('../../components/onlinesrc/OnlineSrcDirective.js', ['gn_onlinesrc_directive'], ['gn_utility']);
@@ -38,6 +39,8 @@ goog.addDependency('../../components/popup/DraggableDirective.js', ['gn_draggabl
 goog.addDependency('../../components/popup/PopupDirective.js', ['gn_popup_directive'], []);
 goog.addDependency('../../components/popup/PopupModule.js', ['gn_popup'], ['gn_popup_directive', 'gn_popup_service']);
 goog.addDependency('../../components/popup/PopupService.js', ['gn_popup_service'], ['gn_draggable_directive']);
+goog.addDependency('../../components/schemamanger/SchemaManagerModule.js', ['gn_schema_manager'], ['gn_schema_manager_service']);
+goog.addDependency('../../components/schemamanger/SchemaManagerService.js', ['gn_schema_manager_service'], []);
 goog.addDependency('../../components/scrollspy/ScrollSpyDirective.js', ['gn_scroll_spy_directive'], ['gn_utility_service']);
 goog.addDependency('../../components/scrollspy/ScrollSpyModule.js', ['gn_scroll_spy'], ['gn_scroll_spy_directive']);
 goog.addDependency('../../components/searchmanager/SearchFormController.js', ['gn_search_form_controller'], ['gn_catalog_service', 'gn_search_form_results_directive', 'gn_urlutils_service']);
@@ -51,7 +54,7 @@ goog.addDependency('../../components/thesaurus-type/ThesaurusTypeModule.js', ['g
 goog.addDependency('../../components/thesaurus/ThesaurusDirective.js', ['gn_thesaurus_directive'], []);
 goog.addDependency('../../components/thesaurus/ThesaurusModule.js', ['gn_thesaurus'], ['gn_multiselect', 'gn_thesaurus_directive', 'gn_thesaurus_service']);
 goog.addDependency('../../components/thesaurus/ThesaurusService.js', ['gn_thesaurus_service'], []);
-goog.addDependency('../../components/utility/UtilityDirective.js', ['gn_utility_directive'], []);
+goog.addDependency('../../components/utility/UtilityDirective.js', ['gn_utility_directive'], ['gn_schema_manager_service']);
 goog.addDependency('../../components/utility/UtilityModule.js', ['gn_utility'], ['gn_utility_directive', 'gn_utility_service']);
 goog.addDependency('../../components/utility/UtilityService.js', ['gn_utility_service'], []);
 goog.addDependency('../../js/CatController.js', ['gn_cat_controller'], ['gn_search_manager']);

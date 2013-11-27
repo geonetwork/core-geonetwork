@@ -1,7 +1,15 @@
 (function() {
   goog.provide('gn_directory_entry_selector');
 
-  var module = angular.module('gn_directory_entry_selector', []);
+
+
+  goog.require('gn_editor_xml_service');
+  goog.require('gn_metadata_manager_service');
+  goog.require('gn_schema_manager_service');
+
+  var module = angular.module('gn_directory_entry_selector',
+      ['gn_metadata_manager_service', 'gn_schema_manager_service',
+       'gn_editor_xml_service']);
 
   /**
    *
@@ -10,9 +18,10 @@
   module.directive('gnDirectoryEntrySelector',
       ['$rootScope', '$timeout', '$q', '$http',
         'gnMetadataManagerService', 'gnSchemaManagerService',
-        'gnUrlUtils',
+        'gnEditorXMLService', 'gnUrlUtils',
         function($rootScope, $timeout, $q, $http, 
-            gnMetadataManagerService, gnSchemaManagerService, gnUrlUtils) {
+            gnMetadataManagerService, gnSchemaManagerService, 
+            gnEditorXMLService, gnUrlUtils) {
 
          return {
            restrict: 'A',
@@ -81,10 +90,10 @@
                  // FIXME: this call is useless when using XLink
                  $http.get(url).success(function(xml) {
                    if (usingXlink) {
-                     snippets.push(gnMetadataManagerService.
+                     snippets.push(gnEditorXMLService.
                      buildXMLForXlink(scope.elementName, url));
                    } else {
-                     snippets.push(gnMetadataManagerService.
+                     snippets.push(gnEditorXMLService.
                      buildXML(scope.elementName, xml));
                    }
                    checkState();

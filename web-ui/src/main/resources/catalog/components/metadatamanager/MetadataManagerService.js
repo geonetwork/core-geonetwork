@@ -1,32 +1,11 @@
 (function() {
   goog.provide('gn_metadata_manager_service');
+
+  goog.require('gn_editor_xml_service');
   goog.require('gn_schema_manager_service');
 
   var module = angular.module('gn_metadata_manager_service',
-      ['gn_schema_manager_service']);
-
-  module.value('gnXmlTemplates', {
-    CRS: '<gmd:referenceSystemInfo ' +
-        "xmlns:gmd='http://www.isotc211.org/2005/gmd' " +
-        "xmlns:gco='http://www.isotc211.org/2005/gco'>" +
-        '<gmd:MD_ReferenceSystem>' +
-        '<gmd:referenceSystemIdentifier>' +
-        '<gmd:RS_Identifier>' +
-        '<gmd:code>' +
-        '<gco:CharacterString>{{description}}' +
-        '</gco:CharacterString>' +
-        '</gmd:code>' +
-        '<gmd:codeSpace>' +
-        '<gco:CharacterString>{{codeSpace}}</gco:CharacterString>' +
-        '</gmd:codeSpace>' +
-        '<gmd:version>' +
-        '<gco:CharacterString>{{version}}</gco:CharacterString>' +
-        '</gmd:version>' +
-        '</gmd:RS_Identifier>' +
-        '</gmd:referenceSystemIdentifier>' +
-        '</gmd:MD_ReferenceSystem>' +
-        '</gmd:referenceSystemInfo>'
-  });
+      ['gn_schema_manager_service', 'gn_editor_xml_service']);
 
   module.factory('gnMetadataManagerService',
       ['$q',
@@ -231,64 +210,13 @@
                  });
              return defer.promise;
            },
-           buildCRSXML: function(crs) {
-             var replacement = ['description', 'codeSpace', 'version'];
-             var xml = gnXmlTemplates.CRS;
-             angular.forEach(replacement, function(key) {
-               xml = xml.replace('{{' + key + '}}', crs[key]);
-             });
-             return xml;
-           },
            /**
             * Build a field name for an XML field
-            * TODO: move to editor service
             */
            buildXMLFieldName: function(elementRef, elementName) {
              var t = ['_X', elementRef,
                       '_', elementName.replace(':', 'COLON')];
              return t.join('');
-           },
-
-           /**
-            * Create an XML fragment to be inserted in a form field.
-            * The element name will be the parent element of the
-            * snippet provided. It has to be in the gmd: namespace.
-            *
-            */
-           buildXML: function(elementName, snippet) {
-             if (snippet.match(/^<\?xml/g)) {
-               var xmlDeclaration =
-                   '<?xml version="1.0" encoding="UTF-8"?>';
-               snippet = snippet.replace(xmlDeclaration, '');
-             }
-
-             var ns = elementName.split(':');
-             var nsDeclaration = [];
-             if (ns.length === 2) {
-               nsDeclaration = ['xmlns:', ns[0], "='",
-                                gnNamespaces[ns[0]], "'"];
-             }
-
-             var tokens = [
-               '<', elementName,
-               ' ', nsDeclaration.join(''), '>',
-               snippet, '</', elementName, '>'];
-             return tokens.join('');
-           },
-           buildXMLForXlink: function(elementName, xlink) {
-             var ns = elementName.split(':');
-             var nsDeclaration = [];
-             if (ns.length === 2) {
-               nsDeclaration = ['xmlns:', ns[0], "='",
-                                gnNamespaces[ns[0]], "'"];
-             }
-             var tokens = [
-               '<', elementName,
-               ' ', nsDeclaration.join(''),
-               ' xmlns:xlink="http://www.w3.org/1999/xlink"',
-               ' xlink:href="',
-               xlink, '"/>'];
-             return tokens.join('');
            }
          };
        }]);
