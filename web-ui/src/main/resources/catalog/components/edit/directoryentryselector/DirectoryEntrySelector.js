@@ -64,8 +64,11 @@
                var checkState = function() {
                  if (snippets.length === contact.length) {
                    scope.snippet = snippets.join(separator);
-                   scope.clearResults();
-
+                   
+                   // Clean results
+                   scope.resultRecords = null;
+                   scope.resultCount = null;
+                   
                     $timeout(function() {
                       // Save the metadata and refresh the form
                       gnMetadataManagerService.save(scope.metadataId, true);
