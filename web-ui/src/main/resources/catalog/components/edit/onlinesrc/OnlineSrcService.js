@@ -26,7 +26,7 @@
            */
           linkToParent: function(records) {
             if (records) {
-              gnBatchProcessing.runProcessNew({
+              gnBatchProcessing.runProcessMd({
                 id: 22, //FIXME : get real value
                 parentUuid: records[0]['geonet:info'].uuid,
                 process: 'parent-add'
@@ -35,7 +35,7 @@
           },
 
           addOnlinesrc: function(params) {
-            gnBatchProcessing.runProcessNew({
+            gnBatchProcessing.runProcessMd({
               id: 22, //FIXME : get real value
               process: 'onlinesrc-add',
               extra_metadata_uuid: '',

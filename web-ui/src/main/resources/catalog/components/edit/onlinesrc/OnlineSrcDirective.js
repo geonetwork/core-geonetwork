@@ -80,7 +80,7 @@
                   scope.submit();
                 }
                 else {
-                  onlinesrcService.addOnlinesrc(params);
+                  scope.onlinesrcService.addOnlinesrc(scope.params);
                 }
               };
             }

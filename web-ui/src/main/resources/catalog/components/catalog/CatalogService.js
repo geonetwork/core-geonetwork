@@ -34,7 +34,9 @@
 
   module.value('gnHttpServices', {
     mdCreate: 'md.create@json',
-    search: 'qi@json'
+    search: 'qi@json',
+    processMd : 'md.processing',
+    processAll : 'md.processing.batch'
   });
 
   module.provider('gnHttp', function() {
@@ -78,59 +80,31 @@
       }];
   });
 
-
-  module.provider('gnBatchProcessing', function() {
-    this.$get = ['$http', '$location', 'gnUrlUtils',
-                 function($http, $location, gnUrlUtils) {
+  module.factory('gnBatchProcessing', [
+    'gnHttp',
+    'gnMetadataManagerService',
+    
+     function(gnHttp,gnMetadataManagerService) {
 
         var processing = true;
         var processReport = null;
         return {
 
           /**
-           * Run process md.processing.new
+           * Run process md.processing on the edited
+           * metadata
            */
-          runProcessNew: function(params) {
-            var url = gnUrlUtils.append('md.processing.new?',
-                gnUrlUtils.toKeyValue(params));
-
-            $http.get(url).success(function(data) {
+          runProcessMd: function(params) {
+            
+            gnMetadataManagerService.save(gnMetadataManagerService.
+                getCurrentEdit()[0].metdataId, false)
+            gnHttp.callService('processMd', params).success(function(data) {
               console.log('md.processing.new success');
             });
-          },
+          }
 
           // TODO : write batch processing service here
           // from adminTools controller
-          runProcess: function(formId) {
-            processing = true;
-            processReport = null;
-            $http.get('md.processing.batch@json?' +
-                    $(formId).serialize())
-              .success(function(data) {
-                  processReport = data;
-                  processReportWarning = data.notFound != 0 ||
-                      data.notOwner != 0 ||
-                      data.notProcessFound != 0;
-                  $rootScope.$broadcast('StatusUpdated', {
-                    msg: $translate('processFinished'),
-                    timeout: 2,
-                    type: 'success'});
-                  $scope.processing = false;
-
-                  checkLastBatchProcessReport();
-                })
-              .error(function(data) {
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate('processError'),
-                    error: data,
-                    timeout: 0,
-                    type: 'danger'});
-                  $scope.processing = false;
-                });
-            gnUtilityService.scrollTo('#gn-batch-process-report');
-            $timeout(checkLastBatchProcessReport, processCheckInterval);
-          }
         };
-      }];
-  });
+      }]);
 })();
