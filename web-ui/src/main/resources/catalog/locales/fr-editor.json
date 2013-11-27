@@ -30,7 +30,6 @@
     "addContactAsLink-help": "Add a link to the contact in the contact directory. The contact will be updated if updated in the directory.",
     "createNewMetadata": "Créer une fiche",
     "createMetadata": "Créer",
-    "inGroup": "Dans",
     "unknownType": "Autres",
     "addFromDictionnary": "Ajouter depuis un annuaire",
     "addKeywordNotFromThesaurus": "Ajouter des mots clés",
@@ -38,6 +37,5 @@
     "addOnlinesrc" : "Add online resource",
     "linkToParent" : "Link to parent",
     "onlinesrcUploadHelp": "Drag & drop here one resource",
-    "chooseOnlinesrc": "Choose or drop resource here",
-    "addFromThesaurus": "or select them in a thesaurus"
+    "chooseOnlinesrc": "Choose or drop resource here"
 }

@@ -86,7 +86,7 @@
                      'http://localhost:8080/geonetwork/srv/eng/' +
                      'subtemplate',
                      gnUrlUtils.toKeyValue(params));
-
+                 
                  // FIXME: this call is useless when using XLink
                  $http.get(url).success(function(xml) {
                    if (usingXlink) {
