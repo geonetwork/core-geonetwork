@@ -11,6 +11,7 @@
     this.$get = ['$http', '$location', 'gnUrlUtils',
                  function($http, $location, gnUrlUtils) {
         return {
+          // TODO: move to metadatamanger
           createNewMetadata: function(id, groupId, fullPrivileges, 
               template, tab) {
             var url = gnUrlUtils.append('md.create@json',

@@ -23,7 +23,8 @@
         scope: {
           'selected': '=gnMultiselect',
           'choices': '=',
-          'sort': '&sortFn'
+          'sortFn': '&',
+          'getLabelProp': '@'
         },
         templateUrl: '../../catalog/components/multiselect/partials/' +
             'multiselect.html',
@@ -32,6 +33,19 @@
           var sortOnSelection = true;
           scope.currentSelectionLeft = [];
           scope.currentSelectionRight = [];
+
+          //          scope.getLabel = function(e) {
+          //                        console.log(e);
+          //                        console.log(e[scope.getLabelProp]);
+          ////            console.log(e);
+          ////            if (e.getLabel) {
+          ////              return e.getLabel();
+          ////            } else if (scope.getLabelProp) {
+          ////              return e[scope.getLabelProp];
+          ////            }
+          ////            return null;
+          //
+          //          };
 
           /**
           * Select a single element or the list of currently
@@ -57,7 +71,7 @@
             });
 
             if (sortOnSelection) {
-              scope.selected.sort(scope.sort);
+              scope.selected.sort(scope.sortFn);
             }
           };
 
@@ -75,7 +89,7 @@
             });
 
             if (sortOnSelection) {
-              scope.choices.sort(scope.sort);
+              scope.choices.sort(scope.sortFn);
             }
           };
 

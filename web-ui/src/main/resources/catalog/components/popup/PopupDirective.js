@@ -11,18 +11,19 @@
         return {
           restrict: 'A',
           transclude: true,
+          // TODO: add options for modal popup
           scope: {
             toggle: '=gnPopup',
             optionsFunc: '&gnPopupOptions' // Options from directive
           },
           template:
               '<h4 class="popover-title gn-popup-title">' +
-              '<span translate>{{options.title}}</span>' +
-              '<button type="button" class="close" ng-click="close()">' +
+              '<span data-translate="">{{options.title}}</span>' +
+              '<button type="button" class="close" data-ng-click="close()">' +
               '&times;</button>' +
               '</h4>' +
               '<div class="popover-content gn-popup-content" ' +
-              'ng-transclude>' +
+              'data-ng-transclude="">' +
               '</div>',
 
           link: function(scope, element, attrs) {

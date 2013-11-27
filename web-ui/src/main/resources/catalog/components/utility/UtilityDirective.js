@@ -2,7 +2,7 @@
   goog.provide('gn_utility_directive');
 
   goog.require('gn_metadata_manager_service');
-  
+
   angular.module('gn_utility_directive', [
   ])
   .directive('groupsCombo', ['$http',
@@ -32,7 +32,7 @@
             },
             controller: ['$scope', '$translate', function($scope, $translate) {
               var config = 'iso19139|gmd:protocol|||';
-              gnMetadataManagerService.getTooltip(config).then(function (data) {
+              gnMetadataManagerService.getTooltip(config).then(function(data) {
                 $scope.protocols = data !== 'null' ?
                     data[0].helper.option : null;
               });

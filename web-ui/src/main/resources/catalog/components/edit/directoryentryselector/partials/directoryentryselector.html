@@ -6,7 +6,7 @@
         <i class="fa fa-plus"/>
         <span>&nbsp;</span>
       </button>
-      <button class="btn btn-default" type="button">
+      <button class="btn btn-default" type="button" data-ng-click="openSelector()">
         <i class="fa fa-book"/>
         <span data-translate="">addFromDictionnary</span>
       </button>
@@ -17,6 +17,7 @@
     <input type="hidden" data-ng-model="params.fast" ng-init="params.fast='false'"/>
 
     <!-- Contact only -->
+    <!-- TODO: could be nice to filter by organisation -->
     <input type="hidden" data-ng-model="params._root"
       ng-init="params._root='gmd:CI_ResponsibleParty'"/>
 
@@ -24,21 +25,26 @@
       data-ng-model="params.any" data-ng-change="triggerSearch('qi@json')"/>
 
     <div class="list-group gn-autocomplete-list">
-      <li href="" class="list-group-item" data-ng-repeat="r in resultRecords">
-          {{r.title}}
-          <span class="pull-right">
-            <!-- TODO: Display only if XLink enable -->
-            <a href="" data-ng-click="addContact(r, true)" class="fa fa-link pull-right"
-              title="{{'addContactAsLink-help' | translate}}"></a>
-            <a href="" data-ng-click="addContact(r)" class="fa fa-plus pull-right"
-                title="{{'addContactAsText-help' | translate}}"></a>
-          </span>
+      <li href="" class="list-group-item" data-ng-repeat="r in resultRecords"> {{r.title}} <span
+          class="pull-right">
+          <!-- TODO: Display only if XLink enable -->
+          <a href="" data-ng-click="addContact(r, true)" class="fa fa-link pull-right"
+            title="{{'addContactAsLink-help' | translate}}"/>
+          <a href="" data-ng-click="addContact(r)" class="fa fa-plus pull-right"
+            title="{{'addContactAsText-help' | translate}}"/>
+        </span>
       </li>
     </div>
     <!-- The contact to insert once received -->
     <div data-ng-if="snippet">
       <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
     </div>
+  </div>
+
+  <div data-gn-popup="directoryEntryPopupShown" class="gn-directory-entry-popup"
+    data-gn-popup-options="{title:('addFromDictionnary' | translate)}"
+    id="gn-directory-entry-popup">
+    <div data-gn-directory-entry-multi-selector=""/>
   </div>
 
 </span>

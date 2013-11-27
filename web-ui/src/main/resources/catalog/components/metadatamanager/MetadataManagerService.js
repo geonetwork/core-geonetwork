@@ -40,7 +40,6 @@
 
   module.factory('gnMetadataManagerService',
       ['$q',
-       '$rootScope',
        '$http',
        '$translate',
        '$compile',
@@ -48,7 +47,7 @@
        'gnUrlUtils',
        'gnNamespaces',
        'gnXmlTemplates',
-       function($q, $rootScope, $http, $translate, $compile, 
+       function($q, $http, $translate, $compile, 
            $cacheFactory,
        gnUrlUtils, gnNamespaces, gnXmlTemplates) {
          /**
@@ -62,6 +61,9 @@
          */
          var duration = 300;
 
+         /**
+          * Cache field info and codelist info
+          */
          var tooltipCache = $cacheFactory('tooltipCache');
          var _select = function(uuid, andClearSelection, action) {
            var defer = $q.defer();
@@ -115,6 +117,7 @@
                    headers: {'Content-Type':
                      'application/x-www-form-urlencoded'}
                  }).success(function(data) {
+                   // TODO: make refreshform method
                if (refreshForm) {
                  var snippet = $(data);
                  $(config.formId).replaceWith(snippet);
@@ -228,6 +231,32 @@
              }).error(function(data) {
                defer.reject(data);
              });
+             return defer.promise;
+           },
+           // TODO Move to SchemaService 
+           getCodelist: function(config) {
+             //<request><codelist schema="iso19139" name="gmd:CI_RoleCode"/>
+             var defer = $q.defer();
+             var fromCache = tooltipCache.get(config);
+             if (fromCache) {
+               defer.resolve(fromCache);
+             } else {
+               var getPostRequestBody = function() {
+                 var info = config.split('|'),
+                 requestBody = '<request><codelist schema="' + info[0] +
+                 '" name="' + info[1] +
+                 '" /></request>';
+                 return requestBody;
+               };
+
+               $http.post('md.element.info@json', getPostRequestBody(), {
+                 headers: {'Content-type': 'application/xml'}
+               }).
+               success(function(data) {
+                 tooltipCache.put(config, data);
+                 defer.resolve(data);
+               });
+             }
              return defer.promise;
            },
            /**
@@ -362,7 +391,7 @@
                '<', elementName,
                ' ', nsDeclaration.join(''),
                ' xmlns:xlink="http://www.w3.org/1999/xlink"',
-               'xlink:href="',
+               ' xlink:href="',
                xlink, '"/>'];
              return tokens.join('');
            }

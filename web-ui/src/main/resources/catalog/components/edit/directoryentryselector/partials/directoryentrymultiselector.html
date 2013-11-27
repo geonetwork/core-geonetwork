@@ -1,0 +1,68 @@
+<span data-ng-controller="GnSearchFormController">
+
+  <!-- subtemplates only -->
+  <input type="hidden" data-ng-model="params._isTemplate" ng-init="params._isTemplate='s'"/>
+  <input type="hidden" data-ng-model="params.fast" ng-init="params.fast='false'"/>
+  <input type="hidden" data-ng-model="params.sortBy" ng-init="params.sortBy='title'"/>
+
+  <!-- Contact only -->
+  <input type="hidden" data-ng-model="params._root" ng-init="params._root='gmd:CI_ResponsibleParty'"/>
+
+  <input type="text" class="form-control" placeholder="{{'searchAContact' | translate}}"
+    data-ng-model="params.any" data-ng-change="triggerSearch('qi@json')"/>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="btn-group pull-right">
+        <button type="button" class="btn btn-link dropdown-toggle pull-right" data-toggle="dropdown">
+          <i class="fa fa-cog"/>
+          <span class="caret"/>
+        </button>
+        <ul class="dropdown-menu">
+          <li role="presentation" class="dropdown-header" data-translate="">entryInsertMode</li>
+          <!-- <li data-ng-repeat="tr in transformationLists"
+              data-ng-class="isCurrent(tr) ? 'disabled' : ''">
+              <a href="" data-ng-click="setTransformation(tr)"
+                title="{{(tr + '-help') | translate}}">{{tr | translate}}</a>
+            </li> -->
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div data-gn-multiselect="selected" data-choices="resultRecords" data-get-label-prop="title"/>
+
+  <!-- TODO handle role -->
+  <div class="modal-footer">
+    <div class="btn-group">
+      <button type="button" class="btn btn-default fa fa-plus dropdown-toggle"
+        data-ng-disabled="selected.length === 0"
+        data-toggle="dropdown">
+        <span data-translate="">addContact</span>
+        <span class="caret"/>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li data-ng-repeat="role in roles">
+          <a data-ng-click="addContact(selected, role.code)" title="{{role.description}}"> 
+            {{role.label}}
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default fa fa-link dropdown-toggle"
+        data-ng-disabled="selected.length === 0"
+        data-toggle="dropdown">
+        <span data-translate="">addContactUsingXLink</span>
+        <span class="caret"/>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li data-ng-repeat="role in roles">
+          <a data-ng-click="addContact(selected, role.code, true)" title="{{role.description}}"> 
+            {{role.label}}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</span>
