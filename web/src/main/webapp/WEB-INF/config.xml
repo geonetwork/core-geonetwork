@@ -1145,8 +1145,14 @@
                 <call name="isoLang" class=".guiservices.isolanguages.Get" />
             </output>
         </service>
-	  
-	  
+		
+		<service name="find">
+			<output sheet="search-cat.xsl"/>
+		</service>
+		<service name="tabsearch">
+			<output sheet="search-tab.xsl"/>
+		</service>
+		
 	  <service name="csw.config.get" deprecated="true">
 	    <class name=".guiservices.csw.Get"/>
 	    
@@ -1219,6 +1225,13 @@
 	    <output sheet="security/node-change-warning.xsl" />
 	  </service>
 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Versioning log                                                -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="versioning.logdata">
+			<class name=".guiservices.versioning.Get"/>
+		</service>
 	</services>
 
 	<!-- ====================================================================== -->

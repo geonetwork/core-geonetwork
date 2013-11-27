@@ -21,7 +21,7 @@ public class MetadataDataInfo implements Serializable {
     private char _template = Constants.YN_FALSE;
     private String _root;
     private String _doctype;
-    private int _displayOrder;
+    private Integer _displayOrder;
     private int _rating;
     private int _popularity;
 
@@ -157,7 +157,7 @@ public class MetadataDataInfo implements Serializable {
      * @return the display order
      */
     @Column(name = "displayorder")
-    public int getDisplayOrder() {
+    public Integer getDisplayOrder() {
         return _displayOrder;
     }
 
@@ -170,7 +170,7 @@ public class MetadataDataInfo implements Serializable {
      * @param displayOrder the display orderthe display order
      * @return this data info object
      */
-    public MetadataDataInfo setDisplayOrder(int displayOrder) {
+    public MetadataDataInfo setDisplayOrder(Integer displayOrder) {
         this._displayOrder = displayOrder;
         return this;
     }
@@ -296,7 +296,7 @@ public class MetadataDataInfo implements Serializable {
                 return false;
         } else if (!_createDate.equals(other._createDate))
             return false;
-        if (_displayOrder != other._displayOrder)
+        if (!_displayOrder.equals(other._displayOrder))
             return false;
         if (_doctype == null) {
             if (other._doctype != null)

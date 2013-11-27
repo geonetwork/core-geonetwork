@@ -21,7 +21,7 @@
           <!-- According to data type -->
           <div data-ng-repeat="s in filterBySection(section.name) | orderBy:getOrderBy"
             data-ng-switch="s['@datatype']">
-            <div data-ng-switch-when="2">
+            <div data-ng-switch-when="BOOLEAN">
               <label class="col-lg-4 control-label" for="{{s['@name']}}"> {{s['@name'] | translate}} </label>
               <div class="col-lg-8">
                 <input type="checkbox" id="{{s['@name']}}" name="{{s.formName}}"
@@ -52,6 +52,42 @@
                 <textarea data-ng-switch-when="system/harvesting/mail/templateWarning" type="text"
                   class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
                   >{{s['#text']}}</textarea>
+                <select data-ng-switch-when="system/server/protocol" class="form-control"
+                      name="{{s.formName}}">
+                  <option value="http"
+                          ng-selected="'http' == s['#text']">http</option>
+                  <option value="https"
+                          ng-selected="'https' == s['#text']">https</option>
+                </select>
+                <select data-ng-switch-when="system/oai/mdmode" class="form-control"
+                      name="{{s.formName}}">
+                  <option value="1"
+                          ng-selected="'1' == s['#text']">{{'system/oai/mdmode-valueTemporaExtent' | translate}}</option>
+                  <option value="2"
+                          ng-selected="'2' == s['#text']">{{'system/oai/mdmode-valueModificationDate' | translate}}</option>
+                </select>
+                <select data-ng-switch-when="system/requestedLanguage/only" class="form-control"
+                      name="{{s.formName}}">
+                  <option value="off"
+                          ng-selected="'off == s['#text']">{{'system/requestedLanguage/only-value1' | translate}}</option>
+                  <option value="prefer_locale"
+                          ng-selected="'prefer_locale' == s['#text']">{{'system/requestedLanguage/only-value2' | translate}}</option>
+                  <option value="prefer_docLocale"
+                          ng-selected="'prefer_docLocale' == s['#text']">{{'system/requestedLanguage/only-value3' | translate}}</option>
+                  <option value="only_locale"
+                          ng-selected="'only_locale' == s['#text']">{{'system/requestedLanguage/only-value4' | translate}}</option>
+                  <option value="only_docLocale"
+                          ng-selected="'only_docLocale' == s['#text']">{{'system/requestedLanguage/only-value5' | translate}}</option>
+                </select>
+                <!-- Read only fields -->
+                <input data-ng-switch-when="system/platform/version" type="text" class="form-control"
+                     id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}" readonly="readonly"/>
+                <input data-ng-switch-when="system/platform/subVersion" type="text" class="form-control"
+                     id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}" readonly="readonly"/>
+                <input data-ng-switch-when="system/site/svnUuid" type="text" class="form-control"
+                     id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}" readonly="readonly"/>
+
+                <!-- Default -->
                 <input data-ng-switch-default="" type="text" class="form-control"
                   id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"/>
 
