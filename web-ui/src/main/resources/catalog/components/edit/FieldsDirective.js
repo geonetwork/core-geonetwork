@@ -44,7 +44,7 @@
                if (!isInitialized) {
                  // Retrieve field information (there is a cache)
                  gnSchemaManagerService
-                  .getTooltip(attrs.gnFieldTooltip).then(function(data) {
+                  .getElementInfo(attrs.gnFieldTooltip).then(function(data) {
                    var info = data[0];
                    if (info.description && info.description.length > 0) {
                      // Initialize tooltip when description returned
