@@ -32,7 +32,7 @@
   module.factory('gnEditorXMLService',
       ['gnNamespaces',
        'gnXmlTemplates',
-       function( 
+       function(
        gnNamespaces, gnXmlTemplates) {
          var getNamespacesForElement = function(elementName) {
            var ns = elementName.split(':');

@@ -32,6 +32,53 @@
       }];
   });
 
+  module.value('gnHttpServices', {
+    mdCreate: 'md.create@json',
+    search: 'qi@json'
+  });
+
+  module.provider('gnHttp', function() {
+
+    this.$get = ['$http', 'gnHttpServices' , '$location', 'gnUrlUtils',
+      function($http, gnHttpServices, $location, gnUrlUtils) {
+
+        var originUrl = this.originUrl = gnUrlUtils.urlResolve(
+            window.location.href, true);
+
+        var defaults = this.defaults = {
+          host: originUrl.host,
+          pathname: originUrl.pathname,
+          protocol: originUrl.protocol
+        };
+
+        var urlSplit = originUrl.pathname.split('/');
+        if (urlSplit.lenght < 3) {
+          //TODO manage error
+        }
+        else {
+          angular.extend(defaults, {
+            webapp: urlSplit[1],
+            srv: urlSplit[2],
+            lang: urlSplit[3]
+          });
+        }
+        return {
+          callService: function(serviceKey, params, httpConfig) {
+
+            var config = {
+              url: gnHttpServices[serviceKey],
+              params: params,
+              method: 'GET'
+            };
+            angular.extend(config, httpConfig);
+            console.log(originUrl);
+            return $http(config);
+          }
+        };
+      }];
+  });
+
+
   module.provider('gnBatchProcessing', function() {
     this.$get = ['$http', '$location', 'gnUrlUtils',
                  function($http, $location, gnUrlUtils) {

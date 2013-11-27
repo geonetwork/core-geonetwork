@@ -33,6 +33,7 @@
               });
             }
           },
+
           addOnlinesrc: function(params) {
             gnBatchProcessing.runProcessNew({
               id: 22, //FIXME : get real value

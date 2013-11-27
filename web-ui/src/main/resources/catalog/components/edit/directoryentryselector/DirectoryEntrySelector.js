@@ -25,7 +25,7 @@
 
          return {
            restrict: 'A',
-           replace: true,
+           replace: false,
            transclude: true,
            scope: {
              mode: '@gnDirectoryEntrySelector',
