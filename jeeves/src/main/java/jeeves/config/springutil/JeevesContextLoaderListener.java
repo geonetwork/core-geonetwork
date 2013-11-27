@@ -1,14 +1,12 @@
 package jeeves.config.springutil;
 
 import com.google.common.base.Function;
-import jeeves.server.sources.http.JeevesServlet;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.Lifecycle;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
@@ -92,7 +90,7 @@ public class JeevesContextLoaderListener extends ContextLoaderListener {
         final Enumeration attributeNames = servletContext.getAttributeNames();
         while (attributeNames.hasMoreElements()) {
             String name = (String) attributeNames.nextElement();
-            if (name.startsWith(JeevesServlet.NODE_APPLICATION_CONTEXT_KEY)) {
+            if (name.startsWith(User.NODE_APPLICATION_CONTEXT_KEY)) {
                 ConfigurableApplicationContext context = (ConfigurableApplicationContext) servletContext.getAttribute(name);
                 action.apply(context);
             }

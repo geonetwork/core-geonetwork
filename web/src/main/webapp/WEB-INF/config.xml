@@ -1214,7 +1214,11 @@
 	    <class name=".guiservices.csw.virtual.Delete"/>
 	    <output forward="virtualcsw.config"/>
 	  </service>
-	  
+
+	  <service name="node-change-warning">
+	    <output sheet="security/node-change-warning.xsl" />
+	  </service>
+
 	</services>
 
 	<!-- ====================================================================== -->

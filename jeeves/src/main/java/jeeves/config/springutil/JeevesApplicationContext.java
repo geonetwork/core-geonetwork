@@ -1,8 +1,8 @@
 package jeeves.config.springutil;
 
-import com.google.common.collect.ObjectArrays;
 import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.server.sources.http.ServletPathFinder;
+import org.fao.geonet.Constants;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
@@ -16,14 +16,6 @@ import java.io.IOException;
 
 public class JeevesApplicationContext extends XmlWebApplicationContext  {
 
-    /**
-     * Bean Id of the string representing the nodeId of the current application context.
-     */
-    public static final String NODE_ID_BEAN_ID = "NODE_ID_BEAN_ID";
-    /**
-     * The bean id of the boolean that indicates if this context is the default context
-     */
-    public static final String IS_DEFAULT_CONTEXT_BEAN_ID = "IS_DEFAULT_CONTEXT_BEAN";
     private final ConfigurationOverrides _configurationOverrides;
     private final String nodeId;
 
@@ -78,7 +70,7 @@ public class JeevesApplicationContext extends XmlWebApplicationContext  {
         try {
             this._configurationOverrides.importSpringConfigurations(reader, (ConfigurableBeanFactory) reader.getBeanFactory(),
                     getServletContext(), appPath);
-            ((ConfigurableBeanFactory) reader.getBeanFactory()).registerSingleton(JeevesApplicationContext.NODE_ID_BEAN_ID, nodeId);
+            ((ConfigurableBeanFactory) reader.getBeanFactory()).registerSingleton(Constants.BeanId.NODE_ID_BEAN_ID, nodeId);
         } catch (JDOMException e) {
             throw new IOException(e);
         }

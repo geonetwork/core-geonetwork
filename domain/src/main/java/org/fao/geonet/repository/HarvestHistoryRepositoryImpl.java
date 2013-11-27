@@ -3,15 +3,10 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.HarvestHistory_;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaUpdate;

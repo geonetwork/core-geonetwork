@@ -1,7 +1,6 @@
 package org.fao.geonet.domain;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.fao.geonet.entitylistener.MetadataCategoryEntityListenerManager;
 
 import javax.persistence.*;
 import java.util.Map;
@@ -15,6 +14,7 @@ import java.util.Map;
 @Access(AccessType.PROPERTY)
 @Cacheable
 @Table(name = "Categories")
+@EntityListeners(MetadataCategoryEntityListenerManager.class)
 public class MetadataCategory extends Localized {
     private int _id;
     private String _name;

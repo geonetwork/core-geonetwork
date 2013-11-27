@@ -1,6 +1,7 @@
 package org.fao.geonet.domain.statistic;
 
 import org.fao.geonet.domain.Constants;
+import org.fao.geonet.entitylistener.SearchRequestParamEntityListenerManager;
 
 import javax.persistence.*;
 
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "Params")
+@EntityListeners(SearchRequestParamEntityListenerManager.class)
 public class SearchRequestParam {
     private int _id;
     private LuceneQueryParamType _queryType;

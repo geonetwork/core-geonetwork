@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.HarvesterSettingEntityListenerManager;
 import org.hibernate.annotations.Type;
 
 import javax.annotation.Nonnull;
@@ -20,9 +21,8 @@ import static javax.persistence.CascadeType.*;
 @Entity
 @Table(name = "HarvesterSettings")
 @Access(AccessType.PROPERTY)
+@EntityListeners(HarvesterSettingEntityListenerManager.class)
 public class HarvesterSetting extends GeonetEntity {
-    public static final int ROOT_ID = 0;
-
     private int _id;
     private HarvesterSetting _parent;
     private String _name;

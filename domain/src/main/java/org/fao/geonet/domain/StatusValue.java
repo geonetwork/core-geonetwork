@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.StatusValueEntityListenerManager;
+
 import javax.persistence.*;
 import java.util.Map;
 
@@ -11,6 +13,7 @@ import java.util.Map;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "StatusValues")
+@EntityListeners(StatusValueEntityListenerManager.class)
 public class StatusValue extends Localized {
     private int _id;
     private String _name;

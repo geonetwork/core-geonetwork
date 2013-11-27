@@ -37,8 +37,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletContext;
 import java.util.Collection;
@@ -139,7 +137,7 @@ public class ProfileManager
         ServiceContext serviceContext = ServiceContext.get();
         if(serviceContext == null) return true;
         ServletContext servletContext = serviceContext.getServlet().getServletContext();
-        ConfigurableApplicationContext springContext = DelegatingFilterProxy.getApplicationContextAttributeKey(servletContext);
+        ConfigurableApplicationContext springContext = DelegatingFilterProxy.getApplicationContextFromServletContext(servletContext);
         if(springContext == null) return true;
         return springContext.containsBean(beanId);
     }
@@ -158,7 +156,7 @@ public class ProfileManager
         ServiceContext serviceContext = ServiceContext.get();
         if(serviceContext == null) return true;
         ServletContext servletContext = serviceContext.getServlet().getServletContext();
-        ConfigurableApplicationContext springContext = DelegatingFilterProxy.getApplicationContextAttributeKey(servletContext);
+        ConfigurableApplicationContext springContext = DelegatingFilterProxy.getApplicationContextFromServletContext(servletContext);
         SecurityContext context = SecurityContextHolder.getContext();
         if(springContext == null || context == null) return true;
         

@@ -2,6 +2,7 @@ package org.fao.geonet.domain;
 
 import com.vividsolutions.jts.util.Assert;
 import org.apache.lucene.document.Document;
+import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
 import org.fao.geonet.utils.Xml;
 import org.hibernate.annotations.Type;
 import org.jdom.Element;
@@ -28,8 +29,8 @@ import java.util.Set;
 @Entity
 @Table(name = "Metadata")
 @Access(AccessType.PROPERTY)
+@EntityListeners(MetadataEntityListenerManager.class)
 public class Metadata extends GeonetEntity {
-
     public static final String METADATA_CATEG_JOIN_TABLE_NAME = "MetadataCateg";
     public static final String METADATA_CATEG_JOIN_TABLE_CATEGORY_ID = "categoryId";
     private int _id;

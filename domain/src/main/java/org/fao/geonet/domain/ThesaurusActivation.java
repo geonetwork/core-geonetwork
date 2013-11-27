@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.ThesaurusActivationEntityListenerManager;
+
 import javax.persistence.*;
 
 /**
@@ -10,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "Thesaurus")
+@EntityListeners(ThesaurusActivationEntityListenerManager.class)
 public class ThesaurusActivation {
     private String _id;
     private char _activated = Constants.YN_TRUE;

@@ -43,13 +43,12 @@ import java.util.Map;
 
 //=============================================================================
 
-/** Contains the context for a service execution
-  */
+/**
+ * Contains the context for a service execution.
+ */
+public class ServiceContext extends BasicContext {
 
-public class ServiceContext extends BasicContext
-{
-
-    private final static InheritableThreadLocal<ServiceContext> threadLocalInstance = new InheritableThreadLocal<ServiceContext>();
+    private static final InheritableThreadLocal<ServiceContext> THREAD_LOCAL_INSTANCE = new InheritableThreadLocal<ServiceContext>();
 
     /**
      * ServiceManager sets the service context thread local when dispatch is called.  this method will
@@ -59,31 +58,31 @@ public class ServiceContext extends BasicContext
      */
     @CheckForNull
     public static ServiceContext get() {
-        return threadLocalInstance.get();
+        return THREAD_LOCAL_INSTANCE.get();
     }
 
     /**
-     * Called to set the Service context for this thread and inherited threads
+     * Called to set the Service context for this thread and inherited threads.
      */
     public void setAsThreadLocal() {
-        threadLocalInstance.set(this);
+        THREAD_LOCAL_INSTANCE.set(this);
     }
 
 
-    private UserSession    userSession = new UserSession();
+    private UserSession _userSession = new UserSession();
 
-	private InputMethod    input;
-	private OutputMethod   output;
-	private Map<String, String> headers;
+	private InputMethod _input;
+	private OutputMethod _output;
+	private Map<String, String> _headers;
 
-	private String language;
-	private String service;
-	private String ipAddress;
-	private String uploadDir;
-	private int    maxUploadSize;
-	private JeevesServlet servlet;
-	private boolean startupError = false;
-	Map<String,String> startupErrors;
+	private String _language;
+	private String _service;
+	private String _ipAddress;
+	private String _uploadDir;
+	private int _maxUploadSize;
+	private JeevesServlet _servlet;
+	private boolean _startupError = false;
+	private Map<String, String> _startupErrors;
     /**
      * Property to be able to add custom response headers depending on the code
      * (and not the xml of Jeeves)
@@ -91,10 +90,10 @@ public class ServiceContext extends BasicContext
      * Be very careful using this, because right now Jeeves doesn't check the
      * headers. Can lead to infinite loops or wrong behaviour.
      * 
-     * @see #statusCode
+     * @see #_statusCode
      * 
      */
-    private Map<String, String> responseHeaders;
+    private Map<String, String> _responseHeaders;
     /**
      * Property to be able to add custom http status code headers depending on
      * the code (and not the xml of Jeeves)
@@ -102,10 +101,10 @@ public class ServiceContext extends BasicContext
      * Be very careful using this, because right now Jeeves doesn't check the
      * headers. Can lead to infinite loops or wrong behaviour.
      * 
-     * @see #responseHeaders
+     * @see #_responseHeaders
      * 
      */
-    private Integer statusCode;
+    private Integer _statusCode;
 
 	//--------------------------------------------------------------------------
 	//---
@@ -113,7 +112,8 @@ public class ServiceContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ServiceContext(String service, ConfigurableApplicationContext jeevesApplicationContext, Map<String, Object> contexts, EntityManager entityManager)
+	public ServiceContext(final String service, final ConfigurableApplicationContext jeevesApplicationContext,
+                          final Map<String, Object> contexts, final EntityManager entityManager)
 	{
 		super(jeevesApplicationContext, contexts, entityManager);
 
@@ -128,54 +128,55 @@ public class ServiceContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public String getLanguage()  { return language;  }
-	public String getService()   { return service;   }
-	public String getIpAddress() { return ipAddress; }
-	public String getUploadDir() { return uploadDir; }
-    public int getMaxUploadSize() { return maxUploadSize; }
+	public String getLanguage()  { return _language;  }
+	public String getService()   { return _service;   }
+	public String getIpAddress() { return _ipAddress; }
+	public String getUploadDir() { return _uploadDir; }
+    public int getMaxUploadSize() { return _maxUploadSize; }
 
-	public UserSession    getUserSession()    { return userSession; }
+	public UserSession    getUserSession()    { return _userSession; }
 	public ProfileManager getProfileManager() { return getBean(ProfileManager.class);   }
 
-	public InputMethod  getInputMethod()  { return input;  }
-	public OutputMethod getOutputMethod() { return output; }
-	public Map<String,String> getStartupErrors() { return startupErrors; }
-	public boolean isStartupError() { return startupError; }
+	public InputMethod  getInputMethod()  { return _input;  }
+	public OutputMethod getOutputMethod() { return _output; }
+	public Map<String, String> getStartupErrors() { return _startupErrors; }
+	public boolean isStartupError() { return _startupError; }
 	public boolean isServletInitialized() { 
-		if (servlet != null) return servlet.isInitialized(); 
-		else return true; // Jeeves not running in servlet container eg for testing
+		if (_servlet != null) {
+            return _servlet.isInitialized();
+        } else {
+            return true; // Jeeves not running in servlet container eg for testing
+        }
 	}
 
 	//--------------------------------------------------------------------------
 
-	public void setLanguage (String lang)    { language  = lang;    }
-	public void setServlet (JeevesServlet serv)    { servlet  = serv;    }
-	public void setIpAddress(String address) { ipAddress = address; }
-	public void setUploadDir(String dir)     { uploadDir = dir;     }
-    public void setMaxUploadSize(int size)   { maxUploadSize = size;}
-    public void setStartupErrors(Map<String,String> errs)   { startupErrors = errs; startupError = true; }
+	public void setLanguage(final String lang)    { _language = lang;    }
+	public void setServlet(final JeevesServlet serv)    { _servlet = serv;    }
+	public void setIpAddress(final String address) { _ipAddress = address; }
+	public void setUploadDir(final String dir)     { _uploadDir = dir;     }
+    public void setMaxUploadSize(final int size)   { _maxUploadSize = size; }
+    public void setStartupErrors(final Map<String,String> errs)   { _startupErrors = errs; _startupError = true; }
 
-	public void setInputMethod (InputMethod m)  { input  = m; }
-	public void setOutputMethod(OutputMethod m) { output = m; }
+	public void setInputMethod(final InputMethod m)  { _input = m; }
+	public void setOutputMethod(final OutputMethod m) { _output = m; }
 
 	//--------------------------------------------------------------------------
 
-	public void setService  (String service)
-	{
-		this.service = service;
+	public void setService(final String service) {
+		this._service = service;
 		logger       = Log.createLogger(Log.WEBAPP +"."+ service);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public void setUserSession(UserSession session)
-	{
-		userSession = session;
+	public void setUserSession(final UserSession session) {
+		_userSession = session;
 	}
 
 	//--------------------------------------------------------------------------
 
-	public void setLogger(Logger l)
+	public void setLogger(final Logger l)
 	{
 		logger = l;
 	}
@@ -187,27 +188,27 @@ public class ServiceContext extends BasicContext
 	 */
 	public Map<String, String> getHeaders()
 	{
-		return headers;
+		return _headers;
 	}
 
 	/**
-	 * Set the map of headers from the request
+	 * Set the map of headers from the request.
 	 * @param headers The new headers to be set.
 	 */
 	public void setHeaders(Map<String, String> headers)
 	{
-		this.headers = headers;
+		this._headers = headers;
 	}
 
 	public JeevesServlet getServlet() {
-        return servlet;
+        return _servlet;
     }
 
 	public Element execute(LocalServiceRequest request) throws Exception {
 		ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, getEntityManager());
 		
-		UserSession session = userSession;
-		if(userSession == null) {
+		UserSession session = _userSession;
+		if(_userSession == null) {
 			session = new UserSession();
 		} 
 		
@@ -227,24 +228,27 @@ public class ServiceContext extends BasicContext
 			throw new ServiceExecutionFailedException(request.getService(),e);
 		}
 	}
-    
+
+    /**
+     * Get the XmlCacheManager instance.
+     */
     public XmlCacheManager getXmlCacheManager() {
         return getBean(XmlCacheManager.class);
     }
     public Map<String, String> getResponseHeaders() {
-        return responseHeaders;
+        return _responseHeaders;
     }
 
     private void setResponseHeaders(Map<String, String> responseHeaders) {
-        this.responseHeaders = responseHeaders;
+        this._responseHeaders = responseHeaders;
     }
 
     public void setStatusCode(Integer statusCode) {
-        this.statusCode = statusCode;
+        this._statusCode = statusCode;
     }
 
     public Integer getStatusCode() {
-        return statusCode;
+        return _statusCode;
     }
 
 }

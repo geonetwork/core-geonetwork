@@ -1,9 +1,8 @@
 package jeeves.config.springutil;
 
-import jeeves.server.sources.http.HttpServiceRequest;
-import jeeves.server.sources.http.JeevesServlet;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.domain.User;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -22,13 +21,15 @@ public class DelegatingFilterProxy extends org.springframework.web.filter.Delega
         if (request instanceof HttpServletRequest) {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             final String nodeName = httpRequest.getServletPath().substring(1);
-            String applicationKey = JeevesServlet.NODE_APPLICATION_CONTEXT_KEY + nodeName;
+            String applicationKey = User.NODE_APPLICATION_CONTEXT_KEY + nodeName;
             if (getServletContext().getAttribute(applicationKey) == null) {
                 // use default;
-                applicationKey = JeevesServlet.NODE_APPLICATION_CONTEXT_KEY;
+                applicationKey = User.NODE_APPLICATION_CONTEXT_KEY;
             }
             applicationContextAttributeKey.set(applicationKey);
-        super.doFilter(request, response, filterChain);
+            ApplicationContextHolder.set(getApplicationContextFromServletContext(getServletContext()));
+            super.doFilter(request, response, filterChain);
+            ApplicationContextHolder.clear();
         } else {
             response.getWriter().write(request.getClass().getName() + " is not a supported type of request");
         }
@@ -39,7 +40,7 @@ public class DelegatingFilterProxy extends org.springframework.web.filter.Delega
         return applicationContextAttributeKey.get();
     }
 
-    public static ConfigurableApplicationContext getApplicationContextAttributeKey(ServletContext servletContext) {
+    public static ConfigurableApplicationContext getApplicationContextFromServletContext(ServletContext servletContext) {
         final Object applicationContext = servletContext.getAttribute(applicationContextAttributeKey.get());
         return (ConfigurableApplicationContext) applicationContext;
     }

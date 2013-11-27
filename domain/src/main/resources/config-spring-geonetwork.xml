@@ -13,6 +13,7 @@
                       entity-manager-factory-ref="entityManagerFactory"
                       transaction-manager-ref="transactionManager"/>
 
+    <bean id="userNodeIdSetter" class="org.fao.geonet.entitylistener.UserNodeIdSetter" />
     <bean id="entityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="jdbcDataSource"/>

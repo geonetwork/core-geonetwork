@@ -31,14 +31,14 @@ import jeeves.server.UserSession;
 import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
+import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -46,7 +46,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
@@ -63,7 +62,6 @@ public class JeevesServlet extends HttpServlet
     private static final long serialVersionUID = 1L;
 	public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
     public static final String NODES_INIT_PARAM = "nodes";
-    public static final String NODE_APPLICATION_CONTEXT_KEY = "jeevesNodeApplicationContext_";
     private boolean initialized = false;
 
     //---------------------------------------------------------------------------
@@ -109,18 +107,18 @@ public class JeevesServlet extends HttpServlet
             // at random places through out the code where it may be in a transaction.
             jeevesAppContext.getBeansOfType(JpaRepository.class, false, true);
 
-            servletContext.setAttribute(NODE_APPLICATION_CONTEXT_KEY + node.trim(), jeevesAppContext);
+            servletContext.setAttribute(User.NODE_APPLICATION_CONTEXT_KEY + node.trim(), jeevesAppContext);
 
             // check if the context is the default context
             try {
-                Boolean isDefault = jeevesAppContext.getBean(JeevesApplicationContext.IS_DEFAULT_CONTEXT_BEAN_ID, Boolean.class);
+                Boolean isDefault = jeevesAppContext.getBean(Constants.BeanId.IS_DEFAULT_CONTEXT_BEAN_ID, Boolean.class);
                 if (isDefault != null && isDefault) {
                     if (defaultContext != null) {
                         throw new IllegalArgumentException("Two nodes where defined as the default.  This is not acceptable.");
                     }
                     defaultContext = jeevesAppContext;
 
-                    servletContext.setAttribute(NODE_APPLICATION_CONTEXT_KEY, jeevesAppContext);
+                    servletContext.setAttribute(User.NODE_APPLICATION_CONTEXT_KEY, jeevesAppContext);
                 }
             } catch (NoSuchBeanDefinitionException e) {
                 // no default bean defined so not default
@@ -129,12 +127,12 @@ public class JeevesServlet extends HttpServlet
 
         // make sure there is a default context
         for (int i = 0; i < nodes.length && defaultContext == null; i++) {
-            defaultContext = (JeevesApplicationContext) servletContext.getAttribute(NODE_APPLICATION_CONTEXT_KEY + nodes[i].trim());
+            defaultContext = (JeevesApplicationContext) servletContext.getAttribute(User.NODE_APPLICATION_CONTEXT_KEY + nodes[i].trim());
 
             if (defaultContext != null) {
                 try {
-                    defaultContext.getBeanFactory().registerSingleton(JeevesApplicationContext.IS_DEFAULT_CONTEXT_BEAN_ID, true);
-                    servletContext.setAttribute(NODE_APPLICATION_CONTEXT_KEY, defaultContext);
+                    defaultContext.getBeanFactory().registerSingleton(Constants.BeanId.IS_DEFAULT_CONTEXT_BEAN_ID, true);
+                    servletContext.setAttribute(User.NODE_APPLICATION_CONTEXT_KEY, defaultContext);
                 } catch (Exception e) {
                     defaultContext = null;
                 }
@@ -146,15 +144,15 @@ public class JeevesServlet extends HttpServlet
             if (!node.trim().isEmpty()) {
 
                 JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) servletContext.getAttribute(
-                        NODE_APPLICATION_CONTEXT_KEY + node.trim());
+                        User.NODE_APPLICATION_CONTEXT_KEY + node.trim());
                 try {
-                    Boolean isDefault = jeevesAppContext.getBean(JeevesApplicationContext.IS_DEFAULT_CONTEXT_BEAN_ID, Boolean.class);
+                    Boolean isDefault = jeevesAppContext.getBean(Constants.BeanId.IS_DEFAULT_CONTEXT_BEAN_ID, Boolean.class);
                     if (isDefault == null) {
-                        jeevesAppContext.getBeanFactory().registerSingleton(JeevesApplicationContext.IS_DEFAULT_CONTEXT_BEAN_ID,
+                        jeevesAppContext.getBeanFactory().registerSingleton(Constants.BeanId.IS_DEFAULT_CONTEXT_BEAN_ID,
                                 defaultContext == jeevesAppContext);
                     }
                 } catch (NoSuchBeanDefinitionException e) {
-                    jeevesAppContext.getBeanFactory().registerSingleton(JeevesApplicationContext.IS_DEFAULT_CONTEXT_BEAN_ID, defaultContext == jeevesAppContext);
+                    jeevesAppContext.getBeanFactory().registerSingleton(Constants.BeanId.IS_DEFAULT_CONTEXT_BEAN_ID, defaultContext == jeevesAppContext);
                 }
             }
         }
@@ -164,7 +162,7 @@ public class JeevesServlet extends HttpServlet
             if (!node.trim().isEmpty()) {
 
                 JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) servletContext.getAttribute(
-                        NODE_APPLICATION_CONTEXT_KEY + node.trim());
+                        User.NODE_APPLICATION_CONTEXT_KEY + node.trim());
                 jeevesAppContext.getBean(JeevesEngine.class).init(pathFinder.getAppPath(), pathFinder.getConfigPath(),
                         pathFinder.getBaseUrl(), this);
 
@@ -187,7 +185,7 @@ public class JeevesServlet extends HttpServlet
 
         while (names.hasMoreElements()) {
             String attributeName = (String) names.nextElement();
-            if (attributeName.startsWith(NODE_APPLICATION_CONTEXT_KEY)) {
+            if (attributeName.startsWith(User.NODE_APPLICATION_CONTEXT_KEY)) {
                 final JeevesApplicationContext applicationContext =
                         (JeevesApplicationContext) servletContext.getAttribute(attributeName);
                 applicationContext.destroy();
@@ -280,7 +278,7 @@ public class JeevesServlet extends HttpServlet
 
 		//--- create request
 
-        ConfigurableApplicationContext applicationContext = DelegatingFilterProxy.getApplicationContextAttributeKey(getServletContext());
+        ConfigurableApplicationContext applicationContext = DelegatingFilterProxy.getApplicationContextFromServletContext(getServletContext());
         JeevesEngine jeeves = applicationContext.getBean(JeevesEngine.class);
 
 		try {

@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.CswCapabilitiesInfoFieldEntityListenerManager;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "CswServerCapabilitiesInfo")
+@EntityListeners(CswCapabilitiesInfoFieldEntityListenerManager.class)
 public class CswCapabilitiesInfoField extends GeonetEntity {
     private static final int ID_COLUMN_LENGTH = 10;
     private static final int LANG_ID_COLUMN_LENGTH = 5;

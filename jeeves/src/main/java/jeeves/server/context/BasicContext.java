@@ -26,6 +26,7 @@ package jeeves.server.context;
 import jeeves.monitor.MonitorManager;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
+import org.fao.geonet.Constants;
 import org.fao.geonet.Logger;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -179,6 +180,14 @@ public class BasicContext implements Logger {
         return logger.getThreshold();
     }
 
+    /**
+     * Return the id of the current node.
+     *
+     * @return the id of the current node.
+     */
+    public String getNodeId() {
+        return this.jeevesApplicationContext.getBean(Constants.BeanId.NODE_ID_BEAN_ID, String.class);
+    }
 }
 
 //=============================================================================

@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.HarvestHistoryEntityListenerManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.hibernate.annotations.Type;
@@ -20,6 +21,7 @@ import java.io.IOException;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "HarvestHistory")
+@EntityListeners(HarvestHistoryEntityListenerManager.class)
 public class HarvestHistory extends GeonetEntity {
     private int _id;
     private ISODate _harvestDate;

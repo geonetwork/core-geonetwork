@@ -1,19 +1,16 @@
 package org.fao.geonet.kernel;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
-import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
 import org.apache.commons.io.FileUtils;
+import org.fao.geonet.Constants;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 
-import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -88,7 +85,7 @@ public class GeonetworkDataDirectory {
             Log.debug(Geonet.DATA_DIRECTORY, "Check and create if needed GeoNetwork data directory");
         }
         this.webappDir = webappDir;
-        this.nodeId = _applicationContext.getBean(JeevesApplicationContext.NODE_ID_BEAN_ID, String.class);
+        this.nodeId = _applicationContext.getBean(Constants.BeanId.NODE_ID_BEAN_ID, String.class);
 		setDataDirectory(jeevesServlet, webappName, webappDir, handlerConfig);
 	}
 	public void init(final String webappName, final String webappDir,  String systemDataDir,
@@ -297,7 +294,7 @@ public class GeonetworkDataDirectory {
 	}
 
     private void updateSystemDataDirWithNodeSuffix() {
-        final Boolean isDefault = _applicationContext.getBean(JeevesApplicationContext.IS_DEFAULT_CONTEXT_BEAN_ID, Boolean.class);
+        final Boolean isDefault = _applicationContext.getBean(Constants.BeanId.IS_DEFAULT_CONTEXT_BEAN_ID, Boolean.class);
         if (!isDefault) {
             if (systemDataDir.endsWith(File.separator)) {
                 systemDataDir = systemDataDir.substring(0, systemDataDir.length() - 1);

@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.AddressEntityListenerManager;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -10,6 +12,7 @@ import java.io.Serializable;
  */
 @Entity
 @Access(AccessType.PROPERTY)
+@EntityListeners(AddressEntityListenerManager.class)
 public class Address extends GeonetEntity implements Serializable {
     private static final int ZIP_COLUMN_LENGTH = 16;
     private int _id;

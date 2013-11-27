@@ -18,8 +18,6 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * Servlet for serving up resources located in GeoNetwork data directory.  
@@ -103,7 +101,7 @@ public class ResourceFilter implements Filter {
         servletContext = config.getServletContext();
         appPath = new java.io.File(servletContext.getRealPath(".")).getParent();
 
-        this.applicationContext = DelegatingFilterProxy.getApplicationContextAttributeKey(config.getServletContext());
+        this.applicationContext = DelegatingFilterProxy.getApplicationContextFromServletContext(config.getServletContext());
         resourcesDir = Resources.locateResourcesDir(config.getServletContext(), applicationContext);
 
         defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/dummy.gif", new byte[0], -1);

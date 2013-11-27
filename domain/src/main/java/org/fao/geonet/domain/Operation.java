@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.OperationEntityListenerManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
@@ -14,6 +16,7 @@ import java.util.Map;
 @Table(name = "Operations")
 @Cacheable
 @Access(AccessType.PROPERTY)
+@EntityListeners(OperationEntityListenerManager.class)
 public class Operation extends Localized {
     private int _id;
     private String _name;

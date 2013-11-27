@@ -51,3 +51,4 @@ jcs_caching/
 web-ui/src/main/resources/catalog/lib/gn*.min.js
 web-ui/src/main/resources/catalog/style/gn*.css
 web-ui/src/main/resources/catalog/style/gn.css
+datadir_node1/
