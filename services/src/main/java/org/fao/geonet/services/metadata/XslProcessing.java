@@ -23,30 +23,32 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import jeeves.constants.Jeeves;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-
-import java.io.File;
-import java.util.*;
 
 /**
  * Process a metadata with an XSL transformation declared for the metadata
@@ -153,6 +155,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
         DataManager dataMan = gc.getBean(DataManager.class);
         SchemaManager schemaMan = gc.getBean(SchemaManager.class);
         AccessManager accessMan = gc.getBean(AccessManager.class);
+        SettingManager settingsMan = gc.getBean(SettingManager.class);
 
         report.incrementProcessedRecords();
         
@@ -198,6 +201,8 @@ public class XslProcessing extends NotInReadOnlyModeService {
 	            Map<String, String> xslParameter = new HashMap<String, String>();
 	            xslParameter.put("guiLang", context.getLanguage());
 	            xslParameter.put("baseUrl", context.getBaseUrl());
+                xslParameter.put("catalogUrl", settingsMan.getSiteURL(context));
+                
 	            for (Element param : children) {
 	                // Add extra metadata
 	                if (param.getName().equals("extra_metadata_uuid")
