@@ -305,7 +305,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 						md = LuceneSearcher.getMetadataFromIndex(doc, id, true, _language == null ? srvContext.getLanguage() : _language, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields());
 					    
 						// Retrieve dynamic properties according to context (eg. editable)
-                        gc.getBean(DataManager.class).buildExtraMetadataInfo(srvContext, id, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
+                        gc.getBean(DataManager.class).buildPrivilegesMetadataInfo(srvContext, id, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
                     }
                     else if (srvContext != null) {
                         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;

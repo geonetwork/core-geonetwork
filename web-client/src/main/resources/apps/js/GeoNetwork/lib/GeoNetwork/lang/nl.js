@@ -20,6 +20,9 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.nl = {
+    'metadataRecordPublishedTitle': 'Metadata publication',
+    'metadataRecordPublished': '${title} is now visible to everyone.',
+    'metadataRecordUnPublished': '${title} is not published to everyone anymore.',
     'metadata-not-found': 'Metadata with UUID ${uuid} not found or not shared with you.',
     'harvestingAdmin': 'Harvesting',
     'filterGroup': 'Filter group ...',

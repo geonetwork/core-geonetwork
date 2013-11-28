@@ -2758,13 +2758,7 @@ public class DataManager {
             addElement(info, Edit.Info.Elem.VERSION, version);
         }
 
-        buildExtraMetadataInfo(context, id, info);
-
-        if (accessMan.isVisibleToAll(id)) {
-            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "true");
-        } else {
-            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "false");
-        }
+        buildPrivilegesMetadataInfo(context, id, info);
 
         // add owner name
         User user = _applicationContext.getBean(UserRepository.class).findOne(owner);
@@ -2828,21 +2822,29 @@ public class DataManager {
     }
 
     /**
-     * Add extra information about the metadata record
-     * which depends on context and could not be stored in db or Lucene index.
+     * Add privileges information about the metadata record
+     * which depends on context and usually could not be stored in db 
+     * or Lucene index because depending on the current user
+     * or current client IP address.
      *
      * @param context
-     * @param id
-     * @param info
+     * @param id    The metadata id
+     * @param info  The element to add the info into
      * @throws Exception
      */
-    public void buildExtraMetadataInfo(ServiceContext context, String id,
+    public void buildPrivilegesMetadataInfo(ServiceContext context, String id,
                                        Element info) throws Exception {
         if (accessMan.canEdit(context, id))
             addElement(info, Edit.Info.Elem.EDIT, "true");
 
         if (accessMan.isOwner(context, id)) {
             addElement(info, Edit.Info.Elem.OWNER, "true");
+        }
+
+        if (accessMan.isVisibleToAll(id)) {
+            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "true");
+        } else {
+            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "false");
         }
 
         Set<Operation> operations = accessMan.getAllOperations(context, id, context.getIpAddress());

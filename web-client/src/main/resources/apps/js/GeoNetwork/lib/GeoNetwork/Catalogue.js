@@ -1416,6 +1416,40 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         });
         this.modalAction(OpenLayers.i18n('setPrivileges') + ' - ' + record.get('title'), privilegesPanel);
     },
+    /** api: method[metadataAdmin]
+     *  Metadata publication. If record is published, action will unpublished it.
+     */
+    metadataPublish: function(record, messageTarget){
+        var published = record.get('isPublishedToAll') === 'true',
+            flag = published ? 'off' : 'on',
+            pivileges = ['_1_0=' + flag, '_1_1=' + flag, '_1_5=' + flag, '_1_6=' + flag], 
+            // View, Interactive Map, Download, Featured
+            service = this.services.mdAdminSave + '?update=true&id=' + record.get('id') + '&',
+            url = service + pivileges.join('&'),
+            app = this; 
+        
+        OpenLayers.Request.GET({
+            url: url,
+            success: function(response){
+                if (messageTarget) {
+                    GeoNetwork.Message().msg({
+                        title: OpenLayers.i18n('metadataRecordPublishedTitle'), 
+                        msg: published ? 
+                                OpenLayers.i18n('metadataRecordUnPublished') : 
+                                OpenLayers.i18n('metadataRecordPublished'), 
+                        tokens: {
+                            title: record.get('title')
+                        },
+                        status: 'info',
+                        target: messageTarget
+                    });
+                }
+            },
+            failure: function(response){
+                app.showError(OpenLayers.i18n('metadataRecordPublishedTitle'), response.status);
+            }
+        });
+    },
     /** api: method[metadataStatus]
      *  Open status form to update metadata status
      */
