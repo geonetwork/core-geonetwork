@@ -12,11 +12,11 @@
 	<element name="code" id="207.0" context="gmd:MD_Identifier">
 		<label>Codice</label>
 		<description>Codice alfanumerico che identifica una istanza in un namespace</description>
-		<help>Codice alfanumerico dell'identificatore.</help>
+		<help>Codice alfanumerico dell'identificatore</help>
 	</element>
 	<element name="code">
 		<label>Codice del sistema</label>
-		<description>Codice. Ad esempio, il codice EPSG.</description>
+		<description>Codice. Ad esempio, il codice EPSG</description>
 	</element>
 	<element name="code" id="547.0" context="gmd:MD_CodeValue">
 		<label>Codice</label>
@@ -381,8 +381,8 @@
 		<description>Descrizione di un elemento dei metadati a testo libero multi-lingue</description>
 	</element>
 	<element name="gmd:RS_Identifier" id="208.0">
-		<description>Identificatore del sistema di riferimento</description>
 		<label>Identificatore</label>
+		<description>Identificatore del sistema di riferimento</description>		
 	</element>
 	<element name="gmd:URL" id="608.0">
 		<label>URL</label>
@@ -608,7 +608,7 @@
 	</element>
 	<element name="gmd:contactInfo" id="378.0">
 		<description>Indirizzo dell’organizzazione responsabile</description>
-		<label>Informazioni per contattare l’Ente</label>
+		<label>Informazioni per contattare l’ente</label>
 	</element>
 	<element name="gmd:contactInstructions" id="392.0">
 		<label>Istruzioni di contatto</label>
@@ -922,7 +922,6 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 	<element name="gmd:evaluationProcedure" id="105.0">
 		<label>Procedura di valutazione</label>
 		<description>Riferimento alla procedura di informazione</description>
-		ShortName
 	</element>
 	<element name="gmd:explanation" id="131.0">
 		<label>Spiegazione</label>
@@ -964,23 +963,21 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 	</element>
 	<element name="gmd:featureCatalogueCitation" id="238.0">
 		<label>Feature catalogue citation</label>
-		<description>Riferimento bibliografico completo ad una o più external feature
-            catalogues</description>
+		<description>Riferimento bibliografico completo ad una o più cataloghi di feature esterni.</description>
 		<condition>obbligatorio</condition>
 	</element>
 	<element name="gmd:featureInstances" id="152.0">
 		<label>Feature instances</label>
-		<description>Feature instances to which the information applies</description>
+		<description>Istanze di feature a cui si applica l'informazione</description>
 		<condition />
 	</element>
 	<element name="gmd:featureTypes" id="237.0">
 		<label>Feature types</label>
-		<description>Subset of feature types from cited feature catalogue occurring in
-            data</description>
+		<description>Sottoinsieme di tipi di feature dal citato catalogo ricorrenti nei dati.</description>
 	</element>
 	<element name="gmd:features" id="151.0">
 		<label>Features</label>
-		<description>Features to which the information applies</description>
+		<description>Feature a cui si applica l'informazione.</description>
 		<condition />
 	</element>
 	<element name="gmd:fees" id="299.0">
@@ -1011,9 +1008,8 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
             TIFF, XWD</help>
 	</element>
 	<element name="gmd:filmDistortionInformationAvailability" id="254.0">
-		<label>Film distortion information availability</label>
-		<description>Indication of whether or not Calibration Reseau information is
-            available</description>
+		<label>Disponibilità di informazioni sulla distorsione da pellicola</label>
+		<description>Indica se l'informazione sulla calibrazione Reseau è disponibile o meno</description>
 	</element>
 	<element name="gmd:formatDistributor" id="290.0">
 		<label>Formato di distribuzione</label>
@@ -1096,7 +1092,7 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 	</element>
 	<element name="gmd:illuminationElevationAngle" id="244.0">
 		<label>Angolo dell'altitudine dell'illuminazione</label>
-		<description> Altitudine dell'illuminazione misurata in gradi in senso orario, dal piano di proiezione all'intersezione della linea visiva con la superficie terrestre. Per immagini provenienti da scansionamento, riferimento al pixel centrale dell'immagine.</description>
+		<description>Altitudine dell'illuminazione misurata in gradi in senso orario, dal piano di proiezione all'intersezione della linea visiva con la superficie terrestre. Per immagini provenienti da scansionamento, riferimento al pixel centrale dell'immagine.</description>
 	</element>
 	<element name="gmd:imageQualityCode" id="247.0">
 		<label>Qualità dell'immagine</label>
@@ -1108,9 +1104,8 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 		<description>Conditions affected the image</description>
 	</element>
 	<element name="gmd:includedWithDataset" id="236.0">
-		<label>Included with dataset</label>
-		<description>Indication of whether or not the feature catalogue is included with the
-            dataset</description>
+		<label>Incluso col dataset</label>
+		<description>Indicazione se il catalogo è incluso o meno all'interno del dataset</description>
 		<condition>obbligatorio</condition>
 	</element>
 	<element name="gmd:individualName" id="375.0">
@@ -1150,8 +1145,7 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 	</element>
 	<element name="gmd:lensDistortionInformationAvailability" id="255.0">
 		<label>Lente di distorsione disponibilità delle informazioni</label>
-		<description>Indicare se or not lens aberration correction information is
-            available</description>
+		<description>Indicare se l'informazione sulla lente di distorsione è disponibile</description>
 	</element>
 	<element name="gmd:level" id="139.0">
 		<label>Livello</label>
@@ -1186,7 +1180,7 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 	</element>
 	<element name="gmd:maxValue" id="260.0">
 		<label>Valore massimo</label>
-		<description>Lunga lunghezza d'onda massima che il sensore è in grado di raccogliere all'interno di una banda di frequenze assegnata</description>
+		<description>Lunghezza d'onda massima che il sensore è in grado di raccogliere all'interno di una banda di frequenze assegnata</description>
 	</element>
 	<element name="gmd:maximumValue" id="356.0">
 		<label>Quota massima</label>
@@ -1327,78 +1321,82 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 		<helper rel="gmd:measureDescription">
 			<option value="">-- Completezza --</option>
 			<option value="Excess item"
-				title="Indication that an item is incorrectly present in the data"
-				id="ISO19138:2006:measure:1">Excess item</option>
+				title="Indica che nei dati è presente un elemento in eccesso"
+				id="ISO19138:2006:measure:1">Elemento in eccesso</option>
 			<option value="Number of excess items"
-				title="Number of items within the dataset, that should not have been in the dataset"
-				id="ISO19138:2006:measure:2">Number of excess items</option>
+				title="Numero di elementi nel dataset che non dovrebbero essere presenti"
+				id="ISO19138:2006:measure:2">Numero di elementi in eccesso</option>
 			<option value="Rate of excess items"
-				title="Number of excess items in the dataset in relation to the number of items that should have been present"
-				id="ISO19138:2006:measure:3">Rate of excess items</option>
+				title="Numero di elementi in eccesso nel dataset rispetto al numero di elementi che dovrebbero essere presenti"
+				id="ISO19138:2006:measure:3">Percentuale di elementi in eccesso</option>
 			<option value="Number of duplicate feature instances"
-				title="Total number of exact duplications of feature instances within the data. Count of all items in the data that are incorrectly extracted with duplicate geometrie"
-				id="ISO19138:2006:measure:4">Number of duplicate feature instances</option>
+				title="Numero totale di duplicazioni esatte di istanze di feature all'interno dei dati. Conteggio di tutti gli elementi nei dati che sono stati erroneamente estratti con geometrie duplicate"
+				id="ISO19138:2006:measure:4">Numero di istanze di feature duplicate</option>
 			<option value="Missing item"
-				title="Indicator that shows that a specific item is missing in the data"
-				id="ISO19138:2006:measure:5">Missing item</option>
+				title="Indica la mancanza di uno specifico elemento nei dati"
+				id="ISO19138:2006:measure:5">Elemento mancante</option>
 			<option value="Number of missing items"
-				title="Count of all items that should have been in the dataset and are missing"
-				id="ISO19138:2006:measure:6">Number of missing items</option>
+				title="Numero di tutti gli elementi non presenti nel dataset che dovrebbero invece essere presenti"
+				id="ISO19138:2006:measure:6">Numero di elementi mancanti</option>
 			<option value="Rate of missing items"
-				title="Number of missing items in the dataset in relation to the number of items that should have been present"
-				id="ISO19138:2006:measure:7">Rate of missing items</option>
-			<option value="">-- Logical consistency / Conceptual consistency
+				title="Numero di tutti gli elementi non presenti nel dataset rispetto al numero di elementi che dovrebbero essere presenti"
+				id="ISO19138:2006:measure:7">Percentuale di elementi mancanti</option>
+			<option value="">-- Consistenza logica / Consistenza concettuale
 				--
 			</option>
 			<option value="Conceptual schema noncompliance"
-				title="Indication that an item is not compliant to the rules of the relevant conceptual schema"
-				id="ISO19138:2006:measure:8">Conceptual schema noncompliance</option>
+				title="Indica che un elemento non è conforme alle regole dello schema concettuale rilevante"
+				id="ISO19138:2006:measure:8">Non conformità schema concettuale</option>
 			<option value="Conceptual schema compliance"
-				title="Indication that an item complies with the rules of the relevant conceptual schema"
-				id="ISO19138:2006:measure:9">Conceptual schema compliance</option>
+				title="Indica che un elemento è conforme alle regole dello schema concettuale rilevante"
+				id="ISO19138:2006:measure:9">Conformità schema concettuale</option>
 			<option
 				value="Number of items noncompliant to the rules of the conceptual schema"
-				title="Count of all items in the dataset that are noncompliant to the rules of the conceptual schema. If the conceptual schema explicitly or implicitly describes rules, these rules have to be followed. Violations against such rules can e.g. be invalid placement of features within a defined tolerance, duplication of features and invalid overlap of features."
-				id="ISO19138:2006:measure:10">Number of items noncompliant to the rules of the conceptual
-				schema
+				title="Numero totale di tutti gli elementi nel dataset che non sono conformi alle regole dello schema concettuale. 
+				Se lo schema concettuale descrive implicitamente o esplicitamente delle regole, queste devono essere rispettate. 
+				Violazioni di queste regole possono essere ad esempio inserimento di feature con errori, duplicazione di feature o sovrapposizioni non valide."
+				id="ISO19138:2006:measure:10">Numero di elementi non conformi alle regole dello schema 
+				concettuale
 			</option>
 			<option value="Number of invalid overlaps of surfaces"
 				title="Total number of erroneous overlaps within the data Which surfaces may overlap and which must not is application dependent. Not all overlapping surfaces are necessarily erroneous. When reporting this data quality measure the types of feature classes corresponding to the illegal overlapping surfaces have to be reported as well."
 				id="ISO19138:2006:measure:11">Number of invalid overlaps of surfaces</option>
 			<option
 				value="Non-compliance rate with respect to the rules of the conceptual schema"
-				title="Number of items in the dataset that are noncompliant to the rules of the conceptual schema in relation to the total number of these items supposed to be in the dataset"
-				id="ISO19138:2006:measure:12">Non-compliance rate with respect to the rules of the conceptual
-				schema
+				title="Numero degli elementi nel dataset che non sono conformi alle regole dello schema concettuale rispetto al numero totale di elementi nel dataset."
+				id="ISO19138:2006:measure:12">Percentuale di non conformità rispetto alle regole dello schema 
+				concettuale
 			</option>
 			<option value=" Compliance rate with the rules of the conceptual schema"
-				title="number of items in the dataset in compliance with the rules of the conceptual schema in relation to the total number of items"
-				id="ISO19138:2006:measure:13"> Compliance rate with the rules of the conceptual schema</option>
-			<option value="">-- Logical consistency / Domain consistency --
+				title="Numero di elementi nel dataset che sono conformi alle regole dello schema concettuale rispetto al numero totale di elementi nel dataset."
+				id="ISO19138:2006:measure:13">Percentuale di conformità alle regole dello schema 
+				concettuale
+				</option>
+			<option value="">-- Consistenza logica / Consistenza di dominio --
 			</option>
 			<option value="Value domain non-conformance"
-				title="Indication of if an item is not in conformance with its value domain"
-				id="ISO19138:2006:measure:14">Value domain non-conformance</option>
+				title="Indica che un elemento non è conforme con il suo valore di dominio."
+				id="ISO19138:2006:measure:14">Non conformità nel valore di dominio</option>
 			<option value="Value domain conformance"
-				title="Indication of if an item is conforming to its value domain"
-				id="ISO19138:2006:measure:15">Value domain conformance</option>
+				title="Indica che un elemento è conforme con il suo valore di dominio."
+				id="ISO19138:2006:measure:15">Conformità nel valore di dominio</option>
 			<option value="Number of items not in conformance with their value domain"
-				title="Count of all items in the dataset that are not in conformance with their value domain."
-				id="ISO19138:2006:measure:16">Number of items not in conformance with their value domain
+				title="Numero totale degli elementi nel dataset che non sono conformi al loro valore di dominio."
+				id="ISO19138:2006:measure:16">Numero di elementi non conformi al loro valore di dominio
 			</option>
 			<option value="Value domain conformance rate"
-				title="Number of items in the dataset that are in conformance with their value domain in relation to the total number of items in the dataset"
-				id="ISO19138:2006:measure:17">Value domain conformance rate</option>
+				title="Numero degli elementi nel dataset che sono conformi al loro valore di dominio in relazione al totale degli elementi nel dataset."
+				id="ISO19138:2006:measure:17">Percentuale di conformità al valore di dominio</option>
 			<option value="Value domain non-conformance rate"
-				title="the number of items in the dataset that are not in conformance with their value domain in relation to the total number of items"
-				id="ISO19138:2006:measure:18">Value domain non-conformance rate</option>
+				title="Numero degli elementi nel dataset che non sono conformi al loro valore di dominio in relazione al totale degli elementi nel dataset."
+				id="ISO19138:2006:measure:18">Percentuale di non conformità al valore di dominio</option>
 			<option value="Physical structure conflicts"
-				title="Count of all items in the dataset that are stored in conflict with the physical structure of the dataset"
-				id="ISO19138:2006:measure:19">Physical structure conflicts</option>
+				title="Numero totale di elementi nel dataset che sono memorizzati in conflitto con la struttura fisica del dataset."
+				id="ISO19138:2006:measure:19">Conflitti nella struttura fisica</option>
 			<option value="Physical structure conflict rate"
-				title="Number of items in the dataset that are stored in conflict with the physical structure of the dataset divided by the total number of items"
-				id="ISO19138:2006:measure:20">Physical structure conflict rate</option>
-			<option value="">-- Logical consistency / Topological consistency
+				title="Numero totale di elementi nel dataset che sono memorizzati in conflitto con la struttura fisica del dataset rispetto al numero totale degli elementi."
+				id="ISO19138:2006:measure:20">Percentuale di conflitti nella struttura fisica</option>
+			<option value="">-- Consistenza logica / Consistenza topologica
 				--
 			</option>
 			<option value="Number of faulty point-curve connections"
@@ -1612,7 +1610,7 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 	</element>
 	<element name="gmd:obligation" id="311.0">
 		<label>Obligation</label>
-		<description>Obligation of the extended element</description>
+		<description>Obbligatorietà dell'elemento esteso</description>
 	</element>
 	<element name="gmd:offLine" id="278.0">
 		<label>Fuori linea</label>
@@ -1816,8 +1814,8 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 			<option show="y" value="WWW:LINK-1.0-http--related">Risorsa correlata (URL)</option>
 			<option show="y" value="WWW:LINK-1.0-http--rss">Feed RSS (URL)</option>
 			<option show="y" value="WWW:LINK-1.0-http--samples">Prodotto d'esempio (URL)</option>
-			<option show="-" value="DB:POSTGIS">PostGIS database table</option>
-			<option show="-" value="DB:ORACLE">ORACLE database table</option>
+			<option show="-" value="DB:POSTGIS">Tabella di database PostGIS</option>
+			<option show="-" value="DB:ORACLE">Tabella di database ORACLE</option>
 			<option show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</option>
 			<option show="y" value="RBNB:DATATURBINE">Data Turbine</option>
 			<option show="-" value="UKST">Tipo di servizio sconosciuto</option>
@@ -1925,7 +1923,7 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 	<element name="gmd:shortName" id="308.0">
 		<label>Nome breve</label>
 		<description>Forma breve adatto per l'uso di un metodo di implementazione, come XML o SGML.
-            NOTE other methods may be used</description>
+            NOTE: possono essere usati altri metodi</description>
 	</element>
 	<element name="gmd:softwareDevelopmentFile" id="326.0">
 		<label>Sviluppo software di file</label>
@@ -1933,8 +1931,7 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 	</element>
 	<element name="gmd:softwareDevelopmentFileFormat" id="327.0">
 		<label> Formato del file per lo sviluppo del software</label>
-		<description>Software dependent format used for the application schema software dependent
-            file</description>
+		<description>Formato dipendente dal software usato per il file dell'application schema dipendente dal software</description>
 	</element>
 	<element name="gmd:source" id="85.0">
 		<label>Dati di origine</label>
@@ -1972,7 +1969,7 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 	</element>
 	<element name="gmd:spatialExtent" id="353.0">
 		<label>Spatial extent</label>
-		<description>Spatial extent component of composite spatial and temporal extent</description>
+		<description>Componente spaziale dell'estensione composita spaziale e temporale</description>
 		<condition>obbligatorio</condition>
 	</element>
 	<element name="gmd:spatialRepresentationInfo" id="12.0">
@@ -2066,13 +2063,12 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
              megabyte. La dimensione di trasferimento è &gt; 0.0</description>
 	</element>
 	<element name="gmd:transformationDimensionDescription" id="168.0">
-		<label>Transformation dimension description</label>
-		<description>Description of the information about which grid dimensions are the spatial
-            dimensions</description>
+		<label>Descrizione delle dimensioni di trasformazione</label>
+		<description>Descrizione delle informazioni su quali dimensioni della griglia sono le dimensioni 
+	         spaziali</description>
 	</element>
 	<element name="gmd:transformationDimensionMapping" id="169.0">
-		<label> Mappatura della dimension69
-e di trasformazione.</label>
+		<label> Mappatura della dimensione di trasformazione.</label>
 		<description>Informazioni su quali dimensioni della griglia sono le dimensioni spaziali</description>
 	</element>
 	<element name="gmd:transformationParameterAvailability" id="161.0">
@@ -2086,11 +2082,11 @@ e di trasformazione.</label>
 	</element>
 	<element name="gmd:turnaround" id="302.0">
 		<label>Turnaround</label>
-		<description>Typical turnaround time for the filling of an order</description>
+		<description>Tempistiche generali per il riempimento di un ordine</description>
 	</element>
 	<element name="gmd:type" id="54.0">
 		<label>Tipo</label>
-		<description>Oggetto utilizzato to group similar keywords</description>
+		<description>Oggetto utilizzato per raggruppare parole chiave simili</description>
 	</element>
 	<element name="gmd:type" id="540.0" context="gmd:MD_CodeDomain">
 		<label>Tipo</label>
@@ -2214,7 +2210,7 @@ e di trasformazione.</label>
 
 	<element name="gml:relatedTime">
 		<label>Relazioni temporali</label>
-		<description>Defines the relation of a given time to the object.</description>
+		<description>Definisce la relazione di un dato elemento temporale con l'oggetto.</description>
 	</element>
 
 	<element name="gml:coordinates">
@@ -2268,8 +2264,12 @@ e di trasformazione.</label>
 	<element name="gml:timeInterval">
 		<label>Intervallo temporale</label>
 		<description>Conforme allo standard ISO 11404, basato su valori a virgola mobile per durate temporali.
-    		ISO 11404 syntax specifies the use of a positiveInteger together with appropriate values for radix and factor. The resolution of the time interval is to one radix ^(-factor) of the specified time unit.
-    		The value of the unit is either selected from the units for time intervals from ISO 31-1:1992, or is another suitable unit.  The encoding is defined for GML in gml:TimeUnitType. The second component of this union type provides a method for indicating time units other than the six standard units given in the enumeration.</description>
+			La sintassi ISO 11404 specifica l'uso di un positiveInteger insieme ad appropriati valori per radice e fattore.
+			La risoluzione dell'intervallo di tempo è di una radice ^(-fattore) della specifica unità di tempo.
+    		Il valore dell'unità può essere selezionata tra le unità di intervalli temporali da ISO 31-1:1992, oppure può essere un'altra unità disponibile.
+    		L'encoding è definita per documenti GML in gml:TimeUnitType.
+    		La seconda componente di questo tipo fornisce un metodo per indicare le unità di tempo successive alle sei standard unità presenti nella enumerazione.
+		</description>
 	</element>
 	<element name="gml:name">
 		<label>Nome</label>
@@ -2288,7 +2288,7 @@ e di trasformazione.</label>
 		<description>Testo di descrizione dell'elemento</description>
 	</element>
 	<element name="gml:descriptionReference">
-		<label>Description reference</label>
+		<label>Descrizione riferimento</label>
 		<description></description>
 	</element>
 	<element name="gml:TimeInstant">
@@ -2308,7 +2308,7 @@ e di trasformazione.</label>
 		<description />
 	</element>
 	<element name="gml:TimeNode">
-		<label>Time node</label>
+		<label>Nodo temporale</label>
 		<description />
 	</element>
 	<element name="gml:TimeEdge">
@@ -2335,27 +2335,27 @@ e di trasformazione.</label>
 		<description>Identificatore unico</description>
 	</element>
 	<element name="indeterminatePosition">
-		<label>Indeterminate position</label>
+		<label>Posizione non determinata</label>
 		<description></description>
 	</element>
 	<element name="frame">
 		<label>Frame</label>
-		<description>Frame attribute provides a URI reference that identifies a description of the reference system</description>
+		<description>Fornisce un riferimento URI che identifica la descrizione del sistema di riferimento</description>
 	</element>
 	<element name="calendarEraName">
-		<label>Name of the calendar era</label>
+		<label>Nome dell'era nel calendario</label>
 		<description></description>
 	</element>
 	<element name="unit">
-		<label>Unit</label>
+		<label>Unità</label>
 		<description></description>
 	</element>
 	<element name="radix">
-		<label>Radix</label>
+		<label>Radice</label>
 		<description></description>
 	</element>
 	<element name="factor">
-		<label>Factor</label>
+		<label>Fattore</label>
 		<description></description>
 	</element>
 
@@ -2363,10 +2363,10 @@ e di trasformazione.</label>
 
 	<element name="srv:SV_ServiceIdentification">
 		<label>Servizio di identificazione (19119)</label>
-		<description>ISO 19119-2005 Service Identification</description>
+		<description>Servizio di identificazione ISO 19119-2005</description>
 	</element>
 	<element name="srv:SV_ParameterDirection">
-		<label>Parameter direction</label>
+		<label>Parametro direzione</label>
 	</element>
 	<element name="srv:serviceType"><!-- readonly="true" -->
 		<label>Tipo di servizio</label>
@@ -2375,8 +2375,8 @@ e di trasformazione.</label>
 			<option value="OGC:WMS">OGC Web Map Service (OGC:WMS)</option>
 			<option value="OGC:WFS">OGC Web Feature Service (OGC:WFS)</option>
 			<option value="OGC:WCS">OGC Web Coverage Service (OGC:WCS)</option>
-			<option value="W3C:HTML:DOWNLOAD">Download (W3C:HTML:DOWNLOAD)</option>
-			<option value="W3C:HTML:LINK">Information (W3C:HTML:LINK)</option>
+			<option value="W3C:HTML:DOWNLOAD">Scaricamento (W3C:HTML:DOWNLOAD)</option>
+			<option value="W3C:HTML:LINK">Informazioni (W3C:HTML:LINK)</option>
 			<!-- INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service 
 				type <option value="discovery">Discovery Service (discovery)</option> <option 
 				value="view">View Service (view)</option> <option value="download">Download 
@@ -2489,7 +2489,7 @@ e di trasformazione.</label>
 	</element>
 	<element name="srv:extent">
 		<label>Estensione</label>
-		<description>Geographic/Temporal Extent of Service</description>
+		<description>Estensione geografica/temporale del servizio</description>
 	</element>
 	<element name="srv:keywords">
 		<label>Parole chiave</label>
@@ -2579,7 +2579,7 @@ e di trasformazione.</label>
 		<label>Unità di misura</label>
 		<description />
 		<helper>
-			<option value="m">meters</option>
+			<option value="m">Metri</option>
 		</helper>
 	</element>
 	<element name="gco:Record">
@@ -2635,7 +2635,7 @@ e di trasformazione.</label>
 	</element>
 	<element name="gmd:has">
 		<label>Has</label>
-		<description>Has</description>
+		<description>Possiede</description>
 	</element>
 	<element name="gmd:MD_PixelOrientationCode">
 		<label>Codice di orientazione del pixel</label>
@@ -2719,36 +2719,36 @@ e di trasformazione.</label>
     </element>
 		<element name="gmx:Anchor">
 				<label>Anchor</label>
-				<description>Supports hyper-linking capabilities and ensures a web-like implementation of CharacterStrings</description>
+				<description>Supporta capacità di hyper-linking e assicura una implementazione di CharacterStrings web-like</description>
 		</element>
 		<element name="xlink:href">
-			<label>Link href</label>
-			<description>Supplies the data that allows an XLink application to find a remote resource (or resource fragment) [W3C XLINK]</description>
+			<label>Riferimento esterno XLink</label>
+			<description>Fornisce i dati che consentono ad una applicazione XLink di recuperare risorse remote (o frammenti di risorsa) [W3C XLINK]</description>
 		</element>
   	<!-- ==================================================== -->
     <element name="hidden-elements">
-        <label>Hidden Elements</label>
-        <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
+        <label>Elementi nascosti</label>
+        <description>Elementi figli ed attributi sono stati nascosti perchè non hai i diritti per vedere questi elementi</description>
     </element> 
     <!-- ==================================================== -->
     <element name="gmx:name"> 
-        <label>Name</label> 
-        <description>Feature catalogue name</description> 
+        <label>Nome</label> 
+        <description>Nome del catalogo delle feature</description> 
     </element> 
     <element name="gmx:scope"> 
         <label>Scope</label> 
-        <description>Scope definition</description> 
+        <description>Definizione dello scope</description> 
     </element> 
     <element name="gmx:versionNumber"> 
-        <label>Version</label> 
-        <description>Catalogue version</description> 
+        <label>Versione</label> 
+        <description>Versione del catalogo</description> 
     </element> 
     <element name="gmx:versionDate"> 
-        <label>Date</label> 
-        <description>Catalogue date</description> 
+        <label>Data</label> 
+        <description>Data del cataloco</description> 
     </element> 
     <element name="gmx:fieldOfApplication"> 
-        <label>Field of application</label> 
-        <description>Field of application</description> 
+        <label>Campo di applicazione</label> 
+        <description>Campo di applicazione</description> 
     </element> 
 </labels>

@@ -298,7 +298,7 @@
 		<entry>
 			<code>source</code>
 			<label>Fonte</label>
-			<description> Informazioni su mappe e grafici da cui derivano i contenuti del dataset.</description>
+			<description>Informazioni su mappe e grafici da cui derivano i contenuti del dataset.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -417,140 +417,127 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
 	<!-- ==================================================== -->
+	<!--  RNDT: http://www.digitpa.gov.it/sites/default/files/normativa/PCM_RNDT%20completo%20su%20sito.pdf -->
 	<codelist name="gmd:MD_CharacterSetCode">
 		<entry>
 			<code>ucs2</code>
 			<label>UCS2</label>
-			<description>Universal Character Set a 16 bit, basato su ISO/IEC 10646</description>
+			<description>Universal Character Set a dimensione fissa di 16 bit, basato sullo standard ISO/IEC 10646</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>ucs4</code>
 			<label>UCS4</label>
-			<description>Universal Character Set a 32 bit, basato su ISO/IEC 10646</description>
+			<description>Universal Character Set a dimensione fissa di 32 bit, basato sullo standard ISO/IEC 10646</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utf7</code>
 			<label>UTF7</label>
-			<description>7-bit variable size UCS Transfer Format, based on ISO/IEC 10646</description>
+			<description>Formato di trasferimento di UCS a dimensione variabile a 7 bit, basato sullo standard ISO/IEC 10646</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utf8</code>
 			<label>UTF8</label>
-			<description>8-bit variable size UCS Transfer Format, based on ISO/IEC 10646</description>
+			<description>Formato di trasferimento di UCS a dimensione variabile a 8 bit, basato sullo standard ISO/IEC 10646</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utf16</code>
 			<label>UTF16</label>
-			<description>16-bit variable size UCS Transfer Format, based on ISO/IEC 10646</description>
+			<description>Formato di trasferimento di UCS a dimensione variabile a 16 bit, basato sullo standard ISO/IEC 10646</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part1</code>
 			<label>8859 Part 1</label>
-			<description>ISO/IEC 8859-1, Information technology - 8-bit single byte coded graphic
-				character sets - Part 1 : Latin alphabet No.1</description>
+			<description>ISO/IEC 8859-1, Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 1: Latin alphabet No. 1</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part2</code>
 			<label>8859 Part 2</label>
-			<description>ISO/IEC 8859-2, Information technology - 8-bit single byte coded graphic
-				character sets - Part 2 : Latin alphabet No.2</description>
+			<description>ISO/IEC 8859-2, Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 2: Latin alphabet No. 2</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part3</code>
 			<label>8859 Part 3</label>
-			<description>ISO/IEC 8859-3, Information technology - 8-bit single byte coded graphic
-				character sets - Part 3 : Latin alphabet No.3</description>
+			<description>ISO/IEC 8859-3, Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 3: Latin alphabet No. 3 
+</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part4</code>
 			<label>8859 Part 4</label>
-			<description>ISO/IEC 8859-4, Information technology - 8-bit single byte coded graphic
-				character sets - Part 4 : Latin alphabet No.4</description>
+			<description>ISO/IEC 8859-4, Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 4: Latin alphabet No. 4</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part5</code>
 			<label>8859 Part 5</label>
-			<description>ISO/IEC 8859-5, Information technology - 8-bit single byte coded graphic
-				character sets - Part 5 : Latin/Cyrillic alphabet</description>
+			<description>ISO/IEC 8859-5, Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 5: Latin/Cyrillic alphabet</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part6</code>
 			<label>8859 Part 6</label>
-			<description>ISO/IEC 8859-6, Information technology - 8-bit single byte coded graphic
-				character sets - Part 6 : Latin/Arabic alphabet</description>
+			<description>ISO/IEC 8859-6, Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 6: Latin/Arabic alphabet</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part7</code>
 			<label>8859 Part 7</label>
-			<description>ISO/IEC 8859-7, Information technology - 8-bit single byte coded graphic
-				character sets - Part 7 : Latin/Greek alphabet</description>
+			<description>ISO/IEC 8859-7 , Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 7: Latin/Greek alphabet</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part8</code>
 			<label>8859 Part 8</label>
-			<description>ISO/IEC 8859-8, Information technology - 8-bit single byte coded graphic
-				character sets - Part 8 : Latin/Hebrew alphabet</description>
+			<description>ISO/IEC 8859-8 , Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 8: Latin/Hebrew alphabet</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part9</code>
 			<label>8859 Part 9</label>
-			<description>ISO/IEC 8859-9, Information technology - 8-bit single byte coded graphic
-				character sets - Part 9 : Latin alphabet No.5</description>
+			<description>ISO/IEC 8859-9, Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 9: Latin alphabet No. 5</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part10</code>
 			<label>8859 Part 10</label>
-			<description>ISO/IEC 8859-10, Information technology - 8-bit single byte coded graphic
-				character sets - Part 10 : Latin alphabet No.6</description>
+			<description>ISO/IEC 8859-10, Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 10: Latin alphabet No. 6</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part11</code>
 			<label>8859 Part 11</label>
-			<description>ISO/IEC 8859-11, Information technology - 8-bit single byte coded graphic
-				character sets - Part 11 : Latin/Thai alphabet</description>
+			<description>ISO/IEC 8859-11, Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 11: Latin/Thai alphabet</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part13</code>
 			<label>8859 Part 13</label>
-			<description>ISO/IEC 8859-13, Information technology - 8-bit single byte coded graphic
-				character sets - Part 13 : Latin alphabet No.7</description>
+			<description>ISO/IEC 8859-13, Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 13: Latin alphabet No. 7</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part14</code>
 			<label>8859 Part 14</label>
-			<description>ISO/IEC 8859-14, Information technology - 8-bit single byte coded graphic
-				character sets - Part 14 : Latin alphabet No.8 (Celtic)</description>
+			<description>ISO/IEC 8859-14, Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 14: Latin alphabet No. 8 (Celtic)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part15</code>
 			<label>8859 Part 15</label>
-			<description>ISO/IEC 8859-15, Information technology - 8-bit single byte coded graphic
-				character sets - Part 15 : Latin alphabet No.9</description>
+			<description>ISO/IEC 8859-15, Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 15: Latin alphabet No. 9</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>8859part16</code>
 			<label>8859 Part 16</label>
-			<description>ISO/IEC 8859-16, Information technology - 8-bit single byte coded graphic
-				character sets - Part 16 : Latin alphabet No.10</description>
+			<description>ISO/IEC 8859-16, Information Technology – insieme codificato di caratteri grafici di un singolo byte a 8 bit – Part 16: Latin/Thai alphabet No. 10</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -574,32 +561,31 @@
 		<entry>
 			<code>usAscii</code>
 			<label>US ASCII</label>
-			<description>United States ASCII code set (ISO 646 US)</description>
+			<description>Set di codici ASCII utilizzato negli Stati Uniti (ISO 646 US)</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>ebcdic</code>
 			<label>EBCDIC</label>
-			<description>IBM mainframe code set</description>
+			<description>Seti di codici utilizzato nei mainframe IBM</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>eucKR</code>
 			<label>EUC KR</label>
-			<description>Korean code set</description>
+			<description>Set di codici coreano</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>big5</code>
 			<label>Big 5</label>
-			<description>Traditional Chinese code set used in Taiwan, Hong Kong of China and other
-				areas</description>
+			<description>Set di codici in cinese tradizionale, usato in Taiwan, Hong Kong ed altre aree</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>GB2312</code>
 			<label>GB2312</label>
-			<description>Simplified Chinese code set</description>
+			<description>Set di codici in cinese semplificato</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
@@ -870,8 +856,7 @@
 		<entry>
 			<code>heavySmokeOrDust</code>
 			<label>Presenza di fumo pesante o polvere</label>
-			<description>Parte dell'immagine è parzialmente oscurata fumo pesante o
-polvere</description>
+			<description>Parte dell'immagine è parzialmente oscurata fumo pesante o polvere</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1037,7 +1022,7 @@ polvere</description>
 		<entry>
 			<code>tar</code>
 			<label>TAR</label>
-			<description>Tape ARchive</description>
+			<description>Archivio su nastro</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1070,7 +1055,7 @@ polvere</description>
 		<entry>
 			<code>cdRom</code>
 			<label>CDROM</label>
-			<description>Read-only optical disk</description>
+			<description>Disco ottico, in sola lettura</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1082,31 +1067,31 @@ polvere</description>
 		<entry>
 			<code>dvdRom</code>
 			<label>DVDROM</label>
-			<description>Digital versatile disk, read only</description>
+			<description>Digital versatile disk, , in sola lettura</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>3halfInchFloppy</code>
-			<label>3 Half Inch Floppy</label>
-			<description>3,5 inch magnetic disk</description>
+			<label>3.5 Floppy</label>
+			<description>Disco magnetico da 3,5 pollici</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>5quarterInchFloppy</code>
-			<label>5 Quarter Inch Floppy</label>
-			<description>5,25 inch magnetic disk</description>
+			<label>5.25 Floppy</label>
+			<description>Disco magnetico da 5,25 pollici</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>7trackTape</code>
 			<label>7 Track tape</label>
-			<description>7 track magnetic tape</description>
+			<description>Nastro magnetico a 7 tracce</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>9trackTape</code>
 			<label>9 Track tape</label>
-			<description>9 track magnetic tape</description>
+			<description>Nastro magnetico a 9 tracce</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1154,7 +1139,7 @@ polvere</description>
 		<entry>
 			<code>onLine</code>
 			<label>Online</label>
-			<description>Direct computer linkage</description>
+			<description>Collegamento diretto ad un computer</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>

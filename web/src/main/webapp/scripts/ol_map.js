@@ -576,7 +576,7 @@ GeoNetwork.app = function() {    // private vars:
 
         var measureSplit = new Ext.SplitButton({
             iconCls: "icon-measure-length",
-            tooltip: "Measure",
+            tooltip: "Measure", // TODO: add localization
             enableToggle: true,
             toggleGroup: "move"	, // Ext doesn't respect this, registered with ButtonToggleMgr below
             allowDepress: false, // Ext doesn't respect this, handler deals with it
@@ -606,7 +606,7 @@ GeoNetwork.app = function() {    // private vars:
                 items: [
                     new Ext.menu.CheckItem(
                         new GeoExt.Action({
-                            text: "Length",
+                            text: "Length", // TODO: add localization
                             iconCls: "icon-measure-length",
                             toggleGroup: "measure",
                             group: "move",
@@ -619,7 +619,7 @@ GeoNetwork.app = function() {    // private vars:
                     ),
                     new Ext.menu.CheckItem(
                         new GeoExt.Action({
-                            text: "Area",
+                            text: "Area", // TODO: add localization
                             iconCls: "icon-measure-area",
                             toggleGroup: "measure",
                             group: "move",

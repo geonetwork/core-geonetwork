@@ -28,12 +28,12 @@
 
 	<multilingual>Impostazioni per multilinguismo</multilingual>
 	<autoDetectEnable>Abilita riconoscimento automatico della lingue di richiesta</autoDetectEnable>
-	<requestedlanguageonly>Search only in requested language</requestedlanguageonly>
-	<requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
-	<requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
-	<requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
-	<requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
-	<requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+	<requestedlanguageonly>Cerca solo nella lingua della richiesta</requestedlanguageonly>
+	<requestedlanguage_offonly>tutti i documenti in tutte le lingue (Nessuna preferenza)</requestedlanguage_offonly>
+	<requestedlanguageprefer_locale>Prediligi documenti con traduzioni nella lingua della richiesta</requestedlanguageprefer_locale>
+	<requestedlanguageprefer_docLocale>Prediligi documenti il cui linguaggio corrisponde alla lingua della richiesta</requestedlanguageprefer_docLocale>
+	<requestedlanguage_localeonly>Traduzioni nella lingua della richiesta</requestedlanguage_localeonly>
+	<requestedlanguage_docLocaleonly>Il linguaggio del documento corrisponde alla lingua della richiesta</requestedlanguage_docLocaleonly>
 	<requestedlanguagesorted>Mostra per primi i risultati nella lingua della richiesta</requestedlanguagesorted>
 
 	<oai>Registro OAI</oai>
@@ -345,7 +345,7 @@
 		<!-- searchStats -->
 
 		<tip id="searchStats.enable">
-			If set, Statistics on searches will be collected and stored in the database.
+		Se abilitato, le statistiche sulle ricerche saranno collezionate e memorizzate nel database.			
 		</tip>
 
 		<!-- multilingual settings -->
@@ -397,7 +397,7 @@
 	<db.maxactive>Massimo numero di connessioni al db:</db.maxactive>	
 	<db.statserror>Statistiche sul db:</db.statserror>
 	<sequentialExecution>Modalità di esecuzione sequenziale del pool di thread: </sequentialExecution>
-	<hidewithheldelements>Hide Withheld Elements</hidewithheldelements>
-	<keepMarkedElement>Keep Marked Element</keepMarkedElement>
+	<hidewithheldelements>Nascondi elementi che necessitano autorizzazione (withheld)</hidewithheldelements>
+	<keepMarkedElement>Mantieni gli elementi marcati (altrimenti verranno eliminati)</keepMarkedElement>
 </strings>
 

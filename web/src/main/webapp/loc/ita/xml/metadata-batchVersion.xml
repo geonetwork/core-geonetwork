@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<notfound>Metadato non trovato</notfound>
-	<notowner>Metadati che non sono stati gestiti dal controllo di versione perchè non se ne hanno i permessi</notowner>
+	<notfound>Record di metadati non trovati</notfound>
+	<notowner>Record di metadati non gestiti dal controllo di versione perchè non ne sei il proprietario</notowner>
 	<updated>Registrata nuova versione per il metadato</updated>
 </strings>

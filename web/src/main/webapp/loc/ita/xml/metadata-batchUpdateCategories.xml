@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<notfound>Record di metadati non trovati</notfound>
-	<notowner>I Record di metadati non hanno le categorie aggiornate poichè non ne sei il proprietario</notowner>
-	<updated>I Record di metadati hanno le categorie aggiornate</updated>
+	<notowner>Record di metadati con categorie non aggiornate perchè non ne sei il proprietario</notowner>
+	<updated>Record di metadati con categorie aggiornate</updated>
 	<resultstitle>Risultati dell'aggiornamento delle categorie</resultstitle>
 </strings>
