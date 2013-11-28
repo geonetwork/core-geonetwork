@@ -370,6 +370,20 @@
 				<input type="hidden" id="x-history-field" />
 				<iframe id="x-history-frame" height="0" width="0"></iframe>
 
+                 <xsl:choose>
+                     <xsl:when test="/root/gui/config/map/osm_map = 'true'">
+                         <script>
+                             var useOSMLayers = true;
+                         </script>
+                     </xsl:when>
+
+                     <xsl:otherwise>
+                         <script>
+                             var useOSMLayers = false;
+                         </script>
+                     </xsl:otherwise>
+                 </xsl:choose>
+
 				<xsl:choose>
 					<xsl:when test="/root/request/debug">
 						
@@ -506,7 +520,8 @@
 						<script type="text/javascript" src="{concat($baseUrl, '/apps/html5ui/js/App-mini.js')}"></script>
 					</xsl:otherwise>
 				</xsl:choose>
-				
+
+
 
             </div>
 		</body>
