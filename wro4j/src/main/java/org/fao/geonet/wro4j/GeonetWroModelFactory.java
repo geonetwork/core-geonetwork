@@ -1,13 +1,12 @@
 package org.fao.geonet.wro4j;
 
-import com.google.common.base.Predicate;
-import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import ro.isdc.wro.config.ReadOnlyContext;
 import ro.isdc.wro.model.WroModel;
 import ro.isdc.wro.model.factory.WroModelFactory;
@@ -17,7 +16,8 @@ import ro.isdc.wro.model.resource.Resource;
 import ro.isdc.wro.model.resource.ResourceType;
 import ro.isdc.wro.util.StopWatch;
 
-import javax.annotation.Nullable;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -51,8 +51,11 @@ public class GeonetWroModelFactory implements WroModelFactory {
         try {
             stopWatch.start("createModel");
             final String sourcesXmlFile = getSourcesXmlFile();
-            final Element element = Xml.loadFile(sourcesXmlFile);
-            final List<Element> jsSources = element.getChildren(JS_SOURCE);
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(sourcesXmlFile);
+
+            final NodeList jsSources = doc.getElementsByTagName(JS_SOURCE);
 
             final WroModel model = new WroModel();
 
@@ -60,13 +63,11 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
             addJavascriptGroups(model, dependencyManager);
 
-            final List<Element> cssSources = element.getChildren(CSS_SOURCE);
+            final NodeList cssSources = doc.getElementsByTagName(CSS_SOURCE);
             addCssGroups(model, cssSources);
 
             return model;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (JDOMException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
             stopWatch.stop();
@@ -74,9 +75,12 @@ public class GeonetWroModelFactory implements WroModelFactory {
         }
     }
 
-    private void addCssGroups(final WroModel model, final List<Element> cssSources) {
-        for (Element cssSource : cssSources) {
-            ResourceDesc desc = parseSource(cssSource);
+    private void addCssGroups(final WroModel model, final NodeList cssSources) {
+
+        for (int i = 0; i < cssSources.getLength(); i++) {
+            Node cssSource = cssSources.item(i);
+
+            ResourceDesc desc = parseSource((Element) cssSource);
 
             for (File file : desc.files("css")) {
                 final String name = file.getName();
@@ -110,11 +114,12 @@ public class GeonetWroModelFactory implements WroModelFactory {
         }
     }
 
-    private ClosureRequireDependencyManager configureJavascripDependencyManager(final List<Element> jsSources) throws IOException {
+    private ClosureRequireDependencyManager configureJavascripDependencyManager(final NodeList jsSources) throws IOException {
         ClosureRequireDependencyManager depManager = new ClosureRequireDependencyManager();
 
-        for (Element jsSource : jsSources) {
-            ResourceDesc desc = parseSource(jsSource);
+        for (int i = 0; i < jsSources.getLength(); i++) {
+            Node jsSource = jsSources.item(i);
+            ResourceDesc desc = parseSource((Element) jsSource);
             for (File file : desc.files("js")) {
                 String path;
                 // if servlet context is null then the build is the
@@ -137,8 +142,8 @@ public class GeonetWroModelFactory implements WroModelFactory {
     private ResourceDesc parseSource(final Element sourceEl) {
         ResourceDesc desc = new ResourceDesc();
 
-        desc.relativePath = sourceEl.getAttributeValue(WEBAPP_ATT);
-        desc.pathOnDisk = sourceEl.getAttributeValue(PATH_ON_DISK_EL);
+        desc.relativePath = sourceEl.getAttribute(WEBAPP_ATT);
+        desc.pathOnDisk = sourceEl.getAttribute(PATH_ON_DISK_EL);
         if (isMavenBuild()) {
             desc.finalPath = new File(desc.pathOnDisk, desc.relativePath).getPath();
         } else {

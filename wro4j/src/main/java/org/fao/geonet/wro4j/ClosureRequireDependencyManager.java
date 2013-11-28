@@ -1,7 +1,6 @@
 package org.fao.geonet.wro4j;
 
 import com.google.common.io.Files;
-import org.fao.geonet.Constants;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -23,6 +22,7 @@ import java.util.regex.Pattern;
  */
 public class ClosureRequireDependencyManager {
 
+    private static final String ENCODING = System.getProperty("file.encoding", "UTF-8");
     private Map<String, Node> _modules = new HashMap<String, Node>();
 
     /**
@@ -34,7 +34,7 @@ public class ClosureRequireDependencyManager {
      */
     @Nonnull
     public Node addFile(@Nonnull String path, @Nonnull File javascriptFile) throws IOException {
-        String javascript = Files.toString(javascriptFile, Charset.forName(Constants.ENCODING));
+        String javascript = Files.toString(javascriptFile, Charset.forName(ENCODING));
         return addFile(path, javascript);
     }
 

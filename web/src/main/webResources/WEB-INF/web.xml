@@ -145,7 +145,7 @@
     </filter>
     <filter-mapping>
         <filter-name>WebResourceOptimizer</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/static/*</url-pattern>
     </filter-mapping>
 
     <!-- Only allow administrators or localhost access to the monitoring metrics -->

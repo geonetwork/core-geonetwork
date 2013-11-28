@@ -2,13 +2,9 @@ package org.fao.geonet.wro4j;
 
 import static org.junit.Assert.*;
 import org.apache.commons.io.FileUtils;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
 import org.junit.Test;
-import ro.isdc.wro.config.Context;
 import ro.isdc.wro.config.ReadOnlyContext;
 import ro.isdc.wro.model.WroModel;
-import ro.isdc.wro.model.factory.WroModelFactory;
 import ro.isdc.wro.model.group.Group;
 import ro.isdc.wro.model.resource.Resource;
 import ro.isdc.wro.model.resource.locator.UriLocator;
@@ -37,12 +33,11 @@ public class GeonetWroModelFactoryTest {
 
         final File wroSources = File.createTempFile("wro-sources", ".xml");
         File jsRoot = ClosureRequireDependencyManagerTest.getJsTestBaseDir();
-        Element sourcesXml = new Element("sources")
-                .addContent(
-                        new Element(GeonetWroModelFactory.JS_SOURCE)
-                                .setAttribute(GeonetWroModelFactory.WEBAPP_ATT, "")
-                                .setAttribute(GeonetWroModelFactory.PATH_ON_DISK_EL, jsRoot.getAbsolutePath()));
-        FileUtils.write(wroSources, Xml.getString(sourcesXml));
+        String sourcesXml = "<sources><" + GeonetWroModelFactory.JS_SOURCE + " " +
+                             GeonetWroModelFactory.WEBAPP_ATT + "=\"\" " +
+                             GeonetWroModelFactory.PATH_ON_DISK_EL + "=\"" + jsRoot.getAbsolutePath() + "\"/>" +
+                             "</sources>";
+        FileUtils.write(wroSources, sourcesXml);
 
         final File configFile = File.createTempFile("wro", ".properties");
         FileUtils.write(configFile, "wroSources="+wroSources.getAbsolutePath().replace(File.separatorChar, '/'));
@@ -86,6 +81,8 @@ public class GeonetWroModelFactoryTest {
         assertTrue(groupNames.contains("3b"));
         assertTrue(groupNames.contains("3c"));
     }
+
+
 
 
 }

@@ -929,19 +929,6 @@
       <!-- The version number is specified above. -->
       <scope>test</scope>
     </dependency>
-
-    <dependency>
-      <groupId>org.jdom</groupId>
-      <artifactId>jdom</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>jdbm</groupId>
-      <artifactId>jdbm</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-    </dependency>
   </dependencies>
 
   <!-- ================================================================== -->
