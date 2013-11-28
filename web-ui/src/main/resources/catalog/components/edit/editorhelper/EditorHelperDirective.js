@@ -42,6 +42,18 @@
           scope.config =
               angular.fromJson($('#' + scope.ref + '_config')[0].value);
 
+          // Check if current value is one of the suggestion
+          var isInList = false;
+          angular.forEach(scope.config.option, function (opt) {
+            if (opt['@value'] === initialValue) {
+              isInList = true;
+            }
+          });
+          if (!isInList) {
+            scope.otherValue = {'@value' : initialValue};
+          } else {
+            scope.otherValue = {'@value' : ''};
+          }
 
           // Set the initial value
           scope.config.selected = {};
@@ -51,10 +63,15 @@
               scope.mode && scope.mode.indexOf('radio') !== -1 ?
               'radio' : scope.mode;
 
-
-          scope.select = function(o) {
-            scope.config.selected = o;
-          };
+          scope.selectOther = function() {
+            $('#otherValue_' + scope.ref).focus();
+          }
+          scope.selectOtherRadio = function() {
+            $('#otherValueRadio_' + scope.ref).prop("checked", true);
+          }
+          scope.updateWithOtherValue = function() {
+            field.value = scope.otherValue['@value'];
+          }
 
           // On change event update the related element(s)
           // which is sent by the form
