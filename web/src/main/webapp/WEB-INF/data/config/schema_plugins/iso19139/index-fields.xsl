@@ -34,7 +34,7 @@
   
   
   <xsl:variable name="sextant-thesaurus" select="document(concat('file:///', $thesauriDir, '/local/thesauri/theme/sextant-theme.rdf'))"/>
-  <xsl:variable name="sextant-theme" select="$sextant-thesaurus//skos:Concept"/>
+  <xsl:variable name="sextant-theme" select="$sextant-thesaurus//*[name() = 'skos:Concept' or name() = 'rdf:Description']"/>
  
   
   <!-- If identification creation, publication and revision date
