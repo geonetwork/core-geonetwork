@@ -197,11 +197,16 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         var combo = new Ext.form.ComboBox({
             store: this.keywordStore,
             triggerAction: 'all',
+            editable: false,
             mode: 'remote',
             displayField: 'value',
             valueField: 'uri',
             listeners: {
                 select: function (combo, record, index) {
+                	// Do not display &nbsp; in input value for the blank record.
+                	if (combo.getValue() == "" || combo.getValue() == "&nbsp;") { 
+                		combo.setValue(null);
+                	}
                     this.selectedKeywordStore.removeAll();
                     this.selectedKeywordStore.add([record]);
                 },
@@ -213,7 +218,13 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         this.keywordStore.baseParams.pThesauri = this.thesaurusIdentifier;
         this.keywordStore.baseParams.maxResults = this.maxKeywords;
         this.keywordStore.on('load', function (store, records) {
-
+        	
+        	// Insert a blank record on top
+        	// Use &nbsp; for label to have a correct height for the element
+        	// in dropdown.
+            var r = new Ext.data.Record({value: '&nbsp;', uri: ''});
+            store.insert(0, r);
+            
             // Custom callback which load response to the selected set
             // and set the combo box value.
             var cb = function (response) {
