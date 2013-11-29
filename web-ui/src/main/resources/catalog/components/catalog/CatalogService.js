@@ -36,7 +36,8 @@
     mdCreate: 'md.create@json',
     search: 'qi@json',
     processMd: 'md.processing',
-    processAll: 'md.processing.batch'
+    processAll: 'md.processing.batch',
+    getRelations: 'md.relations.get@json'
   });
 
   module.provider('gnHttp', function() {

@@ -4,8 +4,54 @@
   var module = angular.module('gn_onlinesrc_service', [
   ]);
 
-  module.factory('gnOnlinesrc', ['gnBatchProcessing', '$http',
-    function(gnBatchProcessing, $http) {
+  module.factory('gnOnlinesrc', ['gnBatchProcessing',
+    function(gnBatchProcessing) {
+    
+    /**
+     * Prepare batch process request parameters.
+     *   - get parameters from onlinesrc form
+     *   - add process name
+     *   - encode URL
+     *   - update name and desc if we add layers
+     */
+     var setParams = function(processName, formParams) {
+        var params = angular.copy(formParams);
+        angular.extend(params, {
+          process: processName,
+          url: encodeURIComponent(params.url)
+        });
+        return setLayersParams(params);
+      }
+     
+     /**
+      * Prepare name and description parameters 
+      * if we are adding resource with layers.
+      * 
+      * Parse all selected layers, extract name 
+      * and title to build name and desc params like
+      *   name : name1,name2,name3
+      *   desc : title1,title2,title3
+      */
+      var setLayersParams = function(params) {
+        if(angular.isArray(params.layers) &&
+            params.layers.length > 0) {
+          var names = [], 
+              descs = [];
+          
+          angular.forEach(params.layers, function(layer) {
+            names.push(layer.name);
+            descs.push(encodeURIComponent(layer.title));
+          });
+          
+          angular.extend(params, {
+            name: names.join(','),
+            desc: descs.join(',')
+          });
+        }
+        delete params.layers;
+        return params;
+      };
+      
       return {
         getAllResources: function() {
 
@@ -32,16 +78,14 @@
             });
           }
         },
-
+        
+        /**
+         * Prepare parameters and call batch
+         * request from the gnBatchProcessing service
+         */
         addOnlinesrc: function(params) {
-          gnBatchProcessing.runProcessMd({
-            process: 'onlinesrc-add',
-            extra_metadata_uuid: '',
-            url: params.onlinesrcUrl,
-            desc: params.onlinesrcDescr,
-            protocol: params.onlinesrcProtocol,
-            name: params.onlinesrcName
-          });
+          gnBatchProcessing.runProcessMd(
+              setParams('onlinesrc-add',params));
         }
       };
     }]);
