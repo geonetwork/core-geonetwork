@@ -13,7 +13,9 @@ import java.util.Map;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "Services")
+@SequenceGenerator(name=Service.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class Service extends GeonetEntity {
+    static final String ID_SEQ_NAME = "service_id_seq";
     private int _id;
     private String _name;
     private String _className;
@@ -27,7 +29,7 @@ public class Service extends GeonetEntity {
      * @return the id of the service.
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
