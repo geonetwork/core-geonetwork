@@ -143,8 +143,12 @@ public class User extends GeonetEntity implements UserDetails {
      */
     @Transient
     public String getEmail() {
-        if (_email != null && !_email.isEmpty()) {
-            return _email.iterator().next();
+        if (_email != null) {
+            for (String email : _email) {
+                if (email.contains("@")) {
+                    return email;
+                }
+            }
         }
         return null;
     }
