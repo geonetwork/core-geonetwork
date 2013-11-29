@@ -79,11 +79,14 @@
                 else $urlWithoutLang"/>
             <xsl:variable name="urlWithoutLang" select="string-join($urlTokenToUse,'/')"/>
             <xsl:variable name="prefix" select="if ($resource-id-url-prefix != '') then $resource-id-url-prefix else $urlWithoutLang"/>
+            <xsl:variable name="code" select="concat($prefix, '/', /*/gmd:fileIdentifier/gco:CharacterString)"/>
             
+            <xsl:copy-of
+                select="gmd:identifier[gmd:MD_Identifier/gmd:code/gco:CharacterString != $code]"/>
             <gmd:identifier>
                 <gmd:MD_Identifier>
                     <gmd:code>
-                        <gco:CharacterString><xsl:value-of select="concat($prefix, '/', /*/gmd:fileIdentifier/gco:CharacterString)"/></gco:CharacterString>
+                        <gco:CharacterString><xsl:value-of select="$code"/></gco:CharacterString>
                     </gmd:code>
                 </gmd:MD_Identifier>
             </gmd:identifier>

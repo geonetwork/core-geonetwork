@@ -737,6 +737,19 @@
   </xsl:template>
   
 
+  <!-- Render batch process directive action -->
+  <xsl:template name="render-batch-process-button">
+    <xsl:param name="process-name"/>
+    <xsl:param name="process-params"/>
+    <!-- TODO: Could be relevant to only apply process to the current thesaurus -->
+    
+    <div class="row">
+      <div class="col-lg-12">
+        <span data-gn-batch-process-button="{$process-name}"
+          data-params="{$process-params}"/>
+      </div>
+    </div>
+  </xsl:template>
 
   <!-- Nav bars -->
   <xsl:template name="scroll-spy-nav-bar">

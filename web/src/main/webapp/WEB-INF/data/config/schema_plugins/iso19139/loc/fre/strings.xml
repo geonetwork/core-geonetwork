@@ -27,4 +27,31 @@
   <metadataConstraints>Md. constraintes</metadataConstraints>
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
   <applicationSchemaInfo>Extension</applicationSchemaInfo>
+  
+  
+  <!-- INSPIRE view labels and help -->
+  <url>Localisateur de la ressource</url>
+  <identifier>Identificateur de ressource unique</identifier>
+  <rsIdentifier>Référentiel de coordonnées</rsIdentifier>
+  <referenceDate>Date de références</referenceDate>
+  <creationDate>Date de création</creationDate>
+  <publicationDate>Date de publication</publicationDate>
+  <revisionDate>Date de révision</revisionDate>
+  <conformity>Conformité</conformity>
+  <conformity_title>Title</conformity_title>
+  <conformity_date>Date</conformity_date>
+  <explanation>Explanation</explanation>
+  <pass>Pass</pass>
+  <pointOfContact>Organisation responsable de la ressource</pointOfContact>
+  <metadataPointOfContact>Point de contact des métadonnées</metadataPointOfContact>
+  <organisationName>Nom de l'organisation</organisationName>
+  <electronicMailAddress>Email de l'organisation</electronicMailAddress>
+  <encoding>Encodage</encoding>
+  <serviceCategory>Catégorie de service</serviceCategory>
+  <format>Format</format>
+  <format_version>Version</format_version>
+  <bboxesSection>Rectangle de délimitation géographique</bboxesSection>
+  <temporalRangeSection>Étendue temporelle</temporalRangeSection>
+  <beginPosition>Date de début</beginPosition>
+  <endPosition>Date de fin</endPosition>
 </strings>

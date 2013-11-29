@@ -139,9 +139,10 @@
 
         <xsl:variable name="isTypePlace" select="count(gmd:type/gmd:MD_KeywordTypeCode[@codeListValue='place']) > 0"/>
         <xsl:if test="$isTypePlace">
-          <!-- TODO: Could be relevant to only apply process to the current thesaurus -->
-          <span data-gn-batch-process-button="add-extent-from-geokeywords"
-            data-params='{{"replace": true}}'/>
+          <xsl:call-template name="render-batch-process-button">
+            <xsl:with-param name="process-name" select="'add-extent-from-geokeywords'"/>
+            <xsl:with-param name="process-params">{"replace": true}</xsl:with-param>
+          </xsl:call-template>
         </xsl:if>
       </xsl:when>
       <xsl:otherwise>

@@ -2,7 +2,7 @@
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="../../config-editor.xsd"
   xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd"
-  xmlns:gts="http://www.isotc211.org/2005/gts">
+  xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gml="http://www.opengis.net/gml" >
 
   <!-- Form field type configuration. Default is text. -->
   <fields>
@@ -107,7 +107,7 @@
         <section xpath="/gmd:MD_Metadata/gmd:contentInfo" 
           or="contentInfo" in="/gmd:MD_Metadata"/>
       </tab>
-      <tab id="portrayalCatalogueInfo">
+      <tab id="portrayalCatalogueInfo" toggle="">
         <section xpath="/gmd:MD_Metadata/gmd:portrayalCatalogueInfo"
           or="portrayalCatalogueInfo" in="/gmd:MD_Metadata"/>
       </tab>
@@ -156,19 +156,32 @@
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"
-            if="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"/>
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0"/>
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract"
-            if="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"/>
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
           <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
           
           
-          <!-- TODO Service coupledResource, serviceType, service taxonomy -->
+          <!-- TODO: Service coupledResource / could use relation panel -->
           
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType"/>
+          
+          
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
+            gmd:descriptiveKeywords
+            [gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'INSPIRE Service taxonomy']">
+          </field>
+          <!-- FIXME: MUST be provided in template and thesaurus available in the catalog, to be displayed properly -->
+          
+          
+          <!-- TODO: Add URL -->
           <field name="url"
             templateModeOnly="true"
             xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions
-            /gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage">
+            /gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage"
+            or="onLine" in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions">
             <template>
               <values>
                 <key label="url" xpath="gmd:URL"/>
@@ -181,9 +194,13 @@
             </template>
           </field>
           
+          
+          <!-- Resource identifier for dataset, service
+          and add action to compute it if not defined. -->
           <field name="identifier"
             templateModeOnly="true"
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier">
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier"
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
               <values>
                 <key label="code" xpath="gmd:MD_Identifier/gmd:code/gco:CharacterString"/>
@@ -199,6 +216,35 @@
               </snippet>
             </template>
           </field>
+          <field name="identifier"
+            templateModeOnly="true"
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier"
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+            <template>
+              <values>
+                <key label="code" xpath="gmd:MD_Identifier/gmd:code/gco:CharacterString"/>
+              </values>
+              <snippet>
+                <gmd:identifier>
+                  <gmd:MD_Identifier>
+                    <gmd:code>
+                      <gco:CharacterString>{{code}}</gco:CharacterString>
+                    </gmd:code>
+                  </gmd:MD_Identifier>
+                </gmd:identifier>
+              </snippet>
+            </template>
+          </field>
+          
+          <action type="batch" 
+            process="add-resource-id"
+            params=''
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/
+            gmd:identifier[ends-with(gmd:MD_Identifier/gmd:code/gco:CharacterString, //gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString)]) = 0"
+          />
+          <!-- [ends-with(gmd:MD_Identifier/gmd:code/gco:CharacterString, root()/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString)] -->
+          
+          
           
           
           <field name="encoding"
@@ -225,24 +271,45 @@
           </field>
           
           
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
+            gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='theme'
+            and not(gmd:thesaurusName)]/gmd:keyword"
+            or="keyword"
+            in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
+            gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='theme'
+            and not(gmd:thesaurusName)]">
+          </field>
           
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
             gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword" or="keyword"
             in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
             gmd:descriptiveKeywords/gmd:MD_Keywords">
-            <!-- TODO support for multiple nodes -->
           </field>
           
-          <!-- TODO INSPIRE Themes -->
-          
+          <!-- INSPIRE Themes -->
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
-            gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
-            <!-- TODO add bbox editor directive -->
-            <!-- TODO add cardinality n -->
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+            gmd:descriptiveKeywords
+            [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE themes')]">
           </field>
+          <!-- FIXME: MUST be provided in template and thesaurus available in the catalog, to be displayed properly -->
           
+          
+          <section name="bboxesSection">
+            <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
+              srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+              <!-- TODO add bbox editor directive -->
+            </field>
+            <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+              gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+              <!-- TODO add bbox editor directive -->
+            </field>
+            <!-- TODO add cardinality n -->
+          </section>
           
           <field name="rsIdentifier"
             templateModeOnly="true"
@@ -263,88 +330,201 @@
             </template>
           </field>
           
-          
-          
-          <field name="creationDate"
-            templateModeOnly="true"
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-            gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'creation']">
-            <template>
-              <!-- TODO: support datetime-->
-              <values>
-                <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
-              </values>
-              <snippet>
-                <gmd:date>
-                  <gmd:CI_Date>
-                    <gmd:date>
-                      <gco:Date>{{date}}</gco:Date>
-                    </gmd:date>
-                    <gmd:dateType>
-                      <gmd:CI_DateTypeCode
-                        codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
-                        codeListValue="creation"/>
-                    </gmd:dateType>
-                  </gmd:CI_Date>
-                </gmd:date>
-              </snippet>
-            </template>
-          </field>
-          
-          
-          <field name="publicationDate"
-            templateModeOnly="true"
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-            gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'publication']">
-            <template>
-              <values>
-                <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
-              </values>
-              <snippet>
-                <gmd:date>
-                  <gmd:CI_Date>
-                    <gmd:date>
-                      <gco:Date>{{date}}</gco:Date>
-                    </gmd:date>
-                    <gmd:dateType>
-                      <gmd:CI_DateTypeCode
-                        codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
-                        codeListValue="publication"/>
-                    </gmd:dateType>
-                  </gmd:CI_Date>
-                </gmd:date>
-              </snippet>
-            </template>
-          </field>
-          
-          
-          <field name="revisionDate"
-            templateModeOnly="true"
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-                  gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']">
-            <template>
-              <values>
-                <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
-              </values>
-              <snippet>
-                <gmd:date>
-                  <gmd:CI_Date>
-                    <gmd:date>
-                      <gco:Date>{{date}}</gco:Date>
-                    </gmd:date>
-                    <gmd:dateType>
-                      <gmd:CI_DateTypeCode
-                        codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
-                        codeListValue="revision"/>
-                    </gmd:dateType>
-                  </gmd:CI_Date>
-                </gmd:date>
-              </snippet>
-            </template>
-          </field>
-          
+          <section name="referenceDate">
+            
+            <field name="creationDate"
+              templateModeOnly="true"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
+              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'creation']"
+              if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+              <template>
+                <!-- TODO: support datetime-->
+                <values>
+                  <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
+                </values>
+                <snippet>
+                  <gmd:date>
+                    <gmd:CI_Date>
+                      <gmd:date>
+                        <gco:Date>{{date}}</gco:Date>
+                      </gmd:date>
+                      <gmd:dateType>
+                        <gmd:CI_DateTypeCode
+                          codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
+                          codeListValue="creation"/>
+                      </gmd:dateType>
+                    </gmd:CI_Date>
+                  </gmd:date>
+                </snippet>
+              </template>
+            </field>
+            <field name="creationDate"
+              templateModeOnly="true"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/
+              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'creation']"
+              if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+              <template>
+                <!-- TODO: support datetime-->
+                <values>
+                  <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
+                </values>
+                <snippet>
+                  <gmd:date>
+                    <gmd:CI_Date>
+                      <gmd:date>
+                        <gco:Date>{{date}}</gco:Date>
+                      </gmd:date>
+                      <gmd:dateType>
+                        <gmd:CI_DateTypeCode
+                          codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
+                          codeListValue="creation"/>
+                      </gmd:dateType>
+                    </gmd:CI_Date>
+                  </gmd:date>
+                </snippet>
+              </template>
+            </field>
+            
+            
+            
+            
+            <field name="publicationDate"
+              templateModeOnly="true"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
+              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'publication']"
+              if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+              <template>
+                <values>
+                  <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
+                </values>
+                <snippet>
+                  <gmd:date>
+                    <gmd:CI_Date>
+                      <gmd:date>
+                        <gco:Date>{{date}}</gco:Date>
+                      </gmd:date>
+                      <gmd:dateType>
+                        <gmd:CI_DateTypeCode
+                          codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
+                          codeListValue="publication"/>
+                      </gmd:dateType>
+                    </gmd:CI_Date>
+                  </gmd:date>
+                </snippet>
+              </template>
+            </field>
+            <field name="publicationDate"
+              templateModeOnly="true"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/
+              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'publication']"
+              if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+              <template>
+                <!-- TODO: support datetime-->
+                <values>
+                  <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
+                </values>
+                <snippet>
+                  <gmd:date>
+                    <gmd:CI_Date>
+                      <gmd:date>
+                        <gco:Date>{{date}}</gco:Date>
+                      </gmd:date>
+                      <gmd:dateType>
+                        <gmd:CI_DateTypeCode
+                          codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
+                          codeListValue="publication"/>
+                      </gmd:dateType>
+                    </gmd:CI_Date>
+                  </gmd:date>
+                </snippet>
+              </template>
+            </field>
+            
+            
+            
+            <field name="revisionDate"
+              templateModeOnly="true"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
+                    gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']"
+              if="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+              <template>
+                <values>
+                  <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
+                </values>
+                <snippet>
+                  <gmd:date>
+                    <gmd:CI_Date>
+                      <gmd:date>
+                        <gco:Date>{{date}}</gco:Date>
+                      </gmd:date>
+                      <gmd:dateType>
+                        <gmd:CI_DateTypeCode
+                          codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
+                          codeListValue="revision"/>
+                      </gmd:dateType>
+                    </gmd:CI_Date>
+                  </gmd:date>
+                </snippet>
+              </template>
+            </field>
+            <field name="revisionDate"
+              templateModeOnly="true"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/
+              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']"
+              if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+              <template>
+                <!-- TODO: support datetime-->
+                <values>
+                  <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
+                </values>
+                <snippet>
+                  <gmd:date>
+                    <gmd:CI_Date>
+                      <gmd:date>
+                        <gco:Date>{{date}}</gco:Date>
+                      </gmd:date>
+                      <gmd:dateType>
+                        <gmd:CI_DateTypeCode
+                          codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
+                          codeListValue="revision"/>
+                      </gmd:dateType>
+                    </gmd:CI_Date>
+                  </gmd:date>
+                </snippet>
+              </template>
+            </field>
+          </section>
           <!-- TODO: temporal extent -->
           <!-- TODO: lineage -->
+          
+          
+          <field 
+            name="temporalRangeSection"
+            templateModeOnly="true"
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:EX_Extent/gmd:temporalElement">
+            <template>
+              <values>
+                <key label="beginPosition" 
+                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition"
+                  use="date"/>
+                <key label="endPosition" 
+                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition"
+                  use="date"/>
+              </values>
+              <snippet>
+                <gmd:temporalElement>
+                  <gmd:EX_TemporalExtent>
+                    <gmd:extent>
+                      <gml:TimePeriod gml:id="">
+                        <gml:beginPosition>{{beginPosition}}</gml:beginPosition>
+                        <gml:endPosition>{{endPosition}}</gml:endPosition>
+                      </gml:TimePeriod>
+                    </gmd:extent>
+                  </gmd:EX_TemporalExtent>
+                </gmd:temporalElement>
+              </snippet>
+            </template>
+          </field>
           
           <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement"/>
           
@@ -436,46 +616,91 @@
           </field>
           
           
-          <field
-            name="pointOfContact"
-            templateModeOnly="true"
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact"
-            or="pointOfContact" in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
-            <template>
-              <values>
-                <key label="organisationName" xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
-                <key label="electronicMailAddress" 
-                  xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+          <section name="pointOfContact">
+            <field
+              name="pointOfContact"
+              templateModeOnly="true"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact"
+              or="pointOfContact" in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
+              if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+              <template>
+                <values>
+                  <key label="organisationName" xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                  <key label="electronicMailAddress" 
+                    xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                      gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
+                      use="email"/>
+                  <key label="role" xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue"/>
+                </values>
+                <snippet>
+                  <gmd:pointOfContact>
+                    <gmd:CI_ResponsibleParty>
+                      <gmd:organisationName>
+                        <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                      </gmd:organisationName>
+                      <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                          <gmd:address>
+                            <gmd:CI_Address>
+                              <gmd:electronicMailAddress>
+                                <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                              </gmd:electronicMailAddress>
+                            </gmd:CI_Address>
+                          </gmd:address>
+                        </gmd:CI_Contact>
+                      </gmd:contactInfo>
+                      <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                          codeListValue="{{role}}"/>
+                      </gmd:role>
+                    </gmd:CI_ResponsibleParty>
+                  </gmd:pointOfContact>
+                </snippet>
+              </template>
+            </field>
+            
+            <field
+              name="pointOfContact"
+              templateModeOnly="true"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact"
+              or="pointOfContact" in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+              if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+              <template>
+                <values>
+                  <key label="organisationName" xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                  <key label="electronicMailAddress" 
+                    xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
                     gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
-                  use="email"/>
-              </values>
-              <snippet>
-                <gmd:pointOfContact>
-                  <gmd:CI_ResponsibleParty>
-                    <gmd:organisationName>
-                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
-                    </gmd:organisationName>
-                    <gmd:contactInfo>
-                      <gmd:CI_Contact>
-                        <gmd:address>
-                          <gmd:CI_Address>
-                            <gmd:electronicMailAddress>
-                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
-                            </gmd:electronicMailAddress>
-                          </gmd:CI_Address>
-                        </gmd:address>
-                      </gmd:CI_Contact>
-                    </gmd:contactInfo>
-                    <gmd:role>
-                      <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                        codeListValue="pointOfContact"/>
-                    </gmd:role>
-                  </gmd:CI_ResponsibleParty>
-                </gmd:pointOfContact>
-              </snippet>
-            </template>
-          </field>
-          
+                    use="email"/>
+                  <key label="role" xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue"/>
+                </values>
+                <snippet>
+                  <gmd:pointOfContact>
+                    <gmd:CI_ResponsibleParty>
+                      <gmd:organisationName>
+                        <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                      </gmd:organisationName>
+                      <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                          <gmd:address>
+                            <gmd:CI_Address>
+                              <gmd:electronicMailAddress>
+                                <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                              </gmd:electronicMailAddress>
+                            </gmd:CI_Address>
+                          </gmd:address>
+                        </gmd:CI_Contact>
+                      </gmd:contactInfo>
+                      <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                          codeListValue="{{role}}"/>
+                      </gmd:role>
+                    </gmd:CI_ResponsibleParty>
+                  </gmd:pointOfContact>
+                </snippet>
+              </template>
+            </field>
+          </section>
           <!--<field
                   xpath="gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title"/>
               <field
@@ -508,46 +733,49 @@
               <fieldset xpath="quality/spec"> </fieldset>-->
         </section>
         <section name="metadata">
-          <field
-            name="metadataPointOfContact"
-            templateModeOnly="true"
-            xpath="/gmd:MD_Metadata/gmd:pointOfContact"
-            or="pointOfContact" in="/gmd:MD_Metadata">
-            <template>
-              <values>
-                <key label="organisationName" xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
-                <key label="electronicMailAddress" 
-                  xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
-                  gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
-                  use="email"/>
-              </values>
-              <snippet>
-                <gmd:pointOfContact>
-                  <gmd:CI_ResponsibleParty>
-                    <gmd:organisationName>
-                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
-                    </gmd:organisationName>
-                    <gmd:contactInfo>
-                      <gmd:CI_Contact>
-                        <gmd:address>
-                          <gmd:CI_Address>
-                            <gmd:electronicMailAddress>
-                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
-                            </gmd:electronicMailAddress>
-                          </gmd:CI_Address>
-                        </gmd:address>
-                      </gmd:CI_Contact>
-                    </gmd:contactInfo>
-                    <gmd:role>
-                      <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                        codeListValue="pointOfContact"/>
-                    </gmd:role>
-                  </gmd:CI_ResponsibleParty>
-                </gmd:pointOfContact>
-              </snippet>
-            </template>
-          </field>
           
+          <section name="metadataPointOfContact">
+            <field
+              name="metadataPointOfContact"
+              templateModeOnly="true"
+              xpath="/gmd:MD_Metadata/gmd:pointOfContact"
+              or="pointOfContact" in="/gmd:MD_Metadata">
+              <template>
+                <values>
+                  <key label="organisationName" xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                  <key label="electronicMailAddress" 
+                    xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                    gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
+                    use="email"/>
+                  <key label="role" xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue"/>
+                </values>
+                <snippet>
+                  <gmd:pointOfContact>
+                    <gmd:CI_ResponsibleParty>
+                      <gmd:organisationName>
+                        <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                      </gmd:organisationName>
+                      <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                          <gmd:address>
+                            <gmd:CI_Address>
+                              <gmd:electronicMailAddress>
+                                <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                              </gmd:electronicMailAddress>
+                            </gmd:CI_Address>
+                          </gmd:address>
+                        </gmd:CI_Contact>
+                      </gmd:contactInfo>
+                      <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                          codeListValue="{{role}}"/>
+                      </gmd:role>
+                    </gmd:CI_ResponsibleParty>
+                  </gmd:pointOfContact>
+                </snippet>
+              </template>
+            </field>
+          </section>
           <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
           <field xpath="/gmd:MD_Metadata/gmd:language"/>
         </section>

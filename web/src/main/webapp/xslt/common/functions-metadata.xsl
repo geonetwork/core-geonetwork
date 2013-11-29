@@ -30,11 +30,13 @@
     <xsl:param name="xpath" as="xs:string?"/>
 
     <!-- TODO : add fallback schema -->
-
+    <!--<xsl:message>#<xsl:value-of select="$name"/></xsl:message>
+    <xsl:message>#<xsl:value-of select="$xpath"/></xsl:message>
+    <xsl:message>#<xsl:value-of select="$parent"/></xsl:message>-->
     <!-- Name with context in current schema -->
     <xsl:variable name="schemaLabelWithContext"
       select="$labels/element[@name=$name and (@context=$xpath or @context=$parent or @context=$parentIsoType)]"/>
-
+    
     <!-- Name in current schema -->
     <xsl:variable name="schemaLabel" select="$labels/element[@name=$name and not(@context)]"/>
 
@@ -104,7 +106,7 @@
           <xsl:if test="@displayIf">
             <xsl:variable name="match">
               <xsl:call-template name="evaluate-iso19139">
-                <xsl:with-param name="base" select="$node"/>
+                <xsl:with-param name="base" select="$metadata/descendant-or-self::node()[gn:element/@ref = $node/gn:element/@ref]"/>
                 <xsl:with-param name="in" select="@displayIf"/>
               </xsl:call-template>
             </xsl:variable>
@@ -115,7 +117,6 @@
         </xsl:for-each>
       </xsl:if>
     </xsl:variable>
-    
     
     <xsl:choose>
       <xsl:when test="$conditionalCodelist/*">
@@ -166,16 +167,40 @@
       This related element is updated with the title value of the selected option.
   -->
   <xsl:function name="gn-fn-metadata:getHelper" as="node()">
-    <xsl:param name="helper" as="node()?"/>
+    <xsl:param name="helper" as="node()*"/>
     <xsl:param name="node" as="node()"/>
     
-    
     <xsl:choose>
+      <xsl:when test="$helper[@displayIf]">
+        
+        <!-- Search for the related element identifier -->
+        <xsl:variable name="relatedElementRef"
+          select="$node/../*[name()=$helper/@rel]/*/gn:element/@ref"/>
+        
+        
+        <helper>
+          <xsl:attribute name="relElementRef" select="$relatedElementRef"/>
+          <xsl:copy-of select="$helper/@*"/>
+          <xsl:for-each select="$helper[@displayIf]">
+            <xsl:variable name="match">
+              <saxon:call-template name="{concat('evaluate-', $schema)}">
+                <xsl:with-param name="base" select="$metadata/descendant-or-self::node()[gn:element/@ref = $node/gn:element/@ref]"/>
+                <xsl:with-param name="in" select="concat('/', @displayIf)"/>
+              </saxon:call-template>
+            </xsl:variable>
+            
+            <xsl:if test="$match/*">
+              <xsl:copy-of select="option"/>
+            </xsl:if>
+          </xsl:for-each>
+        </helper>
+      </xsl:when>
+      
       <xsl:when test="$helper">
         <!-- Search for the related element identifier -->
         <xsl:variable name="relatedElementRef"
           select="$node/../*[name()=$helper/@rel]/*/gn:element/@ref"/>
-
+        
         <helper>
           <xsl:attribute name="relElementRef" select="$relatedElementRef"/>
           <xsl:copy-of select="$helper/@*"/>
@@ -234,13 +259,19 @@
 
 
 
+  <xsl:function name="gn-fn-metadata:getXPath" as="xs:string">
+    <xsl:param name="node" as="node()"/>
+    
+    <xsl:value-of select="gn-fn-metadata:getXPath($node, false())"/>
+  </xsl:function>
 
   <!-- 
     Return the xpath of a node.
   -->
   <xsl:function name="gn-fn-metadata:getXPath" as="xs:string">
     <xsl:param name="node" as="node()"/>
-
+    <xsl:param name="withPosition" as="xs:boolean"/>
+    
     <!-- Avoid root element. -->
     <xsl:variable name="untilIndex" select="1"/>
     <xsl:variable name="xpathSeparator">/</xsl:variable>
@@ -250,17 +281,32 @@
 
     <xsl:variable name="xpath">
       <xsl:for-each select="$ancestors[position() != $untilIndex]">
-        <xsl:value-of select="concat($xpathSeparator, name(.), '[', position(), ']')"/>
+        <xsl:value-of select="if ($withPosition) 
+          then concat($xpathSeparator, name(.), '[', position(), ']')
+          else concat($xpathSeparator, name(.))"/>
       </xsl:for-each>
     </xsl:variable>
 
     <xsl:value-of
       select="if ($isAttribute) 
       then concat($xpath, $xpathSeparator, '@', $elementName) 
-      else concat($xpath, $xpathSeparator, $elementName, '[', $node/position(), ']')"
+      else if ($withPosition) 
+        then concat($xpath, $xpathSeparator, $elementName, '[', $node/position(), ']')
+        else concat($xpath, $xpathSeparator, $elementName)
+      "
     />
   </xsl:function>
 
+  <xsl:function name="gn-fn-metadata:getXPathByRef" as="xs:string">
+    <xsl:param name="nodeRef" as="xs:string"/>
+    <xsl:param name="md" as="node()"/>
+    <xsl:param name="withPosition" as="xs:boolean"/>
+    
+    <xsl:variable name="node" select="$md/descendant::node()[gn:element/@ref = $nodeRef]"/>
+    
+    <xsl:value-of select="gn-fn-metadata:getXPath($node, $withPosition)"/>
+  </xsl:function>
+  
 
 
 </xsl:stylesheet>

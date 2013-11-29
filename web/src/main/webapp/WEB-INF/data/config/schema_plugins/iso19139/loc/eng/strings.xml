@@ -34,6 +34,7 @@
   <url>Online resource</url>
   <identifier>Resource identifier</identifier>
   <rsIdentifier>Projection</rsIdentifier>
+  <referenceDate>Temporal information</referenceDate>
   <creationDate>Creation date</creationDate>
   <publicationDate>Publication date</publicationDate>
   <revisionDate>Revision date</revisionDate>

@@ -12,7 +12,7 @@
   <!-- Create a fieldset in the editor with custom
     legend if attribute name is defined or default 
     legend according to the matching element. -->
-  <xsl:template mode="form-builer" match="section[@name]|fieldset">
+  <xsl:template mode="form-builder" match="section[@name]|fieldset">
     <xsl:param name="base" as="node()"/>
 
     <xsl:variable name="sectionName" select="@name"/>
@@ -29,29 +29,48 @@
                 else $strings/*[name() = $sectionName]"
             />
           </legend>
-          <xsl:apply-templates mode="form-builer" select="@*|*">
+          <xsl:apply-templates mode="form-builder" select="@*|*">
             <xsl:with-param name="base" select="$base"/>
           </xsl:apply-templates>
         </fieldset>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:apply-templates mode="form-builer" select="@*|*">
+        <xsl:apply-templates mode="form-builder" select="@*|*">
           <xsl:with-param name="base" select="$base"/>
         </xsl:apply-templates>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
-
+  <xsl:template mode="form-builder" match="action">
+    <xsl:variable name="match">
+      <xsl:choose>
+        <xsl:when test="@if">
+          <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
+            <xsl:with-param name="base" select="$metadata"/>
+            <xsl:with-param name="in" select="concat('/../', @if)"/>
+          </saxon:call-template>
+        </xsl:when>
+        <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
+    <xsl:if test="$match = true()">
+      <xsl:call-template name="render-batch-process-button">
+        <xsl:with-param name="process-name" select="@process"/>
+        <xsl:with-param name="process-params" select="@params"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
 
   <!-- Element to ignore in that mode -->
-  <xsl:template mode="form-builer" match="@name"/>
+  <xsl:template mode="form-builder" match="@name"/>
 
   <!-- For each field, fieldset and section, check the matching xpath
     is in the current document. In that case dispatch to the schema mode
     or create an XML snippet editor for non matching document based on the
     template element. -->
-  <xsl:template mode="form-builer" match="field|fieldset|section[@xpath]">
+  <xsl:template mode="form-builder" match="field|fieldset|section[@xpath]">
     <!-- The XML document to edit -->
     <xsl:param name="base" as="node()"/>
 
@@ -88,7 +107,7 @@
       <xsl:variable name="isDisplayed">
         <xsl:choose>
           <xsl:when test="@if">
-            <saxon:call-template name="{concat('evaluate-', $schema)}">
+            <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
               <xsl:with-param name="base" select="$base"/>
               <xsl:with-param name="in" select="concat('/../', @if)"/>
             </saxon:call-template>
@@ -98,12 +117,17 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
+      
       <!--
-      <xsl:message>Xpath         : <xsl:copy-of select="@xpath"/></xsl:message>
+      <xsl:message>-- Field: <xsl:value-of select="@name"/></xsl:message>
+      <xsl:message>Xpath: <xsl:copy-of select="@xpath"/></xsl:message>
+      <xsl:message>TemplateModeOnly: <xsl:value-of select="@templateModeOnly"/></xsl:message>
+      <xsl:message>If: <xsl:copy-of select="@if"/></xsl:message>
+      <xsl:message>Display: <xsl:copy-of select="$isDisplayed"/></xsl:message>
       <xsl:message>Matching nodes: <xsl:copy-of select="$nodes"/></xsl:message>
       <xsl:message>Non existing child path: <xsl:value-of select="concat(@in, '/gn:child[@name = ''', @or, ''']')"/></xsl:message>
       <xsl:message>Non existing child: <xsl:copy-of select="$nonExistingChildParent"/></xsl:message>
-      <xsl:message>       display: <xsl:copy-of select="$isDisplayed"/></xsl:message>-->
+      -->
 
 
 
@@ -114,7 +138,8 @@
         -->
       <xsl:choose>
         <xsl:when test="$isDisplayed and not(@templateModeOnly)">
-
+          
+          <xsl:message>  == Field as node</xsl:message>
           <!-- Display the matching node using standard editor mode
           propagating to the schema mode ... -->
           <xsl:for-each select="$nodes">
@@ -136,15 +161,18 @@
           <xsl:if test="($nonExistingChildParent/* and not(@ifNotExist)) or 
             ($nonExistingChildParent/* and count($nodes/*) = 0 and @ifNotExist)">
             <xsl:variable name="childName" select="@or"/>
-
+            <xsl:variable name="configName" select="@name"/>
 
             <xsl:for-each select="$nonExistingChildParent/*/gn:child[@name = $childName]">
               <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
+              
               <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
 
               <xsl:call-template name="render-element-to-add">
                 <xsl:with-param name="label"
-                  select="gn-fn-metadata:getLabel($schema, $name, $labels)/label"/>
+                  select="if ($configName != '') 
+                          then $strings/*[name() = $configName] 
+                          else gn-fn-metadata:getLabel($schema, $name, $labels)/label"/>
                 <xsl:with-param name="directive" select="$directive"/>
                 <xsl:with-param name="childEditInfo" select="."/>
                 <xsl:with-param name="parentEditInfo" select="../gn:element"/>
@@ -153,9 +181,7 @@
           </xsl:if>
 
         </xsl:when>
-        <xsl:when test="$isDisplayed and (@templateModeOnly or template)">
-          <xsl:message>xpath<xsl:value-of select="@xpath"/></xsl:message>
-          <xsl:message>xpath<xsl:value-of select="@templateModeOnly"/></xsl:message>
+        <xsl:when test="$isDisplayed = 'true' and (@templateModeOnly or template)">
           <!-- 
               templateModeOnly 
               
@@ -163,7 +189,6 @@
             metadocument. This mode will probably take precedence over the others
             if defined in a view.
             -->
-          
           
           <xsl:variable name="xpath" select="@xpath"/>
           <xsl:variable name="name" select="@name"/>

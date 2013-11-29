@@ -76,7 +76,7 @@
       
       <xsl:choose>
         <xsl:when test="$service != 'md.element.add' and $tabConfig/section">
-          <xsl:apply-templates mode="form-builer" select="$tabConfig/section">
+          <xsl:apply-templates mode="form-builder" select="$tabConfig/section">
             <xsl:with-param name="base" select="$metadata"/>
           </xsl:apply-templates>
         </xsl:when>

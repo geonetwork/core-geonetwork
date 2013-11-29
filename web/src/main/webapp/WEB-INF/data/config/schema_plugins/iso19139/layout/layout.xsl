@@ -154,16 +154,20 @@
   <xsl:template mode="mode-iso19139" priority="100"
     match="*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|
 		gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|
-		gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL]">
+		gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
 
     <!-- TODO: Support gmd:LocalisedCharacterString -->
     <xsl:variable name="theElement" select="gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|
       gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|
-      gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL"/>
-
-    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+      gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName"/>
+    
+    <!--
+      This may not work if node context is lost eg. when an element is rendered
+      after a selection with copy-of.
+      <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>-->
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPathByRef(gn:element/@ref, $metadata, false())"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
     <xsl:variable name="labelConfig"
       select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
