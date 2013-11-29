@@ -44,7 +44,7 @@
 
           // Check if current value is one of the suggestion
           var isInList = false;
-          angular.forEach(scope.config.option, function (opt) {
+          angular.forEach(scope.config.option, function(opt) {
             if (opt['@value'] === initialValue) {
               isInList = true;
             }
@@ -65,13 +65,13 @@
 
           scope.selectOther = function() {
             $('#otherValue_' + scope.ref).focus();
-          }
+          };
           scope.selectOtherRadio = function() {
-            $('#otherValueRadio_' + scope.ref).prop("checked", true);
-          }
+            $('#otherValueRadio_' + scope.ref).prop('checked', true);
+          };
           scope.updateWithOtherValue = function() {
             field.value = scope.otherValue['@value'];
-          }
+          };
 
           // On change event update the related element(s)
           // which is sent by the form
