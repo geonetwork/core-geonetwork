@@ -56,6 +56,7 @@ import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.util.ThreadUtils;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.ProxyInfo;
 import org.fao.geonet.utils.XmlResolver;
 import org.geotools.data.DataStore;
@@ -100,8 +101,6 @@ public class Geonetwork implements ApplicationHandler {
     private ThreadPool threadPool;
     private String FS = File.separator;
     private ConfigurableApplicationContext _applicationContext;
-    private static final String SPATIAL_INDEX_FILENAME = "spatialindex";
-    private static final String IDS_ATTRIBUTE_NAME = "id";
 
     //---------------------------------------------------------------------------
     //---
@@ -421,11 +420,13 @@ public class Geonetwork implements ApplicationHandler {
                         final String appPath = context.getAppPath();
                         final String filePath = pair.one();
                         final String filePrefix = pair.two();
+                        Log.warning(Geonet.DB, "Executing SQL from: "+filePath+" "+filePrefix);
                         dbLib.insertData(servletContext, context, appPath, filePath, filePrefix);
                     }
                 String siteUuid = UUID.randomUUID().toString();
                 context.getBean(SettingManager.class).setSiteUuid(siteUuid);
             } catch (Throwable t) {
+                Log.error(Geonet.DB, "Error occurred while trying to execute SQL", t);
                 throw new RuntimeException(t);
             }
         }
@@ -585,7 +586,7 @@ public class Geonetwork implements ApplicationHandler {
 
     private DataStore createShapefileDatastore(String indexDir) throws Exception {
 
-        File file = new File(indexDir + "/" + SPATIAL_INDEX_FILENAME + ".shp");
+        File file = new File(indexDir + "/" + SpatialIndexWriter._SPATIAL_INDEX_TYPENAME + ".shp");
         if (!file.getParentFile().mkdirs() && !file.getParentFile().exists()) {
             throw new RuntimeException("Unable to create the spatial index (shapefile) directory: " + file.getParentFile());
         }
@@ -604,9 +605,9 @@ public class Geonetwork implements ApplicationHandler {
         if (!file.exists()) {
             SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
             AttributeDescriptor geomDescriptor = new AttributeTypeBuilder().crs(DefaultGeographicCRS.WGS84).binding(MultiPolygon.class).buildDescriptor("the_geom");
-            builder.setName(SPATIAL_INDEX_FILENAME);
+            builder.setName(SpatialIndexWriter._SPATIAL_INDEX_TYPENAME);
             builder.add(geomDescriptor);
-            builder.add(IDS_ATTRIBUTE_NAME, String.class);
+            builder.add(SpatialIndexWriter._IDS_ATTRIBUTE_NAME, String.class);
             ids.createSchema(builder.buildFeatureType());
         }
 

@@ -87,7 +87,7 @@ public class GeonetRepositoryTest extends AbstractSpringDataTest {
                 return root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner);
             }
         };
-        int newGroupId = 12345678;
+        Integer newGroupId = 12345678;
 
         final BatchUpdateQuery<Metadata> updateQuery = _repo.createBatchUpdateQuery(dataPathSpec, newData);
         updateQuery.add(sourcePathSpec, newGroupId);

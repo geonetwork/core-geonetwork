@@ -129,7 +129,7 @@
 
       function loadCategories() {
         $http.get('info@json?type=categories').success(function(data) {
-          $scope.batchSearchCategories = data.categories;
+          $scope.batchSearchCategories = data.metadatacategory;
         }).error(function(data) {
           // TODO
         });
