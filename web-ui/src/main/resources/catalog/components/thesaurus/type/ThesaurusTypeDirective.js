@@ -14,7 +14,7 @@
         model: '=gnModel',
         disabled: '=gnDisabled'
       },
-      templateUrl: '../../catalog/components/thesaurus-type/partials/' +
+      templateUrl: '../../catalog/components/thesaurus/type/partials/' +
           'thesaurus-type.html',
       link: function(scope, element, attrs) {
         scope.types = scope.typeList ||
