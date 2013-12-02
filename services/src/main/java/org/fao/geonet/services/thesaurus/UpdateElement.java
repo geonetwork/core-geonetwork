@@ -77,8 +77,8 @@ public class UpdateElement implements Service {
 		Thesaurus thesaurus = manager.getThesaurusByName(ref);
 
 		if (!(oldid.equals(newid))) {
-			if (thesaurus.isFreeCode(namespace, newid)) {
-				thesaurus.updateCode(namespace, oldid, newid);
+			if (thesaurus.isFreeCode(null, newid)) {
+				thesaurus.updateCodeByURI(oldid, newid);
 			}else{
 				Element elResp = new Element(Jeeves.Elem.RESPONSE);
 				elResp.addContent(new Element("error").addContent(new Element("message").setText("Code value already exists in thesaurus")));
@@ -87,7 +87,7 @@ public class UpdateElement implements Service {
 		}
 		KeywordBean bean = new KeywordBean(thesaurus.getIsoLanguageMapper())
 			.setNamespaceCode(namespace)
-            .setRelativeCode(newid);
+            .setUriCode(newid);
     
         Map<Pair<String, String>, String> localizations = getLocalizedElements(params);
         if (localizations.isEmpty()) {
