@@ -28,7 +28,8 @@
           };
         }])
   .directive('gnAddOnlinesrc', ['gnOnlinesrc',
-        function(gnOnlinesrc) {
+    'gnOwsCapabilities',
+        function(gnOnlinesrc, gnOwsCapabilities) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -38,7 +39,14 @@
 
               // mode can be 'url' or 'upload'
               scope.mode = 'url';
+              
+              // the form parms that will be submited
               scope.params = {};
+              
+              // Tells if we need to display layer grid and send
+              // layers to the submit
+              scope.isWMSProtocol = false;
+              
               scope.onlinesrcService = gnOnlinesrc;
 
               /**
@@ -62,9 +70,10 @@
                 fail: uploadOnlineSrcError
               };
 
-              /** Add online resource
+              /** 
+               *  Add online resource
                *  If it is an upload, then we submit the form with right content
-               *  If it is an url, we just call a $http.get
+               *  If it is an URL, we just call a $http.get
                */
               scope.addOnlinesrc = function() {
                 if (scope.mode == 'upload') {
@@ -74,6 +83,46 @@
                   scope.onlinesrcService.addOnlinesrc(scope.params);
                 }
               };
+             
+              /**
+               * loadWMSCapabilities
+               * 
+               * Call WMS capabilities request with params.url.
+               * Update params.layers scope value, that will be also
+               * passed to the layers grid directive.
+               */
+              scope.loadWMSCapabilities = function() {
+                if(scope.isWMSProtocol) {
+                  gnOwsCapabilities.getCapabilities(scope.params.url)
+                  .then(function(layers) {
+                    scope.layers = layers;
+                  });
+                }
+              };
+              
+              /**
+               * On protocol combo Change.
+               * Update isWMSProtocol values to display or hide
+               * layer grid and call or not a getCapabilities.
+               */
+              scope.$watch('params.protocol', function(){
+                if(!angular.isUndefined(scope.params.protocol)) {
+                  scope.isWMSProtocol = (scope.params.protocol.
+                      indexOf('OGC:WMS') >= 0);
+                  scope.loadWMSCapabilities();
+                }
+              });
+              
+              /**
+               * On URL change, reload WMS capabilities
+               * if the protocol is WMS
+               */
+              scope.$watch('params.url', function(){
+                if(!angular.isUndefined(scope.params.url)) {
+                  scope.loadWMSCapabilities();
+                }
+              });
+
             }
           };
         }])
@@ -88,13 +137,31 @@
             }
           };
         }])
-  .directive('gnLinkToService', ['gnOnlinesrc',
-        function(gnOnlinesrc) {
+  .directive('gnLinkToService', ['gnOnlinesrc', 'Metadata',
+        function(gnOnlinesrc, Metadata) {
           return {
             restrict: 'A',
+            scope: {},
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/linkToService.html',
             link: function(scope, element, attrs) {
+              scope.params = {
+//                  type: 'service'
+              };
+              
+              // This object is used to share value between this 
+              // directive and the FormController scope that is contained
+              // by the directive
+              scope.stateObj = {};
+              
+              scope.$watchCollection('stateObj.selectRecords', function(){
+                if(!angular.isUndefined(scope.stateObj.selectRecords) &&
+                    scope.stateObj.selectRecords.length > 0) {
+                  var md = new Metadata(scope.stateObj.selectRecords[0]);
+                  console.log(md.getLinksByType('OGC:WMS'));
+                }
+              });
+
               scope.onlinesrcService = gnOnlinesrc;
             }
           };

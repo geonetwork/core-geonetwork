@@ -38,19 +38,34 @@
         };
         return {
           getCapabilities: function(url) {
-            url = 'http://wms.geo.admin.ch/' +
-                '?SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.3.0';
-
+//            url = 'http://wms.geo.admin.ch/' +
+//                '?SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.3.0';
             var defer = $q.defer();
-            if (gnUrlUtils.isValid(url)) {
-              var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
-              $http.get(proxyUrl)
-                .success(function(data, status, headers, config) {
-                    defer.resolve(displayFileContent(data));
-                  })
-                .error(function(data, status, headers, config) {
-                    defer.reject(error);
-                  });
+            if(url) {
+              //merge URL parameters with default ones
+              var parts = url.split('?');
+              var urlParams = gnUrlUtils.parseKeyValue(parts[1].toLowerCase());
+              var defaultParams = {
+                  service: 'WMS',
+                  request: 'getCapabilities'
+              };
+              angular.extend(defaultParams, urlParams);
+              
+              url = gnUrlUtils.append(parts[0], 
+                  gnUrlUtils.toKeyValue(defaultParams));
+              
+              //send request and decode result
+              if (gnUrlUtils.isValid(url)) {
+                var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+                console.log('Send getCapabilities : ' + url);
+                $http.get(proxyUrl)
+                  .success(function(data, status, headers, config) {
+                      defer.resolve(displayFileContent(data));
+                    })
+                  .error(function(data, status, headers, config) {
+                      defer.reject(error);
+                    });
+              }
             }
             return defer.promise;
           }

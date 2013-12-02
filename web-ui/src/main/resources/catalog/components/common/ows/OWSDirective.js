@@ -13,14 +13,11 @@
            templateUrl: '../../catalog/components/common/ows/' +
            'partials/layersGrid.html',
            scope: {
-             selection: '='
+             selection: '=',
+             layers:'='
            },
            link: function(scope, element, attrs) {
 
-             // Load grid with capabilities response
-             gnOwsCapabilities.getCapabilities('').then(function(layers) {
-               scope.layers = layers;
-             });
 
              // Manage layers selection
              scope.selectionMode = attrs.gnSelectionMode;
