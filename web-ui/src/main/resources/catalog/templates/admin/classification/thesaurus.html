@@ -123,10 +123,10 @@
         </form>
         <ul>
           <li data-ng-repeat="k in keywords">
-            <a href=""  data-ng-click="editKeyword(k)" data-ng-show="isExternal()">{{k.value['#text']}}
+            <a href=""  data-ng-click="editKeyword(k)">{{k.value['#text']}}
               <i class="fa fa-edit pull-right" data-ng-class="isExternal() ? 'fa-info' : 'fa-edit'"/>
             </a>
-            <i
+            <a href=""
               class="fa fa-trash-o text-danger pull-right" data-ng-hide="isExternal()"
               data-ng-click="deleteKeyword(k)"/>
           </li>
