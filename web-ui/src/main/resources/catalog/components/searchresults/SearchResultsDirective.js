@@ -1,5 +1,5 @@
 (function() {
-  goog.provide('gn_search_results_directive');
+  geonet.provide('gn_search_results_directive');
 
   var module = angular.module('gn_search_results_directive', []);
 

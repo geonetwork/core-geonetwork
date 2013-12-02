@@ -1,1 +1,1 @@
-goog.provide('3c');
+geonet.provide('3c');

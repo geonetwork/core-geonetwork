@@ -1,5 +1,5 @@
 (function() {
-  goog.provide('gn_login_controller');
+  geonet.provide('gn_login_controller');
 
   var module = angular.module('gn_login_controller', []);
 

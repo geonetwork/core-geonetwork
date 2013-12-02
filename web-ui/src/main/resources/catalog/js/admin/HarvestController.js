@@ -1,13 +1,13 @@
 (function() {
-  goog.provide('gn_harvest_controller');
+  geonet.provide('gn_harvest_controller');
 
 
 
 
 
-  goog.require('gn_category');
-  goog.require('gn_harvester');
-  goog.require('gn_importxsl');
+  geonet.require('gn_category');
+  geonet.require('gn_harvester');
+  geonet.require('gn_importxsl');
 
   var module = angular.module('gn_harvest_controller',
       ['gn_harvester', 'gn_category']);

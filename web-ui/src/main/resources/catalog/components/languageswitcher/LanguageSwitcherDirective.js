@@ -1,5 +1,5 @@
 (function() {
-  goog.provide('gn_language_switcher_directive');
+  geonet.provide('gn_language_switcher_directive');
 
   var module = angular.module('gn_language_switcher_directive',
       ['pascalprecht.translate']);
@@ -23,7 +23,7 @@
         link: function(scope, element, attrs) {
           scope.$watch('lang', function(value) {
             var url = location.href.split('/');
-            if (value != url[5]) {
+            if (value !== url[5]) {
               url[5] = value;  // Use ISO3 code
               // if (window.history.pushState) {
               //     // Update translate with no page reload
@@ -34,7 +34,9 @@
               // trigger a reload
               location.href = url.join('/');
               // }
-              moment && moment.lang(scope.langs[value]);
+              if (moment) {
+                moment.lang(scope.langs[value]);
+              }
             }
           });
         }

@@ -10,6 +10,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <property name="accessDecisionManager" ref="accessDecisionManager"></property>
         <property name="securityMetadataSource">
             <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex">
+                <sec:intercept-url pattern="/static/.*" access="permitAll"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.thesaurus.getList!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/monitor" access="hasRole('Monitor')"></sec:intercept-url>
@@ -526,8 +527,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/password.change!?.*" access="permitAll"/>
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.edit!?.*" access="hasRole('Editor')"/>
-                
-                
+
+
                 
                 
                 

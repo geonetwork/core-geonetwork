@@ -1,7 +1,7 @@
 (function() {
-  goog.provide('gn_dashboard_status_controller');
+  geonet.provide('gn_dashboard_status_controller');
 
-  goog.require('gn_gauge');
+  geonet.require('gn_gauge');
 
   var module = angular.module('gn_dashboard_status_controller',
       ['gn_gauge']);

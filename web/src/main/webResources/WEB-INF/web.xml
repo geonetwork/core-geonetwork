@@ -133,6 +133,7 @@
 
             * Runtime as a Servlet Filter - at runtime WRO4J compiles, lints, minifies and compresses all javascript and css files.
                                             This allows a developer to be able to get instant feed back when he/she changes a file.
+                                            By Default the javascript and css is minimized.  To not have it minized use ?minimize=false
             * Maven build - The same configuration is run on all javascript files during build time.  The artifacts are ignored
                             because they are generated at runtime but it a check to verify that when deployed all artifacts can be
                             correctly built when the .

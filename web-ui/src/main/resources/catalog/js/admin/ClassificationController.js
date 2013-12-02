@@ -1,9 +1,9 @@
 (function() {
-  goog.provide('gn_classification_controller');
+  geonet.provide('gn_classification_controller');
 
 
-  goog.require('gn_categories_controller');
-  goog.require('gn_thesaurus_controller');
+  geonet.require('gn_categories_controller');
+  geonet.require('gn_thesaurus_controller');
 
   var module = angular.module('gn_classification_controller',
       ['gn_thesaurus_controller', 'gn_categories_controller']);

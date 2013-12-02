@@ -1,5 +1,5 @@
 (function() {
-  goog.provide('gn_gauge_directive');
+  geonet.provide('gn_gauge_directive');
 
   var module = angular.module('gn_gauge_directive', []);
 
@@ -31,7 +31,7 @@
       gauge = new Gauge(config.id, gaugeConfig);
       gauge.render();
       return gauge;
-    };
+    }
 
 
     return {

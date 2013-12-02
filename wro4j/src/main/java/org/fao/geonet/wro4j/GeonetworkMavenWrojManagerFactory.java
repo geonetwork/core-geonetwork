@@ -27,4 +27,6 @@ public class GeonetworkMavenWrojManagerFactory extends ConfigurableWroManagerFac
     protected UriLocatorFactory newUriLocatorFactory() {
         return super.newUriLocatorFactory();
     }
+
+
 }

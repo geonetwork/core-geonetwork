@@ -1,5 +1,5 @@
 (function() {
-  goog.provide('gn_utility_service');
+  geonet.provide('gn_utility_service');
 
   var module = angular.module('gn_utility_service', []);
 
@@ -22,8 +22,8 @@
       var docViewTop = $(window).scrollTop();
       var docViewBottom = docViewTop + window.innerHeight;
 
-      var elemTop = parseInt($(elem).offset().top);
-      var elemBottom = parseInt(elemTop + $(elem).height());
+      var elemTop = parseInt($(elem).offset().top, 10);
+      var elemBottom = parseInt(elemTop + $(elem).height(), 10);
 
       return ( // bottom of element in view
               elemBottom < docViewBottom &&

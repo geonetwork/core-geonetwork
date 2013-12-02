@@ -1,5 +1,5 @@
 (function() {
-  goog.provide('gn_importxsl_directive');
+  geonet.provide('gn_importxsl_directive');
 
   var module = angular.module('gn_importxsl_directive', []);
 

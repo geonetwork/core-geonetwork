@@ -1,7 +1,7 @@
 (function() {
-  goog.provide('gn_cat_controller');
+  geonet.provide('gn_cat_controller');
 
-  goog.require('gn_search_manager');
+  geonet.require('gn_search_manager');
 
   var module = angular.module('gn_cat_controller', ['gn_search_manager']);
 

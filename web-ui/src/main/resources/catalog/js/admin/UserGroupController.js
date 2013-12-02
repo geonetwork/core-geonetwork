@@ -1,7 +1,7 @@
 (function() {
-  goog.provide('gn_usergroup_controller');
+  geonet.provide('gn_usergroup_controller');
 
-  goog.require('gn_dbtranslation');
+  geonet.require('gn_dbtranslation');
 
   var module = angular.module('gn_usergroup_controller',
       ['gn_dbtranslation']);

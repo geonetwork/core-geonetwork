@@ -1,5 +1,5 @@
 (function() {
-  goog.provide('gn_harvester_directive');
+  geonet.provide('gn_harvester_directive');
 
   var module = angular.module('gn_harvester_directive', []);
 

@@ -56,42 +56,42 @@ public class ClosureRequireDependencyManagerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileDuplicateModuleId() throws Exception {
-        _depManager.addFile("abc", "goog.provide('1a')");
+        _depManager.addFile("abc", "geonet.provide('1a')");
     }
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileNoProvideString() throws Exception {
-        _depManager.addFile("abc", "goog.provide()");
+        _depManager.addFile("abc", "geonet.provide()");
     }
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileNoRequireString() throws Exception {
-        _depManager.addFile("abc", "goog.require()");
+        _depManager.addFile("abc", "geonet.require()");
     }
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileEmptyProvideString() throws Exception {
-        _depManager.addFile("abc", "goog.provide('')");
+        _depManager.addFile("abc", "geonet.provide('')");
     }
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileEmptyRequireString() throws Exception {
-        _depManager.addFile("abc", "goog.require('')");
+        _depManager.addFile("abc", "geonet.require('')");
     }
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileCyclicDependencyGraph() throws Exception {
-        _depManager.addFile("abc", "goog.provide('xa'); goog.require('xb')");
-        _depManager.addFile("abc", "goog.provide('xb'); goog.require('xa')");
+        _depManager.addFile("abc", "geonet.provide('xa'); geonet.require('xb')");
+        _depManager.addFile("abc", "geonet.provide('xb'); geonet.require('xa')");
         _depManager.validateGraph();
     }
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileNoProvide() throws Exception {
-        _depManager.addFile("abc", "goog.require('ab2'");
+        _depManager.addFile("abc", "geonet.require('ab2'");
     }
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileRequiresSelf() throws Exception {
-        _depManager.addFile("abc", "goog.provide('xa'); goog.require('xa')");
+        _depManager.addFile("abc", "geonet.provide('xa'); geonet.require('xa')");
         _depManager.validateGraph();
     }
     @Test
     public void testAddFileRequiresUsesDoubleQuotes() throws Exception {
-        final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "goog.provide('xb'); goog.require(\"3a\")");
+        final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "geonet.provide('xb'); geonet.require(\"3a\")");
         assertTrue(node.dependencyIds.contains("3a"));
     }
     @Test
@@ -101,14 +101,14 @@ public class ClosureRequireDependencyManagerTest {
     }
     @Test
     public void testAddFileProvidesUsesDoubleQuotes() throws Exception {
-        final ClosureRequireDependencyManager.Node node = _depManager.addFile("xa", "goog.provide(\"xa\")");
+        final ClosureRequireDependencyManager.Node node = _depManager.addFile("xa", "geonet.provide(\"xa\")");
         Assert.assertEquals("xa", node.id);
         final Set<String> allModuleIds = _depManager.getAllModuleIds();
         assertTrue(allModuleIds.toString(), allModuleIds.contains("xa"));
     }
     @Test
     public void testAddFileProvidesCanBeDeclaredAfterRequire() throws Exception {
-        final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "goog.require('3a'); goog.provide('xb');");
+        final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "geonet.require('3a'); geonet.provide('xb');");
         Assert.assertEquals("xb", node.id);
         assertTrue(node.dependencyIds.contains("3a"));
 

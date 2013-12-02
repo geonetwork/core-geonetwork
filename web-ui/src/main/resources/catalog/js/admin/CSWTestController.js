@@ -1,5 +1,5 @@
 (function() {
-  goog.provide('gn_csw_test_controller');
+  geonet.provide('gn_csw_test_controller');
 
 
   var module = angular.module('gn_csw_test_controller',
@@ -30,7 +30,7 @@
       }
 
       $scope.$watch('currentTestId', function() {
-        if ($scope.currentTestId != null) {
+        if ($scope.currentTestId !== null) {
           $http.get('../../xml/csw/test/' + $scope.currentTestId + '.xml')
           .success(function(data) {
                 $scope.currentTest = data;

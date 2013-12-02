@@ -1,5 +1,5 @@
 (function() {
-  goog.provide('gn_adminmetadata_controller');
+  geonet.provide('gn_adminmetadata_controller');
 
 
   var module = angular.module('gn_adminmetadata_controller',
@@ -168,7 +168,7 @@
       };
 
       $scope.sortOrder = function(item) {
-        return parseInt(item.displayorder);
+        return parseInt(item.displayorder, 10);
       };
 
       if ($routeParams.tab === 'template-sort') {

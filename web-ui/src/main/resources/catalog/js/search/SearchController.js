@@ -1,5 +1,5 @@
 (function() {
-  goog.provide('gn_search_controller');
+  geonet.provide('gn_search_controller');
 
 
   var module = angular.module('gn_search_controller',

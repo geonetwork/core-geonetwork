@@ -71,7 +71,7 @@ goog.global.CLOSURE_DEFINES;
  * ensuring that names that already exist are not overwritten. For
  * example:
  * "a.b.c" -> a = {};a.b={};a.b.c={};
- * Used by goog.provide and goog.exportSymbol.
+ * Used by geonet.provide and goog.exportSymbol.
  * @param {string} name name of the object that this file defines.
  * @param {*=} opt_object the object to expose at the end of the path.
  * @param {Object=} opt_objectToExportTo The object to add the path to; default
@@ -178,20 +178,20 @@ goog.define('goog.TRUSTED_SITE', true);
 
 /**
  * Creates object stubs for a namespace.  The presence of one or more
- * goog.provide() calls indicate that the file defines the given
+ * geonet.provide() calls indicate that the file defines the given
  * objects/namespaces.  Build tools also scan for provide/require statements
  * to discern dependencies, build dependency files (see deps.js), etc.
- * @see goog.require
+ * @see geonet.require
  * @param {string} name Namespace provided by this file in the form
  *     "goog.package.part".
  */
-goog.provide = function(name) {
+geonet.provide = function(name) {
   if (!COMPILED) {
     // Ensure that the same namespace isn't provided twice. This is intended
-    // to teach new developers that 'goog.provide' is effectively a variable
-    // declaration. And when JSCompiler transforms goog.provide into a real
+    // to teach new developers that 'geonet.provide' is effectively a variable
+    // declaration. And when JSCompiler transforms geonet.provide into a real
     // variable declaration, the compiled JS should work the same as the raw
-    // JS--even when the raw JS uses goog.provide incorrectly.
+    // JS--even when the raw JS uses geonet.provide incorrectly.
     if (goog.isProvided_(name)) {
       throw Error('Namespace "' + name + '" already declared.');
     }
@@ -244,8 +244,8 @@ if (!COMPILED) {
   };
 
   /**
-   * Namespaces implicitly defined by goog.provide. For example,
-   * goog.provide('goog.events.Event') implicitly declares
+   * Namespaces implicitly defined by geonet.provide. For example,
+   * geonet.provide('goog.events.Event') implicitly declares
    * that 'goog' and 'goog.events' must be namespaces.
    *
    * @type {Object}
@@ -331,7 +331,7 @@ goog.addDependency = function(relPath, provides, requires) {
 // way to do "debug-mode" development.  The dependency system can sometimes
 // be confusing, as can the debug DOM loader's asyncronous nature.
 //
-// With the DOM loader, a call to goog.require() is not blocking -- the
+// With the DOM loader, a call to geonet.require() is not blocking -- the
 // script will not load until some point after the current script.  If a
 // namespace is needed at runtime, it needs to be defined in a previous
 // script, or loaded via require() with its registered dependencies.
@@ -348,10 +348,10 @@ goog.addDependency = function(relPath, provides, requires) {
 /**
  * @define {boolean} Whether to enable the debug loader.
  *
- * If enabled, a call to goog.require() will attempt to load the namespace by
+ * If enabled, a call to geonet.require() will attempt to load the namespace by
  * appending a script tag to the DOM (if the namespace has been registered).
  *
- * If disabled, goog.require() will simply assert that the namespace has been
+ * If disabled, geonet.require() will simply assert that the namespace has been
  * provided (and depend on the fact that some outside tool correctly ordered
  * the script).
  */
@@ -361,13 +361,13 @@ goog.define('goog.ENABLE_DEBUG_LOADER', true);
 /**
  * Implements a system for the dynamic resolution of dependencies
  * that works in parallel with the BUILD system. Note that all calls
- * to goog.require will be stripped by the JSCompiler when the
+ * to geonet.require will be stripped by the JSCompiler when the
  * --closure_pass option is used.
- * @see goog.provide
- * @param {string} name Namespace to include (as was given in goog.provide())
+ * @see geonet.provide
+ * @param {string} name Namespace to include (as was given in geonet.provide())
  *     in the form "goog.package.part".
  */
-goog.require = function(name) {
+geonet.require = function(name) {
 
   // if the object already exists we do not need do do anything
   // TODO(arv): If we start to support require based on file name this has
@@ -389,7 +389,7 @@ goog.require = function(name) {
       }
     }
 
-    var errorMessage = 'goog.require could not find: ' + name;
+    var errorMessage = 'geonet.require could not find: ' + name;
     if (goog.global.console) {
       goog.global.console['error'](errorMessage);
     }

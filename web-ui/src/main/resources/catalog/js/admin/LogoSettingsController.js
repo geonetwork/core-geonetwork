@@ -1,5 +1,5 @@
 (function() {
-  goog.provide('gn_logo_settings_controller');
+  geonet.provide('gn_logo_settings_controller');
 
 
   var module = angular.module('gn_logo_settings_controller',

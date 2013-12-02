@@ -83,7 +83,7 @@ public class ClosureRequireDependencyManager {
         return _modules.keySet();
     }
 
-    private Node getNode(String moduleId) {
+    public Node getNode(String moduleId) {
         Node module = this._modules.get(moduleId);
         isTrue(module != null, moduleId + " does not exist");
         return module;
@@ -127,8 +127,8 @@ public class ClosureRequireDependencyManager {
      * A node in the Dependency Graph.
      */
     static class Node {
-        private static final String PROVIDES_PATTERN_STRING = "goog\\.provide\\s*\\(\\s*(.+?)\\s*\\)";
-        private static final String REQUIRE_PATTERN_STRING = "goog\\.require\\s*\\(\\s*(.+?)\\s*\\)";
+        private static final String PROVIDES_PATTERN_STRING = "geonet\\.provide\\s*\\(\\s*(.+?)\\s*\\)";
+        private static final String REQUIRE_PATTERN_STRING = "geonet\\.require\\s*\\(\\s*(.+?)\\s*\\)";
 
         private static final Pattern SCAN_PATTERN = Pattern.compile("(" + PROVIDES_PATTERN_STRING + ")|(" + REQUIRE_PATTERN_STRING + ")");
         final String id;
@@ -152,17 +152,17 @@ public class ClosureRequireDependencyManager {
                 }
                 String currentId = match.substring(idStartIdx, idEndIdx);
                 idNonEmpty(match, currentId);
-                if (match.contains("goog.require")) {
+                if (match.contains("geonet.require")) {
                     dependencyIds.add(currentId);
                 } else {
                     if (id != null) {
-                        throw new IllegalArgumentException("More than one 'goog.provide' was found in the javascript file: " + path);
+                        throw new IllegalArgumentException("More than one 'geonet.provide' was found in the javascript file: " + path);
                     }
                     id = currentId;
                 }
             }
             if (id == null) {
-                throw new IllegalArgumentException("No provide command was declared");
+                throw new IllegalArgumentException("No 'geonet.provide' command was declared");
             }
             return id;
         }

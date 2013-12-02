@@ -1,14 +1,14 @@
 (function() {
-  goog.provide('gn');
+  geonet.provide('gn');
 
-  goog.require('gn_cat_controller');
-  goog.require('gn_language_switcher');
-  goog.require('gn_metadata_manager');
-  goog.require('gn_pagination');
-  goog.require('gn_search_controller');
-  goog.require('gn_search_manager');
-  goog.require('gn_search_results');
-  goog.require('gn_utility');
+  geonet.require('gn_cat_controller');
+  geonet.require('gn_language_switcher');
+  geonet.require('gn_metadata_manager');
+  geonet.require('gn_pagination');
+  geonet.require('gn_search_controller');
+  geonet.require('gn_search_manager');
+  geonet.require('gn_search_results');
+  geonet.require('gn_utility');
 
   var module = angular.module('gn', [
     'ngRoute',

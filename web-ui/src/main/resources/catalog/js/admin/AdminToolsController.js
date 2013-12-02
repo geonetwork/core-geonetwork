@@ -1,5 +1,5 @@
 (function() {
-  goog.provide('gn_admintools_controller');
+  geonet.provide('gn_admintools_controller');
 
 
   var module = angular.module('gn_admintools_controller',

@@ -1,17 +1,17 @@
 (function() {
-  goog.provide('gn_admin_controller');
+  geonet.provide('gn_admin_controller');
 
 
 
-  goog.require('gn_adminmetadata_controller');
-  goog.require('gn_admintools_controller');
-  goog.require('gn_cat_controller');
-  goog.require('gn_classification_controller');
-  goog.require('gn_dashboard_controller');
-  goog.require('gn_harvest_controller');
-  goog.require('gn_settings_controller');
-  goog.require('gn_standards_controller');
-  goog.require('gn_usergroup_controller');
+  geonet.require('gn_adminmetadata_controller');
+  geonet.require('gn_admintools_controller');
+  geonet.require('gn_cat_controller');
+  geonet.require('gn_classification_controller');
+  geonet.require('gn_dashboard_controller');
+  geonet.require('gn_harvest_controller');
+  geonet.require('gn_settings_controller');
+  geonet.require('gn_standards_controller');
+  geonet.require('gn_usergroup_controller');
 
 
   var module = angular.module('gn_admin_controller',

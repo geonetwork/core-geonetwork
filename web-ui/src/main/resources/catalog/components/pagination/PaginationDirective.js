@@ -1,5 +1,5 @@
 (function() {
-  goog.provide('gn_pagination_directive');
+  geonet.provide('gn_pagination_directive');
 
   var module = angular.module('gn_pagination_directive', []);
 

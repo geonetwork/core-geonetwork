@@ -28,6 +28,10 @@
 
   <!-- FIXME set common dependencies to the root pom.xml  -->
   <dependencies>
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+      </dependency>
 
       <dependency>
       	<groupId>net.sf.ehcache</groupId>
@@ -927,19 +931,6 @@
             <artifactId>wro4j-maven-plugin</artifactId>
             <version>${wro.version}</version>
             <executions>
-                <execution>
-                    <id>jshint</id>
-                    <phase>test</phase>
-                    <goals>
-                        <goal>jshint</goal>
-                    </goals>
-                    <configuration>
-                        <options>sub</options>
-                        <failFast>true</failFast>
-                        <failNever>false</failNever>
-                        <failThreshold>0</failThreshold>
-                    </configuration>
-                </execution>
                 <execution>
                     <id>test-javascript-optimization</id>
                     <phase>test</phase>

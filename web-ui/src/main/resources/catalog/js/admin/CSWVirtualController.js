@@ -1,5 +1,5 @@
 (function() {
-  goog.provide('gn_csw_virtual_controller');
+  geonet.provide('gn_csw_virtual_controller');
 
 
   var module = angular.module('gn_csw_virtual_controller',
