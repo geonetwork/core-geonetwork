@@ -7,7 +7,7 @@
         <input class="form-control" data-ng-model="harvesterSearch.$" autofocus=""
           placeholder="{{'filter' | translate}}"/>
         <div class="list-group">
-          <a class="list-group-item"
+          <a href="" class="list-group-item"
             data-ng-repeat="h in harvesters | filter:harvesterSearch | orderBy:'name'"
             data-ng-class="h['@id'] === harvesterSelected['@id'] ? 'active' : ''"
             data-ng-click="selectHarvester(h)"
@@ -30,7 +30,7 @@
           <ul class="dropdown-menu" role="menu">
             <li data-ng-repeat="(key, value) in harvesterTypes"
               data-ng-class="value.loaded ? '' : 'disabled'">
-              <a data-ng-click="addHarvester(key)"
+              <a href="" data-ng-click="addHarvester(key)"
                 title="{{'harvester-' + value.label + 'Help' | translate}}"> {{('harvester-' +
                 value.label) | translate}} <span data-ng-hide="value.loaded" data-translate=""
                   >notYetSupported</span>
@@ -46,7 +46,7 @@
           </button>
           <ul class="dropdown-menu" role="menu">
             <li data-ng-repeat="h in harvesters | orderBy:'site.name'">
-              <a data-ng-click="cloneHarvester(h['@id'])"
+              <a href="" data-ng-click="cloneHarvester(h['@id'])"
                 title="{{'cloneHarvester' | translate}} {{h.site.name}}"> {{h.site.name}}
                 ({{('harvester-' + h['@type']) | translate}}) </a>
             </li>

@@ -7,7 +7,7 @@
           placeholder="{{'filter' | translate}}"/>
         <input type="hidden" data-ng-model="virtualCSWSelected.id"/>
         <div class="list-group">
-          <a class="list-group-item"
+          <a href="" class="list-group-item"
             data-ng-repeat="v in cswVirtual | filter:virtualCSWSearch | orderBy:'name'"
             data-ng-click="selectVirtualCSW(v)" title="{{v.description}}"> {{v.name}} </a>
         </div>
