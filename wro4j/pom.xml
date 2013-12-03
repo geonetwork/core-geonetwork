@@ -49,6 +49,18 @@
                     <groupId>me.n4u.sass</groupId>
                     <artifactId>sass-gems</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.gmaven.runtime</groupId>
+                    <artifactId>gmaven-runtime-1.7</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.lltyk</groupId>
+                    <artifactId>dojo-shrinksafe</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>

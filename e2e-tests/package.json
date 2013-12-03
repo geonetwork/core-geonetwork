@@ -1,0 +1,12 @@
+{
+  "name": "maven-grunt-prototype",
+  "version": "0.0.1",
+  "devDependencies": {
+    "protractor" : "~0.12.0",
+    "selenium-server": "2.35.0"
+  },
+  "engines": {
+    "node": ">=0.8.0",
+    "npm": ">=2.0.0"
+  }
+}
