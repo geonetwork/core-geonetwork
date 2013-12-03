@@ -817,22 +817,22 @@
             
             <!--
             <resource>
-              <directory>../docs/eng/users/build/html</directory>
+              <directory>${rootProjectDir}/docs/eng/users/build/html</directory>
               <targetPath>docs/eng/users</targetPath>
             </resource>
             <resource>
-              <directory>../docs/eng/users/build/latex</directory>
+              <directory>${rootProjectDir}/docs/eng/users/build/latex</directory>
               <targetPath>docs/eng/users</targetPath>
                <includes>
                 <include>GeoNetworkUserManual.pdf</include>
               </includes>
             </resource>
             <resource>
-            <directory>../docs/eng/developer/build/html</directory>
+            <directory>${rootProjectDir}/docs/eng/developer/build/html</directory>
               <targetPath>docs/eng/developer</targetPath>
             </resource>  
             <resource>
-              <directory>../docs</directory>
+              <directory>${rootProjectDir}/docs</directory>
               <targetPath>docs</targetPath>
                <includes>
                 <include>changes.txt</include>
@@ -841,7 +841,7 @@
               </includes>
             </resource>
             <resource>
-              <directory>../docs/eng/developer/build/latex</directory>
+              <directory>${rootProjectDir}/docs/eng/developer/build/latex</directory>
               <targetPath>docs/eng/developer</targetPath>
                 <includes>
                   <include>GeoNetworkDeveloperManual.pdf</include>
@@ -895,7 +895,7 @@
             <contextPath>/geonetwork</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-            <resourcesAsCSV>${basedir}/src/main/webapp,../web-ui/src/main/resources/,${build.webapp.resources}${widgets.webapp.resources}</resourcesAsCSV>
+            <resourcesAsCSV>${project.basedir}/src/main/webapp,${rootProjectDir}/web-ui/src/main/resources/,${build.webapp.resources},${rootProjectDir}/web-client/src/main/resources/,${widgets.webapp.resources}</resourcesAsCSV>
             </baseResource>
           </webApp>
           <stopKey>JETTY_TOP</stopKey>
@@ -974,21 +974,18 @@
       <id>widgets</id>
       <properties>
         <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widget.xml</web.xml.widget.config.overrides>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
       </properties>
     </profile>
     <profile>
       <id>widgets-tab</id>
       <properties>
           <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widgettab.xml</web.xml.widget.config.overrides>
-          <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
       </properties>
     </profile>
     <profile>
 		<id>html5ui</id>
 		<properties>
 			<web.xml.widget.config.overrides>/WEB-INF/config-overrides-html5ui.xml</web.xml.widget.config.overrides>
-			<widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
 		</properties>
     </profile>
     
