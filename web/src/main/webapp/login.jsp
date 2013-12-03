@@ -7,19 +7,23 @@
 		<script language="Javascript1.5" type="text/javascript">
 		function init() {
 			<% 
-			Object language = null;
+			Object node = null;
+            Object language = null;
 
 			String redirectUrl;
 			org.springframework.security.web.savedrequest.SavedRequest savedRequest =     new org.springframework.security.web.savedrequest.HttpSessionRequestCache().getRequest(request, response);
 			if (savedRequest !=null) {
 				redirectUrl=savedRequest.getRedirectUrl();
-				Pattern p = Pattern.compile("^.*/srv/([a-z]{3})/.*$");
+				Pattern p = Pattern.compile("^.*/([a-zA-Z0-9_\\-]+)/([a-z]{3})/.*$");
 				Matcher m = p.matcher(redirectUrl);
 
 				if (m.find()) 
-					language=m.group(1);
+                    node=m.group(1);
+					language=m.group(2);
 				}
-				
+			if (node==null) {
+			    node = "srv";
+			}
 		if (language==null) {
 				String found = null;
 				Enumeration names = request.getHeaderNames();
@@ -35,7 +39,8 @@
 					}
 				}
 			%>
-			var userLang = "<%= language %>"
+			var userLang = "<%= language %>";
+            var node = "<%= node %>";
 			if(!userLang) {
 				userLang = (navigator.language) ? navigator.language : navigator.userLanguage;
 			} 
@@ -78,8 +83,7 @@
 			} else {
 				userLang = "eng";
 			}
-
-			window.location = "srv/" + userLang + "/catalog.signin" + window.location.search;
+			window.location = node + "/" + userLang + "/catalog.signin" + window.location.search;
 		}
 		</script>
 		
