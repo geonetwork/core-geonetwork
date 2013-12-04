@@ -15,20 +15,21 @@
         </div>
       </div>
       <div data-gn-search-form-results
-        data-gn-search-form-results-mode="title"
+        data-gn-search-form-results-mode="simple"
         data-gn-search-form-results-selection-mode="local simple"
         data-result-records="resultRecords"
         data-select-records="stateObj.selectRecords">
       </div>
       <div data-gn-layers-grid 
         data-gn-selection-mode="multiple"
-        data-selection="layers">
+        data-layers="layers"
+        data-selection="srcParams.layers">
       </div>
     </div>
     <div class="">
       <button type="button" class="btn navbar-btn btn-success"
-        data-ng-click="onlinesrcService.linkToParent(selectRecords)">
-        <i class="fa fa-sitemap" /> <span data-translate="">linkToParent</span>
+        data-ng-click="linkTo()">
+        <i class="fa fa-sitemap" /> <span data-translate="">linkToService</span>
       </button>
     </div>
   </form>

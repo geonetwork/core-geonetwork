@@ -79,6 +79,7 @@
 
         $scope.editorConfig = {
           metadataId: $scope.metadataId,
+          metadataUuid: $scope.metadataUuid,
           formId: $scope.formId,
           compileScope: $scope,
           tab: $scope.tab,

@@ -14,7 +14,7 @@
            'partials/layersGrid.html',
            scope: {
              selection: '=',
-             layers:'='
+             layers: '='
            },
            link: function(scope, element, attrs) {
 

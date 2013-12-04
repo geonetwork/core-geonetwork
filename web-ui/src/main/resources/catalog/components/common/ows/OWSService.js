@@ -38,22 +38,23 @@
         };
         return {
           getCapabilities: function(url) {
-//            url = 'http://wms.geo.admin.ch/' +
-//                '?SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.3.0';
+            //            url = 'http://wms.geo.admin.ch/' +
+            //                '?SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.3.0';
             var defer = $q.defer();
-            if(url) {
+            if (url) {
               //merge URL parameters with default ones
               var parts = url.split('?');
               var urlParams = gnUrlUtils.parseKeyValue(parts[1].toLowerCase());
               var defaultParams = {
-                  service: 'WMS',
-                  request: 'getCapabilities'
+                service: 'WMS',
+                request: 'getCapabilities',
+                version: '1.3.0' //FIXME to remove its not mandatory
               };
               angular.extend(defaultParams, urlParams);
-              
-              url = gnUrlUtils.append(parts[0], 
+
+              url = gnUrlUtils.append(parts[0],
                   gnUrlUtils.toKeyValue(defaultParams));
-              
+
               //send request and decode result
               if (gnUrlUtils.isValid(url)) {
                 var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);

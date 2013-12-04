@@ -51,7 +51,11 @@
         $scope.resultCount = null;
       };
 
-      //      $scope.triggerSearch();
+      $scope.$watch('autoSearch', function() {
+        if ($scope.autoSearch) {
+          $scope.triggerSearch();
+        }
+      });
     }
   ]);
 })();

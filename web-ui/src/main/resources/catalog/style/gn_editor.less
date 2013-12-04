@@ -107,9 +107,12 @@ form.gn-editor {
 }
 
 /* Onlinesrc styles */
-.link-parent-md .onlinesrc-container,
-.add-onlinesrc .onlinesrc-container {
+.onlinesrc-container {
   width: 680px;
+  .list-group {
+    max-height:50%;
+    overflow: auto;
+  }
 }
 
 #gn-new-metadata-container {

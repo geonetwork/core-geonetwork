@@ -1,9 +1,11 @@
 <div>
   <form id="gn-upload-onlinesrc" class="form-horizontal" role="form"
-     method="POST" enctype="multipart/form-data" action="resource.upload.and.link"
+     method="POST" enctype="multipart/form-data" action="metadata.thumbnail.set.new"
      data-file-upload="onlinesrcUploadOptions">
      
     <div class="onlinesrc-container">
+    
+      <!-- mode switcher -->
       <div class="form-group" >
         <div class="btn-group col-sm-offset-2 col-sm-10">
           <button type="button" class="btn btn-default"
@@ -13,6 +15,17 @@
             data-ng-class="{'btn-primary': mode == 'upload'}"
             data-ng-click="mode = 'upload'">upload</button>
         </div>
+      </div>
+      
+      <!-- Hidden filed -->
+      <div class="hidden">
+        <input name="scalingDir" value="width">
+        <input name="smallScalingDir" value="width">
+        <input name="type" value="large">
+        <input name="scalingFactor" value="1000">
+        <input name="smallScalingFactor" value="180">
+        <input name="version" ng-model="params.version">
+        <input name="id" value="11"/>
       </div>
       
       <!-- URL text field -->
@@ -36,68 +49,42 @@
               class="btn btn-success btn-block fileinput-button" ng-class="{disabled: disabled}">
               <i class="fa fa-plus fa fa-white"/>
               <span data-translate="">chooseOnlinesrc</span>
-              <input type="file" id="gn-onlinesrc-file" name="filename" multiple="false"
+              <input type="file" id="gn-onlinesrc-file" name="fname" multiple="false"
                 ng-disabled="disabled"/>
             </span>
             
             <ul>
-              <li data-ng-repeat="file in queue">{{file.name}} ({{file.type}} / {{file.size | formatFileSize}}) <i
+              <li data-ng-repeat="file in queue">
+              <div class="preview" >
+                        <a data-ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery><img data-ng-src="{{file.thumbnailUrl}}" alt=""></a>
+                    </div>
+              <div class="preview" data-file-upload-preview="file"></div>{{file.name}} ({{file.type}} / {{file.size | formatFileSize}}) <i
                   class="fa fa-trash-o" data-ng-click="clear(file)"/>
               </li>
             </ul>
               <div class="checkbox">
-                <label>overwrite <input type="checkbox" name="overwrite">
+                <label>Create small <input type="checkbox" name="createSmall">
                 </label>
               </div>
-              <input name="process" value="onlinesrc-add" data-ng-hide="true"/>
-            <input name="id" value="22" data-ng-hide="true"/>
             </div>
           </div>
         </div>
       </div>
-      <div class="form-group">
-        <label for="onlinesrcName" class="col-sm-2 control-label">Name</label>
-        <div class="col-sm-10">
-          <input ng-model="params.name" name="name" class="form-control"
-            id="onlinesrcName" placeholder="Name" data-ng-required="">
-        </div>
-      </div>
-      
-      <!-- Protocol Combo -->
-      <div class="form-group" data-ng-show="mode == 'url'">
-        <label for="protocol" class="col-sm-2 control-label">Protocol</label>
-        <div class="col-sm-10" protocols-combo 
-          data-protocol="params.protocol" 
-          lang="lang"></div>
-      </div>
       
       <!-- Description Text area -->
-      <div class="form-group">
+      <div class="form-group" data-ng-show="mode == 'url'">
         <label for="onlinesrcDescr" class="col-sm-2 control-label">Description</label>
         <div class="col-sm-10">
           <textarea rows="3" ng-model="params.desc"
             class="form-control" id="onlinesrcDescr"
-            placeholder="Description" name="description" />
+            placeholder="Description" name="thumbnail_desc" />
         </div>
       </div>
-
-      <!-- Refresh Grid Button -->
-      <button type="button" class="btn navbar-btn btn-warning"
-        data-ng-click="loadWMSCapabilities()" data-ng-show="isWMSProtocol && mode == 'url'">
-        <i class="fa fa-refresh" /> <span data-translate=""></span>
-      </button>
-
-      <!-- Layers grid directive -->
-      <div data-gn-layers-grid 
-        data-ng-show="isWMSProtocol && mode == 'url'"
-        data-gn-selection-mode="multiple"
-        data-layers="layers"
-        data-selection="params.layers"></div>
   </form>
   <div class="">
     <button type="button" class="btn navbar-btn btn-success"
-      data-ng-click="addOnlinesrc()">
-      <i class="fa fa-archive" /> <span data-translate="">addOnlinesrc</span>
+      data-ng-click="addThumbnail()">
+      <i class="fa fa-picture-o" /> <span data-translate="">addThumbnail</span>
     </button>
   </div>
 

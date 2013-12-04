@@ -11,21 +11,21 @@
     function Metadata(k) {
       this.props = $.extend(true, {}, k);
     };
-    
+
     function formatLink(sLink) {
       var linkInfos = sLink.split('|');
       return {
-          name: linkInfos[1],
-          url: linkInfos[2],
-          desc: linkInfos[0],
-          protocol: linkInfos[3],
-          contentType: linkInfos[4]
+        name: linkInfos[1],
+        url: linkInfos[2],
+        desc: linkInfos[0],
+        protocol: linkInfos[3],
+        contentType: linkInfos[4]
       };
     }
     function parseLink(sLink) {
-      
+
     };
-    
+
     Metadata.prototype = {
       getUuid: function() {
         return this.props['geonet:info'].uuid;
@@ -37,7 +37,7 @@
         var ret = [];
         angular.forEach(this.props.link, function(link) {
           var linkInfo = formatLink(link);
-          if(linkInfo.protocol.indexOf(type) >= 0 ){
+          if (linkInfo.protocol.indexOf(type) >= 0) {
             ret.push(linkInfo);
           }
         });

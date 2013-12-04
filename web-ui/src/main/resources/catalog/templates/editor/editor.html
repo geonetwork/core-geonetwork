@@ -19,7 +19,7 @@
         <div class="panel-body">
 
           <a href=""
-            data-toggle="modal" data-target=""> <i
+            data-toggle="modal" data-target="#addthumbnail-popup"> <i
             class="fa fa-picture-o"></i> <i class="icon-external-link"></i> <span
             data-translate="">Add a Thumbnail</span>
           </a> <br> <a href=""
@@ -36,10 +36,13 @@
             class="icon-external-link"></i> <span data-translate="">Link
               to a service</span>
           </a> <br> <a href=""
-            data-toggle="modal" data-target="">
-            <i class="fa fa-files-o"></i> <i class="icon-external-link"></i>
-            <span data-translate="">Link to a Dataset</span>
-          </a>
+            data-toggle="modal" data-target="#linktodataset-popup">
+            <i class="fa fa-files-o"></i> <i
+            class="icon-external-link"></i> <span data-translate="">Link
+              to a Dataset</span>
+          </a> 
+          
+          <div gn-onlinesrc-list=""></div>
 
         </div>
       </div>
@@ -59,6 +62,12 @@
   </div>
 
   <div data-gn-modal="" class="onlinesrc-popup"
+    data-gn-popup-options="{title:'Ajout de Thumbnail'}"
+    id="addthumbnail-popup">
+    <div data-gn-add-thumbnail="" class="add-thumbnail"></div>
+  </div>
+
+  <div data-gn-modal="" class="onlinesrc-popup"
     data-gn-popup-options="{title:'Ajout de resource en ligne'}"
     id="addonlinesrc-popup">
     <div data-gn-add-onlinesrc="" class="add-onlinesrc"></div>
@@ -73,8 +82,15 @@
   <div data-gn-modal="" class="onlinesrc-popup"
     data-gn-popup-options="{title:'Link to a Service'}"
     id="linktoservice-popup">
-    <div data-gn-link-to-service="" id="link-to-service"
+    <div data-gn-link-service-to-dataset="attachService" id="link-to-service"
       class="link-service-md"></div>
+  </div>
+
+  <div data-gn-modal="" class="onlinesrc-popup"
+    data-gn-popup-options="{title:'Link to a Dataset'}"
+    id="linktodataset-popup">
+    <div data-gn-link-service-to-dataset="coupledResource" id="link-to-dataset"
+      class="link-dataset-md"></div>
   </div>
 
 </div>

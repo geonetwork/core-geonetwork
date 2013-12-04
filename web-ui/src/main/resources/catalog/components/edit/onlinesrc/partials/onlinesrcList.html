@@ -1,0 +1,30 @@
+<div>
+  <!-- Display Thumnails -->
+  <ul class="list-inline">
+    <li ng-repeat="thumb in relations.thumbnail">
+      <img  class="thumb-small" data-ng-src="{{thumb.id}}" />
+      <a href="" ng-click="onlinesrcService.removeThumbnail(thumb.title)">remove</a>
+    </li>
+  </ul>
+  
+  
+  
+  <!-- List of online resources -->
+  <h4><span data-translate="">onlinesrc</span></h4>
+  <div
+    ng-repeat="resource in relations.onlinesrc | orderBy:'title'"
+    ng-click="">{{resource.title}}</div>
+    
+  <!-- List of datasets -->
+  <h4><span data-translate="">dataset</span></h4>
+  <li
+    ng-repeat="resource in relations.datasets | orderBy:'title'"
+    ng-click="">{{resource.title}}</li>
+    
+  <!-- List of services -->
+  <h4><span data-translate="">service</span></h4>
+  <li
+    ng-repeat="resource in relations.services | orderBy:'title'"
+    ng-click="">{{resource.title}}</li>
+    
+</div>
