@@ -366,7 +366,7 @@ cat.app = function() {
 			sortByStore : new Ext.data.ArrayStore({
 				id: 0,
 				fields: ['id', 'name'],
-				data: [['relevance#', OpenLayers.i18n('relevance')], 
+				data: [['popularity#', OpenLayers.i18n('popularity')], 
 	                    ['title#reverse', OpenLayers.i18n('title')], 
 	                    ['changeDate#', OpenLayers.i18n('changeDate')]]
 	        }),
