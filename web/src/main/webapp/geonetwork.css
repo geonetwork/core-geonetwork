@@ -1409,3 +1409,70 @@ div#privileges {
   padding: 4px;
 }
 
+
+div.metadataValidation form {
+	width: 35%;
+	float: left;
+	display: inline-block;
+}
+
+div.metadataValidation form div {
+}
+
+div.metadataValidation form div label {
+	width: 25%;
+	text-align: right;
+	float: left;
+}
+div.metadataValidation form div select, div.metadataValidation form div input {
+	width: 70%;
+}
+
+div.metadataValidation div.xpath.list {
+	float: right;
+	width: 60%;
+}
+
+div.metadataValidation div.xpath.list th {
+	min-width: 60px;
+	background-color: #266397;
+	color: white;
+}
+
+div.metadataValidation div.xpath.list th, div.metadataValidation div.xpath.list td {
+	border: 1px solid grey;
+	padding: 3px;
+}
+div.metadataValidation div.xpath.list td span.required {
+	width: 16px;
+	height: 16px;
+	background-image: url(images/score.png);
+	background-repeat: no-repeat;
+	display: block;
+	margin: auto;
+}div.metadataValidation div.xpath.list td span.optional {
+	width: 16px;
+	height: 16px;
+	background-image: url(images/scoreno.png);
+	background-repeat: no-repeat;
+	display: block;
+	margin: auto;
+}div.metadataValidation div.xpath.list td a.remove {
+	width: 9px;
+	height: 16px;
+	background-image: url(images/del.gif);
+	background-repeat: no-repeat;
+	display: block;
+	margin: auto;
+}
+div.metadataValidation div.xpath.list tr.newschema {
+	border-top: 4px solid;
+}
+div.metadataValidation div.xpath.list tr {
+	border-right: 2px solid;
+	border-left: 2px solid;
+}
+div.metadataValidation div.xpath.list tbody {
+	border-top: 2px solid;
+	border-bottom: 2px solid;
+}

@@ -27,6 +27,7 @@
 
 package org.fao.geonet.kernel.schema;
 
+import static org.fao.geonet.services.metadata.schema.Validation.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -36,12 +37,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.services.metadata.schema.Validation;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.springframework.beans.factory.annotation.Autowired;
 
 //==============================================================================
 
@@ -50,9 +55,9 @@ public class MetadataSchema
 	private static final String XSL_FILE_EXTENSION = ".xsl";
     private static final String SCH_FILE_EXTENSION = ".sch";
     private Map<String,List<String>> hmElements = new HashMap<String,List<String>>();
-	private Map<String,List<List>> hmRestric  = new HashMap<String,List<List>>();
+	private Map<String,List<List<String>>> hmRestric  = new HashMap<String,List<List<String>>>();
 	private Map<String, MetadataType> hmTypes    = new HashMap<String, MetadataType>();
-	private Map<String, List> hmSubs		 = new HashMap<String, List>();
+	private Map<String, List<String>> hmSubs		 = new HashMap<String, List<String>>();
 	private Map<String, String> hmSubsLink = new HashMap<String, String>();
 	private Map<String,Namespace> hmNameSpaces = new HashMap<String,Namespace>();
 	private Map<String,Namespace> hmPrefixes = new HashMap<String,Namespace>();
@@ -211,7 +216,7 @@ public class MetadataSchema
 
     //---------------------------------------------------------------------------
 
-	public ArrayList getElementValues(String elem,String parent) throws Exception
+	public List<String> getElementValues(String elem,String parent) throws Exception
 	{
 
 		String type = getElementType(elem,parent);
@@ -220,14 +225,14 @@ public class MetadataSchema
 
 		// two cases here - if we have just one element with this name 
 		// then return its values
-		List<List> childValues = hmRestric.get(restricName);
+		List<List<String>> childValues = hmRestric.get(restricName);
 		if (childValues == null) return null;
-		if (childValues.size() == 1) return (ArrayList)childValues.get(0);
+		if (childValues.size() == 1) return childValues.get(0);
 
 		// OTHERWISE we don't know what to do so return the first one anyway! This
 		// should not happen....
 		Logger.log();
-		return (ArrayList)childValues.get(0);
+		return childValues.get(0);
 	}
 
 	//---------------------------------------------------------------------------
@@ -236,7 +241,7 @@ public class MetadataSchema
 	//---
 	//---------------------------------------------------------------------------
 
-	void addElement(String name, String type, List alValues, List alSubs, String subLink)
+	void addElement(String name, String type, List<String> alValues, List<String> alSubs, String subLink)
 	{
 		// first just add the subs - because these are for global elements we 
 		// never have a clash because global elements are all in the same scope
@@ -264,13 +269,13 @@ public class MetadataSchema
 		if (type != null) restricName = name+"+"+type;
 
 		// it's already there
-		List<List> exValues = hmRestric.get(restricName);
+		List<List<String>> exValues = hmRestric.get(restricName);
 		if (exValues != null) {
 			Logger.log();
 
 		// it's not there so add a new list of lists
 		} else {
-			hmRestric .put(restricName, exValues = new ArrayList<List>());
+			hmRestric .put(restricName, exValues = new ArrayList<List<String>>());
 		}
 		exValues.add(alValues);
 	}
@@ -371,11 +376,32 @@ public class MetadataSchema
 	 * 
 	 * @return
 	 */
-	public void loadSchematronRules(String basePath) {
+	public void loadSchematronRules(String basePath) throws Exception {
 	    // Compile schema schematron rules
 	    buildchematronRules(basePath);
 	    
 		String saSchemas[] = new File(schemaDir + File.separator + "schematron").list(new SchematronReportRulesFilter());
+
+
+        ServiceContext context = ServiceContext.get();
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+        if(saSchemas != null) {
+            for(String s : saSchemas) {
+                String file = schemaDir + File.separator + "schematron" + File.separator + s;
+
+                final List<Element> schematronRulesInFile =
+                        dbms.select("select * from " + TABLE_SCHEMATRON + " where file=?", file).getChildren();
+
+                //if schematron not already exists
+                if(schematronRulesInFile.isEmpty()) {
+                    int id = context.getSerialFactory().getSerial(dbms, TABLE_SCHEMATRON, COL_SCHEMATRON_ID);
+                    dbms.execute("insert into "+TABLE_SCHEMATRON+" ("+COL_SCHEMATRON_ID+","+COL_SCHEMATRON_FILE+","+
+                    COL_SCHEMATRON_ISO_SCHEMA+","+COL_SCHEMATRON_REQUIRED+") values ?,?,?,?", id, file, schemaName, true);
+                }
+            }
+        }
+
 		setSchematronRules(saSchemas);
 	}
 
@@ -383,13 +409,13 @@ public class MetadataSchema
 	 * Schematron rules filename is like "schematron-rules-iso.xsl
 	 * 
 	 */
-	private class SchematronReportRulesFilter implements FilenameFilter {
+	private static class SchematronReportRulesFilter implements FilenameFilter {
 		public boolean accept(File directory, String filename) {
             return filename.startsWith(SCHEMATRON_RULE_FILE_PREFIX)
                     && filename.endsWith(XSL_FILE_EXTENSION);
         }
 	}
-	private class SchematronReportRulesSCHFilter implements FilenameFilter {
+	private static class SchematronReportRulesSCHFilter implements FilenameFilter {
         public boolean accept(File directory, String filename) {
             return filename.startsWith(SCHEMATRON_RULE_FILE_PREFIX)
                     && filename.endsWith(SCH_FILE_EXTENSION);
@@ -400,11 +426,17 @@ public class MetadataSchema
 	 * @return
 	 */
 	public String[] getSchematronRules() {
-		return schematronRules;
+		if(schematronRules != null) {
+			return this.schematronRules.clone() ;
+		} else {
+			return new String[]{};
+	}
 	}
 
 	private void setSchematronRules(String[] schematronRules) {
-		this.schematronRules = schematronRules;
+	    if(schematronRules != null) {
+	        this.schematronRules = schematronRules.clone();
+	}
 	}
 
 	// -- this info for profile detection methods

@@ -378,7 +378,7 @@ public class SchemaLoader
 	private ComplexTypeEntry handleLocalElement(Integer elementNr, String baseName, ElementEntry ee, MetadataType mdt, MetadataSchema mds) {
 
 		ComplexTypeEntry cteInt = null;
-		ArrayList<Object> elemRestr = new ArrayList<Object>();
+		ArrayList<String> elemRestr = new ArrayList<String>();
 
 		if (ee.type == null) {
 			if (ee.complexType != null) {
@@ -395,7 +395,7 @@ public class SchemaLoader
 			} 
 		}
 
-		mds.addElement(ee.name, ee.type, elemRestr, new ArrayList(), "");
+		mds.addElement(ee.name, ee.type, elemRestr, new ArrayList<String>(), "");
 		mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
 
 		return(cteInt);

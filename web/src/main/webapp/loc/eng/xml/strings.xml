@@ -894,6 +894,7 @@
 	<isoCore>ISO Core</isoCore>
 	<isoMinimum>ISO Minimum</isoMinimum>
 	<keyword>keyword</keyword>
+	<capitalKeyword>keyword</capitalKeyword>
 	<keywords js="true">Keywords</keywords>
 	<keywordshelp>Select multiple keywords by holding the Ctrl-key when selecting with the mouse</keywordshelp>
 	<kind>Kind</kind>
@@ -1207,6 +1208,14 @@
 	<toDateSelector>Select TO date</toDateSelector>
 	<tools>Tools</tools>
 	<topic>Topic</topic>
+	<metadataschemaValidate>Validation</metadataschemaValidate>
+	<metadataschemaValidateDes>Configure what rules are applied for each schema metadata. If no rule defined for a schema, it will be applied always.</metadataschemaValidateDes>
+	<xpathlabel>xPath</xpathlabel>	
+	<xpathvalue>Value</xpathvalue>
+	<xpathrequired>Required</xpathrequired>
+	<xpathschematron>Schematron</xpathschematron>
+	<xpathconfirm>Are you sure you want to remove this criteria?</xpathconfirm>
+
 	<transferOwnership>Transfer ownership</transferOwnership>
 	<transferOwnershipDes>Transfer metadata ownership to another user</transferOwnershipDes>
 	<type js="true">Type</type>
