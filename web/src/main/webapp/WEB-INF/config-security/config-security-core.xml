@@ -108,6 +108,7 @@
 		<property name="passwordParameter" value="password" />
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="filterProcessesUrl" value="/j_spring_security_check" />
+		<property name="authenticationDetailsSource" ref="authenticationDetailsSource" />
 		<property name="authenticationFailureHandler">
 			<bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
 				<constructor-arg value="/login.jsp?failure=true"></constructor-arg>
@@ -128,7 +129,11 @@
 		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="authenticationEntryPoint" ref="basicAuthenticationEntryPoint" />
+        <property name="authenticationDetailsSource" ref="authenticationDetailsSource" />
 	</bean>
+
+	<bean id="authenticationDetailsSource"
+		class="jeeves.config.springutil.JeevesAuthenticationDetailSource"/>
 
 	<bean id="basicAuthenticationEntryPoint"
 		class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
