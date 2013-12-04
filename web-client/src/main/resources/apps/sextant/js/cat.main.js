@@ -779,6 +779,12 @@ cat.app = function() {
 						+ (1000 * 60 * 60 * 24 * 365)),
 				path: cookiePath
 			});
+			
+			// If we are reading a permalink, we overwrite all cookies values
+			var permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
+			if(Object.keys(permalinkProvider.state).length > 0) {
+			    cookie.state = permalinkProvider.state;
+			}
 			Ext.state.Manager.setProvider(cookie);
 			
 			// Create connexion to the catalogue
