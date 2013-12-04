@@ -216,7 +216,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             mode: 'local',
             id: 'sortByToolBar',
             triggerAction: 'all',
-            value: 'relevance#',
+            value: 'popularity#',
             editable: false,
             width: 130,
             store: this.sortByStore || GeoNetwork.util.SearchFormTools.getSortByStore(),

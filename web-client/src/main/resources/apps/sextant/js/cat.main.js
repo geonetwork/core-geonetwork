@@ -483,7 +483,7 @@ cat.app = function() {
 
 		var formItems = [];
 		var optionsPanel = GeoNetwork.util.SearchFormTools.getOptions(catalogue.services,
-				undefined);
+		        {sortBy: 'popularity#'});
 		optionsPanel.setVisible(false);
 		formItems.push(whereForm, whatForm, whoForm, whenForm, optionsPanel, ownerField, isHarvestedField, catalogueField);
 
