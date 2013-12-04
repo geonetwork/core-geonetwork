@@ -577,3 +577,12 @@ ul.x-menu-list {
     z-index: 1000;
     max-width:85%;
 }
+
+.deleted-reusable *{
+    background-color: #F6FF68;
+    background-image: none;
+
+}
+td.deleted-reusable {
+	background: #F6FF68;
+}
