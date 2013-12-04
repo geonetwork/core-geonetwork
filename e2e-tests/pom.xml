@@ -6,7 +6,7 @@
         <artifactId>geonetwork</artifactId>
         <version>2.11.0-SNAPSHOT</version>
     </parent>
-    <artifactId>geonetwork-e2e-tests</artifactId>
+    <artifactId>e2e-tests</artifactId>
     <packaging>pom</packaging>
     <name>GeoNetwork E2E Javascript Tests</name>
     <description> GeoNetwork integration testsuite. </description>
@@ -24,6 +24,8 @@
         <seleniumPort>4444</seleniumPort>
         <appPort>8844</appPort>
         <sslAppPort>8843</sslAppPort>
+        <jetty.stop.port>8012</jetty.stop.port>
+        <geonetworkWar>${project.build.directory}/geonetworkWar</geonetworkWar>
     </properties>
     <build>
         <plugins>
@@ -42,54 +44,6 @@
                         </fileset>
                     </filesets>
                 </configuration>
-            </plugin>
-            <plugin>
-                <configuration>
-                    <connectors>
-                        <contextXml>${basedir}/../jetty-context.xml</contextXml>
-                        <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
-                            <port>${appPort}</port>
-                            <maxIdleTime>60000</maxIdleTime>
-                            <requestHeaderSize>20000</requestHeaderSize>
-                        </connector>
-                        <connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
-                            <port>${jettySslPort}</port>
-                            <keystore>${project.basedir}/../web/keystore.jks</keystore>
-                            <password>password</password>
-                            <keyPassword>password</keyPassword>
-                            <truststore>${project.basedir}/../web/keystore.jks</truststore>
-                            <trustPassword>password</trustPassword>
-                            <maxIdleTime>60000</maxIdleTime>
-                            <requestHeaderSize>20000</requestHeaderSize>
-                        </connector>
-                    </connectors>
-                    <webApp>${geonetworkWar}/geonetwork-main.war</webApp>
-                    <webAppConfig>
-                        <contextPath>/geonetwork</contextPath>
-                    </webAppConfig>
-                    <stopKey>GEONETWORK_ITEST_STOP</stopKey>
-                    <stopPort>${jetty.stop.port}</stopPort>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>start-jetty</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>run-war</goal>
-                        </goals>
-                        <configuration>
-                            <scanIntervalSeconds>0</scanIntervalSeconds>
-                            <daemon>true</daemon>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>stop-jetty</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -162,10 +116,99 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
     <profiles>
+        <profile>
+            <id>runJettyDaemon</id>
+            <activation>
+                <property><name>!skipJettyRun</name></property>
+            </activation>
+            <properties>
+                <appPort>8080</appPort>
+                <sslAppPort>8443</sslAppPort>
+            </properties>
+                <build>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-dependency-plugin</artifactId>
+                            <version>2.4</version>
+                            <executions>
+                                <execution>
+                                    <id>copy-geonetwork-war</id>
+                                    <phase>generate-test-resources</phase>
+                                    <goals>
+                                        <goal>unpack</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                            <configuration>
+                                <artifactItems>
+                                    <artifactItem>
+                                        <groupId>${project.groupId}</groupId>
+                                        <artifactId>web-app</artifactId>
+                                        <version>${project.version}</version>
+                                        <type>war</type>
+                                    </artifactItem>
+                                </artifactItems>
+                                <outputDirectory>${geonetworkWar}</outputDirectory>
+                                <silent>true</silent>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.mortbay.jetty</groupId>
+                            <artifactId>jetty-maven-plugin</artifactId>
+                            <configuration>
+                                <contextXml>${project.basedir}/../web/jetty-context.xml</contextXml>
+                                <connectors>
+                                    <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
+                                        <port>${appPort}</port>
+                                        <maxIdleTime>60000</maxIdleTime>
+                                        <requestHeaderSize>20000</requestHeaderSize>
+                                    </connector>
+                                    <connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
+                                        <port>${sslAppPort}</port>
+                                        <keystore>${project.basedir}/../web/keystore.jks</keystore>
+                                        <password>password</password>
+                                        <keyPassword>password</keyPassword>
+                                        <truststore>${project.basedir}/../web/keystore.jks</truststore>
+                                        <trustPassword>password</trustPassword>
+                                        <maxIdleTime>60000</maxIdleTime>
+                                        <requestHeaderSize>20000</requestHeaderSize>
+                                    </connector>
+                                </connectors>
+                                <war>${geonetworkWar}</war>
+                                <webAppConfig>
+                                    <contextPath>/geonetwork</contextPath>
+                                </webAppConfig>
+                                <stopKey>GEONETWORK_ITEST_STOP</stopKey>
+                                <stopPort>${jetty.stop.port}</stopPort>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>start-jetty</id>
+                                    <phase>pre-integration-test</phase>
+                                    <goals>
+                                        <goal>run-war</goal>
+                                    </goals>
+                                    <configuration>
+                                        <scanIntervalSeconds>0</scanIntervalSeconds>
+                                        <daemon>true</daemon>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>stop-jetty</id>
+                                    <phase>post-integration-test</phase>
+                                    <goals>
+                                        <goal>stop</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </build>
+        </profile>
         <profile>
             <id>windows</id>
             <activation>
