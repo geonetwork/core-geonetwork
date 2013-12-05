@@ -72,6 +72,7 @@ public final class Edit{
 			public static final String CATEGORY    = "category";
 			public static final String SERVER      = "server";
 			public static final String COLLECTION  = "collection";
+			public static final String ABSTRACT    = "abstract";
 			public static final String HTML        = "html";
 			public static final String IS_TEMPLATE = "isTemplate";
 			public static final String TITLE       = "title";

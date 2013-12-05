@@ -4,6 +4,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -12,6 +13,8 @@ import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetadataRecordSelector;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.util.MarkupParserCache;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 
 import java.util.Collections;
@@ -77,6 +80,15 @@ public class SelectionManager {
             if (element.getName().equals(Geonet.Elem.SUMMARY)) {
                 continue;
             }
+            String absOrigin = element.getChildText(Edit.Info.Elem.ABSTRACT);
+            if(absOrigin != null) {
+                MarkupParser markupParser = MarkupParserCache.lookup("org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage");
+                String absWiki = XslUtil.parseMarkupToText(absOrigin, markupParser);
+                
+                Element absElt = element.getChild("abstract");
+                absElt.setText(absWiki);
+            }
+           
             Element info = element.getChild(Edit.RootChild.INFO,
                     Edit.NAMESPACE);
             String uuid = info.getChildText(Edit.Info.Elem.UUID);
@@ -88,6 +100,8 @@ public class SelectionManager {
                 info.addContent(new Element(Edit.Info.Elem.SELECTED)
                         .setText("false"));
             }
+            
+
         }
 		result.setAttribute(Edit.Info.Elem.SELECTED, Integer
 				.toString(selection.size()));
