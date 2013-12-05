@@ -90,7 +90,7 @@ public class Validation implements Service {
             final String value = Util.getParam(params, "value");
 
             dbms.execute("insert into "+TABLE_SCHEMATRON_CRITERIA+" ("+ COL_CRITERIA_ID +","+ COL_CRITERIA_SCHEMATRON_ID +","+ COL_CRITERIA_TYPE +","
-                         + COL_CRITERIA_VALUE +",) values ?,?,?,?", id, schematronId, type, value);
+                         + COL_CRITERIA_VALUE +",) values (?,?,?,?)", id, schematronId, type, value);
 
 		}
 

@@ -309,6 +309,7 @@
 		<service name="metadata.quiet.delete">
 			<class name=".services.metadata.Delete" />
 			<output forward="admin" />
+        </service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 

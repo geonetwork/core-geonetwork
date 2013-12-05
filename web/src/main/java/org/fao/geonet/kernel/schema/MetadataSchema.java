@@ -397,7 +397,7 @@ public class MetadataSchema
                 if(schematronRulesInFile.isEmpty()) {
                     int id = context.getSerialFactory().getSerial(dbms, TABLE_SCHEMATRON, COL_SCHEMATRON_ID);
                     dbms.execute("insert into "+TABLE_SCHEMATRON+" ("+COL_SCHEMATRON_ID+","+COL_SCHEMATRON_FILE+","+
-                    COL_SCHEMATRON_ISO_SCHEMA+","+COL_SCHEMATRON_REQUIRED+") values ?,?,?,?", id, file, schemaName, true);
+                    COL_SCHEMATRON_ISO_SCHEMA+","+COL_SCHEMATRON_REQUIRED+") values (?,?,?,?)", id, file, schemaName, true);
                 }
             }
         }
