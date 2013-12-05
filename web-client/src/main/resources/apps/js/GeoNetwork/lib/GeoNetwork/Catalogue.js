@@ -1211,7 +1211,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         	}, 500);
         } else {
         	var params = {username: username, password: password};
-        	if (!this.node) {
+        	if (this.node) {
             	params.node = this.node;
             }
 			OpenLayers.Request.POST({

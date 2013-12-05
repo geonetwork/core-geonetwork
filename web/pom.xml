@@ -411,7 +411,13 @@
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
-    
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>web-ui</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+      
     <dependency>
 		<groupId>org.xhtmlrenderer</groupId>
 		<artifactId>flying-saucer-core</artifactId>
@@ -854,8 +860,13 @@
               <artifactId>geonetwork-client</artifactId>
               <type>jar</type>
             </overlay>
+            <overlay>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>web-ui</artifactId>
+                <type>jar</type>
+            </overlay>
           </overlays>
-          <!-- <packagingExcludes>WEB-INF/data/**</packagingExcludes> -->
+            <!-- <packagingExcludes>WEB-INF/data/**</packagingExcludes> -->
           <packagingExcludes>xml/schemas/**</packagingExcludes>
 <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
