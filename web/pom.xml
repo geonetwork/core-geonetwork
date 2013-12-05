@@ -89,10 +89,16 @@
           <artifactId>spring-tx</artifactId>
       </dependency>
       <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-web</artifactId>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-webmvc</artifactId>
+         <version>${spring.version}</version>
       </dependency>
-
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-web</artifactId>
+         <version>${spring.version}</version>
+      </dependency>
+ 
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>

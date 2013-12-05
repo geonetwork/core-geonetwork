@@ -35,14 +35,14 @@ import org.fao.geonet.utils.Log;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 //=============================================================================
 
@@ -201,6 +201,14 @@ public class JeevesServlet extends HttpServlet
 			Log.error(Log.REQUEST,sb.toString());
 			return;
 		}
+
+        // Set the language of the request as the preferred language in a cookie
+        final Cookie langCookie = new Cookie(Jeeves.LANG_COOKIE, srvReq.getLanguage());
+        langCookie.setMaxAge((int) TimeUnit.DAYS.toSeconds(7));
+        langCookie.setComment("Keeps the last language chosen to be the preferred language");
+        langCookie.setVersion(1);
+        langCookie.setPath("/");
+        res.addCookie(langCookie);
 
 		//--- execute request
 

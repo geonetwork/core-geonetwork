@@ -16,15 +16,12 @@
 		<constructor-arg>
 			<list>
 				<sec:filter-chain pattern="/apps/**" filters="" />
-			    <sec:filter-chain pattern="/catalog/**" filters="" />
-			    <sec:filter-chain pattern="/test/**" filters="" />
 				<sec:filter-chain pattern="/" filters="" />
 				<sec:filter-chain pattern="/*.html" filters="" />
 				<sec:filter-chain pattern="/*.jsp" filters="" />
 				<sec:filter-chain pattern="/*.css" filters="" />
 				<sec:filter-chain pattern="/images/**" filters="" />
 				<sec:filter-chain pattern="/maps/**" filters="" />
-				<sec:filter-chain pattern="/wmc/**" filters="" />
 				<sec:filter-chain pattern="/htmlcache/**" filters="" />
 				<sec:filter-chain pattern="/scripts/**" filters="" />
 				<sec:filter-chain pattern="/pdf/**" filters="" />
@@ -54,10 +51,10 @@
 			</bean>
 		</constructor-arg>
 		<constructor-arg>
-			<ref bean="filterChainFilters"/>
+			<ref bean="filter"/>
 		</constructor-arg>
 	</bean>
-	<bean id="filterChainFilters" class="java.util.ArrayList">
+	<bean id="filter" class="java.util.ArrayList">
 		<constructor-arg>
 			<list>
 				<ref bean="securityContextPersistenceFilter" />
@@ -71,6 +68,7 @@
 				<ref bean="anonymousFilter" />
 				<ref bean="sessionMgmtFilter" />
 				<ref bean="exceptionTranslationFilter" />
+				<ref bean="overridefilterSecurityInterceptor" />
 				<ref bean="filterSecurityInterceptor" />
 			</list>
 		</constructor-arg>
@@ -190,6 +188,7 @@
 	
 	    <!-- Note: the id is critical since other components of the system will look up the encoder by its id -->
     <bean class="org.springframework.security.crypto.password.StandardPasswordEncoder" id="geonetworkEncoder">
+        <constructor-arg value="SHA-256"/>
         <constructor-arg value="${passwordSalt}"/>
     </bean>
 
@@ -230,5 +229,8 @@
 	<!-- This bean is here to allow evaluation permissions of the current user by Geonetwork -->
 	<bean id="webPrivilegeEvaluatorCore" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
 		<constructor-arg ref="filterSecurityInterceptor"/>
+	</bean>
+	<bean id="overrideWebPrivilegeEvaluator" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
+		<constructor-arg ref="overridefilterSecurityInterceptor"/>
 	</bean>
 </beans>

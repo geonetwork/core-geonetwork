@@ -1431,4 +1431,5 @@ Kuvailujen tekemiseksi tarvitset käyttäjätunnuksen. Pyydä se osoitteesta <a 
 	<welcome.text>Welcome to GeoNetwork</welcome.text>
 	<tag_label>Tags</tag_label>
 	<map_label>Map</map_label>
+    <unknown>Unknown</unknown>
 </strings>
