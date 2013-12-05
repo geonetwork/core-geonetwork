@@ -375,10 +375,6 @@
 
 	<services package="org.fao.geonet">
 
-		<service name="home">
-			<output sheet="home.xsl"/>
-		</service>
-
 		<service name="strings.js">
 			<output sheet="strings.xsl" contentType="application/json"/>
 		</service>

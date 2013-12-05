@@ -1328,4 +1328,5 @@ vaatimusten täyttämiseksi ilmoitetaan seuraavat kaksi metatietoelementtiä:
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+    <unknown>Unknown</unknown>
 </strings>

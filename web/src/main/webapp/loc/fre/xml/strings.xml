@@ -1712,4 +1712,5 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	
     <advancedOptions.show>Recherche avancée</advancedOptions.show>
     <advancedOptions.hide>Recherche simple</advancedOptions.hide>
+    <unknown>Unknown</unknown>
 </strings>

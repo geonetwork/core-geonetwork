@@ -1672,4 +1672,5 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 	<monitor>Monitor</monitor>
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+    <unknown>Unknown</unknown>
 </strings>
