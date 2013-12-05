@@ -18,7 +18,7 @@
         <serverStage>production</serverStage>
     </properties>
     <file name=".*/WEB-INF/config.xml">
-        <replaceText xpath="default/language">eng</replaceText>
+        <replaceText xpath="default/language">ger</replaceText>
         <replaceAtt xpath="appHandler/param[@name = 'preferredSchema']" attName="value" value="iso19139.che"/>
         <replaceAtt xpath="appHandler/param[@name = 'useSubversion']" attName="value" value="false"/>
         <replaceAtt xpath="appHandler/param[@name = 'maxWritesInTransaction']" attName="value" value="1"/>

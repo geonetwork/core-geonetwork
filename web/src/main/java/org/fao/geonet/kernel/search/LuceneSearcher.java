@@ -24,7 +24,7 @@
 package org.fao.geonet.kernel.search;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Ranges;
+import com.google.common.collect.Range;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 import java.io.IOException;
@@ -119,11 +119,7 @@ import org.jdom.Element;
 
 import java.util.Iterator;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Ranges;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
 
 /**
  * search metadata locally using lucene.
@@ -475,7 +471,7 @@ public class LuceneSearcher extends MetaSearcher {
 		
 		// Filter values which does not reach the threshold
 		if (threshold > 1) {
-			Map<String, Integer> filteredMap = Maps.filterValues(finalValuesMap, Ranges.atLeast(threshold));
+			Map<String, Integer> filteredMap = Maps.filterValues(finalValuesMap, Range.atLeast(threshold));
 			// Push map content to collection
 			finalValues.addAll(filteredMap.keySet());
 			
