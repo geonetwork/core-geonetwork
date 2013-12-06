@@ -27,6 +27,7 @@
 
 package org.fao.geonet.domain;
 
+import org.jdom.Element;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Period;
@@ -54,7 +55,7 @@ import static java.util.Calendar.*;
  * </p>
  */
 @Embeddable
-public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
+public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, XmlEmbeddable {
     private static final String DEFAULT_DATE_TIME = "3000-01-01T00:00:00.000Z"; // JUNK Value
 
     // Pattern to check dates
@@ -511,5 +512,14 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable {
     @Override
     public int compareTo(ISODate o) {
         return _calendar.compareTo(o._calendar);
+    }
+
+    @Override
+    public void addToXml(Element element) {
+        if (isDateOnly()) {
+            element.addContent(getDateAsString());
+        } else {
+            element.addContent(getDateAndTime());
+        }
     }
 }

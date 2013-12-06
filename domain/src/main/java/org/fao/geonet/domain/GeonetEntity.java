@@ -77,6 +77,8 @@ public class GeonetEntity {
             final Element element1 = ((GeonetEntity) rawData).asXml();
             final List list = element1.removeContent();
             element.addContent(list);
+        } else if (rawData instanceof XmlEmbeddable) {
+            ((XmlEmbeddable) rawData).addToXml(element);
         } else if (hasEmbeddableAnnotation(rawData)) {
             final Element element1 = asXml(rawData);
             final List list = element1.removeContent();
