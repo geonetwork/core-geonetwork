@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.geonetwork-opensource</groupId>
@@ -9,7 +10,7 @@
     <artifactId>e2e-tests</artifactId>
     <packaging>pom</packaging>
     <name>GeoNetwork E2E Javascript Tests</name>
-    <description> GeoNetwork integration testsuite. </description>
+    <description>GeoNetwork integration test suite.</description>
     <licenses>
         <license>
             <name>General Public License (GPL)</name>
@@ -21,9 +22,64 @@
 
     <properties>
         <protractorConfig>${basedir}/target/protractor</protractorConfig>
-        <seleniumPort>4444</seleniumPort>
-        <appPort>8844</appPort>
-        <sslAppPort>8843</sslAppPort>
+        <baseProtractorConfig>  // ----- How to setup Selenium -----
+            //
+            // There are three ways to specify how to use Selenium. Specify one of the
+            // following:
+            //
+            // 1. seleniumServerJar - to start Selenium Standalone locally.
+            // 2. seleniumAddress - to connect to a Selenium server which is already
+            //    running.
+            // 3. sauceUser/sauceKey - to use remote Selenium servers via SauceLabs.
+
+            // The location of the selenium standalone server .jar file.
+            seleniumServerJar: '@project.basedir@/node_modules/selenium-server/lib/runner/selenium-server-standalone-2.35.0.jar',
+
+            // Chromedriver location is used to help the selenium standalone server
+            // find chromedriver.
+            //
+            // The binaries are in the chromedriver submodule and the correct driver
+            // is selected by the maven profile activated by the current platform
+            chromeDriver: '@chromedriver@',
+
+            // than the maximum time your application needs to stabilize between tasks.
+            allScriptsTimeout: 11000,
+
+            // ----- Capabilities to be passed to the webdriver instance ----
+            //
+            // For a full list of available capabilities, see
+            // https://code.google.com/p/selenium/wiki/DesiredCapabilities
+            // and
+            // https://code.google.com/p/selenium/source/browse/javascript/webdriver/capabilities.js
+            capabilities: {
+                'browserName': 'chrome'
+            },
+
+            // ----- More information for your tests ----
+            //
+            // A base URL for your application under test. Calls to protractor.get()
+            // with relative paths will be prepended with this.
+            baseUrl: 'http://localhost:${appPort}/geonetwork/srv/eng/',
+
+            // ----- Options to be passed to minijasminenode -----
+            //
+            // See the full list at https://github.com/juliemr/minijasminenode
+            jasmineNodeOpts: {
+                // onComplete will be called just before the driver quits.
+                onComplete: null,
+                // If true, display spec names.
+                isVerbose: false,
+                // If true, print colors to the terminal.
+                showColors: false,
+                // If true, include stack traces in failures.
+                includeStackTrace: true,
+                // Default time to wait in ms before a test fails.
+                defaultTimeoutInterval: 30000
+            }
+        </baseProtractorConfig>
+
+        <appPort>8080</appPort>
+        <sslAppPort>8443</sslAppPort>
         <jetty.stop.port>8012</jetty.stop.port>
         <geonetworkWar>${project.build.directory}/geonetworkWar</geonetworkWar>
     </properties>
@@ -50,20 +106,40 @@
                 <version>2.6</version>
                 <executions>
                     <execution>
-                        <id>copy-resources</id>
-                        <phase>process-test-resources</phase>
+                        <id>protractor-config-first-copy</id>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${protractorConfig}</outputDirectory>
-                            <resources>          
+                            <delimiters>
+                                <delimiter>${*}</delimiter>
+                            </delimiters>
+                            <outputDirectory>${project.build.outputDirectory}/combinedProtractorTemplate</outputDirectory>
+                            <resources>
                                 <resource>
                                     <directory>protractorConfig</directory>
                                     <filtering>true</filtering>
                                 </resource>
-                            </resources>              
-                        </configuration>            
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>protractor-config-second-copy</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <delimiters></delimiters>
+                            <outputDirectory>${protractorConfig}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.outputDirectory}/combinedProtractorTemplate</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -100,16 +176,16 @@
                 <version>1.2.1</version>
                 <executions>
                     <execution>
-                        <id>run_protractor_tests</id>
+                        <id>run_protractor_admin_tests</id>
                         <goals>
                             <goal>exec</goal>
                         </goals>
                         <phase>integration-test</phase>
                         <configuration>
-                            <executable>${project.basedir}${file.separator}node${file.separator}node</executable>
+                            <executable>${project.basedir}/node/node</executable>
                             <arguments>
-                                <argument>${project.basedir}${file.separator}node_modules/${file.separator}rotractor${file.separator}lib${file.separator}cli.js</argument>
-                                <argument>${protractorConfig}${file.separator}protractorConf.js</argument>
+                                <argument>${project.basedir}/node_modules/protractor/lib/cli.js</argument>
+                                <argument>${protractorConfig}/test-admin-cfg.js</argument>
                             </arguments>
                             <workingDirectory>${project.basedir}</workingDirectory>
                         </configuration>
@@ -122,92 +198,94 @@
         <profile>
             <id>runJettyDaemon</id>
             <activation>
-                <property><name>!skipJettyRun</name></property>
+                <property>
+                    <name>!skipJettyRun</name>
+                </property>
             </activation>
             <properties>
-                <appPort>8080</appPort>
-                <sslAppPort>8443</sslAppPort>
+                <appPort>8844</appPort>
+                <sslAppPort>8843</sslAppPort>
             </properties>
-                <build>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-dependency-plugin</artifactId>
-                            <version>2.4</version>
-                            <executions>
-                                <execution>
-                                    <id>copy-geonetwork-war</id>
-                                    <phase>generate-test-resources</phase>
-                                    <goals>
-                                        <goal>unpack</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                            <configuration>
-                                <artifactItems>
-                                    <artifactItem>
-                                        <groupId>${project.groupId}</groupId>
-                                        <artifactId>web-app</artifactId>
-                                        <version>${project.version}</version>
-                                        <type>war</type>
-                                    </artifactItem>
-                                </artifactItems>
-                                <outputDirectory>${geonetworkWar}</outputDirectory>
-                                <silent>true</silent>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.mortbay.jetty</groupId>
-                            <artifactId>jetty-maven-plugin</artifactId>
-                            <configuration>
-                                <contextXml>${project.basedir}/../web/jetty-context.xml</contextXml>
-                                <connectors>
-                                    <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
-                                        <port>${appPort}</port>
-                                        <maxIdleTime>60000</maxIdleTime>
-                                        <requestHeaderSize>20000</requestHeaderSize>
-                                    </connector>
-                                    <connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
-                                        <port>${sslAppPort}</port>
-                                        <keystore>${project.basedir}/../web/keystore.jks</keystore>
-                                        <password>password</password>
-                                        <keyPassword>password</keyPassword>
-                                        <truststore>${project.basedir}/../web/keystore.jks</truststore>
-                                        <trustPassword>password</trustPassword>
-                                        <maxIdleTime>60000</maxIdleTime>
-                                        <requestHeaderSize>20000</requestHeaderSize>
-                                    </connector>
-                                </connectors>
-                                <war>${geonetworkWar}</war>
-                                <webAppConfig>
-                                    <contextPath>/geonetwork</contextPath>
-                                </webAppConfig>
-                                <stopKey>GEONETWORK_ITEST_STOP</stopKey>
-                                <stopPort>${jetty.stop.port}</stopPort>
-                            </configuration>
-                            <executions>
-                                <execution>
-                                    <id>start-jetty</id>
-                                    <phase>pre-integration-test</phase>
-                                    <goals>
-                                        <goal>run-war</goal>
-                                    </goals>
-                                    <configuration>
-                                        <scanIntervalSeconds>0</scanIntervalSeconds>
-                                        <daemon>true</daemon>
-                                    </configuration>
-                                </execution>
-                                <execution>
-                                    <id>stop-jetty</id>
-                                    <phase>post-integration-test</phase>
-                                    <goals>
-                                        <goal>stop</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </build>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>2.4</version>
+                        <executions>
+                            <execution>
+                                <id>copy-geonetwork-war</id>
+                                <phase>generate-test-resources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>web-app</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>war</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${geonetworkWar}</outputDirectory>
+                            <silent>true</silent>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.mortbay.jetty</groupId>
+                        <artifactId>jetty-maven-plugin</artifactId>
+                        <configuration>
+                            <contextXml>${project.basedir}/../web/jetty-context.xml</contextXml>
+                            <connectors>
+                                <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
+                                    <port>${appPort}</port>
+                                    <maxIdleTime>60000</maxIdleTime>
+                                    <requestHeaderSize>20000</requestHeaderSize>
+                                </connector>
+                                <connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
+                                    <port>${sslAppPort}</port>
+                                    <keystore>${project.basedir}/../web/keystore.jks</keystore>
+                                    <password>password</password>
+                                    <keyPassword>password</keyPassword>
+                                    <truststore>${project.basedir}/../web/keystore.jks</truststore>
+                                    <trustPassword>password</trustPassword>
+                                    <maxIdleTime>60000</maxIdleTime>
+                                    <requestHeaderSize>20000</requestHeaderSize>
+                                </connector>
+                            </connectors>
+                            <war>${geonetworkWar}</war>
+                            <webAppConfig>
+                                <contextPath>/geonetwork</contextPath>
+                            </webAppConfig>
+                            <stopKey>GEONETWORK_E2E_TEST_STOP</stopKey>
+                            <stopPort>${jetty.stop.port}</stopPort>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start-jetty</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>run-exploded</goal>
+                                </goals>
+                                <configuration>
+                                    <scanIntervalSeconds>0</scanIntervalSeconds>
+                                    <daemon>true</daemon>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>stop-jetty</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>windows</id>

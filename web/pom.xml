@@ -973,6 +973,11 @@
                     <artifactId>wro4j</artifactId>
                     <version>${project.version}</version>
                 </dependency>
+                <dependency>
+                    <groupId>com.github.sommeri</groupId>
+                    <artifactId>less4j</artifactId>
+                    <version>1.2.1</version>
+                </dependency>
             </dependencies>
 
         </plugin>
