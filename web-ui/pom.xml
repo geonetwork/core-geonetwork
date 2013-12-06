@@ -40,7 +40,7 @@
   </properties>
     <profiles>
         <profile>
-            <id>e2e-tests</id>
+            <id>jasmine-unit-tests</id>
             <activation>
                 <property><name>!skipTests</name></property>
             </activation>
@@ -54,16 +54,18 @@
                             <execution>
                                 <id>jasmine-javascript-tests</id>
                                 <phase>test</phase>
-                                <goals>
+<!-- disable for now
+                               <goals>
                                     <goal>test</goal>
-                                </goals>
+                                </goals> -->
                             </execution>
                         </executions>
                         <configuration>
+                            <preloadSources></preloadSources>
                             <jsSrcDir>${project.basedir}/src/main/resources/catalog/js</jsSrcDir>
                             <jsTestSrcDir>${project.basedir}/src/test/jasmine</jsTestSrcDir>
                             <browserVersion>INTERNET_EXPLORER_9</browserVersion>
-                            <debug>true</debug>>
+                            <debug>true</debug>
                         </configuration>
                     </plugin>
                 </plugins>
