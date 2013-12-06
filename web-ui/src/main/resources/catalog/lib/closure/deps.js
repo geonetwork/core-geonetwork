@@ -15,6 +15,7 @@ goog.addDependency('../../components/common/dv/GaugeDirective.js', ['gn_gauge_di
 goog.addDependency('../../components/common/dv/GaugeModule.js', ['gn_gauge'], ['gn_gauge_directive']);
 goog.addDependency('../../components/common/languageswitcher/LanguageSwitcherDirective.js', ['gn_language_switcher_directive'], []);
 goog.addDependency('../../components/common/languageswitcher/LanguageSwitcherModule.js', ['gn_language_switcher'], ['gn_language_switcher_directive']);
+goog.addDependency('../../components/common/map/mapDirective.js', ['gn_map_directive'], []);
 goog.addDependency('../../components/common/multiselect/MultiselectDirective.js', ['gn_multiselect_directive'], []);
 goog.addDependency('../../components/common/multiselect/MultiselectModule.js', ['gn_multiselect'], ['gn_multiselect_directive']);
 goog.addDependency('../../components/common/ows/OWSDirective.js', ['gn_ows_directive'], []);
@@ -63,7 +64,7 @@ goog.addDependency('../../js/CatController.js', ['gn_cat_controller'], ['gn_sear
 goog.addDependency('../../js/GnAdminModule.js', ['gn_admin'], ['gn', 'gn_admin_controller']);
 goog.addDependency('../../js/GnEditorModule.js', ['gn_editor'], ['gn', 'gn_draggable_directive', 'gn_editor_controller', 'gn_onlinesrc', 'gn_ows', 'gn_popup']);
 goog.addDependency('../../js/GnLoginModule.js', ['gn_login'], ['gn', 'gn_login_controller']);
-goog.addDependency('../../js/GnModule.js', ['gn'], ['gn_cat_controller', 'gn_form_fields_directive', 'gn_language_switcher', 'gn_metadata_manager', 'gn_pagination', 'gn_search_controller', 'gn_search_form_controller', 'gn_search_manager', 'gn_search_results', 'gn_utility']);
+goog.addDependency('../../js/GnModule.js', ['gn'], ['gn_cat_controller', 'gn_form_fields_directive', 'gn_language_switcher', 'gn_map_directive', 'gn_metadata_manager', 'gn_pagination', 'gn_search_controller', 'gn_search_form_controller', 'gn_search_manager', 'gn_search_results', 'gn_utility']);
 goog.addDependency('../../js/LoginController.js', ['gn_login_controller'], []);
 goog.addDependency('../../js/admin/AdminController.js', ['gn_admin_controller'], ['gn_adminmetadata_controller', 'gn_admintools_controller', 'gn_cat_controller', 'gn_classification_controller', 'gn_dashboard_controller', 'gn_harvest_controller', 'gn_settings_controller', 'gn_standards_controller', 'gn_usergroup_controller']);
 goog.addDependency('../../js/admin/AdminMetadataController.js', ['gn_adminmetadata_controller'], []);
