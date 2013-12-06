@@ -18,8 +18,11 @@ import java.util.*;
 @Access(AccessType.PROPERTY)
 @Table(name = "Users")
 @Cacheable
+@SequenceGenerator(name=User.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class User extends GeonetEntity implements UserDetails {
     private static final long serialVersionUID = 2589607276443866650L;
+
+    static final String ID_SEQ_NAME = "user_id_seq";
 
     private int _id;
     private String _username;
@@ -39,7 +42,7 @@ public class User extends GeonetEntity implements UserDetails {
      * @return the user id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
@@ -140,8 +143,12 @@ public class User extends GeonetEntity implements UserDetails {
      */
     @Transient
     public String getEmail() {
-        if (_email != null && !_email.isEmpty()) {
-            return _email.iterator().next();
+        if (_email != null) {
+            for (String email : _email) {
+                if (email.contains("@")) {
+                    return email;
+                }
+            }
         }
         return null;
     }

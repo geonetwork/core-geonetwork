@@ -39,7 +39,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.sql.SQLException;
 
-import static java.lang.Math.min;
 import static org.fao.geonet.repository.specification.SearchRequestSpecs.hasHits;
 import static org.fao.geonet.repository.specification.SearchRequestSpecs.hasService;
 import static org.fao.geonet.repository.statistic.MetadataStatisticSpec.StandardSpecs.popularitySum;
@@ -86,9 +85,9 @@ public class SearchStatistics extends NotInReadOnlyModeService {
         DateTime beginDate = ISODate.parseBasicOrFullDateTime(begin);
         DateTime endDate = ISODate.parseBasicOrFullDateTime(end);
         int days = Days.daysBetween(beginDate, endDate).getDays();
-        int nonZeroDays = min(1, days);
+        int nonZeroDays = days == 0 ? 1 : days;
         int months = Months.monthsBetween(beginDate, endDate).getMonths();
-        int nonZeroMonths = min(1, months);
+        int nonZeroMonths = months == 0 ? 1 : months;
         response.addContent(new Element("activity_days").setText(days + ""));
         response.addContent(new Element("activity_months").setText(months + ""));
 

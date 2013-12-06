@@ -84,7 +84,6 @@ public class ServiceContext extends BasicContext
 	private JeevesServlet servlet;
 	private boolean startupError = false;
 	Map<String,String> startupErrors;
-    private EntityManager entityManager;
     /**
      * Property to be able to add custom response headers depending on the code
      * (and not the xml of Jeeves)
@@ -116,9 +115,8 @@ public class ServiceContext extends BasicContext
 
 	public ServiceContext(String service, ConfigurableApplicationContext jeevesApplicationContext, Map<String, Object> contexts, EntityManager entityManager)
 	{
-		super(jeevesApplicationContext, contexts);
+		super(jeevesApplicationContext, contexts, entityManager);
 
-        this.entityManager = entityManager;
 		setService(service);
 
         setResponseHeaders(new HashMap<String, String>());
@@ -249,9 +247,6 @@ public class ServiceContext extends BasicContext
         return statusCode;
     }
 
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
 }
 
 //=============================================================================

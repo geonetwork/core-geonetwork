@@ -32,7 +32,7 @@
       $scope.dateFrom = null;
       // The end of the temporal range
       $scope.dateTo = null;
-      $scope.graphicType = 'MONTH';
+      $scope.graphicType = 'DAY';
 
 
 
@@ -83,6 +83,9 @@
             return;
           }
 
+          if (!data.requests) {
+            return;
+          }
 
           // Format the data for multi bar chart
           $scope.statistics.search.temporal = [];
@@ -93,8 +96,8 @@
           // to stack series properly
           // TODO : Add all possible dates between min / max
           var xValues = [];
-          for (var i = 0; i < data.response.length; i++) {
-            var r = data.response[i];
+          for (var i = 0; i < data.requests.length; i++) {
+            var r = data.requests[i];
             if (r.record) {
               if ($.isArray(r.record)) {
                 for (var j = 0; j < r.record.length; j++) {
@@ -111,8 +114,8 @@
           xValues.sort();
 
           // Build an array with all values for each series
-          for (var i = 0; i < data.response.length; i++) {
-            var records = data.response[i].record;
+          for (var i = 0; i < data.requests.length; i++) {
+            var records = data.requests[i].record;
             if (records && records.length > 0) {
               var values = [];
               for (var j = 0; j < xValues.length; j++) {
@@ -134,7 +137,7 @@
               }
 
               $scope.statistics.search.temporal.push({
-                key: $translate(data.response[i]['@service']),
+                key: $translate(data.requests[i]['@service']),
                 values: values
               });
             }

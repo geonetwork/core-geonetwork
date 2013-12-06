@@ -22,7 +22,7 @@ sudo easy_install http://closure-linter.googlecode.com/files/closure_linter-late
 cd /path/to/closure-library-parent-dir
 git clone http://code.google.com/p/closure-library/
 cd closure-library
-wget http://closure-compiler.googlecode.com/files/compiler-latest.zip
+wget http://dl.google.com/closure-compiler/compiler-latest.zip
 unzip compiler-latest.zip
 ```
 
@@ -90,11 +90,37 @@ python $CLOSURE_LIB/closure/bin/build/closurebuilder.py \
 
 ```
 
+## Test the application
 
-## Run the application with the UI module
+The testsuite is based on protractor (https://github.com/angular/protractor) an end to end test framework for AngularJS. To install it:
 
 ```
-cd web
-mvn jetty:run -Pui
+npm install -g protractor
 ```
-and access http://localhost:8080/geonetwork/
+
+Start the application (with mvn jetty:run).
+Start the selenium server:
+
+
+```
+# Using standalone server
+java -jar selenium-server-standalone-2.37.0.jar 
+
+# Using maven 
+mvn selenium:start-server
+FIXME: the server starts but error:
+10:16:30.276 INFO - Executing: [new session: {browserName=firefox}] at URL: /session)
+10:16:30.323 INFO - Server started at http://karukera:19643/
+10:16:30.340 WARN - Exception thrown
+java.util.concurrent.ExecutionException: java.lang.RuntimeException: Safari could not be found in the path!
+Please add the directory containing ''Safari'' to your PATH environment
+variable, or explicitly specify a path to Safari like this:
+*safari /blah/blah/Safari
+```
+
+Run the test:
+
+```
+protractor src/main/tests/test-login.cfg
+protractor src/main/tests/test-admin.cfg
+```

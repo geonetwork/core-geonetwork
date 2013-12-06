@@ -23,17 +23,17 @@
            [{
              type: 'thesaurus',
              label: 'manageThesaurus',
-             icon: 'icon-archive',
+             icon: 'fa-archive',
              href: '#/classification/thesaurus'
            },{
                   type: 'directory',
                   label: 'manageDirectory',
-                  icon: 'icon-list-ul',
+                  icon: 'fa-list-ul',
                   href: 'subtemplate.admin' // TODO
                 },{
              type: 'categories',
              label: 'manageCategory',
-             icon: 'icon-tags',
+             icon: 'fa-tags',
              href: '#/classification/categories'
            }]
           };

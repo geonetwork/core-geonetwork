@@ -45,11 +45,7 @@ import org.fao.geonet.repository.OperationRepository;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -264,9 +260,12 @@ public class MEFLib {
 	 * 
 	 * @param zos
 	 * @param name
-	 * @param in
+	 * @param string
 	 * @throws IOException
 	 */
+	static void addFile(ZipOutputStream zos, String name, @Nonnull String string) throws IOException {
+        addFile(zos, name, new ByteArrayInputStream(string.getBytes("UTF-8")));
+    }
 	static void addFile(ZipOutputStream zos, String name, @Nonnull InputStream in)
 			throws IOException {
 	       ZipEntry entry = null;

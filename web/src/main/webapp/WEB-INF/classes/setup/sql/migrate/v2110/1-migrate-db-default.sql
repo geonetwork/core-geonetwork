@@ -40,5 +40,5 @@ CREATE TABLE Email
 	email         varchar(128),
 
 	primary key(user_id),
-    foreign key(user_id) references Users(id),
+    foreign key(user_id) references Users(id)
 );

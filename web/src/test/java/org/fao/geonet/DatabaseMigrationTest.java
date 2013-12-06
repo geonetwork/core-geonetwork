@@ -1,6 +1,9 @@
 package org.fao.geonet;
 
 import org.apache.commons.io.FileUtils;
+import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.SettingDataType;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.statistic.SearchRequestParamRepository;
 import org.fao.geonet.repository.statistic.SearchRequestRepository;
@@ -20,8 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Test migration from a 2.8.0 database to current.  The DatabaseMigration postprocessor is configured in the
@@ -120,6 +122,10 @@ public class DatabaseMigrationTest extends AbstractSpringDataTest {
         assertEquals(39, _searchRequestRepo.count());
         assertEquals(0, _serviceRepo.count());
         assertTrue(_settingRepo.count() > 0);
+        final Setting ignoreChars = _settingRepo.findOne(SettingManager.SYSTEM_LUCENE_IGNORECHARS);
+        assertNotNull(ignoreChars);
+        assertEquals(SettingDataType.STRING, ignoreChars.getDataType());
+        assertEquals("", ignoreChars.getValue());
         assertEquals(1, _sourceRepo.count());
         assertEquals(6, _statusValueRepo.count());
         assertEquals(0, _thesaurusActivationRepo.count());
@@ -127,54 +133,6 @@ public class DatabaseMigrationTest extends AbstractSpringDataTest {
         assertEquals(2, _userRepo.count());
     }
 
-    private void assertThatDBIsUpToDate(Statement statement) throws SQLException {
-        assertRowCount(statement, "Settings", 80);
-        assertSettingsTableIsCorrect(statement);
-        assertRowCount(statement, "Users", 2);
-        assertUserHasUpdatedProfile(statement);
-        assertMetadataHasUpdatedIsTemplate(statement);
-        assertRowCount(statement, "Address", 2);
-    }
-
-    private void assertMetadataHasUpdatedIsTemplate(Statement statement) throws SQLException {
-        ResultSet resultSet = select(statement, "SELECT isTemplate from Metadata");
-        assertEquals(resultSet.getMetaData().getColumnTypeName(1), Types.INTEGER, resultSet.getMetaData().getColumnType(1));
-        resultSet.close();
-    }
-
-    private void assertUserHasUpdatedProfile(Statement statement) throws SQLException {
-        ResultSet resultSet = select(statement, "SELECT profile from Users");
-        assertEquals(resultSet.getMetaData().getColumnTypeName(1), Types.INTEGER, resultSet.getMetaData().getColumnType(1));
-        resultSet.close();
-    }
-
-    private void assertRowCount(Statement statement, String tableName, int expectedCount) throws SQLException {
-        final String sql = "SELECT count(*) from " + tableName;
-        ResultSet resultSet = select(statement, sql);
-        assertEquals(expectedCount, resultSet.getInt(1));
-        resultSet.close();
-    }
-
-    private ResultSet select(Statement statement, String sql) throws SQLException {
-        ResultSet resultSet = statement.executeQuery(sql);
-        assertTrue(resultSet.next());
-        return resultSet;
-    }
-
-    private void assertSettingsTableIsCorrect(Statement statement) throws SQLException {
-        ResultSet resultSet = select(statement, "SELECT name, value, datatype, " +
-                                                "position from Settings WHERE name='system/server/port'");
-        assertEquals("system/server/port", resultSet.getString(1));
-        assertEquals("8080", resultSet.getString(2));
-        assertEquals(1, resultSet.getInt(3));
-        assertEquals(220, resultSet.getInt(4));
-
-        assertEquals(resultSet.getMetaData().getColumnTypeName(1), Types.VARCHAR, resultSet.getMetaData().getColumnType(1));
-        assertEquals(resultSet.getMetaData().getColumnTypeName(2), Types.VARCHAR, resultSet.getMetaData().getColumnType(2));
-        assertEquals(resultSet.getMetaData().getColumnTypeName(3), Types.INTEGER, resultSet.getMetaData().getColumnType(3));
-        assertEquals(resultSet.getMetaData().getColumnTypeName(4), Types.INTEGER, resultSet.getMetaData().getColumnType(3));
-        resultSet.close();
-    }
 
     static File findwebappDir() {
         File current = new File(".").getAbsoluteFile();

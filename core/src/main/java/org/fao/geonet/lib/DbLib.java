@@ -91,7 +91,7 @@ public class DbLib {
                         final String trimmedSQL = sql.trim();
                         final Query query = entityManager.createNativeQuery(trimmedSQL);
                         if (trimmedSQL.startsWith("SELECT")) {
-							query.setFirstResult(1);
+							query.setMaxResults(1);
                             query.getSingleResult();
 						} else {
 							query.executeUpdate();

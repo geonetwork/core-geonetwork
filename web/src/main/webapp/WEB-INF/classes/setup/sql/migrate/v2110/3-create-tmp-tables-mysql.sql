@@ -6,7 +6,7 @@ CREATE TABLE USERGROUPS_TMP
 (
    USERID int NOT NULL,
    GROUPID int NOT NULL,
-   PROFILE int NOT NULL,
+   PROFILE int NOT NULL
 );
 
 -- Convert Profile column to the profile enumeration ordinal

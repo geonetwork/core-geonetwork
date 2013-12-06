@@ -225,12 +225,18 @@ public class SettingInfo
 
     //---------------------------------------------------------------------------
 
-    public boolean getInspireEnabled()
-    {
+    public boolean getInspireEnabled() {
         return _settingManager.getValueAsBool("system/inspire/enable");
     }
 
 
+    public char[] getAnalyzerIgnoreChars() {
+        String ignoreChars = _settingManager.getValue(SettingManager.SYSTEM_LUCENE_IGNORECHARS);
+        if(ignoreChars == null || ignoreChars.length() == 0) {
+            return null;
+        }
+        return ignoreChars.toCharArray();
+    }
 }
 
 //=============================================================================

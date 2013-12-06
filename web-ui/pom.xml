@@ -50,6 +50,8 @@
                 <argument>--strict</argument>
                 <argument>-r</argument>
                 <argument>src/main/resources/catalog/js</argument>
+                <argument>-r</argument>
+                <argument>src/main/resources/catalog/components</argument>
               </arguments>
             </configuration>
           </execution>
@@ -68,9 +70,44 @@
                 <argument>-r</argument>
                 <!-- Each source file in this directory will be checked. -->
                 <argument>src/main/resources/catalog/js</argument>
+                <argument>-r</argument>
+                <argument>src/main/resources/catalog/components</argument>
               </arguments>
             </configuration>
           </execution>
+
+          <!-- Tests -->
+          <execution>
+            <id>fixjsstyle-test</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>fixjsstyle</executable>
+              <arguments>
+                <argument>--strict</argument>
+                <argument>-r</argument>
+                <argument>src/main/tests/specs</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>gjslint-test</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>gjslint</executable>
+              <arguments>
+                <argument>--strict</argument>
+                <argument>-r</argument>
+                <argument>src/main/tests/specs</argument>
+              </arguments>
+            </configuration>
+          </execution>
+
           <execution>
             <id>build-js-dependency</id>
             <!-- python ../../../../../closure-library/closure/bin/build/depswriter.py \
@@ -160,26 +197,6 @@ python $CLOSURE_LIB/closure/bin/build/closurebuilder.py \
               </arguments>
             </configuration>
           </execution>
-            <execution>
-              <id>minify-js-gn-editor</id>
-              <phase>prepare-package</phase>
-              <goals>
-                  <goal>exec</goal>
-              </goals>
-              <configuration>
-                  <executable>python</executable>
-                  <workingDirectory>src/main/resources</workingDirectory>
-                  <arguments>
-                      <argument>${closure.path}/closure/bin/build/closurebuilder.py</argument>
-                      <argument>--root=catalog</argument>
-                      <argument>--namespace=gn_editor</argument>
-                      <argument>--output_mode=compiled</argument>
-                      <!--<argument>-\-compiler_flags="-\-compilation_level=ADVANCED_OPTIMIZATIONS"</argument>-->
-                      <argument>--compiler_jar=${closure.path}/compiler.jar</argument>
-                      <argument>--output_file=catalog/lib/gn_editor.min.js</argument>
-                  </arguments>
-              </configuration>
-          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -194,7 +211,6 @@ python $CLOSURE_LIB/closure/bin/build/closurebuilder.py \
             <include>gn.less</include>
             <include>gn_admin.less</include>
             <include>gn_login.less</include>
-            <include>gn_editor.less</include>
           </includes>
         </configuration>
         <executions>
@@ -204,6 +220,31 @@ python $CLOSURE_LIB/closure/bin/build/closurebuilder.py \
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>selenium-maven-plugin</artifactId>
+        <version>2.3</version>
+        <!--<executions>
+                <execution>
+                    <id>start</id>
+                    <phase>pre-integration-test</phase>
+                    <goals>
+                        <goal>start-server</goal>
+                    </goals>
+                    <configuration>
+                        <background>true</background>
+                    </configuration>
+                </execution>
+                
+                <execution>
+                    <id>stop</id>
+                    <phase>post-integration-test</phase>
+                    <goals>
+                        <goal>stop-server</goal>
+                    </goals>
+                </execution>
+            </executions>-->
       </plugin>
     </plugins>
   </build>

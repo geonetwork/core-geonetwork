@@ -279,8 +279,7 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
                     iconCls : 'privIcon',
                     disabled: true,
                     handler: function(){
-                        var id = this.record.id;
-                        this.catalogue.metadataAdmin(id);
+                        this.catalogue.metadataAdmin(this.record);
                     },
                     scope: this
                 }]

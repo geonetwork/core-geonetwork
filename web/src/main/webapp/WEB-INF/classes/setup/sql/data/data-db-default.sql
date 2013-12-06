@@ -558,8 +558,8 @@ INSERT INTO Settings (name, value, datatype, position) VALUES ('system/platform/
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/platform/subVersion', 'SNAPSHOT', 0, 160);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/site/svnUuid', '', 0, 170);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/server/host', 'localhost', 0, 210);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/server/port', '8080', 1, 220);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/server/protocol', 'http', 0, 230);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/server/protocol', 'http', 0, 220);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/server/port', '8080', 1, 230);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/server/securePort', '8443', 1, 240);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/intranet/network', '127.0.0.1', 0, 310);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/intranet/netmask', '255.0.0.0', 0, 320);
@@ -631,6 +631,7 @@ INSERT INTO Settings (name, value, datatype, position) VALUES ('system/requested
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/requestedLanguage/sorted', 'false', 2, 9540);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/hidewithheldelements/enable', 'false', 2, 9570);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/hidewithheldelements/keepMarkedElement', 'true', 2, 9580);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/lucene/ignorechars', '', 0, 9590);
 
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES  (1,NULL,'harvesting',NULL);
 

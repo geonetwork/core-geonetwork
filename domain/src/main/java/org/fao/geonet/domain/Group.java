@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.util.Map;
 
@@ -17,13 +19,17 @@ import java.util.Map;
 @Table(name = "Groups")
 @Cacheable
 @Access(AccessType.PROPERTY)
+@SequenceGenerator(name=Group.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class Group extends Localized {
+    static final String ID_SEQ_NAME = "group_id_seq";
 
     private int _id;
     private String _name;
     private String _description;
     private String _email;
     private Integer _referrer;
+    private String logo;
+    private String website;
 
     /**
      * Get the id of the group.
@@ -34,7 +40,7 @@ public class Group extends Localized {
      * @return the id of the group.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(nullable = false)
     public int getId() {
         return _id;
@@ -190,5 +196,50 @@ public class Group extends Localized {
     @Transient
     public boolean isReserved() {
         return ReservedGroup.isReserved(getId());
+    }
+
+    /**
+     * Set the logo filename.
+     *
+     * @param logo the logo filename
+     *
+     * @return this entity.
+     */
+    @Nonnull
+    public Group setLogo(@Nullable String logo) {
+        this.logo = logo;
+        return this;
+    }
+
+    /**
+     * Get the logo filename.
+     *
+     * @return the filename of the logo or null if there is no logo associated with this group.
+     */
+    @Nullable
+    public String getLogo() {
+        return logo;
+    }
+
+    /**
+     * Set the website url of this group.
+     *
+     * @param website the website url of this group.
+     *
+     * @return this group entity object.
+     */
+    @Nonnull
+    public Group setWebsite(@Nullable String website) {
+        this.website = website;
+        return this;
+    }
+
+    /**
+     * Return the website url for this group.
+     * @return the website url for this group or null if there is none.
+     */
+    @Nullable
+    public String getWebsite() {
+        return website;
     }
 }

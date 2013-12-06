@@ -33,10 +33,13 @@ import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -57,14 +60,15 @@ public class ScheduleManager
 	private String appPath;
 	private String baseUrl;
 	private String instanceId = SCHEDULER_ID+"-"+UUID.randomUUID().toString();
-    private MonitorManager monitorManager;
-    private ConfigurableApplicationContext jeevesApplicationContext;
-
 	private Hashtable<String, Object> htContexts = new Hashtable<String, Object>();
-	private Scheduler scheduler;
-
+    private Scheduler scheduler;
     private Map<String, ScheduleInfo> vSchedules = new HashMap<String, ScheduleInfo>();
-	
+
+    @Autowired
+    private ConfigurableApplicationContext jeevesApplicationContext;
+    @PersistenceContext
+    private EntityManager entityManager;
+
     //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -96,15 +100,12 @@ public class ScheduleManager
 
 	//--------------------------------------------------------------------------
 
-    public void setMonitorManager (MonitorManager mm) { monitorManager  = mm; }
-    public void setApplicationContext (JeevesApplicationContext jap) { jeevesApplicationContext  = jap; }
 	public void setAppPath(String  path)  { appPath = path;  }
 
     //--------------------------------------------------------------------------
 
     public String getAppPath() { return appPath;}
     public String getBaseUrl() {return baseUrl;}
-    public MonitorManager getMonitorManager() {return monitorManager;}
     public ConfigurableApplicationContext getApplicationContext() { return jeevesApplicationContext; }
     public Hashtable<String, Object> getHtContexts() {return new Hashtable<String, Object>(htContexts);}
 
@@ -167,7 +168,11 @@ public class ScheduleManager
         return vSchedules.get(scheduleName);
     }
 
-	//---------------------------------------------------------------------------
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    //---------------------------------------------------------------------------
 
 
 }
