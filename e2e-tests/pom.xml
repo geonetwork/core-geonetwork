@@ -21,6 +21,7 @@
 
 
     <properties>
+	<browserName>chrome</browserName>
         <protractorConfig>${basedir}/target/protractor</protractorConfig>
         <baseProtractorConfig>  // ----- How to setup Selenium -----
             //
@@ -52,7 +53,7 @@
             // and
             // https://code.google.com/p/selenium/source/browse/javascript/webdriver/capabilities.js
             capabilities: {
-                'browserName': 'chrome'
+                'browserName': '@browserName@'
             },
 
             // ----- More information for your tests ----
@@ -345,5 +346,23 @@
                 <chromedriver>${basedir}/chromedriver/mac32/chromedriver</chromedriver>
             </properties>
         </profile>
+        <profile>
+            <id>firefox</id>
+            <properties>
+                <browserName>firefox</browserName>
+            </properties>
+       </profile>
+        <profile>
+            <id>ie</id>
+            <properties>
+                <browserName>internet explorer</browserName>
+            </properties>
+       </profile>
+        <profile>
+            <id>safari</id>
+            <properties>
+                <browserName>safari</browserName>
+            </properties>
+       </profile>
     </profiles>
 </project>
