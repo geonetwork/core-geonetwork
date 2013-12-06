@@ -1042,6 +1042,11 @@ Ext.onReady(function() {
 	Ext.Ajax.request({
 		url: catalogue.services.getInspireInfo+'&type=harvester',
 		success: function(res) {
+	        if(!res.responseXML) {
+	            var parser = new DOMParser();
+	            res.responseXML = parser.parseFromString(res.responseText, "application/xml");
+	        }
+
 			var enable = res.responseXML.getElementsByTagName("harvester")[0].getElementsByTagName("enable")[0];
 			if (enable.textContent) {
 				GeoNetwork.Settings.editor.editHarvested = enable.textContent;

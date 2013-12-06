@@ -138,6 +138,11 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
      *   and populate the store. If no filter applied, copy the store to the startFacetStore.
      */
     refresh: function (response) {
+        if(!response.responseXML) {
+            var parser = new DOMParser();
+            response.responseXML = parser.parseFromString(response.responseText, "application/xml");
+        }
+
         var facets = response.responseXML.getElementsByTagName('summary')[0],
             zappette = '', 
             panel = this, 
