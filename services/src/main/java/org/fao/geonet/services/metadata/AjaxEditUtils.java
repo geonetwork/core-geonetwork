@@ -322,7 +322,7 @@ public class AjaxEditUtils extends EditUtils {
 				child = el;
 			} else {
 				//--- normal element
-				child = editLib.addElement(schema, el, name);
+				child = editLib.addElement(mds, el, name);
 				if (!childName.equals(""))
 				{
 					//--- or element
@@ -342,7 +342,7 @@ public class AjaxEditUtils extends EditUtils {
 			}
 		}
         else {
-			child = editLib.addElement(schema, el, name);
+			child = editLib.addElement(mds, el, name);
 		}
 		//--- now enumerate the new child (if not a simple attribute)
 		if (childName == null || !childName.equals("geonet:attribute")) {
@@ -374,7 +374,6 @@ public class AjaxEditUtils extends EditUtils {
     /**
      * For Ajax Editing : removes an element from a metadata ([del] link).
      *
-     * @param dbms
      * @param session
      * @param id
      * @param ref
