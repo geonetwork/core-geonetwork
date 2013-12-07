@@ -87,7 +87,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             ((FeatureStore<?,?>) _datastore.getFeatureSource(name)).removeFeatures(Filter.INCLUDE);
         }
         final String initializedString = "initialized";
-        final String webappDir = getWebappDir();
+        final String webappDir = getWebappDir(getClass());
         final File templateDataDir = new File(webappDir, "WEB-INF/data");
         final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
 
@@ -155,7 +155,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         context.setLogger(Log.createLogger("Test"));
         context.setMaxUploadSize(100);
         context.setOutputMethod(ServiceRequest.OutputMethod.DEFAULT);
-        context.setAppPath(getWebappDir());
+        context.setAppPath(getWebappDir(getClass()));
         context.setBaseUrl("geonetwork");
 
         return context;
@@ -187,7 +187,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     }
 
     protected String getStyleSheets() {
-        final String file = getWebappDir();
+        final String file = getWebappDir(getClass());
 
         return new File(file, "xsl/conversion").getPath();
     }
@@ -197,8 +197,8 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
      *
      * @return
      */
-    public static String getWebappDir() {
-        File here = getClassFile();
+    public static String getWebappDir(Class<?> cl) {
+        File here = getClassFile(cl);
         while (!new File(here, "pom.xml").exists() && !new File(here.getParentFile(), "web/src/main/webapp/").exists()) {
 //            System.out.println("Did not find pom file in: "+here);
             here = here.getParentFile();
@@ -207,9 +207,9 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath()+"/";
     }
 
-    private static File getClassFile() {
-        final String testClassName = AbstractCoreIntegrationTest.class.getSimpleName();
-        return new File(AbstractCoreIntegrationTest.class.getResource(testClassName + ".class").getFile());
+    private static File getClassFile(Class<?> cl) {
+        final String testClassName = cl.getSimpleName();
+        return new File(cl.getResource(testClassName + ".class").getFile());
     }
 
     protected User loginAsAdmin(ServiceContext context) {
