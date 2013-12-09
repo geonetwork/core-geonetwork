@@ -203,6 +203,11 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         Ext.Ajax.request({
  		   url: this.catalogue.services.mdSelect,
  		   success: function(response, opts) {
+              if(!response.responseXML) {
+                  var parser = new DOMParser();
+                  response.responseXML = parser.parseFromString(response.responseText, "application/xml");
+              }
+
  			  var numSelected = response.responseXML.getElementsByTagName('Selected')[0].firstChild.nodeValue;
  			  this.updateSelectionInfo(this.catalogue, parseInt(numSelected));
  		  },

@@ -779,6 +779,12 @@ cat.app = function() {
 						+ (1000 * 60 * 60 * 24 * 365)),
 				path: cookiePath
 			});
+			
+			// If we are reading a permalink, we overwrite all cookies values
+			var permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
+			if(Object.keys(permalinkProvider.state).length > 0) {
+			    cookie.state = permalinkProvider.state;
+			}
 			Ext.state.Manager.setProvider(cookie);
 			
 			// Create connexion to the catalogue
@@ -1036,6 +1042,11 @@ Ext.onReady(function() {
 	Ext.Ajax.request({
 		url: catalogue.services.getInspireInfo+'&type=harvester',
 		success: function(res) {
+	        if(!res.responseXML) {
+	            var parser = new DOMParser();
+	            res.responseXML = parser.parseFromString(res.responseText, "application/xml");
+	        }
+
 			var enable = res.responseXML.getElementsByTagName("harvester")[0].getElementsByTagName("enable")[0];
 			if (enable.textContent) {
 				GeoNetwork.Settings.editor.editHarvested = enable.textContent;

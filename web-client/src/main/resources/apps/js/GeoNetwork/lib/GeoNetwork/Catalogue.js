@@ -1144,6 +1144,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             async: false
         }), exception, authenticated, me;
        
+        if(!response.responseXML) {
+            var parser = new DOMParser();
+            response.responseXML = parser.parseFromString(response.responseText, "application/xml");
+        }
        me = response.responseXML.getElementsByTagName('me')[0];
        authenticated = me.getAttribute('authenticated') == 'true';
        
