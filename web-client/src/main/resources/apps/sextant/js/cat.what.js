@@ -46,7 +46,7 @@ cat.what = function() {
 			
 			var filtered = false;
 			var groupToRemove = [];
-            var groupToDisplay = [];
+			var groupToDisplay = [];
             
 			// optionnaly configwhat define some elements to remove using -GROUPNAME flag for non identified users
 			if(configwhatInput && configwhatInput[0] && configwhatInput[0].value) {
@@ -299,8 +299,16 @@ cat.what = function() {
 				startwith:true,
 				url: services.opensearchSuggest
 			});
-			advancedFields.push(radios,  catalogueField, themeINSPIREField, categoryTree);
-			
+
+			var resourceTypeHiddenField = new Ext.form.TextField({
+				name: 'E_type',
+				hidden: true,
+				id: 'E_type',
+				value: 'dataset'
+			});
+
+			advancedFields.push(radios,  catalogueField, themeINSPIREField, categoryTree, resourceTypeHiddenField);
+
 			panel = new Ext.Panel({
 				title: OpenLayers.i18n('What'),
 				autoHeight: true,
@@ -321,7 +329,7 @@ cat.what = function() {
 						});
 					}
 				},
-				items: [searchField, sep1, catalogueField, sep2, radios, themeINSPIREField, categoryTree]
+				items: [searchField, sep1, catalogueField, sep2, radios, themeINSPIREField, categoryTree, resourceTypeHiddenField]
 			});
 		},
 		
