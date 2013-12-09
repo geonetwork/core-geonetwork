@@ -3,6 +3,7 @@ package org.fao.geonet.kernel;
 import com.google.common.collect.Lists;
 import jeeves.server.ServiceConfig;
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.Assert;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.utils.TransformerFactoryFactory;
@@ -99,6 +100,26 @@ public class EditLibTest {
     }
 
     @Test
+    public void testEditExistingAttribute() throws Exception {
+
+        MetadataSchema schema = _schemaManager.getSchema("iso19139");
+
+        final Element metadataElement = new Element("MD_Metadata", GMD).addContent(
+                new Element("fileIdentifier", GMD).setAttribute("nilReason", "missing", GCO).addContent(
+                        new Element("CharacterString", GCO).setText("OldValue")
+                )
+        );
+
+        String newValue = "withheld";
+        final String xpathProperty = "gmd:fileIdentifier/@gco:nilReason";
+        new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, newValue, true);
+
+        assertEquals(newValue, Xml.selectString(metadataElement, xpathProperty, Arrays.asList(GMD, GCO)));
+        assertEquals(1, Xml.selectNodes(metadataElement, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).size());
+        assertEquals(1, Xml.selectNodes(metadataElement, "gmd:fileIdentifier", Arrays.asList(GMD, GCO)).size());
+    }
+
+    @Test
     public void testReplaceFragmentFromXpath_NoAttributes() throws Exception {
 
         MetadataSchema schema = _schemaManager.getSchema("iso19139");
@@ -150,8 +171,8 @@ public class EditLibTest {
 
         String name = "Individual Name";
         String newValue =
-                "<gmd:CI_ResponsibleParty  xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211" +
-                ".org/2005/gco\">" +
+                "<gmd:CI_ResponsibleParty  xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" " +
+                "xmlns:gco=\"http://www.isotc211.org/2005/gco\">" +
                 "<gmd:individualName>" +
                 "<gco:CharacterString>" + name + "</gco:CharacterString>" +
                 "</gmd:individualName>" +
@@ -166,24 +187,6 @@ public class EditLibTest {
         assertEquals(1, Xml.selectNodes(metadataElement, "gmd:contact/gmd:CI_ResponsibleParty/gmd:individualName", nsList).size());
         assertEquals(1, Xml.selectNodes(metadataElement, "gmd:contact/gmd:CI_ResponsibleParty", nsList).size());
         assertEquals(1, Xml.selectNodes(metadataElement, "gmd:contact", nsList).size());
-    }
-
-    @Test
-    public void testAddElementFromXpath_AttributeInPath() throws Exception {
-        SchemaManager manager = _schemaManager;
-
-        MetadataSchema schema = manager.getSchema("iso19139");
-
-        final Element metadataElement = new Element("MD_Metadata", GMD);
-
-        String newValue = "newValue";
-        final String xpathProperty = "gmd:fileIdentifier[@nilReason = 'withheld']/gco:CharacterString";
-        new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, newValue, true);
-
-        assertEqualsText(newValue, metadataElement, xpathProperty, GMD, GCO);
-        assertEquals("withheld", Xml.selectString(metadataElement, "gmd:fileIdentifier/@nilReason", Arrays.asList(GMD, GCO)));
-        assertEquals(1, Xml.selectNodes(metadataElement, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).size());
-        assertEquals(1, Xml.selectNodes(metadataElement, "gmd:fileIdentifier", Arrays.asList(GMD, GCO)).size());
     }
 
     @Test
@@ -221,6 +224,57 @@ public class EditLibTest {
         new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, newValue, true);
     }
     @Test (expected = AssertionError.class)
+    public void testErrorOnDotDot() throws Exception {
+        SchemaManager manager = _schemaManager;
+
+        MetadataSchema schema = manager.getSchema("iso19139");
+
+        final Element metadataElement = new Element("MD_Metadata", GMD);
+        String newValue = "x";
+        final String xpathProperty = "gmd:hierarchyLevel/../@codeListValue";
+        new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, newValue, true);
+    }
+    @Test (expected = AssertionError.class)
+    public void testErrorOnDotDotDot() throws Exception {
+        SchemaManager manager = _schemaManager;
+
+        MetadataSchema schema = manager.getSchema("iso19139");
+
+        final Element metadataElement = new Element("MD_Metadata", GMD);
+        String newValue = "x";
+        final String xpathProperty = "gmd:hierarchyLevel/.../@codeListValue";
+        new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, newValue, true);
+    }
+    @Test (expected = AssertionError.class)
+    public void testErrorOnSlashSlash() throws Exception {
+        SchemaManager manager = _schemaManager;
+
+        MetadataSchema schema = manager.getSchema("iso19139");
+
+        final Element metadataElement = new Element("MD_Metadata", GMD);
+        String newValue = "x";
+        final String xpathProperty = "gmd:hierarchyLevel//@codeListValue";
+        new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, newValue, true);
+    }
+
+    public void testNoUpdateOnError() throws Exception {
+        SchemaManager manager = _schemaManager;
+
+        MetadataSchema schema = manager.getSchema("iso19139");
+
+        final Element metadataElement = new Element("MD_Metadata", GMD);
+
+        String newValue = "x";
+        final String xpathProperty = "gmd:hierarchyLevel/gmd:MD_ScopeCode/../gmd:fileIdentifier";
+        try {
+            new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, newValue, true);
+            fail("expected error");
+        } catch (AssertionError e) {
+            // ignore.
+        }
+        assertEquals(0, metadataElement.getContentSize());
+    }
+    @Test (expected = AssertionError.class)
     public void testAddAttribute_ValueIsNode2() throws Exception {
         SchemaManager manager = _schemaManager;
 
@@ -232,18 +286,5 @@ public class EditLibTest {
         new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, newValue, true);
     }
 
-    public void testAddElement_ValueIsNode() throws Exception {
-        SchemaManager manager = _schemaManager;
-
-        MetadataSchema schema = manager.getSchema("iso19139");
-
-        final Element metadataElement = new Element("MD_Metadata", GMD);
-        String newValue = "<gco:CharacterString>xml</gco:CharacterString>";
-        final String xpathProperty = "gmd:fileIdentifier[@nilReason='withheld']";
-        new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, newValue, true);
-
-        assertEquals(1, Xml.selectNodes(metadataElement, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).size());
-        assertEquals("withheld", Xml.selectString(metadataElement, "gmd:fileIdentifier/@nilReason", Arrays.asList(GMD, GCO)));
-    }
 
 }

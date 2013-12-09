@@ -27,6 +27,7 @@
 
 package org.fao.geonet.kernel;
 
+import com.google.common.collect.Sets;
 import org.apache.commons.jxpath.ri.parser.XPathParserConstants;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -52,6 +53,8 @@ import org.jdom.filter.ElementFilter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * TODO javadoc.
@@ -375,32 +378,48 @@ public class EditLib {
         }
     }
 
+    private static interface XPathParserLocalConstants {
+        int SQBRACKET_OPEN = 84;
+        int TEXT = 78;
+        int NAMESPACE_SEP = 79;
+        int ATTRIBUTE = 86;
+        int PARENT = 83;
+        int DESCENDANT = 7;
+        Set<Integer> ILLEGAL_KINDS = Sets.newHashSet(PARENT, DESCENDANT);
+    }
+
+
     /**
      * Update a metadata record for the xpath/value provided. The xpath (in accordance with JDOM x-path) does not start
      * with the root element for example:
-     *
+     * <p/>
      * <code><pre>
      *     &lt;gmd:MD_Metadata>
      *         &lt;gmd:fileIdentifier>&lt;/gmd:fileIdentifier>
      *     &lt;gmd:MD_Metadata>
      * </pre></code>
-     *
+     * <p/>
      * The xpath
-     * <pre><code>  gmd:MD_Metadata/gmd:fileIdentifier</code></pre>
+     *      <pre><code>  gmd:MD_Metadata/gmd:fileIdentifier</code></pre>
      * will <b>NOT</b> select any elements.  Instead one must use the xpath:
-     * <pre><code>  gmd:fileIdentifier</code></pre>
+     *      <pre><code>  gmd:fileIdentifier</code></pre>
      * to select the gmd:fileIdentifier element.
-     *<p/>
-     *
+     * <p/>
+     * <p/>
      * The value could be a String to set the value of an element or
      * and XML fragment to be inserted for the element.
-     *
+     * <p/>
      * If the xpath match an existing element, this element is updated.
      * Only the first one is updated if more than one match.
-     *
-     *
+     * <p/>
+     * <p/>
      * If it does not, each missing nodes of the xpath are created and
      * the element inserted according to the schema definition.
+     * <p/>
+     * If the end of the xpath is an attribute:
+     * <code><pre>elem/@att</pre></code>
+     * <p/>
+     * Then the attribute of the element will be set instead of the text of the element.
      *
      * @param metadataRecord the metadata xml to update
      * @param metadataSchema the schema of the metadata
@@ -410,39 +429,16 @@ public class EditLib {
      */
     public void addElementOrFragmentFromXpath(Element metadataRecord, MetadataSchema metadataSchema,
                                               String xpathProperty, String value, boolean createXpathNodeIfNotExist) {
-        boolean isNode = value.startsWith("<");
 
-
-        Element node = null;
         try {
-            // Initialized the value to insert and parse XML fragment
-            if (isNode) {
-
-                if (xpathProperty.matches(".*@[^/]+")) {
-                    throw new AssertionError("Cannot set Xml on an attribute.  Xpath:'"+xpathProperty+"' value: '"+value+"'");
-                }
-
-                try {
-                    node = Xml.loadString(value, false);
-                } catch (JDOMException e) {
-                    Log.debug(Geonet.EDITORADDELEMENT, "Invalid XML fragment to insert " + value + ". Error is: " + e.getMessage());
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            final Element node = parseValueAsXml(xpathProperty, value);
             if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT)) {
                 Log.debug(Geonet.EDITORADDELEMENT, "Inserting at location " + xpathProperty + " the snippet or value " + value);
             }
 
-            // Initialize the Xpath with all schema namespaces
-            Map<String, String> mapNs = metadataSchema.getSchemaNSWithPrefix();
+            boolean isNode = node != null;
+            final Object propEl = trySelectNode(metadataRecord, metadataSchema, xpathProperty);
 
-            JDOMXPath xpath = new JDOMXPath(xpathProperty);
-            xpath.setNamespaceContext(new SimpleNamespaceContext(mapNs));
-
-            // Select the node to update and check it exists
-            Object propEl = xpath.selectSingleNode(metadataRecord);
             if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT)) {
                 Log.debug(Geonet.EDITORADDELEMENT, "XPath found in metadata: " + (propEl != null));
             }
@@ -484,29 +480,28 @@ public class EditLib {
                     // The expression is supposed to be part of the XML snippet to insert
                     // If an existing element needs to be updated use the _Xref_replace mode
                     // this mode is more precise with the geonet:element/@ref.
-                    final int XPathParserLocalConstants_SQBRACKET = 84;
-                    final int XPathParserLocalConstants_TEXT = 78;
-                    final int XPathParserLocalConstants_NAMESPACE_SEP = 79;
-                    final int XPathParserLocalConstants_ATTRIBUTE = 86;
                     while (currentToken != null &&
                            currentToken.kind != 0 &&
-                           currentToken.kind != XPathParserLocalConstants_SQBRACKET) {
+                           currentToken.kind != XPathParserLocalConstants.SQBRACKET_OPEN) {
 
                         // TODO : check no .., descendant, ... are in the xpath
                         // Only full xpath are supported.
+                        if (XPathParserLocalConstants.ILLEGAL_KINDS.contains(currentToken.kind)) {
+                            throw new AssertionError("An illegal character '"+currentToken.image+" was found in:\n\n\t"+xpathProperty);
+                        }
 
                         // build element name as the parser progress into the xpath ...
-                        if (currentToken.kind == XPathParserLocalConstants_ATTRIBUTE ) {
+                        if (currentToken.kind == XPathParserLocalConstants.ATTRIBUTE ) {
                             isAttribute = true;
                         }
                         // Match namespace prefix
-                        if (currentToken.kind == XPathParserLocalConstants_TEXT && previousToken != null
+                        if (currentToken.kind == XPathParserLocalConstants.TEXT && previousToken != null
                             && previousToken.kind == XPathParserConstants.SLASH) {
                             // get element namespace if element is text and previous was /
                             // means qualified name only is supported
                             currentElementNamespacePrefix = currentToken.image;
-                        } else if (currentToken.kind == XPathParserLocalConstants_TEXT &&
-                                   previousToken.kind == XPathParserLocalConstants_NAMESPACE_SEP) {
+                        } else if (currentToken.kind == XPathParserLocalConstants.TEXT &&
+                                   previousToken.kind == XPathParserLocalConstants.NAMESPACE_SEP) {
                             // get element name if element is text and previous was /
                             currentElementName = currentToken.image;
 
@@ -600,30 +595,43 @@ public class EditLib {
         }
     }
 
-    /**
-     * Return true if the current node must be replaced because schema cannot allow another instance of the current node to be
-     * added to the parent.
-     *
-     * @param metadataSchema the schema of the metadata being edited
-     * @param currentNode the current node that is being replaced or having a sibling added to.
-     * @return
-     */
-    private boolean canAddElementToParent(MetadataSchema metadataSchema, Element currentNode) throws Exception {
-        final Element parentElement = currentNode.getParentElement();
-        final String elementType = metadataSchema.getElementType(parentElement.getQualifiedName(),
-                parentElement.getParentElement().getQualifiedName());
-        final MetadataType typeInfo = metadataSchema.getTypeInfo(elementType);
+    private Object trySelectNode(Element metadataRecord, MetadataSchema metadataSchema, String xpathProperty)  {
+        // Initialize the Xpath with all schema namespaces
+        Map<String, String> mapNs = metadataSchema.getSchemaNSWithPrefix();
 
-        int idx = typeInfo.getElementList().indexOf(currentNode.getQualifiedName());
 
-        if (idx == -1) {
-            throw new AssertionError("Cannot add a new instance of " + currentNode.getQualifiedName() + " to " + currentNode
-                    .getParentElement().getQualifiedName());
+        try {
+            JDOMXPath xpath = new JDOMXPath(xpathProperty);
+            xpath.setNamespaceContext(new SimpleNamespaceContext(mapNs));
+            // Select the node to update and check it exists
+            return xpath.selectSingleNode(metadataRecord);
+        } catch (JaxenException e) {
+            Log.warning(Geonet.EDITORADDELEMENT, "An illegal xpath was used to locate an element: " + xpathProperty);
+            return null;
         }
-
-        int maxCard = typeInfo.getMaxCardinAt(idx);
-        return maxCard < parentElement.getChildren(currentNode.getName(), currentNode.getNamespace()).size();
     }
+
+    private Element parseValueAsXml(String xpathProperty, String value) {
+        Element node = null;
+        // Initialized the value to insert and parse XML fragment
+        if (value.startsWith("<")) {
+
+            if (xpathProperty.matches(".*@[^/\\]]+")) {
+                throw new AssertionError("Cannot set Xml on an attribute.  Xpath:'"+xpathProperty+"' value: '"+value+"'");
+            }
+
+            try {
+                node = Xml.loadString(value, false);
+            } catch (JDOMException e) {
+                Log.debug(Geonet.EDITORADDELEMENT, "Invalid XML fragment to insert " + value + ". Error is: " + e.getMessage());
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return node;
+    }
+
     //--------------------------------------------------------------------------
 	//---
 	//--- Private methods
