@@ -22,6 +22,7 @@
     </div>
   </div>
  -->
+  <!-- Results List -->
   <div>
     <div class="list-group">
       <a class="list-group-item gn-record"
@@ -36,10 +37,11 @@
           <div class="col-lg-3"><p>{{md.type}}</p></div>
           <div class="col-lg-9">
             <p><strong>{{md.title || md.defaultTitle}}</strong></p>
-            <p class="small">{{md.abstract}}</p>
+            <p class="small">{{md.abstract | characters:250}}</p>
           </div>
         </div>
       </a>
     </div>
   </div>
+  <div data-gn-pagination="paginationInfo"/>
 </div>

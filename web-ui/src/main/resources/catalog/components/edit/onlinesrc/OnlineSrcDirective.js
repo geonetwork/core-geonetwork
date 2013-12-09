@@ -3,6 +3,15 @@
 
   goog.require('gn_utility');
 
+  /**
+   * Provide directives for online resources
+   * 
+   * - gnOnlinesrcList 
+   * - gnAddThumbnail
+   * - gnAddOnlinesrc
+   * - gnLinkParentMd
+   * - gnLinkServiceToDataset
+   */
   angular.module('gn_onlinesrc_directive', [
     'gn_utility',
     'blueimp.fileupload'

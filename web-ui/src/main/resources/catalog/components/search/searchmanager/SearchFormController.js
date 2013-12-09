@@ -28,10 +28,21 @@
       };
       $scope.resultRecords = [];
       $scope.resultCount = 0;
+      $scope.paginationInfo = {};
+      
+      var getPaginationParams= function() {
+        pageOptions = $scope.paginationInfo;
+        return {
+          from: pageOptions.currentPage * pageOptions.hitsPerPage + 1,
+          to: (pageOptions.currentPage + 1) * pageOptions.hitsPerPage
+        };
+      };
 
+      // TODO rewrite this with gnHttp
       var composeUrl = function(service) {
         var url = service || defaultServiceUrl;
         $scope.params = $.extend($scope.params, defaultParams);
+        angular.extend($scope.params, getPaginationParams());
         for (param in $scope.params) {
           url = gnUrlUtils.append(url,
               param + '=' + $scope.params[param]);
@@ -51,11 +62,20 @@
         $scope.resultCount = null;
       };
 
-      $scope.$watch('autoSearch', function() {
-        if ($scope.autoSearch) {
-          $scope.triggerSearch();
+//      $scope.$watch('autoSearch', function() {
+//        if ($scope.autoSearch) {
+//          $scope.triggerSearch();
+//        }
+//      });
+      
+      // When the current page or search criteria change trigger the search
+      $scope.$watch('paginationInfo.currentPage', function() {
+        if($scope.paginationInfo.currentPage) {
+                  $scope.triggerSearch();
         }
       });
+      
+
     }
   ]);
 })();

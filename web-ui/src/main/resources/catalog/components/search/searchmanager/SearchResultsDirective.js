@@ -16,7 +16,9 @@
             'searchresults.html',
         scope: {
           resultRecords: '=',
-          selection: '=selectRecords'
+          paginationInfo: '=paginationInfo',
+          selection: '=selectRecords',
+          resultCount: '='
         },
         link: function(scope, element, attrs) {
 
@@ -29,6 +31,7 @@
             }
           });
 
+          // Manage selection
           if (scope.options.selection) {
             scope.selection = [];
             if (scope.options.selection.mode.indexOf('local') >= 0) {
@@ -54,6 +57,21 @@
               };
             }
           }
+          
+          scope.$watchCollection('resultRecords', function() {
+            if (scope.resultRecords.length > 0) {
+              scope.paginationInfo.pages = Math.round(
+                  scope.resultCount /
+                scope.paginationInfo.hitsPerPage, 0);
+            }
+          });
+          
+          // Manage pagination
+          scope.paginationInfo = {
+              pages: -1,
+              currentPage: 0,
+              hitsPerPage: 2
+            };
         }
       };
     }]);
