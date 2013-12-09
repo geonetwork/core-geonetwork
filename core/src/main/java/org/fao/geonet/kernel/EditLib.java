@@ -33,7 +33,6 @@ import org.fao.geonet.utils.Xml;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.jxpath.ri.parser.Token;
 import org.apache.commons.jxpath.ri.parser.XPathParser;
-import org.apache.commons.jxpath.ri.parser.XPathParserConstants;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
@@ -377,7 +376,21 @@ public class EditLib {
     }
 
     /**
-     * Update a metadata record for the xpath/value provided.
+     * Update a metadata record for the xpath/value provided. The xpath (in accordance with JDOM x-path) does not start
+     * with the root element for example:
+     *
+     * <code><pre>
+     *     &lt;gmd:MD_Metadata>
+     *         &lt;gmd:fileIdentifier>&lt;/gmd:fileIdentifier>
+     *     &lt;gmd:MD_Metadata>
+     * </pre></code>
+     *
+     * The xpath
+     * <pre><code>  gmd:MD_Metadata/gmd:fileIdentifier</code></pre>
+     * will <b>NOT</b> select any elements.  Instead one must use the xpath:
+     * <pre><code>  gmd:fileIdentifier</code></pre>
+     * to select the gmd:fileIdentifier element.
+     *<p/>
      *
      * The value could be a String to set the value of an element or
      * and XML fragment to be inserted for the element.
@@ -389,19 +402,26 @@ public class EditLib {
      * If it does not, each missing nodes of the xpath are created and
      * the element inserted according to the schema definition.
      *
-     * @param metadataRecord
-     * @param createXpathNodeIfNotExist TODO
-     * @param xpathProperty
-     * @param value
-     * @param metadataSchema
+     * @param metadataRecord the metadata xml to update
+     * @param metadataSchema the schema of the metadata
+     * @param xpathProperty the xpath to the element to update/replace/add
+     * @param value the string or xmlString to add/update/replace
+     * @param createXpathNodeIfNotExist if the element identified by the xpath does not exist it will be create when this is true
      */
     public void addElementOrFragmentFromXpath(Element metadataRecord, MetadataSchema metadataSchema,
                                               String xpathProperty, String value, boolean createXpathNodeIfNotExist) {
         boolean isNode = value.startsWith("<");
+
+
         Element node = null;
         try {
             // Initialized the value to insert and parse XML fragment
             if (isNode) {
+
+                if (xpathProperty.matches(".*@[^/]+")) {
+                    throw new AssertionError("Cannot set Xml on an attribute.  Xpath:'"+xpathProperty+"' value: '"+value+"'");
+                }
+
                 try {
                     node = Xml.loadString(value, false);
                 } catch (JDOMException e) {
@@ -446,13 +466,14 @@ public class EditLib {
                     // expression.
                     // Collect element namespace prefix and name, check element exist and
                     // create them according to schema definition.
-                    XPathParser xpathParser = new XPathParser(new StringReader(xpathProperty));
+                    XPathParser xpathParser = new XPathParser(new StringReader(metadataRecord.getQualifiedName()+"/"+xpathProperty));
                     // Start from the root of the metadata document
                     Token currentToken = xpathParser.getNextToken();
                     Token previousToken = currentToken;
 
                     Element currentNode = metadataRecord;
-                    boolean existingElement = false;
+                    boolean existingElement = true;
+                    boolean isAttribute = false;
                     int depth = 0;
                     String currentElementName = "";
                     String currentElementNamespacePrefix = "";
@@ -463,8 +484,10 @@ public class EditLib {
                     // The expression is supposed to be part of the XML snippet to insert
                     // If an existing element needs to be updated use the _Xref_replace mode
                     // this mode is more precise with the geonet:element/@ref.
-                    int XPathParserLocalConstants_SQBRACKET = 84;
-                    int XPathParserLocalConstants_TEXT = 78;
+                    final int XPathParserLocalConstants_SQBRACKET = 84;
+                    final int XPathParserLocalConstants_TEXT = 78;
+                    final int XPathParserLocalConstants_NAMESPACE_SEP = 79;
+                    final int XPathParserLocalConstants_ATTRIBUTE = 86;
                     while (currentToken != null &&
                            currentToken.kind != 0 &&
                            currentToken.kind != XPathParserLocalConstants_SQBRACKET) {
@@ -473,14 +496,17 @@ public class EditLib {
                         // Only full xpath are supported.
 
                         // build element name as the parser progress into the xpath ...
-
+                        if (currentToken.kind == XPathParserLocalConstants_ATTRIBUTE ) {
+                            isAttribute = true;
+                        }
                         // Match namespace prefix
                         if (currentToken.kind == XPathParserLocalConstants_TEXT && previousToken != null
                             && previousToken.kind == XPathParserConstants.SLASH) {
                             // get element namespace if element is text and previous was /
                             // means qualified name only is supported
                             currentElementNamespacePrefix = currentToken.image;
-                        } else if (currentToken.kind == XPathParserLocalConstants_TEXT && previousToken.kind == 79) {
+                        } else if (currentToken.kind == XPathParserLocalConstants_TEXT &&
+                                   previousToken.kind == XPathParserLocalConstants_NAMESPACE_SEP) {
                             // get element name if element is text and previous was /
                             currentElementName = currentToken.image;
 
@@ -507,7 +533,7 @@ public class EditLib {
                                     }
                                     // Element found, no need to create it, continue walking the xpath.
                                     currentNode = nodeToCheck;
-                                    existingElement = true;
+                                    existingElement &= true;
                                 } else {
                                     if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT)) {
                                         Log.debug(Geonet.EDITORADDELEMENT, " > add new node " +
@@ -556,7 +582,11 @@ public class EditLib {
                             currentNode.addContent(children.get(i).detach());
                         }
                     } else {
-                        currentNode.setText(value);
+                        if (isAttribute) {
+                            currentNode.setAttribute(previousToken.image, value);
+                        } else {
+                            currentNode.setText(value);
+                        }
                     }
 
                 }
@@ -569,7 +599,32 @@ public class EditLib {
             e.printStackTrace();
         }
     }
-	//--------------------------------------------------------------------------
+
+    /**
+     * Return true if the current node must be replaced because schema cannot allow another instance of the current node to be
+     * added to the parent.
+     *
+     * @param metadataSchema the schema of the metadata being edited
+     * @param currentNode the current node that is being replaced or having a sibling added to.
+     * @return
+     */
+    private boolean canAddElementToParent(MetadataSchema metadataSchema, Element currentNode) throws Exception {
+        final Element parentElement = currentNode.getParentElement();
+        final String elementType = metadataSchema.getElementType(parentElement.getQualifiedName(),
+                parentElement.getParentElement().getQualifiedName());
+        final MetadataType typeInfo = metadataSchema.getTypeInfo(elementType);
+
+        int idx = typeInfo.getElementList().indexOf(currentNode.getQualifiedName());
+
+        if (idx == -1) {
+            throw new AssertionError("Cannot add a new instance of " + currentNode.getQualifiedName() + " to " + currentNode
+                    .getParentElement().getQualifiedName());
+        }
+
+        int maxCard = typeInfo.getMaxCardinAt(idx);
+        return maxCard < parentElement.getChildren(currentNode.getName(), currentNode.getNamespace()).size();
+    }
+    //--------------------------------------------------------------------------
 	//---
 	//--- Private methods
 	//---

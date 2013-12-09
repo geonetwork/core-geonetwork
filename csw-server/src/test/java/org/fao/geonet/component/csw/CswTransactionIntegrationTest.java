@@ -247,6 +247,25 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         assertMetadataIsUpdated(TITLE_XPATH_DE_FREE_TEXT, newTitle);
     }
 
+
+    @Test
+    public void testXPathRemoveElement() throws Exception {
+        addPhotographicMetadataToRepository(adminUserId());
+
+        ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+
+        final String newTitle = "AddedTitle";
+        Element params = createUpdateTransaction(TITLE_XPATH, newTitle);
+
+        Element response = _transaction.execute(params, serviceContext);
+
+        assertEquals(1, getUpdatedCount(response, TOTAL_UPDATED));
+
+        final Metadata updatedMetadata = _metadataRepository.findOneByUuid(PHOTOGRAPHIC_UUID);
+        assertEquals(1, Xml.selectNodes(updatedMetadata.getXmlData(false), TITLE_XPATH, Arrays.asList(GCO, GMD)).size());
+    }
+
     @Test
     public void testXPathAddXml() throws Exception {
         addPhotographicMetadataToRepository(adminUserId());
