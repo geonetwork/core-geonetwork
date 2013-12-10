@@ -394,7 +394,7 @@ public class MetadataSchema
 
 
         ServiceContext context = ServiceContext.get();
-        if (context == null) {
+        if (context == null || context.getResourceManager() == null) {
             // we are in test mode...
             return;
         }

@@ -43,7 +43,7 @@ public class EditLibTest {
 
         final ServiceConfig serviceConfig = new ServiceConfig(Lists.<Element>newArrayList());
         final String webappDir = getWebappDir(EditLibTest.class);
-        final GeonetworkDataDirectory gdd = new GeonetworkDataDirectory("geonetwork", webappDir, serviceConfig, null);
+        new GeonetworkDataDirectory("geonetwork", webappDir, serviceConfig, null);
 
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
         final String resourcePath = Resources.locateResourcesDir((ServletContext)null);
