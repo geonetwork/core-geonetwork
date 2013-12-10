@@ -190,6 +190,12 @@ public class GeoNetworkLDAPUserDetailsContextMapper implements
 					privileges.add("SXT5_IFREMER_RegisteredUser");
 				}
 				if (privileges != null) {
+					// fixing Mantis issue #18255
+					// removing leading / trailing whitespaces on the group names
+					for (int i = 0; i < privileges.size(); i++) {
+						privileges.set(i, privileges.get(i).trim());
+					}
+
 					Set<String> profileList = new HashSet<String>();
 					
 					for (String privilegeDefinition : privileges) {
