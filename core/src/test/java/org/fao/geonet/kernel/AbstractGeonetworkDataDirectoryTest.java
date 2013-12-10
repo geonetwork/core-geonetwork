@@ -32,7 +32,7 @@ public abstract class AbstractGeonetworkDataDirectoryTest extends AbstractCoreIn
         // reinitialize data directory so that it uses the defaults
         dataDirectory.setSystemDataDir(null);
         final ServiceConfig handlerConfig = new ServiceConfig(getServiceConfigParameterElements());
-        final String webappDir = getWebappDir();
+        final String webappDir = getWebappDir(getClass());
         dataDirectory.init("geonetwork", webappDir, handlerConfig, null);
 
         assertEquals(getGeonetworkNodeId(), dataDirectory.getNodeId());

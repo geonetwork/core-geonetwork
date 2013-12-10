@@ -23,29 +23,33 @@
 
 package jeeves.server.sources.http;
 
-import jeeves.config.springutil.JeevesDelegatingFilterProxy;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.config.springutil.JeevesContextLoaderListener;
+import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.constants.Jeeves;
 import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 //=============================================================================
 
@@ -199,6 +203,14 @@ public class JeevesServlet extends HttpServlet
 			Log.error(Log.REQUEST, sb.toString());
 			return;
 		}
+
+        // Set the language of the request as the preferred language in a cookie
+        final Cookie langCookie = new Cookie(Jeeves.LANG_COOKIE, srvReq.getLanguage());
+        langCookie.setMaxAge((int) TimeUnit.DAYS.toSeconds(7));
+        langCookie.setComment("Keeps the last language chosen to be the preferred language");
+        langCookie.setVersion(1);
+        langCookie.setPath("/");
+        res.addCookie(langCookie);
 
 		//--- execute request
 

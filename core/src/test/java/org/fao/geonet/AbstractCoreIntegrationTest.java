@@ -16,6 +16,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
@@ -84,7 +85,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             ((FeatureStore<?,?>) _datastore.getFeatureSource(name)).removeFeatures(Filter.INCLUDE);
         }
         final String initializedString = "initialized";
-        final String webappDir = getWebappDir();
+        final String webappDir = getWebappDir(getClass());
         final File templateDataDir = new File(webappDir, "WEB-INF/data");
         final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
 
@@ -99,7 +100,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             AttributeDescriptor geomDescriptor = new AttributeTypeBuilder().crs(DefaultGeographicCRS.WGS84).binding(MultiPolygon.class).buildDescriptor("the_geom");
             builder.setName("spatialIndex");
             builder.add(geomDescriptor);
-            builder.add("id", String.class);
+            builder.add(SpatialIndexWriter._IDS_ATTRIBUTE_NAME, String.class);
             _datastore.createSchema(builder.buildFeatureType());
 
             _applicationContext.getBeanFactory().registerSingleton("serviceConfig", serviceConfig);
@@ -182,7 +183,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         context.setLogger(Log.createLogger("Test"));
         context.setMaxUploadSize(100);
         context.setOutputMethod(ServiceRequest.OutputMethod.DEFAULT);
-        context.setAppPath(getWebappDir());
+        context.setAppPath(getWebappDir(getClass()));
         context.setBaseUrl("geonetwork");
 
         return context;
@@ -197,14 +198,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
      * @param namespaces the namespaces required for xpath
      */
     protected void assertEqualsText(String expected, Element xml, String xpath, Namespace... namespaces) throws JDOMException {
-        final Element element;
-        if (namespaces == null || namespaces.length == 0) {
-            element = Xml.selectElement(xml, xpath);
-        } else {
-            element = Xml.selectElement(xml, xpath, Arrays.asList(namespaces));
-        }
-        assertNotNull("No element found at: " + xpath + " in \n" + Xml.getString(xml), element);
-        assertEquals(expected, element.getText());
+        Assert.assertEqualsText(expected, xml, xpath, namespaces);
     }
 
     /**
@@ -221,13 +215,18 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     }
 
     protected String getStyleSheets() {
-        final String file = getWebappDir();
+        final String file = getWebappDir(getClass());
 
         return new File(file, "xsl/conversion").getPath();
     }
 
-    protected String getWebappDir() {
-        File here = getClassFile();
+    /**
+     * Look up the webapp directory.
+     *
+     * @return
+     */
+    public static String getWebappDir(Class<?> cl) {
+        File here = getClassFile(cl);
         while (!new File(here, "pom.xml").exists() && !new File(here.getParentFile(), "web/src/main/webapp/").exists()) {
 //            System.out.println("Did not find pom file in: "+here);
             here = here.getParentFile();
@@ -236,9 +235,9 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath()+File.separator;
     }
 
-    private File getClassFile() {
-        final String testClassName = getClass().getSimpleName();
-        return new File(getClass().getResource(testClassName + ".class").getFile());
+    private static File getClassFile(Class<?> cl) {
+        final String testClassName = cl.getSimpleName();
+        return new File(cl.getResource(testClassName + ".class").getFile());
     }
 
     protected User loginAsAdmin(ServiceContext context) {

@@ -22,7 +22,10 @@ import static javax.persistence.CascadeType.*;
 @Table(name = "HarvesterSettings")
 @Access(AccessType.PROPERTY)
 @EntityListeners(HarvesterSettingEntityListenerManager.class)
+@SequenceGenerator(name=HarvesterSetting.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class HarvesterSetting extends GeonetEntity {
+    static final String ID_SEQ_NAME = "harvester_setting_id_seq";
+
     private int _id;
     private HarvesterSetting _parent;
     private String _name;
@@ -35,7 +38,7 @@ public class HarvesterSetting extends GeonetEntity {
      * @return the setting id
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(name = "id", nullable = false)
     public int getId() {
         return _id;

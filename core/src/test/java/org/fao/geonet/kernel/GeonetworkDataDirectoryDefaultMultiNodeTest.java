@@ -26,6 +26,6 @@ public class GeonetworkDataDirectoryDefaultMultiNodeTest extends AbstractGeonetw
 
     @Override
     protected String getDataDir() {
-        return new File(getWebappDir() + GEONETWORK_DEFAULT_DATA_DIR).getAbsolutePath() + "_" + getGeonetworkNodeId() + separator;
+        return new File(getWebappDir(getClass()) + GEONETWORK_DEFAULT_DATA_DIR).getAbsolutePath() + "_" + getGeonetworkNodeId() + separator;
     }
 }

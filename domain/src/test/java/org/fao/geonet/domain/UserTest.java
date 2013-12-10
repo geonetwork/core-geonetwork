@@ -61,8 +61,9 @@ public class UserTest extends AbstractSpringDataTest {
                         .setCountry(country2)
                         .setState(state2)
                         .setZip(zip2));
-        String email1 = "email1";
-        String email2 = "email2";
+        String email1 = "email1@c2c.com";
+        String email2 = "email2@c2c.com";
+        user.getEmailAddresses().add("invalidEmail");
         user.getEmailAddresses().add(email1);
         user.getEmailAddresses().add(email2);
 
@@ -89,7 +90,7 @@ public class UserTest extends AbstractSpringDataTest {
                 return ((Element)input).getTextTrim();
             }
         });
-        Assert.assertEquals(2, emailAddresses.size());
+        Assert.assertEquals(3, emailAddresses.size());
         Assert.assertTrue(emailAddressesAsStrings.contains(email1));
         Assert.assertTrue(emailAddressesAsStrings.contains(email2));
 

@@ -10,7 +10,7 @@ package org.fao.geonet.kernel;
 public class GeonetworkDataDirectoryDefaultsTest extends AbstractGeonetworkDataDirectoryTest {
     @Override
     protected String getDataDir() {
-        return  getWebappDir()+GeonetworkDataDirectory.GEONETWORK_DEFAULT_DATA_DIR;
+        return  getWebappDir(getClass())+GeonetworkDataDirectory.GEONETWORK_DEFAULT_DATA_DIR;
     }
 
 }
