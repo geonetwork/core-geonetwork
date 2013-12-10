@@ -6,6 +6,7 @@
     "statisticsAndStatus": "Statistiques et status",
     "io": "Importer/Exporter",
     "harvesters": "Moissonnage",
+    "harvesterError": "Erreur lors du moissonnage",
     "settings": "Paramètres",
     "settingsUpdated": "Configuration sauvegardée.",
     "usersAndGroups": "Utilisateurs et groupes",
