@@ -3,11 +3,17 @@
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">testCSW</div>
       <div class="panel-body">
+        <label class="radio-inline">
+          <input type="radio" name="csw" id="csw1" value="csw" data-ng-model="cswUrl"><label for="csw1">csw</label>
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="csw" id="csw2" value="csw-publication" data-ng-model="cswUrl"><label for="csw2">csw-publication</label>
+        </label>
+        <h4 data-translate="">cswRequest</h4>
         <select class="form-control" data-ng-model="currentTestId" autofocus="">
           <option data-ng-repeat="(key, value) in cswTests" value="{{key}}">{{value[0]}}</option>
         </select>
 
-        <h4 data-translate="">cswRequest</h4>
         <textarea rows="8" class="form-control" data-ng-model="currentTest"/>
 
         <br/>
