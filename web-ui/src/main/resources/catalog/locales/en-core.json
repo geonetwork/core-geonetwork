@@ -56,7 +56,8 @@
     "passwordMinlength": "Password must contain at least 6 characters!",
     "updatePassword": "Update",
     "passwordUpdated": "Password successfully updated.",
-    
+    "resetPassword": "Reset password",
+    "resetPasswordTitle": "Reset {{user}} password.",
     "from": "From",
     "to": "To",
     "until": "Until",

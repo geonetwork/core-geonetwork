@@ -581,6 +581,7 @@ INSERT INTO Settings (name, value, datatype, position) VALUES ('system/selection
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/csw/enable', 'true', 2, 1210);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/csw/contactId', NULL, 0, 1220);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/csw/metadataPublic', 'false', 2, 1310);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/csw/transactionUpdateCreateXPath', 'true', 2, 1320);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/shib/use', 'false', 2, 1710);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/shib/path', '/geonetwork/srv/en/shib.user.login', 0, 1720);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/shib/username', 'REMOTE_USER', 0, 1740);

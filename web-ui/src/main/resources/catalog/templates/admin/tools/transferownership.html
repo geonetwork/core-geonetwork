@@ -1,0 +1,40 @@
+<div class="panel panel-default">
+  <div class="panel-heading" data-translate="">transfertPrivs</div>
+  <div class="panel-body">
+      <label data-translate="">chooseSourceEditor</label>
+      <select class="form-control" data-ng-model="editorsSelectedId"
+        autofocus="" data-ng-change="selectUser(editorsSelectedId)">
+        <option data-ng-repeat="e in editors" value="{{e.id}}">{{e.name
+          + ' ' + e.surname}}</option>
+      </select>
+      <table class="table" data-ng-hide="editorsSelectedId == null">
+        <tr>
+          <th data-translate="">sourceGroup</th>
+          <th data-translate="">targetGroup</th>
+          <th data-translate="">targetEditor</th>
+        </tr>
+        <tr data-ng-repeat="g in editorGroups"
+          data-ng-init="transfertList[g.id] = {sourceGroup: g.id};">
+          <td>{{g.name}}</td>
+          <td><select class="form-control"
+            data-ng-model="transfertList[g.id].targetGroup"
+            data-ng-options="g as g.name for g in groupinfo.targetGroup">
+          </select></td>
+          <td><select class="form-control"
+            data-ng-model="transfertList[g.id].targetEditor"
+            data-ng-options="e.id as (e.name + ' ' + e.surname) for e in transfertList[g.id].targetGroup.editor">
+          </select></td>
+          <td>
+            <button type="button" class="btn btn-primary btn-block"
+              data-ng-click="tranferOwnership(g.id)"
+              data-ng-disabled="!transfertList[g.id].targetEditor">
+              <span data-translate="">transfertPriv</span> <i
+                data-ng-class="isRunning(g.id) ? 'fa fa-plus' : ''"></i>
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+</div>

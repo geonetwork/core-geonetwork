@@ -112,11 +112,16 @@
           <artifactId>exec-maven-plugin</artifactId>
           <version>1.2</version>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>2.0</version>
-        </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-release-plugin</artifactId>
+              <version>2.0</version>
+          </plugin>
+          <plugin>
+              <groupId>org.mortbay.jetty</groupId>
+              <artifactId>jetty-maven-plugin</artifactId>
+              <version>${jetty.version}</version>
+          </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
@@ -855,8 +860,18 @@
 		    <artifactId>spring-expression</artifactId>
 		  </exclusion>
 		</exclusions>
-      </dependency>
-      <dependency>
+       </dependency>
+       <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-webmvc</artifactId>
+         <version>${spring.version}</version>
+       </dependency>
+       <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-web</artifactId>
+         <version>${spring.version}</version>
+       </dependency>
+       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-cas</artifactId>
         <version>${spring.security.version}</version>
@@ -1000,6 +1015,7 @@
 
   </repositories>
 
+
   <pluginRepositories>
     <pluginRepository>
       <name>oss.sonatype.org - github-releases</name>
@@ -1070,7 +1086,7 @@
   </distributionManagement>
 
   <properties>
-    <jetty.version>7.3.1.v20110307</jetty.version>
+    <jetty.version>8.1.9.v20130131</jetty.version>
     <geotools.version>8.6</geotools.version>
     <lucene.version>4.1.0</lucene.version>
     <spring.version>3.2.5.RELEASE</spring.version>

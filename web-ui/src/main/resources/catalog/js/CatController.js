@@ -151,18 +151,6 @@
 
 
 
-
-
-
-
-      $scope.selectMetadata = function(uuid) {
-        console.log('select ' + uuid);
-      };
-      $scope.selectAllMetadata = function() {
-        console.log('select all ');
-      };
-
-
       $scope.loadCatalogInfo();
 
 

@@ -16,7 +16,10 @@ import java.util.List;
 @Access(AccessType.PROPERTY)
 @Table(name = "MetadataNotifiers")
 @EntityListeners(MetadataNotifierEntityListenerManager.class)
+@SequenceGenerator(name=MetadataNotifier.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class MetadataNotifier extends GeonetEntity {
+    static final String ID_SEQ_NAME = "metadata_notifier_id_seq";
+
     private int _id;
     private String _name;
     private String _url;
@@ -32,7 +35,7 @@ public class MetadataNotifier extends GeonetEntity {
      * @return the id of this notifier.
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
