@@ -15,10 +15,9 @@
         templateUrl: '../../catalog/components/search/searchmanager/partials/' +
             'searchresults.html',
         scope: {
-          resultRecords: '=',
+          searchResults: '=',
           paginationInfo: '=paginationInfo',
           selection: '=selectRecords',
-          resultCount: '='
         },
         link: function(scope, element, attrs) {
 
@@ -57,21 +56,24 @@
               };
             }
           }
-          
-          scope.$watchCollection('resultRecords', function() {
-            if (scope.resultRecords.length > 0) {
-              scope.paginationInfo.pages = Math.round(
-                  scope.resultCount /
-                scope.paginationInfo.hitsPerPage, 0);
+
+          // Event on new search result
+          // compute page number for pagination
+          scope.$watchCollection('searchResults.records', function() {
+            if (scope.searchResults.records.length > 0) {
+              scope.paginationInfo.pages = Math.ceil(
+                  scope.searchResults.count /
+                  scope.paginationInfo.hitsPerPage, 0);
             }
           });
-          
-          // Manage pagination
+
+          // Default settings for pagination
+          // TODO: put parameters in directive
           scope.paginationInfo = {
-              pages: -1,
-              currentPage: 0,
-              hitsPerPage: 2
-            };
+            pages: -1,
+            currentPage: 1,
+            hitsPerPage: 2
+          };
         }
       };
     }]);
