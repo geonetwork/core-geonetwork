@@ -381,7 +381,8 @@ public class Transaction extends AbstractOperation implements CatalogService {
                 EditLib editLib = new EditLib(_schemaManager);
 
                 MetadataSchema metadataSchema = _schemaManager.getSchema(schemaId);
-                boolean createXpathNodeIfNotExists = true; //gc.getBean(SettingManager.class).getValueAsBool(SettingManager);
+                final String settingId = SettingManager.CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
+                boolean createXpathNodeIfNotExists = gc.getBean(SettingManager.class).getValueAsBool(settingId);
 
                 // Process properties to update
                 for (Element recordProperty : recordProperties) {

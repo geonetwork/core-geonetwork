@@ -40,7 +40,7 @@ public class EditLibTest {
         final GeonetworkDataDirectory gdd = new GeonetworkDataDirectory();
 
         final ServiceConfig serviceConfig = new ServiceConfig(Lists.<Element>newArrayList());
-        gdd.init("geonetwork", AbstractCoreIntegrationTest.getWebappDir(), serviceConfig, null);
+        gdd.init("geonetwork", AbstractCoreIntegrationTest.getWebappDir(EditLibTest.class), serviceConfig, null);
 
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
 

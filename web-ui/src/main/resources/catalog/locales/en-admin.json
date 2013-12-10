@@ -205,6 +205,7 @@
     "system/csw/contactId": "Contact",
     "system/csw/enable": "CSW enabled",
     "system/csw/metadataPublic": "Inserted metadata is public",
+    "system/csw/transactionUpdateCreateXPath": "Transaction XPath Update can create new elements",
     "system/downloadservice": "Download service",
     "system/downloadservice/leave": "Use metadata linkage as is - no changes to linkage",
     "system/downloadservice/leave-help": "Selecting this option means that GeoNetwork will not handle file downloads.",

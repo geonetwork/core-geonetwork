@@ -60,6 +60,7 @@ public class SettingManager {
     public static final String SYSTEM_SITE_SITE_ID_PATH = "system/site/siteId";
     public static final String SYSTEM_SITE_NAME_PATH = "system/site/name";
     public static final String SYSTEM_LUCENE_IGNORECHARS = "system/lucene/ignorechars";
+    public static final String CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS = "system/csw/transactionUpdateCreateXPath";
 
     @Autowired
     private SettingRepository _repo;
