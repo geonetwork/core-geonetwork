@@ -173,11 +173,14 @@ public class Resources {
 	 */
 	public static String locateResourcesDir(ServletContext context) {
 		String property = null;
-		String path = context.getContextPath();
+		String path = null;
+        if (context != null) {
+            context.getContextPath();
+        }
 		if (path != null) {
 			property = System.getProperty(path.substring(1) + ".resources.dir");
 		}
-		if (property == null) {
+		if (property == null && context != null) {
 			property = System.getProperty(context.getServletContextName()
 					+ ".resources.dir");
 		}

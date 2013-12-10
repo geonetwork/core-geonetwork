@@ -1730,4 +1730,26 @@ public class SchemaManager {
 	}
 
 
+    public static String registerXmlCatalogFiles(String path, String schemapluginUriCatalog) {
+        String webapp = path + "WEB-INF" + File.separator;
+
+        //--- Set jeeves.xml.catalog.files property
+        //--- this is critical to schema support so must be set correctly
+        String catalogProp = System.getProperty(Jeeves.XML_CATALOG_FILES);
+        if (catalogProp == null) {
+            catalogProp = "";
+        }
+        if (!catalogProp.equals("")) {
+            Log.info(Geonet.SCHEMA_MANAGER, "Overriding " + Jeeves.XML_CATALOG_FILES + " property (was set to " + catalogProp + ")");
+        }
+        catalogProp = webapp + "oasis-catalog.xml;" + schemapluginUriCatalog;
+        System.setProperty(Jeeves.XML_CATALOG_FILES, catalogProp);
+        Log.info(Geonet.SCHEMA_MANAGER, Jeeves.XML_CATALOG_FILES + " property set to " + catalogProp);
+
+        String blankXSLFile = path + "xsl" + File.separator + "blanks.xsl";
+        System.setProperty(Jeeves.XML_CATALOG_BLANKXSLFILE, blankXSLFile);
+        Log.info(Geonet.SCHEMA_MANAGER, Jeeves.XML_CATALOG_BLANKXSLFILE + " property set to " + blankXSLFile);
+
+        return webapp;
+    }
 }

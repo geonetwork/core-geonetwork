@@ -38,8 +38,7 @@ import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
@@ -299,10 +298,11 @@ public class Transaction extends AbstractOperation implements CatalogService
 
 
         // Update full metadata
+        final SchemaManager schemamanager = gc.getSchemamanager();
         if (xml != null) {
 
             // Retrieve schema and the related Namespaces
-            String schemaId = gc.getSchemamanager().autodetectSchema(xml);
+            String schemaId = schemamanager.autodetectSchema(xml);
 
             if (schemaId == null) {
               throw new NoApplicableCodeEx("Can't identify metadata schema");
@@ -384,18 +384,17 @@ public class Transaction extends AbstractOperation implements CatalogService
                   throw new NoApplicableCodeEx("Can't identify metadata schema");
                 }
 
-                Map mapNs = retrieveNamepacesForSchema(gc.getDataManager().getSchema(schemaId));
-
                 boolean metadataChanged = false;
+                EditLib editLib = new EditLib(schemamanager);
+
+                MetadataSchema metadataSchema = schemamanager.getSchema(schemaId);
 
                 // Process properties to update
                 for(Element recordProperty : recordProperties) {
                     Element propertyNameEl = recordProperty.getChild("Name" ,Csw.NAMESPACE_CSW );
-                    Element propertyValueEl = recordProperty.getChild("Value" ,Csw.NAMESPACE_CSW );
+                    Element propertyValueEl = recordProperty.getChild("Value", Csw.NAMESPACE_CSW);
 
                     String propertyName = propertyNameEl.getText();
-
-                    String propertyValue = propertyValueEl.getText();
 
                     // Get XPath for queriable name, i provided in propertyName.
                     // Otherwise assume propertyName contains full XPath to property to update
@@ -405,23 +404,23 @@ public class Transaction extends AbstractOperation implements CatalogService
                     }
 
                     Log.info(Geonet.CSW, "Xpath of property: " + xpathProperty);
-                    XPath xpath = new JDOMXPath(xpathProperty);
-                    xpath.setNamespaceContext(new SimpleNamespaceContext(mapNs));
 
-                    Object propEl = xpath.selectSingleNode(metadata);
-                    Log.info(Geonet.CSW, "XPath found in metadata: " + (propEl != null));
-
-                    // If a property is not found in metadata, just ignore it.
-                    if (propEl != null) {
-                        if (propEl instanceof Element) {
-                            ((Element) propEl).setText(propertyValue);
-                            metadataChanged = true;
-
-                        } else if (propEl instanceof Attribute) {
-                            ((Attribute) propEl).setValue(propertyValue);
-                            metadataChanged = true;
+                    final List<Element> children = propertyValueEl.getChildren();
+                    AddElemValue propertyValue;
+                    if (children.isEmpty()) {
+                        propertyValue = new AddElemValue(propertyValueEl.getText());
+                        metadataChanged |= editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpathProperty, propertyValue,
+                                true);
+                    } else {
+                        for (Element child : children) {
+                            propertyValue = new AddElemValue((Element) child.clone());
+                            metadataChanged |= editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpathProperty, propertyValue,
+                                    true);
                         }
                     }
+
+                    Log.info(Geonet.CSW, "Metadata has been updated: "+metadataChanged);
+
 
                 } // for(Element recordProperty : recordProperties)
 

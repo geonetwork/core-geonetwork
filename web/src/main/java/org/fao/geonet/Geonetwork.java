@@ -773,23 +773,9 @@ public class Geonetwork implements ApplicationHandler {
 	 */
 	private void setProps(String path, ServiceConfig handlerConfig) {
 
-		String webapp = path + "WEB-INF" + FS;
-
-		//--- Set jeeves.xml.catalog.files property
-		//--- this is critical to schema support so must be set correctly
-		String catalogProp = System.getProperty(Jeeves.XML_CATALOG_FILES);
-		if (catalogProp == null) catalogProp = "";
-		if (!catalogProp.equals("")) {
-			logger.info("Overriding "+Jeeves.XML_CATALOG_FILES+" property (was set to "+catalogProp+")");
-		} 
-		catalogProp = webapp + "oasis-catalog.xml;" + handlerConfig.getValue(Geonet.Config.CONFIG_DIR) + File.separator + "schemaplugin-uri-catalog.xml";
-		System.setProperty(Jeeves.XML_CATALOG_FILES, catalogProp);
-		logger.info(Jeeves.XML_CATALOG_FILES+" property set to "+catalogProp);
-		
-		String blankXSLFile = path + "xsl" + FS + "blanks.xsl";
-		System.setProperty(Jeeves.XML_CATALOG_BLANKXSLFILE, blankXSLFile);
-		logger.info(Jeeves.XML_CATALOG_BLANKXSLFILE + " property set to " + blankXSLFile);
-		
+        final String schemapluginUriCatalog = handlerConfig.getValue(Geonet.Config.CONFIG_DIR) + File.separator +
+                                              "schemaplugin-uri-catalog.xml";
+        String webapp = SchemaManager.registerXmlCatalogFiles(path, schemapluginUriCatalog);
 		//--- Set mime-mappings
 		String mimeProp = System.getProperty("mime-mappings");
 		if (mimeProp == null) mimeProp = "";
