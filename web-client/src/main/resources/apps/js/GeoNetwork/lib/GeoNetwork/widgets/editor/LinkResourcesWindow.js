@@ -676,6 +676,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         this.uploadDocument = false;
                         
                         protocolCombo.setVisible(true);
+                        protocolCombo.ownerCt.find('name', 'name')[0].setVisible(true);
                         
                         if (!fsUpload.collapsed) {
                             fsUpload.collapse();
@@ -776,6 +777,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         this.uploadDocument = true;
                         
                         protocolCombo.setVisible(false);
+                        protocolCombo.ownerCt.find('name', 'name')[0].setVisible(false);
                         
                         if (!fsUrl.collapsed) {
                             fsUrl.collapse();
