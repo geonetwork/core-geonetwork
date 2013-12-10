@@ -14,6 +14,7 @@
             <bean class="org.fao.geonet.TestDatabasePopulator">
                 <property name="interpolatedScripts">
                     <list>
+                        <value>classpath:cleanoutdatabase.sql</value>
                         <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/data-db-default.sql</value>
                         <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-ara-default.sql</value>
                         <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-cat-default.sql</value>
@@ -31,15 +32,6 @@
                         <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-spa-default.sql</value>
                         <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-tur-default.sql</value>
                         <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-vie-default.sql</value>
-                    </list>
-                </property>
-            </bean>
-        </property>
-        <property name="databaseCleaner">
-            <bean class="org.fao.geonet.TestDatabasePopulator">
-                <property name="interpolatedScripts">
-                    <list>
-                        <value>classpath:cleanoutdatabase.sql</value>
                     </list>
                 </property>
             </bean>
