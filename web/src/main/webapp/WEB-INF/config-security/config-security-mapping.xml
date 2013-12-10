@@ -476,6 +476,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.log!?.*" access="hasRole('UserAdmin')"/>
                 
                 
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.ownership.editors!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.ownership.groups!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.ownership.transfer!?.*" access="hasRole('Administrator')"/>
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.languages.get!?.*" access="permitAll"/>
                 
