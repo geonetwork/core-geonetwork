@@ -60,6 +60,7 @@ public class SettingManager {
     public static final String SYSTEM_SITE_SITE_ID_PATH = "system/site/siteId";
     public static final String SYSTEM_SITE_NAME_PATH = "system/site/name";
     public static final String SYSTEM_LUCENE_IGNORECHARS = "system/lucene/ignorechars";
+
     @Autowired
     private SettingRepository _repo;
 

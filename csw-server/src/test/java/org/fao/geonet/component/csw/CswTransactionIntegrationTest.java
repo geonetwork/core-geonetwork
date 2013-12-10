@@ -11,6 +11,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataRepositoryTest;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Test;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,9 +40,9 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     public static final String PHOTOGRAPHIC_UUID = "46E7F9B1-99F6-3241-9039-EAE7201534F4";
     public static final String IDENTIFICATION_XPATH = "gmd:identificationInfo/gmd:MD_DataIdentification";
     public static final String TITLE_XPATH = IDENTIFICATION_XPATH + "/gmd:citation/gmd:CI_Citation/gmd:title";
-    public static final String TITLE_XPATH_DE_FREE_TEXT = TITLE_XPATH + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='DE']";
-    public static final String TITLE_XPATH_FR_FREE_TEXT = TITLE_XPATH + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='FR']";
-    public static final String TITLE_XPATH_EN_FREE_TEXT = TITLE_XPATH + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='EN']";
+    public static final String TITLE_XPATH_DE_FREE_TEXT = TITLE_XPATH + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']";
+    public static final String TITLE_XPATH_FR_FREE_TEXT = TITLE_XPATH + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#FR']";
+    public static final String TITLE_XPATH_EN_FREE_TEXT = TITLE_XPATH + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#EN']";
     public static final String TITLE_XPATH_CHARSTRING = TITLE_XPATH + "/gco:CharacterString";
     private static final String ABSTRACT_XPATH = IDENTIFICATION_XPATH + "/gmd:abstract";
     private static final String TOTAL_UPDATED = "totalUpdated";
@@ -231,24 +233,6 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     }
 
     @Test
-    public void testXPathAddElement() throws Exception {
-        addPhotographicMetadataToRepository(adminUserId());
-
-        ServiceContext serviceContext = createServiceContext();
-        loginAsAdmin(serviceContext);
-
-        final String newTitle = "AddedTitle";
-        Element params = createUpdateTransaction(TITLE_XPATH_DE_FREE_TEXT, newTitle);
-
-        Element response = _transaction.execute(params, serviceContext);
-
-        assertEquals(1, getUpdatedCount(response, TOTAL_UPDATED));
-
-        assertMetadataIsUpdated(TITLE_XPATH_DE_FREE_TEXT, newTitle);
-    }
-
-
-    @Test
     public void testXPathRemoveElement() throws Exception {
         addPhotographicMetadataToRepository(adminUserId());
 
@@ -289,7 +273,8 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
                 .addContent(new Element("textGroup", GMD).addContent(new Element("LocalisedCharacterString", GMD)
                         .setAttribute("locale", "#EN").addContent(en))
                 );
-        Element params = createUpdateTransaction(TITLE_XPATH, Xml.getString(charStringEl)+Xml.getString(ptFreeText));
+        final Element title = new Element("title", GMD).addContent(Lists.newArrayList(charStringEl, ptFreeText));
+        Element params = createUpdateTransaction(TITLE_XPATH, title);
 
         Element response = _transaction.execute(params, serviceContext);
 
@@ -317,10 +302,22 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
                         .addContent(constraint));
     }
 
-    private Element createRecordProperty(String newTitle, String propertyName) {
-        return new Element("RecordProperty", NAMESPACE_CSW)
-                .addContent(new Element("Name", NAMESPACE_CSW).setText(propertyName))
-                .addContent(new Element("Value", NAMESPACE_CSW).setText(newTitle));
+    private Element createRecordProperty(String propertyName, Object value) {
+        Element xml = new Element("RecordProperty", NAMESPACE_CSW)
+                .addContent(new Element("Name", NAMESPACE_CSW).setText(propertyName));
+
+        final Element valueEl = new Element("Value", NAMESPACE_CSW);
+        if (value instanceof Content) {
+            valueEl.addContent((Content) value);
+        } else if (value instanceof String) {
+            valueEl.setText((String) value);
+        } else {
+            throw new AssertionError("Not a supported new value : "+value);
+        }
+
+        xml.addContent(valueEl);
+
+        return xml;
     }
 
     private void addPhotographicMetadataToRepository(int ownerId) throws Exception {
@@ -340,9 +337,9 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
                 MetadataType.METADATA, metadata.getDataInfo().getTitle());
     }
 
-    private Element createUpdateTransaction(String property, String newValue) {
+    private Element createUpdateTransaction(String property, Object newValue) {
         Element constraint = createConstraint();
-        Element recordProperty = createRecordProperty(newValue, property);
+        Element recordProperty = createRecordProperty(property, newValue);
 
         return new Element("Transaction", NAMESPACE_CSW)
                 .setAttribute("service", "CSW")
