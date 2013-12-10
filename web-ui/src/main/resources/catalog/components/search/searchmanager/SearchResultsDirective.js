@@ -17,7 +17,7 @@
         scope: {
           searchResults: '=',
           paginationInfo: '=paginationInfo',
-          selection: '=selectRecords',
+          selection: '=selectRecords'
         },
         link: function(scope, element, attrs) {
 

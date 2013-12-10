@@ -206,12 +206,13 @@
       $scope.recordsToProcessSearch = function() {
         var pageOptions = $scope.recordsToProcessPagination,
             criteria = [
-                        {fast: 'index'},
-                        {from:
-                          (pageOptions.currentPage-1) * pageOptions.hitsPerPage + 1},
-                        {to:
-                          pageOptions.currentPage * pageOptions.hitsPerPage},
-                        {any: $scope.recordsToProcessFilter}],
+              {fast: 'index'},
+              {from:
+                    (pageOptions.currentPage - 1) *
+                    pageOptions.hitsPerPage + 1},
+              {to:
+                    pageOptions.currentPage * pageOptions.hitsPerPage},
+              {any: $scope.recordsToProcessFilter}],
             fields = {'#gn-batchSearchTemplateY': 'y',
                       '#gn-batchSearchTemplateN': 'n',
                       '#gn-batchSearchTemplateS': 's'};

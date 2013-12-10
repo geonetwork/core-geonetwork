@@ -27,15 +27,15 @@
         fast: 'index'
       };
       $scope.searchResults = {
-          records: [],
-          count: 0
-      }
+        records: [],
+        count: 0
+      };
       $scope.paginationInfo = {};
 
       var getPaginationParams = function() {
         pageOptions = $scope.paginationInfo;
         return {
-          from: (pageOptions.currentPage-1) * pageOptions.hitsPerPage + 1,
+          from: (pageOptions.currentPage - 1) * pageOptions.hitsPerPage + 1,
           to: pageOptions.currentPage * pageOptions.hitsPerPage
         };
       };
@@ -61,9 +61,9 @@
       };
       $scope.clearResults = function() {
         $scope.searchResults = {
-            records: [],
-            count: 0
-        }
+          records: [],
+          count: 0
+        };
       };
 
       //      $scope.$watch('autoSearch', function() {
@@ -73,7 +73,7 @@
       //      });
 
       // trigger search on pagination events
-      // TODO: voir s'il ne vaut mieux pas passer la fonction 
+      // TODO: voir s'il ne vaut mieux pas passer la fonction
       // triggerSearch à la directive de searchresults
       $scope.$watch('paginationInfo.currentPage', function() {
         if ($scope.paginationInfo.pages > 0) {
