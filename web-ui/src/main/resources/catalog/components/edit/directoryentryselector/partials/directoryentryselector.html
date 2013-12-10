@@ -26,7 +26,7 @@
       data-ng-model="params.any" data-ng-change="triggerSearch('qi@json')"/>
 
     <div class="list-group gn-autocomplete-list">
-      <li href="" class="list-group-item" data-ng-repeat="r in resultRecords"> {{r.title}} <span
+      <li href="" class="list-group-item" data-ng-repeat="r in searchResults.records"> {{r.title}} <span
           class="pull-right">
           <!-- TODO: Display only if XLink enable -->
           <a href="" data-ng-click="addContact(r, null, true)" class="fa fa-link pull-right"

@@ -26,8 +26,10 @@
       var defaultParams = {
         fast: 'index'
       };
-      $scope.resultRecords = [];
-      $scope.resultCount = 0;
+      $scope.searchResults = {
+          records: [],
+          count: 0
+      }
       $scope.paginationInfo = {};
 
       var getPaginationParams = function() {
@@ -53,13 +55,15 @@
       $scope.triggerSearch = function(service) {
         gnSearchManagerService.search(composeUrl(service)).then(
             function(data) {
-              $scope.resultRecords = data.metadata;
-              $scope.resultCount = data.count;
+              $scope.searchResults.records = data.metadata;
+              $scope.searchResults.count = data.count;
             });
       };
       $scope.clearResults = function() {
-        $scope.resultRecords = null;
-        $scope.resultCount = null;
+        $scope.searchResults = {
+            records: [],
+            count: 0
+        }
       };
 
       //      $scope.$watch('autoSearch', function() {

@@ -5,8 +5,8 @@
 
   /**
    * Provide directives for online resources
-   * 
-   * - gnOnlinesrcList 
+   *
+   * - gnOnlinesrcList
    * - gnAddThumbnail
    * - gnAddOnlinesrc
    * - gnLinkParentMd

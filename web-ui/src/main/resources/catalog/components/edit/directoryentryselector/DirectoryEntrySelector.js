@@ -65,9 +65,10 @@
                  if (snippets.length === contact.length) {
                    scope.snippet = snippets.join(separator);
 
-                   // Clean results
-                   scope.resultRecords = null;
-                   scope.resultCount = null;
+                   // Clean results 
+                   // TODO: should call clean result from searchFormController
+                   scope.searchResults.records = null;
+                   scope.searchResults.count = null;
 
                     $timeout(function() {
                       // Save the metadata and refresh the form
