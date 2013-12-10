@@ -106,16 +106,14 @@
 
                return false;
              };
-             scope.openSelector = function() {
-               // TODO: Schema should be a parameter
-               gnSchemaManagerService
-               .getCodelist('iso19139|gmd:CI_RoleCode')
-               .then(function(data) {
-                 scope.roles = data[0].entry;
-               });
-               // FIXME: add dependency on popup
-               $('#gn-directory-entry-popup').toggle();
-             };
+
+             // TODO: Schema should be a parameter
+             gnSchemaManagerService
+             .getCodelist('iso19139|gmd:CI_RoleCode')
+             .then(function(data) {
+               scope.roles = data[0].entry;
+             });
+
            }
          };
        }]);

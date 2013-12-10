@@ -6,7 +6,8 @@
         <i class="fa fa-plus"/>
         <span>&nbsp;</span>
       </button>
-      <button class="btn btn-default" type="button" data-ng-click="openSelector()">
+      <button class="btn btn-default" type="button" 
+        data-toggle="modal" data-target="#gn-directory-entry-popup-{{elementRef}}">
         <i class="fa fa-book"/>
         <span data-translate="">addFromDictionnary</span>
       </button>
@@ -41,10 +42,9 @@
     </div>
   </div>
 
-  <div data-gn-popup="directoryEntryPopupShown" class="gn-directory-entry-popup"
-    data-gn-draggable=".gn-popup-title"
+  <div data-gn-modal="" class="gn-directory-entry-popup"
     data-gn-popup-options="{title:('addFromDictionnary' | translate)}"
-    id="gn-directory-entry-popup">
+    id="gn-directory-entry-popup-{{elementRef}}">
     <div data-gn-directory-entry-multi-selector=""/>
   </div>
 
