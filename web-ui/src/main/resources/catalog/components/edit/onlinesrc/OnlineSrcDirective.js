@@ -45,6 +45,7 @@
             link: function(scope, element, attrs) {
               scope.metadataId = gnMetadataManagerService.
                   getCurrentEdit().metadataId;
+              
               // mode can be 'url' or 'upload'
               scope.mode = 'url';
 
@@ -55,7 +56,7 @@
                * If we send an upload via form submit, the form field
                * 'version' has to be set.
                */
-              scope.$watchCollection('mode', function() {
+              scope.$watch('mode', function() {
                 if (angular.isUndefined(scope.params.version)) {
                   getVersion();
                 }
@@ -72,12 +73,12 @@
                * Onlinesrc uploaded with success, close the popup,
                * refresh the metadata.
                */
-              var uploadOnlinesrcDone = function(data) {
-                gnMetadataManagerService.save()
-                .then(function(data) {
-                      getVersion();
-                      gnMetadataManagerService.refreshEditorForm($(data.data));
-                    });
+              var uploadOnlinesrcDone = function(evt,data) {
+                $(gnMetadataManagerService.
+                    getCurrentEdit().formId).
+                    find('input[id="version"]').val(data.result.version);
+                
+                  gnMetadataManagerService.refreshEditorForm();
               };
 
               /**
