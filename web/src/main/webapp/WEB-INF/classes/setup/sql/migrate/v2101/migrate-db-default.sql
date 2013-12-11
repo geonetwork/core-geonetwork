@@ -1,4 +1,6 @@
 UPDATE Settings SET value='2.10.1' where id=15;
+update formats set validated='y' where validated is null;
+
 
 CREATE TABLE public.schematron
 (
