@@ -200,18 +200,48 @@
          * Type large or small is specified in parameter.
          * The onlinesrc panel is reloaded after removal.
          */
-        removeThumbnail: function(type) {
+        removeThumbnail: function(thumb) {
           var scope = this;
-          gnHttp.callService('removeThumbnail', {
-            type: (type === 'thumbnail' ? 'small' : 'large'),
-            id: gnMetadataManagerService.getCurrentEdit().metadataId,
-            version: $(gnMetadataManagerService.getCurrentEdit().
-                formId).find('input[id="version"]').val()
-          }).success(function() {
-            // Reload online resources list
-            scope.reload = true;
-          });
+          
+          // It is a url thumbnail
+          if(thumb.id.indexOf('resources.get') < 0 ) {
+             gnBatchProcessing.runProcessMd(
+                setParams('thumbnail-remove', {
+                  id: gnMetadataManagerService.
+                  getCurrentEdit().metadataId,
+                  thumbnail_url: thumb.id
+                })).then(function() {
+                  scope.reload = true;
+                });
+          } 
+          // It is an uploaded tumbnail
+          else {
+            gnHttp.callService('removeThumbnail', {
+              type: (thumb.title === 'thumbnail' ? 'small' : 'large'),
+              id: gnMetadataManagerService.getCurrentEdit().metadataId,
+              version: $(gnMetadataManagerService.getCurrentEdit().
+                  formId).find('input[id="version"]').val()
+            }).success(function() {
+              // Reload online resources list
+              scope.reload = true;
+            });
+          }
+        },
+        
+        removeOnlinesrc: function(onlinesrc) {
+          var scope = this;
+          
+           gnBatchProcessing.runProcessMd(
+              setParams('onlinesrc-remove', {
+                id: gnMetadataManagerService.
+                getCurrentEdit().metadataId,
+                url: onlinesrc.id,
+                name: onlinesrc['abstract']
+              })).then(function() {
+                scope.reload = true;
+              });
         }
+
       };
     }]);
 })();

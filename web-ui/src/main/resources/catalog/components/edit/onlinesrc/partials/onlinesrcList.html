@@ -13,7 +13,8 @@
   <h4><span data-translate="">onlinesrc</span></h4>
   <div
     ng-repeat="resource in relations.onlinesrc | orderBy:'title'"
-    ng-click="">{{resource.title}}</div>
+    ng-click="">{{resource.title}}
+    <a href="" ng-click="onlinesrcService.removeOnlinesrc(resource)">remove</a></div>
     
   <!-- List of datasets -->
   <h4><span data-translate="">dataset</span></h4>
