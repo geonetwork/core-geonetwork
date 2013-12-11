@@ -27,7 +27,7 @@
 		-->
 	<statusSendEmail>Change log message: %s
 		
-Records are available from the following URL:\r\n 
+Records are available from the following URL:
 %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search
 	</statusSendEmail>
 	
