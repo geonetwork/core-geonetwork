@@ -108,6 +108,12 @@
       return {
 
         /**
+         * This value is watched from gnOnlinesrcList directive
+         * to reload online resources list when it is true
+         */
+        reload: false,
+        
+        /**
          * Get all online resources for the current edited
          * metadata.
          */
@@ -190,16 +196,20 @@
         },
 
         /**
-         *
+         * Remove a thumbnail from metadata.
+         * Type large or small is specified in parameter.
+         * The onlinesrc panel is reloaded after removal.
          */
         removeThumbnail: function(type) {
+          var scope = this;
           gnHttp.callService('removeThumbnail', {
             type: (type === 'thumbnail' ? 'small' : 'large'),
             id: gnMetadataManagerService.getCurrentEdit().metadataId,
             version: $(gnMetadataManagerService.getCurrentEdit().
                 formId).find('input[id="version"]').val()
           }).success(function() {
-            console.log('thumbnail removed');
+            // Reload online resources list
+            scope.reload = true;
           });
         }
       };

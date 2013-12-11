@@ -25,10 +25,29 @@
             scope: {},
             link: function(scope, element, attrs) {
               scope.onlinesrcService = gnOnlinesrc;
-              gnOnlinesrc.getAllResources()
+              
+              /**
+               * Call service relations.get to load
+               * all online resources of the current
+               * metadata
+               */
+              var loadRelations = function() {
+                gnOnlinesrc.getAllResources()
                 .then(function(data) {
                     scope.relations = data;
                   });
+              };
+              
+              // Load all relations on form init
+              loadRelations();
+              
+              // Reload relations when a directive requires it
+              scope.$watch('onlinesrcService.reload', function() {
+                if(scope.onlinesrcService.reload) {
+                  loadRelations();
+                  scope.onlinesrcService.reload = false;
+                }
+              });
             }
           };
         }])
@@ -79,6 +98,7 @@
                     find('input[id="version"]').val(data.result.version);
                 
                   gnMetadataManagerService.refreshEditorForm();
+                  gnOnlinesrc.reload = true;
               };
 
               /**
