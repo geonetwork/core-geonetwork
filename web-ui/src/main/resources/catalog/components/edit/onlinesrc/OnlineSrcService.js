@@ -139,6 +139,13 @@
         },
 
         /**
+         *
+         */
+        addThumbnailByURL: function(params) {
+          gnBatchProcessing.runProcessMd(
+              setParams('thumbnail-add', params));
+        },
+        /**
          * Call md.processing.new in mode 'parent-add'
          * to link a parent to the edited metadata
          *

@@ -111,7 +111,7 @@
                       });
                 }
                 else {
-                  gnOnlinesrc.addOnlinesrc(scope.params);
+                  gnOnlinesrc.addThumbnailByURL(scope.params);
                 }
               };
             }

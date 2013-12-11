@@ -39,7 +39,7 @@
     processAll: 'md.processing.batch',
     processXml: 'xml.metadata.processing@json', // TO CHANGE
     getRelations: 'md.relations.get@json',
-    removeThumbnail: 'metadata.thumbnail.unset.new' // TO CHANGE
+    removeThumbnail: 'md.thumbnail.remove@json'
   });
 
   module.provider('gnHttp', function() {
@@ -82,6 +82,8 @@
       }];
   });
 
+  // TODO: Move to editor module (because it's not needed
+  // for search apps for example)
   module.factory('gnBatchProcessing', [
     'gnHttp',
     'gnMetadataManagerService',
