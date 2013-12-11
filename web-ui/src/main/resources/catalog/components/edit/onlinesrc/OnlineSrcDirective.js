@@ -5,8 +5,8 @@
 
   /**
    * Provide directives for online resources
-   * 
-   * - gnOnlinesrcList 
+   *
+   * - gnOnlinesrcList
    * - gnAddThumbnail
    * - gnAddOnlinesrc
    * - gnLinkParentMd
@@ -43,7 +43,8 @@
                 'partials/addThumbnail.html',
             scope: {},
             link: function(scope, element, attrs) {
-
+              scope.metadataId = gnMetadataManagerService.
+                  getCurrentEdit().metadataId;
               // mode can be 'url' or 'upload'
               scope.mode = 'url';
 
@@ -56,11 +57,16 @@
                */
               scope.$watchCollection('mode', function() {
                 if (angular.isUndefined(scope.params.version)) {
-                  scope.params.version = $(gnMetadataManagerService.
-                      getCurrentEdit().formId).
-                      find('input[id="version"]').val();
+                  getVersion();
                 }
               });
+
+              // TODO: should be in gnMetadataManagerService ?
+              var getVersion = function() {
+                return scope.params.version = $(gnMetadataManagerService.
+                    getCurrentEdit().formId).
+                    find('input[id="version"]').val();
+              };
 
               /**
                * Onlinesrc uploaded with success, close the popup,
@@ -69,6 +75,7 @@
               var uploadOnlinesrcDone = function(data) {
                 gnMetadataManagerService.save()
                 .then(function(data) {
+                      getVersion();
                       gnMetadataManagerService.refreshEditorForm($(data.data));
                     });
               };
@@ -92,10 +99,19 @@
                */
               scope.addThumbnail = function() {
                 if (scope.mode == 'upload') {
-                  scope.submit();
+                  gnMetadataManagerService.save()
+                  .then(function(data) {
+                        getVersion();
+                        scope.submit();
+                        // TODO:
+                        // option1: Get version number from response
+                        // and update the editor form
+                        // option2: Reload the editor for this record
+                        // (option2 in widget/option1 avoid editor reload)
+                      });
                 }
                 else {
-                  //                  gnOnlinesrc.addOnlinesrc(scope.params);
+                  gnOnlinesrc.addOnlinesrc(scope.params);
                 }
               };
             }

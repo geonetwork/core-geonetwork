@@ -507,6 +507,10 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.element.add!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.element.remove!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.element.info!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.thumbnail.upload!?.*" access="hasRole('Editor')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.thumbnail.remove!?.*" access="hasRole('Editor')"/>
+                
+                
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.view!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.processing.batch!?.*" access="hasRole('Editor')"/>

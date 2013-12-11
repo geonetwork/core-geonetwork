@@ -156,6 +156,36 @@
       <class name=".services.schema.Info" />
     </service>
     
+    
+    <service name="md.thumbnail.upload">
+      <documentation><![CDATA[
+        Upload a thumbnail and attach it to the metadata record.
+        This service must be used in the context of an editing session.
+        
+        Parameters:
+        * scalingDir
+        * smallScalingDir
+        * type eg. large
+        * scalingFactor
+        * smallScalingFactor
+        * version: The version number of the editing session
+        * id: The metadata id
+        * thumbnail_desc: 
+        * fname: The image
+        
+        ]]></documentation>
+      <class name=".services.thumbnail.Set"/>
+    </service>
+    
+    <service name="md.thumbnail.remove">
+      <documentation><![CDATA[
+        Delete a thumbnail from the data diretory and detach 
+        it to the metadata record.
+        ]]></documentation>
+      <class name=".services.thumbnail.Unset"/>
+    </service>
+    
+    
     <service name="md.relations.get">
       <documentation>Return a list of all relation of the given metadata. Relations are mainly online resources
       like thumbnails, onlineresources etc ..</documentation>

@@ -1,6 +1,6 @@
 <div>
   <form id="gn-upload-onlinesrc" class="form-horizontal" role="form"
-     method="POST" enctype="multipart/form-data" action="metadata.thumbnail.set.new"
+    method="POST" enctype="multipart/form-data" action="md.thumbnail.upload@json"
      data-file-upload="onlinesrcUploadOptions">
      
     <div class="onlinesrc-container">
@@ -25,7 +25,7 @@
         <input name="scalingFactor" value="1000">
         <input name="smallScalingFactor" value="180">
         <input name="version" ng-model="params.version">
-        <input name="id" value="11"/>
+        <input name="id" ng-model="metadataId"/>
       </div>
       
       <!-- URL text field -->
