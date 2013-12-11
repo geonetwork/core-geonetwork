@@ -24,7 +24,7 @@
           'selected': '=gnMultiselect',
           'choices': '=',
           'sortFn': '&',
-          'getLabelFn': '@'
+          'labelProp': '@'  // Function or property
         },
         templateUrl: '../../catalog/components/common/multiselect/partials/' +
             'multiselect.html',
@@ -34,19 +34,18 @@
           scope.currentSelectionLeft = [];
           scope.currentSelectionRight = [];
 
-          //          scope.getLabel = function(e) {
-          //                        console.log(e);
-          //                        console.log(e[scope.getLabelProp]);
-          ////            console.log(e);
-          ////            if (e.getLabel) {
-          ////              return e.getLabel();
-          ////            } else if (scope.getLabelProp) {
-          ////              return e[scope.getLabelProp];
-          ////            }
-          ////            return null;
-          //
-          //          };
-
+          /**
+           * Return the label of the element
+           * It could be a property of the object
+           * or a custom function which build the label
+           */
+          scope.getLabel = function(e) {
+            if (typeof(e[scope.labelProp]) === 'string') {
+              return e[scope.labelProp];
+            } else {
+              return e[scope.labelProp]();
+            }
+          };
           /**
           * Select a single element or the list of currently
           * selected element.

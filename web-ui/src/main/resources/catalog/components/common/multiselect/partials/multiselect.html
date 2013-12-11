@@ -2,7 +2,7 @@
   <div class="col-md-4 col-md-offset-2">
     <select multiple="" class="form-control" data-ng-model="currentSelectionLeft">
       <option data-ng-repeat="e in choices track by $index" 
-        data-ng-init="label = e[getLabelFn]()"
+        data-ng-init="label = getLabel(e)"
         value="{{label}}"
         data-ng-dblclick="select(e)">{{label}}</option>
     </select>
@@ -16,7 +16,7 @@
   <div class="col-md-4">
     <select multiple="" class="form-control" data-ng-model="currentSelectionRight">
       <option data-ng-repeat="e in selected track by $index"
-        data-ng-init="label = e[getLabelFn]()"
+        data-ng-init="label = getLabel(e)"
         value="{{label}}"
         data-ng-dblclick="unselect(e)">{{label}}</option>
     </select>

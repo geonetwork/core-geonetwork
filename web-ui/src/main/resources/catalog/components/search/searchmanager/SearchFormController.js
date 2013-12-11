@@ -30,7 +30,7 @@
         records: [],
         count: 0
       };
-      $scope.paginationInfo = {};
+      $scope.paginationInfo = null;
 
       var getPaginationParams = function() {
         pageOptions = $scope.paginationInfo;
@@ -44,7 +44,13 @@
       var composeUrl = function(service) {
         var url = service || defaultServiceUrl;
         $scope.params = $.extend($scope.params, defaultParams);
-        angular.extend($scope.params, getPaginationParams());
+
+        // If pagination defined
+        // If not, set from and to in params
+        // or let default server side values apply.
+        if ($scope.paginationInfo) {
+          angular.extend($scope.params, getPaginationParams());
+        }
         for (param in $scope.params) {
           url = gnUrlUtils.append(url,
               param + '=' + $scope.params[param]);

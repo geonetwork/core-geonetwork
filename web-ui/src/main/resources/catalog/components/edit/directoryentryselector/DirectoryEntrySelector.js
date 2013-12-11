@@ -38,6 +38,8 @@
            'directoryentryselector/partials/' +
            'directoryentryselector.html',
            link: function(scope, element, attrs) {
+             // Separator between each contact XML
+             // snippet
              var separator = '&&&';
 
              // Search only for contact subtemplate
@@ -74,8 +76,8 @@
 
                    // Clean results
                    // TODO: should call clean result from searchFormController
-                   scope.searchResults.records = null;
-                   scope.searchResults.count = null;
+                   //                   scope.searchResults.records = null;
+                   //                   scope.searchResults.count = null;
 
                     $timeout(function() {
                       // Save the metadata and refresh the form

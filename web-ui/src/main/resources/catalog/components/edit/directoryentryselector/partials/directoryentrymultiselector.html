@@ -1,13 +1,5 @@
 <span data-ng-controller="GnSearchFormController">
 
-  <!-- subtemplates only -->
-  <input type="hidden" data-ng-model="params._isTemplate" ng-init="params._isTemplate='s'"/>
-  <input type="hidden" data-ng-model="params.fast" ng-init="params.fast='false'"/>
-  <input type="hidden" data-ng-model="params.sortBy" ng-init="params.sortBy='title'"/>
-
-  <!-- Contact only -->
-  <input type="hidden" data-ng-model="params._root" ng-init="params._root='gmd:CI_ResponsibleParty'"/>
-
   <input type="text" class="form-control" placeholder="{{'searchAContact' | translate}}"
     data-ng-model="params.any" data-ng-change="triggerSearch('qi@json')"/>
 
@@ -29,8 +21,7 @@
       </div>
     </div>
   </div>
-
-  <div data-gn-multiselect="selected" data-choices="searchResults.records" data-get-label-prop="title"/>
+  <div data-gn-multiselect="selected" data-choices="searchResults.records" data-label-prop="title"/>
 
   <!-- TODO handle role -->
   <div class="modal-footer">
