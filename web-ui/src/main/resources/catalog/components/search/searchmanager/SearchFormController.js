@@ -26,15 +26,17 @@
       var defaultParams = {
         fast: 'index'
       };
-      $scope.resultRecords = [];
-      $scope.resultCount = 0;
+      $scope.searchResults = {
+        records: [],
+        count: 0
+      };
       $scope.paginationInfo = {};
-      
-      var getPaginationParams= function() {
+
+      var getPaginationParams = function() {
         pageOptions = $scope.paginationInfo;
         return {
-          from: pageOptions.currentPage * pageOptions.hitsPerPage + 1,
-          to: (pageOptions.currentPage + 1) * pageOptions.hitsPerPage
+          from: (pageOptions.currentPage - 1) * pageOptions.hitsPerPage + 1,
+          to: pageOptions.currentPage * pageOptions.hitsPerPage
         };
       };
 
@@ -53,29 +55,31 @@
       $scope.triggerSearch = function(service) {
         gnSearchManagerService.search(composeUrl(service)).then(
             function(data) {
-              $scope.resultRecords = data.metadata;
-              $scope.resultCount = data.count;
+              $scope.searchResults.records = data.metadata;
+              $scope.searchResults.count = data.count;
             });
       };
       $scope.clearResults = function() {
-        $scope.resultRecords = null;
-        $scope.resultCount = null;
+        $scope.searchResults = {
+          records: [],
+          count: 0
+        };
       };
 
-//      $scope.$watch('autoSearch', function() {
-//        if ($scope.autoSearch) {
-//          $scope.triggerSearch();
-//        }
-//      });
-      
-      // When the current page or search criteria change trigger the search
+      //      $scope.$watch('autoSearch', function() {
+      //        if ($scope.autoSearch) {
+      //          $scope.triggerSearch();
+      //        }
+      //      });
+
+      // trigger search on pagination events
+      // TODO: voir s'il ne vaut mieux pas passer la fonction
+      // triggerSearch à la directive de searchresults
       $scope.$watch('paginationInfo.currentPage', function() {
-        if($scope.paginationInfo.currentPage) {
-                  $scope.triggerSearch();
+        if ($scope.paginationInfo.pages > 0) {
+          $scope.triggerSearch();
         }
       });
-      
-
     }
   ]);
 })();

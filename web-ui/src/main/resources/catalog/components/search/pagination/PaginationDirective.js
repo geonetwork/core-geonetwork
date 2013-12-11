@@ -17,7 +17,7 @@
             'pagination.html',
         link: function(scope, element, attrs) {
           scope.previous = function() {
-            if (scope.config.currentPage > 0) {
+            if (scope.config.currentPage > 1) {
               scope.config.currentPage -= 1;
             }
           };

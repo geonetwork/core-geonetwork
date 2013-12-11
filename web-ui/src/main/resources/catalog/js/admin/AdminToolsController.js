@@ -76,7 +76,7 @@
        */
       $scope.recordsToProcessPagination = {
         pages: -1,
-        currentPage: 0,
+        currentPage: 1,
         hitsPerPage: 10
       };
       /**
@@ -206,12 +206,13 @@
       $scope.recordsToProcessSearch = function() {
         var pageOptions = $scope.recordsToProcessPagination,
             criteria = [
-                        {fast: 'index'},
-                        {from:
-                    (pageOptions.currentPage * pageOptions.hitsPerPage + 1)},
-                        {to:
-                    (pageOptions.currentPage + 1) * pageOptions.hitsPerPage},
-                        {any: $scope.recordsToProcessFilter}],
+              {fast: 'index'},
+              {from:
+                    (pageOptions.currentPage - 1) *
+                    pageOptions.hitsPerPage + 1},
+              {to:
+                    pageOptions.currentPage * pageOptions.hitsPerPage},
+              {any: $scope.recordsToProcessFilter}],
             fields = {'#gn-batchSearchTemplateY': 'y',
                       '#gn-batchSearchTemplateN': 'n',
                       '#gn-batchSearchTemplateS': 's'};
@@ -251,7 +252,7 @@
         gnSearchManagerService.search('q@json?' + params)
           .then(function(data) {
               $scope.recordsToProcess = data;
-              $scope.recordsToProcessPagination.pages = Math.round(
+              $scope.recordsToProcessPagination.pages = Math.ceil(
                   data.count /
                   $scope.recordsToProcessPagination.hitsPerPage, 0);
             }, function(data) {
