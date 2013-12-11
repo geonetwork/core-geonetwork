@@ -27,9 +27,9 @@
               scope.onlinesrcService = gnOnlinesrc;
               
               /**
-               * Call service relations.get to load
+               * Calls service 'relations.get' to load
                * all online resources of the current
-               * metadata
+               * metadata into the list
                */
               var loadRelations = function() {
                 gnOnlinesrc.getAllResources()
@@ -46,6 +46,7 @@
                 if(scope.onlinesrcService.reload) {
                   loadRelations();
                   scope.onlinesrcService.reload = false;
+                  console.log('## reload relations');
                 }
               });
             }
@@ -70,16 +71,13 @@
 
               // the form params that will be submited
               scope.params = {};
-
-              /**
-               * If we send an upload via form submit, the form field
-               * 'version' has to be set.
-               */
-              scope.$watch('mode', function() {
-                if (angular.isUndefined(scope.params.version)) {
-                  getVersion();
-                }
-              });
+              
+              // upload directive options
+              scope.onlinesrcUploadOptions = {
+                  autoUpload: false,
+                  done: uploadOnlinesrcDone,
+                  fail: uploadOnlineSrcError
+                };
 
               // TODO: should be in gnMetadataManagerService ?
               var getVersion = function() {
@@ -93,10 +91,6 @@
                * refresh the metadata.
                */
               var uploadOnlinesrcDone = function(evt,data) {
-                $(gnMetadataManagerService.
-                    getCurrentEdit().formId).
-                    find('input[id="version"]').val(data.result.version);
-                
                   gnMetadataManagerService.refreshEditorForm();
                   gnOnlinesrc.reload = true;
               };
@@ -107,12 +101,6 @@
               var uploadOnlineSrcError = function(data) {
               };
 
-              scope.onlinesrcUploadOptions = {
-                autoUpload: false,
-                done: uploadOnlinesrcDone,
-                fail: uploadOnlineSrcError
-              };
-
               /**
                *  Add thumbnail
                *  If it is an upload, then we submit the form with right content
@@ -120,19 +108,16 @@
                */
               scope.addThumbnail = function() {
                 if (scope.mode == 'upload') {
+                  getVersion();
                   gnMetadataManagerService.save()
                   .then(function(data) {
-                        getVersion();
                         scope.submit();
-                        // TODO:
-                        // option1: Get version number from response
-                        // and update the editor form
-                        // option2: Reload the editor for this record
-                        // (option2 in widget/option1 avoid editor reload)
                       });
                 }
                 else {
-                  gnOnlinesrc.addThumbnailByURL(scope.params);
+                  gnOnlinesrc.addThumbnailByURL(scope.params).then(function() {
+                    gnOnlinesrc.reload = true;
+                  });
                 }
               };
             }
@@ -140,7 +125,8 @@
         }])
   .directive('gnAddOnlinesrc', ['gnOnlinesrc',
         'gnOwsCapabilities',
-        function(gnOnlinesrc, gnOwsCapabilities) {
+        'gnMetadataManagerService',
+        function(gnOnlinesrc, gnOwsCapabilities, gnMetadataManagerService) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -165,7 +151,7 @@
                * refresh the metadata.
                */
               var uploadOnlinesrcDone = function(data) {
-                scope.clear($scope.queue);
+                scope.clear(scope.queue);
               };
 
               /**
@@ -191,8 +177,16 @@
                   scope.submit();
                 }
                 else {
-                  gnOnlinesrc.addOnlinesrc(scope.params);
+                  gnOnlinesrc.addOnlinesrc(scope.params).
+                  then(function() {
+                    scope.onlinesrcService.reload = true;
+                  });
                 }
+              };
+              
+              scope.onAddSuccess = function() {
+                gnMetadataManagerService.refreshEditorForm();
+                scope.onlinesrcService.reload = true;
               };
 
               /**

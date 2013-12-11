@@ -11,7 +11,7 @@
     '$q',
     function(gnBatchProcessing, gnHttp, gnMetadataManagerService, $q) {
 
-      /**
+    /**
      * Prepare batch process request parameters.
      *   - get parameters from onlinesrc form
      *   - add process name
@@ -140,7 +140,7 @@
          * request from the gnBatchProcessing service
          */
         addOnlinesrc: function(params) {
-          gnBatchProcessing.runProcessMd(
+          return gnBatchProcessing.runProcessMd(
               setParams('onlinesrc-add', params));
         },
 
@@ -148,7 +148,7 @@
          *
          */
         addThumbnailByURL: function(params) {
-          gnBatchProcessing.runProcessMd(
+          return gnBatchProcessing.runProcessMd(
               setParams('thumbnail-add', params));
         },
         /**
