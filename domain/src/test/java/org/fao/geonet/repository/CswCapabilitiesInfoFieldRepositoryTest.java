@@ -111,7 +111,10 @@ public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTe
     }
 
     private CswCapabilitiesInfoField newCswServerCapabilitiesInfo() {
-        int val = _inc.incrementAndGet();
+        return newCswServerCapabilitiesInfo(_inc);
+    }
+    public static CswCapabilitiesInfoField newCswServerCapabilitiesInfo(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
         CswCapabilitiesInfoField CswCapabilitiesInfoField = new CswCapabilitiesInfoField().setFieldName("field" + val).setValue("lang"
                                                                                                                                 + val)
                 .setLangId("l_" + val);

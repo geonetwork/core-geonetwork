@@ -79,11 +79,14 @@ public class MetadataNotificationRepositoryTest extends AbstractSpringDataTest {
     }
 
     private MetadataNotification newMetadataNotification() {
+        return newMetadataNotification(_inc, _notifierRepo);
+    }
+    public static MetadataNotification newMetadataNotification(AtomicInteger inc, MetadataNotifierRepository notifierRepo) {
 
-        MetadataNotifier notifier = MetadataNotifierRepositoryTest.newMetadataNotifier(_inc);
-        notifier = _notifierRepo.save(notifier);
+        MetadataNotifier notifier = MetadataNotifierRepositoryTest.newMetadataNotifier(inc);
+        notifier = notifierRepo.save(notifier);
 
-        int val = _inc.incrementAndGet();
+        int val = inc.incrementAndGet();
         MetadataNotification metadataNotification = new MetadataNotification();
 
         MetadataNotificationId mdNotId = new MetadataNotificationId();
