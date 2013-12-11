@@ -25,7 +25,7 @@
             scope: {},
             link: function(scope, element, attrs) {
               scope.onlinesrcService = gnOnlinesrc;
-              
+
               /**
                * Calls service 'relations.get' to load
                * all online resources of the current
@@ -34,16 +34,16 @@
               var loadRelations = function() {
                 gnOnlinesrc.getAllResources()
                 .then(function(data) {
-                    scope.relations = data;
-                  });
+                      scope.relations = data;
+                    });
               };
-              
+
               // Load all relations on form init
               loadRelations();
-              
+
               // Reload relations when a directive requires it
               scope.$watch('onlinesrcService.reload', function() {
-                if(scope.onlinesrcService.reload) {
+                if (scope.onlinesrcService.reload) {
                   loadRelations();
                   scope.onlinesrcService.reload = false;
                   console.log('## reload relations');
@@ -65,19 +65,19 @@
             link: function(scope, element, attrs) {
               scope.metadataId = gnMetadataManagerService.
                   getCurrentEdit().metadataId;
-              
+
               // mode can be 'url' or 'upload'
               scope.mode = 'url';
 
               // the form params that will be submited
               scope.params = {};
-              
+
               // upload directive options
               scope.onlinesrcUploadOptions = {
-                  autoUpload: false,
-                  done: uploadOnlinesrcDone,
-                  fail: uploadOnlineSrcError
-                };
+                autoUpload: false,
+                done: uploadOnlinesrcDone,
+                fail: uploadOnlineSrcError
+              };
 
               // TODO: should be in gnMetadataManagerService ?
               var getVersion = function() {
@@ -90,9 +90,9 @@
                * Onlinesrc uploaded with success, close the popup,
                * refresh the metadata.
                */
-              var uploadOnlinesrcDone = function(evt,data) {
-                  gnMetadataManagerService.refreshEditorForm();
-                  gnOnlinesrc.reload = true;
+              var uploadOnlinesrcDone = function(evt, data) {
+                gnMetadataManagerService.refreshEditorForm();
+                gnOnlinesrc.reload = true;
               };
 
               /**
@@ -178,12 +178,12 @@
                 }
                 else {
                   gnOnlinesrc.addOnlinesrc(scope.params).
-                  then(function() {
-                    scope.onlinesrcService.reload = true;
-                  });
+                      then(function() {
+                        scope.onlinesrcService.reload = true;
+                      });
                 }
               };
-              
+
               scope.onAddSuccess = function() {
                 gnMetadataManagerService.refreshEditorForm();
                 scope.onlinesrcService.reload = true;

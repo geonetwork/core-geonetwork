@@ -50,9 +50,9 @@
        * and pagination params).
        */
       $scope.triggerSearch = function(service) {
-        
+
         angular.extend($scope.params, defaultParams);
-        
+
         // If pagination defined
         // If not, set from and to in params
         // or let default server side values apply.
@@ -65,7 +65,7 @@
               $scope.searchResults.count = data.count;
             });
       };
-      
+
       /**
        * Clear search results.
        */
@@ -86,7 +86,7 @@
       // TODO: voir s'il ne vaut mieux pas passer la fonction
       // triggerSearch à la directive de searchresults
       $scope.$watch('paginationInfo.currentPage', function() {
-        if ($scope.paginationInfo && 
+        if ($scope.paginationInfo &&
             $scope.paginationInfo.pages > 0) {
           $scope.triggerSearch();
         }

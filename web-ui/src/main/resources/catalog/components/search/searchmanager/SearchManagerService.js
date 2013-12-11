@@ -4,11 +4,11 @@
   var module = angular.module('gn_search_manager_service', []);
 
   module.factory('gnSearchManagerService', [
-    '$q', 
-    '$rootScope', 
+    '$q',
+    '$rootScope',
     '$http',
     'gnHttp',
-     function($q, $rootScope, $http, gnHttp) {
+    function($q, $rootScope, $http, gnHttp) {
 
       /**
        * Utility to format a search response. JSON response
@@ -151,7 +151,7 @@
             });
         return defer.promise;
       };
-      
+
       // TODO: remove search call to use params instead
       // of url and use gnSearch only (then rename it to search)
       var gnSearch = function(params, error) {

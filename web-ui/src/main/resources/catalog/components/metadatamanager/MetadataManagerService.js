@@ -71,7 +71,7 @@
 
          /**
           * Reload editor with the html snippet given
-          * in parameter. If no snippet is provided, then 
+          * in parameter. If no snippet is provided, then
           * just reload the metadata into the form.
           */
          var refreshEditorForm = function(form) {
@@ -81,8 +81,8 @@
              if (mdConfig.compileScope) {
                $compile(snippet)(mdConfig.compileScope);
              }
-           }
-           if(form) {
+           };
+           if (form) {
              refreshForm(form);
            }
            else {

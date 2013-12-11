@@ -11,7 +11,7 @@
     '$q',
     function(gnBatchProcessing, gnHttp, gnMetadataManagerService, $q) {
 
-    /**
+      /**
      * Prepare batch process request parameters.
      *   - get parameters from onlinesrc form
      *   - add process name
@@ -112,7 +112,7 @@
          * to reload online resources list when it is true
          */
         reload: false,
-        
+
         /**
          * Get all online resources for the current edited
          * metadata.
@@ -202,18 +202,18 @@
          */
         removeThumbnail: function(thumb) {
           var scope = this;
-          
+
           // It is a url thumbnail
-          if(thumb.id.indexOf('resources.get') < 0 ) {
-             gnBatchProcessing.runProcessMd(
+          if (thumb.id.indexOf('resources.get') < 0) {
+            gnBatchProcessing.runProcessMd(
                 setParams('thumbnail-remove', {
                   id: gnMetadataManagerService.
-                  getCurrentEdit().metadataId,
+                      getCurrentEdit().metadataId,
                   thumbnail_url: thumb.id
                 })).then(function() {
-                  scope.reload = true;
-                });
-          } 
+              scope.reload = true;
+            });
+          }
           // It is an uploaded tumbnail
           else {
             gnHttp.callService('removeThumbnail', {
@@ -227,19 +227,19 @@
             });
           }
         },
-        
+
         removeOnlinesrc: function(onlinesrc) {
           var scope = this;
-          
-           gnBatchProcessing.runProcessMd(
+
+          gnBatchProcessing.runProcessMd(
               setParams('onlinesrc-remove', {
                 id: gnMetadataManagerService.
-                getCurrentEdit().metadataId,
+                    getCurrentEdit().metadataId,
                 url: onlinesrc.id,
                 name: onlinesrc['abstract']
               })).then(function() {
-                scope.reload = true;
-              });
+            scope.reload = true;
+          });
         }
 
       };
