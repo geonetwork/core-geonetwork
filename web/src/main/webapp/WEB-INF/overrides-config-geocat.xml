@@ -121,10 +121,8 @@
         </addXml>
 		<addXml xpath="">
 			<migrate>
-				<version id="110">
-					<file path="WEB-INF/classes/setup/sql/migrate/v110" filePrefix="migrate-" />
-			        <java class="v110.UpdateRDF"/>		    
-			        <java class="v110.AddGroupsToHarvester"/>		    
+				<version id="2101">
+					<file path="WEB-INF/classes/setup/sql/migrate/v2101" filePrefix="migrate-db-" />
 				</version>
 			</migrate>		    
         </addXml>
