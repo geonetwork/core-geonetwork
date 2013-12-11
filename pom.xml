@@ -209,7 +209,7 @@
 
                           log.info("\n\tMax Heap Memory: "+mx+" MB\n\tMax PermGen Size: "+permgen+" MB")
                           if (permgen < 0 || mx < 0) {
-                              def mavenOpts = "MAVEN_OPTS=\"${MAX_PREFIX}512M ${PERMGEN_PREFIX}128M\""
+                              def mavenOpts = "MAVEN_OPTS=\"${MAX_PREFIX}512M ${PERMGEN_PREFIX}256M\""
                               def errorMsg = "\n\nIn order for the build to complete both the $MAX_PREFIX parameter and the "+
                                       "$PERMGEN_PREFIX must be set.  The e2e tests require this because the start Geonetwork and run " +
                                       "tests against it which takes a lot of memory.\n\nCmd/Powershell:"+
