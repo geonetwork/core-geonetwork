@@ -296,6 +296,7 @@
                 </os>
             </activation>
             <properties>
+                <browserName>chrome</browserName>
                 <chromedriver>${basedir}/chromedriver/win32/chromedriver.exe</chromedriver>
             </properties>
         </profile>
@@ -308,6 +309,7 @@
                 </os>
             </activation>
             <properties>
+                <browserName>firefox</browserName>
                 <chromedriver>${basedir}/chromedriver/linux32/chromedrivere</chromedriver>
             </properties>
         </profile>
@@ -320,11 +322,12 @@
                 </os>
             </activation>
             <properties>
+                <browserName>firefox</browserName>
                 <chromedriver>${basedir}/chromedriver/linux64/chromedriver</chromedriver>
             </properties>
         </profile>
         <profile>
-            <id>linuxx64_64</id>
+            <id>linux64_64</id>
             <activation>
                 <os>
                     <family>linux</family>
@@ -332,6 +335,7 @@
                 </os>
             </activation>
             <properties>
+                <browserName>firefox</browserName>
                 <chromedriver>${basedir}/chromedriver/linux64/chromedriver</chromedriver>
             </properties>
         </profile>
@@ -343,6 +347,7 @@
                 </os>
             </activation>
             <properties>
+                <browserName>safari</browserName>
                 <chromedriver>${basedir}/chromedriver/mac32/chromedriver</chromedriver>
             </properties>
         </profile>
