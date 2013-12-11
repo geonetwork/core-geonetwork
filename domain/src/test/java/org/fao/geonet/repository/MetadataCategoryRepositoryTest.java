@@ -106,7 +106,7 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
         MetadataCategory metadataCategory = new MetadataCategory();
         metadataCategory.setName("name" + val);
         metadataCategory.getLabelTranslations().put("eng", "engLab" + val);
-        metadataCategory.getLabelTranslations().put("fra", "fraLab" + val);
+        metadataCategory.getLabelTranslations().put("fre", "fraLab" + val);
         metadataCategory.getLabelTranslations().put("ger", "gerLab" + val);
 
         return metadataCategory;

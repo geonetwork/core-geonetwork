@@ -104,7 +104,10 @@ public class MetadataRatingByIpRepositoryTest extends AbstractSpringDataTest {
     }
 
     private MetadataRatingByIp newMetadataRatingByIp() {
-        int val = _inc.incrementAndGet();
+        return newMetadataRatingByIp(_inc);
+    }
+    public static MetadataRatingByIp newMetadataRatingByIp(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
         MetadataRatingByIp metadataRatingByIp = new MetadataRatingByIp();
         metadataRatingByIp.setRating(1);
         MetadataRatingByIpId id = new MetadataRatingByIpId();

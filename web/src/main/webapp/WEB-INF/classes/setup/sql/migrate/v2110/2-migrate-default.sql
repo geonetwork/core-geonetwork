@@ -176,3 +176,7 @@ UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 INSERT INTO Address (SELECT id, address, city, state, zip, country FROM Users);
 INSERT INTO UserAddress (SELECT id, id FROM Users);
 INSERT INTO Email (SELECT id, email FROM Users);
+
+
+CREATE SEQUENCE IF NOT EXISTS HIBERNATE_SEQUENCE START WITH 4000 INCREMENT BY 1;
+ALTER TABLE ServiceParameters DROP COLUMN id;
