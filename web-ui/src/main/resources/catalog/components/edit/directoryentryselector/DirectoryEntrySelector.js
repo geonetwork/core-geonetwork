@@ -40,6 +40,13 @@
            link: function(scope, element, attrs) {
              var separator = '&&&';
 
+             // Search only for contact subtemplate
+             angular.extend(scope.params, {
+               _root: 'gmd:CI_ResponsibleParty',
+               _isTemplate: 's',
+               fast: 'false'
+             });
+
              scope.snippet = null;
              scope.snippetRef = gnMetadataManagerService.
              buildXMLFieldName(scope.elementRef, scope.elementName);
