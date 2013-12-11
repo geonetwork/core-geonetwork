@@ -179,7 +179,7 @@
 					<xsl:if test="$type = 'large'">
 						<br/>
 						<br/>
-						<input class="content" type="checkbox" value="on" name="createSmall" checked="true">
+						<input class="content" type="checkbox" value="on" name="createSmall">
 							<xsl:value-of select="/root/gui/thumbnail/create"/>
 						</input>	
 						&#160;
