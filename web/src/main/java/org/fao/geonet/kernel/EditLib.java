@@ -677,8 +677,13 @@ public class EditLib {
                                                                qualifiedName + " inserted in " + currentNode.getName());
                         }
 
-                        currentNode = addElement(metadataSchema.getName(), currentNode, qualifiedName);
-                        existingElement = false;
+                        if (metadataSchema.getElementValues(qualifiedName, currentNode.getQualifiedName()) != null) {
+                            currentNode = addElement(metadataSchema.getName(), currentNode, qualifiedName);
+                            existingElement = false;
+                        } else {
+                            // element not in schema so stop!
+                            return false;
+                        }
                     }
                 }
 
