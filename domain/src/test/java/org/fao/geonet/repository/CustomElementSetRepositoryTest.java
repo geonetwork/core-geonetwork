@@ -36,7 +36,10 @@ public class CustomElementSetRepositoryTest extends AbstractSpringDataTest {
     }
 
     private CustomElementSet newCustomElementSet() {
-        int val = _inc.incrementAndGet();
+        return newCustomElementSet(_inc);
+    }
+    public static CustomElementSet newCustomElementSet(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
         CustomElementSet customElementSet = new CustomElementSet().setXpath("xpath" + val);
         return customElementSet;
     }
