@@ -9,6 +9,7 @@ import org.fao.geonet.GeonetworkDataDirectory;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.resources.Resources;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -105,6 +106,27 @@ public class EditLibTest {
     }
 
     @Test
+    public void testAddElementFromXpath_HasPositionalIdentifier() throws Exception {
+
+        MetadataSchema schema = _schemaManager.getSchema("iso19139");
+
+        final Element metadataElement = new Element("MD_Metadata", GMD).addContent(
+                new Element("fileIdentifier", GMD).addContent(
+                        new Element("CharacterString", GCO).setText("OldValue")
+                )
+        );
+
+        String newValue = "newValue";
+        final String xpathProperty = "gmd:fileIdentifier/gco:CharacterString";
+        new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, new AddElemValue(newValue),
+                true);
+
+        assertEqualsText(newValue, metadataElement, xpathProperty, GMD, GCO);
+        assertEquals(1, Xml.selectNodes(metadataElement, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).size());
+        assertEquals(1, Xml.selectNodes(metadataElement, "gmd:fileIdentifier", Arrays.asList(GMD, GCO)).size());
+    }
+
+    @Test
     public void testEditExistingAttribute() throws Exception {
 
         MetadataSchema schema = _schemaManager.getSchema("iso19139");
@@ -152,6 +174,100 @@ public class EditLibTest {
         assertEqualsText(code3, metadataElement, refSysElemName + "[3]" + xpath, GMD, GCO);
         assertEqualsText(newValue, metadataElement, refSysElemName + "[2]" + xpath, GMD, GCO);
         assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", Arrays.asList(GMD, GCO)).size());
+    }
+
+    @Test
+    public void testRelativePathUpdateWithBrackets() throws Exception {
+
+        MetadataSchema schema = _schemaManager.getSchema("iso19139");
+
+        String code1 = "code1";
+        String code2 = "code2";
+        String code3 = "code3";
+
+        final Element metadataElement = new Element("MD_Metadata", GMD).addContent(Arrays.asList(
+                createReferenceSystemInfo(code1),
+                createReferenceSystemInfo(code2),
+                createReferenceSystemInfo(code3)
+        ));
+
+        final List<Namespace> theNSs = Arrays.asList(GMD, GCO);
+        String xpathToDetach = "*//gmd:code";
+        final List<Content> list = (List<Content>) Xml.selectNodes(metadataElement, xpathToDetach, theNSs);
+
+        for (Content content : list) {
+            content.detach();
+        }
+
+        String newValue = "newValue";
+        final String updateXPath = "(*//gmd:RS_Identifier)[2]/gmd:code/gco:CharacterString";
+        boolean updateOccurred = new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, updateXPath,
+                new AddElemValue(newValue), true);
+
+        assertTrue(updateOccurred);
+
+        final String xpath = "/gmd:ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco" +
+                             ":CharacterString";
+
+        final String refSysElemName = "gmd:referenceSystemInfo";
+        assertTrue(Xml.selectNodes(metadataElement, refSysElemName + "[1]" + xpath, theNSs).isEmpty());
+        assertTrue(Xml.selectNodes(metadataElement, refSysElemName + "[3]" + xpath, theNSs).isEmpty());
+        assertEqualsText(newValue, metadataElement, refSysElemName + "[2]" + xpath, GMD, GCO);
+        assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", theNSs).size());
+    }
+    @Test
+    public void testRelativePathUpdateNoBrackets() throws Exception {
+
+        MetadataSchema schema = _schemaManager.getSchema("iso19139");
+
+        String code1 = "code1";
+        String code2 = "code2";
+        String code3 = "code3";
+
+        final Element metadataElement = new Element("MD_Metadata", GMD).addContent(Arrays.asList(
+                createReferenceSystemInfo(code1),
+                createReferenceSystemInfo(code2),
+                createReferenceSystemInfo(code3)
+        ));
+
+        final List<Namespace> theNSs = Arrays.asList(GMD, GCO);
+        String xpathToDetach = "*//gmd:code";
+        final List<Content> list = (List<Content>) Xml.selectNodes(metadataElement, xpathToDetach, theNSs);
+
+        for (Content content : list) {
+            content.detach();
+        }
+
+        String newValue = "newValue";
+        final String updateXPath = "*//gmd:RS_Identifier/gmd:code/gco:CharacterString";
+        boolean updateOccurred = new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, updateXPath,
+                new AddElemValue(newValue), true);
+
+        assertTrue(updateOccurred);
+
+        final String xpath = "/gmd:ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco" +
+                             ":CharacterString";
+
+        final String refSysElemName = "gmd:referenceSystemInfo";
+        assertEqualsText(newValue, metadataElement, refSysElemName + "[1]" + xpath, GMD, GCO);
+        assertTrue(Xml.selectNodes(metadataElement, refSysElemName + "[2]" + xpath, theNSs).isEmpty());
+        assertTrue(Xml.selectNodes(metadataElement, refSysElemName + "[3]" + xpath, theNSs).isEmpty());
+        assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", theNSs).size());
+    }
+
+    @Test
+    public void testRelativePathUpdateNoChildFound() throws Exception {
+
+        MetadataSchema schema = _schemaManager.getSchema("iso19139");
+
+        final Element metadataElement = new Element("MD_Metadata", GMD);
+
+        String newValue = "newValue";
+        final String refSysElemName = "*//gmd:RS_Identifier/gmd:code/gco:CharacterString";
+        boolean updateOccurred = new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, refSysElemName,
+                new AddElemValue(newValue), true);
+
+        assertFalse(updateOccurred);
     }
 
     @Test
@@ -360,7 +476,7 @@ public class EditLibTest {
                 true);
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void testErrorOnDotDot() throws Exception {
         SchemaManager manager = _schemaManager;
 
@@ -369,11 +485,11 @@ public class EditLibTest {
         final Element metadataElement = new Element("MD_Metadata", GMD);
         String newValue = "x";
         final String xpathProperty = "gmd:hierarchyLevel/../@codeListValue";
-        new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, new AddElemValue(newValue),
-                true);
+        assertFalse(new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, new AddElemValue(newValue),
+                true));
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void testErrorOnDotDotDot() throws Exception {
         SchemaManager manager = _schemaManager;
 
@@ -382,21 +498,8 @@ public class EditLibTest {
         final Element metadataElement = new Element("MD_Metadata", GMD);
         String newValue = "x";
         final String xpathProperty = "gmd:hierarchyLevel/.../@codeListValue";
-        new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, new AddElemValue(newValue),
-                true);
-    }
-
-    @Test(expected = AssertionError.class)
-    public void testErrorOnSlashSlash() throws Exception {
-        SchemaManager manager = _schemaManager;
-
-        MetadataSchema schema = manager.getSchema("iso19139");
-
-        final Element metadataElement = new Element("MD_Metadata", GMD);
-        String newValue = "x";
-        final String xpathProperty = "gmd:hierarchyLevel//@codeListValue";
-        new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, new AddElemValue(newValue),
-                true);
+        assertFalse(new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, new AddElemValue(newValue),
+                true));
     }
 
     @Test

@@ -32,11 +32,16 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
+
+import java.io.File;
+import java.io.IOException;
 
 //=============================================================================
 
@@ -103,11 +108,22 @@ public class Create implements Service
 												  gc.getSiteId(), context.getUserSession().getUserIdAsInt(), 
 												  (child.equals("n")?null:uuid), isTemplate, haveAllRights);
 
+        copyDataDir(context, id, newId, Params.Access.PUBLIC);
+        copyDataDir(context, id, newId, Params.Access.PRIVATE);
+
         Element response = new Element(Jeeves.Elem.RESPONSE);
         response.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
         response.addContent(new Element(Geonet.Elem.ID).setText(newId));
 		return response;
 	}
+
+
+    private void copyDataDir(ServiceContext context, String oldId, String newId, String access) throws IOException {
+        final String sourceDir = Lib.resource.getDir(context, access, oldId);
+        final String destDir = Lib.resource.getDir(context, access, newId);
+
+        FileUtils.copyDirectory(new File(sourceDir), new File(destDir));
+    }
 }
 
 //=============================================================================

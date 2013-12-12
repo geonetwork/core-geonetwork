@@ -27,30 +27,26 @@
 
 package org.fao.geonet.kernel;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
-
 import org.apache.commons.jxpath.ri.parser.Token;
 import org.apache.commons.jxpath.ri.parser.XPathParser;
 import org.apache.commons.jxpath.ri.parser.XPathParserConstants;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataAttribute;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataType;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jaxen.JaxenException;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.jdom.JDOMXPath;
-import org.jdom.Attribute;
-import org.jdom.Content;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
+import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 
 import java.io.StringReader;
@@ -515,7 +511,7 @@ public class EditLib {
                 Log.debug(Geonet.EDITORADDELEMENT, "Inserting at location " + xpathProperty + " the snippet or value " + value);
             }
 
-            final Object propNode = trySelectNode(metadataRecord, metadataSchema, xpathProperty);
+            final Object propNode = trySelectNode(metadataRecord, metadataSchema, xpathProperty).result;
 
             if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT)) {
                 Log.debug(Geonet.EDITORADDELEMENT, "XPath found in metadata: " + (propNode != null));
@@ -539,8 +535,27 @@ public class EditLib {
                 return true;
             } else {
                 if (createXpathNodeIfNotExist) {
-                    createAndAddFromXPath(metadataRecord, metadataSchema, xpathProperty, value);
-                    return true;
+                    int indexOfRequiredPortion = -1;
+
+                    for (int i = 0; i < xpathProperty.length(); i++) {
+                        final char c = xpathProperty.charAt(i);
+                        if (c == ')' || c == ']') {
+                            indexOfRequiredPortion = i + 1;
+                        }
+                    }
+                    if(indexOfRequiredPortion > 0) {
+                        final String requiredXPath = xpathProperty.substring(0, indexOfRequiredPortion);
+                        Object elem = trySelectNode(metadataRecord, metadataSchema, requiredXPath).result;
+                        if (elem instanceof Element) {
+                            Element element = (Element) elem;
+
+                            return createAndAddFromXPath(element, metadataSchema, xpathProperty.substring(indexOfRequiredPortion), value);
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return createAndAddFromXPath(metadataRecord, metadataSchema, xpathProperty, value);
+                    }
                 }
             }
         } catch (JaxenException e) {
@@ -577,23 +592,28 @@ public class EditLib {
         }
     }
 
-    private void createAndAddFromXPath(Element metadataRecord, MetadataSchema metadataSchema, String xpathProperty, AddElemValue value) throws Exception {
-        Element clonedMetadata = (Element) metadataRecord.clone();
+    private boolean createAndAddFromXPath(Element metadataRecord, MetadataSchema metadataSchema, String xpathProperty, AddElemValue value) throws Exception {
+        List<String> xpathParts = Arrays.asList(xpathProperty.split("/"));
+        Pair<Element, String> result = findLongestMatch(metadataRecord, metadataRecord, 0, metadataSchema, xpathParts.size() / 2,
+                xpathParts);
+        final Element elementToAttachTo = result.one();
+        final Element clonedMetadata = (Element) elementToAttachTo.clone();
 
         // Creating the element at the xpath location
         // Walk the XPath from the start until the end or the start of a filter
         // expression.
         // Collect element namespace prefix and name, check element exist and
         // create them according to schema definition.
-        XPathParser xpathParser = new XPathParser(new StringReader(clonedMetadata.getQualifiedName()+"/"+xpathProperty));
+        final XPathParser xpathParser = new XPathParser(new StringReader(clonedMetadata.getQualifiedName()+"/"+result.two()));
+
         // Start from the root of the metadata document
         Token currentToken = xpathParser.getNextToken();
         Token previousToken = currentToken;
 
+        int depth = 0;
         Element currentNode = clonedMetadata;
         boolean existingElement = true;
         boolean isAttribute = false;
-        int depth = 0;
         String currentElementName = "";
         String currentElementNamespacePrefix = "";
 
@@ -610,7 +630,7 @@ public class EditLib {
             // TODO : check no .., descendant, ... are in the xpath
             // Only full xpath are supported.
             if (XPathParserLocalConstants.ILLEGAL_KINDS.contains(currentToken.kind)) {
-                throw new AssertionError("An illegal character '"+currentToken.image+" was found in:\n\n\t"+xpathProperty);
+                return false;
             }
 
             // build element name as the parser progress into the xpath ...
@@ -618,7 +638,7 @@ public class EditLib {
                 isAttribute = true;
             }
             // Match namespace prefix
-            if (currentToken.kind == XPathParserLocalConstants.TEXT                && previousToken.kind == XPathParserConstants.SLASH) {
+            if (currentToken.kind == XPathParserLocalConstants.TEXT && previousToken.kind == XPathParserConstants.SLASH) {
                 // get element namespace if element is text and previous was /
                 // means qualified name only is supported
                 currentElementNamespacePrefix = currentToken.image;
@@ -698,16 +718,63 @@ public class EditLib {
         }
 
         // update worked so now we can update original element...
-        metadataRecord.removeContent();
+        elementToAttachTo.removeContent();
         List<Content> toAdd = Lists.newArrayList(clonedMetadata.getContent());
         for (Content content : toAdd) {
-            metadataRecord.addContent(content.detach());
+            elementToAttachTo.addContent(content.detach());
+        }
+        return true;
+    }
+
+    private static final Joiner COMMA_STRING_JOINER = Joiner.on('/');
+    private Pair<Element, String> findLongestMatch(final Element metadataRecord, final Element bestMatch, final int indexOfBestMatch,
+                                     final MetadataSchema metadataSchema,  final int nextIndex, final List<String> xpathPropertyParts) {
+
+        // do linear search when for last couple elements of xpath
+        if (xpathPropertyParts.size() - nextIndex < 3) {
+            for (int i = xpathPropertyParts.size() - 1; i > -1 ; i--) {
+                final String xpath = COMMA_STRING_JOINER.join(xpathPropertyParts.subList(0, i));
+                SelectResult result = trySelectNode(metadataRecord, metadataSchema, xpath);
+                if (result.result instanceof Element) {
+                    return Pair.read((Element) result.result, COMMA_STRING_JOINER.join(xpathPropertyParts.subList(i, xpathPropertyParts.size())));
+                }
+            }
+            return Pair.read(bestMatch, COMMA_STRING_JOINER.join(xpathPropertyParts.subList(indexOfBestMatch, xpathPropertyParts.size())));
+        } else {
+            final SelectResult found = trySelectNode(metadataRecord, metadataSchema, COMMA_STRING_JOINER.join(xpathPropertyParts.subList(0,
+                    nextIndex)));
+            if (found.result instanceof Element) {
+                Element newBest = (Element) found.result;
+                int newIndex = nextIndex + ((xpathPropertyParts.size() - nextIndex) / 2);
+                return findLongestMatch(metadataRecord, newBest, nextIndex, metadataSchema, newIndex, xpathPropertyParts);
+            } else if(!found.error) {
+                int newNextIndex = indexOfBestMatch + ((nextIndex - indexOfBestMatch) / 2);
+                return findLongestMatch(metadataRecord, bestMatch, indexOfBestMatch, metadataSchema, newNextIndex, xpathPropertyParts);
+            } else {
+                int newNextIndex = nextIndex + 1;
+                return findLongestMatch(metadataRecord, bestMatch, indexOfBestMatch, metadataSchema, newNextIndex, xpathPropertyParts);
+            }
         }
     }
 
-    private Object trySelectNode(Element metadataRecord, MetadataSchema metadataSchema, String xpathProperty)  {
+    private static class SelectResult {
+        private static final SelectResult ERROR = new SelectResult(null, true);
+
+        final Object result;
+        final boolean error;
+
+        private SelectResult(Object result, boolean error) {
+            this.result = result;
+            this.error = error;
+        }
+        private static SelectResult of(Object result) {
+            return new SelectResult(result, false);
+        }
+    }
+
+    private SelectResult trySelectNode(Element metadataRecord, MetadataSchema metadataSchema, String xpathProperty)  {
         if (xpathProperty.trim().isEmpty()) {
-            return metadataRecord;
+            return SelectResult.of(metadataRecord);
         }
 
         // Initialize the Xpath with all schema namespaces
@@ -718,10 +785,10 @@ public class EditLib {
             JDOMXPath xpath = new JDOMXPath(xpathProperty);
             xpath.setNamespaceContext(new SimpleNamespaceContext(mapNs));
             // Select the node to update and check it exists
-            return xpath.selectSingleNode(metadataRecord);
+            return SelectResult.of(xpath.selectSingleNode(metadataRecord));
         } catch (JaxenException e) {
             Log.warning(Geonet.EDITORADDELEMENT, "An illegal xpath was used to locate an element: " + xpathProperty);
-            return null;
+            return SelectResult.ERROR;
         }
     }
 
