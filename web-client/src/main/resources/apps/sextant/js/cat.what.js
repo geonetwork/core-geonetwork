@@ -300,9 +300,8 @@ cat.what = function() {
 				url: services.opensearchSuggest
 			});
 
-			var resourceTypeHiddenField = new Ext.form.TextField({
+			var resourceTypeHiddenField = new Ext.form.Hidden({
 				name: 'E_type',
-				hidden: true,
 				id: 'E_type',
 				value: 'dataset'
 			});
