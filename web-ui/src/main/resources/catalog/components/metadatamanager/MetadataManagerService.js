@@ -55,8 +55,9 @@
        'gnUrlUtils',
        'gnNamespaces',
        'gnXmlTemplates',
+       'gnHttp',
        function($q, $http, $translate, $compile, 
-       gnUrlUtils, gnNamespaces, gnXmlTemplates) {
+       gnUrlUtils, gnNamespaces, gnXmlTemplates, gnHttp) {
          /**
          * Contains a list of metadata records currently edited
          * with the editor configuration.
@@ -68,12 +69,28 @@
          */
          var duration = 300;
 
-
-         var refreshEditorForm = function(snippet) {
-           $(mdConfig.formId).replaceWith(snippet);
-           // Compiling
-           if (mdConfig.compileScope) {
-             $compile(snippet)(mdConfig.compileScope);
+         /**
+          * Reload editor with the html snippet given
+          * in parameter. If no snippet is provided, then
+          * just reload the metadata into the form.
+          */
+         var refreshEditorForm = function(form) {
+           var refreshForm = function(snippet) {
+             $(mdConfig.formId).replaceWith(snippet);
+             // Compiling
+             if (mdConfig.compileScope) {
+               $compile(snippet)(mdConfig.compileScope);
+             }
+           };
+           if (form) {
+             refreshForm(form);
+           }
+           else {
+             gnHttp.callService('edit', {
+               id: mdConfig.metadataId
+             }).then(function(data) {
+               refreshForm($(data.data));
+             });
            }
          };
 

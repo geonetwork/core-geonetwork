@@ -108,6 +108,12 @@
       return {
 
         /**
+         * This value is watched from gnOnlinesrcList directive
+         * to reload online resources list when it is true
+         */
+        reload: false,
+
+        /**
          * Get all online resources for the current edited
          * metadata.
          */
@@ -134,7 +140,7 @@
          * request from the gnBatchProcessing service
          */
         addOnlinesrc: function(params) {
-          gnBatchProcessing.runProcessMd(
+          return gnBatchProcessing.runProcessMd(
               setParams('onlinesrc-add', params));
         },
 
@@ -142,7 +148,7 @@
          *
          */
         addThumbnailByURL: function(params) {
-          gnBatchProcessing.runProcessMd(
+          return gnBatchProcessing.runProcessMd(
               setParams('thumbnail-add', params));
         },
         /**
@@ -190,18 +196,52 @@
         },
 
         /**
-         *
+         * Remove a thumbnail from metadata.
+         * Type large or small is specified in parameter.
+         * The onlinesrc panel is reloaded after removal.
          */
-        removeThumbnail: function(type) {
-          gnHttp.callService('removeThumbnail', {
-            type: (type === 'thumbnail' ? 'small' : 'large'),
-            id: gnMetadataManagerService.getCurrentEdit().metadataId,
-            version: $(gnMetadataManagerService.getCurrentEdit().
-                formId).find('input[id="version"]').val()
-          }).success(function() {
-            console.log('thumbnail removed');
+        removeThumbnail: function(thumb) {
+          var scope = this;
+
+          // It is a url thumbnail
+          if (thumb.id.indexOf('resources.get') < 0) {
+            gnBatchProcessing.runProcessMd(
+                setParams('thumbnail-remove', {
+                  id: gnMetadataManagerService.
+                      getCurrentEdit().metadataId,
+                  thumbnail_url: thumb.id
+                })).then(function() {
+              scope.reload = true;
+            });
+          }
+          // It is an uploaded tumbnail
+          else {
+            gnHttp.callService('removeThumbnail', {
+              type: (thumb.title === 'thumbnail' ? 'small' : 'large'),
+              id: gnMetadataManagerService.getCurrentEdit().metadataId,
+              version: $(gnMetadataManagerService.getCurrentEdit().
+                  formId).find('input[id="version"]').val()
+            }).success(function() {
+              // Reload online resources list
+              scope.reload = true;
+            });
+          }
+        },
+
+        removeOnlinesrc: function(onlinesrc) {
+          var scope = this;
+
+          gnBatchProcessing.runProcessMd(
+              setParams('onlinesrc-remove', {
+                id: gnMetadataManagerService.
+                    getCurrentEdit().metadataId,
+                url: onlinesrc.id,
+                name: onlinesrc['abstract']
+              })).then(function() {
+            scope.reload = true;
           });
         }
+
       };
     }]);
 })();

@@ -3,8 +3,12 @@
 
   var module = angular.module('gn_search_manager_service', []);
 
-  module.factory('gnSearchManagerService', ['$q', '$rootScope', '$http',
-                                            function($q, $rootScope, $http) {
+  module.factory('gnSearchManagerService', [
+    '$q',
+    '$rootScope',
+    '$http',
+    'gnHttp',
+    function($q, $rootScope, $http, gnHttp) {
 
       /**
        * Utility to format a search response. JSON response
@@ -148,6 +152,20 @@
         return defer.promise;
       };
 
+      // TODO: remove search call to use params instead
+      // of url and use gnSearch only (then rename it to search)
+      var gnSearch = function(params, error) {
+        var defer = $q.defer();
+        gnHttp.callService('search', params).
+            success(function(data, status) {
+              defer.resolve(format(data));
+            }).
+            error(function(data, status) {
+              defer.reject(error);
+            });
+        return defer.promise;
+      };
+
       var _select = function(uuid, andClearSelection, action) {
         var defer = $q.defer();
         $http.get('metadata.select@json?' +
@@ -176,6 +194,7 @@
 
       return {
         search: search,
+        gnSearch: gnSearch,
         register: register,
         select: select,
         unselect: unselect,

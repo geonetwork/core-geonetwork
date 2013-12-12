@@ -34,6 +34,7 @@
 
   module.value('gnHttpServices', {
     mdCreate: 'md.create@json',
+    edit: 'md.edit',
     search: 'qi@json',
     processMd: 'md.processing',
     processAll: 'md.processing.batch',

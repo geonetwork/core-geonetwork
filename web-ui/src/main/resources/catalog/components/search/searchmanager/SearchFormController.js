@@ -20,8 +20,7 @@
   module.controller('GnSearchFormController', [
     '$scope',
     'gnSearchManagerService',
-    'gnUrlUtils',
-    function($scope, gnSearchManagerService, gnUrlUtils) {
+    function($scope, gnSearchManagerService) {
       var defaultServiceUrl = 'qi@json';
       var defaultParams = {
         fast: 'index'
@@ -32,6 +31,11 @@
       };
       $scope.paginationInfo = null;
 
+      /**
+       * If an object {paginationInfo} is defined inside the
+       * SearchFormController, then add from and to  params
+       * to the search.
+       */
       var getPaginationParams = function() {
         pageOptions = $scope.paginationInfo;
         return {
@@ -40,10 +44,14 @@
         };
       };
 
-      // TODO rewrite this with gnHttp
-      var composeUrl = function(service) {
-        var url = service || defaultServiceUrl;
-        $scope.params = $.extend($scope.params, defaultParams);
+      /**
+       * Trigger a search with all params contained
+       * in $scope.params (updated with defaultParams
+       * and pagination params).
+       */
+      $scope.triggerSearch = function(service) {
+
+        angular.extend($scope.params, defaultParams);
 
         // If pagination defined
         // If not, set from and to in params
@@ -51,20 +59,16 @@
         if ($scope.paginationInfo) {
           angular.extend($scope.params, getPaginationParams());
         }
-        for (param in $scope.params) {
-          url = gnUrlUtils.append(url,
-              param + '=' + $scope.params[param]);
-        }
-        return url;
-      };
-
-      $scope.triggerSearch = function(service) {
-        gnSearchManagerService.search(composeUrl(service)).then(
+        gnSearchManagerService.gnSearch($scope.params).then(
             function(data) {
               $scope.searchResults.records = data.metadata;
               $scope.searchResults.count = data.count;
             });
       };
+
+      /**
+       * Clear search results.
+       */
       $scope.clearResults = function() {
         $scope.searchResults = {
           records: [],
@@ -82,7 +86,8 @@
       // TODO: voir s'il ne vaut mieux pas passer la fonction
       // triggerSearch à la directive de searchresults
       $scope.$watch('paginationInfo.currentPage', function() {
-        if ($scope.paginationInfo.pages > 0) {
+        if ($scope.paginationInfo &&
+            $scope.paginationInfo.pages > 0) {
           $scope.triggerSearch();
         }
       });
