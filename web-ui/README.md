@@ -22,7 +22,7 @@ sudo easy_install http://closure-linter.googlecode.com/files/closure_linter-late
 cd /path/to/closure-library-parent-dir
 git clone http://code.google.com/p/closure-library/
 cd closure-library
-wget http://closure-compiler.googlecode.com/files/compiler-latest.zip
+wget http://dl.google.com/closure-compiler/compiler-latest.zip
 unzip compiler-latest.zip
 ```
 

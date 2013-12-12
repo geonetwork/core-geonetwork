@@ -151,7 +151,6 @@
 
 
 
-
       $scope.loadCatalogInfo();
 
 

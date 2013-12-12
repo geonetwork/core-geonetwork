@@ -14,7 +14,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/monitor" access="hasRole('Monitor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/\w*healthcheck" access="hasRole('Monitor')"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/service-not-allowed!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/service-not-allowed!?\??.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/.+\?casLogin.*" access="hasRole('RegisteredUser')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/login.form!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/group.remove!?.*" access="hasRole('Administrator')"></sec:intercept-url>
@@ -476,6 +476,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.harvester.log!?.*" access="hasRole('UserAdmin')"/>
                 
                 
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.ownership.editors!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.ownership.groups!?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.ownership.transfer!?.*" access="hasRole('Administrator')"/>
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/admin.languages.get!?.*" access="permitAll"/>
                 
@@ -538,11 +541,10 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/password.change!?.*" access="permitAll"/>
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.edit!?.*" access="hasRole('Editor')"/>
-                
-                
-                
-                
-                
+
+                <sec:intercept-url pattern="/home\?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/home" access="permitAll"></sec:intercept-url>
+
                 <sec:intercept-url pattern="/.*" access="denyAll"></sec:intercept-url>
             </sec:filter-security-metadata-source>
         </property>

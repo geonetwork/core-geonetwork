@@ -31,6 +31,10 @@
         <span data-ng-hide="userSelected.id != ''" data-translate="">newUser</span>
         <strong>{{userSelected.name}} {{userSelected.surname}}</strong>
         <div class="btn-toolbar">
+          <button type="button" class="btn btn-default pull-right fa fa-lock"
+            data-ng-hide="user.profile != 'Administrator'"
+            data-ng-click="resetPassword(userSelected.id)" data-translate=""
+            >resetPassword</button>
           <button type="button" class="btn btn-primary pull-right fa fa-save"
             data-ng-disabled="!gnUserEdit.$valid && !gnUserEdit.dirty"
             data-ng-click="saveUser('#gn-user-edit')" id="gn-btn-user-save" data-translate=""
@@ -138,7 +142,7 @@
                     >{{g.label[lang]}}</option>
                 </select>
                 <h3 data-translate="">Editor</h3>
-                <select multiple="multiple" id="groups_Editor" name="groups_EditorUser"
+                <select multiple="multiple" id="groups_Editor" name="groups_Editor"
                   class="form-control" data-ng-click="setUserProfile()">
                   <option data-ng-repeat="g in groups" value="{{g.id}}"
                     data-ng-selected="isUserGroup(g.id, 'Editor')">{{g.label[lang]}}</option>
@@ -173,4 +177,57 @@
       </div>
     </div>
   </div>
+  
+  
+
+  <div class="modal fade" id="passwordResetModal" tabindex="-1" role="dialog"
+    aria-labelledby="{{'passwordReset' | translate}}" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            >&times;</button>
+          <h4 class="modal-title" data-translate="" 
+            data-translate-values="{ user: '{{userSelected.name}} {{userSelected.surname}}'}">
+            resetPasswordTitle</h4>
+        </div>
+        <div class="modal-body">
+          <form id="gn-password-reset" name="gnPasswordReset">
+            <div
+                data-ng-class="gnPasswordReset.password.$error.required || gnPasswordReset.password.$error.minlength ? 'has-error' : ''">
+                <label class="control-label" data-translate="">password</label>
+                <input type="password" id="gn-user-password" name="password" class="form-control"
+                  data-ng-minlength="6" data-ng-required="true"
+                  data-ng-model="resetPassword1"/>
+                <p class="help-block">
+                  <span class="error" data-ng-show="gnPasswordReset.password.$error.minlength"
+                    data-translate="">passwordMinlength</span>
+                </p>
+              </div>
+              <div
+                data-ng-class="gnPasswordReset.password.$valid == false || 
+                        (resetPassword2 !== resetPassword1) ? 'has-error' : ''">
+                <label class="control-label" data-translate="">passwordRepeat</label>
+                <input type="password" id="gn-user-password2" name="password2" class="form-control"
+                  data-ng-model="resetPassword2"/>
+                <p class="help-block">
+                  <span class="error"
+                    data-ng-show="gnPasswordReset.password.$valid 
+                            && resetPassword2 !== resetPassword1"
+                    data-translate="">passwordNotMatching</span>
+                </p>
+              </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn fa fa-ban-circle" data-dismiss="modal" data-translate=""
+            >cancel</button>
+          <button type="button" class="btn btn-primary fa fa-lock"
+            data-translate="" data-ng-click="saveNewPassword()">resetPassword</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 </div>

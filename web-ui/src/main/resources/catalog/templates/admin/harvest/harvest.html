@@ -87,11 +87,16 @@
         </div>
       </div>
       <div class="panel-body">
-
         <div class="alert alert-info" data-ng-show="harvesterSelected.info.running === true">
           <strong data-translate="">harvesterIsRunning</strong>
         </div>
-
+        <div class="alert alert-danger" data-ng-show="harvesterSelected.error">
+          <strong data-translate="">harvesterError</strong>
+          {{harvesterSelected.error['@id']}}
+          <pre>
+          {{harvesterSelected.error.message}}
+          </pre>
+        </div>
 
         <div data-ng-include="getTplForHarvester()"> </div>
       </div>
@@ -122,15 +127,20 @@
             <td>{{ h.harvestdate | gnFromNow }}</td>
             <td>{{h.elapsedtime}}</td>
             <td>
-              <ul>
-                <li data-ng-repeat="(key, value) in h.info[0]">{{key}}: <span data-ng-switch=""
-                    data-on="key">
-                    <pre data-ng-switch-when="stack">{{value}}</pre>
-                    <span data-ng-switch-when="logfile"/>
-                    <span data-ng-switch-default="">{{value}}</span>
-                  </span>
-                </li>
-              </ul>
+              <p data-ng-repeat="(key, value) in h">
+                <span data-ng-switch=""
+                  data-on="key">
+                  <span data-ng-switch-when="stack">{{key}}: {{value}}</span>
+                  <span data-ng-switch-when="logfile"/>
+                  <span data-ng-switch-when="id"/>
+                  <span data-ng-switch-when="harvestertype"/>
+                  <span data-ng-switch-when="harvesteruuid"/>
+                  <span data-ng-switch-when="harvestername"/>
+                  <span data-ng-switch-when="params"/>
+                  <span data-ng-switch-when="paramsasxml"/>
+                  <span data-ng-switch-default="">{{key}}: {{value}}</span>
+                </span>
+              </p>
 
               <a data-ng-show="h.info[0].logfile"
                 href="admin.harvester.log?file={{h.info[0].logfile}}" target="_blank"

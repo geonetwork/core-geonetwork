@@ -19,7 +19,9 @@ import java.util.Map;
 @Table(name = "Groups")
 @Cacheable
 @Access(AccessType.PROPERTY)
+@SequenceGenerator(name=Group.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class Group extends Localized {
+    static final String ID_SEQ_NAME = "group_id_seq";
 
     private int _id;
     private String _name;
@@ -38,7 +40,7 @@ public class Group extends Localized {
      * @return the id of the group.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(nullable = false)
     public int getId() {
         return _id;

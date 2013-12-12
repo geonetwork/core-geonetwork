@@ -521,7 +521,6 @@ public class SearchManager {
 		_htmlCacheDir = htmlCacheDirTest.getAbsolutePath();
 
 
-        final File luceneDir = _geonetworkDataDirectory.getLuceneDir();
         _spatial = new Spatial(_applicationContext.getBean(DataStore.class), maxWritesInTransaction);
 
      	 _logAsynch = logAsynch;
@@ -1574,6 +1573,7 @@ public class SearchManager {
         public Spatial(DataStore dataStore, int maxWritesInTransaction) throws Exception {
             _lock = new ReentrantLock();
             _datastore = dataStore;
+
 			if (maxWritesInTransaction > 1) {
             	_transaction = new DefaultTransaction("SpatialIndexWriter");
             }

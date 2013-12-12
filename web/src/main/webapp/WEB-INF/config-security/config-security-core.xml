@@ -166,7 +166,7 @@
 	</bean>
 
 	<bean id="accessDeniedHandler"
-		class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+		class="jeeves.config.springutil.JeevesAccessDeniedHandler">
 		<property name="errorPage" value="/accessDenied.jsp" />
 	</bean>
 

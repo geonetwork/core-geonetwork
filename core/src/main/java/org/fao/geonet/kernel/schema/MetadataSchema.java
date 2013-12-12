@@ -327,9 +327,9 @@ public class MetadataSchema
     public Map<String, String> getSchemaNSWithPrefix() {
         Map<String, String> mapNs = new HashMap<String, String>();
         List<Namespace> schemaNsList = getSchemaNS();
-        
+
         for(Namespace ns : schemaNsList) {
-          mapNs.put(ns.getPrefix(), ns.getURI());
+            mapNs.put(ns.getPrefix(), ns.getURI());
         }
         return mapNs;
     }

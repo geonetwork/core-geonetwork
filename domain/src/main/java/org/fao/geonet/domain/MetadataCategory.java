@@ -15,7 +15,9 @@ import java.util.Map;
 @Access(AccessType.PROPERTY)
 @Cacheable
 @Table(name = "Categories")
+@SequenceGenerator(name=MetadataCategory.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class MetadataCategory extends Localized {
+    static final String ID_SEQ_NAME = "metadata_category_id_seq";
     private int _id;
     private String _name;
 
@@ -25,7 +27,7 @@ public class MetadataCategory extends Localized {
      * @return the id
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }

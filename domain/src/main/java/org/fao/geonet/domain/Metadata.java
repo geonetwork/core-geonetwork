@@ -28,7 +28,9 @@ import java.util.Set;
 @Entity
 @Table(name = "Metadata")
 @Access(AccessType.PROPERTY)
+@SequenceGenerator(name=Metadata.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class Metadata extends GeonetEntity {
+    static final String ID_SEQ_NAME = "metadata_id_seq";
 
     public static final String METADATA_CATEG_JOIN_TABLE_NAME = "MetadataCateg";
     public static final String METADATA_CATEG_JOIN_TABLE_CATEGORY_ID = "categoryId";
@@ -52,7 +54,7 @@ public class Metadata extends GeonetEntity {
      * @return the id of the metadata
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(nullable = false)
     public int getId() {
         return _id;

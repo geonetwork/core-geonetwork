@@ -14,7 +14,9 @@ import java.util.Map;
 @Table(name = "Operations")
 @Cacheable
 @Access(AccessType.PROPERTY)
+@SequenceGenerator(name=Operation.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class Operation extends Localized {
+    static final String ID_SEQ_NAME = "operation_id_seq";
     private int _id;
     private String _name;
 
@@ -25,7 +27,7 @@ public class Operation extends Localized {
      * @return the Id of the operation.
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(name = "id", nullable = false)
     public int getId() {
         return _id;

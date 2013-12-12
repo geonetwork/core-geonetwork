@@ -5,6 +5,7 @@ import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.kernel.AddElemValue;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -108,7 +109,7 @@ public class AjaxEditUtils extends EditUtils {
 
         // Store XML fragments to be handled after other elements update
         Map<String, String> xmlInputs = new HashMap<String, String>();
-        Map<String, String> xmlAndXpathInputs = new HashMap<String, String>();
+        Map<String, AddElemValue> xmlAndXpathInputs = new HashMap<String, AddElemValue>();
 
         // --- update elements
         for (Map.Entry<String, String> entry : changes.entrySet()) {
@@ -136,7 +137,7 @@ public class AjaxEditUtils extends EditUtils {
                 
                 String snippet = changes.get(ref + "_xml");
                 if (snippet != null && !"".equals(snippet)) {
-                    xmlAndXpathInputs.put(value, snippet);
+                    xmlAndXpathInputs.put(value, new AddElemValue(snippet));
                 } else {
                     Log.warning(Geonet.EDITOR, "No XML snippet or value found for xpath " + value + " and element ref " + ref);
                 }
@@ -259,7 +260,7 @@ public class AjaxEditUtils extends EditUtils {
 
         // Deals with XML fragments to insert or update
         if (!xmlAndXpathInputs.isEmpty()) {
-            editLib.addElementOrFragmentFromXpaths(md, xmlAndXpathInputs, metadataSchema);
+            editLib.addElementOrFragmentFromXpaths(md, xmlAndXpathInputs, metadataSchema, true);
         }
         
         setMetadataIntoSession(session,(Element)md.clone(), id);
@@ -382,7 +383,7 @@ public class AjaxEditUtils extends EditUtils {
 				child = el;
 			} else {
 				//--- normal element
-				child = editLib.addElement(schema, el, name);
+				child = editLib.addElement(mds, el, name);
 				if (!childName.equals(""))
 				{
 					//--- or element
@@ -402,7 +403,7 @@ public class AjaxEditUtils extends EditUtils {
 			}
 		}
         else {
-			child = editLib.addElement(schema, el, name);
+			child = editLib.addElement(mds, el, name);
 		}
 		//--- now enumerate the new child (if not a simple attribute)
 		if (childName == null || !childName.equals("geonet:attribute")) {
@@ -434,7 +435,6 @@ public class AjaxEditUtils extends EditUtils {
     /**
      * For Ajax Editing : removes an element from a metadata ([del] link).
      *
-     * @param dbms
      * @param session
      * @param id
      * @param ref
