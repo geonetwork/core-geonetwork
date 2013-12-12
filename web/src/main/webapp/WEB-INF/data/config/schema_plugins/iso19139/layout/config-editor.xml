@@ -440,13 +440,11 @@
               </template>
             </field>
             
-            
-            
             <field name="revisionDate"
               templateModeOnly="true"
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-                    gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']"
-              if="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']"
+              if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
               <template>
                 <values>
                   <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
@@ -494,8 +492,6 @@
               </template>
             </field>
           </section>
-          <!-- TODO: temporal extent -->
-          <!-- TODO: lineage -->
           
           
           <field 
@@ -738,7 +734,7 @@
             <field
               name="metadataPointOfContact"
               templateModeOnly="true"
-              xpath="/gmd:MD_Metadata/gmd:pointOfContact"
+              xpath="/gmd:MD_Metadata/gmd:contact"
               or="pointOfContact" in="/gmd:MD_Metadata">
               <template>
                 <values>
@@ -750,7 +746,7 @@
                   <key label="role" xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue"/>
                 </values>
                 <snippet>
-                  <gmd:pointOfContact>
+                  <gmd:contact>
                     <gmd:CI_ResponsibleParty>
                       <gmd:organisationName>
                         <gco:CharacterString>{{organisationName}}</gco:CharacterString>
@@ -771,7 +767,7 @@
                           codeListValue="{{role}}"/>
                       </gmd:role>
                     </gmd:CI_ResponsibleParty>
-                  </gmd:pointOfContact>
+                  </gmd:contact>
                 </snippet>
               </template>
             </field>
