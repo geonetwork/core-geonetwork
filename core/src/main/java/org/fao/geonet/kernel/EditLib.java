@@ -562,8 +562,14 @@ public class EditLib {
                 propEl.addContent(child.detach());
             }
         } else  if (newValue.getName().equals(propEl.getName()) && newValue.getNamespace().equals(propEl.getNamespace())) {
-            int idx = propEl.getParentElement().indexOf(propEl);
-            propEl.getParentElement().setContent(idx, newValue);
+            Element parent = propEl.getParentElement();
+            if (parent == null) {
+              Log.warning(Geonet.EDITORADDELEMENT, propEl.getName() + " does not have parent element. " + 
+                  "That usually means that your XPath requested creation of an element which does not exist in the schema. Check your XPath.");
+            } else {
+              int idx = parent.indexOf(propEl);
+              propEl.getParentElement().setContent(idx, newValue);
+            }
         } else {
             propEl.setContent(newValue);
         }
@@ -572,12 +578,16 @@ public class EditLib {
     private void createAndAddFromXPath(Element metadataRecord, MetadataSchema metadataSchema, String xpathProperty, AddElemValue value) throws Exception {
         Element clonedMetadata = (Element) metadataRecord.clone();
 
+        // If xpath starts from root use it as it is
+        // if not concat root element name
+        String xpath = xpathProperty.startsWith("/") ? xpathProperty : clonedMetadata.getQualifiedName()+"/"+xpathProperty;
+
         // Creating the element at the xpath location
         // Walk the XPath from the start until the end or the start of a filter
         // expression.
         // Collect element namespace prefix and name, check element exist and
         // create them according to schema definition.
-        XPathParser xpathParser = new XPathParser(new StringReader(clonedMetadata.getQualifiedName()+"/"+xpathProperty));
+        XPathParser xpathParser = new XPathParser(new StringReader(xpath));
         // Start from the root of the metadata document
         Token currentToken = xpathParser.getNextToken();
         Token previousToken = currentToken;
@@ -629,7 +639,7 @@ public class EditLib {
                     String qualifiedName = currentElementNamespacePrefix + ":" + currentElementName;
                     if(Log.isDebugEnabled(Geonet.EDITORADDELEMENT)) {
                         Log.debug(Geonet.EDITORADDELEMENT,
-                                "Check if " + qualifiedName + " exists in " + currentNode.getName());
+                                "Check if " + qualifiedName + " exists in " + currentNode.getQualifiedName());
                     }
 
 

@@ -127,15 +127,17 @@ public class AjaxEditUtils extends EditUtils {
                 ref = ref.substring(1);
                 xmlInputs.put(ref, value);
                 continue;
+            } else if (ref.startsWith("P") && ref.endsWith("_xml")) {
+                continue;
             } else if (ref.startsWith("P") && !ref.endsWith("_xml")) {
                 // Catch element starting with a P for xpath update mode
-                
-                // Only path from the root of the record are supported
-                if (value.startsWith("/")) {
-                    Log.warning(Geonet.EDITOR, "Only path from the root of the record are supported. Xpath is " + value);
-                }
-                
                 String snippet = changes.get(ref + "_xml");
+
+                if(Log.isDebugEnabled(Geonet.EDITOR)) {
+                  Log.debug(Geonet.EDITOR, "Add element by XPath: " + value);
+                  Log.debug(Geonet.EDITOR, "  Snippet is : " + snippet);
+                }
+
                 if (snippet != null && !"".equals(snippet)) {
                     xmlAndXpathInputs.put(value, new AddElemValue(snippet));
                 } else {

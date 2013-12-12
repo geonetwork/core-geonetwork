@@ -82,6 +82,26 @@ public class EditLibTest {
         assertEquals(1, Xml.selectNodes(metadataElement, "gmd:fileIdentifier", Arrays.asList(GMD, GCO)).size());
     }
 
+
+    @Test
+    public void testAddElementFromXpath_FromRoot() throws Exception {
+
+        MetadataSchema schema = _schemaManager.getSchema("iso19139");
+
+        final Element metadataElement = new Element("MD_Metadata", GMD);
+        String newValue = "newValueFromRootXpath";
+        final String xpathProperty = "/gmd:Metadata/gmd:fileIdentifier/gco:CharacterString";
+        boolean updated = new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty,
+                new AddElemValue(newValue),
+                true);
+
+        assertTrue(updated);
+        assertEqualsText(newValue, metadataElement, "gmd:fileIdentifier/gco:CharacterString", GMD, GCO);
+        assertEquals(1, Xml.selectNodes(metadataElement, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).size());
+        assertEquals(1, Xml.selectNodes(metadataElement, "gmd:fileIdentifier", Arrays.asList(GMD, GCO)).size());
+    }
+
+
     @Test
     public void testEditElementFromXpath_NoAttributes() throws Exception {
 
