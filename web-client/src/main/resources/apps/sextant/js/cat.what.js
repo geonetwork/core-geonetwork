@@ -303,7 +303,7 @@ cat.what = function() {
 			var resourceTypeHiddenField = new Ext.form.Hidden({
 				name: 'E_type',
 				id: 'E_type',
-				value: 'dataset'
+				value: 'dataset or series or publication or nonGeographicDataset or feature or featureCatalog'
 			});
 
 			advancedFields.push(radios,  catalogueField, themeINSPIREField, categoryTree, resourceTypeHiddenField);
