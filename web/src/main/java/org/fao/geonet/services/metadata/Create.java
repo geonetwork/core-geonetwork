@@ -31,6 +31,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Util;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
@@ -122,6 +123,10 @@ public class Create implements Service
         final String sourceDir = Lib.resource.getDir(context, access, oldId);
         final String destDir = Lib.resource.getDir(context, access, newId);
         if (new File(sourceDir).exists()) {
+            if (!new File(destDir).mkdirs()){
+                Log.warning(Geonet.GEONETWORK, "Error creating the metadata data directory.");
+            }
+
             FileUtils.copyDirectory(new File(sourceDir), new File(destDir));
         }
     }
