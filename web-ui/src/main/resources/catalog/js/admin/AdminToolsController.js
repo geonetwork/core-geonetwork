@@ -107,7 +107,7 @@
       $scope.groupinfo = {};
       $scope.editorSelectedId = null;
       $scope.editorGroups = {};
-      
+
       function loadEditors() {
         $http.get('admin.ownership.editors@json')
             .success(function(data) {
@@ -118,15 +118,15 @@
         $scope.editorSelectedId = id;
         $http.get('admin.usergroups.list@json?id=' + id)
             .success(function(data) {
-                var uniqueGroup = {};
-                angular.forEach(data, function (value) {
-                    if (!uniqueGroup[value.id]) {
-                        uniqueGroup[value.id] = value;
-                    }
-                });
-                $scope.editorGroups = uniqueGroup;
-        }).error(function(data) {
-        });
+              var uniqueGroup = {};
+              angular.forEach(data, function(value) {
+                if (!uniqueGroup[value.id]) {
+                  uniqueGroup[value.id] = value;
+                }
+              });
+              $scope.editorGroups = uniqueGroup;
+            }).error(function(data) {
+            });
 
         $http.get('admin.ownership.groups@json?id=' + id)
           .success(function(data) {
@@ -162,8 +162,8 @@
           headers: {'Content-type': 'application/xml'}
         }).success(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
-            msg: $translate('transfertPrivilegesFinished', 
-                    {privileges: data.privileges, metadata: data.metadata}),
+            msg: $translate('transfertPrivilegesFinished',
+                {privileges: data.privileges, metadata: data.metadata}),
             timeout: 2,
             type: 'success'});
           params.running = false;
