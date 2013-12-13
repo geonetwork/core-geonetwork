@@ -152,6 +152,7 @@ public final class Params {
 	
     public static final String FILENAME = "filename";
     public static final String UPDATEONLY = "update";
+    public static final String START_EDITING_SESSION = "starteditingsession";
 
     /**
      * TODO javadoc.

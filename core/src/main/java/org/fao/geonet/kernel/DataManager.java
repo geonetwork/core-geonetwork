@@ -28,19 +28,24 @@
 package org.fao.geonet.kernel;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
+
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Xml.ErrorHandler;
+
 import jeeves.xlink.Processor;
 
 import org.apache.commons.lang.StringUtils;
@@ -694,6 +699,89 @@ public class DataManager {
         if (svnManager != null) {
             svnManager.createMetadataDir(id, context, md);
         }
+    }
+
+    /**
+     * Start an editing session. This will record the original metadata record
+     * in the session under the {@link Geonet.Session.METADATA_BEFORE_ANY_CHANGES} + id
+     * session property.
+     * 
+     * The record contains geonet:info element.
+     * 
+     * Note: Only the metadata record is stored in session. If the editing
+     * session upload new documents or thumbnails, those documents will not
+     * be cancelled. This needs improvements.
+     * 
+     * @param context
+     * @param id
+     * @throws Exception
+     */
+    public void startEditingSession(ServiceContext context, String id)
+        throws Exception {
+      if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+        Log.debug(Geonet.EDITOR_SESSION, "Editing session starts for record " + id);
+      }
+      
+      boolean keepXlinkAttributes = false;
+      boolean forEditing = false;
+      boolean withValidationErrors = false;
+      Element metadataBeforeAnyChanges = getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+      context.getUserSession().setProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id, metadataBeforeAnyChanges);
+    }
+
+    /**
+     * Rollback to the record in the state it was when the editing session started
+     * (See {@link #startEditingSession(ServiceContext, String)}).
+     * 
+     * @param context
+     * @param id
+     * @throws Exception
+     */
+    public void cancelEditingSession(ServiceContext context,
+        String id) throws Exception {
+        UserSession session = context.getUserSession();
+        Element metadataBeforeAnyChanges = (Element) session.getProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
+        
+        if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+              Log.debug(Geonet.EDITOR_SESSION, 
+                  "Editing session end. Cancel changes. Restore record " + id + 
+                  ". Replace by original record which was: ");
+        }
+        
+        if (metadataBeforeAnyChanges != null) {
+            if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+              Log.debug(Geonet.EDITOR_SESSION, " > restoring record: ");
+              Log.debug(Geonet.EDITOR_SESSION, Xml.getString(metadataBeforeAnyChanges));
+            }
+            Element info = metadataBeforeAnyChanges.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+            boolean validate = false;
+            boolean ufo = false;
+                boolean index = true;
+                metadataBeforeAnyChanges.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+                updateMetadata(context, id, metadataBeforeAnyChanges, 
+                    validate, ufo, index, 
+                    context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), false);
+                endEditingSession(id, session);
+        } else {
+            if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+              Log.debug(Geonet.EDITOR_SESSION, 
+                  " > nothing to cancel for record " + id + 
+                  ". Original record was null. Use starteditingsession to.");
+            }
+        }
+    }
+
+    /**
+     * Remove the original record stored in session.
+     * 
+     * @param id
+     * @param session
+     */
+    public void endEditingSession(String id, UserSession session) {
+        if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+          Log.debug(Geonet.EDITOR_SESSION, "Editing session end.");
+        }
+        session.removeProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
     }
 
     /**

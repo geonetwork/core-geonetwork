@@ -35,7 +35,14 @@
     </service>
     
     <service name="md.edit">
-      <documentation>Edit a metadata record</documentation>
+      <documentation>
+        <![CDATA[
+        Edit a metadata record.
+        
+        Parameters: 
+        * id or uuid
+        * tab
+        ]]></documentation>
       <class name=".services.metadata.GetEditableData"/>
       <output sheet="../xslt/ui-metadata/edit/edit.xsl">
         <call name="thesaurus" class=".services.thesaurus.GetList" />
@@ -81,6 +88,17 @@
         ]]></documentation>
       <class name=".services.metadata.Update">
         <!--<param name="finished" value="yes" />-->
+      </class>
+      <error sheet="../xslt/common/error.xsl"/>
+    </service>
+
+    <service name="md.edit.cancel">
+      <documentation><![CDATA[
+        Cancel editing session.
+        ]]></documentation>
+      <class name=".services.metadata.Update">
+        <param name="forget" value="yes" />
+        <param name="finished" value="yes" />
       </class>
       <error sheet="../xslt/common/error.xsl"/>
     </service>
