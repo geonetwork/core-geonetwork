@@ -121,8 +121,9 @@ public class Create implements Service
     private void copyDataDir(ServiceContext context, String oldId, String newId, String access) throws IOException {
         final String sourceDir = Lib.resource.getDir(context, access, oldId);
         final String destDir = Lib.resource.getDir(context, access, newId);
-
-        FileUtils.copyDirectory(new File(sourceDir), new File(destDir));
+        if (new File(sourceDir).exists()) {
+            FileUtils.copyDirectory(new File(sourceDir), new File(destDir));
+        }
     }
 }
 
