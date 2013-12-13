@@ -74,7 +74,7 @@
           * in parameter. If no snippet is provided, then
           * just reload the metadata into the form.
           */
-         var refreshEditorForm = function(form) {
+         var refreshEditorForm = function(form, startNewSession) {
            var refreshForm = function(snippet) {
              $(mdConfig.formId).replaceWith(snippet);
              // Compiling
@@ -86,9 +86,15 @@
              refreshForm(form);
            }
            else {
-             gnHttp.callService('edit', {
-               id: mdConfig.metadataId
-             }).then(function(data) {
+             var params = {id: mdConfig.metadataId};
+
+             // If a new session, ask the server to save the original
+             // record and update session start time
+             if (startNewSession) {
+               angular.extend(params, {starteditingsession: 'yes'});
+               mdConfig.sessionStartTime = moment();
+             }
+             gnHttp.callService('edit', params).then(function(data) {
                refreshForm($(data.data));
              });
            }
@@ -145,6 +151,33 @@
                defer.resolve(snippet);
              }).error(function(error) {
                setStatus({msg: 'saveMetadataError', saving: false});
+               defer.reject(error);
+             });
+             return defer.promise;
+           },
+           /**
+            * Cancel the changes
+            */
+           cancel: function(refreshForm) {
+             var defer = $q.defer();
+             if (mdConfig.saving) {
+               return;
+             } else {
+               setStatus({msg: 'cancelling', saving: true});
+             }
+
+             $http({
+               method: 'GET',
+               url: 'md.edit.cancel@json',
+               params: {
+                 id: mdConfig.metadataId
+               }
+             }).success(function(data) {
+               setStatus({msg: 'allChangesCanceled', saving: false});
+
+               defer.resolve(data);
+             }).error(function(error) {
+               setStatus({msg: 'cancelChangesError', saving: false});
                defer.reject(error);
              });
              return defer.promise;

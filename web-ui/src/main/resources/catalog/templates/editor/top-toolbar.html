@@ -4,8 +4,9 @@
       <div class="btn-group">
         <button type="button" class="btn btn-default"
           data-ng-class="{'btn-primary': !isTemplate()}" data-ng-click="setTemplate(false)"
-          ><i class="fa" data-ng-class="isTemplate() ? 'fa-circle-o' : 'fa-dot-circle-o'"></i>
-          <span data-translate="">metadata</span></button>
+          ><span data-translate="">metadata</span>
+          <i class="fa" data-ng-class="isTemplate() ? 'fa-circle-o' : 'fa-dot-circle-o'"></i>
+        </button>
         <button type="button" class="btn btn-default"
           data-ng-class="{'btn-primary': isTemplate()}" data-ng-click="setTemplate(true)"
           ><i class="fa" data-ng-class="isTemplate() ? 'fa-dot-circle-o' : 'fa-circle-o'"></i>
@@ -14,8 +15,9 @@
     </div>
   </div>
 
-  <p class="navbar-text gn-tooltip" data-toggle="tooltip" data-placement="bottom"
-    data-ng-mouseover="getSaveStatus()" data-title="{{getSaveStatus()}}">{{editorConfig.savedStatus}}</p>
+  <p class="navbar-text gn-tooltip"
+    data-ng-mouseover="getSaveStatus()" title="{{saveStatus}}">{{editorConfig.savedStatus}}</p>
+  
   <div class="pull-right">
     <button type="button" class="btn btn-primary navbar-btn gn-tooltip" data-ng-click="share()"
       data-title="{{'share-help' | translate}}" data-placement="bottom">
@@ -31,8 +33,9 @@
       <span data-translate="" title="{{'validate-help' | translate}}">validate</span>
     </button>
     <!-- TODO: automatic save status -->
-    <button type="button" class="btn btn-danger navbar-btn" data-ng-click="reset()">
-      <i class="fa fa-cross"/>
+    <button type="button" class="btn btn-danger navbar-btn gn-tooltip" data-ng-click="cancel()" 
+      data-ng-mouseover="getCancelStatus()" title="{{cancelStatus}}">
+      <i class="fa fa-undo"/>
       <span data-translate="">cancel</span>
     </button>
   </div>

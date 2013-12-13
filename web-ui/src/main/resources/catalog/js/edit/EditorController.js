@@ -83,7 +83,8 @@
           formId: $scope.formId,
           compileScope: $scope,
           tab: $scope.tab,
-          displayAttributes: $scope.displayAttributes
+          displayAttributes: $scope.displayAttributes,
+          sessionStartTime: moment()
         };
         gnMetadataManagerService
           .startEditing($scope.editorConfig);
@@ -95,7 +96,7 @@
         // TODO: Check requested metadata exist - return message if it happens
         // Would you like to create a new one ?
         $scope.editorFormUrl = gnMetadataManagerService
-          .buildEditUrlPrefix('md.edit');
+          .buildEditUrlPrefix('md.edit') + '&starteditingsession=yes';
       };
 
 
@@ -199,13 +200,37 @@
         return false;
       };
 
+      $scope.cancel = function(refreshForm) {
+        gnMetadataManagerService.cancel(refreshForm)
+          .then(function(form) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('cancelMetadataSuccess')
+              });
+              gnMetadataManagerService.refreshEditorForm(null, true);
+            }, function(error) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('cancelMetadataError'),
+                error: error,
+                timeout: 0,
+                type: 'danger'});
+            });
+        return false;
+      };
+
       $scope.getSaveStatus = function() {
         if ($scope.editorConfig.savedTime) {
-          return $translate('saveAtimeAgo',
+          return $scope.saveStatus = $translate('saveAtimeAgo',
               {timeAgo: moment($scope.editorConfig.savedTime).fromNow()});
         }
       };
-
+      $scope.getCancelStatus = function() {
+        if ($scope.editorConfig.sessionStartTime) {
+          return $scope.cancelStatus =
+              $translate('cancelChangesFromNow', {
+                timeAgo: moment($scope.editorConfig.sessionStartTime).fromNow()
+              });
+        }
+      };
       //      // Remove status message after 30s
       //      $scope.$watch('savedStatus', function () {
       //        $timeout(function () {
