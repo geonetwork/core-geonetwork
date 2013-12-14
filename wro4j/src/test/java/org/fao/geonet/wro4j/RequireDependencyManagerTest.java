@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.google.common.collect.TreeTraverser;
-import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,12 +23,12 @@ import java.util.*;
  * Date: 11/21/13
  * Time: 11:42 AM
  */
-public class ClosureRequireDependencyManagerTest {
-    private ClosureRequireDependencyManager _depManager;
+public class RequireDependencyManagerTest {
+    private RequireDependencyManager _depManager;
 
     @Before
     public void configureTestFile() throws IOException {
-        this._depManager = new ClosureRequireDependencyManager();
+        this._depManager = new RequireDependencyManager();
         final File rootOfSearch = getJsTestBaseDir();
         final Iterator<File> fileIterator = FileUtils.iterateFiles(rootOfSearch, new String[]{"js"}, true);
 
@@ -45,7 +43,7 @@ public class ClosureRequireDependencyManagerTest {
     }
 
     static File getJsTestBaseDir() {
-        final Class<ClosureRequireDependencyManagerTest> cls = ClosureRequireDependencyManagerTest
+        final Class<RequireDependencyManagerTest> cls = RequireDependencyManagerTest
                 .class;
         final URL resource = cls.getResource(cls.getSimpleName() + ".class");
         if (resource == null) {
@@ -91,7 +89,7 @@ public class ClosureRequireDependencyManagerTest {
     }
     @Test
     public void testAddFileRequiresUsesDoubleQuotes() throws Exception {
-        final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "geonet.provide('xb'); geonet.require(\"3a\")");
+        final RequireDependencyManager.Node node = _depManager.addFile("xb", "geonet.provide('xb'); geonet.require(\"3a\")");
         assertTrue(node.dependencyIds.contains("3a"));
     }
     @Test
@@ -101,14 +99,14 @@ public class ClosureRequireDependencyManagerTest {
     }
     @Test
     public void testAddFileProvidesUsesDoubleQuotes() throws Exception {
-        final ClosureRequireDependencyManager.Node node = _depManager.addFile("xa", "geonet.provide(\"xa\")");
+        final RequireDependencyManager.Node node = _depManager.addFile("xa", "geonet.provide(\"xa\")");
         Assert.assertEquals("xa", node.id);
         final Set<String> allModuleIds = _depManager.getAllModuleIds();
         assertTrue(allModuleIds.toString(), allModuleIds.contains("xa"));
     }
     @Test
     public void testAddFileProvidesCanBeDeclaredAfterRequire() throws Exception {
-        final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "geonet.require('3a'); geonet.provide('xb');");
+        final RequireDependencyManager.Node node = _depManager.addFile("xb", "geonet.require('3a'); geonet.provide('xb');");
         Assert.assertEquals("xb", node.id);
         assertTrue(node.dependencyIds.contains("3a"));
 
@@ -117,11 +115,11 @@ public class ClosureRequireDependencyManagerTest {
     @Test
     public void testFindTransitiveDependenciesFor() throws Exception {
         List<String> a1Deps = Arrays.asList("3a", "2b", "3c", "3b", "2a");
-        Collection<ClosureRequireDependencyManager.Node> depNodes = _depManager.getTransitiveDependenciesFor("1a", false);
-        List<String> actualIds = Lists.transform(Lists.newArrayList(depNodes), new Function<ClosureRequireDependencyManager.Node, String>() {
+        Collection<RequireDependencyManager.Node> depNodes = _depManager.getTransitiveDependenciesFor("1a", false);
+        List<String> actualIds = Lists.transform(Lists.newArrayList(depNodes), new Function<RequireDependencyManager.Node, String>() {
             @Nullable
             @Override
-            public String apply(@Nonnull ClosureRequireDependencyManager.Node input) {
+            public String apply(@Nonnull RequireDependencyManager.Node input) {
                 return input.id;
             }
         });
@@ -129,10 +127,10 @@ public class ClosureRequireDependencyManagerTest {
 
         a1Deps = Arrays.asList("3c", "3a", "2b", "3b", "2a", "1a");
         depNodes = _depManager.getTransitiveDependenciesFor("1b", false);
-        actualIds = Lists.transform(Lists.newArrayList(depNodes), new Function<ClosureRequireDependencyManager.Node, String>() {
+        actualIds = Lists.transform(Lists.newArrayList(depNodes), new Function<RequireDependencyManager.Node, String>() {
             @Nullable
             @Override
-            public String apply(@Nonnull ClosureRequireDependencyManager.Node input) {
+            public String apply(@Nonnull RequireDependencyManager.Node input) {
                 return input.id;
             }
         });

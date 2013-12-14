@@ -1,5 +1,6 @@
 package org.fao.geonet.wro4j;
 
+import com.google.common.base.Optional;
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,10 +18,12 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.fao.geonet.wro4j.GeonetWroModelFactory.*;
 import static org.junit.Assert.*;
 
 /**
@@ -32,55 +35,123 @@ import static org.junit.Assert.*;
  */
 public class GeonetWroModelFactoryTest {
     @Test
-    public void testCreate() throws Exception {
+    public void testCreateUsingRequire() throws Exception {
 
-        File jsRoot = ClosureRequireDependencyManagerTest.getJsTestBaseDir();
-        String sourcesXml = "<sources><" + GeonetWroModelFactory.JS_SOURCE + " " +
-                            GeonetWroModelFactory.WEBAPP_ATT + "=\"\" " +
-                            GeonetWroModelFactory.PATH_ON_DISK_EL + "=\"" + jsRoot.getAbsolutePath() + "\"/>" +
-                            "<" + GeonetWroModelFactory.CSS_SOURCE + " " +
-                            GeonetWroModelFactory.WEBAPP_ATT + "=\"\" " +
-                            GeonetWroModelFactory.PATH_ON_DISK_EL + "=\"" + jsRoot.getAbsolutePath() + "\"/>" +
-                            "</sources>";
-        final WroModel wroModel = createModel(sourcesXml);
-        Set<String> groupNames = new HashSet<String>();
-        final UriLocatorFactory uriLocatorFactory = new GeonetworkMavenWrojManagerFactory().newUriLocatorFactory();
-        for (Group group : wroModel.getGroups()) {
-            groupNames.add(group.getName());
+        File jsRoot = RequireDependencyManagerTest.getJsTestBaseDir();
+        String sourcesXml = "<sources><"+ REQUIRE_EL +"><" + JS_SOURCE_EL + " " +
+                            WEBAPP_ATT + "=\"\" " +
+                            PATH_ON_DISK_ATT + "=\"" + jsRoot.getAbsolutePath() + "\"/>" +
+                            "<" + CSS_SOURCE_EL + " " +
+                            WEBAPP_ATT + "=\"\" " +
+                            PATH_ON_DISK_ATT + "=\"" + jsRoot.getAbsolutePath() + "\"/>" +
+                            "</"+ REQUIRE_EL +"></sources>";
 
-            final List<Resource> resources = group.getResources();
-            if (group.getName().equals("1a")) {
-                assertCssFileExists("1a.css", resources);
-            }
+        final WroModel wroModel = createRequireModel(sourcesXml);
+        assertRequireModel(wroModel);
+    }
+    @Test
+    public void testCreateUsingRequireAndGroupHasPathOnDisk() throws Exception {
 
-            boolean hasSelfJsFile = false;
-            for (Resource resource : resources) {
-                if (resource.getUri().endsWith(group.getName() + ".js")) {
-                    hasSelfJsFile = true;
-                }
-                assertCanLoadResource(uriLocatorFactory, resource);
-            }
+        File jsRoot = RequireDependencyManagerTest.getJsTestBaseDir();
+        String sourcesXml = createSourcesXmlWithPathOnGroup(jsRoot);
 
-            if (!group.getName().equals("anotherCss")) {
-                assertTrue("Group: '" + group.getName() + "' does not have its js file only its dependencies", hasSelfJsFile);
-            } else {
-                assertEquals(1, resources.size());
-                assertTrue(resources.get(0).getUri().endsWith("anotherCss.less"));
-            }
-        }
-
-        assertTrue(groupNames.contains("1a"));
-        assertTrue(groupNames.contains("1b"));
-        assertTrue(groupNames.contains("2a"));
-        assertTrue(groupNames.contains("2b"));
-        assertTrue(groupNames.contains("3a"));
-        assertTrue(groupNames.contains("3b"));
-        assertTrue(groupNames.contains("3c"));
+        final WroModel wroModel = createRequireModel(sourcesXml);
+        assertRequireModel(wroModel);
     }
 
-    private WroModel createModel(String sourcesXml) throws IOException {
+    @Test
+    public void testRelativePathInclude() throws Exception {
+        File jsRoot = RequireDependencyManagerTest.getJsTestBaseDir();
+        String includeSourcesXML = createSourcesXmlWithPathOnGroup(jsRoot);
 
-        final File wroSources = File.createTempFile("wro-sources", ".xml");
+        final String prefix = "wro-includes";
+        final File wroInclude = File.createTempFile(prefix, ".xml");
+        FileUtils.write(wroInclude, includeSourcesXML);
+
+        String mainSourcesXml = "<sources><" + INCLUDE_EL + " file=\"" + wroInclude.getName() + "\"/></sources>";
+        File mainSourcesFile = File.createTempFile("wro-sources", ".xml", wroInclude.getParentFile());
+        final WroModel wroModel = createRequireModel(mainSourcesXml, Optional.of(mainSourcesFile));
+
+        assertRequireModel(wroModel);
+    }
+
+    @Test
+    public void testAbsolutePathInclude() throws Exception {
+        File jsRoot = RequireDependencyManagerTest.getJsTestBaseDir();
+        String includeSourcesXML = createSourcesXmlWithPathOnGroup(jsRoot);
+
+        final String prefix = "wro-includes";
+        final File wroInclude = File.createTempFile(prefix, ".xml");
+        FileUtils.write(wroInclude, includeSourcesXML);
+
+        String mainSourcesXml = "<sources><" + INCLUDE_EL + " file=\"" + wroInclude.getAbsolutePath() +"\"/></sources>";
+        final WroModel wroModel = createRequireModel(mainSourcesXml);
+
+        assertRequireModel(wroModel);
+    }
+
+    @Test
+    public void testURIPathInclude() throws Exception {
+        File jsRoot = RequireDependencyManagerTest.getJsTestBaseDir();
+        String includeSourcesXML = createSourcesXmlWithPathOnGroup(jsRoot);
+
+        final String prefix = "wro-includes";
+        final File wroInclude = File.createTempFile(prefix, ".xml");
+        FileUtils.write(wroInclude, includeSourcesXML);
+
+        String mainSourcesXml = "<sources><" + INCLUDE_EL + " file=\"" + wroInclude.getAbsoluteFile().toURI() +"\"/></sources>";
+        final WroModel wroModel = createRequireModel(mainSourcesXml);
+
+        assertRequireModel(wroModel);
+    }
+
+    @Test
+    public void testCreateDeclaredGroups() throws IOException {
+        File jsRoot = RequireDependencyManagerTest.getJsTestBaseDir();
+        String sourcesXml = "<sources><"+ DECLARATIVE_EL +" " + DECLARATIVE_NAME_ATT + "=\"groupName\"" + " " +
+                            PATH_ON_DISK_ATT + "=\"" + jsRoot.getAbsolutePath() +"\" >" +
+                "<" + JS_SOURCE_EL + " " + WEBAPP_ATT + "=\"sampleFile1a.js\" " + PATH_ON_DISK_ATT + "=\"" + jsRoot.getAbsolutePath() + "\"/>" +
+                "<" + JS_SOURCE_EL + " " + WEBAPP_ATT + "=\"jslvl2/sampleFile2a.js\" />" +
+                "<" + CSS_SOURCE_EL + " " + WEBAPP_ATT+ "=\"1a.css\"/>" +
+                "<" + CSS_SOURCE_EL + " " + WEBAPP_ATT+ "=\"anotherCss.less\" "+ PATH_ON_DISK_ATT + "=\"" + jsRoot.getAbsolutePath() + "\"/>" +
+            "</"+ DECLARATIVE_EL +"></sources>";
+
+        final WroModel wroModel = createRequireModel(sourcesXml);
+
+        assertEquals(1, wroModel.getGroups().size());
+        final Group group = wroModel.getGroups().iterator().next();
+
+        assertEquals("groupName", group.getName());
+        List<Resource> resources = group.getResources();
+
+        assertEquals(4, resources.size());
+
+        List<String> resourceNames = new ArrayList<String>(resources.size());
+        final UriLocatorFactory uriLocatorFactory = new GeonetworkMavenWrojManagerFactory().newUriLocatorFactory();
+        for (Resource resource : resources) {
+            resourceNames.add(resource.getUri());
+            assertCanLoadResource(uriLocatorFactory, resource);
+        }
+
+        assertTrue(resourceNames.contains(("file:/"+jsRoot.getAbsolutePath()+"/sampleFile1a.js").replace('\\', '/')));
+        assertTrue(resourceNames.contains(("file:/"+jsRoot.getAbsolutePath()+"/jslvl2/sampleFile2a.js").replace('\\', '/')));
+        assertTrue(resourceNames.contains(("file:/"+jsRoot.getAbsolutePath()+"/1a.css").replace('\\', '/')));
+        assertTrue(resourceNames.contains(("file:/"+jsRoot.getAbsolutePath()+"/anotherCss.less").replace('\\', '/')));
+
+    }
+
+    private WroModel createRequireModel(String sourcesXml) throws IOException {
+        return createRequireModel(sourcesXml, Optional.<File>absent());
+    }
+    private WroModel createRequireModel(String sourcesXml, Optional<File> sourcesFileOption) throws IOException {
+
+
+        final File wroSources;
+        if (sourcesFileOption.isPresent()) {
+            wroSources = sourcesFileOption.get();
+        } else {
+            wroSources = File.createTempFile("wro-sources", ".xml");
+        }
         FileUtils.write(wroSources, sourcesXml);
 
         final File configFile = File.createTempFile("wro", ".properties");
@@ -135,12 +206,57 @@ public class GeonetWroModelFactoryTest {
         File subdir = new File(tmpDir.getRoot(), "subdir");
         FileUtils.write(new File(subdir, "cssA.css"), "// cssA2.css");
 
-        String sourcesXml = "<sources><" + GeonetWroModelFactory.CSS_SOURCE + " " +
-                            GeonetWroModelFactory.WEBAPP_ATT + "=\"\" " +
-                            GeonetWroModelFactory.PATH_ON_DISK_EL + "=\"" + tmpDir.getRoot().getAbsolutePath() + "\"/>" +
-                            "</sources>";
+        String sourcesXml = "<sources><"+ REQUIRE_EL +"><" + CSS_SOURCE_EL + " " +
+                            WEBAPP_ATT + "=\"\" " +
+                            PATH_ON_DISK_ATT + "=\"" + tmpDir.getRoot().getAbsolutePath() + "\"/>" +
+                            "</"+ REQUIRE_EL +"></sources>";
 
-        createModel(sourcesXml);
+        createRequireModel(sourcesXml);
 
+    }
+
+    private void assertRequireModel(WroModel wroModel) throws IOException {
+        Set<String> groupNames = new HashSet<String>();
+        final UriLocatorFactory uriLocatorFactory = new GeonetworkMavenWrojManagerFactory().newUriLocatorFactory();
+        for (Group group : wroModel.getGroups()) {
+            groupNames.add(group.getName());
+
+            final List<Resource> resources = group.getResources();
+            if (group.getName().equals("1a")) {
+                assertCssFileExists("1a.css", resources);
+            }
+
+            boolean hasSelfJsFile = false;
+            for (Resource resource : resources) {
+                if (resource.getUri().endsWith(group.getName() + ".js")) {
+                    hasSelfJsFile = true;
+                }
+                assertCanLoadResource(uriLocatorFactory, resource);
+            }
+
+            if (!group.getName().equals("anotherCss")) {
+                assertTrue("Group: '" + group.getName() + "' does not have its js file only its dependencies", hasSelfJsFile);
+            } else {
+                assertEquals(1, resources.size());
+                assertTrue(resources.get(0).getUri().endsWith("anotherCss.less"));
+            }
+        }
+
+        assertTrue(groupNames.contains("1a"));
+        assertTrue(groupNames.contains("1b"));
+        assertTrue(groupNames.contains("2a"));
+        assertTrue(groupNames.contains("2b"));
+        assertTrue(groupNames.contains("3a"));
+        assertTrue(groupNames.contains("3b"));
+        assertTrue(groupNames.contains("3c"));
+    }
+
+    private String createSourcesXmlWithPathOnGroup(File jsRoot) {
+        return "<sources><"+ REQUIRE_EL +" "+
+               PATH_ON_DISK_ATT + "=\"" + jsRoot.getAbsolutePath() + "\"><" + JS_SOURCE_EL + " " +
+               WEBAPP_ATT + "=\"\" />" +
+               "<" + CSS_SOURCE_EL + " " +
+               WEBAPP_ATT + "=\"\" />" +
+               "</"+ REQUIRE_EL +"></sources>";
     }
 }

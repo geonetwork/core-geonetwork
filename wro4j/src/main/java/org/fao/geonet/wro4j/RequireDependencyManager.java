@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * Date: 11/21/13
  * Time: 10:45 AM
  */
-public class ClosureRequireDependencyManager {
+public class RequireDependencyManager {
 
     private static final String ENCODING = System.getProperty("file.encoding", "UTF-8");
     private Map<String, Node> _modules = new HashMap<String, Node>();

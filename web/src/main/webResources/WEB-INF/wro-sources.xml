@@ -1,5 +1,9 @@
-<sources>
-    <jsSource webapp="catalog/js" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
-    <jsSource webapp="catalog/components" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
-    <cssSource webapp="catalog/style" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
+<sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="wro-sources.xsd" >
+    <include file="geonetwork-main-wro-sources.xml" />
+    <require pathOnDisk="${project.basedir}/../web-ui/src/main/resources" >
+        <jsSource webapp="catalog/js" />
+        <jsSource webapp="catalog/components" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
+        <cssSource webapp="catalog/style" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
+    </require>
 </sources>

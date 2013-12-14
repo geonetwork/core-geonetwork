@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:include href="../main.xsl"/>
     <xsl:template mode="script" match="/">
-        <script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
+        <script type="text/javascript" src="{/root/gui/url}/static/kernel.js"/>
         <script type="text/javascript" src="{/root/gui/url}/scripts/core/gui/gui.js"/>
         <link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/ext-all.css" />
         <script type="text/javascript" src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js"></script>
