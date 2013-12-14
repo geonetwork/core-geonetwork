@@ -38,9 +38,10 @@
     search: 'qi@json',
     processMd: 'md.processing',
     processAll: 'md.processing.batch',
-    processXml: 'xml.metadata.processing@json', // TO CHANGE
+    processXml: 'xml.metadata.processing@json', // TODO: CHANGE
     getRelations: 'md.relations.get@json',
-    removeThumbnail: 'md.thumbnail.remove@json'
+    removeThumbnail: 'md.thumbnail.remove@json',
+    removeOnlinesrc: 'resource.del.and.detach' // TODO: CHANGE
   });
 
   module.provider('gnHttp', function() {
@@ -88,7 +89,8 @@
   module.factory('gnBatchProcessing', [
     'gnHttp',
     'gnMetadataManagerService',
-    function(gnHttp, gnMetadataManagerService) {
+    '$q',
+    function(gnHttp, gnMetadataManagerService, $q) {
 
       var processing = true;
       var processReport = null;
@@ -97,21 +99,22 @@
         /**
          * Run process md.processing on the edited
          * metadata after the form has been saved.
-         * Then refresh the editor.
          *
-         * Return a promise, called after the form
-         * refresh
+         * Return a promise called the batch has been
+         * processed
          */
         runProcessMd: function(params) {
           angular.extend(params, {
             id: gnMetadataManagerService.getCurrentEdit().metadataId
           });
-          return gnMetadataManagerService.save()
+          var defer = $q.defer();
+          gnMetadataManagerService.save()
                 .then(function() {
                 gnHttp.callService('processMd', params).then(function(data) {
-                  gnMetadataManagerService.refreshEditorForm($(data.data));
+                  defer.resolve(data);
                 });
               });
+          return defer.promise;
         },
 
         runProcessMdXml: function(params) {

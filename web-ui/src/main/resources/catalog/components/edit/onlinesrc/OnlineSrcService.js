@@ -11,6 +11,8 @@
     '$q',
     function(gnBatchProcessing, gnHttp, gnMetadataManagerService, $q) {
 
+      var reload = false;
+
       /**
      * Prepare batch process request parameters.
      *   - get parameters from onlinesrc form
@@ -87,12 +89,48 @@
             id: getChildValue(rel, 'id'),
             uuid: getChildValue(rel, 'uuid'),
             title: getChildValue(rel, 'title'),
+            url: getChildValue(rel, 'url'),
+            protocol: getChildValue(rel, 'protocol'),
+            desc: getChildValue(rel, 'description'),
+            name: getChildValue(rel, 'name'),
             'abstract': getChildValue(rel, 'abstract'),
             type: type,
             subtype: rel.getAttribute('subtype')
           });
         });
         return relations;
+      };
+
+      var refreshForm = function(scope, data) {
+        gnMetadataManagerService.refreshEditorForm(data);
+        scope.reload = true;
+      };
+
+      /**
+       * Run batch process, then refresh form with process
+       * response and reload the updated online resources list.
+       * The first save is done in 'runProcessMd'
+       */
+      var runProcess = function(scope, params) {
+        gnBatchProcessing.runProcessMd(params).then(function(data) {
+          refreshForm(scope, $(data.data));
+        });
+      };
+
+      /**
+       * Run a service (not a batch) to add or remove
+       * an onlinesrc.
+       * Save the form, launch the service, then refresh
+       * the form and reload the onlinesrc list.
+       */
+      var runService = function(service, params, scope) {
+        gnMetadataManagerService.save()
+        .then(function() {
+              gnHttp.callService(service, params).success(function() {
+                refreshForm(scope);
+              });
+            });
+
       };
 
       /**
@@ -103,6 +141,7 @@
        * - linkToDataset
        * - linkToService
        * - removeThumbnail
+       * - removeOnlinesrc
        *******************************************
        */
       return {
@@ -111,7 +150,7 @@
          * This value is watched from gnOnlinesrcList directive
          * to reload online resources list when it is true
          */
-        reload: false,
+        reload: reload,
 
         /**
          * Get all online resources for the current edited
@@ -140,7 +179,7 @@
          * request from the gnBatchProcessing service
          */
         addOnlinesrc: function(params) {
-          return gnBatchProcessing.runProcessMd(
+          return runProcess(this,
               setParams('onlinesrc-add', params));
         },
 
@@ -148,7 +187,7 @@
          *
          */
         addThumbnailByURL: function(params) {
-          return gnBatchProcessing.runProcessMd(
+          runProcess(this,
               setParams('thumbnail-add', params));
         },
         /**
@@ -205,43 +244,45 @@
 
           // It is a url thumbnail
           if (thumb.id.indexOf('resources.get') < 0) {
-            gnBatchProcessing.runProcessMd(
+            runProcess(this,
                 setParams('thumbnail-remove', {
                   id: gnMetadataManagerService.
                       getCurrentEdit().metadataId,
                   thumbnail_url: thumb.id
-                })).then(function() {
-              scope.reload = true;
-            });
+                }));
           }
           // It is an uploaded tumbnail
           else {
-            gnHttp.callService('removeThumbnail', {
+            runService('removeThumbnail', {
               type: (thumb.title === 'thumbnail' ? 'small' : 'large'),
               id: gnMetadataManagerService.getCurrentEdit().metadataId,
               version: $(gnMetadataManagerService.getCurrentEdit().
                   formId).find('input[id="version"]').val()
-            }).success(function() {
-              // Reload online resources list
-              scope.reload = true;
-            });
+            }, this);
           }
         },
 
         removeOnlinesrc: function(onlinesrc) {
           var scope = this;
 
-          gnBatchProcessing.runProcessMd(
-              setParams('onlinesrc-remove', {
-                id: gnMetadataManagerService.
-                    getCurrentEdit().metadataId,
-                url: onlinesrc.id,
-                name: onlinesrc['abstract']
-              })).then(function() {
-            scope.reload = true;
-          });
-        }
+          if (onlinesrc.protocol == 'WWW:DOWNLOAD-1.0-http--download') {
+            runService('removeOnlinesrc', {
+              id: gnMetadataManagerService.
+                  getCurrentEdit().metadataId,
+              url: onlinesrc.url,
+              name: onlinesrc.name
+            }, this);
+          } else {
+            runProcess(this,
+                setParams('onlinesrc-remove', {
+                  id: gnMetadataManagerService.
+                      getCurrentEdit().metadataId,
+                  url: onlinesrc.url,
+                  name: onlinesrc.name
+                }));
 
+          }
+        }
       };
     }]);
 })();

@@ -72,13 +72,6 @@
               // the form params that will be submited
               scope.params = {};
 
-              // upload directive options
-              scope.onlinesrcUploadOptions = {
-                autoUpload: false,
-                done: uploadOnlinesrcDone,
-                fail: uploadOnlineSrcError
-              };
-
               // TODO: should be in gnMetadataManagerService ?
               var getVersion = function() {
                 return scope.params.version = $(gnMetadataManagerService.
@@ -88,7 +81,8 @@
 
               /**
                * Onlinesrc uploaded with success, close the popup,
-               * refresh the metadata.
+               * refresh the metadata form.
+               * Callback of the submit().
                */
               var uploadOnlinesrcDone = function(evt, data) {
                 gnMetadataManagerService.refreshEditorForm();
@@ -99,6 +93,13 @@
                * Onlinesrc uploaded with error, broadcast it.
                */
               var uploadOnlineSrcError = function(data) {
+              };
+
+              // upload directive options
+              scope.onlinesrcUploadOptions = {
+                autoUpload: false,
+                done: uploadOnlinesrcDone,
+                fail: uploadOnlineSrcError
               };
 
               /**
@@ -115,9 +116,7 @@
                       });
                 }
                 else {
-                  gnOnlinesrc.addThumbnailByURL(scope.params).then(function() {
-                    gnOnlinesrc.reload = true;
-                  });
+                  gnOnlinesrc.addThumbnailByURL(scope.params);
                 }
               };
             }
@@ -177,10 +176,7 @@
                   scope.submit();
                 }
                 else {
-                  gnOnlinesrc.addOnlinesrc(scope.params).
-                      then(function() {
-                        scope.onlinesrcService.reload = true;
-                      });
+                  gnOnlinesrc.addOnlinesrc(scope.params);
                 }
               };
 

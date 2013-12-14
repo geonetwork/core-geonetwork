@@ -10,7 +10,8 @@
   
   
   <!-- List of online resources -->
-  <h4><span data-translate="">onlinesrc</span></h4>
+  <h4><i
+            class="fa fa-archive" ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i><span data-translate="">onlinesrc</span></h4>
   <div
     ng-repeat="resource in relations.onlinesrc | orderBy:'title'"
     ng-click="">{{resource.title}}
