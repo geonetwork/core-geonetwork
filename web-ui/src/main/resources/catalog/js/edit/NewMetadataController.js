@@ -53,7 +53,8 @@
           // TODO: add fullPrivileges
         } else {
           // TODO: Better handling of lots of templates
-          gnSearchManagerService.search('qi@json?template=y&fast=index&from=1&to=200').
+          gnSearchManagerService.search('qi@json?' +
+              'template=y&fast=index&from=1&to=200').
               then(function(data) {
 
                 $scope.mdList = data;
@@ -70,7 +71,7 @@
                         types.push(type[j]);
                       }
                     }
-                  } else if ($.inArray(type, dataTypesToExclude) === -1 && 
+                  } else if ($.inArray(type, dataTypesToExclude) === -1 &&
                       $.inArray(type, types) === -1) {
                     types.push(type);
                   }
