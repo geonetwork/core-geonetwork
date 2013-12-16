@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i18n>
+  <viewInGE>Visualiser dans Google Earth</viewInGE>
+  <warning>Attention!</warning>
+  <nojs>Javascript n'est pas actif dans votre navigateur. Activez le ou cliquez <a
+    href="catalog.search.nojs">ici pour rechercher des informations</a> en mode dégradé.</nojs>
+  <selectView>Sélectionner une vue</selectView>
+  <moreTabs>Plus d'information</moreTabs>
+</i18n>
