@@ -52,23 +52,26 @@
               $routeParams.template);
           // TODO: add fullPrivileges
         } else {
-
-          gnSearchManagerService.search('qi@json?template=y&fast=index').
+          // TODO: Better handling of lots of templates
+          gnSearchManagerService.search('qi@json?template=y&fast=index&from=1&to=200').
               then(function(data) {
 
                 $scope.mdList = data;
 
                 var types = [];
+                // TODO: A faster option, could be to rely on facet type
+                // But it may not be available
                 for (var i = 0; i < data.metadata.length; i++) {
                   var type = data.metadata[i].type || unknownType;
                   if (type instanceof Array) {
                     for (var j = 0; j < type.length; j++) {
-                      if (!$.inArray(type[j], dataTypesToExclude) &&
-                          $.inArray(type[j], types)) {
+                      if ($.inArray(type[j], dataTypesToExclude) === -1 &&
+                          $.inArray(type[j], types) === -1) {
                         types.push(type[j]);
                       }
                     }
-                  } else if (types.indexOf(type) < 0 && type) {
+                  } else if ($.inArray(type, dataTypesToExclude) === -1 && 
+                      $.inArray(type, types) === -1) {
                     types.push(type);
                   }
                 }
