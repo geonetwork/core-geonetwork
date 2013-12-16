@@ -107,7 +107,7 @@
         <section xpath="/gmd:MD_Metadata/gmd:contentInfo" 
           or="contentInfo" in="/gmd:MD_Metadata"/>
       </tab>
-      <tab id="portrayalCatalogueInfo" toggle="">
+      <tab id="portrayalCatalogueInfo" toggle="true">
         <section xpath="/gmd:MD_Metadata/gmd:portrayalCatalogueInfo"
           or="portrayalCatalogueInfo" in="/gmd:MD_Metadata"/>
       </tab>
@@ -136,15 +136,15 @@
           <field xpath="/gmd:MD_Metadata/gmd:featureAttribute"/>
         </section>
       </tab>
-      <tab id="metadataConstraints">
+      <tab id="metadataConstraints" toggle="true">
         <section xpath="/gmd:MD_Metadata/gmd:metadataConstraints" or="metadataConstraints"
           in="/gmd:MD_Metadata"/>
       </tab>
-      <tab id="metadataMaintenance">
+      <tab id="metadataMaintenance" toggle="true">
         <section xpath="/gmd:MD_Metadata/gmd:metadataMaintenance" or="metadataMaintenance"
           in="/gmd:MD_Metadata"/>
       </tab>
-      <tab id="applicationSchemaInfo">
+      <tab id="applicationSchemaInfo" toggle="true">
         <section xpath="/gmd:MD_Metadata/gmd:applicationSchemaInfo"
           or="applicationSchemaInfo"  in="/gmd:MD_Metadata"/>
       </tab>

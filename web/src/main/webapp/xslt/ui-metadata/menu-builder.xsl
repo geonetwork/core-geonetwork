@@ -18,18 +18,11 @@
       data-all-depth="{if ($isFlatMode) then 'true' else 'false'}"/>
     
     <ul class="nav nav-pills">
-
-      <!-- Make a tab switcher for all tabs of the current view -->
-      <xsl:if test="count($currentView/tab) > 1">
-        <xsl:apply-templates mode="menu-builder"
-          select="$config/editor/views/view[tab/@id = $tab]/tab"/>
-      </xsl:if>
-
-
       <!-- Make a drop down choice to swith to one view to another -->
-      <li class="dropdown pull-right">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
-          <xsl:value-of select="$i18n/selectView"/>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)" 
+          title="{$i18n/selectView}">
+          <i class="fa fa-eye"></i>
           <b class="caret"/>
         </a>
         <ul class="dropdown-menu">
@@ -58,6 +51,45 @@
           </li>
         </ul>
       </li>
+      
+      
+      <!-- Make a tab switcher for all tabs of the current view -->
+      <xsl:if test="count($currentView/tab) > 1">
+        <xsl:apply-templates mode="menu-builder"
+          select="$config/editor/views/view[tab/@id = $tab]/tab[not(@toggle)]"/>
+        
+        
+        
+        <!-- Some views may define tab to be grouped in an extra button -->
+        <xsl:if test="count($config/editor/views/view[tab/@id = $tab]/tab[@toggle]) > 0">
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)" 
+              title="{$i18n/moreTabs}">
+              <i class="fa fa-ellipsis-h"></i>
+              <b class="caret"/>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- links -->
+              <xsl:for-each select="$config/editor/views/view[tab/@id = $tab]/tab[@toggle]">
+                <li>
+                  <xsl:if test="$tab = @id">
+                    <xsl:attribute name="class">disabled</xsl:attribute>
+                  </xsl:if>
+                  <a>
+                    <xsl:if test="$tab != @id">
+                      <xsl:attribute name="data-ng-click" 
+                        select="concat('switchToTab(''', @id, ''', ''', @mode, ''')')"/>
+                    </xsl:if>
+                    <xsl:variable name="tabId" select="@id"/>
+                    <xsl:value-of select="$strings/*[name() = $tabId]"/>
+                  </a>
+                </li>
+              </xsl:for-each>
+            </ul>
+          </li>
+        </xsl:if>
+      </xsl:if>
+      
     </ul>
   </xsl:template>
 
