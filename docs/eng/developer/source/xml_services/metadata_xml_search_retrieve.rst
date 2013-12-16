@@ -236,7 +236,7 @@ Request
 Get metadata request example::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/xml.metadata.get
+  http://localhost:8080/geonetwork/srv/eng/xml.metadata.get
 
   Mime-type:
   application/xml
@@ -464,7 +464,7 @@ Parameters:
 RSS search request example::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/rss.search
+  http://localhost:8080/geonetwork/srv/eng/rss.search
 
   Mime-type:
   application/xml
@@ -528,12 +528,12 @@ RSS search response example::
         <title>Hydrological Basins in Africa (Sample record, please remove!)</title>
         <link>http://localhost:8080/geonetwork?uuid=5df54bf0-3a7d-44bf-9abf-84d772da8df1</link>
         <link href="http://geonetwork3.fao.org/ows/296?SERVICE=wms$amp;VERSION=1.1.1&REQUEST=GetMap&BBOX=-17.3,-34.6,51.1,38.2&LAYERS=hydrological_basins&SRS=EPSG:4326&WIDTH=200&HEIGHT=213&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=default" type="image/png" rel="alternate" title="Hydrological basins in Africa"/>
-        <link href="http://localhost:8080/geonetwork/srv/en/google.kml?uuid=5df54bf0-3a7d-44bf-9abf-84d772da8df1&layers=hydrological_basins" type="application/vnd.google-earth.kml+xml" rel="alternate" title="Hydrological basins in Africa"/>
+        <link href="http://localhost:8080/geonetwork/srv/eng/google.kml?uuid=5df54bf0-3a7d-44bf-9abf-84d772da8df1&layers=hydrological_basins" type="application/vnd.google-earth.kml+xml" rel="alternate" title="Hydrological basins in Africa"/>
         <category>Geographic metadata catalog</category>
         <description><![CDATA[ ... ]]></description>
         <pubDate>06 Nov 2007 12:13:00 EST</pubDate>
         <guid>http://localhost:8080/geonetwork?uuid=5df54bf0-3a7d-44bf-9abf-84d772da8df1</guid>
-        <media:content url="/geonetwork/srv/en/resources.get?id=11&fname=thumbnail_s.gif&access=public" type="image/gif" width="100"/>
+        <media:content url="/geonetwork/srv/eng/resources.get?id=11&fname=thumbnail_s.gif&access=public" type="image/gif" width="100"/>
         <media:text>Major hydrological basins and their sub-basins ...</media:text>
         <!--Bounding box in georss simplepoint format (default) (http://georss.org)-->
         <georss:point>16.9 1.8</georss:point>
@@ -568,7 +568,7 @@ Parameters:
 RSS latest request example::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/rss.latest
+  http://localhost:8080/geonetwork/srv/eng/rss.latest
 
   Mime-type:
   application/xml
@@ -629,7 +629,7 @@ RSS latest response example::
         &BBOX=-17.3,-34.6,51.1,38.2&LAYERS=hydrological_basins&SRS=EPSG:4326&WIDTH=200
         &HEIGHT=213&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=default" type="image/png"
         rel="alternate" title="Hydrological basins in Africa"/>
-      <link href="http://localhost:8080/geonetwork/srv/en/google.kml?
+      <link href="http://localhost:8080/geonetwork/srv/eng/google.kml?
         uuid=5df54bf0-3a7d-44bf-9abf-84d772da8df1&layers=hydrological_basins"
         type="application/vnd.google-earth.kml+xml"
         rel="alternate" title="Hydrological basins in Africa"/>
@@ -637,7 +637,7 @@ RSS latest response example::
       <description><![CDATA[ ... ]]></description>
       <pubDate>06 Nov 2007 12:13:00 EST</pubDate>
       <guid>http://localhost:8080/geonetwork?uuid=5df54bf0-3a7d-44bf-9abf-84d772da8df1</guid>
-      <media:content url="/geonetwork/srv/en/resources.get?id=11&fname=thumbnail_s.gif
+      <media:content url="/geonetwork/srv/eng/resources.get?id=11&fname=thumbnail_s.gif
         &access=public" type="image/gif" width="100"/>
         <media:text>Major hydrological basins and their sub-basins ...</media:text>
      <!--Bounding box in georss GML format (http://georss.org)-->
