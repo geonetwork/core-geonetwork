@@ -91,7 +91,8 @@
              thesaurusKey: '@',
              keywords: '@',
              transformations: '@',
-             currentTransformation: '@'
+             currentTransformation: '@',
+             maxTags: '@'
            },
            templateUrl: '../../catalog/components/thesaurus/' +
            'partials/keywordselector.html',
@@ -169,7 +170,8 @@
                $timeout(function() {
                  $(id).tagsinput({
                    itemValue: 'label',
-                   itemText: 'label'
+                   itemText: 'label',
+                   maxTags: scope.maxTags
                  });
 
                  angular.forEach(scope.selected, function(keyword) {

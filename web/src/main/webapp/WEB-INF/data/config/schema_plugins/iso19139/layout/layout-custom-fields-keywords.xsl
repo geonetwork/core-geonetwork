@@ -86,11 +86,11 @@
         <!-- The thesaurus key may be contained in the MD_Identifier field or 
           get it from the list of thesaurus based on its title.
           -->
-        <xsl:variable name="thesaurusKey"
+        <xsl:variable name="thesaurusInternalKey"
           select="if (gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code) 
           then gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code 
           else $listOfThesaurus/thesaurus[title=$thesaurusTitle]/key"/>
-
+        <xsl:variable name="thesaurusKey" select="substring-after($thesaurusInternalKey, 'geonetwork.thesaurus.')"></xsl:variable>
 
 
         <!-- Single quote are escaped inside keyword. 
@@ -112,12 +112,17 @@
 
         <!-- Create custom widget: 
               * '' for item selector, 
-              * 'combo' for simple combo, 
-              * 'list' for selection list, 
+              * 'tagsinput' for tags
+              * 'tagsinput' and maxTags = 1 for only one tag
               * 'multiplelist' for multiple selection list
         -->
         <xsl:variable name="widgetMode" select="'tagsinput'"/>
-
+        <xsl:variable name="maxTags" select="''"/>
+        <!--
+          Example: to restrict number of keyword to 1 for INSPIRE
+          <xsl:variable name="maxTags" 
+          select="if ($thesaurusKey = 'external.theme.inspire-theme') then '1' else ''"/>
+        -->
         <!-- Create a div with the directive configuration
             * widgetMod: the layout to use
             * elementRef: the element ref to edit
@@ -132,9 +137,10 @@
           data-metadata-id="{$metadataId}"
           data-element-ref="{concat('_X', ../gn:element/@ref)}"
           data-thesaurus-title="{$thesaurusTitle}"
-          data-thesaurus-key="{substring-after($thesaurusKey, 'geonetwork.thesaurus.')}"
+          data-thesaurus-key="{$thesaurusKey}"
           data-keywords="{$keywords}" data-transformations="{$transformations}"
-          data-current-transformation="{$transformation}">
+          data-current-transformation="{$transformation}"
+          data-max-tags="{$maxTags}">
         </div>
 
         <xsl:variable name="isTypePlace" select="count(gmd:type/gmd:MD_KeywordTypeCode[@codeListValue='place']) > 0"/>
