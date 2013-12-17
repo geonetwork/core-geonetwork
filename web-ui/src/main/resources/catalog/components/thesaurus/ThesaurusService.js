@@ -6,6 +6,7 @@
   module.factory('Keyword', function() {
     function Keyword(k) {
       this.props = $.extend(true, {}, k);
+      this.label = this.getLabel();
     };
     Keyword.prototype = {
       getId: function() {

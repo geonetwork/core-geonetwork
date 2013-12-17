@@ -57,11 +57,17 @@
           <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
         </xsl:if>
         
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.ui.widget.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.iframe-transport.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-process.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-angular.js"></script>
+        
+        <!--<xsl:if test="$isEditing">-->
+          <script src="{$uiResourcesPath}lib/jquery.ext/jquery.ui.widget.js"></script>
+          <script src="{$uiResourcesPath}lib/jquery.ext/jquery.iframe-transport.js"></script>
+          <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload.js"></script>
+          <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-process.js"></script>
+          <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-angular.js"></script>
+          
+          <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.js"></script>
+          <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js"></script>
+        <!--</xsl:if>-->
         
         <!-- Use Closure to load the application scripts -->
         <script>
@@ -92,12 +98,17 @@
         </xsl:if>
         
         
+        <!--<xsl:if test="$isEditing">-->
         <!-- TODO: minify -->
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery.ui.widget.js"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery.iframe-transport.js"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload.js"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-process.js"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-angular.js"></script>
+        
+        <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.min.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"></script>
+        <!--</xsl:if>-->
         
         <script src="{$uiResourcesPath}lib/{$angularApp}.min.js"></script>
       </xsl:otherwise>

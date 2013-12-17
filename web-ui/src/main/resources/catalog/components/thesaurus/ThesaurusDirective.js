@@ -111,6 +111,7 @@
                  scope.transformations.split(',') : [scope.transformations];
 
 
+
              // Check initial keywords are available in the thesaurus
 
              scope.sortKeyword = function(a, b) {
@@ -160,6 +161,104 @@
 
                // Then register search filter change
                scope.$watch('filter', search);
+
+             };
+
+             var initTagsInput = function() {
+               var id = '#tagsinput_' + scope.elementRef;
+               $timeout(function() {
+                 $(id).tagsinput({
+                   itemValue: 'label',
+                   itemText: 'label'
+                 });
+
+                 angular.forEach(scope.selected, function(keyword) {
+                   $(id).tagsinput('add', keyword);
+                 });
+
+                 // Load all keywords from thesaurus and
+                 gnThesaurusService.getKeywords('',
+                 scope.thesaurusKey, scope.max)
+                      .then(function(listOfKeywords) {
+
+                       var field = $(id).tagsinput('input');
+                       field.typeahead({
+                         valueKey: 'label',
+                         local: listOfKeywords,
+                         minLength: 0,
+                         limit: 15
+                         // template: '<p>{{label}}</p>'
+                         // TODO: could be nice to have definition
+                       }).bind('typeahead:selected',
+                   $.proxy(function(obj, keyword) {
+                     // Add to tags
+                     this.tagsinput('add', keyword);
+
+                     // Update selection and snippet
+                     scope.selected = this.tagsinput('items');
+                     getSnippet(); // FIXME: should not be necessary
+                     // as there is a watch on it ?
+
+                     // Clear typeahead
+                     this.tagsinput('input').typeahead('setQuery', '');
+                   }, $(id))
+                       );
+
+                       $(id).on('itemRemoved', function() {
+                         scope.selected = $(this).tagsinput('items');
+                         getSnippet();
+                       });
+
+                       // Display full list when input is clicked
+                       // TODO: add config for that
+                       // From http://stackoverflow.com/questions/18768401/
+                       //   typeahead-js-displaying-all-prefetched-datums
+                       $(element).find('input.tt-query')
+                         .on('click', function() {
+                         var $input = $(this);
+
+                         // these are all expected to be objects
+                         // so falsey check is fine
+                         if (!$input.data() || !$input.data().ttView ||
+                             !$input.data().ttView.datasets ||
+                             !$input.data().ttView.dropdownView ||
+                             !$input.data().ttView.inputView) {
+                       return;
+                         }
+
+                         var ttView = $input.data().ttView;
+
+                         var toggleAttribute = $input.attr('data-toggled');
+
+                         if (!toggleAttribute || toggleAttribute === 'off') {
+                           $input.attr('data-toggled', 'on');
+
+                       $input.typeahead('setQuery', '');
+
+                       if ($.isArray(ttView.datasets) &&
+                           ttView.datasets.length > 0) {
+                         // only pulling the first dataset for this hack
+                         var fullSuggestionList = [];
+                         // renderSuggestions expects a
+                         // suggestions array not an object
+                         $.each(ttView.datasets[0].itemHash, function(i, item) {
+                           fullSuggestionList.push(item);
+                         });
+
+                         ttView.dropdownView.renderSuggestions(
+                         ttView.datasets[0], fullSuggestionList);
+                         ttView.inputView.setHintValue('');
+                         ttView.dropdownView.open();
+                       }
+                         }
+                         else if (toggleAttribute === 'on') {
+                           $input.attr('data-toggled', 'off');
+                       ttView.dropdownView.close();
+                         }
+                   });
+
+                      });
+               });
              };
 
              var checkState = function() {
@@ -168,6 +267,10 @@
 
                  scope.$watch('results', getSnippet);
                  scope.$watch('selected', getSnippet);
+
+                 if (scope.mode === 'tagsinput') {
+                   initTagsInput();
+                 }
                } else if (scope.invalidKeywordMatch) {
                  // invalidate element ref to not trigger
                  // an update of the record with an invalid

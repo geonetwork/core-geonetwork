@@ -116,7 +116,7 @@
               * 'list' for selection list, 
               * 'multiplelist' for multiple selection list
         -->
-        <xsl:variable name="widgetMode" select="''"/>
+        <xsl:variable name="widgetMode" select="'tagsinput'"/>
 
         <!-- Create a div with the directive configuration
             * widgetMod: the layout to use
