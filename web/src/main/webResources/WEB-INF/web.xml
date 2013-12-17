@@ -52,7 +52,7 @@
         </init-param>
         <init-param>
             <param-name>trustedHost</param-name>
-            <param-value>karukera,localhost</param-value>
+            <param-value>localhost</param-value>
         </init-param>
     </filter>
     <filter-mapping>
