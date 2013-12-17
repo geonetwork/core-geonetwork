@@ -1,7 +1,10 @@
 package org.fao.geonet.web;
 
+import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.constants.Jeeves;
 import jeeves.server.overrides.ConfigurationOverrides;
+
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -9,6 +12,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -43,23 +47,26 @@ public class LocaleRedirects {
     public ModelAndView home(final HttpServletRequest request,
                              @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
                              @RequestParam(value = "hl", required = false) String langParam,
+                             @RequestParam(value = "node", required = false) String node,
                              @RequestHeader(value = "Accept-Language", required = false) final String langHeader) {
         String lang = lang(langParam, langCookie, langHeader);
-        return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang));
+        return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, node));
     }
 
     @RequestMapping(value = "/login.jsp")
     public ModelAndView login(final HttpServletRequest request,
                               @RequestParam(value = "hl", required = false) String langParam,
+                              @RequestParam(value = "node", required = false) String node,
                               @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
                               @RequestHeader(value = "Accept-Language", required = false) final String langHeader) {
         String lang = lang(langParam, langCookie, langHeader);
-        return redirectURL(createServiceUrl(request, "login.form", lang));
+        return redirectURL(createServiceUrl(request, "login.form", lang, node));
     }
 
     @RequestMapping(value = "/accessDenied.jsp")
     public ModelAndView accessDenied(final HttpServletRequest request,
                                      @RequestParam(value = "hl", required = false) String langParam,
+                                     @RequestParam(value = "node", required = false) String node,
                                      @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
                                      @RequestParam(value = "referer", required = false) String referer,
                                      @RequestHeader(value = "Accept-Language", required = false) final String langHeader) {
@@ -68,19 +75,24 @@ public class LocaleRedirects {
             referer.contains("accessDenied") || referer.contains("service-not-allowed")) {
             referer = "UNKNOWN";
         }
-        return redirectURL(createServiceUrl(request, "service-not-allowed?referer=" + referer, lang));
+        return redirectURL(createServiceUrl(request, "service-not-allowed?referer=" + referer, lang, node));
     }
 
     private ModelAndView redirectURL(final String url) {
 
         RedirectView rv = new RedirectView(url);
-        rv.setStatusCode(HttpStatus.MOVED_TEMPORARILY);
+        rv.setStatusCode(HttpStatus.FOUND);
         ModelAndView mv = new ModelAndView(rv);
         return mv;
     }
 
-    private String createServiceUrl(HttpServletRequest request, String service, String lang) {
-        return request.getContextPath() + "/srv/" + lang + "/" + service;
+    private String createServiceUrl(HttpServletRequest request, String service, String lang, String node) {
+        ConfigurableApplicationContext context = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(_appContext.getBean(ServletContext.class));
+        String currentNode = context.getBean(NodeInfo.class).getId();
+        
+        node = node == null ? currentNode : node;
+        
+        return request.getContextPath() + "/" + node + "/" + lang + "/" + service;
     }
 
     private String lang(String langParam, String langCookie, String langHeader) {
