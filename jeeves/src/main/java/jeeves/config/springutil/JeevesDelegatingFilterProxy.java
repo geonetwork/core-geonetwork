@@ -29,6 +29,7 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
     private final static InheritableThreadLocal<String> applicationContextAttributeKey = new InheritableThreadLocal<String>();
     ConcurrentHashMap<String, Filter> _nodeIdToFilterMap = new ConcurrentHashMap<String, Filter>();
 
+    
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (request instanceof HttpServletRequest) {
@@ -58,6 +59,17 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
             response.getWriter().write(request.getClass().getName() + " is not a supported type of request");
         }
     }
+    
+    String trustedHost;
+    
+
+    public String getTrustedHost() {
+        return trustedHost;
+    }
+
+    public void setTrustedHost(String trustedHost) {
+        this.trustedHost = trustedHost;
+    }
 
     private String extractNodeIdFromUrl(String referer) {
         final String[] split = referer.split(getServletContext().getContextPath(), 2);
@@ -69,18 +81,21 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
         if (referer == null) {
             return false;
         }
-
+        
         try {
             final URL refererUrl = new URL(referer);
             final Set<InetAddress> refererInetAddress = new HashSet<InetAddress>(Arrays.asList(InetAddress.getAllByName(refererUrl
                     .getHost())));
-            InetAddress[] localINetAddres = InetAddress.getAllByName(request.getLocalAddr());
-
-            for (InetAddress localAddress : localINetAddres) {
-                if (refererInetAddress.contains(localAddress)) {
-                    return true;
+            for (String trusted : getTrustedHost().split(",")) {
+                InetAddress[] localINetAddres = InetAddress.getAllByName(trusted.trim());
+                
+                for (InetAddress localAddress : localINetAddres) {
+                    if (refererInetAddress.contains(localAddress)) {
+                        return true;
+                    }
                 }
             }
+            
         } catch (UnknownHostException e) {
             return false;
         } catch (MalformedURLException e) {

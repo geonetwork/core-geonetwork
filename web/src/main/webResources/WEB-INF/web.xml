@@ -50,6 +50,10 @@
             <param-name>loginService</param-name>
             <param-value>j_spring_security_check</param-value>
         </init-param>
+        <init-param>
+            <param-name>trustedHost</param-name>
+            <param-value>localhost</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
