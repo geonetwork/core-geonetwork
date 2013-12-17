@@ -217,6 +217,21 @@
         return false;
       };
 
+      $scope.close = function() {
+        gnMetadataManagerService.save(false)
+          .then(function(form) {
+              // TODO: Should redirect to main page at some point ?
+              window.close();
+            }, function(error) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('saveMetadataError'),
+                error: error,
+                timeout: 0,
+                type: 'danger'});
+            });
+
+        return false;
+      };
       $scope.getSaveStatus = function() {
         if ($scope.editorConfig.savedTime) {
           return $scope.saveStatus = $translate('saveAtimeAgo',

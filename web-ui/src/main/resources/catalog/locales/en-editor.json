@@ -17,6 +17,7 @@
     "cancel": "Cancel",
     "cancelChangesFromNow": "Cancel all changes since the start of the editing session {{timeAgo}}.",
     "share": "Share",
+    "closeEditor": "Save & close",
     "share-help": "Define who can view this record",
     "validate": "Validate",
     "validate-help": "Check record against standard validation rules",
