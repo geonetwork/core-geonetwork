@@ -31,11 +31,9 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
     @Test
     public void testDoImportMefVersion1() throws Exception {
         ServiceContext context = createServiceContext();
-        final File resource = new File(MEFLibIntegrationTest.class.getResource("mef1-example.mef").getFile());
-        final User admin = loginAsAdmin(context);
-
-        Element params = new Element("request");
-        final List<String> metadataIds = MEFLib.doImport(params, context, resource, getStyleSheets());
+        User admin = loginAsAdmin(context);
+        ImportMetadata importMetadata = new ImportMetadata(this, context).invoke();
+        List<String> metadataIds = importMetadata.getMetadataIds();
 
         assertEquals(1, metadataIds.size());
 
@@ -76,5 +74,30 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
     @Ignore
     public void testDoMEF2Export() throws Exception {
         fail("to implement");
+    }
+
+    public static class ImportMetadata {
+        private final AbstractCoreIntegrationTest testClass;
+        private ServiceContext context;
+        private List<String> metadataIds;
+
+        public ImportMetadata(AbstractCoreIntegrationTest testClass, ServiceContext context) {
+            this.context = context;
+            this.testClass = testClass;
+        }
+
+        public List<String> getMetadataIds() {
+            return metadataIds;
+        }
+
+        public ImportMetadata invoke() throws Exception {
+            testClass.loginAsAdmin(context);
+
+            final File resource = new File(MEFLibIntegrationTest.class.getResource("mef1-example.mef").getFile());
+
+            Element params = new Element("request");
+            metadataIds = MEFLib.doImport(params, context, resource, testClass.getStyleSheets());
+            return this;
+        }
     }
 }

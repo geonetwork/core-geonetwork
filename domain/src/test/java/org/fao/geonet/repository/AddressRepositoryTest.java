@@ -51,7 +51,10 @@ public class AddressRepositoryTest extends AbstractSpringDataTest {
     }
 
     private Address newAddress() {
-        int val = _inc.incrementAndGet();
+        return newAddress(_inc);
+    }
+    public static Address newAddress(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
         Address Address = new Address().setAddress("address" + val).setCity("city" + val).setCountry("country" + val).setState("state"
                                                                                                                                + val)
                 .setZip("zip" + val);

@@ -214,7 +214,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return request;
     }
 
-    protected String getStyleSheets() {
+    public String getStyleSheets() {
         final String file = getWebappDir(getClass());
 
         return new File(file, "xsl/conversion").getPath();
@@ -240,7 +240,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return new File(cl.getResource(testClassName + ".class").getFile());
     }
 
-    protected User loginAsAdmin(ServiceContext context) {
+    public User loginAsAdmin(ServiceContext context) {
         final User admin = _userRepo.findAllByProfile(Profile.Administrator).get(0);
         UserSession userSession = new UserSession();
         userSession.loginAs(admin);
