@@ -250,6 +250,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     public synchronized void destroy() throws Exception {
         doUnschedule();
 
+        // TODO: Remove all sources related to the harvestUuid
+        
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         final Specifications<Metadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().uuid));
         for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
@@ -436,16 +438,16 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         if (log.isDebugEnabled()) {
             log.debug("AbstractHarvester login: ownerId = " + ownerId);
         }
-
-        if (ownerId == null) {
-            throw new IllegalArgumentException("Harvester does not have an ownerId in its parameters.  Aborting harvest.");
-        }
-
+        
         UserRepository repository = this.context.getBean(UserRepository.class);
-        User user = repository.findOne(ownerId);
-
-        // for harvesters created before owner was added to the harvester code, or harvesters belonging to a user that no longer exists
-        if (StringUtils.isEmpty(ownerId) || !this.dataMan.existsUser(this.context, Integer.parseInt(ownerId))) {
+        User user = null;
+        if (ownerId != null) {
+            user = repository.findOne(ownerId);
+        }
+        
+        // for harvesters created before owner was added to the harvester code,
+        // or harvesters belonging to a user that no longer exists
+        if (user == null || StringUtils.isEmpty(ownerId) || !this.dataMan.existsUser(this.context, Integer.parseInt(ownerId))) {
             // just pick any Administrator (they can all see all harvesters and groups anyway)
             user = repository.findAllByProfile(Profile.Administrator).get(0);
             getParams().ownerId = String.valueOf(user.getId());
