@@ -91,6 +91,16 @@ public abstract class AbstractParams {
         if(ownerIdE != null) {
             ownerId = ownerIdE.getText();
         }
+        ownerIdE = node.getChild("owner");
+        if(ownerIdE != null) {
+            ownerId = ownerIdE.getChildText("id");
+            if (ownerId == null || ownerId.trim().isEmpty()) {
+                ownerId = ownerIdE.getText();
+                if (ownerId == null || ownerId.trim().isEmpty()) {
+                    ownerId = null;
+                }
+            }
+        }
 
         if(StringUtils.isEmpty(ownerId)){
             Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
