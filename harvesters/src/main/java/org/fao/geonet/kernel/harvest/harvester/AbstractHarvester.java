@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.DailyRollingFileAppender;
 import org.apache.log4j.PatternLayout;
@@ -62,9 +63,11 @@ import java.io.File;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.quartz.JobKey.jobKey;
@@ -250,12 +253,24 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     public synchronized void destroy() throws Exception {
         doUnschedule();
 
-        // TODO: Remove all sources related to the harvestUuid
-        
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
+        
         final Specifications<Metadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().uuid));
+        Set<String> sources = new HashSet<String>();
         for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
+            sources.add(metadataRepository.findOne(id).getSourceInfo().getSourceId());
             dataMan.deleteMetadata(context, "" + id);
+        }
+        
+        // Remove all sources related to the harvestUuid if they are not linked to any record anymore
+        for (String sourceUuid : sources) {
+            Long ownedBySource = 
+                    metadataRepository.count(Specifications.where(MetadataSpecs.hasSource(sourceUuid)));
+            if (ownedBySource == 0 && !sourceUuid.equals(params.uuid)) {
+                removeIcon(sourceUuid);
+                sourceRepository.delete(sourceUuid);
+            }
         }
 
         doDestroy();
@@ -641,14 +656,18 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      */
     protected void doDestroy() throws SQLException {
-        File icon = new File(Resources.locateLogosDir(context), params.uuid + ".gif");
+        removeIcon(params.uuid);
+
+        context.getBean(SourceRepository.class).delete(params.uuid);
+        // FIXME: Should also delete the categories we have created for servers
+    }
+
+    private void removeIcon(String uuid) {
+        File icon = new File(Resources.locateLogosDir(context), uuid+ ".gif");
 
         if (!icon.delete() && icon.exists()) {
             Log.warning(Geonet.HARVESTER + "." + getType(), "Unable to delete icon: " + icon);
         }
-
-        context.getBean(SourceRepository.class).delete(params.uuid);
-        // FIXME: Should also delete the categories we have created for servers
     }
 
     /**
