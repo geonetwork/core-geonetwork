@@ -16,9 +16,8 @@
 
 	<!-- ================================================================= -->
 	<xsl:function name="myocean:buildIdentifier" as="xs:string">
-		<xsl:param name="domainName" as="xs:string"/>
-		<xsl:param name="id" as="xs:string"/>
-		<xsl:value-of select="concat(normalize-space($domainName), '/', $id)"/>
+		<xsl:param name="id"/>
+		<xsl:value-of select="concat('myocean.eu/', $id)"/>
 	</xsl:function>
 	
 	<xsl:template match="gmd:MD_Metadata">
@@ -26,16 +25,12 @@
 			<xsl:apply-templates select="@*"/>
 
 			<!-- 
-			    The field is computed as “<production unit label> / <internal metadata id>” knowing that  :
-			    production unit label is the domain name related to the email address of the point of contact (see 6.2.3)
+			    The field is computed as “myocean.eu/<internal metadata id>” knowing that  :
 			    internal metadata id is computed by the system and unique for every metadata in the system.
 			    -->
 			<gmd:fileIdentifier>
 				<gco:CharacterString>
-					<xsl:value-of select="myocean:buildIdentifier(substring-after(gmd:identificationInfo/*/
-						gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='originator']/gmd:contactInfo/
-						gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString
-							, '@'), /root/env/id)"/>
+					<xsl:value-of select="myocean:buildIdentifier(/root/env/id)"/>
 				</gco:CharacterString>
 			</gmd:fileIdentifier>
 
@@ -320,16 +315,16 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<!-- MyOcean specific : update supp info according to the first dimension descriptor-->
-	<xsl:template match="gmd:supplementalInformation" priority="2">
-		<xsl:copy>
-			<gco:CharacterString><xsl:value-of select="//gmd:contentInfo/gmd:MD_CoverageDescription/
-				gmd:dimension[1]/gmd:MD_RangeDimension/gmd:descriptor/gco:CharacterString"/></gco:CharacterString>
-		</xsl:copy>
-	</xsl:template>
+
+        <!-- MyOcean specific : update supp info according to the first dimension descriptor-->
+        <xsl:template match="gmd:supplementalInformation" priority="2">
+                <xsl:copy>
+                        <gco:CharacterString><xsl:value-of select="//gmd:contentInfo/gmd:MD_CoverageDescription/
+                                gmd:dimension[1]/gmd:MD_RangeDimension/gmd:descriptor/gco:CharacterString"/></gco:CharacterString>
+                </xsl:copy>
+        </xsl:template>
 	
-	<!-- ================================================================= -->
-	<!-- Set local identifier to the first 3 letters of iso code. Locale ids
+        <!-- Set local identifier to the first 3 letters of iso code. Locale ids
 		are used for multilingual charcterString using #iso2code for referencing.
 	-->
 	<xsl:template match="gmd:PT_Locale">
@@ -372,10 +367,7 @@
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
 			<gco:CharacterString>
-					<xsl:value-of select="myocean:buildIdentifier(substring-after(ancestor::node()[name(.) = 'gmd:identificationInfo']/*/
-						gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='originator']/gmd:contactInfo/
-						gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress
-						, '@'), /root/env/id)"/>
+					<xsl:value-of select="myocean:buildIdentifier(/root/env/id)"/>
 			</gco:CharacterString>
 		</xsl:copy>
 	</xsl:template>
