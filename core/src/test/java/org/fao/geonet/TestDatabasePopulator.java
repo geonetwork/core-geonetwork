@@ -5,6 +5,7 @@ import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -34,14 +35,37 @@ public class TestDatabasePopulator extends ResourceDatabasePopulator {
         }
 
         String webapp = webappFile.getParentFile().getParentFile().getCanonicalPath().replace(File.separatorChar, '/');
+        if (System.getProperty("os.name").toLowerCase().indexOf("win") ==  -1) {
+            webapp = "/"+webapp;
+        }
         for (String script : scripts) {
             String finalString = script.replace("${webapp}", webapp);
             final String classpathPrefix = "classpath:";
             if (finalString.startsWith(classpathPrefix)) {
                 final String resourceString = finalString.substring(classpathPrefix.length());
-                addScript(new InputStreamResource(getClass().getClassLoader().getResourceAsStream(resourceString)));
+                try {
+                    addScript(new InputStreamResource(getClass().getClassLoader().getResourceAsStream(resourceString)));
+                } catch (Exception e) {
+                    throw new AssertionError("Failed to load data script as a from the classpath: "+resourceString);
+                }
             } else {
-                addScript(new InputStreamResource(new URL(finalString).openStream()));
+                // series of hack for different platforms...
+                try {
+                    addScript(new InputStreamResource(new URL(finalString).openStream()));
+                } catch (Exception e) {
+                    String fileUrlPrefix = "file:/";
+                    if (finalString.startsWith(fileUrlPrefix)) {
+                        finalString = finalString.substring(fileUrlPrefix.length());
+                    }
+                    if (!new File(finalString).exists()) {
+                        finalString = finalString.substring(1);
+                    }
+                    if (new File(finalString).exists()) {
+                        addScript(new InputStreamResource(new FileInputStream(finalString)));
+                    } else {
+                        throw new AssertionError("Failed to load data script as a url: "+finalString);
+                    }
+                }
             }
         }
     }

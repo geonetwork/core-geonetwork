@@ -641,7 +641,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     /**
      * @return
      */
-    public AbstractParams getParams() {
+    public synchronized AbstractParams getParams() {
         return params;
     }
 
@@ -656,9 +656,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      */
     protected void doDestroy() throws SQLException {
-        removeIcon(params.uuid);
+        removeIcon(getParams().uuid);
 
-        context.getBean(SourceRepository.class).delete(params.uuid);
+        context.getBean(SourceRepository.class).delete(getParams().uuid);
         // FIXME: Should also delete the categories we have created for servers
     }
 
@@ -844,7 +844,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         el.addContent(new Element(name).setText(Integer.toString(value)));
     }
 
-    public void setParams(AbstractParams params) {
+    public synchronized void setParams(AbstractParams params) {
         this.params = params;
     }
 
