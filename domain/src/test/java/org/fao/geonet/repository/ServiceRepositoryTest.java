@@ -59,7 +59,10 @@ public class ServiceRepositoryTest extends AbstractSpringDataTest {
     }
 
     private Service newService() {
-        int val = _inc.incrementAndGet();
+        return newService(_inc);
+    }
+    public static Service newService(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
 
         Service service = new Service();
 

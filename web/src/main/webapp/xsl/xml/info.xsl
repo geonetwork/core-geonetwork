@@ -13,7 +13,19 @@
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
-
+	
+	<xsl:template match="results">
+		<sources>
+			<xsl:for-each select="record">
+				<xsl:sort select="name" order="ascending"/>
+				<source id="{id}">
+					<uuid><xsl:value-of select="id"/></uuid>
+					<xsl:copy-of select="name"/>
+				</source>
+			</xsl:for-each>
+		</sources>
+	</xsl:template>
+	
     <xsl:template match="isolanguages">
         <xsl:copy>
             <xsl:for-each select="record">

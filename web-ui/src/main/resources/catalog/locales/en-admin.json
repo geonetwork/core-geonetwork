@@ -205,6 +205,7 @@
     "system/csw/contactId": "Contact",
     "system/csw/enable": "CSW enabled",
     "system/csw/metadataPublic": "Inserted metadata is public",
+    "system/csw/transactionUpdateCreateXPath": "Transaction XPath Update can create new elements",
     "system/downloadservice": "Download service",
     "system/downloadservice/leave": "Use metadata linkage as is - no changes to linkage",
     "system/downloadservice/leave-help": "Selecting this option means that GeoNetwork will not handle file downloads.",
@@ -356,6 +357,7 @@
     "time": "Time",
     "details": "Details",
     "harvester": "Harvester",
+    "harvesterError": "Harvest error",
     "newHarvester": "Harvest from ",
     "deleteHarvester": "Delete",
     "deleteHarvesterHelp": "Delete harvester and all related records",
@@ -701,5 +703,13 @@
     "contactAsXML-help": "<h5>Example:</h5><code class='gn-code'>&lt;gmd:CI_ResponsibleParty xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\"&gt;&lt;gmd:individualName&gt;&lt;gco:CharacterString&gt;A new user&lt;/gco:CharacterString&gt;&lt;/gmd:individualName&gt;&lt;gmd:organisationName&gt;&lt;gco:CharacterString&gt;Organisation&lt;/gco:CharacterString&gt;&lt;/gmd:organisationName&gt;&lt;gmd:contactInfo&gt;&lt;gmd:CI_Contact&gt;&lt;gmd:address&gt;&lt;gmd:CI_Address&gt;&lt;gmd:electronicMailAddress&gt;&lt;gco:CharacterString&gt;newemail@organisation.org&lt;/gco:CharacterString&gt;&lt;/gmd:electronicMailAddress&gt;&lt;/gmd:CI_Address&gt;&lt;/gmd:address&gt;&lt;/gmd:CI_Contact&gt;&lt;/gmd:contactInfo&gt;&lt;gmd:role&gt;&lt;gmd:CI_RoleCode codeListValue=\"pointOfContact\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode\"/&gt;&lt;/gmd:role&gt;&lt;/gmd:CI_ResponsibleParty&gt;</code>",
     
     
-    "emptyCatalogShouldBeFilled": "The catalog is empty, you probably want to import new records or configure a harvester. You could also insert <a href='#/metadata/metadata-and-template/load-templates/all'>all templates</a>, <a href='#/metadata/metadata-and-template/load-samples/all'>all samples</a> or <a href='#/metadata/metadata-and-template/load-samples-and-templates/all'>both</a>."
+    "emptyCatalogShouldBeFilled": "The catalog is empty, you probably want to import new records or configure a harvester. You could also insert <a href='#/metadata/metadata-and-template/load-templates/all'>all templates</a>, <a href='#/metadata/metadata-and-template/load-samples/all'>all samples</a> or <a href='#/metadata/metadata-and-template/load-samples-and-templates/all'>both</a>.",
+    "transfertPrivs":"Transfert ownership",
+    "chooseSourceEditor":"Select editor to transfer records from",
+    "sourceGroup":"Source group",
+    "targetGroup":"Target group",
+    "targetEditor":"Target editor",
+    "transfertPriv":"Transfer",
+    "transfertPrivilegesFinished": "{{metadata}} record(s) transfered."
+    
 }

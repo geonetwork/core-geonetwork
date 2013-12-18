@@ -176,7 +176,11 @@
             timeout: 2,
             type: 'success'});
         }).error(function(data) {
-          console.log(data);
+            $rootScope.$broadcast('StatusUpdated', {
+                msg: $translate('harvesterUpdated'),
+                error: data,
+                timeout: 2,
+                type: 'danger'});
         });
       };
       $scope.selectHarvester = function(h) {

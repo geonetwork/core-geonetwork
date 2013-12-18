@@ -125,7 +125,7 @@ Parameters:
 Group label update request example::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/xml.group.update
+  http://localhost:8080/geonetwork/srv/eng/xml.group.update
 
   Mime-type:
   application/xml

@@ -31,7 +31,9 @@ import org.fao.geonet.domain.Profile;
 
 public final class Jeeves
 {
-	/**
+    public static final String LANG_COOKIE = "geonetwork_Preferred_Language_Cookie";
+
+    /**
     * Default constructor.
     * Builds a Jeeves.
     */

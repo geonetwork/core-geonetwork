@@ -16,7 +16,8 @@
     function($scope, $http, $rootScope, $translate, gnUtilityService) {
       var cswSettings = ['system/csw/contactId'];
       var cswBooleanSettings = ['system/csw/enable',
-        'system/csw/metadataPublic'];
+        'system/csw/metadataPublic',
+        'system/csw/transactionUpdateCreateXPath'];
 
       /**
        * CSW properties

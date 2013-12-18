@@ -324,6 +324,16 @@ public class MetadataSchema
 		return new ArrayList<Namespace>(hmPrefixes.values());
 	}
 
+    public Map<String, String> getSchemaNSWithPrefix() {
+        Map<String, String> mapNs = new HashMap<String, String>();
+        List<Namespace> schemaNsList = getSchemaNS();
+
+        for(Namespace ns : schemaNsList) {
+            mapNs.put(ns.getPrefix(), ns.getURI());
+        }
+        return mapNs;
+    }
+
 	public void buildchematronRules(String basePath) {
         String schematronResourceDir = basePath + "WEB-INF" 
                 + File.separator + "classes" + File.separator + "schematron" + File.separator ;
