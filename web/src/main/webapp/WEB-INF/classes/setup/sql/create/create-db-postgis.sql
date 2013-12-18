@@ -511,3 +511,22 @@ CREATE OR REPLACE FUNCTION create_gt_pk_metadata () RETURNS void AS $$ BEGIN IF 
 SELECT create_gt_pk_metadata ();
 
 
+CREATE TABLE schematrondes
+ (
+  id			serial,
+  description	varchar(250)		not null,
+  
+  primary key(id)
+ );
+ 
+CREATE TABLE schematron
+ (
+  id			serial,
+  isoschema		varchar(250)		not null,
+  file			varchar(250)		not null,
+  required		boolean				default 'false' not null,
+  description	int					,
+  
+  primary key(id),
+  foreign key(description) references schematrondes(id)
+ );

@@ -409,6 +409,28 @@ CREATE TABLE Thesaurus
     primary key(id)
   );
 
+--============================================================================
+--Schemas at startup
+
+CREATE TABLE schematrondes
+ (
+  id			int					not null,
+  description	varchar(250)		not null,
+  
+  primary key(id)
+ );
+CREATE TABLE schematron
+ (
+  id			int					not null,
+  isoschema		varchar(250)		not null,
+  file			varchar(250)		not null,
+  required		boolean				default 'false' not null,
+  description	int					,
+  
+  primary key(id),
+  foreign key(description) references schematrondes(id)
+ );
+  
 -- CREATE INDEX MetadataNDX1 ON Metadata(uuid);
 CREATE INDEX MetadataNDX2 ON Metadata(source);
 CREATE INDEX MetadataNDX3 ON Metadata(owner);
