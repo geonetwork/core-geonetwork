@@ -587,7 +587,7 @@ public class ConfigurationOverrides {
 				builder.append(elem.getTextTrim());
 			}
 			return builder.toString();
-    	} catch (FileNotFoundException e) {
+    	} catch (Exception e) {
     		return null;
     	}
 	}

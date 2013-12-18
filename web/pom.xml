@@ -569,11 +569,15 @@
               (see src/main/filters) and copy them to the webapp -->
           <webResources>
             <resource>
-              <directory>${build.webapp.resources}</directory>
-              <directory>${project.basedir}/../web-ui/src/main/resources</directory>
-              <directory>${project.basedir}/../web-client/src/main/resources</directory>
+                <directory>${project.basedir}/../web-client/src/main/resources</directory>
             </resource>
-          
+            <resource>
+                  <directory>${project.basedir}/../web-ui/src/main/resources</directory>
+            </resource>
+            <resource>
+              <directory>${build.webapp.resources}</directory>
+            </resource>
+
             <!-- Remove comment tag to include documentation in the build. 
             Python and Latex are required to build the documentation. -->
             
