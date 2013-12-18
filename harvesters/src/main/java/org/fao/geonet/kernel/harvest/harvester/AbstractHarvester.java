@@ -267,7 +267,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         for (String sourceUuid : sources) {
             Long ownedBySource = 
                     metadataRepository.count(Specifications.where(MetadataSpecs.hasSource(sourceUuid)));
-            if (ownedBySource == 0 && !sourceUuid.equals(params.uuid)) {
+            if (ownedBySource == 0 && !sourceUuid.equals(params.uuid) && sourceRepository.exists(sourceUuid)) {
                 removeIcon(sourceUuid);
                 sourceRepository.delete(sourceUuid);
             }
