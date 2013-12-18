@@ -121,11 +121,14 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
     }
 
     private Operation newOperation() {
-        int id = _nextId.incrementAndGet();
+        return newOperation(_nextId);
+    }
+    public static Operation newOperation(AtomicInteger inc) {
+        int id = inc.incrementAndGet();
         return newOperation(id, "name " + id);
     }
 
-    private Operation newOperation(int id, String name) {
+    private static Operation newOperation(int id, String name) {
         return new Operation().setName(name);
     }
 
