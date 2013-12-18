@@ -25,4 +25,4 @@
 *.png binary
 *.jpg binary
 
-*.xsd text eol=crlf
+*.xsd text eol=lf
