@@ -1,0 +1,7 @@
+<sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="../../../../web/src/main/webResources/WEB-INF/wro-sources.xsd">
+    <require pathOnDisk="wro4j/src/test/resources/org/fao/geonet/wro4j">
+        <jsSource webappPath="" />
+        <cssSource webappPath="" />
+    </require>
+</sources>

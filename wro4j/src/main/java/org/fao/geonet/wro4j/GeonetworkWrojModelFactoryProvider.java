@@ -26,13 +26,18 @@ public class GeonetworkWrojModelFactoryProvider extends ConfigurableProviderSupp
     @Override
     public Map<String, ResourcePreProcessor> providePreProcessors() {
         final Map<String, ResourcePreProcessor> stringResourcePreProcessorMap = super.providePreProcessors();
-        final LazyProcessorDecorator proc = new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
+        stringResourcePreProcessorMap.put(GeonetLessImportPreProcessor.ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
             @Override
             protected ResourcePreProcessor initialize() {
                 return new GeonetLessImportPreProcessor();
             }
-        });
-        stringResourcePreProcessorMap.put(GeonetLessImportPreProcessor.ALIAS, proc);
+        }));
+        stringResourcePreProcessorMap.put(GeonetClosureCompilerProcessor.ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
+            @Override
+            protected ResourcePreProcessor initialize() {
+                return new GeonetClosureCompilerProcessor();
+            }
+        }));
         return stringResourcePreProcessorMap;
     }
 }

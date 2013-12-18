@@ -182,6 +182,10 @@
         <appender-ref ref="fileAppender" />
     </category>
 
+    <category name="ro.isdc.wro">
+        <priority value="DEBUG" />
+    </category>
+
 
     <!-- Turn off logging except when explicitly declared below -->
     <root>

@@ -213,7 +213,7 @@
                               def errorMsg = "\n\nIn order for the build to complete both the $MAX_PREFIX parameter and the "+
                                       "$PERMGEN_PREFIX must be set.  The e2e tests require this because the start Geonetwork and run " +
                                       "tests against it which takes a lot of memory.\n\nCmd/Powershell:"+
-                                      "\n\n\t \$Env.${mavenOpts}\n\nBash/SH:\n\n\texport ${mavenOpts}"
+                                      "\n\n\t \$Env:${mavenOpts}\n\nBash/SH:\n\n\texport ${mavenOpts}"
                               log.error(errorMsg);
                               throw new AssertionError(errorMsg);
                           }

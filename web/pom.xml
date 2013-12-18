@@ -654,7 +654,7 @@
             <contextPath>/geonetwork</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-            <resourcesAsCSV>${basedir}/src/main/webapp,../web-ui/src/main/resources/,${build.webapp.resources}${widgets.webapp.resources}</resourcesAsCSV>
+            <resourcesAsCSV>${basedir}/src/main/webapp,${project.basedir}/../web-ui/src/main/resources/,${build.webapp.resources},${project.basedir}/../web-client/src/main/resources/</resourcesAsCSV>
             </baseResource>
           </webApp>
           <stopKey>JETTY_TOP</stopKey>
@@ -689,7 +689,13 @@
                 </execution>
             </executions>
             <configuration>
-                <targetGroups>gn,gn_admin,gn_login</targetGroups>
+                <!-- The targetGroups are the groups to test for existence.  if they are not found then
+                     an error is raised.  Currently the groups from web-ui, web-client and web are listed
+                     here.  If web-client (for example) is removed then remove the group below
+                -->
+                <targetGroups>gn,gn_admin,gn_login,gn.libs,gn.libs.map,gn.libs.scriptaculous,gn,gn.search,gn.editor,gn.geo.libs,kernel,
+                    geonetwork-client-ext-ux_css,geonetwork-client_css,geonetwork-client-mini-nomap,geonetwork-client-mini,
+                    geonetwork-client-search-app,geonetwork-client-tabsearch-app,geonetwork-client-html5ui-app</targetGroups>
                 <minimize>true</minimize>
                 <destinationFolder>${wro4jOutput}</destinationFolder>
                 <cssDestinationFolder>${wro4jOutput}/css</cssDestinationFolder>
@@ -709,6 +715,16 @@
                 <dependency>
                     <groupId>${project.groupId}</groupId>
                     <artifactId>wro4j</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>web-ui</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>geonetwork-client</artifactId>
                     <version>${project.version}</version>
                 </dependency>
                 <dependency>
@@ -791,21 +807,18 @@
       <id>widgets</id>
       <properties>
         <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widget.xml</web.xml.widget.config.overrides>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
       </properties>
     </profile>
     <profile>
       <id>widgets-tab</id>
       <properties>
           <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widgettab.xml</web.xml.widget.config.overrides>
-          <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
       </properties>
     </profile>
     <profile>
 		<id>html5ui</id>
 		<properties>
 			<web.xml.widget.config.overrides>/WEB-INF/config-overrides-html5ui.xml</web.xml.widget.config.overrides>
-			<widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
 		</properties>
     </profile>
     
@@ -822,7 +835,6 @@
     <build.webapp.resources>${project.build.directory}/webapp</build.webapp.resources>
     <web.xml.main.config.overrides>/WEB-INF/config-overrides-${env}.xml</web.xml.main.config.overrides>
     <web.xml.widget.config.overrides></web.xml.widget.config.overrides>
-    <widgets.webapp.resources></widgets.webapp.resources>
     <system.specific.overrides></system.specific.overrides>
     <rootProjectDir>${basedir}/..</rootProjectDir>
     <wro4jOutput>${project.build.directory}/wro4j-output/</wro4jOutput>

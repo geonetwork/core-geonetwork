@@ -34,16 +34,18 @@ import static org.junit.Assert.*;
  * Time: 1:03 PM
  */
 public class GeonetWroModelFactoryTest {
+
+    private static final String PATH_TO_ROOT_OF_TEST_RESOURCES = "wro4j/src/test/resources/org/fao/geonet/wro4j";
+
     @Test
     public void testCreateUsingRequire() throws Exception {
 
-        File jsRoot = RequireDependencyManagerTest.getJsTestBaseDir();
         String sourcesXml = "<sources><"+ REQUIRE_EL +"><" + JS_SOURCE_EL + " " +
                             WEBAPP_ATT + "=\"\" " +
-                            PATH_ON_DISK_ATT + "=\"" + jsRoot.getAbsolutePath() + "\"/>" +
+                            PATH_ON_DISK_ATT + "=\"" + PATH_TO_ROOT_OF_TEST_RESOURCES + "\"/>" +
                             "<" + CSS_SOURCE_EL + " " +
                             WEBAPP_ATT + "=\"\" " +
-                            PATH_ON_DISK_ATT + "=\"" + jsRoot.getAbsolutePath() + "\"/>" +
+                            PATH_ON_DISK_ATT + "=\"" + PATH_TO_ROOT_OF_TEST_RESOURCES + "\"/>" +
                             "</"+ REQUIRE_EL +"></sources>";
 
         final WroModel wroModel = createRequireModel(sourcesXml);
@@ -52,8 +54,15 @@ public class GeonetWroModelFactoryTest {
     @Test
     public void testCreateUsingRequireAndGroupHasPathOnDisk() throws Exception {
 
-        File jsRoot = RequireDependencyManagerTest.getJsTestBaseDir();
-        String sourcesXml = createSourcesXmlWithPathOnGroup(jsRoot);
+        String sourcesXml = createSourcesXmlWithPathOnGroup();
+
+        final WroModel wroModel = createRequireModel(sourcesXml);
+        assertRequireModel(wroModel);
+    }
+    @Test
+    public void testPathOnDiskIsFullPath() throws Exception {
+
+        String sourcesXml = createSourcesXmlWithPathOnGroup(RequireDependencyManagerTest.getJsTestBaseDir().getAbsolutePath());
 
         final WroModel wroModel = createRequireModel(sourcesXml);
         assertRequireModel(wroModel);
@@ -61,8 +70,7 @@ public class GeonetWroModelFactoryTest {
 
     @Test
     public void testRelativePathInclude() throws Exception {
-        File jsRoot = RequireDependencyManagerTest.getJsTestBaseDir();
-        String includeSourcesXML = createSourcesXmlWithPathOnGroup(jsRoot);
+        String includeSourcesXML = createSourcesXmlWithPathOnGroup();
 
         final String prefix = "wro-includes";
         final File wroInclude = File.createTempFile(prefix, ".xml");
@@ -77,8 +85,7 @@ public class GeonetWroModelFactoryTest {
 
     @Test
     public void testAbsolutePathInclude() throws Exception {
-        File jsRoot = RequireDependencyManagerTest.getJsTestBaseDir();
-        String includeSourcesXML = createSourcesXmlWithPathOnGroup(jsRoot);
+        String includeSourcesXML = createSourcesXmlWithPathOnGroup();
 
         final String prefix = "wro-includes";
         final File wroInclude = File.createTempFile(prefix, ".xml");
@@ -92,8 +99,7 @@ public class GeonetWroModelFactoryTest {
 
     @Test
     public void testURIPathInclude() throws Exception {
-        File jsRoot = RequireDependencyManagerTest.getJsTestBaseDir();
-        String includeSourcesXML = createSourcesXmlWithPathOnGroup(jsRoot);
+        String includeSourcesXML = createSourcesXmlWithPathOnGroup();
 
         final String prefix = "wro-includes";
         final File wroInclude = File.createTempFile(prefix, ".xml");
@@ -106,14 +112,21 @@ public class GeonetWroModelFactoryTest {
     }
 
     @Test
+    public void testClasspathPathInclude() throws Exception {
+        String mainSourcesXml = "<sources><" + INCLUDE_EL + " file=\""+CLASSPATH_PREFIX+"included-wro-sources.xml\"/></sources>";
+        final WroModel wroModel = createRequireModel(mainSourcesXml);
+
+        assertRequireModel(wroModel);
+    }
+
+    @Test
     public void testCreateDeclaredGroups() throws IOException {
-        File jsRoot = RequireDependencyManagerTest.getJsTestBaseDir();
         String sourcesXml = "<sources><"+ DECLARATIVE_EL +" " + DECLARATIVE_NAME_ATT + "=\"groupName\"" + " " +
-                            PATH_ON_DISK_ATT + "=\"" + jsRoot.getAbsolutePath() +"\" >" +
-                "<" + JS_SOURCE_EL + " " + WEBAPP_ATT + "=\"sampleFile1a.js\" " + PATH_ON_DISK_ATT + "=\"" + jsRoot.getAbsolutePath() + "\"/>" +
+                            PATH_ON_DISK_ATT + "=\"" + PATH_TO_ROOT_OF_TEST_RESOURCES +"\" >" +
+                "<" + JS_SOURCE_EL + " " + WEBAPP_ATT + "=\"sampleFile1a.js\" " + PATH_ON_DISK_ATT + "=\"" + PATH_TO_ROOT_OF_TEST_RESOURCES + "\"/>" +
                 "<" + JS_SOURCE_EL + " " + WEBAPP_ATT + "=\"jslvl2/sampleFile2a.js\" />" +
                 "<" + CSS_SOURCE_EL + " " + WEBAPP_ATT+ "=\"1a.css\"/>" +
-                "<" + CSS_SOURCE_EL + " " + WEBAPP_ATT+ "=\"anotherCss.less\" "+ PATH_ON_DISK_ATT + "=\"" + jsRoot.getAbsolutePath() + "\"/>" +
+                "<" + CSS_SOURCE_EL + " " + WEBAPP_ATT+ "=\"anotherCss.less\" "+ PATH_ON_DISK_ATT + "=\"" + PATH_TO_ROOT_OF_TEST_RESOURCES + "\"/>" +
             "</"+ DECLARATIVE_EL +"></sources>";
 
         final WroModel wroModel = createRequireModel(sourcesXml);
@@ -128,21 +141,25 @@ public class GeonetWroModelFactoryTest {
 
         List<String> resourceNames = new ArrayList<String>(resources.size());
         final UriLocatorFactory uriLocatorFactory = new GeonetworkMavenWrojManagerFactory().newUriLocatorFactory();
+
         for (Resource resource : resources) {
             resourceNames.add(resource.getUri());
             assertCanLoadResource(uriLocatorFactory, resource);
+
+            resourceNames.add(resource.getUri().split(PATH_TO_ROOT_OF_TEST_RESOURCES)[1]);
         }
 
-        assertTrue(resourceNames.contains(("file:/"+jsRoot.getAbsolutePath()+"/sampleFile1a.js").replace('\\', '/')));
-        assertTrue(resourceNames.contains(("file:/"+jsRoot.getAbsolutePath()+"/jslvl2/sampleFile2a.js").replace('\\', '/')));
-        assertTrue(resourceNames.contains(("file:/"+jsRoot.getAbsolutePath()+"/1a.css").replace('\\', '/')));
-        assertTrue(resourceNames.contains(("file:/"+jsRoot.getAbsolutePath()+"/anotherCss.less").replace('\\', '/')));
+        assertTrue(resourceNames.contains(("/sampleFile1a.js").replace('\\', '/')));
+        assertTrue(resourceNames.contains(("/jslvl2/sampleFile2a.js").replace('\\', '/')));
+        assertTrue(resourceNames.contains(("/1a.css").replace('\\', '/')));
+        assertTrue(resourceNames.contains(("/anotherCss.less").replace('\\', '/')));
 
     }
 
     private WroModel createRequireModel(String sourcesXml) throws IOException {
         return createRequireModel(sourcesXml, Optional.<File>absent());
     }
+
     private WroModel createRequireModel(String sourcesXml, Optional<File> sourcesFileOption) throws IOException {
 
 
@@ -168,6 +185,7 @@ public class GeonetWroModelFactoryTest {
             }
         });
         wroModelFactory.setContext(context);
+        wroModelFactory.setGeonetworkRootDirectory(getGeonetworkRootDirectory());
         return wroModelFactory.create();
     }
 
@@ -251,12 +269,20 @@ public class GeonetWroModelFactoryTest {
         assertTrue(groupNames.contains("3c"));
     }
 
-    private String createSourcesXmlWithPathOnGroup(File jsRoot) {
+    private String createSourcesXmlWithPathOnGroup() {
+        return createSourcesXmlWithPathOnGroup(PATH_TO_ROOT_OF_TEST_RESOURCES);
+    }
+    private String createSourcesXmlWithPathOnGroup(String pathOnDisk) {
         return "<sources><"+ REQUIRE_EL +" "+
-               PATH_ON_DISK_ATT + "=\"" + jsRoot.getAbsolutePath() + "\"><" + JS_SOURCE_EL + " " +
+               PATH_ON_DISK_ATT + "=\"" + pathOnDisk+ "\"><" + JS_SOURCE_EL + " " +
                WEBAPP_ATT + "=\"\" />" +
                "<" + CSS_SOURCE_EL + " " +
                WEBAPP_ATT + "=\"\" />" +
                "</"+ REQUIRE_EL +"></sources>";
+    }
+
+    public String getGeonetworkRootDirectory() {
+        final File jsTestBaseDir = RequireDependencyManagerTest.getJsTestBaseDir();
+        return GeonetWroModelFactory.findGeonetworkRootDirectory(jsTestBaseDir.getAbsolutePath());
     }
 }

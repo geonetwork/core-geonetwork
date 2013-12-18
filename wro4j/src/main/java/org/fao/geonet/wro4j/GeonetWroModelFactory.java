@@ -45,10 +45,13 @@ public class GeonetWroModelFactory implements WroModelFactory {
     public static final String DECLARATIVE_NAME_ATT = "name";
     public static final String REQUIRE_EL = "require";
     public static final String CSS_SOURCE_EL = "cssSource";
-    public static final String WEBAPP_ATT = "webapp";
+    public static final String WEBAPP_ATT = "webappPath";
     public static final String PATH_ON_DISK_ATT = "pathOnDisk";
+    public static final String CLASSPATH_PREFIX = "classpath:";
     @Inject
-    private ReadOnlyContext context;
+    private ReadOnlyContext _context;
+
+    private String _geonetworkRootDirectory = "";
 
     @Override
     public void destroy() {
@@ -61,10 +64,22 @@ public class GeonetWroModelFactory implements WroModelFactory {
         try {
             stopWatch.start("createModel");
             final String sourcesXmlFile = getSourcesXmlFile();
-            final WroModel model = createModel(sourcesXmlFile, new FileInputStream(sourcesXmlFile));
 
-            logModel(model);
-            return model;
+            if (isMavenBuild() && _geonetworkRootDirectory.isEmpty()) {
+                _geonetworkRootDirectory = findGeonetworkRootDirectory(sourcesXmlFile);
+            }
+            FileInputStream sourcesInputStream = null;
+            try {
+                sourcesInputStream = new FileInputStream(sourcesXmlFile);
+                final WroModel model = createModel(sourcesXmlFile, sourcesInputStream);
+                logModel(model);
+                return model;
+            } finally {
+                if (sourcesInputStream != null) {
+                    IOUtils.closeQuietly(sourcesInputStream);
+                }
+            }
+
         } catch (RuntimeException e) {
             throw e;
         } catch (Error e) {
@@ -77,7 +92,20 @@ public class GeonetWroModelFactory implements WroModelFactory {
         }
     }
 
-    private WroModel createModel(String relativeTo, InputStream sourcesXmlFile) throws ParserConfigurationException, SAXException, IOException {
+    static String findGeonetworkRootDirectory(String sourcesXmlFile) {
+        File currentFile = new File(sourcesXmlFile);
+        while (currentFile != null && !new File(currentFile, "web/src/main/webResources/WEB-INF/web.xml").exists()) {
+            currentFile = currentFile.getParentFile();
+        }
+
+        if (currentFile == null) {
+            throw new AssertionError("Unable to find root geonetwork directory using '"+sourcesXmlFile+"' as a starting point");
+        }
+
+        return currentFile.getAbsolutePath() + "/";
+    }
+
+    private WroModel createModel(String parentSourcesXmlFile, InputStream sourcesXmlFile) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(sourcesXmlFile);
@@ -92,16 +120,22 @@ public class GeonetWroModelFactory implements WroModelFactory {
                 throw new AssertionError("include elements must have a "+FILE_ATT+" attribute");
             }
 
-            InputStream stream = null;
+            Collection<IncludesStream> streams = null;
             try {
-                IncludesStream is = openIncludesStream(relativeTo, include.getAttribute(FILE_ATT));
-                stream = is.stream;
-                WroModel includedModel = createModel(is.locationLoadedFrom, stream);
-                for (Group group : includedModel.getGroups()) {
-                    model.addGroup(group);
+                streams = openIncludesStream(parentSourcesXmlFile, include.getAttribute(FILE_ATT));
+                for (IncludesStream is : streams) {
+                    InputStream stream = is.stream;
+                    WroModel includedModel = createModel(is.locationLoadedFrom, stream);
+                    for (Group group : includedModel.getGroups()) {
+                        model.addGroup(group);
+                    }
                 }
             } finally {
-                IOUtils.closeQuietly(stream);
+                if (streams != null) {
+                    for (IncludesStream stream : streams) {
+                        IOUtils.closeQuietly(stream.stream);
+                    }
+                }
             }
         }
 
@@ -120,6 +154,14 @@ public class GeonetWroModelFactory implements WroModelFactory {
         return model;
     }
 
+    public void setContext(ReadOnlyContext context) {
+        this._context = context;
+    }
+
+    public void setGeonetworkRootDirectory(String geonetworkRootDirectory) {
+        this._geonetworkRootDirectory = geonetworkRootDirectory;
+    }
+
     private static class IncludesStream {
         final InputStream stream;
         final String locationLoadedFrom;
@@ -129,47 +171,112 @@ public class GeonetWroModelFactory implements WroModelFactory {
             this.locationLoadedFrom = locationLoadedFrom;
         }
     }
-    private IncludesStream openIncludesStream(String relativeToWithName, String includeFile) throws FileNotFoundException {
+    private Collection<IncludesStream> openIncludesStream(String parentSourcesXmlFile, String includeFile) throws IOException {
+
+        if (includeFile.startsWith(CLASSPATH_PREFIX)) {
+            final Collection<IncludesStream> includesStreams = loadFromClasspath(includeFile);
+            if (!includesStreams.isEmpty()) {
+                return includesStreams;
+            } else {
+                throw new AssertionError("Unable to load: "+includeFile);
+            }
+        }
+        String relativePath = toRelativePath(parentSourcesXmlFile);
+        if (relativePath.startsWith(CLASSPATH_PREFIX)) {
+            final Collection<IncludesStream> includesStreams;
+            if (relativePath.equals(CLASSPATH_PREFIX)) {
+                includesStreams = loadFromClasspath(relativePath + includeFile);
+            } else {
+                includesStreams = loadFromClasspath(relativePath + "/" + includeFile);
+            }
+            if (!includesStreams.isEmpty()) {
+                return includesStreams;
+            }
+        }
+
+        IncludesStream stream = tryToLoadAsURL(includeFile);
+        if (stream != null) {
+            return Collections.singleton(stream);
+        }
+
+        final String pathWithRelativePortion = relativePath + "/" + includeFile;
+        stream = tryToLoadAsURL(pathWithRelativePortion);
+        if (stream != null) {
+            return Collections.singleton(stream);
+        }
+
+
+        if (new File(includeFile).exists()) {
+            return Collections.singleton(new IncludesStream(new FileInputStream(includeFile), includeFile));
+        }
+        final File file = new File(relativePath, includeFile);
+        if (file.exists()) {
+            return Collections.singleton(new IncludesStream(new FileInputStream(file), file.getAbsolutePath()));
+        }
+        if (!isMavenBuild()) {
+            final ServletContext servletContext = _context.getServletContext();
+            try {
+                File absolute = new File(servletContext.getRealPath(includeFile));
+                if (absolute.exists()) {
+                    return Collections.singleton(new IncludesStream(new FileInputStream(absolute), absolute.getAbsolutePath()));
+                }
+            } catch (Throwable t) {
+                System.out.println();
+                // try relative file then...
+            }
+            try {
+            File relative = new File(servletContext.getRealPath(pathWithRelativePortion));
+            if (relative.exists()) {
+                return Collections.singleton(new IncludesStream(new FileInputStream(relative), relative.getAbsolutePath()));
+            }
+            } catch (Throwable t) {
+                throw new RuntimeException("Error trying to load: '"+includeFile+"' with parent:'"+parentSourcesXmlFile, t);
+            }
+        }
+
+        throw new AssertionError("Unable to locate include xml file. \n\trelativePath: "+relativePath+
+                                 "\n\tinclude file: "+includeFile);
+    }
+
+    private String toRelativePath(String relativeToWithName) {
         final int i = relativeToWithName.replace('\\', '/').lastIndexOf('/');
         String relativeTo;
         if (i > -1) {
             relativeTo = relativeToWithName.substring(0, i);
         } else {
-            relativeTo = relativeToWithName;
-        }
-        IncludesStream stream = tryToLoadAsURL(includeFile);
-        if (stream != null) {
-            return stream;
-        }
-
-        final String pathWithRelativePortion = relativeTo + "/" + includeFile;
-        stream = tryToLoadAsURL(pathWithRelativePortion);
-        if (stream != null) {
-            return stream;
-        }
-
-
-        if (new File(includeFile).exists()) {
-            return new IncludesStream(new FileInputStream(includeFile), includeFile);
-        }
-        final File file = new File(relativeTo, includeFile);
-        if (file.exists()) {
-            return new IncludesStream(new FileInputStream(file), file.getAbsolutePath());
-        }
-        if (!isMavenBuild()) {
-            final ServletContext servletContext = context.getServletContext();
-            File absolute = new File(servletContext.getRealPath(includeFile));
-            if (absolute.exists()) {
-                return new IncludesStream(new FileInputStream(absolute), absolute.getAbsolutePath());
-            }
-            File relative = new File(servletContext.getRealPath(pathWithRelativePortion));
-            if (relative.exists()) {
-                return new IncludesStream(new FileInputStream(relative), relative.getAbsolutePath());
+            relativeTo = "";
+            if (relativeToWithName.startsWith(CLASSPATH_PREFIX)) {
+                relativeTo = CLASSPATH_PREFIX;
             }
         }
+        return relativeTo;
+    }
 
-        throw new AssertionError("Unable to locate include xml file. \n\trelativeTo: "+relativeTo+
-                                 "\n\tinclude file: "+includeFile);
+    private Collection<IncludesStream> loadFromClasspath(String includeFile) throws IOException {
+        final String actualPath = includeFile.substring(CLASSPATH_PREFIX.length());
+        final Enumeration<URL> resources = GeonetWroModelFactory.class.getClassLoader().getResources(actualPath);
+        Collection<IncludesStream> results = new ArrayList<IncludesStream>();
+        while(resources.hasMoreElements()) {
+            final URL url = resources.nextElement();
+            String file = url.getFile();
+            if (file.matches("/.:/.*")) {
+                file = file.substring(1);
+            }
+            String relativeFile = includeFile;
+            if (new File(file).exists()){
+                relativeFile = file;
+            }
+            results.add(new IncludesStream(url.openStream(), relativeFile));
+        }
+
+        if (results.isEmpty() && !isMavenBuild()) {
+            // this is for jetty:run where the file is actually not on the classpath yet.
+            final String path = _context.getServletContext().getRealPath(actualPath);
+            if (path != null && new File(path).exists()) {
+                results.add(new IncludesStream(new FileInputStream(path), path));
+            }
+        }
+        return results;
     }
 
     private IncludesStream tryToLoadAsURL(String includeFile) {
@@ -375,9 +482,17 @@ public class GeonetWroModelFactory implements WroModelFactory {
         }
 
         if (isMavenBuild()) {
-            desc.finalPath = new File(desc.pathOnDisk, desc.relativePath).getPath();
+            final File pathOnDisk = new File(desc.pathOnDisk);
+            if (pathOnDisk.isAbsolute() && pathOnDisk.exists()) {
+                desc.finalPath = new File(desc.pathOnDisk, desc.relativePath).getPath();
+            } else {
+                desc.finalPath = new File(_geonetworkRootDirectory + desc.pathOnDisk, desc.relativePath).getPath();
+            }
+            if (!new File(desc.finalPath).exists()) {
+                throw new AssertionError("Neither '"+desc.finalPath+"' nor '"+new File(desc.pathOnDisk, desc.relativePath)+"' exist");
+            }
         } else {
-            desc.finalPath = context.getServletContext().getRealPath(desc.relativePath);
+            desc.finalPath = _context.getServletContext().getRealPath(desc.relativePath);
         }
 
 
@@ -387,15 +502,15 @@ public class GeonetWroModelFactory implements WroModelFactory {
     }
 
     private boolean isMavenBuild() {
-        return context.getServletContext() == null;
+        return _context.getServletContext() == null;
     }
 
     public String getSourcesXmlFile() {
         final String sourcesRawProperty = getConfigProperties().getProperty(WRO_SOURCES_KEY);
-        if (context.getServletContext() != null) {
+        if (_context.getServletContext() != null) {
             final String[] split = sourcesRawProperty.split("WEB-INF/", 2);
             if (split.length == 2) {
-                final String path = context.getServletContext().getRealPath("/WEB-INF/" + split[1]);
+                final String path = _context.getServletContext().getRealPath("/WEB-INF/" + split[1]);
                 if (path != null) {
                     return path;
                 }
@@ -406,10 +521,6 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
     protected Properties getConfigProperties() {
         return null;
-    }
-
-    public void setContext(ReadOnlyContext context) {
-        this.context = context;
     }
 
     private static class ResourceDesc {
