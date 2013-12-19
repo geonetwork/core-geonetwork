@@ -30,6 +30,8 @@
     "to-iso19139-keyword": "text (recommended)",
     "to-iso19139-keyword-help": "Default mode. Insert keyword as simple text using gco:CharacterString element.",
     "searchAContact": "Search for a contact ...",
+    "addContact": "Add contact",
+    "addContactUsingXLink": "Add contact (using XLink)",
     "addContactAsText-help": "Default mode. Add the contact into the record.",
     "addContactAsLink-help": "Add a link to the contact in the contact directory. The contact will be updated if updated in the directory.",
     "createNewMetadata": "Add a new record",
