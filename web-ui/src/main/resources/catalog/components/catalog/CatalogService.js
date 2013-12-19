@@ -90,8 +90,9 @@
   module.factory('gnBatchProcessing', [
     'gnHttp',
     'gnEditor',
+    'gnCurrentEdit',
     '$q',
-    function(gnHttp, gnEditor, $q) {
+    function(gnHttp, gnEditor, gnCurrentEdit, $q) {
 
       var processing = true;
       var processReport = null;
@@ -106,7 +107,7 @@
          */
         runProcessMd: function(params) {
           angular.extend(params, {
-            id: gnEditor.getCurrentEdit().metadataId
+            id: gnCurrentEdit.id
           });
           var defer = $q.defer();
           gnEditor.save()

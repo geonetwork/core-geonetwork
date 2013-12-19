@@ -69,42 +69,19 @@
       var duration = 300;
       var saving = false;
 
-
       // Controller initialization
       var init = function() {
         gnConfigService.load().then(function(c) {
           // Config loaded
         });
 
-
         angular.extend(gnCurrentEdit, {
           id: $routeParams.id,
-          formId: '#gn-editor-' + $scope.metadataId,
+          formId: '#gn-editor-' + $routeParams.id,
           tab: $routeParams.tab,
-          displayAttribute: $routeParams.displayAttributes === 'true'
-        });
-
-
-
-        $scope.metadataId = $routeParams.id;
-        $scope.formId = '#gn-editor-' + $scope.metadataId;
-        $scope.tab = $routeParams.tab;
-        $scope.displayAttributes = $routeParams.displayAttributes === 'true';
-
-        $scope.editorConfig = {
-          metadataId: $scope.metadataId,
-          metadataUuid: $scope.metadataUuid,
-          formId: $scope.formId,
+          displayAttributes: $routeParams.displayAttributes === 'true',
           compileScope: $scope,
-          tab: $scope.tab,
-          displayAttributes: $scope.displayAttributes,
           sessionStartTime: moment()
-        };
-        gnEditor
-          .startEditing($scope.editorConfig);
-
-        $scope.$watch('displayAttributes', function() {
-          $scope.editorConfig.displayAttributes = $scope.displayAttributes;
         });
 
         // TODO: Check requested metadata exist - return message if it happens
@@ -120,23 +97,14 @@
         };
       };
 
-
       /**
        * When the form is loaded, this function is called.
        * Use it to retrieve form variables or initialize
        * elements eg. tooltip ?
        */
-      $scope.formLoaded = function() {
-        $scope.editorConfig.metadataType =
-            $($scope.formId + ' #template')[0].value;
-        $scope.editorConfig.metadataLanguage =
-            $($scope.formId + ' #language')[0].value;
-        $scope.editorConfig.metadataOtherLanguages =
-            $($scope.formId + ' #otherLanguages')[0].value;
-        $scope.editorConfig.showValidationErrors =
-            $($scope.formId + ' #showvalidationerrors')[0].value;
+      $scope.onFormLoad = function() {
+        gnEditor.onFormLoad();
       };
-
 
       /**
        * Update the form according to the target tab
@@ -159,11 +127,11 @@
        * Set type of record. Update the matching form element.
        */
       $scope.setTemplate = function(isTemplate) {
-        $scope.editorConfig.metadataType = isTemplate ? 'y' : 'n';
-        $('#template')[0].value = $scope.editorConfig.metadataType;
+        gnCurrentEdit.mdType = isTemplate ? 'y' : 'n';
+        $('#template')[0].value = gnCurrentEdit.mdType;
       };
       $scope.isTemplate = function() {
-        return $scope.editorConfig.metadataType === 'y';
+        return gnCurrentEdit.mdType === 'y';
       };
 
       /**
@@ -173,15 +141,16 @@
        */
       $scope.toggleAttributes = function(toggle) {
         if (toggle) {
-          $scope.displayAttributes = $scope.displayAttributes === false;
+          gnCurrentEdit.displayAttributes =
+              gnCurrentEdit.displayAttributes === false;
         }
 
         // Update the form to propagate info when saved
         // or tab switch - Needs to be propagated in Update service
-        $('#displayAttributes')[0].value = $scope.displayAttributes;
+        $('#displayAttributes')[0].value = gnCurrentEdit.displayAttributes;
 
         // Toggle class on all gn-attr widgets
-        if ($scope.displayAttributes) {
+        if (gnCurrentEdit.displayAttributes) {
           $('.gn-attr').removeClass('hidden');
         } else {
           $('.gn-attr').addClass('hidden');
@@ -191,17 +160,17 @@
         return gnEditor[name].$error.required ? 'has-error' : '';
       };
       $scope.add = function(ref, name, insertRef, position, attribute) {
-        gnEditor.add($scope.metadataId, ref, name,
+        gnEditor.add(gnCurrentEdit.id, ref, name,
             insertRef, position, attribute);
         return false;
       };
       $scope.addChoice = function(ref, name, insertRef, position) {
-        gnEditor.addChoice($scope.metadataId, ref, name,
+        gnEditor.addChoice(gnCurrentEdit.id, ref, name,
             insertRef, position);
         return false;
       };
       $scope.remove = function(ref, parent) {
-        gnEditor.remove($scope.metadataId, ref, parent);
+        gnEditor.remove(gnCurrentEdit.id, ref, parent);
       };
       $scope.save = function(refreshForm) {
         gnEditor.save(refreshForm)
@@ -255,16 +224,16 @@
         return false;
       };
       $scope.getSaveStatus = function() {
-        if ($scope.editorConfig.savedTime) {
+        if (gnCurrentEdit.savedTime) {
           return $scope.saveStatus = $translate('saveAtimeAgo',
-              {timeAgo: moment($scope.editorConfig.savedTime).fromNow()});
+              {timeAgo: moment(gnCurrentEdit.savedTime).fromNow()});
         }
       };
       $scope.getCancelStatus = function() {
-        if ($scope.editorConfig.sessionStartTime) {
+        if (gnCurrentEdit.sessionStartTime) {
           return $scope.cancelStatus =
               $translate('cancelChangesFromNow', {
-                timeAgo: moment($scope.editorConfig.sessionStartTime).fromNow()
+                timeAgo: moment(gnCurrentEdit.sessionStartTime).fromNow()
               });
         }
       };

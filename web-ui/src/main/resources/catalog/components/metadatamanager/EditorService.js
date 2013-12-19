@@ -62,67 +62,28 @@
        'gnNamespaces',
        'gnXmlTemplates',
        'gnHttp',
+       'gnCurrentEdit',
        function($q, $http, $translate, $compile, 
-       gnUrlUtils, gnNamespaces, gnXmlTemplates, gnHttp) {
-         /**
-         * Contains a list of metadata records currently edited
-         * with the editor configuration.
-         */
-         var mdConfig = null;
+       gnUrlUtils, gnNamespaces, gnXmlTemplates, gnHttp, gnCurrentEdit) {
 
          /**
          * Animation duration for slide up/down
          */
          var duration = 300;
 
-         /**
-          * Reload editor with the html snippet given
-          * in parameter. If no snippet is provided, then
-          * just reload the metadata into the form.
-          */
-         var refreshEditorForm = function(form, startNewSession) {
-           var refreshForm = function(snippet) {
-             $(mdConfig.formId).replaceWith(snippet);
-             // Compiling
-             if (mdConfig.compileScope) {
-               $compile(snippet)(mdConfig.compileScope);
-             }
-           };
-           if (form) {
-             refreshForm(form);
-           }
-           else {
-             var params = {id: mdConfig.metadataId};
-
-             // If a new session, ask the server to save the original
-             // record and update session start time
-             if (startNewSession) {
-               angular.extend(params, {starteditingsession: 'yes'});
-               mdConfig.sessionStartTime = moment();
-             }
-             gnHttp.callService('edit', params).then(function(data) {
-               refreshForm($(data.data));
-             });
-           }
-         };
 
          var setStatus = function(status) {
-           mdConfig.savedStatus = $translate(status.msg);
-           mdConfig.savedTime = moment();
-           mdConfig.saving = status.saving;
+           gnCurrentEdit.savedStatus = $translate(status.msg);
+           gnCurrentEdit.savedTime = moment();
+           gnCurrentEdit.saving = status.saving;
          };
          return {
-           startEditing: function(config) {
-             mdConfig = config;
-           },
-           getCurrentEdit: function() {
-             return mdConfig;
-           },
            buildEditUrlPrefix: function(service) {
-             var params = [service, '?id=', mdConfig.metadataId];
-             mdConfig.tab && params.push('&currTab=', mdConfig.tab);
-             mdConfig.displayAttributes &&
-             params.push('&displayAttributes=', mdConfig.displayAttributes);
+             var params = [service, '?id=', gnCurrentEdit.id];
+             gnCurrentEdit.tab && params.push('&currTab=', gnCurrentEdit.tab);
+             gnCurrentEdit.displayAttributes &&
+             params.push('&displayAttributes=',
+             gnCurrentEdit.displayAttributes);
              return params.join('');
            },
            /**
@@ -134,7 +95,8 @@
             */
            save: function(refreshForm) {
              var defer = $q.defer();
-             if (mdConfig.saving) {
+             var scope = this;
+             if (gnCurrentEdit.saving) {
                return;
              } else {
                setStatus({msg: 'saving', saving: true});
@@ -142,7 +104,7 @@
 
              $http.post(
                  refreshForm ? 'md.edit.save' : 'md.edit.saveonly',
-                 $(mdConfig.formId).serialize(),
+                 $(gnCurrentEdit.formId).serialize(),
                  {
                    headers: {'Content-Type':
                      'application/x-www-form-urlencoded'}
@@ -150,7 +112,7 @@
 
                var snippet = $(data);
                if (refreshForm) {
-                 refreshEditorForm(snippet);
+                 scope.refreshEditorForm(snippet);
                }
                setStatus({msg: 'allChangesSaved', saving: false});
 
@@ -166,7 +128,7 @@
             */
            cancel: function(refreshForm) {
              var defer = $q.defer();
-             if (mdConfig.saving) {
+             if (gnCurrentEdit.saving) {
                return;
              } else {
                setStatus({msg: 'cancelling', saving: true});
@@ -176,7 +138,7 @@
                method: 'GET',
                url: 'md.edit.cancel@json',
                params: {
-                 id: mdConfig.metadataId
+                 id: gnCurrentEdit.id
                }
              }).success(function(data) {
                setStatus({msg: 'allChangesCanceled', saving: false});
@@ -188,8 +150,61 @@
              });
              return defer.promise;
            },
-           refreshEditorForm: refreshEditorForm,
 
+           /**
+            * Reload editor with the html snippet given
+            * in parameter. If no snippet is provided, then
+            * just reload the metadata into the form.
+            */
+           refreshEditorForm: function(form, startNewSession) {
+             var scope = this;
+             var refreshForm = function(snippet) {
+               $(gnCurrentEdit.formId).replaceWith(snippet);
+               // Compiling
+               if (gnCurrentEdit.compileScope) {
+                 $compile(snippet)(gnCurrentEdit.compileScope);
+               }
+               scope.onFormLoad();
+             };
+             if (form) {
+               refreshForm(form);
+             }
+             else {
+               var params = {id: gnCurrentEdit.id};
+
+               // If a new session, ask the server to save the original
+               // record and update session start time
+               if (startNewSession) {
+                 angular.extend(params, {starteditingsession: 'yes'});
+                 gnCurrentEdit.sessionStartTime = moment();
+               }
+               gnHttp.callService('edit', params).then(function(data) {
+                 refreshForm($(data.data));
+               });
+             }
+           },
+
+           /**
+            * Called after the edit form has been loaded.
+            * Fill gnCurrentEdit all the info of the current
+            * editing session.
+            */
+           onFormLoad: function() {
+             var getInputValue = function(id) {
+               return $(gnCurrentEdit.formId).
+                   find('input[id="' + id + '"]').val();
+             };
+
+             angular.extend(gnCurrentEdit, {
+               mdType: getInputValue('template'),
+               mdLanguage: getInputValue('language'),
+               mdOtherLanguages: getInputValue('otherLanguages'),
+               showValidationErrors: getInputValue('showvalidationerrors'),
+               uuid: getInputValue('uuid'),
+               version: getInputValue('version')
+             });
+
+           },
            //TODO : move edit services to new editor service
            /**
            * Add another element or attribute
@@ -227,7 +242,7 @@
                  // Remove the Add control from the current element
                  var addControl = $('#gn-el-' + insertRef + ' .gn-add');
                }
-               $compile(snippet)(mdConfig.compileScope);
+               $compile(snippet)(gnCurrentEdit.compileScope);
                defer.resolve(snippet);
 
              }).error(function(data) {
@@ -250,7 +265,7 @@
 
                target[position || 'before'](snippet);
 
-               $compile(snippet)(mdConfig.compileScope);
+               $compile(snippet)(gnCurrentEdit.compileScope);
                defer.resolve(snippet);
              }).error(function(data) {
                defer.reject(data);
@@ -261,7 +276,7 @@
              // md.element.remove?id=<metadata_id>&ref=50&parent=41
              // Call service to remove element from metadata record in session
              var defer = $q.defer();
-             $http.get('md.element.remove@json?id=' + mdConfig.metadataId +
+             $http.get('md.element.remove@json?id=' + gnCurrentEdit.id +
                      '&ref=' + ref + '&parent=' + parent)
                      .success(function(data) {
                // Remove element from the DOM

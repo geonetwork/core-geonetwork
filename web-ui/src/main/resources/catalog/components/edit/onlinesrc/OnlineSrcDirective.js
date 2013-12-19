@@ -55,16 +55,16 @@
    .directive('gnAddThumbnail', [
         'gnOnlinesrc',
         'gnEditor',
+        'gnCurrentEdit',
         'gnOwsCapabilities',
-        function(gnOnlinesrc, gnEditor, gnOwsCapabilities) {
+        function(gnOnlinesrc, gnEditor, gnCurrentEdit, gnOwsCapabilities) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/addThumbnail.html',
             scope: {},
             link: function(scope, element, attrs) {
-              scope.metadataId = gnEditor.
-                  getCurrentEdit().metadataId;
+              scope.metadataId = gnCurrentEdit.id;
 
               // mode can be 'url' or 'upload'
               scope.mode = 'url';
@@ -74,9 +74,7 @@
 
               // TODO: should be in gnEditor ?
               var getVersion = function() {
-                return scope.params.version = $(gnEditor.
-                    getCurrentEdit().formId).
-                    find('input[id="version"]').val();
+                return scope.params.version = gnCurrentEdit.version;
               };
 
               /**

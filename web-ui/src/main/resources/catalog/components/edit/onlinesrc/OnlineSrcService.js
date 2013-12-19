@@ -8,8 +8,9 @@
     'gnBatchProcessing',
     'gnHttp',
     'gnEditor',
+    'gnCurrentEdit',
     '$q',
-    function(gnBatchProcessing, gnHttp, gnEditor, $q) {
+    function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit, $q) {
 
       var reload = false;
 
@@ -162,7 +163,7 @@
 
           gnHttp.callService('getRelations', {
             fast: false,
-            id: gnEditor.getCurrentEdit().metadataId
+            id: gnCurrentEdit.id
           }, {
             method: 'post',
             headers: {
@@ -246,8 +247,7 @@
           if (thumb.id.indexOf('resources.get') < 0) {
             runProcess(this,
                 setParams('thumbnail-remove', {
-                  id: gnEditor.
-                      getCurrentEdit().metadataId,
+                  id: gnCurrentEdit.id,
                   thumbnail_url: thumb.id
                 }));
           }
@@ -255,9 +255,8 @@
           else {
             runService('removeThumbnail', {
               type: (thumb.title === 'thumbnail' ? 'small' : 'large'),
-              id: gnEditor.getCurrentEdit().metadataId,
-              version: $(gnEditor.getCurrentEdit().
-                  formId).find('input[id="version"]').val()
+              id: gnCurrentEdit.id,
+              version: gnCurrentEdit.version
             }, this);
           }
         },
@@ -267,16 +266,14 @@
 
           if (onlinesrc.protocol == 'WWW:DOWNLOAD-1.0-http--download') {
             runService('removeOnlinesrc', {
-              id: gnEditor.
-                  getCurrentEdit().metadataId,
+              id: gnCurrentEdit.id,
               url: onlinesrc.url,
               name: onlinesrc.name
             }, this);
           } else {
             runProcess(this,
                 setParams('onlinesrc-remove', {
-                  id: gnEditor.
-                      getCurrentEdit().metadataId,
+                  id: gnCurrentEdit,
                   url: onlinesrc.url,
                   name: onlinesrc.name
                 }));
