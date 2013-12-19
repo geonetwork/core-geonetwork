@@ -88,9 +88,9 @@
   // for search apps for example)
   module.factory('gnBatchProcessing', [
     'gnHttp',
-    'gnMetadataManagerService',
+    'gnEditor',
     '$q',
-    function(gnHttp, gnMetadataManagerService, $q) {
+    function(gnHttp, gnEditor, $q) {
 
       var processing = true;
       var processReport = null;
@@ -105,10 +105,10 @@
          */
         runProcessMd: function(params) {
           angular.extend(params, {
-            id: gnMetadataManagerService.getCurrentEdit().metadataId
+            id: gnEditor.getCurrentEdit().metadataId
           });
           var defer = $q.defer();
-          gnMetadataManagerService.save()
+          gnEditor.save()
                 .then(function() {
                 gnHttp.callService('processMd', params).then(function(data) {
                   defer.resolve(data);

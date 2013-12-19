@@ -4,8 +4,7 @@
   var module = angular.module('gn_search_form_results_directive', []);
 
   module.directive('gnSearchFormResults', [
-    'gnMetadataManagerService',
-    function(gnMetadataManagerService) {
+    function() {
 
       var activeClass = 'active';
 

@@ -47,7 +47,13 @@
     return Metadata;
   });
 
-  module.factory('gnMetadataManagerService',
+  /**
+   * Contains all the value of the current edited
+   * metadata (id, uuid, formId, version etc..)
+   */
+  module.value('gnCurrentEdit', {});
+
+  module.factory('gnEditor',
       ['$q',
        '$http',
        '$translate',

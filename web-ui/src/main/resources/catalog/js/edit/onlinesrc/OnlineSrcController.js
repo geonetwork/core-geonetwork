@@ -10,12 +10,10 @@
    */
   module.controller('GnOnlineSrcControllerDepecrated', [
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
-    'gnMetadataManagerService',
     'gnSearchManagerService',
     'gnUtilityService',
     'gnNewMetadata',
     function($scope, $routeParams, $http, $rootScope, $translate, $compile,
-            gnMetadataManagerService, 
             gnSearchManagerService, 
             gnUtilityService,
             gnNewMetadata) {

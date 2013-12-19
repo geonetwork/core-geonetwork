@@ -3,8 +3,8 @@
 
   var module = angular.module('gn_pagination_directive', []);
 
-  module.directive('gnPagination', ['gnMetadataManagerService',
-                                    function(gnMetadataManagerService) {
+  module.directive('gnPagination', [
+                                    function() {
 
       return {
         restrict: 'A',

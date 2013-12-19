@@ -54,16 +54,16 @@
         }])
    .directive('gnAddThumbnail', [
         'gnOnlinesrc',
-        'gnMetadataManagerService',
+        'gnEditor',
         'gnOwsCapabilities',
-        function(gnOnlinesrc, gnMetadataManagerService, gnOwsCapabilities) {
+        function(gnOnlinesrc, gnEditor, gnOwsCapabilities) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/addThumbnail.html',
             scope: {},
             link: function(scope, element, attrs) {
-              scope.metadataId = gnMetadataManagerService.
+              scope.metadataId = gnEditor.
                   getCurrentEdit().metadataId;
 
               // mode can be 'url' or 'upload'
@@ -72,9 +72,9 @@
               // the form params that will be submited
               scope.params = {};
 
-              // TODO: should be in gnMetadataManagerService ?
+              // TODO: should be in gnEditor ?
               var getVersion = function() {
-                return scope.params.version = $(gnMetadataManagerService.
+                return scope.params.version = $(gnEditor.
                     getCurrentEdit().formId).
                     find('input[id="version"]').val();
               };
@@ -85,7 +85,7 @@
                * Callback of the submit().
                */
               var uploadOnlinesrcDone = function(evt, data) {
-                gnMetadataManagerService.refreshEditorForm();
+                gnEditor.refreshEditorForm();
                 gnOnlinesrc.reload = true;
               };
 
@@ -110,7 +110,7 @@
               scope.addThumbnail = function() {
                 if (scope.mode == 'upload') {
                   getVersion();
-                  gnMetadataManagerService.save()
+                  gnEditor.save()
                   .then(function(data) {
                         scope.submit();
                       });
@@ -124,8 +124,8 @@
         }])
   .directive('gnAddOnlinesrc', ['gnOnlinesrc',
         'gnOwsCapabilities',
-        'gnMetadataManagerService',
-        function(gnOnlinesrc, gnOwsCapabilities, gnMetadataManagerService) {
+        'gnEditor',
+        function(gnOnlinesrc, gnOwsCapabilities, gnEditor) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -181,7 +181,7 @@
               };
 
               scope.onAddSuccess = function() {
-                gnMetadataManagerService.refreshEditorForm();
+                gnEditor.refreshEditorForm();
                 scope.onlinesrcService.reload = true;
               };
 
