@@ -50,12 +50,12 @@
     '$translate', '$compile', '$timeout',
     'gnMetadataManagerService',
     'gnSearchManagerService',
-    'gnUtilityService',
+    'gnUtilityService', 'gnConfigService',
     function($scope, $routeParams, $http, $rootScope, 
         $translate, $compile, $timeout,
             gnMetadataManagerService, 
             gnSearchManagerService, 
-            gnUtilityService) {
+            gnUtilityService, gnConfigService) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
       $scope.formId = null;
@@ -69,6 +69,10 @@
 
       // Controller initialization
       var init = function() {
+        gnConfigService.load().then(function(c) {
+          // Config loaded
+        });
+
         $scope.metadataId = $routeParams.id;
         $scope.formId = '#gn-editor-' + $scope.metadataId;
         //gnUtilityService.getUrlParameter('id');

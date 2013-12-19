@@ -35,6 +35,7 @@
   module.value('gnHttpServices', {
     mdCreate: 'md.create@json',
     edit: 'md.edit',
+    info: 'info@json',
     search: 'qi@json',
     processMd: 'md.processing',
     processAll: 'md.processing.batch',
@@ -124,6 +125,50 @@
 
         // TODO : write batch processing service here
         // from adminTools controller
+      };
+    }]);
+
+
+  /**
+   * Store the catalog config loaded by the gnConfigService.
+   */
+  module.value('gnConfig', {
+    key: {
+      isXLinkEnabled: 'system.xlinkResolver.enable',
+      isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
+      isSearchStatEnabled: 'system.searchStats.enable',
+      isHideWithHelEnabled: 'system.hidewithheldelements.enable'
+    }
+  });
+
+  /**
+   * Load the catalog config and push it to gnConfig.
+   */
+  module.factory('gnConfigService', [
+    '$q',
+    'gnHttp',
+    'gnConfig',
+    function($q, gnHttp, gnConfig) {
+      return {
+        /**
+          * Get catalog configuration. The config is cached.
+          * Boolean value are parsed to boolean.
+          */
+        load: function() {
+          var defer = $q.defer();
+          gnHttp.callService('info',
+              {type: 'config'},
+              {cache: true}).then(function(response) {
+            angular.forEach(response.data, function(value, key) {
+              if (value == 'true' || value == 'false') {
+                response.data[key] = value === 'true';
+              }
+            });
+            angular.extend(gnConfig, response.data);
+            defer.resolve(gnConfig);
+          });
+          return defer.promise;
+        }
       };
     }]);
 })();

@@ -20,9 +20,10 @@
 
     <div class="list-group gn-autocomplete-list">
       <li href="" class="list-group-item" data-ng-repeat="r in searchResults.records"> {{r.title}} <span
-          class="pull-right">
-          <!-- TODO: Display only if XLink enable -->
+        class="pull-right">
+          <!-- Display only if XLink enable -->
           <a href="" data-ng-click="addContact(r, null, true)" class="fa fa-link pull-right"
+            data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled]"
             title="{{'addContactAsLink-help' | translate}}"/>
           <a href="" data-ng-click="addContact(r)" class="fa fa-plus pull-right"
             title="{{'addContactAsText-help' | translate}}"/>

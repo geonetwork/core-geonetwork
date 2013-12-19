@@ -154,9 +154,15 @@
 		        </metadataprivs>
 		    </xsl:when>
 			<xsl:otherwise>
-				<!-- Not needed -->
+				
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="config">
+		<xsl:for-each select="settings/setting">
+			<xsl:element name="{replace(@name, '/', '.')}"><xsl:value-of select="@value"/></xsl:element>
+		</xsl:for-each>
 	</xsl:template>
 
 </xsl:stylesheet>

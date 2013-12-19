@@ -18,10 +18,10 @@
   module.directive('gnDirectoryEntrySelector',
       ['$rootScope', '$timeout', '$q', '$http',
         'gnMetadataManagerService', 'gnSchemaManagerService',
-        'gnEditorXMLService', 'gnUrlUtils',
+        'gnEditorXMLService', 'gnUrlUtils', 'gnConfig',
         function($rootScope, $timeout, $q, $http, 
             gnMetadataManagerService, gnSchemaManagerService, 
-            gnEditorXMLService, gnUrlUtils) {
+            gnEditorXMLService, gnUrlUtils, gnConfig) {
 
          return {
            restrict: 'A',
@@ -41,6 +41,7 @@
              // Separator between each contact XML
              // snippet
              var separator = '&&&';
+             scope.gnConfig = gnConfig;
 
              // Search only for contact subtemplate
              scope.params = {

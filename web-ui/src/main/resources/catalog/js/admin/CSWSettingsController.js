@@ -53,20 +53,21 @@
          * Load catalog settings and extract CSW settings
          */
       function loadSettings() {
-        $http.get('xml.config.get@json?asTree=false').success(function(data) {
-          for (var i = 0; i < data.length; i++) {
-            var setting = data[i];
-            if (cswBooleanSettings.indexOf(setting['@name']) !== -1) {
-              var value = setting['#text'].toLowerCase();
-              $scope.cswSettings[setting['@name']] =
-                  (value == 'true' || value == 'on');
-            } else if (cswSettings.indexOf(setting['@name']) !== -1) {
-              $scope.cswSettings[setting['@name']] = setting['#text'];
-            }
-          }
-        }).error(function(data) {
-          // TODO
-        });
+        $http.get('admin.config.list@json?asTree=false')
+          .success(function(data) {
+              for (var i = 0; i < data.length; i++) {
+                var setting = data[i];
+                if (cswBooleanSettings.indexOf(setting['@name']) !== -1) {
+                  var value = setting['#text'].toLowerCase();
+                  $scope.cswSettings[setting['@name']] =
+                      (value == 'true' || value == 'on');
+                } else if (cswSettings.indexOf(setting['@name']) !== -1) {
+                  $scope.cswSettings[setting['@name']] = setting['#text'];
+                }
+              }
+            }).error(function(data) {
+              // TODO
+            });
       }
 
       function loadUsers() {

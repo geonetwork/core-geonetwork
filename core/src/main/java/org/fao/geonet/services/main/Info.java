@@ -23,39 +23,56 @@
 
 package org.fao.geonet.services.main;
 
-import jeeves.component.ProfileManager;
-import jeeves.constants.Jeeves;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.exceptions.BadParameterEx;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.kernel.region.RegionsDAO;
-import org.fao.geonet.repository.*;
-import org.fao.geonet.repository.specification.GroupSpecs;
-import org.fao.geonet.repository.specification.UserGroupSpecs;
-import org.fao.geonet.repository.specification.UserSpecs;
-import org.fao.geonet.services.util.z3950.RepositoryInfo;
-import org.jdom.Element;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specifications;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import jeeves.component.ProfileManager;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group_;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.Source_;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.User_;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.region.RegionsDAO;
+import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.IsoLanguageRepository;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.StatusValueRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.GroupSpecs;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.repository.specification.UserSpecs;
+import org.fao.geonet.services.util.z3950.RepositoryInfo;
+import org.fao.geonet.utils.Xml;
+import org.hsqldb.lib.HashMap;
+import org.jdom.Element;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specifications;
 
 public class Info implements Service {
     private static final String READ_ONLY = "readonly";
@@ -128,7 +145,21 @@ public class Info implements Service {
                                 "system/platform/version", 
                                 "system/platform/subVersion"
                                 }));
-			} else if (type.equals("inspire")) {
+			} else if (type.equals("config")) {
+			  // Return a set of properties which define what
+			  // to display or not in the user interface
+              result.addContent(new Element("config").addContent(gc.getBean(SettingManager.class).getValues(
+                          new String[]{
+                                       "system/userSelfRegistration/enable", 
+                                       "system/xlinkResolver/enable",
+                                       "system/searchStats/enable",
+                                       "system/inspire/enableSearchPanel",
+                                       "system/harvester/enableEditing",
+                                       "system/metadata/defaultView",
+                                       "system/metadataprivs/usergrouponly",
+                                       "system/hidewithheldelements/enable"
+                                       })));
+            } else if (type.equals("inspire")) {
 				result.addContent(gc.getBean(SettingManager.class).getValues(
 				            new String[]{
 				                         "system/inspire/enableSearchPanel", 
@@ -198,7 +229,6 @@ public class Info implements Service {
 		}
 		
 		result.addContent(getEnv(context));
-
 		Element response = Xml.transform(result, xslPath +"/info.xsl");
 
         return response;

@@ -34,35 +34,36 @@
          * element name in XML Jeeves request element).
          */
       function loadSettings() {
-        $http.get('xml.config.get@json?asTree=false').success(function(data) {
+        $http.get('admin.config.list@json?asTree=false')
+          .success(function(data) {
 
-          gnUtilityService.parseBoolean(data);
-          $scope.settings = data;
+              gnUtilityService.parseBoolean(data);
+              $scope.settings = data;
 
-          for (var i = 0; i < $scope.settings.length; i++) {
-            var tokens = $scope.settings[i]['@name'].split('/');
-            $scope.settings[i].formName =
-                $scope.settings[i]['@name'].replace(/\//g, '.');
-            // Extract level 1 and 2 sections
-            if (tokens) {
-              if (sectionsLevel1.indexOf(tokens[0]) === -1) {
-                sectionsLevel1.push(tokens[0]);
-                $scope.sectionsLevel1.push({
-                  'name': tokens[0],
-                  '@position': $scope.settings[i]['@position']});
+              for (var i = 0; i < $scope.settings.length; i++) {
+                var tokens = $scope.settings[i]['@name'].split('/');
+                $scope.settings[i].formName =
+                    $scope.settings[i]['@name'].replace(/\//g, '.');
+                // Extract level 1 and 2 sections
+                if (tokens) {
+                  if (sectionsLevel1.indexOf(tokens[0]) === -1) {
+                    sectionsLevel1.push(tokens[0]);
+                    $scope.sectionsLevel1.push({
+                      'name': tokens[0],
+                      '@position': $scope.settings[i]['@position']});
+                  }
+                  var level2name = tokens[0] + '/' + tokens[1];
+                  if (sectionsLevel2.indexOf(level2name) === -1) {
+                    sectionsLevel2.push(level2name);
+                    $scope.sectionsLevel2.push({
+                      'name': level2name,
+                      '@position': $scope.settings[i]['@position']});
+                  }
+                }
               }
-              var level2name = tokens[0] + '/' + tokens[1];
-              if (sectionsLevel2.indexOf(level2name) === -1) {
-                sectionsLevel2.push(level2name);
-                $scope.sectionsLevel2.push({
-                  'name': level2name,
-                  '@position': $scope.settings[i]['@position']});
-              }
-            }
-          }
-        }).error(function(data) {
-          // TODO
-        });
+            }).error(function(data) {
+              // TODO
+            });
       }
 
       function loadUsers() {
