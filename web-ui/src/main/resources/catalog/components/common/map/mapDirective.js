@@ -6,14 +6,34 @@
     .directive(
       'gnDrawBbox',
       [
-       function() {
+       '$timeout',
+       function($timeout) {
          return {
            restrict: 'A',
            templateUrl: '../../catalog/components/common/map/' +
            'partials/drawbbox.html',
-           scope: {},
+           scope: {
+             top: '@',
+             bottom: '@',
+             left: '@',
+             right: '@',
+             topRef: '@',
+             bottomRef: '@',
+             leftRef: '@',
+             rightRef: '@'
+
+           },
            link: function(scope, element, attrs) {
              scope.drawing = false;
+
+             // need to parseFloat for number type of the input
+             $timeout(function() {
+               scope.top = parseInt(scope.top);
+               scope.bottom = parseInt(scope.bottom);
+               scope.left = parseInt(scope.left);
+               scope.right = parseInt(scope.right);
+             });
+
              var map = new ol.Map({
                layers: [
                  new ol.layer.Tile({

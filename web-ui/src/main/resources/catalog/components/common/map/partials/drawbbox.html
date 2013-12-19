@@ -4,34 +4,39 @@
   </div>
   <div class="panel-body">
     <div class="container">
-    <div class="form-group col-xs-2">
-          <button class="btn btn-success" ng-click="renderMap()">
-            <i class="fa fa-pencil"></i>render
-          </button>
-          <button class="btn btn-warning" ng-click="drawMap()">
-            <i class="fa fa-pencil"></i>draw
-          </button>
+      <div class="form-group col-xs-2">
+        <button class="btn btn-success" ng-click="renderMap()">
+          <i class="fa fa-pencil"></i>render
+        </button>
+        <button class="btn btn-warning" ng-click="drawMap()">
+          <i class="fa fa-pencil"></i>draw
+        </button>
       </div>
       <div class="form-group col-xs-2">
-        <label for="drawbbox-top">top</label> <input ng-model="top"
-          class="form-control" id="drawbbox-top" placeholder="top">
+        <label for="drawbbox-top">top</label> <input data-ng-model="top" name="{{topRef}}"
+          type="number" class="form-control" id="drawbbox-top"
+          placeholder="top">
       </div>
       <div class="form-group col-xs-2">
-        <label for="drawbbox-left">left</label> <input ng-model="left"
-          class="form-control" id="drawbbox-left" placeholder="left">
+        <label for="drawbbox-left">left</label> <input name="{{leftRef}}"
+          data-ng-model="left" type="number" class="form-control"
+          id="drawbbox-left" placeholder="left">
       </div>
       <div class="form-group col-xs-2">
-        <label for="drawbbox-bottom">bottom</label> <input ng-model="bottom"
-          class="form-control" id="drawbbox-bottom" placeholder="bottom">
+        <label for="drawbbox-bottom">bottom</label> <input name="{{bottomRef}}" type="number"
+          data-ng-model="bottom" class="form-control"
+          id="drawbbox-bottom" placeholder="bottom">
       </div>
       <div class="form-group col-xs-2">
-        <label for="drawbbox-right">right</label> <input ng-model="right"
-          class="form-control" id="drawbbox-right" placeholder="right">
+        <label for="drawbbox-right">right</label> <input
+          data-ng-model="right" class="form-control" name="{{rightRef}}"
+          type="number" id="drawbbox-right" placeholder="right">
       </div>
     </div>
     <div class="container" id="drawbbox-map">
-      <div >
-        <div id="map" style="border: 1px black solid; width: 300px; height: 300px"></div>
+      <div>
+        <div id="map"
+          style="border: 1px black solid; width: 300px; height: 300px"></div>
       </div>
     </div>
   </div>
