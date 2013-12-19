@@ -1,12 +1,12 @@
 -- ISO 3 letter code migration
 INSERT INTO Languages VALUES ('tur','Turkish', 'n', 'n');
 
-UPDATE CategoriesDes (iddes, langid, label)             SET langid='tur' WHERE langid='tr';
+UPDATE CategoriesDes             SET langid='tur' WHERE langid='tr';
 UPDATE IsoLanguagesDes           SET langid='tur' WHERE langid='tr';
 UPDATE RegionsDes                SET langid='tur' WHERE langid='tr';
-UPDATE GroupsDes (iddes, langid, label)                 SET langid='tur' WHERE langid='tr';
+UPDATE GroupsDes                 SET langid='tur' WHERE langid='tr';
 UPDATE OperationsDes             SET langid='tur' WHERE langid='tr';
-UPDATE StatusValuesDes  (iddes, langid, label)           SET langid='tur' WHERE langid='tr';
+UPDATE StatusValuesDes           SET langid='tur' WHERE langid='tr';
 UPDATE CswServerCapabilitiesInfo SET langid='tur' WHERE langid='tr';
 DELETE FROM Languages WHERE id='tr';
 

@@ -1,12 +1,12 @@
 -- ISO 3 letter code migration
 INSERT INTO Languages VALUES ('vie','Tiếng Việt', 'n', 'n');
 
-UPDATE CategoriesDes (iddes, langid, label)             SET langid='vie' WHERE langid='vi';
+UPDATE CategoriesDes             SET langid='vie' WHERE langid='vi';
 UPDATE IsoLanguagesDes           SET langid='vie' WHERE langid='vi';
 UPDATE RegionsDes                SET langid='vie' WHERE langid='vi';
-UPDATE GroupsDes (iddes, langid, label)                 SET langid='vie' WHERE langid='vi';
+UPDATE GroupsDes                 SET langid='vie' WHERE langid='vi';
 UPDATE OperationsDes             SET langid='vie' WHERE langid='vi';
-UPDATE StatusValuesDes  (iddes, langid, label)           SET langid='vie' WHERE langid='vi';
+UPDATE StatusValuesDes           SET langid='vie' WHERE langid='vi';
 UPDATE CswServerCapabilitiesInfo SET langid='vie' WHERE langid='vi';
 DELETE FROM Languages WHERE id='vi';
 
