@@ -1,15 +1,19 @@
 package org.fao.geonet.repository.statistic;
 
 import com.google.common.base.Optional;
+
 import org.fao.geonet.domain.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.*;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -23,9 +27,16 @@ import java.util.Set;
  */
 @Component
 public class MetadataStatisticsQueries {
+	
+	@PersistenceContext
+	@Qualifier(value = "entityManagerFactory")
+	private  EntityManager _entityManager;
 
-    private final EntityManager _entityManager;
-
+	/**
+	 * Constructor for spring automated
+	 */
+	 public MetadataStatisticsQueries() {
+	    }
 
     /**
      * Constructor.

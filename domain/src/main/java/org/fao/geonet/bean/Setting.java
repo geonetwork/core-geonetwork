@@ -1,5 +1,9 @@
 package org.fao.geonet.bean;
 
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.fao.geonet.domain.SettingDataType;
 
 /**
@@ -11,7 +15,7 @@ import org.fao.geonet.domain.SettingDataType;
  * 
  * @author Jesse
  */
-public class Setting extends GeonetEntity {
+public class Setting implements Serializable {
 
 	private static final long serialVersionUID = 5431195166983620627L;
 	private String name;
