@@ -15,11 +15,19 @@
         http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
 	<mvc:annotation-driven
-		content-negotiation-manager="contentNegotiationManager" />
+		content-negotiation-manager="contentNegotiationManager">
+		<mvc:message-converters>
+			<bean
+				class="org.springframework.http.converter.ResourceHttpMessageConverter" />
+			<bean
+				class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter" />
+			<bean
+				class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+		</mvc:message-converters>
+	</mvc:annotation-driven>
 	<bean id="contentNegotiationManager"
 		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
 		<property name="defaultContentType" value="application/xml" />
-		<property name="order" value="1" />
 		<property name="mediaTypes">
 			<map>
 				<entry key="xml" value="application/xml" />
@@ -27,31 +35,8 @@
 				<entry key="rss" value="application/rss+xml" />
 			</map>
 		</property>
-		<property name="defaultViews">
-			<list>
-
-				<!-- JAXB XML View -->
-				<bean class="org.springframework.web.servlet.view.xml.MarshallingView">
-					<constructor-arg>
-						<bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-							<property name="classesToBeBound">
-								<list>
-									<value>org.fao.geonet.services.config.bean.Setting</value>
-								</list>
-							</property>
-						</bean>
-					</constructor-arg>
-				</bean>
-				<!-- JSON View -->
-				<bean
-					class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
-				</bean>
-
-			</list>
-		</property>
-		<property name="ignoreAcceptHeader" value="true" />
 	</bean>
-	
+
 	<context:component-scan base-package="org.fao.geonet" />
 	<tx:annotation-driven />
 
