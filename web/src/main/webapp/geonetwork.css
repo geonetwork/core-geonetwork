@@ -1415,3 +1415,13 @@ img.logo {
 div#editPanel * div table tr > td {
     max-width: 350px;
 }
+
+/* Fix calendar widgets in Chrome/Safari/IE in advanced search page */
+
+.x-date-picker {border-color: #1b376c;background-color:#fff;position: relative;width: 185px; !important;}
+
+
+.ext-ie .x-date-menu {
+    width: 175px !important;
+    height: 185px !important;
+}

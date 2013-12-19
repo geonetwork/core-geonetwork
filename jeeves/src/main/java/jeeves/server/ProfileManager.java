@@ -40,6 +40,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+import net.sf.saxon.value.TextFragmentValue;
 
 import org.jdom.Element;
 import org.springframework.security.access.AccessDeniedException;
@@ -290,7 +291,7 @@ public class ProfileManager
 	 * @return true if accessible or system is unable to determine because the current
 	 * 				thread does not have a ServiceContext in its thread local store
 	 */
-	public static boolean isAccessibleService(Object serviceName) {
+	public static boolean isAccessibleService(Object serviceObj) {
 		ServiceContext serviceContext = ServiceContext.get();
 		if(serviceContext == null) return true;
 		ServletContext servletContext = serviceContext.getServlet().getServletContext();
@@ -300,7 +301,9 @@ public class ProfileManager
 		
 		Map<String, AbstractSecurityInterceptor> evals = springContext.getBeansOfType(AbstractSecurityInterceptor.class);
 		Authentication authentication = context.getAuthentication();
-		
+
+ 		String serviceName = resolveXslString(serviceObj);
+        
 		FilterInvocation fi = new FilterInvocation(null, "/srv/"+serviceContext.getLanguage()+"/"+serviceName, null);
 		for(AbstractSecurityInterceptor securityInterceptor: evals.values()) {
 	    	if(securityInterceptor == null) return true;
@@ -324,11 +327,41 @@ public class ProfileManager
 	        }
 		}
         if (Log.isDebugEnabled(Log.REQUEST)) {
-            Log.info(Log.REQUEST, fi.toString() + " denied for " + authentication.toString());
+            Log.debug(Log.REQUEST, fi.toString() + " denied for " + authentication.toString());
         }
 
 		return false;
 	}
+
+    /**
+     * Transform a XSL object into a String.
+     * <p/>
+     * Sometimes XSL sends a node collection instead of a String; 
+     * here we try to squash the complex object into a String.
+     * <p/>
+     * <i>At the moment only TextFragmentValue</i>s<i> are handled.</i>
+     *
+     * <p/>E.g.:
+     * This will set a complex object:
+     * <pre> {@code
+     * 			<xsl:variable name="name" select="@name"/>
+     * }</pre>
+     * while this code will assign a string:
+     * <pre> {@code
+     * 			<xsl:variable name="name" select="concat('',@name)"/>
+     * }</pre>
+     *
+     */
+    protected static String resolveXslString(Object serviceObj) {
+        String serviceName;
+        if(serviceObj instanceof TextFragmentValue) {
+            serviceName = ((TextFragmentValue)serviceObj).getStringValue();
+        } else {
+            serviceName = String.valueOf(serviceObj);
+        }
+
+        return serviceName;
+    }
 
 	public static boolean isCasEnabled() {
 		return existsBean("casEntryPoint");

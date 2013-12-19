@@ -1082,6 +1082,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             }
         });
     },
+    getNodeText: function(node){
+        if (node) {
+            return node.innerText || node.textContent || node.text;
+        } else {
+            return '';
+        }
+    },
     /** api: method[isLoggedIn]
      * 
      *  Get the xml.info for me. If user is not identified
@@ -1105,13 +1112,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         
         if (response.status === 200 && authenticated) {
             this.identifiedUser = {
-                id: me.getElementsByTagName('id')[0].innerText || me.getElementsByTagName('id')[0].textContent,
-                username: me.getElementsByTagName('username')[0].innerText || me.getElementsByTagName('username')[0].textContent,
-                name: me.getElementsByTagName('name')[0].innerText || me.getElementsByTagName('name')[0].textContent,
-                surname: me.getElementsByTagName('surname')[0].innerText || me.getElementsByTagName('surname')[0].textContent,
-                email: me.getElementsByTagName('email')[0].innerText || me.getElementsByTagName('email')[0].textContent,
-                hash: me.getElementsByTagName('hash')[0].innerText || me.getElementsByTagName('hash')[0].textContent,
-                role: me.getElementsByTagName('profile')[0].innerText || me.getElementsByTagName('profile')[0].textContent
+                id: this.getNodeText(me.getElementsByTagName('id')[0]),
+                username: this.getNodeText(me.getElementsByTagName('username')[0]),
+                name: this.getNodeText(me.getElementsByTagName('name')[0]),
+                surname: this.getNodeText(me.getElementsByTagName('surname')[0]),
+                email: this.getNodeText(me.getElementsByTagName('email')[0]), 
+                hash: this.getNodeText(me.getElementsByTagName('hash')[0]),
+                role: this.getNodeText(me.getElementsByTagName('profile')[0])
             };
             this.onAfterLogin();
             return true;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<notfound>Metadata Records not found</notfound>
-	<notowner>Metadata Records that could not be processed because you are not the owner</notowner>
-	<updated>Metadata Records processed to extract subtemplates</updated>
-	<subtemplates>Subtemplates extracted</subtemplates>
+	<notfound>Record di metadati non trovati</notfound>
+	<notowner>Record di metadati non processati perchè non ne sei il proprietario</notowner>
+	<updated>Record di metadati processati per estrarne i subtemplate</updated>
+	<subtemplates>Subtemplate estratti</subtemplates>	
 </strings>

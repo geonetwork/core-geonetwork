@@ -147,10 +147,24 @@
 	<xsl:template match="geonet:report" mode="validation-report">
 		<xsl:variable name="rule" select="@geonet:rule"/>
 		<xsl:variable name="count" select="count(svrl:schematron-output/svrl:failed-assert)"/>
+		<xsl:variable name="schema" select="string(//response/schema)"/>
+		<xsl:variable name="title">
+			<xsl:choose>
+				<xsl:when test="/root/gui/strings/rules[@name=$rule]">
+					<xsl:value-of select="/root/gui/strings/rules[@name=$rule]"/>
+				</xsl:when>
+				<xsl:when test="/root/gui/schemas/*[local-name()=$schema]/strings/rules[@name=$rule]">
+					<xsl:value-of select="/root/gui/schemas/*[local-name()=$schema]/strings/rules[@name=$rule]"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="/root/gui/strings/rulesOther"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 
 		<fieldset class="validation-report">
 			<legend class="block-legend">
-				<xsl:value-of select="/root/gui/strings/rules[@name=$rule]"/><xsl:text> </xsl:text>
+				<xsl:value-of select="$title"/><xsl:text> </xsl:text>
 				<xsl:choose>
 					<xsl:when test="$count != 0"> (
 						<img src="../../images/schematron.gif" alt="failed" title="failed"/>
