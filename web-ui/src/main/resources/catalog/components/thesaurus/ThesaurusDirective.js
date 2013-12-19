@@ -9,10 +9,10 @@
      */
   module.directive('gnThesaurusSelector',
       ['$http', '$rootScope', '$timeout',
-       'gnThesaurusService', 'gnMetadataManagerService',
+       'gnThesaurusService', 'gnEditor',
        'gnEditorXMLService',
        function($http, $rootScope, $timeout,
-       gnThesaurusService, gnMetadataManagerService,
+       gnThesaurusService, gnEditor,
        gnEditorXMLService) {
 
          return {
@@ -42,7 +42,7 @@
              });
 
              scope.add = function() {
-               gnMetadataManagerService.add(scope.metadataId,
+               gnEditor.add(scope.metadataId,
                    scope.elementRef, scope.elementName, scope.domId, 'before');
              };
 
@@ -53,13 +53,13 @@
                  // Add the fragment to the form
                  scope.snippet = gnEditorXMLService.
                  buildXML(scope.elementName, data);
-                 scope.snippetRef = gnMetadataManagerService.
+                 scope.snippetRef = gnEditor.
                  buildXMLFieldName(scope.elementRef, scope.elementName);
 
 
                  $timeout(function() {
                    // Save the metadata and refresh the form
-                   gnMetadataManagerService.save(scope.metadataId, true);
+                   gnEditor.save(scope.metadataId, true);
                  });
 
                });
@@ -76,10 +76,10 @@
      */
   module.directive('gnKeywordSelector',
       ['$http', '$rootScope', '$timeout',
-       'gnThesaurusService', 'gnMetadataManagerService',
+       'gnThesaurusService', 'gnEditor',
        'Keyword',
        function($http, $rootScope, $timeout,
-       gnThesaurusService, gnMetadataManagerService, Keyword) {
+       gnThesaurusService, gnEditor, Keyword) {
 
          return {
            restrict: 'A',

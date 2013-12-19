@@ -17,10 +17,10 @@
    */
   module.directive('gnDirectoryEntrySelector',
       ['$rootScope', '$timeout', '$q', '$http',
-        'gnMetadataManagerService', 'gnSchemaManagerService',
+        'gnEditor', 'gnSchemaManagerService',
         'gnEditorXMLService', 'gnUrlUtils', 'gnConfig',
         function($rootScope, $timeout, $q, $http, 
-            gnMetadataManagerService, gnSchemaManagerService, 
+            gnEditor, gnSchemaManagerService, 
             gnEditorXMLService, gnUrlUtils, gnConfig) {
 
          return {
@@ -51,11 +51,11 @@
              };
 
              scope.snippet = null;
-             scope.snippetRef = gnMetadataManagerService.
+             scope.snippetRef = gnEditor.
              buildXMLFieldName(scope.elementRef, scope.elementName);
 
              scope.add = function() {
-               gnMetadataManagerService.add(scope.metadataId,
+               gnEditor.add(scope.metadataId,
                    scope.elementRef, scope.elementName,
                    scope.domId, 'before');
                return false;
@@ -82,7 +82,7 @@
 
                     $timeout(function() {
                       // Save the metadata and refresh the form
-                      gnMetadataManagerService.save(scope.metadataId, true);
+                      gnEditor.save(scope.metadataId, true);
                     });
                  }
                };
@@ -130,10 +130,8 @@
        }]);
 
   module.directive('gnDirectoryEntryMultiSelector',
-      ['$rootScope', '$timeout',
-        'gnMetadataManagerService',
-        function($rootScope, $timeout,
-            gnMetadataManagerService) {
+      [
+        function() {
 
          return {
            restrict: 'A',

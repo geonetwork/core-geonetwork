@@ -12,11 +12,9 @@
    */
   module.controller('GnAdminMetadataController', [
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
-    'gnMetadataManagerService',
     'gnSearchManagerService',
     'gnUtilityService',
     function($scope, $routeParams, $http, $rootScope, $translate, $compile,
-            gnMetadataManagerService, 
             gnSearchManagerService, 
             gnUtilityService) {
 

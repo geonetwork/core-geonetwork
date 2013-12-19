@@ -7,9 +7,9 @@
   module.factory('gnOnlinesrc', [
     'gnBatchProcessing',
     'gnHttp',
-    'gnMetadataManagerService',
+    'gnEditor',
     '$q',
-    function(gnBatchProcessing, gnHttp, gnMetadataManagerService, $q) {
+    function(gnBatchProcessing, gnHttp, gnEditor, $q) {
 
       var reload = false;
 
@@ -102,7 +102,7 @@
       };
 
       var refreshForm = function(scope, data) {
-        gnMetadataManagerService.refreshEditorForm(data);
+        gnEditor.refreshEditorForm(data);
         scope.reload = true;
       };
 
@@ -124,7 +124,7 @@
        * the form and reload the onlinesrc list.
        */
       var runService = function(service, params, scope) {
-        gnMetadataManagerService.save()
+        gnEditor.save()
         .then(function() {
               gnHttp.callService(service, params).success(function() {
                 refreshForm(scope);
@@ -162,7 +162,7 @@
 
           gnHttp.callService('getRelations', {
             fast: false,
-            id: gnMetadataManagerService.getCurrentEdit().metadataId
+            id: gnEditor.getCurrentEdit().metadataId
           }, {
             method: 'post',
             headers: {
@@ -210,7 +210,7 @@
 
           return gnBatchProcessing.runProcessMdXml({
             scopedName: qParams.name,
-            //            uuidref: gnMetadataManagerService.
+            //            uuidref: gnEditor.
             //            getCurrentEdit().metadataUuid,
             uuidref: '424d86a7-1d73-4e4b-bf50-c670936eb086',
             uuid: qParams.uuid,
@@ -246,7 +246,7 @@
           if (thumb.id.indexOf('resources.get') < 0) {
             runProcess(this,
                 setParams('thumbnail-remove', {
-                  id: gnMetadataManagerService.
+                  id: gnEditor.
                       getCurrentEdit().metadataId,
                   thumbnail_url: thumb.id
                 }));
@@ -255,8 +255,8 @@
           else {
             runService('removeThumbnail', {
               type: (thumb.title === 'thumbnail' ? 'small' : 'large'),
-              id: gnMetadataManagerService.getCurrentEdit().metadataId,
-              version: $(gnMetadataManagerService.getCurrentEdit().
+              id: gnEditor.getCurrentEdit().metadataId,
+              version: $(gnEditor.getCurrentEdit().
                   formId).find('input[id="version"]').val()
             }, this);
           }
@@ -267,7 +267,7 @@
 
           if (onlinesrc.protocol == 'WWW:DOWNLOAD-1.0-http--download') {
             runService('removeOnlinesrc', {
-              id: gnMetadataManagerService.
+              id: gnEditor.
                   getCurrentEdit().metadataId,
               url: onlinesrc.url,
               name: onlinesrc.name
@@ -275,12 +275,11 @@
           } else {
             runProcess(this,
                 setParams('onlinesrc-remove', {
-                  id: gnMetadataManagerService.
+                  id: gnEditor.
                       getCurrentEdit().metadataId,
                   url: onlinesrc.url,
                   name: onlinesrc.name
                 }));
-
           }
         }
       };

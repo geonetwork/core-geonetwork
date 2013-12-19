@@ -10,9 +10,9 @@
    */
   module.directive('gnBatchProcessButton',
       ['$rootScope', '$timeout', '$http', '$parse',
-        'gnMetadataManagerService', 'gnBatchProcessing',
+        'gnBatchProcessing',
         function($rootScope, $timeout, $http, $parse,
-            gnMetadataManagerService, gnBatchProcessing) {
+       gnBatchProcessing) {
 
          return {
            restrict: 'A',

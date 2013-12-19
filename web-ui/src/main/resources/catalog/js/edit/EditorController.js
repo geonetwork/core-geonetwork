@@ -48,14 +48,17 @@
   module.controller('GnEditorController', [
     '$scope', '$routeParams', '$http', '$rootScope',
     '$translate', '$compile', '$timeout',
-    'gnMetadataManagerService',
+    'gnEditor',
     'gnSearchManagerService',
-    'gnUtilityService', 'gnConfigService',
+    'gnConfigService',
+    'gnUtilityService',
+    'gnCurrentEdit',
     function($scope, $routeParams, $http, $rootScope, 
         $translate, $compile, $timeout,
-            gnMetadataManagerService, 
+            gnEditor, 
             gnSearchManagerService, 
-            gnUtilityService, gnConfigService) {
+            gnConfigService
+            gnUtilityService, gnCurrentEdit) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
       $scope.formId = null;
@@ -73,12 +76,19 @@
           // Config loaded
         });
 
+
+        angular.extend(gnCurrentEdit, {
+          id: $routeParams.id,
+          formId: '#gn-editor-' + $scope.metadataId,
+          tab: $routeParams.tab,
+          displayAttribute: $routeParams.displayAttributes === 'true'
+        });
+
+
+
         $scope.metadataId = $routeParams.id;
         $scope.formId = '#gn-editor-' + $scope.metadataId;
-        //gnUtilityService.getUrlParameter('id');
-        $scope.metadataUuid = gnUtilityService.getUrlParameter('uuid');
         $scope.tab = $routeParams.tab;
-        //gnUtilityService.getUrlParameter('tab');
         $scope.displayAttributes = $routeParams.displayAttributes === 'true';
 
         $scope.editorConfig = {
@@ -90,7 +100,7 @@
           displayAttributes: $scope.displayAttributes,
           sessionStartTime: moment()
         };
-        gnMetadataManagerService
+        gnEditor
           .startEditing($scope.editorConfig);
 
         $scope.$watch('displayAttributes', function() {
@@ -99,7 +109,7 @@
 
         // TODO: Check requested metadata exist - return message if it happens
         // Would you like to create a new one ?
-        $scope.editorFormUrl = gnMetadataManagerService
+        $scope.editorFormUrl = gnEditor
           .buildEditUrlPrefix('md.edit') + '&starteditingsession=yes';
       };
 
@@ -174,20 +184,20 @@
         return gnEditor[name].$error.required ? 'has-error' : '';
       };
       $scope.add = function(ref, name, insertRef, position, attribute) {
-        gnMetadataManagerService.add($scope.metadataId, ref, name,
+        gnEditor.add($scope.metadataId, ref, name,
             insertRef, position, attribute);
         return false;
       };
       $scope.addChoice = function(ref, name, insertRef, position) {
-        gnMetadataManagerService.addChoice($scope.metadataId, ref, name,
+        gnEditor.addChoice($scope.metadataId, ref, name,
             insertRef, position);
         return false;
       };
       $scope.remove = function(ref, parent) {
-        gnMetadataManagerService.remove($scope.metadataId, ref, parent);
+        gnEditor.remove($scope.metadataId, ref, parent);
       };
       $scope.save = function(refreshForm) {
-        gnMetadataManagerService.save(refreshForm)
+        gnEditor.save(refreshForm)
           .then(function(form) {
               $scope.toggleAttributes();
               $rootScope.$broadcast('StatusUpdated', {
@@ -205,12 +215,12 @@
       };
 
       $scope.cancel = function(refreshForm) {
-        gnMetadataManagerService.cancel(refreshForm)
+        gnEditor.cancel(refreshForm)
           .then(function(form) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('cancelMetadataSuccess')
               });
-              gnMetadataManagerService.refreshEditorForm(null, true);
+              gnEditor.refreshEditorForm(null, true);
             }, function(error) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('cancelMetadataError'),
@@ -222,7 +232,7 @@
       };
 
       $scope.close = function() {
-        gnMetadataManagerService.save(false)
+        gnEditor.save(false)
           .then(function(form) {
               // TODO: Should redirect to main page at some point ?
               window.close();

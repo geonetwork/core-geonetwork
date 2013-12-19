@@ -40,9 +40,9 @@ goog.addDependency('../../components/edit/onlinesrc/OnlineSrcDirective.js', ['gn
 goog.addDependency('../../components/edit/onlinesrc/OnlineSrcModule.js', ['gn_onlinesrc'], ['gn_onlinesrc_directive', 'gn_onlinesrc_service']);
 goog.addDependency('../../components/edit/onlinesrc/OnlineSrcService.js', ['gn_onlinesrc_service'], []);
 goog.addDependency('../../components/edit/templatefield/TemplateFieldDirective.js', ['gn_template_field_directive'], []);
+goog.addDependency('../../components/metadatamanager/EditorService.js', ['gn_metadata_manager_service'], ['gn_editor_xml_service', 'gn_schema_manager_service']);
 goog.addDependency('../../components/metadatamanager/EditorXMLService.js', ['gn_editor_xml_service'], ['gn_schema_manager_service']);
 goog.addDependency('../../components/metadatamanager/MetadataManagerModule.js', ['gn_metadata_manager'], ['gn_metadata_manager_service']);
-goog.addDependency('../../components/metadatamanager/MetadataManagerService.js', ['gn_metadata_manager_service'], ['gn_editor_xml_service', 'gn_schema_manager_service']);
 goog.addDependency('../../components/search/formfields/FormFieldsDirective.js', ['gn_form_fields_directive'], []);
 goog.addDependency('../../components/search/pagination/PaginationDirective.js', ['gn_pagination_directive'], []);
 goog.addDependency('../../components/search/pagination/PaginationModule.js', ['gn_pagination'], ['gn_pagination_directive']);
