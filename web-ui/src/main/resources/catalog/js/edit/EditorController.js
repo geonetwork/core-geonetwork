@@ -57,7 +57,7 @@
         $translate, $compile, $timeout,
             gnEditor, 
             gnSearchManagerService, 
-            gnConfigService
+            gnConfigService,
             gnUtilityService, gnCurrentEdit) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
