@@ -17,6 +17,7 @@
     "cancel": "Cancel",
     "cancelChangesFromNow": "Cancel all changes since the start of the editing session {{timeAgo}}.",
     "share": "Share",
+    "beforeUnloadEditor": "You may have unsaved changes since last save {{timeAgo}}.",
     "closeEditor": "Save & close",
     "share-help": "Define who can view this record",
     "validate": "Validate",

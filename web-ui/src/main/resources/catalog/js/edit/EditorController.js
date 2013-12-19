@@ -111,6 +111,13 @@
         // Would you like to create a new one ?
         $scope.editorFormUrl = gnEditor
           .buildEditUrlPrefix('md.edit') + '&starteditingsession=yes';
+        
+        
+        window.onbeforeunload = function() {
+          // TODO: could be better to provide cancelAndClose and saveAndClose button
+          return $translate('beforeUnloadEditor', 
+              {timeAgo: moment($scope.editorConfig.savedTime).fromNow()});
+        };
       };
 
 
@@ -235,6 +242,7 @@
         gnEditor.save(false)
           .then(function(form) {
               // TODO: Should redirect to main page at some point ?
+              window.onbeforeunload = null;
               window.close();
             }, function(error) {
               $rootScope.$broadcast('StatusUpdated', {
