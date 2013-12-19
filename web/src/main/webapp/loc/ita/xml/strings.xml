@@ -22,24 +22,23 @@
 	<anyLanguage>Qualsiasi lingua</anyLanguage>
 	<nodata>Null</nodata>
 	<extractRegisterItems>Estrai elemento dal registro</extractRegisterItems>
-	<selectXPath js="true">Inserisci un XPath per estrarre XML come subtemplate, ad esempio: /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
+	<selectXPath js="true">Inserisci un XPath per estrarre l'elemento XML come subtemplate, ad esempio: /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
 	<selectExtractTitle js="true">Inserisci un XPath per estrarre un titolo dal subtemplate</selectExtractTitle>
-	<batchExtractSubtemplatesTitle>Estrai i subtemplate dal metadato selezionato</batchExtractSubtemplatesTitle>
+	<batchExtractSubtemplatesTitle>Estrai i subtemplate dai metadati selezionati</batchExtractSubtemplatesTitle>
 	<extractSubtemplates>Estrai i subtemplate</extractSubtemplates>
 	<xpathToExtract>XPath per estrarre come subtemplate</xpathToExtract>
 	<xsltToExtractTitle>XSLT per estrarre il titolo dal subtemplate</xsltToExtractTitle>
 	<xpathToExtractTitle>XPath per estrarre il titolo dal subtemplate</xpathToExtractTitle>
 	<categoryForSubtemplate>Categoria per i subtemplate</categoryForSubtemplate>
 	<makeChanges>Voglio veramente fare questa operazione!</makeChanges>
-	<dontMakeChanges>Di default, questa operazione non modifica il database, ovvero opera in test mode. Selezionando la checkbox si disattiva il test mode, e di conseguenza le modifiche verranno riportate nel database.</dontMakeChanges>
-
+	<dontMakeChanges>Per default, questa operazione non effettuerà modifiche al database, girerà cioè in modalità test. Spuntando questa casella si disabiliterà la modalità test e le modifiche saranno applicate al database.</dontMakeChanges>
 	<defaultStatusChangeMessage>Nessuna informazione</defaultStatusChangeMessage>
 	<createThesaurus>Crea/Aggiorna thesaurus</createThesaurus>
 	<thesaurusType>Tipo di thesaurus</thesaurusType>
 	<changeLogMessage>Modifica messaggio di log</changeLogMessage>
 	<status>Stato</status>
 	<updateStatus>Aggiorna stato</updateStatus>
-	<batchUpdateStatusTitle>Aggiornamento in batch stato operazioni</batchUpdateStatusTitle>
+	<batchUpdateStatusTitle>Operazioni di modifica di status multipla</batchUpdateStatusTitle>
 	<startVersion>Avvio versionamento</startVersion>
 	<batchStartVersionTitle>Avvio in batch versionamento</batchStartVersionTitle>
 	<editAttributes>Aggiungi dettagli</editAttributes>
@@ -48,7 +47,7 @@
 	<surnameMandatory>Cognome obbligatorio</surnameMandatory>
 	<firstnameMandatory>Nome obbligatorio</firstnameMandatory>
 	<emailMandatory>Indirizzo email obbligatorio</emailMandatory>
-	<forgottenPassword>Dimenticata la tua password?</forgottenPassword>
+	<forgottenPassword>Password dimenticata?</forgottenPassword>
 	<selectTemplate>Seleziona gli schema</selectTemplate>
 	<useStopwords>L'indice Lucene usa le stopword per queste lingue:</useStopwords>    
 	<rebuildIndexMessage>Se si cambiano questi valori, si raccomanda la ricostruzione dell'indice di Lucene.</rebuildIndexMessage>
@@ -59,18 +58,18 @@
 	<simpleSearch>Ricerca semplificata</simpleSearch>
 	<advancedSearch>Ricerca avanzata</advancedSearch>
 	<remoteSearch>Ricerca remota</remoteSearch>
-	<displayRemoteHtml>Visualizza i risultati usando HTML dal server?</displayRemoteHtml>
+	<displayRemoteHtml>Mostra i risultati usando l'HTML proveniente dal server remoto?</displayRemoteHtml>
 	<noSearchCriteria js="true">Inserisci o seleziona qualche criterio di ricerca</noSearchCriteria>
-	<noServer js="true">Seleziona un server in cui cercare</noServer>
-	<anyWith>Qualsiasi - con UNA di queste parole</anyWith>
+	<noServer js="true">Selezionare il server su cui effettuare la ricerca</noServer>
+	<anyWith>Qualsiasi - con almeno UNA di queste parole</anyWith>
 	<anyWithExactPhrase>Qualsiasi - con questa esatta frase</anyWithExactPhrase>
 	<anyWithAllWords>Qualsiasi - con TUTTE queste parole</anyWithAllWords>
 	<anyWithoutWords>Qualsiasi - SENZA queste parole</anyWithoutWords>
 	<dataDownload>Dati scaricabili</dataDownload>
-	<addSchema>Aggiungi uno schema/profilo metadati</addSchema>
-	<updateSchema>Aggiorna uno schema/profilo metadati</updateSchema>
-	<deleteSchema>Elimina uno schema/profilo metadati</deleteSchema>
-	<selectSchema>Seleziona uno schema/profilo metadati</selectSchema>
+	<addSchema>Aggiungi uno schema/profilo di metadati</addSchema>
+	<updateSchema>Aggiorna uno schema/profilo di metadati</updateSchema>
+	<deleteSchema>Elimina uno schema/profilo di metadati</deleteSchema>
+	<selectSchema>Seleziona uno schema/profilo di metadati</selectSchema>
 	<schemaFileName>Path dell'archivio Zip contenente lo Schema</schemaFileName>
 	<schemaUrl>URL dell'archivio Zip contenente lo Schema</schemaUrl>
 	<schemaUuid>UUID della scheda metadato locale con GeoNetwork Metadata Schema Archive (URL) come risorsa online</schemaUuid>
@@ -98,15 +97,15 @@
 	<stat.numberOfSearch>Numero di ricerche</stat.numberOfSearch>
 	<stat.requestDate>Data della richiesta</stat.requestDate>
 	<stat.spatialFilter>Filtro spaziale</stat.spatialFilter>
-	<stat.totalsearches>Totale ricerche utente</stat.totalsearches>
+	<stat.totalsearches>Ricerche totali</stat.totalsearches>
 	<stat.year>Anno</stat.year>
-	<stat.mdSheet>Scheda metadato</stat.mdSheet>
+	<stat.mdSheet>Scheda del metadato</stat.mdSheet>
 	<stat.noTitle>Nessun titolo</stat.noTitle>
 	<stat.csvExport>Esportazione CSV</stat.csvExport>
 	<stat.tabularStats>Statistiche tabellari</stat.tabularStats>
 	<stat.tip1begin>Clicca in un link qui sotto per visualizzare le statistiche in tempo reale, clicca sulla freccetta </stat.tip1begin>
-	<stat.tip1end>per nascolderlo</stat.tip1end>
-	<stat.lastMonthStats>statistiche del mese precedente</stat.lastMonthStats>
+	<stat.tip1end>per nasconderlo</stat.tip1end>
+	<stat.lastMonthStats>Statistiche del mese precedente</stat.lastMonthStats>
 	<stat.userIpText>IP utente durante la ricerca (numero di ricerche per IP unico)</stat.userIpText>
 	<stat.mostSearchedKeywords>Parole chiave piu' ricercate</stat.mostSearchedKeywords>
 	<stat.mostSearchedCategories>Categorie piu' ricercate</stat.mostSearchedCategories>
@@ -1340,8 +1339,8 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 	<enabled>Abilitato</enabled>
 	<notifications>Notifica ai destinatari remoti</notifications>
 
-	<cswServer>Server CSW</cswServer>
-	<cswServerDes>Descrizione server CSW</cswServerDes>
+	<cswServer>Servizio CSW</cswServer>
+	<cswServerDes>Configurazione del servizio CSW</cswServerDes>
 	<cswServerConfig>Configurazione server CSW</cswServerConfig>
 	<cswServerEnable>Abilita</cswServerEnable>
 	<cswServerMetadataPublic>Il metadato inserito è pubblico (Transazione)</cswServerMetadataPublic>
@@ -1351,10 +1350,10 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 	<cswServerAccessConstraints>Vincoli di accesso</cswServerAccessConstraints>
 	<cswServerContact>Contatto</cswServerContact>
 
-	<virtualcswServer>Configura access point CSW virtuale</virtualcswServer>
-	<virtualcswServerDes>Configurazione server CSW virtuale</virtualcswServerDes>
-	<virtualcswServerConfig>Configurazione server CSW virtuali</virtualcswServerConfig>
-	<virtualcswInsert>Configurazione di un server CSW virtuale</virtualcswInsert>
+	<virtualcswServer>Configurazione CSW virtuali</virtualcswServer>
+	<virtualcswServerDes>Configurazione dei punti di accesso CSW virtuali</virtualcswServerDes>
+	<virtualcswServerConfig>Configurazione dei servizi CSW virtuali</virtualcswServerConfig>
+	<virtualcswInsert>Configurazione di servizio CSW virtuale</virtualcswInsert>
 	<virtualcswServiceName>Nome del servizio</virtualcswServiceName>
 	<virtualcswServiceDescription>Descrizione del servizio</virtualcswServiceDescription>
 	<virtualcswClassName>Classe</virtualcswClassName>
@@ -1367,7 +1366,7 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 	<virtualcswClassnameMandatory>Il nome della classe è obbligatorio.</virtualcswClassnameMandatory>
 	<virtualcswServiceNameStartsWith>Il nome del servizio deve iniziare per \"csw-\".</virtualcswServiceNameStartsWith>
 	
-	<virtualcswUpdateService>Aggiorna un server CSW virtuale</virtualcswUpdateService>
+	<virtualcswUpdateService>Modifica un server CSW virtuale</virtualcswUpdateService>
 	
 	<virtualcswAny>Testo libero</virtualcswAny>
 	<virtualcswTitle>Titolo</virtualcswTitle>
