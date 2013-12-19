@@ -293,18 +293,18 @@
           
           <xsl:choose>
             <xsl:when test="@use = 'textarea'">
-              <textarea class="form-control" id="{$id}_{@label}"></textarea>
+              <textarea class="form-control input-sm" id="{$id}_{@label}"></textarea>
             </xsl:when>
             <xsl:otherwise>
-              <input class="form-control" type="{@use}" value="" id="{$id}_{@label}"/>
+              <input class="" type="{@use}" value="" id="{$id}_{@label}"/>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:for-each>
         
         <xsl:if test="not($isExisting)">
-          <input class="form-control gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
+          <input class=" gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
         </xsl:if>
-        <textarea class="form-control gn-debug" name="{$id}" data-gn-template-field="{$id}"
+        <textarea class="form-control input-sm gn-debug" name="{$id}" data-gn-template-field="{$id}"
           data-keys="{string-join($template/values/key/@label, '#')}"
           data-values="{if ($keyValues) then string-join($keyValues/value, '#') else ''}">
           <xsl:copy-of select="$template/snippet/*"/>
@@ -466,7 +466,7 @@
 
     <xsl:choose>
       <xsl:when test="$type = 'textarea'">
-        <textarea class="form-control" id="gn-field-{$editInfo/@ref}" name="_{$name}">
+        <textarea class="form-control input-sm" id="gn-field-{$editInfo/@ref}" name="_{$name}">
           <xsl:if test="$isRequired">
             <xsl:attribute name="required" select="'required'"/>
           </xsl:if>
@@ -477,7 +477,7 @@
         </textarea>
       </xsl:when>
       <xsl:when test="$type = 'select'">
-        <select class="form-control" id="gn-field-{$editInfo/@ref}" name="_{$name}">
+        <select class="" id="gn-field-{$editInfo/@ref}" name="_{$name}">
           <xsl:if test="$isRequired">
             <xsl:attribute name="required" select="'required'"/>
           </xsl:if>
@@ -536,7 +536,7 @@
       <xsl:otherwise>
         
         <xsl:variable name="input">
-          <input class="form-control " 
+          <input class=" " 
             id="gn-field-{$editInfo/@ref}" 
             name="_{$name}" 
             value="{$valueToEdit}">
@@ -673,7 +673,7 @@
             
             <xsl:variable name="attributeCodeList" select="gn-fn-metadata:getCodeListValues($schema, $attributeName, $codelists)"/>
             
-            <select class="form-control" name="{$fieldName}">
+            <select class="" name="{$fieldName}">
               <xsl:for-each select="$attributeSpec/gn:text">
                 <xsl:variable name="optionValue" select="@value"/>
                 
@@ -691,7 +691,7 @@
             </select>
           </xsl:when>
           <xsl:otherwise>
-            <input type="text" class="form-control" name="{$fieldName}" value="{$attributeValue}"/>
+            <input type="text" class="" name="{$fieldName}" value="{$attributeValue}"/>
           </xsl:otherwise>
         </xsl:choose>
       </div>
