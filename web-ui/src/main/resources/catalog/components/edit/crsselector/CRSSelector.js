@@ -9,9 +9,9 @@
    */
   module.directive('gnCrsSelector',
       ['$rootScope', '$timeout', '$http',
-        'gnMetadataManagerService',
+        'gnMetadataManagerService', 'gnEditorXMLService',
         function($rootScope, $timeout, $http,
-            gnMetadataManagerService) {
+            gnMetadataManagerService, gnEditorXMLService) {
 
          return {
            restrict: 'A',
@@ -53,7 +53,7 @@
              scope.$watch('filter', scope.search);
 
              scope.addCRS = function(crs) {
-               scope.snippet = gnMetadataManagerService.buildCRSXML(crs);
+               scope.snippet = gnEditorXMLService.buildCRSXML(crs);
                scope.crsResults = [];
 
                $timeout(function() {
