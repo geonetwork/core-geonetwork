@@ -116,7 +116,7 @@ x-layout-cmini-east {
   width: 80%;
   height: 250px;
 }
-.latest * input[type='checkbox'] {
+.latest * span.checkbox {
   display: none;
 }
 
