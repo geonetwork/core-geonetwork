@@ -485,6 +485,7 @@ GeoNetwork.Lang.en = {
     'relatedservices': 'Related services',
     'relatedparent': 'Parent',
     'relatedsibling': 'Related records',
+    'relatedassociated': 'Related records',
     'relateddatasets': 'Related datasets',
     'relatedchildren': 'Children',
     'relatedrelated': 'Feature catalogue/dataset link',
