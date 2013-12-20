@@ -103,7 +103,7 @@
         <section xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo" 
           or="referenceSystemInfo" in="/gmd:MD_Metadata"/>
       </tab>
-      <tab id="contentInfo">
+      <tab id="contentInfo" toggle="true">
         <section xpath="/gmd:MD_Metadata/gmd:contentInfo" 
           or="contentInfo" in="/gmd:MD_Metadata"/>
       </tab>
