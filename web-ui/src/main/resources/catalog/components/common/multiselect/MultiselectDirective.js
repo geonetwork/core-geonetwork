@@ -55,17 +55,17 @@
             if (!k) {
               angular.forEach(scope.currentSelectionLeft, function(value) {
                 elementsToAdd.push($.grep(scope.choices, function(n) {
-                  return n[getLabelFn]() === value;
+                  return scope.getLabel(n) === value;
                 })[0]);
               });
             } else {
               elementsToAdd.push(k);
             }
 
-            angular.forEach(elementsToAdd, function(k) {
-              scope.selected.push(k);
+            angular.forEach(elementsToAdd, function(e) {
+              scope.selected.push(e);
               scope.choices = $.grep(scope.choices, function(n) {
-                return n !== k;
+                return scope.getLabel(n) !== scope.getLabel(e);
               });
             });
 
@@ -77,10 +77,10 @@
 
           scope.unselect = function(k) {
             var elementsToRemove = k ?
-                [k[getLabelFn]()] : scope.currentSelectionRight;
+                [scope.getLabel(k)] : scope.currentSelectionRight;
             scope.selected = $.grep(scope.selected, function(n) {
               var toUnselect =
-                  $.inArray(n[getLabelFn](), elementsToRemove) !== -1;
+                  $.inArray(scope.getLabel(n), elementsToRemove) !== -1;
               if (toUnselect) {
                 scope.choices.push(n);
               }
