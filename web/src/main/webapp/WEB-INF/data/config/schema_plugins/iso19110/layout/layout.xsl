@@ -57,10 +57,8 @@
     match="gfc:*[gfc:FC_FeatureType]|
     gfc:*[gfc:FC_AssociationRole]|
     gfc:*[gfc:FC_AssociationOperation]|
-    gfc:producer|
-    gfc:carrierOfCharacteristics|
-    gfc:listedValue|gfc:constrainedBy|gfc:inheritsFrom|gfc:inheritsTo|
-		*[namespace-uri(.) != $gnUri and $isFlatMode = false() and gfc:*]">
+    *[name() = $editorConfig/editor/fieldsWithFieldset/name]|
+    *[namespace-uri(.) != $gnUri and $isFlatMode = false() and gfc:*]">
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>

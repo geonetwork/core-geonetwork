@@ -113,7 +113,7 @@ GeoNetwork.Templates = Ext.extend(Ext.XTemplate, {
     }
 });
 
-GeoNetwork.Templates.SHORT_TITLE ='<h1><input type="checkbox" <tpl if="selected==\'true\'">checked="true"</tpl> class="selector" onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/>&nbsp;<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{[Ext.util.Format.ellipsis(values.title, 50, true)]}</a>' +
+GeoNetwork.Templates.SHORT_TITLE ='<h1><span class="checkbox"><input type="checkbox" <tpl if="selected==\'true\'">checked="true"</tpl> class="selector" onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/>&nbsp;</span><a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{[Ext.util.Format.ellipsis(values.title, 40, true)]}</a>' +
                                     '<span class="md-action-menu"> - <a rel="mdMenu">' + OpenLayers.i18n('mdMenu') + '</a></span></h1>';
 
 GeoNetwork.Templates.TITLE = '<h1><input type="checkbox" <tpl if="selected==\'true\'">checked="true"</tpl> class="selector" onclick="javascript:catalogue.metadataSelect((this.checked?\'add\':\'remove\'), [\'{uuid}\']);"/>&nbsp;<a href="#" onclick="javascript:catalogue.metadataShow(\'{uuid}\');return false;">{title}</a>' +

@@ -11,7 +11,16 @@
     
     <for name="gfc:producer" addDirective="data-gn-directory-entry-selector"/>
   </fields>
-
+  
+  <fieldsWithFieldset>
+    <name>gfc:producer</name>
+    <name>gfc:carrierOfCharacteristics</name>
+    <name>gfc:listedValue</name>
+    <name>gfc:constrainedBy</name>
+    <name>gfc:inheritsFrom</name>
+    <name>gfc:inheritsTo</name>
+  </fieldsWithFieldset>
+  
   <!-- View configuration -->
   <views>
     <view name="default">

@@ -91,8 +91,8 @@
 
 
         window.onbeforeunload = function() {
-          // TODO: could be better to provide cancelAndClose
-          //and saveAndClose button
+          // TODO: could be better to provide
+          // cancelAndClose and saveAndClose button
           return $translate('beforeUnloadEditor',
               {timeAgo: moment($scope.editorConfig.savedTime).fromNow()});
         };

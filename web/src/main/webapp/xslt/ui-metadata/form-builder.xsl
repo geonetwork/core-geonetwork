@@ -106,7 +106,8 @@
         <div class="form-group {if ($isRequired) then 'gn-required' else ''}" id="gn-el-{$editInfo/@ref}">
           <label for="gn-field-{$editInfo/@ref}"
             class="col-lg-2 control-label" 
-            data-gn-field-tooltip="{$schema}|{name(.)}|{name(..)}|{$xpath}">
+            data-gn-field-tooltip="{$schema}|{name(.)}|{name(..)}|{$xpath}"
+            data-placement="{$editorTooltipPlacement}">
             <xsl:value-of select="$label"/>
           </label>
 
@@ -213,7 +214,7 @@
     <fieldset id="{concat('gn-el-', $editInfo/@ref)}" 
       class="{if ($hasXlink) then 'gn-has-xlink' else ''}">
 
-      <legend class="{$cls}" data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|" data-placement="left">
+      <legend class="{$cls}" data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|" data-placement="{$editorTooltipPlacement}">
         <xsl:if test="$xpath and $withXPath">
           <xsl:attribute name="data-gn-xpath" select="$xpath"/>
         </xsl:if>
@@ -356,7 +357,8 @@
       <!-- This element is replaced by the content received when clicking add -->
       <div class="form-group" id="gn-el-{$id}">
         <label class="col-lg-2 control-label"
-          data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
+          data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|"
+          data-placement="{$editorTooltipPlacement}">
           <xsl:if test="normalize-space($label) != ''">
                   <xsl:value-of select="$label"/>
           </xsl:if>

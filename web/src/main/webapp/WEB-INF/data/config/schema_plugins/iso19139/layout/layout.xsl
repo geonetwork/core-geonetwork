@@ -54,11 +54,8 @@
     </xsl:apply-templates>
   </xsl:template>
 
-  <!-- Boxed element -->
-  <!-- Could be nice to externalize TODO
-  <xsl:template mode="mode-iso19139" priority="200"
-      match="*[gn-fn-core:contains-any-of(name(.), ('gmd:MD_Metadata', 'gmd:identificationInfo', 'gmd:distributionInfo'))]|
-              *[namespace-uri(.) != $gnUri and $isFlatMode = false() and gmd:* and not(gco:CharacterString)]">
+  <!-- Boxed element
+    
       Details about the last line :
       * namespace-uri(.) != $gnUri: Only take into account profile's element 
       * and $isFlatMode = false(): In flat mode, don't box any
@@ -66,41 +63,12 @@
       * and not(gco:CharacterString): Don't take into account those having gco:CharacterString (eg. multilingual elements)
   -->
   <xsl:template mode="mode-iso19139" priority="200"
-    match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']|
-		gmd:identificationInfo|
-		gmd:distributionInfo|
-		gmd:portrayalCatalogueInfo|
-		gmd:portrayalCatalogueCitation|
-		gmd:thesaurusName|
-		*[name(..)='gmd:resourceConstraints']|
-		gmd:spatialRepresentationInfo|
-		gmd:pointOfContact|
-		gmd:contact|
-		gmd:dataQualityInfo|
-		gmd:contentInfo|
-		gmd:distributionFormat|
-		gmd:referenceSystemInfo|
-		gmd:spatialResolution|
-		gmd:offLine|
-		gmd:onLine|
-		gmd:address|
-		gmd:projection|
-		gmd:ellipsoid|
-		gmd:extent[name(..)!='gmd:EX_TemporalExtent']|
-		gmd:attributes|
-		gmd:verticalCRS|
-		gmd:geographicBox|
-		gmd:EX_TemporalExtent|
-		gmd:MD_Distributor|
-		srv:containsOperations|
-		srv:SV_CoupledResource|
-		gmd:metadataConstraints|
-		gmd:aggregationInfo|
-		gmd:report/*|
-		gmd:result/*|
-		gmd:processStep|
-		gmd:lineage|
-		*[namespace-uri(.) != $gnUri and $isFlatMode = false() and gmd:* and not(gco:CharacterString)]">
+    match="*[name() = $editorConfig/editor/fieldsWithFieldset/name 
+    or @gco:isoType = $editorConfig/editor/fieldsWithFieldset/name]|
+      gmd:report/*|
+      gmd:result/*|
+      gmd:extent[name(..)!='gmd:EX_TemporalExtent']|
+      *[namespace-uri(.) != $gnUri and $isFlatMode = false() and gmd:* and not(gco:CharacterString)]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     

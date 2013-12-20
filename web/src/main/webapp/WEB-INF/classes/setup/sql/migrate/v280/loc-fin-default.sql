@@ -1,12 +1,12 @@
 -- ISO 3 letter code migration
 INSERT INTO Languages VALUES ('fin','Suomi', 'y', 'n');
 
-UPDATE CategoriesDes (iddes, langid, label)             SET langid='fin' WHERE langid='fi';
+UPDATE CategoriesDes             SET langid='fin' WHERE langid='fi';
 UPDATE IsoLanguagesDes           SET langid='fin' WHERE langid='fi';
 UPDATE RegionsDes                SET langid='fin' WHERE langid='fi';
-UPDATE GroupsDes (iddes, langid, label)                 SET langid='fin' WHERE langid='fi';
+UPDATE GroupsDes                 SET langid='fin' WHERE langid='fi';
 UPDATE OperationsDes             SET langid='fin' WHERE langid='fi';
-UPDATE StatusValuesDes  (iddes, langid, label)           SET langid='fin' WHERE langid='fi';
+UPDATE StatusValuesDes           SET langid='fin' WHERE langid='fi';
 UPDATE CswServerCapabilitiesInfo SET langid='fin' WHERE langid='fi';
 DELETE FROM Languages WHERE id='fi';
 

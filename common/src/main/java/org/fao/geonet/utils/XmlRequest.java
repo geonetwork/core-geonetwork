@@ -113,7 +113,7 @@ public class XmlRequest extends AbstractHttpRequest {
 
 		catch(JDOMException e)
 		{
-			throw new BadXmlResponseEx("Response: " + new String(data, "UTF8") + " (from URI " + httpMethod.getURI() + ")");
+			throw new BadXmlResponseEx("Response: '" + new String(data, "UTF8") + "' (from URI " + httpMethod.getURI() + ")");
 		}
 
 		finally

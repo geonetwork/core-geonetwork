@@ -50,6 +50,40 @@
   </fields>
 
 
+  <fieldsWithFieldset>
+    <name>gmd:MD_Metadata</name>
+    <name>gmd:identificationInfo</name>
+    <name>gmd:distributionInfo</name>
+    <name>gmd:portrayalCatalogueInfo</name>
+    <name>gmd:portrayalCatalogueCitation</name>
+    <name>gmd:thesaurusName</name>
+    <name>gmd:spatialRepresentationInfo</name>
+    <name>gmd:pointOfContact</name>
+    <name>gmd:contact</name>
+    <name>gmd:citedResponsibleParty</name>
+    <name>gmd:dataQualityInfo</name>
+    <name>gmd:contentInfo</name>
+    <name>gmd:distributionFormat</name>
+    <name>gmd:referenceSystemInfo</name>
+    <name>gmd:spatialResolution</name>
+    <name>gmd:offLine</name>
+    <name>gmd:onLine</name>
+    <name>gmd:address</name>
+    <name>gmd:projection</name>
+    <name>gmd:ellipsoid</name>
+    <name>gmd:attributes</name>
+    <name>gmd:verticalCRS</name>
+    <name>gmd:geographicBox</name>
+    <name>gmd:EX_TemporalExtent</name>
+    <name>gmd:MD_Distributor</name>
+    <name>srv:containsOperations</name>
+    <name>srv:SV_CoupledResource</name>
+    <name>gmd:metadataConstraints</name>
+    <name>gmd:aggregationInfo</name>
+    <name>gmd:processStep</name>
+    <name>gmd:lineage</name>
+  </fieldsWithFieldset>
+
   <!-- View configuration -->
   <views>
     <view name="default">
@@ -103,7 +137,7 @@
         <section xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo" 
           or="referenceSystemInfo" in="/gmd:MD_Metadata"/>
       </tab>
-      <tab id="contentInfo">
+      <tab id="contentInfo" toggle="true">
         <section xpath="/gmd:MD_Metadata/gmd:contentInfo" 
           or="contentInfo" in="/gmd:MD_Metadata"/>
       </tab>

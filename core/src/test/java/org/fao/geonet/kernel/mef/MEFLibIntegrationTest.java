@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 import static junit.framework.Assert.assertNotNull;
@@ -93,10 +95,13 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
         public ImportMetadata invoke() throws Exception {
             testClass.loginAsAdmin(context);
 
-            final File resource = new File(MEFLibIntegrationTest.class.getResource("mef1-example.mef").getFile());
+            InputStream stream = MEFLibIntegrationTest.class.getResourceAsStream("mef1-example.mef");
+            final File mefTestFile = File.createTempFile("mefTestFile", ".mef");
+            FileUtils.copyInputStreamToFile(stream, mefTestFile);
+            stream.close();
 
             Element params = new Element("request");
-            metadataIds = MEFLib.doImport(params, context, resource, testClass.getStyleSheets());
+            metadataIds = MEFLib.doImport(params, context, mefTestFile, testClass.getStyleSheets());
             return this;
         }
     }
