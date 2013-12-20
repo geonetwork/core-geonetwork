@@ -1,44 +1,49 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <i class="fa fa-pencil"></i><span data-translate="">drawbbox</span>
-  </div>
-  <div class="panel-body">
-    <div class="container">
-      <div class="form-group col-xs-2">
-        <button class="btn btn-success" ng-click="renderMap()">
-          <i class="fa fa-pencil"></i>render
-        </button>
-        <button class="btn btn-warning" ng-click="drawMap()">
-          <i class="fa fa-pencil"></i>draw
-        </button>
-      </div>
-      <div class="form-group col-xs-2">
-        <label for="drawbbox-top">top</label> <input data-ng-model="top" name="{{topRef}}"
-          type="number" class="form-control" id="drawbbox-top"
-          placeholder="top">
-      </div>
-      <div class="form-group col-xs-2">
-        <label for="drawbbox-left">left</label> <input name="{{leftRef}}"
-          data-ng-model="left" type="number" class="form-control"
-          id="drawbbox-left" placeholder="left">
-      </div>
-      <div class="form-group col-xs-2">
-        <label for="drawbbox-bottom">bottom</label> <input name="{{bottomRef}}" type="number"
-          data-ng-model="bottom" class="form-control"
-          id="drawbbox-bottom" placeholder="bottom">
-      </div>
-      <div class="form-group col-xs-2">
-        <label for="drawbbox-right">right</label> <input
-          data-ng-model="right" class="form-control" name="{{rightRef}}"
-          type="number" id="drawbbox-right" placeholder="right">
-      </div>
+<div class="gn-drawmap-panel">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-pencil"></i><span data-translate="">drawbbox</span>
     </div>
-    <div class="container" id="drawbbox-map">
-      <div>
-        <div id="map"
-          style="border: 1px black solid; width: 300px; height: 300px"></div>
-      </div>
+    <div class="panel-body">
+      <button class="btn btn-warning" ng-click="drawMap()">
+        <i class="fa fa-pencil"></i>draw
+      </button>
+      <table class="text-center">
+        <tr align="center">
+          <td colspan="3"><div class="form-group">
+              <label for="drawbbox-top">top</label> <input
+                data-ng-model="top" name="{{topRef}}" type="number"
+                id="drawbbox-top" placeholder="top" />
+          </div></td>
+        </tr>
+        <tr valign="middle"  align="center">
+          <td class="col-left">
+            <div class="form-group">
+              <label for="drawbbox-left">left</label> <input
+                name="{{leftRef}}" data-ng-model="left" type="number"
+                id="drawbbox-left" placeholder="left" />
+            </div>
+          </td>
+          <td class="col-middle">
+            <div id="map" class="map"></div>
+          </td>
+          <td class="col-right">
+            <div class="form-group">
+              <label for="drawbbox-right">right</label> <input
+                data-ng-model="right"
+                name="{{rightRef}}" type="number" id="drawbbox-right"
+                placeholder="right" />
+            </div>
+          </td>
+        </tr>
+        <tr align="center">
+          <td colspan="3">
+            <div class="form-group">
+            <label for="drawbbox-bottom">bottom</label> <input
+              name="{{bottomRef}}" data-ng-model="left" type="number"
+              id="drawbbox-bottom" placeholder="bottom"/>
+          </div></td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>
-
