@@ -50,7 +50,7 @@
   </fields>
 
 
-  <fieldsetFor>
+  <fieldsWithFieldset>
     <name>gmd:MD_Metadata</name>
     <name>gmd:identificationInfo</name>
     <name>gmd:distributionInfo</name>
@@ -82,7 +82,7 @@
     <name>gmd:aggregationInfo</name>
     <name>gmd:processStep</name>
     <name>gmd:lineage</name>
-  </fieldsetFor>
+  </fieldsWithFieldset>
 
   <!-- View configuration -->
   <views>
