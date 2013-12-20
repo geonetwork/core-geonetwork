@@ -2,10 +2,12 @@ package org.fao.geonet.utils;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -115,27 +117,23 @@ public class GeonetHttpRequestFactory {
     }
 
     public ClientHttpResponse execute(HttpUriRequest request, Function<HttpClientBuilder, Void> configurator) throws IOException {
-        CloseableHttpClient httpClient = null;
-        try {
             final HttpClientBuilder builder = HttpClientBuilder.create();
             builder.setRedirectStrategy(new LaxRedirectStrategy());
             configurator.apply(builder);
 
-            httpClient = builder.build();
-            return new AdaptingResponse(httpClient.execute(request));
-        } finally {
-            if (httpClient != null) {
-                httpClient.close();
-            }
-        }
+            builder.disableContentCompression();
+            CloseableHttpClient httpClient = builder.build();
+            return new AdaptingResponse(httpClient, httpClient.execute(request));
     }
 
     private static class AdaptingResponse extends AbstractClientHttpResponse {
 
         private final CloseableHttpResponse _response;
+        private final CloseableHttpClient _client;
 
-        public AdaptingResponse(CloseableHttpResponse response) {
+        public AdaptingResponse(CloseableHttpClient client, CloseableHttpResponse response) {
             this._response = response;
+            this._client = client;
         }
 
         @Override
@@ -150,11 +148,8 @@ public class GeonetHttpRequestFactory {
 
         @Override
         public void close() {
-            try {
-                _response.close();
-            } catch (IOException e) {
-                Log.error("org.fao.geonet", "Failure closing HttpResponse", e);
-            }
+            IOUtils.closeQuietly(_response);
+            IOUtils.closeQuietly(_client);
         }
 
         @Override

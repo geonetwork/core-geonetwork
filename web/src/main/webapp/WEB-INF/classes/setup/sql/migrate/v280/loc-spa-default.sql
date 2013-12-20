@@ -1,12 +1,12 @@
 -- ISO 3 letter code migration
 INSERT INTO Languages VALUES ('spa','Español', 'y', 'n');
 
-UPDATE CategoriesDes (iddes, langid, label)             SET langid='spa' WHERE langid='es';
+UPDATE CategoriesDes             SET langid='spa' WHERE langid='es';
 UPDATE IsoLanguagesDes           SET langid='spa' WHERE langid='es';
 UPDATE RegionsDes                SET langid='spa' WHERE langid='es';
-UPDATE GroupsDes (iddes, langid, label)                 SET langid='spa' WHERE langid='es';
+UPDATE GroupsDes                 SET langid='spa' WHERE langid='es';
 UPDATE OperationsDes             SET langid='spa' WHERE langid='es';
-UPDATE StatusValuesDes  (iddes, langid, label)           SET langid='spa' WHERE langid='es';
+UPDATE StatusValuesDes           SET langid='spa' WHERE langid='es';
 UPDATE CswServerCapabilitiesInfo SET langid='spa' WHERE langid='es';
 DELETE FROM Languages WHERE id='es';
 

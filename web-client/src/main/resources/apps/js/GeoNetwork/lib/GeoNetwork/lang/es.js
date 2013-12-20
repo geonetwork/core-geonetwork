@@ -445,6 +445,8 @@ GeoNetwork.Lang.es = {
     'advancedSearchOptions':'Criterios avanzados',
     'relatedservices':'Servicios relacionados con',
     'relatedchildren':'Hijos',
+    'relatedsibling': 'Related records',
+    'relatedassociated': 'Related records',
     'relatedfcats':'Catálogo de Funciones Relacionadas',
     'relatedhasfeaturecat':'Conjuntos de datos',
     'relatedsources':'Registros de origen',

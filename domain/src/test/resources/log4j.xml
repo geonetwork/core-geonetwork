@@ -14,10 +14,10 @@
         <priority value="ERROR" />
     </category>
     <category name="org.hibernate.SQL">
-        <priority value="DEBUG"/>
+        <priority value="WARN"/>
     </category>
     <category name="org.gao.geonet.database">
-        <priority value="DEBUG"/>
+        <priority value="WARN"/>
     </category>
     <category name="org.hibernate.type">
         <priority value="WARN"/>
