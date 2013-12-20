@@ -483,6 +483,7 @@ GeoNetwork.Lang.fr = {
     'relatedservices': 'Services associés',
     'relatedparent': 'Métadonnée parent',
     'relatedsibling': 'Ressources associées',
+    'relatedassociated': 'Ressources associées',
     'relateddatasets': 'Métadonnées associées',
     'relatedchildren': 'Enfants',
     'relatedrelated': 'Relation catalogue d\'attributs/données',

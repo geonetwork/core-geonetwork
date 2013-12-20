@@ -452,6 +452,8 @@ GeoNetwork.Lang.pl = {
     'advancedSearchOptions': 'Kryteria zaawansowane',
     'relatedservices': 'Powiązane usługi',
     'relatedchildren': 'Dzieci',
+    'relatedsibling': 'Related records',
+    'relatedassociated': 'Related records',
     'relatedfcats': 'Powiązany katalog obiektów',
     'relatedhasfeaturecat': 'Zbiory danych',
     'relatedsources': 'Źródłowe zbiory danych',

@@ -61,42 +61,99 @@ import java.util.List;
  * <li>could not be readable by current user.</li>
  * <li>could not be visible by current user.</li>
  * </ul>
- *
+ * so results depend on user privileges for related records.
+ * 
  * Parameters:
  * <ul>
- * <li>type: service|children|related|parent|dataset|source|fcat|null (ie. all)</li>
+ * <li>type: online|thumbnail|service|dataset|parent|children|source|fcat|siblings|associated|related|null (ie. all)</li>
  * <li>from: start record</li>
- * <li>to: end record</li>
- * <li>id or uuid: could be optional if call in Jeeves service forward call. In
- * that case geonet:info/uuid is used.</li>
+ * <li>to: end record (default 1000)</li>
+ * <li>id or uuid: could be optional if call in Jeeves service forward call. 
+ *  In that case geonet:info/uuid is used.</li>
  * </ul>
- *
+ * 
+ * In general, relations are defined in ISO19139 records an ISO profiles. The
+ * target document may be in a different schema (eg. ISO19110 for feature
+ * catalog, Dublin core for cross reference to a document). 
+ * 
+ * 
+ * Note about each type:
+ * <h3>online</h3>
+ * List of online resources (see <schema>/process/extract-relations.xsl for details).
+ * 
+ * <h3>thumbnail</h3>
+ * List of thumbnails (see <schema>/process/extract-relations.xsl for details).
+ * 
+ * <h3>service</h3>
+ * Only apply to ISO19139 and ISO profiles.
+ * Search for all records having an operatesOn element pointing to the requested 
+ * metadata record UUID (see indexing to know how operatesOn element is indexed).
+ * 
+ * <h3>parent</h3>
+ * Only apply to ISO19139 and ISO profiles.
+ * Get the parentIdentifier from the requested 
+ * metadata record
+ * 
+ * <h3>children</h3>
+ * Only apply to ISO19139 and ISO profiles.
+ * Search for all records having an parentUuid element pointing to the requested 
+ * metadata record UUID (see indexing to know how operatesOn element is indexed).
+ * 
+ * 
+ * <h3>dataset</h3>
+ * Only apply to ISO19139 and ISO profiles.
+ * Get all records defined in operatesOn element (the current metadata is supposed
+ * to be a service metadata in that case).
+ * 
+ * <h3>source</h3>
+ * Only apply to ISO19139 and ISO profiles.
+ * Get all records defined in source element (in data quality section).
+ * 
+ * <h3>fcat</h3>
+ * Only apply to ISO19110, ISO19139 and ISO profiles.
+ * Get all records defined in featureCatalogueCitation.
+ * 
+ * <h3>siblings</h3>
+ * Only apply to ISO19139 and ISO profiles.
+ * Get all aggregationInfo records. This relation provides
+ * information about association type and initiative type.
+ * 
+ * <h3>associated</h3>
+ * Only apply to ISO19139 and ISO profiles.
+ * Search for all records having an agg_associated field pointing to the requested
+ * metadata record (inverse direction of sibilings). This relation does not
+ * inform about association type and initiative type.
+ * 
+ * <h3>related</h3>
+ * (deprecated) Use to link ISO19110 and ISO19139 record.
+ * 
+ * 
  */
 public class GetRelated implements Service {
 
     private ServiceConfig _config;
-    private static Namespace gmd = Namespace.getNamespace("gmd",
-            "http://www.isotc211.org/2005/gmd");
-    private static Namespace srv = Namespace.getNamespace("srv",
-            "http://www.isotc211.org/2005/srv");
-    private static Namespace gco = Namespace.getNamespace("gco",
-            "http://www.isotc211.org/2005/gco");
+    private static Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+    private static Namespace srv = Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
+    private static Namespace gco = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
+    private static final String XPATH_FOR_AGGRGATIONINFO = "*//gmd:aggregationInfo/*" + 
+            "[gmd:aggregateDataSetIdentifier/*/gmd:code " + 
+            "and gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue != '' " + 
+            "and gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue!='']";
     private static List<Namespace> nsList = Arrays.asList(gmd, gco, srv);
-
+    private static String maxRecords = "1000";
+    private static boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+    
     public void init(String appPath, ServiceConfig config) throws Exception {
         _config = config;
     }
 
-    public Element exec(Element params, ServiceContext context)
-            throws Exception {
-        // Check for one of service|children|related|null (ie. all)
+    public Element exec(Element params, ServiceContext context) throws Exception {
         String type = Util.getParam(params, "type", "");
         String fast = Util.getParam(params, "fast", "true");
         String from = Util.getParam(params, "from", "1");
-        String to = Util.getParam(params, "to", "1000");
+        String to = Util.getParam(params, "to", maxRecords);
 
-        Log.info(Geonet.SEARCH_ENGINE,
-                "GuiService param is " + _config.getValue("guiService"));
+        Log.info(Geonet.SEARCH_ENGINE, "GuiService param is " + _config.getValue("guiService"));
 
         Element info = params.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
         int id;
@@ -124,81 +181,80 @@ public class GetRelated implements Service {
 
         Element relatedRecords = new Element("relations");
 
+        // Get the cached version (use by classic GUI)
         Element md = Show.getCached(context.getUserSession(), Integer.toString(id));
+        if(md == null) {
+            md = gc.getDataManager().getMetadata(context,
+                    String.valueOf(id), forEditing, withValidationErrors,
+                    keepXlinkAttributes);
+        }
+        
         if (type.equals("") || type.contains("children")) {
-            relatedRecords.addContent(search(uuid, "children", context, from,
-                    to, fast));
+            relatedRecords.addContent(search(uuid, "children", context, from, to, fast));
         }
+
+        // Get parent record from this record
         if (type.equals("") || type.contains("parent")) {
-            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-            if(md == null) {
-                md = gc.getDataManager().getMetadata(context,
-                        String.valueOf(id), forEditing, withValidationErrors,
-                        keepXlinkAttributes);
-            }
-            if (md != null) {
-                Element parent = md.getChild("parentIdentifier", gmd);
-                if (parent != null) {
-                    String parentUuid = parent.getChildText("CharacterString", gco);
+            Element parent = md.getChild("parentIdentifier", gmd);
+            if (parent != null) {
+                String parentUuid = parent.getChildText("CharacterString", gco);
 
-									if(dbms == null) dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-									Element parentContent = getRecord(parentUuid, context, dbms, dm);
-									if (parentContent != null) {
-										relatedRecords.addContent(new Element("parent")
-											.addContent(new Element("response")
-											.addContent(parentContent)));
-									}
-								}
-            }
+				if(dbms == null) dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+				Element parentContent = getRecord(parentUuid, context, dbms, dm);
+				if (parentContent != null) {
+					relatedRecords.addContent(new Element("parent")
+						.addContent(new Element("response")
+						.addContent(parentContent)));
+				}
+			}
         }
+
+        // Get aggregates from this record
         if (type.equals("") || type.contains("siblings")) {
-            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-            if(md == null) {
-                md = gc.getDataManager().getMetadata(context,
-                        String.valueOf(id), forEditing, withValidationErrors,
-                        keepXlinkAttributes);
-            }
-						Element response = new Element("response");
-            if (md != null) {
-                List<?> sibs = Xml.selectNodes(md, "*//gmd:aggregationInfo/*[gmd:aggregateDataSetIdentifier/*/gmd:code and gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue!='' and gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue!='']", nsList);
-								for (Object o : sibs) {
-									if (o instanceof Element) {
-										Element sib = (Element)o;
-										Element agId = (Element)sib
-														.getChild("aggregateDataSetIdentifier", gmd)
-										        .getChildren().get(0);
-                  	String sibUuid = agId
-														.getChild("code", gmd)
-														.getChildText("CharacterString", gco);
-										String initType = sib.getChild("initiativeType", gmd) 
-																 .getChild("DS_InitiativeTypeCode", gmd).getAttributeValue("codeListValue");
+            Element response = new Element("response");
+            List<?> sibs = Xml
+                    .selectNodes(
+                            md,
+                            XPATH_FOR_AGGRGATIONINFO,
+                            nsList);
+			for (Object o : sibs) {
+				if (o instanceof Element) {
+					Element sib = (Element)o;
+					Element agId = (Element)sib
+									.getChild("aggregateDataSetIdentifier", gmd)
+					        .getChildren().get(0);
+					String sibUuid = agId
+									.getChild("code", gmd)
+									.getChildText("CharacterString", gco);
+					String initType = sib.getChild("initiativeType", gmd) 
+											 .getChild("DS_InitiativeTypeCode", gmd).getAttributeValue("codeListValue");
 
-										if(dbms == null) dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-										Element sibContent = getRecord(sibUuid, context, dbms, dm);
-										if (sibContent != null) {
-											Element sibling = new Element("sibling");
-											sibling.setAttribute("initiative",initType);
-											response.addContent(sibling.addContent(sibContent));
-										}
-									}
-								}
-            }
-						relatedRecords.addContent(new Element("siblings")
-																				.addContent(response));
+					if(dbms == null) {
+						dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+					}
+					Element sibContent = getRecord(sibUuid, context, dbms, dm);
+					if (sibContent != null) {
+						Element sibling = new Element("sibling");
+						sibling.setAttribute("initiative",initType);
+						response.addContent(sibling.addContent(sibContent));
+					}
+				}
+			}
+			relatedRecords.addContent(new Element("siblings").addContent(response));
         }
+
+        // Search for records where an aggregate point to this record
+        if (type.equals("") || type.contains("associated")) {
+            relatedRecords.addContent(search(uuid, "associated", context, from, to, fast));
+        }
+
+        // Search for services
         if (type.equals("") || type.contains("service")) {
-            relatedRecords.addContent(search(uuid, "services", context, from,
-                    to, fast));
+            relatedRecords.addContent(search(uuid, "services", context, from, to, fast));
         }
         // Related record from uuiref attributes in metadata record
         if (type.equals("") || type.contains("dataset")
                 || type.contains("fcat") || type.contains("source")) {
-            boolean forEditing = false, withValidationErrors = false;
-            if(md == null) {
-                md = gc.getDataManager()
-                    .getMetadata(context, String.valueOf(id), forEditing,
-                            withValidationErrors, false);
-            }
 
             // Get datasets related to service search
             if (type.equals("") || type.contains("dataset")) {
@@ -230,6 +286,7 @@ public class GetRelated implements Service {
             }
         }
 
+        // Relation table is preserved for backward compatibility but should not be used anymore.
         if (type.equals("") || type.contains("related")) {
             // Related records could be feature catalogue defined in relation table
             relatedRecords.addContent(new Element("related").addContent(Get.getRelation(id, "full", context)));
@@ -240,16 +297,24 @@ public class GetRelated implements Service {
 
         // XSL transformation is used on the metadata record to extract
         // distribution information or thumbnails
-        if (type.equals("") || type.contains("online") || type.contains("thumbnail")) {
+        if (md != null && (type.equals("") || type.contains("online") || type.contains("thumbnail"))) {
             relatedRecords.addContent(new Element("metadata").addContent((Content) md.clone()));
         }
-        
-        
-        return relatedRecords;
 
+        return relatedRecords;
     }
 
+    /**
+     * Search in metadata all matching element for the filter 
+     * and return a list of uuid separated by or to be used in a
+     * search on uuid.
+     * 
+     * @param md
+     * @param el
+     * @return
+     */
     private StringBuffer filterMetadata(Element md, ElementFilter el) {
+        @SuppressWarnings("unchecked")
         Iterator<Element> i = md.getDescendants(el);
         StringBuffer uuids = new StringBuffer("");
         boolean first = true;
@@ -289,8 +354,11 @@ public class GetRelated implements Service {
                 parameters.addContent(new Element("operatesOn").setText(uuid));
             else if ("hasfeaturecat".equals(type))
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
+            else if ("associated".equals(type))
+                parameters.addContent(new Element("agg_associated").setText(uuid));
             else if ("datasets".equals(type) || "fcats".equals(type) || "sources".equals(type) || "siblings".equals(type))
                 parameters.addContent(new Element("uuid").setText(uuid));
+
             parameters.addContent(new Element("fast").addContent("index"));
             parameters.addContent(new Element("sortBy").addContent("title"));
             parameters.addContent(new Element("sortOrder").addContent("reverse"));
@@ -313,12 +381,9 @@ public class GetRelated implements Service {
 			Element content = null;
 			try {
 				String id = dm.getMetadataId(dbms, uuid);
-				boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-
+				
 				Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
-				content = dm.getMetadata(context, id,
-																	forEditing, withValidationErrors,
-                                	keepXlinkAttributes);
+				content = dm.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 			} catch (Exception e) {
 				if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
 					Log.debug(Geonet.SEARCH_ENGINE, "Metadata "+uuid+" record is not visible for user.");

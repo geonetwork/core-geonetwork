@@ -452,6 +452,8 @@ GeoNetwork.Lang.ca={
     'advancedSearchOptions': 'Criteris avançats',
     'relatedservices': 'Serveis relacionats',
     'relatedchildren': 'Fills',
+    'relatedsibling': 'Related records',
+    'relatedassociated': 'Related records',
     'relatedfcats': 'Catàleg d\'entitats relacionat',
     'relatedhasfeaturecat': 'Conjunt de dades',
     'relatedsources': 'Source datasets',

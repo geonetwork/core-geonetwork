@@ -439,6 +439,8 @@ GeoNetwork.Lang.de = {
 'advancedSearchOptions':'Erweiterte Kriterien',
 'relatedservices':'Related Service',
 'relatedchildren':'Kinder',
+'relatedsibling': 'Related records',
+'relatedassociated': 'Related records',
 'relatedfcats':'In Verbindung stehende Feature-Katalog',
 'relatedhasfeaturecat':'Datensätze',
 'relatedsources':'Quelldatensätze',
