@@ -1,5 +1,5 @@
 (function() {
-  geonet.provide('gn_metadata_manager_service');
+  goog.provide('gn_metadata_manager_service');
 
   var module = angular.module('gn_metadata_manager_service', []);
 

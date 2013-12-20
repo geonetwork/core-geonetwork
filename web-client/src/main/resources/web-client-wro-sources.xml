@@ -28,7 +28,7 @@
             <jsSource webappPath="apps/js/ext-ux/SuperBoxSelect/SuperBoxSelect.js"/>
             <jsSource webappPath="apps/js/ext-ux/CheckColumn.js"/>
 
-            <jsSource webappPath="apps/js/proj4js-compressed.js"/>
+            <jsSource webappPath="apps/js/proj4js-compressed.js" minimize="false"/>
 
 
             <jsSource webappPath="apps/js/OpenLayers/lib/OpenLayers/SingleFile.js"/>

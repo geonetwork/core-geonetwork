@@ -23,12 +23,12 @@ import java.util.*;
  * Date: 11/21/13
  * Time: 11:42 AM
  */
-public class RequireDependencyManagerTest {
-    private RequireDependencyManager _depManager;
+public class ClosureRequireDependencyManagerTest {
+    private ClosureRequireDependencyManager _depManager;
 
     @Before
     public void configureTestFile() throws IOException {
-        this._depManager = new RequireDependencyManager();
+        this._depManager = new ClosureRequireDependencyManager();
         final File rootOfSearch = getJsTestBaseDir();
         final Iterator<File> fileIterator = FileUtils.iterateFiles(rootOfSearch, new String[]{"js"}, true);
 
@@ -36,14 +36,14 @@ public class RequireDependencyManagerTest {
             File file = fileIterator.next();
 
             if (!file.equals(rootOfSearch) && file.getName().endsWith(".js")) {
-                _depManager.addFile(file.getPath().substring(rootOfSearch.getPath().length()), file);
+                _depManager.addFile(file.getPath().substring(rootOfSearch.getPath().length()), file, Collections.<String>emptySet());
             }
         }
 
     }
 
     static File getJsTestBaseDir() {
-        final Class<RequireDependencyManagerTest> cls = RequireDependencyManagerTest
+        final Class<ClosureRequireDependencyManagerTest> cls = ClosureRequireDependencyManagerTest
                 .class;
         final URL resource = cls.getResource(cls.getSimpleName() + ".class");
         if (resource == null) {
@@ -54,42 +54,43 @@ public class RequireDependencyManagerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileDuplicateModuleId() throws Exception {
-        _depManager.addFile("abc", "geonet.provide('1a')");
+        _depManager.addFile("abc", "goog.provide('1a')", Collections.<String>emptySet());
     }
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileNoProvideString() throws Exception {
-        _depManager.addFile("abc", "geonet.provide()");
+        _depManager.addFile("abc", "goog.provide()", Collections.<String>emptySet());
     }
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileNoRequireString() throws Exception {
-        _depManager.addFile("abc", "geonet.require()");
+        _depManager.addFile("abc", "goog.require()", Collections.<String>emptySet());
     }
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileEmptyProvideString() throws Exception {
-        _depManager.addFile("abc", "geonet.provide('')");
+        _depManager.addFile("abc", "goog.provide('')", Collections.<String>emptySet());
     }
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileEmptyRequireString() throws Exception {
-        _depManager.addFile("abc", "geonet.require('')");
+        _depManager.addFile("abc", "goog.require('')", Collections.<String>emptySet());
     }
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileCyclicDependencyGraph() throws Exception {
-        _depManager.addFile("abc", "geonet.provide('xa'); geonet.require('xb')");
-        _depManager.addFile("abc", "geonet.provide('xb'); geonet.require('xa')");
+        _depManager.addFile("abc", "goog.provide('xa'); goog.require('xb')", Collections.<String>emptySet());
+        _depManager.addFile("abc", "goog.provide('xb'); goog.require('xa')", Collections.<String>emptySet());
         _depManager.validateGraph();
     }
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileNoProvide() throws Exception {
-        _depManager.addFile("abc", "geonet.require('ab2'");
+        _depManager.addFile("abc", "goog.require('ab2'", Collections.<String>emptySet());
     }
     @Test(expected = IllegalArgumentException.class)
     public void testAddFileRequiresSelf() throws Exception {
-        _depManager.addFile("abc", "geonet.provide('xa'); geonet.require('xa')");
+        _depManager.addFile("abc", "goog.provide('xa'); goog.require('xa')", Collections.<String>emptySet());
         _depManager.validateGraph();
     }
     @Test
     public void testAddFileRequiresUsesDoubleQuotes() throws Exception {
-        final RequireDependencyManager.Node node = _depManager.addFile("xb", "geonet.provide('xb'); geonet.require(\"3a\")");
+        final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "goog.provide('xb'); goog.require(\"3a\")",
+                Collections.<String>emptySet());
         assertTrue(node.dependencyIds.contains("3a"));
     }
     @Test
@@ -99,14 +100,28 @@ public class RequireDependencyManagerTest {
     }
     @Test
     public void testAddFileProvidesUsesDoubleQuotes() throws Exception {
-        final RequireDependencyManager.Node node = _depManager.addFile("xa", "geonet.provide(\"xa\")");
+        final ClosureRequireDependencyManager.Node node = _depManager.addFile("xa", "goog.provide(\"xa\")", Collections.<String>emptySet());
         Assert.assertEquals("xa", node.id);
         final Set<String> allModuleIds = _depManager.getAllModuleIds();
         assertTrue(allModuleIds.toString(), allModuleIds.contains("xa"));
     }
     @Test
     public void testAddFileProvidesCanBeDeclaredAfterRequire() throws Exception {
-        final RequireDependencyManager.Node node = _depManager.addFile("xb", "geonet.require('3a'); geonet.provide('xb');");
+        final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "goog.require('3a'); goog.provide('xb');", Collections.<String>emptySet());
+        Assert.assertEquals("xb", node.id);
+        assertTrue(node.dependencyIds.contains("3a"));
+
+    }
+    @Test
+    public void testLineEndingInRequireAndProvide() throws Exception {
+        final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "goog.\nrequire('3a'); goog.\n\rprovide('xb');", Collections.<String>emptySet());
+        Assert.assertEquals("xb", node.id);
+        assertTrue(node.dependencyIds.contains("3a"));
+
+    }
+    @Test
+    public void testLineEndingInRequireAndProvide2() throws Exception {
+        final ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "goog\n.require('3a'); goog\n.\rprovide('xb');", Collections.<String>emptySet());
         Assert.assertEquals("xb", node.id);
         assertTrue(node.dependencyIds.contains("3a"));
 
@@ -114,12 +129,25 @@ public class RequireDependencyManagerTest {
 
     @Test
     public void testFindTransitiveDependenciesFor() throws Exception {
+        ClosureRequireDependencyManager.Node node = _depManager.addFile("xb", "goog.provide('xb');", Collections.singleton("xb"));
+        Assert.assertEquals("xb", node.id);
+        assertFalse(node.isMinimized);
+        assertTrue(node.dependencyIds.isEmpty());
+
+        node = _depManager.addFile("xc", "goog.provide('xc');", Collections.singleton("xb"));
+        Assert.assertEquals("xc", node.id);
+        assertTrue(node.isMinimized);
+        assertTrue(node.dependencyIds.isEmpty());
+    }
+
+    @Test
+    public void testIsMinimized() throws Exception {
         List<String> a1Deps = Arrays.asList("3a", "2b", "3c", "3b", "2a");
-        Collection<RequireDependencyManager.Node> depNodes = _depManager.getTransitiveDependenciesFor("1a", false);
-        List<String> actualIds = Lists.transform(Lists.newArrayList(depNodes), new Function<RequireDependencyManager.Node, String>() {
+        Collection<ClosureRequireDependencyManager.Node> depNodes = _depManager.getTransitiveDependenciesFor("1a", false);
+        List<String> actualIds = Lists.transform(Lists.newArrayList(depNodes), new Function<ClosureRequireDependencyManager.Node, String>() {
             @Nullable
             @Override
-            public String apply(@Nonnull RequireDependencyManager.Node input) {
+            public String apply(@Nonnull ClosureRequireDependencyManager.Node input) {
                 return input.id;
             }
         });
@@ -127,10 +155,10 @@ public class RequireDependencyManagerTest {
 
         a1Deps = Arrays.asList("3c", "3a", "2b", "3b", "2a", "1a");
         depNodes = _depManager.getTransitiveDependenciesFor("1b", false);
-        actualIds = Lists.transform(Lists.newArrayList(depNodes), new Function<RequireDependencyManager.Node, String>() {
+        actualIds = Lists.transform(Lists.newArrayList(depNodes), new Function<ClosureRequireDependencyManager.Node, String>() {
             @Nullable
             @Override
-            public String apply(@Nonnull RequireDependencyManager.Node input) {
+            public String apply(@Nonnull ClosureRequireDependencyManager.Node input) {
                 return input.id;
             }
         });

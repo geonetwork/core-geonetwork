@@ -1,5 +1,5 @@
 (function() {
-  geonet.provide('gn_categories_controller');
+  goog.provide('gn_categories_controller');
 
   var module = angular.module('gn_categories_controller',
       []);

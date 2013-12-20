@@ -1,5 +1,5 @@
 (function() {
-  geonet.provide('gn_adminmetadata_controller');
+  goog.provide('gn_adminmetadata_controller');
 
 
   var module = angular.module('gn_adminmetadata_controller',

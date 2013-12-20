@@ -1,5 +1,5 @@
 (function() {
-  geonet.provide('gn_dbtranslation_directive');
+  goog.provide('gn_dbtranslation_directive');
 
   var module = angular.module('gn_dbtranslation_directive', []);
 

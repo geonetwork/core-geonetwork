@@ -1,7 +1,7 @@
 (function() {
-  geonet.provide('gn_scroll_spy_directive');
+  goog.provide('gn_scroll_spy_directive');
 
-  geonet.require('gn_utility_service');
+  goog.require('gn_utility_service');
 
   var module = angular.module('gn_scroll_spy_directive', []);
 

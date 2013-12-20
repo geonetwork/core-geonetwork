@@ -1,5 +1,5 @@
 (function() {
-  geonet.provide('gn_csw_settings_controller');
+  goog.provide('gn_csw_settings_controller');
 
 
   var module = angular.module('gn_csw_settings_controller',

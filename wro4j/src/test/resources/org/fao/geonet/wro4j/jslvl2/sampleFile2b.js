@@ -1,1 +1,1 @@
-geonet.provide('2b');
+goog.provide('2b');

@@ -1,5 +1,5 @@
 (function() {
-  geonet.provide('gn_language_switcher_directive');
+  goog.provide('gn_language_switcher_directive');
 
   var module = angular.module('gn_language_switcher_directive',
       ['pascalprecht.translate']);

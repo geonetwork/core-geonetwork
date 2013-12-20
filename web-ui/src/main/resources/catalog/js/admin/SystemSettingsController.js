@@ -1,5 +1,5 @@
 (function() {
-  geonet.provide('gn_system_settings_controller');
+  goog.provide('gn_system_settings_controller');
 
 
   var module = angular.module('gn_system_settings_controller',

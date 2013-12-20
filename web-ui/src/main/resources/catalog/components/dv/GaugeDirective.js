@@ -1,5 +1,5 @@
 (function() {
-  geonet.provide('gn_gauge_directive');
+  goog.provide('gn_gauge_directive');
 
   var module = angular.module('gn_gauge_directive', []);
 

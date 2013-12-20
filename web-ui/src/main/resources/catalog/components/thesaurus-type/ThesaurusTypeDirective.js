@@ -1,5 +1,5 @@
 (function() {
-  geonet.provide('gn_thesaurus_type_directive');
+  goog.provide('gn_thesaurus_type_directive');
 
   var module = angular.module('gn_thesaurus_type_directive', []);
 

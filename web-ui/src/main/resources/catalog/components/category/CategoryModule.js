@@ -1,7 +1,7 @@
 (function() {
-  geonet.provide('gn_category');
+  goog.provide('gn_category');
 
-  geonet.require('gn_category_directive');
+  goog.require('gn_category_directive');
 
   angular.module('gn_category', [
     'gn_category_directive'

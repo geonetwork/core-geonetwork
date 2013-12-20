@@ -1,5 +1,5 @@
 (function() {
-  geonet.provide('gn_utility_service');
+  goog.provide('gn_utility_service');
 
   var module = angular.module('gn_utility_service', []);
 

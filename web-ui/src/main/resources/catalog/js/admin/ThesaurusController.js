@@ -1,7 +1,7 @@
 (function() {
-  geonet.provide('gn_thesaurus_controller');
+  goog.provide('gn_thesaurus_controller');
 
-  geonet.require('gn_thesaurus_type');
+  goog.require('gn_thesaurus_type');
 
   var module = angular.module('gn_thesaurus_controller',
       ['gn_thesaurus_type', 'blueimp.fileupload']);

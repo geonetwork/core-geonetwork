@@ -1,5 +1,5 @@
 (function() {
-  geonet.provide('gn_standards_controller');
+  goog.provide('gn_standards_controller');
 
 
   var module = angular.module('gn_standards_controller',

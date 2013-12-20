@@ -1,8 +1,8 @@
 (function() {
-  geonet.provide('gn_login');
+  goog.provide('gn_login');
 
-  geonet.require('gn');
-  geonet.require('gn_login_controller');
+  goog.require('gn');
+  goog.require('gn_login_controller');
 
   var module = angular.module('gn_login', [
     'gn',

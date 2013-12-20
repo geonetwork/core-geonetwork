@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * Date: 11/21/13
  * Time: 10:45 AM
  */
-public class RequireDependencyManager {
+public class ClosureRequireDependencyManager {
 
     private static final String ENCODING = System.getProperty("file.encoding", "UTF-8");
     private Map<String, Node> _modules = new HashMap<String, Node>();
@@ -28,14 +28,16 @@ public class RequireDependencyManager {
     /**
      * Add a javascript file to process.
      *
+     *
      * @param path           the path to the file that will be listed in the WRO4J model to identify the javascript.
      * @param javascriptFile the file containing the javascript
+     * @param notMinimized
      * @return a node object representing the javascript file.
      */
     @Nonnull
-    public Node addFile(@Nonnull String path, @Nonnull File javascriptFile) throws IOException {
+    public Node addFile(@Nonnull String path, @Nonnull File javascriptFile, @Nonnull Set<String> notMinimized) throws IOException {
         String javascript = Files.toString(javascriptFile, Charset.forName(ENCODING));
-        return addFile(path, javascript);
+        return addFile(path, javascript, notMinimized);
     }
 
     /**
@@ -46,8 +48,15 @@ public class RequireDependencyManager {
      * @return a node object representing the javascript file.
      */
     @Nonnull
-    public Node addFile(@Nonnull String path, @Nonnull String javascript) {
-        Node node = new Node(path, javascript);
+    public Node addFile(@Nonnull String path, @Nonnull String javascript, @Nonnull Set<String> notMinimized) {
+        boolean isMinimized = true;
+        for (String s : notMinimized) {
+            if (path.endsWith(s)) {
+                isMinimized = false;
+                break;
+            }
+        }
+        Node node = new Node(path, javascript, isMinimized);
         if (_modules.containsKey(node.id)) {
             throw new IllegalArgumentException("Both '" + node.path + "' and '" + _modules.get(node.id) + "' have the same provide id: " +
                                                "" + node.id);
@@ -127,16 +136,18 @@ public class RequireDependencyManager {
      * A node in the Dependency Graph.
      */
     static class Node {
-        private static final String PROVIDES_PATTERN_STRING = "geonet\\.provide\\s*\\(\\s*(.+?)\\s*\\)";
-        private static final String REQUIRE_PATTERN_STRING = "geonet\\.require\\s*\\(\\s*(.+?)\\s*\\)";
+        static final String PROVIDES_PATTERN_STRING = "goog\\s*\\.\\s*provide\\s*\\(\\s*(.+?)\\s*\\)";
+        static final String REQUIRE_PATTERN_STRING = "goog\\s*\\.\\s*require\\s*\\(\\s*(.+?)\\s*\\)";
 
         private static final Pattern SCAN_PATTERN = Pattern.compile("(" + PROVIDES_PATTERN_STRING + ")|(" + REQUIRE_PATTERN_STRING + ")");
         final String id;
         final String path;
         final List<String> dependencyIds = new ArrayList<String>();
+        final boolean isMinimized;
 
-        private Node(@Nonnull String path, @Nonnull String javascript) {
+        private Node(@Nonnull String path, @Nonnull String javascript, boolean isMinimized) {
             this.path = path;
+            this.isMinimized = isMinimized;
             this.id = parseJavascript(path, javascript);
         }
 
@@ -152,17 +163,17 @@ public class RequireDependencyManager {
                 }
                 String currentId = match.substring(idStartIdx, idEndIdx);
                 idNonEmpty(match, currentId);
-                if (match.contains("geonet.require")) {
+                if (match.contains("goog") && match.contains("require")) {
                     dependencyIds.add(currentId);
                 } else {
                     if (id != null) {
-                        throw new IllegalArgumentException("More than one 'geonet.provide' was found in the javascript file: " + path);
+                        throw new IllegalArgumentException("More than one 'goog.provide' was found in the javascript file: " + path);
                     }
                     id = currentId;
                 }
             }
             if (id == null) {
-                throw new IllegalArgumentException("No 'geonet.provide' command was declared");
+                throw new IllegalArgumentException("No 'goog.provide' command was declared in javascript file: " + path);
             }
             return id;
         }
@@ -173,11 +184,6 @@ public class RequireDependencyManager {
             }
         }
 
-        private void idExists(String match, Matcher requireMatcher) {
-            if (!requireMatcher.find()) {
-                throw new IllegalArgumentException(match + " is not a legal declaration");
-            }
-        }
 
         @Override
         public boolean equals(Object o) {

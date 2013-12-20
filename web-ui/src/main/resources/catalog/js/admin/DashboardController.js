@@ -1,11 +1,11 @@
 (function() {
-  geonet.provide('gn_dashboard_controller');
+  goog.provide('gn_dashboard_controller');
 
 
 
-  geonet.require('gn_dashboard_content_stat_controller');
-  geonet.require('gn_dashboard_search_stat_controller');
-  geonet.require('gn_dashboard_status_controller');
+  goog.require('gn_dashboard_content_stat_controller');
+  goog.require('gn_dashboard_search_stat_controller');
+  goog.require('gn_dashboard_status_controller');
 
   var module = angular.module('gn_dashboard_controller',
       ['gn_dashboard_status_controller',

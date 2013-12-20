@@ -89,6 +89,20 @@
 
       </xsl:otherwise>
     </xsl:choose>
-      <script src="{/root/gui/url}/static/{$angularApp}.js{$minimizedParam}"></script>
+      <xsl:choose>
+          <xsl:when test="/root/request/debug">
+              <!-- Use Closure to load the application scripts -->
+              <script>
+                  window.CLOSURE_NO_DEPS = true;
+              </script>
+
+              <script>
+                  goog.require('<xsl:value-of select="$angularApp"/>');
+              </script>
+          </xsl:when>
+          <xsl:otherwise>
+              <script src="{/root/gui/url}/static/{$angularApp}.js{$minimizedParam}"></script>
+          </xsl:otherwise>
+      </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>

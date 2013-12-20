@@ -41,13 +41,16 @@ public class GeonetWroModelFactory implements WroModelFactory {
     public static final String JS_SOURCE_EL = "jsSource";
     public static final String INCLUDE_EL = "include";
     public static final String FILE_ATT = "file";
+    public static final String FILE_EL = "file";
     public static final String DECLARATIVE_EL = "declarative";
     public static final String DECLARATIVE_NAME_ATT = "name";
+    public static final String MINIMIZED_ATT = "minimized";
     public static final String REQUIRE_EL = "require";
     public static final String CSS_SOURCE_EL = "cssSource";
     public static final String WEBAPP_ATT = "webappPath";
     public static final String PATH_ON_DISK_ATT = "pathOnDisk";
     public static final String CLASSPATH_PREFIX = "classpath:";
+    private static final String NOT_MINIMIZED_EL = "notMinimized";
     @Inject
     private ReadOnlyContext _context;
 
@@ -149,7 +152,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
         for (int i = 0; i < declareNodes.getLength(); i++) {
             Element declared = (Element) declareNodes.item(i);
-            addExplicitelyDeclarativeGroups(declared, model);
+            addExplicitlyDeclarativeGroups(declared, model);
         }
         return model;
     }
@@ -290,7 +293,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
         return null;
     }
 
-    private void addExplicitelyDeclarativeGroups(Element declareEl, WroModel model) {
+    private void addExplicitlyDeclarativeGroups(Element declareEl, WroModel model) {
         String defaultPathOnDisk = declareEl.getAttribute(PATH_ON_DISK_ATT);
         final NodeList jsSources = declareEl.getElementsByTagName(JS_SOURCE_EL);
 
@@ -301,16 +304,20 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
         Group group = new Group(name);
         for (int i = 0; i < jsSources.getLength(); i++ ) {
-            final ResourceDesc desc = parseSource((Element) jsSources.item(i), defaultPathOnDisk);
-            Resource resource = createResource(desc, ResourceType.JS);
+            final Element item = (Element) jsSources.item(i);
+            final ResourceDesc desc = parseSource(item, defaultPathOnDisk);
+            boolean isMinimized = !item.hasAttribute(MINIMIZED_ATT) || Boolean.parseBoolean(item.getAttribute(MINIMIZED_ATT));
+            Resource resource = createResource(isMinimized, desc, ResourceType.JS);
             group.addResource(resource);
         }
 
         final NodeList cssSources = declareEl.getElementsByTagName(CSS_SOURCE_EL);
 
         for (int i = 0; i < cssSources.getLength(); i++ ) {
-            final ResourceDesc desc = parseSource((Element) cssSources.item(i), defaultPathOnDisk);
-            Resource resource = createResource(desc, ResourceType.CSS);
+            final Element item = (Element) cssSources.item(i);
+            final ResourceDesc desc = parseSource(item, defaultPathOnDisk);
+            boolean isMinimized = !item.hasAttribute(MINIMIZED_ATT) || Boolean.parseBoolean(item.getAttribute(MINIMIZED_ATT));
+            Resource resource = createResource(isMinimized, desc, ResourceType.CSS);
             group.addResource(resource);
 
         }
@@ -319,10 +326,10 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
     }
 
-    private Resource createResource(ResourceDesc desc, ResourceType type) {
+    private Resource createResource(boolean isMinimized, ResourceDesc desc, ResourceType type) {
         File file = desc.root;
         Resource resource = new Resource();
-        resource.setMinimize(true);
+        resource.setMinimize(isMinimized);
         resource.setType(type);
         resource.setUri(file.toURI().toString());
         return resource;
@@ -332,7 +339,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
         String defaultPathOnDisk = doc.getAttribute(PATH_ON_DISK_ATT);
         final NodeList jsSources = doc.getElementsByTagName(JS_SOURCE_EL);
 
-        final RequireDependencyManager dependencyManager = configureJavascripDependencyManager(jsSources, defaultPathOnDisk);
+        final ClosureRequireDependencyManager dependencyManager = configureJavascripDependencyManager(jsSources, defaultPathOnDisk);
 
         Map<String, Group> groups = addJavascriptGroupsByRequireDependencies(model, dependencyManager);
 
@@ -344,12 +351,12 @@ public class GeonetWroModelFactory implements WroModelFactory {
     private void logModel(WroModel model) {
         if (LOG.isLoggable(Level.INFO)) {
             StringBuilder builder = new StringBuilder();
-            final int uriLeng = 60;
+            final int uriLength = 60;
             for (Group group : model.getGroups()) {
                 builder.append("Group "+group.getName()+" contains:\n");
                 for (Resource resource : group.getResources()) {
                     String uri = resource.getUri();
-                    int min = Math.max(0, uri.length() - uriLeng);
+                    int min = Math.max(0, uri.length() - uriLength);
                     int max = resource.getUri().length();
                     uri = uri.substring(min, max);
                     if (min > 0) {
@@ -370,7 +377,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
         for (int i = 0; i < cssSources.getLength(); i++) {
             Node cssSource = cssSources.item(i);
-
+            final Set<String> notMinimized = parseSetOfNotMinimized((Element) cssSource);
             ResourceDesc desc = parseSource((Element) cssSource, defaultPathOnDisk);
 
             final Iterable<File> css = desc.files("css", "less");
@@ -392,8 +399,15 @@ public class GeonetWroModelFactory implements WroModelFactory {
                     group = new Group(groupId);
                 }
 
+                boolean isMinimized = true;
+                for (String s : notMinimized) {
+                    if (file.getAbsolutePath().endsWith(s)) {
+                        isMinimized = false;
+                        break;
+                    }
+                }
                 Resource resource = new Resource();
-                resource.setMinimize(true);
+                resource.setMinimize(isMinimized);
                 resource.setType(ResourceType.CSS);
                 resource.setUri(file.toURI().toString());
 
@@ -406,7 +420,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
         //To change body of created methods use File | Settings | File Templates.
     }
 
-    private Map<String, Group> addJavascriptGroupsByRequireDependencies(final WroModel model, final RequireDependencyManager
+    private Map<String, Group> addJavascriptGroupsByRequireDependencies(final WroModel model, final ClosureRequireDependencyManager
             dependencyManager) {
         final Set<String> moduleIds = dependencyManager.getAllModuleIds();
         Map<String, Group> groupMap = new HashMap<String, Group>((int) (moduleIds.size() * 1.5));
@@ -415,9 +429,9 @@ public class GeonetWroModelFactory implements WroModelFactory {
             Group group = new Group(moduleId);
             groupMap.put(moduleId, group);
 
-            final Collection<RequireDependencyManager.Node> deps = dependencyManager.getTransitiveDependenciesFor(moduleId, true);
+            final Collection<ClosureRequireDependencyManager.Node> deps = dependencyManager.getTransitiveDependenciesFor(moduleId, true);
 
-            for (RequireDependencyManager.Node dep : deps) {
+            for (ClosureRequireDependencyManager.Node dep : deps) {
                 group.addResource(createResourceFrom(dep));
             }
 
@@ -428,20 +442,21 @@ public class GeonetWroModelFactory implements WroModelFactory {
         return groupMap;
     }
 
-    private Resource createResourceFrom(RequireDependencyManager.Node dep) {
+    private Resource createResourceFrom(ClosureRequireDependencyManager.Node dep) {
         Resource resource = new Resource();
-        resource.setMinimize(true);
+        resource.setMinimize(dep.isMinimized);
         resource.setType(ResourceType.JS);
         resource.setUri(dep.path);
         return resource;
     }
 
-    private RequireDependencyManager configureJavascripDependencyManager(final NodeList jsSources, String defaultPathOnDisk) throws IOException {
-        RequireDependencyManager depManager = new RequireDependencyManager();
+    private ClosureRequireDependencyManager configureJavascripDependencyManager(final NodeList jsSources, String defaultPathOnDisk) throws IOException {
+        ClosureRequireDependencyManager depManager = new ClosureRequireDependencyManager();
 
         for (int i = 0; i < jsSources.getLength(); i++) {
             Node jsSource = jsSources.item(i);
             ResourceDesc desc = parseSource((Element) jsSource, defaultPathOnDisk);
+            Set<String> notMinimized = parseSetOfNotMinimized((Element) jsSource);
             for (File file : desc.files("js")) {
                 String path;
                 // if servlet context is null then the build is the
@@ -453,13 +468,26 @@ public class GeonetWroModelFactory implements WroModelFactory {
                     path = desc.relativePath + file.getPath().substring(desc.finalPath.length());
                     path = '/' + path.replace('\\', '/').replaceAll("/+", "/");
                 }
-                depManager.addFile(path, file);
+                depManager.addFile(path, file, notMinimized);
             }
         }
 
         depManager.validateGraph();
 
         return depManager;
+    }
+
+    private Set<String> parseSetOfNotMinimized(Element jsSource) {
+        final NodeList nodeList = jsSource.getElementsByTagName(NOT_MINIMIZED_EL);
+        Set<String> notMinimized = new HashSet<String>(nodeList.getLength());
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Element notMinimizedEl = (Element) nodeList.item(i);
+            final NodeList files = notMinimizedEl.getElementsByTagName(FILE_EL);
+            for (int j = 0; j < files.getLength(); j++) {
+                notMinimized.add(files.item(j).getTextContent().trim());
+            }
+        }
+        return notMinimized;
     }
 
     private ResourceDesc parseSource(final Element sourceEl, String defaultPathOnDisk) {
