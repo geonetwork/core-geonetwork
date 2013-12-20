@@ -44,7 +44,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
     public static final String FILE_EL = "file";
     public static final String DECLARATIVE_EL = "declarative";
     public static final String DECLARATIVE_NAME_ATT = "name";
-    public static final String MINIMIZED_ATT = "minimized";
+    public static final String MINIMIZED_ATT = "minimize";
     public static final String REQUIRE_EL = "require";
     public static final String CSS_SOURCE_EL = "cssSource";
     public static final String WEBAPP_ATT = "webappPath";

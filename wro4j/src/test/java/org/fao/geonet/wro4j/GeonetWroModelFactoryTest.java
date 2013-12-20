@@ -125,8 +125,8 @@ public class GeonetWroModelFactoryTest {
         String sourcesXml = "<sources>\n"
                             + "    <declarative name=\"groupName\" pathOnDisk=\"wro4j/src/test/resources/org/fao/geonet/wro4j\">\n"
                             + "        <jsSource webappPath=\"sampleFile1a.js\" pathOnDisk=\""+PATH_TO_ROOT_OF_TEST_RESOURCES+"\"/>\n"
-                            + "        <jsSource webappPath=\"jslvl2/sampleFile2a.js\" minimized=\"false\"/>\n"
-                            + "        <cssSource webappPath=\"1a.css\" minimized=\"false\"/>\n"
+                            + "        <jsSource webappPath=\"jslvl2/sampleFile2a.js\" minimize=\"false\"/>\n"
+                            + "        <cssSource webappPath=\"1a.css\" minimize=\"false\"/>\n"
                             + "        <cssSource webappPath=\"anotherCss.less\" pathOnDisk=\""+PATH_TO_ROOT_OF_TEST_RESOURCES+"\"/>\n"
                             + "    </declarative>\n"
                             + "</sources>";

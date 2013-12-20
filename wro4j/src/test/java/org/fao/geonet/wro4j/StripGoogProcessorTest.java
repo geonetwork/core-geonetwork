@@ -15,7 +15,6 @@ import java.io.StringWriter;
 public class StripGoogProcessorTest extends TestCase {
     public void testProcess1() throws Exception {
         Reader reader = new StringReader("goog.provide('id');goog.require('id2'); console.log('hi')");
-        Context.set(Context.standaloneContext());
         StringWriter writer = new StringWriter();
         final StripGoogProcessor processor = new StripGoogProcessor();
         Resource resource = new Resource();
@@ -29,7 +28,6 @@ public class StripGoogProcessorTest extends TestCase {
 
     public void testProcess2() throws Exception {
         Reader reader = new StringReader("goog . provide  ('id');goog . require('id2'); console.log('hi')");
-        Context.set(Context.standaloneContext());
         StringWriter writer = new StringWriter();
         final StripGoogProcessor processor = new StripGoogProcessor();
         Resource resource = new Resource();
@@ -43,7 +41,6 @@ public class StripGoogProcessorTest extends TestCase {
 
     public void testProcess3() throws Exception {
         Reader reader = new StringReader("goog . provide  ('id')\ngoog . require('id2')\n console.log('hi')");
-        Context.set(Context.standaloneContext());
         StringWriter writer = new StringWriter();
         final StripGoogProcessor processor = new StripGoogProcessor();
         Resource resource = new Resource();
@@ -58,7 +55,6 @@ public class StripGoogProcessorTest extends TestCase {
     public void testProcess4() throws Exception {
         Reader reader = new StringReader("goog.provide('id');goog.require('id2'); goog.require('id2'); goog.require('id2'); \n" +
                                          "goog.require('id2'); \ngoog.require('id2'); goog.require('id2'); \n\nconsole.log('hi')");
-        Context.set(Context.standaloneContext());
         StringWriter writer = new StringWriter();
         final StripGoogProcessor processor = new StripGoogProcessor();
         Resource resource = new Resource();
