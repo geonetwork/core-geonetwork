@@ -181,7 +181,8 @@
 	      <xsl:with-param name="cls" select="local-name()"/>
 <!-- 	      <xsl:with-param name="attributesSnippet" select="$attributes"/>
  -->	      <xsl:with-param name="subTreeSnippet">
-            <div gn-draw-bbox="" 
+ <div></div>
+<!--             <div gn-draw-bbox="" 
                  data-left="{gmd:westBoundLongitude/gco:Decimal}"
                  data-right="{gmd:eastBoundLongitude/gco:Decimal}"
                  data-bottom="{gmd:southBoundLatitude/gco:Decimal}"
@@ -192,7 +193,7 @@
                  data-top-ref="_{gmd:northBoundLatitude/gco:Decimal/gn:element/@ref}"
                  
            ></div>
-	      </xsl:with-param>
+ -->	      </xsl:with-param>
     </xsl:call-template>
       
     </xsl:template>
