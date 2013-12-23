@@ -58,15 +58,15 @@
                  color: 'rgba(255,0,0,0.3)'
                })
              });
-
-             var fo = new ol.render.FeaturesOverlay();
+             // FIXME: turned off as far as the missing class is not available.
+             //             var fo = new ol.render.FeaturesOverlay();
              var featuresCollection = new ol.Collection();
-
-             fo.setMap(map);
-             fo.setFeatures(featuresCollection);
-             fo.setStyleFunction(function(feature, resolution) {
-               return [boxStyle];
-             });
+             //
+             //             fo.setMap(map);
+             //             fo.setFeatures(featuresCollection);
+             //             fo.setStyleFunction(function(feature, resolution) {
+             //               return [boxStyle];
+             //             });
 
              var feature = new ol.Feature();
              featuresCollection.push(feature);
