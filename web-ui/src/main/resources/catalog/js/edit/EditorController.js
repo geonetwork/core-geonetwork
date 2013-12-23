@@ -254,7 +254,7 @@
 
 
       $scope.validate = function() {
-        $($scope.formId + ' #showvalidationerrors')[0].value = 'true';
+        $('#showvalidationerrors')[0].value = 'true';
         $scope.save(true);
       };
 
