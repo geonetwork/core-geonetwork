@@ -122,10 +122,19 @@
   <xsl:template mode="mode-iso19139" priority="100"
     match="*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|
 		gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|
-		gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName]">
+		gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName|gmd:PT_FreeText]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
 
+    <xsl:variable name="elementName" select="name()"/>
+    <xsl:variable name="hasPTFreeText" select="count(gmd:PT_FreeText) > 0"/>
+    <xsl:variable name="isMultilingualElement" 
+      select="$metadataIsMultilingual and 
+              count($editorConfig/editor/multilingualFields/exclude[name = $elementName]) = 0"/>
+    <xsl:variable name="isMultilingualElementExpanded" 
+      select="count($editorConfig/editor/multilingualFields/expanded[name = $elementName]) > 0"/>
+    
+    
     <!-- TODO: Support gmd:LocalisedCharacterString -->
     <xsl:variable name="theElement" select="gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|
       gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|
@@ -173,13 +182,38 @@
       </xsl:if>
     </xsl:variable>
     
+    <xsl:variable name="values">
+      <xsl:if test="$isMultilingualElement">
+        
+        <values>
+          <!-- Or the PT_FreeText element matching the main language -->
+          <value ref="{$theElement/gn:element/@ref}" lang="{$metadataLanguage}"><xsl:value-of select="gco:CharacterString"/></value>
+          
+          <!-- the existing translation -->
+          <xsl:for-each select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
+            <value ref="{gn:element/@ref}" lang="{substring-after(@locale, '#')}"><xsl:value-of select="."/></value>
+          </xsl:for-each>
+          
+          <!-- and create field for none translated language -->
+          <xsl:for-each select="$metadataOtherLanguages/lang">
+            <xsl:variable name="currentLanguageId" select="@id"/>
+            <xsl:if test="count($theElement/parent::node()/
+                gmd:PT_FreeText/gmd:textGroup/
+                gmd:LocalisedCharacterString[@locale = concat('#',$currentLanguageId)]) = 0">
+              <value ref="lang_{@id}_{$theElement/parent::node()/gn:element/@ref}" lang="{@id}"></value>
+            </xsl:if>
+          </xsl:for-each>
+        </values>
+      </xsl:if>
+    </xsl:variable>
+        
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelConfig/label"/>
-      <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="value" select="if ($isMultilingualElement) then $values else *"/>
       <xsl:with-param name="errors" select="$errors"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
-			<xsl:with-param name="widgetParams"/>-->
+        <xsl:with-param name="widgetParams"/>-->
       <xsl:with-param name="xpath" select="$xpath"/>
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
       <xsl:with-param name="type"
@@ -190,7 +224,9 @@
       <xsl:with-param name="parentEditInfo" select="gn:element"/>
       <!-- TODO: Handle conditional helper -->
       <xsl:with-param name="listOfValues" select="$helper"/>
+      <xsl:with-param name="toggleLang" select="$isMultilingualElementExpanded"/>
     </xsl:call-template>
+
 
   </xsl:template>
 
@@ -322,5 +358,6 @@
         select="gn-fn-metadata:getCodeListValues($schema, name(), $codelists, .)"/>
     </xsl:call-template>
   </xsl:template>
+
 
 </xsl:stylesheet>

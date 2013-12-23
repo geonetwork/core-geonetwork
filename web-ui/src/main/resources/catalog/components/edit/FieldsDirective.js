@@ -33,6 +33,22 @@
           }
         };
       });
+
+  module.directive('gnLanguagePicker',
+      function() {
+        return {
+          restrict: 'A',
+          link: function(scope, element, attrs) {
+            $(element).typeahead({
+              valueKey: 'label',
+              local: ['eng', 'fre'],
+              minLength: 0,
+              limit: 15
+            });
+          }
+        };
+      });
+
   module.directive('gnFieldTooltip',
       ['gnSchemaManagerService',
        function(gnSchemaManagerService) {

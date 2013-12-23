@@ -48,7 +48,6 @@
     <description>Nom ou identification de la personne ou de l'organisation responsable pour le domaine de valeurs</description>
     <help>Informations sur la personne ou l'organisation en charge de l'espace nominal ou de l'identifiant.</help>
     <condition/>
-    
   </element>
   <element name="gco:Date" id="364.0" context="gmd:CI_Citation">
     <label>Date d'édition</label>
@@ -1217,13 +1216,6 @@ de métadonnées de données « BD Carthage métropole »
     <condition>Obligatoire</condition>
     <condition>Conditional</condition>
   </element>-->
-  <element name="gmd:codeSpace" id="208.1">
-    <label>Nom de l'identifiant</label>
-    <description>Nom ou identification de la personne ou de l'organisation responsable pour la domaine de valeurs</description>
-    <help>Informations sur la personne ou l'organisation en charge de l'espace nominal ou de l'identifiant.</help>
-    <condition/>
-    
-  </element>
   <element name="gmd:collectiveTitle" id="371.0">
     <label>Titre collectif</label>
     <description>Titre commun avec indication d'une appartenance. Note : le titre identifie des éléments d'une série collective, combiné avec l'information sur quels volumes sont à disposition à la source citée</description>

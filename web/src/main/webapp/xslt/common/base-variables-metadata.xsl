@@ -18,6 +18,10 @@
   <xsl:variable name="metadataOtherLanguages">
     <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
   </xsl:variable>
+  <xsl:variable name="metadataOtherLanguagesAsJson">
+    <saxon:call-template name="{concat('get-', $schema, '-other-languages-as-json')}"/>
+  </xsl:variable>
+  <xsl:variable name="metadataIsMultilingual" select="count($metadataOtherLanguages/*) > 0"/>
   
   <!-- The list of thesaurus -->
   <xsl:variable name="listOfThesaurus" select="/root/gui/thesaurus/thesauri"/>

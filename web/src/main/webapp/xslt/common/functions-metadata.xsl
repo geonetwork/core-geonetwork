@@ -29,10 +29,15 @@
     <xsl:param name="parentIsoType" as="xs:string?"/>
     <xsl:param name="xpath" as="xs:string?"/>
 
-    <!-- TODO : add fallback schema -->
+    <!-- TODO : add fallback schema 
+    Add try/catch block to log out when a label id duplicated
+    in loc files. XSLv3 could be useful for that.
+    -->
     <!--<xsl:message>#<xsl:value-of select="$name"/></xsl:message>
     <xsl:message>#<xsl:value-of select="$xpath"/></xsl:message>
     <xsl:message>#<xsl:value-of select="$parent"/></xsl:message>-->
+    
+    
     <!-- Name with context in current schema -->
     <xsl:variable name="schemaLabelWithContext"
       select="$labels/element[@name=$name and (@context=$xpath or @context=$parent or @context=$parentIsoType)]"/>

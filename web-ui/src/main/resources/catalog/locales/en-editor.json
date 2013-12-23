@@ -1,4 +1,8 @@
 {
+    "allLanguage": "All",
+    "oneLanguage": "One",
+    "allLanguage-help": "Display all languages",
+    "oneLanguage-help": "Choose one language to edit using the selector",
     "overviews": "Overviews",
     "associatedResources": "Associated resources",
     "suggestions": "Suggestions",

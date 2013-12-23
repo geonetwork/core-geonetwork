@@ -51,6 +51,9 @@
     only element potentially using XLink and not all of them. 
     This may have performance inpact? -->
     <xsl:param name="isDisabled" select="ancestor-or-self::node()[@xlink:href]"/>
+    <xsl:param name="toggleLang" select="false()" required="no"/>
+
+    <xsl:variable name="isMultilingual" select="count($value/values) > 0"/>
 
     <!-- Required status is defined in parent element for
     some profiles like ISO19139. If not set, the element
@@ -59,23 +62,15 @@
     -->
     <xsl:variable name="isRequired" as="xs:boolean">
       <xsl:choose>
-        <xsl:when test="$isEditing">
-          <xsl:choose>
-            <xsl:when
-              test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or 
-              (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
-              <xsl:value-of select="true()"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="false()"/>
-            </xsl:otherwise>
-          </xsl:choose>
+        <xsl:when
+          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or 
+          (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
+          <xsl:value-of select="true()"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="false()"/>
         </xsl:otherwise>
       </xsl:choose>
-
     </xsl:variable>
 
 
@@ -111,10 +106,32 @@
             <xsl:value-of select="$label"/>
           </label>
 
-
-          <xsl:choose>
-            <xsl:when test="$isEditing">
-              <div class="col-lg-8 gn-value">
+          <div class="col-lg-8 gn-value">
+            <xsl:if test="$isMultilingual">
+              <xsl:attribute name="data-gn-multilingual-field" select="$metadataOtherLanguagesAsJson"/>
+              <xsl:attribute name="data-main-language" select="$metadataLanguage"/>
+              <xsl:attribute name="data-expanded" select="$toggleLang"/>
+            </xsl:if>
+            
+            <xsl:choose>
+              <xsl:when test="$isMultilingual">
+                <xsl:for-each select="$value/values/value">
+                  <xsl:sort select="@lang"/>
+                  
+                  <xsl:call-template name="render-form-field">
+                    <xsl:with-param name="name" select="@ref"/>
+                    <xsl:with-param name="lang" select="@lang"/>
+                    <xsl:with-param name="value" select="."/>
+                    <xsl:with-param name="type" select="$type"/>
+                    <xsl:with-param name="isRequired" select="$isRequired"/>
+                    <xsl:with-param name="isDisabled" select="$isDisabled"/>
+                    <xsl:with-param name="editInfo" select="$editInfo"/>
+                    <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+                    <xsl:with-param name="listOfValues" select="$listOfValues"/>
+                  </xsl:call-template>
+                </xsl:for-each>
+              </xsl:when>
+              <xsl:otherwise>
                 <xsl:call-template name="render-form-field">
                   <xsl:with-param name="name" select="$name"/>
                   <xsl:with-param name="value" select="$value"/>
@@ -125,52 +142,48 @@
                   <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
                   <xsl:with-param name="listOfValues" select="$listOfValues"/>
                 </xsl:call-template>
-                
-                
-                <xsl:if test="$attributesSnippet">
-                  <div class="well well-sm gn-attr {if ($isDisplayingAttributes) then '' else 'hidden'}">
-                    <xsl:copy-of select="$attributesSnippet"/>
-                  </div>
-                </xsl:if>
-                
-                <xsl:if test="$errors">
-                  <xsl:for-each select="$errors/errors/error">
-                    <span class="help-block text-danger"><xsl:value-of select="."/></span>
-                  </xsl:for-each>
-                </xsl:if>
+              </xsl:otherwise>
+            </xsl:choose>
+            
+            
+            
+            <xsl:if test="$attributesSnippet">
+              <div class="well well-sm gn-attr {if ($isDisplayingAttributes) then '' else 'hidden'}">
+                <xsl:copy-of select="$attributesSnippet"/>
               </div>
-              <div class="col-lg-2 gn-control">
-                <xsl:if test="not($isDisabled)">
-                  <xsl:call-template name="render-form-field-control-remove">
-                    <xsl:with-param name="name" select="name(.)"/>
-                    <xsl:with-param name="isRequired" select="$isRequired"/>
-                    <xsl:with-param name="editInfo" select="$editInfo"/>
-                    <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
-                  </xsl:call-template>
-                </xsl:if>
-                <!-- TODO: Add the set on save text ? -->
-              </div>
-              <!-- Next line display the add element control
-                    the geonet:child element is taking care of that
-                  <xsl:if test="not($isDisabled)">
-                    <div class="col-lg-10"> </div>
-                    <div class="col-lg-2">
-                        <xsl:call-template name="render-form-field-control-add">
-                            <xsl:with-param name="name" select="name(.)"/>
-                            <xsl:with-param name="isRequired" select="$isRequired"/>
-                            <xsl:with-param name="editInfo" select="$editInfo"/>
-                            <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
-                        </xsl:call-template>
-                    </div>
-                  </xsl:if> -->
+            </xsl:if>
+            
+            <xsl:if test="$errors">
+              <xsl:for-each select="$errors/errors/error">
+                <span class="help-block text-danger"><xsl:value-of select="."/></span>
+              </xsl:for-each>
+            </xsl:if>
+          </div>
+          <div class="col-lg-2 gn-control">
+            <xsl:if test="not($isDisabled)">
+              <xsl:call-template name="render-form-field-control-remove">
+                <xsl:with-param name="name" select="name(.)"/>
+                <xsl:with-param name="isRequired" select="$isRequired"/>
+                <xsl:with-param name="editInfo" select="$editInfo"/>
+                <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+              </xsl:call-template>
+            </xsl:if>
+            <!-- TODO: Add the set on save text ? -->
+          </div>
+          <!-- Next line display the add element control
+                the geonet:child element is taking care of that
+              <xsl:if test="not($isDisabled)">
+                <div class="col-lg-10"> </div>
+                <div class="col-lg-2">
+                    <xsl:call-template name="render-form-field-control-add">
+                        <xsl:with-param name="name" select="name(.)"/>
+                        <xsl:with-param name="isRequired" select="$isRequired"/>
+                        <xsl:with-param name="editInfo" select="$editInfo"/>
+                        <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+                    </xsl:call-template>
+                </div>
+              </xsl:if> -->
 
-            </xsl:when>
-            <xsl:otherwise>
-              <div class="col-lg-10 gn-value">
-                <xsl:value-of select="$value"/>
-              </div>
-            </xsl:otherwise>
-          </xsl:choose>
         </div>
       </xsl:otherwise>
     </xsl:choose>
@@ -444,6 +457,7 @@
   <xsl:template name="render-form-field">
     <xsl:param name="name"/>
     <xsl:param name="value"/>
+    <xsl:param name="lang" required="no"/>
     <xsl:param name="hidden"/>
     <xsl:param name="type"/>
     <xsl:param name="isRequired"/>
@@ -468,9 +482,12 @@
 
     <xsl:choose>
       <xsl:when test="$type = 'textarea'">
-        <textarea class="form-control input-sm" id="gn-field-{$editInfo/@ref}" name="_{$name}">
+        <textarea class="form-control input-sm {if ($lang) then 'hidden' else ''}" id="gn-field-{$editInfo/@ref}" name="_{$name}">
           <xsl:if test="$isRequired">
             <xsl:attribute name="required" select="'required'"/>
+          </xsl:if>
+          <xsl:if test="$lang">
+            <xsl:attribute name="lang" select="$lang"/>
           </xsl:if>
           <xsl:if test="$hidden or $hasHelper">
             <xsl:attribute name="class" select="'hidden'"/>
@@ -485,6 +502,9 @@
           </xsl:if>
           <xsl:if test="$isDisabled">
             <xsl:attribute name="disabled" select="'disabled'"/>
+          </xsl:if>
+          <xsl:if test="$lang">
+            <xsl:attribute name="lang" select="$lang"/>
           </xsl:if>
           <xsl:if test="$hidden">
             <xsl:attribute name="display" select="'none'"/>
@@ -537,11 +557,17 @@
       </xsl:when>
       <xsl:otherwise>
         
+        <xsl:variable name="isDirective" select="starts-with($type, 'data-')"/>
+        
         <xsl:variable name="input">
-          <input class=" " 
+          <input class=" {if ($lang) then 'hidden' else ''}" 
             id="gn-field-{$editInfo/@ref}" 
             name="_{$name}" 
             value="{$valueToEdit}">
+            <!-- If type is a directive -->
+            <xsl:if test="$isDirective">
+              <xsl:attribute name="{$type}"/>
+            </xsl:if>
             <xsl:if test="$isRequired">
               <xsl:attribute name="required" select="'required'"/>
               <xsl:attribute name="data-gn-check" select="concat('#gn-el-', $editInfo/@ref)"/>
@@ -549,8 +575,11 @@
             <xsl:if test="$isDisabled">
               <xsl:attribute name="disabled" select="'disabled'"/>
             </xsl:if>
+            <xsl:if test="$lang">
+              <xsl:attribute name="lang" select="$lang"/>
+            </xsl:if>
             <xsl:if test="$type != ''">
-              <xsl:attribute name="type" select="$type"/>
+              <xsl:attribute name="type" select="if ($isDirective) then 'text' else $type"/>
             </xsl:if>
             <xsl:if test="$hidden or $hasHelper">
               <!-- hide the form field if helper is available, the 

@@ -1,4 +1,8 @@
 {
+    "allLanguage": "Toutes",
+    "oneLanguage": "Une seule",
+    "allLanguage-help": "Afficher toutes les langues",
+    "oneLanguage-help": "Choisir la langue à éditer en cliquant sur l'étiquette correspondante",
     "overviews": "Aperçus",
     "associatedResources": "Ressources associées",
     "suggestions": "Suggestions",

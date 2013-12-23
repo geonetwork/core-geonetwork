@@ -7,9 +7,26 @@
     "signIn": "S'identifier",
     "signedInAs": "",
     
+    "title": "Titre",
+    
     "eng": "English",
     "fre": "Français",
-    "title": "Titre",
+    "ara": "عربي",
+    "cat": "Català",
+    "chi": "中文",
+    "dut": "Nederlands",
+    "eng": "English",
+    "fin": "Suomeksi",
+    "fre": "Français",
+    "ger": "Deutsch",
+    "ita": "Italiano",
+    "nor": "Norsk",
+    "por": "Рortuguês",
+    "rus": "Русский",
+    "spa": "Español",
+    "tur": "Türkçe",
+    "pol": "Polski",
+    
     
     "east": "Est",
     "west": "Ouest",

@@ -35,8 +35,10 @@
 
   <xsl:function name="gn-fn-iso19139:getCodeListType" as="xs:string">
     <xsl:param name="name" as="xs:string"/>
-    <xsl:text>select</xsl:text>
-    <!-- TODO: Could be multiple select ? -->
+    
+    <xsl:variable name="configType" select="$editorConfig/editor/fields/for[@name = $name]/@use"/>
+    
+    <xsl:value-of select="if ($configType) then $configType else 'select'"/>
   </xsl:function>
 
 
