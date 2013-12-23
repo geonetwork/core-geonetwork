@@ -1407,7 +1407,7 @@
 			<description>Informations appliquées à programme ou à une routine</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
+		<entry hideInEditMode="true">
 			<code>service</code>
 			<label>Service</label>
 			<description>Informations appliquées à un service Internet</description>

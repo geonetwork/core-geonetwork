@@ -139,7 +139,6 @@
       <xsl:choose>
         <xsl:when test="$isDisplayed and not(@templateModeOnly)">
           
-          <xsl:message>  == Field as node</xsl:message>
           <!-- Display the matching node using standard editor mode
           propagating to the schema mode ... -->
           <xsl:for-each select="$nodes">
@@ -250,7 +249,9 @@
           </xsl:for-each>
           
           
-          <xsl:if test="count($nodes/*) = 0">
+          <!-- The element does not exist in current record. 
+          Create an empty field with a template. -->
+          <xsl:if test="count($nodes/*) = 0 and not(notDisplayedIfMissing)">
             <!-- If the element exist, use the _X<ref> mode which
             insert the snippet for the element if not use the 
             XPATH mode which will create the new element at the 
@@ -266,11 +267,42 @@
               <xsl:with-param name="template" select="$template"/>
             </xsl:call-template>
           </xsl:if>
-          
         </xsl:when>
       </xsl:choose>
     </xsl:if>
   </xsl:template>
   
+  <xsl:template mode="form-builder" match="action[@type='add']">
+    <xsl:param name="base" as="node()"/>
+    <!-- Match any gn:child nodes from the metadocument which
+      correspond to non existing node but available in the schema. -->
+    <xsl:variable name="nonExistingChildParent">
+      <xsl:if test="@or and @in">
+        <saxon:call-template name="{concat('evaluate-', $schema)}">
+          <xsl:with-param name="base" select="$base"/>
+          <xsl:with-param name="in" select="concat('/../', @in, '[gn:child/@name=''', @or, ''']')"/>
+        </saxon:call-template>
+      </xsl:if>
+    </xsl:variable>
+    
+    <xsl:if test="$nonExistingChildParent/*">
+      <!-- The element does not exist in current record. 
+          Add an action to add an element. -->
+      <xsl:variable name="name" select="@name"/>
+      <xsl:variable name="childName" select="@or"/>
+      <xsl:variable name="child" select="$nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]"/>
+      
+      <xsl:call-template name="render-element-template-field">
+        <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
+        <xsl:with-param name="id" select="concat('_X', 
+          $nonExistingChildParent/*[position() = last()]/gn:element/@ref, '_', 
+          $nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]/@prefix, 'COLON', @or)"/>
+        <xsl:with-param name="isExisting" select="false()"/>
+        <xsl:with-param name="template" select="template"/>
+        <xsl:with-param name="submitOnRequest" select="true()"/>
+      </xsl:call-template>
+    </xsl:if>
+    
+  </xsl:template>
   
 </xsl:stylesheet>

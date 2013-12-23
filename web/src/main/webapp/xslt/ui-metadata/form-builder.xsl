@@ -282,6 +282,7 @@
     <xsl:param name="id"/>
     <xsl:param name="xpathFieldId" required="no" select="''"/>
     <xsl:param name="keyValues" required="no"/>
+    <xsl:param name="submitOnRequest" required="no" select="false()"/>
     
     <!--<xsl:message>!render-element-template-field <xsl:copy-of select="$keyValues"/>
       <xsl:value-of select="$name"/>/
@@ -296,33 +297,42 @@
         <xsl:value-of select="$name"/>
       </label>
       <div class="col-lg-8">
-        <xsl:for-each select="$template/values/key">
-          <!-- Only display label if more than one key to match -->
-          <xsl:if test="count($template/values/key) > 1">
-            <label>
-              <xsl:variable name="valueLabelKey" select="@label"/>
-              <xsl:value-of select="$strings/*[name() = $valueLabelKey]"/>
-            </label>
-          </xsl:if>
-          
-          <xsl:choose>
-            <xsl:when test="@use = 'textarea'">
-              <textarea class="form-control input-sm" id="{$id}_{@label}"></textarea>
-            </xsl:when>
-            <xsl:otherwise>
-              <input class="" type="{@use}" value="" id="{$id}_{@label}"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:for-each>
-        
-        <xsl:if test="not($isExisting)">
-          <input class=" gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
+        <xsl:if test="$submitOnRequest">
+          <button class="btn btn-default fa fa-plus" data-gn-template-field-add-button="{$id}"/>
         </xsl:if>
-        <textarea class="form-control input-sm gn-debug" name="{$id}" data-gn-template-field="{$id}"
-          data-keys="{string-join($template/values/key/@label, '#')}"
-          data-values="{if ($keyValues) then string-join($keyValues/value, '#') else ''}">
-          <xsl:copy-of select="$template/snippet/*"/>
-        </textarea>
+        
+        <div>
+          <xsl:if test="$submitOnRequest">
+            <xsl:attribute name="class">hidden</xsl:attribute>
+          </xsl:if>
+          <xsl:for-each select="$template/values/key">
+            <!-- Only display label if more than one key to match -->
+            <xsl:if test="count($template/values/key) > 1">
+              <label>
+                <xsl:variable name="valueLabelKey" select="@label"/>
+                <xsl:value-of select="$strings/*[name() = $valueLabelKey]"/>
+              </label>
+            </xsl:if>
+            
+            <xsl:choose>
+              <xsl:when test="@use = 'textarea'">
+                <textarea class="form-control input-sm" id="{$id}_{@label}"></textarea>
+              </xsl:when>
+              <xsl:otherwise>
+                <input class="" type="{@use}" value="" id="{$id}_{@label}"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+          
+          <xsl:if test="not($isExisting)">
+            <input class=" gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
+          </xsl:if>
+          <textarea class="form-control input-sm gn-debug" name="{$id}" data-gn-template-field="{$id}"
+            data-keys="{string-join($template/values/key/@label, '#')}"
+            data-values="{if ($keyValues) then string-join($keyValues/value, '#') else ''}">
+            <xsl:copy-of select="$template/snippet/*"/>
+          </textarea>
+        </div>
       </div>
     </div>
   </xsl:template>

@@ -2,7 +2,34 @@
   goog.provide('gn_template_field_directive');
 
   var module = angular.module('gn_template_field_directive', []);
+  module.directive('gnTemplateFieldAddButton', ['gnEditor', 'gnCurrentEdit',
+    function(gnEditor, gnCurrentEdit) {
 
+      return {
+        restrict: 'A',
+        replace: false,
+        transclude: false,
+        scope: {
+          id: '@gnTemplateFieldAddButton'
+        },
+        link: function(scope, element, attrs) {
+          var textarea = $(element).parent()
+            .find('textarea[name=' + scope.id + ']');
+          // Unregister this textarea to the form
+          // It will be only submitted if user click the add button
+          textarea.removeAttr('name');
+
+          scope.add = function() {
+            textarea.attr('name', scope.id);
+
+            // Save and refreshform
+            gnEditor.save(gnCurrentEdit.id, true);
+          };
+
+          $(element).click(scope.add);
+        }
+      };
+    }]),
   /**
      * The template field directive managed a custom field which
      * is based on an XML snippet to be sent in the form with some
@@ -22,8 +49,8 @@
         transclude: false,
         scope: {
           id: '@gnTemplateField',
-          keys: '@keys',
-          values: '@values'
+          keys: '@',
+          values: '@'
         },
         link: function(scope, element, attrs) {
           var xmlSnippetTemplate = element[0].innerHTML;
@@ -40,10 +67,18 @@
               if (value !== undefined) {
                 xmlSnippet = xmlSnippet.replace(
                     '{{' + field + '}}',
-                    value);
+                    value.replace(/\&/g, '&amp;amp;')
+                         .replace(/\"/g, '&quot;'));
                 updated = true;
               }
             });
+
+            // Usually when a template field is link to a
+            // gnTemplateFieldAddButton directive, the keys
+            // is empty.
+            if (scope.keys === undefined) {
+              updated = true;
+            }
 
             // Reset the snippet if no match were found TODO
             // which means that no value is defined
