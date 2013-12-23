@@ -10,7 +10,7 @@
        function($timeout) {
          return {
            restrict: 'A',
-           replace:true,
+           replace: true,
            templateUrl: '../../catalog/components/common/map/' +
            'partials/drawbbox.html',
            scope: {
@@ -34,7 +34,7 @@
                scope.left = parseFloat(scope.left);
                scope.right = parseFloat(scope.right);
              });
-             
+
              var map = new ol.Map({
                layers: [
                  new ol.layer.Tile({
@@ -48,7 +48,7 @@
                  zoom: 2
                })
              });
-             
+
              var boxStyle = new ol.style.Style({
                stroke: new ol.style.Stroke({
                  color: 'rgba(255,0,0,1)',
@@ -65,7 +65,7 @@
              fo.setMap(map);
              fo.setFeatures(featuresCollection);
              fo.setStyleFunction(function(feature, resolution) {
-               return [boxStyle]; 
+               return [boxStyle];
              });
 
              var feature = new ol.Feature();
@@ -77,10 +77,10 @@
                   return scope.drawing;
                }
              });
-             dragbox.on('boxstart',function(mapBrowserEvent) {
+             dragbox.on('boxstart', function(mapBrowserEvent) {
                feature.setGeometry(null);
              });
-             dragbox.on('boxend',function(mapBrowserEvent) {
+             dragbox.on('boxend', function(mapBrowserEvent) {
                feature.setGeometry(dragbox.getGeometry());
                scope.bottom = extent[0];
                scope.left = extent[1];
