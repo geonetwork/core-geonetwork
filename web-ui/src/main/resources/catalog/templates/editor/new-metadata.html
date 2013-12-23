@@ -33,7 +33,7 @@
           <div class="list-group">
             <a data-ng-repeat="tpl in tpls" href="" class="list-group-item"
               data-ng-click="setActiveTpl(tpl)"
-              data-ng-class="{'active': tpl==activeTpl}">{{tpl.title}}</a>
+              data-ng-class="{'active': tpl==activeTpl}">{{tpl.title || tpl.defaultTitle}}</a>
           </div>
         </div>
       </div>
