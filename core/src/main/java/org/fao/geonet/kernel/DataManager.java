@@ -414,7 +414,6 @@ public class DataManager {
             final String  source     = fullMd.getSourceInfo().getSourceId();
             final MetadataType metadataType = fullMd.getDataInfo().getType();
             final String  root       = fullMd.getDataInfo().getRoot();
-            final String  title      = fullMd.getDataInfo().getTitle();
             final String  uuid       = fullMd.getUuid();
             final String  isHarvested = String.valueOf(Constants.toYN_EnabledChar(fullMd.getHarvestInfo().isHarvested()));
             final String  owner      = String.valueOf(fullMd.getSourceInfo().getOwner());
@@ -434,7 +433,6 @@ public class DataManager {
             moreFields.add(SearchManager.makeField("_changeDate",  changeDate,  true, true));
             moreFields.add(SearchManager.makeField("_source",      source,      true, true));
             moreFields.add(SearchManager.makeField("_isTemplate",  metadataType.codeString,  true, true));
-            moreFields.add(SearchManager.makeField("_title",       title,       true, true));
             moreFields.add(SearchManager.makeField("_uuid",        uuid,        true, true));
             moreFields.add(SearchManager.makeField("_isHarvested", isHarvested, true, true));
             moreFields.add(SearchManager.makeField("_owner",       owner,       true, true));
@@ -507,7 +505,7 @@ public class DataManager {
                 }
                 moreFields.add(SearchManager.makeField("_valid", isValid, true, true));
             }
-            searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, metadataType, title);
+            searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, metadataType);
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
         } finally {
@@ -1153,7 +1151,7 @@ public class DataManager {
      * @throws Exception
      */
     public void setTemplate(final int id, final MetadataType type, final String title) throws Exception {
-        setTemplateExt(id, type, title);
+        setTemplateExt(id, type);
         indexMetadata(Integer.toString(id));
     }
 
@@ -1161,18 +1159,13 @@ public class DataManager {
      * TODO javadoc.
      *
      * @param id
-     * @param title
      * @throws Exception
      */
-    public void setTemplateExt(final int id, final MetadataType metadataType, final String title) throws Exception {
+    public void setTemplateExt(final int id, final MetadataType metadataType) throws Exception {
         _metadataRepository.update(id, new Updater<Metadata>() {
             @Override
             public void apply(@Nonnull Metadata metadata) {
                 final MetadataDataInfo dataInfo = metadata.getDataInfo();
-                if (title != null) {
-                    dataInfo.setTitle(title);
-                }
-
                 dataInfo.setType(metadataType);
             }
         });
@@ -1407,7 +1400,6 @@ public class DataManager {
      * @param source id of the origin of this metadata (harvesting source, etc.)
      * @param isTemplate whether this metadata is a template
      * @param docType ?!
-     * @param title title of this metadata
      * @param category category of this metadata
      * @param createDate date of creation
      * @param changeDate date of modification
@@ -1417,7 +1409,7 @@ public class DataManager {
      * @throws Exception hmm
      */
     public String insertMetadata(ServiceContext context, String schema, Element metadataXml, String uuid, int owner, String groupOwner, String source,
-                                 String isTemplate, String docType, String title, String category, String createDate, String changeDate, boolean ufo, boolean index) throws Exception {
+                                 String isTemplate, String docType, String category, String createDate, String changeDate, boolean ufo, boolean index) throws Exception {
 
         boolean notifyChange = true;
 
@@ -1436,7 +1428,6 @@ public class DataManager {
                 .setCreateDate(isoCreateDate)
                 .setSchemaId(schema)
                 .setDoctype(docType)
-                .setTitle(title)
                 .setRoot(metadataXml.getQualifiedName())
                 .setType(MetadataType.lookup(isTemplate));
         newMetadata.getSourceInfo()

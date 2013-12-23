@@ -45,7 +45,6 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
                     .setUuid("uuid");
 
             metadata.getDataInfo()
-                    .setTitle("title")
                     .setSchemaId("iso19139");
 
             metadata.getSourceInfo()

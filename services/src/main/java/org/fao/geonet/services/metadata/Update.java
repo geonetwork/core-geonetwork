@@ -78,7 +78,6 @@ public class Update extends NotInReadOnlyModeService {
 		String id         = Utils.getIdentifierFromParameters(params, context);
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 		String showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
-		String title      = params.getChildText(Params.TITLE);
 		String data       = params.getChildText(Params.DATA);
         String minor      = Util.getParam(params, Params.MINOREDIT, "false");
 
@@ -88,7 +87,7 @@ public class Update extends NotInReadOnlyModeService {
 
 		if (!forget) {
 			int iLocalId = Integer.parseInt(id);
-			dataMan.setTemplateExt(iLocalId, MetadataType.lookup(isTemplate), title);
+			dataMan.setTemplateExt(iLocalId, MetadataType.lookup(isTemplate));
 
 			//--- use StatusActionsFactory and StatusActions class to possibly
 			//--- change status as a result of this edit (use onEdit method)

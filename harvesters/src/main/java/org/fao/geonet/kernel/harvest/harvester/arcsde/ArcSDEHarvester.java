@@ -259,12 +259,12 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         String docType = null, title = null, isTemplate = null, group = null, category = null;
         boolean ufo = false, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, xml, uuid, Integer.parseInt(params.ownerId), group, source,
-                         isTemplate, docType, title, category, createDate, createDate, ufo, indexImmediate);
+                         isTemplate, docType, category, createDate, createDate, ufo, indexImmediate);
 
 
 
 		int iId = Integer.parseInt(id);
-		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA);
 		dataMan.setHarvestedExt(iId, source);
 
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);

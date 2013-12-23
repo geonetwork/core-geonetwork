@@ -346,7 +346,7 @@ public class Importer {
                     String group = null, docType = null, title = null, category = null;
                     boolean ufo = false, indexImmediate = false;
                     String fcId = dm.insertMetadata(context, "iso19110", fc.get(index), uuid,
-                            userid, group, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                            userid, group, source, isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
                     if(Log.isDebugEnabled(Geonet.MEF))
                         Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + uuid);
@@ -531,7 +531,7 @@ public class Importer {
         boolean ufo = false, indexImmediate = false;
         id.add(index,
                 dm.insertMetadata(context, schema, md.get(index), uuid,
-                userid, groupId, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate));
+                userid, groupId, source, isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate));
 
 	}
 
