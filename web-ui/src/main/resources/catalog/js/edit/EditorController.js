@@ -62,7 +62,7 @@
       $scope.savedStatus = null;
       $scope.savedTime = null;
       $scope.formId = null;
-
+      $scope.savedStatus = null;
       /**
        * Animation duration for slide up/down
        */
@@ -176,35 +176,40 @@
       $scope.save = function(refreshForm) {
         gnEditor.save(refreshForm)
           .then(function(form) {
+              $scope.savedStatus = gnCurrentEdit.savedStatus;
               $scope.toggleAttributes();
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('saveMetadataSuccess')
               });
             }, function(error) {
+              $scope.savedStatus = gnCurrentEdit.savedStatus;
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('saveMetadataError'),
                 error: error,
                 timeout: 0,
                 type: 'danger'});
             });
-
+        $scope.savedStatus = gnCurrentEdit.savedStatus;
         return false;
       };
 
       $scope.cancel = function(refreshForm) {
         gnEditor.cancel(refreshForm)
           .then(function(form) {
-              $rootScope.$broadcast('StatusUpdated', {
+            $scope.savedStatus = gnCurrentEdit.savedStatus;
+            $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('cancelMetadataSuccess')
               });
               gnEditor.refreshEditorForm(null, true);
             }, function(error) {
+              $scope.savedStatus = gnCurrentEdit.savedStatus;
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('cancelMetadataError'),
                 error: error,
                 timeout: 0,
                 type: 'danger'});
             });
+        $scope.savedStatus = gnCurrentEdit.savedStatus;
         return false;
       };
 
