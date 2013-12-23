@@ -19,20 +19,21 @@
       ['$rootScope', '$timeout', '$q', '$http',
         'gnEditor', 'gnSchemaManagerService',
         'gnEditorXMLService', 'gnUrlUtils', 'gnConfig',
+        'gnCurrentEdit',
         function($rootScope, $timeout, $q, $http, 
             gnEditor, gnSchemaManagerService, 
-            gnEditorXMLService, gnUrlUtils, gnConfig) {
+            gnEditorXMLService, gnUrlUtils, gnConfig, 
+            gnCurrentEdit) {
 
          return {
            restrict: 'A',
            replace: false,
-           transclude: true,
            scope: {
              mode: '@gnDirectoryEntrySelector',
-             metadataId: '@',
              elementName: '@',
              elementRef: '@',
-             domId: '@'
+             domId: '@',
+             templateAddAction: '@'
            },
            templateUrl: '../../catalog/components/edit/' +
            'directoryentryselector/partials/' +
@@ -42,6 +43,7 @@
              // snippet
              var separator = '&&&';
              scope.gnConfig = gnConfig;
+             scope.templateAddAction = scope.templateAddAction === 'true';
 
              // Search only for contact subtemplate
              scope.params = {
@@ -55,9 +57,13 @@
              buildXMLFieldName(scope.elementRef, scope.elementName);
 
              scope.add = function() {
-               gnEditor.add(scope.metadataId,
+               gnEditor.add(gnCurrentEdit.id,
                    scope.elementRef, scope.elementName,
-                   scope.domId, 'before');
+                   scope.domId, 'before').then(function() {
+                 if (scope.templateAddAction) {
+                   gnEditor.save(gnCurrentEdit.id, true);
+                 }
+               });
                return false;
              };
 
@@ -82,7 +88,7 @@
 
                     $timeout(function() {
                       // Save the metadata and refresh the form
-                      gnEditor.save(scope.metadataId, true);
+                      gnEditor.save(gnCurrentEdit.id, true);
                     });
                  }
                };

@@ -282,7 +282,11 @@
     <xsl:param name="id"/>
     <xsl:param name="xpathFieldId" required="no" select="''"/>
     <xsl:param name="keyValues" required="no"/>
-    <xsl:param name="submitOnRequest" required="no" select="false()"/>
+    <xsl:param name="hasAddAction" required="no" select="false()"/>
+    <!-- Parameters for custom add directive -->
+    <xsl:param name="addDirective" required="no"/>
+    <xsl:param name="qname" required="no"/>
+    <xsl:param name="parentRef" required="no"/>
     
     <!--<xsl:message>!render-element-template-field <xsl:copy-of select="$keyValues"/>
       <xsl:value-of select="$name"/>/
@@ -297,42 +301,64 @@
         <xsl:value-of select="$name"/>
       </label>
       <div class="col-lg-8">
-        <xsl:if test="$submitOnRequest">
-          <button class="btn btn-default fa fa-plus" data-gn-template-field-add-button="{$id}"/>
+        <xsl:if test="$hasAddAction">
+          <xsl:choose>
+            <xsl:when test="$addDirective != ''">
+              <div>
+                <xsl:attribute name="{$addDirective}"/>
+                <xsl:attribute name="data-dom-id" select="$id"/>
+                <xsl:attribute name="data-element-name" select="$qname"/>
+                <xsl:attribute name="data-element-ref" select="$parentRef"/>
+                <xsl:attribute name="data-template-add-action" select="'true'"/>
+              </div>
+            </xsl:when>
+            <xsl:otherwise>
+              <i class="btn btn-default fa fa-plus" data-gn-template-field-add-button="{$id}"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:if>
         
-        <div>
-          <xsl:if test="$submitOnRequest">
-            <xsl:attribute name="class">hidden</xsl:attribute>
-          </xsl:if>
-          <xsl:for-each select="$template/values/key">
-            <!-- Only display label if more than one key to match -->
-            <xsl:if test="count($template/values/key) > 1">
-              <label>
-                <xsl:variable name="valueLabelKey" select="@label"/>
-                <xsl:value-of select="$strings/*[name() = $valueLabelKey]"/>
-              </label>
+        
+        <!-- The add directive should take care of building the form 
+        for adding the element. eg. adding a textarea with an XML snippet 
+        in. 
+        The default add action (ie. without directive), add a textarea and
+        use the default XML template defined in the editor configuration.
+        -->
+        <xsl:if test="$addDirective = ''">
+          <div>
+            <xsl:if test="$hasAddAction">
+              <xsl:attribute name="class">hidden</xsl:attribute>
             </xsl:if>
+            <xsl:for-each select="$template/values/key">
+              <!-- Only display label if more than one key to match -->
+              <xsl:if test="count($template/values/key) > 1">
+                <label>
+                  <xsl:variable name="valueLabelKey" select="@label"/>
+                  <xsl:value-of select="$strings/*[name() = $valueLabelKey]"/>
+                </label>
+              </xsl:if>
+              
+              <xsl:choose>
+                <xsl:when test="@use = 'textarea'">
+                  <textarea class="form-control input-sm" id="{$id}_{@label}"></textarea>
+                </xsl:when>
+                <xsl:otherwise>
+                  <input class="" type="{@use}" value="" id="{$id}_{@label}"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:for-each>
             
-            <xsl:choose>
-              <xsl:when test="@use = 'textarea'">
-                <textarea class="form-control input-sm" id="{$id}_{@label}"></textarea>
-              </xsl:when>
-              <xsl:otherwise>
-                <input class="" type="{@use}" value="" id="{$id}_{@label}"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:for-each>
-          
-          <xsl:if test="not($isExisting)">
-            <input class=" gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
-          </xsl:if>
-          <textarea class="form-control input-sm gn-debug" name="{$id}" data-gn-template-field="{$id}"
-            data-keys="{string-join($template/values/key/@label, '#')}"
-            data-values="{if ($keyValues) then string-join($keyValues/value, '#') else ''}">
-            <xsl:copy-of select="$template/snippet/*"/>
-          </textarea>
-        </div>
+            <xsl:if test="not($isExisting)">
+              <input class=" gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
+            </xsl:if>
+            <textarea class="form-control input-sm gn-debug" name="{$id}" data-gn-template-field="{$id}"
+              data-keys="{string-join($template/values/key/@label, '#')}"
+              data-values="{if ($keyValues) then string-join($keyValues/value, '#') else ''}">
+              <xsl:copy-of select="$template/snippet/*"/>
+            </textarea>
+          </div>
+        </xsl:if>
       </div>
     </div>
   </xsl:template>
@@ -441,7 +467,6 @@
                   <div>
                     <xsl:attribute name="{$directive}"/>
                     <xsl:attribute name="data-dom-id" select="$id"/>
-                    <xsl:attribute name="data-metadata-id" select="$metadataId"/>
                     <xsl:attribute name="data-element-name" select="$qualifiedName"/>
                     <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
                   </div>

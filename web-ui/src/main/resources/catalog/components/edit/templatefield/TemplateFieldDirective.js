@@ -7,8 +7,7 @@
 
       return {
         restrict: 'A',
-        replace: false,
-        transclude: false,
+        replace: true,
         scope: {
           id: '@gnTemplateFieldAddButton'
         },
@@ -19,14 +18,14 @@
           // It will be only submitted if user click the add button
           textarea.removeAttr('name');
 
-          scope.add = function() {
+          scope.addFromTemplate = function() {
             textarea.attr('name', scope.id);
 
             // Save and refreshform
             gnEditor.save(gnCurrentEdit.id, true);
           };
 
-          $(element).click(scope.add);
+          $(element).click(scope.addFromTemplate);
         }
       };
     }]),

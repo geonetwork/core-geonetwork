@@ -10,10 +10,10 @@
   module.directive('gnThesaurusSelector',
       ['$http', '$rootScope', '$timeout',
        'gnThesaurusService', 'gnEditor',
-       'gnEditorXMLService',
+       'gnEditorXMLService', 'gnCurrentEdit',
        function($http, $rootScope, $timeout,
        gnThesaurusService, gnEditor,
-       gnEditorXMLService) {
+       gnEditorXMLService, gnCurrentEdit) {
 
          return {
            restrict: 'A',
@@ -21,7 +21,6 @@
            transclude: true,
            scope: {
              mode: '@gnThesaurusSelector',
-             metadataId: '@',
              elementName: '@',
              elementRef: '@',
              domId: '@'
@@ -42,7 +41,7 @@
              });
 
              scope.add = function() {
-               gnEditor.add(scope.metadataId,
+               gnEditor.add(gnCurrentEdit.id,
                    scope.elementRef, scope.elementName, scope.domId, 'before');
              };
 
@@ -59,7 +58,7 @@
 
                  $timeout(function() {
                    // Save the metadata and refresh the form
-                   gnEditor.save(scope.metadataId, true);
+                   gnEditor.save(gnCurrentEdit.id, true);
                  });
 
                });

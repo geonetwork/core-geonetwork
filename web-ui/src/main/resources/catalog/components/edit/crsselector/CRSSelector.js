@@ -9,9 +9,9 @@
    */
   module.directive('gnCrsSelector',
       ['$rootScope', '$timeout', '$http',
-        'gnEditor', 'gnEditorXMLService',
+        'gnEditor', 'gnEditorXMLService', 'gnCurrentEdit',
         function($rootScope, $timeout, $http,
-            gnEditor, gnEditorXMLService) {
+            gnEditor, gnEditorXMLService, gnCurrentEdit) {
 
          return {
            restrict: 'A',
@@ -19,7 +19,6 @@
            transclude: true,
            scope: {
              mode: '@gnCrsSelector',
-             metadataId: '@',
              elementName: '@',
              elementRef: '@',
              domId: '@'
@@ -33,7 +32,7 @@
              buildXMLFieldName(scope.elementRef, scope.elementName);
 
              scope.add = function() {
-               gnEditor.add(scope.metadataId,
+               gnEditor.add(gnCurrentEdit.id,
                    scope.elementRef, scope.elementName, scope.domId, 'before');
                return false;
              };
@@ -58,7 +57,7 @@
 
                $timeout(function() {
                  // Save the metadata and refresh the form
-                 gnEditor.save(scope.metadataId, true);
+                 gnEditor.save(gnCurrentEdit.id, true);
                });
 
                return false;

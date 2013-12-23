@@ -251,7 +251,7 @@
           
           <!-- The element does not exist in current record. 
           Create an empty field with a template. -->
-          <xsl:if test="count($nodes/*) = 0 and not(notDisplayedIfMissing)">
+          <xsl:if test="count($nodes/*) = 0 and not(@notDisplayedIfMissing)">
             <!-- If the element exist, use the _X<ref> mode which
             insert the snippet for the element if not use the 
             XPATH mode which will create the new element at the 
@@ -299,7 +299,10 @@
           $nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]/@prefix, 'COLON', @or)"/>
         <xsl:with-param name="isExisting" select="false()"/>
         <xsl:with-param name="template" select="template"/>
-        <xsl:with-param name="submitOnRequest" select="true()"/>
+        <xsl:with-param name="hasAddAction" select="true()"/>
+        <xsl:with-param name="addDirective" select="@addDirective"/>
+        <xsl:with-param name="parentRef" select="$nonExistingChildParent/*[position() = last()]/gn:element/@ref"/>
+        <xsl:with-param name="qname" select="concat($nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]/@prefix, ':', @or)"/>
       </xsl:call-template>
     </xsl:if>
     
