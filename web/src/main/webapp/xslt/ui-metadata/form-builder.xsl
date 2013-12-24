@@ -88,8 +88,6 @@
           <div class="col-lg-2 gn-control">
             <xsl:if test="not($isDisabled)">
               <xsl:call-template name="render-form-field-control-remove">
-                <xsl:with-param name="name" select="name(.)"/>
-                <xsl:with-param name="isRequired" select="$isRequired"/>
                 <xsl:with-param name="editInfo" select="$editInfo"/>
                 <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
               </xsl:call-template>
@@ -162,8 +160,6 @@
           <div class="col-lg-2 gn-control">
             <xsl:if test="not($isDisabled)">
               <xsl:call-template name="render-form-field-control-remove">
-                <xsl:with-param name="name" select="name(.)"/>
-                <xsl:with-param name="isRequired" select="$isRequired"/>
                 <xsl:with-param name="editInfo" select="$editInfo"/>
                 <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
               </xsl:call-template>
@@ -283,10 +279,13 @@
     <xsl:param name="xpathFieldId" required="no" select="''"/>
     <xsl:param name="keyValues" required="no"/>
     <xsl:param name="hasAddAction" required="no" select="false()"/>
+    <!-- The element to delete or null if no delete action -->
+    <xsl:param name="refToDelete" required="no"/>
     <!-- Parameters for custom add directive -->
     <xsl:param name="addDirective" required="no"/>
     <xsl:param name="qname" required="no"/>
     <xsl:param name="parentRef" required="no"/>
+    
     
     <!--<xsl:message>!render-element-template-field <xsl:copy-of select="$keyValues"/>
       <xsl:value-of select="$name"/>/
@@ -295,7 +294,7 @@
       <xsl:value-of select="$isExisting"/>/
       <xsl:value-of select="$id"/>
     </xsl:message>-->
-    <div class="form-group">
+    <div class="form-group" id="gn-el-{if ($refToDelete) then $refToDelete/@ref else generate-id()}">
       <label class="col-lg-2 control-label">
         <!-- TODO: set tooltip -->
         <xsl:value-of select="$name"/>
@@ -304,6 +303,14 @@
         <xsl:if test="$hasAddAction">
           <xsl:choose>
             <xsl:when test="$addDirective != ''">
+              <!-- The add directive should take care of building the form 
+              for adding the element. eg. adding a textarea with an XML snippet 
+              in. 
+              The default add action (ie. without directive), trigger add based
+              on schema info. It may stop on choices (eg. bbox or polygon for extent)
+              TODO: add a textarea and
+              use the default XML template defined in the editor configuration.
+              -->
               <div>
                 <xsl:attribute name="{$addDirective}"/>
                 <xsl:attribute name="data-dom-id" select="$id"/>
@@ -319,12 +326,7 @@
         </xsl:if>
         
         
-        <!-- The add directive should take care of building the form 
-        for adding the element. eg. adding a textarea with an XML snippet 
-        in. 
-        The default add action (ie. without directive), add a textarea and
-        use the default XML template defined in the editor configuration.
-        -->
+        
         <xsl:if test="$addDirective = ''">
           <div>
             <xsl:if test="$hasAddAction">
@@ -360,6 +362,13 @@
           </div>
         </xsl:if>
       </div>
+      <xsl:if test="$refToDelete">
+        <div class="col-lg-2 gn-control">
+          <xsl:call-template name="render-form-field-control-remove">
+            <xsl:with-param name="editInfo" select="$refToDelete"/>
+          </xsl:call-template>
+        </div>
+      </xsl:if>
     </div>
   </xsl:template>
 
@@ -673,14 +682,9 @@
   mandatory. 
   -->
   <xsl:template name="render-form-field-control-remove">
-    <xsl:param name="name"/>
-    <xsl:param name="isRequired"/>
     <xsl:param name="editInfo"/>
-    <xsl:param name="parentEditInfo"/>
+    <xsl:param name="parentEditInfo" required="no"/>
 
-    <!--<textarea><xsl:copy-of select="$editInfo"/></textarea>
-    <textarea><xsl:copy-of select="$parentEditInfo"/></textarea>
-    -->
     <xsl:if
       test="($parentEditInfo and 
                      ($parentEditInfo/@del = 'true' or 

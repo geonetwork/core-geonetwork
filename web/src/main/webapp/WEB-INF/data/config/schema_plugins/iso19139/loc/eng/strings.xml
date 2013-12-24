@@ -54,4 +54,8 @@
   <encoding>Encoding</encoding>
   <format>Format</format>
   <format_version>Version</format_version>
+  <lineage>Lineage</lineage>
+  <spatialResolution>Spatial resolution</spatialResolution>
+  <accessConstraints>Access constraints</accessConstraints>
+  <useLimitation>Use limitation</useLimitation>
 </strings>

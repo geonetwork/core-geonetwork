@@ -191,6 +191,7 @@
           
           <xsl:variable name="xpath" select="@xpath"/>
           <xsl:variable name="name" select="@name"/>
+          <xsl:variable name="del" select="@del"/>
           <xsl:variable name="template" select="template"/>
           
           <xsl:for-each select="$nodes/*">
@@ -233,18 +234,42 @@
               </xsl:for-each>
             </xsl:variable>
             
+            <!-- Get the reference of the element to delete if delete is allowed. -->
+            <xsl:variable name="refToDelete">
+              <xsl:if test="$del != ''">
+                <xsl:choose>
+                  <xsl:when test="$del = '.'">
+                    <xsl:copy-of select="$currentNode/gn:element"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <!-- Search in the context of the metadata (current context is a node with no parent
+                due to the saxon eval selection. -->
+                    <xsl:variable name="ancestor">
+                      <saxon:call-template name="{concat('evaluate-', $schema)}">
+                        <xsl:with-param name="base" select="$base"/>
+                        <xsl:with-param name="in" select="concat('/descendant-or-self::node()[gn:element/@ref = ''', $currentNode/gn:element/@ref, ''']/', $del)"/>
+                      </saxon:call-template>
+                    </xsl:variable>
+                    
+                    <xsl:copy-of select="$ancestor/*/gn:element"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:if>
+            </xsl:variable>
+
+
             <!-- If the element exist, use the _X<ref> mode which
                   insert the snippet for the element if not use the 
                   XPATH mode which will create the new element at the 
                   correct location. -->
             <xsl:variable name="id" select="concat('_X', gn:element/@ref, '_replace')"/>
-            
             <xsl:call-template name="render-element-template-field">
               <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
               <xsl:with-param name="id" select="$id"/>
               <xsl:with-param name="isExisting" select="true()"/>
               <xsl:with-param name="template" select="$template"/>
               <xsl:with-param name="keyValues" select="$keyValues"/>
+              <xsl:with-param name="refToDelete" select="if ($refToDelete) then $refToDelete/gn:element else ''"/>
             </xsl:call-template>
           </xsl:for-each>
           
