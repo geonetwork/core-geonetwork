@@ -46,7 +46,8 @@
           'Keyword',
           'Thesaurus',
           function($q, $rootScope, $http, gnUrlUtils, Keyword, Thesaurus) {
-            var getKeywordsSearchUrl = function (filter, thesaurus, max, typeSearch) {
+            var getKeywordsSearchUrl = function(filter, 
+                thesaurus, max, typeSearch) {
               return gnUrlUtils.append('keywords@json',
                   gnUrlUtils.toKeyValue({
                     pNewSearch: 'true',
@@ -56,16 +57,16 @@
                     maxResults: max,
                     pKeyword: filter || ''
                   })
-                );
+              );
             };
-            var parseKeywordsResponse = function (data) {
+            var parseKeywordsResponse = function(data) {
               var listOfKeywords = [];
               angular.forEach(data[0], function(k) {
                 listOfKeywords.push(new Keyword(k));
               });
               return listOfKeywords;
             };
-            
+
             return {
               /**
                * Number of keywords returned by search (autocompletion
@@ -136,7 +137,8 @@
               parseKeywordsResponse: parseKeywordsResponse,
               getKeywords: function(filter, thesaurus, max, typeSearch) {
                 var defer = $q.defer();
-                var url = getKeywordsSearchUrl(filter, thesaurus, max, typeSearch);
+                var url = getKeywordsSearchUrl(filter,
+                    thesaurus, max, typeSearch);
                 $http.get(url, { cache: true }).
                     success(function(data, status) {
                       defer.resolve(parseKeywordsResponse(data));

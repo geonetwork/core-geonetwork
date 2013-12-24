@@ -5,7 +5,7 @@
 
   /**
    * The thesaurus selector is composed of a drop down list
-   * of thesaurus available in the catalog. On selection, 
+   * of thesaurus available in the catalog. On selection,
    * an empty XML fragment is requested and added to the form
    * before the editor is saved and refreshed.
    *
@@ -74,16 +74,16 @@
 
   /**
    * The keyword selector could be of 2 types:
-   * 1) composed of an input with autocompletion. Each tags 
+   * 1) composed of an input with autocompletion. Each tags
    * added to the input
    *
    * 2) 2 selection lists: one with the thesaurus search
    * response, the other with the selection.
-   * 
+   *
    * Each time a keyword is selected, the server is
-   * requested to provide the corresponding snippet 
+   * requested to provide the corresponding snippet
    * for the thesaurus.
-   * 
+   *
    * TODO: explain transformation
    */
   module.directive('gnKeywordSelector',
@@ -164,7 +164,7 @@
                      if (counter === scope.initialKeywords.length) {
                        scope.isInitialized = true;
                        scope.invalidKeywordMatch =
-                         scope.selected.length !== scope.initialKeywords.length;
+                       scope.selected.length !== scope.initialKeywords.length;
 
                        // Get the matching XML snippet for
                        // the initial set of keywords
