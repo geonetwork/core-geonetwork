@@ -3,8 +3,26 @@
     data-translate-values="{keywords: {{initialKeywords}}}"> </div>
   <span data-ng-show="!invalidKeywordMatch" ng-switch="mode">
     <div class="row" data-ng-switch-when="tagsinput">
-      <div class="col-md-10 col-md-offset-2" id="ttt">
+      <div class="col-md-8 col-md-offset-2" id="ttt">
         <input type="text" id="tagsinput_{{elementRef}}" class="form-control"></input>
+      </div>
+      <div class="col-md-2">
+        <!-- TODO: improve transformation drop down is duplicated -->
+        <div class="btn-group pull-right">
+          <button type="button" class="btn btn-link dropdown-toggle pull-right"
+            data-toggle="dropdown">
+            <i class="fa fa-cog"/>
+            <span class="caret"/>
+          </button>
+          <ul class="dropdown-menu">
+            <li role="presentation" class="dropdown-header" data-translate="">keywordInsertMode</li>
+            <li data-ng-repeat="tr in transformationLists"
+              data-ng-class="isCurrent(tr) ? 'disabled' : ''">
+              <a href="" data-ng-click="setTransformation(tr)"
+                title="{{(tr + '-help') | translate}}">{{tr | translate}}</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="row" data-ng-switch-default="">

@@ -4,14 +4,17 @@
   var module = angular.module('gn_thesaurus_directive', []);
 
   /**
-     *
-     *
-     */
+   * The thesaurus selector is composed of a drop down list
+   * of thesaurus available in the catalog. On selection, 
+   * an empty XML fragment is requested and added to the form
+   * before the editor is saved and refreshed.
+   *
+   */
   module.directive('gnThesaurusSelector',
-      ['$http', '$rootScope', '$timeout',
+      ['$timeout',
        'gnThesaurusService', 'gnEditor',
        'gnEditorXMLService', 'gnCurrentEdit',
-       function($http, $rootScope, $timeout,
+       function($timeout,
        gnThesaurusService, gnEditor,
        gnEditorXMLService, gnCurrentEdit) {
 
@@ -70,14 +73,24 @@
 
 
   /**
-     *
-     *
-     */
+   * The keyword selector could be of 2 types:
+   * 1) composed of an input with autocompletion. Each tags 
+   * added to the input
+   *
+   * 2) 2 selection lists: one with the thesaurus search
+   * response, the other with the selection.
+   * 
+   * Each time a keyword is selected, the server is
+   * requested to provide the corresponding snippet 
+   * for the thesaurus.
+   * 
+   * TODO: explain transformation
+   */
   module.directive('gnKeywordSelector',
-      ['$http', '$rootScope', '$timeout',
+      ['$timeout',
        'gnThesaurusService', 'gnEditor',
        'Keyword',
-       function($http, $rootScope, $timeout,
+       function($timeout,
        gnThesaurusService, gnEditor, Keyword) {
 
          return {
@@ -91,6 +104,8 @@
              keywords: '@',
              transformations: '@',
              currentTransformation: '@',
+             // Max number of tags allowed. Use 1 to restrict to only
+             // on keyword.
              maxTags: '@'
            },
            templateUrl: '../../catalog/components/thesaurus/' +
@@ -126,12 +141,13 @@
                return 0;
              };
 
-             var init = function() {
 
+
+             var init = function() {
                // Nothing to load - init done
                scope.isInitialized = scope.initialKeywords.length === 0;
 
-               if (scope.initialKeywords.length === 0) {
+               if (scope.isInitialized) {
                  checkState();
                } else {
                  // Check that all initial keywords are in the thesaurus
@@ -148,7 +164,7 @@
                      if (counter === scope.initialKeywords.length) {
                        scope.isInitialized = true;
                        scope.invalidKeywordMatch =
-                       scope.selected.length !== scope.initialKeywords.length;
+                         scope.selected.length !== scope.initialKeywords.length;
 
                        // Get the matching XML snippet for
                        // the initial set of keywords
@@ -160,10 +176,12 @@
                }
 
                // Then register search filter change
+               // Only applies to multiselect mode
                scope.$watch('filter', search);
-
              };
 
+
+             // Init typeahead and tag input
              var initTagsInput = function() {
                var id = '#tagsinput_' + scope.elementRef;
                $timeout(function() {
@@ -173,11 +191,12 @@
                    maxTags: scope.maxTags
                  });
 
+                 // Add selection to the list of tags
                  angular.forEach(scope.selected, function(keyword) {
                    $(id).tagsinput('add', keyword);
                  });
 
-                 // Load all keywords from thesaurus and
+                 // Load all keywords from thesaurus on startup
                  gnThesaurusService.getKeywords('',
                  scope.thesaurusKey, scope.max)
                       .then(function(listOfKeywords) {
@@ -186,8 +205,15 @@
                        field.typeahead({
                          valueKey: 'label',
                          local: listOfKeywords,
+                         // Then filter on typing
+                         remote: {
+                           wildcard: 'QUERY',
+                           url: gnThesaurusService.getKeywordsSearchUrl('QUERY',
+                               scope.thesaurusKey, scope.max),
+                           filter: gnThesaurusService.parseKeywordsResponse
+                         },
                          minLength: 0,
-                         limit: 15
+                         limit: gnThesaurusService.DEFAULT_NUMBER_OF_SUGGESTIONS
                          // template: '<p>{{label}}</p>'
                          // TODO: could be nice to have definition
                        }).bind('typeahead:selected',

@@ -46,8 +46,36 @@
           'Keyword',
           'Thesaurus',
           function($q, $rootScope, $http, gnUrlUtils, Keyword, Thesaurus) {
+            var getKeywordsSearchUrl = function (filter, thesaurus, max, typeSearch) {
+              return gnUrlUtils.append('keywords@json',
+                  gnUrlUtils.toKeyValue({
+                    pNewSearch: 'true',
+                    pTypeSearch: typeSearch || 1,
+                    pThesauri: thesaurus,
+                    pMode: 'searchBox',
+                    maxResults: max,
+                    pKeyword: filter || ''
+                  })
+                );
+            };
+            var parseKeywordsResponse = function (data) {
+              var listOfKeywords = [];
+              angular.forEach(data[0], function(k) {
+                listOfKeywords.push(new Keyword(k));
+              });
+              return listOfKeywords;
+            };
+            
             return {
+              /**
+               * Number of keywords returned by search (autocompletion
+               * or selection, ...)
+               */
               DEFAULT_NUMBER_OF_RESULTS: 200,
+              /**
+               * Number of keywords to display in autocompletion list
+               */
+              DEFAULT_NUMBER_OF_SUGGESTIONS: 30,
               /**
                * Request the XML for the thesaurus and its keywords
                * in a specific format (based on the transformation).
@@ -104,26 +132,14 @@
                 return defer.promise;
 
               },
-
+              getKeywordsSearchUrl: getKeywordsSearchUrl,
+              parseKeywordsResponse: parseKeywordsResponse,
               getKeywords: function(filter, thesaurus, max, typeSearch) {
                 var defer = $q.defer();
-                var url = gnUrlUtils.append('keywords@json',
-                    gnUrlUtils.toKeyValue({
-                      pNewSearch: 'true',
-                      pTypeSearch: typeSearch || 1,
-                      pThesauri: thesaurus,
-                      pMode: 'searchBox',
-                      maxResults: max,
-                      pKeyword: filter || ''
-                    })
-                    );
+                var url = getKeywordsSearchUrl(filter, thesaurus, max, typeSearch);
                 $http.get(url, { cache: true }).
                     success(function(data, status) {
-                      var listOfKeywords = [];
-                      angular.forEach(data[0], function(k) {
-                        listOfKeywords.push(new Keyword(k));
-                      });
-                      defer.resolve(listOfKeywords);
+                      defer.resolve(parseKeywordsResponse(data));
                     }).
                     error(function(data, status) {
                       //                TODO handle error
