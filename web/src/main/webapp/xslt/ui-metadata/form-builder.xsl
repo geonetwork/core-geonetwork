@@ -326,8 +326,7 @@
         </xsl:if>
         
         
-        
-        <xsl:if test="$addDirective = ''">
+        <xsl:if test="not($addDirective)">
           <div>
             <xsl:if test="$hasAddAction">
               <xsl:attribute name="class">hidden</xsl:attribute>
