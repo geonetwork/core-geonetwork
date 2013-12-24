@@ -9,10 +9,8 @@
    * TODO: Add process parameters when needed ?
    */
   module.directive('gnBatchProcessButton',
-      ['$rootScope', '$timeout', '$http', '$parse',
-        'gnBatchProcessing',
-        function($rootScope, $timeout, $http, $parse,
-       gnBatchProcessing) {
+      ['gnEditor', 'gnBatchProcessing',
+        function(gnEditor, gnBatchProcessing) {
 
          return {
            restrict: 'A',
@@ -32,7 +30,11 @@
                  process: scope.processId
                };
                angular.extend(params, scope.paramList);
-               gnBatchProcessing.runProcessMd(params);
+
+               gnBatchProcessing.runProcessMd(params)
+                .then(function(response) {
+                 gnEditor.refreshEditorForm(response.data);
+               });
              };
            }
          };

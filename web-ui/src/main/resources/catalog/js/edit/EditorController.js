@@ -94,7 +94,7 @@
           // TODO: could be better to provide
           // cancelAndClose and saveAndClose button
           return $translate('beforeUnloadEditor',
-              {timeAgo: moment($scope.editorConfig.savedTime).fromNow()});
+              {timeAgo: moment(gnCurrentEdit.savedTime).fromNow()});
         };
       };
 
@@ -196,8 +196,8 @@
       $scope.cancel = function(refreshForm) {
         gnEditor.cancel(refreshForm)
           .then(function(form) {
-            $scope.savedStatus = gnCurrentEdit.savedStatus;
-            $rootScope.$broadcast('StatusUpdated', {
+              $scope.savedStatus = gnCurrentEdit.savedStatus;
+              $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('cancelMetadataSuccess')
               });
               gnEditor.refreshEditorForm(null, true);
@@ -243,13 +243,6 @@
               });
         }
       };
-      //      // Remove status message after 30s
-      //      $scope.$watch('savedStatus', function () {
-      //        $timeout(function () {
-      //          $scope.savedStatus = '';
-      //        }, 30000);
-      //      });
-
 
       $scope.$on('AddElement', function(event, ref, name, 
           insertRef, position, attribute) {
