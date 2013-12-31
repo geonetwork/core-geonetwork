@@ -1,6 +1,7 @@
 package org.fao.geonet.wro4j;
 
 import ro.isdc.wro.model.factory.WroModelFactory;
+import ro.isdc.wro.model.resource.locator.UriLocator;
 import ro.isdc.wro.model.resource.processor.ResourcePreProcessor;
 import ro.isdc.wro.model.resource.processor.decorator.LazyProcessorDecorator;
 import ro.isdc.wro.util.LazyInitializer;
@@ -25,25 +26,37 @@ public class GeonetworkWrojModelFactoryProvider extends ConfigurableProviderSupp
 
     @Override
     public Map<String, ResourcePreProcessor> providePreProcessors() {
-        final Map<String, ResourcePreProcessor> stringResourcePreProcessorMap = super.providePreProcessors();
-        stringResourcePreProcessorMap.put(GeonetLessImportPreProcessor.ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
-            @Override
-            protected ResourcePreProcessor initialize() {
-                return new GeonetLessImportPreProcessor();
-            }
-        }));
-        stringResourcePreProcessorMap.put(StripGoogProcessor.ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
+        final Map<String, ResourcePreProcessor> preProcessorMap = super.providePreProcessors();
+        preProcessorMap.put(StripGoogProcessor.ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
             @Override
             protected ResourcePreProcessor initialize() {
                 return new StripGoogProcessor();
             }
         }));
-        stringResourcePreProcessorMap.put(AddFileUriCommentProcessor.ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
+        preProcessorMap.put(AddFileUriCommentProcessor.ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
             @Override
             protected ResourcePreProcessor initialize() {
                 return new AddFileUriCommentProcessor();
             }
         }));
-        return stringResourcePreProcessorMap;
+        preProcessorMap.put(GeonetLessCompilerProcessor.ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
+            @Override
+            protected ResourcePreProcessor initialize() {
+                return new GeonetLessCompilerProcessor();
+            }
+        }));
+        preProcessorMap.put(GeonetCssMinimizerProcessor.PROD_ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
+            @Override
+            protected ResourcePreProcessor initialize() {
+                return new GeonetCssMinimizerProcessor(true);
+            }
+        }));
+        preProcessorMap.put(GeonetCssMinimizerProcessor.DEV_ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
+            @Override
+            protected ResourcePreProcessor initialize() {
+                return new GeonetCssMinimizerProcessor(false);
+            }
+        }));
+        return preProcessorMap;
     }
 }

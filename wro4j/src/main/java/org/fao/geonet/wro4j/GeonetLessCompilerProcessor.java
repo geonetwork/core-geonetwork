@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * Time: 3:29 PM
  */
 @SupportedResourceType(ResourceType.CSS)
-public class GeonetLessImportPreProcessor
+public class GeonetLessCompilerProcessor
         extends Less4jProcessor {
 
     public static final String ALIAS = "geonetLessCompiler";
