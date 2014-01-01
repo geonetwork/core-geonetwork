@@ -45,18 +45,6 @@ public class GeonetworkWrojModelFactoryProvider extends ConfigurableProviderSupp
                 return new GeonetLessCompilerProcessor();
             }
         }));
-        preProcessorMap.put(GeonetCssMinimizerProcessor.PROD_ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
-            @Override
-            protected ResourcePreProcessor initialize() {
-                return new GeonetCssMinimizerProcessor(true);
-            }
-        }));
-        preProcessorMap.put(GeonetCssMinimizerProcessor.DEV_ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
-            @Override
-            protected ResourcePreProcessor initialize() {
-                return new GeonetCssMinimizerProcessor(false);
-            }
-        }));
         return preProcessorMap;
     }
 }
