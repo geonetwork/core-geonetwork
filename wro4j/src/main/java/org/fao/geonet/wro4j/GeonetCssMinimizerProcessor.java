@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
+import static org.fao.geonet.wro4j.AddFileUriCommentProcessor.*;
 
 /**
  * Remove comments and whitespace from css but keep the file separator comments
@@ -22,8 +23,8 @@ import java.io.Writer;
 @SupportedResourceType(ResourceType.CSS)
 @Minimize
 public class GeonetCssMinimizerProcessor implements ResourcePreProcessor {
-    private static final String START_COMMENT = AddFileUriCommentProcessor.START_JS_COMMENT.split("\\Q%s\\E")[0];
-    private static final String END_COMMENT = AddFileUriCommentProcessor.END_JS_COMMENT.split("\\Q%s\\E")[0];
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(GeonetCssMinimizerProcessor.class);
+
     public static final String PROD_ALIAS = "geonetProdCssMin";
     public static final String DEV_ALIAS = "geonetDevCssMin";
 
@@ -48,12 +49,37 @@ public class GeonetCssMinimizerProcessor implements ResourcePreProcessor {
         while (cur != -1) {
             switch (state) {
                 case SLASHSLASH:
-                    if(cur == '\n' || cur == '\r' || cur == '\f') {
+                    if(cur == '\n' || cur == '\r') {
                         state = State.COPY;
+                    } else if (!prod){
+                        if (startPrefixMatch > -1) {
+                            if (cur == START_FILE_COMMENT.charAt(startPrefixMatch)) {
+                                startPrefixMatch++;
+                                if (startPrefixMatch >= START_FILE_COMMENT.length()) {
+                                    state = State.START_PREFIX;
+                                    writer.write(START_FILE_COMMENT);
+                                    break;
+                                }
+                            } else {
+                                startPrefixMatch = -1;
+                            }
+                        }
+                        if (endPrefixMatch > -1) {
+                            if (cur == END_FILE_COMMENT.charAt(endPrefixMatch)) {
+                                endPrefixMatch++;
+                                if (endPrefixMatch > END_FILE_COMMENT.length()) {
+                                    state = State.END_PREFIX;
+                                    writer.write(END_FILE_COMMENT);
+                                    break;
+                                }
+                            } else {
+                                endPrefixMatch = -1;
+                            }
+                        }
                     }
                     break;
                 case START_PREFIX:
-                    if (cur == '\r' || cur == '\n' || cur == '\f') {
+                    if (cur == '\r' || cur == '\n') {
                         state = State.COPY;
                         writer.write("\n\n\n\n");
                     } else {
@@ -61,7 +87,7 @@ public class GeonetCssMinimizerProcessor implements ResourcePreProcessor {
                     }
                     break;
                 case END_PREFIX:
-                    if (cur == '\r' || cur == '\n' || cur == '\f') {
+                    if (cur == '\r' || cur == '\n') {
                         state = State.COPY;
                         writer.write("\n\n");
                     } else {
@@ -72,43 +98,16 @@ public class GeonetCssMinimizerProcessor implements ResourcePreProcessor {
                     if (cur == '/' && last == '*') {
                         state = State.COPY;
                         cur = -1;
-                    } else if (cur == '\r' || cur == '\n' || cur == '\f'){
-                        startPrefixMatch = endPrefixMatch = -1;
-                    } else if (!prod){
-                        if (startPrefixMatch > -1) {
-                            if (startPrefixMatch < START_COMMENT.length() && cur == START_COMMENT.charAt(startPrefixMatch)) {
-                                startPrefixMatch++;
-                                if (startPrefixMatch >= START_COMMENT.length()) {
-                                    state = State.START_PREFIX;
-                                    writer.write(START_COMMENT);
-                                    break;
-                                }
-                            } else {
-                                startPrefixMatch = -1;
-                            }
-                        }
-                        if (endPrefixMatch > -1) {
-                            if (endPrefixMatch < END_COMMENT.length() && cur == END_COMMENT.charAt(endPrefixMatch)) {
-                                endPrefixMatch++;
-                                if (endPrefixMatch > END_COMMENT.length()) {
-                                    state = State.END_PREFIX;
-                                    writer.write(END_COMMENT);
-                                    break;
-                                }
-                            } else {
-                                endPrefixMatch = -1;
-                            }
-                        }
                     }
                     break;
                 default:
                     if (last == '/') {
                         if (cur == '*') {
                             state = State.STARSLASH;
-                            startPrefixMatch = 2;
-                            endPrefixMatch = 2;
                         } else if (cur == '/') {
                             state = State.SLASHSLASH;
+                            startPrefixMatch = 2;
+                            endPrefixMatch = 2;
                         } else {
                             if (last != -1) {
                                 writer.write(last);

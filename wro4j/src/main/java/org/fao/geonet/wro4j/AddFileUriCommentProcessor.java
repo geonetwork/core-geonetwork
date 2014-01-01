@@ -5,7 +5,6 @@ import ro.isdc.wro.model.resource.Resource;
 import ro.isdc.wro.model.resource.processor.ImportAware;
 import ro.isdc.wro.model.resource.processor.ResourcePreProcessor;
 
-import javax.swing.text.html.CSS;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -56,13 +55,35 @@ public class AddFileUriCommentProcessor implements ResourcePreProcessor, ImportA
     protected static final String START_JS_COMMENT = "/* ---------------  Wro4j Start %s  --------------- */";
     protected static final String END_JS_COMMENT = "/* ---------------  Wro4j End %s --------------- */";
 
+    protected static final String START_CSS_BLOCK = "#______WRO4J_START___ { background-image: url('%s'); }";
+    protected static final String END_CSS_BLOCK = "#______WRO4J_END____ { background-image: url('%s'); }";
+
     @Override
     public void process(Resource resource, Reader reader, Writer writer) throws IOException {
         String uri = resource.getUri();
         if (resource.getUri().length() > MAX_FILE_LENGTH) {
             uri = "..." + uri.substring(uri.length() - MAX_FILE_LENGTH);
         }
-        addJavascriptComment(reader, writer, uri);
+        switch (resource.getType()) {
+            case JS:
+                addJavascriptComment(reader, writer, uri);
+                break;
+            case CSS:
+                addCssBlock(reader, writer, uri);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void addCssBlock(Reader reader, Writer writer, String uri) throws IOException {
+        writer.write(String.format(START_CSS_BLOCK, uri));
+        writer.write("\n\n\n\n");
+        IOUtils.copy(reader, writer);
+        writer.write("\n\n\n\n");
+        writer.write(String.format(END_CSS_BLOCK, uri));
+        writer.write("\n");
+
     }
 
     public void addJavascriptComment(Reader reader, Writer writer, String uri) throws IOException {
