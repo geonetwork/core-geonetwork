@@ -9,7 +9,7 @@
 		<xsl:value-of select="true()"/>
 	</xsl:template>-->
 	<xsl:template mode="permitMarkup-iso19139" match="*">
-		<xsl:value-of select="true()"/>
+		<xsl:value-of select="false()"/>
 	</xsl:template>
 	
 	<xsl:template name="permitMarkup-iso19139">
