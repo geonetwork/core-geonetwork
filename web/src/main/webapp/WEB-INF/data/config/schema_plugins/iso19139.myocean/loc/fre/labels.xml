@@ -36,7 +36,7 @@
         <label>Temporal resolution</label>
         <description></description>
         <helper>
-            <option value="N/A">Not known</option>
+            <option value="irregular">Irregular</option>
             <option value="instantaneous">Instantaneous</option>
             <option value="hourly mean">Hourly mean</option>
             <option value="hourly instantaneous">Hourly instantaneous</option>
@@ -46,6 +46,8 @@
             <option value="daily mean">Daily mean</option>
             <option value="daily mean, hourly mean">Daily mean, hourly mean</option>
             <option value="daily mean, hourly instantaneous">Daily mean, hourly instantaneous</option>
+            <option value="daily mean, monthly mean, seasonal mean">Daily mean, monthly mean, seasonal mean</option>
+            <option value="daily mean, weekly mean">Daily mean, weekly mean</option>
             <option value="weekly mean">Weekly mean</option>
             <option value="weekly mean, monthly mean">Weekly mean, monthly mean</option>
             <option value="monthly mean">Monthly mean</option>
