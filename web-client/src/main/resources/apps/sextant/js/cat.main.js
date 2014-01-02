@@ -911,14 +911,8 @@ cat.app = function() {
 							var searchPage = cookie.get('cat.search.page');
 							
 							
-							if (urlParameters.s_search !== undefined) {
-								searchForm.reset();
-								setHiddenField('E__owner');
-								setHiddenField('E__isHarvested');
-								setHiddenField('E_siteId');
-								setHiddenField('E_template');
-								search();
-							} else if(searchPage && searchPage > 0) {
+							if(urlParameters.s_search === undefined && 
+							        searchPage && searchPage > 0) {
 								catalogue.startRecord = searchPage;
 							}
 							
