@@ -745,7 +745,7 @@ cat.app = function() {
 	    },
 	    getIMap: function () {return this;},
 	    addWMC: function(url) {
-	           // Not supported by this widget app
+	    	window.open(document.getElementById('configgeoviewerurl').value + '?url=' + url);
         },
         addWMSLayer: function (args) {
             var layer = args[0];

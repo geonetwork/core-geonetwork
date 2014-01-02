@@ -67,7 +67,7 @@ cat.list = function() {
 			'<div class="btn-separator">&nbsp;</div>',
 			'<div class="wmsMenu"><span class="icon">&nbsp;</span>'+ OpenLayers.i18n('result-list-view')+ '<span class="list-icon">&nbsp;</span></div>',
 			'<tpl for="links">',
-			'<tpl if="values.type == \'application/vnd.ogc.wms_xml\' || values.type == \'OGC:WMS\'">',
+			'<tpl if="values.type == \'application/vnd.ogc.wms_xml\' || values.type == \'OGC:WMS\' || values.type == \'OGC:WMC\' || values.type == \'OGC:OWS\' || values.type == \'OGC:OWS-C\'">',
 			'<div class="mdHiddenMenu wmsLink dynamic-{parent.dynamic}" title="'
 					+ OpenLayers.i18n('addToMap') + ' {title}">',
 			'<tpl if="values.title">',

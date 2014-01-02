@@ -60,9 +60,18 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     	
     	var url;
     	var showPopup = true;
+    	var c = link.split('|');
+    	// For visualize button, check type of link.
+    	if (c.length > 4) {
+    		var linkType = c[3];
+    		// If map context, override button type
+    		// by link type
+    		if (this.isMapContext(linkType)) {
+    			type = 'ows';
+    		}	
+    	}
+    		
     	if(type == 'wms') {
-	    	var c = link.split('|');
-	    	
 	    	var theme = this.getStore().getAt(this.curId).get("sextantTheme")[0];
 	    	if(theme) {
 	    		var translationStore = Ext.getCmp('E_sextantTheme').storeLabel;
@@ -104,6 +113,12 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 	    	    Ext.query('a[id*=viewerButton]')[0].onclick();
 	    	}
     	}
+    	else if(type=='ows') {
+    		showPopup = false;
+	    	url = Ext.get(Ext.query('input[id*=configgeoviewerurl]')[0]).getValue();
+	    	var context = c[2];
+	    	window.open(url + '?url=' + context, '_blank');
+    	}
     	else if(type=='download') {
     		Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = link;
     		Ext.get(Ext.query('input[id*=getrecordbyidurl]')[0]).dom.value = 
@@ -115,7 +130,9 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     		this.displayPopup(type,url);
     	}
     },
-    
+    isMapContext: function (type) {
+    	return type == 'OGC:WMC' || type == 'OGC:OWS' || type == 'OGC:OWS-C';
+    },
     /**
      * Display a modal popup on list view button click.
      * popup informs action is made and ask for redirection to basket or geoviewer. Stays 5 sec.
