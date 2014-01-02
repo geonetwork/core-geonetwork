@@ -561,11 +561,16 @@ cat.app = function() {
                     facetsPanel.reset();
 
                     // Remove field added by URL or quick search
+                    var cmpToRemove = [];
                     this.cascade(function(cur){
                         if (cur.extraCriteria) {
-                            this.remove(cur);
+                            cmpToRemove.push(cur);
                         }
                     }, this);
+                    Ext.each(cmpToRemove, function(cmp) {
+                        this.remove(cmp);
+                    }, this);
+                    
                     searchForm.find('id', 'E__groupPublished')[0].getStore().load({
                         callback: function() {
                             this.fireEvent('search');
