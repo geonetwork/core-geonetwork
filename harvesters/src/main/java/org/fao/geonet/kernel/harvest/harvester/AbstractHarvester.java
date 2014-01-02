@@ -634,6 +634,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @return
      */
     public final String getType() {
+        // FIXME: context is null when removing record 
+        // eg. http://localhost:8080/geonetwork/node1/eng/admin.harvester.clear@json?id=585
         final String[] types = context.getApplicationContext().getBeanNamesForType(getClass());
         return types[0];
     }
