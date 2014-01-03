@@ -33,12 +33,12 @@
           }
         };
       });
-  
+
   /**
    * Use the region API to retrieve the list of
    * Country.
-   * 
-   * TODO: This could be used in other places 
+   *
+   * TODO: This could be used in other places
    * probably. Move to another common or language module ?
    */
   module.directive('gnCountryPicker', ['gnHttp',
@@ -55,7 +55,7 @@
             // tokens element which is used for filter
             angular.forEach(data, function(country) {
               country.tokens = [];
-              angular.forEach(country.label, function (label) {
+              angular.forEach(country.label, function(label) {
                 country.tokens.push(label);
               });
               country.name = country.label[scope.lang];
@@ -76,8 +76,8 @@
    * Use the lang service to retrieve the list of
    * ISO language available and provide autocompletion
    * for the input field with that directive attached.
-   * 
-   * TODO: This could be used in other places 
+   *
+   * TODO: This could be used in other places
    * like admin > harvesting > OGC WxS
    * probably. Move to another common or language module ?
    */

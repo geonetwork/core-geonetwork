@@ -42,7 +42,8 @@
     processXml: 'xml.metadata.processing@json', // TODO: CHANGE
     getRelations: 'md.relations.get@json',
     lang: 'lang@json',
-    country: 'regions.list@json?categoryId=http://geonetwork-opensource.org/regions%23country',
+    country: 'regions.list@json?categoryId=' +
+        'http://geonetwork-opensource.org/regions%23country',
     removeThumbnail: 'md.thumbnail.remove@json',
     removeOnlinesrc: 'resource.del.and.detach' // TODO: CHANGE
   });
