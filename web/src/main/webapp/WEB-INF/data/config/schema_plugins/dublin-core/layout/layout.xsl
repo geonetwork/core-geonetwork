@@ -14,6 +14,9 @@
     <xsl:value-of select="$metadata/descendant::node()/dc:language[1]"/>
   </xsl:template>
   
+  <!-- No multilingual support in Dublin core -->
+  <xsl:template name="get-dublin-core-other-languages-as-json"/>
+  
   <!-- Get the list of other languages -->
   <xsl:template name="get-dublin-core-other-languages"/>
 
@@ -133,5 +136,22 @@
     </xsl:if>
   </xsl:template>
 
+
+  <!-- Readonly elements -->
+  <xsl:template mode="mode-dublin-core" priority="200" match="dc:identifier">
+    
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label" select="gn-fn-metadata:getLabel($schema, name(), $labels)/label"/>
+      <xsl:with-param name="value" select="."/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
+      <xsl:with-param name="name" select="''"/>
+      <xsl:with-param name="editInfo" select="*/gn:element"/>
+      <xsl:with-param name="parentEditInfo" select="gn:element"/>
+      <xsl:with-param name="isDisabled" select="true()"/>
+    </xsl:call-template>
+    
+  </xsl:template>
 
 </xsl:stylesheet>

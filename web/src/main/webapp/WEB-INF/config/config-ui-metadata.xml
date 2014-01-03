@@ -121,7 +121,6 @@
         <call name="position" class=".guiservices.util.GetPositionMD"/>
         <call name="groups" class=".guiservices.groups.GetMine"/>
         <call name="sources" class=".guiservices.util.Sources"/>
-        <call name="isoLang" class=".guiservices.isolanguages.Get"/>
         <call name="subtemplates" class="jeeves.services.db.Select">
           <param name="db" value="main-db"/>
           <param name="query"
@@ -148,13 +147,31 @@
         <call name="position" class=".guiservices.util.GetPositionMD"/>
         <call name="groups" class=".guiservices.groups.GetMine"/>
         <call name="sources" class=".guiservices.util.Sources"/>
-        <call name="isoLang" class=".guiservices.isolanguages.Get"/>
         <call name="subtemplates" class="jeeves.services.db.Select">
           <param name="db" value="main-db"/>
           <param name="query"
             value="SELECT distinct(root) AS type FROM metadata WHERE isTemplate = 's'"/>
         </call>
       </output>
+    </service>
+    
+    <service name="md.element.down" deprecated="true">
+      <documentation><![CDATA[
+        Move an element at preceding position.
+        ]]></documentation>
+      <class name=".services.metadata.MoveElement">
+        <param name="dir" value="down" />
+      </class>
+      
+    </service>
+    
+    <service name="md.element.up" deprecated="true">
+      <documentation><![CDATA[
+        Move an element at following position.
+        ]]></documentation>
+      <class name=".services.metadata.MoveElement">
+        <param name="dir" value="up" />
+      </class>
     </service>
     
     <service name="md.element.info">

@@ -394,9 +394,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.region.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.regions.list!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.regions.category.list!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/region.getmap.\w\w\w!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/region\.geom\.\w\w\w!?.*" access="permitAll"></sec:intercept-url>
-
+                
 
 
                 <!-- New section of services based on refactoring
@@ -510,6 +508,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.edit!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.element.add!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.element.remove!?.*" access="hasRole('Editor')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.element.up!?.*" access="hasRole('Editor')"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.element.down!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.element.info!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.thumbnail.upload!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/md.thumbnail.remove!?.*" access="hasRole('Editor')"/>
@@ -529,7 +529,15 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw-.*" access="permitAll"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw!?.*" access="permitAll"/>
                 
-                <sec:intercept-url pattern="/srv/[a-z]{2,3}/portal.sru!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/region.get!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/regions.list!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/regions.category.list!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/region.getmap.\w\w\w!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/region\.geom\.\w\w\w!?.*" access="permitAll"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/lang!?.*" access="permitAll"/>
+                
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/portal.sru!?.*" access="permitAll"/>
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.search!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.search.nojs!?.*" access="permitAll"/>
@@ -543,10 +551,10 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.edit!?.*" access="hasRole('Editor')"/>
 
-                <sec:intercept-url pattern="/home\?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/home" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/home\?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/home" access="permitAll"/>
 
-                <sec:intercept-url pattern="/.*" access="denyAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/.*" access="denyAll"/>
             </sec:filter-security-metadata-source>
         </property>
     </bean>

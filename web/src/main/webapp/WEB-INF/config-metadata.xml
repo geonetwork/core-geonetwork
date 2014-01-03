@@ -228,7 +228,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.elem.down">
+		<service name="metadata.elem.down" deprecated="true">
 			<class name=".services.metadata.MoveElement">
 				<param name="dir" value="down" />
 			</class>
@@ -237,7 +237,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.elem.up">
+		<service name="metadata.elem.up" deprecated="true">
 			<class name=".services.metadata.MoveElement">
 				<param name="dir" value="up" />
 			</class>

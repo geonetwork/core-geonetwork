@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    <documentation>
+      <![CDATA[
+      
+      # Region API
+      
+      ## XmlSearch and CswSearch Integration
+      
+      The XmlSearch API will be modified so the geom parameter can either be WKT or have the form: region:id, where id is the id of the region to use as a geometry. If the region has a geometry then that geometry will be loaded otherwise the bbox will be used to create a polygon geometry.
+      
+      For example:
+      
+      Search for metadata intersecting with france:
+       http://localhost:8080/geonetwork/srv/eng/q?fast=index&from=1&to=20&geometry=region:http%3A%2F%2Fgeonetwork-opensource.org%2Fregions%2368
+      Search within the union of France and Switzerland, two regions are comma separated (http%3A%2F%2Fgeonetwork-opensource.org%2Fregions%2368 is the uri encoded id of france and http%3A%2F%2Fgeonetwork-opensource.org%2Fregions%23211 is the encoded id of switzerland)
+       http://localhost:8080/geonetwork/srv/eng/q?fast=index&from=1&to=20&geometry=region:http%3A%2F%2Fgeonetwork-opensource.org%2Fregions%23211,http%3A%2F%2Fgeonetwork-opensource.org%2Fregions%2368
+      The CatalogSearcher (part of Csw GetRecords) will be modified to replace elements with the attribute gml:id which have the form: region:id.
+      
+      For example:
+      ```
+      <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" service="CSW" version="2.0.2" resultType="results_with_summary" startPosition="1" maxRecords="10">
+        <csw:Query typeNames="csw:Record">
+          <csw:ElementSetName>full</csw:ElementSetName>
+          <ogc:SortBy xmlns:ogc="http://www.opengis.net/ogc">
+            <ogc:SortProperty>
+              <ogc:PropertyName>relevance</ogc:PropertyName>
+              <ogc:SortOrder>DESC</ogc:SortOrder>
+            </ogc:SortProperty>
+          </ogc:SortBy>
+          <csw:Constraint version="1.0.0">
+            <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+              <ogc:And>
+                <ogc:PropertyIsEqualTo>
+                  <ogc:PropertyName>similarity</ogc:PropertyName>
+                  <ogc:Literal>0.8</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:Within>
+                  <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                  <gml:MultiPolygon xmlns:gml="http://www.opengis.net/gml" gml:id="kantone:10,kantone:22"/>
+                </ogc:Within>
+              </ogc:And>
+            </ogc:Filter>
+          </csw:Constraint>
+        </csw:Query>
+      </csw:GetRecords>
+      ```
+      ## Implementation Notes
+      
+      The actual implementation will consist of the services and a strategy object that can be configured the geonetwork configuration files (config-spring.xml). The intention is that for a particular application the strategy object can be implemented and configured for use. The default implementation will be the current implementation factored out into the strategy object.
+      
+      The main strategy object is called:
+      
+      RegionsDAO which is the entry point into searching and querying regions. See the javadocs of this class for information on how to use the class and implement new custom regions strategies.
+      
+      ## Default implementations Two strategies will be shipped with Geonetwork by default:
+      
+      Thesaurus Regions - The regions and region categories are derived from the regions listed in the regions thesaurus that is shipped with geonetwork by default
+      * Metadata Regions - Each region is an extent in one of the metadata elements. Because of the cost to search the metadata the first version will no allow list searching all regions in this strategy. The search options are limited to category (the fileid of the MD), this will list the ids of the "regions/extents" within that metadata. The other option is to get a region by id. This is the form: metadata:<fileIdentifier>:<edit ref of geometry>. In the first version only iso19139 can be obtained and only polygons (not bbox)
+      
+      Example URLS
+      
+       http://localhost:8080/geonetwork/srv/eng/xml.regions.category.list
+       http://localhost:8080/geonetwork/srv/eng/xml.regions.list?categoryId=country
+       http://localhost:8080/geonetwork/srv/eng/xml.regions.list?categoryId=kantone
+       http://localhost:8080/geonetwork/srv/eng/xml.regions.list?categoryId=kantone&categoryId=country
+       http://localhost:8080/geonetwork/srv/eng/xml.regions.list?categoryId=gemeinden
+       http://localhost:8080/geonetwork/srv/eng/xml.regions.list?categoryId=gemeinden&maxRecords=5
+       http://localhost:8080/geonetwork/srv/eng/xml.region.get?id=kantone:25
+       http://localhost:8080/geonetwork/srv/eng/region.geom.wkt?id=kantone:25
+       http://localhost:8080/geonetwork/srv/eng/region.geom.wkt?id=kantone:25&srs=EPSG:21781
+       http://localhost:8080/geonetwork/srv/eng/region.getmap.png?id=kantone:25&height=100
+       http://localhost:8080/geonetwork/srv/eng/region.getmap.png?id=kantone:25&srs=EPSG:21781&height=100
+       http://localhost:8080/geonetwork/srv/eng/xml.regions.list?label=aarg
+       http://localhost:8080/geonetwork/srv/eng/xml.regions.list?label=aarg&categoryId=kantone
+       http://localhost:8080/geonetwork/srv/eng/xml.regions.list?label=aarg&maxRecords=5
+       
+      ]]>
+    </documentation>
+
+
+    <service name="region.get">
+      <documentation><![CDATA[
+        Return one region.
+        
+        Parameters:
+         * id - required
+         
+         
+        Example Response:
+        ```
+        <regions>
+          <region id="338" hasGeom="false" categoryId="continent">
+            <north>38.2</north>
+            <south>-34.6</south>
+            <west>-17.3</west>
+            <east>51.1</east>
+            <label>
+              <eng>Africa</eng>
+              <fre>Afrique</fre>
+              <ger>Afrika</ger>
+              <spa>Africa</spa>
+              <rus>Africa</rus>
+              <por>Africa</por>
+              <chi>Africa</chi>
+              <dut>Afrika</dut>
+              <nor>Africa</nor>
+              <fin>Africa</fin>
+              <ara>Africa</ara>
+              <ita>Africa</ita>
+            </label>
+            <category>
+                 <fre>Continent</fre>
+                 <eng>Continent</eng>
+            </category>
+          </record>
+        </response>
+        ```
+        ]]></documentation>
+      <class name=".services.region.Get"/>
+
+      <error id="region-not-found" sheet="../xslt/error/error-xml.xsl" statusCode="404"/>
+    </service>
+
+    <service name="regions.list">
+      <documentation>
+        <![CDATA[
+        
+        Parameters:
+        * category - only return labels contained in the given category - optional
+        * label - searches the labels for regions that contain the text in this parameters - optional
+        * maxRecords - limit the number of results returned - optional
+        
+        Example Response
+        ```
+        <regions count="1">
+          <region id="country.1" hasGeom="true" categoryId="country">
+            <label>
+              <eng>France</eng>
+            </label>
+            <category>
+                 <fre>Pays</fre>
+                 <eng>Country</eng>
+            </category>
+          </region>
+        </regions>
+        ```
+]]>
+      </documentation>
+      <class name=".services.region.List"/>
+    </service>
+
+    <service name="regions.category.list">
+      <documentation>
+        <![CDATA[
+        
+        List all categories available.
+        
+        Example response:
+        ```
+        <categories>
+        <category id="http://geonetwork-opensource.org/regions#country"/>
+        <category id="http://geonetwork-opensource.org/regions#continent"/>
+        <category id="http://geonetwork-opensource.org/regions#ocean"/>
+        <category id="metadata"/>
+        </categories>
+        ```
+        ]]>
+      </documentation>
+      <class name=".services.region.ListCategories"/>
+    </service>
+
+    <service name="region.getmap.png">
+      <documentation>
+        <![CDATA[
+        
+        return a rendering of the geometry as a png. If no background is specified the image will be a transparent png
+         * id - required
+         * mapsrs - (optional) default is EPSG:4326 otherwise it is the project to use when rendering the image
+         * width - (optional) width of the image that is created. Only one of width and height are permitted
+         * height - (optional) height of the image that is created. Only one of width and height are permitted
+         * background - (optional) URL for loading a background image for regions or a key that references the namedBackgrounds (configured in config.xml). A WMS Getmap request is the typical example. The URL must be parameterized with the following parameters:
+         * minx
+         * maxx
+         * miny
+         * maxy
+         * width
+         * height
+         * srs (optional)
+         * geom - (optional) a wkt or gml encoded geometry.
+         * geomtype - (optional) defines if geom is wkt or gml. allowed values are wkt and gml. if not specified the it is assumed the geometry is wkt
+         * geomsrs - (optional) the srs of the geometry passed in via the geom parameter
+        
+        In getMap the envelope of the geometry is calculated then
+        it is expanded by a factor.  That factor is the size of the map.  This allows the 
+        map to be slightly bigger than the geometry allowing some context to be shown.
+        This parameter allows different factors to be chosen per scale level 
+         
+        Proportion is the proportion of the world that the geometry
+        covers (bounds of WGS84)/(bounds of geometry in WGS84)
+        
+        
+        Named backgrounds allow the background parameter to be a simple key 
+        and the complete URL will be looked up from this list of named backgrounds 
+        The name of the child elements is the key and the text is the url
+        ]]>
+      </documentation>
+      <class name=".services.region.GetMap">
+        <param name="expandFactors">
+          <factor proportion=".0005" value="2"/>
+          <factor proportion=".01" value=".5"/>
+          <factor proportion=".015" value=".2"/>
+        </param>
+        <param name="format" value="png"/>
+        <!--  -->
+        <param name="namedBackgrounds">
+          <!-- <geocat>http://wms.geo.admin.ch/?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=ch.swisstopo.pixelkarte-farbe-pk1000.noscale&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png</geocat> -->
+        </param>
+      </class>
+      <output file="true" contentType="image/png"/>
+      <error id="region-not-found" sheet="../xslt/error/error-xml.xsl" statusCode="404"/>
+    </service>
+
+
+    <service name="region.geom.wkt">
+      <documentation><![CDATA[
+        
+        ]]></documentation>
+      <class name=".services.region.GetGeom">
+        <param name="format" value="WKT"/>
+      </class>
+
+      <output sheet="extracttext.xsl" contentType="text/plain; charset=utf-8"/>
+
+      <error id="region-not-found" sheet="../xslt/error/error-xml.xsl" statusCode="404"/>
+
+    </service>
+
+    <service name="region.geom.gml3">
+      <documentation><![CDATA[
+        
+        ]]></documentation>
+      <class name=".services.region.GetGeom">
+        <param name="format" value="GML3"/>
+      </class>
+
+      <error id="region-not-found" sheet="../xslt/error/error-xml.xsl" statusCode="404"/>
+
+    </service>
+  </services>
+</geonet>

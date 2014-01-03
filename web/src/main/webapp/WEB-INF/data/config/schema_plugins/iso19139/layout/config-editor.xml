@@ -42,6 +42,9 @@
     <for name="gmd:electronicMailAddress" use="email"/>
 
     <for name="gmd:language" use="data-gn-language-picker"/>
+    <for name="gmd:languageCode" use="data-gn-language-picker"/>
+
+    <for name="gmd:country" use="data-gn-country-picker"/>
 
     <for name="gmd:referenceSystemInfo" addDirective="data-gn-crs-selector"/>
 
