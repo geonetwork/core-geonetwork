@@ -369,7 +369,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.region.get">
+		<service name="xml.region.get" deprecated="true">
 			<class name=".services.region.Get" />
 			
 			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
@@ -377,64 +377,14 @@
 			</error>
 		</service>
 
-		<service name="xml.regions.list">
+		<service name="xml.regions.list" deprecated="true">
 			<class name=".services.region.List" />
 		</service>
 
-		<service name="xml.regions.category.list">
+		<service name="xml.regions.category.list" deprecated="true">
 			<class name=".services.region.ListCategories" />
 		</service>
 
-		<service name="region.getmap.png">
-			<class name=".services.region.GetMap" >
-				<!-- In getMap the envelope of the geometry is calculated then
-					 it is expanded by a factor.  That factor is the size of the map.  This allows the 
-					 map to be slightly bigger than the geometry allowing some context to be shown.
-					 This parameter allows different factors to be chosen per scale level 
-					 
-					 Proportion is the proportion of the world that the geometry
-					 covers
-					 (bounds of WGS84)/(bounds of geometry in WGS84)-->)
-				 <param name="expandFactors">
-				 	<factor proportion=".0005" value="2"/>
-				 	<factor proportion=".01" value=".5"/>
-				 	<factor proportion=".015" value=".2"/>
-				 </param>
-				 <param name="format" value="png"/>
-				 <!-- named backgrounds allow the background parameter to be a simple key 
-				 	  and the complete URL will be looked up from this list of named backgrounds 
-				 	  The name of the child elements is the key and the text is the url -->
-				 <param name="namedBackgrounds">
-				 	<!-- <geocat>http://wms.geo.admin.ch/?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=ch.swisstopo.pixelkarte-farbe-pk1000.noscale&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png</geocat> -->
-				 </param>
-			 </class>
-			<output file="true" contentType="image/png"/>
-			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-		</service>
-
-		<service name="region.geom.wkt">
-			<class name=".services.region.GetGeom">
-				<param name="format" value="WKT"/>
-			</class>
-			
-			<output sheet="extracttext.xsl" contentType="text/plain; charset=utf-8"/>
-			
-			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-		</service>
-
-		<service name="region.geom.gml3">
-			<class name=".services.region.GetGeom">
-				<param name="format" value="GML3"/>
-			</class>
-			
-			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Selection search services for filtering -->
@@ -1245,6 +1195,7 @@
   <include>config/config-service-pdf.xml</include>
   
   <include>config/config-service-thesaurus.xml</include>
+  <include>config/config-service-region.xml</include>
   
   <include>config/config-service-admin.xml</include>
   <include>config/config-service-admin-harvesting.xml</include>
