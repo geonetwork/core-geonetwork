@@ -42,6 +42,11 @@
           scope.config =
               angular.fromJson($('#' + scope.ref + '_config')[0].value);
 
+          // If only one option, convert to an array
+          if (!$.isArray(scope.config.option)) {
+            scope.config.option = [scope.config.option];
+          }
+
           // Check if current value is one of the suggestion
           var isInList = false;
           angular.forEach(scope.config.option, function(opt) {
