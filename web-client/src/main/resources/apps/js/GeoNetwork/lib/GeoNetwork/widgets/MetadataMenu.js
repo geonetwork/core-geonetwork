@@ -287,7 +287,6 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
     
     composeMenu: function(){
         if(!this.catalogue.isReadOnly()) {
-            this.add(this.editAction);
             this.add(this.editAction2);
             this.add(this.deleteAction);
             this.otherActions = new Ext.menu.Item({
@@ -297,7 +296,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                             this.adminAction, 
                             this.publicationToggleAction, this.statusAction, 
                             this.enableWorkflowAction, this.versioningAction, 
-                            this.categoryAction]
+                            this.categoryAction, new Ext.menu.Separator(), this.editAction]
                 }
             });
         }
@@ -363,7 +362,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         if (!identified || isReadOnly) {
             this.editAction.setText(OpenLayers.i18n('edit'));
             this.editAction.hide();
-            this.editAction2.setText(OpenLayers.i18n('editNew'));
+            this.editAction2.setText(OpenLayers.i18n('edit'));
             this.editAction2.hide();
             this.deleteAction.hide();
         } else {
@@ -378,7 +377,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                             }) : '')
                     );
             this.editAction.show();
-            this.editAction2.setText(OpenLayers.i18n('editNew') 
+            this.editAction2.setText(OpenLayers.i18n('edit') 
                     + (statusIdx !== -1 && status > 0 ? 
                             OpenLayers.String.format(OpenLayers.i18n('currentStatus'), {
                                 status: this.statusStore.getAt(statusIdx).get('label')[catalogue.lang]
