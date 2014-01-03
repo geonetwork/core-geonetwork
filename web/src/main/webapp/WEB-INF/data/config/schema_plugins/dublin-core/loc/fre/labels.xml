@@ -101,10 +101,6 @@
     <label>Langue</label>
     <description>Langue.</description>
     <example/>
-    <helper>
-      <option value="fre">Français</option>
-      <option value="eng">Anglais</option>
-    </helper>
   </element>
 
   <element name="dc:relation">
