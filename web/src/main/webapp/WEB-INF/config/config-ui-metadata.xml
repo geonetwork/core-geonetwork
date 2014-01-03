@@ -155,6 +155,25 @@
       </output>
     </service>
     
+    <service name="md.element.down" deprecated="true">
+      <documentation><![CDATA[
+        Move an element at preceding position.
+        ]]></documentation>
+      <class name=".services.metadata.MoveElement">
+        <param name="dir" value="down" />
+      </class>
+      
+    </service>
+    
+    <service name="md.element.up" deprecated="true">
+      <documentation><![CDATA[
+        Move an element at following position.
+        ]]></documentation>
+      <class name=".services.metadata.MoveElement">
+        <param name="dir" value="up" />
+      </class>
+    </service>
+    
     <service name="md.element.info">
       <documentation><![CDATA[
             Get help on an element.

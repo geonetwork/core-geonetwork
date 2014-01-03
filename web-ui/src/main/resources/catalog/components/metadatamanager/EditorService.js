@@ -71,6 +71,39 @@
          */
          var duration = 300;
 
+         var isFirstElementOfItsKind = function(element) {
+           return !isSameKindOfElement(element, $(element).prev().get(0));
+         };
+         var isLastElementOfItsKind = function(element) {
+           return !isSameKindOfElement(element, $(element).next().get(0));
+         };
+         /**
+          * Compare the element label key with the previous element label key
+          * Return true if the element it the first element of its kind.
+          *
+          * Label key is composed of schema, element name and optionally xpath.
+          *
+          * Example:
+          * iso19139|gmd:voice|gmd:CI_Telephone|/gmd:MD_Metadata/gmd:contact
+          * /gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/
+          * gmd:phone/gmd:CI_Telephone/gmd:voice
+          *
+          */
+         var isSameKindOfElement = function(element, target) {
+           var elementLabel = $(element).children('label').get(0);
+           var elementKey = $(elementLabel).attr('data-gn-field-tooltip');
+           if (target.length === 0) {
+             return false;
+           } else {
+             var childrenLabel = $(target).children('label').get(0);
+             if (childrenLabel) {
+               var targetKey = $(childrenLabel).attr('data-gn-field-tooltip');
+               return targetKey === elementKey;
+             } else {
+               return false;
+             }
+           }
+         };
 
          var setStatus = function(status) {
            gnCurrentEdit.savedStatus = $translate(status.msg);
@@ -224,6 +257,31 @@
              //                  &child=geonet:attribute
 
              var attributeAction = attribute ? '&child=geonet:attribute' : '';
+
+
+             // When adding a new element, the down control
+             // of the previous element must be enabled and
+             // the up control enabled only if the previous
+             // element is not on top.
+             var checkMoveControls = function(element) {
+               var previousElement = element.prev();
+               if (previousElement !== undefined) {
+                 var findExp = 'div.gn-move';
+                 var previousElementCtrl = $(previousElement
+                     .find(findExp).get(0)).children();
+
+                 // Up control is enabled if the previous element is
+                 // not on top.
+                 var upCtrl = previousElementCtrl.get(0);
+                 var isTop = isFirstElementOfItsKind(previousElement.get(0));
+                 $(upCtrl).toggleClass('invisible', isTop);
+
+                 // Down control is on because we have a new element below.
+                 var downCtrl = previousElementCtrl.get(1);
+                 $(downCtrl).removeClass('invisible');
+               }
+             };
+
              var defer = $q.defer();
              $http.get(this.buildEditUrlPrefix('md.element.add') +
              '&ref=' + ref + '&name=' + name + attributeAction)
@@ -239,8 +297,8 @@
                  target[position || 'after'](snippet); // Insert
                  snippet.slideDown(duration, function() {});   // Slide
 
-                 // Remove the Add control from the current element
-                 var addControl = $('#gn-el-' + insertRef + ' .gn-add');
+                 // Adapt the move element
+                 checkMoveControls(snippet);
                }
                $compile(snippet)(gnCurrentEdit.compileScope);
                defer.resolve(snippet);
@@ -272,18 +330,107 @@
              });
              return defer.promise;
            },
-           remove: function(metadataId, ref, parent) {
+           remove: function(metadataId, ref, parent, domRef) {
              // md.element.remove?id=<metadata_id>&ref=50&parent=41
              // Call service to remove element from metadata record in session
              var defer = $q.defer();
              $http.get('md.element.remove@json?id=' + gnCurrentEdit.id +
                      '&ref=' + ref + '&parent=' + parent)
                      .success(function(data) {
-               // Remove element from the DOM
-               var target = $('#gn-el-' + ref);
+               // For a fieldset, domref is equal to ref.
+               // For an input, it may be different because
+               // the element to remove is the parent of the input
+               // element (eg. gmd:voice for a gco:CharacterString)
+               domRef = domRef || ref;
+               // The element to remove from the DOM
+               var target = $('#gn-el-' + domRef);
+
+               // When adding a new element, the down control
+               // of the previous element must be enabled and
+               // the up control enabled only if the previous
+               // element is not on top.
+               var checkMoveControls = function(element) {
+                 // If first element with down only
+                 //  apply this to the next one
+                 var isFirst = isFirstElementOfItsKind(element);
+                 if (isFirst) {
+                   var next = $(element).next().get(0);
+                   var elementCtrl = $(next).find('div.gn-move').get(0);
+                   var ctrl = $(elementCtrl).children();
+                   $(ctrl.get(0)).addClass('invisible');
+                 } else {
+                   // If middle element with up and down
+                   // do nothing
+
+                   // If last element with up only
+                   //  apply this to previous
+                   var isLast = isLastElementOfItsKind(element);
+                   if (isLast) {
+                     var prev = $(element).prev().get(0);
+                     var elementCtrl = $(prev).find('div.gn-move').get(0);
+                     var ctrl = $(elementCtrl).children();
+                     $(ctrl.get(1)).addClass('invisible');
+                   }
+                 }
+               };
+
+               // Adapt the move element
+               checkMoveControls(target.get(0));
+
                target.slideUp(duration, function() { $(this).remove();});
 
                // TODO: Take care of moving the + sign
+               defer.resolve(data);
+             }).error(function(data) {
+               defer.reject(data);
+             });
+             return defer.promise;
+           },
+           /**
+            * Move an element according to the direction defined.
+            * Call the service to apply the change to the metadata,
+            * switch HTML element if domelementToMove defined.
+            */
+           move: function(ref, direction, domelementToMove) {
+             // md.element.up?id=<metadata_id>&ref=50
+             var defer = $q.defer();
+
+
+             var swapMoveControls = function(currentElement, 
+                 switchWithElement) {
+               var findExp = 'div.gn-move';
+               var currentElementCtrl = $(currentElement
+                   .find(findExp).get(0)).children();
+               var switchWithElementCtrl = $(switchWithElement
+                   .find(findExp).get(0)).children();
+
+               // For each existing up/down control transfert
+               // the hidden class between the two elements.
+               angular.forEach(switchWithElementCtrl, function(ctrl, idx) {
+                 var ctrl2 = currentElementCtrl[idx];
+                 var ctrlHidden = $(ctrl).hasClass('invisible');
+                 var ctrl2Hidden = $(ctrl2).hasClass('invisible');
+                 $(ctrl).toggleClass('invisible', ctrl2Hidden);
+                 $(ctrl2).toggleClass('invisible', ctrlHidden);
+               });
+             };
+
+             $http.get(this.buildEditUrlPrefix('md.element.' + direction) +
+             '&ref=' + ref)
+                    .success(function(data) {
+               // Switch with previous element
+               if (domelementToMove) {
+                 var currentElement = $('#gn-el-' + domelementToMove);
+                 var switchWithElement;
+                 if (direction === 'up') {
+                   switchWithElement = currentElement.prev();
+                   switchWithElement.insertAfter(currentElement);
+                 } else {
+                   switchWithElement = currentElement.next();
+                   switchWithElement.insertBefore(currentElement);
+                 }
+                 swapMoveControls(currentElement, switchWithElement);
+               }
                defer.resolve(data);
              }).error(function(data) {
                defer.reject(data);

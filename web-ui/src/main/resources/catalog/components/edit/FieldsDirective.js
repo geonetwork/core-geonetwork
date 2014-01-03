@@ -146,4 +146,26 @@
            }
          };
        }]);
+
+  /**
+   * Move an element up or down. If direction
+   * is not defined, direction is down.
+   */
+  module.directive('gnEditorControlMove', ['gnEditor',
+    function(gnEditor) {
+      return {
+        restrict: 'A',
+        scope: {
+          ref: '@gnEditorControlMove',
+          domelementToMove: '@',
+          direction: '@'
+        },
+        link: function(scope, element, attrs) {
+          $(element).click(function() {
+            gnEditor.move(scope.ref, scope.direction || 'down',
+                scope.domelementToMove);
+          });
+        }
+      };
+    }]);
 })();

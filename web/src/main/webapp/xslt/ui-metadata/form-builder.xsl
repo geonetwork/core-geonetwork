@@ -145,6 +145,12 @@
             
             
             
+            <xsl:call-template name="render-form-field-control-move">
+              <xsl:with-param name="elementEditInfo" select="$parentEditInfo"/>
+              <xsl:with-param name="domeElementToMoveRef" select="$editInfo/@ref"/>
+            </xsl:call-template>
+            
+            
             <xsl:if test="$attributesSnippet">
               <div class="well well-sm gn-attr {if ($isDisplayingAttributes) then '' else 'hidden'}">
                 <xsl:copy-of select="$attributesSnippet"/>
@@ -164,22 +170,7 @@
                 <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
               </xsl:call-template>
             </xsl:if>
-            <!-- TODO: Add the set on save text ? -->
           </div>
-          <!-- Next line display the add element control
-                the geonet:child element is taking care of that
-              <xsl:if test="not($isDisabled)">
-                <div class="col-lg-10"> </div>
-                <div class="col-lg-2">
-                    <xsl:call-template name="render-form-field-control-add">
-                        <xsl:with-param name="name" select="name(.)"/>
-                        <xsl:with-param name="isRequired" select="$isRequired"/>
-                        <xsl:with-param name="editInfo" select="$editInfo"/>
-                        <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
-                    </xsl:call-template>
-                </div>
-              </xsl:if> -->
-
         </div>
       </xsl:otherwise>
     </xsl:choose>
@@ -235,6 +226,12 @@
             <xsl:with-param name="editInfo" select="$editInfo"/>
           </xsl:call-template>
         </xsl:if>
+        
+        
+        <xsl:call-template name="render-form-field-control-move">
+          <xsl:with-param name="elementEditInfo" select="$editInfo"/>
+          <xsl:with-param name="domeElementToMoveRef" select="$editInfo/@ref"/>
+        </xsl:call-template>
       </legend>
 
       <xsl:if test="count($attributesSnippet/*) > 0">
@@ -692,8 +689,12 @@
                    ($editInfo/@del = 'true' or 
                    $editInfo/@min != 1)
                    ))">
+      
+      <xsl:variable name="elementToRemove" select="if ($parentEditInfo) then 
+        $parentEditInfo else $editInfo"/>
+      
       <i class="btn fa fa-times text-danger gn-control pull-right"
-        data-ng-click="remove({$editInfo/@ref}, {$editInfo/@parent})"
+        data-ng-click="remove({$elementToRemove/@ref}, {$elementToRemove/@parent}, {$editInfo/@ref})"
         data-ng-mouseenter="highlightRemove({$editInfo/@ref})"
         data-ng-mouseleave="unhighlightRemove({$editInfo/@ref})"/>
     </xsl:if>
@@ -716,6 +717,24 @@
 
 
 
+
+  <!-- Template to render up and down control. -->
+  <xsl:template name="render-form-field-control-move">
+    <xsl:param name="elementEditInfo"/>
+    <xsl:param name="domeElementToMoveRef" required="no" select="''"/>
+    
+    <div class="gn-move">
+      <xsl:variable name="elementToMoveRef" select="if ($elementEditInfo) then $elementEditInfo/@ref else ''"/>
+      <a class="fa fa-angle-up {if ($elementEditInfo and $elementEditInfo/@up = 'true') then '' else 'invisible'}" 
+        data-gn-editor-control-move="{$elementToMoveRef}"
+        data-domelement-to-move="{$domeElementToMoveRef}"
+        data-direction="up" href=""></a>
+      <a class="fa fa-angle-down {if ($elementEditInfo and $elementEditInfo/@down = 'true') then '' else 'invisible'}" 
+        data-gn-editor-control-move="{$elementToMoveRef}"
+        data-domelement-to-move="{$domeElementToMoveRef}"
+        data-direction="down" href=""></a>
+    </div>
+  </xsl:template>
 
 
   <!-- 

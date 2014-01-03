@@ -170,8 +170,8 @@
             insertRef, position);
         return false;
       };
-      $scope.remove = function(ref, parent) {
-        gnEditor.remove(gnCurrentEdit.id, ref, parent);
+      $scope.remove = function(ref, parent, domRef) {
+        gnEditor.remove(gnCurrentEdit.id, ref, parent, domRef);
       };
       $scope.save = function(refreshForm) {
         gnEditor.save(refreshForm)
