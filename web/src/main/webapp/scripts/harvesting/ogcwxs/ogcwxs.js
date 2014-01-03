@@ -121,6 +121,8 @@ function retrieveOutputSchemas_OK(data)
 	}
 	
 	view.reapplySelectedSchema();
+// COGS - NIWA populate template selection on load
+	view.retrieveTemplates();
 }
 
 //=====================================================================================

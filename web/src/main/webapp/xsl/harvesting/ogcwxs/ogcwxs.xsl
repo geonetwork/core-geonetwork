@@ -130,6 +130,22 @@
 				</td>
 			</tr>
 
+			<!-- COGS: Begin edit for NIWA mods -->
+			<tr id="ogcwxs.templateService.row">
+				<td class="padded">Service Template</td> <!--TODO: I18N-alize -->
+				<td class="padded">
+					<select id="ogcwxs.templateService" />
+				</td>
+			</tr>
+
+			<tr id="ogcwxs.template.layer.row">
+				<td class="padded">Layer Template</td> <!--TODO: I18N-alize -->
+				<td class="padded">
+					<select id="ogcwxs.template.layer" />
+				</td>
+			</tr>
+			<!-- COGS: End edit for NIWA mods -->
+
 			<tr>
 				<td class="padded" valign="bottom"><xsl:value-of select="/root/gui/harvesting/icon"/></td>
 				<td class="padded">

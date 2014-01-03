@@ -162,6 +162,10 @@ var updateTemp =
 '      <useLayerMd>{USELAYERMD}</useLayerMd>'+
 '      <datasetCategory>{DATASETCATEGORY}</datasetCategory>'+
 '      <outputSchema>{OUTPUTSCHEMA}</outputSchema>'+
+//--- COGS TODO use already existing vars.- added to support harvest to template for NIWA 1-4-2013
+'      <templateService>{TEMPLATESERVICE}</templateService>'+
+'      <templateLayer>{TEMPLATELAYER}</templateLayer>'+
+//--- COGS - end mod
 '    </options>'+
 
 '    <content>'+

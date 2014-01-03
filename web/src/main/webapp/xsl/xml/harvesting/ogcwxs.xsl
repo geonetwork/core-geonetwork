@@ -26,6 +26,10 @@
 		<useLayerMd><xsl:value-of  select="useLayerMd/value" /></useLayerMd>
 		<datasetCategory><xsl:value-of  select="datasetCategory/value" /></datasetCategory>
 		<outputSchema><xsl:value-of  select="outputSchema/value" /></outputSchema>
+		<!-- COGS NIWA mods - add templates to ogc wxs harvest schema -->
+		<templateService><xsl:value-of  select="templateService/value" /></templateService>
+		<templateLayer><xsl:value-of  select="templateLayer/value" /></templateLayer>
+		<!-- COGS NIWA - end mod -->
 	</xsl:template>
 
 	<!-- ============================================================================================= -->

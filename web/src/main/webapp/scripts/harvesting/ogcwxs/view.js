@@ -14,6 +14,7 @@ ogcwxs.View = function(xmlLoader)
 	var loader = xmlLoader;
 	var valid  = new Validator(loader);
 	var shower = null;
+	var shower1 = null; //COGS - NIWA OGC harvest to template mod
 	
 	var currSearchId = 0;
 	var selectedSchema = '';
@@ -37,9 +38,14 @@ ogcwxs.View = function(xmlLoader)
 	this.clearOutputSchemas = clearOutputSchemas;
 	this.addOutputSchema    = addOutputSchema;
 	this.reapplySelectedSchema  = reapplySelectedSchema;
+	//COGS - NIWA OGC harvest to template mod
+	this.retrieveTemplates	= retrieveTemplates;
 
 	Event.observe('ogcwxs.icon', 'change', ker.wrap(this, updateIcon));
 	Event.observe('ogcwxs.ogctype', 'change', ker.wrap(this, updateOutputSchemas));
+
+	Event.observe('ogcwxs.outputSchema', 'change', retrieveTemplates);
+    //COGS - NIWA OGC harvest to template mod
 
 //=====================================================================================
 //===
@@ -58,7 +64,9 @@ function init()
 		{ id:'ogcwxs.password',    type:'length',   minSize :0,  maxSize :200 }
 	]);
 	shower = new Shower('ogcwxs.useAccount', 'ogcwxs.account');
-
+	//---COGS - added to support harvest to template for NIWA 1-4-2013 Toggle layer template dropdown
+	shower1 = new Shower('ogcwxs.useLayer', 'ogcwxs.template.layer.row');
+	
 }
 
 //=====================================================================================
@@ -85,6 +93,9 @@ function setEmpty()
 		}
 
 	shower.update();
+	
+	shower1.update(); //---COGS - added to support harvest to template for NIWA 1-4-2013
+	
 	updateIcon();
 
 	//-- set output schema
@@ -123,11 +134,15 @@ function setData(node)
 	this.selectCategories(node);	
 	
 	shower.update();
+
+	shower1.update();//---COGS - added to support harvest to template for NIWA 1-4-2013
+
 	updateIcon();
 
 	//-- set output schema
 	selectedSchema = hvutil.find(options, 'outputSchema'); 	
 	this.controller.retrieveOutputSchemas(); 
+	//-- COGS NIWA TODO set option for templates here
 }
 
 //-------------------------------------------------------------------------------------
@@ -154,6 +169,9 @@ function getData()
 	data.CREATETHUMBNAILS = $('ogcwxs.createThumbnails').checked;
 	data.USELAYER	      = $('ogcwxs.useLayer').checked;
 	data.USELAYERMD       = $('ogcwxs.useLayerMd').checked;
+	//--- COGS - added to support harvest to template for NIWA 1-4-2013
+	data.TEMPLATESERVICE  = $F('ogcwxs.templateService');
+	data.TEMPLATELAYER    = $F('ogcwxs.template.layer');
 	
 	//--- retrieve privileges and categories information
 	
@@ -229,5 +247,52 @@ function updateOutputSchemas() {
 }
 
 //=====================================================================================
+// COGS: Begin edit for NIWA mods 
+// COGS - TODO use method from fragments to populate dropdowns
+
+function retrieveTemplates() {
+	Ext.Ajax.request({
+		url : 'q',
+		params : {
+			'_schema' : $('ogcwxs.outputSchema').value,
+			'template' : 'y',
+			'fast' : 'index'
+		},
+		success : function(r) {
+			var xml_ = r.responseXML,
+				metadata = xml_.getElementsByTagName('metadata');
+			var hostUrl = window.location.href;
+			var tmpltUrl = hostUrl.replace("harvesting", "xml.metadata.get?uuid=");
+
+			$('ogcwxs.templateService').options.length = 0;
+			$('ogcwxs.template.layer').options.length = 0;
+
+			gui.addToSelect('ogcwxs.templateService', '', "(NONE)"); // TODO: I18N
+			gui.addToSelect('ogcwxs.template.layer', '', "(NONE)"); // TODO: I18N
+
+			for (var i=0; i < metadata.length; i++) {
+				var row = metadata[i],
+					title = xml.textContent(row.getElementsByTagName('title')[0]),
+					uuid = xml.textContent(row.getElementsByTagName('uuid')[0]);
+                // COGS check that a template can actual be retrieved with "xml.metadata.get?uuid="
+                 // before adding to the dropdown list
+                Ext.Ajax.request({url:tmpltUrl+uuid,
+                                      success:(function(tmpltUrl, uuid, title) {
+                                        return function(r) {
+                                         gui.addToSelect('ogcwxs.templateService', r.responseText, title);
+                                         gui.addToSelect('ogcwxs.template.layer', r.responseText, title);
+                                        }
+                                      })(tmpltUrl, uuid, title),
+
+				});
+
+			}
+		}
+	});
+}
+
+// COGS: End edit for NIWA mods
+//=====================================================================================
+
 }
 

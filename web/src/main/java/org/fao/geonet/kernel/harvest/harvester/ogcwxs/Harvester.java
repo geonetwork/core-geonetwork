@@ -52,19 +52,11 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 //=============================================================================
@@ -290,6 +282,32 @@ class Harvester extends BaseAligner
 			result.unknownSchema ++;
 		}
 
+		// COGS -TODO use already existing vars for templates from fragments approach
+		// ---- need to add a parameter to pass the uuid of the template to OgcWxSHarvester.java
+		if (params.templateService != "''") {
+            // COGS - NIWA mod to pass template xml
+
+            String TSxml = params.templateService.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+            File temp = File.createTempFile(uuid, ".tmp");
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(temp),"UTF-8");
+            out.write(TSxml);
+            out.close();
+
+            param.put("template", String.valueOf(temp.getAbsoluteFile()));
+            //param.put("template", params.templateService);
+            log.info("File - " + temp.getPath())    ;
+            log.info("Service Template UUID - " + params.templateService)    ;
+
+
+			
+			String styleSheetTmplt = schemaMan.getSchemaDir(params.outputSchema) +
+							Geonet.Path.CONVERT_STYLESHEETS
+							+ "/OGCWxSGetCapabilitiesto19119/"
+							+ "/mergeTemplate.xsl";
+
+			md = Xml.transform (md, styleSheetTmplt, param);
+		}
+		// COGS - End mod
 
 		//--- Create metadata for layers only if user ask for
 		if (params.useLayer || params.useLayerMd) {			
@@ -623,6 +641,31 @@ class Harvester extends BaseAligner
 				param.put("topic", params.topic);
 				
 				xml = Xml.transform (capa, styleSheet, param);
+
+		// COGS TODO use already existing vars for templates from fragments approach.
+		// ---  Layers likely use a different template than the service.
+               if (params.templateLayer != "''") {
+
+                   // Try to load template layer xml
+
+                   String TLxml = params.templateLayer.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+                   File temp = File.createTempFile(reg.uuid, ".tmp");
+                   OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(temp),"UTF-8");
+                   out.write(TLxml);
+                   out.close();
+
+                   param.put("template", String.valueOf(temp.getAbsoluteFile()));
+
+                   log.info("Layer Template UUID - " + params.templateLayer)    ;
+
+                    String styleSheetTmplt = schemaMan.getSchemaDir(params.outputSchema) +
+                            Geonet.Path.CONVERT_STYLESHEETS
+                            + "/OGCWxSGetCapabilitiesto19119/"
+                            + "/mergeTemplate.xsl";
+
+                    xml = Xml.transform (xml, styleSheetTmplt, param);
+                }               
+
                 if(log.isDebugEnabled()) log.debug("  - Layer loaded using GetCapabilities document.");
 				
 			} catch (Exception e) {
