@@ -34,20 +34,46 @@
         };
       });
 
-  module.directive('gnLanguagePicker',
-      function() {
-        return {
-          restrict: 'A',
-          link: function(scope, element, attrs) {
-            $(element).typeahead({
-              valueKey: 'label',
-              local: ['eng', 'fre'],
-              minLength: 0,
-              limit: 15
+  /**
+   * Use the lang service to retrieve the list of
+   * ISO language available and provide autocompletion
+   * for the input field with that directive attached.
+   * 
+   * TODO: This could be used in other places 
+   * like admin > harvesting > OGC WxS
+   * probably. Move to another common or language module ?
+   */
+  module.directive('gnLanguagePicker', ['gnHttp',
+    function(gnHttp) {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          gnHttp.callService('lang', {}, {
+            cache: true
+          }).success(function(data) {
+            // Compute default name and add a
+            // tokens element which is used for filter
+            angular.forEach(data, function(lang) {
+              var defaultName = lang.label['eng'];
+              lang.name = lang.label[scope.lang] || defaultName;
+              lang.tokens = [lang.name, lang.code, defaultName];
             });
-          }
-        };
-      });
+
+            $(element).typeahead({
+              name: 'isoLanguages',
+              valueKey: 'code',
+              template: function(datum) {
+                console.log(datum);
+                return '<p>' + datum.name + ' (' + datum.code + ')</p>';
+              },
+              local: data,
+              minLength: 0,
+              limit: 30
+            });
+          });
+        }
+      };
+    }]);
 
   module.directive('gnFieldTooltip',
       ['gnSchemaManagerService',

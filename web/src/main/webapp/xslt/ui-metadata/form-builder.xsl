@@ -683,7 +683,6 @@
   <xsl:template name="render-form-field-control-remove">
     <xsl:param name="editInfo"/>
     <xsl:param name="parentEditInfo" required="no"/>
-
     <xsl:if
       test="($parentEditInfo and 
                      ($parentEditInfo/@del = 'true' or 

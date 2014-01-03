@@ -121,7 +121,6 @@
         <call name="position" class=".guiservices.util.GetPositionMD"/>
         <call name="groups" class=".guiservices.groups.GetMine"/>
         <call name="sources" class=".guiservices.util.Sources"/>
-        <call name="isoLang" class=".guiservices.isolanguages.Get"/>
         <call name="subtemplates" class="jeeves.services.db.Select">
           <param name="db" value="main-db"/>
           <param name="query"
@@ -148,7 +147,6 @@
         <call name="position" class=".guiservices.util.GetPositionMD"/>
         <call name="groups" class=".guiservices.groups.GetMine"/>
         <call name="sources" class=".guiservices.util.Sources"/>
-        <call name="isoLang" class=".guiservices.isolanguages.Get"/>
         <call name="subtemplates" class="jeeves.services.db.Select">
           <param name="db" value="main-db"/>
           <param name="query"

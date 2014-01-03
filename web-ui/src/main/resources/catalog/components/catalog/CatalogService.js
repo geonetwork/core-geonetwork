@@ -41,6 +41,7 @@
     processAll: 'md.processing.batch',
     processXml: 'xml.metadata.processing@json', // TODO: CHANGE
     getRelations: 'md.relations.get@json',
+    lang: 'lang@json',
     removeThumbnail: 'md.thumbnail.remove@json',
     removeOnlinesrc: 'resource.del.and.detach' // TODO: CHANGE
   });

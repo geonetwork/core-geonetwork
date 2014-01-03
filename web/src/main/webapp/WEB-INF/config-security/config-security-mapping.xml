@@ -529,6 +529,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw-.*" access="permitAll"/>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/csw!?.*" access="permitAll"/>
                 
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/lang!?.*" access="permitAll"/>
+                
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/portal.sru!?.*" access="permitAll"></sec:intercept-url>
                 
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/catalog.search!?.*" access="permitAll"/>
