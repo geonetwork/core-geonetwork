@@ -35,20 +35,6 @@
                scope.right = parseFloat(scope.right);
              });
 
-             var map = new ol.Map({
-               layers: [
-                 new ol.layer.Tile({
-                   source: new ol.source.OSM()
-                 })
-               ],
-               renderer: ol.RendererHint.CANVAS,
-               target: 'map',
-               view: new ol.View2D({
-                 center: [0, 0],
-                 zoom: 2
-               })
-             });
-
              var boxStyle = new ol.style.Style({
                stroke: new ol.style.Stroke({
                  color: 'rgba(255,0,0,1)',
@@ -58,18 +44,32 @@
                  color: 'rgba(255,0,0,0.3)'
                })
              });
-             // FIXME: turned off as far as the missing class is not available.
-             //             var fo = new ol.render.FeaturesOverlay();
-             var featuresCollection = new ol.Collection();
-             //
-             //             fo.setMap(map);
-             //             fo.setFeatures(featuresCollection);
-             //             fo.setStyleFunction(function(feature, resolution) {
-             //               return [boxStyle];
-             //             });
 
              var feature = new ol.Feature();
-             featuresCollection.push(feature);
+             var source = new ol.source.Vector();
+             source.addFeature(feature);
+
+             var bboxLayer = new ol.layer.Vector({
+               source: source,
+               styleFunction: function(feature, resolution) {
+                 return [boxStyle];
+               }
+             });
+
+             var map = new ol.Map({
+               layers: [
+                 new ol.layer.Tile({
+                   source: new ol.source.OSM()
+                 }),
+                 bboxLayer
+               ],
+               renderer: ol.RendererHint.CANVAS,
+               target: 'map',
+               view: new ol.View2D({
+                 center: [0, 0],
+                 zoom: 2
+               })
+             });
 
              var dragbox = new ol.interaction.DragBox({
                style: boxStyle,
@@ -81,37 +81,33 @@
                feature.setGeometry(null);
              });
              dragbox.on('boxend', function(mapBrowserEvent) {
+               var extent = dragbox.getGeometry().getExtent();
                feature.setGeometry(dragbox.getGeometry());
-               scope.bottom = extent[0];
-               scope.left = extent[1];
-               scope.top = extent[2];
-               scope.right = extent[3];
+
+               scope.$apply(function() {
+                 scope.left = extent[0];
+                 scope.bottom = extent[1];
+                 scope.right = extent[2];
+                 scope.top = extent[3];
+               });
              });
 
              map.addInteraction(dragbox);
 
-             var bahavior = function(map, polygon) {
-               var extent = polygon.getLinearRings()[1].getExtent();
-               scope.$apply(function() {
-                 scope.bottom = extent[0];
-                 scope.left = extent[1];
-                 scope.top = extent[2];
-                 scope.right = extent[3];
-               });
-             };
-             var boxInteraction = new ol.interaction.DragBox({
-               behavior: bahavior,
-               condition: function() {return scope.drawing;},
-               style: new ol.style.Style({
-                 stroke: new ol.style.Stroke({
-                   color: 'rgba(255,0,0,1)'
-                 })
-               })
-             });
-
-             map.addInteraction(boxInteraction);
              scope.drawMap = function() {
                scope.drawing = !scope.drawing;
+             };
+
+             scope.updateBbox = function() {
+               var coordinates = [
+                 [
+                   [scope.left, scope.bottom],
+                   [scope.left, scope.top],
+                   [scope.right, scope.top],
+                   [scope.right, scope.bottom]
+                 ]
+               ];
+               feature.getGeometry().setCoordinates(coordinates);
              };
            }
          };
