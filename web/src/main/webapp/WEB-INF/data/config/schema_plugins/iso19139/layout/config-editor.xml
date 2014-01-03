@@ -44,6 +44,8 @@
     <for name="gmd:language" use="data-gn-language-picker"/>
     <for name="gmd:languageCode" use="data-gn-language-picker"/>
 
+    <for name="gmd:country" use="data-gn-country-picker"/>
+
     <for name="gmd:referenceSystemInfo" addDirective="data-gn-crs-selector"/>
 
     <for name="gmd:contact" addDirective="data-gn-directory-entry-selector"/>
