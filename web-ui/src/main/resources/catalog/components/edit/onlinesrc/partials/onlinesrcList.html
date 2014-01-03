@@ -7,28 +7,96 @@
     </li>
   </ul>
   
-  
-  
   <!-- List of online resources -->
-  <div class="onlinesrc-title">
-    <i class="fa fa-link" ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
-    <i class="icon-external-link"></i>
-    <span data-translate="">onlinesrc</span></div>
-  <div
-    ng-repeat="resource in relations.onlinesrc | orderBy:'title'"
-    ng-click="">{{resource.title}}
-    <a href="" ng-click="onlinesrcService.removeOnlinesrc(resource)">remove</a></div>
-    
+  <div class="onlinesrc-title" data-ng-show="relations.onlinesrc">
+    <i class="fa fa-link"></i> <i class="icon-external-link"></i> <span
+      data-translate="">onlinesrc</span> 
+      <a href="" data-toggle="modal"
+        data-target="#addonlinesrc-popup"> 
+        <i class="fa fa-plus"></i>
+    </a>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item" ng-repeat="resource in relations.onlinesrc | orderBy:'title'">
+      {{resource.title}} 
+      <a href="" class="onlinesrc-remove"
+        ng-click="onlinesrcService.removeOnlinesrc(resource)">remove</a>
+    </li>
+  </ul>
+
   <!-- List of datasets -->
-  <h4><span data-translate="">dataset</span></h4>
-  <li
+  <div class="onlinesrc-title" data-ng-show="relations.datasets">
+    <i class="fa fa-files-o"></i>
+    <i class="icon-external-link"></i>
+    <span data-translate="">datasets</span>
+    <a href="" data-toggle="modal"
+        data-target="#linktodataset-popup"> 
+        <i class="fa fa-plus"></i>
+    </a>
+  </div>
+  <div
     ng-repeat="resource in relations.datasets | orderBy:'title'"
-    ng-click="">{{resource.title}}</li>
-    
+    ng-click="">{{resource.title}}
+    <a href="" ng-click="onlinesrcService.removeDataset(resource)">remove</a></div>
+  
   <!-- List of services -->
-  <h4><span data-translate="">service</span></h4>
-  <li
+  <div class="onlinesrc-title" data-ng-show="relations.services">
+    <i class="fa fa-share-square-o"></i>
+    <i class="icon-external-link"></i>
+    <span data-translate="">service</span>
+    <a href="" data-toggle="modal"
+        data-target="#linktoservice-popup"> 
+        <i class="fa fa-plus"></i>
+    </a>
+  </div>
+  <div
     ng-repeat="resource in relations.services | orderBy:'title'"
-    ng-click="">{{resource.title}}</li>
-    
+    ng-click="">{{resource.title}}
+    <a href="" ng-click="onlinesrcService.removeService(resource)">remove</a></div>
+  
+  <!-- List of parent -->
+    <div class="onlinesrc-title" data-ng-show="relations.parent">
+    <i class="fa fa-sitemap" ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
+    <i class="icon-external-link"></i>
+    <span data-translate="">parentMd</span>
+    <a href="" data-toggle="modal"
+        data-target="#linkparent-popup"> 
+        <i class="fa fa-plus"></i>
+    </a>
+    </div>
+    <div
+    ng-repeat="resource in relations.parent | orderBy:'title'"
+    ng-click="">{{resource.title}}
+    <a href="" ng-click="onlinesrcService.removeMdLink('parent', resource)">remove</a></div>
+  
+    <!-- List of sources -->
+    <div class="onlinesrc-title" data-ng-show="relations.sources">
+    <i class="fa fa-file-text-o" ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
+    <i class="icon-external-link"></i>
+    <span data-translate="">sourceDatasets</span>
+    <a href="" data-toggle="modal"
+        data-target="#linktosource-popup"> 
+        <i class="fa fa-plus"></i>
+    </a>
+    </div>
+    <div
+    ng-repeat="resource in relations.sources | orderBy:'title'"
+    ng-click="">{{resource.title}}
+    <a href="" ng-click="onlinesrcService.removeMdLink('source', resource)">remove</a></div>
+  
+      <!-- List of feature catalogs -->
+    <div class="onlinesrc-title" data-ng-show="relations.fcats">
+    <i class="fa fa-list-alt" ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
+    <i class="icon-external-link"></i>
+    <span data-translate="">featureCatalog</span>
+    <a href="" data-toggle="modal"
+        data-target="#linktosource-popup"> 
+        <i class="fa fa-plus"></i>
+    </a>
+    </div>
+    <div
+    ng-repeat="resource in relations.fcats | orderBy:'title'"
+    ng-click="">{{resource.title}}
+    <a href="" ng-click="onlinesrcService.removeFeatureCatalog(resource)">remove</a></div>
+  
 </div>

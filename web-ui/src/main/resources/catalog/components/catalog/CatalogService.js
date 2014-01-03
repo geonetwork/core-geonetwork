@@ -106,9 +106,11 @@
          * processed
          */
         runProcessMd: function(params) {
-          angular.extend(params, {
-            id: gnCurrentEdit.id
-          });
+          if (!params.id && !params.uuid) {
+            angular.extend(params, {
+              id: gnCurrentEdit.id
+            });
+          }
           var defer = $q.defer();
           gnEditor.save()
                 .then(function() {

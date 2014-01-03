@@ -10,7 +10,8 @@
     'gnEditor',
     'gnCurrentEdit',
     '$q',
-    function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit, $q) {
+    'Metadata',
+    function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit, $q, Metadata) {
 
       var reload = false;
 
@@ -191,31 +192,45 @@
           runProcess(this,
               setParams('thumbnail-add', params));
         },
+
         /**
-         * Call md.processing.new in mode 'parent-add'
-         * to link a parent to the edited metadata
-         *
-         * records is an array of metadatas.
+         * Links to another metadata, could be
+         * - parent
+         * - source dataset
+         * - feature catalog
          */
-        linkToParent: function(records) {
-          if (records && records[0]) {
-            return gnBatchProcessing.runProcessMd({
-              parentUuid: records[0]['geonet:info'].uuid,
-              process: 'parent-add'
-            });
+        linkToMd: function(mode, record) {
+          var md = new Metadata(record);
+          var params = {
+            process: mode + '-add'
+          };
+          if (mode == 'fcats') {
+            params.uuidref = md.getUuid();
           }
+          else {
+            params[mode + 'Uuid'] = md.getUuid();
+          }
+          runProcess(this, params);
         },
 
-        linkToDataset: function(params) {
-          var qParams = setParams('dataset-add', params);
 
-          return gnBatchProcessing.runProcessMdXml({
+        linkToService: function(params) {
+          var qParams = setParams('dataset-add', params);
+          var scope = this;
+
+          gnBatchProcessing.runProcessMdXml({
             scopedName: qParams.name,
-            //            uuidref: gnEditor.
-            //            getCurrentEdit().metadataUuid,
-            uuidref: '424d86a7-1d73-4e4b-bf50-c670936eb086',
-            uuid: qParams.uuid,
+            uuidref: qParams.uuidDS,
+            uuid: qParams.uuidSrv,
             process: qParams.process
+          }).then(function() {
+            var qParams = setParams('service-add', params);
+            runProcess(scope, {
+              scopedName: qParams.name,
+              uuidref: qParams.uuidSrv,
+              uuid: qParams.uuidDS,
+              process: qParams.process
+            });
           });
         },
 
@@ -223,16 +238,25 @@
          * Call md.processing.new in mode 'parent-add'
          * to link a service to the edited metadata
          */
-        linkToService: function(params) {
-          var qParams = setParams('service-add', params);
+        linkToDataset: function(params) {
+          var qParams = setParams('onlinesrc-add', params);
+          var scope = this;
 
-          qParams.scopedName = qParams.name;
-          delete qParams.name;
+          gnBatchProcessing.runProcessMdXml({
+            scopedName: qParams.name,
+            uuidref: qParams.uuidSrv,
+            uuid: qParams.uuidDS,
+            process: qParams.process
+          }).then(function() {
+            var qParams = setParams('dataset-add', params);
 
-          qParams.uuidref = qParams.uuid;
-          delete qParams.uuid;
-
-          return gnBatchProcessing.runProcessMd(qParams);
+            runProcess(scope, {
+              scopedName: qParams.name,
+              uuidref: qParams.uuidDS,
+              uuid: qParams.uuidSrv,
+              process: qParams.process
+            });
+          });
         },
 
         /**
@@ -273,11 +297,61 @@
           } else {
             runProcess(this,
                 setParams('onlinesrc-remove', {
-                  id: gnCurrentEdit,
+                  id: gnCurrentEdit.id,
                   url: onlinesrc.url,
                   name: onlinesrc.name
                 }));
           }
+        },
+
+        /**
+         * Remove a service from a metadata
+         */
+        removeService: function(onlinesrc) {
+          var params = {
+            uuid: onlinesrc.uuid,
+            uuidref: gnCurrentEdit.uuid
+          };
+          runProcess(this,
+              setParams('services-remove', params));
+        },
+
+        /**
+         * Remove a dataset from a metadata of
+         * service
+         */
+        removeDataset: function(onlinesrc) {
+          var params = {
+            uuid: gnCurrentEdit.uuid,
+            uuidref: onlinesrc.uuid
+          };
+          runProcess(this,
+              setParams('datasets-remove', params));
+        },
+
+
+        /**
+         * Remove a link metadata by calling a process.
+         * The mode can be 'source', 'parent'
+         */
+        removeMdLink: function(mode, onlinesrc) {
+          var params = {};
+          params[mode + 'Uuid'] = onlinesrc.uuid;
+          runProcess(this,
+              setParams(mode + '-remove', params));
+        },
+
+        /**
+         * Remove a feature catalog link from the
+         * current metadata.
+         */
+        removeFeatureCatalog: function(onlinesrc) {
+          var params = {
+            uuid: gnCurrentEdit.uuid,
+            uuidref: onlinesrc.uuid
+          };
+          runProcess(this,
+              setParams('fcats-remove', params));
         }
       };
     }]);

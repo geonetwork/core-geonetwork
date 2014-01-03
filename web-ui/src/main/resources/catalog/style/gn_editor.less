@@ -4,12 +4,17 @@
 body {
   font-size:13px;
 }
+.dropdown-menu {
+	font-size: 13px;
+}
 
 .tt-query {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
+
+
 
 .tt-hint {
   color: #999
@@ -18,10 +23,38 @@ input, select {
   .form-control;
   .input-sm;
 }
-.onlinesrc-panel {
-  .onlinesrc-title {
-    color: orange;
+.gn-editor-tools-container {
+	.onlinesrc-panel {
+		@onlinesrc-title-small-color: #FF5C00;
+		
+	  .onlinesrc-title {
+	    color: @onlinesrc-title-small-color;
+	    padding-top:6px;
+	    padding-bottom: 3px;
+	    
+	    a {
+	     color: @onlinesrc-title-small-color;
+	     float: right;
+	    }
+	    a:hover {
+	     color: #FF3D00;
+	    }
+	  }
+	  .onlinesrc-remove{
+	    float: right;
+	  }
+	  .list-group-item {
+	     border: none;
+	     padding: 3px 8px;
+	  }
   }
+  
+  .dropdown-menu > li > a {
+    color: #428bca;
+  }
+  .dropdown-menu > li > a:hover {
+	 color: #2a6496;
+	}
 }
 .gn-drawmap-panel {
   .form-group {

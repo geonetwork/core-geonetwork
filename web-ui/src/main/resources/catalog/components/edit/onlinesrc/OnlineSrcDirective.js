@@ -9,8 +9,8 @@
    * - gnOnlinesrcList
    * - gnAddThumbnail
    * - gnAddOnlinesrc
-   * - gnLinkParentMd
    * - gnLinkServiceToDataset
+   * - gnLinkSource
    */
   angular.module('gn_onlinesrc_directive', [
     'gn_utility',
@@ -225,26 +225,12 @@
             }
           };
         }])
-  .directive('gnLinkParentMd', ['gnOnlinesrc',
-        function(gnOnlinesrc) {
-          return {
-            restrict: 'A',
-            templateUrl: '../../catalog/components/edit/onlinesrc/' +
-                'partials/linkToParent.html',
-            link: function(scope, element, attrs) {
-
-              // sent to the SearchFormController
-              scope.autoSearch = true;
-
-              scope.onlinesrcService = gnOnlinesrc;
-            }
-          };
-        }])
   .directive('gnLinkServiceToDataset', [
         'gnOnlinesrc',
         'Metadata',
         'gnOwsCapabilities',
-        function(gnOnlinesrc, Metadata, gnOwsCapabilities) {
+        'gnCurrentEdit',
+        function(gnOnlinesrc, Metadata, gnOwsCapabilities, gnCurrentEdit) {
           return {
             restrict: 'A',
             scope: {},
@@ -301,12 +287,14 @@
 
                     if (angular.isArray(links) && links.length == 1) {
                       scope.loadWMSCapabilities(links[0].url);
-                      scope.srcParams.uuid = md.getUuid();
+                      scope.srcParams.uuidSrv = md.getUuid();
+                      scope.srcParams.uuidDS = gnCurrentEdit.uuid;
                     }
                   }
                   else {
                     scope.layers = links;
-                    scope.srcParams.refuuid = md.getUuid();
+                    scope.srcParams.uuidDS = md.getUuid();
+                    scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
                   }
                 }
               });
@@ -318,16 +306,49 @@
                * Hide modal on success.
                */
               scope.linkTo = function() {
-                if (scope.srcParams.uuid) {
-                  gnOnlinesrc.linkToDataset(scope.srcParams)
-                    .then(function() {
-                        gnOnlinesrc.linkToService(scope.srcParams)
-                        .then(function() {
-                              $('#linktoservice-popup').modal('hide');
-                            });
-                      });
+                if (scope.mode == 'attachService') {
+                  gnOnlinesrc.linkToService(scope.srcParams);
+                }
+                else {
+                  gnOnlinesrc.linkToDataset(scope.srcParams);
                 }
               };
+            }
+          };
+        }])
+        .directive('gnLinkToMetadata', ['gnOnlinesrc',
+        function(gnOnlinesrc) {
+          return {
+            restrict: 'A',
+            scope: {},
+            templateUrl: '../../catalog/components/edit/onlinesrc/' +
+                'partials/linkToMd.html',
+            link: function(scope, element, attrs) {
+              scope.mode = attrs['gnLinkToMetadata'];
+              scope.btn = {};
+
+              if (scope.mode == 'fcats') {
+                scope.params = {
+                      _schema: 'iso19110'
+                };
+                scope.btn = {
+                      icon: 'fa-list-alt',
+                      label: 'linkToFeatureCatalog'
+                };
+              }
+              else if (scope.mode == 'parent') {
+                scope.btn = {
+                      icon: 'fa-sitemap',
+                      label: 'linkToParent'
+                };
+              }
+              else if (scope.mode == 'source') {
+                scope.btn = {
+                      icon: 'fa-file-text-o',
+                      label: 'linkToSource'
+                };
+              }
+              scope.gnOnlinesrc = gnOnlinesrc;
             }
           };
         }]);
