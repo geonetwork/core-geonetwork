@@ -723,17 +723,19 @@
     <xsl:param name="elementEditInfo"/>
     <xsl:param name="domeElementToMoveRef" required="no" select="''"/>
     
-    <div class="gn-move">
-      <xsl:variable name="elementToMoveRef" select="if ($elementEditInfo) then $elementEditInfo/@ref else ''"/>
-      <a class="fa fa-angle-up {if ($elementEditInfo and $elementEditInfo/@up = 'true') then '' else 'invisible'}" 
-        data-gn-editor-control-move="{$elementToMoveRef}"
-        data-domelement-to-move="{$domeElementToMoveRef}"
-        data-direction="up" href=""></a>
-      <a class="fa fa-angle-down {if ($elementEditInfo and $elementEditInfo/@down = 'true') then '' else 'invisible'}" 
-        data-gn-editor-control-move="{$elementToMoveRef}"
-        data-domelement-to-move="{$domeElementToMoveRef}"
-        data-direction="down" href=""></a>
-    </div>
+    <xsl:if test="not($viewConfig/@upAndDownControlHidden)">
+      <div class="gn-move">
+        <xsl:variable name="elementToMoveRef" select="if ($elementEditInfo) then $elementEditInfo/@ref else ''"/>
+        <a class="fa fa-angle-up {if ($elementEditInfo and $elementEditInfo/@up = 'true') then '' else 'invisible'}" 
+          data-gn-editor-control-move="{$elementToMoveRef}"
+          data-domelement-to-move="{$domeElementToMoveRef}"
+          data-direction="up" href=""></a>
+        <a class="fa fa-angle-down {if ($elementEditInfo and $elementEditInfo/@down = 'true') then '' else 'invisible'}" 
+          data-gn-editor-control-move="{$elementToMoveRef}"
+          data-domelement-to-move="{$domeElementToMoveRef}"
+          data-direction="down" href=""></a>
+      </div>
+    </xsl:if>
   </xsl:template>
 
 

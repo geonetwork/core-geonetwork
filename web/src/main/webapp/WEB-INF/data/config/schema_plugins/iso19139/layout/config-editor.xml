@@ -254,7 +254,7 @@
           in="/gmd:MD_Metadata"/>
       </tab>
     </view>
-    <view name="inspire">
+    <view name="inspire" upAndDownControlHidden="true">
       <tab id="inspire" default="true" mode="flat">
         <section name="resource">
           <field
