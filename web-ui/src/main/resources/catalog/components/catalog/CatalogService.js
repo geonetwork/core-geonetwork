@@ -45,7 +45,8 @@
     country: 'regions.list@json?categoryId=' +
         'http://geonetwork-opensource.org/regions%23country',
     removeThumbnail: 'md.thumbnail.remove@json',
-    removeOnlinesrc: 'resource.del.and.detach' // TODO: CHANGE
+    removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
+    suggestionsList: 'md.suggestion@json'
   });
 
   module.provider('gnHttp', function() {
