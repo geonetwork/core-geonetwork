@@ -24,6 +24,14 @@
     </license>
   </licenses>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>jslint-maven-plugin</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+    </dependencies>
+
   <build>
     <resources>
       <resource>
@@ -40,7 +48,7 @@
   </properties>
     <profiles>
         <profile>
-            <id>jasmine-unit-tests</id>
+            <id>tests-and-static-analysis</id>
             <activation>
                 <property><name>!skipTests</name></property>
             </activation>
@@ -68,6 +76,38 @@
                             <debug>true</debug>
                         </configuration>
                     </plugin>
+                    <!--<plugin>-->
+                        <!--<groupId>org.codehaus.mojo</groupId>-->
+                        <!--<artifactId>jslint-maven-plugin</artifactId>-->
+                        <!--<executions>-->
+                            <!--<execution>-->
+                                <!--<goals>-->
+                                    <!--<goal>jslint</goal>-->
+                                <!--</goals>-->
+                                <!--<configuration>-->
+                                    <!--<excludes>-->
+                                        <!--<exclude>**/catalog/lib/**</exclude>-->
+                                        <!--<exclude>**/catalog/components/admin/dbtranslation/DbTranslationDirective.js</exclude>-->
+                                    <!--</excludes>-->
+                                    <!--<assumeABrowser>true</assumeABrowser>-->
+                                    <!--<failOnIssues>true</failOnIssues>-->
+                                    <!--<sourceJsFolder>${project.basedir}/src/main/resources</sourceJsFolder>-->
+                                    <!--<encoding>UTF-8</encoding>-->
+                                    <!--<allowOneVarStatementPerFunction>false</allowOneVarStatementPerFunction>-->
+                                    <!--<disallowBitwiseOperators>false</disallowBitwiseOperators>-->
+                                    <!--<disallowDanglingUnderbarInIdentifiers>false</disallowDanglingUnderbarInIdentifiers>-->
+                                    <!--<predefinedVars>goog,angular,loadLogo,$,loadLogoError</predefinedVars>-->
+                                    <!--<assumeConsoleAlertEtc>true</assumeConsoleAlertEtc>-->
+                                    <!--<disallowUndefinedVariables>false</disallowUndefinedVariables>-->
+                                    <!--<assumeABrowser>true</assumeABrowser>-->
+                                    <!--<disallowInsecureCharsInRegExp>true</disallowInsecureCharsInRegExp>-->
+                                <!--</configuration>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                        <!--<configuration>-->
+
+                        <!--</configuration>-->
+                    <!--</plugin>-->
                 </plugins>
             </build>
         </profile>

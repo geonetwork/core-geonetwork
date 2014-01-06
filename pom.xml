@@ -92,11 +92,26 @@
     <!-- =========================================================== -->
     <pluginManagement>
       <plugins>
+          <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>jslint-maven-plugin</artifactId>
+              <version>1.0.1</version>
+          </plugin>
 		<plugin>
 			<groupId>org.bsc.maven</groupId>
 			<artifactId>maven-processor-plugin</artifactId>
           <version>2.2.3</version>
 		</plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.6</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>2.5</version>
+        </plugin>
         <plugin>
           <groupId>net.alchim31.maven</groupId>
           <artifactId>yuicompressor-maven-plugin</artifactId>
