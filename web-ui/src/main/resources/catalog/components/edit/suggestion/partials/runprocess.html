@@ -1,0 +1,25 @@
+<div>
+  <form class="form-horizontal" role="form">
+    <div class="form-group" data-ng-repeat="(key,param) in gnSuggestion.getCurrent().params">
+      <label data-ng-if="param.type == 'string'" class="col-sm-4 control-label">
+        <span data-translate="">{{key}}</span>
+      </label>
+      <div data-ng-if="param.type == 'string'" class="col-sm-8">
+        <input data-ng-if="param.type == 'string'" type="text" 
+          data-ng-model="params[key]">
+      </div>
+      <div data-ng-if="param.type == 'boolean'" class="col-sm-offset-4 col-sm-8">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" data-ng-model="params[key]">
+            <span data-translate="">{{key}}</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </form>
+  <button type="button" class="btn navbar-btn btn-success"
+  data-ng-click="gnSuggestion.runProcess(gnSuggestion.getCurrent()['@process'], params)">
+  <i class="fa" data-ng-class="btn.icon" /> <span data-translate="">process</span>
+  </button>
+</div>
