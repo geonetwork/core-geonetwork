@@ -46,84 +46,132 @@
         </div>
       </div>
       <div class="panel-body">
-        <form id="gn-user-edit" name="gnUserEdit" data-ng-keypress="updatingUser()">
+        <form id="gn-user-edit" name="gnUserEdit" data-ng-keypress="updatingUser()"
+          class="form-horizontal" role="form">
           <fieldset>
             <input type="hidden" name="id" data-ng-model="userSelected.id"
               value="{{userSelected.id}}"/>
             <input type="hidden" name="operation" data-ng-model="userOperation"
               value="{{userOperation}}"/>
-            <div data-ng-class="gnUserEdit.username.$error.required ? 'has-error' : ''">
-              <label class="control-label" data-translate="">username</label>
-              <input type="text" name="username" class="form-control"
-                data-ng-model="userSelected.username" data-ng-required="true"/>
-              <p class="help-block" data-translate="">usernameHelp</p>
+            <div data-ng-class="gnUserEdit.username.$error.required ? 'has-error' : ''" class="form-group">
+              <label class="control-label col-sm-3" data-translate="">username</label>
+              <div class="col-sm-7">
+                <input type="text" name="username" class="form-control"
+                  data-ng-model="userSelected.username" data-ng-required="true"/>
+                <p class="help-block" data-translate="">usernameHelp</p>
+              </div>
             </div>
             <!-- Password are disabled when updating user -->
             <div ng-hide="userOperation != 'newuser'">
               <div
-                data-ng-class="gnUserEdit.password.$error.required || gnUserEdit.password.$error.minlength ? 'has-error' : ''">
-                <label class="control-label" data-translate="">password</label>
-                <input type="password" id="gn-user-password" name="password" class="form-control"
-                  data-ng-minlength="6" data-ng-required="true"
-                  data-ng-model="userSelected.password"/>
-                <p class="help-block">
-                  <span class="error" data-ng-show="gnUserEdit.password.$error.minlength"
-                    data-translate="">passwordMinlength</span>
-                </p>
+                data-ng-class="gnUserEdit.password.$error.required || gnUserEdit.password.$error.minlength ? 'has-error' : ''" class="form-group">
+                <label class="control-label col-sm-3" data-translate="">password</label>
+                <div class="col-sm-7">
+                  <input type="password" id="gn-user-password" name="password" class="form-control"
+                    data-ng-minlength="6" data-ng-required="true"
+                    data-ng-model="userSelected.password"/>
+                  <p class="help-block">
+                    <span class="error" data-ng-show="gnUserEdit.password.$error.minlength"
+                      data-translate="">passwordMinlength</span>
+                  </p>
+                </div>
               </div>
               <div
                 data-ng-class="gnUserEdit.password.$valid == false || 
-                        (passwordCheck !== userSelected.password) ? 'has-error' : ''">
-                <label class="control-label" data-translate="">passwordRepeat</label>
-                <input type="password" id="gn-user-password2" name="password2" class="form-control"
-                  data-ng-model="passwordCheck"/>
-                <p class="help-block">
-                  <span class="error"
-                    data-ng-show="gnUserEdit.password.$valid 
-                            && passwordCheck != userSelected.password"
-                    data-translate="">passwordNotMatching</span>
-                </p>
+                  (passwordCheck !== userSelected.password) ? 'has-error' : ''" class="form-group">
+                <label class="control-label col-sm-3" data-translate="">passwordRepeat</label>
+                <div class="col-sm-7">
+                  <input type="password" id="gn-user-password2" name="password2" class="form-control"
+                    data-ng-model="passwordCheck"/>
+                  <p class="help-block">
+                    <span class="error"
+                      data-ng-show="gnUserEdit.password.$valid 
+                              && passwordCheck != userSelected.password"
+                      data-translate="">passwordNotMatching</span>
+                  </p>
+                </div>
               </div>
             </div>
-            <div data-ng-class="gnUserEdit.name.$error.required ? 'has-error' : ''">
-              <label class="control-label" data-translate="">name</label>
-              <input type="text" name="name" class="form-control" data-ng-model="userSelected.name"
-                data-ng-required="true"/>
+            <div data-ng-class="gnUserEdit.name.$error.required ? 'has-error' : ''" class="form-group">
+              <label class="control-label col-sm-3" data-translate="">name</label>
+              <div class="col-sm-7">
+                <input type="text" name="name" class="form-control" data-ng-model="userSelected.name"
+                  data-ng-required="true"/>
+              </div>
             </div>
-            <div data-ng-class="userSelected.surname == '' ? 'has-error' : ''">
-              <label class="control-label" data-translate="">surname</label>
-              <input type="text" name="surname" class="form-control"
-                data-ng-model="userSelected.surname" data-ng-required=""/>
+            <div data-ng-class="userSelected.surname == '' ? 'has-error' : ''" class="form-group">
+              <label class="control-label col-sm-3" data-translate="">surname</label>
+              <div class="col-sm-7">
+                <input type="text" name="surname" class="form-control"
+                  data-ng-model="userSelected.surname" data-ng-required=""/>
+              </div>
             </div>
             <div
-              data-ng-class="gnUserEdit.email.$error.email || gnUserEdit.email.$error.required ? 'has-error' : ''">
-              <label class="control-label" data-translate="">email</label>
-              <input type="email" name="email" class="form-control"
-                data-ng-model="userSelected.email" data-ng-required="true"/>
+              data-ng-class="gnUserEdit.email.$error.email || gnUserEdit.email.$error.required ? 'has-error' : ''" class="form-group">
+              <label class="control-label col-sm-3" data-translate="">email</label>
+              <div class="col-sm-7">
+                <input type="email" name="email" class="form-control"
+                  data-ng-model="userSelected.email" data-ng-required="true"/>
+              </div>
             </div>
-            <label data-translate="">organisation</label>
-            <!-- TODO : Add org list -->
-            <input type="text" name="org" class="form-control"
-              data-ng-model="userSelected.organisation"/>
+            <div class="form-group">
+              <label class="control-label col-sm-3" data-translate="">organisation</label>
+              <!-- TODO : Add org list -->
+              <div class="col-sm-7">
+                <input type="text" name="org" class="form-control"
+                  data-ng-model="userSelected.organisation"/>
+              </div>
+            </div>
+            
             <fieldset>
               <legend data-translate="">address</legend>
-              <label data-translate="">address</label>
-              <input type="text" name="address" class="form-control"
-                data-ng-model="userSelected.primaryaddress.address"/>
-              <label data-translate="">zip</label>
-              <input type="text" name="zip" class="form-control"
-                data-ng-model="userSelected.primaryaddress.zip"/>
-              <label data-translate="">state</label>
-              <input type="text" name="state" class="form-control"
-                data-ng-model="userSelected.primaryaddress.state"/>
-              <label data-translate="">city</label>
-              <input type="text" name="city" class="form-control"
-                data-ng-model="userSelected.primaryaddress.city"/>
-              <label data-translate="">country</label>
-              <!-- TODO : Add country list -->
-              <input type="text" name="country" class="form-control"
-                data-ng-model="userSelected.primaryaddress.country"/>
+              
+              <div class="form-group">
+                <label class="control-label col-sm-3" data-translate="">address</label>
+                <div class="col-sm-7">
+                  <input type="text" name="address" class="form-control"
+                    data-ng-model="userSelected.primaryaddress.address"/>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="control-label col-sm-3" data-translate="">zip</label>
+                <div class="col-sm-7">
+                  <input type="text" name="zip" class="form-control"
+                    data-ng-model="userSelected.primaryaddress.zip"/>
+                </div>
+              </div>
+              
+              
+              <div class="form-group">
+                <label class="control-label col-sm-3" data-translate="">state</label>
+                <div class="col-sm-7">
+                  <input type="text" name="state" class="form-control"
+                    data-ng-model="userSelected.primaryaddress.state"/>
+                </div>
+              </div>
+              
+              
+              <div class="form-group">
+                <label class="control-label col-sm-3" data-translate="">city</label>
+                <div class="col-sm-7">
+                  <input type="text" name="city" class="form-control"
+                    data-ng-model="userSelected.primaryaddress.city"/>
+                </div>
+              </div>
+              
+              
+              <div class="form-group">
+                <label class="control-label col-sm-3" data-translate="">country</label>
+                <div class="col-sm-7">
+                  <input type="text" name="country" class="form-control"
+                    data-ng-model="userSelected.primaryaddress.country"
+                    data-gn-country-picker=""/>
+                </div>
+              </div>
             </fieldset>
+            
+            
             <fieldset>
               <legend data-translate="">defineUserGroupsPerProfile</legend>
               <input type="hidden" name="profile" data-ng-model="userSelected.profile"
@@ -195,7 +243,7 @@
           <form id="gn-password-reset" name="gnPasswordReset">
             <div
                 data-ng-class="gnPasswordReset.password.$error.required || gnPasswordReset.password.$error.minlength ? 'has-error' : ''">
-                <label class="control-label" data-translate="">password</label>
+                <label class="control-label col-sm-3" data-translate="">password</label>
                 <input type="password" id="gn-user-password" name="password" class="form-control"
                   data-ng-minlength="6" data-ng-required="true"
                   data-ng-model="resetPassword1"/>
@@ -207,7 +255,7 @@
               <div
                 data-ng-class="gnPasswordReset.password.$valid == false || 
                         (resetPassword2 !== resetPassword1) ? 'has-error' : ''">
-                <label class="control-label" data-translate="">passwordRepeat</label>
+                <label class="control-label col-sm-3" data-translate="">passwordRepeat</label>
                 <input type="password" id="gn-user-password2" name="password2" class="form-control"
                   data-ng-model="resetPassword2"/>
                 <p class="help-block">

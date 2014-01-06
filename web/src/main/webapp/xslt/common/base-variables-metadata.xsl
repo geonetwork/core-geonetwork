@@ -66,6 +66,7 @@
   <xsl:variable name="tab" select="if (/root/gui/currTab) then /root/gui/currTab else 
     $editorConfig/editor/views/view/tab[@default]/@id"/>
   
+  <xsl:variable name="viewConfig" select="$editorConfig/editor/views/view[tab/@id = $tab]"/>
   <xsl:variable name="tabConfig" select="$editorConfig/editor/views/view/tab[@id = $tab]"/>
   
   <xsl:variable name="isFlatMode" select="if (/root/request/flat) then /root/request/flat = 'true'

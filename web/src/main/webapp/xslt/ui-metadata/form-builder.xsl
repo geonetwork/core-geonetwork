@@ -12,7 +12,7 @@
 
   <xsl:import href="../common/utility-tpl-metadata.xsl"/>
 
-  <xsl:import href="../layout-xml.xsl"/>
+  <xsl:import href="form-builder-xml.xsl"/>
 
   <xsl:import href="form-configurator.xsl"/>
 
@@ -509,9 +509,9 @@
         -->
     <xsl:param name="listOfValues" select="''"/>
 
-    <!-- Get variable from attribute (eg. codelist) or node (eg. gco:CharacterString) -->
+    <!-- Get variable from attribute (eg. codelist) or node (eg. gco:CharacterString).-->
     <xsl:variable name="valueToEdit"
-      select="if ($value/*) then normalize-space($value/text()) else $value"/>
+      select="if ($value/*) then $value/text() else $value"/>
 
     <!-- If a form field has suggestion list in helper 
     then the element is hidden and the helper directive is added.
@@ -522,7 +522,9 @@
 
     <xsl:choose>
       <xsl:when test="$type = 'textarea'">
-        <textarea class="form-control input-sm {if ($lang) then 'hidden' else ''}" id="gn-field-{$editInfo/@ref}" name="_{$name}">
+        <textarea class="form-control input-sm {if ($lang) then 'hidden' else ''}" 
+          id="gn-field-{$editInfo/@ref}" name="_{$name}"
+          data-gn-autogrow="">
           <xsl:if test="$isRequired">
             <xsl:attribute name="required" select="'required'"/>
           </xsl:if>
@@ -723,17 +725,19 @@
     <xsl:param name="elementEditInfo"/>
     <xsl:param name="domeElementToMoveRef" required="no" select="''"/>
     
-    <div class="gn-move">
-      <xsl:variable name="elementToMoveRef" select="if ($elementEditInfo) then $elementEditInfo/@ref else ''"/>
-      <a class="fa fa-angle-up {if ($elementEditInfo and $elementEditInfo/@up = 'true') then '' else 'invisible'}" 
-        data-gn-editor-control-move="{$elementToMoveRef}"
-        data-domelement-to-move="{$domeElementToMoveRef}"
-        data-direction="up" href=""></a>
-      <a class="fa fa-angle-down {if ($elementEditInfo and $elementEditInfo/@down = 'true') then '' else 'invisible'}" 
-        data-gn-editor-control-move="{$elementToMoveRef}"
-        data-domelement-to-move="{$domeElementToMoveRef}"
-        data-direction="down" href=""></a>
-    </div>
+    <xsl:if test="not($viewConfig/@upAndDownControlHidden)">
+      <div class="gn-move">
+        <xsl:variable name="elementToMoveRef" select="if ($elementEditInfo) then $elementEditInfo/@ref else ''"/>
+        <a class="fa fa-angle-up {if ($elementEditInfo and $elementEditInfo/@up = 'true') then '' else 'invisible'}" 
+          data-gn-editor-control-move="{$elementToMoveRef}"
+          data-domelement-to-move="{$domeElementToMoveRef}"
+          data-direction="up" href=""></a>
+        <a class="fa fa-angle-down {if ($elementEditInfo and $elementEditInfo/@down = 'true') then '' else 'invisible'}" 
+          data-gn-editor-control-move="{$elementToMoveRef}"
+          data-domelement-to-move="{$domeElementToMoveRef}"
+          data-direction="down" href=""></a>
+      </div>
+    </xsl:if>
   </xsl:template>
 
 

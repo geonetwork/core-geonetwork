@@ -254,7 +254,7 @@
           in="/gmd:MD_Metadata"/>
       </tab>
     </view>
-    <view name="inspire">
+    <view name="inspire" upAndDownControlHidden="true">
       <tab id="inspire" default="true" mode="flat">
         <section name="resource">
           <field
@@ -284,7 +284,7 @@
             xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions
             /gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage"
             del="../..">
-            <template>
+            <template> 
               <values>
                 <key label="url" xpath="gmd:URL"/>
               </values>
