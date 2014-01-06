@@ -899,20 +899,24 @@ GeoNetwork.app = function () {
             
             // Update page title based on search results and params
             var formParams = GeoNetwork.util.SearchTools.getFormValues(searchForm);
-            var criteria = '', 
-                excludedSearchParam = {E_hitsperpage: null, timeType: null,
-                sortOrder: null, sortBy: null};
+
+            // Update page title based on search results and params
+            var formParams = GeoNetwork.util.SearchTools.getFormValues(searchForm);
+            var criteria = [], 
+            excludedSearchParam = {E_hitsperpage: null, timeType: null,
+            sortOrder: null, sortBy: null};
             for (var item in formParams) {
                 if (formParams.hasOwnProperty(item) && excludedSearchParam[item] === undefined) {
                     var value = formParams[item];
                     if (value != '') {
                         fieldName = item.split('_');
-                        criteria += OpenLayers.i18n(fieldName[1] || item) + ': ' + value + ' - '
+                        criteria.push(OpenLayers.i18n(fieldName[1] || item) + ': ' + value);
                     }
                 }
             }
+        
             var title = (catalogue.metadataStore.totalLength || 0) + OpenLayers.i18n('recordsFound')
-                           + (criteria !== '' ? ' | ' + criteria : '');
+                           + (criteria.length > 0 ? ' | ' + criteria.join(', ') : '');
             
             GeoNetwork.Util.updateHeadInfo({
                 title: catalogue.getInfo().name + ' | ' + title

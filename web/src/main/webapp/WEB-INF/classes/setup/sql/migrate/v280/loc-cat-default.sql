@@ -1,12 +1,12 @@
 -- ISO 3 letter code migration
 INSERT INTO Languages VALUES ('cat','Català', 'n', 'n');
 
-UPDATE CategoriesDes (iddes, langid, label)             SET langid='cat' WHERE langid='ca';
+UPDATE CategoriesDes             SET langid='cat' WHERE langid='ca';
 UPDATE IsoLanguagesDes           SET langid='cat' WHERE langid='ca';
 UPDATE RegionsDes                SET langid='cat' WHERE langid='ca';
-UPDATE GroupsDes (iddes, langid, label)                 SET langid='cat' WHERE langid='ca';
+UPDATE GroupsDes                 SET langid='cat' WHERE langid='ca';
 UPDATE OperationsDes             SET langid='cat' WHERE langid='ca';
-UPDATE StatusValuesDes  (iddes, langid, label)           SET langid='cat' WHERE langid='ca';
+UPDATE StatusValuesDes           SET langid='cat' WHERE langid='ca';
 UPDATE CswServerCapabilitiesInfo SET langid='cat' WHERE langid='ca';
 DELETE FROM Languages WHERE id='ca';
 
