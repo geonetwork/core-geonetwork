@@ -284,7 +284,7 @@
             xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions
             /gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage"
             del="../..">
-            <template>
+            <template> 
               <values>
                 <key label="url" xpath="gmd:URL"/>
               </values>
