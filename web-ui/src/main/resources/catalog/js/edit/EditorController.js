@@ -93,8 +93,8 @@
         window.onbeforeunload = function() {
           // TODO: could be better to provide
           // cancelAndClose and saveAndClose button
-          //          return $translate('beforeUnloadEditor',
-          //              {timeAgo: moment(gnCurrentEdit.savedTime).fromNow()});
+          return $translate('beforeUnloadEditor',
+              {timeAgo: moment(gnCurrentEdit.savedTime).fromNow()});
         };
       };
 

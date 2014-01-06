@@ -11,8 +11,8 @@ goog.addDependency('../../components/catalog/CatalogModule.js', ['gn_catalog'], 
 goog.addDependency('../../components/catalog/CatalogService.js', ['gn_catalog_service'], ['gn_urlutils_service']);
 goog.addDependency('../../components/category/CategoryDirective.js', ['gn_category_directive'], []);
 goog.addDependency('../../components/category/CategoryModule.js', ['gn_category'], ['gn_category_directive']);
-goog.addDependency('../../components/common/dv/GaugeDirective.js', ['gn_gauge_directive'], []);
-goog.addDependency('../../components/common/dv/GaugeModule.js', ['gn_gauge'], ['gn_gauge_directive']);
+goog.addDependency('../../components/common/daviz/GaugeDirective.js', ['gn_gauge_directive'], []);
+goog.addDependency('../../components/common/daviz/GaugeModule.js', ['gn_gauge'], ['gn_gauge_directive']);
 goog.addDependency('../../components/common/languageswitcher/LanguageSwitcherDirective.js', ['gn_language_switcher_directive'], []);
 goog.addDependency('../../components/common/languageswitcher/LanguageSwitcherModule.js', ['gn_language_switcher'], ['gn_language_switcher_directive']);
 goog.addDependency('../../components/common/map/mapDirective.js', ['gn_map_directive'], []);
