@@ -7,8 +7,6 @@
       []);
 
   /**
-   * Provide check field utilities.
-   *
    * Note: ng-model and angular checks could not be applied to
    * the editor form as it would require to init the model
    * from the form content using ng-init for example.
@@ -35,6 +33,11 @@
       });
 
   /**
+   * @ngdoc directive
+   * @name gn_fields_directive.directive:gnCountryPicker
+   * @function
+   * 
+   * @description
    * Use the region API to retrieve the list of
    * Country.
    *
@@ -73,6 +76,11 @@
       };
     }]);
   /**
+   * @ngdoc directive
+   * @name gn_fields_directive.directive:gnLanguagePicker
+   * @function
+   * 
+   * @description
    * Use the lang service to retrieve the list of
    * ISO language available and provide autocompletion
    * for the input field with that directive attached.
@@ -112,6 +120,33 @@
       };
     }]);
 
+  /**
+   * @ngdoc directive
+   * @name gn_fields_directive.directive:gnFieldTooltip
+   * @function
+   * 
+   * @description
+   * Initialized field label or fieldset legend tooltip
+   * based on the tooltip configuration.
+   * 
+   * @param {string} gnFieldTooltip The tooltip configuration
+   *  which identified the schema, the element name and optionnaly the
+   *  element parent name and XPath. eg. 'iso19139|gmd:fileIdentifier'.
+   *  
+   * @param {string} placement Tooltip placement. Default to 'bottom' 
+   * See {@link http://getbootstrap.com/javascript/#tooltips}
+   * 
+   * 
+   * @example
+  <example>
+    <file name="index.html">
+      <label for="gn-field-3" 
+         data-gn-field-tooltip="iso19139|gmd:fileIdentifier|gmd:MD_Metadata|
+         /gmd:MD_Metadata/gmd:fileIdentifier"
+         data-placement="left">File identifier</label>
+   </file>
+   </example>
+   */
   module.directive('gnFieldTooltip',
       ['gnSchemaManagerService',
        function(gnSchemaManagerService) {

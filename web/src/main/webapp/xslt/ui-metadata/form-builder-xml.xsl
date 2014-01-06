@@ -13,10 +13,14 @@
       <xsl:when test="$isEditing">
         <!-- TODO: could help editor to have basic
         syntax highlighting. -->
-        <textarea name="data" class="gn-textarea-xml form-control">
+        <textarea name="data" class="gn-textarea-xml form-control" data-gn-autogrow="">
+          
+          <!-- Remove gn:* element -->
           <xsl:variable name="strippedXml">
             <xsl:apply-templates mode="gn-element-cleaner" select="."/>
           </xsl:variable>
+          
+          <!-- Render XML in textarea -->
           <xsl:value-of select="saxon:serialize($strippedXml, 'default-indent-mode')"></xsl:value-of>
         </textarea>
       </xsl:when>
