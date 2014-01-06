@@ -1,5 +1,6 @@
 package jeeves.config.springutil;
 
+import jeeves.server.JeevesEngine;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.context.Lifecycle;
@@ -16,22 +17,26 @@ public class JeevesContextLoaderListener extends ContextLoaderListener {
 
     @Override
     protected void customizeContext(ServletContext servletContext, ConfigurableWebApplicationContext applicationContext) {
-        processBeanFactoryPostProcessorParam(applicationContext, servletContext.getInitParameter(POST_PROCESSOR_INIT_PARAM));
-        String baseURL = servletContext.getContextPath();
-        String webappName;
-        if (baseURL.length() > 1) {
-            webappName = baseURL.substring(1) + ".";
-        } else {
-            webappName = "";
-        }
-        String key = webappName + POST_PROCESSOR_INIT_PARAM;
-        String param = System.getProperty(key);
-        if (param != null) {
-            processBeanFactoryPostProcessorParam(applicationContext, param);
-        } else {
-            key = "geonetwork." + POST_PROCESSOR_INIT_PARAM;
-            param = System.getProperty(key);
-            processBeanFactoryPostProcessorParam(applicationContext, param);
+        try {
+            processBeanFactoryPostProcessorParam(applicationContext, servletContext.getInitParameter(POST_PROCESSOR_INIT_PARAM));
+            String baseURL = servletContext.getContextPath();
+            String webappName;
+            if (baseURL.length() > 1) {
+                webappName = baseURL.substring(1) + ".";
+            } else {
+                webappName = "";
+            }
+            String key = webappName + POST_PROCESSOR_INIT_PARAM;
+            String param = System.getProperty(key);
+            if (param != null) {
+                processBeanFactoryPostProcessorParam(applicationContext, param);
+            } else {
+                key = "geonetwork." + POST_PROCESSOR_INIT_PARAM;
+                param = System.getProperty(key);
+                processBeanFactoryPostProcessorParam(applicationContext, param);
+            }
+        } catch (Throwable e) {
+            JeevesEngine.handleStartupError(e);
         }
     }
 
@@ -44,7 +49,7 @@ public class JeevesContextLoaderListener extends ContextLoaderListener {
                         BeanFactoryPostProcessor postProcessor = (BeanFactoryPostProcessor) class1.newInstance();
                         applicationContext.addBeanFactoryPostProcessor(postProcessor);
                     } catch (Throwable e) {
-                        Log.error(Log.JEEVES, "Unable to create Bean Post processor: "+className);
+                        Log.error(Log.JEEVES, "Unable to create Bean Post processor: " + className);
                     }
                 }
             }
@@ -53,9 +58,13 @@ public class JeevesContextLoaderListener extends ContextLoaderListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        super.contextInitialized(event);
-        Lifecycle context = (Lifecycle) WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
-        context.start();
+        try {
+            super.contextInitialized(event);
+            Lifecycle context = (Lifecycle) WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
+            context.start();
+        } catch (Throwable e) {
+            JeevesEngine.handleStartupError(e);
+        }
     }
 
     @Override
