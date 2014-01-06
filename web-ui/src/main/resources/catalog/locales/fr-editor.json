@@ -65,5 +65,11 @@
     "addCRS-help": "",
     "addFromEPSGdb": "Add from EPSG database",
     "add-extent-from-geokeywords": "Compute extent from keywords",
-    "add-extent-from-geokeywords-help": "Search all keywords from thesaurus of type place and add matching extents."
+    "add-extent-from-geokeywords-help": "Search all keywords from thesaurus of type place and add matching extents.",
+    "setExtent": "Set extent",
+    "setAndReplaceExtent":"Replace existing extent",
+    "setCRS":"Set coordinate reference system",
+    "setDynamicGraphicOverview":"Set graphic overview (using GetMap request URL)",
+    "wmsServiceUrl":"Service URL",
+    "linkUrl": "URL to remove"
 }

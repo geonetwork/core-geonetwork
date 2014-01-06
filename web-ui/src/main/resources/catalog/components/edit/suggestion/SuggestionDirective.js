@@ -16,9 +16,36 @@
                 'partials/list.html',
             scope: {},
             link: function(scope, element, attrs) {
+              scope.gnSuggestion = gnSuggestion;
+              
               gnSuggestion.load().success(function(data){
                 scope.suggestions = data;
               });
+            }
+          };
+        }])
+  .directive('gnRunSuggestion', ['gnSuggestion',
+        function(gnSuggestion) {
+          return {
+            restrict: 'A',
+            templateUrl: '../../catalog/components/edit/suggestion/' +
+                'partials/runprocess.html',
+            link: function(scope, element, attrs) {
+              scope.gnSuggestion = gnSuggestion;
+
+              /**
+               * Init form parameters.
+               * This function is registered to be called on each
+               * suggestion click in the suggestions list.
+               */
+              var initParams = function() {
+                scope.params = {};
+                var p = gnSuggestion.getCurrent().params;
+                for(key in p) {
+                  scope.params[key] = p[key].defaultValue;
+                }
+              };
+              gnSuggestion.register(initParams);
             }
           };
         }]);
