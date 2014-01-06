@@ -260,7 +260,7 @@ csiro.ThesaurusTermSelectionPanel = Ext.extend(Ext.FormPanel, {
             name:"itemselector",
             fieldLabel:"ItemSelector",
             tpl: tpl,
-            legend:translate('foundKeywords'),
+            legend:translate('foundKeywords')
         });
         
         // enable the validate button only if there are selected keywords

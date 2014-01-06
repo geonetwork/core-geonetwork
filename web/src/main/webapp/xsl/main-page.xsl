@@ -24,87 +24,18 @@
 		<xsl:if test="/root/gui/config/search/keyword-selection-panel">
 			<xsl:call-template name="ext-ux"/>
 		</xsl:if>
-		
-		<xsl:choose>
-			<xsl:when test="/root/request/debug">         	
-				<script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js"/><xsl:text>&#10;</xsl:text>
+        <xsl:variable name="minimize">
+            <xsl:choose>
+                <xsl:when test="/root/request/debug">?minimize=false</xsl:when>
+                <xsl:otherwise></xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
 
-				<!--link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/ext-all.css" />
-				<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/file-upload.css"/>
-
-				<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/openlayers/theme/default/style.css"/>
-				<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork_map.css" /-->
-
-				<script type="text/javascript" src="{/root/gui/url}/scripts/geoext/lib/GeoExt.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/mapfish/MapFish.js"/><xsl:text>&#10;</xsl:text>
-
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/core/OGCUtil.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/core/MapStateManager.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/core/CatalogueInterface.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/core/WMCManager.js"/><xsl:text>&#10;</xsl:text>
-
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/Control/ExtentBox.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/Control/ZoomWheel.js"/><xsl:text>&#10;</xsl:text>
-
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/de.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/en.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/es.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/fr.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/nl.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/no.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/fi.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/it.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/ca.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/lang/tr.js"/><xsl:text>&#10;</xsl:text>
-
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/Ext.ux/form/DateTime.js"/><xsl:text>&#10;</xsl:text>
-
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/tree/WMSListGenerator.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/tree/WMSTreeGenerator.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/BrowserPanel.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/LayerInfoPanel.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/LayerStylesPanel.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/PreviewPanel.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/wms/WMSLayerInfo.js"/><xsl:text>&#10;</xsl:text>
-
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/FeatureInfoPanel.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/LegendPanel.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/OpacitySlider.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/PrintAction.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/ProjectionSelector.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/widgets/TimeSelector.js"/><xsl:text>&#10;</xsl:text>
-
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/BaseWindow.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/SingletonWindowManager.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/AddWMS.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/FeatureInfo.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/Opacity.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/LoadWmc.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/WMSTime.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/LayerStyles.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/WmsLayerMetadata.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/map/windows/Disclaimer.js"/><xsl:text>&#10;</xsl:text>
-
-				<script type="text/javascript" src="{/root/gui/url}/scripts/ol_settings.js"/><xsl:text>&#10;</xsl:text>	
-				<script type="text/javascript" src="{/root/gui/url}/scripts/ol_minimap.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/ol_map.js"/><xsl:text>&#10;</xsl:text>
-
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"/><xsl:text>&#10;</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>             
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.search.js"/><xsl:text>&#10;</xsl:text>
-
-				<!-- Editor JS is still required here at least for batch operation -->
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.map.js"/><xsl:text>&#10;</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-
-		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/><xsl:text>&#10;</xsl:text>
+        <script type="text/javascript" src="{/root/gui/url}/static/gn.search.js{$minimize}"/><xsl:text>&#10;</xsl:text>
+        <!-- Editor JS is still required here at least for batch operation -->
+        <script type="text/javascript" src="{/root/gui/url}/static/gn.editor.js{$minimize}"/><xsl:text>&#10;</xsl:text>
+        <script type="text/javascript" src="{/root/gui/url}/static/gn.libs.map.js{$minimize}"/><xsl:text>&#10;</xsl:text>
+        <script type="text/javascript" src="{/root/gui/url}/static/kernel.js{$minimize}"/><xsl:text>&#10;</xsl:text>
 
 		<xsl:variable name="wmc"><xsl:copy-of select="/root/request/wmc"/></xsl:variable>
 		<xsl:variable name="uuid"><xsl:copy-of select="/root/request/uuid"/></xsl:variable>

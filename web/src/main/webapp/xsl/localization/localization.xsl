@@ -9,7 +9,7 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template mode="script" match="/">
-		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/static/kernel.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/core/gui/gui.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/localization/localization.js"/>
 	</xsl:template>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+<log4j:configuration debug="false">
 
 
 
@@ -97,10 +97,6 @@
         <level value="WARN" />
     </logger>
 
-
-
-
-
     <!--  Jeeves module and submodule logger configuration -->
     <logger name="jeeves" additivity="false">
         <level value="DEBUG" />
@@ -180,6 +176,10 @@
     <category name="org.hibernate.type">
         <priority value="WARN" />
         <appender-ref ref="fileAppender" />
+    </category>
+
+    <category name="ro.isdc.wro">
+        <priority value="DEBUG" />
     </category>
 
 

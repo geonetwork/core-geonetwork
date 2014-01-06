@@ -89,7 +89,7 @@
 		<script type="text/javascript" src="{$baseurl}/scripts/prototype.js">
 			// This is a comment - otherwise nothing works
 		</script>
-		<script type="text/javascript" src="{$baseurl}/scripts/core/kernel/kernel.js">
+		<script type="text/javascript" src="{$baseurl}/static/kernel.js">
 			// This is a comment - otherwise nothing works
 		</script>
 		<script type="text/javascript" src="{$baseurl}/scripts/geonetwork.js">

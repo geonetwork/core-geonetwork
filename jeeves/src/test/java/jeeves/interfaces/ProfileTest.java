@@ -13,12 +13,15 @@ public class ProfileTest {
 
     @Test
     public void testGetParents() {
-        assertContainsOnly(UserAdmin, Administrator.getParents());
+        assertEquals(2, Administrator.getParents().size());
+        assertTrue(Administrator.getParents().contains(UserAdmin));
+        assertTrue(Administrator.getParents().contains(Monitor));
         assertContainsOnly(Reviewer, UserAdmin.getParents());
         assertContainsOnly(Editor, Reviewer.getParents());
         assertContainsOnly(RegisteredUser, Editor.getParents());
         assertContainsOnly(Guest, RegisteredUser.getParents());
         assertEquals(0, Monitor.getParents().size());
+        assertEquals(0, Guest.getParents().size());
     }
 
     private void assertContainsOnly(Profile profile, Set<Profile> parents) {
@@ -28,7 +31,7 @@ public class ProfileTest {
 
     @Test
     public void testGetAll() {
-        assertContainsAllExactly(Administrator.getAll(), Administrator, UserAdmin, Reviewer, Editor, RegisteredUser, Guest);
+        assertContainsAllExactly(Administrator.getAll(), Administrator, UserAdmin, Reviewer, Editor, RegisteredUser, Guest, Monitor);
         assertContainsAllExactly(UserAdmin.getAll(), UserAdmin, Reviewer, Editor, RegisteredUser, Guest);
         assertContainsAllExactly(Reviewer.getAll(), Reviewer, Editor, RegisteredUser, Guest);
         assertContainsAllExactly(Editor.getAll(), Editor, RegisteredUser, Guest);
