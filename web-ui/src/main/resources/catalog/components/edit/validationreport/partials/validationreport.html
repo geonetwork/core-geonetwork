@@ -1,0 +1,24 @@
+<div class="gn-validation-report">
+  <div class="row">
+    <button type="button" class="btn btn-default btn-xs pull-right"
+      data-ng-class="showErrorsOnly ? 'active' : ''"
+      data-ng-click="toggleShowErrors()"
+      data-translate="">onlyErrors</button>
+  </div>
+  
+  <div data-ng-repeat="type in ruleTypes">
+    <h3>{{type.label | translate}} <span class="label pull-right"
+        data-ng-class="type.success === type.total ? 'label-success' : 'label-danger'">
+        {{type.success}} / {{type.total}}</span></h3>
+    <p>
+      <div class="list-group">
+        <li class="list-group-item" data-ng-repeat="rule in filterByType(type)"
+          title="{{rule.details}}"
+          data-ng-class="rule['@type'] === 'success' ? (showErrorsOnly ? 'hidden' : '') : 'text-danger'">
+          <h4>{{rule.title}}</h4>
+          <p>{{rule.msg}}</p>
+        </li>
+      </div>
+    </p>
+  </div>
+</div>
