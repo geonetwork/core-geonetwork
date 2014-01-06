@@ -261,7 +261,7 @@
         
         
         <xsl:variable name="type" select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>
-        <xsl:if test="$type">
+        <xsl:if test="$type != ''">
           (<xsl:value-of
             select="/root/gui/schemas/*[name(.)='iso19139']/codelists/codelist[@name = 'gmd:MD_KeywordTypeCode']/
             entry[code = $type]/label"/>)

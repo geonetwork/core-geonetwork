@@ -461,6 +461,8 @@ GeoNetwork.Lang.ca={
     'deleteRecordFailure': 'Error a l\'esborrar la metadada.',
     'advancedSearchOptions': 'Criteris avançats',
     'relatedservices': 'Serveis relacionats',
+    'relatedsource': 'Source datasets',
+    'relatedhassource': 'Is used in',
     'relatedchildren': 'Fills',
     'relatedsibling': 'Related records',
     'relatedassociated': 'Related records',
