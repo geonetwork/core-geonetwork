@@ -6,6 +6,8 @@
     "rememberMe": "Remember me",
     "signIn": "Sign in",
     "signedInAs": "",
+    "needHelp": "Need help",
+    "docNotFound": "<strong>Warning !</strong> Page <a href='{{page}}'>{{page}}</a> not found in documentation.",
     
     "eng": "English",
     "fre": "Français",
@@ -13,9 +15,7 @@
     "cat": "Català",
     "chi": "中文",
     "dut": "Nederlands",
-    "eng": "English",
     "fin": "Suomeksi",
-    "fre": "Français",
     "ger": "Deutsch",
     "ita": "Italiano",
     "nor": "Norsk",

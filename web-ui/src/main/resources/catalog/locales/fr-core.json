@@ -6,6 +6,8 @@
     "rememberMe": "Se souvenir de moi",
     "signIn": "S'identifier",
     "signedInAs": "",
+    "needHelp": "Besoin d'aide",
+    "docNotFound": "<strong>Attention !</strong> La page <a href='{{page}}'>{{page}}</a> n'a pas été trouvée dans le guide utilisateur.",
     
     "title": "Titre",
     
@@ -15,9 +17,7 @@
     "cat": "Català",
     "chi": "中文",
     "dut": "Nederlands",
-    "eng": "English",
     "fin": "Suomeksi",
-    "fre": "Français",
     "ger": "Deutsch",
     "ita": "Italiano",
     "nor": "Norsk",
