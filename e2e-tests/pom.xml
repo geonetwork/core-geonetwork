@@ -115,6 +115,45 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.codehaus.gmaven</groupId>
+                        <artifactId>groovy-maven-plugin</artifactId>
+                        <version>2.0</version>
+                        <executions>
+                            <execution>
+                                <!-- Obtain the selenium jar name by searching the node_modules directory for the jar.
+                                     This allows us to update the package.json without worrying about the selenium jar version number
+                                     changing -->
+                                <id>Find Selenium Jar</id>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                                <configuration>
+                                    <source><![CDATA[
+                                        import static groovy.io.FileType.*
+                                        def base = new File(project.basedir, "node_modules/selenium-server/lib")
+                                        log.info("\n\tSearching $base for selenium server jar")
+                                        def jarsFound = []
+                                        base.eachFileRecurse FILES, { file ->
+                                            if (file.name.startsWith("selenium-server-standalone")) {
+                                                jarsFound << file
+                                            }
+                                        }
+
+                                        if (jarsFound.isEmpty()) {
+                                            throw new AssertionError("No selenium jar found in $base")
+                                        }
+
+                                        project.properties['seleniumJar'] = jarsFound[0].absolutePath
+                                        log.info("\n\tUsing selenium jar: "+jarsFound[0])
+
+
+                      ]]></source>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
                         <executions>
@@ -256,38 +295,6 @@
                         datadir.mkdirs();
                         log.info("\n\n\tSetting DataDirectory to e2e tests to: $datadir")
                         System.setProperty("geonetwork.dir", datadir.absolutePath)
-                      ]]></source>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <!-- Obtain the selenium jar name by searching the node_modules directory for the jar.
-                                     This allows us to update the package.json without worrying about the selenium jar version number
-                                     changing -->
-                                <id>Find Selenium Jar</id>
-                                <goals>
-                                    <goal>execute</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                                <configuration>
-                                    <source><![CDATA[
-                                        import static groovy.io.FileType.*
-                                        def base = new File(project.basedir, "node_modules/selenium-server/lib")
-                                        log.info("\n\tSearching $base for selenium server jar")
-                                        def jarsFound = []
-                                        base.eachFileRecurse FILES, { file ->
-                                            if (file.name.startsWith("selenium-server-standalone")) {
-                                                jarsFound << file
-                                            }
-                                        }
-
-                                        if (jarsFound.isEmpty()) {
-                                            throw new AssertionError("No selenium jar found in $base")
-                                        }
-
-                                        project.properties['seleniumJar'] = jarsFound[0].absolutePath
-                                        log.info("\n\tUsing selenium jar: "+jarsFound[0])
-
-
                       ]]></source>
                                 </configuration>
                             </execution>
