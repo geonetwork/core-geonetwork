@@ -486,6 +486,8 @@ GeoNetwork.Lang.en = {
     'mdResultsLayer': 'Search results',
     'printLayer': 'Print page',
     'relatedservices': 'Related services',
+    'relatedsource': 'Source datasets',
+    'relatedhassource': 'Is used in',
     'relatedparent': 'Parent',
     'relatedsibling': 'Related records',
     'relatedassociated': 'Related records',

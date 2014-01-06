@@ -20,27 +20,27 @@
        *******************************************
        */
       return {
-        
+
         /**
          * Called on suggestion click in the list.
-         * Either open a popup with a form or directly 
+         * Either open a popup with a form or directly
          * execute the process.
          */
         onSuggestionClick: function(sugg) {
           this.setCurrent(sugg);
-          if(sugg.params) {
+          if (sugg.params) {
             $('#runsuggestion-popup').modal('show');
             this.dispatch();
           } else {
             this.runProcess(sugg['@process']);
           }
         },
-        
+
         /**
          * Directives can register callback that will be
          * executed when other call the dispatcher.
-         * This is use because the suggestion content is in 
-         * a popup, whom scope can't be accessed by gnSuggestionList 
+         * This is use because the suggestion content is in
+         * a popup, whom scope can't be accessed by gnSuggestionList
          */
         register: function(cb) {
           callbacks.push(cb);
@@ -50,9 +50,9 @@
             callbacks[i]();
           }
         },
-        
+
         /**
-         * Save current state to share suggestion between all 
+         * Save current state to share suggestion between all
          * directives.
          */
         setCurrent: function(sugg) {
@@ -63,7 +63,7 @@
         },
 
         /**
-         * Call GN service to load all suggestion for the current 
+         * Call GN service to load all suggestion for the current
          * metadata
          */
         load: function() {
@@ -72,9 +72,9 @@
             action: 'analyze'
           });
         },
-        
+
         runProcess: function(service, params) {
-          if(angular.isUndefined(params)) {
+          if (angular.isUndefined(params)) {
             params = {};
           }
           params.process = service;

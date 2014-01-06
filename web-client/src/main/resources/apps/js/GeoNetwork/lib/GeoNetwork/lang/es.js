@@ -444,6 +444,8 @@ GeoNetwork.Lang.es = {
     'deleteRecordFailure':'Error al eliminar los metadatos.',
     'advancedSearchOptions':'Criterios avanzados',
     'relatedservices':'Servicios relacionados con',
+    'relatedsource': 'Source datasets',
+    'relatedhassource': 'Is used in',
     'relatedchildren':'Hijos',
     'relatedsibling': 'Related records',
     'relatedassociated': 'Related records',

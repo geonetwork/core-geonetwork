@@ -41,6 +41,7 @@
     processAll: 'md.processing.batch',
     processXml: 'xml.metadata.processing@json', // TODO: CHANGE
     getRelations: 'md.relations.get@json',
+    getValidation: 'md.validate@json',
     lang: 'lang@json',
     country: 'regions.list@json?categoryId=' +
         'http://geonetwork-opensource.org/regions%23country',

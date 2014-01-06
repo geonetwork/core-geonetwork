@@ -109,6 +109,10 @@ import java.util.List;
  * Only apply to ISO19139 and ISO profiles.
  * Get all records defined in source element (in data quality section).
  * 
+ * <h3>hassource</h3>
+ * Only apply to ISO19139 and ISO profiles.
+ * Get all records where this record is defined has source (in data quality section).
+ * 
  * <h3>fcat</h3>
  * Only apply to ISO19110, ISO19139 and ISO profiles.
  * Get all records defined in featureCatalogueCitation.
@@ -252,7 +256,7 @@ public class GetRelated implements Service {
                     relatedRecords.addContent(search(uuids.toString(), "datasets", context, from, to, fast));
                 }
             }
-            // if source
+            // if source, return source datasets defined in the current record
             if (type.equals("") || type.contains("source")) {
                 ElementFilter el = new ElementFilter("source", gmd);
                 StringBuffer uuids = filterMetadata(md, el);
@@ -268,6 +272,12 @@ public class GetRelated implements Service {
                     relatedRecords.addContent(search(uuids.toString(), "fcats", context, from, to, fast));
                 }
             }
+        }
+
+        // 
+        if (type.equals("") || type.contains("hassource")) {
+            // Return records where this record is a source dataset
+            relatedRecords.addContent(search(uuid, "hassource", context, from, to, fast));
         }
 
         // Relation table is preserved for backward compatibility but should not be used anymore.
@@ -334,6 +344,8 @@ public class GetRelated implements Service {
                 parameters.addContent(new Element("operatesOn").setText(uuid));
             else if ("hasfeaturecat".equals(type))
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
+            else if ("hassource".equals(type))
+                parameters.addContent(new Element("hassource").setText(uuid));
             else if ("associated".equals(type))
                 parameters.addContent(new Element("agg_associated").setText(uuid));
             else if ("datasets".equals(type) || "fcats".equals(type) || "sources".equals(type) || "siblings".equals(type))

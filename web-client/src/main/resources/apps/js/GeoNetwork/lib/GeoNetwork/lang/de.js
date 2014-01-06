@@ -449,6 +449,8 @@ GeoNetwork.Lang.de = {
 'deleteRecordFailure':'Fehler beim Löschen der Metadaten.',
 'advancedSearchOptions':'Erweiterte Kriterien',
 'relatedservices':'Related Service',
+'relatedsource': 'Source datasets',
+'relatedhassource': 'Is used in',
 'relatedchildren':'Kinder',
 'relatedsibling': 'Related records',
 'relatedassociated': 'Related records',

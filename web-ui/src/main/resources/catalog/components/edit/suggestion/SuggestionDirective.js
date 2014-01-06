@@ -2,7 +2,7 @@
   goog.provide('gn_suggestion_directive');
 
   /**
-   * Provide directives for suggestions of the 
+   * Provide directives for suggestions of the
    * edited metadata.
    *
    * - gnSuggestionList
@@ -17,8 +17,8 @@
             scope: {},
             link: function(scope, element, attrs) {
               scope.gnSuggestion = gnSuggestion;
-              
-              gnSuggestion.load().success(function(data){
+
+              gnSuggestion.load().success(function(data) {
                 scope.suggestions = data;
               });
             }
@@ -41,7 +41,7 @@
               var initParams = function() {
                 scope.params = {};
                 var p = gnSuggestion.getCurrent().params;
-                for(key in p) {
+                for (key in p) {
                   scope.params[key] = p[key].defaultValue;
                 }
               };

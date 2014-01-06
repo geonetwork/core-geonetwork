@@ -7,12 +7,14 @@
   goog.require('gn_ows');
   goog.require('gn_popup');
   goog.require('gn_suggestion');
+  goog.require('gn_validation');
 
   var module = angular.module('gn_editor', [
     'gn',
     'gn_popup',
     'gn_onlinesrc',
     'gn_suggestion',
+    'gn_validation',
     'gn_draggable_directive',
     'gn_editor_controller',
     'gn_ows'
