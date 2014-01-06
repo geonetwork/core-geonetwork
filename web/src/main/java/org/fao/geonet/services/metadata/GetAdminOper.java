@@ -84,7 +84,8 @@ public class GetAdminOper implements Service
 		Element ownerId = new Element("ownerid").setText(info.owner);
 		Element groupOwner = new Element("groupOwner").setText(info.groupOwner);
 		Element schema = new Element("schema").setText(info.schemaId);
-		Element hasOwner = new Element("owner"); 
+		Element isMetadata = new Element("isMetadata").setText(Boolean.toString(info.template == MdInfo.Template.METADATA));
+		Element hasOwner = new Element("owner");
 		if (am.isOwner(context,id)) 
 			hasOwner.setText("true");
 		else
@@ -176,6 +177,7 @@ public class GetAdminOper implements Service
 										.addContent(ownerId)
 										.addContent(hasOwner)
 										.addContent(schema)
+										.addContent(isMetadata)
 										.addContent(groupOwner)
 										.addContent(validationEl);
 

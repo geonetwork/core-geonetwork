@@ -61,9 +61,10 @@
 				</xsl:variable>
 				<xsl:variable name="valid">
 					<xsl:choose>
-						<!-- only apply restriction to iso19139 metadata records -->
-						<xsl:when test="contains(/root/gui/reqService,'metadata.batch')">y</xsl:when>
-						<xsl:when test="not(starts-with($schema, 'iso19139')) and $valid-xsd='1'">y</xsl:when>
+                        <xsl:when test="contains(/root/gui/reqService,'metadata.batch')">y</xsl:when>
+                        <!-- only apply restriction to iso19139 metadata records that are not templates -->
+                        <xsl:when test="/root/response/isMetadata = 'false'">y</xsl:when>
+                        <xsl:when test="not(starts-with($schema, 'iso19139')) and $valid-xsd='1'">y</xsl:when>
 						<xsl:when test="starts-with($schema, 'iso19139') and $valid-xsd='1' and $validSch-iso-che='1' and $validSch-iso='1' and $validSch-geonetwork='1'"><xsl:text>y</xsl:text></xsl:when>
 						<xsl:otherwise><xsl:text>n</xsl:text></xsl:otherwise>
 					</xsl:choose>                                   
