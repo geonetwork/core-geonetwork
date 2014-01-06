@@ -228,7 +228,14 @@
       <output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8"/>
     </service>
     
-
-
+    <service name="md.suggestion">
+      <documentation><![CDATA[
+        Get suggestion for all metadata.
+        Paremeters
+        * action could be 'list' or 'analyse'
+        * process
+        ]]></documentation>
+      <class name=".services.metadata.GetSuggestion"/>
+    </service>
   </services>
 </geonet>
