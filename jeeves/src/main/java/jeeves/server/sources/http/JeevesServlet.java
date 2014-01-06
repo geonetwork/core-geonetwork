@@ -63,23 +63,27 @@ public class JeevesServlet extends HttpServlet
 	//---------------------------------------------------------------------------
 
     public void init() throws ServletException {
-        final ServletContext servletContext = getServletContext();
-        final ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
-        this.jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
+        try {
+            final ServletContext servletContext = getServletContext();
+            final ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
+            this.jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
 
-        jeevesAppContext.setAppPath(pathFinder.getAppPath());
+            jeevesAppContext.setAppPath(pathFinder.getAppPath());
 
-        // initialize all JPA Repositories.  This should be done outside of the init
-        // because spring-data-jpa first looks up named queries (based on method names) and
-        // if the query is not found an exception is thrown.  This exception will set rollback
-        // on the transaction if a transaction is active.
-        //
-        // We want to initialize all repositories here so they are not lazily initialized
-        // at random places through out the code where it may be in a transaction.
-        jeevesAppContext.getBeansOfType(JpaRepository.class, false, true);
+            // initialize all JPA Repositories.  This should be done outside of the init
+            // because spring-data-jpa first looks up named queries (based on method names) and
+            // if the query is not found an exception is thrown.  This exception will set rollback
+            // on the transaction if a transaction is active.
+            //
+            // We want to initialize all repositories here so they are not lazily initialized
+            // at random places through out the code where it may be in a transaction.
+            jeevesAppContext.getBeansOfType(JpaRepository.class, false, true);
 
-        jeevesAppContext.getBean(JeevesEngine.class).init(pathFinder.getAppPath(), pathFinder.getConfigPath(), pathFinder.getBaseUrl(), this);
-        initialized = true;
+            jeevesAppContext.getBean(JeevesEngine.class).init(pathFinder.getAppPath(), pathFinder.getConfigPath(), pathFinder.getBaseUrl(), this);
+            initialized = true;
+        } catch (Throwable e) {
+            JeevesEngine.handleStartupError(e);
+        }
     }
 
 	//---------------------------------------------------------------------------

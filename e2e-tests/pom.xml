@@ -295,6 +295,12 @@
                         datadir.mkdirs();
                         log.info("\n\n\tSetting DataDirectory to e2e tests to: $datadir")
                         System.setProperty("geonetwork.dir", datadir.absolutePath)
+
+
+                        // Also set system property so that Geonetwork knows to shutdown in case of error.
+                        // This provision makes it easier to tell when the failure is with Geonetwork start up or
+                        // with e2e-tests or selenium configuration
+                        System.setProperty("geonetwork.shutdown.on.startup.error", "true");
                       ]]></source>
                                 </configuration>
                             </execution>
@@ -354,6 +360,7 @@
                             </webAppConfig>
                             <stopKey>GEONETWORK_E2E_TEST_STOP</stopKey>
                             <stopPort>${jetty.stop.port}</stopPort>
+                            <stopWait>false</stopWait>
                         </configuration>
                         <executions>
                             <execution>
