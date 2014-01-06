@@ -449,6 +449,8 @@ GeoNetwork.Lang.nl = {
     'deleteRecordFailure': "Fout bij het verwijderen van het metadatarecord.",
     'advancedSearchOptions': "Geavanceerde zoek opties",
     'relatedservices': "Gerelateerde service",
+    'relatedsource': 'Source datasets',
+    'relatedhassource': 'Is used in',
     'relatedchildren': "Kinderen",
     'relatedsibling': 'Related records',
     'relatedassociated': 'Related records',

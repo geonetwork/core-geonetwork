@@ -487,6 +487,8 @@ GeoNetwork.Lang.fr = {
     'mdResultsLayer': 'Résultats de la recherche',
     'printLayer': 'Page de l\'impression',
     'relatedservices': 'Services associés',
+    'relatedsource': 'Données sources',
+    'relatedhassource': 'Utilisé par',
     'relatedparent': 'Métadonnée parent',
     'relatedsibling': 'Ressources associées',
     'relatedassociated': 'Ressources associées',
