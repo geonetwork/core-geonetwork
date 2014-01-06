@@ -12,7 +12,8 @@
             <option value="DB">Database</option>
             <option value="OGC:WMS-1.1.1-http-get-map">Web Map Service (OGC)</option>
             <option value="WFS">Web Feature Service (OGC)</option>
-            <option value="WCS">Web Coverage Service (OGC)</option>
+        	<option value="WCS">Web Coverage Service (OGC)</option>
+        	<option value="OGC:OWS-C">OGC:OWS Context</option>
         </helper>
     </element>
     <element name="gmd:abstract" id="25.0">
