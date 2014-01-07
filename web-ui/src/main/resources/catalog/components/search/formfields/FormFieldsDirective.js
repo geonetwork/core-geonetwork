@@ -16,6 +16,11 @@
             link: function(scope, element, attrs) {
               $http.get('admin.group.list@json').success(function(data) {
                 scope.groups = data !== 'null' ? data : null;
+                
+                // Select by default the first group.
+                if (scope.ownerGroup === '' && data) {
+                  scope.ownerGroup = data[0]['id'];
+                }
               });
             }
           };
