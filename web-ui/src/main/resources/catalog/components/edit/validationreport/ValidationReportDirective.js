@@ -17,7 +17,7 @@
                 'partials/validationreport.html',
             scope: {},
             link: function(scope, element, attrs) {
-              scope.showErrorsOnly = false;
+              scope.showErrorsOnly = true;
               scope.gnCurrentEdit = gnCurrentEdit;
 
 
@@ -53,6 +53,19 @@
 
               scope.toggleShowErrors = function() {
                 scope.showErrorsOnly = !scope.showErrorsOnly;
+              };
+
+              scope.getClass = function(type) {
+                if (scope.rules && scope.rules.length) {
+                  if (type === 'icon') {
+                    return scope.hasErrors ?
+                        'fa-thumbs-o-down' : 'fa-thumbs-o-up';
+                  } else {
+                    return scope.hasErrors ? 'panel-danger' : 'panel-success';
+                  }
+                } else {
+                  return '';
+                }
               };
 
               scope.filterByType = function(type) {
