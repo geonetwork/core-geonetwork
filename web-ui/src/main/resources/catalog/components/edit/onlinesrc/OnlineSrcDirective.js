@@ -242,13 +242,13 @@
 
               gnOnlinesrc.register(scope.mode, function() {
                 $('#linktoservice-popup').modal('show');
-                
+
                 // parameters of the online resource form
                 scope.srcParams = {};
-                
+
                 var searchParams = {
-                    type: scope.mode
-                  };
+                  type: scope.mode
+                };
                 scope.$broadcast('resetSearch', searchParams);
               });
 
@@ -332,7 +332,7 @@
                * the search form and trigger a search.
                */
               gnOnlinesrc.register(scope.mode, function() {
-                $('#linkto'+scope.mode+'-popup').modal('show');
+                $('#linkto' + scope.mode + '-popup').modal('show');
                 var searchParams = {};
                 if (scope.mode == 'fcats') {
                   searchParams = {

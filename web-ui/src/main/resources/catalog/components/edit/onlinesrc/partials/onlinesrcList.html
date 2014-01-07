@@ -180,11 +180,6 @@
           <i class="fa fa-plus"></i>
         </a>
       </h4>
-      <div ng-repeat="resource in relations.fcats | orderBy:'title'"
-        ng-click="">
-        {{resource.title}} <a href=""
-          ng-click="onlinesrcService.removeFeatureCatalog(resource)">remove</a>
-      </div>
       <ul class="list-group">
         <li class="list-group-item"
           ng-repeat="resource in relations.fcats | orderBy:'title'">

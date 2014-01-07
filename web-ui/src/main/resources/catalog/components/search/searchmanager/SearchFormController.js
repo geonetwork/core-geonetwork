@@ -83,10 +83,10 @@
           $scope.triggerSearch();
         }
       });
-      
-      
+
+
       $scope.$on('resetSearch', function(evt, searchParams) {
-        if(searchParams) {
+        if (searchParams) {
           $scope.params = searchParams;
         } else {
           searchParams = {};
