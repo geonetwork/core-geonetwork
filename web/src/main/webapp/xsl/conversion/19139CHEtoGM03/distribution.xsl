@@ -63,7 +63,9 @@
             <xsl:apply-templates mode="text" select="gmd:protocol"/>
             <xsl:apply-templates mode="text" select="gmd:applicationProfile"/>
             <xsl:apply-templates mode="text" select="gmd:function"/>
-            <xsl:apply-templates mode="textGroup" select="gmd:description"/>
+            <xsl:if test="normalize-space(gmd:description)!=''">
+                <xsl:apply-templates mode="textGroup" select="gmd:description"/>
+            </xsl:if>
 
             <xsl:if test="normalize-space(gmd:name)!=''">
                 <xsl:apply-templates mode="textGroup" select="gmd:name"/>
