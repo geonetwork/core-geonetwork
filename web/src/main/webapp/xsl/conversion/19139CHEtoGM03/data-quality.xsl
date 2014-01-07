@@ -7,11 +7,12 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:gmi="http://www.isotc211.org/2005/gmi"
-                xmlns:xalan="http://xml.apache.org/xalan" 
-                exclude-result-prefixes="che gco gmd gml xalan gmi">
+                xmlns:xalan="http://xml.apache.org/xalan"
+                xmlns:util="xalan://org.fao.geonet.util.XslUtil"
+                exclude-result-prefixes="che gco gmd gml xalan gmi util">
 
     <xsl:template mode="DataQuality" match="gmd:DQ_DataQuality">
-        <GM03_2_1Core.Core.DQ_DataQuality TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.DQ_DataQuality TID="x{util:randomId()}">
             <BACK_REF name="MD_Metadata"/>
             <xsl:apply-templates mode="DataQuality" select="gmd:scope"/>
             <xsl:apply-templates mode="DataQuality" select="gmd:report"/>
@@ -24,7 +25,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:LI_Source">
-        <GM03_2_1Comprehensive.Comprehensive.sourceLI_Lineage TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.sourceLI_Lineage TID="x{util:randomId()}">
             <source REF="?">
                 <GM03_2_1Comprehensive.Comprehensive.LI_Source  TID="x2{generate-id(.)}">
                  <xsl:apply-templates mode="textGroup" select="gmd:description" />
@@ -66,7 +67,7 @@
             <xsl:apply-templates mode="DataQuality"/>
         </xsl:variable>
         <xsl:if test="count($report/*)>0">
-            <GM03_2_1Comprehensive.Comprehensive.reportDQ_DataQuality TID="x{generate-id(.)}">
+            <GM03_2_1Comprehensive.Comprehensive.reportDQ_DataQuality TID="x{util:randomId()}">
                 <report REF="?">
                     <xsl:copy-of select="$report"/>
                 </report>
@@ -77,7 +78,7 @@
 
     
     <xsl:template mode="DataQuality" match="gmd:extent">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_Scopeextent TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_Scopeextent TID="x{util:randomId()}">
 	        <extent REF="?">
 	            <xsl:apply-templates mode="DataQuality" /> 
 	        </extent>
@@ -86,7 +87,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:EX_Extent">
-        <GM03_2_1Core.Core.EX_Extent TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.EX_Extent TID="x{util:randomId()}">
             <xsl:apply-templates mode="textGroup" select="gmd:description"/>
             <xsl:apply-templates mode="Extent" select="gmd:geographicElement"/>
             <xsl:apply-templates mode="Extent" select="gmd:temporalElement"/>
@@ -95,7 +96,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_Scope">
-        <GM03_2_1Core.Core.DQ_Scope TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.DQ_Scope TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:level"/>
             <BACK_REF name="DQ_DataQuality"/>
             <xsl:apply-templates mode="DataQuality" select="gmd:extent"/>
@@ -104,7 +105,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:MD_ScopeDescription">
-        <GM03_2_1Core.Core.MD_ScopeDescription TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.MD_ScopeDescription TID="x{util:randomId()}">
            <xsl:apply-templates mode="text" select="gmd:attributes"/>
            <xsl:apply-templates mode="text" select="gmd:features"/>
            <xsl:apply-templates mode="text" select="gmd:featureInstances"/>
@@ -117,7 +118,7 @@
 
 
     <xsl:template mode="DataQuality" match="gmd:DQ_TemporalValidity">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_TemporalValidity TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_TemporalValidity TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_TemporalValidity</xsl:with-param>
             </xsl:apply-templates>
@@ -125,7 +126,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_TemporalConsistency">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_TemporalConsistency TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_TemporalConsistency TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_TemporalConsistency</xsl:with-param>
             </xsl:apply-templates>
@@ -133,7 +134,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_AccuracyOfATimeMeasurement">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_AccuracyOfATimeMeasurement TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_AccuracyOfATimeMeasurement TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_AccuracyOfATimeMeasurement</xsl:with-param>
             </xsl:apply-templates>
@@ -141,7 +142,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_QuantitativeAttributeAccuracy">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeAttributeAccuracy TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeAttributeAccuracy TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_QuantitativeAttributeAccuracy</xsl:with-param>
             </xsl:apply-templates>
@@ -149,7 +150,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_NonQuantitativeAttributeAccuracy">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_NonQuantitativeAttributeAccuracy TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_NonQuantitativeAttributeAccuracy TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_NonQuantitativeAttributeAccuracy</xsl:with-param>
             </xsl:apply-templates>
@@ -157,7 +158,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_ThematicClassificationCorrectness">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_ThematicClassificationCorrectness TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_ThematicClassificationCorrectness TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_ThematicClassificationCorrectness</xsl:with-param>
             </xsl:apply-templates>
@@ -165,7 +166,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_RelativeInternalPositionalAccuracy">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_RelativeInternalPositionalAccuracy TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_RelativeInternalPositionalAccuracy TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_RelativeInternalPositionalAccuracy</xsl:with-param>
             </xsl:apply-templates>
@@ -173,7 +174,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_GriddedDataPositionalAccuracy">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_GriddedDataPositionalAccuracy TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_GriddedDataPositionalAccuracy TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_GriddedDataPositionalAccuracy</xsl:with-param>
             </xsl:apply-templates>
@@ -181,7 +182,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_AbsoluteExternalPositionalAccuracy">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_AbsoluteExternalPositionalAccuracy</xsl:with-param>
             </xsl:apply-templates>
@@ -189,7 +190,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_TopologicalConsistency">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_TopologicalConsistency TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_TopologicalConsistency TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_TopologicalConsistency</xsl:with-param>
             </xsl:apply-templates>
@@ -197,7 +198,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_FormatConsistency">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_FormatConsistency TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_FormatConsistency TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_FormatConsistency</xsl:with-param>
             </xsl:apply-templates>
@@ -205,7 +206,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_DomainConsistency">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_DomainConsistency TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_DomainConsistency TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_DomainConsistency</xsl:with-param>
             </xsl:apply-templates>
@@ -213,7 +214,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_ConceptualConsistency">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_ConceptualConsistency TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_ConceptualConsistency TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_ConceptualConsistency</xsl:with-param>
             </xsl:apply-templates>
@@ -221,7 +222,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_CompletenessOmission">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessOmission TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessOmission TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_CompletenessOmission</xsl:with-param>
             </xsl:apply-templates>
@@ -229,7 +230,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:DQ_CompletenessCommission">
-        <GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessCommission TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessCommission TID="x{util:randomId()}">
             <xsl:apply-templates mode="DQ_Element" select=".">
                 <xsl:with-param name="backRef">DQ_CompletenessCommission</xsl:with-param>
             </xsl:apply-templates>
@@ -276,7 +277,7 @@
     
     <xsl:template mode="DataQualityResult" match="gmd:DQ_ConformanceResult">
         <xsl:param name="backRef"/>
-          <GM03_2_1Comprehensive.Comprehensive.DQ_ConformanceResult TID="x{generate-id(.)}">
+          <GM03_2_1Comprehensive.Comprehensive.DQ_ConformanceResult TID="x{util:randomId()}">
                 <BACK_REF name="DQ_Element" />
                 <xsl:apply-templates mode="characterString" select="gmd:explanation"/>
                 <xsl:apply-templates mode="text" select="gmd:pass"/>
@@ -292,7 +293,7 @@
     
     <xsl:template mode="DataQualityResult" match="gmd:DQ_QuantitativeResult">
         <xsl:param name="backRef"/>
-          <GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult TID="x{generate-id(.)}">
+          <GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult TID="x{util:randomId()}">
                 <BACK_REF name="DQ_Element" />
                 <xsl:if test="normalize-space(gmd:valueType/gco:RecordType) != ''">
                     <valueType><xsl:value-of select="gmd:valueType/gco:RecordType"/></valueType>
@@ -354,7 +355,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:LI_Lineage">
-        <GM03_2_1Core.Core.LI_Lineage TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.LI_Lineage TID="x{util:randomId()}">
             <xsl:apply-templates mode="textGroup" select="gmd:statement"/>
             <BACK_REF name="DQ_DataQuality"/>
             <xsl:apply-templates mode="DataQuality" select="gmd:processStep"/>
@@ -366,7 +367,7 @@
             <xsl:apply-templates mode="DataQuality" select="gmd:LI_ProcessStep"/>    
      </xsl:template>
      <xsl:template mode="DataQuality" match="gmd:LI_ProcessStep">
-        <GM03_2_1Comprehensive.Comprehensive.LI_ProcessStep TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.LI_ProcessStep TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:description"/>
             <xsl:apply-templates mode="text" select="gmd:dateTime"/>
             <xsl:apply-templates mode="text_" select="gmd:rationale"/>

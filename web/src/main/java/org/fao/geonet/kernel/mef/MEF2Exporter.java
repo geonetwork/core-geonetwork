@@ -183,7 +183,7 @@ class MEF2Exporter {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             togm03.convert(source, "TransformationTestSupport", out);
             InputStream result = new ByteArrayInputStream(out.toByteArray());
-            MEFLib.addFile(zos,uuid + FS + MD_DIR + "metadata-gm03_2.xml", result);
+            MEFLib.addFile(zos,uuid + FS + MD_DIR + "metadata-gm03_2_1.xml", result);
 		}
 
 		// --- save native metadata

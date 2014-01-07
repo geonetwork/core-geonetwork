@@ -5,10 +5,11 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                exclude-result-prefixes="che gco gmd">
+                xmlns:util="xalan://org.fao.geonet.util.XslUtil"
+                exclude-result-prefixes="che gco gmd util">
 
     <xsl:template mode="metadata" match="che:CHE_MD_Metadata|gmd:MD_Metadata">
-        <GM03_2_1Core.Core.MD_Metadata TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.MD_Metadata TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:fileIdentifier"/>
             <xsl:apply-templates mode="metadata" select="gmd:language"/>
             <xsl:apply-templates mode="text" select="gmd:characterSet"/>
@@ -81,7 +82,7 @@
     </xsl:template>
 
     <xsl:template mode="metadata" match="gmd:portrayalCatalogueInfo">
-        <GM03_2_1Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata TID="x{util:randomId()}">
             <portrayalCatalogueInfo REF="?">
                 <xsl:apply-templates mode="metadata"/>
             </portrayalCatalogueInfo>
@@ -90,7 +91,7 @@
     </xsl:template>
 
     <xsl:template mode="metadata" match="gmd:MD_PortrayalCatalogueReference|che:CHE_MD_PortrayalCatalogueReference">
-        <GM03_2_1Comprehensive.Comprehensive.MD_PortrayalCatalogueReference TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_PortrayalCatalogueReference TID="x{util:randomId()}">
             <!-- portrayalCatalogueURL? -->
             <xsl:apply-templates mode="metadata" select="gmd:portrayalCatalogueCitation"/>
         </GM03_2_1Comprehensive.Comprehensive.MD_PortrayalCatalogueReference>
@@ -101,7 +102,7 @@
     </xsl:template>
 
     <xsl:template mode="metadata" match="gmd:CI_Citation">
-        <GM03_2_1Comprehensive.Comprehensive.CI_Citation TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.CI_Citation TID="x{util:randomId()}">
             <xsl:apply-templates mode="RefSystem" select="."/>
             <BACK_REF name="MD_PortrayalCatalogReference"/>
         </GM03_2_1Comprehensive.Comprehensive.CI_Citation>

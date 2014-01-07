@@ -5,7 +5,8 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                exclude-result-prefixes="che gco gmd">
+                xmlns:util="xalan://org.fao.geonet.util.XslUtil"
+                exclude-result-prefixes="che gco gmd util">
 
     <xsl:template mode="Legislation" match="che:CHE_MD_Legislation">
         <GM03_2_1Comprehensive.Comprehensive.MD_Legislation TID='x{generate-id(.)}'>
@@ -26,7 +27,7 @@
 
     <xsl:template mode="Legislation" match="che:title">
         <title REF="?">
-            <GM03_2_1Comprehensive.Comprehensive.CI_Citation TID="x{generate-id(.)}">
+            <GM03_2_1Comprehensive.Comprehensive.CI_Citation TID="x{util:randomId()}">
                 <xsl:apply-templates mode="RefSystem"/>
             </GM03_2_1Comprehensive.Comprehensive.CI_Citation>
         </title>

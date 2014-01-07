@@ -4,11 +4,12 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                exclude-result-prefixes="che gco gmd">
+                xmlns:util="xalan://org.fao.geonet.util.XslUtil"
+                exclude-result-prefixes="che gco gmd util">
 
     <xsl:template mode="distribution" match="gmd:distributionInfo">
         <distributionInfo REF="?">
-            <GM03_2_1Core.Core.MD_Distribution TID="x{generate-id(.)}">
+            <GM03_2_1Core.Core.MD_Distribution TID="x{util:randomId()}">
                 <xsl:apply-templates mode="distribution"/>
             </GM03_2_1Core.Core.MD_Distribution>
         </distributionInfo>
@@ -19,7 +20,7 @@
     </xsl:template>
 
     <xsl:template mode="distribution" match="gmd:distributor">
-    <GM03_2_1Comprehensive.Comprehensive.MD_Distributiondistributor TID="x{generate-id(.)}">
+    <GM03_2_1Comprehensive.Comprehensive.MD_Distributiondistributor TID="x{util:randomId()}">
         <distributor REF="?">
               <xsl:apply-templates mode="distribution" select="./*"/>
         </distributor>
@@ -29,7 +30,7 @@
     </xsl:template>
     
     <xsl:template mode="distribution" match="gmd:distributionOrderProcess">
-    <GM03_2_1Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor TID="x{generate-id(.)}">
+    <GM03_2_1Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor TID="x{util:randomId()}">
           <distributionOrderProcess REF="?">
             <GM03_2_1Comprehensive.Comprehensive.MD_StandardOrderProcess TID="x2{generate-id(.)}">
                 <xsl:apply-templates mode="text" select="gmd:MD_StandardOrderProcess/gmd:fees"/>
@@ -44,7 +45,7 @@
     
     <xsl:template mode="distribution" match="gmd:MD_DigitalTransferOptions">
         <xsl:param name="showBackRef" select="true()"/>
-        <GM03_2_1Comprehensive.Comprehensive.MD_DigitalTransferOptions TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_DigitalTransferOptions TID="x{util:randomId()}">
             <xsl:if test="$showBackRef = true()">
                 <BACK_REF name="MD_Distribution"/>
             </xsl:if>
@@ -58,12 +59,15 @@
 
     <xsl:template mode="distribution" match="gmd:CI_OnlineResource">
         <xsl:param name="backRef">true</xsl:param>
-        <GM03_2_1Core.Core.CI_OnlineResource TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.CI_OnlineResource TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:protocol"/>
             <xsl:apply-templates mode="text" select="gmd:applicationProfile"/>
             <xsl:apply-templates mode="text" select="gmd:function"/>
             <xsl:apply-templates mode="textGroup" select="gmd:description"/>
-            <xsl:apply-templates mode="textGroup" select="gmd:name"/>
+
+            <xsl:if test="normalize-space(gmd:name)!=''">
+                <xsl:apply-templates mode="textGroup" select="gmd:name"/>
+            </xsl:if>
             <xsl:apply-templates mode="text" select="gmd:linkage"/>
             <xsl:if test="$backRef = 'true'">
                 <BACK_REF name="MD_DigitalTransferOptions"/>
@@ -76,7 +80,7 @@
         </offLine>
     </xsl:template>    
     <xsl:template mode="distribution" match="gmd:MD_Medium">
-        <GM03_2_1Comprehensive.Comprehensive.MD_Medium TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_Medium TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:name"/>
             <xsl:apply-templates mode="text" select="gmd:density"/>
             <xsl:apply-templates mode="text" select="gmd:densityUnits"/>
@@ -90,7 +94,7 @@
     </xsl:template>
 
     <xsl:template mode="distribution" match="gmd:distributionFormat">
-        <GM03_2_1Core.Core.MD_DistributiondistributionFormat TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.MD_DistributiondistributionFormat TID="x{util:randomId()}">
             <BACK_REF name="MD_Distribution"/>
             <distributionFormat REF="?">
                 <xsl:apply-templates mode="distribution"/>
@@ -100,7 +104,7 @@
 
     <xsl:template mode="distribution" match="gmd:MD_Format">
         <xsl:param name="showDistributor" select="true()"/>
-        <GM03_2_1Comprehensive.Comprehensive.MD_Format TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_Format TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:name"/>
             <xsl:apply-templates mode="text" select="gmd:version"/>
             <xsl:apply-templates mode="text" select="gmd:amendmentNumber"/>
@@ -113,7 +117,7 @@
     </xsl:template>
 
     <xsl:template mode="distribution" match="gmd:formatDistributor">
-        <GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat TID="x{util:randomId()}">
             <formatDistributor REF="?">
                 <xsl:apply-templates mode="distribution"/>    
             </formatDistributor>
@@ -122,7 +126,7 @@
     </xsl:template>
 
     <xsl:template mode="distribution" match="gmd:MD_Distributor">
-        <GM03_2_1Comprehensive.Comprehensive.MD_Distributor TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_Distributor TID="x{util:randomId()}">
             <xsl:apply-templates mode="distribution" select="gmd:distributorContact"/>
             <xsl:apply-templates mode="distribution" select="gmd:distributionOrderProcess"/>
             <xsl:apply-templates mode="distribution" select="gmd:distributorTransferOptions"/>    
@@ -139,7 +143,7 @@
     </xsl:template>
 
     <xsl:template mode="distribution" match="gmd:distributorTransferOptions">
-        <GM03_2_1Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor TID="x{util:randomId()}">
             <distributorTransferOptions REF="?">
                 <xsl:apply-templates mode="distribution">
                     <xsl:with-param name="showBackRef" select="false()"/>

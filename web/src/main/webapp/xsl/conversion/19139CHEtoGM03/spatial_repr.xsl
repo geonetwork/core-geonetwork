@@ -6,12 +6,13 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                exclude-result-prefixes="che gco gmd gml">
+                xmlns:util="xalan://org.fao.geonet.util.XslUtil"
+                exclude-result-prefixes="che gco gmd gml util">
 
     <!-- ================================================================================== -->
     
     <xsl:template mode="SpatialRepr" match="gmd:MD_VectorSpatialRepresentation">
-        <GM03_2_1Comprehensive.Comprehensive.MD_VectorSpatialRepresentation TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_VectorSpatialRepresentation TID="x{util:randomId()}">
             <BACK_REF name="MD_Metadata"/>
             <xsl:apply-templates mode="text" select="gmd:topologyLevel"/>
             <xsl:apply-templates mode="SpatialRepr" select="gmd:geometricObjects"/>
@@ -23,7 +24,7 @@
     </xsl:template>
     
     <xsl:template mode="SpatialRepr" match="gmd:MD_GeometricObjects">
-        <GM03_2_1Comprehensive.Comprehensive.MD_GeometricObjects TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_GeometricObjects TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:geometricObjectType"/>
             <xsl:apply-templates mode="text" select="gmd:geometricObjectCount"/>
             <BACK_REF name="MD_VectorSpatialRepresentation"/>
@@ -33,7 +34,7 @@
     <!-- ================================================================================== -->
 
     <xsl:template mode="SpatialRepr" match="gmd:MD_GridSpatialRepresentation">
-        <GM03_2_1Comprehensive.Comprehensive.MD_GridSpatialRepresentation TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_GridSpatialRepresentation TID="x{util:randomId()}">
             <BACK_REF name="MD_Metadata"/>
             <xsl:apply-templates mode="text" select="gmd:numberOfDimensions"/>
             <xsl:apply-templates mode="SpatialRepr" select="gmd:axisDimensionProperties"/>
@@ -47,7 +48,7 @@
     </xsl:template>
 
     <xsl:template mode="SpatialRepr" match="gmd:MD_Dimension">
-        <GM03_2_1Comprehensive.Comprehensive.MD_Dimension TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_Dimension TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:dimensionName"/>
             <xsl:apply-templates mode="text" select="gmd:dimensionSize"/>
             <xsl:apply-templates mode="text" select="gmd:resolution"/>
@@ -58,7 +59,7 @@
     <!-- ================================================================================== -->
     
     <xsl:template mode="SpatialRepr" match="gmd:MD_Georectified">
-        <GM03_2_1Comprehensive.Comprehensive.MD_Georectified TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_Georectified TID="x{util:randomId()}">
             <BACK_REF name="MD_Metadata"/>
     <!-- gridSpatial properties -->
             <xsl:apply-templates mode="text" select="gmd:numberOfDimensions"/>
@@ -106,7 +107,7 @@
     <!-- ================================================================================== -->
         
     <xsl:template mode="SpatialRepr" match="gmd:MD_Georeferenceable">
-        <GM03_2_1Comprehensive.Comprehensive.MD_Georeferenceable TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_Georeferenceable TID="x{util:randomId()}">
             <BACK_REF name="MD_Metadata"/>
 
     <!-- gridSpatial properties -->

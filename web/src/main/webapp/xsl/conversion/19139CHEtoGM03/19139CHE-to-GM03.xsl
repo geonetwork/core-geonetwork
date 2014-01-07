@@ -6,7 +6,8 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                exclude-result-prefixes="che gco gmd">
+                xmlns:util="xalan://org.fao.geonet.util.XslUtil"
+                exclude-result-prefixes="che gco gmd util">
     <xsl:include href="header.xsl"/>
     <xsl:include href="metadata.xsl"/>
     <xsl:include href="distribution.xsl"/>
@@ -33,7 +34,7 @@
         </TRANSFER>
     </xsl:template>
     <xsl:template mode="root" match="gmd:distributorFormat">
-        <GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat TID="x{util:randomId()}">
             <xsl:apply-templates mode="root" select="gmd:MD_Format/gmd:formatDistributor[1]"/>
             <xsl:apply-templates mode="root" select="gmd:MD_Format">
                 <xsl:with-param name="showDistributor" select="false()"/>

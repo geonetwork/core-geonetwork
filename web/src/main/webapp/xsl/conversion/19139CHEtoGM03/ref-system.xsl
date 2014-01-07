@@ -5,7 +5,8 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                exclude-result-prefixes="che gco gmd">
+                xmlns:util="xalan://org.fao.geonet.util.XslUtil"
+                exclude-result-prefixes="che gco gmd util">
 
     <xsl:template mode="RefSystem" match="gmd:referenceSystemInfo">
         <GM03_2_1Core.Core.referenceSystemInfoMD_Metadata TID='x{generate-id(.)}'>
@@ -77,7 +78,7 @@
     </xsl:template>
 
     <xsl:template mode="RefSystem" match="gmd:citedResponsibleParty">
-        <GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty TID="x{util:randomId()}">
             <citedResponsibleParty REF="?">
                 <xsl:apply-templates mode="RespParty"/>
             </citedResponsibleParty>
@@ -92,7 +93,7 @@
 
     <xsl:template mode="RefSystem" match="gmd:CI_Series">
         <series REF="?">
-	        <GM03_2_1Comprehensive.Comprehensive.CI_Series TID="x{generate-id(.)}">
+	        <GM03_2_1Comprehensive.Comprehensive.CI_Series TID="x{util:randomId()}">
 		        <xsl:apply-templates mode="text" select="gmd:page"/>
 		        <xsl:apply-templates mode="text" select="gmd:issueIdentification"/>
 		        <xsl:apply-templates mode="text" select="gmd:name"/>

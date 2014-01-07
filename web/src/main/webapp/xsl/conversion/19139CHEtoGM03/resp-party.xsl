@@ -6,10 +6,11 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                exclude-result-prefixes="che gco gmd">
+                xmlns:util="xalan://org.fao.geonet.util.XslUtil"
+                exclude-result-prefixes="che gco gmd util">
 
     <xsl:template mode="RespParty" match="che:CHE_CI_ResponsibleParty|gmd:CI_ResponsibleParty">
-        <GM03_2_1Core.Core.CI_ResponsibleParty TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.CI_ResponsibleParty TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="che:individualFirstName"/>
             <xsl:apply-templates mode="text" select="che:individualLastName"/>
             <xsl:if test="gmd:contactInfo/gmd:CI_Contact/gmd:address/*/gmd:electronicMailAddress and
@@ -32,7 +33,7 @@
     </xsl:template>
 
     <xsl:template mode="RespParty" match="che:parentResponsibleParty">
-        <GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo TID="x{util:randomId()}">
             <parentResponsibleParty REF="?">
                 <xsl:apply-templates mode="RespParty"/>
             </parentResponsibleParty>
@@ -52,28 +53,28 @@
 
     <xsl:template mode="RespParty" match="che:CHE_CI_Telephone">
         <xsl:for-each select="gmd:voice[normalize-space(.) != '']">
-            <GM03_2_1Core.Core.CI_Telephone TID="x{generate-id(.)}">
+            <GM03_2_1Core.Core.CI_Telephone TID="x{util:randomId()}">
                 <number><xsl:value-of select="gco:CharacterString"/></number>
                 <numberType>mainNumber</numberType>
                 <BACK_REF name="CI_ResponsibleParty"/>
             </GM03_2_1Core.Core.CI_Telephone>
         </xsl:for-each>
         <xsl:for-each select="gmd:facsimile[normalize-space(.) != '']">
-            <GM03_2_1Core.Core.CI_Telephone TID="x{generate-id(.)}">
+            <GM03_2_1Core.Core.CI_Telephone TID="x{util:randomId()}">
                 <number><xsl:value-of select="gco:CharacterString"/></number>
                 <numberType>facsimile</numberType>
                 <BACK_REF name="CI_ResponsibleParty"/>
             </GM03_2_1Core.Core.CI_Telephone>
         </xsl:for-each>
         <xsl:for-each select="che:directNumber[normalize-space(.) != '']">
-            <GM03_2_1Core.Core.CI_Telephone TID="x{generate-id(.)}">
+            <GM03_2_1Core.Core.CI_Telephone TID="x{util:randomId()}">
                 <number><xsl:value-of select="gco:CharacterString"/></number>
                 <numberType>directNumber</numberType>
                 <BACK_REF name="CI_ResponsibleParty"/>
             </GM03_2_1Core.Core.CI_Telephone>
         </xsl:for-each>
         <xsl:for-each select="che:mobile[normalize-space(.) != '']">
-            <GM03_2_1Core.Core.CI_Telephone TID="x{generate-id(.)}">
+            <GM03_2_1Core.Core.CI_Telephone TID="x{util:randomId()}">
                 <number><xsl:value-of select="gco:CharacterString"/></number>
                 <numberType>mobile</numberType>
                 <BACK_REF name="CI_ResponsibleParty"/>
@@ -88,7 +89,7 @@
     </xsl:template>
 
     <xsl:template mode="RespParty" match="che:CHE_CI_Address|gmd:CI_Address">
-        <GM03_2_1Core.Core.CI_Address TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.CI_Address TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="che:streetName"/>
             <xsl:apply-templates mode="text" select="che:streetNumber"/>
             <xsl:apply-templates mode="text" select="che:addressLine"/>
@@ -117,7 +118,7 @@
     </xsl:template>
 
     <xsl:template mode="RespParty" match="gmd:CI_Contact">
-        <GM03_2_1Core.Core.CI_Contact TID="x{generate-id(.)}">
+        <GM03_2_1Core.Core.CI_Contact TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:hoursOfService"/>
             <xsl:apply-templates mode="textGroup" select="gmd:contactInstructions"/>
         </GM03_2_1Core.Core.CI_Contact>

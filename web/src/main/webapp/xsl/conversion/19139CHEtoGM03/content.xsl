@@ -6,10 +6,11 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gml="http://www.opengis.net/gml"
-                exclude-result-prefixes="che gco gmd gml">
+                xmlns:util="xalan://org.fao.geonet.util.XslUtil"
+                exclude-result-prefixes="che gco gmd gml util">
 
     <xsl:template mode="Content" match="gmd:MD_CoverageDescription|che:CHE_MD_CoverageDescription">
-        <GM03_2_1Comprehensive.Comprehensive.MD_CoverageDescription TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_CoverageDescription TID="x{util:randomId()}">
             <BACK_REF name="MD_Metadata"/>
             <xsl:apply-templates mode="Content" select="gmd:attributeDescription"/>
             <xsl:apply-templates mode="text" select="gmd:contentType"/>
@@ -22,7 +23,7 @@
     <xsl:template mode="Content" match="che:CHE_MD_FeatureCatalogueDescription|gmd:MD_FeatureCatalogueDescription">
 	    <xsl:variable name="lcletters">abcdefghijklmnopqrstuvwxyz</xsl:variable>
     	<xsl:variable name="ucletters">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
-        <GM03_2_1Comprehensive.Comprehensive.MD_FeatureCatalogueDescription TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_FeatureCatalogueDescription TID="x{util:randomId()}">
             <BACK_REF name="MD_Metadata"/>
             <xsl:if test="gmd:language">
                 <language>
@@ -68,7 +69,7 @@
 
  
     <xsl:template mode="Content" match="gmd:dimension">
-        <GM03_2_1Comprehensive.Comprehensive.dimensionMD_CoverageDescription TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.dimensionMD_CoverageDescription TID="x{util:randomId()}">
             <dimension REF="?">
                 <xsl:apply-templates mode="Content"/>
             </dimension>
@@ -78,7 +79,7 @@
  
 
     <xsl:template mode="Content" match="che:class">
-        <GM03_2_1Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription TID="x{util:randomId()}">
             <class REF="?">
                 <xsl:apply-templates mode="Content"/>
             </class>
@@ -87,7 +88,7 @@
     </xsl:template>
 
     <xsl:template mode="Content" match="gmd:MD_Band">
-        <GM03_2_1Comprehensive.Comprehensive.MD_Band TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_Band TID="x{util:randomId()}">
             <xsl:apply-templates mode="Content" select="gmd:sequenceIdentifier/gco:MemberName/gco:aName"/>
             <xsl:apply-templates mode="text" select="gmd:descriptor"/>
             <xsl:apply-templates mode="text" select="gmd:maxValue"/>
@@ -102,7 +103,7 @@
     </xsl:template>
     
     <xsl:template mode="Content" match="gmd:MD_RangeDimension">
-        <GM03_2_1Comprehensive.Comprehensive.MD_RangeDimension TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_RangeDimension TID="x{util:randomId()}">
             <xsl:apply-templates mode="Content" select="gmd:sequenceIdentifier/gco:MemberName/gco:aName"/>
             <xsl:apply-templates mode="text" select="gmd:descriptor"/>
         </GM03_2_1Comprehensive.Comprehensive.MD_RangeDimension>
@@ -113,7 +114,7 @@
     </xsl:template>
     
     <xsl:template mode="Content" match="che:CHE_MD_Class">
-        <GM03_2_1Comprehensive.Comprehensive.MD_Class TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_Class TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="che:name"/>
             <xsl:apply-templates mode="text" select="che:description"/>
             <xsl:apply-templates mode="Content" select="che:baseClass"/>
@@ -123,7 +124,7 @@
     </xsl:template>
 
     <xsl:template mode="Content" match="che:attribute">
-        <GM03_2_1Comprehensive.Comprehensive.MD_Attribute TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_Attribute TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="che:name"/>
             <xsl:apply-templates mode="text" select="che:description"/>
             <xsl:apply-templates mode="Content" select="che:namedType"/> 
@@ -133,7 +134,7 @@
     </xsl:template>
 
 	<xsl:template mode="Content" match="che:domain">
-		<GM03_2_1Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription TID="x{generate-id(.)}">
+		<GM03_2_1Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription TID="x{util:randomId()}">
 			<domain REF="?">
 				<xsl:apply-templates mode="Content" select="che:CHE_MD_CodeDomain"/>
 			</domain>
@@ -143,7 +144,7 @@
 
     <xsl:template mode="Content" match="che:type">
       <type REF="?">
-        <GM03_2_1Comprehensive.Comprehensive.MD_Type TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_Type TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="che:type"/>
             <xsl:apply-templates mode="Content" select="che:value/che:CHE_MD_CodeValue"/>
         </GM03_2_1Comprehensive.Comprehensive.MD_Type>
@@ -157,14 +158,14 @@
     </xsl:template>
 
     <xsl:template mode="Content" match="che:CHE_MD_Type">
-		<GM03_2_1Comprehensive.Comprehensive.MD_Type TID="x{generate-id(.)}">
+		<GM03_2_1Comprehensive.Comprehensive.MD_Type TID="x{util:randomId()}">
 			<xsl:apply-templates mode="text" select="che:type" />
 			<xsl:apply-templates mode="Content" select="che:value/che:CHE_MD_CodeValue" />
 		</GM03_2_1Comprehensive.Comprehensive.MD_Type>
 	</xsl:template>
     
     <xsl:template mode="Content" match="che:CHE_MD_CodeValue">
-        <GM03_2_1Comprehensive.Comprehensive.MD_CodeValue TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_CodeValue TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="che:name"/>
             <xsl:apply-templates mode="text" select="che:code"/>
             <xsl:apply-templates mode="text" select="che:description"/>
@@ -181,7 +182,7 @@
     </xsl:template>
 
 	<xsl:template mode="Content" match="che:CHE_MD_CodeDomain">
-		<GM03_2_1Comprehensive.Comprehensive.MD_CodeDomain TID="x{generate-id(.)}">
+		<GM03_2_1Comprehensive.Comprehensive.MD_CodeDomain TID="x{util:randomId()}">
 			<xsl:apply-templates mode="text" select="che:name" />
 			<xsl:apply-templates mode="text" select="che:description" />
 		    <xsl:apply-templates mode="Content" select="che:baseDomain" />
@@ -197,7 +198,7 @@
 
     <xsl:template mode="Content" match="che:namedType">
         <xsl:if test="./*">
-            <GM03_2_1Comprehensive.Comprehensive.MD_AttributenamedType TID="x{generate-id(.)}">
+            <GM03_2_1Comprehensive.Comprehensive.MD_AttributenamedType TID="x{util:randomId()}">
                 <BACK_REF name="MD_Attribute"/>
 	            <namedType REF="?">
 	                <xsl:apply-templates mode="Content"/>
@@ -237,7 +238,7 @@
     </xsl:template>
 
     <xsl:template mode="Content" match="gmd:CI_Citation">
-        <GM03_2_1Comprehensive.Comprehensive.CI_Citation TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.CI_Citation TID="x{util:randomId()}">
         <xsl:apply-templates mode="textGroup" select="gmd:title"/>
         <xsl:apply-templates mode="text" select="gmd:edition"/>
         <xsl:apply-templates mode="text" select="gmd:editionDate"/>
@@ -274,7 +275,7 @@
     </xsl:template>
 
     <xsl:template mode="Content" match="gmd:MD_ImageDescription|che:CHE_MD_ImageDescription">
-        <GM03_2_1Comprehensive.Comprehensive.MD_ImageDescription TID="x{generate-id(.)}">
+        <GM03_2_1Comprehensive.Comprehensive.MD_ImageDescription TID="x{util:randomId()}">
             <BACK_REF name="MD_Metadata"/>
             <xsl:apply-templates mode="Content" select="gmd:attributeDescription"/>
             <xsl:apply-templates mode="text" select="gmd:contentType"/>
