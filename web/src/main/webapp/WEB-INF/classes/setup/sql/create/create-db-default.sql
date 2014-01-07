@@ -478,22 +478,3 @@ CREATE TABLE Thesaurus
     activated    varchar(1),
     primary key(id)
   );
-
-CREATE TABLE schematrondes
- (
-  id			int					not null,
-  description	varchar(250)		not null,
-  
-  primary key(id)
- );
-CREATE TABLE schematron
- (
-  id			int					not null,
-  isoschema		varchar(250)		not null,
-  file			varchar(250)		not null,
-  required		boolean				default 'false' not null,
-  description	int					,
-  
-  primary key(id),
-  foreign key(description) references schematrondes(id)
- );
