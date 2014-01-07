@@ -18,7 +18,9 @@
           gnHttp.callService('getValidation', {
             id: gnCurrentEdit.id
           }).success(function(data) {
-            defer.resolve(data);
+            // Empty response return null string.
+            var response = data !== 'null' ? data : null;
+            defer.resolve(response);
           });
           return defer.promise;
         }
