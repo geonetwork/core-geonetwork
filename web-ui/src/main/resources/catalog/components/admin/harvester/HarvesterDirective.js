@@ -80,9 +80,9 @@
                            '0 0/5 14 * * ?',
                            '0 15 10 ? * MON-FRI',
                            '0 15 10 15 * ?'];
-          scope.setSchedule = function (exp) {
+          scope.setSchedule = function(exp) {
             scope.harvester.options.every = exp;
-          }
+          };
         }
       };
     }]);
