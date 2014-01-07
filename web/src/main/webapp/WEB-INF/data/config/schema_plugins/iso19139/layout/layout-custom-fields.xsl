@@ -167,27 +167,27 @@
     </xsl:call-template>
   </xsl:template>
   
-    <xsl:template mode="mode-iso19139" match="gmd:EX_GeographicBoundingBox" priority="2000">
-        <xsl:param name="schema" select="$schema" required="no"/>
+  <xsl:template mode="mode-iso19139" match="gmd:EX_GeographicBoundingBox" priority="2000">
+    <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
     
-      <xsl:call-template name="render-boxed-element">
-        <xsl:with-param name="label"
-          select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
-        <xsl:with-param name="editInfo" select="gn:element"/>
-        <xsl:with-param name="cls" select="local-name()"/>
-        <!-- <xsl:with-param name="attributesSnippet" select="$attributes"/> -->
-        <xsl:with-param name="subTreeSnippet">
-          <div gn-draw-bbox="" data-left="{gmd:westBoundLongitude/gco:Decimal}"
-            data-right="{gmd:eastBoundLongitude/gco:Decimal}" data-bottom="{gmd:southBoundLatitude/gco:Decimal}"
-            data-top="{gmd:northBoundLatitude/gco:Decimal}" data-left-ref="_{gmd:westBoundLongitude/gco:Decimal/gn:element/@ref}"
-            data-right-ref="_{gmd:eastBoundLongitude/gco:Decimal/gn:element/@ref}"
-            data-bottom-ref="_{gmd:southBoundLatitude/gco:Decimal/gn:element/@ref}"
-            data-top-ref="_{gmd:northBoundLatitude/gco:Decimal/gn:element/@ref}"></div>
-        </xsl:with-param>
+    <xsl:call-template name="render-boxed-element">
+      <xsl:with-param name="label"
+        select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
+      <xsl:with-param name="editInfo" select="gn:element"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <!-- <xsl:with-param name="attributesSnippet" select="$attributes"/> -->
+      <xsl:with-param name="subTreeSnippet">
+        <div gn-draw-bbox="" data-left="{gmd:westBoundLongitude/gco:Decimal}"
+          data-right="{gmd:eastBoundLongitude/gco:Decimal}" data-bottom="{gmd:southBoundLatitude/gco:Decimal}"
+          data-top="{gmd:northBoundLatitude/gco:Decimal}" data-left-ref="_{gmd:westBoundLongitude/gco:Decimal/gn:element/@ref}"
+          data-right-ref="_{gmd:eastBoundLongitude/gco:Decimal/gn:element/@ref}"
+          data-bottom-ref="_{gmd:southBoundLatitude/gco:Decimal/gn:element/@ref}"
+          data-top-ref="_{gmd:northBoundLatitude/gco:Decimal/gn:element/@ref}"></div>
+      </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
 </xsl:stylesheet>

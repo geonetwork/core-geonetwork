@@ -1,26 +1,25 @@
 <span data-ng-controller="GnSearchFormController">
   <div class="input-group">
-    <span class="input-group-btn">
+    <div class="input-group-btn">
       <button class="btn btn-default" type="button" title="{{'add' | translate}}"
         data-ng-click="add();">
         <i class="fa fa-plus"/>
         <span>&nbsp;</span>
       </button>
-      <button class="btn btn-default" type="button" 
-        data-toggle="modal" data-target="#gn-directory-entry-popup-{{elementRef}}">
+      <button class="btn btn-default" type="button" data-toggle="modal"
+        data-target="#gn-directory-entry-popup-{{elementRef}}">
         <i class="fa fa-book"/>
         <span data-translate="">addFromDictionnary</span>
       </button>
-    </span>
+    </div>
 
     <!-- TODO: could be nice to filter by organisation -->
-
     <input type="text" class="form-control" placeholder="{{'searchAContact' | translate}}"
       data-ng-model="params.any" data-ng-change="triggerSearch('qi@json')"/>
 
     <div class="list-group gn-autocomplete-list">
-      <li href="" class="list-group-item" data-ng-repeat="r in searchResults.records"> {{r.title}} <span
-        class="pull-right">
+      <li href="" class="list-group-item" data-ng-repeat="r in searchResults.records"> {{r.title}}
+          <span class="pull-right">
           <!-- Display only if XLink enable -->
           <a href="" data-ng-click="addContact(r, null, true)" class="fa fa-link pull-right"
             data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled]"

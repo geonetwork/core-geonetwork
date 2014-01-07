@@ -69,7 +69,7 @@
       gmd:report/*|
       gmd:result/*|
       gmd:extent[name(..)!='gmd:EX_TemporalExtent']|
-      *[namespace-uri(.) != $gnUri and $isFlatMode = false() and gmd:* and not(gco:CharacterString)]">
+      *[namespace-uri(.) != $gnUri and $isFlatMode = false() and gmd:* and not(gco:CharacterString) and not(gmd:URL)]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     
@@ -120,10 +120,10 @@
   
   
   <!-- Render simple element which usually match a form field -->
-  <xsl:template mode="mode-iso19139" priority="100"
+  <xsl:template mode="mode-iso19139" priority="200"
     match="*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|
-		gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|
-		gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName|gmd:PT_FreeText]">
+       gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|
+       gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName|gmd:PT_FreeText]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
 
