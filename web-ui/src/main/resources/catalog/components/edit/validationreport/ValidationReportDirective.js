@@ -22,7 +22,9 @@
               gnValidation.get().then(function(rules) {
                 scope.rules = rules;
                 scope.ruleTypes = {};
-
+                scope.hasErrors = false;
+                var errors = 0;
+                
                 angular.forEach(scope.rules, function(rule) {
                   if (scope.ruleTypes[rule['@group']] === undefined) {
                     scope.ruleTypes[rule['@group']] = {
@@ -35,7 +37,11 @@
 
                   scope.ruleTypes[rule['@group']][rule['@type']] ++;
                   scope.ruleTypes[rule['@group']].total++;
+                  if (scope.hasErrors = scope.ruleTypes[rule['@group']].error) {
+                    errors ++;
+                  };
                 });
+                scope.hasErrors = errors > 0;
               });
 
               scope.toggleShowErrors = function() {
