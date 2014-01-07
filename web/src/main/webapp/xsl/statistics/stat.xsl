@@ -15,13 +15,21 @@
 	additional scripts
 	-->
 	<xsl:template mode="script" match="/">
-		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
-		<xsl:call-template name="geoHeader"/>
-		<xsl:call-template name="ext-ux"/>
+        <xsl:variable name="minimize">
+            <xsl:choose>
+                <xsl:when test="/root/request/debug">?minimize=false</xsl:when>
+                <xsl:otherwise></xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
 
-		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
+        <script type="text/javascript" src="{/root/gui/url}/static/kernel.js{$minimize}"/>
+        <xsl:call-template name="geoHeader"/>
+        <xsl:call-template name="ext-ux"/>
+
+
+        <script type="text/javascript" src="{/root/gui/url}/static/gn.libs.scriptaculous.js{$minimize}"></script>
+		<script type="text/javascript" src="{/root/gui/url}/static/gn.js{$minimize}"></script>
+		<script type="text/javascript" src="{/root/gui/url}/static/gn.editor.js{$minimize}"></script>
 
 		<script type="text/javascript" language="JavaScript" src="{/root/gui/url}/scripts/swfobject.js"/>
 		<script type="text/javascript" language="JavaScript" src="{/root/gui/url}/scripts/gn_stats.js"/>

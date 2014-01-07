@@ -226,7 +226,7 @@ csiro.CRSSelectionPanel = Ext.extend(Ext.FormPanel, {
             name:"itemselector",
             fieldLabel:"ItemSelector",
             tpl: tpl,
-            legend:translate('foundCRS'),
+            legend:translate('foundCRS')
         });
         
         // enable the validate button only if there are selected keywords

@@ -8,8 +8,8 @@
    * - gnSuggestionList
    */
   angular.module('gn_suggestion_directive', [])
-  .directive('gnSuggestionList', ['gnSuggestion',
-        function(gnSuggestion) {
+  .directive('gnSuggestionList', ['gnSuggestion', 'gnCurrentEdit',
+        function(gnSuggestion, gnCurrentEdit) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/suggestion/' +
@@ -17,9 +17,19 @@
             scope: {},
             link: function(scope, element, attrs) {
               scope.gnSuggestion = gnSuggestion;
+              scope.gnCurrentEdit = gnCurrentEdit;
 
-              gnSuggestion.load().success(function(data) {
-                scope.suggestions = data;
+              var init = function () {
+                gnSuggestion.load().success(function(data) {
+                  scope.suggestions = data;
+                });
+              }
+
+              // When saving is done, refresh validation report
+              scope.$watch('gnCurrentEdit.saving', function(newValue) {
+                if (newValue === false) {
+                  init();
+                }
               });
             }
           };
@@ -46,6 +56,7 @@
                 }
               };
               gnSuggestion.register(initParams);
+              
             }
           };
         }]);
