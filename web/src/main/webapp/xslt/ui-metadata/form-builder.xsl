@@ -602,10 +602,10 @@
         <xsl:variable name="isDirective" select="starts-with($type, 'data-')"/>
         
         <xsl:variable name="input">
-          <input class=" {if ($lang) then 'hidden' else ''}" 
+          <input class="form-control {if ($lang) then 'hidden' else ''}" 
             id="gn-field-{$editInfo/@ref}" 
             name="_{$name}" 
-            value="{$valueToEdit}">
+            value="{normalize-space($valueToEdit)}">
             <!-- If type is a directive -->
             <xsl:if test="$isDirective">
               <xsl:attribute name="{$type}"/>
