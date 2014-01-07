@@ -19,11 +19,11 @@
               scope.gnSuggestion = gnSuggestion;
               scope.gnCurrentEdit = gnCurrentEdit;
 
-              var init = function () {
+              var init = function() {
                 gnSuggestion.load().success(function(data) {
                   scope.suggestions = data;
                 });
-              }
+              };
 
               // When saving is done, refresh validation report
               scope.$watch('gnCurrentEdit.saving', function(newValue) {
@@ -56,7 +56,7 @@
                 }
               };
               gnSuggestion.register(initParams);
-              
+
             }
           };
         }]);

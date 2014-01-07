@@ -19,17 +19,17 @@
             link: function(scope, element, attrs) {
               scope.showErrorsOnly = false;
               scope.gnCurrentEdit = gnCurrentEdit;
-              
-              
-              var init = function () {
+
+
+              var init = function() {
                 scope.rules = {};
                 scope.ruleTypes = {};
                 scope.hasErrors = false;
-                
+
                 gnValidation.get().then(function(rules) {
                   scope.rules = rules;
                   var errors = 0;
-                  
+
                   angular.forEach(scope.rules, function(rule) {
                     if (scope.ruleTypes[rule['@group']] === undefined) {
                       scope.ruleTypes[rule['@group']] = {
@@ -39,16 +39,17 @@
                         success: 0,
                         total: 0};
                     }
-  
+
                     scope.ruleTypes[rule['@group']][rule['@type']] ++;
                     scope.ruleTypes[rule['@group']].total++;
-                    if (scope.hasErrors = scope.ruleTypes[rule['@group']].error) {
-                      errors ++;
-                    };
+                    if (scope.hasErrors =
+                        scope.ruleTypes[rule['@group']].error) {
+                      errors++;
+                    }
                   });
                   scope.hasErrors = errors > 0;
                 });
-              }
+              };
 
               scope.toggleShowErrors = function() {
                 scope.showErrorsOnly = !scope.showErrorsOnly;
