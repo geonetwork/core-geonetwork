@@ -75,7 +75,14 @@
         templateUrl: '../../catalog/components/admin/harvester/partials/' +
             'schedule.html',
         link: function(scope, element, attrs) {
-
+          scope.cronExp = ['0 0 12 * * ?',
+                           '0 15 10 * * ?',
+                           '0 0/5 14 * * ?',
+                           '0 15 10 ? * MON-FRI',
+                           '0 15 10 15 * ?'];
+          scope.setSchedule = function (exp) {
+            scope.harvester.options.every = exp;
+          }
         }
       };
     }]);
