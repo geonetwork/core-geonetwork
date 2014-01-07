@@ -211,4 +211,5 @@
   <!-- Get the list of other languages -->
   <xsl:template name="get-iso19110-other-languages"/>
 
+  <xsl:template name="get-iso19110-other-languages-as-json"/>
 </xsl:stylesheet>
