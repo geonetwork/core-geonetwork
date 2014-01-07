@@ -234,6 +234,7 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/fr.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/nl.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/pl.js</include>
+				<include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/it.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Handler/Drag.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Handler/Box.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Control/ZoomBox.js</include>
@@ -332,7 +333,8 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/fr.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/nl.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/pl.js</include>
-                
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/it.js</include>
+				
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/Util.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/Message.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/Catalogue.js</include>

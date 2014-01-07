@@ -18,7 +18,7 @@
  */
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
-GeoNetwork.Lang.en = {
+GeoNetwork.Lang.it = {
     'metadata-not-found': 'Metadato con UUID ${uuid} non trovato o non condiviso con te.',
     'harvestingAdmin': 'Harvesting',
     'updateUserInfo': 'Modifica il profilo',
@@ -77,7 +77,7 @@ GeoNetwork.Lang.en = {
     'WMSBrowserTab3': "Esterno",
     'WMSBrowserPreviewTitle': "Anteprima layer",
     'WMSBrowserAddButton': "Aggiungi",
-    'WMSBrowserDuplicateMsg': "Il layer è già sulla mappa",
+    'WMSBrowserDuplicateMsg': "Il layer e' già sulla mappa",
     'WMSBrowserPreviewWaitMsg': "Recupero anteprima",
     'WMSBrowserConnectButton': "Connessione",
     'WMSBrowserConnectError': "Errore nella connessione al Web Map Service, controllare la URL.",
@@ -190,7 +190,7 @@ GeoNetwork.Lang.en = {
     'hitsPerPage': 'Corrispondenze per pagina',
     'sortBy': 'Ordina per',
     'relevance': 'Rilevanza',
-    'options': 'Pozioni',
+    'options': 'Opzioni',
     'title': 'Titolo',
     'changeDate': 'Data di modifica',
     'rating': 'Valutazione',
@@ -272,7 +272,7 @@ GeoNetwork.Lang.en = {
     'password': 'password',
     'login': 'Accedi',
     'logout': 'Esci',
-    'administration': 'Administrazione',
+    'administration': 'Amministrazione',
     'validationReport': 'Report di validazione',
     'setStatus': 'Stato del metadato',
     'status': 'Stato',
@@ -328,7 +328,6 @@ GeoNetwork.Lang.en = {
     'viewMode': 'Modo vista',
     'errorAndStatusMsg': 'Errore. Stato: ${status}, descrizione: ${text}. Riprova.',
     'mdEditor': 'Editor metadati',
-    'minorEditTT': 'Non aggiornare timestamp al salvataggio',
     'editing': 'Modifica ${title} (${uuid})',
     'GetCapabilitiesDocumentError': "Errore nel caricamento del documento GetCapabilities del servizio con URL: ",
     'maxResults': "Numero di risultati",
@@ -346,7 +345,7 @@ GeoNetwork.Lang.en = {
     'foundKeywords': "Parole chiave disponibili",
     'clear': "Pulisci",
     'publish': "Pubblica",
-    'publishTooltip': "Pubblica il dataset corrente in un nodo remoto. Se il dataset è già presente in quel nodo, sarà aggiornato.",
+    'publishTooltip': "Pubblica il dataset corrente in un nodo remoto. Se il dataset e' già presente in quel nodo, sarà aggiornato.",
     'publishSuccess': "Pubblicazione effettuata.",
     'publishLayerAdded': " Livello aggiunto alla mappa di anteprima.",
     'unpublish': "Revoca",
@@ -359,7 +358,7 @@ GeoNetwork.Lang.en = {
     'checkFailure': "Impossibile verificare  il dataset nel nodo remoto.",
     'addOnlineSourceTitle': "Collega servizio al metadato",
     'addOnlineSource': 'Aggiungi collegamenti',
-    'addOnlineSourceTT': "Aggiungi una sezione 'risorsa online' al metadato corrente che si riferisce a servizi WMS/WFS/WCS. Se il servizio è un WMS, il livello potrà essere visualizzato nel visualizzatore cartografico.!",
+    'addOnlineSourceTT': "Aggiungi una sezione 'risorsa online' al metadato corrente che si riferisce a servizi WMS/WFS/WCS. Se il servizio e' un WMS, il livello potrà essere visualizzato nel visualizzatore cartografico.!",
     'statusInformation': "Stato.",
     'publishing': "Pubblicazione in corso ...",
     'mapPreview': "Anteprima mappa",
@@ -385,7 +384,7 @@ GeoNetwork.Lang.en = {
     'drawPolygonTT': "Clicca il bottone e disegna un poligono cliccando sulla mappa per aggiungere i punti. Fai doppio click per creare l'ultimo punto del poligono.",
     'drawCircle': 'Disegna cerchio',
     'discovery': 'Ricerca',
-    'visualization': 'Visualizzazione',
+    'visualization': 'Mappa',
     'when': 'Quando?',
     'anyTime': 'In qualsiasi momento',
     'onSelection': 'Nella selezione',
@@ -418,8 +417,6 @@ GeoNetwork.Lang.en = {
     'deleteRecordSuccess': 'Metadato eliminato.', 
     'deleteRecordFailure': 'Errore durante la cancellazione del metadato.',
     'advancedSearchOptions': 'Opzioni di ricerca avanzata',
-    'relatedservices': 'Servizi correlati',
-    'relatedchildren': 'Figli',
     'relatedfcats': 'Cataloghi di attributi correlati',
     'relatedhasfeaturecat': 'Dataset correlati',
     'relatedsources': 'Sorgenti dati collegate',
@@ -494,9 +491,9 @@ GeoNetwork.Lang.en = {
     'subTemplateImport': 'Importazione elemento da directory',
     'xmlData': 'XML',
     'minorEdit': 'Modifica minima',
-    'minorEditTT': '',
+    'minorEditTT': 'Non aggiornare timestamp al salvataggio',
     // Shortcuts
-    'runASearch': 'Esegui una ricerca.',
+    'runSearch': 'Esegui una ricerca.',
     'focusOnAny': 'Imposta il focus sul campo di ricerca con testo libero.',
     'hideSearchForm': 'Mostra o nascondi la form di ricerca.',
     'switchMode': 'Cambia modalità di visualizzazione.',
@@ -507,8 +504,6 @@ GeoNetwork.Lang.en = {
     
     'SelectionWindowTitle': 'Seleziona dalla directory',
     'found': 'Record trovati',
-    'selected': 'Selezionato',
-
     'create': 'Crea',
 
     // Feedback
@@ -590,9 +585,9 @@ GeoNetwork.Lang.en = {
     'ymax': 'Y max',
     'newLabel': 'Etichetta',
     'newDefinition': 'Definizione',
-    'selDirectoryTT': "Seleziona un tipo di directory. Una directory raggruppa tutti gli elementi con lo stesso 'root element name' (es: gmd:CI_ResponsibleParty è una directory di contatti)",
+    'selDirectoryTT': "Seleziona un tipo di directory. Una directory raggruppa tutti gli elementi con lo stesso 'root element name' (es: gmd:CI_ResponsibleParty e' una directory di contatti)",
     'privTplElTT': 'Gestisci privilegi per la selezione corrente.',
-    'addTplElTT': "Aggiungi un elemento da un frammento XML ad una directory. La directory di destinazione è basata sul 'root element name' (es: gmd:CI_ResponsibleParty).",
+    'addTplElTT': "Aggiungi un elemento da un frammento XML ad una directory. La directory di destinazione e' basata sul 'root element name' (es: gmd:CI_ResponsibleParty).",
     'copyTplElTT': 'Crea un nuovo elemento nella directory a partire dalla selezione corrente.',
     'delTplElTT': "Rimuovi l'elemento selezionato dalladirectory.",
     'language': 'Lingua',
@@ -656,9 +651,8 @@ GeoNetwork.Lang.en = {
     'linklabel-image/png': 'Immagine',
     'linklabel-image/jpeg': 'Immagine',
     'linklabel-website': 'Sito web',
-    'linklabel-application/octet-stream': 'Collegamento',
     'linklabel-': 'Collegamento',
-    'cookies.warning': "Per assicurare una navigazione ottimale e altri servizi, questo sito è predisposto per consentire l’uso di tutti i Cookies. Continuando si accetta l'utilizzo dei Cookies.",
+    'cookies.warning': "Per assicurare una navigazione ottimale e altri servizi, questo sito e' predisposto per consentire l’uso di tutti i Cookies. Continuando si accetta l'utilizzo dei Cookies.",
     'no-thumbnail': 'Miniatura non disponibile'
 };
 

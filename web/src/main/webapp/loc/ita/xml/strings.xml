@@ -410,7 +410,7 @@
 	<constraintsTab>Vincoli</constraintsTab>
 	<contactUs>Contatti</contactUs>
 	<contains>Contiene</contains>
-	<contentInfoTab>Informazioni sul contenuto</contentInfoTab>
+	<contentInfoTab>Info contenuto</contentInfoTab>
 	<convert>Converti</convert>
 	<copyright1>Copyright</copyright1>
 	<copyright2><p>Tutti i diritti riservati.<br/> [Dichiarazione generica di copyright] </p></copyright2>
@@ -425,7 +425,7 @@
 	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
 	<cswTest>Test del profilo CSW ISO</cswTest>
 	<cswTestDesc>Pagina di prova del servizio CSW con profilo ISO</cswTestDesc>
-	<dataQualityTab>Qualità dei dati</dataQualityTab>
+	<dataQualityTab>Qualità</dataQualityTab>
 	<datasetIssued>Estensione temporale</datasetIssued>
 	<datasetTab>Dataset</datasetTab>
 	<dateModified>Data di modifica</dateModified>
@@ -486,7 +486,7 @@
 	<exactCoordinate>Coordinate esatte</exactCoordinate>
 	<exactTerm>Termine esatto</exactTerm>
 	<extended>Ricerca avanzata</extended>
-	<extensionInfoTab>Info sull'estensione</extensionInfoTab>
+	<extensionInfoTab>Info estensione</extensionInfoTab>
 	<extent>Estensione</extent>
 	<featuredMap>In evidenza</featuredMap>
 	<feedback>Feedback</feedback>
@@ -733,7 +733,7 @@
 	<rawMetadata>Inserire metadato grezzo</rawMetadata>
 	<rebuild>Riorganizza</rebuild>
 	<recentAdditions>Modifiche recenti</recentAdditions>
-	<refSysTab>Sistema di riferimento</refSysTab>
+	<refSysTab>Sist. riferimento</refSysTab>
 	<region>Regione</region>
 	<register>Registra</register>
 	<registerChoose>Voglio </registerChoose>
@@ -808,8 +808,8 @@
 
 	<southbc>Coordinata limite verso sud</southbc>
 	<spacesNot js="true">In questo campo gli spazi non sono ammessi</spacesNot>
-	<spatial2Tab>Rappr. Spaz.</spatial2Tab>
-	<spatialTab>Info Spaz.</spatialTab>
+	<spatial2Tab>Rappr. Spaziale</spatial2Tab>
+	<spatialTab>Info Spaziali</spatialTab>
 	<startsWith>Comincia con</startsWith>
 	<state>Stato</state>
 	<styleSheet>Foglio di stile</styleSheet>
