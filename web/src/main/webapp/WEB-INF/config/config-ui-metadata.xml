@@ -213,7 +213,7 @@
       <documentation>Return a list of all relation of the given metadata. Relations are mainly online resources
       like thumbnails, onlineresources etc ..</documentation>
       <class name=".guiservices.metadata.GetRelated"/>
-      <output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8"/>
+      <output sheet="../xslt/services/metadata/relation.xsl" contentType="text/xml; charset=UTF-8"/>
     </service>
     
     <service name="md.suggestion">
