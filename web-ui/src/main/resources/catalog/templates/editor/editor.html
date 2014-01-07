@@ -17,59 +17,8 @@
             <span data-translate="">overviews</span>
           </div>
         </div>
+        <div data-gn-onlinesrc-list=""></div>
         <div class="panel panel-default">
-          <div class="panel-heading">
-            <i class="fa fa-link"></i><i class="icon-external-link"></i> <span
-              data-translate="">associatedResources</span>
-            <div class="btn-group">
-              <button type="button"
-                class="btn btn-link dropdown-toggle fa fa-plus"
-                data-toggle="dropdown">
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="" data-toggle="modal"
-                  data-target="#addthumbnail-popup"> <i
-                    class="fa fa-picture-o"></i> <i class="icon-external-link"></i>
-                    <span data-translate="">addThumbnail</span>
-                </a></li>
-                <li><a href="" data-toggle="modal"
-                  data-target="#addonlinesrc-popup"> <i class="fa fa-link"></i>
-                    <i class="icon-external-link"></i> <span data-translate="">addOnlinesrc</span>
-                </a></li>
-                <li class="divider"></li>
-                <li><a href="" data-toggle="modal"
-                  data-target="#linkparent-popup"> <i class="fa fa-sitemap"></i>
-                    <i class="icon-external-link"></i> <span data-translate="">linkToParent</span>
-                </a></li>
-                <li><a href="" data-toggle="modal"
-                  data-target="#linktoservice-popup"> <i
-                    class="fa fa-share-square-o"></i> <i
-                    class="icon-external-link"></i> <span data-translate="">linkToService</span>
-                </a></li>
-                <li><a href="" data-toggle="modal"
-                  data-target="#linktodataset-popup"> <i
-                    class="fa fa-files-o"></i> <i class="icon-external-link"></i>
-                    <span data-translate="">linkToDataset</span>
-                </a></li>
-                <li><a href="" data-toggle="modal"
-                  data-target="#linktosource-popup"> <i
-                    class="fa fa-file-text-o"></i> <i class="icon-external-link"></i>
-                    <span data-translate="">linkToSource</span>
-                </a></li>
-                <li><a href="" data-toggle="modal"
-                  data-target="#linktofcatalog-popup"> <i
-                    class="fa fa-list-alt"></i> <i class="icon-external-link"></i>
-                    <span data-translate="">linkToFeatureCatalog</span>
-                </a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="panel-body">
-            <div data-gn-onlinesrc-list=""></div>
-          </div>
-        </div>
-      <div class="panel panel-default">
         <div class="panel-heading">
           <i class="fa fa-cogs"></i><span data-translate="">suggestions</span>
         </div>
@@ -108,21 +57,21 @@
 
 <div data-gn-modal="" class="onlinesrc-popup"
   data-gn-popup-options="{title:'Ajout de resource en ligne'}"
-  id="linkparent-popup">
+  id="linktoparent-popup">
   <div data-gn-link-to-metadata="parent" class="link-parent-md"></div>
 </div>
 
 <div data-gn-modal="" class="onlinesrc-popup"
   data-gn-popup-options="{title:'Link to a Service'}"
   id="linktoservice-popup">
-  <div data-gn-link-service-to-dataset="attachService"
+  <div data-gn-link-service-to-dataset="service"
     id="link-to-service" class="link-service-md"></div>
 </div>
 
 <div data-gn-modal="" class="onlinesrc-popup"
   data-gn-popup-options="{title:'Link to a Dataset'}"
   id="linktodataset-popup">
-  <div data-gn-link-service-to-dataset="coupledResource"
+  <div data-gn-link-service-to-dataset="dataset"
     id="link-to-dataset" class="link-dataset-md"></div>
 </div>
 
@@ -135,7 +84,7 @@
 
 <div data-gn-modal="" class="onlinesrc-popup"
   data-gn-popup-options="{title:'Link to a source'}"
-  id="linktofcatalog-popup">
+  id="linktofcats-popup">
   <div data-gn-link-to-metadata="fcats" id="link-to-fcatalog"
     class="link-fcatalog-md"></div>
 </div>

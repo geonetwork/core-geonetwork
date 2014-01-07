@@ -14,7 +14,8 @@
     function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit, $q, Metadata) {
 
       var reload = false;
-
+      var openCb = {};
+      
       /**
      * Prepare batch process request parameters.
      *   - get parameters from onlinesrc form
@@ -160,6 +161,14 @@
           return defer.promise;
         },
 
+        onOpenPopup: function(type) {
+          openCb[type]();
+        },
+        
+        register: function(type, fn) {
+          openCb[type] = fn;
+        },
+        
         /**
          * Prepare parameters and call batch
          * request from the gnBatchProcessing service

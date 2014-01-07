@@ -49,7 +49,7 @@
        * in $scope.params (updated with defaultParams
        * and pagination params).
        */
-      $scope.triggerSearch = function(service) {
+      $scope.triggerSearch = function() {
 
         angular.extend($scope.params, defaultParams);
 
@@ -76,20 +76,23 @@
         };
       };
 
-      //      $scope.$watch('autoSearch', function() {
-      //        if ($scope.autoSearch) {
-      //          $scope.triggerSearch();
-      //        }
-      //      });
-
       // trigger search on pagination events
-      // TODO: voir s'il ne vaut mieux pas passer la fonction
-      // triggerSearch à la directive de searchresults
       $scope.$watch('paginationInfo.currentPage', function() {
         if ($scope.paginationInfo &&
             $scope.paginationInfo.pages > 0) {
           $scope.triggerSearch();
         }
+      });
+      
+      
+      $scope.$on('resetSearch', function(evt, searchParams) {
+        if(searchParams) {
+          $scope.params = searchParams;
+        } else {
+          searchParams = {};
+        }
+        $scope.paginationInfo.currentPage = 1;
+        $scope.triggerSearch();
       });
     }
   ]);
