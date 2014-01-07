@@ -240,17 +240,17 @@
 
               scope.mode = attrs['gnLinkServiceToDataset'];
 
-              // sent to the SearchFormController
-              scope.autoSearch = true;
-
-              // parameters of the search form contained in the directive
-              scope.params = {
-                type: scope.mode == 'attachService' ?
-                    'service' : 'dataset'
-              };
-
-              // parameters of the online resource form
-              scope.srcParams = {};
+              gnOnlinesrc.register(scope.mode, function() {
+                $('#linktoservice-popup').modal('show');
+                
+                // parameters of the online resource form
+                scope.srcParams = {};
+                
+                var searchParams = {
+                    type: scope.mode
+                  };
+                scope.$broadcast('resetSearch', searchParams);
+              });
 
               // This object is used to share value between this
               // directive and the SearchFormController scope that is contained
@@ -327,27 +327,37 @@
               scope.mode = attrs['gnLinkToMetadata'];
               scope.btn = {};
 
-              if (scope.mode == 'fcats') {
-                scope.params = {
-                      _schema: 'iso19110'
-                };
-                scope.btn = {
-                      icon: 'fa-list-alt',
-                      label: 'linkToFeatureCatalog'
-                };
-              }
-              else if (scope.mode == 'parent') {
-                scope.btn = {
-                      icon: 'fa-sitemap',
-                      label: 'linkToParent'
-                };
-              }
-              else if (scope.mode == 'source') {
-                scope.btn = {
-                      icon: 'fa-file-text-o',
-                      label: 'linkToSource'
-                };
-              }
+              /**
+               * Register a method on popup open to reset
+               * the search form and trigger a search.
+               */
+              gnOnlinesrc.register(scope.mode, function() {
+                $('#linkto'+scope.mode+'-popup').modal('show');
+                var searchParams = {};
+                if (scope.mode == 'fcats') {
+                  searchParams = {
+                        _schema: 'iso19110'
+                  };
+                  scope.btn = {
+                        icon: 'fa-list-alt',
+                        label: 'linkToFeatureCatalog'
+                  };
+                }
+                else if (scope.mode == 'parent') {
+                  scope.btn = {
+                        icon: 'fa-sitemap',
+                        label: 'linkToParent'
+                  };
+                }
+                else if (scope.mode == 'source') {
+                  scope.btn = {
+                        icon: 'fa-file-text-o',
+                        label: 'linkToSource'
+                  };
+                }
+                scope.$broadcast('resetSearch', searchParams);
+              });
+
               scope.gnOnlinesrc = gnOnlinesrc;
             }
           };

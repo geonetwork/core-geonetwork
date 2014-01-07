@@ -209,7 +209,7 @@
     </service>
     
     
-    <service name="md.relations.get">
+    <service name="md.relations">
       <documentation>Return a list of all relation of the given metadata. Relations are mainly online resources
       like thumbnails, onlineresources etc ..</documentation>
       <class name=".guiservices.metadata.GetRelated"/>
