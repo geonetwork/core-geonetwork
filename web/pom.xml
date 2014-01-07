@@ -630,7 +630,7 @@
             <contextXml>${basedir}/jetty-context.xml</contextXml>
             <connectors>
             <connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
-              <port>8181</port>
+              <port>8080</port>
               <maxIdleTime>10000</maxIdleTime>
               <requestHeaderSize>20000</requestHeaderSize>
             </connector>
