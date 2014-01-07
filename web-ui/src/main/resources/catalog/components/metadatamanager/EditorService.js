@@ -234,7 +234,8 @@
                mdOtherLanguages: getInputValue('otherLanguages'),
                showValidationErrors: getInputValue('showvalidationerrors'),
                uuid: getInputValue('uuid'),
-               version: getInputValue('version')
+               version: getInputValue('version'),
+               saving: false
              });
 
            },

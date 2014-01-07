@@ -67,7 +67,6 @@
        * Animation duration for slide up/down
        */
       var duration = 300;
-      var saving = false;
 
       // Controller initialization
       var init = function() {
