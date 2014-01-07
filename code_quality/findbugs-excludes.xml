@@ -19,11 +19,16 @@
 	</Match>
 
 	<!--              Jeeves  Exceptions                 -->
-	<Match>
-		<Class name="jeeves.server.JeevesEngine" />
-		<Method name="setDBServicesElement" />
-		<Bug pattern="REC_CATCH_EXCEPTION" />
-	</Match>
+    <Match>
+        <Class name="jeeves.server.JeevesEngine" />
+        <Method name="setDBServicesElement" />
+        <Bug pattern="REC_CATCH_EXCEPTION" />
+    </Match>
+    <Match>
+        <Class name="jeeves.server.JeevesEngine" />
+        <Method name="init" />
+        <Bug pattern="DM_EXIT" />
+    </Match>
  	<Match>
 		<Class name="jeeves.server.dispatchers.ServiceManager" />
 		<Method name="dispatch" />

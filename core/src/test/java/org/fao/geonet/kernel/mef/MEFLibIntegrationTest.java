@@ -10,9 +10,11 @@ import org.jdom.Element;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import sun.misc.IOUtils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 import static junit.framework.Assert.assertNotNull;

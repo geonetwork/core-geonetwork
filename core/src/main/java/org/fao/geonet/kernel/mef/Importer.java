@@ -73,7 +73,7 @@ public class Importer {
 		String fileType = Util.getParam(params, "file_type", "mef");
 		if (fileType.equals("mef")) {
 			MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
-			if (version.equals(MEFLib.Version.V2)) {
+			if (version != null && version.equals(MEFLib.Version.V2)) {
                 fileType = "mef2";
             }
 		}
