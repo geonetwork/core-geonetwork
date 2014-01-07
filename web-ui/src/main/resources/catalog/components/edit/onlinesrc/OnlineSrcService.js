@@ -15,7 +15,7 @@
 
       var reload = false;
       var openCb = {};
-      
+
       /**
      * Prepare batch process request parameters.
      *   - get parameters from onlinesrc form
@@ -78,8 +78,8 @@
           }
           rel.type = type;
           delete rel['@type'];
-          
-          if(rel['@subtype']) {
+
+          if (rel['@subtype']) {
             rel.subtype = subtype;
             delete rel['@subtype'];
           }
@@ -164,11 +164,11 @@
         onOpenPopup: function(type) {
           openCb[type]();
         },
-        
+
         register: function(type, fn) {
           openCb[type] = fn;
         },
-        
+
         /**
          * Prepare parameters and call batch
          * request from the gnBatchProcessing service
