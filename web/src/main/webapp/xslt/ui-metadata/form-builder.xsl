@@ -342,7 +342,7 @@
                   <textarea class="form-control input-sm" id="{$id}_{@label}"></textarea>
                 </xsl:when>
                 <xsl:otherwise>
-                  <input class="" type="{@use}" value="" id="{$id}_{@label}"/>
+                  <input class="form-control" type="{if (@use) then @use else 'text'}" value="" id="{$id}_{@label}"/>
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:for-each>
