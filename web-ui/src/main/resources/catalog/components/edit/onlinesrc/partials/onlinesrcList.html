@@ -55,14 +55,45 @@
         </li>
       </ul>
 
-      <!-- List of online resources -->
-      <h3 class="onlinesrc-title" data-ng-show="relations.onlinesrc">
+<!--       <div gn-onlinesrc-list-by-type="onlinesrc" 
+           gn-relation="relations.onlinesrc"
+           gn-icon="fa-link"
+           gn-remove="onlinesrcService.removeOnlinesrc(p)"></div>
+           
+      <div gn-onlinesrc-list-by-type="datasets" 
+           gn-relation="relations.datasets"
+           gn-icon="fa-files-o"
+           gn-remove="onlinesrcService.removeDataset(p)"></div>
+           
+      <div gn-onlinesrc-list-by-type="service" 
+           gn-relation="relations.services"
+           gn-icon="fa-share-square-o"
+           gn-remove="onlinesrcService.removeService(p)"></div>
+           
+      <div gn-onlinesrc-list-by-type="parentMd" 
+           gn-relation="relations.parent"
+           gn-icon="fa-sitemap"
+           gn-remove="onlinesrcService.removeOnlinesrc(p)"></div>
+           
+      <div gn-onlinesrc-list-by-type="sourceDatasets" 
+           gn-relation="relations.sources"
+           gn-icon="fa-file-text-o"
+           gn-remove="onlinesrcService.removeOnlinesrc(p)"></div>
+           
+      <div gn-onlinesrc-list-by-type="featureCatalog" 
+           gn-relation="relations.fcats"
+           gn-icon="fa-list-alt"
+           gn-remove="onlinesrcService.removeOnlinesrc(p)"></div>
+ -->           
+ 
+      <!-- ******* List of online resources ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.onlinesrc">
         <i class="fa fa-link"></i> <i class="icon-external-link"></i> <span
           data-translate="">onlinesrc</span> <a href=""
           data-toggle="modal" data-target="#addonlinesrc-popup"> <i
           class="fa fa-plus"></i>
         </a>
-      </h3>
+      </h4>
       <ul class="list-group">
         <li class="list-group-item"
           ng-repeat="resource in relations.onlinesrc | orderBy:'title'">
@@ -71,37 +102,41 @@
         </li>
       </ul>
 
-      <!-- List of datasets -->
-      <div class="onlinesrc-title" data-ng-show="relations.datasets">
+      <!-- ******* List of datasets ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.datasets">
         <i class="fa fa-files-o"></i> <i class="icon-external-link"></i>
         <span data-translate="">datasets</span> <a href=""
           data-toggle="modal" data-target="#linktodataset-popup"> <i
           class="fa fa-plus"></i>
         </a>
-      </div>
-      <div ng-repeat="resource in relations.datasets | orderBy:'title'"
-        ng-click="">
-        {{resource.title}} <a href=""
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          ng-repeat="resource in relations.datasets | orderBy:'title'">
+          {{resource.title}} <a href="" class="onlinesrc-remove"
           ng-click="onlinesrcService.removeDataset(resource)">remove</a>
-      </div>
+        </li>
+      </ul>
 
-      <!-- List of services -->
-      <div class="onlinesrc-title" data-ng-show="relations.services">
+      <!-- ******* List of services ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.services">
         <i class="fa fa-share-square-o"></i> <i
           class="icon-external-link"></i> <span data-translate="">service</span>
         <a href=""
           data-ng-click="onlinesrcService.onOpenPopup('service')"> <i
           class="fa fa-plus"></i>
         </a>
-      </div>
-      <div ng-repeat="resource in relations.services | orderBy:'title'"
-        ng-click="">
-        {{resource.title}} <a href=""
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          ng-repeat="resource in relations.services | orderBy:'title'">
+          {{resource.title}} <a href="" class="onlinesrc-remove"
           ng-click="onlinesrcService.removeService(resource)">remove</a>
-      </div>
+        </li>
+      </ul>
 
-      <!-- List of parent -->
-      <div class="onlinesrc-title" data-ng-show="relations.parent">
+      <!--******* List of parent ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.parent">
         <i class="fa fa-sitemap"
           ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i> <i
           class="icon-external-link"></i> <span data-translate="">parentMd</span>
@@ -109,15 +144,17 @@
           data-ng-click="onlinesrcService.onOpenPopup('parent')"> <i
           class="fa fa-plus"></i>
         </a>
-      </div>
-      <div ng-repeat="resource in relations.parent | orderBy:'title'"
-        ng-click="">
-        {{resource.title}} <a href=""
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          ng-repeat="resource in relations.parent | orderBy:'title'">
+          {{resource.title}} <a href="" class="onlinesrc-remove"
           ng-click="onlinesrcService.removeMdLink('parent', resource)">remove</a>
-      </div>
+        </li>
+      </ul>
 
-      <!-- List of sources -->
-      <div class="onlinesrc-title" data-ng-show="relations.sources">
+      <!-- ******* List of sources ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.sources">
         <i class="fa fa-file-text-o"
           ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i> <i
           class="icon-external-link"></i> <span data-translate="">sourceDatasets</span>
@@ -125,27 +162,36 @@
           data-ng-click="onlinesrcService.onOpenPopup('source')"> <i
           class="fa fa-plus"></i>
         </a>
-      </div>
-      <div ng-repeat="resource in relations.sources | orderBy:'title'"
-        ng-click="">
-        {{resource.title}} <a href=""
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          ng-repeat="resource in relations.sources | orderBy:'title'">
+          {{resource.title}} <a href="" class="onlinesrc-remove"
           ng-click="onlinesrcService.removeMdLink('source', resource)">remove</a>
-      </div>
+        </li>
+      </ul>
 
-      <!-- List of feature catalogs -->
-      <div class="onlinesrc-title" data-ng-show="relations.fcats">
+      <!-- ******* List of feature catalogs ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.fcats">
         <i class="fa fa-list-alt"
           ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i> <i
           class="icon-external-link"></i> <span data-translate="">featureCatalog</span>
         <a href="" data-ng-click="onlinesrcService.onOpenPopup('fcats')">
           <i class="fa fa-plus"></i>
         </a>
-      </div>
+      </h4>
       <div ng-repeat="resource in relations.fcats | orderBy:'title'"
         ng-click="">
         {{resource.title}} <a href=""
           ng-click="onlinesrcService.removeFeatureCatalog(resource)">remove</a>
       </div>
+      <ul class="list-group">
+        <li class="list-group-item"
+          ng-repeat="resource in relations.fcats | orderBy:'title'">
+          {{resource.title}} <a href="" class="onlinesrc-remove"
+          ng-click="onlinesrcService.removeFeatureCatalog(resource)">remove</a>
+        </li>
+      </ul>
 
     </div>
   </div>
