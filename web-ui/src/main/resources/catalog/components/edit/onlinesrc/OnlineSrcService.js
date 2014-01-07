@@ -69,36 +69,20 @@
       var parseRelations = function(data) {
 
         var relations = {};
-        var xmlDoc = $.parseXML(data);
-        var $xml = $(xmlDoc);
-        var xmlRel = $xml.find('relation');
+        angular.forEach(data.relation, function(rel) {
 
-        angular.forEach(xmlRel, function(rel) {
-
-          var getChildValue = function(node, id) {
-            if (node.getElementsByTagName(id) &&
-                node.getElementsByTagName(id)[0]) {
-              return rel.getElementsByTagName(id)[0].textContent;
-            }
-            return undefined;
-          };
-
-          var type = rel.getAttribute('type');
+          var type = rel['@type'];
           if (!relations[type]) {
             relations[type] = [];
           }
-          relations[type].push({
-            id: getChildValue(rel, 'id'),
-            uuid: getChildValue(rel, 'uuid'),
-            title: getChildValue(rel, 'title'),
-            url: getChildValue(rel, 'url'),
-            protocol: getChildValue(rel, 'protocol'),
-            desc: getChildValue(rel, 'description'),
-            name: getChildValue(rel, 'name'),
-            'abstract': getChildValue(rel, 'abstract'),
-            type: type,
-            subtype: rel.getAttribute('subtype')
-          });
+          rel.type = type;
+          delete rel['@type'];
+          
+          if(rel['@subtype']) {
+            rel.subtype = subtype;
+            delete rel['@subtype'];
+          }
+          relations[type].push(rel);
         });
         return relations;
       };
