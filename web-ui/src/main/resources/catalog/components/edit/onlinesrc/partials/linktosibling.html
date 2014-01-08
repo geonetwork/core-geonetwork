@@ -1,0 +1,57 @@
+<div>
+  <form class="form-horizontal" role="form"
+    data-ng-controller="GnSearchFormController">
+    <div class="onlinesrc-container">
+    
+      <div class="form-group">
+        <label for="associationType" class="col-sm-3 control-label">
+          <span data-translate="">associationType</span>
+        </label>
+        <div class="col-sm-5" schema-info-combo="codelist"
+          data-selected-info="associationType"
+          data-gn-schema-info="gmd:DS_AssociationTypeCode" lang="lang"></div>
+      </div>
+      <div class="form-group">
+        <label for="associationType" class="col-sm-3 control-label">
+          <span data-translate="">initiativeType</span>
+        </label>
+        <div class="col-sm-5" schema-info-combo="codelist"
+          data-selected-info="initiativeType"
+          data-gn-schema-info="gmd:DS_InitiativeTypeCode" lang="lang"></div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-10">
+          <div class="input-group dropdown" id="siblingdd">
+            <span class="input-group-addon"><i
+              class="fa fa-search" /></span> <input class="form-control"
+              data-ng-change="triggerSearch()" type="text"
+              data-ng-model="params.any"
+              ng-focus="toggleDropDown()"
+              ng-blur="toggleDropDown()"
+              placeholder="{{'search' | translate}}"/>
+            <ul class="dropdown-menu" >
+              <li data-ng-repeat="rec in searchResults.records"><a
+                href=""> {{rec.title}} </a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div data-gn-multiselect="selected" data-choices="searchResults.records" data-label-prop="title"/>
+      
+<!--       <div data-gn-search-form-results
+        data-gn-search-form-results-mode="title"
+        data-gn-search-form-results-selection-mode="local simple"
+        data-search-results="searchResults"
+        data-select-records="selectRecords"
+        data-pagination-info="paginationInfo"></div>
+    </div>
+ -->    <div class="">
+      <button type="button" class="btn navbar-btn btn-success"
+        data-ng-click="gnOnlinesrc.linkToMd(mode, selectRecords[0], popupid)">
+        <i class="fa fa-sign-out" /> <span
+          data-translate="">linkToSibling</span>
+      </button>
+    </div>
+  </form>
+</div>
