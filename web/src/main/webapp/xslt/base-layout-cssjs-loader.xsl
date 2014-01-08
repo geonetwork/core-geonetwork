@@ -21,10 +21,12 @@
     
     <xsl:choose>
       <xsl:when test="$isDebugMode">
-        <link href="{$uiResourcesPath}style/{$angularApp}.less" rel="stylesheet/less" media="screen" />
+          <link href="{$uiResourcesPath}style/{$angularApp}.less" rel="stylesheet/less" media="screen" />
+          <link href="{$uiResourcesPath}style/{/root/gui/nodeId}.less" rel="stylesheet/less" media="screen" />
       </xsl:when>
       <xsl:otherwise>
-        <link href="{$uiResourcesPath}style/{$angularApp}.css" rel="stylesheet" media="screen" />
+          <link href="{$uiResourcesPath}style/{$angularApp}.css" rel="stylesheet" media="screen" />
+          <link href="{$uiResourcesPath}style/{/root/gui/nodeId}.css" rel="stylesheet" media="screen" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
