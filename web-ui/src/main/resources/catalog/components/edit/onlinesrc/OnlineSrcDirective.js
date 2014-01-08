@@ -375,5 +375,39 @@
               scope.gnOnlinesrc = gnOnlinesrc;
             }
           };
+        }])        
+        .directive('gnLinkToSibling', ['gnOnlinesrc',
+        function(gnOnlinesrc) {
+          return {
+            restrict: 'A',
+            scope: {},
+            templateUrl: '../../catalog/components/edit/onlinesrc/' +
+                'partials/linktosibling.html',
+            link: function(scope, element, attrs) {
+              
+              scope.popupid = attrs['gnLinkToSibling'];
+
+              /**
+               * Register a method on popup open to reset
+               * the search form and trigger a search.
+               */
+              gnOnlinesrc.register('sibling', function() {
+                $(scope.popupid).modal('show');
+                scope.$broadcast('resetSearch');
+              });
+              
+              scope.toggleDropDown = function() {
+                var div = $('#siblingdd');
+                if(div.hasClass('open')) {
+                  div.removeClass('open');
+                }
+                else {
+                  div.addClass('open')
+                }
+              };
+
+              scope.gnOnlinesrc = gnOnlinesrc;
+            }
+          };
         }]);
 })();
