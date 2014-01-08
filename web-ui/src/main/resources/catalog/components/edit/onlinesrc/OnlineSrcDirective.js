@@ -10,14 +10,14 @@
    * - gnAddThumbnail
    * - gnAddOnlinesrc
    * - gnLinkServiceToDataset
-   * - gnLinkSource
+   * - gnLinkToMetadata
    */
   angular.module('gn_onlinesrc_directive', [
     'gn_utility',
     'blueimp.fileupload'
   ])
-  .directive('gnOnlinesrcList', ['gnOnlinesrc',
-        function(gnOnlinesrc) {
+  .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
+        function(gnOnlinesrc, gnCurrentEdit) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -25,6 +25,7 @@
             scope: {},
             link: function(scope, element, attrs) {
               scope.onlinesrcService = gnOnlinesrc;
+              scope.gnCurrentEdit = gnCurrentEdit;
 
               /**
                * Calls service 'relations.get' to load
@@ -38,15 +39,18 @@
                     });
               };
 
-              // Load all relations on form init
-              loadRelations();
-
               // Reload relations when a directive requires it
               scope.$watch('onlinesrcService.reload', function() {
                 if (scope.onlinesrcService.reload) {
                   loadRelations();
                   scope.onlinesrcService.reload = false;
-                  console.log('## reload relations');
+                }
+              });
+              
+              // When saving is done, refresh validation report
+              scope.$watch('gnCurrentEdit.saving', function(newValue) {
+                if (newValue === false) {
+                  loadRelations();
                 }
               });
             }
