@@ -34,8 +34,11 @@
     <script>var geonet={provide:function(s){},require:function(s){}}</script>
     <xsl:choose>
       <xsl:when test="$isDebugMode">
+          <script>
+              window.CLOSURE_NO_DEPS = true;
+          </script>
         <script src="{$uiResourcesPath}lib/closure/base.js"></script>
-        
+
         <script src="{$uiResourcesPath}lib/jquery-2.0.2.js"></script>
         
         <script src="{$uiResourcesPath}lib/moment+langs.min.js"></script>
@@ -92,10 +95,7 @@
       <xsl:choose>
           <xsl:when test="/root/request/debug">
               <!-- Use Closure to load the application scripts -->
-              <script>
-                  window.CLOSURE_NO_DEPS = true;
-              </script>
-
+              <script src="{/root/gui/url}/static/closure_deps.js"></script>
               <script>
                   goog.require('<xsl:value-of select="$angularApp"/>');
               </script>
