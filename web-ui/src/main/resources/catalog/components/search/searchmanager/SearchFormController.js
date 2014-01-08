@@ -89,9 +89,11 @@
         if (searchParams) {
           $scope.params = searchParams;
         } else {
-          searchParams = {};
+          $scope.params = {};
         }
-        $scope.paginationInfo.currentPage = 1;
+        if($scope.paginationInfo) {
+          $scope.paginationInfo.currentPage = 1;
+        }
         $scope.triggerSearch();
       });
     }
