@@ -44,5 +44,37 @@
                   });
             }]
           };
+        }])
+  .directive('schemaInfoCombo', ['$http', 'gnSchemaManagerService',
+        function($http, gnSchemaManagerService) {
+          return {
+            restrict: 'A',
+            templateUrl: '../../catalog/components/search/formfields/' +
+                'partials/schemainfocombo.html',
+            scope: {
+              selectedInfo: '=',
+              lang: '=',
+              info: '@gnSchemaInfo',
+            },
+            link: function(scope, element, attrs) {
+              var config = 'iso19139|' + scope.info + '|||';
+              scope.type = attrs['schemaInfoCombo'];
+              if(scope.type == 'codelist') {
+                gnSchemaManagerService.getCodelist(config).then(
+                    function(data) {
+                      scope.infos = data !== 'null' ?
+                          data[0].entry : null;
+                    });
+              }
+              else if(scope.type == 'element') {
+                gnSchemaManagerService.getElementInfo(config).then(
+                    function(data) {
+                      scope.infos = data !== 'null' ?
+                          data[0].helper.option : null;
+                    });
+              }
+            }
+          };
         }]);
+
 })();
