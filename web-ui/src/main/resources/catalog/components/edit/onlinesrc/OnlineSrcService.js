@@ -93,13 +93,19 @@
         scope.reload = true;
       };
 
+      var closePopup = function(id) {
+        if(id) {
+          $(id).modal('hide');
+        }
+      };
+      
       /**
        * Run batch process, then refresh form with process
        * response and reload the updated online resources list.
        * The first save is done in 'runProcessMd'
        */
       var runProcess = function(scope, params) {
-        gnBatchProcessing.runProcessMd(params).then(function(data) {
+        return gnBatchProcessing.runProcessMd(params).then(function(data) {
           refreshForm(scope, $(data.data));
         });
       };
@@ -173,17 +179,21 @@
          * Prepare parameters and call batch
          * request from the gnBatchProcessing service
          */
-        addOnlinesrc: function(params) {
-          return runProcess(this,
-              setParams('onlinesrc-add', params));
+        addOnlinesrc: function(params, popupid) {
+          runProcess(this,
+              setParams('onlinesrc-add', params)).then(function() {
+                closePopup(popupid);
+              });
         },
 
         /**
          *
          */
-        addThumbnailByURL: function(params) {
+        addThumbnailByURL: function(params, popupid) {
           runProcess(this,
-              setParams('thumbnail-add', params));
+              setParams('thumbnail-add', params)).then(function() {
+                closePopup(popupid);
+              });
         },
 
         /**
@@ -192,7 +202,7 @@
          * - source dataset
          * - feature catalog
          */
-        linkToMd: function(mode, record) {
+        linkToMd: function(mode, record, popupid) {
           var md = new Metadata(record);
           var params = {
             process: mode + '-add'
@@ -203,11 +213,13 @@
           else {
             params[mode + 'Uuid'] = md.getUuid();
           }
-          runProcess(this, params);
+          runProcess(this, params).then(function() {
+            closePopup(popupid);
+          });
         },
 
 
-        linkToService: function(params) {
+        linkToService: function(params, popupid) {
           var qParams = setParams('dataset-add', params);
           var scope = this;
 
@@ -223,6 +235,8 @@
               uuidref: qParams.uuidSrv,
               uuid: qParams.uuidDS,
               process: qParams.process
+            }).then(function() {
+              closePopup(popupid);
             });
           });
         },
@@ -231,7 +245,7 @@
          * Call md.processing.new in mode 'parent-add'
          * to link a service to the edited metadata
          */
-        linkToDataset: function(params) {
+        linkToDataset: function(params, popupid) {
           var qParams = setParams('onlinesrc-add', params);
           var scope = this;
 
@@ -248,6 +262,8 @@
               uuidref: qParams.uuidDS,
               uuid: qParams.uuidSrv,
               process: qParams.process
+            }).then(function() {
+              closePopup(popupid);
             });
           });
         },

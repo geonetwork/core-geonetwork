@@ -10,14 +10,14 @@
    * - gnAddThumbnail
    * - gnAddOnlinesrc
    * - gnLinkServiceToDataset
-   * - gnLinkSource
+   * - gnLinkToMetadata
    */
   angular.module('gn_onlinesrc_directive', [
     'gn_utility',
     'blueimp.fileupload'
   ])
-  .directive('gnOnlinesrcList', ['gnOnlinesrc',
-        function(gnOnlinesrc) {
+  .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
+        function(gnOnlinesrc, gnCurrentEdit) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -25,6 +25,7 @@
             scope: {},
             link: function(scope, element, attrs) {
               scope.onlinesrcService = gnOnlinesrc;
+              scope.gnCurrentEdit = gnCurrentEdit;
 
               /**
                * Calls service 'relations.get' to load
@@ -38,15 +39,18 @@
                     });
               };
 
-              // Load all relations on form init
-              loadRelations();
-
               // Reload relations when a directive requires it
               scope.$watch('onlinesrcService.reload', function() {
                 if (scope.onlinesrcService.reload) {
                   loadRelations();
                   scope.onlinesrcService.reload = false;
-                  console.log('## reload relations');
+                }
+              });
+              
+              // When saving is done, refresh validation report
+              scope.$watch('gnCurrentEdit.saving', function(newValue) {
+                if (newValue === false) {
+                  loadRelations();
                 }
               });
             }
@@ -60,6 +64,9 @@
         function(gnOnlinesrc, gnEditor, gnCurrentEdit, gnOwsCapabilities) {
           return {
             restrict: 'A',
+            scope: {
+              gnPopupid: '='
+            },
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/addThumbnail.html',
             scope: {},
@@ -71,6 +78,8 @@
 
               // the form params that will be submited
               scope.params = {};
+
+              scope.popupid = attrs['gnPopupid'];
 
               // TODO: should be in gnEditor ?
               var getVersion = function() {
@@ -85,6 +94,7 @@
               var uploadOnlinesrcDone = function(evt, data) {
                 gnEditor.refreshEditorForm();
                 gnOnlinesrc.reload = true;
+                $(scope.popupid).modal('hide');
               };
 
               /**
@@ -114,7 +124,7 @@
                       });
                 }
                 else {
-                  gnOnlinesrc.addThumbnailByURL(scope.params);
+                  gnOnlinesrc.addThumbnailByURL(scope.params, scope.popupid);
                 }
               };
             }
@@ -128,7 +138,6 @@
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/addOnlinesrc.html',
-            scope: {},
             link: function(scope, element, attrs) {
 
               // mode can be 'url' or 'upload'
@@ -143,12 +152,15 @@
 
               scope.onlinesrcService = gnOnlinesrc;
 
+              scope.popupid = attrs['gnPopupid'];
+              
               /**
                * Onlinesrc uploaded with success, close the popup,
                * refresh the metadata.
                */
               var uploadOnlinesrcDone = function(data) {
                 scope.clear(scope.queue);
+                $(scope.popupid).modal('hide');
               };
 
               /**
@@ -174,7 +186,7 @@
                   scope.submit();
                 }
                 else {
-                  gnOnlinesrc.addOnlinesrc(scope.params);
+                  gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid);
                 }
               };
 
@@ -239,6 +251,7 @@
             link: function(scope, element, attrs) {
 
               scope.mode = attrs['gnLinkServiceToDataset'];
+              scope.popupid = '#linkto' + scope.mode + '-popup';
 
               gnOnlinesrc.register(scope.mode, function() {
                 $('#linktoservice-popup').modal('show');
@@ -283,7 +296,7 @@
                   var md = new Metadata(scope.stateObj.selectRecords[0]);
                   var links = md.getLinksByType('OGC:WMS');
 
-                  if (scope.mode == 'attachService') {
+                  if (scope.mode == 'service') {
 
                     if (angular.isArray(links) && links.length == 1) {
                       scope.loadWMSCapabilities(links[0].url);
@@ -306,11 +319,11 @@
                * Hide modal on success.
                */
               scope.linkTo = function() {
-                if (scope.mode == 'attachService') {
-                  gnOnlinesrc.linkToService(scope.srcParams);
+                if (scope.mode == 'service') {
+                  gnOnlinesrc.linkToService(scope.srcParams, scope.popupid);
                 }
                 else {
-                  gnOnlinesrc.linkToDataset(scope.srcParams);
+                  gnOnlinesrc.linkToDataset(scope.srcParams, scope.popupid);
                 }
               };
             }
@@ -325,6 +338,7 @@
                 'partials/linkToMd.html',
             link: function(scope, element, attrs) {
               scope.mode = attrs['gnLinkToMetadata'];
+              scope.popupid = '#linkto' + scope.mode + '-popup';
               scope.btn = {};
 
               /**
@@ -332,7 +346,7 @@
                * the search form and trigger a search.
                */
               gnOnlinesrc.register(scope.mode, function() {
-                $('#linkto' + scope.mode + '-popup').modal('show');
+                $(scope.popupid).modal('show');
                 var searchParams = {};
                 if (scope.mode == 'fcats') {
                   searchParams = {
