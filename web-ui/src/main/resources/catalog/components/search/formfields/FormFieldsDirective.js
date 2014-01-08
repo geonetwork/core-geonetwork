@@ -53,11 +53,10 @@
                 'partials/schemainfocombo.html',
             scope: {
               selectedInfo: '=',
-              lang: '=',
-              info: '@gnSchemaInfo',
+              lang: '='
             },
             link: function(scope, element, attrs) {
-              var config = 'iso19139|' + scope.info + '|||';
+              var config = 'iso19139|' + attrs['gnSchemaInfo'] + '|||';
               scope.type = attrs['schemaInfoCombo'];
               if(scope.type == 'codelist') {
                 gnSchemaManagerService.getCodelist(config).then(
