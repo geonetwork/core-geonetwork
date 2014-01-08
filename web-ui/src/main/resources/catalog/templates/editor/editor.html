@@ -27,13 +27,15 @@
 <div data-gn-modal="" class="onlinesrc-popup"
   data-gn-popup-options="{title:'Ajout de Thumbnail'}"
   id="addthumbnail-popup">
-  <div data-gn-add-thumbnail="" class="add-thumbnail"></div>
+  <div data-gn-add-thumbnail="" class="add-thumbnail"
+    data-gn-popupid="#addthumbnail-popup"></div>
 </div>
 
 <div data-gn-modal="" class="onlinesrc-popup"
   data-gn-popup-options="{title:'Ajout de resource en ligne'}"
   id="addonlinesrc-popup">
-  <div data-gn-add-onlinesrc="" class="add-onlinesrc"></div>
+  <div data-gn-add-onlinesrc="" class="add-onlinesrc"
+    data-gn-popupid="#addonlinesrc-popup"></div>
 </div>
 
 <div data-gn-modal="" class="onlinesrc-popup"
@@ -65,9 +67,9 @@
 
 <div data-gn-modal="" class="onlinesrc-popup"
   data-gn-popup-options="{title:'Link to a source'}"
-  id="linktofcats-popup">
+  id="gnLinkToMetadata">
   <div data-gn-link-to-metadata="fcats" id="link-to-fcatalog"
-    class="link-fcatalog-md"></div>
+    class="link-fcatalog-md" data-gn-parent-id="#gnLinkToMetadata"></div>
 </div>
 
 <div data-gn-modal="" class="onlinesrc-popup"
