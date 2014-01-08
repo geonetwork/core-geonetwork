@@ -98,7 +98,7 @@
         <li class="list-group-item"
           ng-repeat="resource in relations.onlinesrc | orderBy:'title'">
           {{resource.title}} <a href="" class="onlinesrc-remove"
-          ng-click="onlinesrcService.removeOnlinesrc(resource)">remove</a>
+          ng-click="onlinesrcService.removeOnlinesrc(resource)"><i class="btn fa fa-times text-danger"></i></a>
         </li>
       </ul>
 
