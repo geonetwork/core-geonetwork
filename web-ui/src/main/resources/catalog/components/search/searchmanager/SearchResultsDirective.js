@@ -22,7 +22,7 @@
 
           // get init options
           scope.options = {};
-          jQuery.extend(scope.options, {
+          angular.extend(scope.options, {
             mode: attrs.gnSearchFormResultsMode,
             selection: {
               mode: attrs.gnSearchFormResultsSelectionMode
@@ -30,7 +30,7 @@
           });
 
           // Manage selection
-          if (scope.options.selection) {
+          if (scope.options.selection.mode) {
             scope.selection = [];
             if (scope.options.selection.mode.indexOf('local') >= 0) {
 

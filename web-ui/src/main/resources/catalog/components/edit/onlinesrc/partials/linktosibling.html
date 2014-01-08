@@ -26,32 +26,35 @@
             <span class="input-group-addon"><i
               class="fa fa-search" /></span> <input class="form-control"
               data-ng-change="triggerSearch()" type="text"
+              data-toggle="dropdown"
               data-ng-model="params.any"
-              ng-focus="toggleDropDown()"
-              ng-blur="toggleDropDown()"
               placeholder="{{'search' | translate}}"/>
-            <ul class="dropdown-menu" >
+            <ul class="dropdown-menu" role="menu">
               <li data-ng-repeat="rec in searchResults.records"><a
-                href=""> {{rec.title}} </a></li>
+                href="" data-ng-click="addToSelection(rec, associationType, initiativeType)"
+                > {{rec.title}} </a></li>
             </ul>
           </div>
         </div>
       </div>
-      <div data-gn-multiselect="selected" data-choices="searchResults.records" data-label-prop="title"/>
+      <div>
+        <div class="list-group">
+          <a class="list-group-item gn-record"
+            data-ng-repeat="obj in selection"
+            href="">
+              {{obj.md.title || obj.md.defaultTitle}}
+              <span class="pull-right"><i>{{obj.associationType}} / {{obj.initiativeType}}</i></span>
+          </a>
+        </div>
+      </div>
       
-<!--       <div data-gn-search-form-results
-        data-gn-search-form-results-mode="title"
-        data-gn-search-form-results-selection-mode="local simple"
-        data-search-results="searchResults"
-        data-select-records="selectRecords"
-        data-pagination-info="paginationInfo"></div>
-    </div>
- -->    <div class="">
-      <button type="button" class="btn navbar-btn btn-success"
-        data-ng-click="gnOnlinesrc.linkToMd(mode, selectRecords[0], popupid)">
-        <i class="fa fa-sign-out" /> <span
-          data-translate="">linkToSibling</span>
-      </button>
+      <div class="">
+        <button type="button" class="btn navbar-btn btn-success"
+          data-ng-click="gnOnlinesrc.linkToMd(mode, selectRecords[0], popupid)">
+          <i class="fa fa-sign-out" /> <span
+            data-translate="">linkToSibling</span>
+        </button>
+      </div>
     </div>
   </form>
 </div>

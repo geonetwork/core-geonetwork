@@ -386,7 +386,8 @@
             link: function(scope, element, attrs) {
               
               scope.popupid = attrs['gnLinkToSibling'];
-
+              scope.selection = [];
+              
               /**
                * Register a method on popup open to reset
                * the search form and trigger a search.
@@ -396,13 +397,31 @@
                 scope.$broadcast('resetSearch');
               });
               
-              scope.toggleDropDown = function() {
-                var div = $('#siblingdd');
-                if(div.hasClass('open')) {
-                  div.removeClass('open');
+              var findObj = function(obj) {
+                for(i=0;i<scope.selection.length;++i){
+                  if(scope.selection[i].md == obj){
+                    return scope.selection[i];
+                  }
                 }
-                else {
-                  div.addClass('open')
+                return undefined;
+              };
+              
+              scope.addToSelection = function(md, associationType, initiativeType) {
+                if(associationType && initiativeType) {
+                  var o = findObj(md);
+                  if(angular.isUndefined(o)) {
+                    scope.selection.push({
+                      md: md,
+                      associationType: associationType ,
+                      initiativeType: initiativeType
+                    });
+                  }
+                  else {
+                    angular.extend(o, {
+                      associationType: associationType ,
+                      initiativeType: initiativeType
+                    });
+                  }
                 }
               };
 
