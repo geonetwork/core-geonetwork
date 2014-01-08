@@ -9,6 +9,7 @@
     "validationReport": "Validation",
     "recommendedValues": "Valeurs recommandées",
     "toggleAttributes": "Plus de détails",
+    "toggleTooltips": "Infobulles",
     "createA": "Décrire un(e) ",
     "noTemplatesAvailable": "Attention ! Il n'y a aucun modèle de saisie dans ce catalogue. Vous devriez en ajouter ou <a href='admin.console#/metadata'>en importer</a>.",
     "fromTemplate": "à partir de ",

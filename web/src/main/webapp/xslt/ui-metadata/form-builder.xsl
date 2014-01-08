@@ -99,8 +99,7 @@
         <div class="form-group {if ($isRequired) then 'gn-required' else ''}" id="gn-el-{$editInfo/@ref}">
           <label for="gn-field-{$editInfo/@ref}"
             class="col-lg-2 control-label" 
-            data-gn-field-tooltip="{$schema}|{name(.)}|{name(..)}|{$xpath}"
-            data-placement="{$editorTooltipPlacement}">
+            >
             <xsl:value-of select="$label"/>
           </label>
 
@@ -121,6 +120,7 @@
                     <xsl:with-param name="lang" select="@lang"/>
                     <xsl:with-param name="value" select="."/>
                     <xsl:with-param name="type" select="$type"/>
+                    <xsl:with-param name="tooltip" select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"/>
                     <xsl:with-param name="isRequired" select="$isRequired"/>
                     <xsl:with-param name="isDisabled" select="$isDisabled"/>
                     <xsl:with-param name="editInfo" select="$editInfo"/>
@@ -134,6 +134,7 @@
                   <xsl:with-param name="name" select="$name"/>
                   <xsl:with-param name="value" select="$value"/>
                   <xsl:with-param name="type" select="$type"/>
+                  <xsl:with-param name="tooltip" select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"/>
                   <xsl:with-param name="isRequired" select="$isRequired"/>
                   <xsl:with-param name="isDisabled" select="$isDisabled"/>
                   <xsl:with-param name="editInfo" select="$editInfo"/>
@@ -214,7 +215,7 @@
     <fieldset id="{concat('gn-el-', $editInfo/@ref)}" 
       class="{if ($hasXlink) then 'gn-has-xlink' else ''}">
 
-      <legend class="{$cls}" data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|" data-placement="{$editorTooltipPlacement}">
+      <legend class="{$cls}" data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|">
         <xsl:if test="$xpath and $withXPath">
           <xsl:attribute name="data-gn-xpath" select="$xpath"/>
         </xsl:if>
@@ -411,8 +412,7 @@
       <!-- This element is replaced by the content received when clicking add -->
       <div class="form-group" id="gn-el-{$id}">
         <label class="col-lg-2 control-label"
-          data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|"
-          data-placement="{$editorTooltipPlacement}">
+          data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
           <xsl:if test="normalize-space($label) != ''">
                   <xsl:value-of select="$label"/>
           </xsl:if>
@@ -500,6 +500,7 @@
     <xsl:param name="lang" required="no"/>
     <xsl:param name="hidden"/>
     <xsl:param name="type"/>
+    <xsl:param name="tooltip" required="no"/>
     <xsl:param name="isRequired"/>
     <xsl:param name="isDisabled"/>
     <xsl:param name="editInfo"/>
@@ -528,6 +529,9 @@
           <xsl:if test="$isRequired">
             <xsl:attribute name="required" select="'required'"/>
           </xsl:if>
+          <xsl:if test="$tooltip">
+            <xsl:attribute name="data-gn-field-tooltip" select="$tooltip"/>
+          </xsl:if>
           <xsl:if test="$lang">
             <xsl:attribute name="lang" select="$lang"/>
           </xsl:if>
@@ -544,6 +548,9 @@
           </xsl:if>
           <xsl:if test="$isDisabled">
             <xsl:attribute name="disabled" select="'disabled'"/>
+          </xsl:if>
+          <xsl:if test="$tooltip">
+            <xsl:attribute name="data-gn-field-tooltip" select="$tooltip"/>
           </xsl:if>
           <xsl:if test="$lang">
             <xsl:attribute name="lang" select="$lang"/>
@@ -609,6 +616,9 @@
             <!-- If type is a directive -->
             <xsl:if test="$isDirective">
               <xsl:attribute name="{$type}"/>
+            </xsl:if>
+            <xsl:if test="$tooltip">
+              <xsl:attribute name="data-gn-field-tooltip" select="$tooltip"/>
             </xsl:if>
             <xsl:if test="$isRequired">
               <xsl:attribute name="required" select="'required'"/>

@@ -79,9 +79,12 @@
           formId: '#gn-editor-' + $routeParams.id,
           tab: $routeParams.tab,
           displayAttributes: $routeParams.displayAttributes === 'true',
+          displayTooltips: false,
           compileScope: $scope,
           sessionStartTime: moment()
         });
+
+        $scope.gnCurrentEdit = gnCurrentEdit;
 
         // TODO: Check requested metadata exist - return message if it happens
         // Would you like to create a new one ?
@@ -156,6 +159,18 @@
           $('.gn-attr').addClass('hidden');
         }
       };
+
+      $scope.toggleTooltips = function(toggle) {
+        if (toggle) {
+          gnCurrentEdit.displayTooltips =
+              gnCurrentEdit.displayTooltips === false;
+        }
+
+        // Update the form to propagate info when saved
+        // or tab switch - Needs to be propagated in Update service
+        $('#displayTooltips')[0].value = gnCurrentEdit.displayTooltips;
+      };
+
       $scope.checkField = function(name) {
         return gnEditor[name].$error.required ? 'has-error' : '';
       };

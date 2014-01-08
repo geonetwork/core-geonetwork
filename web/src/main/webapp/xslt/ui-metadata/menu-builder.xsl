@@ -20,7 +20,7 @@
     <ul class="nav nav-pills">
       <!-- Make a drop down choice to swith to one view to another -->
       <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)" 
+        <a class="dropdown-toggle" data-toggle="dropdown" href="" 
           title="{$i18n/selectView}">
           <i class="fa fa-eye"></i>
           <b class="caret"/>
@@ -34,7 +34,7 @@
               </xsl:if>
               <!-- When a view contains multiple tab, the one with
                 the default attribute is the one to open -->
-              <a data-ng-click="switchToTab('{tab[@default]/@id}', '{tab[@default]/@mode}')">
+              <a data-ng-click="switchToTab('{tab[@default]/@id}', '{tab[@default]/@mode}')" href="">
                 <xsl:variable name="viewName" select="@name"/>
                 <xsl:value-of select="$strings/*[name() = $viewName]"/>
               </a>
@@ -43,10 +43,17 @@
 
           <li class="divider"/>
           <li>
-            <a data-ng-click="toggleAttributes(true)" >
+            <a data-ng-click="toggleAttributes(true)" href="">
               <i class="fa"
-                data-ng-class="displayAttributes ? 'fa-check-square-o' : 'fa-square-o'"/>
-              <span data-translate="">toggleAttributes</span>
+                data-ng-class="gnCurrentEdit.displayAttributes ? 'fa-check-square-o' : 'fa-square-o'"/>
+              &#160;<span data-translate="">toggleAttributes</span>
+            </a>
+          </li>
+          <li>
+            <a data-ng-click="toggleTooltips(true)" href="">
+              <i class="fa"
+                data-ng-class="gnCurrentEdit.displayTooltips ? 'fa-check-square-o' : 'fa-square-o'"/>
+              &#160;<span data-translate="">toggleTooltips</span>
             </a>
           </li>
         </ul>
@@ -63,7 +70,7 @@
         <!-- Some views may define tab to be grouped in an extra button -->
         <xsl:if test="count($config/editor/views/view[tab/@id = $tab]/tab[@toggle]) > 0">
           <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)" 
+            <a class="dropdown-toggle" data-toggle="dropdown" href="" 
               title="{$i18n/moreTabs}">
               <i class="fa fa-ellipsis-h"></i>
               <b class="caret"/>
@@ -75,7 +82,7 @@
                   <xsl:if test="$tab = @id">
                     <xsl:attribute name="class">disabled</xsl:attribute>
                   </xsl:if>
-                  <a>
+                  <a href="">
                     <xsl:if test="$tab != @id">
                       <xsl:attribute name="data-ng-click" 
                         select="concat('switchToTab(''', @id, ''', ''', @mode, ''')')"/>
@@ -100,7 +107,7 @@
       <xsl:if test="$tab = @id">
         <xsl:attribute name="class">active</xsl:attribute>
       </xsl:if>
-      <a>
+      <a href="">
         <xsl:if test="$tab != @id">
           <xsl:attribute name="data-ng-click" 
             select="concat('switchToTab(''', @id, ''', ''', @mode, ''')')"/>

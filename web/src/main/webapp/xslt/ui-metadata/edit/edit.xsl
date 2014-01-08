@@ -63,6 +63,8 @@
       <input type="hidden" id="currTab" name="currTab" value="{$tab}"/>
       <input type="hidden" id="displayAttributes" name="displayAttributes"
         value="{$isDisplayingAttributes}"/>
+      <input type="hidden" id="displayTooltips" name="displayTooltips"
+        value="{$isDisplayingTooltips}"/>
       <input type="hidden" id="minor" name="minor" value="{$isMinorEdit}"/>
       <input type="hidden" id="flat" name="flat" value="{$isFlatMode}"/>
       <input type="hidden" id="showvalidationerrors" name="showvalidationerrors" value="{$showValidationErrors}"/>

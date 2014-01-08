@@ -9,6 +9,7 @@
     "validationReport": "Validation",
     "recommendedValues": "Recommended values",
     "toggleAttributes": "More details",
+    "toggleTooltips": "Tooltips",
     "createA": "Create a ",
     "noTemplatesAvailable": "Warning! There is no templates available in the catalog. You should add or <a href='admin.console#/metadata'>import</a> some.",
     "fromTemplate": "From ",

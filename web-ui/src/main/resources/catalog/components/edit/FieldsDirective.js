@@ -60,26 +60,66 @@
    </example>
    */
   module.directive('gnFieldTooltip',
-      ['gnSchemaManagerService',
-       function(gnSchemaManagerService) {
+      ['gnSchemaManagerService', 'gnCurrentEdit',
+       function(gnSchemaManagerService, gnCurrentEdit) {
          return {
            restrict: 'A',
            link: function(scope, element, attrs) {
              var isInitialized = false;
-             var initTooltip = function() {
-               if (!isInitialized) {
+             var initTooltip = function(event) {
+               if (!isInitialized && gnCurrentEdit.displayTooltips) {
                  // Retrieve field information (there is a cache)
                  gnSchemaManagerService
                   .getElementInfo(attrs.gnFieldTooltip).then(function(data) {
                    var info = data[0];
                    if (info.description && info.description.length > 0) {
                      // Initialize tooltip when description returned
-                     // TODO: Create some kind of template
-                     element.tooltip({
-                       title: info.description,
-                       placement: attrs.placement || 'bottom'
+                     var html = '';
+                     angular.forEach(info.help, function(helpText) {
+                       if (helpText['@for']) {
+                       //                         html += helpText['#text'];
+                       } else {
+                         html += helpText;
+                       }
                      });
-                     element.tooltip('show');
+                     var isField =
+                     element.is('input') || element.is('textarea');
+
+
+                     // Right same width as field
+                     // For legend, popover is right
+                     // Bottom is not recommended when typeahead
+                     var placement = attrs.placement || 'right';
+
+                     // TODO : improve. Here we fix the width
+                     // to the remaining space between the element
+                     // and the right window border.
+                     var width = ($(window).width() -
+                         element.offset().left -
+                         element.outerWidth()) * .95;
+                     element.popover({
+                       title: info.description,
+                       content: html,
+                       html: true,
+                       placement: placement,
+                       template: '<div class="popover gn-popover" ' +
+                       'style="max-width:' + width + 'px;' +
+                       'width:' + width + 'px"' +
+                       '>' +
+                       '<div class="arrow">' +
+                       '</div><div class="popover-inner">' +
+                       '<h3 class="popover-title"></h3>' +
+                       '<div class="popover-content"><p></p></div></div></div>',
+                       //                       trigger: 'click',
+                       trigger: isField ? 'focus' : 'hover'
+                     });
+
+                     if (event === 'hover' && !isField) {
+                       element.popover('show');
+                     } else {
+                       element.focus();
+                     }
+
                      isInitialized = true;
                    }
                  });
@@ -88,7 +128,10 @@
 
              // On hover trigger the tooltip init
              element.hover(function() {
-               initTooltip();
+               initTooltip('hover');
+             });
+             element.focus(function() {
+               initTooltip('focus');
              });
            }
          };

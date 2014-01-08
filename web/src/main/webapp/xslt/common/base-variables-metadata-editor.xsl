@@ -15,5 +15,4 @@
   <!-- Default form field type is text input. -->
   <xsl:variable name="defaultFieldType" select="'text'"/>
   
-  <xsl:variable name="editorTooltipPlacement" select="'left'"/>
 </xsl:stylesheet>

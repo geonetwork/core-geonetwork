@@ -48,6 +48,7 @@
   
   <!-- Display attributes in editor -->
   <xsl:variable name="isDisplayingAttributes" select="/root/request/displayAttributes = 'true'"/>
+  <xsl:variable name="isDisplayingTooltips" select="/root/request/displayTooltips = 'true'"/>
   
   <xsl:variable name="withInlineEditing" select="false()"/>
   
