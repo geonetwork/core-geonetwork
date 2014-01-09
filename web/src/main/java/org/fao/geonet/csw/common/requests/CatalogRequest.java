@@ -525,7 +525,7 @@ public abstract class CatalogRequest
 			}
 			System.out.println("POST params:"+Xml.getString(params));
 			httpMethod = post;
-			httpMethod.setPath(address);
+			httpMethod.setPath(path);
 		}
  
 //		httpMethod.setFollowRedirects(true);
