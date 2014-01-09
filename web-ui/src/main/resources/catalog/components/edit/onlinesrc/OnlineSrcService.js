@@ -244,7 +244,7 @@
         },
 
         /**
-         * Call md.processing.new in mode 'parent-add'
+         * Call md.processing. in mode 'parent-add'
          * to link a service to the edited metadata
          */
         linkToDataset: function(params, popupid) {
@@ -270,6 +270,9 @@
           });
         },
         
+        /**
+         * Run a the process sibling with given parameters
+         */
         linkToSibling: function(params, popupid) {
           runProcess(this,
               setParams('sibling-add', params)).then(function() {
