@@ -25,7 +25,9 @@
         templateUrl: '../../catalog/components/edit/editorhelper/partials/' +
             'editorhelper.html',
         link: function(scope, element, attrs) {
-          var field = document.gnEditor[scope.ref],
+          // Retrieve the target field by name (general case)
+          // or by id (template mode field).
+          var field = document.gnEditor[scope.ref] || $('#' + scope.ref).get(O),
               relatedAttributeField = document.gnEditor[scope.relatedAttribute],
               relatedElementField = document.gnEditor[scope.relatedElement],
               initialValue = field.value;
@@ -34,6 +36,7 @@
           var populateField = function(field, value) {
             if (field && value !== undefined) {
               field.value = field.type === 'number' ? parseFloat(value) : value;
+              $(field).change();
             }
           };
 

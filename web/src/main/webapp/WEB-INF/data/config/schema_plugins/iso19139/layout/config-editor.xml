@@ -372,8 +372,9 @@
             xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat">
             <template>
               <values>
-                <key label="format" xpath="gmd:MD_Format/gmd:name/gco:CharacterString"/>
-                <!-- TODO: get helper -->
+                <key label="format" xpath="gmd:MD_Format/gmd:name/gco:CharacterString">
+                  <helper name="gmd:name" context="gmd:MD_Format"/>
+                </key>
                 <key label="format_version" xpath="gmd:MD_Format/gmd:version/gco:CharacterString"/>
               </values>
               <snippet>

@@ -217,7 +217,30 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:function>
-
+  
+  <!-- Get helper -->
+  <xsl:function name="gn-fn-metadata:getHelper" as="node()">
+    <xsl:param name="schema" as="xs:string"/>
+    <xsl:param name="name" as="xs:string"/>
+    <xsl:param name="context" as="xs:string?"/>
+    <xsl:param name="xpath" as="xs:string?"/>
+    
+    <!-- Name with context in current schema -->
+    <xsl:variable name="helper"
+      select="$labels/element[@name=$name and (@context=$xpath or @context=$context)]/helper"/>
+    
+    <xsl:choose>
+      <xsl:when test="$helper">
+        <xsl:copy-of select="$helper" copy-namespaces="no"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <null/>
+      </xsl:otherwise>
+    </xsl:choose>
+    
+  </xsl:function>
+  
+  
 
 
   <!-- Get field type based on editor configuration.
