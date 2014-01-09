@@ -219,7 +219,7 @@ public final class Processor {
 			}	
 					
 		} else {
-			Log.info(Log.XLINK_PROCESSOR, "cache HIT on "+uri.toLowerCase());
+			Log.debug(Log.XLINK_PROCESSOR, "cache HIT on "+uri.toLowerCase());
 		}
 
 		// search for and return only the xml fragment that has @id=idSearch
