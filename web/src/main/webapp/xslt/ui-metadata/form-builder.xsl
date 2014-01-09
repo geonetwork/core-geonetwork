@@ -361,9 +361,29 @@
                   <textarea class="form-control input-sm" id="{$id}_{@label}"></textarea>
                 </xsl:when>
                 <xsl:otherwise>
-                  <input class="form-control" type="{if (@use) then @use else 'text'}" value="" id="{$id}_{@label}"/>
+                  <input class="form-control" type="{if (@use) then @use else 'text'}" value="" id="{$id}_{@label}">
+                    <xsl:if test="helper">
+                      <!-- hide the form field if helper is available, the 
+                        value is set by the directive which provide customized 
+                        forms -->
+                      <xsl:attribute name="class" select="'hidden'"/>
+                    </xsl:if>
+                  </input>
                 </xsl:otherwise>
               </xsl:choose>
+              
+              <xsl:if test="helper">
+                <xsl:variable name="helper" select="gn-fn-metadata:getHelper($schema, helper/@name, helper/@context, helper/@xpath)"/>
+                
+                <xsl:call-template name="render-form-field-codelist">
+                  <xsl:with-param name="elementRef" select="concat($id, '_', @label)"/>
+                  <!--<xsl:with-param name="relatedElement" select="concat('_', $editInfo/@ref)"/>
+                  <xsl:with-param name="relatedElementRef" select="concat('_', $editInfo/@ref, '_', $listOfValues/@relAtt)"/>-->
+                  <xsl:with-param name="dataType" select="'text'"/>
+                  <xsl:with-param name="listOfValues" select="$helper"/>
+                </xsl:call-template>
+              </xsl:if>
+              
             </xsl:for-each>
             
             <xsl:if test="not($isExisting)">
@@ -670,25 +690,42 @@
         Current input could be an element or an attribute (eg. uom). 
         -->
     <xsl:if test="$hasHelper">
-      <!-- 
-            The helper config to pass to the directive in JSON format
-          -->
-      <textarea id="_{$editInfo/@ref}_config" class="hidden">
-        <xsl:copy-of select="java-xsl-util:xmlToJson(
-          saxon:serialize($listOfValues, 'default-serialize-mode'))"/></textarea>
-      <div 
-        data-gn-editor-helper="{$listOfValues/@editorMode}"
-        data-ref="_{$editInfo/@ref}"
-        data-type="{$type}"
-        data-related-element="{if ($listOfValues/@relElementRef != '') 
-        then concat('_', $listOfValues/@relElementRef) else ''}"
-        data-related-attr="{if ($listOfValues/@relAtt) 
-        then concat('_', $editInfo/@ref, '_', $listOfValues/@relAtt) else ''}">
-      </div>
+     
+      <xsl:call-template name="render-form-field-codelist">
+        <xsl:with-param name="elementRef" select="concat('_', $editInfo/@ref)"/>
+        <xsl:with-param name="relatedElement" select="concat('_', $editInfo/@ref)"/>
+        <xsl:with-param name="relatedElementRef" select="concat('_', $editInfo/@ref, '_', $listOfValues/@relAtt)"/>
+        <xsl:with-param name="dataType" select="$type"/>
+        <xsl:with-param name="listOfValues" select="$listOfValues"/>
+      </xsl:call-template>
     </xsl:if>
 
   </xsl:template>
 
+
+  <xsl:template name="render-form-field-codelist">
+    <xsl:param name="elementRef" as="xs:string"/>
+    <xsl:param name="relatedElement" as="xs:string" required="no" select="''"/>
+    <xsl:param name="relatedElementRef" as="xs:string" required="no" select="''"/>
+    <xsl:param name="dataType" as="xs:string" required="no" select="'text'"/>
+    <xsl:param name="listOfValues" as="node()"/>
+    
+    <!-- 
+    The helper config to pass to the directive in JSON format
+    -->
+    <textarea id="{$elementRef}_config" class="hidden">
+      <xsl:copy-of select="java-xsl-util:xmlToJson(
+        saxon:serialize($listOfValues, 'default-serialize-mode'))"/></textarea>
+    <div 
+      data-gn-editor-helper="{$listOfValues/@editorMode}"
+      data-ref="{$elementRef}"
+      data-type="{$dataType}"
+      data-related-element="{if ($listOfValues/@relElementRef != '') 
+      then $relatedElement else ''}"
+      data-related-attr="{if ($listOfValues/@relAtt) 
+      then $relatedElementRef else ''}">
+    </div>
+  </xsl:template>
 
   <!-- Display the remove control 
   if parent info is not defined and element is not 
@@ -867,27 +904,4 @@
     </div>
   </xsl:template>
 
-  <!-- Nav bars -->
-  <xsl:template name="scroll-spy-nav-bar">
-    <div id="navbarExample" class="navbar navbar-static navbar-fixed-bottom">
-      <div class="navbar-inner">
-        <div class="container" style="width: auto;">
-          <ul class="nav">
-            <li class="active">
-              <a href="#identificationInfo">@gmd:identificationInfo</a>
-            </li>
-            <li>
-              <a href="#spatialRepresentationInfo">@gmd:spatialRepresentationInfo</a>
-            </li>
-            <li>
-              <a href="#distributionInfo">@gmd:distributionInfo</a>
-            </li>
-            <li>
-              <a href="#dataQualityInfo">@gmd:dataQualityInfo</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </xsl:template>
 </xsl:stylesheet>
