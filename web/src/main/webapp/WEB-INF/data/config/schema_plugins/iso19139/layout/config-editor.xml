@@ -40,7 +40,8 @@
 
 
 
-<!--    <for name="gmx:FileName" use="data-gn-filename"/>-->
+    <!-- gmx:FileName/@src attribute -->
+    <for name="src" use="data-gn-logo-selector"/>
 
     <for name="gmd:electronicMailAddress" use="email"/>
 
@@ -52,9 +53,11 @@
     <for name="gmd:referenceSystemInfo" addDirective="data-gn-crs-selector"/>
 
     <for name="gmd:contact" addDirective="data-gn-directory-entry-selector"/>
+    <for name="gmd:pointOfContact" addDirective="data-gn-directory-entry-selector"/>
     <for name="gmd:distributor" addDirective="data-gn-directory-entry-selector"/>
     <for name="gmd:processor" addDirective="data-gn-directory-entry-selector"/>
     <for name="gmd:citedResponsibleParty" addDirective="data-gn-directory-entry-selector"/>
+    
     <for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector"/>
   </fields>
 

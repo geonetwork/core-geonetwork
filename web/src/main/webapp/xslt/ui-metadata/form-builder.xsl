@@ -44,14 +44,29 @@
     <xsl:param name="hidden" required="no" as="xs:boolean" select="false()"/>
     <xsl:param name="editInfo" required="no"/>
     <xsl:param name="parentEditInfo" required="no"/>
+    
+    <!-- The fields matching all element attributes.
+    Rendered hidden in a block below the input. -->
     <xsl:param name="attributesSnippet" required="no"/>
+    
+    <!-- Force displaying attributes even if $isDisplayingAttributes
+    global variable is not set to true. This could be useful when the attributes
+    are important for the element. eg. gmx:FileName -->
+    <xsl:param name="forceDisplayAttributes" required="no" as="xs:boolean" select="false()"/>
+    
+    <!-- A list of values - could be an helper list for example. -->
     <xsl:param name="listOfValues" select="''"/>
+    
     <!-- Disable all form fields included in a section based on an XLink.
     It could be relevant to investigate if this check should be done on
     only element potentially using XLink and not all of them. 
     This may have performance inpact? -->
     <xsl:param name="isDisabled" select="ancestor-or-self::node()[@xlink:href]"/>
-    <xsl:param name="toggleLang" select="false()" required="no"/>
+    
+    <!-- Define if the language fields should be displayed 
+    with the selector or below each other. -->
+    <xsl:param name="toggleLang" required="no" as="xs:boolean" select="false()"/>
+
 
     <xsl:variable name="isMultilingual" select="count($value/values) > 0"/>
 
@@ -153,7 +168,10 @@
             
             
             <xsl:if test="$attributesSnippet">
-              <div class="well well-sm gn-attr {if ($isDisplayingAttributes) then '' else 'hidden'}">
+              <xsl:variable name="cssDefaultClass" select="'well well-sm'"/>
+              <div class="{$cssDefaultClass} 
+                {if ($forceDisplayAttributes) then 'gn-attr-mandatory' else 'gn-attr'}
+                {if ($isDisplayingAttributes or $forceDisplayAttributes) then '' else 'hidden'}">
                 <xsl:copy-of select="$attributesSnippet"/>
               </div>
             </xsl:if>
@@ -643,20 +661,7 @@
         </xsl:variable>
 
         <xsl:copy-of select="$input"/>
-        <!--
-          Tentative to display asterisk for mandatory elements
-          <xsl:choose>
-          <xsl:when test="$isRequired">
-            <div class="input-group">
-              <xsl:copy-of select="$input"/>
-              <span class="input-group-addon"><i class="fa fa-asterisk"/>&#xA0;</span>
-            </div>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:copy-of select="$input"/>
-          </xsl:otherwise>
-        </xsl:choose>-->
-        
+
       </xsl:otherwise>
     </xsl:choose>
 
@@ -760,6 +765,11 @@
     <xsl:variable name="attributeName" select="name()"/>
     <xsl:variable name="attributeValue" select="."/>
     <xsl:variable name="attributeSpec" select="../gn:attribute[@name = $attributeName]"/>
+    
+    <xsl:variable name="directive"
+      select="gn-fn-metadata:getFieldType($editorConfig, name(), 
+      name(..))"/>
+    
     <!-- Form field name escaping ":" which will be invalid character for
     Jeeves request parameters. -->
     <xsl:variable name="fieldName" select="concat('_', $ref, '_', replace($attributeName, ':', 'COLON'))"/>
@@ -769,6 +779,10 @@
         <xsl:value-of select="gn-fn-metadata:getLabel($schema, $attributeName, $labels)/label"/>
       </label>
       <div class="col-lg-8">
+        <xsl:if test="$directive">
+          <xsl:attribute name="{$directive}"/>
+        </xsl:if>
+        
         <xsl:choose>
           <xsl:when test="$attributeSpec/gn:text">
             
@@ -792,7 +806,8 @@
             </select>
           </xsl:when>
           <xsl:otherwise>
-            <input type="text" class="" name="{$fieldName}" value="{$attributeValue}"/>
+            <input type="text" class="" name="{$fieldName}" value="{$attributeValue}">
+            </input>
           </xsl:otherwise>
         </xsl:choose>
       </div>
