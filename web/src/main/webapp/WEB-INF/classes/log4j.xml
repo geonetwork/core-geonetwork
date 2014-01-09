@@ -168,19 +168,21 @@
     <logger name="org.jzkit.search.impl.LRUCache" additivity="false">
         <level value="WARN" />
     </logger>
-
-    <category name="org.hibernate.SQL">
-        <priority value="WARN" />
+    <logger name="ro.isdc.wro.http" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
-    </category>
-    <category name="org.hibernate.type">
-        <priority value="WARN" />
+    </logger>
+    <logger name="org.hibernate.SQL" additivity="false">
+        <level value="WARN" />
+        <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
-    </category>
-
-    <category name="ro.isdc.wro">
-        <priority value="DEBUG" />
-    </category>
+    </logger>
+    <logger name="org.hibernate.type" additivity="false">
+        <level value="WARN" />
+        <appender-ref ref="consoleAppender" />
+        <appender-ref ref="fileAppender" />
+    </logger>
 
 
     <!-- Turn off logging except when explicitly declared below -->

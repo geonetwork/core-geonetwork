@@ -25,6 +25,13 @@ public class GeonetworkWrojModelFactoryProvider extends ConfigurableProviderSupp
     }
 
     @Override
+    public Map<String, UriLocator> provideLocators() {
+        final Map<String, UriLocator> locatorMap = super.provideLocators();
+        locatorMap.put(ClosureDependencyUriLocator.URI_LOCATOR_ID, new ClosureDependencyUriLocator());
+        return locatorMap;
+    }
+
+    @Override
     public Map<String, ResourcePreProcessor> providePreProcessors() {
         final Map<String, ResourcePreProcessor> preProcessorMap = super.providePreProcessors();
         preProcessorMap.put(StripGoogProcessor.ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {

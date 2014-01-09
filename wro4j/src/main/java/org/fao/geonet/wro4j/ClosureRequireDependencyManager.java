@@ -28,7 +28,6 @@ public class ClosureRequireDependencyManager {
     /**
      * Add a javascript file to process.
      *
-     *
      * @param path           the path to the file that will be listed in the WRO4J model to identify the javascript.
      * @param javascriptFile the file containing the javascript
      * @param notMinimized
@@ -71,7 +70,7 @@ public class ClosureRequireDependencyManager {
      * @param moduleId    the root module.
      * @param includeSelf
      * @return the ordered list of dependency paths.  The order is defined as:
-     *         {deps of dependencyA}, dependencyA, {deps of dependencyB}, dependencyB, ...
+     * {deps of dependencyA}, dependencyA, {deps of dependencyB}, dependencyB, ...
      */
     public Collection<Node> getTransitiveDependenciesFor(String moduleId, boolean includeSelf) {
         Node module = getNode(moduleId);
@@ -205,4 +204,5 @@ public class ClosureRequireDependencyManager {
             return result;
         }
     }
+
 }
