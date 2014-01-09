@@ -46,7 +46,7 @@
                   scope.onlinesrcService.reload = false;
                 }
               });
-              
+
               // When saving is done, refresh validation report
               scope.$watch('gnCurrentEdit.saving', function(newValue) {
                 if (newValue === false) {
@@ -153,7 +153,7 @@
               scope.onlinesrcService = gnOnlinesrc;
 
               scope.popupid = attrs['gnPopupid'];
-              
+
               /**
                * Onlinesrc uploaded with success, close the popup,
                * refresh the metadata.
@@ -375,7 +375,7 @@
               scope.gnOnlinesrc = gnOnlinesrc;
             }
           };
-        }])        
+        }])
         .directive('gnLinkToSibling', ['gnOnlinesrc',
         function(gnOnlinesrc) {
           return {
@@ -384,10 +384,10 @@
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/linktosibling.html',
             link: function(scope, element, attrs) {
-              
+
               scope.popupid = attrs['gnLinkToSibling'];
               scope.selection = [];
-              
+
               /**
                * Register a method on popup open to reset
                * the search form and trigger a search.
@@ -396,29 +396,30 @@
                 $(scope.popupid).modal('show');
                 scope.$broadcast('resetSearch');
               });
-              
+
               var findObj = function(obj) {
-                for(i=0;i<scope.selection.length;++i){
-                  if(scope.selection[i].md == obj){
+                for (i = 0; i < scope.selection.length; ++i) {
+                  if (scope.selection[i].md == obj) {
                     return scope.selection[i];
                   }
                 }
                 return undefined;
               };
-              
-              scope.addToSelection = function(md, associationType, initiativeType) {
-                if(associationType && initiativeType) {
+
+              scope.addToSelection = function(md, 
+                  associationType, initiativeType) {
+                if (associationType && initiativeType) {
                   var o = findObj(md);
-                  if(angular.isUndefined(o)) {
+                  if (angular.isUndefined(o)) {
                     scope.selection.push({
                       md: md,
-                      associationType: associationType ,
+                      associationType: associationType,
                       initiativeType: initiativeType
                     });
                   }
                   else {
                     angular.extend(o, {
-                      associationType: associationType ,
+                      associationType: associationType,
                       initiativeType: initiativeType
                     });
                   }
