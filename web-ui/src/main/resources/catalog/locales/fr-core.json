@@ -5,7 +5,7 @@
     "password": "Mot de passe",
     "rememberMe": "Se souvenir de moi",
     "signIn": "S'identifier",
-    "signedInAs": "",
+    "signedInAs": " ",
     "needHelp": "Besoin d'aide",
     "docNotFound": "<strong>Attention !</strong> La page <a href='{{page}}'>{{page}}</a> n'a pas été trouvée dans le guide utilisateur.",
     
