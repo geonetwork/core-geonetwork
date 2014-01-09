@@ -30,27 +30,28 @@
               data-ng-model="params.any"
               placeholder="{{'search' | translate}}"/>
             <ul class="dropdown-menu" role="menu">
-              <li data-ng-repeat="rec in searchResults.records"><a
-                href="" data-ng-click="addToSelection(rec, associationType, initiativeType)"
-                > {{rec.title}} </a></li>
+              <li data-ng-repeat="md in searchResults.records"><a
+                href="" data-ng-click="addToSelection(md, associationType, initiativeType)"
+                > {{md.title}} </a></li>
             </ul>
           </div>
         </div>
       </div>
       <div>
-        <div class="list-group">
-          <a class="list-group-item gn-record"
-            data-ng-repeat="obj in selection"
-            href="">
+        <ul class="list-group">
+          <li class="list-group-item gn-record"
+            data-ng-repeat="obj in selection">
               {{obj.md.title || obj.md.defaultTitle}}
               <span class="pull-right"><i>{{obj.associationType}} / {{obj.initiativeType}}</i></span>
-          </a>
-        </div>
+              <a ng-click="removeFromSelection(obj)" href="">
+                <i class="btn fa fa-times text-danger"></i>
+              </a>
+          </li>
+        </ul>
       </div>
-      
       <div class="">
         <button type="button" class="btn navbar-btn btn-success"
-          data-ng-click="gnOnlinesrc.linkToMd(mode, selectRecords[0], popupid)">
+          data-ng-click="linkToResource()">
           <i class="fa fa-sign-out" /> <span
             data-translate="">linkToSibling</span>
         </button>

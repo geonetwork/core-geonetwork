@@ -79,11 +79,13 @@
           rel.type = type;
           delete rel['@type'];
 
-          if (rel['@subtype']) {
-            rel.subtype = subtype;
-            delete rel['@subtype'];
+          if (rel['@subType']) {
+            rel.subType = rel['@subType'];
+            delete rel['@subType'];
           }
-          relations[type].push(rel);
+          if(angular.isString(rel.title)) {
+            relations[type].push(rel);
+          }
         });
         return relations;
       };
@@ -242,7 +244,7 @@
         },
 
         /**
-         * Call md.processing.new in mode 'parent-add'
+         * Call md.processing. in mode 'parent-add'
          * to link a service to the edited metadata
          */
         linkToDataset: function(params, popupid) {
@@ -266,6 +268,16 @@
               closePopup(popupid);
             });
           });
+        },
+        
+        /**
+         * Run a the process sibling with given parameters
+         */
+        linkToSibling: function(params, popupid) {
+          runProcess(this,
+              setParams('sibling-add', params)).then(function() {
+                closePopup(popupid);
+              });
         },
 
         /**
@@ -338,7 +350,6 @@
               setParams('datasets-remove', params));
         },
 
-
         /**
          * Remove a link metadata by calling a process.
          * The mode can be 'source', 'parent'
@@ -361,6 +372,19 @@
           };
           runProcess(this,
               setParams('fcats-remove', params));
+        },
+        
+        /**
+         * Remove a sibling link from the
+         * current metadata.
+         */
+        removeSibling: function(onlinesrc) {
+          var params = {
+            uuid: gnCurrentEdit.uuid,
+            uuidref: onlinesrc.uuid
+          };
+          runProcess(this,
+              setParams('sibling-remove', params));
         }
       };
     }]);

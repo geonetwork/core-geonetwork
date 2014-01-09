@@ -192,7 +192,25 @@
           ng-click="onlinesrcService.removeFeatureCatalog(resource)">remove</a>
         </li>
       </ul>
-
+      
+      <!-- ******* List of siblings ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.sibling">
+        <i class="fa fa-sign-out"
+          ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i> <i
+          class="icon-external-link"></i> <span data-translate="">siblings</span>
+        <a href="" data-ng-click="onlinesrcService.onOpenPopup('sibling')">
+          <i class="fa fa-plus"></i>
+        </a>
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          ng-repeat="resource in relations.sibling | orderBy:'title'">
+          {{resource.title}} 
+          <span>{{'(' + resource.subType.toUpperCase() + ')'}}</span>
+          <a href="" class="onlinesrc-remove"
+            ng-click="onlinesrcService.removeSibling(resource)">remove</a>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
