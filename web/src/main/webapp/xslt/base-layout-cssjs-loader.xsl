@@ -34,9 +34,7 @@
     <script>var geonet={provide:function(s){},require:function(s){}}</script>
     <xsl:choose>
       <xsl:when test="$isDebugMode">
-          <script>
-              window.CLOSURE_NO_DEPS = true;
-          </script>
+        
         <script src="{$uiResourcesPath}lib/closure/base.js"></script>
         
         <script src="{$uiResourcesPath}lib/jquery-2.0.3.js"></script>
@@ -69,14 +67,6 @@
         <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js"></script>
         <!--</xsl:if>-->
         
-        <!-- Use Closure to load the application scripts -->
-        <script>
-          window.CLOSURE_NO_DEPS = true;
-        </script>
-        
-        <script>
-          goog.require('<xsl:value-of select="$angularApp"/>');
-        </script>
       </xsl:when>
       <xsl:otherwise>
         <script src="{$uiResourcesPath}lib/jquery-2.0.3.min.js"></script>
@@ -114,17 +104,18 @@
         <script src="{$uiResourcesPath}lib/{$angularApp}.min.js"></script>
       </xsl:otherwise>
     </xsl:choose>
-      <xsl:choose>
-          <xsl:when test="/root/request/debug">
-              <!-- Use Closure to load the application scripts -->
-              <script src="{/root/gui/url}/static/closure_deps.js"></script>
-              <script>
-                  goog.require('<xsl:value-of select="$angularApp"/>');
-              </script>
-          </xsl:when>
-          <xsl:otherwise>
-              <script src="{/root/gui/url}/static/{$angularApp}.js{$minimizedParam}"></script>
-          </xsl:otherwise>
-      </xsl:choose>
+    
+    <xsl:choose>
+        <xsl:when test="/root/request/debug">
+            <!-- Use Closure to load the application scripts -->
+            <script src="{/root/gui/url}/static/closure_deps.js"></script>
+            <script>
+                goog.require('<xsl:value-of select="$angularApp"/>');
+            </script>
+        </xsl:when>
+        <xsl:otherwise>
+            <script src="{/root/gui/url}/static/{$angularApp}.js{$minimizedParam}"></script>
+        </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
