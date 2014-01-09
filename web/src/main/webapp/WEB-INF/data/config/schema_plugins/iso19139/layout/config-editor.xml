@@ -39,6 +39,9 @@
     <for name="gco:DateTime" use="datetime"/>
 
 
+
+<!--    <for name="gmx:FileName" use="data-gn-filename"/>-->
+
     <for name="gmd:electronicMailAddress" use="email"/>
 
     <for name="gmd:language" use="data-gn-language-picker"/>
@@ -160,6 +163,8 @@
 
   <!-- View configuration -->
   <views>
+    <!-- TODO: Add option to configure if view should be displayed or not 
+    based on xpath expression ? -->
     <view name="default">
       <tab id="default" default="true" mode="flat">
         <section xpath="/gmd:MD_Metadata/gmd:identificationInfo"/>
