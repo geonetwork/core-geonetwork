@@ -46,6 +46,7 @@
   <metadataPointOfContact>Point de contact des métadonnées</metadataPointOfContact>
   <organisationName>Nom de l'organisation</organisationName>
   <electronicMailAddress>Email de l'organisation</electronicMailAddress>
+  <role>Rôle</role>
   <encoding>Encodage</encoding>
   <serviceCategory>Catégorie de service</serviceCategory>
   <format>Format</format>

@@ -806,7 +806,9 @@
               <values>
                 <key label="conformity_title"
                   xpath="gmd:DQ_ConformanceResult/
-                        gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
+                  gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString">
+                  <helper name="gmd:title" context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"></helper>
+                </key>
                 <key label="conformity_date"
                   xpath="gmd:DQ_ConformanceResult/
                         gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date"
@@ -1021,7 +1023,9 @@
                       gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                     use="email"/>
                   <key label="role"
-                    xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue"/>
+                    xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+                    <codelist name="gmd:CI_RoleCode"/>
+                  </key>
                 </values>
                 <snippet>
                   <gmd:pointOfContact>
@@ -1070,7 +1074,9 @@
                     gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                     use="email"/>
                   <key label="role"
-                    xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue"/>
+                    xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+                    <codelist name="gmd:CI_RoleCode"/>
+                  </key>
                 </values>
                 <snippet>
                   <gmd:pointOfContact>
@@ -1121,7 +1127,9 @@
                     gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                     use="email"/>
                   <key label="role"
-                    xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue"/>
+                    xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+                    <codelist name="gmd:CI_RoleCode"/>
+                  </key>
                 </values>
                 <snippet>
                   <gmd:contact>

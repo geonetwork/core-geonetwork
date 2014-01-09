@@ -223,14 +223,45 @@
             
             <xsl:variable name="keyValues">
               <xsl:for-each select="$template/values/key">
-                <xsl:variable name="matchingNodeValue">
-                  <saxon:call-template name="{concat('evaluate-', $schema)}">
-                    <xsl:with-param name="base" select="$currentNode"/>
-                    <xsl:with-param name="in" select="concat('/', @xpath)"/>
-                  </saxon:call-template>
-                </xsl:variable>
-                
-                <value><xsl:value-of select="normalize-space($matchingNodeValue)"/></value>
+                <field name="{@label}">
+                  <xsl:variable name="matchingNodeValue">
+                    <saxon:call-template name="{concat('evaluate-', $schema)}">
+                      <xsl:with-param name="base" select="$currentNode"/>
+                      <xsl:with-param name="in" select="concat('/', @xpath)"/>
+                    </saxon:call-template>
+                  </xsl:variable>
+                  <value><xsl:value-of select="normalize-space($matchingNodeValue)"/></value>
+                  
+                  
+                  <!-- If an helper element defined the path to an helper list to 
+                  get from the loc files -->
+                  <xsl:if test="helper">
+                    <!-- Get them, it may contains multiple helpers with context (eg. different for service and dataset) -->
+                    <xsl:variable name="helper" select="gn-fn-metadata:getHelper($schema, helper/@name, helper/@context, helper/@xpath)"/>
+                    
+                    <xsl:choose>
+                      <xsl:when test="count($helper) > 1">
+                        <!-- If more than one, get the one matching the context of the matching element. -->
+                        <xsl:variable name="chooseHelperBasedOnElement" 
+                          select="gn-fn-metadata:getHelper($helper, 
+                          $metadata/descendant::*[gn:element/@ref = $matchingNodeValue/*/gn:element/@parent])"/>
+                        <xsl:copy-of select="$chooseHelperBasedOnElement"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:copy-of select="$helper"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:if>
+                  
+                  
+                  
+                  <xsl:if test="codelist">
+                    <xsl:variable name="listOfValues" 
+                      select="gn-fn-metadata:getCodeListValues($schema, codelist/@name, $codelists)"/>
+                    <xsl:copy-of select="$listOfValues"/>
+                  </xsl:if>
+                  
+                </field>
               </xsl:for-each>
             </xsl:variable>
             

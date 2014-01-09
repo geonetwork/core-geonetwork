@@ -79,6 +79,11 @@
           };
           scope.updateWithOtherValue = function() {
             field.value = scope.otherValue['@value'];
+            $(field).change();
+          };
+          scope.select = function(value) {
+            field.value = value['@value'];
+            $(field).change();
           };
 
           // On change event update the related element(s)
