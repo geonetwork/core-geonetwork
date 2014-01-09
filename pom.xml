@@ -528,11 +528,16 @@
         <artifactId>batik-ext</artifactId>
         <version>1.6</version>
       </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.5</version>
-        </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.7.5</version>
+      </dependency>
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.13</version>
+      </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
@@ -730,14 +735,6 @@
             <artifactId>slf4j-log4j12</artifactId>
           </exclusion>
         </exclusions>
-      </dependency>
-      <!-- Load slf4g to match other dependency version (eg. quartz)
-      and replace the one loaded by eu.medsea.mimeutil.
-      -->
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-        <version>1.6.1</version>
       </dependency>
       <dependency>
         <groupId>joda-time</groupId>
