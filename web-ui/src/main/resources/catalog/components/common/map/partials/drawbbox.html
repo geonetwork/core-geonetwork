@@ -4,7 +4,7 @@
       <i class="fa fa-pencil"></i><span data-translate="">drawbbox</span>
     </div>
     <div class="panel-body">
-      <button class="btn btn-warning" ng-click="drawMap()">
+      <button class="btn btn-warning" data-ng-click="drawMap()">
         <i class="fa fa-pencil"></i>draw
       </button>
       <table class="text-center">
@@ -16,7 +16,7 @@
                 data-ng-change="updateBbox()"/>
           </div></td>
         </tr>
-        <tr valign="middle"  align="center">
+        <tr valign="middle" align="center">
           <td class="col-left">
             <div class="form-group">
               <label for="drawbbox-left">left</label> <input
@@ -25,7 +25,7 @@
             </div>
           </td>
           <td class="col-middle">
-            <div id="map" class="map"></div>
+            <div id="{{mapId}}" class="map"></div>
           </td>
           <td class="col-right">
             <div class="form-group">

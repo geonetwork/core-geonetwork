@@ -26,7 +26,9 @@
            },
            link: function(scope, element, attrs) {
              scope.drawing = false;
-
+             scope.mapId = 'map-drawbbox-'+
+               scope.topRef.substring(1,scope.topRef.length);
+             
              // need to parseFloat for number type of the input
              $timeout(function() {
                scope.top = parseFloat(scope.top);
@@ -64,7 +66,6 @@
                  bboxLayer
                ],
                renderer: ol.RendererHint.CANVAS,
-               target: 'map',
                view: new ol.View2D({
                  center: [0, 0],
                  zoom: 2
@@ -94,10 +95,19 @@
 
              map.addInteraction(dragbox);
 
+             // When form is loaded, set map div.
+             scope.$watch('gnCurrentEdit.version', function(newValue) {
+               map.setTarget(scope.mapId);
+             });
+             
              scope.drawMap = function() {
                scope.drawing = !scope.drawing;
              };
 
+             /**
+              * Redraw the Bbox when the user change the
+              * coordinates in the form
+              */
              scope.updateBbox = function() {
                var coordinates = [
                  [
