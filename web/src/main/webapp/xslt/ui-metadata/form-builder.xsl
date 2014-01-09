@@ -347,11 +347,16 @@
             <xsl:if test="$hasAddAction">
               <xsl:attribute name="class">hidden</xsl:attribute>
             </xsl:if>
+            <!-- For each template field create an input.
+            The directive takes care of setting values. -->
             <xsl:for-each select="$template/values/key">
+              <xsl:variable name="valueLabelKey" select="@label"/>
+              <xsl:variable name="helper" select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/helper else ''"/>
+              <xsl:variable name="codelist" select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/codelist else ''"/>
+              
               <!-- Only display label if more than one key to match -->
               <xsl:if test="count($template/values/key) > 1">
                 <label>
-                  <xsl:variable name="valueLabelKey" select="@label"/>
                   <xsl:value-of select="$strings/*[name() = $valueLabelKey]"/>
                 </label>
               </xsl:if>
@@ -360,9 +365,19 @@
                 <xsl:when test="@use = 'textarea'">
                   <textarea class="form-control input-sm" id="{$id}_{@label}"></textarea>
                 </xsl:when>
+                <xsl:when test="$codelist != ''">
+                  <select class="form-control input-sm" id="{$id}_{@label}">
+                    <xsl:for-each select="$codelist/entry">
+                      <xsl:sort select="label"/>
+                      <option value="{code}" title="{normalize-space(description)}">
+                        <xsl:value-of select="label"/>
+                      </option>
+                    </xsl:for-each>
+                  </select>
+                </xsl:when>
                 <xsl:otherwise>
                   <input class="form-control" type="{if (@use) then @use else 'text'}" value="" id="{$id}_{@label}">
-                    <xsl:if test="helper">
+                    <xsl:if test="$helper">
                       <!-- hide the form field if helper is available, the 
                         value is set by the directive which provide customized 
                         forms -->
@@ -372,10 +387,8 @@
                 </xsl:otherwise>
               </xsl:choose>
               
-              <xsl:if test="helper">
-                <xsl:variable name="helper" select="gn-fn-metadata:getHelper($schema, helper/@name, helper/@context, helper/@xpath)"/>
-                
-                <xsl:call-template name="render-form-field-codelist">
+              <xsl:if test="$helper">
+                <xsl:call-template name="render-form-field-helper">
                   <xsl:with-param name="elementRef" select="concat($id, '_', @label)"/>
                   <!--<xsl:with-param name="relatedElement" select="concat('_', $editInfo/@ref)"/>
                   <xsl:with-param name="relatedElementRef" select="concat('_', $editInfo/@ref, '_', $listOfValues/@relAtt)"/>-->
@@ -391,7 +404,7 @@
             </xsl:if>
             <textarea class="form-control input-sm gn-debug" name="{$id}" data-gn-template-field="{$id}"
               data-keys="{string-join($template/values/key/@label, '#')}"
-              data-values="{if ($keyValues) then string-join($keyValues/value, '#') else ''}">
+              data-values="{if ($keyValues and count($keyValues/*) > 0) then string-join($keyValues/field/value, '#') else ''}">
               <xsl:copy-of select="$template/snippet/*"/>
             </textarea>
           </div>
@@ -691,7 +704,7 @@
         -->
     <xsl:if test="$hasHelper">
      
-      <xsl:call-template name="render-form-field-codelist">
+      <xsl:call-template name="render-form-field-helper">
         <xsl:with-param name="elementRef" select="concat('_', $editInfo/@ref)"/>
         <xsl:with-param name="relatedElement" select="concat('_', $editInfo/@ref)"/>
         <xsl:with-param name="relatedElementRef" select="concat('_', $editInfo/@ref, '_', $listOfValues/@relAtt)"/>
@@ -703,7 +716,7 @@
   </xsl:template>
 
 
-  <xsl:template name="render-form-field-codelist">
+  <xsl:template name="render-form-field-helper">
     <xsl:param name="elementRef" as="xs:string"/>
     <xsl:param name="relatedElement" as="xs:string" required="no" select="''"/>
     <xsl:param name="relatedElementRef" as="xs:string" required="no" select="''"/>

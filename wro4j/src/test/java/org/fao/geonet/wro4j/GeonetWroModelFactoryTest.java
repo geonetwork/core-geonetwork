@@ -94,6 +94,9 @@ public class GeonetWroModelFactoryTest {
         final List<Resource> resources = depsGroup.getResources();
 
         String jsTestBaseDirAsPath = jsTestBaseDir.replace('\\', '/');
+        if (jsTestBaseDirAsPath.charAt(0) == '/') {
+            jsTestBaseDirAsPath = jsTestBaseDirAsPath.substring(1);
+        }
 
         assertEquals(7, resources.size());
         for (Resource resource : resources) {

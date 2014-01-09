@@ -219,7 +219,7 @@
   </xsl:function>
   
   <!-- Get helper -->
-  <xsl:function name="gn-fn-metadata:getHelper" as="node()">
+  <xsl:function name="gn-fn-metadata:getHelper" as="node()*">
     <xsl:param name="schema" as="xs:string"/>
     <xsl:param name="name" as="xs:string"/>
     <xsl:param name="context" as="xs:string?"/>
