@@ -89,6 +89,7 @@
           
         <script src="{$uiResourcesPath}lib/angular-translate.min.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.min.js"></script>
+        <script src="{$uiResourcesPath}lib/ol.js"></script>
         
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.min.js"></script>
