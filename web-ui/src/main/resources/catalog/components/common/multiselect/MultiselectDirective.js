@@ -34,7 +34,7 @@
           scope.currentSelectionLeft = [];
           scope.currentSelectionRight = [];
           scope.selected = [];
-          
+
           /**
            * Return the label of the element
            * It could be a property of the object
@@ -43,7 +43,7 @@
           scope.getLabel = function(e) {
             if (angular.isString(e[scope.labelProp])) {
               return e[scope.labelProp];
-            } else if (angular.isFunction(e[scope.labelProp])){
+            } else if (angular.isFunction(e[scope.labelProp])) {
               return e[scope.labelProp]();
             }
           };

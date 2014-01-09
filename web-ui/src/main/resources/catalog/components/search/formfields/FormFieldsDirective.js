@@ -58,14 +58,14 @@
             link: function(scope, element, attrs) {
               var config = 'iso19139|' + attrs['gnSchemaInfo'] + '|||';
               scope.type = attrs['schemaInfoCombo'];
-              if(scope.type == 'codelist') {
+              if (scope.type == 'codelist') {
                 gnSchemaManagerService.getCodelist(config).then(
                     function(data) {
                       scope.infos = data !== 'null' ?
                           data[0].entry : null;
                     });
               }
-              else if(scope.type == 'element') {
+              else if (scope.type == 'element') {
                 gnSchemaManagerService.getElementInfo(config).then(
                     function(data) {
                       scope.infos = data !== 'null' ?

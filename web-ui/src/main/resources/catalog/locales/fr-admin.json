@@ -102,6 +102,10 @@
     "iso19110": "Information géographique - Méthodologie de catalogage des entités (ISO 19110:2005)",
     "iso19110-acr": "ISO19110",
     "iso19110-help": "",
+    "iso19135": "Information géographique - Registres (ISO 19135:2005)",
+    "iso19135-acr": "ISO19135",
+    "iso19135-help": "",
+    
     "data.codeListDir": "Répertoire des thésaurus : ",
     "data.configDir": "Répertoire pour la configuration : ",
     "data.dataDir": "Répertoire des données : ",

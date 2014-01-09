@@ -96,11 +96,11 @@
       };
 
       var closePopup = function(id) {
-        if(id) {
+        if (id) {
           $(id).modal('hide');
         }
       };
-      
+
       /**
        * Run batch process, then refresh form with process
        * response and reload the updated online resources list.
@@ -184,8 +184,8 @@
         addOnlinesrc: function(params, popupid) {
           runProcess(this,
               setParams('onlinesrc-add', params)).then(function() {
-                closePopup(popupid);
-              });
+            closePopup(popupid);
+          });
         },
 
         /**
@@ -194,8 +194,8 @@
         addThumbnailByURL: function(params, popupid) {
           runProcess(this,
               setParams('thumbnail-add', params)).then(function() {
-                closePopup(popupid);
-              });
+            closePopup(popupid);
+          });
         },
 
         /**

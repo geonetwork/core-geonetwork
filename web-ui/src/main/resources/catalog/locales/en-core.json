@@ -5,7 +5,7 @@
     "password": "Password",
     "rememberMe": "Remember me",
     "signIn": "Sign in",
-    "signedInAs": "",
+    "signedInAs": " ",
     "needHelp": "Need help",
     "docNotFound": "<strong>Warning !</strong> Page <a href='{{page}}'>{{page}}</a> not found in documentation.",
     

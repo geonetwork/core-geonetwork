@@ -114,7 +114,9 @@
     "iso19110": "Geographic information - Methodology for feature cataloguing (ISO 19110:2005)",
     "iso19110-acr": "ISO19110",
     "iso19110-help": "",
-    
+    "iso19135": "Geographic information - Procedures for item registration (ISO 19135:2005)",
+    "iso19135-acr": "ISO19135",
+    "iso19135-help": "",
     
     "data.codeListDir": "Thesaurus folder: ",
     "data.configDir": "Configuration folder: ",

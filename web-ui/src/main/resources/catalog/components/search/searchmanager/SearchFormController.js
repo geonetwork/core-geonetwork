@@ -91,7 +91,7 @@
         } else {
           $scope.params = {};
         }
-        if($scope.paginationInfo) {
+        if ($scope.paginationInfo) {
           $scope.paginationInfo.currentPage = 1;
         }
         $scope.triggerSearch();
