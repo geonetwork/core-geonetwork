@@ -386,7 +386,6 @@
             link: function(scope, element, attrs) {
               
               scope.popupid = attrs['gnLinkToSibling'];
-              scope.selection = [];
               
               /**
                * Register a method on popup open to reset
@@ -395,21 +394,32 @@
               gnOnlinesrc.register('sibling', function() {
                 $(scope.popupid).modal('show');
                 scope.$broadcast('resetSearch');
+                scope.selection = [];
               });
               
-              var findObj = function(obj) {
+              /**
+               * Search a metada record into the selection.
+               * Return the index or -1 if not present.
+               */
+              var findObj = function(md) {
                 for(i=0;i<scope.selection.length;++i){
-                  if(scope.selection[i].md == obj){
-                    return scope.selection[i];
+                  if(scope.selection[i].md == md){
+                    return i;
                   }
                 }
-                return undefined;
+                return -1;
               };
               
+              /**
+               * Add the result metadata to the selection.
+               * Add it only it associationType & initiativeType are set.
+               * If the metadata alreay exists, it override it with the new
+               * given associationType/initiativeType.
+               */
               scope.addToSelection = function(md, associationType, initiativeType) {
                 if(associationType && initiativeType) {
-                  var o = findObj(md);
-                  if(angular.isUndefined(o)) {
+                  var idx = findObj(md);
+                  if(idx < 0) {
                     scope.selection.push({
                       md: md,
                       associationType: associationType ,
@@ -417,15 +427,43 @@
                     });
                   }
                   else {
-                    angular.extend(o, {
+                    angular.extend(scope.selection[idx], {
                       associationType: associationType ,
                       initiativeType: initiativeType
                     });
                   }
                 }
               };
-
-              scope.gnOnlinesrc = gnOnlinesrc;
+              
+              /**
+               * Remove a record from the selection
+               */
+              scope.removeFromSelection = function(obj) {
+                var idx = findObj(obj.md);
+                if(idx >= 0) {
+                  scope.selection.splice(idx, 1);
+                }
+              };
+              
+              /**
+               * Call the batch process to add the sibling
+               * to the current edited metadata.
+               */
+              scope.linkToResource = function() {
+                var uuids=[];
+                for(i=0;i<scope.selection.length;++i) {
+                  var obj = scope.selection[i];
+                  uuids.push(obj.md['geonet:info'].uuid+'#'+
+                           obj.associationType+'#'+
+                           obj.initiativeType);
+                }
+                var params = {
+                    initiativeType : scope.initiativeType,
+                    associationType: scope.associationType,
+                    uuids : uuids.join(',')
+                }
+                gnOnlinesrc.linkToSibling(params, scope.popupid);
+              };
             }
           };
         }]);

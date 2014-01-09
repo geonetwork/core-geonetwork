@@ -55,6 +55,7 @@
     "parentMd" : "Parent Metadata",
     "datasets" : "Datasets",
     "sourceDatasets" : "Source datasets",
+    "siblings" : "Other resources",
     "featureCatalog" : "Features catalog",
     "addOnlinesrc" : "Add an online resource",
     "addThumbnail" : "Add a thumbnail",
