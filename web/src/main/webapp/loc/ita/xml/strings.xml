@@ -1673,4 +1673,6 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
     <unknown>Unknown</unknown>
+    
+    <deleteRow>Eliminare la riga</deleteRow>
 </strings>

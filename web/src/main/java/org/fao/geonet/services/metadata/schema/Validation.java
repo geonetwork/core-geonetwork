@@ -66,7 +66,6 @@ public class Validation implements Service {
 		String action = null;
 		try {
 			action = Util.getParam(params, "action");
-			context.info("Action: " + action);
 		} catch (MissingParameterEx ex) {
 		}
 
@@ -75,7 +74,7 @@ public class Validation implements Service {
 
 		if ("delete".equalsIgnoreCase(action)) {
 			final Integer id = Integer.valueOf(Util.getParam(params, "id"));
-			dbms.execute("delete from " + TABLE_SCHEMATRON + " where "
+			dbms.execute("delete from " + TABLE_SCHEMATRON_CRITERIA + " where "
 					+ COL_SCHEMATRON_ID + " = ?", id);
 		} else if ("add".equalsIgnoreCase(action)) {
 			String schema = Util.getParam(params, TABLE_SCHEMATRON);

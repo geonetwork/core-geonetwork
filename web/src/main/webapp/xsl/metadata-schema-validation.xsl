@@ -13,6 +13,8 @@
 				<title>Shared Object Admin</title>
 				<link rel="stylesheet"
 					href="../../apps/shared-objects/app/lib/bootstrap3/css/bootstrap.css" />
+        		<link href="../../apps/shared-objects/app/lib/bootstrap3/css/bootstrap-glyphicons.css" 
+        			type="text/css" rel="stylesheet"/>
 				<link rel="stylesheet" href="../../geocat.css" />
 			</head>
 			<body>
@@ -22,14 +24,14 @@
 
 				<script src="../../apps/shared-objects/app/lib/jquery.js"></script>
 				<script
-					src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+					src="../../apps/shared-objects/app/lib/angular/angular.min.js"></script>
 				<script
-					src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.8.0.js"></script>
+					src="../../apps/shared-objects/app/lib/bootstrap3/js/ui-bootstrap-tpls-0.9.0.js"></script>
 				<script
 					src="../../apps/shared-objects/app/js/metadata.schema.validation.app.js"></script>
 
 
-				<div id="content_container">
+				<div id="content_container" class="angularapp">
 					<h3>
 						<xsl:value-of select="/root/gui/strings/metadataschemaValidate" />
 					</h3>
@@ -126,15 +128,11 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr data-ng-if="data.length == 0">
-									<td></td>
-									<td colspan="2">
-										<div class="alert alert-info">{{translate('noRecords')}}</div>
-									</td>
-								</tr>
-								<tr data-ng-repeat="row in data" id="row-{{row.id}}">
+								<tr data-ng-repeat="row in data">
 									<td>
-										{{row.required}}
+										<span>
+											<xsl:attribute name="class">glyphicon glyphicon-{{row.required}}</xsl:attribute>
+										</span>
 									</td>
 									<td>
 										{{row.desc}}
@@ -146,9 +144,9 @@
 										{{row.value}}
 									</td>
 									<td>
-										<a>
+										<a class="glyphicon glyphicon-remove-circle removeItem">
+											<xsl:attribute name="title"><xsl:value-of select="/root/gui/strings/deleteRow" /></xsl:attribute>
 											<xsl:attribute name="ng-click">removeItem(this);</xsl:attribute>
-											Delete
 										</a>
 									</td>
 								</tr>

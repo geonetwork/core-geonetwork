@@ -71,6 +71,9 @@ $(function() {
 		$("#xpath").val("");
 		$("#keyword").val("");
 		$("#group").val("");
+
+		$("#keyword").removeClass("error");
+		$("#group").removeClass("error");
 		if ($("#xpathtype").val() == "KEYWORD") {
 			$("#group").hide();
 			$("#keyword").show();
@@ -121,6 +124,19 @@ function($scope, $http) {
 			}
 		}).success(function(data) {
 			$scope.data = data;
+			
+			angular.forEach($scope.data, function(item) {
+				if(item.required) {
+					item.required =  "check";
+				} else {
+					item.required = "";
+				}
+				if(item.xpath) {
+					item.required = "keyword" ;
+				} else {
+					item.required = "group";
+				}
+			});
 		});
 	};
 
@@ -128,11 +144,13 @@ function($scope, $http) {
 });
 
 function checkErrors() {
+	$("#keyword").removeClass("error");
+	$("#group").removeClass("error");
 	if (criteria.keyword.value == '') {
-		jQuery(criteria.keyword).addClass("error");
+		$(criteria.keyword).addClass("error");
 	}
 	if (criteria.group.value == '') {
-		jQuery(criteria.group).addClass("error");
+		$(criteria.group).addClass("error");
 	}
 }
 

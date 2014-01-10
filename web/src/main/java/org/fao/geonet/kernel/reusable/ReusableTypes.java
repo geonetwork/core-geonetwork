@@ -28,6 +28,6 @@ public enum ReusableTypes
     // the name matters so don't change without doing a string search and
     // updating those that rely on these string
     // This is mainly for xsl
-    contacts, formats, keywords, extents;
+    contacts, formats, keywords, extents, schematronrules, groups;
 
 }

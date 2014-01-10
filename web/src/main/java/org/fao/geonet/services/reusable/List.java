@@ -74,6 +74,12 @@ public class List implements Service
         case keywords:
             strategy = new KeywordsStrategy(gc.getThesaurusManager(), appPath, baseUrl, language);
             break;
+        case schematronrules:
+            strategy = new SchematronRulesStrategy(dbms, language);
+            break;
+        case groups:
+            strategy = new GroupStrategy(dbms, language);
+            break;
 
         default:
             throw new IllegalArgumentException(type + " is not a reusable object type");
