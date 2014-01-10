@@ -14,28 +14,49 @@
            templateUrl: '../../catalog/components/common/map/' +
            'partials/drawbbox.html',
            scope: {
-             top: '@',
-             bottom: '@',
-             left: '@',
-             right: '@',
-             topRef: '@',
-             bottomRef: '@',
-             leftRef: '@',
-             rightRef: '@'
+             htop: '@',
+             hbottom: '@',
+             hleft: '@',
+             hright: '@',
+             htopRef: '@',
+             hbottomRef: '@',
+             hleftRef: '@',
+             hrightRef: '@'
 
            },
            link: function(scope, element, attrs) {
              scope.drawing = false;
              scope.mapId = 'map-drawbbox-'+
-               scope.topRef.substring(1,scope.topRef.length);
+               scope.htopRef.substring(1,scope.htopRef.length);
              
-             // need to parseFloat for number type of the input
-             $timeout(function() {
-               scope.top = parseFloat(scope.top);
-               scope.bottom = parseFloat(scope.bottom);
-               scope.left = parseFloat(scope.left);
-               scope.right = parseFloat(scope.right);
-             });
+             /**
+              * Reproj the bbox extent from map proj
+              * to MD proj and fill the edit form.
+              */
+             var reprojFromMapToMd = function(extent) {
+               
+               var extent4326 = ol.proj.transform(extent, 
+                   'EPSG:3857', 'EPSG:4326');
+               
+               scope.hleft = extent4326[0];
+               scope.hbottom = extent4326[1];
+               scope.hright = extent4326[2];
+               scope.htop = extent4326[3];
+             };
+             
+             // Get map proj coordinates from MD ones
+             var bottomLeft4326 = ol.proj.transform(
+                 [parseFloat(scope.hleft),parseFloat(scope.hbottom)],
+                 'EPSG:4326', 'EPSG:3857');
+
+             var topRight4326 = ol.proj.transform(
+                 [parseFloat(scope.hright),parseFloat(scope.htop)],
+                 'EPSG:4326', 'EPSG:3857');
+
+             scope.top = topRight4326[1];
+             scope.bottom = bottomLeft4326[1];
+             scope.left = bottomLeft4326[0];
+             scope.right = topRight4326[0];
 
              var boxStyle = new ol.style.Style({
                stroke: new ol.style.Stroke({
@@ -84,20 +105,29 @@
              dragbox.on('boxend', function(mapBrowserEvent) {
                var extent = dragbox.getGeometry().getExtent();
                feature.setGeometry(dragbox.getGeometry());
-
+               
                scope.$apply(function() {
                  scope.left = extent[0];
                  scope.bottom = extent[1];
                  scope.right = extent[2];
                  scope.top = extent[3];
+                 
+                 reprojFromMapToMd(extent);
                });
              });
 
              map.addInteraction(dragbox);
 
-             // When form is loaded, set map div.
+             /**
+              * When form is loaded
+              * - set map div
+              * - draw the feature with MD initial coordinates
+              * - fit map extent
+              */ 
              scope.$watch('gnCurrentEdit.version', function(newValue) {
                map.setTarget(scope.mapId);
+               scope.updateBbox();
+               map.getView().fitExtent(feature.getGeometry().getExtent(), map.getSize());
              });
              
              scope.drawMap = function() {
@@ -107,8 +137,10 @@
              /**
               * Redraw the Bbox when the user change the
               * coordinates in the form
+              * If reproj is true, then reproj the bbox extent
+              * to the MD proj.
               */
-             scope.updateBbox = function() {
+             scope.updateBbox = function(reproj) {
                var coordinates = [
                  [
                    [scope.left, scope.bottom],
@@ -117,7 +149,16 @@
                    [scope.right, scope.bottom]
                  ]
                ];
+               
+               if(!feature.getGeometry()) {
+                 var geom = new ol.geom.Polygon([coordinates]);
+                 feature.setGeometry(geom);
+               }
                feature.getGeometry().setCoordinates(coordinates);
+               
+               if(reproj) {
+                 reprojFromMapToMd(feature.getGeometry().getExtent());
+               }
              };
            }
          };

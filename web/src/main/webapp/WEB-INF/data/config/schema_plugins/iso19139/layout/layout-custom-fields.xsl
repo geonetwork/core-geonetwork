@@ -181,12 +181,12 @@
       <xsl:with-param name="cls" select="local-name()"/>
       <!-- <xsl:with-param name="attributesSnippet" select="$attributes"/> -->
       <xsl:with-param name="subTreeSnippet">
-        <div gn-draw-bbox="" data-left="{gmd:westBoundLongitude/gco:Decimal}"
-          data-right="{gmd:eastBoundLongitude/gco:Decimal}" data-bottom="{gmd:southBoundLatitude/gco:Decimal}"
-          data-top="{gmd:northBoundLatitude/gco:Decimal}" data-left-ref="_{gmd:westBoundLongitude/gco:Decimal/gn:element/@ref}"
-          data-right-ref="_{gmd:eastBoundLongitude/gco:Decimal/gn:element/@ref}"
-          data-bottom-ref="_{gmd:southBoundLatitude/gco:Decimal/gn:element/@ref}"
-          data-top-ref="_{gmd:northBoundLatitude/gco:Decimal/gn:element/@ref}"></div>
+        <div gn-draw-bbox="" data-hleft="{gmd:westBoundLongitude/gco:Decimal}"
+          data-hright="{gmd:eastBoundLongitude/gco:Decimal}" data-hbottom="{gmd:southBoundLatitude/gco:Decimal}"
+          data-htop="{gmd:northBoundLatitude/gco:Decimal}" data-hleft-ref="_{gmd:westBoundLongitude/gco:Decimal/gn:element/@ref}"
+          data-hright-ref="_{gmd:eastBoundLongitude/gco:Decimal/gn:element/@ref}"
+          data-hbottom-ref="_{gmd:southBoundLatitude/gco:Decimal/gn:element/@ref}"
+          data-htop-ref="_{gmd:northBoundLatitude/gco:Decimal/gn:element/@ref}"></div>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>

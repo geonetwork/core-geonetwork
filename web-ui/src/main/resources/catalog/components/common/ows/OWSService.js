@@ -38,8 +38,6 @@
         };
         return {
           getCapabilities: function(url) {
-            //            url = 'http://wms.geo.admin.ch/' +
-            //                '?SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.3.0';
             var defer = $q.defer();
             if (url) {
               //merge URL parameters with default ones

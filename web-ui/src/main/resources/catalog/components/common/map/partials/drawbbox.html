@@ -7,21 +7,26 @@
       <button class="btn btn-warning" data-ng-click="drawMap()">
         <i class="fa fa-pencil"></i>draw
       </button>
+      <input data-ng-model="htop" type="hidden" name="{{htopRef}}"/>
+      <input data-ng-model="hleft" type="hidden" name="{{hleftRef}}"/>
+      <input data-ng-model="hright" type="hidden" name="{{hrightRef}}"/>
+      <input data-ng-model="hbottom" type="hidden" name="{{hbottomRef}}"/>
       <table class="text-center">
         <tr align="center">
           <td colspan="3"><div class="form-group">
               <label for="drawbbox-top">top</label> <input
-                data-ng-model="top" name="{{topRef}}" type="number"
+                data-ng-model="top" type="number"
                 id="drawbbox-top" placeholder="top" 
-                data-ng-change="updateBbox()"/>
+                data-ng-change="updateBbox(true)"/>
           </div></td>
         </tr>
         <tr valign="middle" align="center">
           <td class="col-left">
             <div class="form-group">
-              <label for="drawbbox-left">left</label> <input
-                name="{{leftRef}}" data-ng-model="left" type="number"
-                id="drawbbox-left" placeholder="left" />
+              <label for="drawbbox-left">left</label>
+              <input data-ng-model="left" type="number"
+                id="drawbbox-left" placeholder="left"
+                data-ng-change="updateBbox(true)" />
             </div>
           </td>
           <td class="col-middle">
@@ -31,8 +36,8 @@
             <div class="form-group">
               <label for="drawbbox-right">right</label> <input
                 data-ng-model="right"
-                name="{{rightRef}}" type="number" id="drawbbox-right"
-                placeholder="right" />
+                type="number" id="drawbbox-right"
+                placeholder="right" data-ng-change="updateBbox(true)"/>
             </div>
           </td>
         </tr>
@@ -40,8 +45,9 @@
           <td colspan="3">
             <div class="form-group">
             <label for="drawbbox-bottom">bottom</label> <input
-              name="{{bottomRef}}" data-ng-model="left" type="number"
-              id="drawbbox-bottom" placeholder="bottom"/>
+              data-ng-model="bottom" type="number"
+              id="drawbbox-bottom" placeholder="bottom"
+              data-ng-change="updateBbox(true)"/>
           </div></td>
         </tr>
       </table>
