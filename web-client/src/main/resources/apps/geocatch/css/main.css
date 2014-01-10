@@ -194,8 +194,8 @@ body>.ext-el-mask {
 	margin: 0 auto;
 	background-color: #CCCCCC;
 	border-bottom: 1px solid #FFFFFF;
-	height: 26px;
-	overflow: hidden;
+	/*height: 26px;
+	overflow: hidden;*/
 	overflow-y: auto;
 }
 

@@ -597,6 +597,17 @@ public class ValidateTransformationTest
                         new Exists(new Finder("GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult",
                                               new Exists(new Finder("valueType"))))
                 ));
+        rules.put("GM03_2_1Comprehensive.Comprehensive",
+                new And(new Exists(new Finder("GM03_2_1Comprehensive.Comprehensive.DQ_ConformanceResult")),
+                        new Exists(new Finder("GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult",
+                                              new Exists(new Finder("valueType")))),
+                        new Exists(new Finder("GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult",
+                                new Exists(new Finder("XMLBLBOX/arbitrary/c1")))),
+                        new Exists(new Finder("GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult",
+                                new Exists(new Finder("XMLBLBOX/arbitrary/another"))))
+
+
+                ));
 
 // TODO Find out why some of the items in the model don't seem supported by the xsd...
 //        rules.put("GM03_2_1Comprehensive.Comprehensive.DQ_ElementevaluationProcedure", Requirement.ACCEPT);
@@ -627,6 +638,48 @@ public class ValidateTransformationTest
                    new And (new Exists(new Finder("gmd:DQ_ConformanceResult", hasExpectedConformanceChildren)),
                             new Exists(new Finder("gmd:DQ_QuantitativeResult", hasExpectedQuantitativeChildren))
                            )
+                   );
+        testFile(file, Control.GM03_2_ISO, rules, true);
+    }
+
+    @Test //@Ignore
+    public void importXMLBLBBOXNoXmlInIsoFile() throws Throwable
+    {
+        File file = new File(data, "iso19139/XMLBLBOXNoXmlInIso.xml");
+        Multimap<String, Requirement> rules = ArrayListMultimap.create();
+        rules.put("GM03_2_1Comprehensive.Comprehensive",
+                new And(new Exists(new Finder("GM03_2_1Comprehensive.Comprehensive.DQ_ConformanceResult")),
+                        new Exists(new Finder("GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult",
+                                              new Exists(new Finder("valueType")))),
+                        new Exists(new Finder("GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult",
+                                new Exists(new Finder("value", new EqualText("textOfRecord")))))
+                ));
+
+// TODO Find out why some of the items in the model don't seem supported by the xsd...
+//        rules.put("GM03_2_1Comprehensive.Comprehensive.DQ_ElementevaluationProcedure", Requirement.ACCEPT);
+//        rules.put("GM03_2_1Comprehensive.Comprehensive.DQ_ElementmeasureIdentification", Requirement.ACCEPT);
+        rules.put("GM03_2_1Comprehensive.Comprehensive.reportDQ_DataQuality", Requirement.ACCEPT);
+        file = testFile(file, Control.ISO_GM03, rules, true);
+
+        rules = ArrayListMultimap.create();
+        rules.put("gmd:DQ_DataQuality/gmd:scope", Requirement.ACCEPT);
+        rules.put("gmd:DQ_DataQuality/gmd:lineage", Requirement.ACCEPT);
+        rules.put("gmd:DQ_DataQuality/gmd:report/gmd:DQ_TemporalValidity", Requirement.ACCEPT);
+        rules.put("gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency", Requirement.ACCEPT);
+        Requirement hasExpectedConformanceChildren =
+            new And(new Exists(new Finder("gmd:explanation")),
+                    new Exists(new Finder("gmd:pass/gco:Boolean"))
+            );
+
+        Requirement hasExpectedQuantitativeChildren =
+            new And(new Exists(new Finder("gmd:valueType/gco:RecordType")),
+                    new Exists(new Finder("gmd:valueUnit")),
+                    new Exists(new Finder("gmd:errorStatistic/CharacterString")),  // may need to be changed to PT_FreeText/textGroup/LocalisedCharacterString in future
+                    new Exists(new Finder("gmd:value/gco:Record", new EqualText("textOfRecord")))
+                    );
+
+        rules.put("gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency",
+                   new Exists(new Finder("gmd:DQ_QuantitativeResult", hasExpectedQuantitativeChildren))
                    );
         testFile(file, Control.GM03_2_ISO, rules, true);
     }
