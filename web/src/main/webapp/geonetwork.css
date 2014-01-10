@@ -1413,16 +1413,21 @@ div#privileges {
 div.metadataValidation form {
 	width: 35%;
 	float: left;
-	display: inline-block;
+	display: block;
 }
 
 div.metadataValidation form div {
+	display: inline;
+	padding: 2px;
+}
+
+div.metadataValidation form input[type="submit"] {
+	float: right;
 }
 
 div.metadataValidation form div label {
 	width: 25%;
 	text-align: right;
-	float: left;
 }
 div.metadataValidation form div select, div.metadataValidation form div input {
 	width: 70%;

@@ -45,22 +45,20 @@ import java.util.Map;
  */
 public class Validation implements Service {
 
-    public static final String TABLE_SCHEMATRON = "schematron";
-    public  static final String TABLE_SCHEMATRON_CRITERIA = "schematroncriteria";
+	public static final String TABLE_SCHEMATRON = "schematron";
+	public static final String TABLE_SCHEMATRON_CRITERIA = "schematroncriteria";
 
-    public  static final String COL_CRITERIA_ID = "id";
-    public  static final String COL_CRITERIA_SCHEMATRON_ID = "schematron";
-    public  static final String COL_CRITERIA_TYPE = "type";
-    public  static final String COL_CRITERIA_VALUE = "value";
+	public static final String COL_CRITERIA_ID = "id";
+	public static final String COL_CRITERIA_SCHEMATRON_ID = "schematron";
+	public static final String COL_CRITERIA_TYPE = "type";
+	public static final String COL_CRITERIA_VALUE = "value";
 
-    public  static final String COL_SCHEMATRON_ID = "id";
-    public static final String COL_SCHEMATRON_FILE = "file";
-    public static final String COL_SCHEMATRON_ISO_SCHEMA = "isoschema";
-    public static final String COL_SCHEMATRON_REQUIRED = "required";
+	public static final String COL_SCHEMATRON_ID = "id";
+	public static final String COL_SCHEMATRON_FILE = "file";
+	public static final String COL_SCHEMATRON_ISO_SCHEMA = "isoschema";
+	public static final String COL_SCHEMATRON_REQUIRED = "required";
 
-
-
-    public Element exec(Element params, ServiceContext context)
+	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 
 		Element res = new Element("schematron");
@@ -72,48 +70,54 @@ public class Validation implements Service {
 		} catch (MissingParameterEx ex) {
 		}
 
+		Dbms dbms = (Dbms) context.getResourceManager()
+				.open(Geonet.Res.MAIN_DB);
 
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		if ("delete".equalsIgnoreCase(action)) {
+			final Integer id = Integer.valueOf(Util.getParam(params, "id"));
+			dbms.execute("delete from " + TABLE_SCHEMATRON + " where "
+					+ COL_SCHEMATRON_ID + " = ?", id);
+		} else if ("add".equalsIgnoreCase(action)) {
+			String schema = Util.getParam(params, TABLE_SCHEMATRON);
 
-        if ("delete".equalsIgnoreCase(action)) {
-            final Integer id = Integer.valueOf(Util
-                    .getParam(params, "id"));
-            dbms.execute("delete from "+TABLE_SCHEMATRON+" where "+ COL_SCHEMATRON_ID +" = ?", id);
-        } else if ("add".equalsIgnoreCase(action)) {
-            String schema = Util.getParam(params, TABLE_SCHEMATRON);
+			final Integer schematronId = Integer.valueOf(schema);
+			final Integer id = context.getSerialFactory().getSerial(dbms,
+					TABLE_SCHEMATRON, "id");
+			final SchematronCriteriaType type = SchematronCriteriaType
+					.valueOf(Util.getParam(params, "type"));
+			final String value = Util.getParam(params, "value");
 
-
-            final Integer schematronId = Integer.valueOf(schema);
-            final Integer id = context.getSerialFactory().getSerial(dbms, TABLE_SCHEMATRON, "id");
-            final SchematronCriteriaType type = SchematronCriteriaType.valueOf(Util.getParam(params,
-                    "type"));
-            final String value = Util.getParam(params, "value");
-
-            dbms.execute("insert into "+TABLE_SCHEMATRON_CRITERIA+" ("+ COL_CRITERIA_ID +","+ COL_CRITERIA_SCHEMATRON_ID +","+ COL_CRITERIA_TYPE +","
-                         + COL_CRITERIA_VALUE +",) values (?,?,?,?)", id, schematronId, type, value);
+			dbms.execute("insert into " + TABLE_SCHEMATRON_CRITERIA + " ("
+					+ COL_CRITERIA_ID + "," + COL_CRITERIA_SCHEMATRON_ID + ","
+					+ COL_CRITERIA_TYPE + "," + COL_CRITERIA_VALUE
+					+ ") values (?,?,?,?);", id, schematronId, type.ordinal(),
+					value);
 
 		}
 
-        final List<Element> schematrons = dbms.select("select * from " + TABLE_SCHEMATRON).getChildren();
+		final List<Element> schematrons = dbms.select(
+				"select * from " + TABLE_SCHEMATRON).getChildren();
 
-        for (Element schematron : schematrons) {
-            schematron.setName("schematron");
+		for (Element schematron : schematrons) {
+			schematron.setName("schematron");
 
-            Integer id = Integer.parseInt(schematron.getChildText(COL_SCHEMATRON_ID));
-            List<Element> schematronCriteria = dbms.select("select * from " + TABLE_SCHEMATRON_CRITERIA + " where " +
-                                                     COL_CRITERIA_SCHEMATRON_ID + "=?", id).getChildren();
+			Integer id = Integer.parseInt(schematron
+					.getChildText(COL_SCHEMATRON_ID));
+			List<Element> schematronCriteria = dbms.select(
+					"select * from " + TABLE_SCHEMATRON_CRITERIA + " where "
+							+ COL_CRITERIA_SCHEMATRON_ID + "=?", id)
+					.getChildren();
 
+			for (Element element : schematronCriteria) {
+				element.removeChild(COL_CRITERIA_SCHEMATRON_ID);
+				element.addContent((Element) schematron.clone());
+			}
 
-            for (Element element : schematronCriteria) {
-                element.removeChild(COL_CRITERIA_SCHEMATRON_ID);
-                element.addContent((Element) schematron.clone());
-            }
+		}
 
-        }
-
-        for (Element schematron : schematrons) {
-            res.addContent((Element)schematron.clone());
-        }
+		for (Element schematron : schematrons) {
+			res.addContent((Element) schematron.clone());
+		}
 
 		return res;
 	}
