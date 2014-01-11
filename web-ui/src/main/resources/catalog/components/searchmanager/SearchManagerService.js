@@ -110,10 +110,12 @@
       var searchFn = function() {
         var pageOptions = scope[config.pager], filter = '';
 
-        scope[config.filter] && $.each(scope[config.filter],
-            function(key, value) {
-              filter += '&' + key + '=' + value;
-            });
+        if (scope[config.filter]) {
+            $.each(scope[config.filter],
+                function(key, value) {
+                  filter += '&' + key + '=' + value;
+                });
+        }
         search('q@json?fast=index' +
             filter +
             '&from=' + (pageOptions.currentPage *
@@ -122,11 +124,11 @@
                                 pageOptions.hitsPerPage), config.error)
                 .then(function(data) {
               scope[config.records] = data;
-              pageOptions.count = parseInt(data.count);
+              pageOptions.count = parseInt(data.count, 10);
               pageOptions.pages = Math.round(
                   data.count /
                   pageOptions.hitsPerPage, 0);
-              config.success && config.success(data);
+              if (config.success) { config.success(data); }
             });
       };
       return searchFn;

@@ -1,12 +1,12 @@
 -- ISO 3 letter code migration
 INSERT INTO Languages VALUES ('rus','русский язык', 'n', 'n');
 
-UPDATE CategoriesDes (iddes, langid, label)             SET langid='rus' WHERE langid='ru';
+UPDATE CategoriesDes             SET langid='rus' WHERE langid='ru';
 UPDATE IsoLanguagesDes           SET langid='rus' WHERE langid='ru';
 UPDATE RegionsDes                SET langid='rus' WHERE langid='ru';
-UPDATE GroupsDes (iddes, langid, label)                 SET langid='rus' WHERE langid='ru';
+UPDATE GroupsDes                 SET langid='rus' WHERE langid='ru';
 UPDATE OperationsDes             SET langid='rus' WHERE langid='ru';
-UPDATE StatusValuesDes  (iddes, langid, label)           SET langid='rus' WHERE langid='ru';
+UPDATE StatusValuesDes           SET langid='rus' WHERE langid='ru';
 UPDATE CswServerCapabilitiesInfo SET langid='rus' WHERE langid='ru';
 DELETE FROM Languages WHERE id='ru';
 

@@ -70,6 +70,7 @@ public class JeevesServlet extends HttpServlet
 	//---------------------------------------------------------------------------
 
     public void init() throws ServletException {
+        try {
         final ServletContext servletContext = getServletContext();
         final ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
 
@@ -86,6 +87,9 @@ public class JeevesServlet extends HttpServlet
         }
 
         initialized = true;
+        } catch (Throwable e) {
+            JeevesEngine.handleStartupError(e);
+        }
     }
 
 	//---------------------------------------------------------------------------

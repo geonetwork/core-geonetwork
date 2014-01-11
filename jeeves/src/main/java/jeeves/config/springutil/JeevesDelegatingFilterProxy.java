@@ -15,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class JeevesDelegatingFilterProxy extends GenericFilterBean {
     private final static InheritableThreadLocal<String> applicationContextAttributeKey = new InheritableThreadLocal<String>();
-    ConcurrentHashMap<String, Filter> _nodeIdToFilterMap = new ConcurrentHashMap<String, Filter>();
+    private HashMap<String, Filter> _nodeIdToFilterMap = new HashMap<String, Filter>();
 
     
     @Override

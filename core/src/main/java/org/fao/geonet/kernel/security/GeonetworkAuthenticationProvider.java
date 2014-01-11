@@ -82,7 +82,7 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 					}
 				}
 
-                if (authentication.getDetails() instanceof JeevesAuthenticationDetails) {
+                if (authentication != null && authentication.getDetails() instanceof JeevesAuthenticationDetails) {
                     user.getSecurity().setNodeId(((JeevesAuthenticationDetails) authentication.getDetails()).getNodeId());
                 }
 

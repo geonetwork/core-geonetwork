@@ -196,15 +196,26 @@ public class JeevesEngine {
             info("Startup time is : " + duration + " (secs)");
 
             info("=== System working =========================================");
-        } catch (Exception e) {
-            fatal("Raised exception during init");
-            fatal("   Exception : " + e);
-            fatal("   Message   : " + e.getMessage());
-            fatal("   Stack     : " + Util.getStackTrace(e));
-
-            throw new RuntimeException("Exception raised", e);
+        } catch (Throwable e) {
+            handleStartupError(e);
         }
 
+    }
+
+    public static void handleStartupError(Throwable e) {
+        Log.fatal  (Log.ENGINE, "Raised exception during init");
+        Log.fatal  (Log.ENGINE, "   Exception : " + e);
+        Log.fatal  (Log.ENGINE, "   Message   : " + e.getMessage());
+        Log.fatal  (Log.ENGINE, "   Stack     : " + Util.getStackTrace(e));
+
+        if (Boolean.TRUE.toString().equalsIgnoreCase(System.getProperty(Jeeves.SHUTDOWN_ON_STARTUP_ERROR))) {
+            e.printStackTrace();
+            System.err.println("\n\n\tERROR STARTING UP GEONETWORK.  System property "+Jeeves.SHUTDOWN_ON_STARTUP_ERROR+" == "+System.getProperty(Jeeves.SHUTDOWN_ON_STARTUP_ERROR));
+            System.err.println("\n\n\t>> HARD SHUTDOWN INITIATED <<");
+            System.exit(1);
+        }
+
+        throw new RuntimeException("Exception raised", e);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+<log4j:configuration debug="false">
 
 
 
@@ -97,10 +97,6 @@
         <level value="WARN" />
     </logger>
 
-
-
-
-
     <!--  Jeeves module and submodule logger configuration -->
     <logger name="jeeves" additivity="false">
         <level value="DEBUG" />
@@ -172,15 +168,21 @@
     <logger name="org.jzkit.search.impl.LRUCache" additivity="false">
         <level value="WARN" />
     </logger>
-
-    <category name="org.hibernate.SQL">
-        <priority value="WARN" />
+    <logger name="ro.isdc.wro.http" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
-    </category>
-    <category name="org.hibernate.type">
-        <priority value="WARN" />
+    </logger>
+    <logger name="org.hibernate.SQL" additivity="false">
+        <level value="WARN" />
+        <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
-    </category>
+    </logger>
+    <logger name="org.hibernate.type" additivity="false">
+        <level value="WARN" />
+        <appender-ref ref="consoleAppender" />
+        <appender-ref ref="fileAppender" />
+    </logger>
 
 
     <!-- Turn off logging except when explicitly declared below -->

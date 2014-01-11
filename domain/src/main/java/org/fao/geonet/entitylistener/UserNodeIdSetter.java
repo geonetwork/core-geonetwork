@@ -24,7 +24,7 @@ public class UserNodeIdSetter implements GeonetworkEntityListener<User> {
 
     @Override
     public void handleEvent(final PersistentEventType type, final User entity) {
-        if (type == PersistentEventType.PostLoad || type == PersistentEventType.PostPersist) {
+        if (type == PersistentEventType.PostLoad || type == PersistentEventType.PostPersist || type == PersistentEventType.PrePersist) {
             entity.getSecurity().setNodeId(context.getBean(NodeInfo.class).getId());
         }
     }

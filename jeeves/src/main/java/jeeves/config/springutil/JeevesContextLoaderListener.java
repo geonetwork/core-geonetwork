@@ -5,6 +5,13 @@ import jeeves.server.overrides.ConfigurationOverrides;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import jeeves.server.JeevesEngine;
+import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.context.Lifecycle;
+import org.springframework.web.context.ConfigurableWebApplicationContext;
+import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -20,6 +27,7 @@ public class JeevesContextLoaderListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(final ServletContextEvent sce) {
+        try {
         final Pattern nodeNamePattern = Pattern.compile("[a-zA-Z0-9_\\-]+");
         final ServletContext servletContext = sce.getServletContext();
 
@@ -77,11 +85,14 @@ public class JeevesContextLoaderListener implements ServletContextListener {
                 defaultContext = jeevesAppContext;
 
                 servletContext.setAttribute(User.NODE_APPLICATION_CONTEXT_KEY, jeevesAppContext);
-            }
+        }
         }
 
         if (defaultContext == null) {
             throw new IllegalArgumentException("There are no default contexts defined");
+        }
+        } catch (Throwable e) {
+            JeevesEngine.handleStartupError(e);
         }
     }
 

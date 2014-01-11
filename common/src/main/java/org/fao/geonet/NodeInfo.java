@@ -1,5 +1,7 @@
 package org.fao.geonet;
 
+import java.io.Serializable;
+
 /**
  * Encapsulates informations about the current node such as the node id.
  *
@@ -7,7 +9,7 @@ package org.fao.geonet;
  * Date: 11/27/13
  * Time: 2:35 PM
  */
-public class NodeInfo {
+public class NodeInfo implements Serializable {
     private String id;
     private boolean defaultNode;
 

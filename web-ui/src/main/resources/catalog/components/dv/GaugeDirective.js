@@ -31,7 +31,7 @@
       gauge = new Gauge(config.id, gaugeConfig);
       gauge.render();
       return gauge;
-    };
+    }
 
 
     return {

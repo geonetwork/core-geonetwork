@@ -1,12 +1,12 @@
 -- ISO 3 letter code migration
 INSERT INTO Languages VALUES ('nor','Norsk', 'n', 'n');
 
-UPDATE CategoriesDes (iddes, langid, label)             SET langid='nor' WHERE langid='no';
+UPDATE CategoriesDes             SET langid='nor' WHERE langid='no';
 UPDATE IsoLanguagesDes           SET langid='nor' WHERE langid='no';
 UPDATE RegionsDes                SET langid='nor' WHERE langid='no';
-UPDATE GroupsDes (iddes, langid, label)                 SET langid='nor' WHERE langid='no';
+UPDATE GroupsDes                 SET langid='nor' WHERE langid='no';
 UPDATE OperationsDes             SET langid='nor' WHERE langid='no';
-UPDATE StatusValuesDes  (iddes, langid, label)           SET langid='nor' WHERE langid='no';
+UPDATE StatusValuesDes           SET langid='nor' WHERE langid='no';
 UPDATE CswServerCapabilitiesInfo SET langid='nor' WHERE langid='no';
 DELETE FROM Languages WHERE id='no';
 
