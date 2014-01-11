@@ -1639,7 +1639,7 @@ public class DataManager {
 			    if (keepXlinkAttributes) {
 			        Processor.processXLink(md, srvContext);
 			    } else {
-			        Processor.detachXLink(md);
+			        Processor.detachXLink(md, srvContext);
 			    }
 			}
 		}

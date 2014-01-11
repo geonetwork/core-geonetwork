@@ -101,13 +101,22 @@ public final class Processor {
 	//--------------------------------------------------------------------------
   /**
     * Detach all XLinks child of the input XML document.
+    * Use this if using local XLink with no language.
+    * The language will be deduced from the current context.
+    */
+	public static Element detachXLink(Element xml, ServiceContext srvContext) {
+		searchXLink(xml, ACTION_DETACH, srvContext);
+		searchLocalXLink(xml, ACTION_DETACH);
+		return xml;
+	}
+  /**
+    * Detach all XLinks child of the input XML document.
     */
 	public static Element detachXLink(Element xml) {
 		searchXLink(xml, ACTION_DETACH, null);
 		searchLocalXLink(xml, ACTION_DETACH);
 		return xml;
 	}
-
 	//--------------------------------------------------------------------------
   /**
     * Return all XLinks child of the input XML document.
@@ -173,13 +182,23 @@ public final class Processor {
 			
 			try {
 				if(uri.startsWith(XLink.LOCAL_PROTOCOL)) {
-					LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
-					request.setDebug(false);
-					if(request.getLanguage() == null) {
-						request.setLanguage(srvContext.getLanguage());
+					if (srvContext == null) {
+						StackTraceElement[] cause = new Exception().getStackTrace();
+						StringBuffer sb = new StringBuffer();
+						for (StackTraceElement s : cause) {
+							sb.append(s.toString()).append("\n");
+						}
+						Log.warning(Log.XLINK_PROCESSOR, "Can't resolve local XLink " + uri 
+								+ " with null context. Call from " + sb.toString());
+					} else {
+						LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
+						request.setDebug(false);
+						if(request.getLanguage() == null) {
+							request.setLanguage(srvContext.getLanguage());
+						}
+						request.setInputMethod(InputMethod.GET);
+						remoteFragment = srvContext.execute(request);
 					}
-					request.setInputMethod(InputMethod.GET);
-					remoteFragment = srvContext.execute(request);
 				} else {
 					URL url = new URL(uri.replaceAll("&amp;", "&"));
 					
