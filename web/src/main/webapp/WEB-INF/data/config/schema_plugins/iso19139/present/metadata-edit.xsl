@@ -1313,7 +1313,8 @@
     <xsl:variable name="listOfKeywords" select="replace(replace(string-join(gmd:keyword/*[1], '#,#'), '''', '\\'''), '#', '''')"/>
     
     <!-- Get current transformation mode based on XML fragement analysis -->
-    <xsl:variable name="transformation" select="if (count(descendant::gmd:keyword/gmx:Anchor) > 0) then 'to-iso19139-keyword-with-anchor' 
+    <xsl:variable name="transformation" 
+      select="if (count(descendant::gmd:keyword/gmx:Anchor) > 0) then 'to-iso19139-keyword-with-anchor' 
       else if (@xlink:href) then 'to-iso19139-keyword-as-xlink' 
       else 'to-iso19139-keyword'"/>
     
@@ -1322,11 +1323,13 @@
     <xsl:variable name="parentName" select="name(..)"/>
     <xsl:variable name="elementTransformations" select="/root/gui/schemalist/*[text()=$schema]/
       associations/registerTransformation[@element = $parentName]"/>
-    <xsl:variable name="listOfTransformations" select="if ($elementTransformations) 
+   <!-- <xsl:variable name="listOfTransformations" select="if ($elementTransformations) 
       then concat('''', string-join($elementTransformations/@xslTpl, ''','''), '''')
-      else '''to-iso19139-keyword'''"/>
+      else '''to-iso19139-keyword'',''to-iso19139-keyword-as-xlink'''"/>
+    <xsl:variable name="listOfTransformations" select="'''to-iso19139-keyword'',''to-iso19139-keyword-as-xlink'''"></xsl:variable>
     
-    <xsl:variable name="listOfTransformations">'to-iso19139-keyword'</xsl:variable>
+    <xsl:variable name="listOfTransformations">'to-iso19139-keyword','to-iso19139-keyword-as-xlink'</xsl:variable>
+   -->
     
     
     <!-- Retrieve the thesaurus identifier from the thesaurus citation. The thesaurus 
@@ -1348,6 +1351,10 @@
     <xsl:variable name="widgetMode" select="if ($thesaurusId = 'geonetwork.thesaurus.local.theme.sextant-theme') 
                                             then 'combo' 
                                             else ''"/>
+    
+    <xsl:variable name="listOfTransformations" select="if ($thesaurusId = 'geonetwork.thesaurus.local.theme.sextant-theme') 
+      then '''to-iso19139-keyword-as-xlink''' 
+      else '''to-iso19139-keyword'''"/>
     
     <!-- The element identifier in the metadocument-->
     <xsl:variable name="elementRef" select="../geonet:element/@ref"/>
