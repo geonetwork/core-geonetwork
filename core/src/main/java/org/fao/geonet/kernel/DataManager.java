@@ -117,8 +117,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * Handles all operations on metadata (select,insert,update,delete etc...).
  *
  */
-@Component
-@Lazy
 @Transactional
 public class DataManager {
 

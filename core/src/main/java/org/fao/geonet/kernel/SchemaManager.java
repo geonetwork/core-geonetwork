@@ -85,7 +85,6 @@ import java.util.zip.ZipInputStream;
  * The SchemaManager holds a map of Schema objects known to GeoNetwork. 
  *
  */
-@Component
 public class SchemaManager {
 
     private static final int MODE_NEEDLE = 0;

@@ -96,6 +96,13 @@
            });
          };
 
+         $scope.nodeChangeRedirect = function(redirectTo) {
+           $http.get('../../j_spring_security_logout')
+              .success(function(data) {
+                  window.location.href = redirectTo;
+           });
+         };
+
          initForm();
 
        }]);

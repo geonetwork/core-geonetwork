@@ -2,6 +2,7 @@ package org.fao.geonet.domain;
 
 import com.vividsolutions.jts.util.Assert;
 import org.apache.lucene.document.Document;
+import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
 import org.fao.geonet.utils.Xml;
 import org.hibernate.annotations.Type;
 import org.jdom.Element;
@@ -28,6 +29,7 @@ import java.util.Set;
 @Entity
 @Table(name = "Metadata")
 @Access(AccessType.PROPERTY)
+@EntityListeners(MetadataEntityListenerManager.class)
 @SequenceGenerator(name=Metadata.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class Metadata extends GeonetEntity {
     static final String ID_SEQ_NAME = "metadata_id_seq";

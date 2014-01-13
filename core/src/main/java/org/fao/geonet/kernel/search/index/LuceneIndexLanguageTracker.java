@@ -31,9 +31,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @author jeichar
  */
-@Component
-@Lazy
-@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class LuceneIndexLanguageTracker {
     private final Map<String, Directory> dirs = new HashMap<String, Directory>();
     private final Map<String, TrackingIndexWriter> trackingWriters = new HashMap<String, TrackingIndexWriter>();

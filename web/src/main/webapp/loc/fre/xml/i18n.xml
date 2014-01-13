@@ -6,4 +6,8 @@
     href="catalog.search.nojs">ici pour rechercher des informations</a> en mode dégradé.</nojs>
   <selectView>Sélectionner une vue</selectView>
   <moreTabs>Plus d'information</moreTabs>
+  <nodeChangeWarning>Attention ! Vous souhaitez accéder à un autre noeud</nodeChangeWarning>
+  <nodeChangeInfo>Attention : Vous n'êtes plus dans le catalogue auquel vous étiez connecté.</nodeChangeInfo>
+  <nodeChangeBack>Si vous souhaitez revenir à ce catalogue cliquer ici :</nodeChangeBack>
+  <nodeChangeForward>Sinon, pour vous déconnectez et poursuivre vers le nouveau catalogue, cliquer là :</nodeChangeForward>
 </i18n>

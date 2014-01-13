@@ -41,9 +41,6 @@ import java.util.Vector;
 /**
  * A container class for a service. It collect the method and the filter
  */
-@Component
-@Lazy
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ServiceInfo {
     private String appPath;
     private String match;

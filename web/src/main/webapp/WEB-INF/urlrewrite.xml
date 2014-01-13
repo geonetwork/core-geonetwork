@@ -84,8 +84,8 @@
 
     <!-- Use new home service because it performs a faster redirect -->
     <rule>
-        <from>^/srv/(\w\w\w)/home$</from>
-        <to type="permanent-redirect" last="true">%{context-path}/home?lang=$1</to>
+        <from>^/([^/]*)/(\w\w\w)/home$</from>
+        <to type="permanent-redirect" last="true">%{context-path}/home?hl=$2&amp;node=$1</to>
     </rule>
 
     <!-- Use redirects to handle the initial entry points -->

@@ -296,9 +296,6 @@ public class Geonetwork implements ApplicationHandler {
             nfe.printStackTrace();
         }
 
-        String htmlCacheDir = handlerConfig
-                .getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
-
         SettingInfo settingInfo = context.getBean(SettingInfo.class);
         searchMan = _applicationContext.getBean(SearchManager.class);
         searchMan.init(logAsynch,
@@ -325,15 +322,10 @@ public class Geonetwork implements ApplicationHandler {
 
         if (xmlSerializer instanceof XmlSerializerSvn && svnManager != null) {
             svnManager.setContext(context);
-            String subversionPath = handlerConfig.getValue(Geonet.Config.SUBVERSION_PATH);
+            String subversionPath = dataDirectory.getMetadataRevisionDir().getCanonicalPath();
             svnManager.setSubversionPath(subversionPath);
             svnManager.init();
         }
-
-        /**
-         * Initialize iso languages mapper
-         */
-        IsoLanguagesMapper.getInstance().init(_applicationContext);
 
         /**
          * Initialize language detector

@@ -33,7 +33,6 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
@@ -121,8 +120,6 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Indexes metadata using Lucene.
  */
-@Component
-@Lazy
 public class SearchManager {
 	private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
 	private static final String INDEXING_ERROR_FIELD = "_indexingError";

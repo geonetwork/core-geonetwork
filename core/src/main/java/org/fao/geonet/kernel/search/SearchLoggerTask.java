@@ -17,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author francois
  */
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Transactional
 public class SearchLoggerTask implements Runnable {
     private ServiceContext srvContext;
