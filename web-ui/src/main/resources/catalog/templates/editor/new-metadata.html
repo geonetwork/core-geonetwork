@@ -38,13 +38,13 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-3">
+    <div class="col-lg-3" data-ng-show="groups && groups.length > 1">
       <div class="panel-default panel">
         <div class="panel-heading"><span data-translate="">inGroup</span>
           <strong>{{(ownerGroup.label[lang] || '...') | translate}}</strong>
         </div>
         <div class="panel-body">
-          <div data-groups-combo="" data-owner-group="ownerGroup" lang="lang"/>
+          <div data-groups-combo="" data-owner-group="ownerGroup" lang="lang" data-groups="groups"/>
         </div>
       </div>
     </div>

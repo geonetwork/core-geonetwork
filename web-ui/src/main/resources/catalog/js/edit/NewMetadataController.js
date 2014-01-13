@@ -29,6 +29,14 @@
         staticMap: 'fa-globe',
         dataset: 'fa-file'
       };
+      
+      $scope.$watchCollection('groups', function(){
+        if(!angular.isUndefined($scope.groups)) {
+          if($scope.groups.length == 1) {
+            $scope.ownerGroup = $scope.groups[0].id;
+          }
+        }
+      });
 
       // List of record type to not take into account
       // Could be avoided if a new index field is created FIXME ?
@@ -89,6 +97,10 @@
         }
       };
 
+      /**
+       * Get all the templates for a given type.
+       * Will put this list into $scope.tpls variable.
+       */
       $scope.getTemplateNamesByType = function(type) {
         var tpls = [];
         for (var i = 0; i < $scope.mdList.metadata.length; i++) {
@@ -102,7 +114,7 @@
           }
         }
 
-        // TODO: Take in account template sort order ?
+        // Sort template list
         function compare(a, b) {
           if (a.title < b.title)
             return -1;

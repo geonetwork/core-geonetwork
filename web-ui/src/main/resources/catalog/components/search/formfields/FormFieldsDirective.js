@@ -11,7 +11,8 @@
                 'partials/groupsCombo.html',
             scope: {
               ownerGroup: '=',
-              lang: '='
+              lang: '=',
+              groups: '='
             },
             link: function(scope, element, attrs) {
               $http.get('admin.group.list@json').success(function(data) {
