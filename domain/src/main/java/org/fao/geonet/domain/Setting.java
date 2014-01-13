@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.SettingEntityListenerManager;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ import javax.persistence.*;
 @Table(name = "Settings")
 @Cacheable
 @Access(AccessType.PROPERTY)
+@EntityListeners(SettingEntityListenerManager.class)
 public class Setting extends GeonetEntity {
     private String name;
     private String value;

@@ -1140,8 +1140,14 @@
                 <call name="isoLang" class=".guiservices.isolanguages.Get" />
             </output>
         </service>
-	  
-	  
+		
+		<service name="find">
+			<output sheet="search-cat.xsl"/>
+		</service>
+		<service name="tabsearch">
+			<output sheet="search-tab.xsl"/>
+		</service>
+		
 	  <service name="csw.config.get" deprecated="true">
 	    <class name=".guiservices.csw.Get"/>
 	    
@@ -1209,7 +1215,7 @@
 	    <class name=".guiservices.csw.virtual.Delete"/>
 	    <output forward="virtualcsw.config"/>
 	  </service>
-	  
+
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Versioning log                                                -->

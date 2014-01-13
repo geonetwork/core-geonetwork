@@ -173,7 +173,7 @@ public class ConfigurationOverrides {
     public static final ConfigurationOverrides DEFAULT = new ConfigurationOverrides(null);
     private String _overrides;
 
-    public ConfigurationOverrides(String overrides) {
+    public ConfigurationOverrides(final String overrides) {
         this._overrides = overrides;
     }
 

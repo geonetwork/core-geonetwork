@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.CswCapabilitiesInfoFieldEntityListenerManager;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "CswServerCapabilitiesInfo")
+@EntityListeners(CswCapabilitiesInfoFieldEntityListenerManager.class)
 @SequenceGenerator(name=CswCapabilitiesInfoField.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class CswCapabilitiesInfoField extends GeonetEntity {
     static final String ID_SEQ_NAME = "csw_server_capabilities_info_id_seq";

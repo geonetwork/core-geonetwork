@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.GroupEntityListenerManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
@@ -19,6 +21,7 @@ import java.util.Map;
 @Table(name = "Groups")
 @Cacheable
 @Access(AccessType.PROPERTY)
+@EntityListeners(GroupEntityListenerManager.class)
 @SequenceGenerator(name=Group.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class Group extends Localized {
     static final String ID_SEQ_NAME = "group_id_seq";

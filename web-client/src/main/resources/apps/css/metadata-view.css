@@ -32,14 +32,14 @@
   margin-left: 15px !important;
 }
 .md-view div.relation span {
-  background-image : url(../images/default/chart_organisation.png) !important;
+  background-image : url(../apps/images/default/chart_organisation.png) !important;
   background-repeat : no-repeat;
   width: 16px;
   height: 16px;
   position: absolute;
 }
 .md-view div.more {
-  background-image : url(../images/default/three_dots.png) !important;
+  background-image : url(../apps/images/default/three_dots.png) !important;
   background-repeat : no-repeat;
   background-position : 95% 80%;
 }
@@ -255,70 +255,70 @@ Display hyperlink as text next to element
   padding-bottom: 3px;
 }
 .md-mn-view {
-  background-image : url(../images/default/page_go.png) !important;
+  background-image : url(../apps/images/default/page_go.png) !important;
 }
 .md-mn-edit {
-  background-image : url(../images/default/page_edit.png) !important;
+  background-image : url(../apps/images/default/page_edit.png) !important;
 }
 .md-mn-del {
-  background-image : url(../images/default/page_delete.png) !important;
+  background-image : url(../apps/images/default/page_delete.png) !important;
 }
 .md-mn-copy {
-  background-image : url(../images/default/page_copy.png) !important;
+  background-image : url(../apps/images/default/page_copy.png) !important;
 }
 .md-mn-find {
-  background-image : url(../images/default/find.png) !important;
+  background-image : url(../apps/images/default/find.png) !important;
 }
 .md-mn-go {
-  background-image : url(../images/default/bullet_go.png) !important;
+  background-image : url(../apps/images/default/bullet_go.png) !important;
 }
 .md-mn-advanced {
-  background-image : url(../images/default/cog.png) !important;
+  background-image : url(../apps/images/default/cog.png) !important;
 }
 .md-mn-user {
-  background-image : url(../images/default/user.png) !important;
+  background-image : url(../apps/images/default/user.png) !important;
 }
 .md-mn-pdf {
-  background-image : url(../images/default/page_white_acrobat.png) !important;
+  background-image : url(../apps/images/default/page_white_acrobat.png) !important;
 }
 .md-mn-badd {
-  background-image : url(../images/default/brick_add.png) !important;
+  background-image : url(../apps/images/default/brick_add.png) !important;
 }
 .md-mn-zip {
-  background-image : url(../images/default/page_white_zip.png) !important;
+  background-image : url(../apps/images/default/page_white_zip.png) !important;
 }
 .md-mn-ftp {
-  background-image : url(../images/default/folder.png) !important;
+  background-image : url(../apps/images/default/folder.png) !important;
 }
 .md-mn-ftps {
-  background-image : url(../images/default/folder_key.png) !important;
+  background-image : url(../apps/images/default/folder_key.png) !important;
 }
 .md-mn-download {
-  background-image : url(../images/default/download.png) !important;
+  background-image : url(../apps/images/default/download.png) !important;
 }
 .mn-user-location {
-  background-image : url(../images/default/user_location.png) !important;
+  background-image : url(../apps/images/default/user_location.png) !important;
 }
 .mn-view-simple {
-  background-image : url(../images/default/mv-simple.png) !important;
+  background-image : url(../apps/images/default/mv-simple.png) !important;
   background-repeat : no-repeat;
 }
 .mn-view-full {
-  background-image : url(../images/default/mv-full.png) !important;
+  background-image : url(../apps/images/default/mv-full.png) !important;
   background-repeat : no-repeat;
 }
 .mn-view-thumbnail {
-  background-image : url(../images/default/mv-thumbnail.png) !important;
+  background-image : url(../apps/images/default/mv-thumbnail.png) !important;
   background-repeat : no-repeat;
 }
 .mn-login {
-  background-image : url(../images/default/user_go.png) !important;
+  background-image : url(../apps/images/default/user_go.png) !important;
 }
 .mn-logout {
-  background-image : url(../images/default/door_out.png) !important;
+  background-image : url(../apps/images/default/door_out.png) !important;
 }
 .mn-clear {
-  background-image : url(../images/default/cross.png) !important;
+  background-image : url(../apps/images/default/cross.png) !important;
 }
 
 .search-item {
@@ -376,25 +376,25 @@ li.tag-cloud-7 {
   margin-right : 3px;
 }
 .connectIcon {
-  background-image : url(../images/default/connect.png) !important;
+  background-image : url(../apps/images/default/connect.png) !important;
 }
 .zoomin {
-  background-image : url(../images/default/icon_zoomin.png) !important;
+  background-image : url(../apps/images/default/icon_zoomin.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .zoomout {
-  background-image : url(../images/default/icon_zoomout.png) !important;
+  background-image : url(../apps/images/default/icon_zoomout.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .zoomfull {
-  background-image : url(../images/default/icon_zoomfull.png) !important;
+  background-image : url(../apps/images/default/icon_zoomfull.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .pan {
-  background-image : url(../images/default/icon_pan.png) !important;
+  background-image : url(../apps/images/default/icon_pan.png) !important;
   height : 20px !important;
   width : 20px !important;
 }

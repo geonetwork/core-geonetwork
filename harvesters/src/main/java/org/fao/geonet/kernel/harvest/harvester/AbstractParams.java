@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import com.vividsolutions.jts.util.Assert;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -256,7 +257,6 @@ public abstract class AbstractParams {
     public Trigger getTrigger() {
     	return QuartzSchedulerUtils.getTrigger(uuid, AbstractHarvester.HARVESTER_GROUP_NAME, every, MAX_EVERY);
     }
-
     /**
      *
      * @param port

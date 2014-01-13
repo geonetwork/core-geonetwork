@@ -59,9 +59,7 @@ import org.springframework.stereotype.Component;
  * @author fxprunayre
  * 
  */
-@Component(value = LuceneConfig.LUCENE_CONFIG_BEAN_NAME)
 public class LuceneConfig {
-    public static final String LUCENE_CONFIG_BEAN_NAME = "luceneConfig";
     public static final String USE_NRT_MANAGER_REOPEN_THREAD = "useNRTManagerReopenThread";
     private static final int ANALYZER_CLASS = 1;
 	private static final int BOOST_CLASS = 2;
