@@ -7,7 +7,7 @@
 	xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
 	xmlns:geonet="http://www.fao.org/geonetwork">
 
-  <xsl:include href="metadata-csw-record-view.xsl"/>
+  <xsl:include href="metadata-view.xsl"/>
 
 	<!-- main template - the way into processing csw-record which is 
 	     published as dublic-core -->
