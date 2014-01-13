@@ -1,5 +1,7 @@
 <div class="visible-lg">
-  <button class="btn btn-link fa fa-sort-amount-asc" data-toggle="collapse" data-target="#{{id}}-spy"/>
+  <div class="btn-toolbar" role="toolbar">
+    <button class="btn btn-link fa fa-sort-amount-asc" data-toggle="collapse" data-target="#{{id}}-spy"/>
+  </div>
   <ul class="nav nav-pills nav-stacked collapse" data-ng-class="collapse ? '' : 'in'" id="{{id}}-spy">
     <li data-ng-repeat="s in spyElems" data-ng-class="s.active ? 'active' : ''">
       <a href="" data-ng-click="scrollTo(s.id)"> {{s.label}} </a>
