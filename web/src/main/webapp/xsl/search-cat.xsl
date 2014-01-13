@@ -29,10 +29,18 @@
 					href="../../apps/js/ext/resources/css/ext-all.css"/>
 				<link rel="stylesheet" type="text/css"
 					href="../../apps/js/ext/resources/css/xtheme-gray.css"/>
-				<link rel="stylesheet" type="text/css" href="../../apps/js/ext-ux/css/ext-ux.css"/>
 				<link rel="stylesheet" type="text/css"
 					href="../../apps/js/OpenLayers/theme/default/style.css"/>
-				<link rel="stylesheet" type="text/css" href="../../apps/css/geonetwork.css"/>
+			    <xsl:choose>
+			        <xsl:when test="/root/request/debug">
+			            <link rel="stylesheet" type="text/css" href="../../static/geonetwork-client-ext-ux_css.css?minimize=false"/>
+			            <link rel="stylesheet" type="text/css" href="../../static/geonetwork-client_css.css?minimize=false"/>
+			        </xsl:when>
+			        <xsl:otherwise>
+			            <link rel="stylesheet" type="text/css" href="../../static/geonetwork-client-ext-ux_css.css"/>
+			            <link rel="stylesheet" type="text/css" href="../../static/geonetwork-client_css.css"/>
+			        </xsl:otherwise>
+			    </xsl:choose>
 			</head>
 			<body>
 				<div id="loading-mask"></div>
@@ -94,9 +102,11 @@
 						
 					</xsl:when>
 					<xsl:otherwise>
-						<script type="text/javascript" src="../../apps/js/ext/adapter/ext/ext-base.js"></script>
-						<script type="text/javascript" src="../../apps/js/ext/ext-all.js"></script>
-						<script type="text/javascript" src="../../apps/search/js/App-mini.js"></script>
+					    <script type="text/javascript" src="../../apps/js/ext/adapter/ext/ext-base.js"></script>
+					    <script type="text/javascript" src="../../apps/js/ext/ext-all.js"></script>
+					    <script type="text/javascript" src="../../static/geonetwork-client-mini-nomap.js"></script>
+					    <script type="text/javascript" src="../../static/geonetwork-client-mini.js"></script>
+					    <script type="text/javascript" src="../../static/geonetwork-client-search-app.js"></script>
 					</xsl:otherwise>
 				</xsl:choose>
 			</body>
