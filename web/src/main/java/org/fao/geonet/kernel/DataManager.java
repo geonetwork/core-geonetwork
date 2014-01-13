@@ -2090,16 +2090,21 @@ public class DataManager {
 			errorReport.addContent(xsdErrors);
 			Integer[] results = {0, 0, 0};
 			valTypeAndStatus.put("xsd", results);
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
 		        Log.debug(Geonet.DATA_MANAGER, "  - XSD error: " + Xml.getString(xsdErrors));
+            }
 		}
         else {
 		    Integer[] results = {1, 0, 0};
 		    valTypeAndStatus.put("xsd", results);
+
+            if(Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
+                Log.trace(Geonet.DATA_MANAGER, "Valid.");
+            }
 		}
 
 		// ...then schematrons
-		Element schematronError;
+		Element schematronError = null;
 		
 		// edit mode
         if (forEditing) {
@@ -2120,15 +2125,21 @@ public class DataManager {
               }
 		}
         else {
-	        // enumerate the metadata xml so that we can report any problems found 
-	        // by the schematron_xml script to the geonetwork editor
-	        editLib.enumerateTree(md);
+        	try {
+		        // enumerate the metadata xml so that we can report any problems found 
+		        // by the schematron_xml script to the geonetwork editor
+		        editLib.enumerateTree(md);
+	
+		        // get an xml version of the schematron errors and return for error display
+		        schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
+	
+		        // remove editing info added by enumerateTree
+		        editLib.removeEditingInfo(md);
 
-	        // get an xml version of the schematron errors and return for error display
-	        schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
-
-	        // remove editing info added by enumerateTree
-	        editLib.removeEditingInfo(md);
+			} catch (Exception e) {
+				e.printStackTrace();
+				Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata "+id+": "+e.getMessage());
+			}
 		}
         
         if (schematronError != null && schematronError.getContent().size() > 0) {
@@ -2141,9 +2152,13 @@ public class DataManager {
         }
         
         // Save report in session (invalidate by next update) and db
-        if(session != null) {
-            session.setProperty(Geonet.Session.VALIDATION_REPORT + id, errorReport);
-        }
+		try {
+			saveValidationStatus(dbms, id, valTypeAndStatus, new ISODate().toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.error(Geonet.DATA_MANAGER, "Could not save validation status on metadata "+id+": "+e.getMessage());
+		}
+
 		saveValidationStatus(dbms, id, valTypeAndStatus, new ISODate().toString());
    		
 		return Pair.read(errorReport, version);
