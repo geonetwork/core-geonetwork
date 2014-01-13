@@ -19,7 +19,7 @@
               scope.gnSuggestion = gnSuggestion;
               scope.gnCurrentEdit = gnCurrentEdit;
 
-              var init = function() {
+              scope.load = function() {
                 gnSuggestion.load().success(function(data) {
                   if(data && !angular.isString(data)) {
                     scope.suggestions = data;
@@ -30,10 +30,18 @@
                 });
               };
 
+              // Reload suggestions list when a directive requires it
+              scope.$watch('gnSuggestion.reload', function() {
+                if (scope.gnSuggestion.reload) {
+                  scope.load();
+                  scope.gnSuggestion.reload = false;
+                }
+              });
+
               // When saving is done, refresh validation report
               scope.$watch('gnCurrentEdit.saving', function(newValue) {
                 if (newValue === false) {
-                  init();
+                  scope.load();
                 }
               });
             }

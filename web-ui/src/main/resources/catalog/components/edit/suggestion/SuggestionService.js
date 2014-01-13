@@ -11,6 +11,7 @@
     'gnCurrentEdit',
     function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit) {
 
+      var reload = false;
       var current = undefined;
       var callbacks = [];
 
@@ -74,11 +75,13 @@
         },
 
         runProcess: function(service, params) {
+          var scope = this;
           if (angular.isUndefined(params)) {
             params = {};
           }
           params.process = service;
           gnBatchProcessing.runProcessMd(params).then(function(data) {
+            scope.reload = true;
           });
         }
       };

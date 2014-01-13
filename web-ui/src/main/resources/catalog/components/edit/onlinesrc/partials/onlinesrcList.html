@@ -74,7 +74,7 @@
         <li class="list-group-item"
           data-ng-repeat="resource in relations.onlinesrc | orderBy:'title'">
           {{resource.title}} <a href="" class="onlinesrc-remove"
-          data-ng-click="onlinesrcService.removeOnlinesrc(resource)"><i class="btn fa fa-times text-danger"></i></a>
+          data-ng-click="onlinesrcService.removeOnlinesrc(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
         </li>
       </ul>
 
@@ -91,7 +91,7 @@
         <li class="list-group-item"
           data-ng-repeat="resource in relations.datasets | orderBy:'title'">
           {{resource.title}} <a href="" class="onlinesrc-remove"
-          data-ng-click="onlinesrcService.removeDataset(resource)">remove</a>
+          data-ng-click="onlinesrcService.removeDataset(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
         </li>
       </ul>
 
@@ -109,7 +109,7 @@
         <li class="list-group-item"
           data-ng-repeat="resource in relations.services | orderBy:'title'">
           {{resource.title}} <a href="" class="onlinesrc-remove"
-          data-ng-click="onlinesrcService.removeService(resource)">remove</a>
+          data-ng-click="onlinesrcService.removeService(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
         </li>
       </ul>
 
@@ -127,7 +127,7 @@
         <li class="list-group-item"
           data-ng-repeat="resource in relations.parent | orderBy:'title'">
           {{resource.title}} <a href="" class="onlinesrc-remove"
-          data-ng-click="onlinesrcService.removeMdLink('parent', resource)">remove</a>
+          data-ng-click="onlinesrcService.removeMdLink('parent', resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
         </li>
       </ul>
 
@@ -146,7 +146,7 @@
         <li class="list-group-item"
           data-ng-repeat="resource in relations.sources | orderBy:'title'">
           {{resource.title}} <a href="" class="onlinesrc-remove"
-          data-ng-click="onlinesrcService.removeMdLink('source', resource)">remove</a>
+          data-ng-click="onlinesrcService.removeMdLink('source', resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
         </li>
       </ul>
 
@@ -164,7 +164,7 @@
         <li class="list-group-item"
           data-ng-repeat="resource in relations.fcats | orderBy:'title'">
           {{resource.title}} <a href="" class="onlinesrc-remove"
-          data-ng-click="onlinesrcService.removeFeatureCatalog(resource)">remove</a>
+          data-ng-click="onlinesrcService.removeFeatureCatalog(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
         </li>
       </ul>
       
@@ -184,7 +184,7 @@
           {{resource.title}} 
           <span>{{'(' + resource.subType.toUpperCase() + ')'}}</span>
           <a href="" class="onlinesrc-remove"
-            data-ng-click="onlinesrcService.removeSibling(resource)">remove</a>
+            data-ng-click="onlinesrcService.removeSibling(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
         </li>
       </ul>
     </div>
