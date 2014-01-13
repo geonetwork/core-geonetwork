@@ -2,6 +2,7 @@ package org.fao.geonet.domain.statistic;
 
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.entitylistener.SearchRequestEntityListenerManager;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ import java.util.List;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "Requests")
+@EntityListeners(SearchRequestEntityListenerManager.class)
 @SequenceGenerator(name=SearchRequest.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class SearchRequest {
     static final String ID_SEQ_NAME = "search_request_id_seq";

@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 
 import org.fao.geonet.constants.Geonet;
@@ -68,8 +69,8 @@ public class KeywordsSearcher {
 		this._isoLanguageMapper = mapper;
 	}
 
-    public KeywordsSearcher(ThesaurusFinder thesaurusFinder) {
-        this(IsoLanguagesMapper.getInstance(), thesaurusFinder);
+    public KeywordsSearcher(ServiceContext context, ThesaurusFinder thesaurusFinder) {
+        this(context.getBean(IsoLanguagesMapper.class), thesaurusFinder);
     }
 
     /**

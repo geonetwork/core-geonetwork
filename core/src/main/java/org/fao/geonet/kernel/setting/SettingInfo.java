@@ -30,9 +30,7 @@ import org.springframework.stereotype.Component;
 import java.util.Calendar;
 
 //=============================================================================
-@Component
-public class SettingInfo
-{
+public class SettingInfo {
     @Autowired
     private SettingManager _settingManager;
 

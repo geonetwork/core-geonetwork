@@ -1,4 +1,4 @@
-package org.fao.geonet.kernel.security;
+package jeeves.config.springutil;
 
 import java.io.IOException;
 

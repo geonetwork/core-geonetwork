@@ -19,7 +19,8 @@
     if ($service = 'admin.console') then 'gn_admin'
     else if ($service = 'catalog.signin' or 
               $service = 'new.account' or 
-              $service = 'new.password') then 'gn_login'
+              $service = 'new.password' or 
+              $service = 'node-change-warning') then 'gn_login'
     else if ($service = 'catalog.edit') then 'gn_editor'
     else 'gn'"/>
   

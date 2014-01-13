@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.MetadataRatingByIpEntityListenerManager;
+
 import javax.persistence.*;
 
 /**
@@ -12,6 +14,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "MetadataRating")
+@EntityListeners(MetadataRatingByIpEntityListenerManager.class)
 public class MetadataRatingByIp extends GeonetEntity {
     private MetadataRatingByIpId _id;
     private int _rating;

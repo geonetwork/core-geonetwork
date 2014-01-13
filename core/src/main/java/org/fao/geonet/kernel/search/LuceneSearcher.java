@@ -479,67 +479,73 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      * @param request
      */
     public static String determineLanguage(ServiceContext srvContext, Element request, SettingInfo settingInfo) {
-        if(settingInfo != null && settingInfo.getIgnoreRequestedLanguage()) {
-            if(Log.isDebugEnabled(Geonet.LUCENE))
+        if (settingInfo != null && settingInfo.getIgnoreRequestedLanguage()) {
+            if (Log.isDebugEnabled(Geonet.LUCENE)) {
                 Log.debug(Geonet.LUCENE, "requestedlanguage ignored");
+            }
             return null;
         }
         String requestedLanguage = request.getChildText("requestedLanguage");
         String finalDetectedLanguage = null;
         // requestedLanguage in request
-        if(StringUtils.isNotEmpty(requestedLanguage)) {
-            if(Log.isDebugEnabled(Geonet.LUCENE))
+        if (StringUtils.isNotEmpty(requestedLanguage)) {
+            if (Log.isDebugEnabled(Geonet.LUCENE)) {
                 Log.debug(Geonet.LUCENE, "found requestedlanguage in request: " + requestedLanguage);
+            }
             finalDetectedLanguage = requestedLanguage;
-        }
-        // no requestedLanguage in request
-        else {
+        } else {
+            // no requestedLanguage in request
             boolean detected = false;
             // autodetection is enabled
-            if(settingInfo.getAutoDetect()) {
-                if(Log.isDebugEnabled(Geonet.LUCENE))
+            if (settingInfo.getAutoDetect()) {
+                if (Log.isDebugEnabled(Geonet.LUCENE)) {
                     Log.debug(Geonet.LUCENE, "auto-detecting request language is enabled");
-                    try {
-                        String test = request.getChildText("any");
-                        if(StringUtils.isNotEmpty(test)) {
-                        String detectedLanguage = LanguageDetector.getInstance().detect(test);
-                            if(Log.isDebugEnabled(Geonet.LUCENE))
-                                Log.debug(Geonet.LUCENE, "automatic language detection: '" + request.getChildText("any") + "' is in language " + detectedLanguage);
-                        finalDetectedLanguage = detectedLanguage;
-                            detected = true;
-                        }
-                    }
-                catch (Exception x) {
-                        Log.error(Geonet.LUCENE, "Error auto-detecting language: " + x.getMessage());
-                        x.printStackTrace();
-                    }
                 }
-            else {
-                if(Log.isDebugEnabled(Geonet.LUCENE))
+                try {
+                    String test = request.getChildText("any");
+                    if (StringUtils.isNotEmpty(test)) {
+                        String detectedLanguage = LanguageDetector.getInstance().detect(srvContext, test);
+                        if (Log.isDebugEnabled(Geonet.LUCENE)) {
+                            Log.debug(Geonet.LUCENE, "automatic language detection: '" + request.getChildText("any") + "' is in " +
+                                                     "language " + detectedLanguage);
+                        }
+                        finalDetectedLanguage = detectedLanguage;
+                        detected = true;
+                    }
+                } catch (Exception x) {
+                    Log.error(Geonet.LUCENE, "Error auto-detecting language: " + x.getMessage());
+                    x.printStackTrace();
+                }
+            } else {
+                if (Log.isDebugEnabled(Geonet.LUCENE)) {
                     Log.debug(Geonet.LUCENE, "auto-detecting request language is disabled");
+                }
             }
             // autodetection is disabled or detection failed
-            if(!detected) {
-                if(Log.isDebugEnabled(Geonet.LUCENE))
+            if (!detected) {
+                if (Log.isDebugEnabled(Geonet.LUCENE)) {
                     Log.debug(Geonet.LUCENE, "autodetection is disabled or detection failed");
+                }
 
 
                 // servicecontext available
                 if (srvContext != null) {
-                    if(Log.isDebugEnabled(Geonet.LUCENE))
+                    if (Log.isDebugEnabled(Geonet.LUCENE)) {
                         Log.debug(Geonet.LUCENE, "taking language from servicecontext");
+                    }
                     finalDetectedLanguage = srvContext.getLanguage();
-                }
-                // no servicecontext available
-                else {
-                    if(Log.isDebugEnabled(Geonet.LUCENE))
+                } else {
+                    // no servicecontext available
+                    if (Log.isDebugEnabled(Geonet.LUCENE)) {
                         Log.debug(Geonet.LUCENE, "taking GeoNetwork default language");
+                    }
                     finalDetectedLanguage = Geonet.DEFAULT_LANGUAGE; // TODO : set default not language in config
                 }
             }
         }
-        if(Log.isDebugEnabled(Geonet.LUCENE))
+        if (Log.isDebugEnabled(Geonet.LUCENE)) {
             Log.debug(Geonet.LUCENE, "determined language is: " + finalDetectedLanguage);
+        }
         return finalDetectedLanguage;
     }
 
@@ -1136,21 +1142,21 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 	public static Pair<TopDocs, Element> doSearchAndMakeSummary(int numHits, int startHit, int endHit, String langCode, 
 			Map<String, FacetConfig> summaryConfig, IndexReader reader, 
 			Query query, Filter cFilter, Sort sort, TaxonomyReader taxonomyReader, boolean buildSummary, boolean trackDocScores,
-			boolean trackMaxScore, boolean docsScoredInOrder) throws Exception
-	{
-        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
+			boolean trackMaxScore, boolean docsScoredInOrder) throws Exception {
+        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
             Log.debug(Geonet.SEARCH_ENGINE, "Build summary: " + buildSummary);
             Log.debug(Geonet.SEARCH_ENGINE, "Setting up the TFC with numHits " + numHits);
         }
 		TopFieldCollector tfc = TopFieldCollector.create(sort, numHits, true, trackDocScores, trackMaxScore, docsScoredInOrder);
 
-        if(query != null && reader != null ) {
+        if (query != null && reader != null ) {
             // too dangerous to do this only for logging, as it may throw NPE if Query was not constructed correctly
             // However if you need to see what Lucene queries are really used, print the rewritten query instead
             // Query rw = query.rewrite(reader);
             // System.out.println("Lucene query: " + rw.toString());
-            if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+            if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
                 Log.debug(Geonet.SEARCH_ENGINE, "Lucene query: " + query.toString());
+            }
         }
         IndexSearcher searcher = new IndexSearcher(reader);
 

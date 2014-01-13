@@ -17,8 +17,6 @@ import javax.annotation.Nonnull;
 /**
  * TODO javadoc.
  */
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class IncreasePopularityTask implements Runnable {
     private DataManager dataManager;
     private ServiceContext context;

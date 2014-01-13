@@ -21,6 +21,18 @@
         </service>
 
 
+        <service name="node-change-warning">
+            <documentation><![CDATA[
+                This is the page returned when user is identified in one node
+                and try to access another node. The page proposed to the user
+                to return to the previous node or logout and go to the requested 
+                node.
+                ]]></documentation>
+            <output sheet="../xslt/ui-admin/node-change-warning.xsl">
+                <xml name="i18n" file="xml/i18n.xml"/>
+            </output>
+        </service>
+
         <service name="new.password">
             <documentation><![CDATA[
                 Change user password page.

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
 	">
+
+    <bean id="Harvest" class="org.fao.geonet.component.harvester.csw.Harvest" />
+    <bean id="HarvestManager" class="org.fao.geonet.kernel.harvest.HarvestManagerImpl" />
 
     <!-- The id of the beans is the same as the type in the harvester settings table and thus should not be changed -->
     <bean id="geonetwork" class="org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester" scope="prototype"/>
@@ -21,5 +22,6 @@
     <bean id="arcsde" class="org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEHarvester" scope="prototype"/>
     <bean id="filesystem" class="org.fao.geonet.kernel.harvest.harvester.localfilesystem.LocalFilesystemHarvester" scope="prototype"/>
     <bean id="wfsfeatures" class="org.fao.geonet.kernel.harvest.harvester.wfsfeatures.WfsFeaturesHarvester" scope="prototype"/>
+
 
 </beans>

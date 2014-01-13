@@ -42,8 +42,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-@Component
-@Lazy
+
 public class CatalogConfiguration {
 
 	// GetCapabilities variables

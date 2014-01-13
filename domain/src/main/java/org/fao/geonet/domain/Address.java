@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.AddressEntityListenerManager;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -10,6 +12,7 @@ import java.io.Serializable;
  */
 @Entity
 @Access(AccessType.PROPERTY)
+@EntityListeners(AddressEntityListenerManager.class)
 @SequenceGenerator(name=Address.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class Address extends GeonetEntity implements Serializable {
     static final String ID_SEQ_NAME = "address_id_seq";
