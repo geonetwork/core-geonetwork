@@ -1747,4 +1747,6 @@
     <advancedOptions.show>Show advanced options</advancedOptions.show>
     <advancedOptions.hide>Hide advanced options</advancedOptions.hide>
     <unknown>Unknown</unknown>
+    
+    <deleteRow>Delete row</deleteRow>
 </strings>

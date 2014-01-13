@@ -1,10 +1,9 @@
 /*******************************************************************************
 general
 *******************************************************************************/
-
-
 * {
-	font-size: 100%; /* without this font sizes are not inherited correctly */
+	font-size: 100%;
+	/* without this font sizes are not inherited correctly */
 }
 
 body {
@@ -19,10 +18,11 @@ div {
 	margin: 0px;
 }
 
-table, tr, td {
+table,tr,td {
 	border-width: 0px;
 	border-spacing: 0px;
-	border-collapse: collapse; /* border-spacing should be enough, but added for IE compatibility */
+	border-collapse: collapse;
+	/* border-spacing should be enough, but added for IE compatibility */
 	padding: 0px;
 	vertical-align: top; /*ETJ*/
 }
@@ -37,7 +37,8 @@ th {
 	text-align: left;
 	border-width: 0px;
 	border-spacing: 0px;
-	border-collapse: collapse; /* border-spacing should be enough, but added for IE compatibility */
+	border-collapse: collapse;
+	/* border-spacing should be enough, but added for IE compatibility */
 	font-size: 0.9em;
 	font-weight: normal;
 	font-style: normal;
@@ -67,11 +68,10 @@ a {
 }
 
 td.padded a {
-  font-weight: bolder;
+	font-weight: bolder;
 }
 
-a:hover
-{
+a:hover {
 	text-decoration: underline;
 }
 
@@ -79,35 +79,33 @@ a.no-help:hover {
 	text-decoration: none;
 }
 
-.arrow{
+.arrow {
 	background-image: url('images/arrow.gif');
-
-	background-repeat:no-repeat;
-
-	padding:0 0 3px 7px;
+	background-repeat: no-repeat;
+	padding: 0 0 3px 7px;
 	/*
 	text-align: left;
 	text-transform: uppercase;
 	font-weight: bold;
 	*/
-
 }
 
 /*******************************************************************************
 banner
 *******************************************************************************/
-
 tr.banner {
 	/* moved to td, since IE does not accept it
 	border-bottom: 1px solid #ffffff;
 	*/
+	
 }
 
 td.banner {
 	font-size: 8pt;
 	color: #ffffff;
 	background-image: url('images/blue-background.gif');
-	border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+	border-bottom: 1px solid #ffffff;
+	/* moved here from tr since IE accepts it only here */
 }
 
 .bottom_border {
@@ -120,7 +118,8 @@ td.banner-menu {
 	background: #064377;
 	padding-left: 8px;
 	padding-right: 8px;
-	border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+	border-bottom: 1px solid #ffffff;
+	/* moved here from tr since IE accepts it only here */
 	height: 16px;
 }
 
@@ -133,7 +132,8 @@ td.banner-login {
 	background: #266397;
 	padding-left: 8px;
 	padding-right: 8px;
-	border-bottom: 1px solid #ffffff; /* moved here from tr since IE accepts it only here */
+	border-bottom: 1px solid #ffffff;
+	/* moved here from tr since IE accepts it only here */
 	height: 16px;
 	vertical-align: middle
 }
@@ -143,23 +143,23 @@ a.banner {
 	text-decoration: none;
 }
 
-a.banner:hover
-{
+a.banner:hover {
 	text-decoration: underline;
 }
 
-tr.banner-active, td.banner-active {
-    background-color: #fff !important;
-    border-left: 2px #0263B2 solid;
+tr.banner-active,td.banner-active {
+	background-color: #fff !important;
+	border-left: 2px #0263B2 solid;
 }
 
 font.banner-active {
-  color: #fff;
+	color: #fff;
 	text-decoration: none;
 	font-weight: bold;
 }
+
 font.banner-tab-active {
-  color: #064377;
+	color: #064377;
 	text-decoration: none;
 	font-weight: bold;
 }
@@ -175,7 +175,8 @@ input.banner {
 	margin-left: 4px;
 	font: 7pt Verdana;
 	color: #064377;
-	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	border: 1px solid #266397;
+	/* moved here from tr since IE accepts it only here */
 }
 
 button.banner {
@@ -184,7 +185,8 @@ button.banner {
 	color: #064377;
 	cursor: pointer;
 	cursor: hand;
-	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	border: 1px solid #266397;
+	/* moved here from tr since IE accepts it only here */
 }
 
 a.palette {
@@ -192,8 +194,7 @@ a.palette {
 	text-decoration: none;
 }
 
-a.palette:hover
-{
+a.palette:hover {
 	background: #064377;
 }
 
@@ -207,10 +208,12 @@ content
 *******************************************************************************/
 body {
 	/*background-color: #e7edf5;*/
+	
 }
 
 td.content {
 	/*background: #e7edf5;*/
+	
 }
 
 .padded-content {
@@ -219,20 +222,20 @@ td.content {
 }
 
 .text-aligned-left {
-    text-align: left;
+	text-align: left;
 }
 
 .hit {
 	border-top: 1px solid silver;
-	padding-top: 10px;	
+	padding-top: 10px;
 	margin-top: 10px;
 }
 
 .results_header {
-	margin-top: 5px; 
-	margin-bottom: 5px; 
-    overflow-x: hidden;	
-	overflow-y: auto;	
+	margin-top: 5px;
+	margin-bottom: 5px;
+	overflow-x: hidden;
+	overflow-y: auto;
 	width: 100%;
 }
 
@@ -255,16 +258,17 @@ td.blue-content {
 	height: 30px;
 }
 
-input.content, select.content, textarea.content {
+input.content,select.content,textarea.content {
 	font-family: Verdana;
 	font-size: 9pt;
 	color: #064377;
 	max-width: 400px;
-	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	border: 1px solid #266397;
+	/* moved here from tr since IE accepts it only here */
 }
 
 textarea.md {
-    resize: both !important;
+	resize: both !important;
 }
 
 .checkbox_results {
@@ -278,9 +282,9 @@ select.banner-content {
 	font-size: 7pt !important;
 }
 
-input.error, textarea.error, select.error {
-    color: #FF2211 !important;
-    border: 3px solid #FF2211 !important;
+input.error,textarea.error,select.error {
+	color: #FF2211 !important;
+	border: 3px solid #FF2211 !important;
 }
 
 h1.error {
@@ -291,74 +295,77 @@ select.lang_selector {
 	max-width: 70px;
 }
 
-a.content, button.content {
+a.content,button.content {
 	font-family: Verdana;
 	font-size: 9pt;
 	color: #064377;
 	max-width: 400px;
 	cursor: pointer;
 	cursor: hand;
-	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	border: 1px solid #266397;
+	/* moved here from tr since IE accepts it only here */
 	background-color: #e7e7e7;
 	text-shadow: gray 2px 2px 3px;
 }
 
 .downloadsummary {
-  margin: 0px;
+	margin: 0px;
 }
 
-.downloadsummary button.content, button.dscontent {
-  font-family: Verdana;
-  font-size: 9pt;
-  font-weight: bold;
-  min-width: 10.2em;
-  width: 10.2em;
-  max-width: 400px;
-  cursor: pointer;
-  cursor: hand;
-  border: 1px solid #064367; /* moved here from tr since IE accepts it only here */
-  text-shadow: 2px 1px 1px #062347 !important;
-  color: #FDFDFD;
-  background-color: #4784b8;
+.downloadsummary button.content,button.dscontent {
+	font-family: Verdana;
+	font-size: 9pt;
+	font-weight: bold;
+	min-width: 10.2em;
+	width: 10.2em;
+	max-width: 400px;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px solid #064367;
+	/* moved here from tr since IE accepts it only here */
+	text-shadow: 2px 1px 1px #062347 !important;
+	color: #FDFDFD;
+	background-color: #4784b8;
 }
 
 button.dscontent {
-  min-width: 12.2em;
-  width: 12.2em;
-  max-width: 600px;
+	min-width: 12.2em;
+	width: 12.2em;
+	max-width: 600px;
 }
 
 button.content img.icon {
-    width: 15px;
-    height: 15px;
-    align: absmiddle;
-    margin-right: 2px;
+	width: 15px;
+	height: 15px;
+	align: absmiddle;
+	margin-right: 2px;
 }
 
 a.content {
-    padding: 1px 10px 1px 10px;
+	padding: 1px 10px 1px 10px;
 }
 
 a.content:hover {
-    text-decoration: none
+	text-decoration: none
 }
 
-input.content-small, button.content-small {
+input.content-small,button.content-small {
 	font-family: Verdana;
 	font-size: 7pt;
 	color: #064377;
 	min-width: 150px;
 	cursor: pointer;
 	cursor: hand;
-	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	border: 1px solid #266397;
+	/* moved here from tr since IE accepts it only here */
 }
 
 td.padded p {
-    padding-bottom:2px;
+	padding-bottom: 2px;
 }
 
 fieldset.metadata-block {
-    margin-top: 30px;
+	margin-top: 30px;
 	border-top: 3px #266397 solid;
 	border-bottom-width: 0px;
 	border-left-width: 0px;
@@ -374,32 +381,29 @@ fieldset.metadata-block * fieldset {
 }
 
 fieldset.metadata-block legend {
-    text-transform:uppercase;
+	text-transform: uppercase;
 	font-weight: bold;
-	font-size:large;
+	font-size: large;
 }
 
 fieldset.metadata-block * legend {
-    font-size:medium;
-    text-transform: none;
+	font-size: medium;
+	text-transform: none;
 }
 
 fieldset.metadata-block * fieldset * legend {
-    font-size:small;
-    text-transform: none;
+	font-size: small;
+	text-transform: none;
 }
-
 
 legend span div {
-    font-size:x-small;
-    text-transform: none;
+	font-size: x-small;
+	text-transform: none;
 }
-
 
 /*******************************************************************************
 footer
 *******************************************************************************/
-
 td.footer {
 	font-size: 8pt;
 	background: #beb800;
@@ -413,15 +417,13 @@ a.footer {
 	color: #064377;
 }
 
-a.footer:hover
-{
+a.footer:hover {
 	text-decoration: underline;
 }
 
 /*******************************************************************************
 metadata
 *******************************************************************************/
-
 table.md {
 	font-size: 8pt;
 }
@@ -431,16 +433,17 @@ th.md {
 }
 
 ul.md {
-     list-style-type: circle;
-     margin-left: 20px;
+	list-style-type: circle;
+	margin-left: 20px;
 }
 
-input.md, select.md, textarea.md {
+input.md,select.md,textarea.md {
 	font-family: Verdana;
 	font-size: 8pt;
 	color: #064377;
 	/* max-width: 400; */
-	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	border: 1px solid #266397;
+	/* moved here from tr since IE accepts it only here */
 }
 
 button.md {
@@ -450,15 +453,15 @@ button.md {
 	/* max-width: 400; */
 	cursor: pointer;
 	cursor: hand;
-	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	border: 1px solid #266397;
+	/* moved here from tr since IE accepts it only here */
 }
 
 /*******************************************************************************
 editor
 *******************************************************************************/
-
 #editorBusy {
-  z-index: 100;
+	z-index: 100;
 	position: fixed;
 	top: 45%;
 	left: 45%;
@@ -468,32 +471,33 @@ editor
 #editorOverlay {
 	position: absolute;
 	margin: auto;
-	top: 0; left: 0;
-	width: 100%; height: 100%;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 	z-index: 9999;
-	background-color: #000!important;
+	background-color: #000 !important;
 }
-#editorOverlay[id] { position: fixed; }
 
-
+#editorOverlay[id] {
+	position: fixed;
+}
 
 /*******************************************************************************
 utilities
 *******************************************************************************/
-
-font.error, font.warning {
+font.error,font.warning {
 	color: #ff4040;
 }
 
 .missing {
-    color: #ff4040;
-    font-style: italic;
+	color: #ff4040;
+	font-style: italic;
 }
 
 .info {
-    font-style: italic;
+	font-style: italic;
 }
-
 
 td.box {
 	border: 2px solid #266397;
@@ -512,17 +516,16 @@ td.dots {
 	border-top: 1px inset #266397;
 }
 
-th.padded, td.padded {
+th.padded,td.padded {
 	padding: 2px;
 }
 
 th.padded-center {
-	text-align:  center;
+	text-align: center;
 	padding: 2px;
 }
 
-a.image:hover
-{
+a.image:hover {
 	background: transparent;
 }
 
@@ -530,18 +533,17 @@ td.spacer {
 	height: 16px;
 }
 
-div.track  {
+div.track {
 	background: #064377;
-	margin-top:2px;
+	margin-top: 2px;
 }
 
 div.handle {
 	background: #beb800;
-	cursor:move;
+	cursor: move;
 }
 
-.dots 
-{
+.dots {
 	height: 1px;
 	width: 1px;
 	border-left: 1px solid #266397;
@@ -550,65 +552,59 @@ div.handle {
 /*******************************************************************************
 Ajax styles
 *******************************************************************************/
-
-.tooltip
-{
+.tooltip {
 	position: absolute;
 	background-color: #f0f0ff;
-	border:  solid black 1px;
+	border: solid black 1px;
 	padding: 4px;
 }
 
-.tipRow
-{
+.tipRow {
 	margin: 10px;
 	padding: 15px;
 }
 
-.tipHeader
-{
-	text-align:    left;
-	font-weight:   bold;
-	padding-left:  2px;
+.tipHeader {
+	text-align: left;
+	font-weight: bold;
+	padding-left: 2px;
 	padding-right: 2px;
 }
 
-.tipCell
-{
+.tipCell {
 	text-align: left;
 }
 
-.policyGroup 
-{
+.policyGroup {
 	margin: 5px;
-	border-style:dashed;
-	border-width:0px 0px 1px 0px;
+	border-style: dashed;
+	border-width: 0px 0px 1px 0px;
 }
 
 /*******************************************************************************
 Other action buttons
 *******************************************************************************/
-
 .oAcEle {
-    border: 1px solid #266397;
-    background-color: #e7e7e7;
-    position: absolute;
-    opacity: .9;
-    filter: alpha(opacity=90);
-    -moz-opacity: 0.9;
-    z-index:1;
+	border: 1px solid #266397;
+	background-color: #e7e7e7;
+	position: absolute;
+	opacity: .9;
+	filter: alpha(opacity = 90);
+	-moz-opacity: 0.9;
+	z-index: 1;
 }
 
 .oAcEle button {
-    text-align:left;
-    font-family: Verdana;
-    color: #064377;
-    font-size: 8pt;
-    cursor: pointer;
-    cursor: hand;
-    width:98%;
-    border-width: 0px;
+	text-align: left;
+	font-family: Verdana;
+	color: #064377;
+	font-size: 8pt;
+	cursor: pointer;
+	cursor: hand;
+	width: 98%;
+	border-width: 0px;
 }
+
 .oAcEle button:hover {
 	text-decoration: underline;
 }
@@ -617,106 +613,109 @@ Other action buttons
 Ajax Keyword list
 *******************************************************************************/
 div.keywordSelectorFrame {
-        background: #fff;
-		position: absolute;
-		padding: 2px;
-		left: 10px;
-		top: 140px;
+	background: #fff;
+	position: absolute;
+	padding: 2px;
+	left: 10px;
+	top: 140px;
 }
 
 * html div.keywordSelector {
-	    height: expression( this.scrollHeight > 201 ? "200px" : "auto" ); /* sets min-height for IE */
+	height: expression(this.scrollHeight > 201 ? "200px" : "auto");
+	/* sets min-height for IE */
 }
 
 div.keywordSelector {
-        background: #fff;
-        border: 4px solid #064377;
-		margin: 2px;
-		padding: 5px;
-        cursor: pointer;
-        overflow: auto;
-		max-height: 200px;
-		max-width: 300px;
-		width: 300px;
+	background: #fff;
+	border: 4px solid #064377;
+	margin: 2px;
+	padding: 5px;
+	cursor: pointer;
+	overflow: auto;
+	max-height: 200px;
+	max-width: 300px;
+	width: 300px;
 }
 
 div.keywordList {
-        background: #fff;
-        cursor: pointer;
-        overflow: auto;
-		max-height: 200px;
+	background: #fff;
+	cursor: pointer;
+	overflow: auto;
+	max-height: 200px;
 }
 
-
 div.keywordList ul {
-        border: 1px solid #888;
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        list-style-type: circle;
-        cursor: pointer;
-        overflow: hidden;
+	border: 1px solid #888;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	list-style-type: circle;
+	cursor: pointer;
+	overflow: hidden;
 }
 
 div.keywordList ul li {
-        margin: 0;
-        padding: 1px;
-        cursor: pointer;
-	 	list-style-type:none;
+	margin: 0;
+	padding: 1px;
+	cursor: pointer;
+	list-style-type: none;
 }
 
 div.keywordList ul li.selected {
-        background-color: #beb800;
-        cursor: pointer;
+	background-color: #beb800;
+	cursor: pointer;
 }
 
 div.keywordList ul strong.highlight {
-        color: #800;
-        margin: 0;
-        padding: 0;
-        cursor: pointer;
+	color: #800;
+	margin: 0;
+	padding: 0;
+	cursor: pointer;
 }
 
 div.keywordList ul li span {
-	display :none;
+	display: none;
 }
 
 div.keywordResults ul {
-        margin: 3px;
-        padding: 0;
-		border-style:dashed;
-		border-width:1px 0px 0px 1px;
-		list-style-type:none;
+	margin: 3px;
+	padding: 0;
+	border-style: dashed;
+	border-width: 1px 0px 0px 1px;
+	list-style-type: none;
 }
 
 div.keywordResults ul li {
-        margin: 4px;
-		list-style-type:none;
+	margin: 4px;
+	list-style-type: none;
 }
 
 span.searchHelpFrame {
-        background: #fff;
-    position: relative;
-    border-style: solid;
-    margin: 2px;
-    padding: 2px;
+	background: #fff;
+	position: relative;
+	border-style: solid;
+	margin: 2px;
+	padding: 2px;
 }
 
 div.legend {
-        margin: 3px;
-        padding: 3px;
-		border-style:dashed;
-		border-width:1px 1px 1px 1px;
-		font-style: italic;
+	margin: 3px;
+	padding: 3px;
+	border-style: dashed;
+	border-width: 1px 1px 1px 1px;
+	font-style: italic;
 }
+
 div.broader {
-        background-color: #8ba4c5;
+	background-color: #8ba4c5;
 }
+
 div.related {
-        background-color: #d5dfec;
+	background-color: #d5dfec;
 }
+
 div.narrower {
-        background-color: #f7faff;
+	background-color: #f7faff;
 }
 
 div.important {
@@ -729,50 +728,45 @@ div.important {
 }
 
 div.suggestion {
-	font-style:italic;
+	font-style: italic;
 	padding: 2px;
 }
 
 div.keywordResults ul li.selected {
-        background-color: #beb800;
-        cursor: pointer;
+	background-color: #beb800;
+	cursor: pointer;
 }
 
 /* GEOGRAPHIC SEARCH */
-
-
-.geosearchmain{
-    border-bottom: 2px;
-    margin-bottom: 1px;
-
-    vertical-align: top;
-    
+.geosearchmain {
+	border-bottom: 2px;
+	margin-bottom: 1px;
+	vertical-align: top;
 }
 
-.geosearch{
-    border-bottom: 2px;
-    margin-bottom: 1px;
+.geosearch {
+	border-bottom: 2px;
+	margin-bottom: 1px;
 }
 
-.geosearchfields{
-    padding-bottom: 10px;
-    border-bottom: 1px solid;
-    margin-bottom: 10px;
+.geosearchfields {
+	padding-bottom: 10px;
+	border-bottom: 1px solid;
+	margin-bottom: 10px;
 }
 
-.geosearchfields a{
-/*    text-decoration: none; */
-    margin-top: 5px;
+.geosearchfields a {
+	/*    text-decoration: none; */
+	margin-top: 5px;
 }
 
 td.advsearchfields {
-    padding-bottom: 10px;
-    border-bottom: 1px solid;
-/*    margin-bottom: 10px;*/
-
-    border-left: 1px solid;
-    padding-left: 5px;
-    padding-right: 5px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid;
+	/*    margin-bottom: 10px;*/
+	border-left: 1px solid;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 /*.advsearchfields > tbody > tr > td {
@@ -782,13 +776,12 @@ td.advsearchfields {
 
 }
 */
-
-#coords{
-    text-align:center;
-    margin-top: 5px;
+#coords {
+	text-align: center;
+	margin-top: 5px;
 }
 
-.IMBtn{
+.IMBtn {
 	font-family: Verdana;
 	font-size: 9px;
 	color: #064377;
@@ -797,25 +790,25 @@ td.advsearchfields {
 }
 
 /* Search input boxes */
-
-#similarity1, #similarity02, #similarity04, #similarity06, #similarity08, #radfrom0, #radfrom1, #radfromext1 {
+#similarity1,#similarity02,#similarity04,#similarity06,#similarity08,#radfrom0,#radfrom1,#radfromext1
+	{
 	margin: 3px;
 }
 
-#dateFrom, #dateTo, #extTo, #extFrom {
+#dateFrom,#dateTo,#extTo,#extFrom {
 	margin: 3px;
 }
 
-#digital, #download, #dynamic, #paper {
+#digital,#download,#dynamic,#paper {
 	margin: 3px;
 }
 
-#northBL, #eastBL, #southBL, #westBL {
-	margin:  3px;;
+#northBL,#eastBL,#southBL,#westBL {
+	margin: 3px;;
 }
 
 #inspire {
-	margin:  3px;
+	margin: 3px;
 }
 
 #inspirethemesdiv {
@@ -827,11 +820,11 @@ label {
 	padding-left: 3px;
 }
 
-#openIMBtn{
+#openIMBtn {
 	background: url(images/arrow.gif) no-repeat right;
 }
 
-#closeIMBtn{
+#closeIMBtn {
 	background: url(images/arrow_inv.gif) no-repeat right;
 }
 
@@ -850,48 +843,43 @@ imenabled {
 
 imdisabled {
 	color: #434343;
-    cursor: progress;
+	cursor: progress;
 }
 
 div.metadata_current {
-    padding: 3px;
-    position: relative;
+	padding: 3px;
+	position: relative;
 }
 
-div.metadata_current table,
-div.metadata_current td
-{
+div.metadata_current table,div.metadata_current td {
+	
 }
 
 img.calendar {
-    cursor: pointer; 
-    background:none;
-    vertical-align: middle;
-    margin-left: 2px;
-    margin-right: 2px;
-}
-img.calendar:hover {
-    background:red;
+	cursor: pointer;
+	background: none;
+	vertical-align: middle;
+	margin-left: 2px;
+	margin-right: 2px;
 }
 
+img.calendar:hover {
+	background: red;
+}
 
 /* This will fix some redraw problems with gn setting */
-.calendar table ,
-.calendar tr ,
-.calendar td  {
+.calendar table,.calendar tr,.calendar td {
 	border-collapse: separate;
 }
 
 .ilwhiteboard {
-    position:relative;
+	position: relative;
 	border: 1px solid #266397;
 	margin: 4px;
 }
 
 /* Rating popup */
-
-button.rating 
-{
+button.rating {
 	font-family: Verdana;
 	font-size: 9pt;
 	color: #064377;
@@ -899,29 +887,27 @@ button.rating
 	width: 100px;
 	cursor: pointer;
 	cursor: hand;
-	border: 1px solid #266397; /* moved here from tr since IE accepts it only here */
+	border: 1px solid #266397;
+	/* moved here from tr since IE accepts it only here */
 	margin-bottom: 4px;
 }
 
-.ratingBox
-{
+.ratingBox {
 	position: absolute;
 	background-color: #E0E0FF;
-	border:  solid black 1px;
+	border: solid black 1px;
 	padding: 0px;
 	margin: 0px;
 }
 
-.ratingCloser 
-{
-    position: absolute;
-    top:     1px;
-    right:   3px;
-    width:  16px;
-    height: 16px;
-    cursor: pointer;
-    
-    z-index: 20;    
+.ratingCloser {
+	position: absolute;
+	top: 1px;
+	right: 3px;
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
+	z-index: 20;
 }
 
 div#error {
@@ -964,88 +950,92 @@ div#error {
 }
 
 div.thumbnail {
-    width: 250px !important;
-    height: 150px !important;
-    float: left;
-    text-align:center;
-    vertical-align:middle;
-    margin:2px;
+	width: 250px !important;
+	height: 150px !important;
+	float: left;
+	text-align: center;
+	vertical-align: middle;
+	margin: 2px;
 }
+
 img.thumbnail {
-    border: 1px solid #266397;
- }
- img.thumbnail {
-    width: 120px;
-    height: auto;
+	border: 1px solid #266397;
 }
+
 img.thumbnail {
-    height: 120px;
-    width: auto;
+	width: 120px;
+	height: auto;
 }
+
+img.thumbnail {
+	height: 120px;
+	width: auto;
+}
+
 span.thumbnail {
-    font-size: small;
-    font-style: italic;
-    color: #2a628f;
-    overflow-x: scroll;
-    white-space: nowrap;
+	font-size: small;
+	font-style: italic;
+	color: #2a628f;
+	overflow-x: scroll;
+	white-space: nowrap;
 }
 
 div.relatedElements {
-    float:right;
-    border:1px solid black;
-    width:320px;
-    padding:2px;
-    margin:2px;
-    text-align:left;
-    max-height:500px;
-    overflow:auto;
+	float: right;
+	border: 1px solid black;
+	width: 320px;
+	padding: 2px;
+	margin: 2px;
+	text-align: left;
+	max-height: 500px;
+	overflow: auto;
 }
 
 div.relatedElements ul {
-    margin-left: 0px;
+	margin-left: 0px;
 }
 
 div.relatedElements ul li ul {
-    margin-left: 5px;
+	margin-left: 5px;
 }
 
 div.relatedElements ul li ul li ul {
-    margin-left: 10px;
+	margin-left: 10px;
 }
 
 /*******************************
  Keywords search box
  *******************************/
- 
 .ux-mselect-item .ux-mselect-item-thesaurus {
-    color: #555;
-    font-style: italic;
+	color: #555;
+	font-style: italic;
 }
 
 .validation-report fieldset {
-    margin: 5px 2px 2px 2px;
-    padding: 5px 2px 2px 2px;
+	margin: 5px 2px 2px 2px;
+	padding: 5px 2px 2px 2px;
 }
 
 .validation-report img {
-    vertical-align:middle;
-    height:8px;
-    width:8px;
+	vertical-align: middle;
+	height: 8px;
+	width: 8px;
 }
 
 .validation-report ul li {
-    margin-left:25px;
-    margin-top:3px;
-    /*list-style-type:disc;*/
+	margin-left: 25px;
+	margin-top: 3px;
+	/*list-style-type:disc;*/
 }
+
 .validation-report ul li ul li {
-    list-style-type: disc;
+	list-style-type: disc;
 }
 
 div.toolTipOverlay {
 	background: #fff;
-    max-width: 600px!important;
-    height: auto;
+	max-width: 600px !important;
+	height: auto;
 	font-weight: normal;
 	position: absolute;
 	border-style: solid;
@@ -1055,99 +1045,126 @@ div.toolTipOverlay {
 }
 
 div.toolTipOverlay * li {
-    white-space: pre-wrap;
+	white-space: pre-wrap;
 }
 
-div.toolTipOverlay ul li, div.shortcutHelp ul li {
-    margin-left:15px;
-    list-style-type: disc;
+div.toolTipOverlay ul li,div.shortcutHelp ul li {
+	margin-left: 15px;
+	list-style-type: disc;
 }
 
 .tooltipDescription {
-	white-space:normal;
+	white-space: normal;
 }
 
-.addIcon { background-image: url('images/add.png') !important; }
-.searchIcon { background-image: url('images/find.png') !important; }
-.validationReportIcon { background-image: url('images/schematron.gif') !important; }
-.shortcutHelpIcon { background-image: url('images/schematron.gif') !important; }
-.linkIcon { background-image: url('images/link.png') !important; }
-.addVector { background-image: url('images/vector_add.png') !important; }
-.delVector { background-image: url('images/vector_delete.png') !important; }
-.connect { background-image: url('images/connect.png') !important; }
-.processMetadata { background-image: url('images/table_gear.png') !important; }
-.repository { 
-    background-image: url('images/database_yellow.png') !important; 
-    background-repeat: no-repeat;
-    padding-left: 15px;
-}
- a.repository {
-    cursor: pointer;
+.addIcon {
+	background-image: url('images/add.png') !important;
 }
 
+.searchIcon {
+	background-image: url('images/find.png') !important;
+}
+
+.validationReportIcon {
+	background-image: url('images/schematron.gif') !important;
+}
+
+.shortcutHelpIcon {
+	background-image: url('images/schematron.gif') !important;
+}
+
+.linkIcon {
+	background-image: url('images/link.png') !important;
+}
+
+.addVector {
+	background-image: url('images/vector_add.png') !important;
+}
+
+.delVector {
+	background-image: url('images/vector_delete.png') !important;
+}
+
+.connect {
+	background-image: url('images/connect.png') !important;
+}
+
+.processMetadata {
+	background-image: url('images/table_gear.png') !important;
+}
+
+.repository {
+	background-image: url('images/database_yellow.png') !important;
+	background-repeat: no-repeat;
+	padding-left: 15px;
+}
+
+a.repository {
+	cursor: pointer;
+}
 
 img.category {
-    width:15px;
-    height:15px;
-    margin: 2px;    
-    vertical-align: middle;
+	width: 15px;
+	height: 15px;
+	margin: 2px;
+	vertical-align: middle;
 }
 
-div.modalbox{
-    padding: 3px;
+div.modalbox {
+	padding: 3px;
 }
 
 div.modalbox * label {
-    padding-left: 5px;
+	padding-left: 5px;
 }
 
 div.modalbox * li {
-    font-size: small
+	font-size: small
 }
 
 div.modalbox * li * li {
-    font-size: smaller
+	font-size: smaller
 }
 
 div.row {
-  margin-bottom: 5px;
+	margin-bottom: 5px;
 }
 
 span.labelField {
-    display: table-cell;
-    display: inline-block;
-    width: 180px;
-    vertical-align: top;
-    font-size: 0.9em;
+	display: table-cell;
+	display: inline-block;
+	width: 180px;
+	vertical-align: top;
+	font-size: 0.9em;
 }
 
 span.labelFieldDisabled {
-    display: table-cell;
-    display: inline-block;
-    width: 180px;
-    vertical-align: top;
-    font-size: 0.9em;
-    color: #b4b4b4;
+	display: table-cell;
+	display: inline-block;
+	width: 180px;
+	vertical-align: top;
+	font-size: 0.9em;
+	color: #b4b4b4;
 }
 
 span.labelFieldSmall {
-    display: table-cell;
-    display: inline-block;
-    width: 60px;
-    vertical-align: top;
-    font-size: 0.9em;
+	display: table-cell;
+	display: inline-block;
+	width: 60px;
+	vertical-align: top;
+	font-size: 0.9em;
 }
 
 div.inspireThemeTitle {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-style: italic;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-style: italic;
 }
 
 span.inspireThemeElement {
-    /*display: table-cell;
+	/*display: table-cell;
     display: inline-block; */
-	vertical-align:top;
+	vertical-align: top;
 }
 
 .advsearchinspire {
@@ -1155,13 +1172,13 @@ span.inspireThemeElement {
 }
 
 .xlinked {
-     font-style: italic;
+	font-style: italic;
 }
 
 /*******************************
  Search results
  *******************************/
-div.hittext  {
+div.hittext {
 	padding: 5px;
 	overflow: auto;
 	width: 98%;
@@ -1171,19 +1188,19 @@ div.thumbnail_results {
 	float: right;
 	width: 200px !important;
 	height: auto !important;
-    text-align:center;
-    vertical-align:middle;
+	text-align: center;
+	vertical-align: middle;
 }
 
 div.hitdescription {
-
+	
 }
 
 div.buttons {
-	margin-top: 5px; 
-	margin-bottom: 5px; 
+	margin-top: 5px;
+	margin-bottom: 5px;
 	/*overflow: auto;*/
-    height: 30px;
+	height: 30px;
 	width: 100%;
 }
 
@@ -1202,7 +1219,7 @@ div.caption {
 	text-align: left;
 }
 
-div.abstract1, #owslinks {
+div.abstract1,#owslinks {
 	text-align: left;
 	margin: 5px 5px 5px 100px;
 }
@@ -1228,11 +1245,12 @@ div.hittitle a {
 }
 
 div.hittext_top {
+	
 }
 
 div.keywords {
 	text-align: left;
-	margin: 5px 5px 5px 100px;	
+	margin: 5px 5px 5px 100px;
 }
 
 div.attributionlogo {
@@ -1246,9 +1264,9 @@ div.hitexport {
 	margin-left: 5px;
 }
 
-div.ownership{
-	 float:right;
-	 clear:both;
+div.ownership {
+	float: right;
+	clear: both;
 }
 
 div.pageList {
@@ -1261,96 +1279,97 @@ div.pageList {
  Loading application panel
  *******************************/
 #loading {
-    position: absolute;
-    left: 45%;
-    top: 40%;
-    margin-left: -45px;
-    padding: 2px;
-    z-index: 20001;
-    height: auto;
-    border: 1px solid #ccc;
+	position: absolute;
+	left: 45%;
+	top: 40%;
+	margin-left: -45px;
+	padding: 2px;
+	z-index: 20001;
+	height: auto;
+	border: 1px solid #ccc;
 }
 
 #loading a {
-    color: #225588;
+	color: #225588;
 }
 
 #loading .loading-indicator {
-    background: white;
-    color: #444;
-    font: bold 13px tahoma, arial, helvetica;
-    padding: 10px;
-    margin: 0;
-    height: auto;
+	background: white;
+	color: #444;
+	font: bold 13px tahoma, arial, helvetica;
+	padding: 10px;
+	margin: 0;
+	height: auto;
 }
 
 #loading .loading-indicator img {
-    margin-right: 8px;
-    float: left;
-    vertical-align: top;
+	margin-right: 8px;
+	float: left;
+	vertical-align: top;
 }
 
 #loading-msg {
-    font: normal 10px arial, tahoma, sans-serif;
+	font: normal 10px arial, tahoma, sans-serif;
 }
 
 /*******************************
  Content panel in ExtJS layout
  *******************************/
 #content ul {
-    list-style:disc outside none;
-    padding-left: 20px;
+	list-style: disc outside none;
+	padding-left: 20px;
 }
 
 #content p {
-    margin: 1em 0px;
+	margin: 1em 0px;
 }
 
-#content h1, #content h2, #content h3 {
-    margin-bottom: 6px;
-    margin-top: 8px;
+#content h1,#content h2,#content h3 {
+	margin-bottom: 6px;
+	margin-top: 8px;
 }
 
 div.table-container {
-	  width: 80%;
-	  margin: auto;
-		padding:0;
-		display: table;
+	width: 80%;
+	margin: auto;
+	padding: 0;
+	display: table;
 }
 
-div.table-row  {
-   display: table-row;
+div.table-row {
+	display: table-row;
 }
 
 div.table-left {
-		width: 33%;
-		padding:1em;
-		display: table-cell;
+	width: 33%;
+	padding: 1em;
+	display: table-cell;
 }
 
 div.table-right {
-		width: 33%;
-		padding:1em;
-    display: table-cell;
+	width: 33%;
+	padding: 1em;
+	display: table-cell;
 }
 
 div.table-middle {
-		width: 33%;
-		padding: 1em;
-    display: table-cell;
+	width: 33%;
+	padding: 1em;
+	display: table-cell;
 }
 
-.Bt{
+.Bt {
 	float: left;
 	background-repeat: no-repeat;
 	width: 15px;
 	height: 15px;
 }
 
-.rightBt{
+.rightBt {
 	background-image: url(images/bullet_arrow_right.png);
 }
-.downBt{
+
+.downBt {
 	background-image: url(images/bullet_arrow_down.png);
 }
 
@@ -1361,7 +1380,7 @@ fieldset .attributes {
 }
 
 img.configTitle {
-	width:20px;
+	width: 20px;
 	vertical-align: middle;
 }
 
@@ -1369,6 +1388,7 @@ td.configOption {
 	width: 50px;
 	text-align: right;
 }
+
 img.configOption {
 	width: 15px;
 	vertical-align: middle;
@@ -1382,97 +1402,85 @@ td.configTitle {
 div#privileges {
 	max-height: 650px;
 }
+
 .logo-wrap div img {
-  max-height: 80px;
-  max-width: 80px;
-}
-.logo-wrap {
-  height: 90px;
-  width: 90px;
-  float: left;
-  margin: 4px;
-  margin-right: 0;
-  padding: 5px;
-  border: 1px solid #fff;
-}
-.logo-wrap span {
-  display: block;
-  overflow: hidden;
-  text-align: center;
-}
-.logo-over {
-  border: 1px solid #dddddd;
-}
-.logo-selected {
-  border: 1px solid #99bbe8;
-  background-color: #dddddd;
-  padding: 4px;
+	max-height: 80px;
+	max-width: 80px;
 }
 
+.logo-wrap {
+	height: 90px;
+	width: 90px;
+	float: left;
+	margin: 4px;
+	margin-right: 0;
+	padding: 5px;
+	border: 1px solid #fff;
+}
+
+.logo-wrap span {
+	display: block;
+	overflow: hidden;
+	text-align: center;
+}
+
+.logo-over {
+	border: 1px solid #dddddd;
+}
+
+.logo-selected {
+	border: 1px solid #99bbe8;
+	background-color: #dddddd;
+	padding: 4px;
+}
 
 div.metadataValidation form {
 	width: 35%;
 	float: left;
-	display: inline-block;
+	display: block;
 }
 
 div.metadataValidation form div {
+	display: inline;
+	padding: 2px;
+}
+
+div.metadataValidation form input[type="submit"] {
+	float: right;
 }
 
 div.metadataValidation form div label {
 	width: 25%;
 	text-align: right;
-	float: left;
 }
-div.metadataValidation form div select, div.metadataValidation form div input {
+
+div.metadataValidation form div select,div.metadataValidation form div input
+	{
 	width: 70%;
 }
 
-div.metadataValidation div.xpath.list {
-	float: right;
-	width: 60%;
+div#content_container.angularapp {
+	margin: 15px;
 }
 
-div.metadataValidation div.xpath.list th {
-	min-width: 60px;
-	background-color: #266397;
-	color: white;
+#resultTable {
+	margin-left: 2%;
+	width: 96%;
 }
 
-div.metadataValidation div.xpath.list th, div.metadataValidation div.xpath.list td {
-	border: 1px solid grey;
-	padding: 3px;
+#resultTable a.removeItem {
+	color: #C22424;
+	width: 22px;
+	height: 22px;
 }
-div.metadataValidation div.xpath.list td span.required {
-	width: 16px;
-	height: 16px;
-	background-image: url(images/score.png);
-	background-repeat: no-repeat;
-	display: block;
-	margin: auto;
-}div.metadataValidation div.xpath.list td span.optional {
-	width: 16px;
-	height: 16px;
-	background-image: url(images/scoreno.png);
-	background-repeat: no-repeat;
-	display: block;
-	margin: auto;
-}div.metadataValidation div.xpath.list td a.remove {
-	width: 9px;
-	height: 16px;
-	background-image: url(images/del.gif);
-	background-repeat: no-repeat;
-	display: block;
-	margin: auto;
+
+#resultTable a.removeItem:hover {
+	color: red;
+	text-decoration: none;
+	font-size: 120%;
 }
-div.metadataValidation div.xpath.list tr.newschema {
-	border-top: 4px solid;
-}
-div.metadataValidation div.xpath.list tr {
-	border-right: 2px solid;
-	border-left: 2px solid;
-}
-div.metadataValidation div.xpath.list tbody {
-	border-top: 2px solid;
-	border-bottom: 2px solid;
+
+#resultTable span.glyphicon-check {
+	color: #005700;
+	padding: 4px;
 }
