@@ -51,7 +51,7 @@ public abstract class AbstractGeonetworkDataDirectoryTest extends AbstractCoreIn
         assertEquals(new File(expectedDataDir, "data" + separator + "metadata_subversion"), dataDirectory.getMetadataRevisionDir());
         final File expectedResourcesDir = new File(expectedDataDir, "data" + separator + "resources");
         assertEquals(expectedResourcesDir, dataDirectory.getResourcesDir());
-        assertEquals(new File(expectedResourcesDir, "htmlCache"), dataDirectory.getHtmlCacheDir());
+        assertEquals(new File(expectedResourcesDir, "htmlcache"), dataDirectory.getHtmlCacheDir());
         assertEquals(new File(expectedConfigDir, "schema_plugins"), dataDirectory.getSchemaPluginsDir());
         assertEquals(new File(expectedConfigDir, "codelist"), dataDirectory.getThesauriDir());
     }
