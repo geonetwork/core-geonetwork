@@ -21,7 +21,12 @@
 
               var init = function() {
                 gnSuggestion.load().success(function(data) {
-                  scope.suggestions = data;
+                  if(data && !angular.isString(data)) {
+                    scope.suggestions = data;
+                  }
+                  else {
+                    scope.suggestions = [];
+                  }
                 });
               };
 
