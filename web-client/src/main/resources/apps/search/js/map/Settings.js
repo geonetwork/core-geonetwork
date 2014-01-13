@@ -42,13 +42,13 @@ GeoNetwork.map.BACKGROUND_LAYERS = [
 ];
 
 //// Config for OSM based maps
-//GeoNetwork.map.PROJECTION = "EPSG:900913";
-////GeoNetwork.map.EXTENT = new OpenLayers.Bounds(-550000, 5000000, 1200000, 7000000);
-//GeoNetwork.map.EXTENT = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
-//GeoNetwork.map.BACKGROUND_LAYERS = [
-//    new OpenLayers.Layer.OSM()
-//    //new OpenLayers.Layer.Google("Google Streets");
-//];
+GeoNetwork.map.PROJECTION = "EPSG:900913";
+//GeoNetwork.map.EXTENT = new OpenLayers.Bounds(-550000, 5000000, 1200000, 7000000);
+GeoNetwork.map.EXTENT = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34);
+GeoNetwork.map.BACKGROUND_LAYERS = [
+    new OpenLayers.Layer.OSM()
+    //new OpenLayers.Layer.Google("Google Streets");
+];
 
 //GeoNetwork.map.RESOLUTIONS = [];
 
@@ -58,7 +58,7 @@ GeoNetwork.map.BACKGROUND_LAYERS = [
 //GeoNetwork.map.OWS = "../../maps/demis.xml";
 //* Default GeoServer layers
 //GeoNetwork.map.OWS = "../../maps/geoserver_localhost.xml";
-GeoNetwork.map.CONTEXT = "../../maps/geoserver_localhost.wmc";
+//GeoNetwork.map.CONTEXT = "../../maps/geoserver_localhost.wmc";
 
 GeoNetwork.map.CONTEXT_MAP_OPTIONS = {
  controls: [],

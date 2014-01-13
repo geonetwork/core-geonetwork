@@ -39,7 +39,6 @@
 			<link rel="stylesheet" type="text/css" href="../../apps/tabsearch/css/gnmetadatadefault.css"/>
 			<link rel="stylesheet" type="text/css" href="../../apps/js/OpenLayers/theme/default/style.css"/>
 			<link rel="stylesheet" type="text/css" href="../../apps/css/metadata-view.css"/>
-			
 			<style>
 				
 				body,p,td,li,th {font-family:arial;}
@@ -115,9 +114,11 @@
 						
 					</xsl:when>
 					<xsl:otherwise>
-						<script type="text/javascript" src="../../apps/js/ext/adapter/ext/ext-base.js"></script>
-						<script type="text/javascript" src="../../apps/js/ext/ext-all.js"></script>
-						<script type="text/javascript" src="../../apps/tabsearch/js/App-mini.js"></script>
+					    <script type="text/javascript" src="../../apps/js/ext/adapter/ext/ext-base.js"></script>
+					    <script type="text/javascript" src="../../apps/js/ext/ext-all.js"></script>
+					    <script type="text/javascript" src="../../static/geonetwork-client-mini-nomap.js"></script>
+					    <script type="text/javascript" src="../../static/geonetwork-client-mini.js"></script>
+					    <script type="text/javascript" src="../../static/geonetwork-client-tabsearch-app.js"></script>
 					</xsl:otherwise>
 				</xsl:choose>
 			</body>
