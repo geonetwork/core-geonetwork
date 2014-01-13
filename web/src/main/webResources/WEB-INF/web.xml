@@ -304,10 +304,13 @@
         <url-pattern>/srv/*</url-pattern>
     </servlet-mapping>
 
+    <!--
+    Multinode configuration: Add servlet mapping for each nodes
     <servlet-mapping>
         <servlet-name>gn-servlet</servlet-name>
         <url-pattern>/node1/*</url-pattern>
     </servlet-mapping>
+     -->
     <!-- Servlet proxy -->
     <servlet>
         <servlet-name>HttpProxy</servlet-name>
