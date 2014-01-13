@@ -1306,6 +1306,16 @@ function showLinkedMetadataSelectionPanel(ref, name, fullRelationships) {
 function processItem(items, index, parent) {
 	
 	if(index >= items.length) {
+	    if (parent) {
+	      var i = parent.id.indexOf('_');
+          if (i != -1) {
+            var found = Ext.query("*[id^="+parent.id.substring(0, i+1)+"]");
+            if (found.length > 0) {
+              parentInDoc = found[found.length - 1];
+              parentInDoc.scrollTo();
+            }
+          }
+	    }
 		return;
 	}
 	

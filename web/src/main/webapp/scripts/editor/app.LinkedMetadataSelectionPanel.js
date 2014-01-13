@@ -214,10 +214,9 @@ app.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
                                    fields: ['label', 'rel'],
                                    data : [                                         
 //                                           [translate('parent'), 'parent'],
-                                           [translate('crossReference'),  'crossReference'],
-                                           [translate('partOfSeamlessDatabase'), 'partOfSeamlessDatabase'],
-                                           [translate('source'), 'source'],
-                                           [translate('stereoMate'), 'stereoMate']                                           
+                                           [translate('isDescriptionOf'), 'isDescriptionOf'],
+                                           [translate('largerWorkCitation'),  'largerWorkCitation'],
+                                           [translate('isTemporalStatOf'), 'isTemporalStatOf'],
                                           ]
                                     }),
                                   displayField:'label',

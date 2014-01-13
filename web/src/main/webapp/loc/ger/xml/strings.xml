@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
+    <isDescriptionOf js="true">Description</isDescriptionOf>
+    <largerWorkCitation js="true">Larger Work Citation</largerWorkCitation>
+    <isTemporalStatOf js="true">Temporal State</isTemporalStatOf>
     <createNewSharedObject js="true">Bearbeite %objtype%</createNewSharedObject>
     <noRecords js='true'>Keine Metadaten gefunden</noRecords>
     <edit js='true'>Bearbeiten</edit>
