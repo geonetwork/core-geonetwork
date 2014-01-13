@@ -61,7 +61,7 @@
         </dependency>
         <dependency>
             <groupId>xml-resolver</groupId>
-            <artifactId>xml-resolver</artifactId>
+            <artifactId>xml-resolver-patched</artifactId>
         </dependency>
         <dependency>
             <groupId>jaxen</groupId>
