@@ -653,7 +653,7 @@
             <contextPath>/geonetwork</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-            <resourcesAsCSV>${project.basedir}/src/main/webapp,${rootProjectDir}/web-ui/src/main/resources/,${build.webapp.resources},${rootProjectDir}/web-client/src/main/resources/,${widgets.webapp.resources}</resourcesAsCSV>
+            <resourcesAsCSV>${project.basedir}/src/main/webapp,${rootProjectDir}/web-ui/src/main/resources/,${build.webapp.resources},${rootProjectDir}/web-client/src/main/resources/</resourcesAsCSV>
             </baseResource>
           </webApp>
           <stopKey>JETTY_TOP</stopKey>
