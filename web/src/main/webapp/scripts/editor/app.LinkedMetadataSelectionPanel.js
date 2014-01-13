@@ -45,11 +45,22 @@ app.Utility = {
 		 * in a CSW response but there's no easy way to 
 		 * check which is the one for the GetCapabilities.
 		 */
-		checkUriNullValues: function (v, record) {
+		checkTitleNullValues: function (v, record) {
 			if (record.URI)
 				return record.URI[0].value;
 			else
 				return '';
+		},
+
+		/**
+		 * Check title null values and return first
+		 * title found.
+		 */
+		checkUriNullValues: function (v, record) {
+			if (record.title && record.title.length > 0)
+				return record.title[0].value;
+			else
+				return translate('noTitle');
 		}
 };
 
@@ -73,7 +84,7 @@ app.linkedMetadata = {};
  */
 app.linkedMetadata.linkedMetadataStore = new Ext.data.JsonStore({
     fields: [{
-        name: 'title', mapping: 'title[0].value', defaultValue: ''
+        name: 'title', convert: app.Utility.checkTitleNullValues
     }, {
         name: 'subject', convert: app.Utility.convertSubjectAsCommaSeparatedValues, defaultValue: ''
     }, {
