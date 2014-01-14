@@ -46,12 +46,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.ServiceNotAllowedEx;
@@ -98,6 +92,7 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Parent;
 import org.jdom.filter.ElementFilter;
+import org.jdom.xpath.XPath;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
@@ -2008,40 +2003,40 @@ public class DataManager {
 				valid = false;
 			}
 		} else {
-            if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER, "Validating against XSD " + schema);
-            }
-			// do XSD validation
-			Element md = doc.getRootElement();
-			Element xsdErrors = getXSDXmlReport(schema,md);
-	    	if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
-	     		Integer[] results = {0, 0, 0};
-	     		valTypeAndStatus.put("xsd", results);
-	            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
-	                Log.debug(Geonet.DATA_MANAGER, "Invalid.");
-					valid = false;
-	    	} else {
-	     		Integer[] results = {1, 0, 0};
-	     		valTypeAndStatus.put("xsd", results);
-	            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
-	                Log.debug(Geonet.DATA_MANAGER, "Valid.");
-	    	}	
-			try {
-				editLib.enumerateTree(md);
-     		schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
-     		editLib.removeEditingInfo(md);
-			} catch (Exception e) {
-				e.printStackTrace();
-				Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata "+id+": "+e.getMessage());
-				valid = false;
-			}
+			//Deprecated, sustituted by applyCustomSchematronRules
+//            if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+//                Log.debug(Geonet.DATA_MANAGER, "Validating against XSD " + schema);
+//            }
+//			// do XSD validation
+//			Element md = doc.getRootElement();
+//			Element xsdErrors = getXSDXmlReport(schema,md);
+//	    	if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
+//	     		Integer[] results = {0, 0, 0};
+//	     		valTypeAndStatus.put("xsd", results);
+//	            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+//	                Log.debug(Geonet.DATA_MANAGER, "Invalid.");
+//					valid = false;
+//	    	} else {
+//	     		Integer[] results = {1, 0, 0};
+//	     		valTypeAndStatus.put("xsd", results);
+//	            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+//	                Log.debug(Geonet.DATA_MANAGER, "Valid.");
+//	    	}	
+//			try {
+//				editLib.enumerateTree(md);
+//     		schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
+//     		editLib.removeEditingInfo(md);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata "+id+": "+e.getMessage());
+//				valid = false;
+//			}
 		}
 
         //Apply custom schematron rules
         Element errors = applyCustomSchematronRules(dbms, schema, doc.getRootElement(), lang, valTypeAndStatus);
-        if(errors != null) {
-        	valid = false;
-        }
+        valid = valid && errors == null;
+        
 
 		if (schematronError != null && schematronError.getContent().size() > 0) {
 			valid = false;
@@ -2129,24 +2124,28 @@ public class DataManager {
               editLib.expandElements(schema, md);
               version = editLib.getVersionForEditing(schema, id, md);
                     
+              
+
+  			//Deprecated, sustituted by applyCustomSchematronRules
               //-- get a schematron error report if no xsd errors and add results
               //-- to the metadata as a geonet:schematronerrors element with 
               //-- links to the ref id of the affected element
-              schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
-              if (schematronError != null) {
-                  md.addContent((Element)schematronError.clone());
-                  if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                      Log.debug(Geonet.DATA_MANAGER, "  - Schematron error: " + Xml.getString(schematronError));
-              }
+//              schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
+//              if (schematronError != null) {
+//                  md.addContent((Element)schematronError.clone());
+//                  if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+//                      Log.debug(Geonet.DATA_MANAGER, "  - Schematron error: " + Xml.getString(schematronError));
+//              }
 		}
         else {
         	try {
 		        // enumerate the metadata xml so that we can report any problems found 
 		        // by the schematron_xml script to the geonetwork editor
 		        editLib.enumerateTree(md);
-	
+
+				//Deprecated, sustituted by applyCustomSchematronRules
 		        // get an xml version of the schematron errors and return for error display
-		        schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
+//		        schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
 	
 		        // remove editing info added by enumerateTree
 		        editLib.removeEditingInfo(md);
@@ -2158,7 +2157,10 @@ public class DataManager {
 		}
         
         //Apply custom schematron rules
-        errorReport.addContent(applyCustomSchematronRules(dbms, schema, md, lang, valTypeAndStatus));
+        Element error = applyCustomSchematronRules(dbms, schema, md, lang, valTypeAndStatus);
+        if(error != null) {
+        	errorReport.addContent(error);
+        }
         
         if (schematronError != null && schematronError.getContent().size() > 0) {
             Element schematron = new Element("schematronerrors", Edit.NAMESPACE);
@@ -2208,20 +2210,18 @@ public class DataManager {
 	
 			@SuppressWarnings("unchecked")
 			final List<Element> schematroncriteria = dbms.select(
-					"SELECT DISTINCT schematron.id, file FROM schematroncriteria, "
-					+ "schematron WHERE schematron.isoschema like ? "
-					+ "AND schematroncriteria.schematron = schematron.id;", 
+					"SELECT DISTINCT schematron.id, file, required FROM "
+					+ "schematron WHERE schematron.isoschema like ? ", 
 					metadataSchema.getName()).getChildren();
 			
 			//Loop through all xsl files
 			for (Element schematron : schematroncriteria) {
-				
-				Integer id = Integer.parseInt(schematron
-						.getChildText("id"));
-				
+			
+				Boolean required = "t".equalsIgnoreCase(schematron.getChildText("required"));
+				Integer id = Integer.parseInt(schematron.getChildText("id"));
 				//it contains absolute path to the xsl file
 				String rule = schematron.getChildText("file");
-				
+				Integer ifNotValid = (required? 0 : 2);
 	
 				@SuppressWarnings("unchecked")
 				final List<Element> criterias = dbms.select(
@@ -2233,18 +2233,34 @@ public class DataManager {
 				//if any criteria does not apply, do not apply at all (AND)
 				boolean apply = true;
 				for(Element criteria : criterias) {
-					//TODO
-					String type = criteria.getChildText("type");
+
+					Integer type = Integer.valueOf(criteria.getChildText("type"));
 					String value = criteria.getChildText("value");
+					boolean tmpApply = false;
+                    
+					switch(type) {
+					case 0: //group
+						tmpApply = dbms.select(
+								"SELECT 1 FROM metadata "
+								+ "WHERE groupowner = value ", 
+								id).getChildren().size() == 0;
+						break;
+					case 1: //keyword
+                    default: 
+	                    XPath xpath = XPath.newInstance(
+	                    		  "//gmd:keyword/gco:CharacterString/text() = '" + value + "' "
+	                    		  + "or //gmd:keyword/gmd:PT_FreeText/gmd:textGroup/"
+	                    		  + "gmd:LocalisedCharacterString/text() = '" + value + "'");
+	                    tmpApply = Boolean.valueOf(xpath.valueOf(md));
+	                      break;
+					}
 					
-					 XPathFactory xPathfactory = XPathFactory.newInstance();
-                     XPath xpath = xPathfactory.newXPath();
-                     XPathExpression expr = xpath
-                                     .compile("//gmd:keyword");
-
-                     String idString = (String) expr.evaluate(md,
-                                     XPathConstants.STRING);
-
+					apply = apply && tmpApply;
+					
+					if(!apply) {
+						break;
+					}
+                     
 				}
 				
 				if(apply) {
@@ -2252,7 +2268,7 @@ public class DataManager {
 		                Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
 		            }
 		            
-					String ruleId = rule.substring(rule.lastIndexOf("/"), 
+					String ruleId = rule.substring(rule.lastIndexOf("/") + 1, 
 							rule.indexOf(".xsl"));
 					
 					Element report = new Element("report", Edit.NAMESPACE);
@@ -2281,7 +2297,7 @@ public class DataManager {
 		                    i.next(); 
 		                	invalidRules ++;
 		                }
-						Integer[] results = {invalidRules!=0?0:1, firedRules, invalidRules};
+						Integer[] results = {invalidRules!=0?ifNotValid:1, firedRules, invalidRules};
 						if (valTypeAndStatus != null) {
 						    valTypeAndStatus.put(ruleId, results);
 						}
@@ -2308,7 +2324,7 @@ public class DataManager {
 			Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
             errorReport.addContent("Schematron error ocurred, rules could not be verified: " + sqle.getMessage());
             schemaTronXmlOut.addContent(errorReport);
-		} catch (XPathExpressionException e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		
