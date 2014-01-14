@@ -131,10 +131,10 @@ function($scope, $http) {
 				} else {
 					item.required = "";
 				}
-				if(item.xpath) {
-					item.required = "keyword" ;
+				if(item.type == 0) {
+					item.type = "group" ;
 				} else {
-					item.required = "group";
+					item.type = "keyword";
 				}
 			});
 		});
@@ -166,7 +166,7 @@ function TypeaheadCtrl($scope, $http, limitToFilter) {
 			angular.forEach(data.data, function(item) {
 				res.push({
 					label : item.search,
-					value : item.xlink
+					value : item.search
 				});
 			});
 			return limitToFilter(res, 8);

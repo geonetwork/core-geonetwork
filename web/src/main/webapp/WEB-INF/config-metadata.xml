@@ -841,16 +841,9 @@
 
 
 		<!-- Validation framework extended -->
-		<service name="metadata.schema.validation.do">
-			<class name=".services.metadata.schema.DoValidation" />
-		</service>
 		<service name="metadata.schema.validation">
 			<class name=".services.metadata.schema.Validation" />
 			<output sheet="metadata-schema-validation.xsl" />
-		</service>
-		<!-- At start, check the schemas available -->
-		<service name="metadata.schema.autoLoad">
-			<class name=".services.metadata.schema.AutoLoad" />
 		</service>
 
          <service name="metadata.validation.status">

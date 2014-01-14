@@ -27,6 +27,31 @@
 
 package org.fao.geonet.kernel;
 
+import java.io.File;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.JeevesException;
 import jeeves.exceptions.ServiceNotAllowedEx;
@@ -41,6 +66,7 @@ import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
@@ -72,24 +98,6 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Parent;
 import org.jdom.filter.ElementFilter;
-
-import java.io.File;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
@@ -1976,6 +1984,8 @@ public class DataManager {
 	public boolean doValidate(Dbms dbms, String schema, String id, Document doc, String lang) {
 		HashMap <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
 		boolean valid = true;
+		// then do schematron validation
+		Element schematronError = null;
 
 		if (doc.getDocType() != null) {
             if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
@@ -1998,25 +2008,24 @@ public class DataManager {
 				valid = false;
 			}
 		} else {
-            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "Validating against XSD " + schema);
+            }
 			// do XSD validation
 			Element md = doc.getRootElement();
-    	Element xsdErrors = getXSDXmlReport(schema,md);
-    	if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
-     		Integer[] results = {0, 0, 0};
-     		valTypeAndStatus.put("xsd", results);
-            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                Log.debug(Geonet.DATA_MANAGER, "Invalid.");
-				valid = false;
-    	} else {
-     		Integer[] results = {1, 0, 0};
-     		valTypeAndStatus.put("xsd", results);
-            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                Log.debug(Geonet.DATA_MANAGER, "Valid.");
-    	}	
-			// then do schematron validation
-			Element schematronError = null;
+			Element xsdErrors = getXSDXmlReport(schema,md);
+	    	if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
+	     		Integer[] results = {0, 0, 0};
+	     		valTypeAndStatus.put("xsd", results);
+	            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+	                Log.debug(Geonet.DATA_MANAGER, "Invalid.");
+					valid = false;
+	    	} else {
+	     		Integer[] results = {1, 0, 0};
+	     		valTypeAndStatus.put("xsd", results);
+	            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+	                Log.debug(Geonet.DATA_MANAGER, "Valid.");
+	    	}	
 			try {
 				editLib.enumerateTree(md);
      		schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
@@ -2026,11 +2035,17 @@ public class DataManager {
 				Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata "+id+": "+e.getMessage());
 				valid = false;
 			}
-			if (schematronError != null && schematronError.getContent().size() > 0) {
-				valid = false;
-			}
 		}
 
+        //Apply custom schematron rules
+        Element errors = applyCustomSchematronRules(dbms, schema, doc.getRootElement(), lang, valTypeAndStatus);
+        if(errors != null) {
+        	valid = false;
+        }
+
+		if (schematronError != null && schematronError.getContent().size() > 0) {
+			valid = false;
+		}
 		// now save the validation status
 		try {
 			saveValidationStatus(dbms, id, valTypeAndStatus, new ISODate().toString());
@@ -2142,6 +2157,9 @@ public class DataManager {
 			}
 		}
         
+        //Apply custom schematron rules
+        errorReport.addContent(applyCustomSchematronRules(dbms, schema, md, lang, valTypeAndStatus));
+        
         if (schematronError != null && schematronError.getContent().size() > 0) {
             Element schematron = new Element("schematronerrors", Edit.NAMESPACE);
             Element idElem = new Element("id", Edit.NAMESPACE);
@@ -2162,6 +2180,143 @@ public class DataManager {
 		saveValidationStatus(dbms, id, valTypeAndStatus, new ISODate().toString());
    		
 		return Pair.read(errorReport, version);
+	}
+	
+
+    /**
+     * 
+     * TODO
+     * Creates XML schematron report for each set of rules defined in schema 
+     * directory. This method assumes that you've run enumerateTree on the 
+     * metadata
+     * 
+     * Returns null if no error on validation.
+     * 
+     * @param schema
+     * @param md
+     * @param lang
+     * @param valTypeAndStatus
+     * @return errors
+     */
+	private Element applyCustomSchematronRules(Dbms dbms, String schema, Element md, 
+			String lang, Map<String, Integer[]> valTypeAndStatus) {
+		MetadataSchema metadataSchema = getSchema(schema);
+
+		Element schemaTronXmlOut = new Element("schematronerrors",
+				Edit.NAMESPACE);
+		try {
+	
+			@SuppressWarnings("unchecked")
+			final List<Element> schematroncriteria = dbms.select(
+					"SELECT DISTINCT schematron.id, file FROM schematroncriteria, "
+					+ "schematron WHERE schematron.isoschema like ? "
+					+ "AND schematroncriteria.schematron = schematron.id;", 
+					metadataSchema.getName()).getChildren();
+			
+			//Loop through all xsl files
+			for (Element schematron : schematroncriteria) {
+				
+				Integer id = Integer.parseInt(schematron
+						.getChildText("id"));
+				
+				//it contains absolute path to the xsl file
+				String rule = schematron.getChildText("file");
+				
+	
+				@SuppressWarnings("unchecked")
+				final List<Element> criterias = dbms.select(
+						"SELECT DISTINCT type, value FROM schematroncriteria "
+						+ "WHERE schematron = ? ", 
+						id).getChildren();
+				
+				//Loop through all criteria to see if apply schematron
+				//if any criteria does not apply, do not apply at all (AND)
+				boolean apply = true;
+				for(Element criteria : criterias) {
+					//TODO
+					String type = criteria.getChildText("type");
+					String value = criteria.getChildText("value");
+					
+					 XPathFactory xPathfactory = XPathFactory.newInstance();
+                     XPath xpath = xPathfactory.newXPath();
+                     XPathExpression expr = xpath
+                                     .compile("//gmd:keyword");
+
+                     String idString = (String) expr.evaluate(md,
+                                     XPathConstants.STRING);
+
+				}
+				
+				if(apply) {
+		            if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+		                Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
+		            }
+		            
+					String ruleId = rule.substring(rule.lastIndexOf("/"), 
+							rule.indexOf(".xsl"));
+					
+					Element report = new Element("report", Edit.NAMESPACE);
+					report.setAttribute("rule", ruleId,
+							Edit.NAMESPACE);
+
+					try {
+						Map<String,String> params = new HashMap<String,String>();
+						params.put("lang", lang);
+						params.put("rule", rule);
+						params.put("thesaurusDir", this.thesaurusDir);
+						Element xmlReport = Xml.transform(md, rule, params);
+						if (xmlReport != null) {
+							report.addContent(xmlReport);
+						}
+						// add results to persitent validation information
+						int firedRules = 0;
+						Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+						while (i.hasNext()) {
+		                    i.next();
+		                    firedRules ++;
+		                }
+						int invalidRules = 0;
+		                i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+		                while (i.hasNext()) {
+		                    i.next(); 
+		                	invalidRules ++;
+		                }
+						Integer[] results = {invalidRules!=0?0:1, firedRules, invalidRules};
+						if (valTypeAndStatus != null) {
+						    valTypeAndStatus.put(ruleId, results);
+						}
+					} catch (Exception e) {
+						Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+rule+" failed");
+
+		                // If an error occurs that prevents to verify schematron rules, add to show in report
+		                Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
+		                errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
+		                report.addContent(errorReport);
+
+						e.printStackTrace();
+					}
+
+					// -- append report to main XML report.
+					schemaTronXmlOut.addContent(report);
+					
+				
+				}
+	
+			}
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+			Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
+            errorReport.addContent("Schematron error ocurred, rules could not be verified: " + sqle.getMessage());
+            schemaTronXmlOut.addContent(errorReport);
+		} catch (XPathExpressionException e) {
+			e.printStackTrace();
+		}
+		
+		if(schemaTronXmlOut.getChildren().isEmpty()) {
+			schemaTronXmlOut = null;
+		}
+		
+		return schemaTronXmlOut;
 	}
 	
 	/**
