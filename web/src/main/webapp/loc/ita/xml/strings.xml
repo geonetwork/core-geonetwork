@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
+    <metadataValidationConfiguration>Metadata Validation</metadataValidationConfiguration>
+    <metadataValidationConfigurationDesc>Configure Metadata Validation</metadataValidationConfigurationDesc>
+    <noTitle>No Title</noTitle>
+    <isDescriptionOf js="true">Description</isDescriptionOf>
+    <largerWorkCitation js="true">Larger Work Citation</largerWorkCitation>
+    <isTemporalStatOf js="true">Temporal State</isTemporalStatOf>
     <createNewSharedObject js="true">Modifica %objtype%</createNewSharedObject>
     <noRecords js='true'>Nessun record trovato</noRecords>
     <edit js='true'>Modifica</edit>

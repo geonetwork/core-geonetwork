@@ -605,9 +605,9 @@ var geocat = {
         						title = (title.innerText || title.textContent);
         					}
         					var parent = (relation.getAttribute("parent") == "true");
-        					var sibling = (type == "source" || type == "stereoMate" 
-        									|| type == "partOfSeamlessDatabase" 
-        										|| type == "crossReference");
+        					var sibling = (type == "source" || type == "isTemporalStatOf"
+        									|| type == "largerWorkCitation"
+        										|| type == "isDescriptionOf");
         					
         					var div = "<li class='relation arrow " + ((sibling)? "sibling" : "") + " " 
         							+ type + " " + ((parent)? "parent" : "") +

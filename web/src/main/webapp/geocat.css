@@ -145,6 +145,33 @@ a.no-help:hover {
 	background-image: url('images/chain_parent_partOfSeamlessDatabase.png');
 }
 
+.arrow.isDescriptionOf {
+	background-image: url('images/chain_child_isDescriptionOf.png');
+}
+
+.arrow.isTemporalStatOf {
+	background-image: url('images/chain_child_isTemporalStatOf.png');
+}
+
+.arrow.largerWorkCitation {
+	background-image: url('images/chain_child_largerWorkCitation.png');
+}
+.arrow.isDescriptionOf.parent {
+	background-image: url('images/chain_parent_isDescriptionOf.png');
+}
+
+.arrow.isTemporalStatOf.parent {
+	background-image: url('images/chain_parent_isTemporalStatOf.png');
+}
+
+.arrow.largerWorkCitation.parent {
+	background-image: url('images/chain_parent_largerWorkCitation.png');
+}
+
+.arrow.partOfSeamlessDatabase.parent {
+	background-image: url('images/chain_parent_partOfSeamlessDatabase.png');
+}
+
 .resultsHeader {
     padding-bottom: 2em;
     margin-bottom: 2em;

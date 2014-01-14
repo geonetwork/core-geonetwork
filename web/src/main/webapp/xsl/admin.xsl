@@ -425,7 +425,12 @@
 					        <xsl:with-param name="title" select="/root/gui/strings/downloadBackup"/>
 							<xsl:with-param name="desc" select="/root/gui/strings/downloadBackupDesc"/>
 						</xsl:call-template>
- 
+						<xsl:call-template name="addrow">
+							<xsl:with-param name="service" select="'metadata.schema.validation'"/>
+					        <xsl:with-param name="title" select="/root/gui/strings/metadataValidationConfiguration"/>
+							<xsl:with-param name="desc" select="/root/gui/strings/metadataValidationConfigurationDesc"/>
+						</xsl:call-template>
+
 					</xsl:variable>
 
 

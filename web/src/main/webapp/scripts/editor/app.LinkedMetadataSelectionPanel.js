@@ -50,7 +50,28 @@ app.Utility = {
 				return record.URI[0].value;
 			else
 				return '';
-		}
+		},
+
+		/**
+		 * Check title null values and return first
+		 * title found.
+		 */
+		checkTitleNullValues: function (v, record) {
+			if (record.title && record.title.length > 0)
+				return record.title[0].value;
+			else
+				return translate('noTitle');
+		},
+        /**
+         * Check title null values and return first
+         * title found.
+         */
+        checkIdentifierNullValues: function (v, record) {
+            if (record.identifier && record.identifier.length > 0)
+                return record.identifier[0].value;
+            else
+                return '';
+        }
 };
 
 /**
@@ -73,11 +94,11 @@ app.linkedMetadata = {};
  */
 app.linkedMetadata.linkedMetadataStore = new Ext.data.JsonStore({
     fields: [{
-        name: 'title', mapping: 'title[0].value', defaultValue: ''
+        name: 'title', convert: app.Utility.checkTitleNullValues, defaultValue: ''
     }, {
         name: 'subject', convert: app.Utility.convertSubjectAsCommaSeparatedValues, defaultValue: ''
     }, {
-        name: 'uuid', mapping: 'identifier[0].value', defaultValue: ''
+        name: 'uuid', convert: app.Utility.checkIdentifierNullValues, defaultValue: ''
     }, {
         name: 'uri', convert: app.Utility.checkUriNullValues
     }
@@ -214,10 +235,9 @@ app.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
                                    fields: ['label', 'rel'],
                                    data : [                                         
 //                                           [translate('parent'), 'parent'],
-                                           [translate('crossReference'),  'crossReference'],
-                                           [translate('partOfSeamlessDatabase'), 'partOfSeamlessDatabase'],
-                                           [translate('source'), 'source'],
-                                           [translate('stereoMate'), 'stereoMate']                                           
+                                           [translate('isDescriptionOf'), 'isDescriptionOf'],
+                                           [translate('largerWorkCitation'),  'largerWorkCitation'],
+                                           [translate('isTemporalStatOf'), 'isTemporalStatOf'],
                                           ]
                                     }),
                                   displayField:'label',

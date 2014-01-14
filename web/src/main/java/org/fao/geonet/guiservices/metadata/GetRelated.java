@@ -159,9 +159,13 @@ public class GetRelated implements Service {
                         String.valueOf(id), forEditing, withValidationErrors,
                         keepXlinkAttributes);
             }
-						Element response = new Element("response");
+            Element response = new Element("response");
+
+            // TODO this should use lucene index instead of xsl transforms
             if (md != null) {
-                List<?> sibs = Xml.selectNodes(md, "*//gmd:aggregationInfo/*[gmd:aggregateDataSetIdentifier/*/gmd:code and gmd:initiativeType/gmd:DS_InitiativeTypeCode and string(gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue)='crossReference']", nsList);
+                List<?> sibs = Xml.selectNodes(md, "*//gmd:aggregationInfo/*[gmd:aggregateDataSetIdentifier/*/gmd:code and " +
+                                                   "gmd:initiativeType/gmd:DS_InitiativeTypeCode and " +
+                                                   "string(gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue)='crossReference']", nsList);
 								for (Object o : sibs) {
 									if (o instanceof Element) {
 										Element sib = (Element)o;
@@ -171,7 +175,7 @@ public class GetRelated implements Service {
                   	String sibUuid = agId
 														.getChild("code", gmd)
 														.getChildText("CharacterString", gco);
-										String initType = sib.getChild("initiativeType", gmd) 
+										String initType = sib.getChild("initiativeType", gmd)
 																 .getChild("DS_InitiativeTypeCode", gmd).getAttributeValue("codeListValue");
 
 										if(dbms == null) dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
@@ -260,17 +264,23 @@ public class GetRelated implements Service {
             //And lucene ones:
             relatedRecords.addContent(search(uuid, "crossReference", context, from,
                     to, fast));
-            relatedRecords.addContent(search(uuid, "partOfSeamlessDatabase", context, 
+            relatedRecords.addContent(search(uuid, "partOfSeamlessDatabase", context,
             		from, to, fast));
             relatedRecords.addContent(search(uuid, "source", context, from,
                     to, fast));
             relatedRecords.addContent(search(uuid, "stereoMate", context, from,
                     to, fast));
+            relatedRecords.addContent(search(uuid, "isDescriptionOf", context,
+            		from, to, fast));
+            relatedRecords.addContent(search(uuid, "isTemporalStatOf", context, from,
+                    to, fast));
+            relatedRecords.addContent(search(uuid, "largerWorkCitation", context, from,
+                    to, fast));
 
         }
-        
-        XMLOutputter xmlout = new XMLOutputter();
-        xmlout.output(relatedRecords,  System.out);
+//
+//        XMLOutputter xmlout = new XMLOutputter();
+//        xmlout.output(relatedRecords,  System.out);
 
         return relatedRecords;
 
@@ -315,8 +325,9 @@ public class GetRelated implements Service {
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
             else if ("datasets".equals(type) || "fcats".equals(type) || "sources".equals(type) || "siblings".equals(type))
                 parameters.addContent(new Element("uuid").setText(uuid));
-            else if ("crossReference".equals(type) || "partOfSeamlessDatabase".equals(type) 
-            			|| "source".equals(type) || "stereoMate".equals(type))
+            else if ("crossReference".equals(type) || "partOfSeamlessDatabase".equals(type)
+            			|| "source".equals(type) || "stereoMate".equals(type) || "isDescriptionOf".equals(type)
+                        || "isTemporalStatOf".equals(type) || "largerWorkCitation".equals(type))
             	parameters.addContent(new Element(type).setText(uuid));
             parameters.addContent(new Element("fast").addContent("index"));
             parameters.addContent(new Element("sortBy").addContent("title"));

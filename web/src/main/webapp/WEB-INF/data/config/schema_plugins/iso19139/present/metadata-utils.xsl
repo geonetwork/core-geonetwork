@@ -172,7 +172,10 @@
 			<xsl:variable name="siblings" select="/root/gui/relation/crossReference/response/*|
 													/root/gui/relation/partOfSeamlessDatabase/response/*|
 													/root/gui/relation/source/response/*|
-													/root/gui/relation/stereoMate/response/*"/>
+													/root/gui/relation/stereoMate/response/*|
+													/root/gui/relation/largerWorkCitation/response/*|
+													/root/gui/relation/isTemporalStatOf/response/*|
+													/root/gui/relation/isDescriptionOf/response/*"/>
 
 			<!-- The GetCapabilities URL -->
 			<xsl:variable name="capabilitiesUrl">
@@ -276,6 +279,15 @@
 		        							</xsl:if>
 		        							<xsl:if test="$type = 'crossReference'">
 		        								<xsl:value-of select="/root/gui/strings/crossReference" />
+		        							</xsl:if>
+		        							<xsl:if test="$type = 'largerWorkCitation'">
+		        								<xsl:value-of select="/root/gui/strings/largerWorkCitation" />
+		        							</xsl:if>
+		        							<xsl:if test="$type = 'isDescriptionOf'">
+		        								<xsl:value-of select="/root/gui/strings/isDescriptionOf" />
+		        							</xsl:if>
+		        							<xsl:if test="$type = 'isTemporalStatOf'">
+		        								<xsl:value-of select="/root/gui/strings/isTemporalStatOf" />
 		        							</xsl:if>
 		        						</xsl:variable>
 		        						<li><a class="arrow sibling {$type} {$isParent}" title="{$helpText}" href="javascript:geocat.openMetadataWindow('{uuid}');">

@@ -18,7 +18,8 @@
     </relations>
   </xsl:template>
 
-  <xsl:template mode="relation" match="related|services|datasets|children|parent|sources|fcats|hasfeaturecat|crossReference|partOfSeamlessDatabase|source|stereoMate">
+  <xsl:template mode="relation" priority="100" match="related|services|datasets|children|parent|sources|fcats|hasfeaturecat|crossReference
+                                        |partOfSeamlessDatabase|source|stereoMate|largerWorkCitation|isTemporalStatOf|isDescriptionOf">
     <xsl:apply-templates mode="relation" select="response/*">
       <xsl:with-param name="type" select="name(.)"/>
       <xsl:with-param name="isParent" select="./@parent"/>
