@@ -232,6 +232,14 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<gm03Valid>Gültig nach GM03</gm03Valid>
 	<inspireValid>Gültig nach INSPIRE</inspireValid>
     
+    
+	<validmd>
+		<xsd>Gültig nach XSD</xsd>
+		<schematron-rules-iso>Gültig nach ISO</schematron-rules-iso>
+		<schematron-rules-iso-che>Gültig nach GM03</schematron-rules-iso-che>
+		<schematron-rules-inspire>Gültig nach INSPIRE</schematron-rules-inspire>
+	</validmd>
+    
     <xsl.admin>Metadaten-Stylesheets</xsl.admin>
     <xsl.admin.des>Personalisierte Stylesheets (XSL) zur Darstellung der Metadaten in HTML</xsl.admin.des>
     <toggleVisibilityEdit>Option zum Verstecken einzelner Attribute</toggleVisibilityEdit>

@@ -228,6 +228,13 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<isoValid>Valide ISO</isoValid>
 	<gm03Valid>Valide GM03</gm03Valid>
 	<inspireValid>Valide INSPIRE</inspireValid>
+	
+	<validmd>
+		<xsd>Valide XSD</xsd>
+		<schematron-rules-iso>Valide ISO</schematron-rules-iso>
+		<schematron-rules-iso-che>Valide GM03</schematron-rules-iso-che>
+		<schematron-rules-inspire>Valide INSPIRE</schematron-rules-inspire>
+	</validmd>
 
     <xsl.admin>Feuilles de style pour la présentation des métadonnées</xsl.admin>
     <xsl.admin.des>Feuilles de style (XSL) personalisées pour l'affichage des métadonnées en HTML</xsl.admin.des>

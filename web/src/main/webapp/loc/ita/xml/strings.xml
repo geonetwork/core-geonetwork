@@ -232,6 +232,15 @@
 	<isoValid>Conforme ISO</isoValid>
 	<gm03Valid>Conforme GM03</gm03Valid>
 	<inspireValid>Conforme INSPIRE</inspireValid>
+	
+	
+	<validmd>
+		<xsd>Conforme XSD</xsd>
+		<schematron-rules-iso>Conforme ISO</schematron-rules-iso>
+		<schematron-rules-iso-che>Conforme GM03</schematron-rules-iso-che>
+		<schematron-rules-inspire>Conforme INSPIRE</schematron-rules-inspire>
+	</validmd>
+    
 
     <xsl.admin>Stylesheets di rappresentazione</xsl.admin>
     <xsl.admin.des>Stylesheets (XSL) per rappresentare i metadati in HTML personalizzato</xsl.admin.des>

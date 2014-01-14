@@ -242,6 +242,12 @@
 	<isoValid>ISO valid</isoValid>
 	<gm03Valid>GM03 valid</gm03Valid>
 	<inspireValid>INSPIRE valid</inspireValid>
+	<validmd>
+		<xsd>XSD valid</xsd>
+		<schematron-rules-iso>ISO valid</schematron-rules-iso>
+		<schematron-rules-iso-che>GM03 valid</schematron-rules-iso-che>
+		<schematron-rules-inspire>INSPIRE valid</schematron-rules-inspire>
+	</validmd>
 
     <xsl.admin>Metadata displaying Stylesheets</xsl.admin>
     <xsl.admin.des>Stylesheets (XSL) for displaying metadata in HTML in custom layouts</xsl.admin.des>
