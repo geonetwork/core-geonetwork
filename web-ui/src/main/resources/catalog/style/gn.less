@@ -56,11 +56,21 @@
 div.gn-scroll-spy {
   position: fixed;
   bottom: 0%;
-  left: 0px;
-  opacity: 0.7;
+  right: 0px;
+  opacity: 0.8;
   font-size: 80%;
+  width: 150px;
+  z-index: 999;
+  background-color: @panel-bg;
+  border-top-left-radius: @panel-border-radius;
+  border-top: 1px solid @panel-default-border;
+  border-left: 1px solid @panel-default-border;
   
+  button {
+    .pull-right();
+  }
   ul {
+    opacity: 1;
     li {
       a {
       padding-left: 5px;
