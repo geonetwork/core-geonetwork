@@ -15,7 +15,7 @@
   goog.require('gn_cat_controller');
   goog.require('gn_form_fields_directive');
   goog.require('gn_language_switcher');
-  goog.require('gn_map_directive');
+  goog.require('gn_map');
   goog.require('gn_metadata_manager');
   goog.require('gn_needhelp');
   goog.require('gn_pagination');
@@ -37,7 +37,7 @@
     'gn_cat_controller',
     'gn_search_controller',
     'gn_form_fields_directive',
-    'gn_map_directive',
+    'gn_map',
     'gn_search_form_controller',
     'gn_needhelp'
   ]);

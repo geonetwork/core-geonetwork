@@ -6,18 +6,14 @@
     .directive(
       'gnDrawBbox',
       [
-       '$timeout',
-       function($timeout) {
+       'gnMapProjection',
+       function(gnMapProjection) {
          return {
            restrict: 'A',
            replace: true,
            templateUrl: '../../catalog/components/common/map/' +
            'partials/drawbbox.html',
            scope: {
-             htop: '@',
-             hbottom: '@',
-             hleft: '@',
-             hright: '@',
              htopRef: '@',
              hbottomRef: '@',
              hleftRef: '@',
@@ -30,34 +26,45 @@
                scope.htopRef.substring(1,scope.htopRef.length);
              
              /**
-              * Reproj the bbox extent from map proj
-              * to MD proj and fill the edit form.
+              * Different projections used in the directive:
+              * - md : the proj system in the metadata. It is defined as 
+              *   4326 by iso19139 schema
+              * - map : the projection of the ol3 map, this projection
+              *   is set in GN settings
+              * - form : projection used for the form, it is chosen 
+              *   from the combo list.
               */
-             var reprojFromMapToMd = function(extent) {
-               
-               var extent4326 = ol.proj.transform(extent, 
-                   'EPSG:3857', 'EPSG:4326');
-               
-               scope.hleft = extent4326[0];
-               scope.hbottom = extent4326[1];
-               scope.hright = extent4326[2];
-               scope.htop = extent4326[3];
+             scope.projs = {
+                 list : ['EPSG:4326','EPSG:3857'],
+                 md: 'EPSG:4326',
+                 map: 'EPSG:3857',
+                 form: 'EPSG:3857'
              };
              
-             // Get map proj coordinates from MD ones
-             var bottomLeft4326 = ol.proj.transform(
-                 [parseFloat(scope.hleft),parseFloat(scope.hbottom)],
-                 'EPSG:4326', 'EPSG:3857');
+             scope.extent = {
+                 md: [parseFloat(attrs.hleft), parseFloat(attrs.hbottom),
+                      parseFloat(attrs.hright), parseFloat(attrs.htop)],
+                 map : [],
+                 form: []
+             };
+             
+             var reprojExtent = function(from, to) {
+               scope.extent[to] = gnMapProjection.reprojExtent(
+                   scope.extent[from], 
+                   scope.projs[from], scope.projs[to]
+               );
+             };
+             
+             // Init extent from md for map and form
+             reprojExtent('md', 'map');
+             reprojExtent('md', 'form');
 
-             var topRight4326 = ol.proj.transform(
-                 [parseFloat(scope.hright),parseFloat(scope.htop)],
-                 'EPSG:4326', 'EPSG:3857');
-
-             scope.top = topRight4326[1];
-             scope.bottom = bottomLeft4326[1];
-             scope.left = bottomLeft4326[0];
-             scope.right = topRight4326[0];
-
+             scope.$watch('projs.form', function(newValue, oldValue) {
+               scope.extent.form = gnMapProjection.reprojExtent(
+                   scope.extent.form, oldValue, newValue
+               );
+             });
+             
              var boxStyle = new ol.style.Style({
                stroke: new ol.style.Stroke({
                  color: 'rgba(255,0,0,1)',
@@ -99,24 +106,36 @@
                   return scope.drawing;
                }
              });
+             
              dragbox.on('boxstart', function(mapBrowserEvent) {
                feature.setGeometry(null);
              });
+             
              dragbox.on('boxend', function(mapBrowserEvent) {
-               var extent = dragbox.getGeometry().getExtent();
+               scope.extent.map = dragbox.getGeometry().getExtent();
                feature.setGeometry(dragbox.getGeometry());
                
                scope.$apply(function() {
-                 scope.left = extent[0];
-                 scope.bottom = extent[1];
-                 scope.right = extent[2];
-                 scope.top = extent[3];
                  
-                 reprojFromMapToMd(extent);
+                 reprojExtent('map', 'form');
+                 reprojExtent('map', 'md');
                });
              });
 
              map.addInteraction(dragbox);
+
+             /**
+              * Draw the map extent as a bbox onto the map.
+              */
+             var drawBbox = function() {
+               var coordinates = gnMapProjection.
+                 getCoordinatesFromExtent(scope.extent.map);
+
+               var geom = new ol.geom.Polygon([coordinates]);
+               feature.setGeometry(geom);
+               
+               feature.getGeometry().setCoordinates(coordinates);
+             };
 
              /**
               * When form is loaded
@@ -126,39 +145,28 @@
               */ 
              scope.$watch('gnCurrentEdit.version', function(newValue) {
                map.setTarget(scope.mapId);
-               scope.updateBbox();
+               drawBbox();
                map.getView().fitExtent(feature.getGeometry().getExtent(), map.getSize());
              });
              
+             /**
+              * Switch mode (panning or drawing)
+              */
              scope.drawMap = function() {
                scope.drawing = !scope.drawing;
              };
-
+             
              /**
-              * Redraw the Bbox when the user change the
-              * coordinates in the form
-              * If reproj is true, then reproj the bbox extent
-              * to the MD proj.
+              * Called on form input change.
+              * Set map and md extent from form reprojection, and draw
+              * the bbox from the map extent.
               */
-             scope.updateBbox = function(reproj) {
-               var coordinates = [
-                 [
-                   [scope.left, scope.bottom],
-                   [scope.left, scope.top],
-                   [scope.right, scope.top],
-                   [scope.right, scope.bottom]
-                 ]
-               ];
+             scope.updateBbox = function() {
                
-               if(!feature.getGeometry()) {
-                 var geom = new ol.geom.Polygon([coordinates]);
-                 feature.setGeometry(geom);
-               }
-               feature.getGeometry().setCoordinates(coordinates);
+               reprojExtent('form', 'map');
+               reprojExtent('form', 'md');
                
-               if(reproj) {
-                 reprojFromMapToMd(feature.getGeometry().getExtent());
-               }
+               drawBbox();
              };
            }
          };
