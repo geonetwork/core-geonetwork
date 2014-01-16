@@ -73,6 +73,10 @@
       <artifactId>jetty-servlet</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.eclipse.core</groupId>
+      <artifactId>org.eclipse.core.runtime</artifactId>
+    </dependency>
+    <dependency>
       <groupId>jsch</groupId>
       <artifactId>jsch</artifactId>
     </dependency>
