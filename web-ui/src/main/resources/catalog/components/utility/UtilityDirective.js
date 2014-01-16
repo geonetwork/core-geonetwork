@@ -42,6 +42,10 @@
               local: data,
               minLength: 0,
               limit: 30
+            }).on('typeahead:selected', function(event, datum) {
+              if(angular.isFunction(scope.onRegionSelect)) {
+                scope.onRegionSelect(datum);
+              }
             });
           });
         }
