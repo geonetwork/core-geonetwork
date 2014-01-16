@@ -56,14 +56,20 @@
 	</gmd:metadataStandardVersion>
 	<gmd:referenceSystemInfo>
 		<gmd:MD_ReferenceSystem>
-			<gmd:referenceSystemIdentifier>
-				<gmd:RS_Identifier>
-					<gmd:code>
-						<gco:CharacterString>WGS84</gco:CharacterString>
-					</gmd:code>
-				</gmd:RS_Identifier>
-			</gmd:referenceSystemIdentifier>
-		</gmd:MD_ReferenceSystem>
+     			<gmd:referenceSystemIdentifier>
+        			<gmd:RS_Identifier>
+          				<gmd:code>
+            					<gco:CharacterString>WGS 84 (EPSG:4326)</gco:CharacterString>
+          				</gmd:code>
+          				<gmd:codeSpace>
+            					<gco:CharacterString>EPSG</gco:CharacterString>
+          				</gmd:codeSpace>
+          				<gmd:version>
+            					<gco:CharacterString>7.9</gco:CharacterString>
+          				</gmd:version>
+        			</gmd:RS_Identifier>
+      			</gmd:referenceSystemIdentifier>
+    		</gmd:MD_ReferenceSystem>
 	</gmd:referenceSystemInfo>
 	<gmd:identificationInfo>
 		<gmd:MD_DataIdentification>
