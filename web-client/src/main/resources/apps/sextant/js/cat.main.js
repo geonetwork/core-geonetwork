@@ -585,7 +585,7 @@ cat.app = function() {
         // Manage header click event to toggle advanced or simple search
         // criteria mode
         searchForm.on('afterrender',function(cpt) {
-            cpt.addEvents('advancedmode', 'simplemode', 'facetmode');
+            cpt.addEvents('advancedmode', 'simplemode');
             cpt.ownerCt.header.on('click', function(e,v,t) {
                 if(v.id == 'searchFormHeaderLinkadvanced') {
                     this.fireEvent('advancedmode', this);
@@ -595,19 +595,14 @@ cat.app = function() {
                     this.fireEvent('simplemode', this);
                     activeSearchMode = 'simple';
                 }
-                else if(v.id == 'searchFormHeaderLinkfacet') {
-                    this.fireEvent('facetmode', this);
-                    activeSearchMode = 'facet';
-                }
                 cookie.set('cat.searchform.viewmode', activeSearchMode)
             }, cpt);
             
             
             cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced').setVisibilityMode(Ext.Element.DISPLAY);
             cpt.ownerCt.header.child('#searchFormHeaderLinksimple') && cpt.ownerCt.header.child('#searchFormHeaderLinksimple').setVisibilityMode(Ext.Element.DISPLAY);
-            cpt.ownerCt.header.child('#searchFormHeaderLinkfacet') && cpt.ownerCt.header.child('#searchFormHeaderLinkfacet').setVisibilityMode(Ext.Element.DISPLAY);
         
-            cpt.on('advancedmode',function(cpt) {            
+            cpt.on('advancedmode',function(cpt) {
                 cpt.setVisible(true);
                 Ext.each(advandcedField,function(item) {
                     item.setVisible(!item.disabled);
@@ -616,7 +611,6 @@ cat.app = function() {
                 });
                 cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced').hide();
                 cpt.ownerCt.header.child('#searchFormHeaderLinksimple') && cpt.ownerCt.header.child('#searchFormHeaderLinksimple').show();
-                cpt.ownerCt.header.child('#searchFormHeaderLinkfacet') && cpt.ownerCt.header.child('#searchFormHeaderLinkfacet').show();
                 document.getElementById('currentSearchMode').innerHTML = OpenLayers.i18n('search-header-advanced');
             });
             cpt.on('simplemode',function() {
@@ -630,20 +624,6 @@ cat.app = function() {
 
                  cpt.ownerCt.header.child('#searchFormHeaderLinksimple') && cpt.ownerCt.header.child('#searchFormHeaderLinksimple').hide();
                  cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced').show();
-                 cpt.ownerCt.header.child('#searchFormHeaderLinkfacet') && cpt.ownerCt.header.child('#searchFormHeaderLinkfacet').show();
-            });
-            cpt.on('facetmode',function() {
-                document.getElementById('currentSearchMode').innerHTML = OpenLayers.i18n('search-header-facet');
-                cpt.setVisible(false);
-                if(cpt.ownerCt.header.child('#searchFormHeaderLinkfacet')) {
-                    cpt.ownerCt.header.child('#searchFormHeaderLinkfacet').hide();
-                }
-                if(cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced')) {
-                    cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced').show();
-                }
-                if(cpt.ownerCt.header.child('#searchFormHeaderLinksimple')) {
-                    cpt.ownerCt.header.child('#searchFormHeaderLinksimple').show();
-                }
             });
             
             // get active serach mode from cookies, or from the first element of the config list
@@ -858,10 +838,6 @@ cat.app = function() {
                         + OpenLayers.i18n('search-view-form') + ' '
                         + '</span>'
                         + '<span id="currentSearchMode"></span>'
-                        + (searchModes.indexOf('facet') >= 0 ? 
-                                '<a id="searchFormHeaderLinkfacet" href="#">' + 
-                                OpenLayers.i18n('search-header-facet') + 
-                                '</a>' : '')
                         + (searchModes.indexOf('advanced') >= 0 ? 
                                 '<a id="searchFormHeaderLinkadvanced" href="#">' + 
                                 OpenLayers.i18n('search-header-advanced') + 
@@ -870,7 +846,6 @@ cat.app = function() {
                                 '<a id="searchFormHeaderLinksimple" href="#">' + 
                                 OpenLayers.i18n('search-header-simple') + 
                             '</a>' : ''),
-                    border : false,
                     frame : false,
                     minWidth : 300,
                     width : 442,
@@ -882,14 +857,14 @@ cat.app = function() {
                     layoutConfig : {
                         animate : true
                     },
-                    items : [searchForm,breadcrumb,facetsPanel]
+                    items : [searchForm]
                 }, {
                     region : 'center',
                     id : 'center',
                     split : true,
                     autoScroll: true,
                     cls: 'sxt-layout-border-white',
-                    margins: '0 0 0 4',
+                    margins: '0 7 0 4',
                     tbar : tBar,
                     items : [ infoPanel, resultsPanel,new Ext.BoxComponent({
                         autoEl : {
@@ -899,7 +874,30 @@ cat.app = function() {
                             id : 'load-spinner'
                         }
                     })]
-                } ],
+                }, {
+                    id : 'east',
+                    region : 'east',
+                    cls: 'sxt-layout-border-white west-panel',
+                    bodyCssClass: 'west-panel-body',
+                    headerCssClass : 'search-panel-header',
+                    split : true,
+                    hidden: searchModes.indexOf('facet') >= 0 ? false : true, 
+                    margins: '0 0 0 4',
+                    title : OpenLayers.i18n("refineSearch"),
+                    collapsible : true,
+                    hideCollapseTool : true,
+                    autoScroll : true,
+                    border : false,
+                    frame : false,
+                    width : 250,
+                    minWidth : 100,
+                    maxWidth : 500,
+                    collapseMode : 'mini',
+                    layoutConfig : {
+                        animate : true
+                    },
+                    items: [breadcrumb,facetsPanel]
+                }],
                 listeners: {
                     afterrender: {
                         fn: function(o){

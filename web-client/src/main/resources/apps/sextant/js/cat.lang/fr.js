@@ -35,5 +35,6 @@ cat.lang.fr = {
     ,"click_to_zoom": "cliquez pour zoomer sur la zone"
     ,"onlineResFromMD": "A partir des fiches"
     ,"onlineResFromManual": "Saisie manuelle"
+    ,"refineSearch": "Précisez votre recherche"
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, cat.lang.fr);
