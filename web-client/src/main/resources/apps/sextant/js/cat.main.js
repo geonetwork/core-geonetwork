@@ -257,50 +257,15 @@ cat.app = function() {
         });
     }
 
-    function createToolBar() {
-
-        var previousAction = new Ext.Action({
-            id : 'previousBt',
-            text : '&lt;&lt;',
-            handler : function() {
-                var from = catalogue.startRecord
-                        - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
-                if (from > 0) {
-                    catalogue.startRecord = from;
-                    search();
-                }
-            },
-            scope : this
-        });
-
-        var nextAction = new Ext.Action({
-            id : 'nextBt',
-            text : '&gt;&gt;',
-            handler : function() {
-                catalogue.startRecord += parseInt(Ext.getCmp('E_hitsperpage')
-                        .getValue(), 10);
-                search();
-            },
-            scope : this
-        });
-
-        return new Ext.Toolbar({
-            items : [ previousAction, '|', nextAction, '|', {
-                xtype : 'tbtext',
-                text : '',
-                id : 'info'
-            } ]
-        });
-    }
-
     function createResultsPanel(permalinkProvider) {
 
+        var hits = parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+        
         var previousAction = new Ext.Action({
             id : 'previousBt',
-            text : '&lt;&lt;',
+            text : '&lt;',
             handler : function() {
-                var from = catalogue.startRecord
-                        - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                var from = catalogue.startRecord - hits;
                 if (from > 0) {
                     catalogue.startRecord = from;
                     search();
@@ -311,15 +276,32 @@ cat.app = function() {
 
         var nextAction = new Ext.Action({
             id : 'nextBt',
-            text : '&gt;&gt;',
+            text : '&gt;',
             handler : function() {
-                catalogue.startRecord += parseInt(Ext.getCmp('E_hitsperpage')
-                        .getValue(), 10);
+                catalogue.startRecord += hits;
                 search();
             },
             scope : this
         });
         
+        var firstAction = new Ext.Action({
+            id: 'firstBt',
+            text: '&lt;&lt;',
+            handler: function () {
+                catalogue.startRecord = 1;
+                search();
+            }
+        });
+        var lastAction = new Ext.Action({
+            id: 'lastBt',
+            text: '&gt;&gt;',
+            handler: function () {
+                catalogue.startRecord = Math.floor(catalogue.metadataStore.totalLength / hits)
+                           * hits + 1;
+                search();
+            }
+        });
+
         var pdfAction = new Ext.Action({
             id: 'pdfPrintResults',
             iconCls: 'md-mn-pdf',
@@ -370,7 +352,8 @@ cat.app = function() {
                         ['title#reverse', OpenLayers.i18n('title')], 
                         ['changeDate#', OpenLayers.i18n('changeDate')]]
             }),
-            items : [ previousAction, '|', nextAction, '|', {
+            items : [ firstAction, ' ', previousAction, '|', 
+                      nextAction, ' ', lastAction, '|', {
                     xtype : 'tbtext',
                     text : '',
                     id : 'info'
@@ -988,10 +971,15 @@ cat.app = function() {
             // FIXME : result panel need to update layout in case of slider
             // Ext.getCmp('resultsPanel').syncSize();
             Ext.getCmp('previousBt').setDisabled(catalogue.startRecord === 1);
-            Ext.getCmp('nextBt').setDisabled(
-                    catalogue.startRecord
-                            + parseInt(Ext.getCmp('E_hitsperpage').getValue(),
-                                    10) > catalogue.metadataStore.totalLength);
+            Ext.getCmp('firstBt').setDisabled(catalogue.startRecord === 1);
+            
+            var lastEnable = (catalogue.startRecord
+            + parseInt(Ext.getCmp('E_hitsperpage').getValue(),
+                    10) > catalogue.metadataStore.totalLength);
+            
+            Ext.getCmp('nextBt').setDisabled(lastEnable);
+            Ext.getCmp('lastBt').setDisabled(lastEnable);
+            
             if (Ext.getCmp('E_sortBy').getValue()) {
                 Ext.getCmp('sortByToolBar').setValue(
                         Ext.getCmp('E_sortBy').getValue() + "#"
