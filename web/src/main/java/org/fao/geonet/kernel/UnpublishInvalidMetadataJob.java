@@ -146,7 +146,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         if (published) {
             Element report = dataManager.doValidate(null, dbms, schema, id, md, "eng", false).one();
 
-            Pair<String,String> failureReport = failureReason(report);
+            Pair<String,String> failureReport = failureReason(report, dbms);
             String failureRule = failureReport.one();
             String failureReasons = failureReport.two();
             if (!failureRule.isEmpty()) {
@@ -168,7 +168,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         return !children.isEmpty();
     }
 
-    private Pair<String, String> failureReason(Element report) {
+    private Pair<String, String> failureReason(Element report, Dbms dbms) {
 
         @SuppressWarnings("unchecked")
         Iterator<Element> reports = report.getDescendants(new ReportFinder());
@@ -180,7 +180,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
             if(report.getName().equals("xsderrors")) {
                 processXsdError(report, rules, failures);
             } else {
-                processSchematronError(report, rules, failures);
+                processSchematronError(report, rules, failures, dbms);
             }
         }
 
@@ -209,11 +209,14 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         }
     }
 
-    private void processSchematronError(Element report, StringBuilder rules, StringBuilder failures) {
+    private void processSchematronError(Element report, StringBuilder rules, StringBuilder failures, Dbms dbms) {
         String reportType = report.getAttributeValue("rule", Edit.NAMESPACE);
         reportType = reportType == null ? "No name for rule" : reportType;
         StringBuilder failure = new StringBuilder();
-        if (!reportType.equals(Geocat.INSPIRE_SCHEMATRON_ID)) {
+        
+        boolean isMandatory = checkMandatory(report.getAttributeValue("dbident", Edit.NAMESPACE), dbms);
+        
+        if (isMandatory) {
             @SuppressWarnings("unchecked")
             Iterator<Element> errors = report.getDescendants(new ErrorFinder());
 
@@ -240,7 +243,22 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    private boolean checkMandatory(String id, Dbms dbms) {
+        try {
+			@SuppressWarnings("unchecked")
+			List<Element> record = dbms.select("select required from schematron where id = ? LIMIT 1", Integer.valueOf(id))
+					.getChildren();
+			
+			Element r = record.get(0);
+			
+			return "t".equalsIgnoreCase(r.getChildText("required"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
     private List<MetadataRecord> lookUpMetadataIds(Dbms dbms) throws SQLException {
         Element results = dbms.select("select id,uuid from metadata where istemplate='n' and isharvested='n'");
 

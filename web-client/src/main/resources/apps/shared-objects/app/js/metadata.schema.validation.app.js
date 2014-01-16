@@ -124,15 +124,15 @@ function($scope, $http) {
 			}
 		}).success(function(data) {
 			$scope.data = data;
-			
+
 			angular.forEach($scope.data, function(item) {
-				if(item.required) {
-					item.required =  "check";
+				if (item.required) {
+					item.required = "check";
 				} else {
 					item.required = "";
 				}
-				if(item.type == 0) {
-					item.type = "group" ;
+				if (item.type == 0) {
+					item.type = "group";
 				} else {
 					item.type = "keyword";
 				}
@@ -165,8 +165,8 @@ function TypeaheadCtrl($scope, $http, limitToFilter) {
 			var res = [];
 			angular.forEach(data.data, function(item) {
 				res.push({
-					label : item.search,
-					value : item.search
+					label : item.desc,
+					value : item.desc
 				});
 			});
 			return limitToFilter(res, 8);
@@ -178,10 +178,9 @@ function TypeaheadCtrl($scope, $http, limitToFilter) {
 	}
 
 	$scope.getGroups = function(val) {
-		return $http.get(
-				'http://localhost:8190/geonetwork/srv/eng/xml.group.list', {
-					dataType : "xml"
-				}).then(function(data) {
+		return $http.get('xml.group.list', {
+			dataType : "xml"
+		}).then(function(data) {
 			var res = [];
 
 			xml = data.responseXML;

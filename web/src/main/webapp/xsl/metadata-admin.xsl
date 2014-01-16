@@ -199,7 +199,7 @@
 						<xsl:for-each select="/root/response/validation/record">
 							<xsl:variable name="valid" select="normalize-space(status)"/>
 							<xsl:variable name="name"><xsl:value-of select="normalize-space(valtype)"/></xsl:variable>	
-							<tr>
+							<tr class="{$name}">
 								<td style="width:60px">
 									<xsl:choose>
 										<xsl:when test="$valid='1'"><!-- valid -->
@@ -214,8 +214,12 @@
 									</xsl:choose>
 								</td>
 								<td class="padded">	
-								<xsl:value-of
-									select="/root/gui/strings/validmd/*[name()=$name]"/>	
+									<xsl:variable name="name_"><xsl:value-of
+										select="/root/gui/strings/validmd/*[name()=$name]"/></xsl:variable>
+									<xsl:choose>
+										<xsl:when test="$name_ != ''"><xsl:value-of select="$name_"/></xsl:when>
+										<xsl:otherwise><xsl:value-of select="$name"/></xsl:otherwise>
+									</xsl:choose>
 								</td>
 							</tr>
 						</xsl:for-each>

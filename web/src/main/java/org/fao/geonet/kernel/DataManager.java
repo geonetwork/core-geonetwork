@@ -2221,6 +2221,7 @@ public class DataManager {
 				Integer id = Integer.parseInt(schematron.getChildText("id"));
 				//it contains absolute path to the xsl file
 				String rule = schematron.getChildText("file");
+				String dbident = id.toString();
 				Integer ifNotValid = (required? 0 : 2);
 	
 				@SuppressWarnings("unchecked")
@@ -2241,17 +2242,13 @@ public class DataManager {
 					switch(type) {
 					case 0: //group
 						tmpApply = dbms.select(
-								"SELECT 1 FROM metadata "
-								+ "WHERE groupowner = value ", 
-								id).getChildren().size() == 0;
+								"SELECT * FROM metadata "
+								+ "WHERE groupowner = ? ", 
+								Integer.valueOf(value)).getChildren().size() > 0;
 						break;
 					case 1: //keyword
-                    default: 
-	                    XPath xpath = XPath.newInstance(
-	                    		  "//gmd:keyword/gco:CharacterString/text() = '" + value + "' "
-	                    		  + "or //gmd:keyword/gmd:PT_FreeText/gmd:textGroup/"
-	                    		  + "gmd:LocalisedCharacterString/text() = '" + value + "'");
-	                    tmpApply = Boolean.valueOf(xpath.valueOf(md));
+                    default: 		                
+	                    tmpApply = checkKeyword(md, value);
 	                      break;
 					}
 					
@@ -2273,6 +2270,8 @@ public class DataManager {
 					
 					Element report = new Element("report", Edit.NAMESPACE);
 					report.setAttribute("rule", ruleId,
+							Edit.NAMESPACE);
+					report.setAttribute("dbident", dbident,
 							Edit.NAMESPACE);
 
 					try {
@@ -2335,6 +2334,54 @@ public class DataManager {
 		return schemaTronXmlOut;
 	}
 	
+	private boolean checkKeyword(Element element, String value) {
+		//xpath does not like che xsd structure, maybe because it is local?
+//        XPath xpath = XPath.newInstance(
+//        		  "//gmd:keyword/gco:CharacterString/text() = '" + value + "' "
+//        		  + "or //gmd:keyword/gmd:PT_FreeText/gmd:textGroup/"
+//        		  + "gmd:LocalisedCharacterString/text() = '" + value + "'");
+        
+		List<Element> children = element.getChildren();
+		boolean res = false;
+		
+		for(Element child : children) {
+			if(child.getName().equalsIgnoreCase("keyword")) {
+				List<Element> freeTexts = child.getChildren();
+				for(Element freeText : freeTexts) {
+					if("CharacterString".equals(freeText.getName())) {
+						res = res || value.equals(freeText.getText());
+					}
+					else if("PT_FreeText".equals(freeText.getName())) {
+						List<Element> textGroups = freeText.getChildren();
+						for(Element textGroup : textGroups) {
+							if("textGroup".equals(textGroup.getName())) {
+								List<Element> localiseds = textGroup.getChildren();
+								for(Element localised : localiseds) {
+									res = res || value.equals(localised.getText());
+								}
+								if(res) {
+									break;
+								}
+							}
+							if(res) {
+								break;
+							}
+						}
+					}
+				}
+				
+			} else {
+				res = res || checkKeyword(child, value);
+			}
+			
+			if(res) {
+				break;
+			}
+		}
+        
+		return res;
+	}
+
 	/**
 	 * Saves validation status information into the database for the current record.
 	 * 
