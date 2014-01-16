@@ -186,7 +186,8 @@
           data-htop="{gmd:northBoundLatitude/gco:Decimal}" data-hleft-ref="_{gmd:westBoundLongitude/gco:Decimal/gn:element/@ref}"
           data-hright-ref="_{gmd:eastBoundLongitude/gco:Decimal/gn:element/@ref}"
           data-hbottom-ref="_{gmd:southBoundLatitude/gco:Decimal/gn:element/@ref}"
-          data-htop-ref="_{gmd:northBoundLatitude/gco:Decimal/gn:element/@ref}"></div>
+          data-htop-ref="_{gmd:northBoundLatitude/gco:Decimal/gn:element/@ref}"
+          data-lang="lang"></div>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>

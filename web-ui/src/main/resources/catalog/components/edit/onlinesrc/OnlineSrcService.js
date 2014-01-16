@@ -125,7 +125,6 @@
                 refreshForm(scope);
               });
             });
-
       };
 
       /**

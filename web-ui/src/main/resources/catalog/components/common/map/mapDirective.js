@@ -17,8 +17,8 @@
              htopRef: '@',
              hbottomRef: '@',
              hleftRef: '@',
-             hrightRef: '@'
-
+             hrightRef: '@',
+             lang: '='
            },
            link: function(scope, element, attrs) {
              scope.drawing = false;
@@ -116,7 +116,6 @@
                feature.setGeometry(dragbox.getGeometry());
                
                scope.$apply(function() {
-                 
                  reprojExtent('map', 'form');
                  reprojExtent('map', 'md');
                });
@@ -146,7 +145,10 @@
              scope.$watch('gnCurrentEdit.version', function(newValue) {
                map.setTarget(scope.mapId);
                drawBbox();
-               map.getView().fitExtent(feature.getGeometry().getExtent(), map.getSize());
+               if(scope.extent.map[0] && scope.extent.map[1] &&
+                   scope.extent.map[2] && scope.extent.map[3]) {
+                 map.getView().fitExtent(scope.extent.map, map.getSize());
+               }
              });
              
              /**
@@ -167,6 +169,23 @@
                reprojExtent('form', 'md');
                
                drawBbox();
+             };
+             
+             /**
+              * Callback sent to gn-country-picker directive.
+              * Called on region selection from typeahead.
+              * Zoom to extent.
+              */
+             scope.onRegionSelect = function(region) {
+               var extent = [parseFloat(region.west), 
+                             parseFloat(region.south), 
+                             parseFloat(region.east), 
+                             parseFloat(region.north)];
+               
+               var extentMap = gnMapProjection.reprojExtent(
+                   extent, scope.projs.md, scope.projs.map
+               );
+               map.getView().fitExtent(extentMap, map.getSize());
              };
            }
          };

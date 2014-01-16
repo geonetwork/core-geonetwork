@@ -11,7 +11,7 @@
           <i class="fa fa-pencil"></i>draw
         </button>
         <div class="col-sm-3">
-          <label class="sr-only">Email address</label>
+          <label class="sr-only">projection</label>
           <select data-ng-model="projs.form">
             <option data-ng-repeat="proj in projs.list" 
               value="{{proj}}"
@@ -19,6 +19,13 @@
             </option>
          </select>
         </div>
+        <div class="col-sm-3" lang="lang">
+          <label class="sr-only">region</label>
+          <input type="text" name="country" class="form-control"
+            data-gn-country-picker=""
+            placeholder="region"/>
+        </div>
+        
       </form>
       
       <!-- Hidden field that match xml metadata schema -->
@@ -32,7 +39,7 @@
           <td colspan="3"><div class="form-group">
               <label for="drawbbox-top">top</label> <input
                 data-ng-model="extent.form[3]" type="number"
-                id="drawbbox-top" placeholder="top" 
+                id="drawbbox-top" placeholder="north" 
                 data-ng-change="updateBbox(true)"/>
           </div></td>
         </tr>
