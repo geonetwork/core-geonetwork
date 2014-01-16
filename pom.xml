@@ -616,6 +616,11 @@
         <version>2.5.3</version>
       </dependency>
 			-->
+			<dependency>
+				<groupId>org.eclipse.core</groupId>
+				<artifactId>org.eclipse.core.runtime</artifactId>
+				<version>3.7.0</version>
+			</dependency>
 
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
       <dependency>

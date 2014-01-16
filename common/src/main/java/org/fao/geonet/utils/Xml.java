@@ -85,7 +85,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
-import java.nio.file.Paths;
+import org.eclipse.core.runtime.URIUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -456,7 +456,7 @@ public final class Xml
                 if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
                     Log.debug(Log.XML_RESOLVER, "  Check if exist " + s.getSystemId());
                 }
-                File f = Paths.get(new URI(s.getSystemId())).toFile();
+                File f = URIUtil.toFile(new URI(s.getSystemId()));
                 if(Log.isDebugEnabled(Log.XML_RESOLVER))
                     Log.debug(Log.XML_RESOLVER, "Check on "+f.getPath()+" exists returned: "+f.exists());
                 // If the resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
