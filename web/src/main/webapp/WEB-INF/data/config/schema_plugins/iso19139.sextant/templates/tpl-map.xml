@@ -7,7 +7,7 @@
 		<gco:CharacterString>7a818ae0-fb7d-4676-85f8-3d483aa9571f</gco:CharacterString>
 	</gmd:fileIdentifier>
 	<gmd:language>
-		<gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
+		<gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre"/>
 	</gmd:language>
 	<gmd:characterSet>
 		<gmd:MD_CharacterSetCode codeListValue="utf8"
@@ -92,8 +92,7 @@
 				</gmd:CI_Citation>
 			</gmd:citation>
 			<gmd:abstract>
-				<gco:CharacterString>Use this template to describe a static map (eg. PDF or image)
-					or an interactive map (eg. WMC).</gco:CharacterString>
+			        <gco:CharacterString>Use this template to describe a static map (eg. PDF or image) or an interactive map (eg. OWS-Context).</gco:CharacterString>
 			</gmd:abstract>
 			<gmd:credit>
 				<gco:CharacterString>-- Map credit --</gco:CharacterString>
@@ -149,7 +148,7 @@
 			</gmd:spatialResolution>
 			<gmd:language>
 				<gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/"
-					codeListValue="eng"/>
+					codeListValue="fre"/>
 			</gmd:language>
 			<gmd:topicCategory>
 				<gmd:MD_TopicCategoryCode/>
@@ -200,7 +199,7 @@
 			<gmd:distributionFormat>
 				<gmd:MD_Format>
 					<gmd:name>
-						<gco:CharacterString>OGC:WMC</gco:CharacterString>
+						<gco:CharacterString>OGC:OWS Context</gco:CharacterString>
 					</gmd:name>
 					<gmd:version gco:nilReason="missing">
 						<gco:CharacterString/>
@@ -212,10 +211,10 @@
 					<gmd:onLine>
 						<gmd:CI_OnlineResource>
 							<gmd:linkage>
-								<gmd:URL>http://localhost:8080/geonetwork/srv/en/resources.get?uuid=7a818ae0-fb7d-4676-85f8-3d483aa9571f&amp;fname=&amp;access=private</gmd:URL>
+								<gmd:URL/>
 							</gmd:linkage>
 							<gmd:protocol>
-								<gco:CharacterString>WWW:DOWNLOAD-1.0-http--download</gco:CharacterString>
+								<gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
 							</gmd:protocol>
 							<gmd:name>
 								<gmx:MimeFileType xmlns:gmx="http://www.isotc211.org/2005/gmx"
@@ -232,11 +231,10 @@
 								<gmd:URL/>
 							</gmd:linkage>
 							<gmd:protocol>
-								<gco:CharacterString>OGC:WMC-1.1.0-http-get-capabilities</gco:CharacterString>
+								<gco:CharacterString>OGC:OWS-C</gco:CharacterString>
 							</gmd:protocol>
 							<gmd:name>
-								<gco:CharacterString>Online Web Map Context
-									file</gco:CharacterString>
+								<gco:CharacterString>Online Web Map Context file</gco:CharacterString>
 							</gmd:name>
 							<gmd:description gco:nilReason="missing">
 								<gco:CharacterString/>
