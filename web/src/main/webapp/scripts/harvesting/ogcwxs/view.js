@@ -267,8 +267,8 @@ function retrieveTemplates() {
 			$('ogcwxs.templateService').options.length = 0;
 			$('ogcwxs.template.layer').options.length = 0;
 
-			gui.addToSelect('ogcwxs.templateService', '', "(NONE)"); // TODO: I18N
-			gui.addToSelect('ogcwxs.template.layer', '', "(NONE)"); // TODO: I18N
+			gui.addToSelect('ogcwxs.templateService', '', "---"); // TODO: I18N
+			gui.addToSelect('ogcwxs.template.layer', '', "---"); // TODO: I18N
 
 			for (var i=0; i < metadata.length; i++) {
 				var row = metadata[i],
@@ -279,14 +279,18 @@ function retrieveTemplates() {
                 Ext.Ajax.request({url:tmpltUrl+uuid,
                                       success:(function(tmpltUrl, uuid, title) {
                                         return function(r) {
-                                         gui.addToSelect('ogcwxs.templateService', r.responseText, title);
-                                         gui.addToSelect('ogcwxs.template.layer', r.responseText, title);
+                                         gui.addToSelect('ogcwxs.templateService', uuid, title);
+                                         gui.addToSelect('ogcwxs.template.layer', uuid, title);
+                                         //gui.addToSelect('ogcwxs.templateService', r.responseText, title);
+                                         //gui.addToSelect('ogcwxs.template.layer', r.responseText, title);
                                         }
                                       })(tmpltUrl, uuid, title),
 
 				});
 
 			}
+		gui.addToSelect('ogcwxs.templateService', 'xx', "(NONE)"); // TODO: I18N
+		gui.addToSelect('ogcwxs.template.layer', 'xx', "(NONE)"); // TODO: I18N
 		}
 	});
 }
