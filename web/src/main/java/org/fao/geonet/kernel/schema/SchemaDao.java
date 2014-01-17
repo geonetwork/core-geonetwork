@@ -2,6 +2,7 @@ package org.fao.geonet.kernel.schema;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
@@ -32,8 +33,15 @@ public class SchemaDao {
 
 	public static void insertSchematron(ServiceContext context, Dbms dbms,
 			String file, String schemaName) throws SQLException {
-		int id = context.getSerialFactory().getSerial(dbms, TABLE_SCHEMATRON,
+		Integer id = null;
+		if(context != null) {
+			id = context.getSerialFactory().getSerial(dbms, TABLE_SCHEMATRON,
 				COL_SCHEMATRON_ID);
+		} else {
+			//We must be on a testing outside jeeves environment
+			Random r = new Random();
+			id = r.nextInt();
+		}
 		dbms.execute("insert into " + TABLE_SCHEMATRON + " ("
 				+ COL_SCHEMATRON_ID + "," + COL_SCHEMATRON_FILE + ","
 				+ COL_SCHEMATRON_ISO_SCHEMA + "," + COL_SCHEMATRON_REQUIRED
