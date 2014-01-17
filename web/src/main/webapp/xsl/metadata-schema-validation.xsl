@@ -105,7 +105,7 @@
 							<input type="submit" />
 						</form>
 					</div>
-
+					<br/>
 					<div>
 						<table id="resultTable" class="table table-condensed"
 							ng-controller="table_controller">
