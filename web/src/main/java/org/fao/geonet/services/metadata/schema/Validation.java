@@ -28,12 +28,14 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import jeeves.utils.Util;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.SchematronCriteriaType;
+import org.fao.geonet.kernel.schema.SchemaDao;
 import org.jdom.Element;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -44,20 +46,7 @@ import java.util.Map;
  * @author delawen
  */
 public class Validation implements Service {
-
-	public static final String TABLE_SCHEMATRON = "schematron";
-	public static final String TABLE_SCHEMATRON_CRITERIA = "schematroncriteria";
-
-	public static final String COL_CRITERIA_ID = "id";
-	public static final String COL_CRITERIA_SCHEMATRON_ID = "schematron";
-	public static final String COL_CRITERIA_TYPE = "type";
-	public static final String COL_CRITERIA_VALUE = "value";
-
-	public static final String COL_SCHEMATRON_ID = "id";
-	public static final String COL_SCHEMATRON_FILE = "file";
-	public static final String COL_SCHEMATRON_ISO_SCHEMA = "isoschema";
-	public static final String COL_SCHEMATRON_REQUIRED = "required";
-
+	
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 
@@ -74,41 +63,32 @@ public class Validation implements Service {
 
 		if ("delete".equalsIgnoreCase(action)) {
 			final Integer id = Integer.valueOf(Util.getParam(params, "id"));
-			dbms.execute("delete from " + TABLE_SCHEMATRON_CRITERIA + " where "
-					+ COL_SCHEMATRON_ID + " = ?", id);
+			SchemaDao.deleteCriteria(dbms, id);
 		} else if ("add".equalsIgnoreCase(action)) {
-			String schema = Util.getParam(params, TABLE_SCHEMATRON);
+			String schema = Util.getParam(params, SchemaDao.TABLE_SCHEMATRON);
 
 			final Integer schematronId = Integer.valueOf(schema);
 			final Integer id = context.getSerialFactory().getSerial(dbms,
-					TABLE_SCHEMATRON, "id");
+					SchemaDao.TABLE_SCHEMATRON, "id");
 			final SchematronCriteriaType type = SchematronCriteriaType
 					.valueOf(Util.getParam(params, "type"));
 			final String value = Util.getParam(params, "value");
 
-			dbms.execute("insert into " + TABLE_SCHEMATRON_CRITERIA + " ("
-					+ COL_CRITERIA_ID + "," + COL_CRITERIA_SCHEMATRON_ID + ","
-					+ COL_CRITERIA_TYPE + "," + COL_CRITERIA_VALUE
-					+ ") values (?,?,?,?);", id, schematronId, type.ordinal(),
-					value);
+			SchemaDao.insertCriteria(dbms, schematronId, id, type, value);
 
 		}
 
-		final List<Element> schematrons = dbms.select(
-				"select * from " + TABLE_SCHEMATRON).getChildren();
+		final List<Element> schematrons = SchemaDao.selectSchemas(dbms);
 
 		for (Element schematron : schematrons) {
 			schematron.setName("schematron");
 
 			Integer id = Integer.parseInt(schematron
-					.getChildText(COL_SCHEMATRON_ID));
-			List<Element> schematronCriteria = dbms.select(
-					"select * from " + TABLE_SCHEMATRON_CRITERIA + " where "
-							+ COL_CRITERIA_SCHEMATRON_ID + "=?", id)
-					.getChildren();
+					.getChildText(SchemaDao.COL_SCHEMATRON_ID));
+			List<Element> schematronCriteria = SchemaDao.selectCriteria(dbms, id);
 
 			for (Element element : schematronCriteria) {
-				element.removeChild(COL_CRITERIA_SCHEMATRON_ID);
+				element.removeChild(SchemaDao.COL_CRITERIA_SCHEMATRON_ID);
 				element.addContent((Element) schematron.clone());
 			}
 
@@ -120,7 +100,7 @@ public class Validation implements Service {
 
 		return res;
 	}
-
+	
 	public void init(String appPath, ServiceConfig params) throws Exception {
 	}
 

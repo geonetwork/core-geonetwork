@@ -28,10 +28,12 @@
 package org.fao.geonet.kernel.schema;
 
 import static org.fao.geonet.services.metadata.schema.Validation.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -405,13 +407,11 @@ public class MetadataSchema
                 String file = schemaDir + File.separator + "schematron" + File.separator + s;
 
                 final List<Element> schematronRulesInFile =
-                        dbms.select("select * from " + TABLE_SCHEMATRON + " where file=?", file).getChildren();
+                        SchemaDao.selectSchemas(dbms, file);
 
                 //if schematron not already exists
                 if(schematronRulesInFile.isEmpty()) {
-                    int id = context.getSerialFactory().getSerial(dbms, TABLE_SCHEMATRON, COL_SCHEMATRON_ID);
-                    dbms.execute("insert into "+TABLE_SCHEMATRON+" ("+COL_SCHEMATRON_ID+","+COL_SCHEMATRON_FILE+","+
-                    COL_SCHEMATRON_ISO_SCHEMA+","+COL_SCHEMATRON_REQUIRED+") values (?,?,?,?)", id, file, schemaName, true);
+                    SchemaDao.insertSchematron(context, dbms, file, schemaName);
                 }
             }
         }

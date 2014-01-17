@@ -78,6 +78,7 @@ import org.fao.geonet.kernel.reusable.ProcessParams;
 import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.reusable.log.ReusableObjectLogger;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.SchemaDao;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -2207,12 +2208,9 @@ public class DataManager {
 		Element schemaTronXmlOut = new Element("schematronerrors",
 				Edit.NAMESPACE);
 		try {
-	
-			@SuppressWarnings("unchecked")
-			final List<Element> schematroncriteria = dbms.select(
-					"SELECT DISTINCT schematron.id, file, required FROM "
-					+ "schematron WHERE schematron.isoschema like ? ", 
-					metadataSchema.getName()).getChildren();
+			String schemaname = metadataSchema.getName();
+			final List<Element> schematroncriteria = SchemaDao.selectSchema(dbms,
+					schemaname);
 			
 			//Loop through all xsl files
 			for (Element schematron : schematroncriteria) {
@@ -2224,11 +2222,7 @@ public class DataManager {
 				String dbident = id.toString();
 				Integer ifNotValid = (required? 0 : 2);
 	
-				@SuppressWarnings("unchecked")
-				final List<Element> criterias = dbms.select(
-						"SELECT DISTINCT type, value FROM schematroncriteria "
-						+ "WHERE schematron = ? ", 
-						id).getChildren();
+				final List<Element> criterias = SchemaDao.selectCriteriaBySchema(dbms, id);
 				
 				//Loop through all criteria to see if apply schematron
 				//if any criteria does not apply, do not apply at all (AND)
@@ -2333,14 +2327,19 @@ public class DataManager {
 		
 		return schemaTronXmlOut;
 	}
-	
+
 	private boolean checkKeyword(Element element, String value) {
-		//xpath does not like che xsd structure, maybe because it is local?
-//        XPath xpath = XPath.newInstance(
-//        		  "//gmd:keyword/gco:CharacterString/text() = '" + value + "' "
-//        		  + "or //gmd:keyword/gmd:PT_FreeText/gmd:textGroup/"
-//        		  + "gmd:LocalisedCharacterString/text() = '" + value + "'");
+		
+		try {
+			 return ((Boolean)Xml.selectNodes(element, "//gmd:keyword/gco:CharacterString/text() = '" + value + "' ")
+					 	.get(0)) ||
+					 ((Boolean) Xml.selectNodes(element, "//gmd:keyword/gmd:PT_FreeText/gmd:textGroup/"
+				  + "gmd:LocalisedCharacterString/text() = '" + value + "'").get(0));
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		}
         
+		//if xpath fails:
 		List<Element> children = element.getChildren();
 		boolean res = false;
 		
