@@ -745,7 +745,7 @@
 									</xsl:variable>
 											
 									<westBoundLongitude>
-										<gco:Decimal><xsl:copy-of select="exslt:node-set($boxes)/*[name(.)='xmin']"/></gco:Decimal>
+										<gco:Decimal><xsl:value-of select="exslt:node-set($boxes)/*[name(.)='xmin']"/></gco:Decimal>
 									</westBoundLongitude>
 									<eastBoundLongitude>
 										<gco:Decimal><xsl:value-of select="exslt:node-set($boxes)/*[name(.)='xmax']"/></gco:Decimal>
