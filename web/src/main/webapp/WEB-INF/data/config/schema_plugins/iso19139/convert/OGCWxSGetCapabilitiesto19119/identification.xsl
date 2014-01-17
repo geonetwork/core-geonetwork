@@ -745,6 +745,7 @@
 									</xsl:variable>
 											
 									<westBoundLongitude>
+										<!-- Byron Cochrane - Bug fix change tag from xsl:copy-of to xsl:value-of for westBoundLongitude -->
 										<gco:Decimal><xsl:value-of select="exslt:node-set($boxes)/*[name(.)='xmin']"/></gco:Decimal>
 									</westBoundLongitude>
 									<eastBoundLongitude>
