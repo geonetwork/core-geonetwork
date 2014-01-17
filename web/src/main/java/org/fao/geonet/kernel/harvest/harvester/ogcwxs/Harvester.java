@@ -284,7 +284,7 @@ class Harvester extends BaseAligner
 		}
          log.info("Template Service = " + params.templateService);
 		// COGS -TODO use already existing vars for templates from fragments approach
-		// ---- need to add a parameter to pass the uuid of the template to OgcWxSHarvester.java
+		// ---- parameter to pass the uuid of the template to OgcWxSHarvester.java
 		if (!params.templateService.equals("xx")&&!params.templateService.equals("''")) {
             // COGS - NIWA mod to pass template xml
             String TSid = dataMan.getMetadataId(dbms,params.templateService);
