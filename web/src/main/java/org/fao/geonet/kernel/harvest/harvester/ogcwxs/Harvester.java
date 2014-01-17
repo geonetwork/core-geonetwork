@@ -12,7 +12,7 @@
 //===	WITHOUT ANY WARRANTY; without even the implied warranty of
 //===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 //===	General Public License for more details.
-//===
+//===                                                      TLxml =
 //===	You should have received a copy of the GNU General Public License
 //===	along with this program; if not, write to the Free Software
 //===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
@@ -50,6 +50,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
+import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
 
 import java.io.*;
@@ -281,13 +282,14 @@ class Harvester extends BaseAligner
 			log.warning("Skipping metadata with unknown schema.");
 			result.unknownSchema ++;
 		}
-
+         log.info("Template Service = " + params.templateService);
 		// COGS -TODO use already existing vars for templates from fragments approach
 		// ---- need to add a parameter to pass the uuid of the template to OgcWxSHarvester.java
-		if (params.templateService != "''") {
+		if (!params.templateService.equals("xx")&&!params.templateService.equals("''")) {
             // COGS - NIWA mod to pass template xml
-
-            String TSxml = params.templateService.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+            String TSid = dataMan.getMetadataId(dbms,params.templateService);
+            String TSxml = new XMLOutputter().outputString(dataMan.getMetadata(dbms,TSid));
+            //String TSxml = params.templateService.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
             File temp = File.createTempFile(uuid, ".tmp");
             OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(temp),"UTF-8");
             out.write(TSxml);
@@ -295,9 +297,12 @@ class Harvester extends BaseAligner
 
             param.put("template", String.valueOf(temp.getAbsoluteFile()));
             //param.put("template", params.templateService);
-            log.info("File - " + temp.getPath())    ;
-            log.info("Service Template UUID - " + params.templateService)    ;
-
+            log.info("service xml as string i hope - " + dataMan.getMetadata(dbms,TSid));
+            log.info("File - " + temp.getPath());
+            log.info("Service Schema - " + schema);
+            log.info("Service MD UUID - " + params.uuid);
+            log.info("Service Template xml - " + TSxml)    ;
+            log.info("GeoServer Service Metadata - " + new XMLOutputter().outputString(md));
 
 			
 			String styleSheetTmplt = schemaMan.getSchemaDir(params.outputSchema) +
@@ -306,6 +311,7 @@ class Harvester extends BaseAligner
 							+ "/mergeTemplate.xsl";
 
 			md = Xml.transform (md, styleSheetTmplt, param);
+            log.info("Merged Service Metadata - " + new XMLOutputter().outputString(md));
 		}
 		// COGS - End mod
 
@@ -639,16 +645,18 @@ class Harvester extends BaseAligner
 				param.put("Name", reg.name);
 				param.put("lang", params.lang);
 				param.put("topic", params.topic);
-				
-				xml = Xml.transform (capa, styleSheet, param);
 
+				xml = Xml.transform (capa, styleSheet, param);
+                schema = dataMan.autodetectSchema (xml);
+                log.info("Template Layer = " + params.templateLayer);
 		// COGS TODO use already existing vars for templates from fragments approach.
 		// ---  Layers likely use a different template than the service.
-               if (params.templateLayer != "''") {
+               if (!params.templateLayer.equals("xx")&&!params.templateLayer.equals("''")) {
 
                    // Try to load template layer xml
+                   String TLid = dataMan.getMetadataId(dbms,params.templateLayer);
+                   String TLxml = new XMLOutputter().outputString(dataMan.getMetadata(dbms,TLid));
 
-                   String TLxml = params.templateLayer.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
                    File temp = File.createTempFile(reg.uuid, ".tmp");
                    OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(temp),"UTF-8");
                    out.write(TLxml);
@@ -656,7 +664,10 @@ class Harvester extends BaseAligner
 
                    param.put("template", String.valueOf(temp.getAbsoluteFile()));
 
-                   log.info("Layer Template UUID - " + params.templateLayer)    ;
+                   log.info("Layer UUID - " + params.uuid)    ;
+                   log.info("Layer Schema - " + schema);
+                   log.info("Layer Template  xml - " + TLxml)    ;
+                   log.info("GeoServer Layer Metadata - " + new XMLOutputter().outputString(xml));
 
                     String styleSheetTmplt = schemaMan.getSchemaDir(params.outputSchema) +
                             Geonet.Path.CONVERT_STYLESHEETS
@@ -664,7 +675,10 @@ class Harvester extends BaseAligner
                             + "/mergeTemplate.xsl";
 
                     xml = Xml.transform (xml, styleSheetTmplt, param);
-                }               
+                    log.info("Merged Layer Metadata - " + new XMLOutputter().outputString(xml));
+                }
+                //End COGS mod
+
 
                 if(log.isDebugEnabled()) log.debug("  - Layer loaded using GetCapabilities document.");
 				
@@ -672,7 +686,7 @@ class Harvester extends BaseAligner
 				log.warning("  - Failed to do XSLT transformation on Layer element : " + e.getMessage());
 			}
 		}
-		
+
 		
 		// Insert in db
 		try {
@@ -684,7 +698,8 @@ class Harvester extends BaseAligner
             boolean ufo = false, indexImmediate = false;
             
 			schema = dataMan.autodetectSchema (xml);
-			
+
+			log.debug("Now inserting metadata") ;
             reg.id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), reg.uuid, Integer.parseInt(params.ownerId), group, params.uuid,
                          isTemplate, docType, title, category, date, date, ufo, indexImmediate);
 			

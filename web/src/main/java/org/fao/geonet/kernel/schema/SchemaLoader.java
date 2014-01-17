@@ -28,6 +28,8 @@
 package org.fao.geonet.kernel.schema;
 
 import java.io.File;
+import java.net.URI;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,6 +39,8 @@ import java.util.Map;
 
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
+import jeeves.utils.ResolverWrapper;
+import jeeves.utils.Resolver;
 
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -688,14 +692,29 @@ public class SchemaLoader
             else if (name.equals("import") || name.equals("include")) {
                 String schemaLoc = elChild.getAttributeValue("schemaLocation");
 
-                //--- we must prevent imports from the web
+                //--- we must try to resolve imports from the web using the
+                //--- oasis catalog 
 
+                String scFile;
                 if (schemaLoc.startsWith("http:")) {
-                    int lastSlash = schemaLoc.lastIndexOf('/');
-                    schemaLoc = schemaLoc.substring(lastSlash + 1);
+                    Resolver resolver = ResolverWrapper.getInstance();
+                    scFile = resolver.getXmlResolver().resolveURI(schemaLoc);
+
+                    if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
+                      Log.debug(Geonet.SCHEMA_MANAGER, "Cats: "+Arrays.toString(resolver.getXmlResolver().getCatalogList())+" Resolved "+schemaLoc+" "+scFile);
+
+                    if (scFile == null) { // what use is this? old behaviour
+                      Log.warning(Geonet.SCHEMA_MANAGER, "Cannot resolve "+schemaLoc+": will append last component to current path (not sure it will help though!)");
+                      int lastSlash = schemaLoc.lastIndexOf('/');
+                      scFile = path + schemaLoc.substring(lastSlash + 1);
+                    } else {  // this is good - get the path of resolved URI
+                      scFile = new URI(scFile).getPath();
+                    }
+                } else {
+                  scFile = path + schemaLoc;
                 }
-                if (!loadedFiles.contains(new File(path + schemaLoc).getCanonicalPath())) {
-                    alElementFiles.addAll(loadFile(path + schemaLoc, loadedFiles));
+                if (!loadedFiles.contains(new File(scFile).getCanonicalPath())) {
+                    alElementFiles.addAll(loadFile(scFile, loadedFiles));
                 }
             }
             else {

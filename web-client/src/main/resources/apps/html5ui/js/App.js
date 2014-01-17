@@ -640,7 +640,16 @@ GeoNetwork.app = function() {
             this.loginApp = new GeoNetwork.loginApp();
             this.loginApp.init();
             this.mapApp = new GeoNetwork.mapApp();
-            this.mapApp.init();
+
+            var layers={}, options={};
+            if(GeoNetwork.map.CONTEXT || GeoNetwork.map.OWS) {
+                options = GeoNetwork.map.CONTEXT_MAIN_MAP_OPTIONS;
+            } else {
+                options = GeoNetwork.map.MAIN_MAP_OPTIONS;
+                layers  = GeoNetwork.map.BACKGROUND_LAYERS;
+            }
+
+            this.mapApp.init(options, layers);
             this.searchApp = new GeoNetwork.searchApp();
             this.searchApp.init();
 

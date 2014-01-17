@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@page import="java.util.Enumeration"%><html xmlns="http://www.w3.org/1999/xhtml">
+<%@ page import="java.util.Enumeration,org.springframework.security.web.*,org.springframework.security.core.*,java.util.regex.Pattern,java.util.regex.Matcher"%><html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 	<% String baseURL = "/geonetwork"; %>
 		<meta http-equiv="Pragma" content="no-cache">
@@ -8,22 +8,45 @@
 		<script language="Javascript1.5" type="text/javascript">
 		function init() {
 			<% 
-			String found = null;
-			Enumeration names = request.getHeaderNames();
-			while (names.hasMoreElements()) {
-				String s = (String)names.nextElement();
-				if(s.equalsIgnoreCase("Accept-Language")) {
-					found = s;
-					break;
-				}
-			}
 			Object language = null;
-			if(found != null) {
-				language = request.getHeader(found);
-			}
+			Object ssLanguage = null;
+
+			String redirectUrl;
+			org.springframework.security.web.savedrequest.SavedRequest savedRequest =     new org.springframework.security.web.savedrequest.HttpSessionRequestCache().getRequest(request, response);
+			if (savedRequest !=null) {
+				redirectUrl=savedRequest.getRedirectUrl();
+				Pattern p = Pattern.compile("^.*/srv/([a-z]{3})/.*$");
+				Matcher m = p.matcher(redirectUrl);
+
+				if (m.find()) 
+					language=m.group(1);
+				}
+		ssLanguage=language;
+				
+		if (language==null) {
+			String found = null;
+				Enumeration names = request.getHeaderNames();
+				while (names.hasMoreElements()) {
+					String s = (String)names.nextElement();
+					if(s.equalsIgnoreCase("Accept-Language")) {
+						found = s;
+						break;
+					}
+				}
+				if(found != null) {
+					language = request.getHeader(found);
+					}
+				}
 			%>
 			var userLang = '<%= language %>'
+			var ssUserLang = '<%= ssLanguage %>'
 			var referer = window.location.pathname
+
+			// Attempt to determine language based on referer if we could not determine it based on spring security.
+			refererLang=(referer.match(/^.*\/srv\/([a-z]{3})\/.*$/i)|| [,null])[1];
+			if (ssUserLang=="null" && refererLang && refererLang.length==3)
+				userLang=refererLang;
+
 			if(!userLang) {
 				userLang = (navigator.language) ? navigator.language : navigator.userLanguage;
 			} 

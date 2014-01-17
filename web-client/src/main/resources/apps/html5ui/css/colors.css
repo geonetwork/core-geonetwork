@@ -9,7 +9,7 @@ html,button,input,select,textarea {
 	color: #222;
 }
 
-div#resultsPanel .x-panel-bbar table.x-toolbar-ct,.x-panel-header,div#big-map .x-panel-tbar table.x-toolbar-ct,div#resultsPanel table.x-toolbar-ct,div#resultsPanel button,.main aside
+div#resultsPanel .x-panel-bbar table.x-toolbar-ct,.x-panel-header,div#big-map .x-panel-tbar table.x-toolbar-ct,div#resultsPanel table.x-toolbar-ct,.main aside
 	{
 	background: #47A8DD;
 	color: white;
@@ -285,5 +285,10 @@ dl.xml {
 
 div#tabs .x-tab-strip span.x-tab-strip-text {
 	color: black;
-	shadow: grey;
+	box-shadow: grey;
+}
+
+
+.emptyThumbnail span {
+	color: #376690;	
 }

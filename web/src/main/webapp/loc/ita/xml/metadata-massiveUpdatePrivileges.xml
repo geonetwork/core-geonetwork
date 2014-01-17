@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<notfound>Metatietoja ei löydy.</notfound>
-	<notowner>Metatietojen oikeuksia ei päivitetty, koska et ole metatietojen omistaja.</notowner>
-	<updated>Päivitetyt metatiedot</updated>
-	<resultstitle>Oikeuspäivityksen tulokset</resultstitle>
+	<notfound>Record di metadati non trovati</notfound>
+   	<notowner>Record di metadati i cui privilegi non sono stati aggiornati perchè non ne sei proprietario</notowner>
+   	<updated>Record di metadati i cui privilegi sono stati aggiornati</updated>
+   	<resultstitle>Risultati aggiornamento privilegi</resultstitle>
 </strings>

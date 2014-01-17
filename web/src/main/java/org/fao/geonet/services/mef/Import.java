@@ -25,11 +25,14 @@ package org.fao.geonet.services.mef;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
@@ -79,16 +82,20 @@ public class Import extends NotInReadOnlyModeService {
         String fileType = Util.getParam(params, "file_type", "mef");
 		String uploadDir = context.getUploadDir();
 
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager   dm = gc.getDataManager();
+		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
 		File file = new File(uploadDir, mefFile);
 
-		List<String> id = MEFLib.doImport(params, context, file, stylePath);
+		List<String> id = MEFLib.doImport(params, context, file, stylePath, dbms);
         String ids = "";
 
         Iterator<String> iter = id.iterator();
         while (iter.hasNext()) {
             String item = (String) iter.next();
             ids += item + ";";
-
+						dm.indexInThreadPool(context, item, dbms);	
         }
 
         file.delete();

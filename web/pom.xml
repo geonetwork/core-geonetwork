@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>2.10.0-SNAPSHOT</version>
+    <version>2.10.2-SNAPSHOT</version>
   </parent>
 
 
@@ -627,6 +627,9 @@
               <includes>
                 <include>${geonetwork.build.dir}/scripts/editor/app.CRSSelectionPanel.js</include>
                 <include>${geonetwork.build.dir}/scripts/editor/app.KeywordSelectionPanel.js</include>
+                <include>${geonetwork.build.dir}/scripts/editor/csiro.EditorExtensions.js</include>
+                <include>${geonetwork.build.dir}/scripts/editor/csiro.ThesaurusTermSelectionPanel.js</include>
+                <include>${geonetwork.build.dir}/scripts/editor/csiro.CRSSelectionPanel.js</include>
                 <include>${geonetwork.build.dir}/scripts/editor/app.LinkedMetadataSelectionPanel.js</include>
                 <include>${geonetwork.build.dir}/scripts/editor/LogoSelectionPanel.js</include>
                 <include>${geonetwork.build.dir}/scripts/editor/app.GeoPublisherPanel.js</include>

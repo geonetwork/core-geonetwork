@@ -125,7 +125,7 @@ CREATE TABLE RegionsDes
 CREATE TABLE Users
   (
     id            int           not null,
-    username      varchar(256)  not null,
+    username      varchar(255)  not null,
     password      varchar(120)  not null,
     surname       varchar(32),
     name          varchar(32),
@@ -246,7 +246,7 @@ CREATE TABLE Groups
     id           int            not null,
     name         varchar(32)    not null,
     description  varchar(255),
-    email        varchar(32),
+    email        varchar(128),
     referrer     int,
 
     primary key(id),

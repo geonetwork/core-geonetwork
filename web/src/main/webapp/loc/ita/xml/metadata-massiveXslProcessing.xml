@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<notfound>Metatietoja ei löydy.</notfound>
-	<notowner>Metatietoja ei voitu prosessoida, koska et ole niiden omistaja.</notowner>
-	<updated>Metatiedot prosessoitu.</updated>
-    <notProcessFound>Metateitoprosessia ei löydy metatietoskeemalle.</notProcessFound>
+	<notfound>Record di metadati non trovati</notfound>
+    <notowner>Record di metadati non processati perchè non ne sei proprietario</notowner>
+    <updated>Record di metadati processati</updated>
+    <notProcessFound>Operazione Xsl sui metadati non trovata per lo schema metadati</notProcessFound>
 </strings>

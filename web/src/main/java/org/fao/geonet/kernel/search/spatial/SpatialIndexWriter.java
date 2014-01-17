@@ -90,7 +90,7 @@ public class SpatialIndexWriter implements FeatureListener
     static final String                                          SPATIAL_FILTER_JCS        = "SpatialFilterCache";
     public static final int                                      MAX_WRITES_IN_TRANSACTION = 1000;
 
-    private final Parser                              _parser;
+    private final Map<String, Parser>                 _parserMap;
     private final Transaction                         _transaction;
     private  int                                 _maxWrites;
     private final Lock                                _lock;
@@ -110,22 +110,24 @@ public class SpatialIndexWriter implements FeatureListener
 			* TODO: javadoc.
 			* 
 			* @param dataStore
-			* @param parser
+			* @param parserMap HashMap of GeoTools GML Parsers
 			* @param transaction
 			* @param maxWrites Maximum number of writes in a transaction. If set to
 			* 1 then AUTO_COMMIT is being used.
 			* @param lock
 			*/
-    public SpatialIndexWriter(DataStore datastore, Parser parser,
+    public SpatialIndexWriter(DataStore datastore, Map<String,Parser> parserMap,
             Transaction transaction, int maxWrites, Lock lock) 
 						throws Exception
     {
         // Note: The Configuration takes a long time to create so it is worth
         // re-using the same Configuration
         _lock = lock;
-        _parser = parser;
-        _parser.setStrict(false);
-        _parser.setValidating(false);
+        _parserMap = parserMap;
+        for (Parser parser : _parserMap.values()) {
+          parser.setStrict(false);
+          parser.setValidating(false);
+        }
         _transaction = transaction;
 		_maxWrites = maxWrites;
 
@@ -155,7 +157,7 @@ public class SpatialIndexWriter implements FeatureListener
             _index = null;
             errorMessage = new HashMap<String, String>();
             Geometry geometry = extractGeometriesFrom(
-                    schemaDir, metadata, _parser, errorMessage);
+                    schemaDir, metadata, _parserMap, errorMessage);
 
             if (geometry != null && !geometry.getEnvelopeInternal().isNull()) {
                 MemoryFeatureCollection features = new MemoryFeatureCollection(_featureStore.getSchema());
@@ -283,7 +285,7 @@ public class SpatialIndexWriter implements FeatureListener
      * testing access.
      */
     static MultiPolygon extractGeometriesFrom(String schemaDir, 
-            Element metadata, Parser parser, Map errorMessage) throws Exception
+            Element metadata, Map<String,Parser> parserMap, Map errorMessage) throws Exception
     {
         org.geotools.util.logging.Logging.getLogger("org.geotools.xml")
                 .setLevel(Level.SEVERE);
@@ -293,6 +295,25 @@ public class SpatialIndexWriter implements FeatureListener
         if (transform.getChildren().size() == 0) {
             return null;
         }
+
+        // get gml namespace and extract namespace uri
+        String gmlNamespaceUri = transform.getNamespace("gml").getURI();
+        if (gmlNamespaceUri == null) {
+          // may not have gml prefix but it should be a gml:GeometryCollection
+          // so the default namespace should be gml/gml3.2
+          gmlNamespaceUri = transform.getNamespace().getURI(); 
+        }
+
+        // see if we have a parser that handles that gml namespace uri
+        Parser parser = parserMap.get(gmlNamespaceUri);
+        if (parser == null) {
+          Log.error(Geonet.INDEX_ENGINE, "Couldn't find namespace with gml prefix when applying "+sSheet);
+          return null;
+        } else {
+          if (Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            Log.debug(Geonet.INDEX_ENGINE, "Using gml configuration for "+gmlNamespaceUri);
+        }
+
         List<Polygon> allPolygons = new ArrayList<Polygon>();
         for (Element geom : (List<Element>)transform.getChildren()) {
 					String srs = geom.getAttributeValue("srsName"); 

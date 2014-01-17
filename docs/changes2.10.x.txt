@@ -1,8 +1,202 @@
 ================================================================================
 ===
-=== GeoNetwork 2.10.0: List of changes
+=== GeoNetwork 2.10.2: List of changes
 ===
 ================================================================================
+- Update version to 2.10.2-0
+- Update version to 2.10.2-0
+- #267 HTML5 UI: Use WMC context in map and allow OSM layers
+- #271 Transfer ownership displays target users repeated
+- #266 HTML5 UI: Hide special groups from New Metadata panel
+- Merge pull request #265 from Delawen/origin/2.10.x
+- Fixing a really weird bug on IE I don't even know how to report.
+- Merge pull request #263 from Delawen/136
+- Check if we passed an override parameter for layers #136
+- Merge pull request #227 from kristjanr/PressingEnterKeyWhenSearching
+- Merge pull request #227 from kristjanr/PressingEnterKeyWhenSearching
+- #257 WMS harvester thumbnail issue (classic UI)
+- Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
+- Editor / XML view / Do not escape &#10; (#254).
+- #247 HTML5 UI: Context menu in search results displaying admin options when unlogged
+- Fix email size for group - live fix from GeoNetwork workshop in FOSS4G2013.
+- Fix email size for group - live fix from GeoNetwork workshop in FOSS4G2013.
+- #246 HTML5 UI: Click on search result metadata title doesn't open the metadata detail page
+- #241 Fix MySql create sql script
+- Bug fix: Pressing <Enter> key instead [Search] button sends only Simple Search request. http://trac.osgeo.org/geonetwork/ticket/1041
+- Merge pull request #220 from ianwallen/Branch_a6a1b2af565d7e159c4a644e8c82475063912773
+- Merge pull request #221 from ianwallen/Fix_Issue_174
+- Fixed issue when the referer was null
+- Merge pull request #173 from ianwallen/Jetty-7.6.8
+- Fix issue 213 Fixed issues related to last commit (dcd363f2cb8cbb08a0113a370c0fcc506061aa8b)    - characterset issue with ita    - commited conflict info from nor
+- Fix bug edit linkresource service selection
+- Widgets / Editor / User defined frequency is not properly saved.
+- Update version to 2.10.1.
+- Fix for #206
+- Adding a temporal element in editor would produce an invalid record because suggestion checking for nested OR types was not coping with duplicate element names in the 19115/19139 element hierarchy (in this case gmd:extent).
+- Update version to 2.10.1-SNAPSHOT
+- Update version to 2.10.1-SNAPSHOT
+- Update version to 2.10.1-SNAPSHOT
+- Update version to 2.10.1-0
+- Update version to 2.10.1-0
+- Merge branch '2.10.x' of github.com:geonetwork/core-geonetwork into 2.10.x
+- Forgotten password in self-registration system broken due to arguments to PasswordEncoder matches function being wrong way round
+- Fixed issue with registration and password reset not working
+- ISO19139 / RDF / Properly encode rdf:resource for point of contact organisation.
+- Security / JeevesException extending AuthenticationException make the user to be logged off when an Exception is thrown.
+- Merge branch '2.10.x' of github.com:geonetwork/core-geonetwork into 2.10.x
+- Merge pull request #172 from ianwallen/Issue_#153
+- Merge pull request #188 from ianwallen/Fix_Issue_176
+- Issue #166: Spatial Filters in CSW etc for 2.10.x were trimming too many search results - problem was caused by switching from a Set implementation in 2.8.x to an array[] in 2.10.x whilst processing search results the counter on the array was not being incremented
+- Change log4j.logger.jeeves from DEBUG to INFO    DEBUG should probably not be a default    DEBUG was causing all the config overrides to be placed in the log files - in some cases this was username passwords for the database.
+- Bring in commit 45edb70 from 2.8.x to make batch import transactional and faster
+- Merge pull request #175 from ianwallen/Fix_Issue_174
+- Merge pull request #178 from ianwallen/Fix_question_mark_search
+- Merge pull request #180 from Delawen/2.10.x
+- Adding translatable text to "no thumbnail" caption
+- Fix for issue when searching for "?" which was returning the following error. StringIndexOutOfBoundsException : String index out of range: -1
+- Added another fix where if we cannot get the language from the spring security then we can use the referer.
+- Fix for Issue #174 Retreived savedRequest from spring security and parse language out of the url.
+- Upgrade from Jetty 7.3.1 to Jetty 7.6.8 It seems to have fixes the issue with jsp pages not being compiled properly.
+- Re-Fix Issue #153 Apparently there may still be links which use the 2 char language code -i.e. "fr" which get redirected to "fre". In order for these links to work we need to allow for 2 to 3 chars for the language.
+- Merge pull request #161 from ianwallen/2.10.x
+- Merge pull request #163 from ianwallen/fix-Issue-158
+- Merge pull request #165 from ianwallen/Fix-Issue-153
+- Fix for issue 153 Updated the regular expression related to the languages to be more specific.
+- Fix for Issue #158 Changed logic so that it will only check for the proper permission if there is a need to make a change. Since the user interface does now allow editor to change the group <= 1 they should not be any attempt to changes.
+- Remove console.log debug stuff
+- Updated Help link so that it will link to the proper language if the correct files exists.
+- CRS selection change for sensorML
+- Exception processing should be done by schema to avoid confusion caused by unqualified names being present in more than one schema
+- Merge pull request #156 from ianwallen/2.10.x
+- Switch from status List service to Info service for advanced search menu
+- Add thesaurus selector which can be predefined with thesaurus name, can select one or many values - used for sensorML at present but could be used elsewhere
+- French changes failed in the last update. Trying again.
+- Widgets / Keyword selection / Fix keyword update when using arrow control.
+- Overrides / Add support for geoserver nodes (#154).
+- When processing geonet:child, exclude geonet: namespace attributes
+- Subtemplate import / Add the capability to update existing record (#152).
+- Merge branch 'UTF-8' of git://github.com/ianwallen/core-geonetwork into ianwallen-UTF-8
+- Another Fix for Ticket 1295 - Thanks Ian Wallen.
+- Add same map options as mini search map.
+- Add missing JS file required for zoom control.
+- Add warning when permalink points to a deleted or not visible to user record.
+- Ignore geonet:* in INSPIRE view edit mode.
+- Harvester / Error retrieving remote node groups (#150).
+- ISO19139 profile / Make add source templates generic for ISO profile too.
+- ISO19139 profile / Make thumbnail managment templates generic for ISO profile too.
+- ISO19139 profile / Make relation templates generic for ISO profile too.
+- ISO19139 profile / Make thumbnail managment templates generic for ISO profile too.
+- Test CSW / This interface is accessible from the admin now - Use the same layout.
+- Merge pull request #145 from ianwallen/2.10.x
+- Widgets / Add capability to customize tagcloud (#144).
+- Fixed broken image issue that was occurring when the image src variable was null.
+- BaseURL should not contain Host URL Otherwise if the site hostname is not configured properly then you will get errors such as the following. "bad URI or cross-site access not allowed"
+- Widgets apps / Support IE10.
+- Widgets / HTML5UI / Fix image path for icon in editor (Related to ba19858).
+- LDAP / Get highest profile if more than one defined.
+- Administration / Subtemplate / Allow sort by title (#140).
+- Improve french translation.
+- Widgets / Add capability to configure default edit mode on per schema basis. Add option to disable a calendar (eg. when indeterminatePosition=something for example in ISO19139).
+- Widgets / Keyword selection / Add the capability to search by URI instead of keyword label. Properly escape & in gmx:Anchor.
+- Administration / Import / Restore the capability to load subtemplates.
+- Update version to 2.10.0-SNAPSHOT
+- Documentation / Add 2.10 feature list. Fix release doc due to submodule changes.
+- Documentation / Add missing files related to submodule removal and .gitignore rule.
+- Only ignore installer creation folder.
+- Merge pull request #131 from ianwallen/2.10.x
+- added missing file to docs
+- Permit anyone to view the docs if they exists.
+- Merge pull request #127 from Delawen/2.10.x
+- Print Panel improved, now with more scroll bars!
+- Merge pull request #126 from Delawen/2.10.x
+- More margin changes for main content div, so the editor looks better #108
+- Merge pull request #125 from Delawen/2.10.x
+- Improved style for metadata editor, adding a better "delete" icon for buttons
+- Improved styling on metadata editor
+- Fix typo that made the rule invalid
+- Merge pull request #124 from Delawen/2.10.x
+- Adding checkboxes for results view fixing #103
+- Merge pull request #123 from Delawen/2.10.x
+- Fixing logout not clearing the user defined on catalogue
+- Merge pull request #122 from Delawen/2.10.x
+- Putting Login dropdown box above everything else
+- Merge branch '2.10.x' of github.com:geonetwork/core-geonetwork into 2.10.x
+- Merge pull request #120 from Delawen/2.10.x
+- Minimum height for pupular and latest metadata, so it is completely visible at all times #104
+- Merge pull request #119 from Delawen/2.10.x
+- Consistent resizing of resultsPanel for different css rules
+- Margins on main content will degrade on smaller screens to have more space for content. Related to #100, not being able to see "actions" button
+- Merge pull request #118 from Delawen/2.10.x
+- Removing testing with latest ExtJS library
+- #1299 Map viewer: Layers that are inside the overlays folder are multiplying
+- #1299 Map viewer: Layers that are inside the overlays folder are multiplying
+- Merge pull request #114 from Delawen/2.10.x
+- Simplifying font-face css3 definitions
+- Fixing fonts css
+- patch fixes #106 Using document mode of IE9
+- Cleanup/formating of harvesting.xml and config.xml   Added missing elements that existed in English but not in the other.   Formating - tabs   Moved some elements around to match the order of the English elements
+- Adding eot version of the fonts
+- added docs, installer and release into main repo
+- removed submodules installer, docs, releases
+- Updated the compare to use the xsl:for-each to loop through language as it is cleaner. Added missing "tur" and "pol"
+- Added missing "pol"
+- Formatting - spaces to tabs
+- Added missing <add js="true">
+- Added missing <url> and <filter>
+-   Added missing elements that existed in English but not in the other.   Fixed typos in attributes
+- * Cleanup/formating.   Added missing elements that existed in English but not in the other.   Formating - tabs   Moved some elements around to match the order of the English
+- Formating changes - mostly spaces to tabs.
+- Fixed XML related errors.
+- Cleanup/formating.   Added missing elements that existed in English but not in the other.   Formating - tabs   Moved some elements around to match the order of the English
+- Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
+- Fix compile error.
+- Converted another file to UTF-8 for better support.
+- Merge pull request #97 from ianwallen/UTF-8
+- Fix statistics compile error.
+- Self Registration - not adding profile (#1298).
+- Fix findbugs checks.
+- Feedback form / JS error.
+- ISO19139 / Improve label in french.
+- Add configuration option to update or not schema plugin catalog on startup (allows to modify it manually if necessary).
+- Widgets / Translate user role in user menu.
+- Fix logo size on IE7.
+- Fix all statistics services broken by ReadOnlyMode and some IOUtils changes.
+- Converted some file to UTF-8 for better support.
+- Fixed for Ticket #1295 Change encoding for login.jsp to utf-8
+- Merge pull request #96 from ianwallen/2.10.x
+- Remove "developer" user as it is not required.
+- RSS / FF does not render feed as usual (#1297).
+- Merge pull request #95 from ianwallen/2.10.x
+- Change oracle varchar to varchar2.
+- Rename migration scripts from 2.9 to 2.10 since 2.9 was not a supported version.
+- Widgets / misc fix.
+- UPDATE HarvestHistory moved to db-default so that it applies to all databases.
+- Add missing SQL statement in migration scripts required for CSW virtual admin.
+- Removed blank lines in Oracle statements so that it can be executed from sqlplus if required.
+- SQL table name error (from last commit) - "service" should be "services"
+- Widgets / Add missing i18n.
+- Widgets / Fix uuid to call to addWMSLayer.
+- gco:nilReson not translated (#1293).
+- French translation / Add missing string.
+- Suggestion / Keyword comma exploder / Only process required keywords and do not forget thesaurus name.
+- Related to #1276 for login.jsp page
+- Merge pull request #93 from Delawen/2.10.x Improvements on Spanish Translation
+- Merge pull request #93 from Delawen/2.10.x Improvements on Spanish Translation
+- Merge pull request #92 from Delawen/2.10.x
+- Removing some deprecated "importants" on css that made very difficult to work
+- A bigger tag cloud (width) as some long keywords have problems
+- When clicking on a tag, change tab to search to see results for the tag
+- Merge remote branch 'origin/2.10.x' into 2.10.x
+- Merge pull request #91 from Delawen/2.10.x
+- Log-out bug fixing
+- Authentication was incorrectly determined at start, so the login/logout/admin buttons were broken
+- Full link on label on tag cloud
+- Fixing bug on tag-cloud that made the facet filters search not to load
+- #1288 Fix link code for thumbnails
+- #1291 Unify permissions setting when importing a metadata with UI and CSW-Transaction
+- Updated installer submodule in 2.10.x
+- #1291 Unify permissions setting when importing a metadata with UI and CSW-Transaction
+- Update version to 2.10.0-SNAPSHOT
 - Update doc.
 - Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
 - Merge pull request #90 from Delawen/2.10.x

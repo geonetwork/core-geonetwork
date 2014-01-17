@@ -164,13 +164,13 @@
                                 </xsl:choose>
                             </a>
                             <label id="username_label">
-                                <xsl:value-of select="/root/request/user/username" />
+                                <xsl:value-of select="/root/gui/session/username" />
                             </label>
                             <label id="name_label">
                                 <xsl:choose>
                                     <xsl:when test="starts-with($authenticated, 'true')">
 		                                -
-		                                <xsl:value-of select="/root/request/user/name" />
+		                                <xsl:value-of select="/root/gui/session/name" />
                                     </xsl:when>
                                 </xsl:choose>
                             </label>
@@ -178,7 +178,7 @@
                                 <xsl:choose>
                                     <xsl:when test="starts-with($authenticated, 'true')">
 		                                (           
-		                                <xsl:value-of select="/root/request/user/profile" />
+		                                <xsl:value-of select="/root/gui/session/profile" />
 		                                )
                                     </xsl:when>
                                 </xsl:choose>
@@ -370,6 +370,20 @@
 				<input type="hidden" id="x-history-field" />
 				<iframe id="x-history-frame" height="0" width="0"></iframe>
 
+                 <xsl:choose>
+                     <xsl:when test="/root/gui/config/map/osm_map = 'true'">
+                         <script>
+                             var useOSMLayers = true;
+                         </script>
+                     </xsl:when>
+
+                     <xsl:otherwise>
+                         <script>
+                             var useOSMLayers = false;
+                         </script>
+                     </xsl:otherwise>
+                 </xsl:choose>
+
 				<xsl:choose>
 					<xsl:when test="/root/request/debug">
 						
@@ -503,7 +517,8 @@
 						<script type="text/javascript" src="{concat($baseUrl, '/apps/html5ui/js/App-mini.js')}"></script>
 					</xsl:otherwise>
 				</xsl:choose>
-				
+
+
 
             </div>
 		</body>

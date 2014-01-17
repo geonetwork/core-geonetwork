@@ -1,5 +1,9 @@
 var getGNServiceURL = function(service) {
-	return Env.locService+"/"+service;
+    if (service.indexOf("/") == 0) {
+        return Env.locService+service;
+    } else {
+        return Env.locService+'/'+service;
+    }
 };
 
 function findPos(obj) 

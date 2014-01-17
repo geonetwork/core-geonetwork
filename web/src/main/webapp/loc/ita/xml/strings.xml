@@ -16,173 +16,172 @@
 	<tur>Türkçe</tur> <!-- Do not translate! -->
 	<pol>Polski</pol> <!-- Do not translate! -->
 
-	<otherValue>Other:</otherValue>
-	<warning>Warning</warning>
-	<isAdmin>Is administrator ?</isAdmin>
+	<otherValue>Altro:</otherValue>
+	<warning>Attenzione</warning>
+	<isAdmin>E' amministratore?</isAdmin>
 	<anyLanguage>Qualsiasi lingua</anyLanguage>
 	<nodata>Null</nodata>
-	<extractRegisterItems>Extract Register Items</extractRegisterItems>
-	<selectXPath js="true">Enter an XPath to extract XML as a subtemplate eg. /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
-	<selectExtractTitle js="true">Enter an XPath to extract a title from the subtemplate</selectExtractTitle>
-	<batchExtractSubtemplatesTitle>Extract subtemplates from selected metadata</batchExtractSubtemplatesTitle>
-	<extractSubtemplates>Extract subtemplates</extractSubtemplates>
-	<xpathToExtract>XPath to extract as subtemplate</xpathToExtract>
-	<xsltToExtractTitle>XSLT to extract title from subtemplate</xsltToExtractTitle>
-	<xpathToExtractTitle>XPath to extract title from subtemplate</xpathToExtractTitle>
-	<categoryForSubtemplate>Category for subtemplates</categoryForSubtemplate>
-	<makeChanges>I really want to do this!</makeChanges>
-	<dontMakeChanges>By default, this operation will not make any changes to the database ie. it runs in test mode. Checking this box switches test mode off and changes will be made to the database.</dontMakeChanges>
-
-	<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
-	<createThesaurus>Create/Update Thesaurus</createThesaurus>
-	<thesaurusType>Tipo di Thesaurus</thesaurusType>
-	<changeLogMessage>Change Log Message</changeLogMessage>
-	<status>Status</status>
-	<updateStatus>Update status</updateStatus>
-	<batchUpdateStatusTitle>Batch Update Status Operation</batchUpdateStatusTitle>
-	<startVersion>Start Versioning</startVersion>
-	<batchStartVersionTitle>Batch Start Versioning</batchStartVersionTitle>
-	<editAttributes>Add more details</editAttributes>
-	<subtemplate.admin>Manage directories</subtemplate.admin>
-	<subtemplate.admin.desc>Add/modify/delete directories (eg. contact directories)</subtemplate.admin.desc>  
-	<surnameMandatory>Last name/surname is Mandatory</surnameMandatory>
-	<firstnameMandatory>First name is Mandatory</firstnameMandatory>
-	<emailMandatory>email address is Mandatory</emailMandatory>
-	<forgottenPassword>Forgot your password?</forgottenPassword>
-	<selectTemplate>Select schemas</selectTemplate>
+	<extractRegisterItems>Estrai elemento dal registro</extractRegisterItems>
+	<selectXPath js="true">Inserisci un XPath per estrarre l'elemento XML come subtemplate, ad esempio: /gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty</selectXPath>
+	<selectExtractTitle js="true">Inserisci un XPath per estrarre un titolo dal subtemplate</selectExtractTitle>
+	<batchExtractSubtemplatesTitle>Estrai i subtemplate dai metadati selezionati</batchExtractSubtemplatesTitle>
+	<extractSubtemplates>Estrai i subtemplate</extractSubtemplates>
+	<xpathToExtract>XPath per estrarre come subtemplate</xpathToExtract>
+	<xsltToExtractTitle>XSLT per estrarre il titolo dal subtemplate</xsltToExtractTitle>
+	<xpathToExtractTitle>XPath per estrarre il titolo dal subtemplate</xpathToExtractTitle>
+	<categoryForSubtemplate>Categoria per i subtemplate</categoryForSubtemplate>
+	<makeChanges>Voglio veramente fare questa operazione!</makeChanges>
+	<dontMakeChanges>Per default, questa operazione non effettuerà modifiche al database, girerà cioè in modalità test. Spuntando questa casella si disabiliterà la modalità test e le modifiche saranno applicate al database.</dontMakeChanges>
+	<defaultStatusChangeMessage>Nessuna informazione</defaultStatusChangeMessage>
+	<createThesaurus>Crea/Aggiorna thesaurus</createThesaurus>
+	<thesaurusType>Tipo di thesaurus</thesaurusType>
+	<changeLogMessage>Modifica messaggio di log</changeLogMessage>
+	<status>Stato</status>
+	<updateStatus>Aggiorna stato</updateStatus>
+	<batchUpdateStatusTitle>Operazioni di modifica di status multipla</batchUpdateStatusTitle>
+	<startVersion>Avvio versionamento</startVersion>
+	<batchStartVersionTitle>Avvio in batch versionamento</batchStartVersionTitle>
+	<editAttributes>Aggiungi dettagli</editAttributes>
+	<subtemplate.admin>Gestione directory</subtemplate.admin>
+	<subtemplate.admin.desc>Aggiungi/modifica/elimina directory</subtemplate.admin.desc>  
+	<surnameMandatory>Cognome obbligatorio</surnameMandatory>
+	<firstnameMandatory>Nome obbligatorio</firstnameMandatory>
+	<emailMandatory>Indirizzo email obbligatorio</emailMandatory>
+	<forgottenPassword>Password dimenticata?</forgottenPassword>
+	<selectTemplate>Seleziona gli schema</selectTemplate>
 	<useStopwords>L'indice Lucene usa le stopword per queste lingue:</useStopwords>    
 	<rebuildIndexMessage>Se si cambiano questi valori, si raccomanda la ricostruzione dell'indice di Lucene.</rebuildIndexMessage>
-	<notificationsDes>Remote updates</notificationsDes>
+	<notificationsDes>Aggiornamenti remoti</notificationsDes>
 	<metadata-templates-samples-add>Aggiungi modelli ed esempi</metadata-templates-samples-add>
 	<metadata-schema-select>Selezione una schema per il quale aggiungere modelli e dati di esempio</metadata-schema-select>
 	<templatesSamples>Organizza modelli e dati di esempio</templatesSamples>
 	<simpleSearch>Ricerca semplificata</simpleSearch>
 	<advancedSearch>Ricerca avanzata</advancedSearch>
 	<remoteSearch>Ricerca remota</remoteSearch>
-	<displayRemoteHtml>Display results using HTML from server?</displayRemoteHtml>
-	<noSearchCriteria js="true">Please enter or select some search criteria</noSearchCriteria>
-	<noServer js="true">Please select a server to search</noServer>
-	<anyWith>Any - with one of these words</anyWith>
-	<anyWithExactPhrase>Any - with this exact phrase</anyWithExactPhrase>
-	<anyWithAllWords>Any - with all of these words</anyWithAllWords>
-	<anyWithoutWords>Any - without these words</anyWithoutWords>
+	<displayRemoteHtml>Mostra i risultati usando l'HTML proveniente dal server remoto?</displayRemoteHtml>
+	<noSearchCriteria js="true">Inserisci o seleziona qualche criterio di ricerca</noSearchCriteria>
+	<noServer js="true">Selezionare il server su cui effettuare la ricerca</noServer>
+	<anyWith>Qualsiasi - con almeno UNA di queste parole</anyWith>
+	<anyWithExactPhrase>Qualsiasi - con questa esatta frase</anyWithExactPhrase>
+	<anyWithAllWords>Qualsiasi - con TUTTE queste parole</anyWithAllWords>
+	<anyWithoutWords>Qualsiasi - SENZA queste parole</anyWithoutWords>
 	<dataDownload>Dati scaricabili</dataDownload>
-	<addSchema>Add a metadata schema/profile</addSchema>
-	<updateSchema>Update a metadata schema/profile</updateSchema>
-	<deleteSchema>Delete a metadata schema/profile</deleteSchema>
-	<selectSchema>Select a metadata schema/profile</selectSchema>
-	<schemaFileName>Path to Schema Zip Archive</schemaFileName>
-	<schemaUrl>URL of Schema Zip Archive</schemaUrl>
-	<schemaUuid>UUID of local metadata record with GeoNetwork Metadata Schema Archive (URL) as online resource</schemaUuid>
-	<add>Add</add>
-	<schemaOps>Metadata Schema Operations</schemaOps>
-	<enterSchema>Enter a name for the schema to be added</enterSchema>
-	<selectSchemaOperations>Source of schema zip archive:</selectSchemaOperations>
+	<addSchema>Aggiungi uno schema/profilo di metadati</addSchema>
+	<updateSchema>Aggiorna uno schema/profilo di metadati</updateSchema>
+	<deleteSchema>Elimina uno schema/profilo di metadati</deleteSchema>
+	<selectSchema>Seleziona uno schema/profilo di metadati</selectSchema>
+	<schemaFileName>Path dell'archivio Zip contenente lo Schema</schemaFileName>
+	<schemaUrl>URL dell'archivio Zip contenente lo Schema</schemaUrl>
+	<schemaUuid>UUID della scheda metadato locale con GeoNetwork Metadata Schema Archive (URL) come risorsa online</schemaUuid>
+	<add>Aggiungi</add>
+	<schemaOps>Operazioni sugli Schema Metadati</schemaOps>
+	<enterSchema>Specifica un nome per lo schema da aggiungere</enterSchema>
+	<selectSchemaOperations>Origine dell'archivio Zip con lo schema:</selectSchemaOperations>
 	<showRemoteHTML>Mostra HTML dal server remoto</showRemoteHTML>
-	<searchStatistics>Search statistics</searchStatistics>
-	<searchStatisticsDes>See statistics about searches performed in the application</searchStatisticsDes>
+	<searchStatistics>Statistiche sulle ricerche</searchStatistics>
+	<searchStatisticsDes>Mostra statistiche sulle ricerche effettuate all'interno dell'applicazione</searchStatisticsDes>
 
-	<stat.byDay>by Day</stat.byDay>
-	<stat.byMonth>by Month</stat.byMonth>
-	<stat.byWeek>by Week</stat.byWeek>
-	<stat.byYear>by Year</stat.byYear>
-	<stat.collapse>Collapse</stat.collapse>
-	<stat.numAutoGeneratedSearches>Number of auto-generated (guiservice) searches</stat.numAutoGeneratedSearches>
-	<stat.date>Date</stat.date>
-	<stat.day>Day</stat.day>
+	<stat.byDay>per Giorno</stat.byDay>
+	<stat.byMonth>per Mese</stat.byMonth>
+	<stat.byWeek>per Settimana</stat.byWeek>
+	<stat.byYear>per Anno</stat.byYear>
+	<stat.collapse>Comprimi</stat.collapse>
+	<stat.numAutoGeneratedSearches>Numero di ricerche auto-generate (guiservice)</stat.numAutoGeneratedSearches>
+	<stat.date>Data</stat.date>
+	<stat.day>Giorno</stat.day>
 	<stat.hits>Hits</stat.hits>
 	<stat.ip>IP</stat.ip>
-	<stat.noValue>no value</stat.noValue>
-	<stat.language>Language</stat.language>
-	<stat.month>Month</stat.month>
-	<stat.numberOfSearch>Number of search</stat.numberOfSearch>
-	<stat.requestDate>Date of request</stat.requestDate>
-	<stat.spatialFilter>Spatial filter</stat.spatialFilter>
-	<stat.totalsearches>Total user searches</stat.totalsearches>
-	<stat.year>Year</stat.year>
-	<stat.mdSheet>Metadata sheet</stat.mdSheet>
-	<stat.noTitle>no title</stat.noTitle>
-	<stat.csvExport>CSV export</stat.csvExport>
-	<stat.tabularStats>Tabular statistics</stat.tabularStats>
-	<stat.tip1begin>Click on a link below to display live statistics, click the little arrow </stat.tip1begin>
-	<stat.tip1end>to hide it</stat.tip1end>
-	<stat.lastMonthStats>Last Month statistics</stat.lastMonthStats>
-	<stat.userIpText>User IP during search (number of search per unique IP)</stat.userIpText>
-	<stat.mostSearchedKeywords>Most searched Keywords</stat.mostSearchedKeywords>
-	<stat.mostSearchedCategories>Most searched Categories</stat.mostSearchedCategories>
-	<stat.simpleVsAdvanced>Simple vs advanced search</stat.simpleVsAdvanced>
-	<stat.mdPopularity>Metadata popularity</stat.mdPopularity>
-	<stat.graphicalStats>Graphical statistics</stat.graphicalStats>
-	<stat.tip2>Choose a date unit (year, month, day) and a date range and click ok to display a graphic</stat.tip2>
-	<stat.numberOfRequests>Number of requests</stat.numberOfRequests>
-	<stat.chooseDateFrom>Choose a date from</stat.chooseDateFrom>
-	<stat.dateFrom>Date from</stat.dateFrom>
-	<stat.dateTo>Date to</stat.dateTo>
-	<stat.md>Metadata</stat.md>
-	<stat.popularity>Popularity</stat.popularity>
-	<stat.totalSearches>Total user searches</stat.totalSearches>
-	<stat.numSearchesPerDay>Number of user searches per day</stat.numSearchesPerDay>
-	<stat.numSearchesNoResult>Number of user searches with no results</stat.numSearchesNoResult>
-	<stat.simpleAdvancedSearch>Simple / advanced search</stat.simpleAdvancedSearch>
-	<stat.searchedTerm>Searched term</stat.searchedTerm>
-	<stat.count>Count</stat.count>
-	<stat.numSimpleSearch>Number of simple searches</stat.numSimpleSearch>
-	<stat.numAdvancedSearch>Number of advanced searches</stat.numAdvancedSearch>
+	<stat.noValue>Nessun valore</stat.noValue>
+	<stat.language>Lingua</stat.language>
+	<stat.month>Mese</stat.month>
+	<stat.numberOfSearch>Numero di ricerche</stat.numberOfSearch>
+	<stat.requestDate>Data della richiesta</stat.requestDate>
+	<stat.spatialFilter>Filtro spaziale</stat.spatialFilter>
+	<stat.totalsearches>Ricerche totali</stat.totalsearches>
+	<stat.year>Anno</stat.year>
+	<stat.mdSheet>Scheda del metadato</stat.mdSheet>
+	<stat.noTitle>Nessun titolo</stat.noTitle>
+	<stat.csvExport>Esportazione CSV</stat.csvExport>
+	<stat.tabularStats>Statistiche tabellari</stat.tabularStats>
+	<stat.tip1begin>Clicca in un link qui sotto per visualizzare le statistiche in tempo reale, clicca sulla freccetta </stat.tip1begin>
+	<stat.tip1end>per nasconderlo</stat.tip1end>
+	<stat.lastMonthStats>Statistiche del mese precedente</stat.lastMonthStats>
+	<stat.userIpText>IP utente durante la ricerca (numero di ricerche per IP unico)</stat.userIpText>
+	<stat.mostSearchedKeywords>Parole chiave piu' ricercate</stat.mostSearchedKeywords>
+	<stat.mostSearchedCategories>Categorie piu' ricercate</stat.mostSearchedCategories>
+	<stat.simpleVsAdvanced>Ricerca semplice / avanzata</stat.simpleVsAdvanced>
+	<stat.mdPopularity>Popolarità dei metadati</stat.mdPopularity>
+	<stat.graphicalStats>Grafico statistiche</stat.graphicalStats>
+	<stat.tip2>Scegli una unità di tempo (anno, mese, giorno) ed un intervallo di date, quindi premi OK per visualizzare il grafico</stat.tip2>
+	<stat.numberOfRequests>Numero di richieste</stat.numberOfRequests>
+	<stat.chooseDateFrom>Scegli una data di inizio</stat.chooseDateFrom>
+	<stat.dateFrom>Data di inizio</stat.dateFrom>
+	<stat.dateTo>Data di termine</stat.dateTo>
+	<stat.md>Metadati</stat.md>
+	<stat.popularity>Popolarità</stat.popularity>
+	<stat.totalSearches>Totale ricerche utente</stat.totalSearches>
+	<stat.numSearchesPerDay>Numero di ricerche utente per giorno</stat.numSearchesPerDay>
+	<stat.numSearchesNoResult>Numero di ricerche utente senza risultati</stat.numSearchesNoResult>
+	<stat.simpleAdvancedSearch>Ricerca semplice / avanzata</stat.simpleAdvancedSearch>
+	<stat.searchedTerm>Termine ricercato</stat.searchedTerm>
+	<stat.count>Conteggio</stat.count>
+	<stat.numSimpleSearch>Numero di ricerche semplici</stat.numSimpleSearch>
+	<stat.numAdvancedSearch>Numero di ricerche avanzate</stat.numAdvancedSearch>
 	<stat.></stat.>
-	<stat.exportRequests>Export Requests table (one entry per user request)</stat.exportRequests>
-	<stat.exportParams>Export Parameters table (request keywords, several entries per user request)</stat.exportParams>
-	<stat.csvSemiColumnDelimiter>Semicolon separator</stat.csvSemiColumnDelimiter>
-	<stat.rightClickSaveAs>Right-click on the link to save the CSV file</stat.rightClickSaveAs>
-	<stat.searchedKeywords>Searched Keywords</stat.searchedKeywords>
-	<stat.popuByGroup>Metadata popularity by group</stat.popuByGroup>
-	<stat.popuByCatalog>Metadata popularity by catalog (node id)</stat.popuByCatalog>
-	<stat.popularityByCategory>Metadata popularity by category</stat.popularityByCategory>
-	<stat.mdType>Type of metadata searched for</stat.mdType>
-	<stat.dsMsType>Dataset metadata</stat.dsMsType>
-	<stat.serviceMdType>Service metadata</stat.serviceMdType>
-	<stat.basicGeodataType>Basic geodata</stat.basicGeodataType>
-	<stat.allTypes>All</stat.allTypes>
-	<stat.seeAdminPage>See system configuration page to enable logging feature</stat.seeAdminPage>
-	<stat.logDisabled>The logging feature is currently disabled</stat.logDisabled>
-	<stat.maintenance>Maintenance</stat.maintenance>
-	<stat.deleteTmpImages>Deletes temporary graphic and CSV files</stat.deleteTmpImages>
-	<stat.deleteTmpFiles>Delete files now</stat.deleteTmpFiles>
-	<stat.filesDel> file(s) deleted.</stat.filesDel>
-	<stat.warnCsvExport>Caution: exporting log tables can take several minutes</stat.warnCsvExport>
-	<stat.clickToDownload>Click on the link to download the CSV file</stat.clickToDownload>
+	<stat.exportRequests>Esporta la tabella delle Richieste (un record per richiesta utente)</stat.exportRequests>
+	<stat.exportParams>Esporta la tabella dei Parametri (parole chiave richiesta, piu' record per richiesta utente)</stat.exportParams>
+	<stat.csvSemiColumnDelimiter>Separatore punto e virgola</stat.csvSemiColumnDelimiter>
+	<stat.rightClickSaveAs>Clicca con il tasto destro nel link per salvare il file CSV</stat.rightClickSaveAs>
+	<stat.searchedKeywords>Parole chiave ricercate</stat.searchedKeywords>
+	<stat.popuByGroup>Popolarità metadati per gruppo</stat.popuByGroup>
+	<stat.popuByCatalog>Popolarità metadati per catalogo (id del nodo)</stat.popuByCatalog>
+	<stat.popularityByCategory>Popolarità metadati per categoria</stat.popularityByCategory>
+	<stat.mdType>Tipo di medatado ricercato per</stat.mdType>
+	<stat.dsMsType>Metadato dataset</stat.dsMsType>
+	<stat.serviceMdType>Metadato service</stat.serviceMdType>
+	<stat.basicGeodataType>Geodato di base</stat.basicGeodataType>
+	<stat.allTypes>Tutti</stat.allTypes>
+	<stat.seeAdminPage>Vai alla pagina di configurazione del sistema per abilitare il log</stat.seeAdminPage>
+	<stat.logDisabled>Il log è attualmente disabilitato</stat.logDisabled>
+	<stat.maintenance>Manutenzione</stat.maintenance>
+	<stat.deleteTmpImages>Elimina i grafici temporanei ed i files CSV</stat.deleteTmpImages>
+	<stat.deleteTmpFiles>Elimina i files ora</stat.deleteTmpFiles>
+	<stat.filesDel> file(s) eliminati.</stat.filesDel>
+	<stat.warnCsvExport>Attenzione: l'esportazione delle tabelle di log puo' impiegare diversi minuti</stat.warnCsvExport>
+	<stat.clickToDownload>Clicca sul collegamento per scaricare il file CSV</stat.clickToDownload>
 	
 	<drawRectangle js="true">Disegna rettangolo</drawRectangle>
 	<drawPolygon js="true">Disegna poligono</drawPolygon>
 	<drawCircle js="true">Disegna cerchio</drawCircle>
 	<geopublisher>GeoPublisher</geopublisher>
-	<geoPublisherWindowTitle js="true">Geo-publication: </geoPublisherWindowTitle>
+	<geoPublisherWindowTitle js="true">GeoPublisher: </geoPublisherWindowTitle>
 	<geopublisherHelp>Pubblica o revoca il dataset come WMS o WFS in un GeoServer remoto.</geopublisherHelp>
 	<publish js="true">Pubblica</publish>
-	<publishTooltip js="true">Publish current dataset to remote node. If dataset is already publish in that node, it will be updated.</publishTooltip>
+	<publishTooltip js="true">Pubblica il dataset corrente in un nodo remoto. Se il dataset è già presente in quel nodo, sarà aggiornato.</publishTooltip>
 	<publishError js="true">Pubblicazione fallita.</publishError>
-	<publishErrorCode js="true">Codice d'errore:</publishErrorCode>
-	<publishSuccess js="true">Successful publication.</publishSuccess>
-	<publishLayerAdded js="true"> Layer added to map preview.</publishLayerAdded>
+	<publishErrorCode js="true">Codice d\'errore:</publishErrorCode>
+	<publishSuccess js="true">Pubblicazione effettuata.</publishSuccess>
+	<publishLayerAdded js="true">Livello aggiunto alla mappa di anteprima.</publishLayerAdded>
 	<unpublish js="true">Revoca</unpublish>
-	<unpublishTooltip js="true">Remove current dataset from remote node.</unpublishTooltip>
-	<unpublishError js="true">Unpublication failed. </unpublishError>
-	<unpublishSuccess js="true">Successful unpublication.</unpublishSuccess>
+	<unpublishTooltip js="true">Rimuovi il dataset corrente dal nodo remoto.</unpublishTooltip>
+	<unpublishError js="true">Revoca fallita.</unpublishError>
+	<unpublishSuccess js="true">Revoca effettuata.</unpublishSuccess>
 	<check js="true">Controlla</check>
-	<errorConnectionRefused js="true">Connection refused.</errorConnectionRefused>
-	<errorDatasetNotFound js="true">Dataset not found.</errorDatasetNotFound>
-	<datasetFound js="true">Dataset found and added to the map preview.</datasetFound>
-	<checkFailure js="true">Failed to check dataset in remote node.</checkFailure>
-	<addOnlineSource js="true">Add WMS info to online source</addOnlineSource>
+	<errorConnectionRefused js="true">Connessione rifiutata.</errorConnectionRefused>
+	<errorDatasetNotFound js="true">Dataset non trovato.</errorDatasetNotFound>
+	<datasetFound js="true">Dataset trovato ed aggiunto alla mappa di anteprima.</datasetFound>
+	<checkFailure js="true">Impossibile verificare  il dataset nel nodo remoto.</checkFailure>
+	<addOnlineSource js="true">Aggiungi le info WMS alla risorsa online</addOnlineSource>
 	<statusInformation js="true">Informazioni sullo stato.</statusInformation>
 	<mapPreview js="true">Anteprima mappa</mapPreview>
-	<selectANode js="true">Selezione un nodo ...</selectANode>
-	<publishing js="true">Pubblicazione ...</publishing>
+	<selectANode js="true">Selezione un nodo...</selectANode>
+	<publishing js="true">Pubblicazione...</publishing>
 
 	<logo>Configurazione del logo</logo>
 	<logoSelectionWindow js="true">Scegli un logo</logoSelectionWindow>
 	<chooseLogo>Scegli un logo</chooseLogo>
 	<orgLogo>Logo dell'organizzazione</orgLogo>
-	<logoDes>Manage catalogue logo (node and harvesting logo)</logoDes>
+	<logoDes>Gestione il catalogo dei logo (logo del nodo e dell'harvesting)</logoDes>
 	<logoRegistered js="true">Logo registrati</logoRegistered>
 	<logoAdd js="true">Aggiungi logo</logoAdd>
 	<selectedLogo js="true">Logo selezionati:</selectedLogo>
@@ -334,7 +333,7 @@
 	<anyThesaurus js="true">Ogni thesaurus</anyThesaurus>
 	<selectedKeywords js="true">Parole chiave selezionate</selectedKeywords>
 	<foundKeywords js="true">Parole chiave disponibili</foundKeywords>
-	<keywordSelectionWindowTitle js="true">Seleziona parole chiave</keywordSelectionWindowTitle>
+	<keywordSelectionWindowTitle js="true">Seleziona le parole chiave</keywordSelectionWindowTitle>
 	<crsSelectionWindowTitle js="true">Seleziona un sistema di riferimento</crsSelectionWindowTitle>
 	<selectedCRS js="true">Sistemi di riferimento selezionati</selectedCRS>
 	<foundCRS js="true">Sistemi di riferimento disponibili</foundCRS>
@@ -411,7 +410,7 @@
 	<constraintsTab>Vincoli</constraintsTab>
 	<contactUs>Contatti</contactUs>
 	<contains>Contiene</contains>
-	<contentInfoTab>Informazioni sul contenuto</contentInfoTab>
+	<contentInfoTab>Info contenuto</contentInfoTab>
 	<convert>Converti</convert>
 	<copyright1>Copyright</copyright1>
 	<copyright2><p>Tutti i diritti riservati.<br/> [Dichiarazione generica di copyright] </p></copyright2>
@@ -426,7 +425,7 @@
 	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
 	<cswTest>Test del profilo CSW ISO</cswTest>
 	<cswTestDesc>Pagina di prova del servizio CSW con profilo ISO</cswTestDesc>
-	<dataQualityTab>Qualità dei dati</dataQualityTab>
+	<dataQualityTab>Qualità</dataQualityTab>
 	<datasetIssued>Estensione temporale</datasetIssued>
 	<datasetTab>Dataset</datasetTab>
 	<dateModified>Data di modifica</dateModified>
@@ -487,7 +486,7 @@
 	<exactCoordinate>Coordinate esatte</exactCoordinate>
 	<exactTerm>Termine esatto</exactTerm>
 	<extended>Ricerca avanzata</extended>
-	<extensionInfoTab>Info sull'estensione</extensionInfoTab>
+	<extensionInfoTab>Info estensione</extensionInfoTab>
 	<extent>Estensione</extent>
 	<featuredMap>In evidenza</featuredMap>
 	<feedback>Feedback</feedback>
@@ -521,7 +520,7 @@
 	<groupManDes>Aggiungi/modifica/elimina e mostra i gruppi</groupManDes>
 	<groups>Gruppi</groups>
 	<harvestingManagement>Gestione harvesting</harvestingManagement>
-	<harvestingManDes>Aggiungi/modifica/elimina/start/stop i processi di harvesting</harvestingManDes>
+	<harvestingManDes>Aggiungi/modifica/elimina/avvia/interrompi i processi di harvesting</harvestingManDes>
 	<help>Aiuto</help>
 	<helpLinkTooltip js="true">Aiuto</helpLinkTooltip>
 	<helpComplete>Aiuto completo</helpComplete>
@@ -734,7 +733,7 @@
 	<rawMetadata>Inserire metadato grezzo</rawMetadata>
 	<rebuild>Riorganizza</rebuild>
 	<recentAdditions>Modifiche recenti</recentAdditions>
-	<refSysTab>Sistema di riferimento</refSysTab>
+	<refSysTab>Sist. riferimento</refSysTab>
 	<region>Regione</region>
 	<register>Registra</register>
 	<registerChoose>Voglio </registerChoose>
@@ -809,8 +808,8 @@
 
 	<southbc>Coordinata limite verso sud</southbc>
 	<spacesNot js="true">In questo campo gli spazi non sono ammessi</spacesNot>
-	<spatial2Tab>Rappr. Spaz.</spatial2Tab>
-	<spatialTab>Info Spaz.</spatialTab>
+	<spatial2Tab>Rappr. Spaziale</spatial2Tab>
+	<spatialTab>Info Spaziali</spatialTab>
 	<startsWith>Comincia con</startsWith>
 	<state>Stato</state>
 	<styleSheet>Foglio di stile</styleSheet>
@@ -822,7 +821,7 @@
 	<systemConfig>Configurazione del sistema</systemConfig>
 	<systemConfigDes>Permette di modificare alcuni parametri del sistema</systemConfigDes>
 	<systemInfo>Informazioni sul sistema</systemInfo>
-	<systemInfoDes>Mostra informazioni avanzate su catalogo, indicd, java e sistema operativo</systemInfoDes>
+	<systemInfoDes>Mostra informazioni avanzate su catalogo, indici, java e sistema operativo</systemInfoDes>
 	<template>Modello</template>
 	<Term>Condizioni</Term>
 	<thanks>Grazie per l'iniziativa. GeoNetwork</thanks>
@@ -854,14 +853,14 @@
 	<UserAdmin>Utente amministratore</UserAdmin>
 	<userAtLeastOneGroup js="true">Selezionare almeno un gruppo.</userAtLeastOneGroup>
 	<userDefined>- Definito dall'utente -</userDefined>
-	<userInfo>Modifica l'informazione dell'utente</userInfo>
-	<userInfoDes>Permetti all'utente corrente di modificare le proprie informazioni</userInfoDes>
+	<userInfo>Informazioni sull'utente</userInfo>
+	<userInfoDes>Permette all'utente corrente di modificare le proprie informazioni</userInfoDes>
 	<userManagement>Gestione utenti</userManagement>
-	<userManDes>Aggiungi/modifica/cancella e mostra utenti</userManDes>
+	<userManDes>Aggiungi/modifica/elimina e mostra utenti</userManDes>
 	<username>Nome Utente</username>
 	<usernameMandatory>Il campo 'Nome Utente' è obbligatorio.</usernameMandatory>
 	<userPw>Cambia password</userPw>
-	<userPwDes>Permetti all'utente corrente di cambiare la password</userPwDes>
+	<userPwDes>Permette all'utente corrente di cambiare la password</userPwDes>
 	<uuidAction>Importa azioni:</uuidAction>
 	<validate>Valida</validate>
 	<assign>Assegna al catalogo corrente</assign>
@@ -1043,17 +1042,17 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 	<zip>Zip</zip>
 	<header_meta>
 		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
-		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<meta name="description" content="GeoNetwork opensource permette di accedere via internet a mappe interattive, immagini satellitari e dati spaziali a loro associati. Il suo scopo è di semplificare l'accesso e l'uso di dati spaziali ed informazioni collegate. GeoNetwork opensource permette di condividere facilmente dati spaziali tra utenti differenti."/>
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
-		<meta name="DC.title" lang="English" content="GeoNetwork opensource portal to spatial data and information"/>
-		<meta name="DC.creator" content="GeoNetwork Team"/>
-		<meta name="DC.subject" lang="English" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
-		<meta name="DC.description" lang="English" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
+		<meta name="DC.title" lang="Italian" content="Portale GeoNetwork opensource per i dati spaziali ed informazioni associate"/>
+		<meta name="DC.creator" content="Team GeoNetwork"/>
+		<meta name="DC.subject" lang="Italian" content="GeoNetwork opensource metadati ISO19115 ISO19139 ISO GIS remoto sensori dati shapefiles spaziali dati satellite immagini mappa mappe interattivo opengis mapping 19115 19139 geografico z39.50 catalogo clearinghouse coverages grid raster data opensource open source network"/>
+		<meta name="DC.description" lang="Italian" content="GeoNetwork opensource permette di accedere via internet a mappe interattive, immagini satellitari e dati spaziali a loro associati. Il suo scopo è di semplificare l'accesso e l'uso di dati spaziali ed informazioni collegate. GeoNetwork opensource permette di condividere facilmente dati spaziali tra utenti differenti."/>
 		<meta name="DC.publisher" content=""/>
 		<meta name="DC.date" content="02-07-2007"/>
 		<meta name="DC.type" scheme="DCMIType" content="InteractiveResource"/>
 		<meta name="DC.format" content="text/html; charset=UTF-8"/>
-		<meta name="DC.language" content="English French Spanish German Russian Chinese Dutch Portuguese"/>
+		<meta name="DC.language" content="Italiano Inglese Francese Spagnolo Tedesco Russo Cinese Olandese Portoghese"/>
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<mainpage1>
@@ -1109,7 +1108,7 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 	<thesaurus>
 		<load>Carica dalla repository di thesauri di GeoNetwork</load>
 		<addelement>Aggiungi termine</addelement>
-		<admin>Gestisci thesaurus</admin>
+		<admin>Gestione thesaurus</admin>
 		<broader>Termine più ampio</broader>
 		<category>Categoria del thesaurus</category>
 		<consultation>Vista del thesaurus</consultation>
@@ -1124,8 +1123,8 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 		<foundKeyWordsLimit>Numero massimo di termini trovati</foundKeyWordsLimit>
 		<keywordConfirm>Confermare l\'eliminazione della parola chiave</keywordConfirm>
 		<keywordDescription>Definizione della parola chiave:</keywordDescription>
-		<management>Gestisci thesauri</management>
-		<manDes>Aggiungi/modifica/cancella e visualizza thesauri</manDes>
+		<management>Gestione thesauri</management>
+		<manDes>Aggiungi/modifica/elimina e visualizza thesauri</manDes>
 		<narrower>Termine più ristretto</narrower>
 		<related>Termine correlato</related>
 		<thesaurus>Thesaurus</thesaurus>
@@ -1144,113 +1143,114 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 
 	<inspire>      
         <serviceType>
-            <value id="discovery">Discovery Service (discovery)</value>
-            <value id="view">View Service (view)</value>
-            <value id="download">Download Service (download)</value>
-            <value id="transformation">Transformation Service (transformation)</value>
-            <value id="invoke">Invoke Spatial Data Service (invoke)</value>
-            <value id="other">Other Services (other)</value>
+            <value id="discovery">Servizio di ricerca (discovery)</value>
+            <value id="view">Servizio di consultazione (view)</value>
+            <value id="download">Servizio di scaricamento (download)</value>
+            <value id="transformation">Servizio di conversione (transformation)</value>
+            <value id="invoke">Servizio di richiesta dei servizi di dati territoriali (invoke)</value>
+            <value id="other">Altri servizi (other)</value>
         </serviceType>
         <spatialDataService>
             <group label="Geographic human interaction services">
-                <value id="humanInteractionService">Geographic human interaction services</value>
-                <value id="humanCatalogueViewer">Catalogue viewer</value>
-                <value id="humanGeographicViewer">Geographic viewer</value>
-                <value id="humanGeographicSpreadsheetViewer">Geographic spreadsheet viewer</value>
-                <value id="humanChainDefinitionEditor">Chain definition editor</value>
-                <value id="humanWorkflowEnactmentManager">Workflow enactment manager</value>
-                <value id="humanGeographicFeatureEditor">Geographic feature editor</value>
-                <value id="humanGeographicSymbolEditor">Geographic symbol editor</value>
-                <value id="humanFeatureGeneralizationEditor">Feature generalisation editor</value>
-                <value id="humanGeographicDataStructureViewer">Geographic data-structure viewer</value>
+                <value id="humanInteractionService">Servizi geografici con interazione umana</value>
+                <value id="humanCatalogueViewer">Visualizzatore del catalogo</value>
+                <value id="humanGeographicViewer">Visualizzatore geografico</value>
+                <value id="humanGeographicSpreadsheetViewer">Visualizzatore di fogli elettronici geografici</value>
+                <value id="humanServiceEditor">Editor di servizi</value>
+                <value id="humanChainDefinitionEditor">Editor per la definizione di catene</value>
+                <value id="humanWorkflowEnactmentManager">Gestore di esecuzione del workflow</value>
+                <value id="humanGeographicFeatureEditor">Editor di elementi geografici (geographic feature)</value>
+                <value id="humanGeographicSymbolEditor">Editor di simboli geografici</value>
+                <value id="humanFeatureGeneralizationEditor">Editor di generalizzazione di elementi (feature)</value>
+                <value id="humanGeographicDataStructureViewer">Visualizzatore della struttura dei dati geografici</value>
             </group>
 
             <group label="Geographic model/information management service">
-                <value id="infoManagementService">Geographic model/information management service</value>
-                <value id="infoFeatureAccessService">Feature access service</value>
-                <value id="infoMapAccessService">Map access service</value>
-                <value id="infoCoverageAccessService">Coverage access service</value>
-                <value id="infoSensorDescriptionService">Sensor description service</value>
-                <value id="infoProductAccessService">Product access service</value>
-                <value id="infoFeatureTypeService">Feature type service</value>
-                <value id="infoCatalogueService">Catalogue service</value>
-                <value id="infoRegistryService">Registry service</value>
-                <value id="infoGazetteerService">Gazetteer service</value>
-                <value id="infoOrderHandlingService">Order handling service</value>
-                <value id="infoStandingOrderService">Standing order service</value>
+                <value id="infoManagementService">Servizio di gestione dei modelli/informazioni geografiche</value>
+                <value id="infoFeatureAccessService">Servizio di accesso a elementi (feature)</value>
+                <value id="infoMapAccessService">Servizio di accesso a mappe (map)</value>
+                <value id="infoCoverageAccessService">Servizio di accesso a coperture (coverage)</value>
+                <value id="infoSensorDescriptionService">Servizio di descrizione dei sensori</value>
+                <value id="infoProductAccessService">Servizio di accesso ai prodotti</value>
+                <value id="infoFeatureTypeService">Servizio di tipi di elementi (feature type)</value>
+                <value id="infoCatalogueService">Servizio di catalogo</value>
+                <value id="infoRegistryService">Servizio di registro</value>
+                <value id="infoGazetteerService">Servizio toponimico</value>
+                <value id="infoOrderHandlingService">Servizio di gestione degli ordini</value>
+                <value id="infoStandingOrderService">Servizio di ordini permanenti</value>
             </group>
 
             <group label="Geographic workflow/task management services">
-                <value id="taskManagementService">Geographic workflow/task management services</value>
-                <value id="chainDefinitionService">Chain definition service</value>
-                <value id="workflowEnactmentService">Workflow enactment service</value>
-                <value id="subscriptionService">Subscription service</value>
+                <value id="taskManagementService">Servizi di gestione di workflow/compiti geografici</value>
+                <value id="chainDefinitionService">Servizio di definizione di catene</value>
+                <value id="workflowEnactmentService">Servizio di esecuzione del workflow</value>
+                <value id="subscriptionService">Servizio di abbonamento</value>
             </group>
 
             <group label="Geographic processing services - spatial">
-                <value id="spatialProcessingService">Geographic processing services - spatial</value>
-                <value id="spatialCoordinateConversionService">Coordinate conversion service </value>
-                <value id="spatialCoordinateTransformationService">Coordinate transformation service </value>
-                <value id="spatialCoverageVectorConversionService">Coverage/vector conversion service </value>
-                <value id="spatialImageCoordinateConversionService">Image coordinate conversion service</value>
-                <value id="spatialRectificationService">Rectification service</value>
-                <value id="spatialOrthorectificationService">Orthorectification service</value>
-                <value id="spatialSensorGeometryModelAdjustmentService">Sensor geometry model adjustment service</value>
-                <value id="spatialImageGeometryModelConversionService">Image geometry model conversion service</value>
-                <value id="spatialSubsettingService">Subsetting service</value>
-                <value id="spatialSamplingService">Sampling service</value>
-                <value id="spatialTilingChangeService">Tiling change service</value>
-                <value id="spatialDimensionMeasurementService">Dimension measurement service</value>
-                <value id="spatialFeatureManipulationService">Feature manipulation services</value>
-                <value id="spatialFeatureMatchingService">Feature matching service</value>
-                <value id="spatialFeatureGeneralizationService">Feature generalisation service</value>
-                <value id="spatialRouteDeterminationService">Route determination service</value>
-                <value id="spatialPositioningService">Positioning service</value>
-                <value id="spatialProximityAnalysisService">Proximity analysis service</value>
+                <value id="spatialProcessingService">Servizi di trattamento geografico — aspetti territoriali</value>
+                <value id="spatialCoordinateConversionService">Servizio di conversione delle coordinate</value>
+                <value id="spatialCoordinateTransformationService">Servizio di trasformazione delle coordinate</value>
+                <value id="spatialCoverageVectorConversionService">Servizio di conversione di raster/vettoriale</value>
+                <value id="spatialImageCoordinateConversionService">Servizio di conversione delle coordinate delle immagini</value>
+                <value id="spatialRectificationService">Servizio di rettifica</value>
+                <value id="spatialOrthorectificationService">Servizio di ortorettifica</value>
+                <value id="spatialSensorGeometryModelAdjustmentService">Servizio di adeguamento dei modelli geometrici dei sensori</value>
+                <value id="spatialImageGeometryModelConversionService">Servizio di conversione dei modelli geometrici delle immagini</value>
+                <value id="spatialSubsettingService"> Servizio di definizione dei sottoinsiemi</value>
+                <value id="spatialSamplingService">Servizio di campionamento</value>
+                <value id="spatialTilingChangeService">Servizio di modifica della mosaicatura (tiling)</value>
+                <value id="spatialDimensionMeasurementService">Servizio di misura delle dimensioni</value>
+                <value id="spatialFeatureManipulationService">Servizi di manipolazione degli elementi geografici</value>
+                <value id="spatialFeatureMatchingService">Servizio di corrispondenza di elementi</value>
+                <value id="spatialFeatureGeneralizationService">Servizio di generalizzazione di elementi</value>
+                <value id="spatialRouteDeterminationService">Servizio di determinazione dell'itinerario</value>
+                <value id="spatialPositioningService">Servizio di posizionamento</value>
+                <value id="spatialProximityAnalysisService">Servizio di analisi di prossimità</value>
             </group>
 
             <group label="Geographic processing services - thematic">
-                <value id="thematicProcessingService">Geographic processing services - thematic</value>
-                <value id="thematicGoparameterCalculationService">Geoparameter calculation service</value>
-                <value id="thematicClassificationService">Thematic classification service</value>
-                <value id="thematicFeatureGeneralizationService">Feature generalisation service</value>
-                <value id="thematicSubsettingService">Subsetting service</value>
-                <value id="thematicSpatialCountingService">Spatial counting service</value>
-                <value id="thematicChangeDetectionService">Change detection service</value>
-                <value id="thematicGeographicInformationExtractionService">Geographic information extraction services</value>
-                <value id="thematicImageProcessingService">Image processing service</value>
-                <value id="thematicReducedResolutionGenerationService">Reduced resolution generation service</value>
-                <value id="thematicImageManipulationService">Image Manipulation Services</value>
-                <value id="thematicImageUnderstandingService">Image understanding services</value>
-                <value id="thematicImageSynthesisService">Image synthesis services</value>
-                <value id="thematicMultibandImageManipulationService">Multiband image manipulation</value>
-                <value id="thematicObjectDetectionService">Object detection service</value>
-                <value id="thematicGeoparsingService">Geoparsing service</value>
-                <value id="thematicGeocodingService">Geocoding service</value>
+                <value id="thematicProcessingService">Servizi di trattamento geografico — aspetti tematici</value>
+                <value id="thematicGoparameterCalculationService">Servizio di calcolo dei geoparametri</value>
+                <value id="thematicClassificationService">Servizio di classificazione tematica</value>
+                <value id="thematicFeatureGeneralizationService">Servizio di generalizzazione di elementi</value>
+                <value id="thematicSubsettingService">Servizio di definizione dei sottoinsiemi</value>
+                <value id="thematicSpatialCountingService">Servizio di conteggio territoriale</value>
+                <value id="thematicChangeDetectionService">Servizio di rilevazione dei cambiamenti</value>
+                <value id="thematicGeographicInformationExtractionService">Servizio di estrazione di informazioni geografiche</value>
+                <value id="thematicImageProcessingService">Servizio di trattamento delle immagini</value>
+                <value id="thematicReducedResolutionGenerationService">Servizio di riduzione della risoluzione</value>
+                <value id="thematicImageManipulationService">Servizi di manipolazione delle immagini</value>
+                <value id="thematicImageUnderstandingService">Servizi di comprensione di immagini</value>
+                <value id="thematicImageSynthesisService">Servizi di sintesi di immagini</value>
+                <value id="thematicMultibandImageManipulationService">Manipolazione di immagini multibanda</value>
+                <value id="thematicObjectDetectionService">Servizio di rilevazione di oggetti</value>
+                <value id="thematicGeoparsingService">Servizio di analisi sintattica (geoparsing)</value>
+                <value id="thematicGeocodingService">Servizio di geocodifica</value>
             </group>
 
              <group label="Geographic processing services - temporal">
-                <value id="temporalProcessingService">Geographic processing services - temporal</value>
-                <value id="temporalReferenceSystemTransformationService"> Temporal reference system transformation service</value>
-                <value id="temporalSubsettingService">Subsetting service</value>
-                <value id="temporalSamplingService">Sampling service</value>
-                <value id="temporalProximityAnalysisService">Temporal proximity analysis service</value>
+                <value id="temporalProcessingService">Servizi di processamento geografico — aspetti temporali</value>
+                <value id="temporalReferenceSystemTransformationService">Servizio di trasformazione del sistema di riferimento temporale</value>
+                <value id="temporalSubsettingService">Servizio di definizione dei sottoinsiemi</value>
+                <value id="temporalSamplingService">Servizio di campionamento</value>
+                <value id="temporalProximityAnalysisService">Servizio di analisi di prossimità temporale</value>
             </group>
 
             <group label="Geographic processing services - metadata">
-                <value id="metadataProcessingService">Geographic processing services - metadata</value>
-                <value id="metadataStatisticalCalculationService">Statistical calculation service</value>
-                <value id="metadataGeographicAnnotationService">Geographic annotation services</value>
+                <value id="metadataProcessingService">Servizi di processamento geografico — metadati</value>
+                <value id="metadataStatisticalCalculationService">Servizio di calcolo statistico</value>
+                <value id="metadataGeographicAnnotationService">Servizi di annotazione geografica</value>
             </group>
 
             <group label="Geographic communication services">
-                <value id="comService">Geographic communication services</value>
-                <value id="comEncodingService">Encoding service</value>
-                <value id="comTransferService">Transfer service</value>
-                <value id="comGeographicCompressionService">Geographic compression service</value>
-                <value id="comGeographicFormatConversionService">Geographic format conversion service</value>
-                <value id="comMessagingService">Messaging service</value>
-                <value id="comRemoteFileAndExecutableManagement">Remote file and executable management</value>
+                <value id="comService">Servizi di comunicazione geografica</value>
+                <value id="comEncodingService">Servizio di codifica</value>
+                <value id="comTransferService">Servizio di trasferimento</value>
+                <value id="comGeographicCompressionService">Servizio di compressione geografica</value>
+                <value id="comGeographicFormatConversionService">Servizio di conversione di formato geografico</value>
+                <value id="comMessagingService">Servizio di messaggeria</value>
+                <value id="comRemoteFileAndExecutableManagement">Gestione di file remoti e di file eseguibili</value>
             </group>
         </spatialDataService>
         <conformity>
@@ -1268,7 +1268,7 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
             <l6>Appendice</l6>
             <l7>Tipo di risorsa</l7>
             <l8>Tutto</l8>
-            <l9>Dataset e serie di dataset</l9>
+            <l9>Dataset e serie</l9>
             <l10>Servizi</l10>
             <l11>Organizzazione</l11>
             <l12>Mostra temi INSPIRE</l12>
@@ -1339,8 +1339,8 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 	<enabled>Abilitato</enabled>
 	<notifications>Notifica ai destinatari remoti</notifications>
 
-	<cswServer>Server CSW</cswServer>
-	<cswServerDes>Descrizione server CSW</cswServerDes>
+	<cswServer>Servizio CSW</cswServer>
+	<cswServerDes>Configurazione del servizio CSW</cswServerDes>
 	<cswServerConfig>Configurazione server CSW</cswServerConfig>
 	<cswServerEnable>Abilita</cswServerEnable>
 	<cswServerMetadataPublic>Il metadato inserito è pubblico (Transazione)</cswServerMetadataPublic>
@@ -1350,33 +1350,33 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 	<cswServerAccessConstraints>Vincoli di accesso</cswServerAccessConstraints>
 	<cswServerContact>Contatto</cswServerContact>
 
-	<virtualcswServer>Configure virtual CSW access point</virtualcswServer>
-	<virtualcswServerDes>Configuration of virtual CSW servers</virtualcswServerDes>
-	<virtualcswServerConfig>Configuration of virtual CSW servers</virtualcswServerConfig>
-	<virtualcswInsert>Configuration of a virtual CSW server</virtualcswInsert>
-	<virtualcswServiceName>Service name</virtualcswServiceName>
-	<virtualcswServiceDescription>Service description</virtualcswServiceDescription>
-	<virtualcswClassName>Class</virtualcswClassName>
-	<virtualcswNewService>Add a service</virtualcswNewService>
-	<virtualcswParamName>Filter type</virtualcswParamName>
-	<virtualcswParamValue>Filter value</virtualcswParamValue>
-	<virtualcswServicenameMandatory>Service name is mandatory.</virtualcswServicenameMandatory>
-	<virtualcswServicenameTooLong>Service name is too long (48 characters max)</virtualcswServicenameTooLong>
-	<virtualcswServicenameSpecialChars>Service name must not contain special characters.</virtualcswServicenameSpecialChars>
-	<virtualcswClassnameMandatory>Class name is mandatory.</virtualcswClassnameMandatory>
-	<virtualcswServiceNameStartsWith>Service name must begin with \"csw-\".</virtualcswServiceNameStartsWith>
+	<virtualcswServer>Configurazione CSW virtuali</virtualcswServer>
+	<virtualcswServerDes>Configurazione dei punti di accesso CSW virtuali</virtualcswServerDes>
+	<virtualcswServerConfig>Configurazione dei servizi CSW virtuali</virtualcswServerConfig>
+	<virtualcswInsert>Configurazione di servizio CSW virtuale</virtualcswInsert>
+	<virtualcswServiceName>Nome del servizio</virtualcswServiceName>
+	<virtualcswServiceDescription>Descrizione del servizio</virtualcswServiceDescription>
+	<virtualcswClassName>Classe</virtualcswClassName>
+	<virtualcswNewService>Aggiungi un servizio</virtualcswNewService>
+	<virtualcswParamName>Tipo filtro</virtualcswParamName>
+	<virtualcswParamValue>Valore filtro</virtualcswParamValue>
+	<virtualcswServicenameMandatory>Il nome del servizio è obbligatorio.</virtualcswServicenameMandatory>
+	<virtualcswServicenameTooLong>Il nome del servizio è troppo lungo (max 48 caratteri).</virtualcswServicenameTooLong>
+	<virtualcswServicenameSpecialChars>Il nome del servizio non deve contenere caratteri speciali.</virtualcswServicenameSpecialChars>
+	<virtualcswClassnameMandatory>Il nome della classe è obbligatorio.</virtualcswClassnameMandatory>
+	<virtualcswServiceNameStartsWith>Il nome del servizio deve iniziare per \"csw-\".</virtualcswServiceNameStartsWith>
 	
-	<virtualcswUpdateService>Update a CSW virtual server</virtualcswUpdateService>
+	<virtualcswUpdateService>Modifica un server CSW virtuale</virtualcswUpdateService>
 	
-	<virtualcswAny>Free text</virtualcswAny>
-	<virtualcswTitle>Title</virtualcswTitle>
-	<virtualcswAbstract>Abstract</virtualcswAbstract>
-	<virtualcswKeywords>Keyword</virtualcswKeywords>
-	<virtualcswDenominator>Denominator</virtualcswDenominator>
-	<virtualcswCatalog>Catalog</virtualcswCatalog>
-	<virtualcswGroup>Group</virtualcswGroup>
-	<virtualcswCategory>Category</virtualcswCategory>
-	<virtualcswType>Resource type</virtualcswType>
+	<virtualcswAny>Testo libero</virtualcswAny>
+	<virtualcswTitle>Titolo</virtualcswTitle>
+	<virtualcswAbstract>Descrizione</virtualcswAbstract>
+	<virtualcswKeywords>Parola chiave</virtualcswKeywords>
+	<virtualcswDenominator>Denominatore</virtualcswDenominator>
+	<virtualcswCatalog>Catalogo</virtualcswCatalog>
+	<virtualcswGroup>Gruppo</virtualcswGroup>
+	<virtualcswCategory>Categoria</virtualcswCategory>
+	<virtualcswType>Tipo risorsa</virtualcswType>
 
 	<customize-elementset>Personalizza element set</customize-elementset>
 	<csw-server-disabled>Il server CSW è disabilitato.</csw-server-disabled>
@@ -1384,19 +1384,19 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 	<custom-elementset-revert>Per ripristinare le risposte di default ElementSetName = FULL, eliminare tutti gli elementi da questa lista.</custom-elementset-revert>
 	<custom-elementset-add>Aggiungi elemento</custom-elementset-add>
 
-	<wmslayers>Layers WMS</wmslayers>
-	<formatter.admin>Metadata Formatter Admin</formatter.admin>
-	<formatter.admin.des>Administration UI for metadata formatting bundlers</formatter.admin.des>
-	<monitor>Monitor</monitor>
-	<concealed>Concealed</concealed>
-	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
+	<wmslayers>Livelli WMS</wmslayers>
+	<formatter.admin>Formattazione metadati</formatter.admin>
+	<formatter.admin.des>Interfaccia d'amministrazione per le formattazioni personalizzate</formatter.admin.des>
+	<monitor>Monitorato</monitor>
+	<concealed>Nascosto</concealed>
+	<serviceNotAllowed>Non sono presenti i permessi di accesso per il seguente servizio: {1}</serviceNotAllowed>
 	
-	<advancedOptions.show>show advanced options</advancedOptions.show>
-	<advancedOptions.hide>hide advanced options</advancedOptions.hide>
-	<latestDatasets>Latest</latestDatasets>
-	<popularDatasets>Popular</popularDatasets>
-	<filter>Filter</filter>
-	<welcome.text>Welcome to GeoNetwork</welcome.text>
+	<advancedOptions.show>mostra opzioni avanzate</advancedOptions.show>
+	<advancedOptions.hide>nascondi opzioni avanzate</advancedOptions.hide>
+	<latestDatasets>Ultimi</latestDatasets>
+	<popularDatasets>Popolari</popularDatasets>
+	<filter>Filtra</filter>
+	<welcome.text>Benvenuto in GeoNetwork</welcome.text>
 	<tag_label>Tags</tag_label>
-	<map_label>Map</map_label>
+	<map_label>Mappa</map_label>
 </strings>

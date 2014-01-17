@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <understandResource>Informazioni sul dataset</understandResource>
+  <relatedResources>Servizi e dati collegati</relatedResources>
+  <techInfo>Informazioni tecniche</techInfo>
+  <contactInfo>Informazioni sul contatto</contactInfo>
+  <mdContactInfo>Contatto del metadato</mdContactInfo>
+  <refDate>Data di riferimento</refDate>
+  <temporalRef>Informazioni temporali</temporalRef>
+  <constraintInfo>Informazioni sulle limitazioni di accesso</constraintInfo>
+
+  <xml_iso19139>Salva questa scheda come un file XML ISO19139</xml_iso19139>
+  <xml_iso19139Tooai_dc>Salva questa scheda come un file XML OAI Dublin Core</xml_iso19139Tooai_dc>
+</strings>

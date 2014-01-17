@@ -24,7 +24,7 @@
 
 	<!-- =================================================================================== -->
 
-	<property name="version" value="2.10.0" />
+	<property name="version" value="2.10.2" />
     <property name="subVersion" value="SNAPSHOT" />
 	<property name="javaVersion" value="1.6.0" /> <!-- Minimum version required -->
 	<property name="jre_url" value="http://java.sun.com/javase/downloads" />

@@ -1585,7 +1585,7 @@ public class SearchManager {
         private final Transaction                     _transaction;
         private final int                             _maxWritesInTransaction;
         private final Timer                           _timer;
-        private final Parser                          _gmlParser;
+        private final Map<String, Parser> _parserMap = new HashMap<String, Parser>();
         private final Lock                            _lock;
         private SpatialIndexWriter                    _writer;
         private volatile Committer                             _committerTask;
@@ -1612,7 +1612,8 @@ public class SearchManager {
             }
             _maxWritesInTransaction = maxWritesInTransaction;
             _timer = new Timer(true);
-            _gmlParser = new Parser(new GMLConfiguration());
+            _parserMap.put(Geonet.Namespaces.GML.getURI(), new Parser(new GMLConfiguration()));
+            _parserMap.put(Geonet.Namespaces.GML32.getURI(), new Parser(new org.geotools.gml3.v3_2.GMLConfiguration()));
             boolean rebuildIndex;
 
             rebuildIndex = createWriter(_datastore);
@@ -1637,7 +1638,7 @@ public class SearchManager {
         private boolean createWriter(DataStore datastore) throws IOException {
             boolean rebuildIndex;
             try {
-                _writer = new SpatialIndexWriter(datastore, _gmlParser,_transaction, _maxWritesInTransaction, _lock);
+                _writer = new SpatialIndexWriter(datastore, _parserMap,_transaction, _maxWritesInTransaction, _lock);
 				rebuildIndex = _writer.getFeatureSource().getSchema() == null;
             }
             catch (Throwable e) {
@@ -1772,7 +1773,7 @@ public class SearchManager {
          */
         private SpatialIndexWriter writerNoLocking() throws Exception {
             if (_writer == null) {
-                _writer = new SpatialIndexWriter(_datastore, _gmlParser, _transaction, _maxWritesInTransaction, _lock);
+                _writer = new SpatialIndexWriter(_datastore, _parserMap, _transaction, _maxWritesInTransaction, _lock);
             }
             return _writer;
         }

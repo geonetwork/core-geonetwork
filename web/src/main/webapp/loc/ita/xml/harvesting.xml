@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<selectownergroup>Harvester appartiene al gruppo</selectownergroup>
+	<selectownergroup>Gruppo di appartenenza dell'harvester</selectownergroup>
 	<select>Seleziona</select>
 	<name>Nome</name>
 	<directoryname>Directory</directoryname>
@@ -147,25 +147,25 @@
 	<importxslt>Applicare questo XSLT ai metadati scaricati</importxslt>
 	<rejectDuplicateResource>Check for duplicate resources based on resource identifier comparison (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
 
-	<at>Run at</at>
-	<atSpec>( hour of day : minute eg. 23:15 )</atSpec>
-	<interval>Will run again every</interval>
+	<at>Parte alle</at>
+	<atSpec>(ora:minuti; es. 23:15 )</atSpec>
+	<interval>Partenza ogni</interval>
 	<hourintervals>
-		<hour label="Each hour">1</hour>
-		<hour label="3 hours">3</hour>
-		<hour label="6 hours">6</hour>
-		<hour label="12 hours">12</hour>
+		<hour label="Ogni ora">1</hour>
+		<hour label="3 ore">3</hour>
+		<hour label="6 ore">6</hour>
+		<hour label="12 hore">12</hour>
 		<hour label="N/A">undefined</hour>
 	</hourintervals>
 
 	<dayofweek>
-		<day label="Monday">MON</day>
-		<day label="Tuesday">TUE</day>
-		<day label="Wednesday">WED</day>
-		<day label="Thursday">THU</day>
-		<day label="Friday">FRI</day>
-		<day label="Saturday">SAT</day>
-		<day label="Sunday">SUN</day>
+		<day label="Lunedi">MON</day>
+		<day label="Martedi">TUE</day>
+		<day label="Mercoledi">WED</day>
+		<day label="Giovedi">THU</day>
+		<day label="Venerdi">FRI</day>
+		<day label="Sabato">SAT</day>
+		<day label="Domenica">SUN</day>
 	</dayofweek>
 	<hours>
 		<hour label="0">0</hour>
@@ -212,7 +212,7 @@
 	<retrieveInfo>Recuperare le info</retrieveInfo>
 	<source>Sorgente</source>
 	<criteria>Criteri</criteria>
-	<validate>Convalidare</validate>
+	<validate>Applica validazione</validate>
 	<recurse>Ricorsione</recurse>
 	<nodelete>Mantieni localmente se eliminato sul sito originario</nodelete>
 	<server>Server</server>	

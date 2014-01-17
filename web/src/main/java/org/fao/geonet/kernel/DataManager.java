@@ -255,7 +255,7 @@ public class DataManager {
      * @param context
      * @param ids
      */
-    private void batchRebuild(ServiceContext context, List<String> ids) {
+    public void batchRebuild(ServiceContext context, List<String> ids) {
 
         // split reindexing task according to number of processors we can assign
         int threadCount = ThreadUtils.getNumberOfThreads();
@@ -1617,6 +1617,24 @@ public class DataManager {
      */
     public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
         Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+        return getMetadata(srvContext, dbms, id, forEditing, withEditorValidationErrors, keepXlinkAttributes);
+    }
+
+    /**
+     * Retrieves a metadata (in xml) given its id; adds editing information if requested and validation errors if
+     * requested.
+     *
+     * @param srvContext
+     * @param dbms
+     * @param id
+     * @param forEditing        Add extra element to build metadocument {@link EditLib#expandElements(String, Element)}
+     * @param withEditorValidationErrors
+     * @param keepXlinkAttributes When XLinks are resolved in non edit mode, do not remove XLink attributes.
+     * @return
+     * @throws Exception
+     */
+    public Element getMetadata(ServiceContext srvContext, Dbms dbms, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
         boolean doXLinks = xmlSerializer.resolveXLinks();
         Element md = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, false);
         if (md == null) return null;
@@ -2200,7 +2218,7 @@ public class DataManager {
     private void manageThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, Element env,
                                  String styleSheet, boolean indexAfterChange) throws Exception {
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
-        Element md = getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+        Element md = getMetadata(context, dbms, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
         if (md == null)
             return;
@@ -2366,52 +2384,52 @@ public class DataManager {
      * @throws Exception
      */
     public void setOperation(ServiceContext context, Dbms dbms, int mdId, int grpId, int opId) throws Exception {
-        // Check user privileges
-        // Session may not be defined when a harvester is running
-        if (context.getUserSession() != null) {
-            String userProfile = context.getUserSession().getProfile();
-            if (! (userProfile.equals(Geonet.Profile.ADMINISTRATOR) || userProfile.equals(Geonet.Profile.USER_ADMIN)) ) {
-                int userId = Integer.parseInt(context.getUserSession()
-                        .getUserId());
-                // Reserved groups
-                if (grpId <= 1) {
-                    // If user is reviewer, user can change operation for groups
-                    // -1, 0, 1
-                    String isReviewerQuery = "SELECT groupId FROM UserGroups WHERE userId=? AND profile=?";
-                    Element isReviewerRes = dbms.select(isReviewerQuery,
-                            userId, Geonet.Profile.REVIEWER);
-                    if (isReviewerRes.getChildren().size() == 0) {
-                        throw new ServiceNotAllowedEx(
-                                "User can't set operation for group "
-                                        + grpId
-                                        + " because the user in not a Reviewer of any group.");
-                    }
-                } else {
-
-                    GeonetContext gc = (GeonetContext) context
-                            .getHandlerContext(Geonet.CONTEXT_NAME);
-                    String userGroupsOnly = settingMan
-                            .getValue("system/metadataprivs/usergrouponly");
-                    if (userGroupsOnly.equals("true")) {
-                        // If user is member of the group, user can set
-                        // operation
-                        String isMemberQuery = "SELECT groupId FROM UserGroups WHERE groupId=? AND userId=?";
-                        Element isMemberRes = dbms.select(isMemberQuery, grpId,
-                                userId);
-                        if (isMemberRes.getChildren().size() == 0) {
+        String query = "SELECT metadataId FROM OperationAllowed WHERE metadataId=? AND groupId=? AND operationId=?";
+        Element elRes = dbms.select(query, mdId, grpId, opId);
+        if (elRes.getChildren().size() == 0) {   
+            // Check user privileges
+            // Session may not be defined when a harvester is running
+            if (context.getUserSession() != null) {
+                String userProfile = context.getUserSession().getProfile();
+                if (! (userProfile.equals(Geonet.Profile.ADMINISTRATOR) || userProfile.equals(Geonet.Profile.USER_ADMIN)) ) {
+                    int userId = Integer.parseInt(context.getUserSession()
+                            .getUserId());
+                    // Reserved groups
+                    if (grpId <= 1) {
+                        // If user is reviewer, user can change operation for groups
+                        // -1, 0, 1
+                        String isReviewerQuery = "SELECT groupId FROM UserGroups WHERE userId=? AND profile=?";
+                        Element isReviewerRes = dbms.select(isReviewerQuery,
+                                userId, Geonet.Profile.REVIEWER);
+                        if (isReviewerRes.getChildren().size() == 0) {
                             throw new ServiceNotAllowedEx(
                                     "User can't set operation for group "
                                             + grpId
-                                            + " because the user in not member of this group.");
+                                            + " because the user in not a Reviewer of any group.");
+                        }
+                    } else {
+
+                        GeonetContext gc = (GeonetContext) context
+                                .getHandlerContext(Geonet.CONTEXT_NAME);
+                        String userGroupsOnly = settingMan
+                                .getValue("system/metadataprivs/usergrouponly");
+                        if (userGroupsOnly.equals("true")) {
+                            // If user is member of the group, user can set
+                            // operation
+                            String isMemberQuery = "SELECT groupId FROM UserGroups WHERE groupId=? AND userId=?";
+                            Element isMemberRes = dbms.select(isMemberQuery, grpId,
+                                    userId);
+                            if (isMemberRes.getChildren().size() == 0) {
+                                throw new ServiceNotAllowedEx(
+                                        "User can't set operation for group "
+                                                + grpId
+                                                + " because the user in not member of this group.");
+                            }
                         }
                     }
                 }
             }
-        }
-        // Set operation
-        String query = "SELECT metadataId FROM OperationAllowed WHERE metadataId=? AND groupId=? AND operationId=?";
-        Element elRes = dbms.select(query, mdId, grpId, opId);
-        if (elRes.getChildren().size() == 0) {
+            // Set operation
             dbms.execute("INSERT INTO OperationAllowed(metadataId, groupId, operationId) VALUES(?,?,?)", mdId, grpId, opId);
             if (svnManager != null) {
                 svnManager.setHistory(dbms, mdId+"", context);

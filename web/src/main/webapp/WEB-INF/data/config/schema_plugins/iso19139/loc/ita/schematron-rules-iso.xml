@@ -28,7 +28,7 @@
     <M61>[ISOFTDS19139:2005-TableA1] - Il nome del livello gerarchico deve essere documentato se il livello gerarchico non contiene "dataset"</M61>
     
     
-    <alert.M6><div>Topic category is mandatory if MD_Metadata.hierarchyLevel equal 'dataset' or 'series' or doesn't exist.</div></alert.M6>
+    <alert.M6><div>Tema è obbligatorio se MD_Metadata.hierarchyLevel è 'dataset' o 'serie' oppure non esiste.</div></alert.M6>
     <report.M6>Il tema principale è:</report.M6>
     <alert.M6.characterString><div>Il testo deve avere un contenuto oppure il genitore di nilReason attribute deve essere legittimo.</div></alert.M6.characterString>
     <alert.M6.directPosition><div>La presenza di un attributo della dimensione implica la presenza dell'attributo srsName.</div></alert.M6.directPosition>
@@ -59,12 +59,12 @@
     </div></alert.M11>
     <report.M11><div>La descrizione e L'estensione di origine sono documentati per lignaggio.</div></report.M11>        
     <alert.M13><div>La dichiarazione è obbligatoria se non è definito nesun processo o fonte per dataset o per la serie.<br/>
-        If(count(source) + count(processStep) =0) and (DQ_DataQuality.scope.level = 'dataset' or 'series') allora dichiarazione è obbligatoria.</div></alert.M13>
+        Se(count(source) + count(processStep) = 0) e (DQ_DataQuality.scope.level = 'dataset' or 'series') allora dichiarazione è obbligatoria.</div></alert.M13>
     <report.M13><div>L'affermazione è documentata.</div></report.M13>
     <alert.M14><div>La 'fonte' il ruolo è obbligatorio se Genealogia.dichiarazione e la 'fase del processo' sono ruoli non documentati.<br/>
-        <span class="validationReportSuggestion">Suggerimento: Definire la discendenza o dichiarare  process step role.</span>
+        <span class="validationReportSuggestion">Suggerimento: Definire la discendenza o dichiarare process step role.</span>
     </div></alert.M14>
-    <report.M14>Source required if no statement or processStep.</report.M14>
+    <report.M14>La 'sorgente' è richiesta se non è definito statement o processStep.</report.M14>
     <alert.M15><div>La 'fase del processo' il ruolo è obbligatorio se Genealogia.dichiarazione e la 'fonte' sono ruoli non documentati.<br/>
         <span class="validationReportSuggestion">Suggerimento: Definire la discendenza o dichiarare source role.</span>        
     </div></alert.M15>
@@ -76,7 +76,7 @@
     <alert.M18><div>La 'densityUnits' è obbligatoria se è fornita la 'densità'.</div></alert.M18>
     <report.M18>La densita è:</report.M18>
     <alert.M19><div>E' necessario un formato di distribuzione.<br/>
-    count (distributionFormat + distributor/MD_Distributor/distributorFormat) &gt; 0.</div></alert.M19>
+    count(distributionFormat + distributor/MD_Distributor/distributorFormat) &gt; 0.</div></alert.M19>
     <report.M19>Formato/i del distributore.</report.M19>
     <alert.M20><div>Nella sezione di estensione, uno dei seguenti elementi deve essere definito: descrizione, Elemento geografico,
         Elemento temporale, Elemento verticale.<br/>
@@ -90,18 +90,18 @@
     <alert.M23><div>Sia 'nome del dataset aggregato' o 'identificatore aggregato del dataset' devono essere documentati.</div></alert.M23>
     <report.M23>Il nome del dataset aggregato o l'identificatore aggregato del dataset documentati.</report.M23>
     <alert.M24><div>lingua non è presente.</div></alert.M24>
-    <alert.M26.obligation><div>if 'dataType' notEqual 'codelist', 'enumeration' or 'codelistElement' then 'obligation' is mandatory.</div></alert.M26.obligation>
-    <alert.M26.maximumOccurence><div>if 'dataType' notEqual 'codelist', 'enumeration' or 'codelistElement' then 'maximumOccurence' is mandatory.</div></alert.M26.maximumOccurence>
-    <alert.M26.domainValue><div>if 'dataType' notEqual 'codelist', 'enumeration' or 'codelistElement' then 'domainValue' is mandatory.</div></alert.M26.domainValue>
-    <alert.M27><div>if 'obligation' = 'conditional' then 'condition' is mandatory.</div></alert.M27>
+    <alert.M26.obligation><div>se 'dataType' non è uguale a 'codelist', 'enumeration' or 'codelistElement' allora 'obligation' è obbligatoria.</div></alert.M26.obligation>
+    <alert.M26.maximumOccurence><div>se 'dataType' non è uguale a 'codelist', 'enumeration' o 'codelistElement' allora 'maximumOccurence' è obbligatorio.</div></alert.M26.maximumOccurence>
+    <alert.M26.domainValue><div>se 'dataType' non è uguale a 'codelist', 'enumeration' o 'codelistElement' allora 'domainValue' è obbligatorio.</div></alert.M26.domainValue>
+    <alert.M27><div>se 'obligation' = 'conditional' allora 'condition' è obbligatorio.</div></alert.M27>
     <report.M27>La condizione per l'elemento condizionale è definita.</report.M27>
-    <alert.M28><div>if 'dataType' = 'codelistElement' then 'domainCode' is mandatory.</div></alert.M28>
+    <alert.M28><div>se 'dataType' = 'codelistElement' allora 'domainCode' è obbligatorio.</div></alert.M28>
     <report.M28>Codice di dominio documentato per l'elemento del code list.</report.M28>
-    <alert.M29><div>if 'dataType' not equal to 'codelistElement' then 'shortName' is mandatory.</div></alert.M29>
+    <alert.M29><div>se 'dataType' non è uguale a 'codelistElement' allora 'shortName' è obbligatorio.</div></alert.M29>
     <report.M29>Nome breve documentato per l'elemento nullo della code list.</report.M29>
-    <alert.M30><div>'checkPointDescription' is mandatory if 'checkPointAvailability' = 1 or true.</div></alert.M30>
+    <alert.M30><div>'checkPointDescription' è obbligatorio if 'checkPointAvailability' = 1 oppure è true.</div></alert.M30>
     <report.M30>La descrizione del Check point è documentata.</report.M30>
-    <alert.M61><div>hierarchyLevelName must be documented if hierarchyLevel does not contain 'dataset'</div></alert.M61>
+    <alert.M61><div>hierarchyLevelName deve essere documentato se hierarchyLevel non contiene 'dataset'</div></alert.M61>
     <report.M61>Il livello gerarchico è:</report.M61>
 </strings>
 

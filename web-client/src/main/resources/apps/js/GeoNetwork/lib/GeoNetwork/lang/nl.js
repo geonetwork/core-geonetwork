@@ -442,6 +442,8 @@ GeoNetwork.Lang.nl = {
     'advancedSearchOptions': "Geavanceerde zoek opties",
     'relatedservices': "Gerelateerde service",
     'relatedchildren': "Kinderen",
+    'relatedsibling': 'Related records',
+    'relatedassociated': 'Related records',
     'relatedfcats': "Gerelateerde objectencatalogus",
     'relatedhasfeaturecat': "Datasets",
     'relatedsources': "Bron datasets",
