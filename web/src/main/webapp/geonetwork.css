@@ -1425,3 +1425,7 @@ div#editPanel * div table tr > td {
     width: 175px !important;
     height: 185px !important;
 }
+     /* Chrome25 Bug fix, 100% width causes issues with the date picker, replaced with a fixed width
+     table.x-date-inner {
+        width:200px !important; }*//* original was width : 100% */
+

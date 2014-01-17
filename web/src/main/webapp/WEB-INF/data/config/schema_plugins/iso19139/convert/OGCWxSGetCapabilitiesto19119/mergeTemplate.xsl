@@ -34,9 +34,9 @@
             <xsl:copy-of select="gmd:hierarchyLevelName"/>
 
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:contact/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:contact/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:contact/."/>
-                <xsl:with-param name="mode" select="''"/>
+                <xsl:with-param name="mode" select="'replace'"/>
             </xsl:call-template>
 
             <xsl:copy-of select="gmd:dateStamp"/>
@@ -49,7 +49,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:spatialRepresentationInfo/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:spatialRepresentationInfo/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/."/>
                 <xsl:with-param name="mode" select="$updateMode"/>
             </xsl:call-template>
@@ -57,7 +57,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:referenceSystemInfo/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:referenceSystemInfo/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:referenceSystemInfo/."/>
                 <xsl:with-param name="mode" select="$updateMode"/>
             </xsl:call-template>
@@ -65,7 +65,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:metadataExtensionInfo/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:metadataExtensionInfo/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:metadataExtensionInfo/."/>
                 <xsl:with-param name="mode" select="$updateMode"/>
             </xsl:call-template>
@@ -79,66 +79,66 @@
                         <xsl:copy-of select="@*"/>
 
                         <xsl:call-template name="process">
-                            <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:citation/."/>
+                            <xsl:with-param name="templateElement" select="$templateMD//gmd:identificationInfo//gmd:citation/."/>
                             <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:identificationInfo//gmd:citation/."/>
                             <xsl:with-param name="mode" select="$updateMode"/>
                         </xsl:call-template>
 
                         <xsl:call-template name="process">
-                            <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:abstract/."/>
+                            <xsl:with-param name="templateElement" select="$templateMD//gmd:identificationInfo//gmd:abstract/."/>
                             <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:identificationInfo//gmd:abstract/."/>
                             <xsl:with-param name="mode" select="$updateMode"/>
                         </xsl:call-template>
 
                         <xsl:call-template name="process">
-                            <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:purpose/."/>
+                            <xsl:with-param name="templateElement" select="$templateMD//gmd:identificationInfo//gmd:purpose/."/>
                             <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:identificationInfo//gmd:purpose/."/>
                             <xsl:with-param name="mode" select="$updateMode"/>
                         </xsl:call-template>
 
                         <xsl:call-template name="process">
-                            <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:credit/."/>
+                            <xsl:with-param name="templateElement" select="$templateMD//gmd:identificationInfo//gmd:credit/."/>
                             <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:identificationInfo//gmd:credit/."/>
                             <xsl:with-param name="mode" select="$updateMode"/>
                         </xsl:call-template>
 
                         <xsl:call-template name="process">
-                            <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:status/."/>
+                            <xsl:with-param name="templateElement" select="$templateMD//gmd:identificationInfo//gmd:status/."/>
                             <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:identificationInfo//gmd:status/."/>
                             <xsl:with-param name="mode" select="$updateMode"/>
                         </xsl:call-template>
 	
 	                    <xsl:call-template name="process">
-                            <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:pointOfContact/."/>
+                            <xsl:with-param name="templateElement" select="$templateMD//gmd:identificationInfo//gmd:pointOfContact/."/>
 	                        <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:identificationInfo//gmd:pointOfContact/."/>
 	                        <xsl:with-param name="mode" select="$updateMode"/>
 	                    </xsl:call-template>
 
                         <xsl:call-template name="process">
-                            <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:descriptiveKeywords/."/>
+                            <xsl:with-param name="templateElement" select="$templateMD//gmd:identificationInfo//gmd:descriptiveKeywords/."/>
                             <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:identificationInfo//gmd:descriptiveKeywords/."/>
                             <xsl:with-param name="mode" select="'add'"/>
                         </xsl:call-template>
 	                    
-	                    <xsl:copy-of select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:resourceMaintenance"/>
+	                    <xsl:copy-of select="$templateMD//gmd:identificationInfo//gmd:resourceMaintenance"/>
 	                    <xsl:copy-of select="/gmd:MD_Metadata/gmd:identificationInfo//gmd:graphicOverview"/>
-	                    <xsl:copy-of select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:resourceFormat"/>
+	                    <xsl:copy-of select="$templateMD//gmd:identificationInfo//gmd:resourceFormat"/>
 	                    
 
 	                    
 	                    <!-- FIXME / TO BE DISCUSS following sections are replaced. -->
-	                    <xsl:copy-of select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:resourceSpecificUsage"/>
-	                    <xsl:copy-of select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:resourceConstraints"/>
-	                    <xsl:copy-of select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:aggregationInfo"/>
-	                    <xsl:copy-of select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:spatialRepresentationType"/>
-	                    <xsl:copy-of select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:spatialResolution"/>
-	                    <xsl:copy-of select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:langage"/>
-	                    <xsl:copy-of select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:characterSet"/>
-	                    <xsl:copy-of select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:topicCategory"/>
-	                    <xsl:copy-of select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo//gmd:environmentDescription"/>
+	                    <xsl:copy-of select="$templateMD//gmd:identificationInfo//gmd:resourceSpecificUsage"/>
+	                    <xsl:copy-of select="$templateMD//gmd:identificationInfo//gmd:resourceConstraints"/>
+	                    <xsl:copy-of select="$templateMD//gmd:identificationInfo//gmd:aggregationInfo"/>
+	                    <xsl:copy-of select="$templateMD//gmd:identificationInfo//gmd:spatialRepresentationType"/>
+	                    <xsl:copy-of select="$templateMD//gmd:identificationInfo//gmd:spatialResolution"/>
+	                    <xsl:copy-of select="$templateMD//gmd:identificationInfo//gmd:langage"/>
+	                    <xsl:copy-of select="$templateMD//gmd:identificationInfo//gmd:characterSet"/>
+	                    <xsl:copy-of select="$templateMD//gmd:identificationInfo//gmd:topicCategory"/>
+	                    <xsl:copy-of select="$templateMD//gmd:identificationInfo//gmd:environmentDescription"/>
 	                    
 	                    <xsl:call-template name="process">
-                            <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:extent/."/>
+                            <xsl:with-param name="templateElement" select="$templateMD//gmd:extent/."/>
 	                        <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:identificationInfo//gmd:extent/."/>
 	                        <xsl:with-param name="mode" select="$updateMode"/>
 	                    </xsl:call-template>
@@ -161,7 +161,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:contentInfo/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:contentInfo/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:contentInfo/."/>
                 <xsl:with-param name="mode" select="$updateMode"/>
             </xsl:call-template>
@@ -170,7 +170,7 @@
             <!-- Distribution -->
             
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:distributionInfo/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:distributionInfo/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:distributionInfo/."/>
                 <!-- Force mode to replace element due to schema cardinality -->
                 <xsl:with-param name="mode" select="'replace'"/>
@@ -180,7 +180,7 @@
             <!-- Quality -->
             
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:dataQualityInfo/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:dataQualityInfo/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:dataQualityInfo/."/>
                 <xsl:with-param name="mode" select="$updateMode"/>
             </xsl:call-template>
@@ -188,7 +188,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:portrayalCatalogueInfo/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:portrayalCatalogueInfo/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:portrayalCatalogueInfo/."/>
                 <xsl:with-param name="mode" select="$updateMode"/>
             </xsl:call-template>
@@ -196,7 +196,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:metadataConstraints/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:metadataConstraints/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:metadataConstraints/."/>
                 <xsl:with-param name="mode" select="$updateMode"/>
             </xsl:call-template>
@@ -204,7 +204,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:applicationSchemaInfo/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:applicationSchemaInfo/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:applicationSchemaInfo/."/>
                 <xsl:with-param name="mode" select="$updateMode"/>
             </xsl:call-template>
@@ -212,7 +212,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:metadataMaintenance/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:metadataMaintenance/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:metadataMaintenance/."/>
 
                 <xsl:with-param name="mode" select="'replace'"/>
@@ -221,7 +221,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:series/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:series/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:series/."/>
 
                 <xsl:with-param name="mode" select="'replace'"/>
@@ -230,7 +230,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:describes/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:describes/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:describes/."/>
 
                 <xsl:with-param name="mode" select="'replace'"/>
@@ -239,7 +239,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:propertyType/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:propertyType/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:propertyType/."/>
 
                 <xsl:with-param name="mode" select="'replace'"/>
@@ -248,7 +248,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:featureType/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:featureType/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:featureType/."/>
 
                 <xsl:with-param name="mode" select="'replace'"/>
@@ -258,7 +258,7 @@
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
             <xsl:call-template name="process">
-                <xsl:with-param name="templateElement" select="$templateMD/gmd:MD_Metadata/gmd:featureAttribute/."/>
+                <xsl:with-param name="templateElement" select="$templateMD//gmd:featureAttribute/."/>
                 <xsl:with-param name="name" select="/gmd:MD_Metadata/gmd:featureAttribute/."/>
 
                 <xsl:with-param name="mode" select="'replace'"/>
@@ -277,16 +277,16 @@
         <xsl:param name="name"/>
         <xsl:param name="mode"/>
         <xsl:variable name="update">
-            <xsl:value-of select="$name/*" />
+        <xsl:value-of select="$name/*" />
         </xsl:variable>
 
 <!--        <xsl:variable name="templateElement">
             <xsl:choose>
                 <xsl:when test="$subLevel=true()">
-                    <xsl:copy-of select="$templateMD/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/*[name(.)=name($name)]"/>
+                    <xsl:copy-of select="$templateMD//gmd:identificationInfo/srv:SV_ServiceIdentification/*[name(.)=name($name)]"/>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:copy-of select="$templateMD/gmd:MD_Metadata/*[name(.)=name($name)]"/>
+                    <xsl:copy-of select="$templateMD//*[name(.)=name($name)]"/>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>             -->
