@@ -113,7 +113,9 @@
          return {
            buildEditUrlPrefix: function(service) {
              var params = [service, '?id=', gnCurrentEdit.id];
-             gnCurrentEdit.tab && params.push('&currTab=', gnCurrentEdit.tab);
+             gnCurrentEdit.tab ?
+             params.push('&currTab=', gnCurrentEdit.tab) :
+             params.push('&currTab=', 'default');
              gnCurrentEdit.displayAttributes &&
              params.push('&displayAttributes=',
              gnCurrentEdit.displayAttributes);
