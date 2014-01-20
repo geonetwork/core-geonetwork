@@ -305,7 +305,7 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
                         }
                         
                     }
-                    else if((isOwner == 'false') && (record.get('userGroup') == "false")) {
+                    else if (catalogue.canSetInternalPrivileges() == false) {
                         return css + 'privileges-grid-disable';
                     }
                     else {
