@@ -2188,7 +2188,6 @@ public class DataManager {
 
     /**
      * 
-     * TODO
      * Creates XML schematron report for each set of rules defined in schema 
      * directory. This method assumes that you've run enumerateTree on the 
      * metadata
@@ -2201,7 +2200,7 @@ public class DataManager {
      * @param valTypeAndStatus
      * @return errors
      */
-	private Element applyCustomSchematronRules(Dbms dbms, String schema, Element md, 
+	public Element applyCustomSchematronRules(Dbms dbms, String schema, Element md, 
 			String lang, Map<String, Integer[]> valTypeAndStatus) {
 		MetadataSchema metadataSchema = getSchema(schema);
 
