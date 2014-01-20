@@ -164,10 +164,14 @@ function TypeaheadCtrl($scope, $http, limitToFilter) {
 		}).then(function(data) {
 			var res = [];
 			angular.forEach(data.data, function(item) {
-				res.push({
-					label : item.desc,
-					value : item.desc
-				});
+				var str = item.desc;
+				
+				if(str.toUpperCase().indexOf(val.toUpperCase()) > 0) {
+					res.push({
+						label : str,
+						value : str
+					});
+				}
 			});
 			return limitToFilter(res, 8);
 		});
@@ -221,6 +225,17 @@ app.controller('addNewEntry',
 function($scope, $http) {
 	$scope.submit = function() {
 		checkErrors();
+		
+		//enforce failback: xpath cannot be empty
+		if($('#xpath').val() == '') {
+			if($("#keyword").is(":visible")) {
+				$('#xpath').val($("#keyword").val());
+			}
+			else if($("#group").is(":visible")) {
+				$('#xpath').val($("#group").val());
+			}
+		}
+		
 		$http({
 			method : 'GET',
 			url : '',
