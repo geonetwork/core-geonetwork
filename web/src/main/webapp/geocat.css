@@ -1219,3 +1219,12 @@ fieldset.metadata-block table tbody tr[id^="child_gmd:parentIdentifier_"] {
    width: 50px;
    background-image:url('images/spinner.gif');
 }
+
+img.icon16 {
+	max-height: 16px;
+	max-width: 16px;
+}
+img.icon18 {
+	max-height: 18px;
+	max-width: 18px;
+}

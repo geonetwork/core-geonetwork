@@ -203,13 +203,13 @@
 								<td style="width:60px">
 									<xsl:choose>
 										<xsl:when test="$valid='1'"><!-- valid -->
-											<img src="../../images/button_ok.png" alt="valid" title="valid"/>
+											<img class="icon16" src="../../images/button_ok.png" alt="valid" title="valid"/>
 										</xsl:when>
 										<xsl:when test="$valid='0'"><!-- error -->
-											<img src="../../images/validationError.gif" alt="{/root/gui/strings/publishOnlyIfAdminOrValid}" title="{/root/gui/strings/publishOnlyIfAdminOrValid}"/>
+											<img class="icon18" src="../../images/validationError.png" alt="{/root/gui/strings/publishOnlyIfAdminOrValid}" title="{/root/gui/strings/publishOnlyIfAdminOrValid}"/>
 										</xsl:when>
 										<xsl:otherwise><!-- warning -->
-											<img src="../../images/schematron.gif" alt="{/root/gui/strings/publishOnlyIfAdminOrValid}" title="{/root/gui/strings/publishOnlyIfAdminOrValid}"/>
+											<img class="icon18" src="../../images/validationWarning.png" alt="{/root/gui/strings/publishOnlyIfAdminOrValid}" title="{/root/gui/strings/publishOnlyIfAdminOrValid}"/>
 										</xsl:otherwise>
 									</xsl:choose>
 								</td>
