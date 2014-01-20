@@ -14,6 +14,7 @@
     "noTemplatesAvailable": "Warning! There is no templates available in the catalog. You should add or <a href='admin.console#/metadata'>import</a> some.",
     "fromTemplate": "From ",
     "metadataType": "Type of record",
+    "metadataNotFound": "Warning! Requested metadata with id {{id}} not found. <a href='#/create'>Create a new one ?</a>",
     "allChangesSaved": "All changes saved",
     "allChangesCanceled": "All changes cancelled.",
     "saveAtimeAgo": "Last edit was {{timeAgo}}.",

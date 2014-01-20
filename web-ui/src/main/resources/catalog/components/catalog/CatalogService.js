@@ -8,8 +8,8 @@
   ]);
 
   module.provider('gnNewMetadata', function() {
-    this.$get = ['$http', '$location', 'gnUrlUtils',
-                 function($http, $location, gnUrlUtils) {
+    this.$get = ['$http', '$location', '$timeout', 'gnUrlUtils',
+                 function($http, $location, $timeout, gnUrlUtils) {
         return {
           // TODO: move to metadatamanger
           createNewMetadata: function(id, groupId, fullPrivileges, 
@@ -23,6 +23,23 @@
                 })
                 );
 
+            //            $http.get(url).success(function(data) {
+            //              // TODO: If using NRT in Lucene, the record
+            //              // will not be indexed straight away. Add a
+            //              // timeout for the index to be reopened
+            //              //
+            //              // A better approach could be to be able
+            //              // to force a reopen on the editor search
+            //              // which check if the record exist
+            //              // or
+            //              // do not use timeout if NRT is not used
+            //              // in config-lucene.xml
+            //              $timeout(function () {
+            //                $location.path('/metadata/' + data.id);
+            //              }, 1000)
+            //
+            //            });
+            // NRT is turned off by default.
             $http.get(url).success(function(data) {
               $location.path('/metadata/' + data.id);
             });

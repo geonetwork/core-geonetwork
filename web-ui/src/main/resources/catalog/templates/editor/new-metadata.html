@@ -3,7 +3,7 @@
   <div class="alert alert-warning" data-ng-hide="mdTypes" 
     data-translate="">noTemplatesAvailable</div>
   <div class="row" data-ng-show="mdTypes">
-    <div class="col-lg-2">
+    <div class="col-sm-2">
       <div class="panel panel-default dynamic-list">
         <div class="panel-heading">
           <span data-translate="">createA</span>
@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-5">
+    <div class="col-sm-5">
       <div class="panel-default panel">
         <div class="panel-heading">
           <span data-translate="">fromTemplate</span>
@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-3" data-ng-show="groups && groups.length > 1">
+    <div class="col-sm-3" data-ng-show="groups && groups.length > 1">
       <div class="panel-default panel">
         <div class="panel-heading"><span data-translate="">inGroup</span>
           <strong>{{(ownerGroup.label[lang] || '...') | translate}}</strong>
@@ -48,7 +48,7 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-2">
+    <div class="col-sm-2">
       <button type="button" class="btn navbar-btn btn-success btn-lg"
         data-ng-click="createNewMetadata()"
         data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup)}">

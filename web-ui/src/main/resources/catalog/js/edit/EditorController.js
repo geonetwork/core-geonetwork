@@ -54,15 +54,18 @@
     'gnUtilityService',
     'gnCurrentEdit',
     function($scope, $routeParams, $http, $rootScope, 
-        $translate, $compile, $timeout,
+        $translate, $compile, $timeout, 
             gnEditor, 
             gnSearchManagerService, 
             gnConfigService,
-            gnUtilityService, gnCurrentEdit) {
+            gnUtilityService, 
+            gnCurrentEdit) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
       $scope.formId = null;
       $scope.savedStatus = null;
+      $scope.metadataFound = true;
+
       /**
        * Animation duration for slide up/down
        */
@@ -74,30 +77,42 @@
           // Config loaded
         });
 
-        angular.extend(gnCurrentEdit, {
-          id: $routeParams.id,
-          formId: '#gn-editor-' + $routeParams.id,
-          tab: $routeParams.tab,
-          displayAttributes: $routeParams.displayAttributes === 'true',
-          displayTooltips: false,
-          compileScope: $scope,
-          sessionStartTime: moment()
-        });
+        if ($routeParams.id) {
+          // Check requested metadata exists
+          gnSearchManagerService.gnSearch({
+            _id: $routeParams.id,
+            fast: 'index'
+          }).then(function(data) {
+            $scope.metadataFound = data.count !== '0';
+            $scope.metadataNotFoundId = $routeParams.id;
+            if ($scope.metadataFound) {
+              // TODO: Set metadata in page HEAD ?
 
-        $scope.gnCurrentEdit = gnCurrentEdit;
+              angular.extend(gnCurrentEdit, {
+                id: $routeParams.id,
+                formId: '#gn-editor-' + $routeParams.id,
+                tab: $routeParams.tab,
+                displayAttributes: $routeParams.displayAttributes === 'true',
+                displayTooltips: false,
+                compileScope: $scope,
+                sessionStartTime: moment()
+              });
 
-        // TODO: Check requested metadata exist - return message if it happens
-        // Would you like to create a new one ?
-        $scope.editorFormUrl = gnEditor
-          .buildEditUrlPrefix('md.edit') + '&starteditingsession=yes';
+              $scope.gnCurrentEdit = gnCurrentEdit;
+
+              $scope.editorFormUrl = gnEditor
+                .buildEditUrlPrefix('md.edit') + '&starteditingsession=yes';
 
 
-        window.onbeforeunload = function() {
-          // TODO: could be better to provide
-          // cancelAndClose and saveAndClose button
-          return $translate('beforeUnloadEditor',
-              {timeAgo: moment(gnCurrentEdit.savedTime).fromNow()});
-        };
+              window.onbeforeunload = function() {
+                // TODO: could be better to provide
+                // cancelAndClose and saveAndClose button
+                return $translate('beforeUnloadEditor',
+                    {timeAgo: moment(gnCurrentEdit.savedTime).fromNow()});
+              };
+            }
+          });
+        }
       };
 
       /**
