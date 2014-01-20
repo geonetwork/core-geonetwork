@@ -113,12 +113,12 @@
       <xsl:otherwise>
         <div class="form-group {if ($isRequired) then 'gn-required' else ''}" id="gn-el-{$editInfo/@ref}">
           <label for="gn-field-{$editInfo/@ref}"
-            class="col-lg-2 control-label" 
+            class="col-sm-2 control-label" 
             >
             <xsl:value-of select="$label"/>
           </label>
 
-          <div class="col-lg-8 gn-value">
+          <div class="col-sm-8 gn-value">
             <xsl:if test="$isMultilingual">
               <xsl:attribute name="data-gn-multilingual-field" select="$metadataOtherLanguagesAsJson"/>
               <xsl:attribute name="data-main-language" select="$metadataLanguage"/>
@@ -182,7 +182,7 @@
               </xsl:for-each>
             </xsl:if>
           </div>
-          <div class="col-lg-2 gn-control">
+          <div class="col-sm-2 gn-control">
             <xsl:if test="not($isDisabled)">
               <xsl:call-template name="render-form-field-control-remove">
                 <xsl:with-param name="editInfo" select="$editInfo"/>
@@ -311,11 +311,11 @@
       <xsl:value-of select="$id"/>
     </xsl:message>-->
     <div class="form-group" id="gn-el-{if ($refToDelete) then $refToDelete/@ref else generate-id()}">
-      <label class="col-lg-2 control-label">
+      <label class="col-sm-2 control-label">
         <!-- TODO: set tooltip -->
         <xsl:value-of select="$name"/>
       </label>
-      <div class="col-lg-8">
+      <div class="col-sm-8">
         <xsl:if test="$hasAddAction">
           <xsl:choose>
             <xsl:when test="$addDirective != ''">
@@ -411,7 +411,7 @@
         </xsl:if>
       </div>
       <xsl:if test="$refToDelete">
-        <div class="col-lg-2 gn-control">
+        <div class="col-sm-2 gn-control">
           <xsl:call-template name="render-form-field-control-remove">
             <xsl:with-param name="editInfo" select="$refToDelete"/>
           </xsl:call-template>
@@ -462,13 +462,13 @@
   
       <!-- This element is replaced by the content received when clicking add -->
       <div class="form-group" id="gn-el-{$id}">
-        <label class="col-lg-2 control-label"
+        <label class="col-sm-2 control-label"
           data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
           <xsl:if test="normalize-space($label) != ''">
                   <xsl:value-of select="$label"/>
           </xsl:if>
         </label>
-        <div class="col-lg-8">
+        <div class="col-sm-8">
           
           <xsl:choose>
             <!-- When element have different types, provide
