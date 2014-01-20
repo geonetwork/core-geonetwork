@@ -106,6 +106,9 @@
     "UserAdmin": "Utilisateur administrateur",
     
     
+    "metadata": "Fiche",
+    "template": "Modèle de fiche",
+    
     "errorIs": "L'erreur est ",
     
     "somethingWrong": "Quelque chose s'est mal déroulé!",
