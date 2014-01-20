@@ -14,15 +14,20 @@
   -->
   <xsl:template
     match="@*|
-    node()[namespace-uri()!='http://www.fao.org/geonetwork' and not(contains(name(.),'_ELEMENT'))]"
+    node()[namespace-uri()!='http://www.fao.org/geonetwork' and 
+           not(contains(name(.),'_ELEMENT'))]"
     mode="gn-element-cleaner">
     <xsl:copy>
       <xsl:copy-of select="@*[namespace-uri()!='http://www.fao.org/geonetwork']"/>
       <xsl:apply-templates select="node()" mode="gn-element-cleaner"/>
     </xsl:copy>
   </xsl:template>
+  
   <!-- Remove GeoNetwork info element and children -->
   <xsl:template mode="gn-element-cleaner" match="gn:info" priority="2"/>
+  
+  <!-- Remove Schematron error report element and children -->
+  <xsl:template mode="gn-element-cleaner" match="svrl:*" priority="2"/>
 
 
   <!--
