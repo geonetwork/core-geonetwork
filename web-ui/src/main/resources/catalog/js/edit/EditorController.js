@@ -81,6 +81,7 @@
           // Check requested metadata exists
           gnSearchManagerService.gnSearch({
             _id: $routeParams.id,
+            _isTemplate: 'y or n or s',
             fast: 'index'
           }).then(function(data) {
             $scope.metadataFound = data.count !== '0';
