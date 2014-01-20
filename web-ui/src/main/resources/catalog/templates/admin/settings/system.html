@@ -22,8 +22,8 @@
           <div data-ng-repeat="s in filterBySection(section.name) | orderBy:getOrderBy"
             data-ng-switch="s['@datatype']">
             <div data-ng-switch-when="BOOLEAN">
-              <label class="col-lg-4 control-label" for="{{s['@name']}}"> {{s['@name'] | translate}} </label>
-              <div class="col-lg-8">
+              <label class="col-sm-4 control-label" for="{{s['@name']}}"> {{s['@name'] | translate}} </label>
+              <div class="col-sm-8">
                 <input type="checkbox" id="{{s['@name']}}" name="{{s.formName}}"
                   data-ng-model="s['#text']"/>
 
@@ -32,10 +32,10 @@
               </div>
             </div>
             <div data-ng-switch-default="" class="form-group">
-              <label class="col-lg-4 control-label" for="{{s['@name']}}">{{s['@name'] |
+              <label class="col-sm-4 control-label" for="{{s['@name']}}">{{s['@name'] |
                 translate}}</label>
               <!-- According to entry -->
-              <div class="col-lg-8" data-ng-switch="s['@name']">
+              <div class="col-sm-8" data-ng-switch="s['@name']">
 
                 <!-- List of user to be used as CSW contact -->
                 <select data-ng-switch-when="system/csw/contactId" class="form-control"
