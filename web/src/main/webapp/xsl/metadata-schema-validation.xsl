@@ -10,7 +10,7 @@
 			<head>
 				<meta charset="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-				<title>Shared Object Admin</title>
+				<title>Metadata Validation</title>
 				<link rel="stylesheet"
 					href="../../apps/shared-objects/app/lib/bootstrap3/css/bootstrap.css" />
         		<link href="../../apps/shared-objects/app/lib/bootstrap3/css/bootstrap-glyphicons.css" 
