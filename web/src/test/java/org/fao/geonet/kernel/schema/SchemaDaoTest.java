@@ -7,6 +7,8 @@ import jeeves.resources.dbms.Dbms;
 import org.fao.geonet.domain.SchematronCriteriaType;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -14,7 +16,7 @@ import org.junit.Test;
  * */
 public class SchemaDaoTest {
 
-	private static final String JDBC_H2_TEST = "jdbc:h2:˜/test";
+	private static final String JDBC_H2_TEST = "jdbc:h2:schematrontest";
 	private static final String SA = "sa";
 	public static final String TABLE_SCHEMATRON = "schematron";
 	public static final String TABLE_SCHEMATRON_CRITERIA = "schematroncriteria";
@@ -29,7 +31,7 @@ public class SchemaDaoTest {
 	public static final String COL_SCHEMATRON_ISO_SCHEMA = "isoschema";
 	public static final String COL_SCHEMATRON_REQUIRED = "required";
 
-	private Dbms dbms = mockDbms();
+	private static Dbms dbms;
 
 	@Test
 	public void test() throws SQLException {
@@ -62,22 +64,33 @@ public class SchemaDaoTest {
 
 	}
 
-	private Dbms mockDbms() {
+	@Before
+	public void cleanDB() throws Exception {
+
+		try {
+			dbms.execute("DELETE FROM schematron;");
+			dbms.execute("DELETE FROM schematroncriteria;");
+			dbms.execute("DELETE FROM schematrondes;");
+
+			dbms.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@BeforeClass
+	public static void mockDbms() {
 
 		JdbcDataSource ds = new JdbcDataSource();
 		ds.setURL(JDBC_H2_TEST);
 		ds.setUser(SA);
 		ds.setPassword(SA);
 
-		Dbms dbms = null;
 		try {
 			dbms = new Dbms(ds, JDBC_H2_TEST);
 
 			dbms.connect(SA, SA);
-
-			dbms.execute("DROP TABLE schematron;");
-			dbms.execute("DROP TABLE schematroncriteria;");
-			dbms.execute("DROP TABLE schematrondes;");
 
 			dbms.execute("CREATE TABLE IF NOT EXISTS schematron (id integer NOT NULL,"
 					+ "  file character varying(255) NOT NULL,"
@@ -107,6 +120,5 @@ public class SchemaDaoTest {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
 		}
-		return dbms;
 	}
 }
