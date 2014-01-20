@@ -83,7 +83,7 @@
             rel.subType = rel['@subType'];
             delete rel['@subType'];
           }
-          if(angular.isString(rel.title)) {
+          if (angular.isString(rel.title)) {
             relations[type].push(rel);
           }
         });
@@ -268,15 +268,15 @@
             });
           });
         },
-        
+
         /**
          * Run a the process sibling with given parameters
          */
         linkToSibling: function(params, popupid) {
           runProcess(this,
               setParams('sibling-add', params)).then(function() {
-                closePopup(popupid);
-              });
+            closePopup(popupid);
+          });
         },
 
         /**
@@ -372,7 +372,7 @@
           runProcess(this,
               setParams('fcats-remove', params));
         },
-        
+
         /**
          * Remove a sibling link from the
          * current metadata.

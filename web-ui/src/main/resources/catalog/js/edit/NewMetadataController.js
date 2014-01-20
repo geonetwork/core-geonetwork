@@ -29,10 +29,10 @@
         staticMap: 'fa-globe',
         dataset: 'fa-file'
       };
-      
-      $scope.$watchCollection('groups', function(){
-        if(!angular.isUndefined($scope.groups)) {
-          if($scope.groups.length == 1) {
+
+      $scope.$watchCollection('groups', function() {
+        if (!angular.isUndefined($scope.groups)) {
+          if ($scope.groups.length == 1) {
             $scope.ownerGroup = $scope.groups[0].id;
           }
         }

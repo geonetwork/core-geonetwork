@@ -21,7 +21,7 @@
 
               scope.load = function() {
                 gnSuggestion.load().success(function(data) {
-                  if(data && !angular.isString(data)) {
+                  if (data && !angular.isString(data)) {
                     scope.suggestions = data;
                   }
                   else {

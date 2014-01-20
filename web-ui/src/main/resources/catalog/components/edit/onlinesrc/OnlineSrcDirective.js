@@ -46,7 +46,7 @@
                   scope.onlinesrcService.reload = false;
                 }
               });
-              
+
               // When saving is done, refresh validation report
               scope.$watch('gnCurrentEdit.saving', function(newValue) {
                 if (newValue === false) {
@@ -153,7 +153,7 @@
               scope.onlinesrcService = gnOnlinesrc;
 
               scope.popupid = attrs['gnPopupid'];
-              
+
               /**
                * Onlinesrc uploaded with success, close the popup,
                * refresh the metadata.
@@ -375,7 +375,7 @@
               scope.gnOnlinesrc = gnOnlinesrc;
             }
           };
-        }])        
+        }])
         .directive('gnLinkToSibling', ['gnOnlinesrc',
         function(gnOnlinesrc) {
           return {
@@ -384,9 +384,9 @@
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/linktosibling.html',
             link: function(scope, element, attrs) {
-              
+
               scope.popupid = attrs['gnLinkToSibling'];
-              
+
               /**
                * Register a method on popup open to reset
                * the search form and trigger a search.
@@ -396,72 +396,73 @@
                 scope.$broadcast('resetSearch');
                 scope.selection = [];
               });
-              
+
               /**
                * Search a metada record into the selection.
                * Return the index or -1 if not present.
                */
               var findObj = function(md) {
-                for(i=0;i<scope.selection.length;++i){
-                  if(scope.selection[i].md == md){
+                for (i = 0; i < scope.selection.length; ++i) {
+                  if (scope.selection[i].md == md) {
                     return i;
                   }
                 }
                 return -1;
               };
-              
+
               /**
                * Add the result metadata to the selection.
                * Add it only it associationType & initiativeType are set.
                * If the metadata alreay exists, it override it with the new
                * given associationType/initiativeType.
                */
-              scope.addToSelection = function(md, associationType, initiativeType) {
-                if(associationType && initiativeType) {
+              scope.addToSelection =
+                  function(md, associationType, initiativeType) {
+                if (associationType && initiativeType) {
                   var idx = findObj(md);
-                  if(idx < 0) {
+                  if (idx < 0) {
                     scope.selection.push({
                       md: md,
-                      associationType: associationType ,
+                      associationType: associationType,
                       initiativeType: initiativeType
                     });
                   }
                   else {
                     angular.extend(scope.selection[idx], {
-                      associationType: associationType ,
+                      associationType: associationType,
                       initiativeType: initiativeType
                     });
                   }
                 }
               };
-              
+
               /**
                * Remove a record from the selection
                */
               scope.removeFromSelection = function(obj) {
                 var idx = findObj(obj.md);
-                if(idx >= 0) {
+                if (idx >= 0) {
                   scope.selection.splice(idx, 1);
                 }
               };
-              
+
               /**
                * Call the batch process to add the sibling
                * to the current edited metadata.
                */
               scope.linkToResource = function() {
-                var uuids=[];
-                for(i=0;i<scope.selection.length;++i) {
+                var uuids = [];
+                for (i = 0; i < scope.selection.length; ++i) {
                   var obj = scope.selection[i];
-                  uuids.push(obj.md['geonet:info'].uuid+'#'+
-                           obj.associationType+'#'+
-                           obj.initiativeType);
+                  uuids.push(obj.md['geonet:info'].uuid + '#' +
+                      obj.associationType + '#' +
+                      obj.initiativeType);
                 }
                 var params = {
-                    initiativeType : scope.initiativeType,
-                    associationType: scope.associationType,
-                    uuids : uuids.join(',')
-                }
+                  initiativeType: scope.initiativeType,
+                  associationType: scope.associationType,
+                  uuids: uuids.join(',')
+                };
                 gnOnlinesrc.linkToSibling(params, scope.popupid);
               };
             }
