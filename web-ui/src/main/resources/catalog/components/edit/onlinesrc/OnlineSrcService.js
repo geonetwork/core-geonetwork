@@ -15,8 +15,19 @@
 
       var reload = false;
       var openCb = {};
-
+      
       /**
+       * To match an icon to a protocol
+       */
+      var protocolIcons = [
+         ['OGC:','fa-globe'],
+         ['ESRI','fa-globe'],
+         ['WWW:LINK', 'fa-link'],
+         ['DB:', 'fa-columns'],
+         ['WWW:DOWNLOAD', 'fa-download']
+      ];
+
+    /**
      * Prepare batch process request parameters.
      *   - get parameters from onlinesrc form
      *   - add process name
@@ -219,7 +230,30 @@
           });
         },
 
-
+        /**
+         * Get display icon depending of the protocol
+         * of the online resource.
+         * To display onlinesrc list
+         */
+        getIconByProtocol: function(p) {
+          for(i=0;i<protocolIcons.length;++i) {
+            if(p.indexOf(protocolIcons[i][0]) >= 0) {
+              return protocolIcons[i][1];
+            }
+          }
+        },
+        
+        /**
+         * Open onlinesrc url into a new window
+         * On onlinesrc list click.
+         */
+        openLink: function(url) {
+          window.open(url, '_blank');
+        },
+        
+        /**
+         * Link a service to the current metadata
+         */
         linkToService: function(params, popupid) {
           var qParams = setParams('dataset-add', params);
           var scope = this;
