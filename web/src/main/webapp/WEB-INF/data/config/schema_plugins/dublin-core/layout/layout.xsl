@@ -153,5 +153,40 @@
     </xsl:call-template>
     
   </xsl:template>
+  
+    <xsl:template mode="mode-dublin-core" match="dc:coverage" priority="2000">
+    <xsl:param name="schema" select="$schema" required="no"/>
+    <xsl:param name="labels" select="$labels" required="no"/>
+    
+    <xsl:variable name="coverage" select="."/>
+    <xsl:variable name="n" select="substring-after($coverage,'North ')"/>
+    <xsl:variable name="north" select="substring-before($n,',')"/>
+    <xsl:variable name="s" select="substring-after($coverage,'South ')"/>
+    <xsl:variable name="south" select="substring-before($s,',')"/>
+    <xsl:variable name="e" select="substring-after($coverage,'East ')"/>
+    <xsl:variable name="east" select="substring-before($e,',')"/>
+    <xsl:variable name="w" select="substring-after($coverage,'West ')"/>
+    <xsl:variable name="west" select="substring-before($w,'. ')"/>
+    <xsl:variable name="p" select="substring-after($coverage,'(')"/>
+    <xsl:variable name="place" select="substring-before($p,')')"/>
+    
+    <xsl:call-template name="render-boxed-element">
+      <xsl:with-param name="label"
+        select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..),'','')/label"/>
+      <xsl:with-param name="editInfo" select="gn:element"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <!-- <xsl:with-param name="attributesSnippet" select="$attributes"/> -->
+      <xsl:with-param name="subTreeSnippet">
+        <div gn-draw-bbox="" 
+          data-hleft="{$west}"
+          data-hright="{$east}" 
+          data-hbottom="{$south}"
+          data-htop="{$north}"
+          data-dc-ref="_{gn:element/@ref}"
+          data-lang="lang"></div>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+  
 
 </xsl:stylesheet>

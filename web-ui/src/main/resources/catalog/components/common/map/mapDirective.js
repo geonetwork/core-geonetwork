@@ -18,13 +18,24 @@
              hbottomRef: '@',
              hleftRef: '@',
              hrightRef: '@',
+             dcRef: '@',
              lang: '='
            },
            link: function(scope, element, attrs) {
              scope.drawing = false;
+             var mapRef = scope.htopRef || scope.dcRef;
              scope.mapId = 'map-drawbbox-' +
-             scope.htopRef.substring(1, scope.htopRef.length);
+               mapRef.substring(1, mapRef.length);
 
+             /**
+              * set dublin-core coverage output
+              */
+             var setDcOutput = function() {
+               if(scope.dcRef) {
+                 scope.dcExtent = gnMap.getDcExtent(scope.extent.md);
+               }
+             };
+             
              /**
               * Different projections used in the directive:
               * - md : the proj system in the metadata. It is defined as
@@ -58,7 +69,8 @@
              // Init extent from md for map and form
              reprojExtent('md', 'map');
              reprojExtent('md', 'form');
-
+             setDcOutput();
+             
              scope.$watch('projs.form', function(newValue, oldValue) {
                scope.extent.form = gnMap.reprojExtent(
                    scope.extent.form, oldValue, newValue
@@ -123,6 +135,7 @@
                scope.$apply(function() {
                  reprojExtent('map', 'form');
                  reprojExtent('map', 'md');
+                 setDcOutput();
                });
              });
 
@@ -144,7 +157,6 @@
                      scope.extent.map);
                  geom = new ol.geom.Polygon(coordinates);
                }
-               
                feature.setGeometry(geom);
                feature.getGeometry().setCoordinates(coordinates);
              };
@@ -180,7 +192,7 @@
 
                reprojExtent('form', 'map');
                reprojExtent('form', 'md');
-
+               setDcOutput();
                drawBbox();
              };
 
@@ -197,8 +209,10 @@
 
                reprojExtent('md', 'map');
                reprojExtent('md', 'form');
+               setDcOutput();
                drawBbox();
-               map.getView().fitExtent(scope.extent.map, map.getSize());             };
+               map.getView().fitExtent(scope.extent.map, map.getSize());
+             };
            }
          };
        }]);

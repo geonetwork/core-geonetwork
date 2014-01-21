@@ -64,7 +64,22 @@
             return new ol.layer.Tile({
               source: source
             });
-          }
+          },
+          
+          /**
+           * Transform map extent into dublin-core schema for
+           * dc:coverage metadata element. 
+           * Ex :
+           * North 90, South -90, East 180, West -180. Global
+           */
+          getDcExtent : function(extent) {
+            var dc = 'North ' + extent[3] + ', ' +
+              'South ' + extent[1] + ', ' +
+              'East ' + extent[0] + ', ' +
+              'West ' + extent[2] + '. Global';
+            
+            return dc;
+          },
         };
       }];
   });
