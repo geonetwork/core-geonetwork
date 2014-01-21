@@ -607,6 +607,8 @@
     "batchProcessParameters": "Paramètres du processus",
     "runProcess": "Lancer",
     "recordsProcessed": " fiches traitées",
+    "processRecommendedOnHostChange": "Mettre à jour les fiches",
+    "processRecommendedOnHostChange-help": "Après modification de l'hôte, il est recommandé de mettre à jour les URLs contenues dans les fiches (eg. aperçus, documents téléchargés, XLinks).",
     "processReportFor": "Rapport : ",
     "processReportTotalRecords": "Fiches à traiter",
     "processReportProcessedRecords": "Fiches traitées",

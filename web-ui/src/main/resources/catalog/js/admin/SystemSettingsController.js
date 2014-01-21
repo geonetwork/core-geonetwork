@@ -147,7 +147,7 @@
        */
       $scope.saveAndProcessSettings = function (formId) {
         $scope.saveSettings(formId);
-        $location.path('/tools/batch');
+        $location.path('/tools/batch/select/all/process/url-host-relocator');
       }
 
       /**

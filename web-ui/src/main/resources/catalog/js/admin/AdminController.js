@@ -61,6 +61,9 @@
         when('/tools/:tab', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminToolsController'}).
+        when('/tools/:tab/select/:selectAll/process/:processId', {
+          templateUrl: tplFolder + 'page-layout.html',
+          controller: 'GnAdminToolsController'}).
         when('/harvest', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnHarvestController'}).
