@@ -28,7 +28,7 @@
 		<property name="cacheAllRegionsInMemory" value="true"/>
 		<property name="thesaurusName" value="external.place.regions"/>
 	</bean>
-	<bean id="MetadataRegionsDAO" class="org.fao.geonet.services.region.MetadataRegionDAO">
+	<!--<bean id="MetadataRegionsDAO" class="org.fao.geonet.services.region.MetadataRegionDAO">
 		<property name="cacheAllRegionsInMemory" value="false"/>
-	</bean>
+	</bean>-->
 </beans>
