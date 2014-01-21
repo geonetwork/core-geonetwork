@@ -38,7 +38,7 @@
       <table class="text-center">
         <tr align="center">
           <td colspan="3"><div class="form-group">
-              <label for="drawbbox-top">top</label> <input
+              <input
                 data-ng-model="extent.form[3]" type="number"
                 id="drawbbox-top" placeholder="north" 
                 data-ng-change="updateBbox(true)"/>
@@ -47,7 +47,6 @@
         <tr valign="middle" align="center">
           <td class="col-left">
             <div class="form-group">
-              <label for="drawbbox-left">left</label>
               <input data-ng-model="extent.form[0]" type="number"
                 id="drawbbox-left" placeholder="left"
                 data-ng-change="updateBbox(true)" />
@@ -58,7 +57,7 @@
           </td>
           <td class="col-right">
             <div class="form-group">
-              <label for="drawbbox-right">right</label> <input
+              <input
                 data-ng-model="extent.form[2]"
                 type="number" id="drawbbox-right"
                 placeholder="right" data-ng-change="updateBbox(true)"/>
@@ -68,7 +67,7 @@
         <tr align="center">
           <td colspan="3">
             <div class="form-group">
-            <label for="drawbbox-bottom">bottom</label> <input
+            <input
               data-ng-model="extent.form[1]" type="number"
               id="drawbbox-bottom" placeholder="bottom"
               data-ng-change="updateBbox(true)"/>
