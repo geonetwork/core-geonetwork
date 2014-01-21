@@ -190,16 +190,15 @@
               * Zoom to extent.
               */
              scope.onRegionSelect = function(region) {
-               var extent = [parseFloat(region.west),
+               scope.extent.md = [parseFloat(region.west),
                              parseFloat(region.south),
                              parseFloat(region.east),
                              parseFloat(region.north)];
 
-               var extentMap = gnMap.reprojExtent(
-                   extent, scope.projs.md, scope.projs.map
-               );
-               map.getView().fitExtent(extentMap, map.getSize());
-             };
+               reprojExtent('md', 'map');
+               reprojExtent('md', 'form');
+               drawBbox();
+               map.getView().fitExtent(scope.extent.map, map.getSize());             };
            }
          };
        }]);
