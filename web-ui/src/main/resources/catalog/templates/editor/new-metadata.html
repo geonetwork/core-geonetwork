@@ -1,7 +1,14 @@
 <div class="container" id="gn-new-metadata-container">
   <h2 data-translate="">createNewMetadata</h2>
-  <div class="alert alert-warning" data-ng-hide="mdTypes" 
+
+  <div class="alert alert-warning" data-ng-hide="hasTemplates" 
     data-translate="">noTemplatesAvailable</div>
+
+  <div class="progress progress-striped active"
+    data-ng-show="hasTemplates && mdList === null">
+    <div class="progress-bar" style="width: 100%"/>
+  </div>
+
   <div class="row" data-ng-show="mdTypes">
     <div class="col-sm-2">
       <div class="panel panel-default dynamic-list">

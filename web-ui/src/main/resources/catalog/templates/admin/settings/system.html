@@ -1,6 +1,6 @@
 <div class="panel panel-default" data-ng-controller="GnSystemSettingsController">
   <div class="gn-scroll-spy" data-gn-scroll-spy="gn-settings-spy-target" 
-      data-watch="sectionsLevel2" data-depth="1"/>
+      data-watch="sectionsLevel1" data-depth="1"/>
 
   <div class="panel-heading">
     <span data-translate="">settings</span>
@@ -12,14 +12,14 @@
   </div>
   <div class="panel-body">
     <form id="gn-settings" class="form-horizontal">
-
-      <fieldset data-ng-repeat="section1 in sectionsLevel1 track by $index" id="gn-settings-spy-target">
+      <fieldset data-ng-repeat="(key, section1) in sectionsLevel1 | orderObjectBy:'@position'"
+        id="gn-settings-spy-target">
         <h1>{{section1.name | translate}}</h1>
-        <fieldset data-ng-repeat="section in sectionsLevel2 | orderBy:getOrderBy"
-          id="{{section.name.replace('/', '-')}}">
-          <legend>{{section.name | translate}}</legend>
+        <fieldset data-ng-repeat="section2 in section1.children | orderObjectBy:'@position'"
+          id="{{section2.name.replace('/', '-')}}">
+          <legend>{{section2.name | translate}}</legend>
           <!-- According to data type -->
-          <div data-ng-repeat="s in filterBySection(section.name) | orderBy:getOrderBy"
+          <div data-ng-repeat="s in section2.children | orderObjectBy:'@position'"
             data-ng-switch="s['@datatype']">
             <div data-ng-switch-when="BOOLEAN">
               <label class="col-sm-4 control-label" for="{{s['@name']}}"> {{s['@name'] | translate}} </label>
@@ -79,6 +79,7 @@
                   <option value="only_docLocale"
                           ng-selected="'only_docLocale' == s['#text']">{{'system/requestedLanguage/only-value5' | translate}}</option>
                 </select>
+
                 <!-- Read only fields -->
                 <input data-ng-switch-when="system/platform/version" type="text" class="form-control"
                      id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}" readonly="readonly"/>
@@ -87,6 +88,26 @@
                 <input data-ng-switch-when="system/site/svnUuid" type="text" class="form-control"
                      id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}" readonly="readonly"/>
 
+                <div data-ng-switch-when="system/server/host">
+                  <input type="text" class="form-control"
+                    id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
+                    data-ng-model="s['#text']"
+                    data-ng-change="processRecommended('siteIdChange', s['@name'])"/>
+                  
+                  <button type="submit" class="btn btn-warning fa fa-save"
+                    title="{{'processRecommendedOnHostChange-help' | translate}}" 
+                    data-ng-show="processName !== null"
+                    data-ng-click="saveAndProcessSettings('#gn-settings')" data-translate="">processRecommendedOnHostChange</button>
+                </div>
+                
+                <div data-ng-switch-when="system/server/port">
+                  <input type="text" class="form-control"
+                    id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
+                    data-ng-model="s['#text']"
+                    data-ng-change="processRecommended('siteIdChange', s['@name'])"/>
+                  
+                </div>
+                
                 <!-- Default -->
                 <input data-ng-switch-default="" type="text" class="form-control"
                   id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"/>

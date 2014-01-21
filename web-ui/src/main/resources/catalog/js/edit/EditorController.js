@@ -53,18 +53,22 @@
     'gnConfigService',
     'gnUtilityService',
     'gnCurrentEdit',
+    'gnConfig',
     function($scope, $routeParams, $http, $rootScope, 
         $translate, $compile, $timeout, 
             gnEditor, 
             gnSearchManagerService, 
             gnConfigService,
             gnUtilityService, 
-            gnCurrentEdit) {
+            gnCurrentEdit,
+            gnConfig) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
       $scope.formId = null;
       $scope.savedStatus = null;
       $scope.metadataFound = true;
+      $scope.gnConfig = gnConfig;
+      $scope.gnSchemaConfig = {};
 
       /**
        * Animation duration for slide up/down
@@ -86,13 +90,18 @@
           }).then(function(data) {
             $scope.metadataFound = data.count !== '0';
             $scope.metadataNotFoundId = $routeParams.id;
+
+            var mdSchema = data.metadata[0]['geonet:info'].schema;
+            $scope.gnSchemaConfig = gnConfig['metadata.editor.schemaConfig'][mdSchema];
+            var defaultTab = $scope.gnSchemaConfig.defaultTab;
+
             if ($scope.metadataFound) {
               // TODO: Set metadata in page HEAD ?
 
               angular.extend(gnCurrentEdit, {
                 id: $routeParams.id,
                 formId: '#gn-editor-' + $routeParams.id,
-                tab: $routeParams.tab,
+                tab: $routeParams.tab || defaultTab,
                 displayAttributes: $routeParams.displayAttributes === 'true',
                 displayTooltips: false,
                 compileScope: $scope,

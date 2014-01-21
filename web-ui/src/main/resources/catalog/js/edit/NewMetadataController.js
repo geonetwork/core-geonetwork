@@ -20,6 +20,8 @@
             gnNewMetadata) {
 
       $scope.isTemplate = 'n';
+      $scope.hasTemplates = true;
+      $scope.mdList = null;
 
       // A map of icon to use for each types
       var icons = {
@@ -64,6 +66,7 @@
               then(function(data) {
 
                 $scope.mdList = data;
+                $scope.hasTemplates = data.count != '0';
 
                 var types = [];
                 // TODO: A faster option, could be to rely on facet type

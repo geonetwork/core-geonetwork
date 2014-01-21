@@ -10,9 +10,9 @@
    */
   module.controller('GnLoginController',
       ['$scope', '$http', '$rootScope', '$translate', '$location', '$window',
-       'gnUtilityService', 'gnConfigService', 'gnConfig',
+       'gnUtilityService', 'gnConfig',
        function($scope, $http, $rootScope, $translate, $location, $window,
-               gnUtilityService, gnConfigService, gnConfig) {
+               gnUtilityService, gnConfig) {
           $scope.registrationStatus = null;
           $scope.passwordReminderStatus = null;
           $scope.sendPassword = false;
@@ -24,9 +24,6 @@
 
           $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
           $scope.gnConfig = gnConfig;
-          gnConfigService.load().then(function(c) {
-            // Config loaded
-          });
 
           function initForm() {
            if ($window.location.pathname.indexOf('new.password') !== -1) {

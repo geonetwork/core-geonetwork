@@ -5,7 +5,23 @@
   var module = angular.module('gn_system_settings_controller',
       []);
 
+  module.filter('orderObjectBy', function(){
+    return function(input, attribute) {
+       if (!angular.isObject(input)) return input;
 
+       var array = [];
+       for(var objectKey in input) {
+           array.push(input[objectKey]);
+       }
+
+       array.sort(function(a, b){
+           a = parseInt(a[attribute]);
+           b = parseInt(b[attribute]);
+           return a - b;
+       });
+       return array;
+    }
+   });
   /**
    * GnSystemSettingsController provides management interface
    * for catalog settings.
@@ -15,15 +31,14 @@
    *  Metadata views > default views, Search only in requested language)
    */
   module.controller('GnSystemSettingsController', [
-    '$scope', '$http', '$rootScope', '$translate', 'gnUtilityService',
-    function($scope, $http, $rootScope, $translate, gnUtilityService) {
+    '$scope', '$http', '$rootScope', '$translate', '$location', 'gnUtilityService',
+    function($scope, $http, $rootScope, $translate, $location, gnUtilityService) {
 
       $scope.settings = [];
-      var sectionsLevel1 = [];
-      var sectionsLevel2 = [];
-      $scope.sectionsLevel1 = [];
-      $scope.sectionsLevel2 = [];
+      $scope.sectionsLevel1 = {};
       $scope.systemUsers = null;
+      $scope.orderProperty = '@position';
+      $scope.reverse = false;
 
       /**
          * Load catalog settings as a flat list and
@@ -37,6 +52,8 @@
         $http.get('admin.config.list@json?asTree=false')
           .success(function(data) {
 
+              var sectionsLevel1 = [];
+              var sectionsLevel2 = [];
               gnUtilityService.parseBoolean(data);
               $scope.settings = data;
 
@@ -46,18 +63,23 @@
                     $scope.settings[i]['@name'].replace(/\//g, '.');
                 // Extract level 1 and 2 sections
                 if (tokens) {
-                  if (sectionsLevel1.indexOf(tokens[0]) === -1) {
-                    sectionsLevel1.push(tokens[0]);
-                    $scope.sectionsLevel1.push({
-                      'name': tokens[0],
-                      '@position': $scope.settings[i]['@position']});
+                  var level1name = tokens[0];
+                  if (sectionsLevel1.indexOf(level1name) === -1) {
+                    sectionsLevel1.push(level1name);
+                    $scope.sectionsLevel1[level1name] = {
+                      'name': level1name,
+                      '@position': $scope.settings[i]['@position'],
+                      children: []
+                    };
                   }
-                  var level2name = tokens[0] + '/' + tokens[1];
+                  var level2name = level1name + '/' + tokens[1];
                   if (sectionsLevel2.indexOf(level2name) === -1) {
                     sectionsLevel2.push(level2name);
-                    $scope.sectionsLevel2.push({
+                    $scope.sectionsLevel1[level1name].children.push({
                       'name': level2name,
-                      '@position': $scope.settings[i]['@position']});
+                      '@position': $scope.settings[i]['@position'],
+                      'children': filterBySection($scope.settings, level2name)
+                    });
                   }
                 }
               }
@@ -71,26 +93,20 @@
           $scope.systemUsers = data;
         });
       }
+
       /**
          * Filter all settings for a section
          */
-      $scope.filterBySection = function(section) {
+      var filterBySection = function(elements, section) {
         var settings = [];
-
-        for (var i = 0; i < $scope.settings.length; i++) {
-          var s = $scope.settings[i];
-          if (s['@name'].indexOf(section) !== -1) {
+        var regexp = new RegExp('^' + section);
+        for (var i = 0; i < elements.length; i++) {
+          var s = elements[i];
+          if (regexp.test(s['@name'])) {
             settings.push(s);
           }
         }
         return settings;
-      };
-
-      /**
-         * Order by position
-         */
-      $scope.getOrderBy = function(s) {
-        return s['@position'];
       };
 
       /**
@@ -117,6 +133,22 @@
                     type: 'danger'});
                 });
       };
+      $scope.processName = null;
+      $scope.processRecommended = function (processName) {
+        $scope.processName = processName;
+        
+        
+      };
+
+      /**
+       * Save settings and move to the batch process page
+       * 
+       * TODO: set the process to use and select all
+       */
+      $scope.saveAndProcessSettings = function (formId) {
+        $scope.saveSettings(formId);
+        $location.path('/tools/batch');
+      }
 
       /**
          * Scroll to an element.

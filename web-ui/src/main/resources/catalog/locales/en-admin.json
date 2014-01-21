@@ -681,6 +681,8 @@
     "processReportErrors": "Records with error",
     "processReportNoProcessFound": "Records with process not defined in its standard",
     "processReportNotOwner": "Not editable records",
+    "processRecommendedOnHostChange": "Update metadata records",
+    "processRecommendedOnHostChange-help": "After changing the catalog host name, it's recommended to update all links which may be defined in the catalog records (eg. thumbnails, uploaded documents, XLinks).",
     
     "availableStandards": "Standards available",
     "addOrUpdateStandards": "Add or update standards",

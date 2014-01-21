@@ -16,9 +16,9 @@
    */
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
-    'gnSearchManagerService',
+    'gnSearchManagerService', 'gnConfigService',
     function($scope, $http, $q, $rootScope, $translate,
-            gnSearchManagerService) {
+            gnSearchManagerService, gnConfigService) {
       $scope.version = '0.0.1';
       // TODO : add language
       $scope.lang = location.href.split('/')[5];
@@ -50,6 +50,10 @@
       $scope.user = {};
       $scope.authenticated = false;
       $scope.initialized = false;
+
+      gnConfigService.load().then(function(c) {
+        // Config loaded
+      });
 
       /**
        * Catalog facet summary providing
