@@ -72,6 +72,12 @@
                }),
                fill: new ol.style.Fill({
                  color: 'rgba(255,0,0,0.3)'
+               }),
+               image: new ol.style.Circle({
+                 radius: 7,
+                 fill: new ol.style.Fill({
+                   color: 'rgba(255,0,0,1)'
+                 })
                })
              });
 
@@ -126,12 +132,20 @@
               * Draw the map extent as a bbox onto the map.
               */
              var drawBbox = function() {
-               var coordinates = gnMap.
-               getCoordinatesFromExtent(scope.extent.map);
-
-               var geom = new ol.geom.Polygon([coordinates]);
+               var coordinates, geom; 
+               
+               if(gnMap.isPoint(scope.extent.map)) {
+                 coordinates = [scope.extent.map[0], 
+                   scope.extent.map[1]];
+                 geom = new ol.geom.Point(coordinates);
+               }
+               else {
+                 coordinates = gnMap.getPolygonFromExtent(
+                     scope.extent.map);
+                 geom = new ol.geom.Polygon(coordinates);
+               }
+               
                feature.setGeometry(geom);
-
                feature.getGeometry().setCoordinates(coordinates);
              };
 

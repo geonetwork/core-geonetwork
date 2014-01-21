@@ -27,8 +27,12 @@
             }
           },
 
-
-          getCoordinatesFromExtent: function(extent) {
+          isPoint: function(extent) {
+             return (extent[0] == extent[2] 
+               && extent[1]) == extent[3];
+          },
+          
+          getPolygonFromExtent: function(extent) {
             return [
                     [
                      [extent[0], extent[1]],
