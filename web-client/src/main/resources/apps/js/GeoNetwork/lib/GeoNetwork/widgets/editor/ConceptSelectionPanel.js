@@ -395,6 +395,19 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         
         return this.itemSelector;
     },
+    /** private: method[uuid]
+     *  
+     *  Create a uuid identifier for each block of radio transformations.
+		 *  @author Slavik Meltser (slavik@meltser.info).
+		  * @link http://slavik.meltser.info/?p=142
+     */
+		uuid: function () {
+		    function _p8(s) {
+				  var p = (Math.random().toString(16)+"000000000").substr(2,8);
+					return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;
+				}
+				return _p8() + _p8(true) + _p8(true) + _p8();
+		},
     /** private: method[generateTransformationSelector]
      *  
      *  Create a group of radio for each transformation mode.
@@ -405,11 +418,13 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             this.transformation = this.transformations[0];
             return null;
         } else if (this.transformations.length > 1) {
+						transId = self.uuid(); // needed to uniquely identify each block
+						                       // of radio buttons
             Ext.each(this.transformations, function (item, idx) {
                 radios.push(new Ext.form.Radio({
                     checked: (item === self.transformation ? true : false), // Check current transformation if defined
                     boxLabel: OpenLayers.i18n(item),
-                    name: self.thesaurusIdentifier + '_transformation', // FIXME : if more than one block with same thesaurus
+                    name: 'transformation_' + transId,
                     inputValue: item
                 }));
             });

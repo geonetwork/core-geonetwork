@@ -73,6 +73,10 @@
       <artifactId>jetty-servlet</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.eclipse.core</groupId>
+      <artifactId>org.eclipse.core.runtime</artifactId>
+    </dependency>
+    <dependency>
       <groupId>jsch</groupId>
       <artifactId>jsch</artifactId>
     </dependency>
@@ -98,7 +102,7 @@
     </dependency>
     <dependency>
     	<groupId>xml-resolver</groupId>
-     	<artifactId>xml-resolver</artifactId>
+     	<artifactId>xml-resolver-patched</artifactId>
     </dependency>
     <dependency>
       <groupId>org.geotools.jdbc</groupId>

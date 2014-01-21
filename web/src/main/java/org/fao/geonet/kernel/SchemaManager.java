@@ -1119,7 +1119,7 @@ public class SchemaManager {
     			String zero = "";
     			if (baseNrInt < 10) zero = "0";
                 newBlank.setAttribute("uriStartString", Geonet.File.METADATA_BLANK + zero + baseNrInt);
-                newBlank.setAttribute("rewritePrefix",  buildSchemaFolderPath(name));
+                newBlank.setAttribute("rewritePrefix",  new File(buildSchemaFolderPath(name)).toURI().toURL().toString());
     		} else {
     			throw new IllegalArgumentException("Exceeded maximum number of plugin schemas "+Geonet.File.METADATA_MAX_BLANKS);
     		}
