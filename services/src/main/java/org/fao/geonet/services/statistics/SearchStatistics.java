@@ -56,15 +56,15 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class SearchStatistics extends NotInReadOnlyModeService {
 
     private static final String NUMBER_OF_SEARCH_QUERY = "SELECT COUNT(*) AS total " +
-                                                         "FROM requests WHERE service = ?";
+                                                         "FROM Requests WHERE service = ?";
 
-    private static final String NUMBER_SEARCH_BY_X_QUERY = "SELECT count(*) / ? AS avg FROM requests " +
+    private static final String NUMBER_SEARCH_BY_X_QUERY = "SELECT count(*) / ? AS avg FROM Requests " +
                                                            "WHERE service = ? ";
 
-    private static final String NUMBER_VIEWS_BY_X_QUERY = "SELECT sum(popularity) / ? AS avg FROM metadata";
+    private static final String NUMBER_VIEWS_BY_X_QUERY = "SELECT sum(popularity) / ? AS avg FROM Metadata";
 
     private static final String NUMBER_OF_SEARCHES_WITH_NO_HITS_QUERY =
-            "SELECT count(*) AS total FROM requests WHERE hits = 0 AND service = ?";
+            "SELECT count(*) AS total FROM Requests WHERE hits = 0 AND service = ?";
 
     private static final String SERVICE_PARAM = "service";
 
