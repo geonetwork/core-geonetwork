@@ -5,9 +5,10 @@
   var module = angular.module('gn_map_service', [
   ]);
 
-  module.provider('gnMapProjection', function() {
+  module.provider('gnMap', function() {
     this.$get = [
-      function() {
+      'gnConfig',
+      function(gnConfig) {
         return {
 
           /**
@@ -36,6 +37,28 @@
                      [extent[2], extent[1]]
               ]
             ];
+          },
+          
+          getMapConfig: function() {
+            return gnConfig['map.config'];
+          },
+          
+          getLayersFromConfig: function() {
+            var conf = this.getMapConfig();
+            var source;
+            
+            if(conf.useOSM) {
+              source = new ol.source.OSM();
+            }
+            else {
+              source = new ol.source.TileWMS({
+                url: conf.layer.url,
+                params: {'LAYERS': conf.layer.layers}
+              });
+            }
+            return new ol.layer.Tile({
+              source: source
+            });
           }
         };
       }];

@@ -6,8 +6,8 @@
     .directive(
       'gnDrawBbox',
       [
-       'gnMapProjection',
-       function(gnMapProjection) {
+       'gnMap',
+       function(gnMap) {
          return {
            restrict: 'A',
            replace: true,
@@ -35,10 +35,10 @@
               *   from the combo list.
               */
              scope.projs = {
-               list: ['EPSG:4326', 'EPSG:3857'],
+               list: gnMap.getMapConfig().projectionList,
                md: 'EPSG:4326',
-               map: 'EPSG:3857',
-               form: 'EPSG:3857'
+               map: gnMap.getMapConfig().projection,
+               form: gnMap.getMapConfig().projectionList[0]
              };
 
              scope.extent = {
@@ -49,7 +49,7 @@
              };
 
              var reprojExtent = function(from, to) {
-               scope.extent[to] = gnMapProjection.reprojExtent(
+               scope.extent[to] = gnMap.reprojExtent(
                    scope.extent[from],
                    scope.projs[from], scope.projs[to]
                );
@@ -60,7 +60,7 @@
              reprojExtent('md', 'form');
 
              scope.$watch('projs.form', function(newValue, oldValue) {
-               scope.extent.form = gnMapProjection.reprojExtent(
+               scope.extent.form = gnMap.reprojExtent(
                    scope.extent.form, oldValue, newValue
                );
              });
@@ -88,14 +88,13 @@
 
              var map = new ol.Map({
                layers: [
-                 new ol.layer.Tile({
-                   source: new ol.source.OSM()
-                 }),
+                 gnMap.getLayersFromConfig(),
                  bboxLayer
                ],
                renderer: ol.RendererHint.CANVAS,
                view: new ol.View2D({
                  center: [0, 0],
+                 projection: scope.projs.map,
                  zoom: 2
                })
              });
@@ -127,7 +126,7 @@
               * Draw the map extent as a bbox onto the map.
               */
              var drawBbox = function() {
-               var coordinates = gnMapProjection.
+               var coordinates = gnMap.
                getCoordinatesFromExtent(scope.extent.map);
 
                var geom = new ol.geom.Polygon([coordinates]);
@@ -182,7 +181,7 @@
                              parseFloat(region.east),
                              parseFloat(region.north)];
 
-               var extentMap = gnMapProjection.reprojExtent(
+               var extentMap = gnMap.reprojExtent(
                    extent, scope.projs.md, scope.projs.map
                );
                map.getView().fitExtent(extentMap, map.getSize());
