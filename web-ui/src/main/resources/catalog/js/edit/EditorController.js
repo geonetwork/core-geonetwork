@@ -93,7 +93,10 @@
 
             var mdSchema = data.metadata[0]['geonet:info'].schema;
             $scope.gnSchemaConfig = gnConfig['metadata.editor.schemaConfig'][mdSchema];
-            var defaultTab = $scope.gnSchemaConfig.defaultTab;
+            var defaultTab = 'default';
+            if ($scope.gnSchemaConfig && $scope.gnSchemaConfig.defaultTab) {
+              defaultTab = $scope.gnSchemaConfig.defaultTab;
+            }
 
             if ($scope.metadataFound) {
               // TODO: Set metadata in page HEAD ?
