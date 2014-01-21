@@ -57,7 +57,8 @@
             else {
               source = new ol.source.TileWMS({
                 url: conf.layer.url,
-                params: {'LAYERS': conf.layer.layers}
+                params: {'LAYERS': conf.layer.layers,
+                  'VERSION': conf.layer.version}
               });
             }
             return new ol.layer.Tile({
