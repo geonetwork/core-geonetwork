@@ -23,6 +23,8 @@
 
 package org.fao.geonet.services.main;
 
+import static org.springframework.data.jpa.domain.Specifications.where;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,6 +45,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group_;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.Source_;
 import org.fao.geonet.domain.UserGroup;
@@ -58,7 +61,9 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataRatingByIpRepository;
 import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.StatusValueRepository;
@@ -69,6 +74,7 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
 import org.fao.geonet.utils.Xml;
+import org.hibernate.cfg.SettingsFactory;
 import org.hsqldb.lib.HashMap;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
@@ -148,17 +154,13 @@ public class Info implements Service {
 			} else if (type.equals("config")) {
 			  // Return a set of properties which define what
 			  // to display or not in the user interface
+              final List<Setting> publicSettings = context.getBean(SettingRepository.class).findByInternal(false);
+              List<String> publicSettingsKey = new ArrayList<String>();
+              for(Setting s : publicSettings) {
+                publicSettingsKey.add(s.getName());
+              }
               result.addContent(new Element("config").addContent(gc.getBean(SettingManager.class).getValues(
-                          new String[]{
-                                       "system/userSelfRegistration/enable", 
-                                       "system/xlinkResolver/enable",
-                                       "system/searchStats/enable",
-                                       "system/inspire/enableSearchPanel",
-                                       "system/harvester/enableEditing",
-                                       "system/metadata/defaultView",
-                                       "system/metadataprivs/usergrouponly",
-                                       "system/hidewithheldelements/enable"
-                                       })));
+                  publicSettingsKey.toArray(new String[0]))));
             } else if (type.equals("inspire")) {
 				result.addContent(gc.getBean(SettingManager.class).getValues(
 				            new String[]{

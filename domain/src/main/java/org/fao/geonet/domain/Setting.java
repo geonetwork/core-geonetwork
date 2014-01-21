@@ -23,6 +23,7 @@ public class Setting extends GeonetEntity {
     private String value;
     private SettingDataType dataType;
     private int position;
+    private boolean internal;
 
     @Id
     @Column(name = "name", nullable = false, length = 255/* mysql cannot accept it any bigger if it is to be the id */)
@@ -64,6 +65,16 @@ public class Setting extends GeonetEntity {
     public Setting setPosition(int position) {
         this.position = position;
         return this;
+    }
+
+    @Column(name = "internal", nullable = true)
+    public boolean isInternal() {
+      return internal;
+    }
+
+    public Setting setInternal(boolean internal) {
+      this.internal = internal;
+      return this;
     }
 
 
