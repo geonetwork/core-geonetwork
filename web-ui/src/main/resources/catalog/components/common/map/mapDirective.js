@@ -6,8 +6,8 @@
     .directive(
       'gnDrawBbox',
       [
-       'gnMapProjection',
-       function(gnMapProjection) {
+       'gnMap',
+       function(gnMap) {
          return {
            restrict: 'A',
            replace: true,
@@ -35,10 +35,10 @@
               *   from the combo list.
               */
              scope.projs = {
-               list: ['EPSG:4326', 'EPSG:3857'],
+               list: gnMap.getMapConfig().projectionList,
                md: 'EPSG:4326',
-               map: 'EPSG:3857',
-               form: 'EPSG:3857'
+               map: gnMap.getMapConfig().projection,
+               form: gnMap.getMapConfig().projectionList[0]
              };
 
              scope.extent = {
@@ -49,7 +49,7 @@
              };
 
              var reprojExtent = function(from, to) {
-               scope.extent[to] = gnMapProjection.reprojExtent(
+               scope.extent[to] = gnMap.reprojExtent(
                    scope.extent[from],
                    scope.projs[from], scope.projs[to]
                );
@@ -60,7 +60,7 @@
              reprojExtent('md', 'form');
 
              scope.$watch('projs.form', function(newValue, oldValue) {
-               scope.extent.form = gnMapProjection.reprojExtent(
+               scope.extent.form = gnMap.reprojExtent(
                    scope.extent.form, oldValue, newValue
                );
              });
@@ -72,6 +72,12 @@
                }),
                fill: new ol.style.Fill({
                  color: 'rgba(255,0,0,0.3)'
+               }),
+               image: new ol.style.Circle({
+                 radius: 7,
+                 fill: new ol.style.Fill({
+                   color: 'rgba(255,0,0,1)'
+                 })
                })
              });
 
@@ -88,14 +94,13 @@
 
              var map = new ol.Map({
                layers: [
-                 new ol.layer.Tile({
-                   source: new ol.source.OSM()
-                 }),
+                 gnMap.getLayersFromConfig(),
                  bboxLayer
                ],
                renderer: ol.RendererHint.CANVAS,
                view: new ol.View2D({
                  center: [0, 0],
+                 projection: scope.projs.map,
                  zoom: 2
                })
              });
@@ -127,12 +132,20 @@
               * Draw the map extent as a bbox onto the map.
               */
              var drawBbox = function() {
-               var coordinates = gnMapProjection.
-               getCoordinatesFromExtent(scope.extent.map);
-
-               var geom = new ol.geom.Polygon([coordinates]);
+               var coordinates, geom; 
+               
+               if(gnMap.isPoint(scope.extent.map)) {
+                 coordinates = [scope.extent.map[0], 
+                   scope.extent.map[1]];
+                 geom = new ol.geom.Point(coordinates);
+               }
+               else {
+                 coordinates = gnMap.getPolygonFromExtent(
+                     scope.extent.map);
+                 geom = new ol.geom.Polygon(coordinates);
+               }
+               
                feature.setGeometry(geom);
-
                feature.getGeometry().setCoordinates(coordinates);
              };
 
@@ -182,7 +195,7 @@
                              parseFloat(region.east),
                              parseFloat(region.north)];
 
-               var extentMap = gnMapProjection.reprojExtent(
+               var extentMap = gnMap.reprojExtent(
                    extent, scope.projs.md, scope.projs.map
                );
                map.getView().fitExtent(extentMap, map.getSize());

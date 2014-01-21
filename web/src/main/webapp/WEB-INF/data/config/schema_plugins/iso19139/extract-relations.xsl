@@ -39,7 +39,6 @@
             else if (gmd:description/gco:CharacterString != '')
             then gmd:description/gco:CharacterString
             else gmd:linkage/gmd:URL"/>
-          <xsl:value-of select="if (gmd:protocol/*) then concat(' (', gmd:protocol/*, ')') else ''"/>
         </xsl:variable>
         
         <id><xsl:value-of select="gmd:linkage/gmd:URL"/></id>

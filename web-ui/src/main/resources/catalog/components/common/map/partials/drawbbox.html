@@ -29,11 +29,12 @@
       </form>
       
       <!-- Hidden field that match xml metadata schema -->
-      <input data-ng-model="extent.form[0]" type="hidden" name="{{hleftRef}}"/>
-      <input data-ng-model="extent.form[1]" type="hidden" name="{{hbottomRef}}"/>
-      <input data-ng-model="extent.form[2]" type="hidden" name="{{hrightRef}}"/>
-      <input data-ng-model="extent.form[3]" type="hidden" name="{{htopRef}}"/>
-      
+      <div class="hidden">
+      <input data-ng-model="extent.form[0]" type="" name="{{hleftRef}}"/>
+      <input data-ng-model="extent.form[1]" type="" name="{{hbottomRef}}"/>
+      <input data-ng-model="extent.form[2]" type="" name="{{hrightRef}}"/>
+      <input data-ng-model="extent.form[3]" type="" name="{{htopRef}}"/>
+      </div>
       <table class="text-center">
         <tr align="center">
           <td colspan="3"><div class="form-group">

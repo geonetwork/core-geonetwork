@@ -56,8 +56,11 @@
       <!-- ******* Display Thumbnails ******* -->
       <ul class="list-inline">
         <li data-ng-repeat="thumb in relations.thumbnail"><img
-          class="thumb-small" data-ng-src="{{thumb.id}}" /> <a href=""
-          data-ng-click="onlinesrcService.removeThumbnail(thumb)">remove</a>
+          class="thumb-small" data-ng-src="{{thumb.id}}" />
+          <a href="" class="onlinesrc-remove"
+          data-ng-click="onlinesrcService.removeThumbnail(thumb)">
+            <i class="btn fa fa-times text-danger"></i>
+          </a> 
         </li>
       </ul>
 
@@ -70,13 +73,15 @@
           <i class="fa fa-plus"></i>
         </a>
       </h4>
-      <ul class="list-group">
-        <li class="list-group-item"
-          data-ng-repeat="resource in relations.onlinesrc | orderBy:'title'">
-          {{resource.title}} <a href="" class="onlinesrc-remove"
-          data-ng-click="onlinesrcService.removeOnlinesrc(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
-        </li>
-      </ul>
+      <div class="list-group">
+        <a class="list-group-item" href=""
+          data-ng-repeat="resource in relations.onlinesrc | orderBy:'title'"
+          data-ng-click="onlinesrcService.openLink(resource.url)">
+          <i class="fa" data-ng-class="onlinesrcService.getIconByProtocol(resource.protocol)"/>
+          {{resource.title}} <span class="onlinesrc-remove"
+          data-ng-click="onlinesrcService.removeOnlinesrc(resource)"><i class="btn fa fa-times text-danger pull-right"></i></span>
+        </a>
+      </div>
 
       <!-- ******* List of datasets ******* -->
       <h4 class="onlinesrc-title" data-ng-show="relations.datasets">
