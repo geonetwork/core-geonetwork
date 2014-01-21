@@ -62,19 +62,30 @@
 							Disabled if user is not an administrator
 							or if user is not a reviewer of the metadata group.
 						-->
+						<xsl:variable name="isTemplate" select="/root/response/isMetadata = 'false'"/>
+						<xsl:variable name="isAdministrator" select="$profile = 'Administrator'"/>
+						<xsl:variable name="isReviewer" select="not($isNotReviewer)"/>
+						<xsl:variable name="isValid" select="$valid='y'"/>
+						
+						<!-- Metadata can only be published by administrator or reviewer 
+						if it is valid or (sub)template -->
+						<xsl:variable name="cannotPublic" select="
+									not(($isAdministrator or $isReviewer) and
+									($isTemplate or $isValid))"/>
+						
 						<xsl:apply-templates select="/root/response/groups/group[id='1']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer or ($valid='n')"/>
+							<xsl:with-param name="disabled" select="$cannotPublic"/>
 						</xsl:apply-templates>
 
 						<xsl:apply-templates select="/root/response/groups/group[id='0']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer or ($valid='n')"/>
+							<xsl:with-param name="disabled" select="$cannotPublic"/>
 						</xsl:apply-templates>
 
 						<xsl:apply-templates select="/root/response/groups/group[id='-1']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer or ($valid='n')"/>
+							<xsl:with-param name="disabled" select="$cannotPublic"/>
 						</xsl:apply-templates>
 
 						<tr>
