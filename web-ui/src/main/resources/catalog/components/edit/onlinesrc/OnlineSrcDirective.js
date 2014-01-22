@@ -353,7 +353,7 @@
                         _schema: 'iso19110'
                   };
                   scope.btn = {
-                        icon: 'fa-list-alt',
+                        icon: 'fa-table',
                         label: 'linkToFeatureCatalog'
                   };
                 }
@@ -365,7 +365,7 @@
                 }
                 else if (scope.mode == 'source') {
                   scope.btn = {
-                        icon: 'fa-file-text-o',
+                        icon: 'fa-sitemap fa-rotate-180',
                         label: 'linkToSource'
                   };
                 }
