@@ -354,7 +354,7 @@ public class LuceneSearcher extends MetaSearcher {
 		// To count the number of values added and stop if maxNumberOfTerms reach
 		int counter = 0;
 		String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
-		
+		String analyzedSearchValue = analyzeText(searchField, searchValueWithoutWildcard, SearchManager.getAnalyzer(_language, true));
 		Map <String, SearchManager.TermFrequency> finalValuesMap = new HashMap<String, SearchManager.TermFrequency>();
 		
 		GeonetContext gc = null;
@@ -395,7 +395,8 @@ public class LuceneSearcher extends MetaSearcher {
                     String[] values = doc.getValues(searchField);
 
                     for (int j = 0; j < values.length; ++j) {
-                        if (searchValue.equals("") || StringUtils.containsIgnoreCase(values[j], searchValueWithoutWildcard)) {
+                        if (searchValue.equals("") || StringUtils.containsIgnoreCase(values[j], analyzedSearchValue)
+                        		|| StringUtils.containsIgnoreCase(values[j], searchValueWithoutWildcard)) {
                             // Use a map to save values frequency
                             String termName = values[j];
                             TermFrequency valueFrequency = finalValuesMap.get(termName);
@@ -1682,7 +1683,7 @@ public class LuceneSearcher extends MetaSearcher {
      * @param a
      * @return
      */
-	private static String analyzeText(String field, String requestStr, PerFieldAnalyzerWrapper a) {
+	public static String analyzeText(String field, String requestStr, PerFieldAnalyzerWrapper a) {
 
 		boolean phrase = false;
 		if ((requestStr.startsWith("\"") && requestStr.endsWith("\""))) {

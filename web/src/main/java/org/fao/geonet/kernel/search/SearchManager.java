@@ -1075,10 +1075,12 @@ public class SearchManager {
 	 * @throws Exception
 	 */
 	public Collection<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms,
-	                                            int threshold) throws Exception {
+	                                            int threshold, String language) throws Exception {
         Collection<TermFrequency> termList = new ArrayList<TermFrequency>();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
         String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
+		String analyzedSearchValue = LuceneSearcher.analyzeText(fieldName, searchValueWithoutWildcard, SearchManager.getAnalyzer(language, true));
+
         boolean startsWithOnly = !searchValue.startsWith("*") && searchValue.endsWith("*");
         
         try {
@@ -1093,7 +1095,11 @@ public class SearchManager {
                     while (term != null && i++ < maxNumberOfTerms) {
                         String text = term.utf8ToString();
                         if (termEnum.docFreq() >= threshold) {
-                            if ((startsWithOnly && StringUtils.startsWithIgnoreCase(text, searchValueWithoutWildcard))
+                        	String analyzedText = LuceneSearcher.analyzeText(fieldName, text, SearchManager.getAnalyzer(language, true));
+
+                            if ((startsWithOnly && StringUtils.startsWithIgnoreCase(analyzedText, analyzedSearchValue))
+                                    || (!startsWithOnly && StringUtils.containsIgnoreCase(analyzedText, analyzedSearchValue)) 
+                                    || (startsWithOnly && StringUtils.startsWithIgnoreCase(text, searchValueWithoutWildcard))
                                     || (!startsWithOnly && StringUtils.containsIgnoreCase(text, searchValueWithoutWildcard))) {
                                 TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
                                 termList.add(freq);
