@@ -9,6 +9,11 @@
     this.$get = [
       'gnConfig',
       function(gnConfig) {
+        var defaultMapConfig = {
+          'useOSM': 'true',
+          'projection': 'EPSG:3857',
+          'projectionList': ['EPSG:4326', 'EPSG:3857']
+        };
         return {
 
           /**
@@ -18,7 +23,7 @@
            *
            */
           reprojExtent: function(extent, src, dest) {
-            if (src == dest) {
+            if (src == dest || extent === null) {
               return extent;
             }
             else {
@@ -44,7 +49,11 @@
           },
 
           getMapConfig: function() {
-            return gnConfig['map.config'];
+            if (gnConfig['map.config'] && gnConfig['map.config'].length > 0) {
+              return gnConfig['map.config'];
+            } else {
+              return defaultMapConfig;
+            }
           },
 
           getLayersFromConfig: function() {

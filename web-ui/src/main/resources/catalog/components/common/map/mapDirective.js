@@ -53,11 +53,18 @@
              };
 
              scope.extent = {
-               md: [parseFloat(attrs.hleft), parseFloat(attrs.hbottom),
-                      parseFloat(attrs.hright), parseFloat(attrs.htop)],
+               md: null,
                map: [],
                form: []
              };
+
+             if (attrs.hleft !== '' && attrs.hbottom !== '' &&
+                 attrs.hright !== '' && attrs.htop !== '') {
+               scope.extent.md = [
+                 parseFloat(attrs.hleft), parseFloat(attrs.hbottom),
+                 parseFloat(attrs.hright), parseFloat(attrs.htop)
+               ];
+             }
 
              var reprojExtent = function(from, to) {
                scope.extent[to] = gnMap.reprojExtent(
@@ -77,6 +84,7 @@
                );
              });
 
+             // TODO: move style in db config
              var boxStyle = new ol.style.Style({
                stroke: new ol.style.Stroke({
                  color: 'rgba(255,0,0,1)',
@@ -147,6 +155,11 @@
              var drawBbox = function() {
                var coordinates, geom;
 
+               // no geometry
+               if (scope.extent.map == null) {
+                 return;
+               }
+
                if (gnMap.isPoint(scope.extent.map)) {
                  coordinates = [scope.extent.map[0],
                    scope.extent.map[1]];
@@ -170,7 +183,8 @@
              scope.$watch('gnCurrentEdit.version', function(newValue) {
                map.setTarget(scope.mapId);
                drawBbox();
-               if (scope.extent.map[0] && scope.extent.map[1] &&
+               if (scope.extent.map &&
+                   scope.extent.map[0] && scope.extent.map[1] &&
                    scope.extent.map[2] && scope.extent.map[3]) {
                  map.getView().fitExtent(scope.extent.map, map.getSize());
                }
