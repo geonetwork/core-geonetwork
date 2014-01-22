@@ -15,7 +15,7 @@
           <select data-ng-model="projs.form">
             <option data-ng-repeat="proj in projs.list" 
               value="{{proj}}"
-              data-ng-selected="p == selectedInfo">{{proj}}
+              data-ng-selected="proj == projs.form">{{proj}}
             </option>
          </select>
         </div>
