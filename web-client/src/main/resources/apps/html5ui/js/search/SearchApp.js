@@ -177,7 +177,8 @@ GeoNetwork.searchApp = function() {
                 name : 'O_nodynamicdownload_',
                 id : 'o_nodynamicdownload',
                 boxLabel : OpenLayers.i18n('No direct download'),
-                renderTo : "ck3"
+                renderTo : "ck3",
+                hidden: true
             });
 
             noDirectDownload_.on("check", function(el) {
@@ -232,15 +233,20 @@ GeoNetwork.searchApp = function() {
                 // tpl: tpl,
                 fieldLabel : OpenLayers.i18n('org')
             });
-            // var denominatorField = GeoNetwork.util.SearchFormTools
-            // .getScaleDenominatorField(true);
 
-            // var groupField = GeoNetwork.util.SearchFormTools.getGroupField(
-            // catalogue.services.getGroups, true);
-            var metadataTypeField = GeoNetwork.util.SearchFormTools
-                    .getMetadataTypeField(true);
-            // var validField = GeoNetwork.util.SearchFormTools
-            // .getValidField(true);
+        		var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(
+                		catalogue.services.getSources, catalogue.services.logoUrl, true);
+        		var groupField = GeoNetwork.util.SearchFormTools.getGroupField(
+                		catalogue.services.getGroups, true);
+        		var metadataTypeField = GeoNetwork.util.SearchFormTools
+                		.getMetadataTypeField(true);
+        		var categoryField = GeoNetwork.util.SearchFormTools.getCategoryField(
+                		catalogue.services.getCategories, '../../apps/images/default/category/', true);
+        		var validField = GeoNetwork.util.SearchFormTools.getValidField(true);
+        		var spatialTypes = GeoNetwork.util.SearchFormTools
+                		.getSpatialRepresentationTypeField(null, true);
+        		var denominatorField = GeoNetwork.util.SearchFormTools
+                		.getScaleDenominatorField(true);
 
             // Add hidden fields to be use by quick metadata links from the
             // admin panel (eg. my metadata).
@@ -256,10 +262,13 @@ GeoNetwork.searchApp = function() {
                 name : 'E_siteId',
                 hidden : true
             });
-            var serviceTypeField = GeoNetwork.util.INSPIRESearchFormTools
-                    .getServiceTypeField(true);
+						var serviceTypeField = GeoNetwork.util.INSPIRESearchFormTools
+						    .getServiceTypeField(true);
+
             advancedCriteria.push(themekeyField, orgNameField,
-                    metadataTypeField, ownerField, isHarvestedField, siteId);
+										catalogueField, groupField, metadataTypeField, 
+										categoryField, validField, spatialTypes, denominatorField,
+                    ownerField, isHarvestedField, siteId);
 
             var sortByCombo = new Ext.form.TextField({
                 name : 'E_sortBy',
@@ -367,7 +376,7 @@ GeoNetwork.searchApp = function() {
                 }, where, when ]
             });
 
-            this.setAdminFieldsCallback([ metadataTypeField ]);
+            this.setAdminFieldsCallback([ metadataTypeField, groupField ]);
 
             return new GeoNetwork.SearchFormPanel({
                 id : 'advanced-search-options-content-form',
@@ -516,10 +525,8 @@ GeoNetwork.searchApp = function() {
                 searchFormCmp : Ext
                         .getCmp('advanced-search-options-content-form'),
                 sortByCmp : Ext.getCmp('E_sortBy'),
-                metadataResultsView : metadataResultsView
-            // Permalink provider is broken due to cookie state probably
-            // so remove it from the NGR GUI FIXME
-            // permalinkProvider : permalinkProvider
+                metadataResultsView : metadataResultsView,
+                permalinkProvider : permalinkProvider
             });
 
             var bBar = this.createBBar();

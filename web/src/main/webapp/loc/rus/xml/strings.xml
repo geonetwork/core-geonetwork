@@ -737,6 +737,7 @@ ISO 19115 не позволяет иметь более одного.
 	<rawMetadata>Raw Metadata Insert</rawMetadata>
 	<rebuild>Перестроить</rebuild>
 	<recentAdditions>Последние изменения</recentAdditions>
+	<recentlyViewed>Recent</recentlyViewed>
 	<refSysTab>Система ссылки</refSysTab>
 	<region>Регион</region>
 	<register>Регистрировать</register>
@@ -1397,4 +1398,5 @@ ISO 19115 не позволяет иметь более одного.
 	<welcome.text>Welcome to GeoNetwork</welcome.text>
 	<tag_label>Tags</tag_label>
 	<map_label>Map</map_label>
+  <about.text>About this site</about.text>
 </strings>

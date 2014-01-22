@@ -732,6 +732,7 @@
 	<rawMetadata>原始元数据插入</rawMetadata>
 	<rebuild>Rebuild</rebuild>
 	<recentAdditions>最近新增</recentAdditions>
+	<recentlyViewed>Recent</recentlyViewed>
 	<refSysTab>参照系统信息</refSysTab>
 	<region>地区</region>
 	<register>Register</register>
@@ -1388,4 +1389,5 @@
 	<welcome.text>Welcome to GeoNetwork</welcome.text>
 	<tag_label>Tags</tag_label>
 	<map_label>Map</map_label>
+  <about.text>About this site</about.text>
 </strings>

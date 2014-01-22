@@ -539,14 +539,30 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
      */
     dislayLinks: function (records) {
         var view = this;
+
         Ext.each(records, function (r) {
             var links = r.get('links'),
                 id = r.get('id'),
-                uuid = r.get('uuid');
+                uuid = r.get('uuid'),
+                div = Ext.query('#md-links-' + id, view.el.dom.body),
+                el = Ext.get(div[0]);
+
+            // Add permanent link (can copy for bookmark)
+            var menu = new Ext.menu.Menu(),
+                bHref = this.catalogue.services.rootUrl + 'search?&uuid=' + escape(uuid);
+
+            var permalinkMenu = new Ext.menu.TextItem({text: '<input value="' + bHref + '"/></br><a href="' + bHref + '">Link</a>'});
+            menu.add('<b class="menu-title">' 
+                      + OpenLayers.i18n('permalinkInfo') + '</b>',
+                      permalinkMenu);
+            view.addLinkMenu(id, [{
+              text: 'Bookmark Link',
+              href: bHref,
+              menu: menu
+            }], OpenLayers.i18n('Bookmark Link'), 'bookmark', el);
+
             
             if (links.length > 0) {
-                var div = Ext.query('#md-links-' + id, view.el.dom.body),
-                    el = Ext.get(div[0]);
                 
                 // The template may not defined a md-links placeholder
                 if (el) {
@@ -568,9 +584,11 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                     var linkButton = [], label = null, currentType = null, bt,
                          allowDynamic = r.get('dynamic'), allowDownload = r.get('download'),
                          hasDownloadAction = false;
-                    
+                
+                    var nid = 0;
                     store.each(function (record) {
-                        
+                        nid += 1;
+                        var linkId = nid+"-"+uuid;
                         // Avoid empty URL
                         if (record.get('href') !== '') {
                             // Check that current record type is the same as the previous record
@@ -578,7 +596,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                             // or create a new button to be added later
                             if (currentType === null || currentType !== record.get('type')) {
                                 if (linkButton.length !== 0) {
-                                    view.addLinkMenu(linkButton, label, currentType, el);
+                                    view.addLinkMenu(linkId, linkButton, label, currentType, el);
                                 }
                                 linkButton = [];
                                 currentType = record.get('type');
@@ -595,7 +613,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                             var text = null, handler = null;
                             
                             // Only display WMS link if dynamic property set to true for current user & record
-                            if ((currentType === 'application/vnd.ogc.wms_xml' || currentType === 'OGC:WMS')) {
+                            if (currentType === 'application/vnd.ogc.wms_xml' || (currentType.indexOf('OGC:WMS') > -1)) {
                                 if (allowDynamic) {
                                     linkButton.push({
                                         text: record.get('title') || record.get('name'),
@@ -603,7 +621,8 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                             // FIXME : ref to app
                                             app.switchMode('1', true);
                                             app.getIMap().addWMSLayer([[record.get('title'), record.get('href'), record.get('name'), uuid]]);
-                                        }
+                                        },
+                                        href: record.get('href')
                                     });
                                 }
                             } else if (currentType === 'application/vnd.ogc.wmc') {
@@ -613,13 +632,14 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                         // FIXME : ref to app
                                         app.switchMode('1', true);
                                         app.getIMap().addWMC(record.get('href'));
-                                    }
+                                    },
+                                    href: record.get('href')
                                 });
                             } else {
                                 // If link is uploaded to GeoNetwork the resources.get service is used
                                 // Check if allowDownload 
                                 var displayLink = true;
-                                if (record.get('href').indexOf('resources.get') !== -1) {
+                                if ((record.get('href').indexOf('resources.get') !== -1) || (record.get('href').indexOf('file.disclaimer') !== -1)) {
                                     displayLink = allowDownload;
                                 } else if (currentType === 'application/vnd.google-earth.kml+xml') {
                                     // Google earth link is provided when a WMS is provided
@@ -636,19 +656,24 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                         }
                         
                     });
-                    // Add the latest button
+                    // Add the last button
+                    nid++;
+                    var linkId = nid+"-"+uuid;
                     if (linkButton !== null && linkButton.length !== 0) {
-                        view.addLinkMenu(linkButton, label, currentType, el);
+                        view.addLinkMenu(linkId, linkButton, label, currentType, el);
                     }
                     
                     // Add the download all button
                     if (hasDownloadAction) {
-                        view.addLinkMenu([{
+                        nid++;
+                        linkId = nid+"-"+uuid;
+                        view.addLinkMenu(linkId, [{
                             text: 'download',
                             handler: function () {
                                 // FIXME : this call require the catalogue to be named catalogue
                                 catalogue.metadataPrepareDownload(id);
-                            }
+                            },
+                            href: record.get('href')
                         }], OpenLayers.i18n('prepareDownload'), 'downloadAllIcon', el);
                     }
                 }
@@ -660,25 +685,64 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
      *  If there is only one element in the linkButton array, display a menu
      *  and display a dropdown menu if not.
      */
-    addLinkMenu: function (linkButton, label, currentType, el) {
+    addLinkMenu: function (parentId, linkButton, label, currentType, el) {
+        var buttonId = label+'-'+parentId;
+        if (Ext.get(buttonId)) { // don't need to add them again
+          return;
+        }
+
+        var href = linkButton[0].href;
+        var isDownload = (href.indexOf('resources.get') !== -1) || (href.indexOf('file.disclaimer') !== -1);
         if (linkButton.length === 1) {
             var handler = linkButton[0].handler || function () {
                 window.open(linkButton[0].href);
             };
-            bt = new Ext.Button({
-                text: label,
-                tooltip: linkButton[0].text,
+						var tTip = label + ' ' + href;
+						if (linkButton[0].text == '') {
+							tTip = linkButton[0].text;
+						}
+            if (linkButton[0].menu) {
+              bt = new Ext.Button({
+                id: buttonId,
+                tooltip: tTip,
+                menu: linkButton[0].menu,
+                iconCls: GeoNetwork.Util.protocolToCSS(currentType, isDownload),
+                renderTo: el
+              });
+            } else {
+              bt = new Ext.Button({
+                id: buttonId,
+                tooltip: tTip,
                 handler: handler,
-                iconCls: GeoNetwork.Util.protocolToCSS[currentType] || currentType,
+                iconCls: GeoNetwork.Util.protocolToCSS(currentType, isDownload),
                 renderTo: el
-            });
+              });
+            }
         } else {
-            bt = new Ext.Button({
-                text: label,
-                menu: new Ext.menu.Menu({cls: 'links-mn', items: linkButton}),
-                iconCls: GeoNetwork.Util.protocolToCSS[currentType] || currentType,
-                renderTo: el
-            });
+						if (linkButton[0].handler) { // if handlers then create button list
+							var items = [];
+            	Ext.each(linkButton, function (button) {
+              	items.push(new Ext.Button({
+                	handler: button.handler,
+                	text: button.text
+              	}));
+					  	});
+            	bt = new Ext.Button({
+                	id: buttonId,
+                	tooltip: label,
+                	menu: new Ext.menu.Menu({cls: 'links-mn', items: items}),
+                	iconCls: GeoNetwork.Util.protocolToCSS(currentType, isDownload),
+                	renderTo: el
+            	});
+						} else {
+            	bt = new Ext.Button({
+                	id: buttonId,
+                	tooltip: label,
+                	menu: new Ext.menu.Menu({cls: 'links-mn', items: linkButton}),
+                	iconCls: GeoNetwork.Util.protocolToCSS(currentType, isDownload),
+                	renderTo: el
+            	});
+						}
         }
     },
     /** private: method[dislayRelations]

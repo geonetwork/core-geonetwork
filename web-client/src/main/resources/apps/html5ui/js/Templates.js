@@ -247,15 +247,6 @@ GeoNetwork.HTML5UI.Templates.WMS_VALID = "";
 GeoNetwork.HTML5UI.Templates.WFS_VALID = "";
 
 /**
- * Shows Add to favourites
- */
-GeoNetwork.HTML5UI.Templates.BOOKMARK =
-    '<button class="bookmark-icon" value="{title}" \
-    onclick="javascript:bookmarkMetadata(\'{[values.title.replace(\"\'\", \"\")]}\', \'{uuid}\');">\
-        <img title="{[OpenLayers.i18n("Add Bookmark")]}" src="../../apps/html5ui/img/bookmark-add-icon.png"/>\
-    </button>';
-
-/**
  * Display copy to clipboard icon if you are using IE.
  * @type {String}
  */
@@ -385,7 +376,6 @@ GeoNetwork.HTML5UI.Templates.SIMPLE = new Ext.XTemplate(
 //    GeoNetwork.HTML5UI.Templates.DOWNLOAD,
 //    '</td>\
 //     <td>',
-    GeoNetwork.HTML5UI.Templates.BOOKMARK,
     GeoNetwork.HTML5UI.Templates.LINKCONTAINER,
     '</td>\
      <td>',
@@ -486,7 +476,6 @@ GeoNetwork.HTML5UI.Templates.FULL = new Ext.XTemplate(
     '</table>',
     '<table><tr>',
             '<td>',
-            GeoNetwork.HTML5UI.Templates.BOOKMARK,
             GeoNetwork.HTML5UI.Templates.COPYTOCLIPBOARD,
             '</td>',
             '<td class="icon" colspan="2">',

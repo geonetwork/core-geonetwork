@@ -32,11 +32,14 @@ GeoNetwork.BreadCrumb = function() {
         separator : "  >>  ",
         div : "bread-crumb-app",
         defaultSteps : [ {
-            text : OpenLayers.i18n("BROWSE"),
+            text : OpenLayers.i18n("HOME"),
             func : "showBrowse()"
         }, {
             text : OpenLayers.i18n("SEARCH RESULTS"),
             func : "showSearch()"
+        }, {
+            text : OpenLayers.i18n("ABOUT"),
+            func : "showAbout()"
         } ],
         /**
          * Adds another crumb to the breadcrumb.

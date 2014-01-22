@@ -739,6 +739,7 @@
 	<rawMetadata>Insertion de métadonnées par lots</rawMetadata>
 	<rebuild>Regénérer</rebuild>
 	<recentAdditions>Derniers ajouts</recentAdditions>
+	<recentlyViewed>Recent</recentlyViewed>
 	<refSysTab>Système de Réf.</refSysTab>
 	<region>Région</region>
 	<register>Créer un compte</register>
@@ -1412,4 +1413,5 @@
 	<welcome.text></welcome.text>
 	<tag_label>Tags</tag_label>
 	<map_label>Carte</map_label>
+  <about.text>About this site</about.text>
 </strings>

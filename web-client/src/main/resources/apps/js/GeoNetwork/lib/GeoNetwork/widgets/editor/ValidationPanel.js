@@ -64,7 +64,7 @@ GeoNetwork.editor.ValidationPanel = Ext.extend(Ext.Panel, {
      *  Remove validation report from the store
      */
     clear: function () {
-        this.store.removeAll();
+        if (this.store.getTotalCount()>0) this.store.removeAll();
     },
     reload: function (e, id) {
         this.metadataId = id || this.metadataId;

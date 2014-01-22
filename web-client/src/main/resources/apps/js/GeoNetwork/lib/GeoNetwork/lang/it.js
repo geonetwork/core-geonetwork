@@ -654,7 +654,10 @@ GeoNetwork.Lang.it = {
     'linklabel-': 'Collegamento',
     'cookies.warning': "Per assicurare una navigazione ottimale e altri servizi, questo sito e' predisposto per consentire l’uso di tutti i Cookies. Continuando si accetta l'utilizzo dei Cookies.",
     'no-thumbnail': 'Miniatura non disponibile',
-		'bigMap': 'Open Map and hide search results'
+		'bigMap': 'Open Map and hide search results',
+    'createThesaurus': 'Create Thesaurus',
+	'Online data': 'Web Services',
+	'Data for download': 'Data Available'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, GeoNetwork.Lang.it);

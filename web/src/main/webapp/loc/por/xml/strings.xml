@@ -738,6 +738,7 @@
 	<rawMetadata>Inserção dos metadados originais</rawMetadata>
 	<rebuild>Reconstrução</rebuild>
 	<recentAdditions>Alterações recentes</recentAdditions>
+	<recentlyViewed>Recent</recentlyViewed>
 	<refSysTab>Sistema de referência</refSysTab>
 	<region>Região</region>
 	<register>Registar</register>
@@ -1401,4 +1402,5 @@
 	<welcome.text>Welcome to GeoNetwork</welcome.text>
 	<tag_label>Tags</tag_label>
 	<map_label>Map</map_label>
+  <about.text>About this site</about.text>
 </strings>
