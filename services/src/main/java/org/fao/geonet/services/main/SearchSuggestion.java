@@ -197,7 +197,7 @@ public class SearchSuggestion implements Service {
             // If a field is not stored, field values could not be retrieved
             // In that case search the index
             listOfSuggestions.addAll(sm.getTermsFequency(
-                    fieldName, searchValue, maxNumberOfTerms, threshold));
+                    fieldName, searchValue, maxNumberOfTerms, threshold, context.getLanguage()));
         }
 
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {

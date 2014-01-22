@@ -2980,7 +2980,9 @@
       </xsl:variable>
     
       <xsl:variable name="abstract">
-        <xsl:apply-templates mode="escapeXMLEntities" select="/root/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract/gco:CharacterString"/>
+        <xsl:apply-templates mode="escapeXMLEntities" select="/root/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract/gco:CharacterString">
+          <xsl:with-param name="includingCRLF" select="true()"/>
+        </xsl:apply-templates>
       </xsl:variable>
     
       <button type="button" class="content repository" 
