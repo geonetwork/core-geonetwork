@@ -42,6 +42,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
 
@@ -138,8 +139,11 @@ public class Create extends NotInReadOnlyModeService {
     private void copyDataDir(ServiceContext context, String oldId, String newId, String access) throws IOException {
         final String sourceDir = Lib.resource.getDir(context, access, oldId);
         final String destDir = Lib.resource.getDir(context, access, newId);
-
         if (new File(sourceDir).exists()) {
+            if (!new File(destDir).mkdirs()){
+                Log.warning(Geonet.GEONETWORK, "Error creating the metadata data directory.");
+            }
+
             FileUtils.copyDirectory(new File(sourceDir), new File(destDir));
         }
     }
