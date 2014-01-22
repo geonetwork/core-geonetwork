@@ -584,7 +584,14 @@ public class EditLib {
     }
 
     private boolean createAndAddFromXPath(Element metadataRecord, MetadataSchema metadataSchema, String xpathProperty, AddElemValue value) throws Exception {
+        if (xpathProperty.startsWith("/")) {
+            xpathProperty = xpathProperty.substring(1);
+        }
+        if (xpathProperty.startsWith(metadataRecord.getQualifiedName()+"/")) {
+            xpathProperty = xpathProperty.substring(metadataRecord.getQualifiedName().length()+1);
+        }
         List<String> xpathParts = Arrays.asList(xpathProperty.split("/"));
+
         Pair<Element, String> result = findLongestMatch(metadataRecord, metadataRecord, 0, metadataSchema, xpathParts.size() / 2,
                 xpathParts);
         final Element elementToAttachTo = result.one();
@@ -629,7 +636,7 @@ public class EditLib {
                 isAttribute = true;
             }
             // Match namespace prefix
-            if (currentToken.kind == XPathParserLocalConstants.TEXT                && previousToken.kind == XPathParserConstants.SLASH) {
+            if (currentToken.kind == XPathParserLocalConstants.TEXT && previousToken.kind == XPathParserConstants.SLASH) {
                 // get element namespace if element is text and previous was /
                 // means qualified name only is supported
                 currentElementNamespacePrefix = currentToken.image;
@@ -670,7 +677,7 @@ public class EditLib {
 
                         if (metadataSchema.getElementValues(qualifiedName, currentNode.getQualifiedName()) != null) {
                             currentNode = addElement(metadataSchema, currentNode, qualifiedName);
-                        existingElement = false;
+                            existingElement = false;
                         } else {
                             // element not in schema so stop!
                             return false;
@@ -722,31 +729,36 @@ public class EditLib {
         return true;
     }
 
-    private static final Joiner COMMA_STRING_JOINER = Joiner.on('/');
+    private static final Joiner SLASH_STRING_JOINER = Joiner.on('/');
     private Pair<Element, String> findLongestMatch(final Element metadataRecord, final Element bestMatch, final int indexOfBestMatch,
                                      final MetadataSchema metadataSchema,  final int nextIndex, final List<String> xpathPropertyParts) {
 
         // do linear search when for last couple elements of xpath
         if (xpathPropertyParts.size() - nextIndex < 3) {
             for (int i = xpathPropertyParts.size() - 1; i > -1 ; i--) {
-                final String xpath = COMMA_STRING_JOINER.join(xpathPropertyParts.subList(0, i));
+                final String xpath = SLASH_STRING_JOINER.join(xpathPropertyParts.subList(0, i));
                 SelectResult result = trySelectNode(metadataRecord, metadataSchema, xpath);
                 if (result.result instanceof Element) {
-                    return Pair.read((Element) result.result, COMMA_STRING_JOINER.join(xpathPropertyParts.subList(i,
+                    return Pair.read((Element) result.result, SLASH_STRING_JOINER.join(xpathPropertyParts.subList(i,
                             xpathPropertyParts.size())));
                 }
             }
-            return Pair.read(bestMatch, COMMA_STRING_JOINER.join(xpathPropertyParts.subList(indexOfBestMatch, xpathPropertyParts.size())));
+            return Pair.read(bestMatch, SLASH_STRING_JOINER.join(xpathPropertyParts.subList(indexOfBestMatch, xpathPropertyParts.size())));
         } else {
-            final SelectResult found = trySelectNode(metadataRecord, metadataSchema, COMMA_STRING_JOINER.join(xpathPropertyParts.subList(0,
-                    nextIndex)));
+            final String currentXPath = SLASH_STRING_JOINER.join(xpathPropertyParts.subList(0, nextIndex));
+            final SelectResult found = trySelectNode(metadataRecord, metadataSchema, currentXPath);
             if (found.result instanceof Element) {
                 Element newBest = (Element) found.result;
                 int newIndex = nextIndex + ((xpathPropertyParts.size() - nextIndex) / 2);
                 return findLongestMatch(metadataRecord, newBest, nextIndex, metadataSchema, newIndex, xpathPropertyParts);
             } else if(!found.error) {
                 int newNextIndex = indexOfBestMatch + ((nextIndex - indexOfBestMatch) / 2);
-                return findLongestMatch(metadataRecord, bestMatch, indexOfBestMatch, metadataSchema, newNextIndex, xpathPropertyParts);
+                if (newNextIndex == indexOfBestMatch) {
+                    String xpath = SLASH_STRING_JOINER.join(xpathPropertyParts.subList(indexOfBestMatch, xpathPropertyParts.size()));
+                    return Pair.read(bestMatch, xpath);
+                } else {
+                    return findLongestMatch(metadataRecord, bestMatch, indexOfBestMatch, metadataSchema, newNextIndex, xpathPropertyParts);
+                }
             } else {
                 int newNextIndex = nextIndex + 1;
                 return findLongestMatch(metadataRecord, bestMatch, indexOfBestMatch, metadataSchema, newNextIndex, xpathPropertyParts);

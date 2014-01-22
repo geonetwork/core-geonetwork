@@ -528,4 +528,37 @@ public class EditLibTest extends AbstractCoreIntegrationTest {
         assertEqualsText(text, metadataElement, charStringXpath, GMD, GCO);
         assertEquals(att, Xml.selectString(metadataElement, attXPath, Arrays.asList(GMD, GCO)));
     }
-}
+
+    @Test
+    public void testAddElementFromXpath_Extent() throws Exception {
+
+        MetadataSchema schema = _schemaManager.getSchema("iso19139");
+
+        final Element metadataElement = new Element("MD_Metadata", GMD);
+        String newValue = "newValueFromRootXpath";
+        final String xpath = "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement";
+        final String xpathProperty = xpath;
+        boolean updated = new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty,
+                new AddElemValue(newValue),
+                true);
+
+        assertTrue(updated);
+        assertEqualsText(newValue, metadataElement, xpath, GMD, GCO);
+    }
+
+    @Test
+    public void testAddElementFromXpath_ExtentFromRoot() throws Exception {
+
+        MetadataSchema schema = _schemaManager.getSchema("iso19139");
+
+        final Element metadataElement = new Element("MD_Metadata", GMD);
+        String newValue = "newValueFromRootXpath";
+        final String xpath = "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement";
+        final String xpathProperty = "/gmd:MD_Metadata/"+xpath;
+        boolean updated = new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty,
+                new AddElemValue(newValue),
+                true);
+
+        assertTrue(updated);
+        assertEqualsText(newValue, metadataElement, xpath, GMD, GCO);
+    }}
