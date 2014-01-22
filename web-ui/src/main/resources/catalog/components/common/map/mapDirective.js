@@ -25,17 +25,17 @@
              scope.drawing = false;
              var mapRef = scope.htopRef || scope.dcRef;
              scope.mapId = 'map-drawbbox-' +
-               mapRef.substring(1, mapRef.length);
+             mapRef.substring(1, mapRef.length);
 
              /**
               * set dublin-core coverage output
               */
              var setDcOutput = function() {
-               if(scope.dcRef) {
+               if (scope.dcRef) {
                  scope.dcExtent = gnMap.getDcExtent(scope.extent.md);
                }
              };
-             
+
              /**
               * Different projections used in the directive:
               * - md : the proj system in the metadata. It is defined as
@@ -70,7 +70,7 @@
              reprojExtent('md', 'map');
              reprojExtent('md', 'form');
              setDcOutput();
-             
+
              scope.$watch('projs.form', function(newValue, oldValue) {
                scope.extent.form = gnMap.reprojExtent(
                    scope.extent.form, oldValue, newValue
@@ -145,10 +145,10 @@
               * Draw the map extent as a bbox onto the map.
               */
              var drawBbox = function() {
-               var coordinates, geom; 
-               
-               if(gnMap.isPoint(scope.extent.map)) {
-                 coordinates = [scope.extent.map[0], 
+               var coordinates, geom;
+
+               if (gnMap.isPoint(scope.extent.map)) {
+                 coordinates = [scope.extent.map[0],
                    scope.extent.map[1]];
                  geom = new ol.geom.Point(coordinates);
                }
@@ -203,9 +203,9 @@
               */
              scope.onRegionSelect = function(region) {
                scope.extent.md = [parseFloat(region.west),
-                             parseFloat(region.south),
-                             parseFloat(region.east),
-                             parseFloat(region.north)];
+                 parseFloat(region.south),
+                 parseFloat(region.east),
+                 parseFloat(region.north)];
 
                reprojExtent('md', 'map');
                reprojExtent('md', 'form');

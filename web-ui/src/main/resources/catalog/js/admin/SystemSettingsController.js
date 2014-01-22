@@ -5,23 +5,23 @@
   var module = angular.module('gn_system_settings_controller',
       []);
 
-  module.filter('orderObjectBy', function(){
+  module.filter('orderObjectBy', function() {
     return function(input, attribute) {
-       if (!angular.isObject(input)) return input;
+      if (!angular.isObject(input)) return input;
 
-       var array = [];
-       for(var objectKey in input) {
-           array.push(input[objectKey]);
-       }
+      var array = [];
+      for (var objectKey in input) {
+        array.push(input[objectKey]);
+      }
 
-       array.sort(function(a, b){
-           a = parseInt(a[attribute]);
-           b = parseInt(b[attribute]);
-           return a - b;
-       });
-       return array;
+      array.sort(function(a, b) {
+        a = parseInt(a[attribute]);
+        b = parseInt(b[attribute]);
+        return a - b;
+      });
+      return array;
     }
-   });
+  });
   /**
    * GnSystemSettingsController provides management interface
    * for catalog settings.
@@ -31,8 +31,10 @@
    *  Metadata views > default views, Search only in requested language)
    */
   module.controller('GnSystemSettingsController', [
-    '$scope', '$http', '$rootScope', '$translate', '$location', 'gnUtilityService',
-    function($scope, $http, $rootScope, $translate, $location, gnUtilityService) {
+    '$scope', '$http', '$rootScope', '$translate', '$location',
+    'gnUtilityService',
+    function($scope, $http, $rootScope, $translate, $location, 
+        gnUtilityService) {
 
       $scope.settings = [];
       $scope.initalSettings = [];
@@ -138,34 +140,37 @@
                 });
       };
       $scope.processName = null;
-      $scope.processRecommended = function (processName) {
+      $scope.processRecommended = function(processName) {
         $scope.processName = processName;
-        $scope.processTitle = $translate('processRecommendedOnHostChange-help', {
-          old: buildUrl($scope.initalSettings),
-          by: buildUrl($scope.settings)
-        });
+        $scope.processTitle =
+            $translate('processRecommendedOnHostChange-help', {
+              old: buildUrl($scope.initalSettings),
+              by: buildUrl($scope.settings)
+            });
       };
 
-      var buildUrl = function (settings) {
+      var buildUrl = function(settings) {
         var port = filterBySection(settings, 'system/server/port')[0]['#text'];
         var host = filterBySection(settings, 'system/server/host')[0]['#text'];
-        var protocol = filterBySection(settings, 'system/server/protocol')[0]['#text'];
-        
+        var protocol = filterBySection(settings,
+            'system/server/protocol')[0]['#text'];
+
         return protocol + '://' + host + (port == '80' ? '' : ':' + port);
-      }
+      };
       /**
        * Save settings and move to the batch process page
-       * 
+       *
        * TODO: set the process to use and select all
        */
-      $scope.saveAndProcessSettings = function (formId) {
+      $scope.saveAndProcessSettings = function(formId) {
         $scope.saveSettings(formId);
 
-        $location.path('/tools/batch/select/all/process/url-host-relocator').search(
+        $location.path('/tools/batch/select/all/process/url-host-relocator')
+          .search(
             'urlPrefix=' + buildUrl($scope.initalSettings) +
             '&newUrlPrefix=' + buildUrl($scope.settings));
-      }
-      
+      };
+
 
       /**
          * Scroll to an element.

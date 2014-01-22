@@ -68,23 +68,24 @@
                 }
                 else {
                   // TODO: clear selection ?
-                  console.log("Single selection is not supported in remote mode.");
-//                  md['geonet:info'].selected = true;
-//                  gnSearchManagerService.select(md['geonet:info'].uuid)
-//                    .then(updateSelectionNumber);
+                  console.log('Single selection is not ' +
+                      'supported in remote mode.');
+                  //  md['geonet:info'].selected = true;
+                  //  gnSearchManagerService.select(md['geonet:info'].uuid)
+                  //  .then(updateSelectionNumber);
                 }
               };
             }
           }
-          
-          var updateSelectionNumber = function (data) {
+
+          var updateSelectionNumber = function(data) {
             scope.selection = {
-                length: data[0]
+              length: data[0]
             };
           };
-          
-          scope.selectAll = function (all) {
-            angular.forEach(scope.searchResults.records, function (md) {
+
+          scope.selectAll = function(all) {
+            angular.forEach(scope.searchResults.records, function(md) {
               md['geonet:info'].selected = all;
             });
             if (all) {
@@ -92,18 +93,18 @@
             } else {
               gnSearchManagerService.selectNone().then(updateSelectionNumber);
             }
-          }
-          
+          };
+
           /**
            * If local, selection is handled in an array on the client
            * if not, selection is handled on server side and
            * search results contains information if a record is selected or not.
            */
-          scope.isSelected = function (md) {
+          scope.isSelected = function(md) {
             var targetUuid = md['geonet:info'].uuid;
             var selected = false;
             if (scope.options.selection.mode.indexOf('local') >= 0) {
-              angular.forEach(scope.selection, function (md) {
+              angular.forEach(scope.selection, function(md) {
                 if (md['geonet:info'].uuid === targetUuid) {
                   selected = true;
                 }
@@ -112,7 +113,7 @@
               selected = md['geonet:info'].selected;
             }
             return selected;
-          }
+          };
           // Event on new search result
           // compute page number for pagination
           scope.$watchCollection('searchResults.records', function() {

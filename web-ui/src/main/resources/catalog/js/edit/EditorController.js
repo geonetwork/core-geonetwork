@@ -56,9 +56,9 @@
     'gnConfig',
     function($scope, $routeParams, $http, $rootScope, 
         $translate, $compile, $timeout, 
-            gnEditor, 
-            gnSearchManagerService, 
-            gnConfigService,
+        gnEditor, 
+        gnSearchManagerService, 
+        gnConfigService,
             gnUtilityService, 
             gnCurrentEdit,
             gnConfig) {
@@ -92,7 +92,8 @@
             $scope.metadataNotFoundId = $routeParams.id;
 
             var mdSchema = data.metadata[0]['geonet:info'].schema;
-            $scope.gnSchemaConfig = gnConfig['metadata.editor.schemaConfig'][mdSchema];
+            $scope.gnSchemaConfig =
+                gnConfig['metadata.editor.schemaConfig'][mdSchema];
             var defaultTab = 'default';
             if ($scope.gnSchemaConfig && $scope.gnSchemaConfig.defaultTab) {
               defaultTab = $scope.gnSchemaConfig.defaultTab;

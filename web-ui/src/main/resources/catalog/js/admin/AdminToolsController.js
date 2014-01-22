@@ -261,15 +261,15 @@
       loadProcessConfig();
       checkLastBatchProcessReport();
 
-      $scope.setTemplate = function (params) {
+      $scope.setTemplate = function(params) {
         var values = [];
         if ($('#batchSearchTemplateY')[0].checked) values.push('y');
         if ($('#batchSearchTemplateN')[0].checked) values.push('n');
         if ($('#batchSearchTemplateS')[0].checked) values.push('s');
         params._isTemplate = values.join(' or ');
-      }
+      };
 
-      var initProcessByRoute = function () {
+      var initProcessByRoute = function() {
         if ($routeParams.tab === 'batch') {
           // Check if we should select all record
           if ($routeParams.selectAll) {
@@ -278,11 +278,11 @@
           }
           if ($routeParams.processId) {
             // Select a process defined in the route
-            angular.forEach($scope.batchProcesses, function (p) {
+            angular.forEach($scope.batchProcesses, function(p) {
               if (p.key === $routeParams.processId) {
                 // For each process parameter check if param
                 // defined in the location search section
-                angular.forEach(p.params, function (param) {
+                angular.forEach(p.params, function(param) {
                   var urlParam = $location.search()[param.name];
                   if (urlParam) {
                     param.value = urlParam;
@@ -293,7 +293,7 @@
             });
           }
         }
-      }
+      };
 
 
       // Indexing management
