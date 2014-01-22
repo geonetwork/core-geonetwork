@@ -134,7 +134,7 @@
       data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'">
       <div class="panel-heading">
         <span data-translate="">processReportFor</span> {{processReport['@process'] | translate}}<br/>
-        <p> {{numberOfRecordsProcessed}} <span>recordsProcessed</span>
+        <p> {{numberOfRecordsProcessed}} <span data-translate="">recordsProcessed</span>
           ({{processReport['@startDate']}} <span data-ng-show="processReport['@running'] == 'true'"
             >...</span>
           <span data-ng-show="processReport['@running'] != 'true'"> -

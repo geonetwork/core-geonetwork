@@ -11,6 +11,10 @@
     
     "title": "Titre",
     
+    "METADATA": "Fiche",
+    "TEMPLATE": "Modèle de fiche",
+    "SUB_TEMPLATE": "Annuaire",
+    
     "eng": "English",
     "fre": "Français",
     "ara": "عربي",
@@ -105,9 +109,6 @@
     "Reviewer": "Reviewer",
     "UserAdmin": "Utilisateur administrateur",
     
-    
-    "metadata": "Fiche",
-    "template": "Modèle de fiche",
     
     "errorIs": "L'erreur est ",
     

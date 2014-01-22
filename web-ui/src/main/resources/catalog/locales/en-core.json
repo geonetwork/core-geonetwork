@@ -9,6 +9,10 @@
     "needHelp": "Need help",
     "docNotFound": "<strong>Warning !</strong> Page <a href='{{page}}'>{{page}}</a> not found in documentation.",
     
+    "METADATA": "Metadata",
+    "TEMPLATE": "Template",
+    "SUB_TEMPLATE": "Directory entry",
+    
     "eng": "English",
     "fre": "Français",
     "ara": "عربي",
@@ -121,9 +125,6 @@
     "service": "Service",
     "staticMap": "Static map",
     "featureCatalog": "Feature catalog",
-    
-    "metadata": "Metadata",
-    "template": "Template",
     
     "errorIs": "Error is ",
     

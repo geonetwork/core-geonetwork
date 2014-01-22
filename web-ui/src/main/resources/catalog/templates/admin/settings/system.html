@@ -89,15 +89,19 @@
                      id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}" readonly="readonly"/>
 
                 <div data-ng-switch-when="system/server/host">
-                  <input type="text" class="form-control"
-                    id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
-                    data-ng-model="s['#text']"
-                    data-ng-change="processRecommended('siteIdChange', s['@name'])"/>
-                  
-                  <button type="submit" class="btn btn-warning fa fa-save"
-                    title="{{'processRecommendedOnHostChange-help' | translate}}" 
-                    data-ng-show="processName !== null"
-                    data-ng-click="saveAndProcessSettings('#gn-settings')" data-translate="">processRecommendedOnHostChange</button>
+                  <div class="input-group">
+                    <input type="text" class="form-control"
+                      id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
+                      data-ng-model="s['#text']"
+                      data-ng-change="processRecommended('siteIdChange', s['@name'])"/>
+                    <span class="input-group-btn" data-ng-show="processName !== null">
+                        <button type="submit" class="btn btn-warning"
+                          title="{{processTitle}}" 
+                          data-ng-click="saveAndProcessSettings('#gn-settings')">
+                          <i class="fa fa-medkit"></i>&nbsp;<span data-translate=""
+                          >processRecommendedOnHostChange</span></button>
+                      </span>
+                  </div>
                 </div>
                 
                 <div data-ng-switch-when="system/server/port">

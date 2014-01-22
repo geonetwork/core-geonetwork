@@ -92,9 +92,6 @@
     
     "nostatus": "No status",
     
-    "METADATA": "Metadata",
-    "TEMPLATE": "Template",
-    "SUB_TEMPLATE": "Directory entry",
     
     "dublin-core": "Dublin Core",
     "dublin-core-acr": "DC",
@@ -682,7 +679,7 @@
     "processReportNoProcessFound": "Records with process not defined in its standard",
     "processReportNotOwner": "Not editable records",
     "processRecommendedOnHostChange": "Update metadata records",
-    "processRecommendedOnHostChange-help": "After changing the catalog host name, it's recommended to update all links which may be defined in the catalog records (eg. thumbnails, uploaded documents, XLinks).",
+    "processRecommendedOnHostChange-help": "After changing the catalog host name, it's recommended to update all links which may be defined in the catalog records (eg. thumbnails, uploaded documents, XLinks). Click here to replace {{old}} by {{by}}",
     
     "availableStandards": "Standards available",
     "addOrUpdateStandards": "Add or update standards",

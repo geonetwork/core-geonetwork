@@ -11,11 +11,11 @@
    */
   module.controller('GnAdminToolsController', [
     '$scope', '$http', '$rootScope', '$translate', '$compile',
-    '$q', '$timeout', '$routeParams',
+    '$q', '$timeout', '$routeParams', '$location',
     'gnSearchManagerService',
     'gnUtilityService',
     function($scope, $http, $rootScope, $translate, $compile, 
-        $q, $timeout, $routeParams,
+        $q, $timeout, $routeParams, $location,
             gnSearchManagerService, 
             gnUtilityService) {
 
@@ -71,14 +71,6 @@
       $scope.recordsToProcess = null;
       $scope.numberOfRecordsProcessed = null;
 
-      /**
-       * The pagination config
-       */
-      $scope.recordsToProcessPagination = {
-        pages: -1,
-        currentPage: 1,
-        hitsPerPage: 10
-      };
       /**
        * The selected process
        */
@@ -180,7 +172,8 @@
         $http.get($scope.base + 'config/batch-process-cfg.json')
         .success(function(data) {
               $scope.batchProcesses = data.config;
-              initProcessByRoute();
+
+              $timeout(initProcessByRoute);
             });
       }
 
@@ -259,14 +252,14 @@
         $timeout(checkLastBatchProcessReport, processCheckInterval);
       };
 
-      // TODO: Should only do that if batch process is the current page
-      loadProcessConfig();
-      checkLastBatchProcessReport();
       loadGroups();
       loadUsers();
       loadCategories();
       loadEditors();
 
+      // TODO: Should only do that if batch process is the current page
+      loadProcessConfig();
+      checkLastBatchProcessReport();
 
       $scope.setTemplate = function (params) {
         var values = [];
@@ -284,13 +277,20 @@
             $scope.$broadcast('resetSearch');
           }
           if ($routeParams.processId) {
-            // Select a process
+            // Select a process defined in the route
             angular.forEach($scope.batchProcesses, function (p) {
               if (p.key === $routeParams.processId) {
+                // For each process parameter check if param
+                // defined in the location search section
+                angular.forEach(p.params, function (param) {
+                  var urlParam = $location.search()[param.name];
+                  if (urlParam) {
+                    param.value = urlParam;
+                  }
+                });
                 $scope.selectedProcess = p;
               }
             });
-            
           }
         }
       }

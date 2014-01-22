@@ -35,8 +35,10 @@
     function($scope, $http, $rootScope, $translate, $location, gnUtilityService) {
 
       $scope.settings = [];
+      $scope.initalSettings = [];
       $scope.sectionsLevel1 = {};
       $scope.systemUsers = null;
+      $scope.processTitle = '';
       $scope.orderProperty = '@position';
       $scope.reverse = false;
 
@@ -56,6 +58,8 @@
               var sectionsLevel2 = [];
               gnUtilityService.parseBoolean(data);
               $scope.settings = data;
+              angular.copy(data, $scope.initalSettings);
+
 
               for (var i = 0; i < $scope.settings.length; i++) {
                 var tokens = $scope.settings[i]['@name'].split('/');
@@ -136,10 +140,19 @@
       $scope.processName = null;
       $scope.processRecommended = function (processName) {
         $scope.processName = processName;
-        
-        
+        $scope.processTitle = $translate('processRecommendedOnHostChange-help', {
+          old: buildUrl($scope.initalSettings),
+          by: buildUrl($scope.settings)
+        });
       };
 
+      var buildUrl = function (settings) {
+        var port = filterBySection(settings, 'system/server/port')[0]['#text'];
+        var host = filterBySection(settings, 'system/server/host')[0]['#text'];
+        var protocol = filterBySection(settings, 'system/server/protocol')[0]['#text'];
+        
+        return protocol + '://' + host + (port == '80' ? '' : ':' + port);
+      }
       /**
        * Save settings and move to the batch process page
        * 
@@ -147,8 +160,12 @@
        */
       $scope.saveAndProcessSettings = function (formId) {
         $scope.saveSettings(formId);
-        $location.path('/tools/batch/select/all/process/url-host-relocator');
+
+        $location.path('/tools/batch/select/all/process/url-host-relocator').search(
+            'urlPrefix=' + buildUrl($scope.initalSettings) +
+            '&newUrlPrefix=' + buildUrl($scope.settings));
       }
+      
 
       /**
          * Scroll to an element.
