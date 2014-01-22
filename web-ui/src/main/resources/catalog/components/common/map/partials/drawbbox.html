@@ -1,17 +1,14 @@
 <div class="gn-drawmap-panel">
   <div class="panel panel-default">
-    <div class="panel-heading">
-      <i class="fa fa-pencil"></i><span data-translate="">drawbbox</span>
-    </div>
     <div class="panel-body">
     
       <!-- Header with projection selection, draw button and area list -->
       <form class="form-inline" role="form">
         <button class="btn btn-warning" data-ng-click="drawMap()">
-          <i class="fa fa-pencil"></i>draw
+          <i class="fa fa-pencil"></i>&nbsp;<span data-translate="">drawRectangle</span>
         </button>
         <div class="col-sm-3">
-          <label class="sr-only">projection</label>
+          <label class="sr-only" data-translate="">chooseProjection</label>
           <select data-ng-model="projs.form">
             <option data-ng-repeat="proj in projs.list" 
               value="{{proj}}"
@@ -20,10 +17,10 @@
          </select>
         </div>
         <div class="col-sm-3" lang="lang">
-          <label class="sr-only">region</label>
+          <label class="sr-only" data-translate="">chooseRegion</label>
           <input type="text" name="country" class="form-control"
             data-gn-country-picker=""
-            placeholder="region"/>
+            placeholder="{{'chooseRegion' | translate}}"/>
         </div>
         
       </form>
@@ -41,7 +38,7 @@
           <td colspan="3"><div class="form-group">
               <input
                 data-ng-model="extent.form[3]" type="number"
-                id="drawbbox-top" placeholder="north" 
+                id="drawbbox-top" placeholder="{{'north' | translate}}" 
                 data-ng-change="updateBbox(true)"/>
           </div></td>
         </tr>
@@ -49,7 +46,7 @@
           <td class="col-left">
             <div class="form-group">
               <input data-ng-model="extent.form[0]" type="number"
-                id="drawbbox-left" placeholder="left"
+                id="drawbbox-left" placeholder="{{'west' | translate}}"
                 data-ng-change="updateBbox(true)" />
             </div>
           </td>
@@ -61,7 +58,7 @@
               <input
                 data-ng-model="extent.form[2]"
                 type="number" id="drawbbox-right"
-                placeholder="right" data-ng-change="updateBbox(true)"/>
+                placeholder="{{'east' | translate}}" data-ng-change="updateBbox(true)"/>
             </div>
           </td>
         </tr>
@@ -70,7 +67,7 @@
             <div class="form-group">
             <input
               data-ng-model="extent.form[1]" type="number"
-              id="drawbbox-bottom" placeholder="bottom"
+              id="drawbbox-bottom" placeholder="{{'south' | translate}}"
               data-ng-change="updateBbox(true)"/>
           </div></td>
         </tr>
