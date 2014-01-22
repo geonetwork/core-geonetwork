@@ -2180,8 +2180,6 @@ public class DataManager {
 			Log.error(Geonet.DATA_MANAGER, "Could not save validation status on metadata "+id+": "+e.getMessage());
 		}
 
-		saveValidationStatus(dbms, id, valTypeAndStatus, new ISODate().toString());
-   		
 		return Pair.read(errorReport, version);
 	}
 	
@@ -2258,8 +2256,7 @@ public class DataManager {
 		                Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
 		            }
 		            
-					String ruleId = rule.substring(rule.lastIndexOf("/") + 1, 
-							rule.indexOf(".xsl"));
+					String ruleId = SchemaDao.toRuleName(rule);
 					
 					Element report = new Element("report", Edit.NAMESPACE);
 					report.setAttribute("rule", ruleId,
@@ -2276,7 +2273,7 @@ public class DataManager {
 						if (xmlReport != null) {
 							report.addContent(xmlReport);
 						}
-						// add results to persitent validation information
+						// add results to persistent validation information
 						int firedRules = 0;
 						Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
 						while (i.hasNext()) {

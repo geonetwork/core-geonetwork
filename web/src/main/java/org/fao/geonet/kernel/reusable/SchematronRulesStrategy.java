@@ -36,6 +36,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.fao.geonet.kernel.schema.SchemaDao;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.jdom.Element;
 
@@ -70,7 +71,7 @@ public final class SchematronRulesStrategy extends ReplacementStrategy {
 		@SuppressWarnings("unchecked")
 		List<Element> records = results.getChildren("record");
 		for (Element record : records) {
-			String file = record.getChildTextNormalize(FILE_COL);
+			String file = SchemaDao.toRuleName(record.getChildTextNormalize(FILE_COL));
 			String isoschema = record.getChildTextNormalize(ISOSCHEMA_COL);
 			return "[" + isoschema + "] " + file;
 		}

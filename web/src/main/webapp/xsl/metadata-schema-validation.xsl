@@ -23,8 +23,14 @@
 				</div>
 
 				<script src="../../apps/shared-objects/app/lib/jquery.js"></script>
-				<script
-					src="../../apps/shared-objects/app/lib/angular/angular.min.js"></script>
+                <xsl:choose>
+                    <xsl:when test="/root/request/debug">
+                        <script src="../../apps/shared-objects/app/lib/angular/angular.js"></script>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <script src="../../apps/shared-objects/app/lib/angular/angular.min.js"></script>
+                    </xsl:otherwise>
+                </xsl:choose>
 				<script
 					src="../../apps/shared-objects/app/lib/bootstrap3/js/ui-bootstrap-tpls-0.9.0.js"></script>
 				<script
@@ -44,28 +50,25 @@
 							ng-controller="addNewEntry">
 							<div>
 								<label>
-									<xsl:value-of select="/root/gui/strings/xpathschematron" />
-									:
+									<xsl:value-of select="/root/gui/strings/xpathschematron" /> :
 								</label>
 
 								<select ng-model="formData.schematron" name="schematron"
 									autofocus="autofocus" required="true">
 									<xsl:for-each select="/root/schematron/schematron">
 										<option>
-											<xsl:attribute name="value"><xsl:value-of
-												select="id" /></xsl:attribute>
-											[
+											<xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
+											<xsl:text>[</xsl:text>
 											<xsl:value-of select="isoschema" />
-											]
-											<xsl:value-of select="tokenize(file,'/')[last()]" />
+                                            <xsl:text>] </xsl:text>
+											<xsl:value-of select="tokenize(file,'/|\\')[last()]" />
 										</option>
 									</xsl:for-each>
 								</select>
 							</div>
 							<div>
 								<label>
-									<xsl:value-of select="/root/gui/strings/xpathlabel" />
-									:
+									<xsl:value-of select="/root/gui/strings/xpathlabel" /> :
 								</label>
 								<select ng-model="formData.type" name="type" id="xpathtype"
 									placeholder="{/root/gui/strings/xpathlabel}" required="true">

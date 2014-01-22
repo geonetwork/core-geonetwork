@@ -1,5 +1,6 @@
 package org.fao.geonet.kernel.schema;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
@@ -9,6 +10,8 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.domain.SchematronCriteriaType;
 import org.jdom.Element;
+
+import javax.persistence.Transient;
 
 /**
  * This class will probably dissappear with JPA
@@ -113,4 +116,35 @@ public class SchemaDao {
 		return schematroncriteria;
 	}
 
+    private final static int EXTENSION_LENGTH = ".xsl".length();
+    private final static String SEPARATOR = File.separator;
+    private final static String ALT_SEPARATOR;
+
+    static {
+        if (SEPARATOR.equals("\\")) {
+            ALT_SEPARATOR = "/";
+        } else {
+            ALT_SEPARATOR = "\\";
+        }
+    }
+
+    public static String toRuleName(String file) {
+        if (file == null) {
+            return "unnamed rule";
+        }
+        int lastSegmentIndex = file.lastIndexOf(SEPARATOR);
+        if (lastSegmentIndex < 0) {
+            lastSegmentIndex = file.lastIndexOf(ALT_SEPARATOR);
+        }
+
+        if (lastSegmentIndex < 0) {
+            lastSegmentIndex = 0;
+        } else {
+            // drop the separator character
+            lastSegmentIndex += 1;
+        }
+
+        String rule = file.substring(lastSegmentIndex, file.length() - EXTENSION_LENGTH);
+        return rule ;
+    }
 }
