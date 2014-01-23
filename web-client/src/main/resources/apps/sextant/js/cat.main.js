@@ -791,7 +791,7 @@ cat.app = function() {
                 bodyCssClass: 'west-panel-body',
                 bodyStyle: 'padding-top:20px;padding-left:20px',
                 layoutConfig: {
-                    columns:3
+                    columns:1
                 }
             });
             
