@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.config;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jeeves.interfaces.Service;
@@ -32,11 +31,11 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.services.config.bean.Setting;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Setting;
+import org.fao.geonet.kernel.setting.ISettingManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
-import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +53,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class Get implements Service {
 
 	@Autowired
-	private SettingManager sm;
+	private ISettingManager sm;
 
 	@RequestMapping(value = "/{lang}/admin.config.list", produces="application/xml")
 	public @ResponseBody
@@ -63,27 +62,14 @@ public class Get implements Service {
 			@RequestParam(required = false, defaultValue = "false") Boolean asTree)
 			throws Exception {
 
-		Element system = sm.getAllAsXML(asTree);
-		XMLOutputter outp = new XMLOutputter();
-		String s = outp.outputString(system);
-
-		System.out.println("---");
-		System.out.println(s);
-		System.out.println("---");
-
-		List<Setting> res = new ArrayList<Setting>();
-		Setting set = new Setting();
-		set.setName("sdf");
-		res.add(set);
-
-		return res;
+		return sm.getAllAsList();
 	}
 
-	public SettingManager getSm() {
+	public ISettingManager getSm() {
 		return sm;
 	}
 
-	public void setSm(SettingManager sm) {
+	public void setSm(ISettingManager sm) {
 		this.sm = sm;
 	}
 

@@ -2,6 +2,7 @@ package org.fao.geonet.bean;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.fao.geonet.domain.SettingDataType;
@@ -13,8 +14,9 @@ import org.fao.geonet.domain.SettingDataType;
  * {@link org.fao.geonet.repository.HarvesterSettingRepository} to traverse the
  * hierarchy.
  * 
- * @author Jesse
+ * @author delawen
  */
+@XmlRootElement(name="settings")
 public class Setting implements Serializable {
 
 	private static final long serialVersionUID = 5431195166983620627L;
@@ -23,6 +25,7 @@ public class Setting implements Serializable {
 	private SettingDataType dataType;
 	private int position;
 
+	@XmlAttribute(name = "@name") 
 	public String getName() {
 		return name;
 	}
@@ -31,6 +34,7 @@ public class Setting implements Serializable {
 		this.name = name;
 	}
 
+	@XmlAttribute(name = "@value")
 	public String getValue() {
 		return value;
 	}
@@ -39,6 +43,7 @@ public class Setting implements Serializable {
 		this.value = value;
 	}
 
+	@XmlAttribute(name = "@dataType")
 	public SettingDataType getDataType() {
 		return dataType;
 	}
@@ -47,6 +52,7 @@ public class Setting implements Serializable {
 		this.dataType = dataType;
 	}
 
+	@XmlAttribute(name = "@position")
 	public int getPosition() {
 		return position;
 	}

@@ -35,18 +35,18 @@ import javax.persistence.PersistenceContext;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.repository.LanguageRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.utils.Log;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.Setting_;
+import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SettingRepository;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 /**
@@ -55,7 +55,7 @@ import org.springframework.stereotype.Component;
  * that make use of the settings need to be modified.
  */
 @Component
-public class SettingManager {
+public class SettingManager implements ISettingManager {
 
     public static final String SYSTEM_SITE_SITE_ID_PATH = "system/site/siteId";
     public static final String SYSTEM_SITE_NAME_PATH = "system/site/name";
@@ -73,7 +73,8 @@ public class SettingManager {
      *
      * @return all settings as xml.
      */
-    public Element getAllAsXML(boolean asTree) {
+    @Override
+	public Element getAllAsXML(boolean asTree) {
         Element env = new Element("settings");
         List<Setting> settings = _repo.findAll(SortUtils.createSort(Setting_.name));
 
@@ -124,7 +125,8 @@ public class SettingManager {
      * 
      * @param path eg. system/site/name
      */
-    public String getValue(String path) {
+    @Override
+	public String getValue(String path) {
         if (Log.isDebugEnabled(Geonet.SETTINGS)) {
             Log.debug(Geonet.SETTINGS, "Requested setting with name: " + path);
         }
@@ -149,7 +151,8 @@ public class SettingManager {
      * 
      * @param keys A list of setting's key to retrieve
      */
-    public Element getValues(String[] keys) {
+    @Override
+	public Element getValues(String[] keys) {
         Element env = new Element("settings");
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i];
@@ -174,7 +177,8 @@ public class SettingManager {
      * @param key The setting key
      * @return The setting valueThe setting key
      */
-    public boolean getValueAsBool(String key) {
+    @Override
+	public boolean getValueAsBool(String key) {
         String value = getValue(key);
         if (value == null)
             return false;
@@ -188,7 +192,8 @@ public class SettingManager {
      * @param defaultValue The default value
      * @return The setting value as boolean
      */
-    public boolean getValueAsBool(String key, boolean defaultValue) {
+    @Override
+	public boolean getValueAsBool(String key, boolean defaultValue) {
         String value = getValue(key);
         return (value != null) ? Boolean.parseBoolean(value) : defaultValue;
     }
@@ -199,7 +204,8 @@ public class SettingManager {
      * @param key The setting key
      * @return The integer value of the setting or null
      */
-    public Integer getValueAsInt(String key) {
+    @Override
+	public Integer getValueAsInt(String key) {
         String value = getValue(key);
         if (value == null || value.trim().length() == 0)
             return null;
@@ -214,7 +220,8 @@ public class SettingManager {
      * 
      * @return true if the types are correct and the setting is found.
      */
-    public boolean setValue(String key, String value) {
+    @Override
+	public boolean setValue(String key, String value) {
         if (Log.isDebugEnabled(Geonet.SETTINGS)) {
             Log.debug(Geonet.SETTINGS, "Setting with name: " + key + ", value: " + value);
         }
@@ -239,7 +246,8 @@ public class SettingManager {
      * @param key the key/path/name of the setting.
      * @param value the new boolean value
      */
-    public boolean setValue(String key, boolean value) {
+    @Override
+	public boolean setValue(String key, boolean value) {
         return setValue(key, String.valueOf(value));
     }
 
@@ -251,7 +259,8 @@ public class SettingManager {
      * 
      * @throws SQLException
      */
-    public final boolean setValues(final Map<String, String> values) {
+    @Override
+	public final boolean setValues(final Map<String, String> values) {
         boolean success = true;
         for (Map.Entry<String, String> entry : values.entrySet()) {
             String key = entry.getKey();
@@ -265,24 +274,41 @@ public class SettingManager {
      * Refreshes current settings manager. This has to be used when updating the Settings table without using this class. For example when
      * using an SQL script.
      */
-    public final boolean refresh() throws SQLException {
+    @Override
+	public final boolean refresh() throws SQLException {
         _entityManager.getEntityManagerFactory().getCache().evict(HarvesterSetting.class);
         return true;
     }
 
-    public final String getSiteId() {
+    /* (non-Javadoc)
+	 * @see org.fao.geonet.kernel.setting.ISettingManager#getSiteId()
+	 */
+    @Override
+	public final String getSiteId() {
         return getValue(SYSTEM_SITE_SITE_ID_PATH);
     }
 
-    public final String getSiteName() {
+    /* (non-Javadoc)
+	 * @see org.fao.geonet.kernel.setting.ISettingManager#getSiteName()
+	 */
+    @Override
+	public final String getSiteName() {
         return getValue(SYSTEM_SITE_NAME_PATH);
     }
 
-    public void setSiteUuid(String siteUuid) {
+    /* (non-Javadoc)
+	 * @see org.fao.geonet.kernel.setting.ISettingManager#setSiteUuid(java.lang.String)
+	 */
+    @Override
+	public void setSiteUuid(String siteUuid) {
        setValue(SYSTEM_SITE_SITE_ID_PATH, siteUuid);
     }
 
-    public @Nonnull String getSiteURL(@Nonnull ServiceContext context) {
+    /* (non-Javadoc)
+	 * @see org.fao.geonet.kernel.setting.ISettingManager#getSiteURL(jeeves.server.context.ServiceContext)
+	 */
+    @Override
+	public @Nonnull String getSiteURL(@Nonnull ServiceContext context) {
         String lang = context.getLanguage();
         if(lang == null) {
             lang = context.getBean(LanguageRepository.class).findOneByDefaultLanguage().getId();
@@ -296,11 +322,24 @@ public class SettingManager {
         return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
     }
 
-    public boolean getHideWitheldElements() {
+    /* (non-Javadoc)
+	 * @see org.fao.geonet.kernel.setting.ISettingManager#getHideWitheldElements()
+	 */
+    @Override
+	public boolean getHideWitheldElements() {
         return getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
     }
 
-    public boolean setHideWitheldElements(boolean value) {
+    /* (non-Javadoc)
+	 * @see org.fao.geonet.kernel.setting.ISettingManager#setHideWitheldElements(boolean)
+	 */
+    @Override
+	public boolean setHideWitheldElements(boolean value) {
         return setValue("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", value);
     }
+
+	@Override
+	public List<org.fao.geonet.bean.Setting> getAllAsList() {
+		throw new NotImplementedException("This is the Jeeves class, use the Spring autowired class");
+	}
 }
