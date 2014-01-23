@@ -9,19 +9,19 @@
   <div
     data-ng-include="'../../catalog/templates/editor/top-toolbar.html'">
   </div>
-
   <div class="row gn-editor-container">
     <div class="col-md-8">
       <div data-ng-include="editorFormUrl"
         data-onload="onFormLoad()"></div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4" 
+      data-ng-if="gnSchemaConfig.related.display === true || gnSchemaConfig.validation.display === true || gnSchemaConfig.suggestion.display === true">
       <div class="gn-editor-tools-container">
-        <div data-gn-onlinesrc-list="" data-ng-show="gnSchemaConfig.related"></div>
+        <div data-gn-onlinesrc-list="" data-ng-if="gnSchemaConfig.related.display === true"></div>
 
-        <div data-gn-validation-report="" data-ng-show="gnSchemaConfig.validation == true"></div>
+        <div data-gn-validation-report="" data-ng-if="gnSchemaConfig.validation.display === true"></div>
 
-        <div data-gn-suggestion-list="" data-ng-show="gnSchemaConfig.suggestion == true"></div>
+        <div data-gn-suggestion-list="" data-ng-if="gnSchemaConfig.suggestion.display === true"></div>
 
         <div data-gn-need-help="publish-02-edit-a-record"></div>
       </div>

@@ -2,7 +2,7 @@
   <div class="panel-heading">
     <i class="fa fa-link"></i><i class="icon-external-link"></i> <span
       data-translate="">associatedResources</span>
-    <div class="btn-group">
+    <div class="btn-group" data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true">
       <button type="button"
         class="btn btn-link dropdown-toggle fa fa-plus"
         data-toggle="dropdown">
@@ -52,13 +52,14 @@
   </div>
   <div class="panel-body">
     <div class="gn-onlinesrc-panel">
-    
+      
       <!-- ******* Display Thumbnails ******* -->
       <ul class="list-inline">
         <li data-ng-repeat="thumb in relations.thumbnail"><img
           class="thumb-small" data-ng-src="{{thumb.id}}" />
           <a href="" class="onlinesrc-remove"
-          data-ng-click="onlinesrcService.removeThumbnail(thumb)">
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+            data-ng-click="onlinesrcService.removeThumbnail(thumb)">
             <i class="btn fa fa-times text-danger"></i>
           </a> 
         </li>
@@ -79,7 +80,8 @@
           data-ng-click="onlinesrcService.openLink(resource.url)">
           <i class="fa" data-ng-class="onlinesrcService.getIconByProtocol(resource.protocol)"/>
           {{resource.title}} <span class="onlinesrc-remove"
-          data-ng-click="onlinesrcService.removeOnlinesrc(resource)"><i class="btn fa fa-times text-danger pull-right"></i></span>
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+            data-ng-click="onlinesrcService.removeOnlinesrc(resource)"><i class="btn fa fa-times text-danger pull-right"></i></span>
         </a>
       </div>
 
@@ -96,6 +98,7 @@
         <li class="list-group-item"
           data-ng-repeat="resource in relations.datasets | orderBy:'title'">
           {{resource.title}} <a href="" class="onlinesrc-remove"
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
           data-ng-click="onlinesrcService.removeDataset(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
         </li>
       </ul>
@@ -114,7 +117,8 @@
         <li class="list-group-item"
           data-ng-repeat="resource in relations.services | orderBy:'title'">
           {{resource.title}} <a href="" class="onlinesrc-remove"
-          data-ng-click="onlinesrcService.removeService(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+            data-ng-click="onlinesrcService.removeService(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
         </li>
       </ul>
 
@@ -132,7 +136,8 @@
         <li class="list-group-item"
           data-ng-repeat="resource in relations.parent | orderBy:'title'">
           {{resource.title}} <a href="" class="onlinesrc-remove"
-          data-ng-click="onlinesrcService.removeMdLink('parent', resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+            data-ng-click="onlinesrcService.removeMdLink('parent', resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
         </li>
       </ul>
 
@@ -151,7 +156,8 @@
         <li class="list-group-item"
           data-ng-repeat="resource in relations.sources | orderBy:'title'">
           {{resource.title}} <a href="" class="onlinesrc-remove"
-          data-ng-click="onlinesrcService.removeMdLink('source', resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+            data-ng-click="onlinesrcService.removeMdLink('source', resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
         </li>
       </ul>
 
@@ -169,9 +175,24 @@
         <li class="list-group-item"
           data-ng-repeat="resource in relations.fcats | orderBy:'title'">
           {{resource.title}} <a href="" class="onlinesrc-remove"
-          data-ng-click="onlinesrcService.removeFeatureCatalog(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+            data-ng-click="onlinesrcService.removeFeatureCatalog(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
         </li>
       </ul>
+      
+      <!-- ******* List of datasets associated with this feature catalogs ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.hasfeaturecat">
+        <i class="fa fa-files-o"></i>
+        <i class="icon-external-link"></i>
+        <span data-translate="">hasFeatureCatalog</span>
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          data-ng-repeat="resource in relations.hasfeaturecat | orderBy:'title'">
+          {{resource.title}}</li>
+        </li>
+      </ul>
+      
       
       <!-- ******* List of siblings ******* -->
       <h4 class="onlinesrc-title" data-ng-show="relations.sibling">
@@ -189,9 +210,24 @@
           {{resource.title}} 
           <span>{{'(' + resource.subType.toUpperCase() + ')'}}</span>
           <a href="" class="onlinesrc-remove"
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
             data-ng-click="onlinesrcService.removeSibling(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
         </li>
       </ul>
+      
+      <!-- ******* List of associated records (reverse direction of siblings) ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.associated">
+        <i class="fa fa-sign-out"></i>
+        <i class="icon-external-link"></i>
+        <span data-translate="">siblings</span>
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          data-ng-repeat="resource in relations.associated | orderBy:'title'">
+          {{resource.title}}</li>
+          </li>
+      </ul>
+      
     </div>
   </div>
 </div>

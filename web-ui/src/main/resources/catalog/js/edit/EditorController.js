@@ -92,11 +92,16 @@
             $scope.metadataNotFoundId = $routeParams.id;
 
             var mdSchema = data.metadata[0]['geonet:info'].schema;
-            $scope.gnSchemaConfig =
+
+            // Get the schema configuration for the current record
+            gnCurrentEdit.schemaConfig = $scope.gnSchemaConfig =
                 gnConfig['metadata.editor.schemaConfig'][mdSchema];
+
+
             var defaultTab = 'default';
-            if ($scope.gnSchemaConfig && $scope.gnSchemaConfig.defaultTab) {
-              defaultTab = $scope.gnSchemaConfig.defaultTab;
+            if (gnCurrentEdit.schemaConfig &&
+                gnCurrentEdit.schemaConfigdefaultTab) {
+              defaultTab = gnCurrentEdit.schemaConfig.defaultTab;
             }
 
             if ($scope.metadataFound) {
@@ -107,7 +112,8 @@
                 formId: '#gn-editor-' + $routeParams.id,
                 tab: $routeParams.tab || defaultTab,
                 displayAttributes: $routeParams.displayAttributes === 'true',
-                displayTooltips: false,
+                displayTooltips:
+                    gnCurrentEdit.schemaConfig.displayToolTip === true,
                 compileScope: $scope,
                 sessionStartTime: moment()
               });

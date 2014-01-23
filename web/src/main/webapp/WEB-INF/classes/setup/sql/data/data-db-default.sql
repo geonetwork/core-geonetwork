@@ -639,7 +639,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES 
   ('map/config', '{"useOSM":false,"context":"","layer":{"url":"http://www2.demis.nl/mapserver/wms.asp?","layers":"Countries","version":"1.1.1"},"projection":"EPSG:4326","projectionList":["EPSG:4326","EPSG:3857"]}', 0, 9590, false);
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES 
-  ('metadata/editor/schemaConfig', '{"iso19139": {"defaultTab": "default", "related": [""], "suggestion": false}, "dublin-core": {"defaultTab": "default"}}', 0, 10000, false);
+  ('metadata/editor/schemaConfig', '{"iso19110":{"defaultTab":"default","displayToolTip":true,"related":{"display":true,"readonly":true,"categories":["dataset"]},"validation":{"display":true}},"iso19139":{"defaultTab":"default","displayToolTip":true,"related":{"display":true,"categories":[]},"suggestion":{"display":true},"validation":{"display":true}},"dublin-core":{"defaultTab":"default","related":{"display":true,"readonly":true,"categories":[]},}}', 0, 10000, false);
 
 
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES  (1,NULL,'harvesting',NULL);

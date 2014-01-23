@@ -43,15 +43,34 @@
                   <option data-ng-repeat="u in systemUsers" value="{{u.id}}"
                     ng-selected="u.id == s['#text']">{{u.name + ' ' + u.surname}}</option>
                 </select>
-                <textarea data-ng-switch-when="system/harvesting/mail/template" type="text"
+                <textarea 
+                  data-gn-autogrow=""
+                  data-ng-switch-when="system/harvesting/mail/template" type="text"
                   class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
                   >{{s['#text']}}</textarea>
-                <textarea data-ng-switch-when="system/harvesting/mail/templateError" type="text"
+                <textarea 
+                  data-gn-autogrow=""
+                  data-ng-switch-when="system/harvesting/mail/templateError" type="text"
                   class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
                   >{{s['#text']}}</textarea>
-                <textarea data-ng-switch-when="system/harvesting/mail/templateWarning" type="text"
+                <textarea 
+                  data-gn-autogrow=""
+                  data-ng-switch-when="system/harvesting/mail/templateWarning" type="text"
                   class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
                   >{{s['#text']}}</textarea>
+                
+                <!-- JSON configuration for map and editor -->
+                <textarea 
+                  data-gn-autogrow=""
+                  data-ng-switch-when="map/config" type="text"
+                  class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
+                  >{{s['#text']}}</textarea>
+                <textarea 
+                  data-gn-autogrow=""
+                  data-ng-switch-when="metadata/editor/schemaConfig" type="text"
+                  class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
+                  >{{s['#text']}}</textarea>
+                
                 <select data-ng-switch-when="system/server/protocol" class="form-control"
                       name="{{s.formName}}">
                   <option value="http"
