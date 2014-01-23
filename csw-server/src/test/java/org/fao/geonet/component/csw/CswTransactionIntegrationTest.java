@@ -39,7 +39,7 @@ import static org.junit.Assert.*;
  */
 public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     public static final String PHOTOGRAPHIC_UUID = "46E7F9B1-99F6-3241-9039-EAE7201534F4";
-    public static final String IDENTIFICATION_XPATH = "gmd:identificationInfo/gmd:MD_DataIdentification";
+    public static final String IDENTIFICATION_XPATH = "gmd:identificationInfo/*";
     public static final String TITLE_XPATH = IDENTIFICATION_XPATH + "/gmd:citation/gmd:CI_Citation/gmd:title";
     public static final String TITLE_XPATH_DE_FREE_TEXT = TITLE_XPATH + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']";
     public static final String TITLE_XPATH_FR_FREE_TEXT = TITLE_XPATH + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#FR']";
@@ -159,7 +159,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         addPhotographicMetadataToRepository(adminUserId());
 
         final Element metadata = Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml"));
-        final String xpath = "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints";
+        final String xpath = "gmd:identificationInfo/*/gmd:resourceConstraints";
         Xml.selectElement(metadata, xpath, Arrays.asList(GMD)).detach();
 
         assertNotNull(Xml.selectElement(_metadataRepository.findOneByUuid(PHOTOGRAPHIC_UUID).getXmlData(false), xpath,

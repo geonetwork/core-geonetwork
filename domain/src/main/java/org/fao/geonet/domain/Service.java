@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.ServiceEntityListenerManager;
+
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +15,7 @@ import java.util.Map;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "Services")
+@EntityListeners(ServiceEntityListenerManager.class)
 @SequenceGenerator(name=Service.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class Service extends GeonetEntity {
     static final String ID_SEQ_NAME = "service_id_seq";

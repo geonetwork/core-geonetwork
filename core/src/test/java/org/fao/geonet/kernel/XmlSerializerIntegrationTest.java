@@ -76,7 +76,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
 	@Test
 	public void testInternalSelectHidingWithheldNullServiceContext() throws Exception {
         _settingManager.setHideWitheldElements(true);
-		Field field = ServiceContext.class.getDeclaredField("threadLocalInstance");
+		Field field = ServiceContext.class.getDeclaredField("THREAD_LOCAL_INSTANCE");
 		field.setAccessible(true);
 		InheritableThreadLocal<ServiceContext> threadLocalInstance = (InheritableThreadLocal<ServiceContext>) field.get(null);
 		threadLocalInstance.set(null);

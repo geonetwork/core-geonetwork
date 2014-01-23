@@ -617,9 +617,6 @@ public class KeywordBean {
 				return this;
     }
 
-    public void setIsoLanguageMapper(IsoLanguagesMapper isoLanguageMapper) {
-        this.isoLanguageMapper = isoLanguageMapper;
-    }
 
     private String to3CharLang(String lang) {
         return getIsoLanguageMapper().iso639_1_to_iso639_2(lang.toLowerCase(), lang.toLowerCase());

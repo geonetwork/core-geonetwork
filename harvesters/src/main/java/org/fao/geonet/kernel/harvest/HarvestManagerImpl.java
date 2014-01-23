@@ -23,7 +23,15 @@
 
 package org.fao.geonet.kernel.harvest;
 
+import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -44,22 +52,14 @@ import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.quartz.ListenerManager;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
 
 /**
  * TODO Javadoc.
  *
  */
-@Component
 public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
     //---------------------------------------------------------------------------
@@ -98,10 +98,9 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         this.readOnly = isReadOnly;
         Log.debug(Geonet.HARVEST_MAN, "HarvesterManager initializing, READONLYMODE is " + this.readOnly);
 		xslPath    = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml/harvesting/";
-
-		AbstractHarvester.getScheduler().getListenerManager().addJobListener(new HarversterJobListener(this), jobGroupEquals(AbstractHarvester.HARVESTER_GROUP_NAME));
-
-
+		AbstractHarvester.getScheduler().getListenerManager().addJobListener(
+		        HarversterJobListener.getInstance(this));
+		
         final Element harvesting = settingMan.get("harvesting", -1);
         if (harvesting != null) {
             Element entries = harvesting.getChild("children");
@@ -113,7 +112,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
                     AbstractHarvester ah = AbstractHarvester.create(type, context);
                     ah.init(node, context);
-
+                    
                     hmHarvesters.put(ah.getID(), ah);
                     hmHarvestLookup.put(ah.getParams().uuid, ah);
                 }
@@ -328,6 +327,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 			Element name = site.getChild("name");
 			if (name != null) {
 				String nameStr = name.getText();
+				// TODO i18n
 				name.setText("clone: "+nameStr);
 			}
 		}
@@ -528,7 +528,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
 	@Override
     public AbstractHarvester getHarvester(String harvestUuid) {
-		return hmHarvestLookup.get(harvestUuid);
+	    return hmHarvestLookup.get(harvestUuid);
 	}
 
 	//---------------------------------------------------------------------------
@@ -581,7 +581,6 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         dataMan.deleteBatchMetadata(harvesterUUID);
 
         elapsedTime = (System.currentTimeMillis() - elapsedTime) / 1000;
-        System.out.println("Time: " + elapsedTime);
 
         Element historyEl = new Element("result");
         historyEl.addContent(new Element("cleared"));

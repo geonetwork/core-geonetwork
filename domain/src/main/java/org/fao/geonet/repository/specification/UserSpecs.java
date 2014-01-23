@@ -84,4 +84,13 @@ public final class UserSpecs {
             }
         };
     }
+
+    public static Specification<User> hasUserIdIn(final Collection<Integer> ids) {
+        return new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return root.get(User_.id).in(ids);
+            }
+        };
+    }
 }

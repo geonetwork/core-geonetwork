@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.OperationEntityListenerManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
@@ -14,6 +16,7 @@ import java.util.Map;
 @Table(name = "Operations")
 @Cacheable
 @Access(AccessType.PROPERTY)
+@EntityListeners(OperationEntityListenerManager.class)
 @SequenceGenerator(name=Operation.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class Operation extends Localized {
     static final String ID_SEQ_NAME = "operation_id_seq";

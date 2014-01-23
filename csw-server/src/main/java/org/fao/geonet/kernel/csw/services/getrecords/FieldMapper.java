@@ -32,9 +32,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 //==============================================================================
-@Component
-public class FieldMapper
-{
+public class FieldMapper {
     //---------------------------------------------------------------------------
     //---
     //--- API methods
