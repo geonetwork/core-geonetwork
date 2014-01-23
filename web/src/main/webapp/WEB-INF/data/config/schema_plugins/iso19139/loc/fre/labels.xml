@@ -4891,4 +4891,12 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <element name="gml:realizationEpoch">
         <label>Époque de réalisation</label>
     </element>
+    <element name="gco:lower">
+      <label>Minimum</label>
+      <description/>
+    </element>
+    <element name="gmx:language">
+      <label>Langue des métadonnées</label>
+      <description></description>
+    </element>
 </labels>
