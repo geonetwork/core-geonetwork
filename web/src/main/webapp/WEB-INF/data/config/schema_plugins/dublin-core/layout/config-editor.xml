@@ -6,6 +6,7 @@
   <fields>
     <for name="dc:description" use="textarea"/>
     <for name="dc:source" use="textarea"/>
+    <for name="dc:rights" use="textarea"/>
 
     <for name="dct:modified" use="date"/>
     <for name="dct:created" use="date"/>
