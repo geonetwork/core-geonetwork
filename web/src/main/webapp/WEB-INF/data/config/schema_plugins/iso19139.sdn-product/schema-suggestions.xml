@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields>
+	<field name="gmd:contactInstructions">
+		<suggest name="gco:CharacterString"/>
+		<suggest name="gmx:FileName"/>
+	</field>
+
+	<field name="gmd:otherCitationDetails">
+		<suggest name="gco:CharacterString"/>
+		<suggest name="gmx:FileName"/>
+	</field>
+
+	<field name="gmd:language">
+		<suggest name="gco:CharacterString"/>
+		<suggest name="gmd:LanguageCode"/>
+	</field>
+
+	<field name="gmx:FileName">
+		<suggest name="src"/>
+	</field>
+
+	<!-- Service -->
+	<field name="srv:coupledResource">
+		<suggest name="srv:SV_CoupledResource"/>
+	</field>
+
+
+	<!-- Distribution -->
+	<field name="gmd:MD_Distribution">
+		<suggest name="gmd:transferOptions"/>
+	</field>
+
+	<field name="gmd:transferOptions">
+		<suggest name="gmd:MD_DigitalTransferOptions"/>
+	</field>
+
+	<field name="gmd:MD_DigitalTransferOptions">
+		<suggest name="gmd:onLine"/>
+	</field>
+
+	<field name="gmd:onLine">
+		<suggest name="gmd:CI_OnlineResource"/>
+	</field>
+
+	<field name="gmd:CI_OnlineResource">
+		<suggest name="gmd:protocol"/>
+		<suggest name="gmd:name"/>
+		<suggest name="gmd:description"/>
+	</field>
+
+
+	<!-- ResponsibleParty -->
+	<field name="gmd:CI_ResponsibleParty">
+		<suggest name="gmd:organisationName"/>
+		<suggest name="gmd:contactInfo"/>
+	</field>
+
+	<field name="gmd:CI_Contact">
+		<suggest name="gmd:address"/>
+	</field>
+
+	<field name="gmd:CI_Address">
+		<suggest name="gmd:electronicMailAddress"/>
+	</field>
+
+
+
+
+	<!-- Keywords -->
+	<field name="gmd:MD_Keywords">
+		<suggest name="gmd:type"/>
+	</field>
+
+	<field name="gmd:keyword">
+		<suggest name="xlink:href"/>
+		<suggest name="xlink:type"/>
+	</field>
+
+	<field name="gmd:extent">
+		<suggest name="gmd:EX_Extent"/>
+	</field>
+
+
+
+
+	<!-- Extent -->
+	<field name="gmd:EX_Extent">
+		<suggest name="gmd:description"/>
+		<suggest name="gmd:geographicElement"/>
+		<suggest name="gmd:temporalElement"/>
+		<suggest name="gmd:verticalElement"/>
+	</field>
+
+	<!--<field name="gmd:geographicElement">
+        <suggest name="gmd:EX_GeographicBoundingBox"/>
+    </field>-->
+
+	<field name="gmd:EX_TemporalExtent">
+		<suggest name="gmd:extent"/>
+	</field>
+
+	<field name="gml:TimePeriod">
+		<suggest name="gml:beginPosition"/>
+		<suggest name="gml:endPosition"/>
+	</field>
+
+	<field name="gmd:polygon">
+		<suggest name="gml:Polygon"/>
+	</field>
+
+	<field name="gmd:EX_GeographicBoundingBox">
+		<suggest name="gmd:westBoundLongitude"/>
+		<suggest name="gmd:eastBoundLongitude"/>
+		<suggest name="gmd:southBoundLatitude"/>
+		<suggest name="gmd:northBoundLatitude"/>
+	</field>
+
+	<field name="gmd:attributes">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="gmd:features">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="gmd:featureInstances">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="gmd:attributeInstances">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="gmd:propertyType">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="gmd:featureType">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="gmd:featureAttribute">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="srv:operatesOn">
+		<suggest name="uuidref"/>
+	</field>
+
+	<field name="gml:Polygon">
+		<suggest name="srsName"/>
+	</field>
+
+	<field name="gml:descriptionReference">
+		<suggest name="xlink:href"/>
+	</field>
+
+
+	<field name="gmd:MD_Constraints">
+		<suggest name="gmd:useLimitation"/>
+	</field>
+
+	<field name="gmd:MD_LegalConstraints">
+		<suggest name="gmd:useLimitation"/>
+		<suggest name="gmd:accessConstraints"/>
+		<suggest name="gmd:useConstraints"/>
+		<suggest name="gmd:otherContraints"/>
+	</field>
+
+	<field name="gmd:MD_SecurityContraints">
+		<suggest name="gmd:classification"/>
+		<suggest name="gmd:useLimitation"/>
+	</field>
+
+
+
+	<!-- Quality
+    <field name="gmd:report">
+        <suggest name="gmd:DQ_DomainConsistency"/>
+    </field> -->
+
+	<field name="gmd:DQ_DomainConsistency">
+		<suggest name="gmd:result"/>
+	</field>
+
+	<field name="gmd:DQ_ConformanceResult">
+		<suggest name="gmd:specification"/>
+		<suggest name="gmd:pass"/>
+		<suggest name="gmd:explanation"/>
+	</field>
+
+	<!-- Date -->
+	<field name="gmd:CI_Date">
+		<suggest name="gmd:date"/>
+	</field>
+
+	<field name="gmd:date">
+		<suggest name="gco:Date"/>
+	</field>
+
+	<!-- Resolution -->
+	<field name="gmd:spatialResolution">
+		<suggest name="gmd:MD_Resolution"/>
+	</field>
+
+
+	<field name="gmd:RS_Identifier">
+		<suggest name="gmd:codeSpace"/>
+	</field>
+</fields>
