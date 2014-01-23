@@ -83,7 +83,7 @@ GeoNetwork.mapApp = function() {
 
         var showBigMapButton = new OpenLayers.Control.Button({
             trigger : showBigMap,
-            title : 'Open kaart en verberg zoekresultaten'
+            title : OpenLayers.i18n('bigMap')
         });
 
         OpenLayers.Util.extend(showBigMapButton, {
