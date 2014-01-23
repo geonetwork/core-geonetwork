@@ -381,7 +381,7 @@ interface RemoteRetriever {
 interface RemoteFile {
 	public String  getPath();
 	public String  getChangeDate();
-	public Element getMetadata(SchemaManager  schemaMan) throws JDOMException, IOException, Exception;
+	public Element getMetadata(SchemaManager  schemaMan) throws Exception;
 	public boolean isMoreRecentThan(String localDate);
 }
 

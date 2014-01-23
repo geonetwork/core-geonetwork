@@ -28,6 +28,11 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
     protected MockRequestFactoryGeonet _requestFactory;
     @Autowired
     protected HarvestHistoryRepository _harvestHistoryRepository;
+
+    private final String _harvesterType;
+    protected AbstractHarvesterIntegrationTest(String harvesterType) {
+        this._harvesterType = harvesterType;
+    }
     @Before
     public void clearRequestFactory() {
         _requestFactory.clear();
@@ -40,7 +45,7 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
         loginAsAdmin(context);
         mockHttpRequests(_requestFactory);
 
-        Element params = createHarvesterParams("csw");
+        Element params = createHarvesterParams(_harvesterType);
         customizeParams(params);
         AbstractHarvester _harvester = getHarvesterUnderTest();
         _harvester.init(params, context);

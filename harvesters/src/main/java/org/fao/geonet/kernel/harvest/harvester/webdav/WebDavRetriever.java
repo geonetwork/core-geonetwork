@@ -24,90 +24,92 @@
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import com.github.sardine.DavResource;
+import com.github.sardine.Sardine;
+import com.github.sardine.impl.SardineImpl;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.Logger;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 class WebDavRetriever implements RemoteRetriever {
-	//--------------------------------------------------------------------------
-	//---
-	//--- RemoteRetriever interface
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- RemoteRetriever interface
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Logger log, ServiceContext context, WebDavParams params) {
-		this.log    = log;
-		this.context= context;
-		this.params = params;
-	}
+    public void init(Logger log, ServiceContext context, WebDavParams params) {
+        this.log = log;
+        this.context = context;
+        this.params = params;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public List<RemoteFile> retrieve() throws Exception {
-		davRes = open(params.url);
-		files.clear();
-		retrieveFiles(davRes);
-		return files;
-	}
+    public List<RemoteFile> retrieve() throws Exception {
 
-	//---------------------------------------------------------------------------
+        final HttpClientBuilder clientBuilder = context.getBean(GeonetHttpRequestFactory.class).getDefaultHttpClientBuilder();
+        Lib.net.setupProxy(context, clientBuilder);
 
-	public void destroy() {
-		try	{
-//			davRes.close()  //TODO Webdav;
-		}
-		catch(Exception e) {
-			log.warning("Cannot close resource : "+ e.getMessage());
-		}
-	}
+        if (params.useAccount) {
+            this.sardine = new SardineImpl(clientBuilder);
+        } else {
+            this.sardine = new SardineImpl(clientBuilder, params.username, params.password);
+        }
+        files.clear();
+        retrieveFiles(open(params.url));
+        return files;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private DavResource open(String url) throws Exception {
-        if(log.isDebugEnabled()) {
+    public void destroy() {
+        try {
+            sardine.shutdown();
+        } catch (Exception e) {
+            log.warning("Cannot close resource : " + e.getMessage());
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
+
+    private DavResource open(String url) throws Exception {
+        if (log.isDebugEnabled()) {
             log.debug("opening webdav resource with URL: " + url);
         }
-		if (!url.endsWith("/")) {
-            if(log.isDebugEnabled()) {
+        if (!url.endsWith("/")) {
+            if (log.isDebugEnabled()) {
                 log.debug("URL " + url + "does not end in slash -- will be appended");
             }
-			url += "/";
-		}
-        if(log.isDebugEnabled()) {
+            url += "/";
+        }
+        if (log.isDebugEnabled()) {
             log.debug("Connecting to webdav url for node : " + params.name + " URL: " + params.url);
         }
         DavResource wr = createResource(url);
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Connected to webdav resource at : " + url);
         }
 
-        //--- we are interested only in folders
-        // heikki: somehow this works fine here, but see retrieveFiles()
-        if (!wr.isDirectory()) {
-            log.error("Resource url is not a collection : "+ url);
-            throw new Exception("Resource url is not a collection : "+ url);
-        } else {
-            log.info("Resource path is : "+ wr.getPath());
-            return wr;
-        }
-	}
+        log.info("Resource path is : " + wr.getPath());
+        return wr;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private DavResource createResource(String url) throws Exception {
-        if(log.isDebugEnabled()) log.debug("Creating WebdavResource");
-        context.error(getClass().getName()+" has not yet been reimplemented");
+    private DavResource createResource(String url) throws Exception {
+        if (log.isDebugEnabled()) log.debug("Creating WebdavResource");
+
+
 //
 //		HttpURL http = url.startsWith("https") ? new HttpsURL(url) : new HttpURL(url);
 //
@@ -148,11 +150,11 @@ class WebDavRetriever implements RemoteRetriever {
 //			return new WebdavResource(http, host, Integer.parseInt(port));
 //		}
         return null; //TODO Webdav
-	}
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private void retrieveFiles(DavResource wr) throws IOException {
+    private void retrieveFiles(DavResource davResource) throws IOException {
 //		String path = wr.getPath();
 //        if(log.isDebugEnabled()) log.debug("Scanning resource : "+ path);
 //		WebdavResource[] wa = wr.listWebdavResources();
@@ -200,20 +202,21 @@ class WebDavRetriever implements RemoteRetriever {
 //		}
 
         //TODO Webdav
-	}
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	private Logger         log;
-	private ServiceContext context;
-	private WebDavParams   params;
-	private DavResource davRes;
+    private Logger log;
+    private ServiceContext context;
+    private WebDavParams params;
 
-	private List<RemoteFile> files = new ArrayList<RemoteFile>();
+    private List<RemoteFile> files = new ArrayList<RemoteFile>();
+    private Sardine sardine;
+
 }
 
 //=============================================================================

@@ -1,24 +1,22 @@
 package org.fao.geonet.utils;
 
 import com.google.common.base.Function;
-import com.google.common.base.Functions;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.*;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.client.AbstractClientHttpResponse;
 import org.springframework.http.client.ClientHttpResponse;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -31,6 +29,21 @@ import java.net.URL;
  * Time: 4:16 PM
  */
 public class GeonetHttpRequestFactory {
+    private int numberOfConcurrentRequests = 20;
+    private PoolingHttpClientConnectionManager connectionManager;
+
+    @PreDestroy
+    public synchronized void shutdown() {
+        if (connectionManager != null) {
+            connectionManager.shutdown();
+        }
+        connectionManager = null;
+    }
+    public synchronized void setNumberOfConcurrentRequests(int numberOfConcurrentRequests) {
+        shutdown();
+        this.numberOfConcurrentRequests = numberOfConcurrentRequests;
+    }
+
     /**
      * Create a default XmlRequest.
      *
@@ -117,13 +130,26 @@ public class GeonetHttpRequestFactory {
     }
 
     public ClientHttpResponse execute(HttpUriRequest request, Function<HttpClientBuilder, Void> configurator) throws IOException {
-            final HttpClientBuilder builder = HttpClientBuilder.create();
-            builder.setRedirectStrategy(new LaxRedirectStrategy());
-            configurator.apply(builder);
-
-            builder.disableContentCompression();
-            CloseableHttpClient httpClient = builder.build();
+        final HttpClientBuilder clientBuilder = getDefaultHttpClientBuilder();
+        configurator.apply(clientBuilder);
+        CloseableHttpClient httpClient = clientBuilder.build();
             return new AdaptingResponse(httpClient, httpClient.execute(request));
+    }
+
+    public HttpClientBuilder getDefaultHttpClientBuilder() {
+        synchronized (this) {
+            if (connectionManager == null) {
+                connectionManager = new PoolingHttpClientConnectionManager();
+                connectionManager.setMaxTotal(this.numberOfConcurrentRequests);
+            }
+        }
+
+        final HttpClientBuilder builder = HttpClientBuilder.create();
+        builder.setRedirectStrategy(new LaxRedirectStrategy());
+        builder.setConnectionManager(connectionManager);
+
+        builder.disableContentCompression();
+        return builder;
     }
 
     private static class AdaptingResponse extends AbstractClientHttpResponse {
@@ -172,5 +198,6 @@ public class GeonetHttpRequestFactory {
             return httpHeaders;
         }
     }
+
 
 }

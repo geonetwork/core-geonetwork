@@ -42,6 +42,10 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
     @Autowired
     private CswHarvester _harvester;
 
+    protected CswHarvesterIntegrationTest() {
+        super("csw");
+    }
+
     protected void mockHttpRequests(MockRequestFactoryGeonet bean) {
         final MockXmlRequest cswServerRequest = new MockXmlRequest(HOST, PORT, PROTOCOL);
         cswServerRequest.when(CAPABILITIES_URL)
