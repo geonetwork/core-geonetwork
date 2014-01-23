@@ -728,6 +728,10 @@ cat.app = function() {
             if(gnUrlElt && gnUrlElt.length==1) {
                 GeoNetwork.URL=Ext.get(gnUrlElt[0]).getValue();
                 
+                if(window.location.href.indexOf('https') == 0 && 
+                        GeoNetwork.URL.indexOf('https') < 0) {
+                    GeoNetwork.URL = GeoNetwork.URL.replace('http', 'https');
+                }
                 var loc = getLocation(window.location.href);
                 cookiePath = loc.pathname;
             }
