@@ -663,7 +663,8 @@ GeoNetwork.Lang.nl = {
     'linklabel-text/plain': 'Web link',
     'linklabel-image/png': 'Image link',
     'linklabel-image/jpeg': 'Image link',
-    'linklabel-': 'Link'
+    'linklabel-': 'Link',
+		'bigMap': 'Open kaart en verberg zoekresultaten'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.nl, GeoNetwork.Lang.nl);

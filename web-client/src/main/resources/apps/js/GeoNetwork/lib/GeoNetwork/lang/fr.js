@@ -673,6 +673,7 @@ GeoNetwork.Lang.fr = {
     'linklabel-text/plain': 'Liens',
     'linklabel-image/png': 'Images',
     'linklabel-image/jpeg': 'Images',
-    'linklabel-': 'Liens'
+    'linklabel-': 'Liens',
+		'bigMap': 'Open Map and hide search results'
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.Lang.fr);

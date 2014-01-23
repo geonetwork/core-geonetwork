@@ -634,7 +634,8 @@ GeoNetwork.Lang.es = {
     'linklabel-text/plain': 'Web link',
     'linklabel-image/png': 'Image link',
     'linklabel-image/jpeg': 'Image link',
-    'linklabel-': 'Link'
+    'linklabel-': 'Link',
+		'bigMap': 'Open Map and hide search results'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.es, GeoNetwork.Lang.es);
