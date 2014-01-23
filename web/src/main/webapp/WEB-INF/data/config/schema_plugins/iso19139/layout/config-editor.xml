@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="../../config-editor.xsd"
+  xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd"
   xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gml="http://www.opengis.net/gml"
   xmlns:srv="http://www.isotc211.org/2005/srv">
@@ -648,8 +649,7 @@
             </field>
 
             <field name="revisionDate" templateModeOnly="true"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']"
               if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
               <template>
                 <values>
@@ -829,6 +829,7 @@
                         <gmd:title>
                           <gco:CharacterString>{{conformity_title}}</gco:CharacterString>
                         </gmd:title>
+                        <gn:copy select="gmd:alternateTitle"/>
                         <gmd:date>
                           <gmd:CI_Date>
                             <gmd:date>
@@ -841,6 +842,16 @@
                             </gmd:dateType>
                           </gmd:CI_Date>
                         </gmd:date>
+                        <gn:copy select="gmd:edition"/>
+                        <gn:copy select="gmd:editionDate"/>
+                        <gn:copy select="gmd:identifier"/>
+                        <gn:copy select="gmd:citedResponsibleParty"/>
+                        <gn:copy select="gmd:presentationForm"/>
+                        <gn:copy select="gmd:series"/>
+                        <gn:copy select="gmd:otherCitationDetails"/>
+                        <gn:copy select="gmd:collectiveTitle"/>
+                        <gn:copy select="gmd:ISBN"/>
+                        <gn:copy select="gmd:ISSN"/>
                       </gmd:CI_Citation>
                     </gmd:specification>
                     <gmd:explanation>
