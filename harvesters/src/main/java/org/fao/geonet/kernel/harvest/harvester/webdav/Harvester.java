@@ -27,14 +27,13 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.repository.HarvesterDataRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Log;
@@ -117,7 +116,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             if (!exists(files, uri)) {
                 // only one metadata record created per uri by this harvester
                 String id = localUris.getRecords(uri).get(0).id;
-                if (log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
+                if (log.isDebugEnabled()){
+                    log.debug("  - Removing old metadata with local id:"+ id);
+                }
                 try {
                     dataMan.deleteMetadataGroup(context, id);
                 } catch (Exception e) {
@@ -134,10 +135,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 		for(RemoteFile rf : files) {
 			result.totalMetadata++;
 			List<RecordInfo> records = localUris.getRecords(rf.getPath());
-			if (records == null)	{
+			if (records == null) {
 				addMetadata(rf);
-			}
-			else {
+			} else {
 				// only one metadata record created per uri by this harvester 
 				updateMetadata(rf, records.get(0));
 			}
@@ -225,7 +225,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                     isTemplate, docType, title, category, rf.getChangeDate(), rf.getChangeDate(), ufo, indexImmediate);
+                     isTemplate, docType, title, category, rf.getChangeDate().getDateAndTime(), rf.getChangeDate().getDateAndTime(), ufo, indexImmediate);
 
 
 		int iId = Integer.parseInt(id);
@@ -327,7 +327,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             boolean index = false;
             String language = context.getLanguage();
             final Metadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
-                    rf.getChangeDate(), false);
+                    rf.getChangeDate().getDateAndTime(), false);
 
             //--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
@@ -380,7 +380,7 @@ interface RemoteRetriever {
 
 interface RemoteFile {
 	public String  getPath();
-	public String  getChangeDate();
+	public ISODate getChangeDate();
 	public Element getMetadata(SchemaManager  schemaMan) throws Exception;
 	public boolean isMoreRecentThan(String localDate);
 }

@@ -37,6 +37,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 class WebDavRetriever implements RemoteRetriever {
+
+    private Logger log;
+    private ServiceContext context;
+    private WebDavParams params;
+
+    private List<RemoteFile> files = new ArrayList<RemoteFile>();
+    private Sardine sardine;
+
     //--------------------------------------------------------------------------
     //---
     //--- RemoteRetriever interface
@@ -62,7 +70,10 @@ class WebDavRetriever implements RemoteRetriever {
             this.sardine = new SardineImpl(clientBuilder, params.username, params.password);
         }
         files.clear();
-        retrieveFiles(open(params.url));
+        final List<DavResource> resources = open(params.url);
+        for (DavResource resource : resources) {
+            retrieveFile(resource);
+        }
         return files;
     }
 
@@ -82,7 +93,7 @@ class WebDavRetriever implements RemoteRetriever {
     //---
     //---------------------------------------------------------------------------
 
-    private DavResource open(String url) throws Exception {
+    private List<DavResource> open(String url) throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("opening webdav resource with URL: " + url);
         }
@@ -95,127 +106,63 @@ class WebDavRetriever implements RemoteRetriever {
         if (log.isDebugEnabled()) {
             log.debug("Connecting to webdav url for node : " + params.name + " URL: " + params.url);
         }
-        DavResource wr = createResource(url);
-        if (log.isDebugEnabled()) {
-            log.debug("Connected to webdav resource at : " + url);
+        final List<DavResource> davResources = sardine.list(url);
+        if(log.isDebugEnabled()){
+            log.debug("# " + davResources.size() + " webdav resources found in: " + url);
         }
 
-        log.info("Resource path is : " + wr.getPath());
-        return wr;
+        return davResources;
     }
 
-    //---------------------------------------------------------------------------
+    private void retrieveFile(DavResource davResource) throws IOException {
 
-    private DavResource createResource(String url) throws Exception {
-        if (log.isDebugEnabled()) log.debug("Creating WebdavResource");
+		String path = davResource.getPath();
+        int startSize = files.size();
+
+        if (davResource.isDirectory()) {
+            // it is a directory
+            if (params.recurse) {
+                if(log.isDebugEnabled()) {
+                    log.debug(path + " is a collection, processed recursively");
+                }
+
+                for (DavResource resource : sardine.list(path)) {
+                    retrieveFile(resource);
+                }
+            } else {
+                if(log.isDebugEnabled()) {
+                    log.debug(path + " is a collection. Ignoring because recursion is disabled.");
+                }
+            }
+        } else {
+            // it is a file
+            if(log.isDebugEnabled()) {
+                log.debug(path + " is not a collection");
+            }
+            final String name = davResource.getName();
+            if (name.toLowerCase().endsWith(".xml")) {
+                if(log.isDebugEnabled()) {
+                    log.debug("found xml file ! " + name.toLowerCase());
+                }
+                files.add(new WebDavRemoteFile(sardine, davResource));
+            }
+            else {
+                if(log.isDebugEnabled()) {
+                    log.debug(name.toLowerCase() + " is not an xml file");
+                }
+            }
+        }
 
 
-//
-//		HttpURL http = url.startsWith("https") ? new HttpsURL(url) : new HttpURL(url);
-//
-//		if(params.useAccount) {
-//            if(log.isDebugEnabled()) log.debug("using account, username: " + params.username + " password: " + params.password);
-//			http.setUserinfo(params.username, params.password);
-//		}
-//		else {
-//            if(log.isDebugEnabled()) log.debug("not using account");
-//		}
-//
-//		//--- setup proxy, if the case
-//
-//		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-//		SettingManager sm = gc.getBean(SettingManager.class);
-//
-//		boolean enabled = sm.getValueAsBool("system/proxy/use", false);
-//		String  host    = sm.getValue("system/proxy/host");
-//		String  port    = sm.getValue("system/proxy/port");
-//
-//		if (!enabled) {
-//            if(log.isDebugEnabled()) {
-//                log.debug("local proxy not enabled");
-//                log.debug("returning a new WebdavResource");
-//                log.debug("using http port: " + http.getPort() + " http uri: " + http.getURI());
-//            }
-//            return new WebdavResource(http, 1);
-//		}
-//		else {
-//            if(log.isDebugEnabled()) log.debug("local proxy enabled");
-//			if (!Lib.type.isInteger(port)) {
-//				throw new Exception("Proxy port is not an integer : "+ port);
-//			}
-//            if(log.isDebugEnabled()) {
-//                log.debug("returning a new WebdavResource");
-//			    log.debug("using http proxy port: " + port + " proxy host: " + host + " http uri: " + http.getURI());
-//            }
-//			return new WebdavResource(http, host, Integer.parseInt(port));
-//		}
-        return null; //TODO Webdav
+			int endSize = files.size();
+			int added = endSize - startSize;
+			if (added == 0) {
+                if(log.isDebugEnabled()) log.debug("No xml files found in path : "+ path);
+			}
+			else {
+                if(log.isDebugEnabled()) log.debug("Found "+ added +" xml file(s) in path : "+ path);
+			}
     }
-
-    //---------------------------------------------------------------------------
-
-    private void retrieveFiles(DavResource davResource) throws IOException {
-//		String path = wr.getPath();
-//        if(log.isDebugEnabled()) log.debug("Scanning resource : "+ path);
-//		WebdavResource[] wa = wr.listWebdavResources();
-//        if(log.isDebugEnabled()) log.debug("# " + wa.length + " webdav resources found in: " + wr.getPath());
-//		if(wa.length > 0) {
-//			int startSize = files.size();
-//			for(WebdavResource w : wa) {
-//				// heikki: even though response indicates that a sub directory is a collection, according to Slide
-//				//         that is never the case. To determine if a resource is a sub directory, use the following
-//				//         trick :
-//				// if(w.getIsCollection()) {
-//				if(w.getPath().equals(wr.getPath()) && w.getDisplayName().length() > 0) {
-//					if(params.recurse) {
-//                        if(log.isDebugEnabled()) log.debug(w.getPath() + " is a collection, processed recursively");
-//						String url = w.getHttpURL().getURI();
-//						url = url + w.getDisplayName()+ "/";
-//						HttpURL http = url.startsWith("https") ? new HttpsURL(url) : new HttpURL(url);
-//						WebdavResource huh = new WebdavResource(http, 1);
-//						retrieveFiles(huh);
-//					}
-//					else {
-//                        if(log.isDebugEnabled())
-//                            log.debug(w.getPath() + " is a collection. Ignoring because recursion is disabled.");
-//					}
-//				}
-//				else {
-//                    if(log.isDebugEnabled()) log.debug(w.getName() + " is not a collection");
-//					if (w.getName().toLowerCase().endsWith(".xml")) {
-//                        if(log.isDebugEnabled()) log.debug("found xml file ! " + w.getName().toLowerCase());
-//						files.add(new WebDavRemoteFile(w));
-//					}
-//					else {
-//                        if(log.isDebugEnabled()) log.debug(w.getName().toLowerCase() + " is not an xml file");
-//					}
-//				}
-//			}
-//			int endSize = files.size();
-//			int added = endSize - startSize;
-//			if (added == 0) {
-//                if(log.isDebugEnabled()) log.debug("No xml files found in path : "+ path);
-//			}
-//			else {
-//                if(log.isDebugEnabled()) log.debug("Found "+ added +" xml file(s) in path : "+ path);
-//			}
-//		}
-
-        //TODO Webdav
-    }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
-
-    private Logger log;
-    private ServiceContext context;
-    private WebDavParams params;
-
-    private List<RemoteFile> files = new ArrayList<RemoteFile>();
-    private Sardine sardine;
 
 }
 

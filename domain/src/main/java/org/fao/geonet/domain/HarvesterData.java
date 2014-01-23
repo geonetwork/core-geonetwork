@@ -113,4 +113,32 @@ public class HarvesterData {
     public void setValue(ISODate value) {
         setValue(value.getDateAndTime());
     }
+
+    @Override
+    public String toString() {
+        return "HarvesterData{" +
+               "id=" + id +
+               ", value='" + value + '\'' +
+               '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        HarvesterData that = (HarvesterData) o;
+
+        if (!id.equals(that.id)) return false;
+        if (!value.equals(that.value)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + value.hashCode();
+        return result;
+    }
 }
