@@ -22,6 +22,7 @@
 //==============================================================================
 package org.fao.geonet.kernel.security;
 
+import jeeves.config.springutil.JeevesAuthenticationDetails;
 import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.domain.User;
@@ -80,6 +81,10 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
                         user = PasswordUtil.updatePasswordWithNew(true, oldPassword, newPassword, user.getId(), encoder, _userRepository);
 					}
 				}
+
+                if (authentication != null && authentication.getDetails() instanceof JeevesAuthenticationDetails) {
+                    user.getSecurity().setNodeId(((JeevesAuthenticationDetails) authentication.getDetails()).getNodeId());
+                }
 
 				return user;
 			}

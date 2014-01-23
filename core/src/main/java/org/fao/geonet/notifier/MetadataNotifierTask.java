@@ -32,8 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * A runnable for notifying remote listeners that metadata changes have occurred.
  */
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class MetadataNotifierTask implements Runnable {
     private ServiceContext context;
 

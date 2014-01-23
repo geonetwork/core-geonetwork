@@ -127,7 +127,7 @@
                                 <goals>
                                     <goal>execute</goal>
                                 </goals>
-                                <phase>generate-resources</phase>
+                                <phase>process-test-resources</phase>
                                 <configuration>
                                     <source><![CDATA[
                                         import static groovy.io.FileType.*
@@ -159,7 +159,7 @@
                         <executions>
                             <execution>
                                 <id>protractor-config-first-copy</id>
-                                <phase>generate-resources</phase>
+                                <phase>process-test-resources</phase>
                                 <goals>
                                     <goal>copy-resources</goal>
                                 </goals>
@@ -178,7 +178,7 @@
                             </execution>
                             <execution>
                                 <id>protractor-config-second-copy</id>
-                                <phase>generate-resources</phase>
+                                <phase>process-test-resources</phase>
                                 <goals>
                                     <goal>copy-resources</goal>
                                 </goals>
@@ -206,7 +206,7 @@
                                 <goals>
                                     <goal>install-node-and-npm</goal>
                                 </goals>
-                                <phase>process-test-resources</phase>
+                                <phase>generate-resources</phase>
                                 <configuration>
                                     <nodeVersion>v0.10.24</nodeVersion>
                                     <npmVersion>1.3.23</npmVersion>
@@ -218,7 +218,7 @@
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
-                                <phase>process-test-resources</phase>
+                                <phase>generate-resources</phase>
                             </execution>
                         </executions>
                     </plugin>

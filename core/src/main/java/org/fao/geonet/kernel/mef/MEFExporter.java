@@ -67,7 +67,7 @@ class MEFExporter {
 			Format format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 		Metadata record = MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
 
-		if (record.getDataInfo().getType() != MetadataType.METADATA) {
+		if (record.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
 			throw new Exception("Cannot export sub template");
         }
 

@@ -7,7 +7,6 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
@@ -52,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.apache.commons.io.FileUtils.copyDirectory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -91,9 +89,8 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         final File templateDataDir = new File(webappDir, "WEB-INF/data");
         final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
 
-        final ArrayList<Element> params = Lists.newArrayList(new Element("param")
-                .setAttribute(ConfigFile.Param.Attr.NAME, "preferredSchema")
-                .setAttribute(ConfigFile.Param.Attr.VALUE, "iso19139"));
+        final ArrayList<Element> params = getServiceConfigParameterElements();
+
         final ServiceConfig serviceConfig = new ServiceConfig(params);
 
         try {
@@ -109,6 +106,10 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             _applicationContext.getBeanFactory().registerSingleton("serviceConfig", serviceConfig);
             _applicationContext.getBeanFactory().registerSingleton(initializedString, initializedString);
         }
+
+        NodeInfo nodeInfo = _applicationContext.getBean(NodeInfo.class);
+        nodeInfo.setId(getGeonetworkNodeId());
+        nodeInfo.setDefaultNode(isDefaultNode());
 
 
         final File dataDir = _testTemporaryFolder.getRoot();
@@ -134,6 +135,33 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);
         _applicationContext.getBean(DataManager.class).init(createServiceContext(), false);
 
+    }
+
+    protected boolean isDefaultNode() {
+        return true;
+    }
+
+    /**
+     * Get the elements in the service config object.
+     */
+    protected ArrayList<Element> getServiceConfigParameterElements() {
+        return Lists.newArrayList(createServiceConfigParam("preferredSchema", "iso19139"));
+    }
+
+    protected static Element createServiceConfigParam(String name, String value) {
+        return new Element("param")
+                .setAttribute(ConfigFile.Param.Attr.NAME, name)
+                .setAttribute(ConfigFile.Param.Attr.VALUE, value);
+    }
+
+    /**
+     * Get the node id of the geonetwork node under test.  This hook is here primarily for the GeonetworkDataDirectory tests
+     * but also useful for any other tests that want to test multi node support.
+     *
+     * @return the node id to put into the ApplicationContext.
+     */
+    protected String getGeonetworkNodeId() {
+        return "srv";
     }
 
     /**
@@ -204,7 +232,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             here = here.getParentFile();
         }
 
-        return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath()+"/";
+        return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath()+File.separator;
     }
 
     private static File getClassFile(Class<?> cl) {
@@ -224,4 +252,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.xml");
         return Xml.loadStream(resource.openStream());
     }
+
+
 }

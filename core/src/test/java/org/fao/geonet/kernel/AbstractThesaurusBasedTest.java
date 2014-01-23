@@ -18,6 +18,7 @@ import org.openrdf.sesame.config.RepositoryConfig;
 import org.openrdf.sesame.config.SailConfig;
 import org.openrdf.sesame.constants.RDFFormat;
 import org.openrdf.sesame.repository.local.LocalRepository;
+import org.springframework.context.support.GenericXmlApplicationContext;
 
 public abstract class AbstractThesaurusBasedTest {
 	protected static final String THESAURUS_KEYWORD_NS = "http://abstract.thesaurus.test#";
@@ -62,7 +63,9 @@ public abstract class AbstractThesaurusBasedTest {
             	IOUtils.closeQuietly(to);
             }
             FileUtils.copyFile(template, thesaurusFile);
-            this.thesaurus = new Thesaurus(isoLangMapper, thesaurusFile.getName(), "test", "test", thesaurusFile, "http://concept");
+            GenericXmlApplicationContext appContext = new GenericXmlApplicationContext();
+            appContext.getBeanFactory().registerSingleton("IsoLangMapper", isoLangMapper);
+            this.thesaurus = new Thesaurus(appContext, thesaurusFile.getName(), "test", "test", thesaurusFile, "http://concept");
         }
         setRepository(this.thesaurus);
     }
@@ -79,7 +82,9 @@ public abstract class AbstractThesaurusBasedTest {
         File directory = new File(AbstractThesaurusBasedTest.class.getResource(AbstractThesaurusBasedTest.class.getSimpleName()+".class").getFile()).getParentFile();
 
         this.thesaurusFile = new File(directory, "testThesaurus.rdf");
-        this.thesaurus = new Thesaurus(isoLangMapper, thesaurusFile.getName(), null, null, "test", "test", thesaurusFile, "http://concept", true);
+        GenericXmlApplicationContext appContext = new GenericXmlApplicationContext();
+        appContext.getBeanFactory().registerSingleton("IsoLangMapper", isoLangMapper);
+        this.thesaurus = new Thesaurus(appContext, thesaurusFile.getName(), null, null, "test", "test", thesaurusFile, "http://concept", true);
         setRepository(this.thesaurus);
         
         if (thesaurusFile.exists() && thesaurusFile.length() > 0) {

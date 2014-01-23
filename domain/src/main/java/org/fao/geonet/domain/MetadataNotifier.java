@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.MetadataNotifierEntityListenerManager;
+
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.List;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "MetadataNotifiers")
+@EntityListeners(MetadataNotifierEntityListenerManager.class)
 @SequenceGenerator(name=MetadataNotifier.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class MetadataNotifier extends GeonetEntity {
     static final String ID_SEQ_NAME = "metadata_notifier_id_seq";
