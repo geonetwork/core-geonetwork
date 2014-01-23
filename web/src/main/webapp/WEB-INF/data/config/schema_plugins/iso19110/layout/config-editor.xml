@@ -9,6 +9,10 @@
     <for name="gmx:scope" use="textarea"/>
     <for name="gmx:fieldOfApplication" use="textarea"/>
     
+    <for name="gmx:language" use="data-gn-language-picker"/>
+    <for name="gfc:functionalLanguage" use="data-gn-language-picker"/>
+    <for name="gmd:languageCode" use="data-gn-language-picker"/>
+    
     <for name="gfc:producer" addDirective="data-gn-directory-entry-selector"/>
   </fields>
   
