@@ -12,7 +12,8 @@ import java.util.Map;
 @Access(AccessType.PROPERTY)
 @Table(name = "StatusValues")
 public class StatusValue extends Localized {
-    private int _id;
+	private static final long serialVersionUID = 112093471293847L;
+	private int _id;
     private String _name;
     private char _reserved = Constants.YN_FALSE;
     private int displayOrder;

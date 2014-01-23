@@ -18,7 +18,7 @@ public class MetadataNotifier extends GeonetEntity {
 	private String _url;
 	private char _enabled = Constants.YN_FALSE;
 	private String _username;
-	private char[] _password;
+	private char[] password;
 	private List<MetadataNotification> _notifications = new ArrayList<MetadataNotification>();
 
 	public int get_id() {
@@ -62,11 +62,11 @@ public class MetadataNotifier extends GeonetEntity {
 	}
 
 	public char[] get_password() {
-		return _password;
+		return password.clone();
 	}
 
 	public void set_password(char[] _password) {
-		this._password = _password;
+		this.password = _password.clone();
 	}
 
 	public List<MetadataNotification> get_notifications() {

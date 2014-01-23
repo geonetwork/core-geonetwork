@@ -21,7 +21,7 @@ public enum UserSecurityNotification {
     public static UserSecurityNotification find(String notificationName) {
         for (UserSecurityNotification notification : values()) {
             if (notification.toString().equalsIgnoreCase(notificationName)) {
-
+            	return UNKNOWN;
             }
         }
         return UNKNOWN;

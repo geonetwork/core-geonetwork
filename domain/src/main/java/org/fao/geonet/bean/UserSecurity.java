@@ -18,11 +18,11 @@ public class UserSecurity extends GeonetEntity {
 	private String _authType;
 
 	public char[] get_password() {
-		return _password;
+		return _password.clone();
 	}
 
 	public void set_password(char[] _password) {
-		this._password = _password;
+		this._password = _password.clone();
 	}
 
 	public String get_authType() {
