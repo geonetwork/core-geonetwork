@@ -1081,7 +1081,7 @@
     <lucene.version>4.1.0</lucene.version>
     <spring.version>3.2.4.RELEASE</spring.version>
     <spring.security.version>3.1.4.RELEASE</spring.security.version>
-    <jackson.version>1.9.13</jackson.version>
+    <jackson.version>1.9.5</jackson.version>
     <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>

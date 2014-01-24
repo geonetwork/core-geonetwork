@@ -17,7 +17,8 @@ import javax.persistence.*;
 @Cacheable
 @Access(AccessType.PROPERTY)
 public class Setting extends GeonetEntity {
-    private String name;
+	private static final long serialVersionUID = -1884226715442176159L;
+	private String name;
     private String value;
     private SettingDataType dataType;
     private int position;

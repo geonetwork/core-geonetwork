@@ -4,8 +4,7 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.fao.geonet.domain.SettingDataType;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  * An entity representing a system configuration setting.
@@ -16,16 +15,16 @@ import org.fao.geonet.domain.SettingDataType;
  * 
  * @author delawen
  */
-@XmlRootElement(name="settings")
-public class Setting implements Serializable {
+@XmlRootElement(name="setting")
+@XmlType(propOrder={"name", "position"})
+@javax.xml.bind.annotation.XmlTransient
+public abstract class Setting implements Serializable {
 
 	private static final long serialVersionUID = 5431195166983620627L;
 	private String name;
-	private String value;
-	private SettingDataType dataType;
 	private int position;
 
-	@XmlAttribute(name = "@name") 
+	@XmlAttribute(name = "name") 
 	public String getName() {
 		return name;
 	}
@@ -34,25 +33,7 @@ public class Setting implements Serializable {
 		this.name = name;
 	}
 
-	@XmlAttribute(name = "@value")
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	@XmlAttribute(name = "@dataType")
-	public SettingDataType getDataType() {
-		return dataType;
-	}
-
-	public void setDataType(SettingDataType dataType) {
-		this.dataType = dataType;
-	}
-
-	@XmlAttribute(name = "@position")
+	@XmlAttribute(name = "position")
 	public int getPosition() {
 		return position;
 	}

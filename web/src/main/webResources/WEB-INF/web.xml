@@ -192,7 +192,7 @@
             <param-name>geonetwork.dir</param-name>
             <param-value>/app/geonetwork_data_dir</param-value>
         </init-param>-->
-        <load-on-startup>1</load-on-startup>
+        <load-on-startup>2</load-on-startup>
     </servlet>
 
         <!-- Servlet proxy -->
@@ -327,7 +327,7 @@
         <servlet-class>
             org.springframework.web.servlet.DispatcherServlet
         </servlet-class>
-        <load-on-startup>2</load-on-startup>
+        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>spring</servlet-name>

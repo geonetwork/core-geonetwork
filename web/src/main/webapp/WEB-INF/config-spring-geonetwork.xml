@@ -25,7 +25,16 @@
  	<!--<import resource="config-db/db2.xml"/> -->
  	<!--<import resource="config-db/postgres.xml"/>-->
  	<!--<import resource="config-db/sqlserver.xml"/> -->
-
+ 	
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+	  <property name="mediaTypes">
+	  <map>
+	    <entry key="html" value="text/html"/>
+	    <entry key="json" value="application/json"/>
+	    <entry key="xml" value="application/xml"/>
+	  </map>
+	 </property>
+	 </bean>
     <!--
         Choose the XmlSerializer to use.
         If the XmlSerializer is the SvnSerializer then subversion versioning will be enabled
