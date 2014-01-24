@@ -973,13 +973,13 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.metadata.insert">
+		<service name="xml.metadata.insert" deprecated="true">
 			<class name=".services.metadata.Insert" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.metadata.delete">
+		<service name="xml.metadata.delete" deprecated="true">
 			<class name=".services.metadata.Delete" />
 		</service>
 

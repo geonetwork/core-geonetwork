@@ -40,7 +40,7 @@
 
   <xsl:template name="subtemplate-common-fields">
     <Field name="any" string="{normalize-space(string(.))}" store="false" index="true"/>
-    <Field name="_root" string="{name(.)}" store="false" index="true"/>
+    <Field name="_root" string="{name(.)}" store="true" index="true"/>
   </xsl:template>
 
 </xsl:stylesheet>

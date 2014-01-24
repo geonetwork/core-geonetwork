@@ -105,6 +105,7 @@
       <field name="_source" tagName="source"/>
       <field name="_status" tagName="status"/>
       <field name="_edit" tagName="edit"/>
+      <field name="_root" tagName="root"/>
       <field name="_title" tagName="title" multilingualSortField="true"/>
       <field name="_docLocale" tagName="docLocale"/>
       <field name="_locale" tagName="_locale"/>

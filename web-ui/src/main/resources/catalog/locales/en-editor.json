@@ -92,5 +92,11 @@
     "wmsServiceUrl":"Service URL",
     "linkUrl": "URL to remove",
     "associationType": "Association type",
-    "initiativeType": "Initiative type"
+    "initiativeType": "Initiative type",
+    "directoryManager": "Manage directory",
+    "chooseAType": "Choose a type",
+    "directoryEntries": "Entries",
+    "gmd:CI_ResponsibleParty": "Organizations & contacts",
+    "gmd:MD_Distribution": "Online resources"
+    
 }

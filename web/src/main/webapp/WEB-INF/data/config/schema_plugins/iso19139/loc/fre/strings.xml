@@ -13,6 +13,7 @@
   
   <advanced>Complète</advanced>
   <default>Simple</default>
+  <simple>Simple</simple>
   <inspire>INSPIRE</inspire>
   <resource>Ressource</resource>
   <xml>XML</xml>

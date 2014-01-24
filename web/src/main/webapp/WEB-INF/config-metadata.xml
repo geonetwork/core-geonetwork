@@ -246,7 +246,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.attr.delete">
+		<service name="metadata.attr.delete" deprecated="true">
 			<class name=".services.metadata.DeleteAttribute"/>
 		</service>
 

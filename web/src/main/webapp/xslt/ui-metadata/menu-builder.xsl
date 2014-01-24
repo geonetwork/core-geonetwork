@@ -27,35 +27,57 @@
         </a>
         <ul class="dropdown-menu">
           <!-- links -->
-          <xsl:for-each select="$config/editor/views/view">
-            <li>
-              <xsl:if test="@name = $currentView/@name">
-                <xsl:attribute name="class">disabled</xsl:attribute>
-              </xsl:if>
-              <!-- When a view contains multiple tab, the one with
+          <xsl:choose>
+            <xsl:when test="$isTemplate = 's'">
+              <li>
+                <xsl:if test="'simple' = $currentView/@name">
+                  <xsl:attribute name="class">disabled</xsl:attribute>
+                </xsl:if>
+                <a data-ng-click="switchToTab('simple', '')" href="">
+                  <xsl:value-of select="$strings/*[name() = 'simple']"/>
+                </a>
+              </li>
+              <li>
+                <xsl:if test="'xml' = $currentView/@name">
+                  <xsl:attribute name="class">disabled</xsl:attribute>
+                </xsl:if>
+                <a data-ng-click="switchToTab('xml', '')" href="">
+                  <xsl:value-of select="$strings/*[name() = 'xml']"/>
+                </a>
+              </li>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:for-each select="$config/editor/views/view">
+                <li>
+                  <xsl:if test="@name = $currentView/@name">
+                    <xsl:attribute name="class">disabled</xsl:attribute>
+                  </xsl:if>
+                  <!-- When a view contains multiple tab, the one with
                 the default attribute is the one to open -->
-              <a data-ng-click="switchToTab('{tab[@default]/@id}', '{tab[@default]/@mode}')" href="">
-                <xsl:variable name="viewName" select="@name"/>
-                <xsl:value-of select="$strings/*[name() = $viewName]"/>
-              </a>
-            </li>
-          </xsl:for-each>
-
-          <li class="divider"/>
-          <li>
-            <a data-ng-click="toggleAttributes(true)" href="">
-              <i class="fa"
-                data-ng-class="gnCurrentEdit.displayAttributes ? 'fa-check-square-o' : 'fa-square-o'"/>
-              &#160;<span data-translate="">toggleAttributes</span>
-            </a>
-          </li>
-          <li>
-            <a data-ng-click="toggleTooltips(true)" href="">
-              <i class="fa"
-                data-ng-class="gnCurrentEdit.displayTooltips ? 'fa-check-square-o' : 'fa-square-o'"/>
-              &#160;<span data-translate="">toggleTooltips</span>
-            </a>
-          </li>
+                  <a data-ng-click="switchToTab('{tab[@default]/@id}', '{tab[@default]/@mode}')" href="">
+                    <xsl:variable name="viewName" select="@name"/>
+                    <xsl:value-of select="$strings/*[name() = $viewName]"/>
+                  </a>
+                </li>
+              </xsl:for-each>
+              
+              <li class="divider"/>
+              <li>
+                <a data-ng-click="toggleAttributes(true)" href="">
+                  <i class="fa"
+                    data-ng-class="gnCurrentEdit.displayAttributes ? 'fa-check-square-o' : 'fa-square-o'"/>
+                  &#160;<span data-translate="">toggleAttributes</span>
+                </a>
+              </li>
+              <li>
+                <a data-ng-click="toggleTooltips(true)" href="">
+                  <i class="fa"
+                    data-ng-class="gnCurrentEdit.displayTooltips ? 'fa-check-square-o' : 'fa-square-o'"/>
+                  &#160;<span data-translate="">toggleTooltips</span>
+                </a>
+              </li>
+            </xsl:otherwise>
+          </xsl:choose>
         </ul>
       </li>
       

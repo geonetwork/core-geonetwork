@@ -15,6 +15,7 @@
   <!-- View and tabs -->
   <advanced>Full</advanced>
   <default>Simple</default>
+  <simple>Simple</simple>
   <inspire>INSPIRE</inspire>
   <resource>Resource</resource>
   <xml>XML</xml>

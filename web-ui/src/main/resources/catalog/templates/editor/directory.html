@@ -1,0 +1,71 @@
+<div class="container" id="gn-directory-container">
+  <h2 data-translate="">directoryManager</h2>
+  <div class="alert alert-warning" data-ng-hide="hasEntries" data-translate=""
+    >noEntriesAvailable</div>
+  
+  <ul class="nav nav-pills">
+    <li class="disabled"><a data-translate="" href="javascript:void(0);">chooseAType</a></li>
+    <li data-ng-repeat="type in mdTypes" data-ng-class="activeType === type ? 'active' : ''">
+      <a href="" data-ng-click="selectType(type)">
+        <i class="fa {{getTypeIcon(type)}}"/>&nbsp;{{type | translate}}</a></li>
+  </ul>
+  <br/>
+  <div class="row">
+    <div class="col-sm-4" data-ng-if="tpls">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span data-translate="">directoryEntries</span>
+        </div>
+        <div class="panel-body">
+          <input class="form-control" data-ng-model="entrySearch.$" autofocus=""
+            placeholder="{{'filter' | translate}}"/>
+          <div class="list-group">
+            <li class="list-group-item"
+              data-ng-repeat="e in tpls | filter:entrySearch | orderBy:'title'"
+              data-ng-class="e['geonet:info'].id === activeEntry['@id'] ? 'active' : ''">
+              <a href="" data-ng-click="selectEntry(e)"> {{e.title}} </a>
+              <div class="pull-right">
+                <a href="" data-ng-click="copyEntry(e)">
+                  <i class="fa fa-copy"/>
+                </a>
+                <a href="" data-ng-click="delEntry(e)">
+                  <i class="fa fa-times text-danger"/>
+                </a>
+              </div>
+            </li>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-8" data-ng-if="activeEntry">
+      <div class="panel-default panel">
+        <div class="panel-heading">
+          <span data-translate="">{{activeEntry.title || activeEntry.defaultTitle}}</span>
+          
+          <div class="btn-toolbar">
+            <button type="button" class="btn btn-danger pull-right" data-ng-click="close()" 
+              title="{{'closeEditor' | translate}}">
+              <i class="fa fa-sign-out"/>&nbsp;
+            </button>
+            <button type="button" class="btn btn-primary pull-right" data-ng-click="save()">
+              <i class="fa fa-save"/>
+              <span data-translate="">save</span>
+            </button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div data-ng-include="editorFormUrl"
+            data-onload="onFormLoad()"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div data-gn-modal="" class="gn-import-entry"
+    data-gn-popup-options="{title:'importDirectoryEntry'}"
+    id="gn-import-entry">
+    <div data-gn-link-to-metadata="source" id="link-to-source"
+      class="link-source-md"></div>
+  </div>
+  
+</div>

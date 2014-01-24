@@ -10,6 +10,13 @@
 
 
 
+
+
+
+
+
+
+  goog.require('gn_directory_controller');
   goog.require('gn_fields');
   goog.require('gn_new_metadata_controller');
   goog.require('gn_scroll_spy');
@@ -17,7 +24,8 @@
   goog.require('gn_utility_directive');
 
   var module = angular.module('gn_editor_controller',
-      ['gn_fields', 'gn_new_metadata_controller', 'gn_utility_directive',
+      ['gn_fields', 'gn_new_metadata_controller',
+       'gn_directory_controller', 'gn_utility_directive',
        'gn_scroll_spy', 'gn_thesaurus']);
 
   var tplFolder = '../../catalog/templates/editor/';
@@ -33,9 +41,21 @@
         when('/metadata/:id/tab/:tab/:displayAttributes', {
           templateUrl: tplFolder + 'editor.html',
           controller: 'GnEditorController'}).
+        when('/create', {
+          templateUrl: tplFolder + 'new-metadata.html',
+          controller: 'GnNewMetadataController'}).
         when('/create/from/:id/in/:group/astemplate/:template', {
           templateUrl: tplFolder + 'editor.html',
           controller: 'GnNewMetadataController'}).
+        when('/directory', {
+          templateUrl: tplFolder + 'directory.html',
+          controller: 'GnDirectoryController'}).
+        when('/directory/type/:type', {
+          templateUrl: tplFolder + 'directory.html',
+          controller: 'GnDirectoryController'}).
+        when('/directory/id/:id', {
+          templateUrl: tplFolder + 'directory.html',
+          controller: 'GnDirectoryController'}).
         otherwise({
           templateUrl: tplFolder + 'new-metadata.html',
           controller: 'GnNewMetadataController'

@@ -11,18 +11,29 @@
     this.$get = ['$http', '$location', '$timeout', 'gnUrlUtils',
                  function($http, $location, $timeout, gnUrlUtils) {
         return {
-          // TODO: move to metadatamanger
-          createNewMetadata: function(id, groupId, fullPrivileges, 
+          deleteMetadata: function(id) {
+            var url = gnUrlUtils.append('md.delete@json',
+                gnUrlUtils.toKeyValue({
+                  id: id
+                })
+                );
+            return $http.get(url);
+          },
+          copyMetadata: function(id, groupId, fullPrivileges, 
               template, tab) {
             var url = gnUrlUtils.append('md.create@json',
                 gnUrlUtils.toKeyValue({
                   group: groupId,
                   id: id,
-                  isTemplate: template || 'n',
+                  template: template || 'n',
                   fullPrivileges: fullPrivileges || true
                 })
                 );
-
+            return $http.get(url);
+          },
+          // TODO: move to metadatamanger
+          createNewMetadata: function(id, groupId, fullPrivileges, 
+              template, tab) {
             //            $http.get(url).success(function(data) {
             //              // TODO: If using NRT in Lucene, the record
             //              // will not be indexed straight away. Add a
@@ -40,7 +51,8 @@
             //
             //            });
             // NRT is turned off by default.
-            $http.get(url).success(function(data) {
+            this.copyMetadata(id, groupId, fullPrivileges,
+                template, tab).success(function(data) {
               $location.path('/metadata/' + data.id);
             });
             // TODO : handle creation error
