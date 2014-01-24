@@ -25,8 +25,6 @@ operations[i++] = [ 'csw-GetRecordsNoFilterIsoRecord',
 		'csw-GetRecords | no filter | outputSchema: csw-IsoRecord', '' ];
 operations[i++] = [ 'csw-GetRecordsNoFilterCswIsoRecord',
 		'csw-GetRecords | no filter | outputSchema: csw-Record', '' ];
-operations[i++] = [ 'csw-GetRecordsNoFilterFraIsoRecord',
-		'csw-GetRecords | no filter | outputSchema: fra:IsoRecord', '' ];
 operations[i++] = [
 		'csw-GetRecordsNoFilterOwn',
 		'csw-GetRecords | no filter | outputSchema: own (CSW GeoNetwork extension)',
@@ -65,8 +63,6 @@ operations[i++] = [ 'csw-GetRecordsCQLEquals',
 operations[i++] = [ 'csw-GetRecordById', 'csw-GetRecordById', '' ];
 operations[i++] = [ 'csw-GetRecordByIdIsoRecord',
 		'csw-GetRecordById | outputSchema: IsoRecord', '' ];
-operations[i++] = [ 'csw-GetRecordByIdFraIsoRecord',
-		'csw-GetRecordById | outputSchema: fra:IsoRecord', '' ];
 // GetRecordById ------------- END -- //
 // GetDomain ------------- START -- //
 operations[i++] = [ 'csw-GetDomainParameterName', 'csw-GetDomain | ParameterName', '' ];
