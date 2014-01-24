@@ -74,16 +74,18 @@
           <i class="fa fa-plus"></i>
         </a>
       </h4>
-      <div class="list-group">
-        <a class="list-group-item" href=""
-          data-ng-repeat="resource in relations.onlinesrc | orderBy:'title'"
-          data-ng-click="onlinesrcService.openLink(resource.url)">
+      <ul class="list-group">
+        <li class="list-group-item" href=""
+          data-ng-repeat="resource in relations.onlinesrc | orderBy:'title'">
           <i class="fa" data-ng-class="onlinesrcService.getIconByProtocol(resource.protocol)"/>
-          {{resource.title}} <span class="onlinesrc-remove"
+          <a href="" data-ng-click="onlinesrcService.openLink(resource.url)">
+            {{resource.title}}
+         </a> 
+         <span class="onlinesrc-remove"
             data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
             data-ng-click="onlinesrcService.removeOnlinesrc(resource)"><i class="btn fa fa-times text-danger pull-right"></i></span>
-        </a>
-      </div>
+        </li>
+      </ul>
 
       <!-- ******* List of datasets ******* -->
       <h4 class="onlinesrc-title" data-ng-show="relations.datasets">

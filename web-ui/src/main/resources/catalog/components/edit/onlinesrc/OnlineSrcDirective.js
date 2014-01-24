@@ -71,8 +71,7 @@
                 'partials/addThumbnail.html',
             scope: {},
             link: function(scope, element, attrs) {
-              scope.metadataId = gnCurrentEdit.id;
-
+              
               // mode can be 'url' or 'upload'
               scope.mode = 'url';
 
@@ -83,6 +82,7 @@
 
               // TODO: should be in gnEditor ?
               var getVersion = function() {
+                scope.metadataId = gnCurrentEdit.id;
                 return scope.params.version = gnCurrentEdit.version;
               };
 
@@ -118,7 +118,7 @@
               scope.addThumbnail = function() {
                 if (scope.mode == 'upload') {
                   getVersion();
-                  gnEditor.save()
+                  gnEditor.save(false, true)
                   .then(function(data) {
                         scope.submit();
                       });

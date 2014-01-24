@@ -134,7 +134,7 @@
             });
           }
           var defer = $q.defer();
-          gnEditor.save()
+          gnEditor.save(false, true)
                 .then(function() {
                 gnHttp.callService('processMd', params).then(function(data) {
                   defer.resolve(data);
