@@ -311,7 +311,7 @@ GeoNetwork.app = function () {
         
         advancedCriteria.push(themekeyField, orgNameField, categoryField, 
                                 when, spatialTypes, denominatorField, 
-                                catalogueField, groupField, 
+                                groupField, 
                                 metadataTypeField, validField, statusField);
 
         // Create INSPIRE fields if enabled in administration
