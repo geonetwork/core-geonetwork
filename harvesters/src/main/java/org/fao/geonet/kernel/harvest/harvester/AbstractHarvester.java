@@ -57,6 +57,7 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
@@ -171,14 +172,14 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws BadInputEx
      * @throws SQLException
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized void add(Element node) throws BadInputEx, SQLException {
         status = Status.INACTIVE;
         error = null;
         id = doAdd(node);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized void init(Element node, ServiceContext context) throws BadInputEx, SchedulerException {
         id = node.getAttributeValue("id");
         status = Status.parse(node.getChild("options").getChildText("status"));
@@ -249,7 +250,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      *
      * @throws Exception
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized void destroy() throws Exception {
         doUnschedule();
 
@@ -284,7 +285,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      * @throws SchedulerException
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized OperResult start() throws SQLException, SchedulerException {
         if (status != Status.INACTIVE) {
             return OperResult.ALREADY_ACTIVE;
@@ -306,7 +307,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      * @throws SchedulerException
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized OperResult stop() throws SQLException, SchedulerException {
         if (status != Status.ACTIVE) {
             return OperResult.ALREADY_INACTIVE;
@@ -322,7 +323,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      *
      * @return {@link OperResult#OK} or {@link OperResult#ALREADY_RUNNING} if harvester is currently running.
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized OperResult run() throws SQLException, SchedulerException {
         if (status == Status.INACTIVE) {
             start();
@@ -339,7 +340,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      *
      * @return {@link OperResult#OK} or {@link OperResult#ERROR}
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized OperResult invoke() {
         Status oldStatus = status;
 
@@ -359,7 +360,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      * @throws SchedulerException
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized void update(Element node) throws BadInputEx, SQLException, SchedulerException {
         doUpdate(id, node);
 
@@ -386,7 +387,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      *
      * @param node
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized void addInfo(Element node) {
         Element info = node.getChild("info");
 
@@ -484,7 +485,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * Run the harvest process.
      * This has to be protected or better for CGLib to proxy to it./
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     protected synchronized OperResult harvest() {
         OperResult operResult = OperResult.OK;
         running = true;
@@ -903,7 +904,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @return
      * @throws Exception
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public String getOwnerEmail() throws Exception {
         String ownerId = getParams().ownerIdGroup;
 

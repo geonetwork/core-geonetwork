@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.Xml;
@@ -151,7 +152,7 @@ class WAFRemoteFile implements RemoteFile {
 	}
 
 	
-	public String getChangeDate() {
+	public ISODate getChangeDate() {
 		return null;
 	}
 	

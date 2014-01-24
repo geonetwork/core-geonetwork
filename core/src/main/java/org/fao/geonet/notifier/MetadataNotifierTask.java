@@ -26,6 +26,7 @@ import jeeves.server.context.ServiceContext;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -40,7 +41,7 @@ public class MetadataNotifierTask implements Runnable {
         return this;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void run() {
         try {
             context.getBean(MetadataNotifierManager.class).updateMetadataBatch(context);

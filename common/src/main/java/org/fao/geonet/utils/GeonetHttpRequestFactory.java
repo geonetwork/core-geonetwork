@@ -4,12 +4,17 @@ import com.google.common.base.Function;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
+import org.apache.http.HttpClientConnection;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ConnectionRequest;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.protocol.HttpContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.AbstractClientHttpResponse;
 import org.springframework.http.client.ClientHttpResponse;
@@ -20,6 +25,7 @@ import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Factory interface for making different kinds of requests.  This is an interface so that tests can mock their own implementations.
@@ -31,6 +37,7 @@ import java.net.URL;
 public class GeonetHttpRequestFactory {
     private int numberOfConcurrentRequests = 20;
     private PoolingHttpClientConnectionManager connectionManager;
+    private HttpClientConnectionManager nonShutdownableConnectionManager;
 
     @PreDestroy
     public synchronized void shutdown() {
@@ -141,12 +148,45 @@ public class GeonetHttpRequestFactory {
             if (connectionManager == null) {
                 connectionManager = new PoolingHttpClientConnectionManager();
                 connectionManager.setMaxTotal(this.numberOfConcurrentRequests);
+                nonShutdownableConnectionManager = new HttpClientConnectionManager() {
+                    public void closeExpiredConnections() {
+                        connectionManager.closeExpiredConnections();
+                    }
+
+                    public ConnectionRequest requestConnection(HttpRoute route, Object state) {
+                        return connectionManager.requestConnection(route, state);
+                    }
+
+                    public void releaseConnection(HttpClientConnection managedConn, Object state, long keepalive, TimeUnit tunit) {
+                        connectionManager.releaseConnection(managedConn, state, keepalive, tunit);
+                    }
+
+                    public void connect(HttpClientConnection managedConn, HttpRoute route, int connectTimeout, HttpContext context) throws IOException {
+                        connectionManager.connect(managedConn, route, connectTimeout, context);
+                    }
+
+                    public void upgrade(HttpClientConnection managedConn, HttpRoute route, HttpContext context) throws IOException {
+                        connectionManager.upgrade(managedConn, route, context);
+                    }
+
+                    public void routeComplete(HttpClientConnection managedConn, HttpRoute route, HttpContext context) throws IOException {
+                        connectionManager.routeComplete(managedConn, route, context);
+                    }
+
+                    public void shutdown() {
+                        // don't shutdown pool
+                    }
+
+                    public void closeIdleConnections(long idleTimeout, TimeUnit tunit) {
+                        connectionManager.closeIdleConnections(idleTimeout, tunit);
+                    }
+                };
             }
         }
 
         final HttpClientBuilder builder = HttpClientBuilder.create();
         builder.setRedirectStrategy(new LaxRedirectStrategy());
-        builder.setConnectionManager(connectionManager);
+        builder.setConnectionManager(nonShutdownableConnectionManager);
 
         builder.disableContentCompression();
         return builder;

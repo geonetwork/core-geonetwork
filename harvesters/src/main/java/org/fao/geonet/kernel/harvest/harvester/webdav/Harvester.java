@@ -76,8 +76,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 	public HarvestResult harvest(Logger log) throws Exception {
 		this.log = log;
         if(log.isDebugEnabled()) log.debug("Retrieving remote metadata information for : "+ params.name);
-		
-		RemoteRetriever rr = null;		
+        RemoteRetriever rr = null;
         if (params.subtype.equals("webdav")) {
             rr = new WebDavRetriever();
         } else if (params.subtype.equals("waf")) {
@@ -85,13 +84,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         } else {
             throw new IllegalArgumentException(params.subtype + " is not one of webdav or waf");
         }
-		
-		Log.info(Log.SERVICE, "webdav harvest subtype : "+params.subtype);		
-		rr.init(log, context, params);
-		List<RemoteFile> files = rr.retrieve();
-        if(log.isDebugEnabled()) log.debug("Remote files found : "+ files.size());
-		align(files);
-		rr.destroy();
+        try {
+            Log.info(Log.SERVICE, "webdav harvest subtype : "+params.subtype);
+            rr.init(log, context, params);
+            List<RemoteFile> files = rr.retrieve();
+            if(log.isDebugEnabled()) log.debug("Remote files found : "+ files.size());
+            align(files);
+        } finally { rr.destroy();
+        }
 		return result;
 	}
 

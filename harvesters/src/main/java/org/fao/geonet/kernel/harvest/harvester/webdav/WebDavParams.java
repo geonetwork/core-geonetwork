@@ -64,7 +64,6 @@ public class WebDavParams extends AbstractParams
 		recurse  = Util.getParam(opt, "recurse",  false);
 		
 		subtype  = Util.getParam(opt, "subtype","");
-        useFileNameAsIdentity  = Util.getParam(opt, "useFileNameAsIdentity", false);
 	}
 
 	//---------------------------------------------------------------------------
@@ -84,9 +83,7 @@ public class WebDavParams extends AbstractParams
 		icon     = Util.getParam(site,  "icon", icon);
 
 		recurse  = Util.getParam(opt, "recurse",  recurse);
-		
 		subtype  = Util.getParam(opt, "subtype",  subtype);
-        useFileNameAsIdentity  = Util.getParam(opt, "useFileNameAsIdentity",  useFileNameAsIdentity);
 	}
 
 	//---------------------------------------------------------------------------
@@ -134,13 +131,6 @@ public class WebDavParams extends AbstractParams
      * Flag indicating if WAFRetriever or WebDavRetriever should be used.
      */
 	public String subtype;
-    /**
-     * If true use the file name of the harvester to determine if the metadata has previously been downloaded
-     * and thus avoid re-downloading it if the file date stamp is unchanged.
-     * <p/>
-     * If false then all files will be downloaded and parsed to obtain the uuid to use as comparison.
-     */
-    public boolean useFileNameAsIdentity;
 }
 
 //=============================================================================

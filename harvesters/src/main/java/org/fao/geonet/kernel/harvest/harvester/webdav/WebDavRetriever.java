@@ -34,6 +34,7 @@ import org.fao.geonet.utils.GeonetHttpRequestFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 class WebDavRetriever implements RemoteRetriever {
@@ -65,16 +66,39 @@ class WebDavRetriever implements RemoteRetriever {
         Lib.net.setupProxy(context, clientBuilder);
 
         if (params.useAccount) {
-            this.sardine = new SardineImpl(clientBuilder);
-        } else {
             this.sardine = new SardineImpl(clientBuilder, params.username, params.password);
+        } else {
+            this.sardine = new SardineImpl(clientBuilder);
         }
-        files.clear();
-        final List<DavResource> resources = open(params.url);
+         files.clear();
+
+        String url = params.url;
+        if (!url.endsWith("/")) {
+            if (log.isDebugEnabled()) {
+                log.debug("URL " + url + "does not end in slash -- will be appended");
+            }
+            url += "/";
+        }
+
+        final List<DavResource> resources = open(url);
+        url = calculateBaseURL(url, resources);
         for (DavResource resource : resources) {
-            retrieveFile(resource);
+            retrieveFile(url, resource);
         }
         return files;
+    }
+
+    static String calculateBaseURL(String url, List<DavResource> resources) throws IOException {
+        for (Iterator<DavResource> iterator = resources.iterator(); iterator.hasNext(); ) {
+            DavResource next = iterator.next();
+            if (url.endsWith(next.getPath())) {
+                // this is the directory we just searched for so remove it and use it to calculate the base URL.
+                iterator.remove();
+
+                return url.substring(0, url.length() - next.getPath().length());
+            }
+        }
+        return url;
     }
 
     //---------------------------------------------------------------------------
@@ -97,16 +121,12 @@ class WebDavRetriever implements RemoteRetriever {
         if (log.isDebugEnabled()) {
             log.debug("opening webdav resource with URL: " + url);
         }
-        if (!url.endsWith("/")) {
-            if (log.isDebugEnabled()) {
-                log.debug("URL " + url + "does not end in slash -- will be appended");
-            }
-            url += "/";
-        }
+
         if (log.isDebugEnabled()) {
             log.debug("Connecting to webdav url for node : " + params.name + " URL: " + params.url);
         }
-        final List<DavResource> davResources = sardine.list(url);
+
+        final List<DavResource> davResources = sardine.list(url, 1, false);
         if(log.isDebugEnabled()){
             log.debug("# " + davResources.size() + " webdav resources found in: " + url);
         }
@@ -114,7 +134,7 @@ class WebDavRetriever implements RemoteRetriever {
         return davResources;
     }
 
-    private void retrieveFile(DavResource davResource) throws IOException {
+    private void retrieveFile(String baseURL, DavResource davResource) throws IOException {
 
 		String path = davResource.getPath();
         int startSize = files.size();
@@ -126,8 +146,8 @@ class WebDavRetriever implements RemoteRetriever {
                     log.debug(path + " is a collection, processed recursively");
                 }
 
-                for (DavResource resource : sardine.list(path)) {
-                    retrieveFile(resource);
+                for (DavResource resource : sardine.list(baseURL+path)) {
+                    retrieveFile(baseURL, resource);
                 }
             } else {
                 if(log.isDebugEnabled()) {
@@ -144,7 +164,7 @@ class WebDavRetriever implements RemoteRetriever {
                 if(log.isDebugEnabled()) {
                     log.debug("found xml file ! " + name.toLowerCase());
                 }
-                files.add(new WebDavRemoteFile(sardine, davResource));
+                files.add(new WebDavRemoteFile(sardine, baseURL, davResource));
             }
             else {
                 if(log.isDebugEnabled()) {

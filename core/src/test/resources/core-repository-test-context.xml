@@ -41,5 +41,5 @@
 
     <!--<bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>-->
     <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.MemoryDirectoryFactory" lazy-init="true"/>
-
+    <bean id="ForceInitRepositoriesForTestingBean" class="org.fao.geonet.kernel.ForceInitRepositoriesForTestingBean" lazy-init="false"/>
 </beans>

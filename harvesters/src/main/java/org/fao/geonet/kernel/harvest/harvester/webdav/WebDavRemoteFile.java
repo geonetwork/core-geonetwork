@@ -42,13 +42,11 @@ class WebDavRemoteFile implements RemoteFile {
     private String path;
     private ISODate changeDate;
 
-    private DavResource wr;
 
-    public WebDavRemoteFile(Sardine sardine, DavResource wr) {
+    public WebDavRemoteFile(Sardine sardine, String baseURL, DavResource davResource) {
         this.sardine = sardine;
-        this.wr = wr;
-        path = wr.getPath();
-        changeDate = new ISODate(wr.getModified().getTime(), false);
+        path = baseURL + davResource.getPath();
+        changeDate = new ISODate(davResource.getModified().getTime(), false);
     }
 
     //---------------------------------------------------------------------------
@@ -80,7 +78,7 @@ class WebDavRemoteFile implements RemoteFile {
     //---------------------------------------------------------------------------
 
     public boolean isMoreRecentThan(String localChangeDate) {
-        ISODate remoteDate = new ISODate(changeDate);
+        ISODate remoteDate = changeDate;
         ISODate localDate = new ISODate(localChangeDate);
         //--- accept if remote date is greater than local date
         return (remoteDate.timeDifferenceInSeconds(localDate) > 0);
