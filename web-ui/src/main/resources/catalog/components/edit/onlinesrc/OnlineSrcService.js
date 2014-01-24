@@ -39,9 +39,9 @@
         angular.extend(params, {
           process: processName
         });
-        if (!angular.isUndefined(params.url)) {
-          params.url = encodeURIComponent(params.url);
-        }
+//        if (!angular.isUndefined(params.url)) {
+//          params.url = encodeURIComponent(params.url);
+//        }
         return setLayersParams(params);
       };
 
@@ -81,6 +81,9 @@
       var parseRelations = function(data) {
 
         var relations = {};
+        if(!angular.isArray(data.relation)) {
+          data.relation = [data.relation];
+        }
         angular.forEach(data.relation, function(rel) {
 
           var type = rel['@type'];
@@ -94,7 +97,8 @@
             rel.subType = rel['@subType'];
             delete rel['@subType'];
           }
-          if (angular.isString(rel.title)) {
+          if (angular.isString(rel.title) ||
+              type == 'thumbnail') {
             relations[type].push(rel);
           }
         });
@@ -128,9 +132,11 @@
        * an onlinesrc.
        * Save the form, launch the service, then refresh
        * the form and reload the onlinesrc list.
+       * The save is silent, in order not to reload the 
+       * onlinesrc list on save and on batch success.
        */
       var runService = function(service, params, scope) {
-        gnEditor.save()
+        gnEditor.save(false, true)
         .then(function() {
               gnHttp.callService(service, params).success(function() {
                 refreshForm(scope);

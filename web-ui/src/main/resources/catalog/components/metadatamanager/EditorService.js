@@ -128,13 +128,15 @@
             * This is required while switching tab for example. Update the tab
             * value in the form and trigger save to update the view.
             */
-           save: function(refreshForm) {
+           save: function(refreshForm, silent) {
              var defer = $q.defer();
              var scope = this;
              if (gnCurrentEdit.saving) {
                return;
              } else {
-               setStatus({msg: 'saving', saving: true});
+               if(!silent) {
+                 setStatus({msg: 'saving', saving: true});
+               }
              }
 
              $http.post(
@@ -149,11 +151,15 @@
                if (refreshForm) {
                  scope.refreshEditorForm(snippet);
                }
-               setStatus({msg: 'allChangesSaved', saving: false});
+               if(!silent) {
+                 setStatus({msg: 'allChangesSaved', saving: false});
+               }
 
                defer.resolve(snippet);
              }).error(function(error) {
-               setStatus({msg: 'saveMetadataError', saving: false});
+               if(!silent) {
+                 setStatus({msg: 'saveMetadataError', saving: false});
+               }
                defer.reject(error);
              });
              return defer.promise;
