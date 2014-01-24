@@ -278,9 +278,30 @@ GeoNetwork.app = function () {
             items: GeoNetwork.util.SearchFormTools.getWhen()
         });
         
-        
-        var catalogueField = GeoNetwork.util.SearchFormTools.getCatalogueField(services.getSources, services.logoUrl, true);
-        var groupField = GeoNetwork.util.SearchFormTools.getGroupField(services.getGroups, true);
+        var groupFieldStore = new GeoNetwork.data.OpenSearchSuggestionStore({
+            url : catalogue.services.opensearchSuggest,
+            rootId : 1,
+            baseParams : {
+                field : '_groupPublished',
+                sortBy: 'ALPHA'
+            }
+        });
+
+        var groupField = new Ext.ux.form.SuperBoxSelect({
+            hideLabel: false,
+            width: 230,
+            minChars: 0,
+            queryParam: 'q',
+            hideTrigger: false,
+            id: 'E__groupPublished',
+            name: 'E__groupPublished',
+            mode: 'remote',
+            store: groupFieldStore,
+            valueField: 'value',
+            displayField: 'value',
+            valueDelimiter: ' or ',
+            fieldLabel: OpenLayers.i18n('Catalogue')
+        });
         var metadataTypeField = GeoNetwork.util.SearchFormTools.getMetadataTypeField(true);
         var categoryField = GeoNetwork.util.SearchFormTools.getCategoryField(services.getCategories, '../images/default/category/', true);
         var validField = GeoNetwork.util.SearchFormTools.getValidField(true);

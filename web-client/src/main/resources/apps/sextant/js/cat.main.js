@@ -756,6 +756,8 @@ cat.app = function() {
             var permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
             if(Object.keys(permalinkProvider.state).length > 0) {
                 cookie.state = permalinkProvider.state;
+                delete cookie.state.s.scaleOn;
+                delete cookie.state.s.timeType;
             }
             Ext.state.Manager.setProvider(cookie);
             
