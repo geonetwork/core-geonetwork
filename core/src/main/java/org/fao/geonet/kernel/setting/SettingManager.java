@@ -339,7 +339,7 @@ public class SettingManager implements ISettingManager {
     }
 
 	@Override
-	public List<org.fao.geonet.bean.Setting> getAllAsList() {
+	public List<Setting> getAllAsList() {
 		throw new NotImplementedException("This is the Jeeves class, use the Spring autowired class");
 	}
 }

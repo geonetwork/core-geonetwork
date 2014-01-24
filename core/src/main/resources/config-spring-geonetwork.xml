@@ -13,6 +13,6 @@
 
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     <tx:annotation-driven proxy-target-class="true"/>
-    <context:component-scan base-package="org.fao.geonet.kernel,org.fao.geonet.component, jeeves, org.fao.geonet.notifier"/>
+    <context:component-scan base-package="org.fao.geonet.services,org.fao.geonet.kernel,org.fao.geonet.component, jeeves, org.fao.geonet.notifier"/>
 
 </beans>

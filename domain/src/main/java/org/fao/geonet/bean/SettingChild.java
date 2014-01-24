@@ -4,8 +4,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
-import org.fao.geonet.domain.SettingDataType;
-
 /**
  * An entity representing a system configuration setting.
  * <p/>
