@@ -30,6 +30,56 @@
   <xsl:template mode="gn-element-cleaner" match="svrl:*" priority="2"/>
 
 
+
+
+
+  <!-- Combine the context node with the node-to-merge
+  children. Make a copy of everything for all elements of the
+  context node and combined when gn:copy node is found.
+  
+  Example:
+
+      <gmd:CI_Citation>
+        <gmd:title>
+          <gco:CharacterString>{{conformity_title}}</gco:CharacterString>
+        </gmd:title>
+        <gn:copy select="gmd:alternateTitle"/>
+
+  A more advanced merging strategy could have been done 
+  in Java based on the information from the SchemaManager
+  which could know where children must be inserted (TODO).
+  -->
+  <xsl:template mode="gn-merge" match="*" exclude-result-prefixes="#all">
+    <xsl:param name="node-to-merge"/>
+    
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates mode="gn-merge" select="*">
+        <xsl:with-param name="node-to-merge" select="$node-to-merge"/>
+      </xsl:apply-templates>
+      <xsl:copy-of select="text()"/>
+    </xsl:copy>
+  </xsl:template>
+  
+  <!-- Combine the context node with the node-to-merge 
+    matching children. It works on XML records or Metadocuments
+    (ie. having gn:info elements).
+  
+  -->
+  <xsl:template mode="gn-merge" match="gn:copy" priority="2" exclude-result-prefixes="#all">
+    <xsl:param name="node-to-merge"/>
+    
+    <xsl:variable name="nodeNames" select="@select"/>
+    <!-- FIXME: Descendant could probably select more than 
+    what is expected. -->
+    <xsl:apply-templates mode="gn-element-cleaner" 
+      select="$node-to-merge/descendant-or-self::node()[name() = $nodeNames]"/>
+  </xsl:template>
+
+
+
+
+
   <!--
     2 types of errors are added to a record on validation:
     * XSD 

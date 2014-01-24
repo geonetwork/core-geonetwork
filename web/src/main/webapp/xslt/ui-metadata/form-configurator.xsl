@@ -196,11 +196,11 @@
           
           <xsl:for-each select="$nodes/*">
             <!-- Retrieve matching key values 
-              CHECKME: if more than one node match
               Only text values are supported. Separator is #.
+              -->
               
-              
-              TODO: When existing, the template should be combined with 
+            <!--
+              When existing, the template should be combined with 
               the existing node to add element not available in the template
               and available in the source XML document. 
               
@@ -220,6 +220,17 @@
                 
               -->
             <xsl:variable name="currentNode" select="."/>
+            
+            <xsl:variable name="templateCombinedWithNode" as="node()">
+              <template>
+                <xsl:copy-of select="$template/values"/>
+                <snippet>
+                  <xsl:apply-templates mode="gn-merge" select="$template/snippet/*">
+                    <xsl:with-param name="node-to-merge" select="$currentNode"/>
+                  </xsl:apply-templates>
+                </snippet>
+              </template>
+            </xsl:variable>
             
             <xsl:variable name="keyValues">
               <xsl:for-each select="$template/values/key">
@@ -298,7 +309,7 @@
               <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
               <xsl:with-param name="id" select="$id"/>
               <xsl:with-param name="isExisting" select="true()"/>
-              <xsl:with-param name="template" select="$template"/>
+              <xsl:with-param name="template" select="$templateCombinedWithNode"/>
               <xsl:with-param name="keyValues" select="$keyValues"/>
               <xsl:with-param name="refToDelete" select="if ($refToDelete) then $refToDelete/gn:element else ''"/>
             </xsl:call-template>
@@ -327,6 +338,7 @@
       </xsl:choose>
     </xsl:if>
   </xsl:template>
+  
   
   <xsl:template mode="form-builder" match="action[@type='add']">
     <xsl:param name="base" as="node()"/>

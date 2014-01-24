@@ -304,7 +304,7 @@
     
     
     <!--<xsl:message>!render-element-template-field <xsl:copy-of select="$keyValues"/>
-      <xsl:value-of select="$name"/>/
+      <xsl:value-of select="$name"/>/tpl:
       <xsl:copy-of select="$template"/>/
       <xsl:value-of select="$id"/>/
       <xsl:value-of select="$isExisting"/>/

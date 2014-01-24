@@ -262,7 +262,7 @@ class EditUtils {
                 if(Log.isDebugEnabled(Geonet.EDITOR))
                     Log.debug(Geonet.EDITOR, "replacing XML content");
 				el.removeContent();
-				val = addNamespaceToFragment(val);
+				val = EditLib.addNamespaceToFragment(val);
 				el.addContent(Xml.loadString(val, false));
             }
 			else {
@@ -350,24 +350,6 @@ class EditUtils {
     }
 
 	/**
-	 * Adds missing namespace (ie. GML) to XML inputs. It should be done by the client side
-	 * but add a check in here.
-	 *
-	 * @param fragment 		The fragment to be checked and processed.
-	 *
-	 * @return 				The updated fragment.
-	 */
-	protected static String addNamespaceToFragment(String fragment) {
-        //add the gml namespace if its missing
-        if (fragment.contains("<gml:") && !fragment.contains("xmlns:gml=\"")) {
-            if(Log.isDebugEnabled(Geonet.EDITOR))
-                Log.debug(Geonet.EDITOR, "  Add missing GML namespace.");
-        	fragment = fragment.replaceFirst("<gml:([^ >]+)", "<gml:$1 xmlns:gml=\"http://www.opengis.net/gml\"");
-        }
-		return fragment;
-	}
-
-    /**
      * If no PT_FreeText element exists, creates a geonet:element with an empty ref.
      *
      * @param parent
