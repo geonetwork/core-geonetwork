@@ -8,7 +8,6 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.kernel.AddElemValue;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.EditLib;
@@ -33,10 +32,6 @@ import java.util.Map;
  */
 public class AjaxEditUtils extends EditUtils {
 
-    private static final String XML_FRAGMENT_SEPARATOR = "&&&";
-    private static final String MSG_ELEMENT_NOT_FOUND_AT_REF = "Element not found at ref = ";
-    private static final String COLON_SEPARATOR = "COLON";
-    
     public AjaxEditUtils(ServiceContext context) {
         super(context);
     }
@@ -61,7 +56,7 @@ public class AjaxEditUtils extends EditUtils {
      * <li>P{key}=xpath with P{key}_xml=XML snippet</li>
      * </ul>
      * 
-     * ElementName MUST contain "{@value #COLON_SEPARATOR}" instead of ":" for prefixed elements.
+     * ElementName MUST contain "{@value #EditLib.COLON_SEPARATOR}" instead of ":" for prefixed elements.
      * 
      * <p>
      * When using X key ElementValue could contains many XML fragments (eg. 
@@ -71,7 +66,7 @@ public class AjaxEditUtils extends EditUtils {
      * If not, the element with ElementId is replaced.
      * If _replace suffix is used, then all elements having the same type than elementId are removed before insertion.
      * 
-     * <p>
+     * </p>
      * 
      * <p>
      * <pre>
@@ -158,13 +153,13 @@ public class AjaxEditUtils extends EditUtils {
             
             Element el = editLib.findElement(md, ref);
             if (el == null) {
-                Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+                Log.error(Geonet.EDITOR, EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
                 continue;
             }
             
             // Process attribute
             if (attribute != null) {
-                Pair<Namespace, String> attInfo = parseAttributeName(attribute, COLON_SEPARATOR, id, md, editLib);
+                Pair<Namespace, String> attInfo = parseAttributeName(attribute, EditLib.COLON_SEPARATOR, id, md, editLib);
                 String localname = attInfo.two();
                 Namespace attrNS = attInfo.one();
                 if (el.getAttribute(localname, attrNS) != null) {
@@ -187,80 +182,10 @@ public class AjaxEditUtils extends EditUtils {
         
         // Deals with XML fragments to insert or update
         if (!xmlInputs.isEmpty()) {
-            
-            // Loop over each XML fragments to insert or replace
-            for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
-                String nodeRef = entry.getKey();
-                String xmlSnippetAsString = entry.getValue();
-                String nodeName = null;
-                boolean replaceExisting = false;
-                
-                String[] nodeConfig = nodeRef.split("_");
-                // Possibilities:
-                // * X125
-                // * X125_replace
-                // * X125_gmdCOLONkeywords
-                // * X125_gmdCOLONkeywords_replace
-                nodeRef = nodeConfig[0];
-                
-                if (nodeConfig.length > 1 && nodeConfig[1] != null) {
-                    if (nodeConfig[1].equals("replace")) {
-                        replaceExisting = true;
-                    } else {
-                        nodeName = nodeConfig[1].replace(COLON_SEPARATOR, ":");
-                    }
-                }
-                
-                if (nodeConfig.length > 2 && nodeConfig[2] != null) {
-                    if (nodeConfig[2].equals("replace")) {
-                        replaceExisting = true;
-                    }
-                }
-                
-                
-                // Get element to fill
-                Element el = editLib.findElement(md, nodeRef);
-                if (el == null) {
-                    Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + nodeRef);
-                    continue;
-                }
-                
-                
-                if (xmlSnippetAsString != null && !xmlSnippetAsString.equals("")) {
-                    String[] fragments = xmlSnippetAsString.split(XML_FRAGMENT_SEPARATOR);
-                    for (String fragment : fragments) {
-                        if (nodeName != null) {
-                            if(Log.isDebugEnabled(Geonet.EDITOR))
-                                Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment + " to element with ref: " + nodeRef);
-                            
-                            editLib.addFragment(schema, el, nodeName, fragment, replaceExisting);
-                        } else {
-                            if(Log.isDebugEnabled(Geonet.EDITOR))
-                                Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment
-                                    + " to element with ref: " + nodeRef + " replacing content.");
-                            
-                            // clean before update
-                            el.removeContent();
-                            fragment = addNamespaceToFragment(fragment);
-                            
-                            // Add content
-                            Element node = Xml.loadString(fragment, false);
-                            if (replaceExisting) {
-                                @SuppressWarnings("unchecked")
-                                List<Element> children = node.getChildren();
-                                for (int i = 0; i < children.size(); i++) {
-                                    el.addContent(children.get(i).detach());
-                                }
-                            } else {
-                                el.addContent(node);
-                            }
-                        }
-                    }
-                }
-            }
+            editLib.addXMLFragments(schema, md, xmlInputs);
         }
 
-        // Deals with XML fragments to insert or update
+        // Deals with XML fragments and XPath to insert or update
         if (!xmlAndXpathInputs.isEmpty()) {
             editLib.addElementOrFragmentFromXpaths(md, xmlAndXpathInputs, metadataSchema, true);
         }
@@ -273,7 +198,6 @@ public class AjaxEditUtils extends EditUtils {
         
         return (Element) md.detach();
     }
-
     /**
      * TODO javadoc.
      *
@@ -353,7 +277,7 @@ public class AjaxEditUtils extends EditUtils {
 		EditLib editLib = dataManager.getEditLib();
         Element el = editLib.findElement(md, ref);
 		if (el == null)
-			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 		//--- locate the geonet:element and geonet:info elements and clone for
 		//--- later re-use
@@ -461,7 +385,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, ref);
 
 		if (el == null)
-			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 
 		String uName = el.getName();
@@ -597,7 +521,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element elSwap = editLib.findElement(md, ref);
 
 		if (elSwap == null)
-			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 		//--- swap the elements
 		int iSwapIndex = -1;
@@ -686,7 +610,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, ref);
 
 		if (el == null)
-			Log.error(Geonet.DATA_MANAGER, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			Log.error(Geonet.DATA_MANAGER, EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 			//throw new IllegalStateException("Element not found at ref = " + ref);
 
 		//--- remove editing info added by previous call
@@ -744,7 +668,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, ref);
 
 		if (el == null)
-			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 		//--- remove editing info added by previous call
 		editLib.removeEditingInfo(md);
