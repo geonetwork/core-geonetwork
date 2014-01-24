@@ -42,6 +42,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.Group_;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
@@ -64,6 +65,8 @@ import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRatingByIpRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.SettingRepository;
+import org.fao.geonet.repository.SettingRepositoryCustom;
+import org.fao.geonet.repository.SettingRepositoryImpl;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.StatusValueRepository;
@@ -154,7 +157,7 @@ public class Info implements Service {
 			} else if (type.equals("config")) {
 			  // Return a set of properties which define what
 			  // to display or not in the user interface
-              final List<Setting> publicSettings = context.getBean(SettingRepository.class).findByInternal(false);
+              final List<Setting> publicSettings = context.getBean(SettingRepository.class).findAllByInternal(false);
               List<String> publicSettingsKey = new ArrayList<String>();
               for(Setting s : publicSettings) {
                 publicSettingsKey.add(s.getName());
