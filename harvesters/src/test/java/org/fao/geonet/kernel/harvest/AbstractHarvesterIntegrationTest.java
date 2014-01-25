@@ -56,7 +56,7 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
         assertEqualsText(""+ getExpectedTotalFound(), result, "total");
         assertEqualsText(""+ getExpectedBadFormat(), result, "badFormat");
         assertEqualsText(""+ getExpectedDoesNotValidate(), result, "doesNotValidate");
-        assertEqualsText(""+ getExpectedUnkownSchema(), result, "unknownSchema");
+        assertEqualsText(""+ getExpectedUnknownSchema(), result, "unknownSchema");
         assertEqualsText(""+ getExpectedUpdated(), result, "updated");
         assertEqualsText(""+ getExpectedRemoved(), result, "removed");
 
@@ -71,7 +71,7 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
     protected int getExpectedAdded() { return 0; }
     protected int getExpectedBadFormat() { return 0; }
     protected int getExpectedDoesNotValidate() { return 0; }
-    protected int getExpectedUnkownSchema() { return 0; }
+    protected int getExpectedUnknownSchema() { return 0; }
     protected int getExpectedUpdated() { return 0; }
     protected int getExpectedRemoved() { return 0; }
 

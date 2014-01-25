@@ -18,7 +18,7 @@ import java.util.List;
  *
  * Created by Jesse on 1/12/14.
  */
-public class WebDavHarvester_NonRecursive_Test extends AbstractHarvesterIntegrationTest {
+public class WebDavHarvester_Validation_NonRecursive_IntegrationTest extends AbstractHarvesterIntegrationTest {
 
     private static final String BASE_PATH = "/webdav/";
     private static final String HOST = "http://webdav_harvester_test.com";
@@ -29,7 +29,7 @@ public class WebDavHarvester_NonRecursive_Test extends AbstractHarvesterIntegrat
 //    @Autowired
 //    private WebDavHarvester _harvester;
 
-    public WebDavHarvester_NonRecursive_Test() {
+    public WebDavHarvester_Validation_NonRecursive_IntegrationTest() {
         super("webdav");
     }
 
@@ -40,12 +40,14 @@ public class WebDavHarvester_NonRecursive_Test extends AbstractHarvesterIntegrat
     @Override
     protected int getExpectedDoesNotValidate() { return 1; }
     @Override
-    protected int getExpectedUnkownSchema() { return 1; }
+    protected int getExpectedUnknownSchema() { return 1; }
 
     @Override
     protected void mockHttpRequests(MockRequestFactoryGeonet bean) throws Exception {
-        final WebDavDescriptor folder = new WebDavDescriptor(true, "folder/", "folder", START_DATE, false)
-                .add(new WebDavDescriptor(false, "lvl2Valid.xml", "validMd.xml", START_DATE, false));
+        boolean isRecursive = isRecursive();
+        final WebDavDescriptor folder = new WebDavDescriptor(true, "folder/", "folder", START_DATE, isRecursive)
+                .add(new WebDavDescriptor(false, "lvl2Valid.xml", "validMd.xml", START_DATE, isRecursive))
+                .add(new WebDavDescriptor(false, "lvl2InValid.xml", "invalidMd.xml", START_DATE, isRecursive));
 
         final WebDavDescriptor root = new WebDavDescriptor(true, BASE_PATH, "root", START_DATE, true)
                 .add(folder)
@@ -61,10 +63,20 @@ public class WebDavHarvester_NonRecursive_Test extends AbstractHarvesterIntegrat
     protected void customizeParams(Element node) {
         Element site = node.getChild("site");
         Element opt  = node.getChild("options");
+        final Element content = node.getChild("content");
+        content.getChild("validate").setText(""+onlyValid());
 
         site.addContent(new Element("url").setText(WEB_DAV_URL));
-        opt.addContent(new Element("recurse").setText("false"));
+        opt.addContent(new Element("recurse").setText(""+isRecursive()));
         opt.addContent(new Element("subtype").setText("webdav"));
+    }
+
+    protected boolean isRecursive() {
+        return false;
+    }
+
+    protected boolean onlyValid() {
+        return true;
     }
 
     private static class WebDavDescriptor {
@@ -138,7 +150,7 @@ public class WebDavHarvester_NonRecursive_Test extends AbstractHarvesterIntegrat
 
 
         private String getUnmodifiedResource(String xmlFile) throws Exception {
-            final InputStream resourceAsStream = WebDavHarvester_NonRecursive_Test.class.getResourceAsStream(xmlFile);
+            final InputStream resourceAsStream = WebDavHarvester_Validation_NonRecursive_IntegrationTest.class.getResourceAsStream(xmlFile);
             return CharStreams.toString(new InputStreamReader(resourceAsStream, "UTF-8"));
         }
     }
