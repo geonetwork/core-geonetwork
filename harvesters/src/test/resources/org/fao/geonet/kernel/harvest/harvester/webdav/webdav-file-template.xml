@@ -1,0 +1,20 @@
+<D:response xmlns:lp1="DAV:" xmlns:lp2="http://apache.org/dav/props/" xmlns:g0="DAV:">
+    <D:href>@@href@@</D:href>
+    <D:propstat>
+        <D:prop>
+            <lp1:creationdate>@@modDate@@</lp1:creationdate>
+            <lp1:getcontentlength>@@contentLength@@</lp1:getcontentlength>
+            <D:getcontenttype>application/xml</D:getcontenttype>
+            <lp1:getetag>@@href@@</lp1:getetag>
+            <lp1:getlastmodified>Thu, 23 Jan 2014 20:01:14 GMT</lp1:getlastmodified>
+            <lp1:resourcetype/>
+        </D:prop>
+        <D:status>HTTP/1.1 200 OK</D:status>
+    </D:propstat>
+    <D:propstat>
+        <D:prop>
+            <g0:displayname/>
+        </D:prop>
+        <D:status>HTTP/1.1 404 Not Found</D:status>
+    </D:propstat>
+</D:response>

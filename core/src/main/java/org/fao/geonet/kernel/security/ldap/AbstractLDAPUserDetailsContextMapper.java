@@ -48,6 +48,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -78,7 +79,7 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public UserDetails mapUserFromContext(DirContextOperations userCtx,
             String username, Collection<? extends GrantedAuthority> authorities) {
 

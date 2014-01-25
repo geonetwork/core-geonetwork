@@ -28,7 +28,6 @@
 package jeeves.server;
 
 import jeeves.component.ProfileManager;
-import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
@@ -54,20 +53,16 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PreDestroy;
-import javax.persistence.PersistenceContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.xml.transform.TransformerConfigurationException;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-
-import static org.springframework.web.context.support.WebApplicationContextUtils.getWebApplicationContext;
 
 //=============================================================================
 
@@ -114,7 +109,7 @@ public class JeevesEngine {
 
 	/** Inits the engine, loading all needed data.
 	  */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void init(final String appPath, final String configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException
 	{
         ServletContext servletContext = null;

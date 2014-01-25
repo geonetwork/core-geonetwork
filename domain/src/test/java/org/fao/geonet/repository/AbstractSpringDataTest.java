@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
@@ -17,7 +18,7 @@ import java.io.InputStream;
         AbstractSpringDataTest.CLASSPATH_CONFIG_SPRING_GEONETWORK_PARENT_XML,
         AbstractSpringDataTest.CLASSPATH_CONFIG_SPRING_GEONETWORK_XML,
         AbstractSpringDataTest.CLASSPATH_REPOSITORY_TEST_CONTEXT_XML})
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 public abstract class AbstractSpringDataTest {
 
     public static final String CLASSPATH_CONFIG_SPRING_GEONETWORK_XML = "classpath*:config-spring-geonetwork.xml";
