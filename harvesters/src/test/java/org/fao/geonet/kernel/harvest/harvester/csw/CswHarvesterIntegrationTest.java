@@ -88,4 +88,9 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
     protected int getExpectedAdded() {
         return 2;
     }
+
+    @Override
+    protected int getExpectedTotalFound() {
+        return 2;
+    }
 }

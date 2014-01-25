@@ -65,6 +65,12 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
         _requestFactory.assertAllRequestsCalled();
 
         assertEquals(1, _harvestHistoryRepository.count());
+
+        performExtraAssertions(_harvester);
+    }
+
+    protected void performExtraAssertions(AbstractHarvester harvester) {
+        // no extras by default
     }
 
     protected int getExpectedTotalFound() { return 0; }

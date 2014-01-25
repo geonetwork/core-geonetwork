@@ -1,6 +1,9 @@
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.harvest.MockRequestFactoryGeonet;
+import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,26 +21,14 @@ import static org.junit.Assert.assertFalse;
  */
 public class CswHarvesterIntegrationNoOwnerTest extends CswHarvesterIntegrationTest {
 
-    @Autowired
-    private CswHarvester _harvester;
-
     protected void customizeParams(Element params) {
         addCswSpecificParams(params);
         params.getChild("site").getChild("ownerId").detach();
     }
 
     @Override
-    protected int getExpectedAdded() {
-        return 0;
-    }
-
-    @Override
-    protected void mockHttpRequests(MockRequestFactoryGeonet bean) {
-        // no requests will be made
-    }
-
-    @Override
-    protected void assertExpectedErrors(List errors) {
-        assertFalse(errors.isEmpty());
+    protected void performExtraAssertions(AbstractHarvester harvester) {
+        final User admin = _userRepo.findAllByProfile(Profile.Administrator).get(0);
+        assertEquals(""+admin.getId(), harvester.getParams().ownerId);
     }
 }

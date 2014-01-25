@@ -10,7 +10,7 @@
         <priority value="ERROR" />
     </category>
     <category name="org.hibernate.SQL">
-        <priority value="TRACE"/>
+        <priority value="INFO"/>
     </category>
     <category name="org.gao.geonet.database">
         <priority value="WARN"/>
