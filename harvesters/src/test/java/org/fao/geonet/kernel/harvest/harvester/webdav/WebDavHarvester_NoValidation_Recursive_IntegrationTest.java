@@ -19,7 +19,7 @@ public class WebDavHarvester_NoValidation_Recursive_IntegrationTest extends WebD
 
     @Override
     protected int getExpectedTotalFound() {
-        return 4;
+        return 5;
     }
 
     @Override

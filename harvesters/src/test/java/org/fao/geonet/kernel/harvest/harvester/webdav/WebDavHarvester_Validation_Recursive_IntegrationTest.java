@@ -13,7 +13,7 @@ public class WebDavHarvester_Validation_Recursive_IntegrationTest extends WebDav
 
     @Override
     protected int getExpectedTotalFound() {
-        return 4;
+        return 5;
     }
 
     @Override

@@ -147,7 +147,9 @@ class WebDavRetriever implements RemoteRetriever {
                 }
 
                 for (DavResource resource : sardine.list(baseURL+path)) {
-                    retrieveFile(baseURL, resource);
+                    if (!resource.getHref().equals(davResource.getHref())) {
+                        retrieveFile(baseURL, resource);
+                    }
                 }
             } else {
                 if(log.isDebugEnabled()) {
