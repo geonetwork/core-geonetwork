@@ -314,7 +314,6 @@
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/AdminTools.js"/>
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/HarvesterPanel.js"/>
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/MetadataInsertPanel.js"/>
-            <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/SubTemplateManagerPanel.js"/>
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/ThesaurusManagerPanel.js"/>
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/PrivilegesPanel.js"/>
 

@@ -478,18 +478,6 @@
                                     />
                         </xsl:call-template>
 
-                        <!-- Only add the subtemplate if the client is widget based -->
-                        <xsl:if test="/root/gui/config/client/@widget">
-                            <tr>
-                                <td class="spacer"/>
-                            </tr>
-
-                            <xsl:call-template name="addrow">
-                                <xsl:with-param name="service" select="'subtemplate.admin'"/>
-                                <xsl:with-param name="title" select="/root/gui/strings/subtemplate.admin"/>
-                                <xsl:with-param name="desc" select="/root/gui/strings/subtemplate.admin.desc"/>
-                            </xsl:call-template>
-                        </xsl:if>
                     </xsl:variable>
 
                     <xsl:if test="not($readonly)">
