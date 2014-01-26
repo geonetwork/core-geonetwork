@@ -7,6 +7,8 @@
     'gn_urlutils_service'
   ]);
 
+  // TODO: move to metadatamanger
+  // TODO: rename this is more than new metadata
   module.provider('gnNewMetadata', function() {
     this.$get = ['$http', '$location', '$timeout', 'gnUrlUtils',
                  function($http, $location, $timeout, gnUrlUtils) {
@@ -31,7 +33,14 @@
                 );
             return $http.get(url);
           },
-          // TODO: move to metadatamanger
+          importMetadata: function(data) {
+            return $http({
+              url: 'md.insert@json',
+              method: 'POST',
+              data: $.param(data),
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            });
+          },
           createNewMetadata: function(id, groupId, fullPrivileges, 
               template, tab) {
             //            $http.get(url).success(function(data) {

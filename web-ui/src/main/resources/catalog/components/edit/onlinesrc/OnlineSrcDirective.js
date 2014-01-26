@@ -71,7 +71,7 @@
                 'partials/addThumbnail.html',
             scope: {},
             link: function(scope, element, attrs) {
-              
+
               // mode can be 'url' or 'upload'
               scope.mode = 'url';
 

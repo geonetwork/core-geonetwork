@@ -97,6 +97,9 @@
     "chooseAType": "Choose a type",
     "directoryEntries": "Entries",
     "gmd:CI_ResponsibleParty": "Organizations & contacts",
-    "gmd:MD_Distribution": "Online resources"
-    
+    "gmd:MD_Distribution": "Online resources",
+    "importEntry": "Import directory entry",
+    "xmlSnippet": "XML snippet",
+    "addRecord": "Add dataset",
+    "yourMetadata": "Your metadata"
 }

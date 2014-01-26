@@ -134,7 +134,7 @@
              if (gnCurrentEdit.saving) {
                return;
              } else {
-               if(!silent) {
+               if (!silent) {
                  setStatus({msg: 'saving', saving: true});
                }
              }
@@ -151,13 +151,13 @@
                if (refreshForm) {
                  scope.refreshEditorForm(snippet);
                }
-               if(!silent) {
+               if (!silent) {
                  setStatus({msg: 'allChangesSaved', saving: false});
                }
 
                defer.resolve(snippet);
              }).error(function(error) {
-               if(!silent) {
+               if (!silent) {
                  setStatus({msg: 'saveMetadataError', saving: false});
                }
                defer.reject(error);

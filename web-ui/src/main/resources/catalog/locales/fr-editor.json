@@ -99,5 +99,9 @@
     "chooseAType": "Sélectionner un type",
     "directoryEntries": "Éléments",
     "gmd:CI_ResponsibleParty": "Organisations & contacts",
-    "gmd:MD_Distribution": "Ressources en ligne"
+    "gmd:MD_Distribution": "Ressources en ligne",
+    "importEntry": "Importer un élément dans un annuaire",
+    "xmlSnippet": "Fragment XML",
+    "addRecord": "Ajouter une donnée",
+    "yourMetadata": "Vos métadonnées"
 }

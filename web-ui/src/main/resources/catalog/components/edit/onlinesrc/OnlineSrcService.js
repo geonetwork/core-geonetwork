@@ -39,9 +39,9 @@
         angular.extend(params, {
           process: processName
         });
-//        if (!angular.isUndefined(params.url)) {
-//          params.url = encodeURIComponent(params.url);
-//        }
+        //        if (!angular.isUndefined(params.url)) {
+        //          params.url = encodeURIComponent(params.url);
+        //        }
         return setLayersParams(params);
       };
 
@@ -81,7 +81,7 @@
       var parseRelations = function(data) {
 
         var relations = {};
-        if(!angular.isArray(data.relation)) {
+        if (!angular.isArray(data.relation)) {
           data.relation = [data.relation];
         }
         angular.forEach(data.relation, function(rel) {
@@ -132,7 +132,7 @@
        * an onlinesrc.
        * Save the form, launch the service, then refresh
        * the form and reload the onlinesrc list.
-       * The save is silent, in order not to reload the 
+       * The save is silent, in order not to reload the
        * onlinesrc list on save and on batch success.
        */
       var runService = function(service, params, scope) {

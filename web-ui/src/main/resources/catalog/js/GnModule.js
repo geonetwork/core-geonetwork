@@ -28,6 +28,7 @@
   var module = angular.module('gn', [
     'ngRoute',
     'pascalprecht.translate',
+    'angular-md5',
     'gn_language_switcher',
     'gn_utility',
     'gn_search_manager',

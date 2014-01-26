@@ -26,12 +26,14 @@
             gnNewMetadata) {
 
       $scope.isTemplate = 's';
-      $scope.hasEntries = true;
+      $scope.hasEntries = false;
       $scope.mdList = null;
       $scope.activeType = null;
       $scope.activeEntry = null;
       $scope.ownerGroup = null;
-
+      // TODO: Use paging
+      $scope.maxEntries = 500;
+      
       var dataTypesToExclude = [];
 
       // A map of icon to use for each types
@@ -39,14 +41,6 @@
         'gmd:CI_ResponsibleParty': 'fa-user',
         'gmd:MD_Distribution': 'fa-link'
       };
-
-      //      $scope.$watchCollection('groups', function() {
-      //        if (!angular.isUndefined($scope.groups)) {
-      //          if ($scope.groups.length == 1) {
-      //            $scope.ownerGroup = $scope.groups[0].id;
-      //          }
-      //        }
-      //      });
 
       // List of record type to not take into account
       // Could be avoided if a new index field is created FIXME ?
@@ -75,8 +69,9 @@
       };
 
       var searchEntries = function() {
+        $scope.tpls = null;
         gnSearchManagerService.search('qi@json?' +
-            'template=s&fast=index&from=1&to=500').
+            'template=s&fast=index&from=1&to=' + $scope.maxEntries).
             then(function(data) {
 
               $scope.mdList = data;
@@ -167,7 +162,6 @@
         gnEditor.save(refreshForm)
           .then(function(form) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
-              $scope.toggleAttributes();
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('saveMetadataSuccess')
               });
@@ -217,6 +211,10 @@
        * Open the editor for the selected entry
        */
       $scope.selectEntry = function(e) {
+        // TODO: alert when changing from
+        // import action to editing to avoid
+        // losing information.
+        $scope.isImporting = false;
         $scope.activeEntry = e;
 
         if (e) {
@@ -237,12 +235,29 @@
         }
       };
 
-      $scope.addEntry = function() {
-        // xml.metadata.insert
-        //        insert_mode:0
-        //        template:s
-        //        data:
-        //          group:
+      $scope.isImporting = false;
+      $scope.importData = {
+        data: null,
+        insert_mode: 0,
+        template: 's',
+        fullPrivileges: 'y'
+      };
+
+
+      $scope.startImportEntry = function() {
+        $scope.selectEntry(null);
+        $scope.isImporting = true;
+        $scope.importData.group = $scope.groups[0].id;
+      };
+
+      $scope.importEntry = function(formId) {
+        gnNewMetadata.importMetadata($scope.importData).then(
+            function() {
+              searchEntries();
+              $scope.isImporting = false;
+              $scope.importData = null;
+            }
+        );
       };
 
       $scope.delEntry = function(e) {

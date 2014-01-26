@@ -11,7 +11,7 @@
 <div class="navbar-collapse navbar-ex1-collapse pull-right">
     <ul class="nav navbar-nav">
         <li data-ng-show="authenticated">
-            <p class="navbar-text"><img ng-src="http://gravatar.com/avatar/{{user.hash}}?s=18"/>
+            <p class="navbar-text"><img class="img-circle" ng-src="http://gravatar.com/avatar/{{u.email | md5}}?s=18"/>
                 <a href="admin.console#/organization/users/{{user.username}}"  
                     title="{{'userDetails' | translate}}" class="navbar-link">
                     {{user.name}} {{user.surname}} ({{user.profile | translate}})<i class="fa fa-user"></i></a>

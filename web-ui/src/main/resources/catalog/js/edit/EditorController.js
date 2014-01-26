@@ -5,26 +5,17 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
   goog.require('gn_directory_controller');
   goog.require('gn_fields');
   goog.require('gn_new_metadata_controller');
+  goog.require('gn_editorboard_controller');
   goog.require('gn_scroll_spy');
   goog.require('gn_thesaurus');
   goog.require('gn_utility_directive');
 
   var module = angular.module('gn_editor_controller',
       ['gn_fields', 'gn_new_metadata_controller',
+       'gn_editorboard_controller',
        'gn_directory_controller', 'gn_utility_directive',
        'gn_scroll_spy', 'gn_thesaurus']);
 
@@ -57,8 +48,8 @@
           templateUrl: tplFolder + 'directory.html',
           controller: 'GnDirectoryController'}).
         otherwise({
-          templateUrl: tplFolder + 'new-metadata.html',
-          controller: 'GnNewMetadataController'
+          templateUrl: tplFolder + 'editorboard.html',
+          controller: 'GnEditorBoardController'
         });
   }]);
 
