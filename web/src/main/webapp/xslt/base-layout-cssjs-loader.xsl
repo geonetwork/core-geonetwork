@@ -48,6 +48,7 @@
         <script src="{$uiResourcesPath}lib/angular/angular-route.js"></script>
         
         <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
+        <script src="{$uiResourcesPath}lib/angular-md5.js"></script>
         
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
         <script src="{$uiResourcesPath}lib/ol-whitespace.js"></script>
@@ -80,6 +81,7 @@
         <script src="{$uiResourcesPath}lib/angular/angular-route.min.js"></script>
           
         <script src="{$uiResourcesPath}lib/angular-translate.min.js"></script>
+        <script src="{$uiResourcesPath}lib/angular-md5.min.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.min.js"></script>
         <script src="{$uiResourcesPath}lib/ol.js"></script>
         
