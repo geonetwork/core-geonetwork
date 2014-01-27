@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.ThesaurusActivationEntityListenerManager;
+
 import javax.persistence.*;
 
 /**
@@ -10,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "Thesaurus")
+@EntityListeners(ThesaurusActivationEntityListenerManager.class)
 public class ThesaurusActivation {
     private String _id;
     private char _activated = Constants.YN_TRUE;
@@ -71,5 +74,26 @@ public class ThesaurusActivation {
      */
     public void setActivated(boolean activated) {
         setActivated_JpaWorkaround(Constants.toYN_EnabledChar(activated));
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ThesaurusActivation that = (ThesaurusActivation) o;
+
+        if (_activated != that._activated) return false;
+        if (_id != null ? !_id.equals(that._id) : that._id != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = _id != null ? _id.hashCode() : 0;
+        result = 31 * result + (int) _activated;
+        return result;
     }
 }

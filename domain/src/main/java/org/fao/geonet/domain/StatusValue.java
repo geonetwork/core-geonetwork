@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.StatusValueEntityListenerManager;
+
 import javax.persistence.*;
 import java.util.Map;
 
@@ -11,9 +13,12 @@ import java.util.Map;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "StatusValues")
+@EntityListeners(StatusValueEntityListenerManager.class)
+@SequenceGenerator(name=StatusValue.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class StatusValue extends Localized {
 	private static final long serialVersionUID = 112093471293847L;
 	private int _id;
+    static final String ID_SEQ_NAME = "status_value_id_seq";
     private String _name;
     private char _reserved = Constants.YN_FALSE;
     private int displayOrder;
@@ -26,7 +31,7 @@ public class StatusValue extends Localized {
      * @return the id of the StatusValue object
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }

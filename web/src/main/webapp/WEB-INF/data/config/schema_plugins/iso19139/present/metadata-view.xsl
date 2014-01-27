@@ -107,10 +107,11 @@
           </xsl:with-param>
         </xsl:call-template>
 
-
+        <xsl:variable name="modifiedDate" select="gmd:dateStamp/*[1]"/>
         <span class="madeBy">
-          <xsl:value-of select="/root/gui/strings/changeDate"/><xsl:value-of select="substring-before(gmd:dateStamp, 'T')"/> | 
-          <xsl:value-of select="/root/gui/strings/uuid"/><xsl:value-of select="gmd:fileIdentifier"/>
+          <xsl:value-of select="/root/gui/strings/changeDate"/>&#160;<xsl:value-of 
+            select="if (contains($modifiedDate, 'T')) then substring-before($modifiedDate, 'T') else $modifiedDate"/> | 
+          <xsl:value-of select="/root/gui/strings/uuid"/>&#160;<xsl:value-of select="gmd:fileIdentifier"/>
         </span>
 
       </xsl:with-param>
@@ -260,7 +261,7 @@
         
         
         <xsl:variable name="type" select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>
-        <xsl:if test="$type">
+        <xsl:if test="$type != ''">
           (<xsl:value-of
             select="/root/gui/schemas/*[name(.)='iso19139']/codelists/codelist[@name = 'gmd:MD_KeywordTypeCode']/
             entry[code = $type]/label"/>)

@@ -99,7 +99,9 @@ public class XmlRequest extends AbstractHttpRequest {
         final ClientHttpResponse httpResponse = doExecute(httpMethod);
 
         if (httpResponse.getRawStatusCode() > 399) {
-            throw new BadServerResponseEx(httpResponse.getStatusText()+" -- Response Code: "+httpResponse.getRawStatusCode());
+            throw new BadServerResponseEx(httpResponse.getStatusText() + 
+                    " -- URI: " + httpMethod.getURI() +
+                    " -- Response Code: " + httpResponse.getRawStatusCode());
         }
 
         byte[] data = null;
@@ -111,7 +113,7 @@ public class XmlRequest extends AbstractHttpRequest {
 
 		catch(JDOMException e)
 		{
-			throw new BadXmlResponseEx(new String(data, "UTF8"));
+			throw new BadXmlResponseEx("Response: '" + new String(data, "UTF8") + "' (from URI " + httpMethod.getURI() + ")");
 		}
 
 		finally

@@ -58,6 +58,8 @@
     "passwordMinlength": "Le mot de passe doit contenir au moins 6 caractères !",
     "updatePassword": "Mettre à jour",
     "passwordUpdated": "Mot de passe mis à jour avec succès.",
+    "resetPassword": "Changer le mot de passe",
+    "resetPasswordTitle": "Modification du mot de passe de {{user}}.",
     
     "from": "De",
     "to": " à ",

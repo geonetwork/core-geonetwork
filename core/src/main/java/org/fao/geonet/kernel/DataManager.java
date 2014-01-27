@@ -82,6 +82,7 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
@@ -112,9 +113,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Handles all operations on metadata (select,insert,update,delete etc...).
  *
  */
-@Component
-@Lazy
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED, noRollbackFor = {XSDValidationErrorEx.class, NoSchemaMatchesException.class})
 public class DataManager {
 
     private static final String FS = File.separator;

@@ -112,9 +112,15 @@ public class ConfigurationOveridesTest {
     }
     @Test //@Ignore
     public void updateSpringConfiguration() throws JDOMException, IOException {
-        JeevesApplicationContext applicationContext = new JeevesApplicationContext(new ConfigurationOverrides("/WEB-INF/test-spring-config-overrides.xml"));
-        applicationContext.setAppPath(appPath);
-        applicationContext.setConfigLocation("classpath:test-spring-config.xml");
+        final ConfigurationOverrides configurationOverrides = new ConfigurationOverrides("/WEB-INF/test-spring-config-overrides.xml");
+        final String nodeId = "srv";
+        JeevesApplicationContext applicationContext = new JeevesApplicationContext(configurationOverrides, null, "classpath:test-spring-config.xml"){
+
+            @Override
+            protected String getAppPath() {
+                return appPath;
+            }
+        };
         updateAndPerformSpringAssertions(applicationContext);
         
         // make sure refresh works multiple times

@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.SourceEntityListenerManager;
+
 import javax.persistence.*;
 
 /**
@@ -10,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "Sources")
+@EntityListeners(SourceEntityListenerManager.class)
 public class Source extends GeonetEntity {
     private String _uuid;
     private String _name;

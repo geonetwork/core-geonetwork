@@ -6,6 +6,7 @@
     "statisticsAndStatus": "Statistiques et status",
     "io": "Importer/Exporter",
     "harvesters": "Moissonnage",
+    "harvesterError": "Erreur lors du moissonnage",
     "settings": "Paramètres",
     "settingsUpdated": "Configuration sauvegardée.",
     "usersAndGroups": "Utilisateurs et groupes",
@@ -632,5 +633,12 @@
     "emailToSearch": "Email à rechercher",
     "contactAsXML": "Fragment de XML à insérer pour les contacts correspondant",
     "contactAsXML-help": "<h5>Exemple:</h5><code class='gn-code'>&lt;gmd:CI_ResponsibleParty xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\"&gt;&lt;gmd:individualName&gt;&lt;gco:CharacterString&gt;A new user&lt;/gco:CharacterString&gt;&lt;/gmd:individualName&gt;&lt;gmd:organisationName&gt;&lt;gco:CharacterString&gt;Organisation&lt;/gco:CharacterString&gt;&lt;/gmd:organisationName&gt;&lt;gmd:contactInfo&gt;&lt;gmd:CI_Contact&gt;&lt;gmd:address&gt;&lt;gmd:CI_Address&gt;&lt;gmd:electronicMailAddress&gt;&lt;gco:CharacterString&gt;newemail@organisation.org&lt;/gco:CharacterString&gt;&lt;/gmd:electronicMailAddress&gt;&lt;/gmd:CI_Address&gt;&lt;/gmd:address&gt;&lt;/gmd:CI_Contact&gt;&lt;/gmd:contactInfo&gt;&lt;gmd:role&gt;&lt;gmd:CI_RoleCode codeListValue=\"pointOfContact\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode\"/&gt;&lt;/gmd:role&gt;&lt;/gmd:CI_ResponsibleParty&gt;</code>",
-    "emptyCatalogShouldBeFilled": "Le catalogue est vide, vous devriez probablement importer des nouvelles fiches ou moissonner un catalogue distant. Vous pouvez également insérer <a href='#/metadata/metadata-and-template/load-templates/all'>les modèles</a>, <a href='#/metadata/metadata-and-template/load-samples/all'>les exemples</a> ou <a href='#/metadata/metadata-and-template/load-samples-and-templates/all'>les deux</a>."
+    "emptyCatalogShouldBeFilled": "Le catalogue est vide, vous devriez probablement importer des nouvelles fiches ou moissonner un catalogue distant. Vous pouvez également insérer <a href='#/metadata/metadata-and-template/load-templates/all'>les modèles</a>, <a href='#/metadata/metadata-and-template/load-samples/all'>les exemples</a> ou <a href='#/metadata/metadata-and-template/load-samples-and-templates/all'>les deux</a>.",
+    "transfertPrivs":"Transfert de privilèges",
+    "chooseSourceEditor":"Sélectionner l'éditeur dont les fiches seront transférées",
+    "sourceGroup":"Groupe source",
+    "targetGroup":"Groupe cible",
+    "targetEditor":"Editeur cible",
+    "transfertPriv":"Transférer",
+    "transfertPrivilegesFinished": "{{metadata}} fiche(s) transférées."
 }

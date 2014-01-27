@@ -25,7 +25,6 @@ import java.util.Set;
  * Date: 9/21/13
  * Time: 4:23 PM
  */
-@Component
 public class MetadataStatisticsQueries {
 	
 	@PersistenceContext

@@ -60,9 +60,12 @@ public class LanguageRepositoryTest extends AbstractSpringDataTest {
         assertEquals(language2.isInspire(), histories.get(0).isInspire());
     }
 
-
     private Language newLanguage() {
-        int val = _inc.incrementAndGet();
+        return newLanguage(_inc);
+    }
+
+    public static Language newLanguage(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
         Language lang = new Language();
         lang.setId("l-" + val);
         lang.setDefaultLanguage(val % 2 == 0);

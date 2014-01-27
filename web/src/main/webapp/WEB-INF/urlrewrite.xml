@@ -81,6 +81,26 @@
         <from>^/robots.txt$</from>
         <to type="forward" last="true">/srv/eng/robots.txt</to>
     </rule>
+
+    <!-- Use new home service because it performs a faster redirect -->
+    <rule>
+        <from>^/([^/]*)/(\w\w\w)/home$</from>
+        <to type="permanent-redirect" last="true">%{context-path}/home?hl=$2&amp;node=$1</to>
+    </rule>
+
+    <!-- Use redirects to handle the initial entry points -->
+    <rule>
+        <from>^/$</from>
+        <to type="permanent-redirect" last="true">%{context-path}/home</to>
+    </rule>
+    <rule>
+        <from>^/index.html$</from>
+        <to type="permanent-redirect" last="true">%{context-path}/home</to>
+    </rule>
+    <rule>
+        <from>^/index.jsp$</from>
+        <to type="permanent-redirect" last="true">%{context-path}/home</to>
+    </rule>
     
     <!-- Rules for RESTful urls for metadata retrieve -->
     <rule>

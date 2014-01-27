@@ -356,6 +356,7 @@
 					<Field name="agg_{$associationType}_{$initiativeType}" string="{$code}" store="false" index="true"/>
 					<Field name="agg_{$associationType}_with_initiative" string="{$initiativeType}" store="false" index="true"/>
 					<Field name="agg_{$associationType}" string="{$code}" store="false" index="true"/>
+					<Field name="agg_associated" string="{$code}" store="false" index="true"/>
 					<Field name="agg_with_association" string="{$associationType}" store="false" index="true"/>
 					<Field name="agg_use" string="true" store="false" index="true"/>
 				</xsl:if>
@@ -567,7 +568,7 @@
 		<xsl:variable name="isStatic" select="count(gmd:distributionInfo/gmd:MD_Distribution/
 			gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString[contains(., 'PDF') or contains(., 'PNG') or contains(., 'JPEG')]) > 0"/>
 		<xsl:variable name="isInteractive" select="count(gmd:distributionInfo/gmd:MD_Distribution/
-			gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString[contains(., 'OGC:WMC') or contains(., 'OGC:OWS')]) > 0"/>
+			gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString[contains(., 'OGC:WMC') or contains(., 'OGC:OWS-C')]) > 0"/>
 		<xsl:variable name="isPublishedWithWMCProtocol" select="count(gmd:distributionInfo/gmd:MD_Distribution/
 			gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol[starts-with(gco:CharacterString, 'OGC:WMC')]) > 0"/>
 		
@@ -622,8 +623,8 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-		<xsl:for-each select="gmd:dateStamp/gco:DateTime">
-			<Field name="changeDate" string="{string(.)}" store="true" index="true"/>
+		<xsl:for-each select="gmd:dateStamp">
+			<Field name="changeDate" string="{string(gco:DateTime|gco:Date)}" store="true" index="true"/>
 		</xsl:for-each>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

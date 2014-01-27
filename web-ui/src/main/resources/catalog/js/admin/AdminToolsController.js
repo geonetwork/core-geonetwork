@@ -37,9 +37,9 @@
               icon: 'fa-medkit',
               href: '#/tools/batch'
             },{
-              type: 'transfert-privs',
+              type: 'transferownership',
               label: 'transfertPrivs',
-              href: 'transfer.ownership'
+              href: '#/tools/transferownership'
             }]
       };
 
@@ -104,6 +104,79 @@
       $scope.batchSearchGroups = {};
       $scope.batchSearchUsers = {};
       $scope.batchSearchCategories = {};
+
+      $scope.editors = {};
+      $scope.groupinfo = {};
+      $scope.editorSelectedId = null;
+      $scope.editorGroups = {};
+      
+      function loadEditors() {
+        $http.get('admin.ownership.editors@json')
+            .success(function(data) {
+              $scope.editors = data;
+            });
+      }
+      $scope.selectUser = function(id) {
+        $scope.editorSelectedId = id;
+        $http.get('admin.usergroups.list@json?id=' + id)
+            .success(function(data) {
+                var uniqueGroup = {};
+                angular.forEach(data, function (value) {
+                    if (!uniqueGroup[value.id]) {
+                        uniqueGroup[value.id] = value;
+                    }
+                });
+                $scope.editorGroups = uniqueGroup;
+        }).error(function(data) {
+        });
+
+        $http.get('admin.ownership.groups@json?id=' + id)
+          .success(function(data) {
+              // If user does not have group and only one
+              // target group, a simple object is returned
+              // and it should be a target group ? FIXME
+              if (!data.group && !data.targetGroup) {
+                data.group = data;
+                data.targetGroup = data;
+              }
+              // Make all group and targetGroup arrays.
+              $scope.groupinfo = {
+                group: [].concat(data.group),
+                targetGroup: [].concat(data.targetGroup)
+              };
+            });
+      };
+      $scope.transfertList = {};
+
+      $scope.tranferOwnership = function(sourceGroup) {
+        var params = $scope.transfertList[sourceGroup];
+
+        // check params.targetGroup.id and params.targetEditor defined
+
+        var xml = '<request><sourceUser>' + $scope.editorSelectedId +
+            '</sourceUser><sourceGroup>' + sourceGroup +
+            '</sourceGroup><targetUser>' + params.targetEditor +
+            '</targetUser><targetGroup>' + params.targetGroup.id +
+            '</targetGroup></request>';
+
+        params.running = true;
+        $http.post('admin.ownership.transfer@json', xml, {
+          headers: {'Content-type': 'application/xml'}
+        }).success(function(data) {
+          $rootScope.$broadcast('StatusUpdated', {
+            msg: $translate('transfertPrivilegesFinished', 
+                    {privileges: data.privileges, metadata: data.metadata}),
+            timeout: 2,
+            type: 'success'});
+          params.running = false;
+        }).error(function(data) {
+          // TODO
+          params.running = false;
+        });
+      };
+      $scope.isRunning = function(sourceGroup) {
+        return $scope.transfertList[sourceGroup].running;
+      };
 
       function loadProcessConfig() {
         $http.get($scope.base + 'config/batch-process-cfg.json')
@@ -193,7 +266,7 @@
       loadGroups();
       loadUsers();
       loadCategories();
-
+      loadEditors();
 
       $scope.recordsToProcessSearchFor = function(e) {
         $scope.recordsToProcessFilter = (e ? e.target.value : '');

@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans default-lazy-init="true"
+<<<<<<< HEAD
 	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="
 	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+=======
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+>>>>>>> 0ca90de07982407aa227bc33d37dd45191bd8666
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 ">
 
+    <import resource="config-security/config-security.xml"/>
+    <import resource="classpath:JZkitApplicationContext.xml"/>
 
+<<<<<<< HEAD
 	<import resource="config-security/config-security.xml" />
 	<import resource="classpath*:/config-spring-geonetwork.xml" />
 	<import resource="classpath:JZkitApplicationContext.xml" />
@@ -92,4 +102,48 @@
 	<!-- <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"> 
 		<property name="basename" value="translations" /> </bean> -->
 
+=======
+    <import resource="config-db/initial_data.xml"/>
+
+
+    <!-- Uncomment if you want to use a non-shapefile datastore -->
+    <!--<import resource="config-db/postgis-shared-datasource.xml"/>-->
+    <!--<import resource="config-db/postgis-alternate-datasource.xml"/>-->
+
+    <!--
+        Import the versioning configuration (subversion etc...)
+    -->
+    <import resource="config-versioning.xml"/>
+
+
+    <bean id="scheduler"
+          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
+    </bean>
+    <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>
+    <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
+        <property name="numberOfConcurrentRequests" value="30" />
+    </bean>
+
+    <!-- Define the languages in the UI.  Seems like these should come from database at some point but at the moment they
+         are needed here.
+     -->
+    <util:set id="languages">
+        <value>ara</value>
+        <value>cat</value>
+        <value>chi</value>
+        <value>dut</value>
+        <value>eng</value>
+        <value>fin</value>
+        <value>fre</value>
+        <value>ger</value>
+        <value>ita</value>
+        <value>nor</value>
+        <value>pol</value>
+        <value>por</value>
+        <value>rus</value>
+        <value>spa</value>
+        <value>tur</value>
+    </util:set>
+>>>>>>> 0ca90de07982407aa227bc33d37dd45191bd8666
 </beans>

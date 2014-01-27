@@ -7,7 +7,6 @@ import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.csw.CswHarvesterIntegrationTest;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.repository.HarvestHistoryRepository;
-import org.fao.geonet.repository.HarvesterSettingRepository;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,6 @@ public class AddIntegrationTest extends AbstractHarvesterServiceIntegrationTest 
     private HarvesterSettingsManager _settingsManager;
     @Autowired
     private HarvestHistoryRepository _historyRepository;
-    @Autowired
-    private HarvestManager _harvestManager;
 
     @Test
     public void testExec() throws Exception {

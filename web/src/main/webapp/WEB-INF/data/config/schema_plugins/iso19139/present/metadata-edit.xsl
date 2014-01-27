@@ -1397,16 +1397,19 @@
           <xsl:with-param name="content">
             
             <xsl:variable name="thesaurusName" select="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"></xsl:variable>
-            <xsl:variable name="thesaurusCode" select="if (gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/
-              gmd:identifier/gmd:MD_Identifier/gmd:code) then gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/
-              gmd:identifier/gmd:MD_Identifier/gmd:code else /root/gui/thesaurus/thesauri/thesaurus[title=$thesaurusName]/key"/>
+            <xsl:variable name="thesaurusCode" select="if (gmd:thesaurusName/gmd:CI_Citation/
+              gmd:identifier/gmd:MD_Identifier/gmd:code/*[1]) then gmd:thesaurusName/gmd:CI_Citation/
+              gmd:identifier/gmd:MD_Identifier/gmd:code/*[1] else /root/gui/thesaurus/thesauri/thesaurus[title=$thesaurusName]/key"/>
+            
+            <!-- Check that thesaurus is available locally. Check that the thesaurus is available in the catalogue to not 
+              to try to initialize a widget with a non existing thesaurus.  -->
+            <xsl:variable name="isThesaurusAvailable"
+              select="count(/root/gui/thesaurus/thesauri/thesaurus[key = $thesaurusCode]) > 0"></xsl:variable>
             
             <xsl:choose>
               <!-- If a thesaurus is attached to that keyword group 
-              use a snippet editor. 
-              TODO : check that the thesaurus is available in the catalogue to not 
-              to try to initialize a widget with a non existing thesaurus. -->
-              <xsl:when test="$thesaurusCode != ''">
+              use a snippet editor.-->
+              <xsl:when test="$isThesaurusAvailable">
                 <xsl:apply-templates select="gmd:MD_Keywords" mode="snippet-editor">
                   <xsl:with-param name="edit" select="$edit"/>
                   <xsl:with-param name="schema" select="$schema"/>
@@ -2977,7 +2980,9 @@
       </xsl:variable>
     
       <xsl:variable name="abstract">
-        <xsl:apply-templates mode="escapeXMLEntities" select="/root/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract/gco:CharacterString"/>
+        <xsl:apply-templates mode="escapeXMLEntities" select="/root/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract/gco:CharacterString">
+          <xsl:with-param name="includingCRLF" select="true()"/>
+        </xsl:apply-templates>
       </xsl:variable>
     
       <button type="button" class="content repository" 

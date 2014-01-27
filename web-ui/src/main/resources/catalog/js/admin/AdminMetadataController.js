@@ -168,7 +168,7 @@
       };
 
       $scope.sortOrder = function(item) {
-        return parseInt(item.displayorder);
+        return parseInt(item.displayorder, 10);
       };
 
       if ($routeParams.tab === 'template-sort') {

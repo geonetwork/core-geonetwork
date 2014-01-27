@@ -40,7 +40,7 @@
     <condition/>
     
   </element>
-  <element name="codeSpace" id="208.1">
+  <element name="gmd:codeSpace" id="208.1">
     <label>Espace de nommage</label>
     <description>Nom ou identification de la personne ou de l'organisation responsable pour le domaine de valeurs</description>
     <help>Informations sur la personne ou l'organisation en charge de l'espace nominal ou de l'identifiant.</help>
@@ -2638,7 +2638,7 @@ période de temps couverte par le service.
       <option value="PNG">PNG</option>
       <option value="JPEG">JPEG</option>
       <option value="OGC:WMC">OGC:WMC</option>
-      <option value="OGC:OWS Context">OGC:OWS Context</option>
+      <option value="OGC:OWS-C">OGC OWS Context</option>
     </helper>
   </element>
   <element name="gmd:name" id="307.0" context="gmd:MD_ExtendedElementInformation">
@@ -3091,6 +3091,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
       <option value="OGC:WFS">OGC-WFS Web Feature Service</option>
       <option value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
       <option value="OGC:WMC">OGC-WMC Web Map Context</option>
+      <option value="OGC:OWS-C">OGC OWS Context</option>
       <option value="OGC:WMS">OGC-WMS Web Map Service</option>
       <option value="OGC:WNS">OGC-WNS Web Notification Service</option>
       <option value="OGC:WPS">OGC-WPS Web Processing Service</option>

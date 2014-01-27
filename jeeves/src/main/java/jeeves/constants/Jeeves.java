@@ -31,7 +31,10 @@ import org.fao.geonet.domain.Profile;
 
 public final class Jeeves
 {
-	/**
+    public static final String LANG_COOKIE = "geonetwork_Preferred_Language_Cookie";
+    public static final String SHUTDOWN_ON_STARTUP_ERROR = "geonetwork.shutdown.on.startup.error";
+
+    /**
     * Default constructor.
     * Builds a Jeeves.
     */
@@ -90,6 +93,7 @@ public final class Jeeves
 		public static final String LOC_SERVICE  = "locService";
 		public static final String LANGUAGE     = "language";
 		public static final String REQ_SERVICE  = "reqService";
+        public static final String NODE_ID      = "nodeId";
 	}
 
 	//--------------------------------------------------------------------------

@@ -28,16 +28,18 @@
 package org.fao.geonet.kernel;
 
 import jeeves.server.ServiceConfig;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.exceptions.OperationAbortedEx;
+
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.overrides.ConfigurationOverrides;
+
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
@@ -69,6 +71,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -82,7 +85,6 @@ import java.util.zip.ZipInputStream;
  * The SchemaManager holds a map of Schema objects known to GeoNetwork. 
  *
  */
-@Component
 public class SchemaManager {
 
     private static final int MODE_NEEDLE = 0;
@@ -1694,21 +1696,15 @@ public class SchemaManager {
                     if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                         Log.debug(Geonet.SCHEMA_MANAGER, "  Searching value for element: " + tempElement.getName());
 		            
-					String needleVal = needle.getValue();
-					String[] needleToken = StringUtils.deleteWhitespace(needleVal).split("\\|");
-          String tempVal = StringUtils.deleteWhitespace(tempElement.getValue());
-                    
-					for (String t : needleToken) {
-											Log.debug(Geonet.SCHEMA_MANAGER, "    Comparing: '" + t + "' \n****with****\n '" + tempVal + "'");
-	                    if(tempVal!=null && needleVal!=null){
-	                        returnVal = t.equals(tempVal);
-	                        if (returnVal) {
-                                if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
-                                    Log.debug(Geonet.SCHEMA_MANAGER, "    Found value: " + t + " for needle: " + needleName);
-	                            break;
-	                        }
-	                    }
-					}
+                    String needleVal = StringUtils.deleteWhitespace(needle.getValue());
+                    String tempVal = StringUtils.deleteWhitespace(tempElement.getValue());
+                    returnVal = Pattern.matches(needleVal, tempVal);
+                    if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
+                        Log.debug(Geonet.SCHEMA_MANAGER, "    Pattern " + needleVal + " applied to value " + tempVal + " match: " + returnVal);
+                    }
+                    if (returnVal) {
+                        break;
+                    }
 				} else {
 					returnVal = true;
 					break;

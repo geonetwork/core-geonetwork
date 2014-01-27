@@ -40,6 +40,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
@@ -100,7 +101,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
         }
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     private void runInTransaction(JobExecutionContext jobExecContext) {
         // Get LDAP information defining which users to sync
         final JobDataMap jdm = jobExecContext.getJobDetail().getJobDataMap();

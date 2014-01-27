@@ -116,7 +116,7 @@ x-layout-cmini-east {
   width: 80%;
   height: 250px;
 }
-.latest * input[type='checkbox'] {
+.latest * span.checkbox {
   display: none;
 }
 
@@ -219,7 +219,7 @@ table.map {
   border-top : 1px solid rgba(0, 0, 0, 0.15);
 }
 #header {
-  /*background-image : url(../images/default/header-bg.png);*/
+  /*background-image : url(../apps/images/default/header-bg.png);*/
   height : 33px;
   border-bottom: 1px solid #ececec;
 }
@@ -236,7 +236,7 @@ table.map {
 }
 
 #footer {
-  background-image : url(../images/default/header-bg.png);
+  background-image : url(../apps/images/default/header-bg.png);
   height : 20px;
   /* bottom: 0px; */
   text-align : center;
@@ -255,7 +255,7 @@ table.map {
   left : 0;
 }
 #logo {
-  background-image : url(../images/default/gn-logo.png);
+  background-image : url(../apps/images/default/gn-logo.png);
   background-repeat : no-repeat;
   height : 30px;
 }
@@ -305,105 +305,105 @@ table.related * a:hover,
 
 /* Icon based on protocol prefix in related resource table */
 .WWWLINK {
-  background-image : url(../images/default/link.png);
+  background-image : url(../apps/images/default/link.png);
 }
 .WWWDOWNLOAD {
-  background-image : url(../images/default/database_yellow.png);
+  background-image : url(../apps/images/default/database_yellow.png);
 }
 .OGCWMS {
-  background-image : url(../images/default/map/server_picture.png);
+  background-image : url(../apps/images/default/map/server_picture.png);
 }
 .OGCWFS {
-  background-image : url(../images/default/map/server_vector.png);
+  background-image : url(../apps/images/default/map/server_vector.png);
 }
 
 
 /* Other icons */
 .md-mn-reset {
-  background-image : url(../images/default/cross.png);
+  background-image : url(../apps/images/default/cross.png);
 }
 .md-mn-kml {
-  background-image : url(../images/default/google-earth-link.png);
+  background-image : url(../apps/images/default/google-earth-link.png);
 }
 .md-mn-www {
-  background-image : url(../images/default/link.png);
+  background-image : url(../apps/images/default/link.png);
 }
 .xmlIcon {
-  background-image : url(../images/default/page_code.png);
+  background-image : url(../apps/images/default/page_code.png);
 }
 .rdfIcon {
-  background-image : url(../images/default/sw-cube.png);
+  background-image : url(../apps/images/default/sw-cube.png);
 }
 .addIcon {
-  background-image : url(../images/default/add.png) !important;
+  background-image : url(../apps/images/default/add.png) !important;
 }
 .privIcon {
-  background-image : url(../images/default/group_key.png) !important;
+  background-image : url(../apps/images/default/group_key.png) !important;
 }
 .childIcon {
-  background-image : url(../images/default/chart_organisation.png) !important;
+  background-image : url(../apps/images/default/chart_organisation.png) !important;
 }
 .statusIcon {
-  background-image : url(../images/default/tag_blue_add.png) !important;
+  background-image : url(../apps/images/default/tag_blue_add.png) !important;
 }
 .versioningIcon {
-  background-image : url(../images/default/date_go.png) !important;
+  background-image : url(../apps/images/default/date_go.png) !important;
 }
 .downloadAllIcon {
-  background-image : url(../images/default/folder_page_white.png) !important;
+  background-image : url(../apps/images/default/folder_page_white.png) !important;
 }
 .searchIcon {
-  background-image : url(../images/default/find.png) !important;
+  background-image : url(../apps/images/default/find.png) !important;
 }
 .validationReportIcon {
-  background-image : url(../images/default/schematron.gif) !important;
+  background-image : url(../apps/images/default/schematron.gif) !important;
 }
 .shortcutHelpIcon {
-  background-image : url(../images/default/schematron.gif) !important;
+  background-image : url(../apps/images/default/schematron.gif) !important;
 }
 .viewModeIcon {
-  background-image : url(../images/default/application_view_tile.png) !important;
+  background-image : url(../apps/images/default/application_view_tile.png) !important;
 }
 .linkIcon {
-  background-image : url(../images/default/link.png) !important;
+  background-image : url(../apps/images/default/link.png) !important;
 }
 .addVector {
-  background-image : url(../images/default/vector_add.png) !important;
+  background-image : url(../apps/images/default/vector_add.png) !important;
 }
 .delVector {
-  background-image : url(../images/default/vector_delete.png) !important;
+  background-image : url(../apps/images/default/vector_delete.png) !important;
 }
 .connect {
-  background-image : url(../images/default/connect.png) !important;
+  background-image : url(../apps/images/default/connect.png) !important;
 }
 .importIcon {
-  background-image : url(../images/default/import.png) !important;
+  background-image : url(../apps/images/default/import.png) !important;
 }
 .adminIcon {
-  background-image : url(../images/default/admin.png) !important;
+  background-image : url(../apps/images/default/admin.png) !important;
 }
 .csvIcon {
-  background-image : url(../images/default/csv.png) !important;
+  background-image : url(../apps/images/default/csv.png) !important;
 }
 .categoryIcon {
-  background-image : url(../images/default/tag_orange.png) !important;
+  background-image : url(../apps/images/default/tag_orange.png) !important;
 }
 .newOwnerIcon {
-  background-image : url(../images/default/newOwner.png) !important;
+  background-image : url(../apps/images/default/newOwner.png) !important;
 }
 .subtemplateIcon {
-  background-image : url(../images/default/report_magnify.png) !important;
+  background-image : url(../apps/images/default/report_magnify.png) !important;
 }
 .processMetadata {
-  background-image : url(../images/default/table_gear.png) !important;
+  background-image : url(../apps/images/default/table_gear.png) !important;
 }
 .repository {
-  background-image : url(../images/default/database_yellow.png) !important;
+  background-image : url(../apps/images/default/database_yellow.png) !important;
   background-repeat : no-repeat;
   padding-left : 15px;
 }
 .WFSDownloadIcon {
-  background-image : url(../images/default/database_yellow.png) !important;
+  background-image : url(../apps/images/default/database_yellow.png) !important;
   background-repeat : no-repeat;
   padding-left : 15px;
 }
@@ -455,7 +455,7 @@ table.related * a:hover,
 }
 
 #loading .loading-indicator {
-  background : url(../images/default/spinner.gif) no-repeat;
+  background : url(../apps/images/default/spinner.gif) no-repeat;
   color : #555;
   text-align : center;
   height : 40px;
@@ -736,7 +736,7 @@ ul.gn-relation-thumbnail {
 }
 
 .filter-text-icon {
-   background-image: url(../images/default/find.png) !important;
+   background-image: url(../apps/images/default/find.png) !important;
    width: 16px;
    height: 16px;
    border-color: transparent !important;

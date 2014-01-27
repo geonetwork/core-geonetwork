@@ -7,7 +7,6 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
@@ -17,6 +16,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
@@ -51,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.apache.commons.io.FileUtils.copyDirectory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -86,13 +85,12 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             ((FeatureStore<?,?>) _datastore.getFeatureSource(name)).removeFeatures(Filter.INCLUDE);
         }
         final String initializedString = "initialized";
-        final String webappDir = getWebappDir();
+        final String webappDir = getWebappDir(getClass());
         final File templateDataDir = new File(webappDir, "WEB-INF/data");
         final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
 
-        final ArrayList<Element> params = Lists.newArrayList(new Element("param")
-                .setAttribute(ConfigFile.Param.Attr.NAME, "preferredSchema")
-                .setAttribute(ConfigFile.Param.Attr.VALUE, "iso19139"));
+        final ArrayList<Element> params = getServiceConfigParameterElements();
+
         final ServiceConfig serviceConfig = new ServiceConfig(params);
 
         try {
@@ -102,12 +100,16 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             AttributeDescriptor geomDescriptor = new AttributeTypeBuilder().crs(DefaultGeographicCRS.WGS84).binding(MultiPolygon.class).buildDescriptor("the_geom");
             builder.setName("spatialIndex");
             builder.add(geomDescriptor);
-            builder.add("id", String.class);
+            builder.add(SpatialIndexWriter._IDS_ATTRIBUTE_NAME, String.class);
             _datastore.createSchema(builder.buildFeatureType());
 
             _applicationContext.getBeanFactory().registerSingleton("serviceConfig", serviceConfig);
             _applicationContext.getBeanFactory().registerSingleton(initializedString, initializedString);
         }
+
+        NodeInfo nodeInfo = _applicationContext.getBean(NodeInfo.class);
+        nodeInfo.setId(getGeonetworkNodeId());
+        nodeInfo.setDefaultNode(isDefaultNode());
 
 
         final File dataDir = _testTemporaryFolder.getRoot();
@@ -135,6 +137,33 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
     }
 
+    protected boolean isDefaultNode() {
+        return true;
+    }
+
+    /**
+     * Get the elements in the service config object.
+     */
+    protected ArrayList<Element> getServiceConfigParameterElements() {
+        return Lists.newArrayList(createServiceConfigParam("preferredSchema", "iso19139"));
+    }
+
+    protected static Element createServiceConfigParam(String name, String value) {
+        return new Element("param")
+                .setAttribute(ConfigFile.Param.Attr.NAME, name)
+                .setAttribute(ConfigFile.Param.Attr.VALUE, value);
+    }
+
+    /**
+     * Get the node id of the geonetwork node under test.  This hook is here primarily for the GeonetworkDataDirectory tests
+     * but also useful for any other tests that want to test multi node support.
+     *
+     * @return the node id to put into the ApplicationContext.
+     */
+    protected String getGeonetworkNodeId() {
+        return "srv";
+    }
+
     /**
      * Create a Service context without a user session but otherwise ready to use.
      */
@@ -154,7 +183,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         context.setLogger(Log.createLogger("Test"));
         context.setMaxUploadSize(100);
         context.setOutputMethod(ServiceRequest.OutputMethod.DEFAULT);
-        context.setAppPath(getWebappDir());
+        context.setAppPath(getWebappDir(getClass()));
         context.setBaseUrl("geonetwork");
 
         return context;
@@ -169,14 +198,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
      * @param namespaces the namespaces required for xpath
      */
     protected void assertEqualsText(String expected, Element xml, String xpath, Namespace... namespaces) throws JDOMException {
-        final Element element;
-        if (namespaces == null || namespaces.length == 0) {
-            element = Xml.selectElement(xml, xpath);
-        } else {
-            element = Xml.selectElement(xml, xpath, Arrays.asList(namespaces));
-        }
-        assertNotNull("No element found at: " + xpath + " in \n" + Xml.getString(xml), element);
-        assertEquals(expected, element.getText());
+        Assert.assertEqualsText(expected, xml, xpath, namespaces);
     }
 
     /**
@@ -192,28 +214,33 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return request;
     }
 
-    protected String getStyleSheets() {
-        final String file = getWebappDir();
+    public String getStyleSheets() {
+        final String file = getWebappDir(getClass());
 
         return new File(file, "xsl/conversion").getPath();
     }
 
-    private String getWebappDir() {
-        File here = getClassFile();
+    /**
+     * Look up the webapp directory.
+     *
+     * @return
+     */
+    public static String getWebappDir(Class<?> cl) {
+        File here = getClassFile(cl);
         while (!new File(here, "pom.xml").exists() && !new File(here.getParentFile(), "web/src/main/webapp/").exists()) {
 //            System.out.println("Did not find pom file in: "+here);
             here = here.getParentFile();
         }
 
-        return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath()+"/";
+        return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath()+File.separator;
     }
 
-    private File getClassFile() {
-        final String testClassName = getClass().getSimpleName();
-        return new File(getClass().getResource(testClassName + ".class").getFile());
+    private static File getClassFile(Class<?> cl) {
+        final String testClassName = cl.getSimpleName();
+        return new File(cl.getResource(testClassName + ".class").getFile());
     }
 
-    protected User loginAsAdmin(ServiceContext context) {
+    public User loginAsAdmin(ServiceContext context) {
         final User admin = _userRepo.findAllByProfile(Profile.Administrator).get(0);
         UserSession userSession = new UserSession();
         userSession.loginAs(admin);
@@ -225,4 +252,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.xml");
         return Xml.loadStream(resource.openStream());
     }
+
+
 }

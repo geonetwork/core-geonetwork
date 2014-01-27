@@ -1,6 +1,7 @@
 package org.fao.geonet.domain;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import junit.framework.Assert;
 import org.fao.geonet.repository.AbstractSpringDataTest;
@@ -8,8 +9,12 @@ import org.fao.geonet.repository.UserRepositoryTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -56,8 +61,9 @@ public class UserTest extends AbstractSpringDataTest {
                         .setCountry(country2)
                         .setState(state2)
                         .setZip(zip2));
-        String email1 = "email1";
-        String email2 = "email2";
+        String email1 = "email1@c2c.com";
+        String email2 = "email2@c2c.com";
+        user.getEmailAddresses().add("invalidEmail");
         user.getEmailAddresses().add(email1);
         user.getEmailAddresses().add(email2);
 
@@ -84,7 +90,7 @@ public class UserTest extends AbstractSpringDataTest {
                 return ((Element)input).getTextTrim();
             }
         });
-        Assert.assertEquals(2, emailAddresses.size());
+        Assert.assertEquals(3, emailAddresses.size());
         Assert.assertTrue(emailAddressesAsStrings.contains(email1));
         Assert.assertTrue(emailAddressesAsStrings.contains(email2));
 
@@ -117,7 +123,42 @@ public class UserTest extends AbstractSpringDataTest {
         user.getSecurity().setSecurityNotificationsString("");
 
         assertTrue(user.getSecurity().getSecurityNotifications().isEmpty());
+    }
 
+    @Test
+    public void testGetGrantedAuthorities() throws Exception {
+        final User user = UserRepositoryTest.newUser(_inc);
+        user.setProfile(Profile.RegisteredUser);
 
+        Collection<String> authNames = authNames(user);
+        assertEquals(2, authNames.size());
+
+        assertTrue(authNames.contains(Profile.RegisteredUser.name()));
+        assertTrue(authNames.contains(Profile.Guest.name()));
+
+        final String nodeId = "testNodeId";
+        user.getSecurity().setNodeId(nodeId);
+
+        authNames = authNames(user);
+        assertEquals(3, authNames.size());
+
+        assertTrue(authNames.contains(Profile.RegisteredUser.name()));
+        assertTrue(authNames.contains(Profile.Guest.name()));
+        assertTrue(authNames.contains(User.NODE_APPLICATION_CONTEXT_KEY+nodeId));
+
+    }
+
+    private Collection<String> authNames(User user) {
+        final Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
+        for (GrantedAuthority authority : authorities) {
+            assertTrue(authority instanceof SimpleGrantedAuthority);
+        }
+        return Collections2.transform(authorities, new Function<Object, String>() {
+            @Nullable
+            @Override
+            public String apply(@Nullable Object input) {
+                return ((GrantedAuthority) input).getAuthority();
+            }
+        });
     }
 }

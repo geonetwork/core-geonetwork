@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.IsoLanguageEntityListenerManager;
+
 import javax.persistence.*;
 import java.util.Map;
 
@@ -13,7 +15,10 @@ import java.util.Map;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "IsoLanguages")
+@EntityListeners(IsoLanguageEntityListenerManager.class)
+@SequenceGenerator(name=IsoLanguage.ID_SEQ_NAME, initialValue=10000, allocationSize=1)
 public class IsoLanguage extends Localized {
+    static final String ID_SEQ_NAME = "iso_language_id_seq";
     private int id;
     private String code;
     private String shortCode;
@@ -26,7 +31,7 @@ public class IsoLanguage extends Localized {
      * @return the id
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return id;
     }

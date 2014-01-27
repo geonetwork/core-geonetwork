@@ -126,11 +126,6 @@
 	<!-- ====================================================================== -->
 
 	<services package="org.fao.geonet">
-
-		<service name="home">
-			<output sheet="home.xsl"/>
-		</service>
-
 		<service name="main.home">
 			<output sheet="main-page.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
@@ -1145,8 +1140,14 @@
                 <call name="isoLang" class=".guiservices.isolanguages.Get" />
             </output>
         </service>
-	  
-	  
+		
+		<service name="find">
+			<output sheet="search-cat.xsl"/>
+		</service>
+		<service name="tabsearch">
+			<output sheet="search-tab.xsl"/>
+		</service>
+		
 	  <service name="csw.config.get" deprecated="true">
 	    <class name=".guiservices.csw.Get"/>
 	    
@@ -1214,7 +1215,7 @@
 	    <class name=".guiservices.csw.virtual.Delete"/>
 	    <output forward="virtualcsw.config"/>
 	  </service>
-	  
+
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Versioning log                                                -->
@@ -1264,6 +1265,7 @@
   <include>config/config-service-admin-logo.xml</include>
   <include>config/config-service-admin-user-and-group.xml</include>
   <include>config/config-service-admin-geoserver-publication.xml</include>
+  <include>config/config-service-admin-transfert-privileges.xml</include>
   
   <include>config/config-service-statistics.xml</include>
   

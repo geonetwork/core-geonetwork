@@ -10,6 +10,7 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
@@ -17,8 +18,6 @@ import javax.annotation.Nonnull;
 /**
  * TODO javadoc.
  */
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class IncreasePopularityTask implements Runnable {
     private DataManager dataManager;
     private ServiceContext context;
@@ -31,7 +30,7 @@ public class IncreasePopularityTask implements Runnable {
         this.metadataId = metadataId;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void run() {
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 

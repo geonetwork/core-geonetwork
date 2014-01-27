@@ -132,12 +132,17 @@ GeoNetwork.loginApp = function() {
             var intervalID;
             var loginAttempts = 0;
             var loginWindow;
-            Ext.Ajax.request({
-                url : catalogue.services.rootUrl + '../../j_spring_security_check',
-                params : {
+            var params = {
                     username : username,
                     password : password
-                },
+                };
+            if (catalogueNode) {
+            	params.node = catalogueNode;
+            }
+            
+            Ext.Ajax.request({
+                url : '../../j_spring_security_check',
+                params : params,
                 headers : {
                     "Content-Type" : "application/x-www-form-urlencoded"
                 },
@@ -147,8 +152,14 @@ GeoNetwork.loginApp = function() {
             });
         },// FIXME Until catalog is adapted to spring security login, use this
         logout : function() {
+	    	 var params = {};
+	         if (catalogueNode) {
+	         	params.node = catalogueNode;
+	         }
+             
             Ext.Ajax.request({
                 url : catalogue.services.rootUrl + '../../j_spring_security_logout',
+                params : params,
                 headers : {
                     "Content-Type" : "application/x-www-form-urlencoded"
                 },

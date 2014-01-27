@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.CswCapabilitiesInfoFieldEntityListenerManager;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -15,7 +16,11 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "CswServerCapabilitiesInfo")
+@EntityListeners(CswCapabilitiesInfoFieldEntityListenerManager.class)
+@SequenceGenerator(name=CswCapabilitiesInfoField.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class CswCapabilitiesInfoField extends GeonetEntity {
+    static final String ID_SEQ_NAME = "csw_server_capabilities_info_id_seq";
+
     private static final int ID_COLUMN_LENGTH = 10;
     private static final int LANG_ID_COLUMN_LENGTH = 5;
     private static final int FIELD_NAME_COLUMN_LENGTH = 32;
@@ -28,7 +33,7 @@ public class CswCapabilitiesInfoField extends GeonetEntity {
      * The id of the entity. This is a generated value and not controlled by the developer.
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(name = "idfield", length = ID_COLUMN_LENGTH)
     public int getId() {
         return _id;

@@ -118,7 +118,7 @@ Parameters:
 Category label update request example::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/xml.category.update
+  http://localhost:8080/geonetwork/srv/eng/xml.category.update
 
   Mime-type:
   application/xml

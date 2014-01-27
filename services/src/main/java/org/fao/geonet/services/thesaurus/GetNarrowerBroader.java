@@ -65,7 +65,7 @@ public class GetNarrowerBroader implements Service {
 		ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
 
         if(Log.isDebugEnabled("KeywordsManager")) Log.debug("KeywordsManager","Creating new keywords searcher");
-		searcher = new KeywordsSearcher(thesaurusMan);
+		searcher = new KeywordsSearcher(context, thesaurusMan);
 		
 		String request = Util.getParam(params, "request");
         String conceptId = Util.getParam(params, "id");

@@ -1,12 +1,12 @@
 -- ISO 3 letter code migration
 INSERT INTO Languages VALUES ('ara','العربية', 'n', 'n');
 
-UPDATE CategoriesDes (iddes, langid, label)             SET langid='ara' WHERE langid='ar';
+UPDATE CategoriesDes             SET langid='ara' WHERE langid='ar';
 UPDATE IsoLanguagesDes           SET langid='ara' WHERE langid='ar';
 UPDATE RegionsDes                SET langid='ara' WHERE langid='ar';
-UPDATE GroupsDes (iddes, langid, label)                 SET langid='ara' WHERE langid='ar';
+UPDATE GroupsDes                 SET langid='ara' WHERE langid='ar';
 UPDATE OperationsDes             SET langid='ara' WHERE langid='ar';
-UPDATE StatusValuesDes  (iddes, langid, label)           SET langid='ara' WHERE langid='ar';
+UPDATE StatusValuesDes           SET langid='ara' WHERE langid='ar';
 UPDATE CswServerCapabilitiesInfo SET langid='ara' WHERE langid='ar';
 DELETE FROM Languages WHERE id='ar';
 

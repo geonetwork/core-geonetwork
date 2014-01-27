@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.UserEntityListenerManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,8 +19,13 @@ import java.util.*;
 @Access(AccessType.PROPERTY)
 @Table(name = "Users")
 @Cacheable
+@EntityListeners(value = {UserEntityListenerManager.class})
+@SequenceGenerator(name=User.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class User extends GeonetEntity implements UserDetails {
+    public static final String NODE_APPLICATION_CONTEXT_KEY = "jeevesNodeApplicationContext_";
     private static final long serialVersionUID = 2589607276443866650L;
+
+    static final String ID_SEQ_NAME = "user_id_seq";
 
     private int _id;
     private String _username;
@@ -39,7 +45,7 @@ public class User extends GeonetEntity implements UserDetails {
      * @return the user id
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
@@ -140,8 +146,12 @@ public class User extends GeonetEntity implements UserDetails {
      */
     @Transient
     public String getEmail() {
-        if (_email != null && !_email.isEmpty()) {
-            return _email.iterator().next();
+        if (_email != null) {
+            for (String email : _email) {
+                if (email.contains("@")) {
+                    return email;
+                }
+            }
         }
         return null;
     }
@@ -299,6 +309,11 @@ public class User extends GeonetEntity implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
+        final String nodeId = getSecurity().getNodeId();
+        if (nodeId != null) {
+            auths.add(new SimpleGrantedAuthority(NODE_APPLICATION_CONTEXT_KEY+nodeId));
+        }
+
         if (_profile != null) {
             for (String p : getProfile().getAllNames()) {
                 auths.add(new SimpleGrantedAuthority(p));
@@ -363,7 +378,7 @@ public class User extends GeonetEntity implements UserDetails {
         ArrayList<Address> otherAddresses = new ArrayList<Address>(otherUser.getAddresses());
 
         for (Iterator<Address> iterator = _addresses.iterator(); iterator.hasNext(); ) {
-            Address address = (Address) iterator.next();
+            Address address = iterator.next();
             boolean found = false;
 
             for (Iterator<Address> iterator2 = otherAddresses.iterator(); iterator.hasNext(); ) {
@@ -425,5 +440,4 @@ public class User extends GeonetEntity implements UserDetails {
         result = 31 * result + _security.hashCode();
         return result;
     }
-
 }

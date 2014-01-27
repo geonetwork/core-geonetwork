@@ -39,7 +39,7 @@
 				<script type="text/javascript" src="{$widgetPath}/js/GeoNetwork/lib/GeoNetwork.js"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<script type="text/javascript" src="{$widgetPath}/js/GeoNetwork-mini.js"/>
+				<script type="text/javascript" src="{$widgetPath}/../static/geonetwork-client-mini.js"/>
 			</xsl:otherwise>
 		</xsl:choose>
 

@@ -1,11 +1,8 @@
 package org.fao.geonet.kernel.harvest;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Logger;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.repository.HarvestHistoryRepository;
-import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +25,13 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
     protected MockRequestFactoryGeonet _requestFactory;
     @Autowired
     protected HarvestHistoryRepository _harvestHistoryRepository;
+
+
+    private final String _harvesterType;
+
+    public AbstractHarvesterIntegrationTest(String harvesterType) {
+        this._harvesterType = harvesterType;
+    }
     @Before
     public void clearRequestFactory() {
         _requestFactory.clear();
@@ -40,28 +44,49 @@ public abstract class AbstractHarvesterIntegrationTest extends AbstractHarvester
         loginAsAdmin(context);
         mockHttpRequests(_requestFactory);
 
-        Element params = createHarvesterParams("csw");
+        Element params = createHarvesterParams(_harvesterType);
         customizeParams(params);
-        AbstractHarvester _harvester = getHarvesterUnderTest();
+        final String harvesterUuid = _harvestManager.addHarvesterReturnUUID(params);
+        AbstractHarvester _harvester = _harvestManager.getHarvester(harvesterUuid);
         _harvester.init(params, context);
 
         _harvester.invoke();
-        assertExpectedResult(_harvester.getResult());
+        final Element result = _harvester.getResult();
+        assertEqualsText(""+getExpectedAdded(), result, "added");
+        assertEqualsText(""+ getExpectedTotalFound(), result, "total");
+        assertEqualsText(""+ getExpectedBadFormat(), result, "badFormat");
+        assertEqualsText(""+ getExpectedDoesNotValidate(), result, "doesNotValidate");
+        assertEqualsText(""+ getExpectedUnknownSchema(), result, "unknownSchema");
+        assertEqualsText(""+ getExpectedUpdated(), result, "updated");
+        assertEqualsText(""+ getExpectedRemoved(), result, "removed");
+
         assertExpectedErrors(_harvester.getErrors());
 
         _requestFactory.assertAllRequestsCalled();
 
         assertEquals(1, _harvestHistoryRepository.count());
+
+        performExtraAssertions(_harvester);
     }
+
+    protected void performExtraAssertions(AbstractHarvester harvester) {
+        // no extras by default
+    }
+
+    protected int getExpectedTotalFound() { return 0; }
+    protected int getExpectedAdded() { return 0; }
+    protected int getExpectedBadFormat() { return 0; }
+    protected int getExpectedDoesNotValidate() { return 0; }
+    protected int getExpectedUnknownSchema() { return 0; }
+    protected int getExpectedUpdated() { return 0; }
+    protected int getExpectedRemoved() { return 0; }
 
     protected void assertExpectedErrors(List errors) {
         assertEquals (0, errors.size());
     }
 
-    protected abstract void assertExpectedResult(Element result);
-    protected abstract void mockHttpRequests(MockRequestFactoryGeonet bean);
+    protected abstract void mockHttpRequests(MockRequestFactoryGeonet bean) throws Exception;
     protected abstract void customizeParams(Element params);
 
-    protected abstract AbstractHarvester getHarvesterUnderTest();
 
 }

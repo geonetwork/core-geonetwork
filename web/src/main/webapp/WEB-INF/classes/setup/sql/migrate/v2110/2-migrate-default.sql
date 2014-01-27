@@ -155,6 +155,7 @@ INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvestin
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/level2', 'false', 2, 9027);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/harvesting/mail/level3', 'false', 2, 9028);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/lucene/ignorechars', '', 0, 9590);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/csw/transactionUpdateCreateXPath', 'true', 2, 1320);
 
 
 ALTER TABLE StatusValues ADD displayorder int;
@@ -175,3 +176,7 @@ UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 INSERT INTO Address (SELECT id, address, city, state, zip, country FROM Users);
 INSERT INTO UserAddress (SELECT id, id FROM Users);
 INSERT INTO Email (SELECT id, email FROM Users);
+
+
+CREATE SEQUENCE IF NOT EXISTS HIBERNATE_SEQUENCE START WITH 4000 INCREMENT BY 1;
+ALTER TABLE ServiceParameters DROP COLUMN id;

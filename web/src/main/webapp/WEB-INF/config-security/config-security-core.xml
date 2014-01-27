@@ -16,6 +16,7 @@
 		<constructor-arg>
 			<list>
 				<sec:filter-chain pattern="/apps/**" filters="" />
+				<sec:filter-chain pattern="/static/**" filters="" />
 			    <sec:filter-chain pattern="/catalog/**" filters="" />
 			    <sec:filter-chain pattern="/test/**" filters="" />
 				<sec:filter-chain pattern="/" filters="" />
@@ -64,6 +65,7 @@
 				<ref bean="logoutFilter" />
 				<!-- A filter that check if an external service already authenticated user
 					 (default implementation does nothing but can be overridden) -->
+				<ref bean="multiNodeAuthenticationFilter" />
 				<ref bean="preAuthenticationFilter" />
 				<ref bean="basicAuthenticationFilter" />
 				<ref bean="formLoginFilter" />
@@ -77,7 +79,10 @@
 	</bean>
 	<!-- A filter that check if an external service already authenticated user
 					 (default implementation does nothing but can be overridden) -->
-	<bean id="preAuthenticationFilter" class="org.fao.geonet.kernel.security.PassthroughFilter"/>
+	<bean id="multiNodeAuthenticationFilter" class="jeeves.config.springutil.MultiNodeAuthenticationFilter">
+        <property name="location" value="${wrongNodeRedirectURL}" />
+    </bean>
+	<bean id="preAuthenticationFilter" class="jeeves.config.springutil.PassthroughFilter"/>
 	<bean id="securityContextPersistenceFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
 		<property name="securityContextRepository" ref="securityContextRepository" />
 	</bean>
@@ -104,6 +109,7 @@
 		<property name="passwordParameter" value="password" />
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="filterProcessesUrl" value="/j_spring_security_check" />
+		<property name="authenticationDetailsSource" ref="authenticationDetailsSource" />
 		<property name="authenticationFailureHandler">
 			<bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
 				<constructor-arg value="/login.jsp?failure=true"></constructor-arg>
@@ -124,7 +130,11 @@
 		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="authenticationEntryPoint" ref="basicAuthenticationEntryPoint" />
+        <property name="authenticationDetailsSource" ref="authenticationDetailsSource" />
 	</bean>
+
+	<bean id="authenticationDetailsSource"
+		class="jeeves.config.springutil.JeevesAuthenticationDetailSource"/>
 
 	<bean id="basicAuthenticationEntryPoint"
 		class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
@@ -166,7 +176,7 @@
 	</bean>
 
 	<bean id="accessDeniedHandler"
-		class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+		class="jeeves.config.springutil.JeevesAccessDeniedHandler">
 		<property name="errorPage" value="/accessDenied.jsp" />
 	</bean>
 

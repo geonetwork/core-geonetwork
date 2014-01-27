@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.LanguageEntityListenerManager;
+
 import javax.annotation.Nonnull;
 import javax.persistence.*;
 
@@ -15,6 +17,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "Languages")
+@EntityListeners(LanguageEntityListenerManager.class)
 public class Language extends GeonetEntity {
     String _id;
     String _name;

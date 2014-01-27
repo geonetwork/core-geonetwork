@@ -33,7 +33,6 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
@@ -121,8 +120,6 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Indexes metadata using Lucene.
  */
-@Component
-@Lazy
 public class SearchManager {
 	private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
 	private static final String INDEXING_ERROR_FIELD = "_indexingError";
@@ -521,7 +518,6 @@ public class SearchManager {
 		_htmlCacheDir = htmlCacheDirTest.getAbsolutePath();
 
 
-        final File luceneDir = _geonetworkDataDirectory.getLuceneDir();
         _spatial = new Spatial(_applicationContext.getBean(DataStore.class), maxWritesInTransaction);
 
      	 _logAsynch = logAsynch;
@@ -1058,10 +1054,11 @@ public class SearchManager {
 	 * @throws Exception
 	 */
 	public Collection<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms,
-	                                            int threshold) throws Exception {
+	                                            int threshold, String language) throws Exception {
         Collection<TermFrequency> termList = new ArrayList<TermFrequency>();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
         String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
+        String analyzedSearchValue = LuceneSearcher.analyzeText(fieldName, searchValueWithoutWildcard, SearchManager.getAnalyzer(language, true));
         boolean startsWithOnly = !searchValue.startsWith("*") && searchValue.endsWith("*");
         
         try {
@@ -1076,7 +1073,10 @@ public class SearchManager {
                     while (term != null && i++ < maxNumberOfTerms) {
                         String text = term.utf8ToString();
                         if (termEnum.docFreq() >= threshold) {
-                            if ((startsWithOnly && StringUtils.startsWithIgnoreCase(text, searchValueWithoutWildcard))
+                            String analyzedText = LuceneSearcher.analyzeText(fieldName, text, SearchManager.getAnalyzer(language, true));
+                            if ((startsWithOnly && StringUtils.startsWithIgnoreCase(analyzedText, analyzedSearchValue))
+                                    || (!startsWithOnly && StringUtils.containsIgnoreCase(analyzedText, analyzedSearchValue)) 
+                                    || (startsWithOnly && StringUtils.startsWithIgnoreCase(text, searchValueWithoutWildcard))
                                     || (!startsWithOnly && StringUtils.containsIgnoreCase(text, searchValueWithoutWildcard))) {
                                 TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
                                 termList.add(freq);
@@ -1593,6 +1593,7 @@ public class SearchManager {
         public Spatial(DataStore dataStore, int maxWritesInTransaction) throws Exception {
             _lock = new ReentrantLock();
             _datastore = dataStore;
+
 			if (maxWritesInTransaction > 1) {
             	_transaction = new DefaultTransaction("SpatialIndexWriter");
             }

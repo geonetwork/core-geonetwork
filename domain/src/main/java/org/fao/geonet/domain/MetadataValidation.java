@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.MetadataValidationEntityListenerManager;
+
 import javax.persistence.*;
 
 /**
@@ -10,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "Validation")
+@EntityListeners(MetadataValidationEntityListenerManager.class)
 public class MetadataValidation extends GeonetEntity {
     private MetadataValidationId _id;
     private MetadataValidationStatus _status;

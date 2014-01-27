@@ -23,9 +23,19 @@
 
 package jeeves.server.dispatchers;
 
-import com.yammer.metrics.core.TimerContext;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletResponse;
+
 import jeeves.component.ProfileManager;
-import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
@@ -44,38 +54,29 @@ import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
+
 import org.fao.geonet.Constants;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NotAllowedEx;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
 import org.fao.geonet.exceptions.ServiceNotMatchedEx;
-import org.fao.geonet.utils.*;
+import org.fao.geonet.utils.BLOB;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.SOAPUtil;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.yammer.metrics.core.TimerContext;
 
 //=============================================================================
-@Component
-@Lazy
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 public class ServiceManager {
 	private Map<String, ArrayList<ServiceInfo>> htServices = new HashMap<String, ArrayList<ServiceInfo>>(100);
 	private Map<String, Object> htContexts = new HashMap<String, Object>();
@@ -325,9 +326,9 @@ public class ServiceManager {
 
 	//---------------------------------------------------------------------------
 
-	public ServiceContext createServiceContext(String name, JeevesApplicationContext jeevesApplicationContext)
+	public ServiceContext createServiceContext(String name, ConfigurableApplicationContext appContext)
 	{
-		ServiceContext context = new ServiceContext(name, jeevesApplicationContext, htContexts,
+		ServiceContext context = new ServiceContext(name, appContext, htContexts,
                 entityManager);
 
 		context.setBaseUrl(baseUrl);
@@ -441,7 +442,7 @@ public class ServiceManager {
                         HttpServiceRequest req2 = (HttpServiceRequest) req;
 
                         req2.getHttpServletResponse().setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-                        req2.getHttpServletResponse().setHeader("Location", baseUrl +  "/srv/" +  req.getLanguage() + "/" + forward); 
+                        req2.getHttpServletResponse().setHeader("Location", baseUrl +  "/" + context.getApplicationContext().getBean(NodeInfo.class).getId() + "/" +  req.getLanguage() + "/" + forward); 
 
                         return;
                     } else {
@@ -637,7 +638,7 @@ public class ServiceManager {
                     guiServicesTimerContext.stop();
                 }
 
-				addPrefixes(guiElem, context.getLanguage(), req.getService());
+				addPrefixes(guiElem, context.getLanguage(), req.getService(), context.getApplicationContext().getBean(NodeInfo.class).getId());
 
 				Element rootElem = new Element(Jeeves.Elem.ROOT)
 												.addContent(guiElem)
@@ -739,7 +740,7 @@ public class ServiceManager {
                 guiServicesTimerContext.stop();
             }
 
-            addPrefixes(guiElem, context.getLanguage(), req.getService());
+            addPrefixes(guiElem, context.getLanguage(), req.getService(), context.getApplicationContext().getBean(NodeInfo.class).getId());
 
 			Element rootElem = new Element(Jeeves.Elem.ROOT)
 											.addContent(guiElem)
@@ -829,7 +830,7 @@ public class ServiceManager {
 		// Dispatch HTTP status code
 		req.setStatusCode(outPage.getStatusCode());
 
-		addPrefixes(guiElem, context.getLanguage(), req.getService());
+		addPrefixes(guiElem, context.getLanguage(), req.getService(), context.getApplicationContext().getBean(NodeInfo.class).getId());
 
 		Element rootElem = new Element(Jeeves.Elem.ROOT)
 										.addContent(guiElem)
@@ -917,14 +918,15 @@ public class ServiceManager {
 
 	//---------------------------------------------------------------------------
 
-	private void addPrefixes(Element root, String lang, String service)
+	private void addPrefixes(Element root, String lang, String service, String nodeId)
 	{
 		root.addContent(new Element(Jeeves.Elem.LANGUAGE)    .setText(lang));
 		root.addContent(new Element(Jeeves.Elem.REQ_SERVICE) .setText(service));
 		root.addContent(new Element(Jeeves.Elem.BASE_URL)    .setText(baseUrl));
 		root.addContent(new Element(Jeeves.Elem.LOC_URL)     .setText(baseUrl +"/loc/"+ lang));
-		root.addContent(new Element(Jeeves.Elem.BASE_SERVICE).setText(baseUrl +"/"+ Jeeves.Prefix.SERVICE));
-		root.addContent(new Element(Jeeves.Elem.LOC_SERVICE) .setText(baseUrl +"/"+ Jeeves.Prefix.SERVICE +"/"+ lang));
+		root.addContent(new Element(Jeeves.Elem.BASE_SERVICE).setText(baseUrl +"/"+ nodeId));
+		root.addContent(new Element(Jeeves.Elem.NODE_ID)     .setText(nodeId));
+		root.addContent(new Element(Jeeves.Elem.LOC_SERVICE) .setText(baseUrl +"/"+ nodeId +"/"+ lang));
 	}
 
 	//---------------------------------------------------------------------------

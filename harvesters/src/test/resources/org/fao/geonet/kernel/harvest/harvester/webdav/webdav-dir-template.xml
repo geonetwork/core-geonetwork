@@ -1,0 +1,24 @@
+<D:response xmlns:lp2="http://apache.org/dav/props/" xmlns:lp1="DAV:">
+    <D:href>@@href@@</D:href>
+    <D:propstat>
+        <D:prop>
+            <lp1:resourcetype><D:collection/></lp1:resourcetype>
+            <lp1:creationdate>2014-01-23T20:01:22Z</lp1:creationdate>
+            <lp1:getlastmodified>@@modDate@@</lp1:getlastmodified>
+            <lp1:getetag>"12020df-3000-4f0a8b499e880"</lp1:getetag>
+            <D:supportedlock>
+                <D:lockentry>
+                    <D:lockscope><D:exclusive/></D:lockscope>
+                    <D:locktype><D:write/></D:locktype>
+                </D:lockentry>
+                <D:lockentry>
+                    <D:lockscope><D:shared/></D:lockscope>
+                    <D:locktype><D:write/></D:locktype>
+                </D:lockentry>
+            </D:supportedlock>
+            <D:lockdiscovery/>
+            <D:getcontenttype>httpd/unix-directory</D:getcontenttype>
+        </D:prop>
+        <D:status>HTTP/1.1 200 OK</D:status>
+    </D:propstat>
+</D:response>

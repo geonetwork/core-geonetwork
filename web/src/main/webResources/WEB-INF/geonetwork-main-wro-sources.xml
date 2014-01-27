@@ -1,0 +1,216 @@
+<sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="wro-sources.xsd">
+    <declarative name="gn.libs" pathOnDisk="${project.basedir}/src/main/webapp">
+        <jsSource webappPath="scripts/sarissa.js"/>
+        <jsSource webappPath="scripts/prototype.js"/>
+    </declarative>
+
+    <declarative name="gn.libs.map" pathOnDisk="${project.basedir}/src/main/webapp">
+        <jsSource webappPath="scripts/map/core/OGCUtil.js"/>
+        <jsSource webappPath="scripts/map/core/MapStateManager.js"/>
+        <jsSource webappPath="scripts/map/core/CatalogueInterface.js"/>
+        <jsSource webappPath="scripts/map/core/WMCManager.js"/>
+
+        <jsSource webappPath="scripts/map/Control/ExtentBox.js"/>
+        <jsSource webappPath="scripts/map/Control/ZoomWheel.js"/>
+
+        <jsSource webappPath="scripts/map/lang/en.js"/>
+        <jsSource webappPath="scripts/map/lang/de.js"/>
+        <jsSource webappPath="scripts/map/lang/nl.js"/>
+        <jsSource webappPath="scripts/map/lang/fr.js"/>
+        <jsSource webappPath="scripts/map/lang/no.js"/>
+        <jsSource webappPath="scripts/map/lang/fi.js"/>
+        <jsSource webappPath="scripts/map/lang/it.js"/>
+        <jsSource webappPath="scripts/map/lang/tr.js"/>
+
+        <jsSource webappPath="scripts/map/Ext.ux/form/DateTime.js"/>
+
+        <jsSource webappPath="scripts/map/widgets/tree/WMSListGenerator.js"/>
+        <jsSource webappPath="scripts/map/widgets/tree/WMSTreeGenerator.js"/>
+        <jsSource webappPath="scripts/map/widgets/wms/BrowserPanel.js"/>
+        <jsSource webappPath="scripts/map/widgets/wms/LayerInfoPanel.js"/>
+        <jsSource webappPath="scripts/map/widgets/wms/LayerStylesPanel.js"/>
+        <jsSource webappPath="scripts/map/widgets/wms/PreviewPanel.js"/>
+        <jsSource webappPath="scripts/map/widgets/wms/WMSLayerInfo.js"/>
+
+        <jsSource webappPath="scripts/map/widgets/FeatureInfoPanel.js"/>
+        <jsSource webappPath="scripts/map/widgets/LegendPanel.js"/>
+        <jsSource webappPath="scripts/map/widgets/OpacitySlider.js"/>
+        <jsSource webappPath="scripts/map/widgets/PrintAction.js"/>
+        <jsSource webappPath="scripts/map/widgets/ProjectionSelector.js"/>
+        <jsSource webappPath="scripts/map/widgets/TimeSelector.js"/>
+
+        <jsSource webappPath="scripts/map/windows/BaseWindow.js"/>
+        <jsSource webappPath="scripts/map/windows/SingletonWindowManager.js"/>
+        <jsSource webappPath="scripts/map/windows/AddWMS.js"/>
+        <jsSource webappPath="scripts/map/windows/FeatureInfo.js"/>
+        <jsSource webappPath="scripts/map/windows/Opacity.js"/>
+        <jsSource webappPath="scripts/map/windows/LoadWmc.js"/>
+        <jsSource webappPath="scripts/map/windows/LayerStyles.js"/>
+        <jsSource webappPath="scripts/map/windows/WmsLayerMetadata.js"/>
+        <jsSource webappPath="scripts/map/windows/WMSTime.js"/>
+        <jsSource webappPath="scripts/map/windows/Disclaimer.js"/>
+
+        <jsSource webappPath="scripts/ol_settings.js"/>
+        <jsSource webappPath="scripts/ol_minimap.js"/>
+        <jsSource webappPath="scripts/ol_map.js"/>
+    </declarative>
+
+    <declarative name="gn.libs.scriptaculous" pathOnDisk="${project.basedir}/src/main/webapp">
+        <jsSource webappPath="scripts/scriptaculous/effects.js"/>
+        <jsSource webappPath="scripts/scriptaculous/dragdrop.js"/>
+        <jsSource webappPath="scripts/scriptaculous/controls.js"/>
+        <jsSource webappPath="scripts/scriptaculous/builder.js"/>
+    </declarative>
+
+    <declarative name="gn" pathOnDisk="${project.basedir}/src/main/webapp">
+        <jsSource webappPath="scripts/geonetwork.js"/>
+        <jsSource webappPath="scripts/modalbox.js"/>
+        <jsSource webappPath="scripts/form_check.js"/>
+    </declarative>
+
+    <declarative name="gn.search" pathOnDisk="${project.basedir}/src/main/webapp">
+        <jsSource webappPath="scripts/gn_search.js"/>
+    </declarative>
+
+    <declarative name="gn.editor" pathOnDisk="${project.basedir}/src/main/webapp">
+        <jsSource webappPath="scripts/editor/app.CRSSelectionPanel.js"/>
+        <jsSource webappPath="scripts/editor/app.KeywordSelectionPanel.js"/>
+        <jsSource webappPath="scripts/editor/csiro.EditorExtensions.js"/>
+        <jsSource webappPath="scripts/editor/csiro.ThesaurusTermSelectionPanel.js"/>
+        <jsSource webappPath="scripts/editor/csiro.CRSSelectionPanel.js"/>
+        <jsSource webappPath="scripts/editor/app.LinkedMetadataSelectionPanel.js"/>
+        <jsSource webappPath="scripts/editor/LogoSelectionPanel.js"/>
+        <jsSource webappPath="scripts/editor/app.GeoPublisherPanel.js"/>
+        <jsSource webappPath="scripts/editor/app.SearchField.js"/>
+        <jsSource webappPath="scripts/editor/csw.SearchTools.js"/>
+        <jsSource webappPath="scripts/editor/metadata-editor.js"/>
+        <jsSource webappPath="scripts/editor/metadata-show.js"/>
+        <jsSource webappPath="scripts/editor/simpletooltip.js"/>
+        <jsSource webappPath="scripts/editor/tooltip.js"/>
+        <jsSource webappPath="scripts/editor/tooltip-manager.js"/>
+    </declarative>
+
+    <declarative name="gn.geo.libs" pathOnDisk="${project.basedir}/src/main/webapp">
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/SingleFile.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Util.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/BaseTypes.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/BaseTypes/Class.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/BaseTypes/Bounds.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/Rico/Corner.js"/>
+        <jsSource webappPath="scripts/geoext/lib/GeoExt/SingleFile.js"/>
+        <jsSource webappPath="scripts/geoext/lib/GeoExt.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Console.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords.js"/>
+        <jsSource webappPath="scripts/geoext/lib/GeoExt/data/WMSCapabilitiesReader.js"/>
+        <jsSource webappPath="scripts/geoext/lib/GeoExt/data/LayerStore.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Events.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Icon.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Marker.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Popup.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Popup/Anchored.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Popup/AnchoredBubble.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Feature.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Feature/Vector.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/WKT.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/XML.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/WMSGetFeatureInfo.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Geometry.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control/PanZoom.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control/PanZoomBar.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Tween.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Map.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Projection.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Layer.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Tile.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Tile/Image.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Layer/Image.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Geometry/Collection.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Geometry/Point.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Geometry/MultiPoint.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Geometry/Curve.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Geometry/LineString.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Geometry/LinearRing.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Handler.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Handler/Point.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Handler/Path.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Geometry/Polygon.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Handler/Polygon.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/XML.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Geometry/MultiLineString.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Geometry/MultiPolygon.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/GML.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/GML/Base.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/GML/v3.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/BaseTypes/Element.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Handler/MouseWheel.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control/ZoomToMaxExtent.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Style.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Filter.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Filter/FeatureId.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Filter/Logical.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Filter/Comparison.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/Filter.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Protocol.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Protocol/HTTP.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Renderer.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Renderer/Elements.js"/>
+        <jsSource webappPath="scripts/geoext/lib/GeoExt/widgets/MapPanel.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Handler/Feature.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/StyleMap.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Layer/Vector.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Layer/Vector/RootContainer.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control/SelectFeature.js"/>
+        <jsSource webappPath="scripts/geoext/lib/GeoExt/data/WMSCapabilitiesStore.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control/Attribution.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Request.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Request/XMLHttpRequest.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Ajax.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/BaseTypes/LonLat.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/BaseTypes/Size.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/BaseTypes/Pixel.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Lang.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Lang/en.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Handler/Drag.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Handler/Box.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control/ZoomBox.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control/DragPan.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Handler/Click.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control/Navigation.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Layer/HTTPRequest.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Layer/Grid.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Layer/WMS.js"/>
+        <jsSource webappPath="scripts/geoext/lib/GeoExt/data/LayerRecord.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Renderer/SVG.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Layer/TileCache.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control/Button.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/GML/v2.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/Filter/v1.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/Filter/v1_0_0.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/Filter/v1_1_0.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords/v2_0_2.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/WMSCapabilities.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/WMSCapabilities/v1_1.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control/Scale.js"/>
+        <jsSource webappPath="scripts/geoext/lib/GeoExt/widgets/Action.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control/DrawFeature.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Rule.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Handler/Hover.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control/MouseDefaults.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control/MousePosition.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Handler/RegularPolygon.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Renderer/VML.js"/>
+        <jsSource webappPath="scripts/geoext/lib/GeoExt/data/LayerReader.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/WMSCapabilities/v1_1_0.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Format/WMSCapabilities/v1_1_1.js"/>
+        <jsSource webappPath="scripts/openlayers/lib/OpenLayers/Control/ArgParser.js"/>
+        <jsSource webappPath="scripts/openlayers/addins/LoadingPanel.js"/>
+        <jsSource webappPath="scripts/openlayers/addins/ScaleBar.js"/>
+    </declarative>
+    <declarative name="kernel" pathOnDisk="${project.basedir}/src/main/webapp">
+        <jsSource webappPath="/scripts/core/kernel/kernel.js" />
+    </declarative>
+</sources>
